@@ -42,6 +42,16 @@
     define('queueKeyCmdToCmd',              323);
     define('queueKeySerialToParser',        822);  // 0x336
     define('queueKeyParserToCmdSemaphore',  999);  // Queue pour passer les messages Ack entre parcer et Cmd.
+    define('queueKeyCtrlToParser', 333); // To pass control message to Parser
+
+    $allQueues = array(
+        queueKeyAbeilleToAbeille, queueKeyAbeilleToCmd, queueKeyParserToAbeille, queueKeyParserToAbeille2, queueKeyCmdToAbeille,
+        queueKeyCmdToMon, queueKeyParserToMon, queueKeyMonToCmd,
+        queueKeyAssistToParser, queueKeyParserToAssist, queueKeyAssistToCmd,
+        queueKeyParserToLQI, queueKeyLQIToAbeille, queueKeyLQIToCmd,
+        queueKeyXmlToAbeille, queueKeyXmlToCmd, queueKeyFormToCmd, queueKeyParserToCli,
+        queueKeyParserToCmd, queueKeyCmdToCmd, queueKeySerialToParser, queueKeyParserToCmdSemaphore, queueKeyCtrlToParser
+    );
 
     define('priorityMin',           1);
     define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel

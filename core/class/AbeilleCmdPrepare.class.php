@@ -1115,7 +1115,7 @@
                                     "address"                       => $parameters['address'],
                                     "EP"                            => $parameters['EP'],
                                     "clusterId"                     => $parameters['clusterId'],
-                                    "direction"                     => $parameters['direction'],
+                                    "direction"                     => isset($parameters['direction']) ? $parameters['direction'] : "00",
                                     "startAttributeId"              => $parameters['startAttributeId'],
                                     "maxAttributeId"                => $parameters['maxAttributeId'],
                 );

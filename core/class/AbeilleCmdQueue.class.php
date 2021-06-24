@@ -260,8 +260,7 @@
             }
         }
 
-        function writeToDest($f, $port, $cmd, $len, $datas)
-        {
+        function writeToDest($f, $port, $cmd, $len, $datas) {
             if (get_resource_type($f)) {
                 fwrite($f, pack("H*", "01"));
                 fwrite($f, pack("H*", $this->transcode($cmd))); //MSG TYPE

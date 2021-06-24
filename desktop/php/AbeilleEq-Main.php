@@ -118,6 +118,25 @@
             </div>
         </div>
 
+        <?php
+        /* If battery powered eq. 'batteryType' is defined in device JSON file */
+        if ($eqLogic->getConfiguration('battery_type', '') != "") {
+            echo '<hr>';
+
+            echo '<div class="form-group">';
+            echo '<div class="col-sm-3"></div>';
+            echo '<h3 class="col-sm-5" style="text-align:left">{{Equipement sur piles}}</h3>';
+            echo '</div>';
+
+            echo '<div class="form-group" >';
+            echo '<label class="col-sm-3 control-label" >{{Type de piles}}</label>';
+            echo '<div class="col-sm-3">';
+            echo '<input id="CeciEstImportant" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="battery_type" placeholder="{{Doit être indiqué sous la forme : 3xAA}}"/>';
+            echo '</div>';
+            echo '</div>';
+        }
+        ?>
+
         <hr>
         <div class="form-group">
             <label class="col-sm-3 control-label">{{Position pour les representations graphiques.}}</label>

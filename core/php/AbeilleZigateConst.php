@@ -208,57 +208,56 @@
 
         /* List of known devices per profile */
         $clustersTable = array (
-            "0000" => "General: Basic",
-            "0001" => "General: Power Config",
-            "0002" => "General: Temperature Config",
-            "0003" => "General: Identify",
-            "0004" => "General: Groups",
-            "0005" => "General: Scenes",
-            "0006" => "General: On/Off",
-            "0007" => "General: On/Off Config",
-            "0008" => "General: Level Control",
-            "0009" => "General: Alarms",
-            "000A" => "General: Time",
-            "000B" => "General: RSSI Location",
-            "000C" => "General: Analog Input (Basic)",
-            "000D" => "General: Analog Output (Basic)",
-            "000E" => "General: Analog Value (Basic)",
-            "000F" => "General: Binary Input (Basic)",
-            "0010" => "General: Binary Output (Basic)",
-            "0011" => "General: Binary Value (Basic)",
-            "0012" => "General: Multistate Input (Basic)",
-            "0013" => "General: Multistate Output (Basic)",
-            "0014" => "General: Multistate Value (Basic)",
-            "0015" => "General: Commissioning",
-            "0019" => "General: Inconnu par abeille",
-            "0020" => "General: Poll Control",
-            "0019" => "General: OTA",
-            "0100" => "Closures: Shade Configuration",
-            "0101" => "Closures: Door Lock",
-            "0102" => "Closures: Window Covering",
+            "0000" => "General-Basic",
+            "0001" => "General-Power Config",
+            "0002" => "General-Temperature Config",
+            "0003" => "General-Identify",
+            "0004" => "General-Groups",
+            "0005" => "General-Scenes",
+            "0006" => "General-On/Off",
+            "0007" => "General-On/Off Config",
+            "0008" => "General-Level Control",
+            "0009" => "General-Alarms",
+            "000A" => "General-Time",
+            "000B" => "General-RSSI Location",
+            "000C" => "General-Analog Input (Basic)",
+            "000D" => "General-Analog Output (Basic)",
+            "000E" => "General-Analog Value (Basic)",
+            "000F" => "General-Binary Input (Basic)",
+            "0010" => "General-Binary Output (Basic)",
+            "0011" => "General-Binary Value (Basic)",
+            "0012" => "General-Multistate Input (Basic)",
+            "0013" => "General-Multistate Output (Basic)",
+            "0014" => "General-Multistate Value (Basic)",
+            "0015" => "General-Commissioning",
+            "0020" => "General-Poll Control",
+            "0019" => "General-OTA",
+            "0100" => "Closures-Shade Configuration",
+            "0101" => "Closures-Door Lock",
+            "0102" => "Closures-Window Covering",
             "0200" => "Pump Configuration and Control",
-            "0201" => "HVAC: Thermostat",
-            "0202" => "HVAC: Fan Control",
-            "0203" => "HVAC: Dehumidification Control",
-            "0204" => "HVAC: Thermostat User Interface Configuration",
-            "0300" => "Lighting: Color Control",
-            "0301" => "Lighting: Ballast Configuration",
-            "0400" => "Measurement: Illuminance",
-            "0401" => "Measurement: Illuminance level sensing",
-            "0402" => "Measurement: Temperature",
-            "0403" => "Measurement: Pression atmosphérique",
-            "0404" => "Measurement: Flow Measurement",
-            "0405" => "Measurement: Humidity",
-            "0406" => "Measurement: Occupancy Sensing",
-            "0500" => "Security & Safety: IAS Zone (IAS_ZONE_CLUSTER)",
-            "0501" => "Security & Safety: IAS ACE (IAS_ACE_CLUSTER)",
-            "0502" => "Security & Safety: IAS WD",
-            "0702" => "Smart Energy: Metering",
-            "0703" => "Smart Energy: Messaging",
-            "0B05" => "Misc: Diagnostics",
+            "0201" => "HVAC-Thermostat",
+            "0202" => "HVAC-Fan Control",
+            "0203" => "HVAC-Dehumidification Control",
+            "0204" => "HVAC-Thermostat User Interface Configuration",
+            "0300" => "Lighting-Color Control",
+            "0301" => "Lighting-Ballast Configuration",
+            "0400" => "Measurement-Illuminance",
+            "0401" => "Measurement-Illuminance level sensing",
+            "0402" => "Measurement-Temperature",
+            "0403" => "Measurement-Pression atmosphérique",
+            "0404" => "Measurement-Flow Measurement",
+            "0405" => "Measurement-Humidity",
+            "0406" => "Measurement-Occupancy Sensing",
+            "0500" => "Security & Safety-IAS Zone",
+            "0501" => "Security & Safety-IAS ACE",
+            "0502" => "Security & Safety-IAS WD",
+            "0702" => "Smart Energy-Metering",
+            "0703" => "Smart Energy-Messaging",
+            "0B05" => "Misc-Diagnostics",
             "0B04" => "Electrical Measurement",
             "0B05" => "Diagnostics",
-            "1000" => "ZLL: Commissioning",
+            "1000" => "ZLL-Commissioning",
             "FC01" => "Legrand private",
             "FC41" => "Legrand private",
             "FF01" => "Xiaomi private",
@@ -268,7 +267,7 @@
 
         if (array_key_exists($clustId, $clustersTable))
             return $clustersTable[$clustId];
-        return "Cluster ".$clustId." inconnu";
+        return "Unknown ".$clustId." cluster";
     }
 
     /* Returns zigate 8000 cmd status based on given '$status' value. */
@@ -288,7 +287,7 @@
 
         if (array_key_exists($status, $statusesTable))
             return $statusesTable[$status];
-        return "Status ".$status." inconnu";
+        return "Unknown ".$status." status";
     }
 
     /* Returns a string corresponding to 804E bitmap info, based on given '$bitMap' value.
@@ -383,5 +382,42 @@
         if (array_key_exists($status, $statusesTable))
             return $statusesTable[$status];
         return "Unknown status ".$status;
+    }
+
+    /* Returns Zigbee ZCL command name from id. */
+    function zgGetZCLCommand($id)
+    {
+        $id = strtolower($id);
+
+        /* List of known ZCL commands */
+        $cmdsTable = array (
+            "00" => "Read Attributes",
+            "01" => "Read Attributes Response",
+            "02" => "Write Attributes",
+            "03" => "Write Attributes Undivided",
+            "04" => "Write Attributes Response",
+            "05" => "Write Attributes No Response",
+            "06" => "Configure Reporting",
+            "07" => "Configure Reporting Response",
+            "08" => "Read Reporting Configuration",
+            "09" => "Read Reporting Configuration Response",
+            "0a" => "Report attributes",
+            "0b" => "Default Response",
+            "0c" => "Discover Attributes",
+            "0d" => "Discover Attributes Response",
+            "0e" => "Read Attributes Structured",
+            "0f" => "Write Attributes Structured",
+            "10" => "Write Attributes Structured response",
+            "11" => "Discover Commands Received",
+            "12" => "Discover Commands Received Response",
+            "13" => "Discover Commands Generated",
+            "14" => "Discover Commands Generated Response",
+            "15" => "Discover Attributes Extended",
+            "16" => "Discover Attributes Extended Response"
+        );
+
+        if (array_key_exists($id, $cmdsTable))
+            return $cmdsTable[$id];
+        return "Unknown cmd ".$id;
     }
 ?>

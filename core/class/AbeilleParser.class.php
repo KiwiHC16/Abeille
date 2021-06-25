@@ -3698,6 +3698,19 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                     return;
                 }
 
+                // Xiaomi Double Relay (ref ?)
+                elseif (($AttributId == "FF01") && ($AttributSize == "0044")) {
+                    $FF01 = $this->decodeFF01(substr($payload, 24, strlen($payload) - 24 - 2));
+                    parserLog('debug', "  Xiaomi proprietary (Double relay)");
+                    parserLog('debug', "  ".json_encode($FF01));
+
+                    $this->msgToAbeille($dest."/".$SrcAddr, '0006', '01-0000',   $FF01["Etat SW 1 Binaire"]["valueConverted"], $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, '0006', '02-0000',   $FF01["Etat SW 2 Binaire"]["valueConverted"], $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, '000C', '01-0055',   $FF01["Puissance"]["valueConverted"],         $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'tbd',  '--conso--', $FF01["Consommation"]["valueConverted"],      $lqi);
+                    return;
+                }
+
                 // Xiaomi Presence Infrarouge IR V1 / Bouton V1 Rond
                 elseif (($AttributId == "FF02")) {
                     // Assuming $dataType == "42"
@@ -4076,18 +4089,6 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                     $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
-                }
-
-                // Xiaomi Double Relay (ref ?)
-                elseif (($AttributId == "FF01") && ($AttributSize == "0044")) {
-                    $FF01 = $this->decodeFF01(substr($payload, 24, strlen($payload) - 24 - 2));
-                    parserLog('debug', "  Champ proprietaire Xiaomi (Relais double)");
-                    parserLog('debug', "  ".json_encode($FF01));
-
-                    $this->msgToAbeille($dest."/".$SrcAddr, '0006', '01-0000',   $FF01["Etat SW 1 Binaire"]["valueConverted"], $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, '0006', '02-0000',   $FF01["Etat SW 2 Binaire"]["valueConverted"], $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, '000C', '01-0055',   $FF01["Puissance"]["valueConverted"],         $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'tbd',  '--conso--', $FF01["Consommation"]["valueConverted"],      $lqi);
                 }
 
                 // Xiaomi Capteur Presence

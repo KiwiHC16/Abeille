@@ -1,11 +1,11 @@
 <?php
 
-require_once __DIR__.'/../php/AbeilleLog.php';
+    require_once __DIR__.'/../php/AbeilleLog.php';
 
-define('corePhpDir', __DIR__.'/../php/');
-define('devicesDir', __DIR__.'/../config/devices/'); // Abeille's supported devices
-define('devicesLocalDir', __DIR__.'/../config/devices_local/'); // Unsupported/user devices
-define('cmdsDir', __DIR__.'/../config/commands/'); // Abeille's supported commands
+    define('corePhpDir', __DIR__.'/../php/');
+    define('devicesDir', __DIR__.'/../config/devices/'); // Abeille's supported devices
+    define('devicesLocalDir', __DIR__.'/../config/devices_local/'); // Unsupported/user devices
+    define('cmdsDir', __DIR__.'/../config/commands/'); // Abeille's supported commands
 
 class AbeilleTools
 {
@@ -694,30 +694,48 @@ class AbeilleTools
     }
 
     /**
-     * Stop given daemons list.
+     * Stop given daemons list or all daemons.
      * Ex: $daemons = "AbeilleMonitor AbeilleCmd AbeilleParser"
      * @param string $daemons Deamons list to stop, space separated. Empty string = ALL
      */
     public static function stopDaemons($daemons = "") {
         log::add('Abeille', 'debug', "stopDaemons($daemons)");
+        $cmd1 = $cmd2 = "";
         if ($daemons != "") {
             $daemonsArr = explode(" ", $daemons);
             $grep = "";
+            $grep2 = ""; // Grep pattern for 'socat'
             foreach ($daemonsArr as $daemon) {
                 if ($grep != "")
                     $grep .= "\|";
                 $grep .= $daemon;
+                if (substr($daemon, 0, 12) == "AbeilleSocat") {
+                    $zgNb = substr($daemon, 12);
+                    if ($grep2 != "")
+                        $grep2 .= "\|";
+                    $grep2 .= "zigate".$zgNb;
+                }
             }
-            $cmd = "pgrep -a php | grep '".$grep."'";
+            $cmd1 = "pgrep -a php | grep '".$grep."'";
+            exec($cmd1, $running);
+            if ($grep2 != "") {
+                $cmd2 = "pgrep -a socat | grep '".$grep."'";
+                exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
+                $running = array_merge($running, $running2);
+            }
         } else {
-            $cmd = "pgrep -a php | grep Abeille";
+            $cmd1 = "pgrep -a php | grep Abeille";
+            exec($cmd1, $running); // Get all Abeille daemons
+            /* 'pgrep -a socat' example:
+               16343 socat -d -d pty,raw,echo=0,link=/dev/zigate2 tcp:192.168.0.101:80 */
+            $cmd2 = "pgrep -a socat | grep zigate";
+            exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
+            $running = array_merge($running, $running2);
         }
-        // log::add('Abeille', 'debug', "stopDaemons() => cmd=".$cmd);
-        exec($cmd, $running);
 
         $nbOfDaemons = sizeof($running);
         if ($nbOfDaemons != 0) {
-            log::add('Abeille', 'debug', 'stopDaemons(): Arret de '.$nbOfDaemons.' démons');
+            log::add('Abeille', 'debug', 'stopDaemons(): Stopping '.$nbOfDaemons.' daemons');
             for ($i = 0; $i < $nbOfDaemons; $i++) {
 // log::add('Abeille', 'debug', 'deamon_stopDaemonsstop(): running[i]='.$running[$i]);
                 $arr = explode(" ", $running[$i]);
@@ -730,12 +748,16 @@ class AbeilleTools
             $running = array(); // Clear previous result.
             for ($t = 0; ($nbOfDaemons != 0) && ($t < stopTimeout); $t+=500) {
                 usleep(500000); // Sleep 500ms
-                exec($cmd, $running);
+                exec($cmd1, $running);
+                if ($cmd2 != "") {
+                    exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
+                    $running = array_merge($running, $running2);
+                }
                 $nbOfDaemons = sizeof($running);
 // log::add('Abeille', 'debug', 'stopDaemons(): LA'.$nbOfDaemons."=".json_encode($running));
             }
             if ($nbOfDaemons != 0) {
-                log::add('Abeille', 'debug', 'stopDaemons(): '.$nbOfDaemons.' démons toujours actifs apres '.stopTimeout.' ms');
+                log::add('Abeille', 'debug', 'stopDaemons(): '.$nbOfDaemons.' daemons still active after '.stopTimeout.' ms');
                 log::add('Abeille', 'debug', 'stopDaemons(): '.json_encode($running));
                 for ($i = 0; $i < $nbOfDaemons; $i++) {
                     $arr = explode(" ", $running[$i]);
@@ -744,7 +766,7 @@ class AbeilleTools
                 }
             }
         } else
-            log::add('Abeille', 'debug', 'stopDaemons(): Aucun démon actif');
+            log::add('Abeille', 'debug', 'stopDaemons(): No active daemon');
 
         return true;
     }
@@ -762,8 +784,11 @@ class AbeilleTools
                 if ($config['AbeilleActiver'.$zgNb] != "Y")
                     continue; // Zigate disabled
 
-                if ($config['AbeilleType'.$zgNb] == "WIFI")
+                if ($config['AbeilleType'.$zgNb] == "WIFI") {
+                    if ($daemons != "")
+                        $daemons .= " ";
                     $daemons .= "AbeilleSocat".$zgNb;
+                }
                 if ($daemons != "")
                     $daemons .= " ";
                 $daemons .= "AbeilleSerialRead".$zgNb;
@@ -999,9 +1024,7 @@ class AbeilleTools
     {
         log::add('Abeille', $loglevel, $message);
     }
-
 }
 
-// var_dump(AbeilleTools::getDeviceNameFromJson());
-
+    // var_dump(AbeilleTools::getDeviceNameFromJson());
 ?>

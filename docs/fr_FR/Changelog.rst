@@ -11,6 +11,7 @@ ChangeLog
 - Page EQ: type de batterie déplacé vers principale.
 - Interne: plusieurs améliorations de robustesse.
 - Interne: Parser: Support des messages longs.
+- Zigate WIFI: Correction & amélioration arret/démarrage démon.
 
 210620-STABLE-1
 ----------

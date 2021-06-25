@@ -62,9 +62,8 @@
         exit(3);
     }
 
-    $nohup  = "/usr/bin/nohup";
     $sudo   = "/usr/bin/sudo";
-    $socat  = "/usr/bin/socat";
+    // $socat  = "/usr/bin/socat";
     // $parameters = "pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
     // $parameters = "pty,raw,echo=0,link=".$WifiLink." tcp:".$ip;
     // $parameters = "pty,raw,echo=0,link=".$serial." tcp:".$ip;
@@ -73,42 +72,33 @@
        Note: raw is obsolete. rawer should be the default. To be tested. */
     logMessage('info', 'Attention ! Certain systèmes acceptent soit l\'option \'raw\' soit \'rawer\' pour socat. Modifiez la ligne "$parameter=" du fichier AbeilleSocat.php pour mettre la bonne option.');
 
-    // Boucle sur le lancement de socat et des que socat est lancé bloque la boucle pendant l'execution.
-    // while (1) {
-
-        /* Printing socat infos for debug */
-        // $cmd = $sudo." ".$socat." -V";
-        // $cmd = $cmd . ' >/var/www/html/log/AbeilleSOCATTOOL';
-        // $cmd = $cmd . ' 2>&1';
-
-        logMessage('debug', 'Creating connection from '.$ip.':'.$port.' to '.$serial);
+    logMessage('debug', 'Creating connection from '.$ip.':'.$port.' to '.$serial);
     //
-        // $cmd = "socat -d -d -x pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
-        // $cmd = "socat pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
+    // $cmd = "socat -d -d -x pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
+    // $cmd = "socat pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
     //
-        // $cmd = "socat -d -d -x pty,raw,echo=0,link=".$WifiLink." tcp:192.168.4.8:9999";
-        // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999";
+    // $cmd = "socat -d -d -x pty,raw,echo=0,link=".$WifiLink." tcp:192.168.4.8:9999";
+    // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999";
 
-        //$cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23"; // jeedomzwave
-        // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999"; // abeille
-        // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23";
+    //$cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23"; // jeedomzwave
+    // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999"; // abeille
+    // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23";
 
-        /* TODO: socat output might not be UTF8.
-           Can we use iconv -f ISO-8859-1 -t UTF-8//TRANSLIT input.file -o out.file ? */
+    /* TODO: socat output might not be UTF8.
+        Can we use iconv -f ISO-8859-1 -t UTF-8//TRANSLIT input.file -o out.file ? */
 
-        // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
-        $cmd = $sudo." ".$socat." ".$parameters;
-        // $cmd = $cmd . ' 2>&1 &';
-        // $cmd = $cmd . ' >>/var/www/html/log/AbeilleSOCATTOOL';
-        // $cmd = $cmd.' 2>&1';
-        logMessage('debug', 'cmd='.$cmd);
+    // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
+    // $cmd = $sudo." ".$socat." ".$parameters;
+    $cmd = $sudo." socat ".$parameters;
+    // $cmd = $cmd . ' 2>&1 &';
+    // $cmd = $cmd . ' >>/var/www/html/log/AbeilleSOCATTOOL';
+    // $cmd = $cmd.' 2>&1';
 
-        exec($cmd, $output, $result_code);
-        if ($result_code != 0)
-            logMessage('debug', 'Socat ERROR '.$result_code);
-        //logMessage('Info','Arret de Socat on relance dans 1 minute.');
-       // sleep(60);
-    //}
+    logMessage('debug', 'cmd='.$cmd);
+
+    exec($cmd, $output, $result_code);
+    if ($result_code != 0)
+        logMessage('debug', 'Socat exited with ERROR '.$result_code);
 
     logMessage('info', '<<< Arret du démon \'AbeilleSocat\'');
 ?>

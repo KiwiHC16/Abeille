@@ -1,13 +1,6 @@
 ChangeLog
 =========
 
-- Equipement/categories: correction. Effacement categorie résiduelle.
-- Trafri motion sensor: Mise-à-jour JSON pour controle de groupe.
-- Gestion des démons: correctif sur arret forcé (kill).
-
-210625-BETA-1
-----------
-
 - Modifications syntaxe JSON équipement (avec support rétroactif temporaire):
   - 'commands' au lieu de 'Commandes'.
   - 'category' au lieu de 'Categorie'
@@ -19,6 +12,9 @@ ChangeLog
 - Interne: plusieurs améliorations de robustesse.
 - Interne: Parser: Support des messages longs.
 - Zigate WIFI: Correction & amélioration arret/démarrage démon.
+- Equipement/categories: correction. Effacement categorie résiduelle.
+- Trafri motion sensor: Mise-à-jour JSON pour controle de groupe.
+- Gestion des démons: correctif sur arret forcé (kill).
 
 210620-STABLE-1
 ----------

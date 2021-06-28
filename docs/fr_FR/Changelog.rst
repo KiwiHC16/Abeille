@@ -3,6 +3,7 @@ ChangeLog
 
 - Equipement/categories: correction. Effacement categorie résiduelle.
 - Trafri motion sensor: Mise-à-jour JSON pour controle de groupe.
+- Gestion des démons: correctif sur arret forcé (kill).
 
 210625-BETA-1
 ----------

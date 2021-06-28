@@ -740,7 +740,7 @@ class AbeilleTools
 // log::add('Abeille', 'debug', 'deamon_stopDaemonsstop(): running[i]='.$running[$i]);
                 $arr = explode(" ", $running[$i]);
                 $pid = $arr[0];
-                exec("kill -s TERM ".$pid);
+                exec("sudo kill -s TERM ".$pid);
 // log::add('Abeille', 'debug', 'stopDaemons(): kill -s TERM '.$pid);
             }
             /* Waiting until timeout that all daemons be ended */
@@ -762,7 +762,7 @@ class AbeilleTools
                 for ($i = 0; $i < $nbOfDaemons; $i++) {
                     $arr = explode(" ", $running[$i]);
                     $pid = $arr[0];
-                    exec("kill -s KILL ".$pid);
+                    exec("sudo kill -s KILL ".$pid);
                 }
             }
         } else

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Equipement/categories: correction. Effacement categorie résiduelle.
+- Trafri motion sensor: Mise-à-jour JSON pour controle de groupe.
+
 210625-BETA-1
 ----------
 

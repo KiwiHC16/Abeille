@@ -2677,14 +2677,20 @@ while ($cron->running()) {
         $elogic->setIsEnable("1");
         if (isset($objetDefSpecific["timeout"]))
             $elogic->setTimeout($objetDefSpecific["timeout"]);
+
         if (isset($objetDefSpecific["category"]))
             $categories = $objetDefSpecific["category"];
         else if (isset($objetDefSpecific["Categorie"])) // Old name support
             $categories = $objetDefSpecific["Categorie"];
         // $elogic->setCategory(array_keys($objetDefSpecific["Categorie"])[0], $objetDefSpecific["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
+        $allCat = ["heating","security","energy","light","opening","automatism","multimedia","default"];
+        foreach ($allCat as $cat) { // Clear all
+            $elogic->setCategory($cat, "0");
+        }
         foreach ($categories as $key => $value) {
             $elogic->setCategory($key, $value);
         }
+
         $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
         $elogic->save();
 

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210628-BETA-1
+----------
+
 - Modifications syntaxe JSON équipement (avec support rétroactif temporaire):
   - 'commands' au lieu de 'Commandes'.
   - 'category' au lieu de 'Categorie'

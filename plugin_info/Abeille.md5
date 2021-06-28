@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210625-BETA-1"
+# VERSION="210628-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -48,7 +48,7 @@ ee2be2ec60cb3b00ed0501cb232f7166 *Zigate_Module/ReadJN5168/read.php
 e7cd868c9ee87d0ec35bd6d866500449 *core/ajax/AbeilleFiles.ajax.php
 7650cfc074038eb9712acec23813d2da *core/ajax/AbeilleZigate.ajax.php
 803a7b121f687efca0724915b4fabe98 *core/ajax/abeille.ajax.php
-f080f7a34569da075ed9b24e8f765dd8 *core/class/Abeille.class.php
+0b95e795c0df2b632435f19a4c5cc812 *core/class/Abeille.class.php
 1b168df63dd8f213613058478ed3181f *core/class/AbeilleCmd.class.php
 c5494ce46b25d509ff930c26baea4e8c *core/class/AbeilleCmdPrepare.class.php
 21749ae5eba1db269696ef60e1e9c3db *core/class/AbeilleCmdProcess.class.php
@@ -59,7 +59,7 @@ d0e38ab1e4c468c2843be74ca7165c48 *core/class/AbeilleCmdQueue.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 2ebb56e1ea41091916d618f74fe15764 *core/class/AbeilleTemplateCommon.class.php
 a583bb8133f5cdfdd2261c2161b4a1e3 *core/class/AbeilleTemplateEq.class.php
-5719f48b970574eeb9822e3ff7a97c84 *core/class/AbeilleTools.class.php
+b3af717db14dfaa4ea3725e9369ae889 *core/class/AbeilleTools.class.php
 fb15711b044915f5291add3ce425c751 *core/config/Abeille.config.ini
 7adfc47352d85c8286d7130672413526 *core/config/Abeille.config.php
 96b14488adfe25210ff0b340be3f531d *core/config/HueCatalogue.json
@@ -609,7 +609,8 @@ f0d8cea109490c590e72f81c954232c7 *core/config/devices/TRADFRIbulbGU10W400lm/TRAD
 a01df918c1a1024a7d94ae03cc53ee9c *core/config/devices/TRADFRIbulbGU10WS400lm/TRADFRIbulbGU10WS400lm.json
 e03eb1b0ed6372d1cac8c7e2762aa4cd *core/config/devices/TRADFRIbulbGU10WW400lm/TRADFRIbulbGU10WW400lm.json
 238fa7a762fb12d800b119d97fb8a205 *core/config/devices/TRADFRIcontroloutlet/TRADFRIcontroloutlet.json
-d1a4b7aef142df7ac43df7e0632849dd *core/config/devices/TRADFRImotionsensor/TRADFRImotionsensor.json
+b04fc04a833162a4cd9881285e533402 *core/config/devices/TRADFRImotionsensor/TRADFRImotionsensor.json
+da28bc631b1cd9585a97384f96b6767f *core/config/devices/TRADFRImotionsensor/notes.txt
 d8ae1131b1ff54f52434a76d2846d952 *core/config/devices/TRADFRIonoffswitch/TRADFRIonoffswitch.json
 ce58cb543d5aed2aed57d49162d460c5 *core/config/devices/TRADFRIonoffswitch/notes.txt
 0c4a8d56482eacfe533ec0e675a78c16 *core/config/devices/TRADFRIopencloseremote/TRADFRIopencloseremote.json
@@ -689,7 +690,7 @@ d11feb6bc149f5059f193dd89fc04adc *core/config/devices/sensor_86sw2/sensor_86sw2.
 e19e7cecd5983f43bf79332f620647d0 *core/config/devices/sensor_cube.aqgl01/sensor_cube.aqgl01.json
 ef33e404a1896a67da3c73d2ef677fb3 *core/config/devices/sensor_cube/sensor_cube.json
 76eb42efcfa894e85108e588b9e1439e *core/config/devices/sensor_ht/sensor_ht.json
-6d882b0d7efc4fea4d68a1ade498e660 *core/config/devices/sensor_magnet.aq2/sensor_magnet.aq2.json
+e7a2473a6bce09a0eba21f235b9f82f8 *core/config/devices/sensor_magnet.aq2/sensor_magnet.aq2.json
 75117987275ef9f3bce95909ae97d091 *core/config/devices/sensor_magnet/sensor_magnet.json
 ba19d0a480dc605848f18c43bc4f3db0 *core/config/devices/sensor_motion.aq2/sensor_motion.aq2.json
 1bfe5a3da707ac9542ade6f8cc30df17 *core/config/devices/sensor_motion/sensor_motion.json
@@ -790,7 +791,7 @@ d2c7be8f2790e2af709516cd12122037 *desktop/php/AbeilleEq-Main.php
 cb121a171c9d45f3e51c17d1e2b92542 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-3238675b8e4064d16b06aeca4abb9d40 *docs/fr_FR/Changelog.rst
+bbe75a1699edb084b09890b03513316f *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1011,11 +1012,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-cde4ec79befd47efaf2b7be6e4d2d034 *plugin_info/Abeille.version
+66ee956096adb30762efa504dfaeb741 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 b621d15e706e786e3db9f176d4163f63 *plugin_info/configuration.php
-e7502167d32430335253b1bde4864c0e *plugin_info/info.json
+1ece86b6b1c7736d1560a2c0bfa51f46 *plugin_info/info.json
 ec45f2d7ccce5ec06908d4ce7388749e *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 d323b5c18f2b6806a0a79277985f17f6 *resources/AbeilleDeamon/AbeilleInterrogate.php

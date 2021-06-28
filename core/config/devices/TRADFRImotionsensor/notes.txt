@@ -1,0 +1,46 @@
+Type de l'équipement : TRADFRI motion sensor
+
+"cluster": 0
+    {
+    "attribute": 4,
+    "data": "IKEA of Sweden",
+    "name": "manufacturer",
+    "value": "IKEA of Sweden"
+    },
+    {
+    "attribute": 5,
+    "data": "TRADFRI motion sensor",
+    "name": "type",
+    "type": "str",
+    "value": "TRADFRI motion sensor"
+    }
+
+"cluster": 1
+    {
+    "attribute": 32,
+    "data": 28,
+    "name": "battery_voltage",
+    "type": "float",
+    "value": 2.8
+    },
+    {
+    "attribute": 33,
+    "data": 60,
+    "name": "battery_percent",
+    "type": "int",
+    "value": 60
+    },
+
+AbeilleParser 2018-12-14 11:27:47[DEBUG]In cluster: 0000 - General: Basic
+AbeilleParser 2018-12-14 11:27:47[DEBUG]In cluster: 0001 - General: Power Config
+AbeilleParser 2018-12-14 11:27:47[DEBUG]In cluster: 0003 - General: Identify
+AbeilleParser 2018-12-14 11:27:47[DEBUG]In cluster: 0009 - General: Alarms
+AbeilleParser 2018-12-14 11:27:47[DEBUG]In cluster: 0B05 - Misc: Diagnostics
+AbeilleParser 2018-12-14 11:27:47[DEBUG]In cluster: 1000 - ZLL: Commissioning
+AbeilleParser 2018-12-14 11:27:47[DEBUG]OutClusterCount : 05
+AbeilleParser 2018-12-14 11:27:47[DEBUG]Out cluster: 0003 - General: Identify
+AbeilleParser 2018-12-14 11:27:47[DEBUG]Out cluster: 0004 - General: Groups
+AbeilleParser 2018-12-14 11:27:47[DEBUG]Out cluster: 0006 - General: On/Off
+AbeilleParser 2018-12-14 11:27:47[DEBUG]Out cluster: 0019 - General: OTA
+AbeilleParser 2018-12-14 11:27:47[DEBUG]Out cluster: 1000 - ZLL: Commissioning
+

@@ -1,7 +1,8 @@
 ChangeLog
 =========
 
-- Interne: Parser: affichage erreurs queues.
+- Interne: Parser: affichage erreurs msg_receive().
+- Interne: SerialRead: affichage erreur msg_send().
 
 210628-BETA-1
 ----------

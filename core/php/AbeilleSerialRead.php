@@ -28,6 +28,18 @@
     include_once __DIR__.'/AbeilleLog.php';
     include_once __DIR__.'/../class/AbeilleTools.class.php';
 
+    /* Tcharp38: Ouahhh. How can it handle multi-zigate ? Who is
+       dealing with concurrent msg_send() on the same queue ? */
+    function msgToParser($msgToSend) {
+        global $queueKeySerialToParser;
+        if (msg_send($queueKeySerialToParser, 1, json_encode($msgToSend), false, false, $errorCode) == false) {
+            logMessage('error', 'ERREUR msg_send(queueKeySerialToParser): '.$errorCode);
+            logMessage('error', '  msg='.json_encode($msgToSend));
+            return false;
+        }
+        return true;
+    }
+
     logSetConf('', true); // Log to STDOUT until log name fully known (need Zigate number)
     logMessage('info', '>>> Démarrage d\'AbeilleSerialRead sur port '.$argv[2]);
 
@@ -111,11 +123,7 @@
         'type' => 'status',
         'status' => 'ready',
     );
-    /* Tcharp38: Ouahhh. How can it handle multi-zigate ? Who is
-       dealing with concurrent msg_send() on the same queue ? */
-    if (msg_send($queueKeySerialToParser, 1, json_encode($msgToSend), false, false) == false) {
-        logMessage('error', 'ERREUR de transmission: '.json_encode($msgToSend));
-    }
+    msgToParser($msgToSend);
 
     $transcode = false;
     $frame = ""; // Transcoded message from Zigate
@@ -170,6 +178,8 @@
         } else {
             /* Waiting for "03" end byte */
             if ($byte == "03") {
+                logMessage('debug', 'Got '.json_encode($frame));
+
                 if ($ccrc != $ecrc)
                     logMessage('error', 'ERREUR CRC: calc=0x'.dechex($ccrc).', att=0x'.dechex($ecrc).', mess='.substr($frame, 0, 12).'...'.substr($frame, -2, 2));
 
@@ -179,13 +189,7 @@
                     'type' => 'zigatemessage',
                     'msg' => $frame
                 );
-                /* Tcharp38: Ouahhh. How can it handle multi-zigate ? Who is
-                   dealing with concurrent msg_send() on the same queue ? */
-                if (msg_send($queueKeySerialToParser, 1, json_encode($msgToSend), false, false) == false) {
-                    logMessage('error', 'ERREUR de transmission: '.json_encode($frame));
-                } else {
-                    logMessage('debug', 'Reçu: '.json_encode($frame));
-                }
+                msgToParser($msgToSend);
                 $frame = ""; // Already transmitted or displayed
                 $step = "WAITSTART";
             } else {

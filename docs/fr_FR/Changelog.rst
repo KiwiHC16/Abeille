@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: affichage erreurs queues.
+
 210628-BETA-1
 ----------
 

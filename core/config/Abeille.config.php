@@ -42,16 +42,13 @@
     define('queueKeyCmdToCmd',              323);
     define('queueKeySerialToParser',        822);  // 0x336
     define('queueKeyParserToCmdSemaphore',  999);  // Queue pour passer les messages Ack entre parcer et Cmd.
-    define('queueKeyCtrlToParser', 333); // To pass control message to Parser
+    define('queueKeyCtrlToParser', 0x337); // To pass control message to Parser
 
-    $allQueues = array(
-        queueKeyAbeilleToAbeille, queueKeyAbeilleToCmd, queueKeyParserToAbeille, queueKeyParserToAbeille2, queueKeyCmdToAbeille,
-        queueKeyCmdToMon, queueKeyParserToMon, queueKeyMonToCmd,
-        queueKeyAssistToParser, queueKeyParserToAssist, queueKeyAssistToCmd,
-        queueKeyParserToLQI, queueKeyLQIToAbeille, queueKeyLQIToCmd,
-        queueKeyXmlToAbeille, queueKeyXmlToCmd, queueKeyFormToCmd, queueKeyParserToCli,
-        queueKeyParserToCmd, queueKeyCmdToCmd, queueKeySerialToParser, queueKeyParserToCmdSemaphore, queueKeyCtrlToParser
-    );
+    /* New way to declare queues, allowing to define a max message size per queue.
+       array['<queueName>'] = array("id" => queueId, "max" => maxMsgSize) */
+    $abQueues = array();
+    $abQueues["queueSerialToParser"] = array( "id" => 0x336, "max" => 2048 );
+    $abQueues["queueCtrlToParser"] = array( "id" => 0x337, "max" => 2048 );
 
     define('priorityMin',           1);
     define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel

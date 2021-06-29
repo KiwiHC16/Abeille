@@ -210,9 +210,11 @@
         // $LQI = array(); // Tcharp38: no longer used
         // $clusterTab = AbeilleTools::getJSonConfigFiles("zigateClusters.json"); // Tcharp38: no longer required
 
-        $queueKeySerialToParser = msg_get_queue(queueKeySerialToParser);
+        // $queueKeySerialToParser = msg_get_queue(queueSerialToParser);
+        $queueSerialToParser = msg_get_queue($abQueues["queueSerialToParser"]["id"]);
+        $queueSerialToParserMax = $abQueues["queueSerialToParser"]["max"];
+
         $max_msg_size = 2048;
-        $msg_type = NULL;
 
         // $fromAssistQueue = msg_get_queue(queueKeyAssistToParser);
         // $toAssistQueue = msg_get_queue(queueKeyParserToAssist);
@@ -227,11 +229,12 @@
         $GLOBALS['customEqList'] = AbeilleTools::getDevicesList("local");
         parserLog('debug', 'customEqList='.json_encode( $GLOBALS['customEqList']));
 
+        $msgType = null;
         while (true) {
 
             // Treat messages received from AbeilleSerialRead, check CRC, and if Ok execute proper decode function.
-            while (msg_receive($queueKeySerialToParser, 0, $msg_type, $max_msg_size, $dataJson, false, MSG_IPC_NOWAIT, $errorCode)) {
-                $data = json_decode( $dataJson );
+            while (msg_receive($queueSerialToParser, 0, $msgType, $queueSerialToParserMax, $dataJson, false, MSG_IPC_NOWAIT, $errorCode)) {
+                $data = json_decode($dataJson);
 
                 if ($data->type != 'zigatemessage') {
                     /* Forward status message as it is. */
@@ -256,11 +259,11 @@
                 }
             }
             if ($errorCode != 42) { // 42 = No message
-                logMessage('debug', '  msg_receive(queueKeySerialToParser) ERROR '.$errorCode);
+                logMessage('debug', '  msg_receive(queueSerialToParser) ERROR '.$errorCode);
             }
 
 //             /* Checking if message from EQ assistant */
-//             if (msg_receive($fromAssistQueue, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) == true) {
+//             if (msg_receive($fromAssistQueue, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) == true) {
 // // logMessage('debug', "Received=".json_encode($msg));
 //                 if ($msg['type'] == 'reroute') {
 //                     $rerouteNet = $msg['network'];
@@ -272,7 +275,7 @@
 //             }
 
             /* Checking if control message for Parser */
-            if (msg_receive($fromCtrlQueue, 0, $msg_type, $max_msg_size, $jsonMsg, false, MSG_IPC_NOWAIT, $errorCode) == true) {
+            if (msg_receive($fromCtrlQueue, 0, $msgType, $max_msg_size, $jsonMsg, false, MSG_IPC_NOWAIT, $errorCode) == true) {
                 logMessage('debug', "fromCtrlQueue=".$jsonMsg);
                 $msg = json_decode($jsonMsg, true);
                 if ($msg['type'] == 'sendToCli') {

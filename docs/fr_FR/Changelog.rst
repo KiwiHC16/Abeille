@@ -3,6 +3,7 @@ ChangeLog
 
 - Interne: Parser: affichage erreurs msg_receive().
 - Interne: SerialRead: affichage erreur msg_send().
+- Interne: Serial to parser: Messages trop grands ignores pour ne plus bloquer la pile + message d'erreur.
 
 210628-BETA-1
 ----------

@@ -4,6 +4,9 @@ ChangeLog
 - Interne: Parser: affichage erreurs msg_receive().
 - Interne: SerialRead: affichage erreur msg_send().
 - Interne: Serial to parser: Messages trop grands ignores pour ne plus bloquer la pile + message d'erreur.
+- Batterie %: Parser renvoi valeur correcte pour 0001-EPX-0021 + Abeille.class + update JSON (#2056).
+  Peut nécessiter de recharger JSON.
+- Batterie %: Report dans Jeedom de tous les "end points" et pas seulement 01.
 
 210628-BETA-1
 ----------

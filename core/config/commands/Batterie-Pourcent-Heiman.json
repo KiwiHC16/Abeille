@@ -2,8 +2,7 @@
   "0001-#EP#-0021": {
     "isVisible": 0,
     "name": "Batterie",
-    "order": 9,
-    "isHistorized": "1",
+    "isHistorized": 0,
     "Type": "info",
     "subType": "numeric",
     "generic_type": "BATTERY",
@@ -11,8 +10,6 @@
     "template": "vuMeter",
     "unite": "%",
     "configuration": {
-      "uniqId": "5c07ciusd7662165e",
-      "calculValueOffset": "#value#/2",
       "minValue": "0",
       "maxValue": "100",
       "visibilityCategory": "All"

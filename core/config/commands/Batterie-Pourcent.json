@@ -2,8 +2,7 @@
   "Batterie-Pourcent": {
     "isVisible": 0,
     "name": "BatteriePourcent",
-    "order": 4,
-    "isHistorized": "1",
+    "isHistorized": 0,
     "Type": "info",
     "subType": "numeric",
     "generic_type": "BATTERY",
@@ -11,7 +10,6 @@
     "template": "vuMeter",
     "unite": "%",
     "configuration": {
-	"uniqId": "5c07c766216df",
       "minValue": "0",
       "maxValue": "100",
       "historizeRound": "1",

@@ -230,7 +230,7 @@
         while (true) {
 
             // Treat messages received from AbeilleSerialRead, check CRC, and if Ok execute proper decode function.
-            while (msg_receive($queueKeySerialToParser, 0, $msg_type, $max_msg_size, $dataJson, false, MSG_IPC_NOWAIT)) {
+            while (msg_receive($queueKeySerialToParser, 0, $msg_type, $max_msg_size, $dataJson, false, MSG_IPC_NOWAIT, $errorCode)) {
                 $data = json_decode( $dataJson );
 
                 if ($data->type != 'zigatemessage') {
@@ -255,6 +255,9 @@
                     $AbeilleParser->protocolDatas($data->net, $data->msg);
                 }
             }
+            if ($errorCode != 42) { // 42 = No message
+                logMessage('debug', '  msg_receive(queueKeySerialToParser) ERROR '.$errorCode);
+            }
 
 //             /* Checking if message from EQ assistant */
 //             if (msg_receive($fromAssistQueue, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) == true) {
@@ -269,7 +272,7 @@
 //             }
 
             /* Checking if control message for Parser */
-            if (msg_receive($fromCtrlQueue, 0, $msg_type, $max_msg_size, $jsonMsg, false, MSG_IPC_NOWAIT) == true) {
+            if (msg_receive($fromCtrlQueue, 0, $msg_type, $max_msg_size, $jsonMsg, false, MSG_IPC_NOWAIT, $errorCode) == true) {
                 logMessage('debug', "fromCtrlQueue=".$jsonMsg);
                 $msg = json_decode($jsonMsg, true);
                 if ($msg['type'] == 'sendToCli') {
@@ -277,6 +280,8 @@
                     $GLOBALS['sendToCli']['addr'] = $msg['addr'];
                     $GLOBALS['sendToCli']['ieee'] = $msg['ieee'];
                 }
+            } else if ($errorCode != 42) { // 42 = No message
+                logMessage('debug', '  msg_receive(fromCtrlQueue) ERROR '.$errorCode);
             }
 
             // Check if we have any action scheduled and waiting to be processed

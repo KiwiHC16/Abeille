@@ -2035,13 +2035,19 @@ while ($cron->running()) {
                 $elogic->setStatus('battery', $value);
                 $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
             }
-            if ($cmdId == "0001-01-0021") {
-                /* en % batterie example Ikea Remote */
-                // 10.10.2.1   BatteryPercentageRemaining Attribute Specifies the remaining battery life as a half integer percentage of the full battery capacity (e.g.
-                // 34.5%, 45%, 68.5%, 90%) with a range between zero and 100%, with 0x00 = 0%, 0x64 = 50%, and 0xC8 = 100%. This is particularly suited for devices with
-                // rechargeable batteries. The value 0xff indicates an invalid or unknown reading. This attribute SHALL be configurable for attribute reporting.
-                // C8 is 200, so value/200*100
-                $elogic->setStatus('battery', $value / 2);
+            // Tcharp38: Correct % value directly reported by parser according to zigbee spec (raw value / 2)
+            // if ($cmdId == "0001-01-0021") {
+            //     /* en % batterie example Ikea Remote */
+            //     // 10.10.2.1   BatteryPercentageRemaining Attribute Specifies the remaining battery life as a half integer percentage of the full battery capacity (e.g.
+            //     // 34.5%, 45%, 68.5%, 90%) with a range between zero and 100%, with 0x00 = 0%, 0x64 = 50%, and 0xC8 = 100%. This is particularly suited for devices with
+            //     // rechargeable batteries. The value 0xff indicates an invalid or unknown reading. This attribute SHALL be configurable for attribute reporting.
+            //     // C8 is 200, so value/200*100
+            //     $elogic->setStatus('battery', $value / 2);
+            //     $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+            // }
+            if (preg_match("/^0001-[0-9A-F]*-0021/", $cmdId)) {
+                log::add('Abeille', 'debug', "  Battery % reporting: ".$cmdId.", val=".$value);
+                $elogic->setStatus('battery', $value);
                 $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
             }
 

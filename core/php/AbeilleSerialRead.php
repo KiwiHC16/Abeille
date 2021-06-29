@@ -31,9 +31,16 @@
     /* Tcharp38: Ouahhh. How can it handle multi-zigate ? Who is
        dealing with concurrent msg_send() on the same queue ? */
     function msgToParser($msgToSend) {
-        global $queueKeySerialToParser;
-        if (msg_send($queueKeySerialToParser, 1, json_encode($msgToSend), false, false, $errorCode) == false) {
-            logMessage('error', 'ERREUR msg_send(queueKeySerialToParser): '.$errorCode);
+        global $queueSerialToParser, $queueMax;
+        $jsonMsg = json_encode($msgToSend);
+        $size = strlen($jsonMsg);
+        if ($size > $queueMax) {
+            logMessage('error', 'msg_send(queueSerialToParser): Message trop grand (max='.$queueMax.', size='.$size.') => ignoré !');
+            logMessage('error', '  msg='.$jsonMsg);
+            return false;
+        }
+        if (msg_send($queueSerialToParser, 1, $jsonMsg, false, false, $errorCode) == false) {
+            logMessage('error', 'msg_send(queueSerialToParser): ERREUR '.$errorCode);
             logMessage('error', '  msg='.json_encode($msgToSend));
             return false;
         }
@@ -93,7 +100,9 @@
     // if (pcntl_signal(SIGTERM, "shutdown", false) != true)
     //     logMessage("error", "Erreur pcntl_signal()");
 
-    $queueKeySerialToParser = msg_get_queue(queueKeySerialToParser);
+    // $queueSerialToParser = msg_get_queue(queueSerialToParser);
+    $queueSerialToParser = msg_get_queue($abQueues["queueSerialToParser"]["id"]);
+    $queueMax = $abQueues["queueSerialToParser"]["max"];
 
     exec(system::getCmdSudo().' chmod 777 '.$serial.' >/dev/null 2>&1');
     exec("stty -F ".$serial." sane", $out, $status);

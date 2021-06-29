@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210629-MASTER_TCHARP38-3"
+# VERSION="210629-MASTER_TCHARP38-4"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -48,14 +48,14 @@ ee2be2ec60cb3b00ed0501cb232f7166 *Zigate_Module/ReadJN5168/read.php
 e7cd868c9ee87d0ec35bd6d866500449 *core/ajax/AbeilleFiles.ajax.php
 7650cfc074038eb9712acec23813d2da *core/ajax/AbeilleZigate.ajax.php
 803a7b121f687efca0724915b4fabe98 *core/ajax/abeille.ajax.php
-0b95e795c0df2b632435f19a4c5cc812 *core/class/Abeille.class.php
+bec3325188717e0953f1e489d2a72524 *core/class/Abeille.class.php
 1b168df63dd8f213613058478ed3181f *core/class/AbeilleCmd.class.php
 c5494ce46b25d509ff930c26baea4e8c *core/class/AbeilleCmdPrepare.class.php
 21749ae5eba1db269696ef60e1e9c3db *core/class/AbeilleCmdProcess.class.php
 d0e38ab1e4c468c2843be74ca7165c48 *core/class/AbeilleCmdQueue.class.php
 1d8ecd8f974647271c4e630015a43d7f *core/class/AbeilleDebug.class.php
 17e48d546034f737716d4532d29a29af *core/class/AbeilleMsg.php
-0e1697c10d2e7ead8080e314a66ad8a6 *core/class/AbeilleParser.class.php
+58b20860565e160a0e8157beaf6eba59 *core/class/AbeilleParser.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 2ebb56e1ea41091916d618f74fe15764 *core/class/AbeilleTemplateCommon.class.php
 a583bb8133f5cdfdd2261c2161b4a1e3 *core/class/AbeilleTemplateEq.class.php
@@ -71,10 +71,10 @@ a70f16f2e480e52ff62e007ea25475e8 *core/config/commands/2200K.json
 1618d485217109d2d7b576b4070cb927 *core/config/commands/5000K.json
 68691e400695e04fe6cdfca46327c446 *core/config/commands/6000K.json
 e8ddd99da88f2315c6ade687c83efdd5 *core/config/commands/BasicApplicationVersion.json
-6c2a774df4cc9d244d93087ae9566620 *core/config/commands/Batterie-Hue.json
-9ec6eb8752c77d6e41a87c1f9e3fbc84 *core/config/commands/Batterie-Pourcent-Heiman.json
-17b7759452e713ead4404993b4217f1c *core/config/commands/Batterie-Pourcent-Ikea.json
-b330c7746b5a1c1493765c10d5fa3ade *core/config/commands/Batterie-Pourcent.json
+cc96ef7023abf6a4b860d3659070e467 *core/config/commands/Batterie-Hue.json
+6f01d9890c7cefcae6107fc7014daa46 *core/config/commands/Batterie-Pourcent-Heiman.json
+6cd9edcf623660d0b2ceb9e9c6d53f5a *core/config/commands/Batterie-Pourcent-Ikea.json
+1cc6f8d491c85a7218bb638a166ae4fd *core/config/commands/Batterie-Pourcent.json
 a1ba22b61c701a77c720bd2b81b02849 *core/config/commands/Batterie-Volt-Konke.json
 0c797c43e3e0832b98a9c757020d6be0 *core/config/commands/Batterie-Volt.json
 de863f6cc13386cef7c8cb340ffe7ede *core/config/commands/Battery-Volt-3.json
@@ -791,7 +791,7 @@ d2c7be8f2790e2af709516cd12122037 *desktop/php/AbeilleEq-Main.php
 cb121a171c9d45f3e51c17d1e2b92542 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-3ae486b85ba6e494982905d9ad25105e *docs/fr_FR/Changelog.rst
+63df4093d89c125a94982e9079b5fc8d *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1012,11 +1012,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-709ac9250db9497a17a7858b76f383ae *plugin_info/Abeille.version
+c6e2babf30a0fcb60a3ab6f6fe45d178 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 b621d15e706e786e3db9f176d4163f63 *plugin_info/configuration.php
-a7cd62952f1fd78be9a1b026cc666195 *plugin_info/info.json
+8e6d5ff14ca23366e3fe74cab7bfbe31 *plugin_info/info.json
 ec45f2d7ccce5ec06908d4ce7388749e *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 d323b5c18f2b6806a0a79277985f17f6 *resources/AbeilleDeamon/AbeilleInterrogate.php

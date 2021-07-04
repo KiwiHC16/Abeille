@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-210629-BETA-1
+210704-STABLE-1
 ----------
 
 - Modifications syntaxe JSON équipement (avec support rétroactif temporaire):

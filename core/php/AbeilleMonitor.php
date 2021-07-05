@@ -14,10 +14,10 @@
 
     include_once __DIR__.'/../../core/config/Abeille.config.php';
 
-    /* Developers debug features */
-    // define("dbgFile", __DIR__."/../../tmp/debug.json");
+    /* Developers options */
     if (file_exists(dbgFile)) {
-        $dbgConfig = json_decode(file_get_contents(dbgFile), TRUE);
+        // $dbgConfig = json_decode(file_get_contents(dbgFile), true);
+
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
@@ -110,7 +110,7 @@
     //     // pcntl_signal($sig, SIG_IGN);
     //     if (file_exists(dbgFile)) {
     //         logMessage("debug", "Relecture de la config developpeur.");
-    //         $dbgConfig = json_decode(file_get_contents(dbgFile), TRUE);
+    //         $dbgConfig = json_decode(file_get_contents(dbgFile), true);
     //         if (isset($dbgConfig["dbgMonitorAddr"])) {
     //             logMessage("info", "Adresse à surveiller: ".$dbgConfig["dbgMonitorAddr"]);
     //         } else
@@ -124,20 +124,28 @@
     function monRun()
     {
         /* Configuring 'AbeilleLog' library */
-        logSetConf("AbeilleMonitor.log", TRUE);
+        logSetConf("AbeilleMonitor.log", true);
         logMessage("info", ">>> Démarrage du démon de monitoring");
 
         declare(ticks = 1);
-        if (pcntl_signal(SIGTERM, "monShutdown", FALSE) != TRUE)
+        if (pcntl_signal(SIGTERM, "monShutdown", false) != true)
             logMessage("error", "Erreur pcntl_signal()");
-        // if (pcntl_signal(SIGUSR1, "monReload", FALSE) != TRUE)
+        // if (pcntl_signal(SIGUSR1, "monReload", false) != true)
         //     logMessage("error", "Erreur pcntl_signal()");
 
-        $dbgConfig = $GLOBALS["dbgConfig"];
-        if (isset($dbgConfig["dbgMonitorAddr"])) {
-            logMessage("info", "Adresse à surveiller: ".$dbgConfig["dbgMonitorAddr"]);
+        $GLOBALS["monId"] = config::byKey('monitor', 'Abeille', false);
+        $monId = $GLOBALS["monId"];
+        if ($monId !== false) {
+            $eqLogic = eqLogic::byId($monId);
+            if (!is_object($eqLogic)) {
+                logMessage('error', 'Mauvais ID pour équipement à surveiller: '.$monId);
+            } else {
+                list($net, $addr) = explode( "/", $eqLogic->getLogicalId());
+                $ieee = $eqLogic->getConfiguration('IEEE', '');
+                logMessage("info", "Equipement à surveiller: ".$eqLogic->getHumanName().', '.$addr.'-'.$ieee);
+            }
         } else
-            logMessage("info", "Aucune adresse à surveiller pour l'instant.");
+            logMessage("info", "Aucun équipement à surveiller pour l'instant.");
 
         /* Main
            Create queues and check them regularly
@@ -165,25 +173,25 @@
 
                 $msgType = NULL;
                 $msg = NULL;
-                $msgSent = TRUE; // Message direction: assuming sent
+                $msgSent = true; // Message direction: assuming sent
                 if (($statCmdQueue['msg_qnum'] != 0) && ($statParserQueue['msg_qnum'] != 0)) {
                     /* Select queue with oldest message */
                     if ($statCmdQueue['msg_stime'] < $statParserQueue['msg_stime'])
-                        msg_receive($queueCmdToMon, 0, $msgType, $max_msg_size, $msg, TRUE, MSG_IPC_NOWAIT);
+                        msg_receive($queueCmdToMon, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT);
                     else {
-                        msg_receive($queueParserToMon, 0, $msgType, $max_msg_size, $msg, TRUE, MSG_IPC_NOWAIT);
-                        $msgSent = FALSE;
+                        msg_receive($queueParserToMon, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT);
+                        $msgSent = false;
                     }
                 } else if ($statCmdQueue['msg_qnum'] != 0)
-                    msg_receive($queueCmdToMon, 0, $msgType, $max_msg_size, $msg, TRUE, MSG_IPC_NOWAIT);
+                    msg_receive($queueCmdToMon, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT);
                 else {
-                    msg_receive($queueParserToMon, 0, $msgType, $max_msg_size, $msg, TRUE, MSG_IPC_NOWAIT);
-                    $msgSent = FALSE;
+                    msg_receive($queueParserToMon, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT);
+                    $msgSent = false;
                 }
 
                 if ($msg['type'] == 'x2mon') {
                     /* Log message */
-                    if ($msgSent == TRUE)
+                    if ($msgSent == true)
                         logMessage("debug", "=> ".$msg['msg']);
                     else
                         logMessage("debug", "<= ".$msg['msg']);
@@ -197,7 +205,7 @@
 
                     /* Updating 'debug.json' content */
                     if (file_exists($dbgFile))
-                        $devConfig = json_decode(file_get_contents($dbgFile), TRUE);
+                        $devConfig = json_decode(file_get_contents($dbgFile), true);
                     else
                         $devConfig = array();
                     $devConfig["dbgMonitorAddr"] = $msg['addr'];

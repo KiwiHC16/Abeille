@@ -10,7 +10,7 @@
 
     include_once __DIR__.'/../../core/config/Abeille.config.php';
 
-    /* Developers debug features */
+    /* Developpers options */
     if (file_exists(dbgFile)) {
         $dbgConfig = json_decode(file_get_contents(dbgFile), true);
         if (isset($dbgConfig["dbgParserLog"])) {
@@ -20,10 +20,6 @@
             foreach ($arr as $idx => $value) {
                 $dbgParserLog[$value] = 1;
             }
-        }
-        if (isset($dbgConfig["dbgMonitorAddr"])) { // Monitor params
-            $dbgMonitorAddr = $dbgConfig["dbgMonitorAddr"];
-            $dbgMonitorAddrExt = substr($dbgMonitorAddr, 5); // Extracting extended addr
         }
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -41,8 +37,6 @@
     include_once __DIR__.'/../class/AbeilleCmd.class.php';      // AbeilleCmdClass
     include_once __DIR__.'/../class/AbeilleParser.class.php';   // AbeilleParserClass
     include_once __DIR__.'/../class/Abeille.class.php';         // AbeilleClass
-    if (isset($dbgMonitorAddr) && ($dbgMonitorAddr != ""))
-        include_once __DIR__.'/AbeilleMonitor.php'; // Tracing monitor for debug purposes
 
     // Needed for decode8701 and decode8702
     // Voir https://github.com/fairecasoimeme/ZiGate/issues/161
@@ -200,6 +194,23 @@
     if ($daemons["parser"] > 1) {
         logMessage('error', 'Le démon est déja lancé! '.json_encode($daemons));
         exit(3);
+    }
+
+    /* Any device to monitor ?
+       It is indicated by 'monitor' key in Jeedom 'config' table. */
+    $monId = config::byKey('monitor', 'Abeille', false);
+    if ($monId !== false) {
+        $eqLogic = eqLogic::byId($monId);
+        if (!is_object($eqLogic)) {
+            logMessage('error', 'Mauvais ID pour équipement à surveiller: '.$monId);
+        } else {
+            list($net, $addr) = explode( "/", $eqLogic->getLogicalId());
+            $ieee = $eqLogic->getConfiguration('IEEE', '');
+            $dbgMonitorAddr = $addr;
+            $dbgMonitorAddrExt = $ieee;
+            logMessage("debug", "Device to monitor: ".$eqLogic->getHumanName().', '.$addr.'-'.$ieee);
+            include_once __DIR__.'/AbeilleMonitor.php'; // Tracing monitor for debug purposes
+        }
     }
 
     try {

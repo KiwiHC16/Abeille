@@ -1,7 +1,9 @@
 ChangeLog
 =========
 
-210629-BETA-1
+- Moniteur: Disponible pour tous et plus seulement en mode dev.
+
+210704-STABLE-1
 ----------
 
 - Modifications syntaxe JSON équipement (avec support rétroactif temporaire):

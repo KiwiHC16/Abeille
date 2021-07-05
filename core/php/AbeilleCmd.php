@@ -6,13 +6,10 @@
      *
      */
 
-    /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.json";
-    if (file_exists($dbgFile)) {
-        $dbgConfig = json_decode(file_get_contents($dbgFile), true);
-        if (isset($dbgConfig["dbgMonitorAddr"])) { // Monitor params
-            $dbgMonitorAddr = $dbgConfig["dbgMonitorAddr"];
-        }
+    include_once __DIR__.'/../config/Abeille.config.php';
+
+    /* Developpers options */
+    if (file_exists(dbgFile)) {
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
@@ -20,7 +17,6 @@
     }
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
-    include_once __DIR__.'/../config/Abeille.config.php';
     include_once __DIR__.'/../../resources/AbeilleDeamon/includes/function.php';
     include_once __DIR__.'/../class/AbeilleMsg.php';
     include_once __DIR__.'/AbeilleLog.php';
@@ -42,6 +38,23 @@
         logMessage('error', 'Le démon est déja lancé ! '.json_encode($daemons));
         exit(3);
     }
+
+    /* Any device to monitor ?
+       It is indicated by 'monitor' key in Jeedom 'config' table. */
+       $monId = config::byKey('monitor', 'Abeille', false);
+       if ($monId !== false) {
+           $eqLogic = eqLogic::byId($monId);
+           if (!is_object($eqLogic)) {
+               logMessage('error', 'Mauvais ID pour équipement à surveiller: '.$monId);
+           } else {
+               list($net, $addr) = explode( "/", $eqLogic->getLogicalId());
+               $ieee = $eqLogic->getConfiguration('IEEE', '');
+               $dbgMonitorAddr = $addr;
+               $dbgMonitorAddrExt = $ieee;
+               logMessage("debug", "Device to monitor: ".$eqLogic->getHumanName().', '.$addr.'-'.$ieee);
+               include_once __DIR__.'/AbeilleMonitor.php'; // Tracing monitor for debug purposes
+           }
+       }
 
     try {
         $AbeilleCmdQueue = new AbeilleCmdQueue($argv[1]);

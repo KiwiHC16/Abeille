@@ -348,6 +348,31 @@ try {
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        /* Monitor equipment with given ID.
+        Returns: status=0/-1, errors=<error message(s)> */
+        if (init('action') == 'monitor') {
+            $eqId = init('eqId');
+
+            logSetConf("AbeilleMonitor.log", true);
+            // logMessage("debug", "AbeilleDev.ajax: action==monitor, eqId=".$eqId);
+
+            $status = 0;
+            $error = "";
+
+            $curMonId = config::byKey('monitor', 'Abeille', false);
+            if ($eqId !== $curMonId) {
+                /* Saving ID of device to monitor */
+                config::save('monitor', $eqId, 'Abeille');
+
+                /* Need to start AbeilleMonitor if not already running
+                and restart cmd & parser.
+                WARNING: If cron is not running, any (re)start should be avoided. */
+                $conf = AbeilleTools::getParameters();
+                AbeilleTools::restartDaemons($conf, "AbeilleMonitor AbeilleParser AbeilleCmd");
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
 
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.
             Instead 'success' callback is used. This means that

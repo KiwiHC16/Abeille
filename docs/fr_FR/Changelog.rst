@@ -1,6 +1,7 @@
 ChangeLog
 =========
 
+- Interne: cron15 amélioré. Pas d'interrogation si eq appartient à zigate inactive.
 - Moniteur: Disponible pour tous et plus seulement en mode dev.
 
 210704-STABLE-1

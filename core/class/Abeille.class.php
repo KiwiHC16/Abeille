@@ -496,71 +496,83 @@ if (0) {
             return;
         }
 
-        log::add('Abeille', 'debug', 'cron15: Démarrage --------------------------------');
+        log::add('Abeille', 'debug', 'cron15: Starting --------------------------------');
 
         /* Look every 15 minutes if the kernel driver is not in error */
-        log::add('Abeille', 'debug', 'Check USB driver potential crash');
+        log::add('Abeille', 'debug', 'cron15: Check USB driver potential crash');
         $cmd = "egrep 'pl2303' /var/log/syslog | tail -1 | egrep -c 'failed|stopped'";
         $output = array();
         exec(system::getCmdSudo().$cmd, $output);
         $usbZigateStatus = !is_null($output) ? (is_numeric($output[0]) ? $output[0] : '-1') : '-1';
         if ($usbZigateStatus != '0') {
-            message::add("Abeille", "Erreur, le pilote pl2303 est en erreur, impossible de communiquer avec la zigate.", "Il faut débrancher/rebrancher la zigate et relancer le demon.");
-            log::add('Abeille', 'debug', 'cron15: Fin --------------------------------');
+            message::add("Abeille", "ERREUR: le pilote pl2303 semble en erreur, impossible de communiquer avec la zigate.", "Il faut débrancher/rebrancher la zigate et relancer le démon.");
+            // log::add('Abeille', 'debug', 'cron15: Fin --------------------------------');
         }
 
-        log::add('Abeille', 'debug', 'cron15: Interrogation des équipements sans nouvelles depuis plus de 15mins.');
-        $eqLogics = Abeille::byType('Abeille');
+        log::add('Abeille', 'debug', 'cron15: Interrogating devices silent for more than 15mins.');
+        $config = AbeilleTools::getParameters();
         $i = 0;
-        foreach ($eqLogics as $eqLogic) {
-            if (!$eqLogic->getIsEnable())
-                continue; // Equipment disabled
-            // TODO: Tcharp38. The following should be done only if eq is on "active" zigate.
+        for ($zgNb = 1; $zgNb <= $config['zigateNb']; $zgNb++) {
+            $zigate = Abeille::byLogicalId('Abeille'.$zgNb.'/0000', 'Abeille');
+            if (!is_object($zigate))
+                continue; // Probably deleted on Jeedom side.
+            if (!$zigate->getIsEnable())
+                continue; // Zigate disabled
+            if ($config['AbeilleActiver'.$zgNb] != 'Y')
+                continue; // Zigate disabled.
 
-            $eqName = $eqLogic->getname();
+            $eqLogics = Abeille::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                list($dest, $addr) = explode("/", $eqLogic->getLogicalId());
+                if ($dest != 'Abeille'.$zgNb)
+                    continue; // Not on current network
+                if (!$eqLogic->getIsEnable())
+                    continue; // Equipment disabled
 
-            // We don t take virtual eqLogic like Remote Control. eqLogic existe by not the real device.
-            list($dest, $addr) = explode("/", $eqLogic->getLogicalId());
-            if (strlen($addr) != 4)
-                continue;
+                /* Special case: should ignore virtual remote */
+                if ($eqLogic->getConfiguration("modeleJson") == "remotecontrol")
+                    continue; // Abeille virtual remote
 
-            /* Checking if received some news in the last 15mins */
-            $cmd = $eqLogic->getCmd('info', 'Time-TimeStamp');
-            if (!is_object($cmd)) { // Cmd not found
-                log::add('Abeille', 'warning', "cron15: Commande 'Time-TimeStamp' manquante pour ".$eqName);
-                continue; // No sense to interrogate EQ if Time-TimeStamp does not exists
-            }
-            $lastComm = $cmd->execCmd();
-            if (!is_numeric($lastComm)) { // Does it avoid PHP warning ?
-                // No comm from EQ yet.
-                $daemonsStart = config::byKey('lastDeamonLaunchTime', 'Abeille', '');
-                if ($daemonsStart == '')
-                    continue; // Deamons not started yet
-                $lastComm = strtotime($daemonsStart);
-            }
-            if ((time() - $lastComm) <= (15 * 60))
-                continue; // Alive within last 15mins. No need to interrogate.
+                $eqName = $eqLogic->getname();
 
-            /* No news in the last 15mins. Need to interrogate this eq */
-            $mainEP = $eqLogic->getConfiguration("mainEP");
-            if (strlen($mainEP) <= 1) {
-                log::add('Abeille', 'warning', "cron15: 'End Point' principal manquant pour ".$eqName);
-                continue;
-            }
-            $poll = 0;
-            if ( $eqLogic->getConfiguration("RxOnWhenIdle", 'none') == 1 )
-                $poll = 1;
+                /* Checking if received some news in the last 15mins */
+                $cmd = $eqLogic->getCmd('info', 'Time-TimeStamp');
+                if (!is_object($cmd)) { // Cmd not found
+                    log::add('Abeille', 'warning', "cron15: Commande 'Time-TimeStamp' manquante pour ".$eqName);
+                    continue; // No sense to interrogate EQ if Time-TimeStamp does not exists
+                }
+                $lastComm = $cmd->execCmd();
+                if (!is_numeric($lastComm)) { // Does it avoid PHP warning ?
+                    // No comm from EQ yet.
+                    $daemonsStart = config::byKey('lastDeamonLaunchTime', 'Abeille', '');
+                    if ($daemonsStart == '')
+                        continue; // Daemons not started yet
+                    $lastComm = strtotime($daemonsStart);
+                }
+                if ((time() - $lastComm) <= (15 * 60))
+                    continue; // Alive within last 15mins. No need to interrogate.
 
-            if ( strlen($eqLogic->getConfiguration("battery_type", '')) == 0 )
-                $poll += 10;
+                /* No news in the last 15mins. Need to interrogate this eq */
+                $mainEP = $eqLogic->getConfiguration("mainEP");
+                if (strlen($mainEP) <= 1) {
+                    log::add('Abeille', 'warning', "cron15: 'End Point' principal manquant pour ".$eqName);
+                    continue;
+                }
+                $poll = 0;
+                if ($eqLogic->getConfiguration("RxOnWhenIdle", 'none') == 1)
+                    $poll = 1;
 
-            if ( $eqLogic->getConfiguration("poll", 'none') == "15" )
-                $poll += 100;
+                if (strlen($eqLogic->getConfiguration("battery_type", '')) == 0)
+                    $poll += 10;
 
-            if ($poll > 0) {
-                log::add('Abeille', 'debug', "cron15: Interrogation de '".$eqName."' (adresse ".$addr.", poll-reason=".$poll.")");
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $mainEP);
-                $i++;
+                if ($eqLogic->getConfiguration("poll", 'none') == "15")
+                    $poll += 100;
+
+                if ($poll > 0) {
+                    log::add('Abeille', 'debug', "cron15: Interrogating '".$eqName."' (addr ".$addr.", poll-reason=".$poll.")");
+                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $mainEP);
+                    $i++;
+                }
             }
         }
         if (($i * 23) > (15 * 60)) { // A msg every 23sec must fit in 15mins.
@@ -1990,7 +2002,7 @@ while ($cron->running()) {
             $elogic->save();
             $elogic->refresh();
 
-            log::add('Abeille', 'debug', 'IEEE-Addr cmd and eq updated: '.$elogic->getName().' - '.$elogic->getConfiguration('IEEE', 'Unknown') );
+            log::add('Abeille', 'debug', '  IEEE-Addr cmd and eq updated: '.$elogic->getName().' - '.$elogic->getConfiguration('IEEE', 'Unknown') );
 
             return;
         }

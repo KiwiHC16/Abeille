@@ -2040,10 +2040,12 @@ while ($cron->running()) {
             /* Traitement particulier pour les batteries */
             if ($cmdId == "Batterie-Volt") {
                 /* Volt en milli V. Max a 3,1V Min a 2,7V, stockage en % batterie */
+                // Tcharp38: To be removed. Should not be systematic. Device may report percent too */
                 $elogic->setStatus('battery', self::volt2pourcent($value));
                 $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
             }
-            if ($cmdId == "Batterie-Pourcent") {
+            else if (($cmdId == "Battery-Percent") || ($cmdId == "Batterie-Pourcent")) {
+                log::add('Abeille', 'debug', "  Battery % reporting: ".$cmdId.", val=".$value);
                 $elogic->setStatus('battery', $value);
                 $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
             }
@@ -2057,23 +2059,17 @@ while ($cron->running()) {
             //     $elogic->setStatus('battery', $value / 2);
             //     $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
             // }
-            if (preg_match("/^0001-[0-9A-F]*-0021/", $cmdId)) {
+            else if (preg_match("/^0001-[0-9A-F]*-0021/", $cmdId)) {
                 log::add('Abeille', 'debug', "  Battery % reporting: ".$cmdId.", val=".$value);
                 $elogic->setStatus('battery', $value);
                 $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
             }
 
-            /*
-                if ( ($cmdId == "Zigate-8000") && (substr($value,0,2)!="00") ) {
-                    message::add( "Abeille", "La Zigate semble ne pas pouvoir traiter toutes les demandes.",'KiwiHC16: Investigations en cours pour mieux traiter ce sujet.' );
-                }
-                */
-
             /* Traitement particulier pour la remontée de nom qui est utilisé pour les ping des routeurs */
             // if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {
             // if (preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId) || preg_match("/^0000-[0-9A-F]*-*0010/", $cmdId)) {
-            if ($cmdId == "Time-TimeStamp") {
-                log::add('Abeille', 'debug', "Updating ONLINE status for '".$dest."/".$addr."'");
+            else if ($cmdId == "Time-TimeStamp") {
+                log::add('Abeille', 'debug', "  Updating 'online' status for '".$dest."/".$addr."'");
                 $cmdlogicOnline = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), 'online');
                 $elogic->checkAndUpdateCmd($cmdlogicOnline, 1);
             }
@@ -2091,7 +2087,6 @@ while ($cron->running()) {
 
             // Polling to trigger based on this info cmd change: e.g. state moved to On, getPower value.
             $cmds = AbeilleCmd::searchConfigurationEqLogic($elogic->getId(), 'PollingOnCmdChange', 'action');
-
             foreach ($cmds as $key => $cmd) {
                 if ($cmd->getConfiguration('PollingOnCmdChange') == $cmdId) {
                     log::add('Abeille', 'debug', 'Cmd action execution: '.$cmd->getName());
@@ -2102,6 +2097,21 @@ while ($cron->running()) {
                 }
             }
 
+            /* 'trig' defined in command allows to trig another command on new value receipt.
+               Syntax: 'trig': 'trig-cmd-logicalId' */
+            $trigLogicId = $cmdlogic->getConfiguration('ab::trig');
+            if ($trigLogicId) {
+                $newvalue = $cmdlogic->execCmd(); // Value might be updated with a "calculValueOffset" rule
+                $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), $trigLogicId);
+                if ($trigCmd)
+                    $elogic->checkAndUpdateCmd($trigCmd, $newvalue);
+
+                if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
+                    log::add('Abeille', 'debug', "  Battery % reporting: ".$trigLogicId.", val=".$newvalue);
+                    $elogic->setStatus('battery', $newvalue);
+                    $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+                }
+            }
             return;
         }
 
@@ -2109,8 +2119,8 @@ while ($cron->running()) {
             log::add('Abeille', 'debug', "  L'objet '".$nodeid."' existe mais pas la cmde '".$cmdId."' => message ignoré");
             return;
         }
-        log::add('Abeille', 'debug', "Tres bizarre, Message non traité, il manque probablement du code.");
 
+        log::add('Abeille', 'debug', "  WARNING: Unexpected state at end of message().");
         return;
     } // End message()
 
@@ -2140,7 +2150,7 @@ while ($cron->running()) {
 
             $logicalId = $net.'/'.$addr;
             $jsonName = $msg['jsonId'];
-            log::add('Abeille', 'debug', "msgFromParser(): Eq announce received for ".$addr.", type='".$jsonName."'");
+            log::add('Abeille', 'debug', "msgFromParser(): Eq announce received for ".$net.'/'.$addr.", zbId='".$jsonName."'");
 
             $ieee = $msg['ieee'];
 
@@ -2166,9 +2176,11 @@ while ($cron->running()) {
                 break; // No need to go thru other equipments
             }
 
+            /* Create or update device from JSON */
             Abeille::createDevice($net, $addr, $ep, $ieee, $jsonName);
 
-            $eqLogic = self::byLogicalId($logicalId, 'Abeille');
+            if (!is_object($eqLogic))
+                $eqLogic = self::byLogicalId($logicalId, 'Abeille');
 
             /* MAC capa */
             $mc = hexdec($msg['capa']);
@@ -2230,6 +2242,8 @@ while ($cron->running()) {
                         $ieee2 = $cmd->execCmd();
                         if ($ieee2 != $ieee)
                             continue; // Still no registered IEEE
+                        // Tcharp38: It should not be possible that IEEE be in cmd but not in configuration. No sense
+                        //           since IEEE always provided with device announce.
                         $eqLogic2->setConfiguration('IEEE', $ieee2);
                         $eqLogic2->save();
                         log::add('Abeille', 'debug', "msgFromParser(): Missing IEEE addr corrected");
@@ -2692,7 +2706,7 @@ while ($cron->running()) {
             $elogic->setIsVisible($objetDefSpecific["isVisible"]);
         else
             $elogic->setIsVisible(1);
-        $elogic->setIsEnable("1");
+        $elogic->setIsEnable(1);
         if (isset($objetDefSpecific["timeout"]))
             $elogic->setTimeout($objetDefSpecific["timeout"]);
 
@@ -2760,8 +2774,7 @@ while ($cron->running()) {
             if ($cmdValueDefaut["Type"] == "info") {
                 // $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd);
                 $cmdlogic->setConfiguration('topic', $cmd);
-            }
-            if ($cmdValueDefaut["Type"] == "action") {
+            } else if ($cmdValueDefaut["Type"] == "action") {
                 // $cmdlogic->setConfiguration('retain', '0'); // not needed anymore, was used for mosquitto
 
                 if (isset($cmdValueDefaut["value"])) {
@@ -2772,6 +2785,11 @@ while ($cron->running()) {
                     $cmdlogic->setValue($cmdPointeur_Value->getId());
                 }
             }
+
+            if (isset($cmdValueDefaut["trig"]))
+                $cmdlogic->setConfiguration('ab::trig', $cmdValueDefaut["trig"]);
+            else
+                $cmdlogic->setConfiguration('ab::trig', null); // Removing config entry
 
             /* Updating 'configuration' fields of eqLogic from JSON.
                In case of update, some fields may no longer be required ($unusedConfKey).

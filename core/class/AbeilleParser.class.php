@@ -420,7 +420,7 @@
             }
 
             if (isset($GLOBALS['eqList'][$net][$addr])) {
-                $eq = &$GLOBALS['eqList'][$net][$addr];
+                $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
                 if ($eq['ieee'] != $ieee) {
                     parserLog('debug', '  ERROR: There is a different EQ (ieee='.$eq['ieee'].') for addr '.$addr);
                     return;
@@ -452,7 +452,7 @@
                     'location' => null, // null=undef, false=unsupported, else 'value'
                     'jsonId' => '',
                 );
-                $eq = &$GLOBALS['eqList'][$net][$addr];
+                $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
             }
 
             /* Starting identification phase */

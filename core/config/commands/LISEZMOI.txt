@@ -78,10 +78,9 @@ Exemple de commande 'action'
 
 * template: ??
 
-* configuration: 
+* configuration:
 
     * topic
     * request
     * historizeRound: optionnel
       Nombre de digits apres la virgule pour commande 'info' type 'numeric'.
-      

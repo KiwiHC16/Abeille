@@ -1,0 +1,87 @@
+***
+*** Plugin Abeille
+*** Répertoire "core/config/commands"
+***
+
+Ce répertoire contient l'ensemble des commandes de base supportées par Abeille.
+Les équipements reposent sur certaines d'entre elles.
+
+Attention !! Toute modification de ce répertoire sera écrasée lors des mises-à-jour du plugin.
+
+Format de fichier
+=================
+
+Exemple de commande 'info'
+
+    {
+      "0006-#EP#-0000": {
+        "isVisible": 1,
+        "name": "etat",
+        "isHistorized": 0,
+        "Type": "info",
+        "subType": "binary",
+        "generic_type": "LIGHT_STATE_BOOL",
+        "invertBinary": "0",
+        "template": "light",
+        "configuration": {
+          "repeatEventManagement": "always",
+          "visibilityCategory": "All"
+        }
+      }
+    }
+
+Exemple de commande 'action'
+
+    {
+      "getEtat": {
+        "isVisible": 0,
+        "name": "getEtat",
+        "isHistorized": 0,
+        "Type": "action",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+          "topic": "ReadAttributeRequest",
+          "request": "EP=#EP#&clusterId=0006&attributeId=0000",
+          "RefreshData": "1",
+          "visibilityCategory": "additionalCommand"
+        }
+      }
+    }
+
+* Clef d'entrée/identificateur: OBLIGATOIRE
+    Si commande info => logicalId
+    Si commande action => Ignoré pour l'instant
+
+* name: OBLIGATOIRE
+  Nom de la commande vu par Jeedom.
+
+* Type: OBLIGATOIRE
+  Type de commande: info ou action
+
+* subType: OBLIGATOIRE
+  Type d'information: binary, numeric, ...
+
+* isVisible: optionnel.
+  Indique si la commande est visible dans le widget.
+  Invisible par défaut.
+
+* isHistorized: optionnel.
+  Indique si la commande doit être historisée.
+  Non par défaut.
+
+* generic_type: ??
+
+* invertBinary: optionnel.
+  Utile uniquement pour une commande 'info' de subType 'binary'.
+
+* template: ??
+
+* configuration: 
+
+    * topic
+    * request
+    * historizeRound: optionnel
+      Nombre de digits apres la virgule pour commande 'info' type 'numeric'.
+      

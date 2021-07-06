@@ -9,7 +9,6 @@
       "light": "1"
     },
     "configuration": {
-      "uniqId": "5c07c766264bfaz",
       "icone": "sen_ill_mgl01",
       "battery_type": "1x3V CR2032",
       "mainEP": "#EP#"
@@ -24,7 +23,8 @@
 
       "include0001-1": "BindToPowerConfig",
       "include0001-2": "setReportBatterieVolt",
-      "include0001-3": "Battery-Volt-3"
+      "include0001-3": "Battery-Volt2Percent-3",
+      "include0001-4": "Batterie-Pourcent-Ikea"
     }
   }
 }

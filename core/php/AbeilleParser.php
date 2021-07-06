@@ -240,6 +240,30 @@
         $GLOBALS['customEqList'] = AbeilleTools::getDevicesList("local");
         parserLog('debug', 'customEqList='.json_encode( $GLOBALS['customEqList']));
 
+        /* Init known devices list */
+        $eqLogics = eqLogic::byType('Abeille');
+        $GLOBALS['eqList'] = [];
+        foreach ($eqLogics as $eqLogic) {
+            $eqLogicId = $eqLogic->getLogicalId();
+            list($net, $addr) = explode("/", $eqLogicId);
+            if (!isset($GLOBALS['eqList'][$net]))
+                $GLOBALS['eqList'][$net] = [];
+            $eq = array(
+                'ieee' => $eqLogic->getConfiguration('IEEE', ''),
+                'capa' => $eqLogic->getConfiguration('MACCapa', ''),
+                'rejoin' => '', // Rejoin info from device announce
+                'status' => 'idle', // identifying, configuring, discovering, idle
+                'time' => time(),
+                'epList' => '', // List of end points
+                'epFirst' => '', // First end point (usually 01)
+                'manufacturer' => null, // null(undef)/false(unsupported)/'xx'
+                'modelIdentifier' => null, // null(undef)/false(unsupported)/'xx'
+                'location' => null, // null(undef)/false(unsupported)/'xx'
+                'jsonId' => $eqLogic->getConfiguration('modeleJson', ''),
+            );
+            $GLOBALS['eqList'][$net][$addr] = $eq;
+        }
+
         $msgType = null;
         while (true) {
 

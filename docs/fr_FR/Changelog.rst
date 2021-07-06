@@ -3,6 +3,7 @@ ChangeLog
 
 - Xiaomi Luminosite: Ajout pourcentage batterie basé sur retour tension (#1166).
 - Interne: cron15 amélioré. Pas d'interrogation si eq appartient à zigate inactive.
+- Inclusion: support revu pour périph qui quitte puis revient sur le réseau.
 - Moniteur: Disponible pour tous et plus seulement en mode dev.
 
 210704-STABLE-1

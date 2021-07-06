@@ -2164,6 +2164,8 @@ while ($cron->running()) {
                     list($net2, $addr2) = explode( "/", $eqLogicId);
                     if ($net2 != $net)
                         continue; // Not on expected network
+                    if ((substr($addr2, 0, 2) == "rc") || ($addr2 == ""))
+                        continue; // Virtual remote control
 
                     $ieee2 = $eqLogic->getConfiguration('IEEE', '');
                     if ($ieee2 == '') {
@@ -2237,6 +2239,8 @@ while ($cron->running()) {
                 list($net2, $addr2) = explode( "/", $eqLogicId2);
                 if ($net2 != $net)
                     continue; // Not on expected network
+                if ((substr($addr2, 0, 2) == "rc") || ($addr2 == ""))
+                    continue; // Virtual remote control
 
                 $ieee2 = $eqLogic2->getConfiguration('IEEE', '');
                 if ($ieee2 == '') {
@@ -2605,6 +2609,7 @@ while ($cron->running()) {
 
         $elogic = self::byLogicalId($net."/".$addr, 'Abeille');
         if (!is_object($elogic)) {
+            log::add('Abeille', 'debug', 'createDevice(): New device '.$net.'/'.$addr);
             if ($jsonName != "defaultUnknown")
                 message::add("Abeille", "Nouvel équipement identifié (".$eqType."). Création en cours. Rafraîchissez votre dashboard dans qq secondes.", '');
             else
@@ -2620,6 +2625,7 @@ while ($cron->running()) {
             $elogic->setLogicalId($logicalId);
             $elogic->setObject_id($abeilleConfig['AbeilleParentId']);
         } else {
+            log::add('Abeille', 'debug', 'createDevice(): Already existing device '.$net.'/'.$addr);
             $eqName = $elogic->getName();
             $eqPath = $elogic->getHumanName(); // Jeedom hierarchical name
             $eqCurJsonId = $elogic->getConfiguration('modeleJson'); // Current JSON ID
@@ -2646,8 +2652,8 @@ while ($cron->running()) {
         log::add('Abeille', 'debug', 'Template config='.json_encode($objetConfiguration));
         $elogic->setConfiguration('modeleJson', $jsonName);
         $elogic->setConfiguration('type', 'topic'); // ??, type = topic car pas json
-        if (isset($objetConfiguration['uniqId']))
-            $elogic->setConfiguration('uniqId', $objetConfiguration["uniqId"]);
+        // if (isset($objetConfiguration['uniqId']))
+        //     $elogic->setConfiguration('uniqId', $objetConfiguration["uniqId"]);
 
         if (isset($objetConfiguration["icon"]))
             $icon = $objetConfiguration["icon"];

@@ -267,7 +267,7 @@ int main(int argc, char *argv[])
         printf("- Detected Chip: %s\n", pcPartName);
         if (!strcmp(pcPartName, "Unknown"))
             printf("- u32ChipId=0x%08x\n", sChipDetails.u32ChipId);
-        printf("- MAC Address:   %02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X\n",
+        printf("- MAC Address  : %02X:%02X:%02X:%02X:%02X:%02X:%02X:%02X\n",
                 sChipDetails.au8MacAddress[0] & 0xFF, sChipDetails.au8MacAddress[1] & 0xFF, sChipDetails.au8MacAddress[2] & 0xFF, sChipDetails.au8MacAddress[3] & 0xFF,
                 sChipDetails.au8MacAddress[4] & 0xFF, sChipDetails.au8MacAddress[5] & 0xFF, sChipDetails.au8MacAddress[6] & 0xFF, sChipDetails.au8MacAddress[7] & 0xFF);
     }

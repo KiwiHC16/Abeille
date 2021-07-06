@@ -1,0 +1,16 @@
+{
+  "2000K": {
+    "isVisible": 1,
+    "name": "2000K",
+    "isHistorized": 0,
+    "Type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "setTemperature",
+      "request": "EP=#EP#&slider=2000",
+      "visibilityCategory": "All"
+    }
+  }
+}

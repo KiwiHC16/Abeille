@@ -269,11 +269,11 @@
                 'List' => $NList
             );
 
-            if (msg_send($this->queueKeyParserToLQI, 1, json_encode($msg), false, false, $error_code) == TRUE) {
+            if (msg_send($this->queueKeyParserToLQI, 1, json_encode($msg), false, false, $errorCode) == TRUE) {
                 return 0;
             }
 
-            parserLog("error", "msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$error_code.")");
+            parserLog("error", "msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$errorCode.")");
             return -1;
         }
 
@@ -381,8 +381,9 @@
             $GLOBALS['eqList'][<network>][<addr>] = array(
                 'ieee' => $ieee,
                 'capa' => '', // MAC capa from dev announce
+                'rejoin' => '', // Rejoin info from device announce
                 'status' => 'identifying', // identifying, configuring, discovering, idle
-                'since' => time(),
+                'time' => time(),
                 'epList' => '', // List of end points
                 'epFirst' => '', // First end point (usually 01)
                 'manufacturer' => null (undef)/false (unsupported)/'xx'
@@ -397,32 +398,15 @@
             idle: all actions ended
         */
 
-        /* Called on device announce during inclusion phase.
-           This is the first step of identification. */
-        function deviceAnnounce($net, $addr, $ieee, $capa) {
+        /* Called on device announce. */
+        function deviceAnnounce($net, $addr, $ieee, $capa, $rejoin) {
             if (!isset($GLOBALS['eqList']))
                 $GLOBALS['eqList'] = [];
             if (!isset($GLOBALS['eqList'][$net]))
                 $GLOBALS['eqList'][$net] = [];
 
-            if (isset($GLOBALS['eqList'][$net][$addr])) {
-                $eq = &$GLOBALS['eqList'][$net][$addr];
-                if ($eq['ieee'] != $ieee) {
-                    parserLog('debug', '  ERROR: There is a different EQ (ieee='.$eq['ieee'].') for addr '.$addr);
-                    return;
-                }
-                parserLog('debug', '  EQ already known: Status='.$eq['status'].', since='.$eq['since'].', time='.time());
-
-                /* Note: Assuming 4sec max per phase */
-                if (($eq['since'] + 4) > time()) {
-                    if ($eq['status'] == 'identifying')
-                        parserLog('debug', '  Device identification already ongoing');
-                    else if ($eq['status'] == 'discovering')
-                        parserLog('debug', '  Device discovering already ongoing');
-                    return;
-                }
-                /* Identification to restart */
-            } else {
+            /* If no device with 'addr', may be due to short addr change */
+            if (!isset($GLOBALS['eqList'][$net][$addr])) {
                 /* Looking for eq by its ieee to update addr which may have changed */
                 foreach ($GLOBALS['eqList'][$net] as $oldaddr => $eq) {
                     if ($eq['ieee'] != $ieee)
@@ -433,50 +417,69 @@
                     parserLog('debug', '  EQ already known: Addr updated from '.$oldaddr.' to '.$addr);
                     break;
                 }
-                if (!isset($GLOBALS['eqList'][$net][$addr])) {
-                    /* It's an unknown eq */
-                    parserLog('debug', '  EQ new to parser');
-                    $GLOBALS['eqList'][$net][$addr] = array(
-                        'ieee' => $ieee,
-                        'capa' => $capa,
-                        'status' => '', // identifying, discovering, configuring
-                        'since' => '',
-                        'epList' => '',
-                        'epFirst' => '',
-                        'manufacturer' => null, // null=undef, false=unsupported, else 'value'
-                        'modelIdentifier' => null, // null=undef, false=unsupported, else 'value'
-                        'location' => null, // null=undef, false=unsupported, else 'value'
-                        'jsonId' => '',
-                    );
-                    $eq = &$GLOBALS['eqList'][$net][$addr];
-                }
             }
 
-            if ($eq['epList'] == '') {
-                /* Special trick for Xiaomi for which some devices (at least v1) do not answer to "Active EP request".
-                   Old sensor even not answer to manufacturer request. */
-                $xiaomi = (substr($ieee, 0, 9) == "00158D000") ? true : false;
-                if ($xiaomi) {
-                    parserLog('debug', '  Xiaomi specific identification.');
-                    $eq['manufacturer'] = 'LUMI';
-                    $eq['epList'] = "01";
-                    $eq['epFirst'] = "01";
-                    if (!isset($eq['modelIdentifier'])) {
-                        parserLog('debug', '  Requesting modelIdentifier from EP 01');
-                        $this->msgToCmd("Cmd".$net."/0000/getName", "address=".$addr.'&destinationEndPoint=01');
-                    }
-                } else {
-                    parserLog('debug', '  Requesting active end points list');
-                    $this->msgToCmd("Cmd".$net."/0000/ActiveEndPoint", "address=".$addr);
+            if (isset($GLOBALS['eqList'][$net][$addr])) {
+                $eq = &$GLOBALS['eqList'][$net][$addr];
+                if ($eq['ieee'] != $ieee) {
+                    parserLog('debug', '  ERROR: There is a different EQ (ieee='.$eq['ieee'].') for addr '.$addr);
+                    return;
                 }
-                $eq['status'] = 'identifying';
-                $eq['since'] = time();
+                parserLog('debug', '  EQ already known: Status='.$eq['status'].', since='.$eq['time'].', time='.time());
+
+                /* Checking if it's not a too fast consecutive device announce.
+                   Note: Assuming 4sec max per phase */
+                if (($eq['time'] + 4) > time()) {
+                    if ($eq['status'] == 'identifying')
+                        parserLog('debug', '  Device identification already ongoing');
+                    else if ($eq['status'] == 'discovering')
+                        parserLog('debug', '  Device discovering already ongoing');
+                    return; // Last step is not older than 4sec
+                }
             } else {
-                /* 'epList' is already known => trigger next step */
-                $eq['status'] = 'identifying';
-                $eq['since'] = time();
-                $this->deviceUpdate($net, $addr, 'epList', $eq['epList']);
+                /* It's an unknown eq */
+                parserLog('debug', '  EQ new to parser');
+                $GLOBALS['eqList'][$net][$addr] = array(
+                    'ieee' => $ieee,
+                    'capa' => $capa,
+                    'rejoin' => $rejoin,
+                    'status' => '', // identifying, discovering, configuring
+                    'time' => '',
+                    'epList' => '',
+                    'epFirst' => '',
+                    'manufacturer' => null, // null=undef, false=unsupported, else 'value'
+                    'modelIdentifier' => null, // null=undef, false=unsupported, else 'value'
+                    'location' => null, // null=undef, false=unsupported, else 'value'
+                    'jsonId' => '',
+                );
+                $eq = &$GLOBALS['eqList'][$net][$addr];
             }
+
+            /* Starting identification phase */
+            $eq['status'] = 'identifying';
+            $eq['time'] = time();
+
+            if ($eq['epList'] != '') {
+                /* 'epList' is already known => trig next step */
+                $this->deviceUpdate($net, $addr, 'epList', $eq['epList']);
+                return;
+            }
+
+            /* Special trick for Xiaomi for which some devices (at least v1) do not answer to "Active EP request".
+                Old sensor even not answer to manufacturer request. */
+            $xiaomi = (substr($ieee, 0, 9) == "00158D000") ? true : false;
+            if ($xiaomi) {
+                parserLog('debug', '  Xiaomi specific identification.');
+                $eq['manufacturer'] = 'LUMI';
+                $eq['epList'] = "01";
+                $eq['epFirst'] = "01";
+                $this->deviceUpdate($net, $addr, 'epList', $eq['epList']);
+                return;
+            }
+
+            /* Default identification: need EP list */
+            parserLog('debug', '  Requesting active end points list');
+            $this->msgToCmd("Cmd".$net."/0000/ActiveEndPoint", "address=".$addr);
         }
 
         /* 2nd step of identification phase.
@@ -505,6 +508,7 @@
                 return;
 
             if ($updType == 'epList') {
+                /* Any other info missing to identify device ? */
                 if (!isset($eq['manufacturer'])) {
                     parserLog('debug', '  Requesting manufacturer from EP '.$eq['epFirst']);
                     $this->msgToCmd("Cmd".$net."/0000/getManufacturerName", "address=".$addr.'&destinationEndPoint='.$eq['epFirst']);
@@ -526,36 +530,31 @@
                     - if found => configure
                     - if not found => discover
                 - else if location is supported
-                    - search for JSON with 'modelId_manuf' then 'modelId'
+                    - search for JSON with 'location'
                     - if found => configure
-                    - if not found => discover
-                - else => discover */
-            $nextstep = '';
+                    - if not found => discover */
             if (!isset($eq['modelIdentifier']))
                 return; // Need value or false (unsupported)
             if ($eq['modelIdentifier'] !== false) {
                 if (!isset($eq['manufacturer']))
                     return; // Need value or false (unsupported)
                 /* Manufacturer & modelId attributes returned */
-                if ($this->findJsonConfig($eq, 'modelIdentifier'))
-                    $nextstep = 'configure';
-                else
-                    $nextstep = 'discover';
+                $this->findJsonConfig($eq, 'modelIdentifier');
             } else if (!isset($eq['location'])) {
                 return; // Need value or false (unsupported)
             } else if ($eq['location'] !== false) {
                 /* ModelId UNsupported. Trying with 'location' */
-                if ($this->findJsonConfig($eq, 'location'))
-                    $nextstep = 'configure';
-                else
-                    $nextstep = 'discover';
+                $this->findJsonConfig($eq, 'location');
             } else {
-                $nextstep = 'discover';
+                parserLog('debug', "  WARNING: Unidentified device ! Can't do anything.");
+                return;
             }
 
-            if ($nextstep == 'configure')
+            /* Device is identified and 'jsonId' indicates how to support it. */
+            // Tcharp38: If new dev announce of already known device, should we reconfigure it anyway ?
+            if ($eq['jsonId'] != 'defaultUnknown')
                 $this->deviceConfigure($net, $addr);
-            else if ($nextstep == 'discover')
+            else
                 $this->deviceDiscover($net, $addr);
         } // End deviceUpdate()
 
@@ -565,8 +564,8 @@
 
             $eq = &$GLOBALS['eqList'][$net][$addr];
             $eq['status'] = 'configuring';
-            $cmds = $eq['config']['Commandes'];
 
+            $cmds = $eq['config']['Commandes'];
 parserLog('debug', "  cmds=".json_encode($cmds));
             foreach ($cmds as $cmd) {
                 $c = $cmd['configuration'];
@@ -792,20 +791,20 @@ parserLog('debug', '      request='.$request);
             return $conv;
         }
 
-        /* New generic function to convert hex string to uintX/intX */
-        function convHexToNumber($hexValue, $zbType) {
-            $num = hexdec($hexValue);
-            switch ($zbType) {
-            case "29": // int16
-                if ($num > 0x7fff) // is negative
-                $num -= 0x10000;
-                break;
-            default:
-                parserLog('debug', "convHexToNumber(): Unsupported type ".$zbType);
-                return 0;
-            }
-            return $num;
-        }
+        // /* New generic function to convert hex string to uintX/intX */
+        // function convHexToNumber($hexValue, $zbType) {
+        //     $num = hexdec($hexValue);
+        //     switch ($zbType) {
+        //     case "29": // int16
+        //         if ($num > 0x7fff) // is negative
+        //         $num -= 0x10000;
+        //         break;
+        //     default:
+        //         parserLog('debug', "convHexToNumber(): Unsupported type ".$zbType);
+        //         return 0;
+        //     }
+        //     return $num;
+        // }
 
         /* Convert hex string to proper data type.
            'hexString' = input hexa string
@@ -868,7 +867,7 @@ parserLog('debug', '      request='.$request);
                 }
             } else
                 $hs = substr($hexString, 0, $dataSize * 2);
-parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexString." => hs=".$hs);
+// parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexString." => hs=".$hs);
             $hexValue = $hs;
 
             // Computing value
@@ -1088,7 +1087,7 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $lqi
          *
-         * @return          Does return anything as all action are triggered by sending messages in queues
+         * @return Nothing
          */
         function decode004d($dest, $payload, $lqi)
         {
@@ -1148,14 +1147,17 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
 
             $zgNb = substr($dest, 7);
             if (isset($GLOBALS['zigate'.$zgNb]['permitJoin']) && ($GLOBALS['zigate'.$zgNb]['permitJoin'] == "01")) {
-                $this->deviceAnnounce($dest, $Addr, $IEEE, $MACCapa);
+                $this->deviceAnnounce($dest, $Addr, $IEEE, $MACCapa, $Rejoin);
             } else {
-                if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'Oui', 1) == "Oui") {
-                    parserLog('debug', '  Not in inclusion mode => device announce ignored');
-                    return;
-                }
-                parserLog('debug', '  Not in inclusion mode but trying to identify announcing device anyway');
-                $this->deviceAnnounce($dest, $Addr, $IEEE, $MACCapa);
+                // if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'Oui', 1) == "Oui") {
+                //     parserLog('debug', '  Not in inclusion mode => device announce ignored');
+                //     return;
+                // }
+                if (!isset($GLOBALS['eqList'][$dest]) || !isset($GLOBALS['eqList'][$dest][$addr]))
+                    parserLog('debug', '  Not in inclusion mode but trying to identify unknown device anyway.');
+                else
+                    parserLog('debug', '  Not in inclusion mode and got a device announce for already known device.');
+                $this->deviceAnnounce($dest, $Addr, $IEEE, $MACCapa, $Rejoin);
             }
 
             // $this->msgToAbeilleFct($dest."/".$Addr, "enable", $IEEE);
@@ -1224,8 +1226,6 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
 
             $SrcAddr    = substr($payload,  2,  4);
             $EPS        = substr($payload,  6,  2);
-            $ClusterId  = "0006-".$EPS;
-            $AttributId = "0000";
             $data       = substr($payload, 30,  2);
 
             $this->whoTalked[] = $dest.'/'.$SrcAddr;
@@ -1237,6 +1237,8 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
+            $ClusterId  = "0006-".$EPS;
+            $AttributId = "0000";
             $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, $data);
         }
 
@@ -3651,6 +3653,21 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                     return;
                 }
 
+                // Xiaomi capteur Inondation
+                elseif (($AttributId == 'FF01') && ($AttributSize == "0022")) {
+                    // Assuming DataType=42
+                    parserLog('debug', '  Xiaomi proprietary (Capteur d\'inondation)');
+
+                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    $etat = substr($payload, 88, 2);
+                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent( $voltage ).', Etat='.$etat);
+
+                    $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                    return;
+                }
+
                 // Xiaomi temp/humidity/pressure square sensor
                 elseif (($AttributId == 'FF01') && ($AttributSize == "0025")) {
                     // Assuming $dataType == "42"
@@ -3724,7 +3741,6 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
                     return;
                 }
-
             } // End cluster 0000
 
             else if ($ClusterId == "0001") { // Power configuration cluster
@@ -3843,9 +3859,10 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
 
             /* If $data is set it means message already treated before */
             if (isset($data)) {
+                /* Send to Abeille */
                 $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId."-".$EPoint, $AttributId, $data);
 
-                /* Send to client if connection opened */
+                /* Send to client page if connection opened */
                 $toCli = array(
                     'src' => 'parser',
                     'type' => 'attributeReport', // 8100 or 8102
@@ -4020,23 +4037,6 @@ parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexStri
                 //     // $this->msgToAbeille( $SrcAddr, '0403', '0010', $pression / 10,    $lqi);
                 //     // $this->msgToAbeille( $SrcAddr, '0403', '0000', $pression / 100,   $lqi);
                 // }
-
-                // Xiaomi capteur Inondation
-                elseif (($AttributId == 'FF01') && ($AttributSize == "0022")) {
-                    parserLog('debug', '  Champ proprietaire Xiaomi (Capteur d\'inondation)');
-
-                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    $etat = substr($payload, 88, 2);
-                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent( $voltage ).', Etat='.$etat);
-
-                    $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
-                    // $this->msgToAbeille( $SrcAddr, '0402', '0000', $temperature,      $lqi);
-                    // $this->msgToAbeille( $SrcAddr, '0405', '0000', $humidity,         $lqi);
-                    // $this->msgToAbeille( $SrcAddr, '0403', '0010', $pression / 10,    $lqi);
-                    // $this->msgToAbeille( $SrcAddr, '0403', '0000', $pression / 100,   $lqi);
-                }
 
                 // Xiaomi bouton Aqara Wireless Switch V3 #712 (https://github.com/KiwiHC16/Abeille/issues/712)
                 elseif (($AttributId == 'FF01') && ($AttributSize == "0026")) {

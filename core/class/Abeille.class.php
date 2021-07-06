@@ -2154,26 +2154,30 @@ while ($cron->running()) {
 
             $ieee = $msg['ieee'];
 
-            /* On 'dev announce' addr may have changed. Looking for EQ based on its IEEE address */
-            $all = self::byType('Abeille');
-            foreach ($all as $key => $eqLogic) {
-                $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/xxxx'
-                list($net2, $addr2) = explode( "/", $eqLogicId);
-                if ($net2 != $net)
-                    continue; // Not on expected network
+            $eqLogic = self::byLogicalId($logicalId, 'Abeille');
+            if (!is_object($eqLogic)) {
+                /* Unknown device with net/addr logicalId.
+                   Probably due to addr change on 'dev announce'. Looking for EQ based on its IEEE address */
+                $all = self::byType('Abeille');
+                foreach ($all as $key => $eqLogic) {
+                    $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/xxxx'
+                    list($net2, $addr2) = explode( "/", $eqLogicId);
+                    if ($net2 != $net)
+                        continue; // Not on expected network
 
-                $ieee2 = $eqLogic->getConfiguration('IEEE', '');
-                if ($ieee2 == '') {
-                    log::add('Abeille', 'debug', "msgFromParser(): WARNING. No IEEE addr in '".$eqLogicId."' config.");
-                    continue; // No registered IEEE
+                    $ieee2 = $eqLogic->getConfiguration('IEEE', '');
+                    if ($ieee2 == '') {
+                        log::add('Abeille', 'debug', "msgFromParser(): WARNING. No IEEE addr in '".$eqLogicId."' config.");
+                        continue; // No registered IEEE
+                    }
+                    if ($ieee2 != $ieee)
+                        continue; // Not the right equipment
+
+                    $eqLogic->setLogicalId($logicalId); // Updating logical ID
+                    $eqLogic->save();
+                    log::add('Abeille', 'debug', "msgFromParser(): Eq found with old addr ".$addr2.". Update done.");
+                    break; // No need to go thru other equipments
                 }
-                if ($ieee2 != $ieee)
-                    continue; // Not the right equipment
-
-                $eqLogic->setLogicalId($logicalId); // Updating logical ID
-                $eqLogic->save();
-                log::add('Abeille', 'debug', "msgFromParser(): Eq found with old addr ".$addr2.". Update done.");
-                break; // No need to go thru other equipments
             }
 
             /* Create or update device from JSON */

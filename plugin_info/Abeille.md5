@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210706-MASTER_TCHARP38-1"
+# VERSION="210706-MASTER_TCHARP38-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -48,14 +48,14 @@ ee2be2ec60cb3b00ed0501cb232f7166 *Zigate_Module/ReadJN5168/read.php
 e7cd868c9ee87d0ec35bd6d866500449 *core/ajax/AbeilleFiles.ajax.php
 7650cfc074038eb9712acec23813d2da *core/ajax/AbeilleZigate.ajax.php
 8ebf0ec2066ea6fc6f6dc8b657f42059 *core/ajax/abeille.ajax.php
-7443e906f9c129fb5e2b6da4f19106a3 *core/class/Abeille.class.php
+15d2e1473740ea625b90446ceb45dcf4 *core/class/Abeille.class.php
 1b168df63dd8f213613058478ed3181f *core/class/AbeilleCmd.class.php
 c5494ce46b25d509ff930c26baea4e8c *core/class/AbeilleCmdPrepare.class.php
 21749ae5eba1db269696ef60e1e9c3db *core/class/AbeilleCmdProcess.class.php
 d0e38ab1e4c468c2843be74ca7165c48 *core/class/AbeilleCmdQueue.class.php
 1d8ecd8f974647271c4e630015a43d7f *core/class/AbeilleDebug.class.php
 17e48d546034f737716d4532d29a29af *core/class/AbeilleMsg.php
-db7186dc2ca78ecded351f34b7f14bc0 *core/class/AbeilleParser.class.php
+982c6eca6702f137cb8ebbe4232eb62a *core/class/AbeilleParser.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 2ebb56e1ea41091916d618f74fe15764 *core/class/AbeilleTemplateCommon.class.php
 a583bb8133f5cdfdd2261c2161b4a1e3 *core/class/AbeilleTemplateEq.class.php
@@ -65,11 +65,13 @@ fb15711b044915f5291add3ce425c751 *core/config/Abeille.config.ini
 96b14488adfe25210ff0b340be3f531d *core/config/HueCatalogue.json
 5373985868d2b6309d47fe0eaf784f00 *core/config/IAS ACE Cluster  IAS Zone & Diagnostics Only_ZHA.xml
 544199d4607a555546ff5f7507154e4b *core/config/addParameterToAllTemplates.php
+877731d3855a9260c53304145b944048 *core/config/commands/2000K.json
 a70f16f2e480e52ff62e007ea25475e8 *core/config/commands/2200K.json
 9ed342be49db6b7837caad7b5ff00a78 *core/config/commands/2700K.json
 6c086493cb337be72bd5c4347641d0e1 *core/config/commands/4000K.json
 1618d485217109d2d7b576b4070cb927 *core/config/commands/5000K.json
 68691e400695e04fe6cdfca46327c446 *core/config/commands/6000K.json
+d7238cd06792acd9614434111ab59c9b *core/config/commands/6500K.json
 e8ddd99da88f2315c6ade687c83efdd5 *core/config/commands/BasicApplicationVersion.json
 cc96ef7023abf6a4b860d3659070e467 *core/config/commands/Batterie-Hue.json
 6f01d9890c7cefcae6107fc7014daa46 *core/config/commands/Batterie-Pourcent-Heiman.json
@@ -116,7 +118,7 @@ d1f6b3c55b606376f82807085d4b137f *core/config/commands/Group-Membership.json
 25bb61aa774c83e3a3a1632910561f60 *core/config/commands/IEEE-Addr.json
 399da21ae796b1914dcf65eb21ab9622 *core/config/commands/Identify.json
 2f7b9a7ad448e688c469c5e7e19ac49f *core/config/commands/IkeaTeleCmdLeftRigth.json
-cad18815989a34d3c7a40c1b24bcd263 *core/config/commands/LISEZMOI.txt
+9f03309823c6e4653e63c94bb425d1bb *core/config/commands/LISEZMOI.txt
 e9de1976422ed6729985c17f33b5be7b *core/config/commands/Left-Right-Cmd.json
 8fb53e1339b5de1997fe21b531639a22 *core/config/commands/Left-Right-Direction.json
 13ee4b5cff1724a375b55b4c8de169ec *core/config/commands/LegrandContactorAuto.json
@@ -502,6 +504,7 @@ e65e5b926925f011e45ffb583e7f4abf *core/config/devices/7-digital-input/7-digital-
 124f32d0ecb1f69e4aaedc15361000c6 *core/config/devices/ClassicA60RGBW/ClassicA60RGBW.json
 0a99062238386bac777234b432228d68 *core/config/devices/ClassicA60Wclear-LIGHTIFY-2/ClassicA60Wclear-LIGHTIFY-2.json
 20ea29d31f3b470a8428895dcee017f3 *core/config/devices/ClassicA60Wclear-LIGHTIFY/ClassicA60Wclear-LIGHTIFY.json
+924c8ab938e1a707dc167a841ad0f331 *core/config/devices/ClassicB40TW-LIGHTIFY/ClassicB40TW-LIGHTIFY.json
 5a80831c36848470167d8843874f12a0 *core/config/devices/Connectedoutlet/Connectedoutlet.json
 c76b85dcb130d21a93edb75d174525a4 *core/config/devices/Contactor/Contactor.json
 e375bf49574bef962c8ab2bc4e976efe *core/config/devices/DIYRuZ_RT/DIYRuZ_RT.json
@@ -793,7 +796,7 @@ d2c7be8f2790e2af709516cd12122037 *desktop/php/AbeilleEq-Main.php
 cb121a171c9d45f3e51c17d1e2b92542 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-96885cdd0c8311f555fb3fc068526bf0 *docs/fr_FR/Changelog.rst
+1d67f135d77d4d4310f733b39c5dfa2b *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1014,11 +1017,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-b0d290c893dfbf80292a0aa6b729b6cf *plugin_info/Abeille.version
+bae0ede183b63292df5194c4b8814169 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 b621d15e706e786e3db9f176d4163f63 *plugin_info/configuration.php
-50c8e70a52a9f1f274c5b1955744321b *plugin_info/info.json
+6eb37214447e3ebf93caa95fdce50291 *plugin_info/info.json
 ec45f2d7ccce5ec06908d4ce7388749e *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 d323b5c18f2b6806a0a79277985f17f6 *resources/AbeilleDeamon/AbeilleInterrogate.php
@@ -1050,7 +1053,7 @@ bfb48054fb3a643a2ec7e5691608e890 *resources/fw_zigate/FW_ChangeLog.md
 746899598a7d2a43c5f29d6ce965d091 *resources/fw_zigate/ZiGate_v3.1c.bin
 27198557070a42767d7acb2c8e2a1234 *resources/fw_zigate/ZiGate_v3.1d.bin
 9322f8c93173c2a3c2e976b2d395330f *resources/fw_zigate/ZiGate_v3.1d_pre_PDMhost.dev.bin
-9051651cd4ca597b47a09315f7817f47 *resources/fw_zigate/ZiGate_v3.1e.dev.bin
+9051651cd4ca597b47a09315f7817f47 *resources/fw_zigate/ZiGate_v3.1e.bin
 b72399d5a204b159944b19883ea99870 *resources/prog_jennic-0.7/README.md
 152f3cf4a01ed7a9530807ceff981133 *resources/prog_jennic-0.7/README.txt
 4d2446fe85771dffa2b14e2caebfac85 *resources/prog_jennic-0.7/build/FlashProgrammerExtension_JN5168.bin
@@ -1064,7 +1067,7 @@ d4346dd5a19d5f11a8c40dc3ee27dc6e *resources/prog_jennic-0.7/source/JN51xx_BootLo
 846f8135db859f85bb2396b24149e578 *resources/prog_jennic-0.7/source/JN51xx_BootLoader.h
 c886e65239e481cedb4f97fe4ddcc54f *resources/prog_jennic-0.7/source/common.h
 80c009ec1440e80f61f1e510315bad01 *resources/prog_jennic-0.7/source/dbg.h
-acf290c710f11aafd5c355af3a230bce *resources/prog_jennic-0.7/source/main.c
+e72d69d66617ad16d85cd52f725c0d67 *resources/prog_jennic-0.7/source/main.c
 ca03d69e0031eda1c9e619373fd23c5c *resources/prog_jennic-0.7/source/uart.c
 8a8ae26d16916b55cf64b203ae86a9ab *resources/prog_jennic-0.7/source/uart.h
 b936972732ae854e55b7c70e43bd0c52 *resources/prog_jennic/JennicModuleProgrammerRPI3

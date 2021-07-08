@@ -16,6 +16,8 @@ ChangeLog
   - Correction clef top commandes 'info' (clef = nom de fichier).
 - JSON équipements: Support préliminaire pour directive "use"
   - Ex: "cmd_jeedom_name": { "use": "cmd_file_name", "params": "EP=01" }
+- Page EQ/avancé: ajout du bouton "reconfigurer".
+- Page gestion: suppression du bouton "Apply Settings to NE".
 - Page EQ/avancé: version préliminaire de l'assistant de découverte.
 
 210704-STABLE-1

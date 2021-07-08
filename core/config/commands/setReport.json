@@ -1,0 +1,13 @@
+{
+    "setReport": {
+        "comment": "Generic configure reporting command",
+        "name": "setReport-X-Y",
+        "subType": "other",
+        "template": "",
+        "configuration": {
+            "topic": "setReport",
+            "request": "targetEndpoint=#EP#&ClusterId=#CLUSTID#&AttributeId=#ATTRID#&AttributeType=#ATTRTYPE#&MinInterval=1800&MaxInterval=3600"
+        },
+        "type": "action"
+    }
+}

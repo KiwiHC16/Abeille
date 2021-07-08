@@ -1,9 +1,10 @@
 {
-  "0702-#EP#-0303": {
-    "name": "SummationFormatting",
-    "Type": "info",
-    "subType": "numeric",
-    "configuration": {
+    "zb-0702-SummationFormatting": {
+        "name": "SummationFormatting",
+        "subType": "numeric",
+        "configuration": {
+            "topic": "0702-#EP#-0303"
+        },
+        "type": "info"
     }
-  }
 }

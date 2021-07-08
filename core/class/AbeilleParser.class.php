@@ -371,9 +371,9 @@
             }
 
             // Read JSON to get list of commands to execute
-            $eqConfig = AbeilleTools::getJsonConfig($jsonName, $jsonLocation);
+            $eqConfig = AbeilleTools::getDeviceConfig($jsonName, $jsonLocation);
             $eq['jsonId'] = $jsonName;
-            $eq['config'] = $eqConfig[$jsonName];
+            $eq['config'] = $eqConfig;
             return true;
         }
 
@@ -565,13 +565,13 @@
             $eq = &$GLOBALS['eqList'][$net][$addr];
             $eq['status'] = 'configuring';
 
-            $cmds = $eq['config']['Commandes'];
+            $cmds = $eq['config']['commands'];
 parserLog('debug', "  cmds=".json_encode($cmds));
-            foreach ($cmds as $cmd) {
+            foreach ($cmds as $cmdJName => $cmd) {
                 $c = $cmd['configuration'];
                 if (!isset($c['execAtCreation']))
                     continue;
-                parserLog('debug', "    exec cmd ".$cmd['name']);
+                parserLog('debug', "    exec cmd ".$cmdJName);
                 $topic = $c['topic'];
                 // $topic = AbeilleCmd::updateField($dest, $cmd, $topic);
                 $request = $c['request'];

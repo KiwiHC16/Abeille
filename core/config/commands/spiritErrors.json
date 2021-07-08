@@ -1,21 +1,19 @@
 {
-  "0201-#EP#-4002": {
-    "isVisible": 0,
-    "name": "Errors",
-    "order": 2,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "badge",
-    "configuration": {
-      "uniqId": "5c5654yuui440",
-      "calculValueOffset": "#value#",
-      "historizeRound": "1",
-      "visibilityCategory": "All",
-      "topic": "0201-#EP#-4002"
-    },
-    "unite": ""
-  }
+    "spiritErrors": {
+        "isVisible": 0,
+        "name": "Errors",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+            "calculValueOffset": "#value#",
+            "historizeRound": "1",
+            "visibilityCategory": "All",
+            "topic": "0201-#EP#-4002"
+        },
+        "unite": "",
+        "type": "info"
+    }
 }

@@ -1,16 +1,15 @@
 {
-  "Time-TimeStamp": {
-    "isVisible": 0,
-    "name": "Time-TimeStamp",
-    "order": 6,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "numeric",
-    "invertBinary": "0",
-    "template": "badge",
-    "configuration": {
-	"uniqId": "5c07c7662262b",
-      "visibilityCategory": "Time"
+    "Time-TimeStamp": {
+        "isVisible": 0,
+        "name": "Time-TimeStamp",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+            "visibilityCategory": "Time",
+            "topic": "Time-TimeStamp"
+        },
+        "type": "info"
     }
-  }
 }

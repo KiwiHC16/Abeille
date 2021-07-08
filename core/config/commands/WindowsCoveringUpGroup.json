@@ -1,19 +1,17 @@
 {
-  "WindowsCoveringUpGroup": {
-    "isVisible": 1,
-    "name": "Up",
-    "order": 7,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c0qssf7c7qs6622080",
-      "topic": "CmdAbeille/#addrGroup#/WindowsCoveringGroup",
-      "request": "clusterCommand=00",
-      "visibilityCategory": "All"
+    "WindowsCoveringUpGroup": {
+        "isVisible": 1,
+        "name": "Up",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "CmdAbeille\/#addrGroup#\/WindowsCoveringGroup",
+            "request": "clusterCommand=00",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
     }
-  }
 }

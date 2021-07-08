@@ -1,22 +1,20 @@
 {
-  "danfossUIKeyLockSet": {
-    "isVisible": 0,
-    "name": "Set Key Lock",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "slider",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210128_1312",
-      "topic": "WriteAttributeRequestGeneric",
-      "request": "EP=01&Proprio=&clusterId=0204&attributeId=0001&attributeType=30&value=#slider#",
-      "minValue": "0",
-      "maxValue": "1",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "danfossUIKeyLockSet": {
+        "isVisible": 0,
+        "name": "Set Key Lock",
+        "isHistorized": "0",
+        "subType": "slider",
+        "template": "",
+        "configuration": {
+            "topic": "WriteAttributeRequestGeneric",
+            "request": "EP=01&Proprio=&clusterId=0204&attributeId=0001&attributeType=30&value=#slider#",
+            "minValue": "0",
+            "maxValue": "1",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

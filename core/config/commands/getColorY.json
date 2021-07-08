@@ -1,22 +1,20 @@
 {
-  "getColorY": {
-    "isVisible": 0,
-    "name": "getColorY",
-    "order": 19,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c76623c26",
-      "topic": "ReadAttributeRequest",
-      "request": "clusterId=0300&attributeId=0004&EP=#EP#",
-      "RefreshData": "1",
-      "visibilityCategory": "additionalCommand"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "getColorY": {
+        "isVisible": 0,
+        "name": "getColorY",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "ReadAttributeRequest",
+            "request": "clusterId=0300&attributeId=0004&EP=#EP#",
+            "RefreshData": "1",
+            "visibilityCategory": "additionalCommand"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

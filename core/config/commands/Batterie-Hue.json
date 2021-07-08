@@ -1,20 +1,21 @@
 {
-  "0001-#EP#-0021": {
-    "isVisible": 0,
-    "name": "Batterie",
-    "isHistorized": 0,
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "BATTERY",
-    "invertBinary": "0",
-    "template": "vuMeter",
-    "unite": "%",
-    "configuration": {
-      "calculValueOffset": "#value#/255*100",
-      "minValue": "0",
-      "maxValue": "100",
-      "historizeRound": "1",
-      "visibilityCategory": "Network"
+    "Batterie-Hue": {
+        "isVisible": 0,
+        "name": "Batterie",
+        "isHistorized": 0,
+        "subType": "numeric",
+        "generic_type": "BATTERY",
+        "invertBinary": "0",
+        "template": "vuMeter",
+        "unite": "%",
+        "configuration": {
+            "calculValueOffset": "#value#\/255*100",
+            "minValue": "0",
+            "maxValue": "100",
+            "historizeRound": "1",
+            "visibilityCategory": "Network",
+            "topic": "0001-#EP#-0021"
+        },
+        "type": "info"
     }
-  }
 }

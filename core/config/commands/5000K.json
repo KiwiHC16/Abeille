@@ -1,21 +1,19 @@
 {
-  "5000K": {
-    "isVisible": 1,
-    "name": "5000K",
-    "order": 13,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c762430d3",
-      "topic": "setTemperature",
-      "request": "EP=#EP#&slider=5000",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "5000K": {
+        "isVisible": 1,
+        "name": "5000K",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "setTemperature",
+            "request": "EP=#EP#&slider=5000",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

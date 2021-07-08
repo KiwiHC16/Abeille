@@ -1,16 +1,15 @@
 {
-  "Scene-Membership": {
-    "isVisible": 0,
-    "name": "Scenes",
-    "order": 21,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "string",
-    "invertBinary": "0",
-    "template": "badge",
-    "configuration": {
-      "uniqId": "5c0ab76621b88",
-      "visibilityCategory": "Network"
+    "Scene-Membership": {
+        "isVisible": 0,
+        "name": "Scenes",
+        "isHistorized": "0",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+            "visibilityCategory": "Network",
+            "topic": "Scene-Membership"
+        },
+        "type": "info"
     }
-  }
 }

@@ -1,15 +1,15 @@
 {
-  "Group-Membership": {
-    "isVisible": 0,
-    "name": "Groups",
-    "order": 21,
-    "isHistorized": 0,
-    "Type": "info",
-    "subType": "string",
-    "invertBinary": "0",
-    "template": "badge",
-    "configuration": {
-      "visibilityCategory": "Network"
+    "Group-Membership": {
+        "isVisible": 0,
+        "name": "Groups",
+        "isHistorized": 0,
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+            "visibilityCategory": "Network",
+            "topic": "Group-Membership"
+        },
+        "type": "info"
     }
-  }
 }

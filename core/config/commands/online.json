@@ -1,19 +1,18 @@
 {
-  "online": {
-    "isVisible": 0,
-    "name": "online",
-    "order": 31,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "binary",
-    "generic_type": "ONLINE",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c766246fd",
-      "returnStateValue": "0",
-      "returnStateTime": "60",
-      "visibilityCategory": "Network"
+    "online": {
+        "isVisible": 0,
+        "name": "online",
+        "isHistorized": "1",
+        "subType": "binary",
+        "generic_type": "ONLINE",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "returnStateValue": "0",
+            "returnStateTime": "60",
+            "visibilityCategory": "Network",
+            "topic": "online"
+        },
+        "type": "info"
     }
-  }
 }

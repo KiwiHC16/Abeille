@@ -1,23 +1,21 @@
 {
-  "setRGB": {
-    "Comment": "Needed to control color from HomeBridge, should be merged with setColourRGB",
-    "isVisible": 0,
-    "name": "setRGB",
-    "order": 39,
-    "isHistorized": "0",
-    "generic_type": "LIGHT_SET_COLOR",
-    "Type": "action",
-    "subType": "color",
-    "configuration": {
-      "uniqId": "5cd7c76624c73",
-      "topic": "setColourRGB",
-      "request": "EP=#EP#&color=#color#",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1",
-      "color_placeholder": "#RRGGBB",
-      "visibilityCategory": "additionalCommand"
+    "setRGB": {
+        "Comment": "Needed to control color from HomeBridge, should be merged with setColourRGB",
+        "isVisible": 0,
+        "name": "setRGB",
+        "isHistorized": "0",
+        "generic_type": "LIGHT_SET_COLOR",
+        "subType": "color",
+        "configuration": {
+            "topic": "setColourRGB",
+            "request": "EP=#EP#&color=#color#",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1",
+            "color_placeholder": "#RRGGBB",
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "action"
     }
-  }
 }

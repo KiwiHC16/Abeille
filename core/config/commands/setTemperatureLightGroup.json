@@ -1,24 +1,22 @@
 {
-  "setTemperatureLightGroup": {
-    "isVisible": 1,
-    "name": "setTemperatureLightGroup",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "slider",
-    "generic_type": "LIGHT_SET_COLOR_TEMP",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c466a54a4",
-      "topic": "CmdAbeille/#addrGroup#/setTemperatureGroup",
-      "request": "EP=01&slider=#slider#",
-      "minValue": "2200",
-      "maxValue": "4000",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "setTemperatureLightGroup": {
+        "isVisible": 1,
+        "name": "setTemperatureLightGroup",
+        "isHistorized": "0",
+        "subType": "slider",
+        "generic_type": "LIGHT_SET_COLOR_TEMP",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "CmdAbeille\/#addrGroup#\/setTemperatureGroup",
+            "request": "EP=01&slider=#slider#",
+            "minValue": "2200",
+            "maxValue": "4000",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

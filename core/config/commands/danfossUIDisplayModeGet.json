@@ -1,18 +1,16 @@
 {
-  "danfossUIDisplayModeGet": {
-    "isVisible": 0,
-    "name": "Display Mode Get",
-    "order": 12,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210128_1227",
-      "topic": "ReadAttributeRequest",
-      "request": "EP=01&clusterId=0204&attributeId=0000",
-      "visibilityCategory": "additionalCommand"
+    "danfossUIDisplayModeGet": {
+        "isVisible": 0,
+        "name": "Display Mode Get",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "ReadAttributeRequest",
+            "request": "EP=01&clusterId=0204&attributeId=0000",
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "action"
     }
-  }
 }

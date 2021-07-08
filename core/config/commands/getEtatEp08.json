@@ -1,19 +1,17 @@
 {
-  "getEtatEp08": {
-    "isVisible": 0,
-    "name": "getEtatEp08",
-    "order": 12,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210307_1949",
-      "topic": "ReadAttributeRequest",
-      "request": "EP=08&clusterId=0006&attributeId=0000",
-      "RefreshData": "1",
-      "visibilityCategory": "additionalCommand"
+    "getEtatEp08": {
+        "isVisible": 0,
+        "name": "getEtatEp08",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "ReadAttributeRequest",
+            "request": "EP=08&clusterId=0006&attributeId=0000",
+            "RefreshData": "1",
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "action"
     }
-  }
 }

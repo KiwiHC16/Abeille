@@ -1,22 +1,21 @@
 {
-  "tdb--current--": {
-    "isVisible": 1,
-    "Type": "info",
-    "invertBinary": "0",
-    "isHistorized": "1",
-    "name": "A",
-    "unite": "A",
-    "order": 17,
-    "subType": "numeric",
-    "generic_type": "",
-    "template": "badge",
-    "configuration": {
-      "uniqId": "5c06zedz5ZAfgsdgf23767c182a",
-      "repeatEventManagement": "always",
-      "historizeRound": "0",
-      "maxValue": "16",
-      "minValue": "0",
-      "visibilityCategory": "All"
+    "CurrentPrise": {
+        "isVisible": 1,
+        "invertBinary": "0",
+        "isHistorized": "1",
+        "name": "A",
+        "unite": "A",
+        "subType": "numeric",
+        "generic_type": "",
+        "template": "badge",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "historizeRound": "0",
+            "maxValue": "16",
+            "minValue": "0",
+            "visibilityCategory": "All",
+            "topic": "tdb--current--"
+        },
+        "type": "info"
     }
-  }
 }

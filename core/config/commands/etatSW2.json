@@ -1,17 +1,16 @@
 {
-  "0006-05-0000": {
-    "isVisible": 1,
-    "name": "etat switch 2",
-    "order": 7,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "",
-    "invertBinary": "1",
-    "template": "badge",
-    "configuration": {
-      "uniqId": "5c07c766236b4",
-      "visibilityCategory": "All"
+    "etatSW2": {
+        "isVisible": 1,
+        "name": "etat switch 2",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "generic_type": "",
+        "invertBinary": "1",
+        "template": "badge",
+        "configuration": {
+            "visibilityCategory": "All",
+            "topic": "0006-05-0000"
+        },
+        "type": "info"
     }
-  }
 }

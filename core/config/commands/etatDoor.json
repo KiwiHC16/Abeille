@@ -1,18 +1,16 @@
 {
-  "0006-#EP#-0000": {
-    "isVisible": 1,
-    "name": "etat",
-    "order": 2,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "binary",
-    "generic_type": "OPENING",
-    "invertBinary": "1",
-    "template": "door",
-    "configuration": {
-      "uniqId": "5c07c7662341a",
-      "visibilityCategory": "All",
-      "topic": "0006-#EP#-0000"
+    "etatDoor": {
+        "isVisible": 1,
+        "name": "etat",
+        "isHistorized": "1",
+        "subType": "binary",
+        "generic_type": "OPENING",
+        "invertBinary": "1",
+        "template": "door",
+        "configuration": {
+            "visibilityCategory": "All",
+            "topic": "0006-#EP#-0000"
+        },
+        "type": "info"
     }
-  }
 }

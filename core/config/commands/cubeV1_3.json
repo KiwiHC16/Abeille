@@ -1,16 +1,15 @@
 {
-  "000C-03-0055": {
-    "isVisible": 1,
-    "name": "Rotation Angle",
-    "order": 4,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "string",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c76442fb22",
-      "visibilityCategory": "All"
+    "cubeV1_3": {
+        "isVisible": 1,
+        "name": "Rotation Angle",
+        "isHistorized": "0",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "visibilityCategory": "All",
+            "topic": "000C-03-0055"
+        },
+        "type": "info"
     }
-  }
 }

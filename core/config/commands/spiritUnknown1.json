@@ -1,21 +1,19 @@
 {
-  "0201-#EP#-0012": {
-    "isVisible": 0,
-    "name": "Unknown1",
-    "order": 2,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "badge",
-    "configuration": {
-      "uniqId": "5c5654yuddsui440",
-      "calculValueOffset": "#value#",
-      "historizeRound": "1",
-      "visibilityCategory": "All",
-      "topic": "0201-#EP#-0012"
-    },
-    "unite": ""
-  }
+    "spiritUnknown1": {
+        "isVisible": 0,
+        "name": "Unknown1",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+            "calculValueOffset": "#value#",
+            "historizeRound": "1",
+            "visibilityCategory": "All",
+            "topic": "0201-#EP#-0012"
+        },
+        "unite": "",
+        "type": "info"
+    }
 }

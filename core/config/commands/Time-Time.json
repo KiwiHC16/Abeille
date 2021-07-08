@@ -1,16 +1,15 @@
 {
-  "Time-Time": {
-    "isVisible": 0,
-    "name": "Time-Time",
-    "order": 5,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "string",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c766225aa",
-      "visibilityCategory": "Time"
+    "Time-Time": {
+        "isVisible": 0,
+        "name": "Time-Time",
+        "isHistorized": "0",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "visibilityCategory": "Time",
+            "topic": "Time-Time"
+        },
+        "type": "info"
     }
-  }
 }

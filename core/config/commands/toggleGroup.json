@@ -1,22 +1,20 @@
 {
-  "toggleGroup": {
-    "name": "Toggle",
-    "order": 1,
-    "isVisible": 1,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c76625583",
-      "topic": "CmdAbeille/#addrGroup#/OnOffGroup",
-      "request": "Toggle",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "icon": "<i class=\"fa fa-power-off\"></i>",
-      "forceReturnLineAfter": "0"
+    "toggleGroup": {
+        "name": "Toggle",
+        "isVisible": 1,
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "CmdAbeille\/#addrGroup#\/OnOffGroup",
+            "request": "Toggle",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "icon": "<i class=\"fa fa-power-off\"><\/i>",
+            "forceReturnLineAfter": "0"
+        },
+        "type": "action"
     }
-  }
 }

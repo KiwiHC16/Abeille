@@ -1,17 +1,16 @@
 {
-  "Var-RampUpDown": {
-    "isVisible": 1,
-    "Type": "info",
-    "invertBinary": "0",
-    "isHistorized": "0",
-    "name": "RampUpDown",
-    "order": 4,
-    "subType": "numeric",
-    "template": "badge",
-    "configuration": {
-      "uniqId": "5c07c76622951",
-      "historizeRound": "2",
-      "visibilityCategory": "All"
+    "Var-RampUpDown": {
+        "isVisible": 1,
+        "invertBinary": "0",
+        "isHistorized": "0",
+        "name": "RampUpDown",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": {
+            "historizeRound": "2",
+            "visibilityCategory": "All",
+            "topic": "Var-RampUpDown"
+        },
+        "type": "info"
     }
-  }
 }

@@ -1,20 +1,18 @@
 {
-  "setReportRadiateurConsigneTemperature": {
-    "isVisible": 0,
-    "name": "setReportRadiateurConsigneTemperature",
-    "order": 29,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210128_1338",
-      "topic": "setReport",
-      "request": "targetEndpoint=01&ClusterId=0201&AttributeId=0012&AttributeType=29&MaxInterval=3500",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "12",
-      "visibilityCategory": "Network"
+    "setReportRadiateurConsigneTemperature": {
+        "isVisible": 0,
+        "name": "setReportRadiateurConsigneTemperature",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "setReport",
+            "request": "targetEndpoint=01&ClusterId=0201&AttributeId=0012&AttributeType=29&MaxInterval=3500",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": "12",
+            "visibilityCategory": "Network"
+        },
+        "type": "action"
     }
-  }
 }

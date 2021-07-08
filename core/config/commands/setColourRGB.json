@@ -1,21 +1,19 @@
 {
-  "setColourRGB": {
-    "isVisible": 0,
-    "name": "RGB",
-    "order": 39,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "message",
-    "configuration": {
-      "uniqId": "5c07c76624c73",
-      "topic": "setColourRGB",
-      "request": "EP=#EP#&color=#title#",
-      "visibilityCategory": "additionalCommand"
-    },
-    "display": {
-      "forceReturnLineAfter": "1",
-      "title_placeholder": "RRGGBB",
-      "message_placeholder": "na"
+    "setColourRGB": {
+        "isVisible": 0,
+        "name": "RGB",
+        "isHistorized": "0",
+        "subType": "message",
+        "configuration": {
+            "topic": "setColourRGB",
+            "request": "EP=#EP#&color=#title#",
+            "visibilityCategory": "additionalCommand"
+        },
+        "display": {
+            "forceReturnLineAfter": "1",
+            "title_placeholder": "RRGGBB",
+            "message_placeholder": "na"
+        },
+        "type": "action"
     }
-  }
 }

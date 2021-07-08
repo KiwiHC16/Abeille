@@ -1,22 +1,21 @@
 {
-  "0300-01-0007": {
-    "isVisible": 1,
-    "name": "temperatureLight",
-    "order": 2,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "LIGHT_COLOR_TEMP",
-    "invertBinary": "0",
-    "template": "badge",
-    "unite": "K",
-    "configuration": {
-      "uniqId": "5407c76625440",
-      "visibilityCategory": "All",
-      "minValue": "2200",
-      "maxValue": "4000",
-      "visibiltyTemplate": "1",
-      "calculValueOffset":"intval(1000000/#value#)"
+    "temperatureLight": {
+        "isVisible": 1,
+        "name": "temperatureLight",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "generic_type": "LIGHT_COLOR_TEMP",
+        "invertBinary": "0",
+        "template": "badge",
+        "unite": "K",
+        "configuration": {
+            "visibilityCategory": "All",
+            "minValue": "2200",
+            "maxValue": "4000",
+            "visibiltyTemplate": "1",
+            "calculValueOffset": "intval(1000000\/#value#)",
+            "topic": "0300-01-0007"
+        },
+        "type": "info"
     }
-  }
 }

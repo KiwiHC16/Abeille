@@ -1,20 +1,18 @@
 {
-  "spiritSetReportBatterie": {
-    "isVisible": 0,
-    "name": "setReportBatterie",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c76624ea41",
-      "topic": "setReportSpirit",
-      "request": "targetEndpoint=01&ClusterId=0001&AttributeId=0021&AttributeType=20&MinInterval=43100&MaxInterval=43300",
-      "visibilityCategory": "Network",
+    "spiritSetReportBatterie": {
+        "isVisible": 0,
+        "name": "setReportBatterie",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "setReportSpirit",
+            "request": "targetEndpoint=01&ClusterId=0001&AttributeId=0021&AttributeType=20&MinInterval=43100&MaxInterval=43300",
+            "visibilityCategory": "Network",
             "execAtCreation": "Yes",
-      "execAtCreationDelay": "11"
+            "execAtCreationDelay": "11"
+        },
+        "type": "action"
     }
-  }
 }

@@ -1,19 +1,17 @@
 {
-  "LegrandContactorAuto": {
-    "isVisible": 1,
-    "name": "Auto",
-    "order": 7,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07csdo7s662frsgd2080sd",
-      "topic": "commandLegrand",
-      "request": "Action=On&EP=#EP#&Mode=02",
-      "visibilityCategory": "All"
+    "LegrandContactorAuto": {
+        "isVisible": 1,
+        "name": "Auto",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "commandLegrand",
+            "request": "Action=On&EP=#EP#&Mode=02",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
     }
-  }
 }

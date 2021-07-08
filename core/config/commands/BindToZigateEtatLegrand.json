@@ -1,21 +1,19 @@
 {
-  "BindToZigateEtatLegrand": {
-    "Comment": "Used to bind the Prise Legrand to zigate pour l etat et le mode",
-    "isVisible": 0,
-    "name": "BindToZigateEtatLegrand",
-    "order": 27,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5csdf07c766qd2188fqsfgazrt",
-      "topic": "bindShort",
-      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=#EP#&ClusterId=FC41&reportToAddress=#ZiGateIEEE#",
-      "visibilityCategory": "Network",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "10"
+    "BindToZigateEtatLegrand": {
+        "Comment": "Used to bind the Prise Legrand to zigate pour l etat et le mode",
+        "isVisible": 0,
+        "name": "BindToZigateEtatLegrand",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "bindShort",
+            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=#EP#&ClusterId=FC41&reportToAddress=#ZiGateIEEE#",
+            "visibilityCategory": "Network",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": "10"
+        },
+        "type": "action"
     }
-  }
 }

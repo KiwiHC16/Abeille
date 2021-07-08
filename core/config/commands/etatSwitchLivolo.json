@@ -1,16 +1,15 @@
 {
-  "0006-#EP#-0000": {
-    "isVisible": 1,
-    "name": "etat",
-    "order": 3,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "template": "badge",
-    "configuration": {
-      "uniqId": "5d07c76623220",
-      "repeatEventManagement": "always",
-      "visibilityCategory": "All"
+    "etatSwitchLivolo": {
+        "isVisible": 1,
+        "name": "etat",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "visibilityCategory": "All",
+            "topic": "0006-#EP#-0000"
+        },
+        "type": "info"
     }
-  }
 }

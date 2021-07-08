@@ -1,16 +1,13 @@
 {
-    "setTemperatureLight": {
+    "setTemperatureLight2": {
         "isVisible": 1,
         "name": "setTemperatureLight",
-        "order": 14,
         "isHistorized": "0",
-        "Type": "action",
         "subType": "slider",
         "generic_type": "LIGHT_SET_COLOR_TEMP",
         "invertBinary": "0",
         "template": "",
         "configuration": {
-            "uniqId": "5c07c762430a5",
             "topic": "setTemperature",
             "request": "EP=#EP#&slider=#slider#",
             "minValue": "2000",
@@ -19,6 +16,7 @@
         },
         "display": {
             "forceReturnLineAfter": "1"
-        }
+        },
+        "type": "action"
     }
 }

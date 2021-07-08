@@ -1,21 +1,19 @@
 {
-  "BindToPuissance": {
-    "isVisible": 0,
-    "name": "BindToPuissance",
-    "order": 13,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07cdd62ytjt1802",
-      "topic": "bindShort",
-      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0702&reportToAddress=#ZiGateIEEE#",
-      "visibilityCategory": "Network"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "BindToPuissance": {
+        "isVisible": 0,
+        "name": "BindToPuissance",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "bindShort",
+            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0702&reportToAddress=#ZiGateIEEE#",
+            "visibilityCategory": "Network"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

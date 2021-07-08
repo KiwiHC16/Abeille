@@ -1,24 +1,22 @@
 {
-  "spiritSetValvePosition": {
-    "isVisible": 0,
-    "name": "Set Valve",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "slider",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07a7632aa34",
-      "topic": "WriteAttributeRequestValveSpiritConsigne",
-      "request": "clusterId=0201&attributeId=4001&EP=01&Proprio=1037&attributeType=20&value=#slider#",
-      "minValue": "00",
-      "maxValue": "255",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "spiritValvePositionSet": {
+        "isVisible": 0,
+        "name": "Set Valve",
+        "isHistorized": "0",
+        "subType": "slider",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "WriteAttributeRequestValveSpiritConsigne",
+            "request": "clusterId=0201&attributeId=4001&EP=01&Proprio=1037&attributeType=20&value=#slider#",
+            "minValue": "00",
+            "maxValue": "255",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

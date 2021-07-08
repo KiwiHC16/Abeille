@@ -1,21 +1,19 @@
 {
-  "setLevelGroupEP1": {
-    "name": "setLevel Gp1",
-    "order": 5,
-    "isVisible": 1,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "slider",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210219_1226",
-      "topic": "CmdAbeille/#GroupeEP1#/setLevelGroup",
-      "request": "Level=#slider#&duration=01",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "setLevelGroupEP1": {
+        "name": "setLevel Gp1",
+        "isVisible": 1,
+        "isHistorized": "0",
+        "subType": "slider",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "CmdAbeille\/#GroupeEP1#\/setLevelGroup",
+            "request": "Level=#slider#&duration=01",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

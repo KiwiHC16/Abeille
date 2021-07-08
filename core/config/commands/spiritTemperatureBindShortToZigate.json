@@ -1,23 +1,21 @@
 {
-  "spiritTemperatureBindShortToZigate": {
-    "isVisible": 0,
-    "name": "Temperature Bind",
-    "order": 13,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07cdoo621802",
-      "topic": "bindShort",
-      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0201&reportToAddress=#ZiGateIEEE#",
-      "visibilityCategory": "Network",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "9"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "spiritTemperatureBindShortToZigate": {
+        "isVisible": 0,
+        "name": "Temperature Bind",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "bindShort",
+            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0201&reportToAddress=#ZiGateIEEE#",
+            "visibilityCategory": "Network",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": "9"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

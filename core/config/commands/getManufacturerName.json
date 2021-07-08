@@ -1,18 +1,16 @@
 {
-  "getManufacturerName": {
-    "isVisible": 0,
-    "name": "getManufacturerName",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c76623e00",
-      "topic": "ReadAttributeRequest",
-      "request": "EP=#EP#&clusterId=0000&attributeId=0004",
-      "visibilityCategory": "additionalCommand"
+    "getManufacturerName": {
+        "isVisible": 0,
+        "name": "getManufacturerName",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "ReadAttributeRequest",
+            "request": "EP=#EP#&clusterId=0000&attributeId=0004",
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "action"
     }
-  }
 }

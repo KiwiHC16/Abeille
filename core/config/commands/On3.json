@@ -1,19 +1,17 @@
 {
-  "On3": {
-    "isVisible": 1,
-    "name": "On3",
-    "order": 13,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "LIGHT_ON",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c7erg66iuoo221df",
-      "topic": "OnOff",
-      "request": "Action=On&EP=04",
-      "visibilityCategory": "All"
+    "On3": {
+        "isVisible": 1,
+        "name": "On3",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "LIGHT_ON",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "OnOff",
+            "request": "Action=On&EP=04",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
     }
-  }
 }

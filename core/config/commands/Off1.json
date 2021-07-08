@@ -1,19 +1,17 @@
 {
-  "Off1": {
-    "isVisible": 1,
-    "name": "Off1",
-    "order": 11,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "LIGHT_OFF",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c76621f88",
-      "topic": "OnOff",
-      "request": "Action=Off&EP=02",
-      "visibilityCategory": "All"
+    "Off1": {
+        "isVisible": 1,
+        "name": "Off1",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "LIGHT_OFF",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "OnOff",
+            "request": "Action=Off&EP=02",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
     }
-  }
 }

@@ -1,19 +1,17 @@
 {
-  "Blanc": {
-    "name": "Blanc",
-    "order": 23,
-    "isHistorized": "0",
-    "isVisible": "1",
-    "Type": "action",
-    "subType": "other",
-    "configuration": {
-	"uniqId": "5c07c7662198e",
-      "topic": "setColour",
-      "request": "EP=#EP#&X=6000&Y=6000",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "0"
+    "Blanc": {
+        "name": "Blanc",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "subType": "other",
+        "configuration": {
+            "topic": "setColour",
+            "request": "EP=#EP#&X=6000&Y=6000",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "0"
+        },
+        "type": "action"
     }
-  }
 }

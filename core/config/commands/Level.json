@@ -1,20 +1,20 @@
 {
-  "0008-#EP#-0000": {
-    "isVisible": 1,
-    "name": "Level",
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "numeric",
-    "invertBinary": "0",
-    "template": "",
-    "unite": "%",
-    "configuration": {
-	"uniqId": "5c07c76621e11",
-      "minValue": "0",
-      "maxValue": "100",
-      "historizeRound": "0",
-      "calculValueOffset": "#value#/255*100",
-      "visibilityCategory": "All"
+    "Level": {
+        "isVisible": 1,
+        "name": "Level",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "",
+        "unite": "%",
+        "configuration": {
+            "minValue": "0",
+            "maxValue": "100",
+            "historizeRound": "0",
+            "calculValueOffset": "#value#\/255*100",
+            "visibilityCategory": "All",
+            "topic": "0008-#EP#-0000"
+        },
+        "type": "info"
     }
-  }
 }

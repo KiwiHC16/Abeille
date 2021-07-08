@@ -1,21 +1,20 @@
 {
-  "Lift": {
-    "isVisible": 1,
-    "name": "Lift",
-    "order": 4,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "invertBinary": "0",
-    "template": "",
-    "unite": "%",
-    "configuration": {
-      "uniqId": "20210222_1159",
-      "minValue": "1",
-      "maxValue": "254",
-      "historizeRound": "0",
-      "calculValueOffset": "",
-      "visibilityCategory": "All"
+    "Lift": {
+        "isVisible": 1,
+        "name": "Lift",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "",
+        "unite": "%",
+        "configuration": {
+            "minValue": "1",
+            "maxValue": "254",
+            "historizeRound": "0",
+            "calculValueOffset": "",
+            "visibilityCategory": "All",
+            "topic": "Lift"
+        },
+        "type": "info"
     }
-  }
 }

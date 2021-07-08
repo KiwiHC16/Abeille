@@ -1,19 +1,17 @@
 {
-  "getColorX": {
-    "isVisible": 0,
-    "name": "getColorX",
-    "order": 18,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c76623b8f",
-      "topic": "ReadAttributeRequest",
-      "request": "clusterId=0300&attributeId=0003&EP=#EP#",
-      "RefreshData": "1",
-      "visibilityCategory": "additionalCommand"
+    "getColorX": {
+        "isVisible": 0,
+        "name": "getColorX",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "ReadAttributeRequest",
+            "request": "clusterId=0300&attributeId=0003&EP=#EP#",
+            "RefreshData": "1",
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "action"
     }
-  }
 }

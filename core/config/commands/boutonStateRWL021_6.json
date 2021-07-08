@@ -1,18 +1,17 @@
 {
-  "fc00-02-0003-Duree": {
-    "isVisible": 1,
-    "name": "DureeButtonLumMoins",
-    "order": 3,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "string",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c678968632236",
-      "repeatEventManagement": "always",
-      "visibilityCategory": "All"
+    "boutonStateRWL021_6": {
+        "isVisible": 1,
+        "name": "DureeButtonLumMoins",
+        "isHistorized": "1",
+        "subType": "string",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "visibilityCategory": "All",
+            "topic": "fc00-02-0003-Duree"
+        },
+        "type": "info"
     }
-  }
 }

@@ -1,16 +1,15 @@
 {
-  "FC41-#EP#-0000": {
-    "isVisible": 1,
-    "name": "Mode",
-    "order": 17,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "invertBinary": "0",
-    "template": "badge",
-    "configuration": {
-      "uniqId": "5c0sdsd7c7zey6621c24",
-      "visibilityCategory": "Network"
+    "LegrandContactorMode": {
+        "isVisible": 1,
+        "name": "Mode",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+            "visibilityCategory": "Network",
+            "topic": "FC41-#EP#-0000"
+        },
+        "type": "info"
     }
-  }
 }

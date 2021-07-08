@@ -1,20 +1,19 @@
 {
-  "0006-#EP#-0000": {
-    "isVisible": 1,
-    "name": "etat1",
-    "order": 2,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "binary",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c766237ef1",
-      "AbeilleRejectValue": "0",
-      "returnStateValue": "0",
-      "returnStateTime": "1",
-      "repeatEventManagement": "always",
-      "visibilityCategory": "All"
+    "etatSwitchDouble_1": {
+        "isVisible": 1,
+        "name": "etat1",
+        "isHistorized": "1",
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "AbeilleRejectValue": "0",
+            "returnStateValue": "0",
+            "returnStateTime": "1",
+            "repeatEventManagement": "always",
+            "visibilityCategory": "All",
+            "topic": "0006-#EP#-0000"
+        },
+        "type": "info"
     }
-  }
 }

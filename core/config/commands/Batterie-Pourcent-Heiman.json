@@ -1,18 +1,19 @@
 {
-  "0001-#EP#-0021": {
-    "isVisible": 0,
-    "name": "Batterie",
-    "isHistorized": 0,
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "BATTERY",
-    "invertBinary": "0",
-    "template": "vuMeter",
-    "unite": "%",
-    "configuration": {
-      "minValue": "0",
-      "maxValue": "100",
-      "visibilityCategory": "All"
+    "Batterie-Pourcent-Heiman": {
+        "isVisible": 0,
+        "name": "Batterie",
+        "isHistorized": 0,
+        "subType": "numeric",
+        "generic_type": "BATTERY",
+        "invertBinary": "0",
+        "template": "vuMeter",
+        "unite": "%",
+        "configuration": {
+            "minValue": "0",
+            "maxValue": "100",
+            "visibilityCategory": "All",
+            "topic": "0001-#EP#-0021"
+        },
+        "type": "info"
     }
-  }
 }

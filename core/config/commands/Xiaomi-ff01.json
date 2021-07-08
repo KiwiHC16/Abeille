@@ -1,17 +1,16 @@
 {
-  "0000-#EP#-ff01-removed": {
-    "Comment": "changed ff01 to ff01removed to avoid homebridge to crash as Hex data are in this command info.",
-    "isVisible": 0,
-    "name": "Specific",
-    "order": 5,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "string",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c76622a7b",
-      "visibilityCategory": "additionalCommand"
+    "Xiaomi-ff01": {
+        "Comment": "changed ff01 to ff01removed to avoid homebridge to crash as Hex data are in this command info.",
+        "isVisible": 0,
+        "name": "Specific",
+        "isHistorized": "0",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "visibilityCategory": "additionalCommand",
+            "topic": "0000-#EP#-ff01-removed"
+        },
+        "type": "info"
     }
-  }
 }

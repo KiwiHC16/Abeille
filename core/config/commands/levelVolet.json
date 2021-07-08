@@ -1,22 +1,21 @@
 {
-  "0008-01-0000": {
-    "isVisible": 1,
-    "name": "Level",
-    "order": 8,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "FLAP_SLIDER",
-    "invertBinary": "0",
-    "template": "",
-    "unite": "%",
-    "configuration": {
-      "uniqId": "5c07c766240c1",
-      "minValue": "0",
-      "maxValue": "100",
-      "historizeRound": "0",
-      "calculValueOffset": "#value#/255*100",
-      "visibilityCategory": "All"
+    "levelVolet": {
+        "isVisible": 1,
+        "name": "Level",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "generic_type": "FLAP_SLIDER",
+        "invertBinary": "0",
+        "template": "",
+        "unite": "%",
+        "configuration": {
+            "minValue": "0",
+            "maxValue": "100",
+            "historizeRound": "0",
+            "calculValueOffset": "#value#\/255*100",
+            "visibilityCategory": "All",
+            "topic": "0008-01-0000"
+        },
+        "type": "info"
     }
-  }
 }

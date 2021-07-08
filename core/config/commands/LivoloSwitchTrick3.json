@@ -1,21 +1,19 @@
 {
-  "LivoloSwitchTrick3": {
-    "isVisible": 0,
-    "name": "LivoloSwitchTrick3",
-    "order": 7,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "LIGHT_ON",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "dsdfsgsgdsD12452FZqs",
-      "topic": "OnOff",
-      "request": "Action=On&EP=#EP#",
-      "visibilityCategory": "All",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "11"
+    "LivoloSwitchTrick3": {
+        "isVisible": 0,
+        "name": "LivoloSwitchTrick3",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "LIGHT_ON",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "OnOff",
+            "request": "Action=On&EP=#EP#",
+            "visibilityCategory": "All",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": "11"
+        },
+        "type": "action"
     }
-  }
 }

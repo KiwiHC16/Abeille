@@ -1,21 +1,19 @@
 {
-  "offGroupEP1": {
-    "name": "Off Gp1",
-    "order": 0,
-    "isVisible": 1,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210219_1020",
-      "topic": "CmdAbeille/#GroupeEP1#/OnOffGroup",
-      "request": "Off",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "icon": "<i class=\"icon jeedom-lumiere-off\"></i>"
+    "offGroupEP1": {
+        "name": "Off Gp1",
+        "isVisible": 1,
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "CmdAbeille\/#GroupeEP1#\/OnOffGroup",
+            "request": "Off",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "icon": "<i class=\"icon jeedom-lumiere-off\"><\/i>"
+        },
+        "type": "action"
     }
-  }
 }

@@ -1,24 +1,22 @@
 {
-  "spiritTrvModeSet": {
-    "isVisible": 0,
-    "name": "Set TRV Mode",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "message",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07a7632a123",
-      "topic": "WriteAttributeRequestTrvSpiritMode",
-      "request": "clusterId=0201&attributeId=4000&EP=01&Proprio=1037&attributeType=30&value=#message#",
-      "minValue": "00",
-      "maxValue": "255",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "spiritTrvModeSet": {
+        "isVisible": 0,
+        "name": "Set TRV Mode",
+        "isHistorized": "0",
+        "subType": "message",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "WriteAttributeRequestTrvSpiritMode",
+            "request": "clusterId=0201&attributeId=4000&EP=01&Proprio=1037&attributeType=30&value=#message#",
+            "minValue": "00",
+            "maxValue": "255",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

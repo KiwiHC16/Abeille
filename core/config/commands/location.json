@@ -1,16 +1,15 @@
 {
-  "0000-#EP#-0010": {
-    "isVisible": 0,
-    "name": "lieux",
-    "order": 1,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "string",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c76624219",
-      "visibilityCategory": "All"
+    "location": {
+        "isVisible": 0,
+        "name": "lieux",
+        "isHistorized": "0",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "visibilityCategory": "All",
+            "topic": "0000-#EP#-0010"
+        },
+        "type": "info"
     }
-  }
 }

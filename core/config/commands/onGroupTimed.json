@@ -1,21 +1,19 @@
 {
-  "onGroupTimed": {
-    "name": "OnTimed",
-    "order": 0,
-    "isVisible": 1,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07cqsq7sds6624hf493",
-      "topic": "CmdAbeille/#addrGroup#/OnOffGroupTimed",
-      "request": "action=On&onTime=#onTime#&offWaitTime=0000",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "icon": "<i class=\"icon jeedom2-bulb14\"></i>"
+    "onGroupTimed": {
+        "name": "OnTimed",
+        "isVisible": 1,
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "CmdAbeille\/#addrGroup#\/OnOffGroupTimed",
+            "request": "action=On&onTime=#onTime#&offWaitTime=0000",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "icon": "<i class=\"icon jeedom2-bulb14\"><\/i>"
+        },
+        "type": "action"
     }
-  }
 }

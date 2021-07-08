@@ -1,25 +1,23 @@
 {
-  "0403-01-0010": {
-    "Comment": "Type Generique = PRESSURE et pas WEATHER_PRESSURE sinon homebridge pas content.",
-    "isVisible": 1,
-    "name": "Pression",
-    "order": 5,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "PRESSURE",
-    "invertBinary": "0",
-    "template": "barometre",
-    "unite": "hPa",
-    "display": {
-      "forceReturnLineAfter": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c766247fc",
-      "calculValueOffset": "#value#/10",
-      "historizeRound": "1",
-      "visibilityCategory": "All",
-      "topic": "0403-01-0010"
+    "pression": {
+        "Comment": "Type Generique = PRESSURE et pas WEATHER_PRESSURE sinon homebridge pas content.",
+        "isVisible": 1,
+        "name": "Pression",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "generic_type": "PRESSURE",
+        "invertBinary": "0",
+        "template": "barometre",
+        "unite": "hPa",
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "configuration": {
+            "calculValueOffset": "#value#\/10",
+            "historizeRound": "1",
+            "visibilityCategory": "All",
+            "topic": "0403-01-0010"
+        },
+        "type": "info"
     }
-  }
 }

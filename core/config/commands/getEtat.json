@@ -1,19 +1,17 @@
 {
-  "getEtat": {
-    "isVisible": 0,
-    "name": "getEtat",
-    "order": 12,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c76623cdpksn1",
-      "topic": "ReadAttributeRequest",
-      "request": "EP=#EP#&clusterId=0006&attributeId=0000",
-      "RefreshData": "1",
-      "visibilityCategory": "additionalCommand"
+    "getEtat": {
+        "isVisible": 0,
+        "name": "getEtat",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "ReadAttributeRequest",
+            "request": "EP=#EP#&clusterId=0006&attributeId=0000",
+            "RefreshData": "1",
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "action"
     }
-  }
 }

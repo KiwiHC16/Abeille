@@ -1,19 +1,17 @@
 {
-  "BleuGroup": {
-    "name": "Bleu Group",
-    "order": 24,
-    "isHistorized": "0",
-    "isVisible": "1",
-    "Type": "action",
-    "subType": "other",
-    "configuration": {
-      "uniqId": "5c07sqc7662djh19fe",
-      "topic": "CmdAbeille/#addrGroup#/setColourGroup",
-      "request": "X=228F&Y=228F",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "0"
+    "BleuGroup": {
+        "name": "Bleu Group",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "subType": "other",
+        "configuration": {
+            "topic": "CmdAbeille\/#addrGroup#\/setColourGroup",
+            "request": "X=228F&Y=228F",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "0"
+        },
+        "type": "action"
     }
-  }
 }

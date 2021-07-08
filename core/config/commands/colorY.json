@@ -1,19 +1,18 @@
 {
-  "0300-#EP#-0004": {
-    "isVisible": 0,
-    "name": "colorY",
-    "order": 6,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "numeric",
-    "template": "badge",
-    "unite": "",
-    "display": {
-      "forceReturnLineAfter": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76622dfe",
-      "visibilityCategory": "additionalCommand"
+    "colorY": {
+        "isVisible": 0,
+        "name": "colorY",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "template": "badge",
+        "unite": "",
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "configuration": {
+            "visibilityCategory": "additionalCommand",
+            "topic": "0300-#EP#-0004"
+        },
+        "type": "info"
     }
-  }
 }

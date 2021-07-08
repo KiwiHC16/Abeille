@@ -1,19 +1,17 @@
 {
-  "High": {
-    "isVisible": 1,
-    "name": "High",
-    "order": 13,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "configuration": {
-	"uniqId": "5c07c766250c1",
-      "topic": "WriteAttributeRequestVibration",
-      "request": "Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=04030000&repeat=3",
-      "visibilityCategory": "Network"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "setSmokeSensivityHigh": {
+        "isVisible": 1,
+        "name": "High",
+        "isHistorized": "0",
+        "subType": "other",
+        "configuration": {
+            "topic": "WriteAttributeRequestVibration",
+            "request": "Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=04030000&repeat=3",
+            "visibilityCategory": "Network"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

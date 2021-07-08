@@ -1,22 +1,20 @@
 {
-  "onGroupEp4": {
-    "name": "On Gp4",
-    "order": 2,
-    "isVisible": 1,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210219_1012",
-      "topic": "CmdAbeille/#GroupeEP4#/OnOffGroup",
-      "request": "On",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "icon": "<i class=\"icon jeedom-lumiere-on\"></i>",
-      "forceReturnLineAfter": "1"
+    "onGroupEP4": {
+        "name": "On Gp4",
+        "isVisible": 1,
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "CmdAbeille\/#GroupeEP4#\/OnOffGroup",
+            "request": "On",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "icon": "<i class=\"icon jeedom-lumiere-on\"><\/i>",
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

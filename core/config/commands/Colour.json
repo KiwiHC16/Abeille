@@ -1,21 +1,19 @@
 {
-  "Colour": {
-    "isVisible": 0,
-    "name": "Colour",
-    "order": 13,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "message",
-    "configuration": {
-      "uniqId": "5c07c76621b07",
-      "topic": "setColour",
-      "request": "X=#title#&Y=#message#",
-      "visibilityCategory": "additionalCommand"
-    },
-    "display": {
-      "forceReturnLineAfter": "0",
-      "title_placeholder": "XXXX",
-      "message_placeholder": "YYYY"
+    "Colour": {
+        "isVisible": 0,
+        "name": "Colour",
+        "isHistorized": "0",
+        "subType": "message",
+        "configuration": {
+            "topic": "setColour",
+            "request": "X=#title#&Y=#message#",
+            "visibilityCategory": "additionalCommand"
+        },
+        "display": {
+            "forceReturnLineAfter": "0",
+            "title_placeholder": "XXXX",
+            "message_placeholder": "YYYY"
+        },
+        "type": "action"
     }
-  }
 }

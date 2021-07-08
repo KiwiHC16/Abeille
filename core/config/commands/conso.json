@@ -1,18 +1,17 @@
 {
-  "tbd---conso--": {
-    "isVisible": 1,
-    "Type": "info",
-    "invertBinary": "0",
-    "isHistorized": "1",
-    "name": "Conso",
-    "unite": "kWh",
-    "order": 16,
-    "subType": "numeric",
-    "template": "badge",
-    "configuration": {
-      "uniqId": "5c07c76622e9e",
-      "historizeRound": "3",
-      "visibilityCategory": "All"
+    "conso": {
+        "isVisible": 1,
+        "invertBinary": "0",
+        "isHistorized": "1",
+        "name": "Conso",
+        "unite": "kWh",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": {
+            "historizeRound": "3",
+            "visibilityCategory": "All",
+            "topic": "tbd---conso--"
+        },
+        "type": "info"
     }
-  }
 }

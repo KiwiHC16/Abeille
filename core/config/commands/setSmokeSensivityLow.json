@@ -1,16 +1,14 @@
 {
-  "Low": {
-    "isVisible": 1,
-    "name": "Low",
-    "order": 11,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "configuration": {
-	"uniqId": "5c07c76625134",
-      "topic": "WriteAttributeRequestVibration",
-      "request": "Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=04010000&repeat=3",
-      "visibilityCategory": "Network"
+    "setSmokeSensivityLow": {
+        "isVisible": 1,
+        "name": "Low",
+        "isHistorized": "0",
+        "subType": "other",
+        "configuration": {
+            "topic": "WriteAttributeRequestVibration",
+            "request": "Proprio=115f&clusterId=0500&attributeId=fff1&attributeType=23&value=04010000&repeat=3",
+            "visibilityCategory": "Network"
+        },
+        "type": "action"
     }
-  }
 }

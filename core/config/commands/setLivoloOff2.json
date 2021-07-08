@@ -1,22 +1,20 @@
 {
-  "setLivoloOff2": {
-    "name": "Off 2",
-    "order": 11,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "LIGHT_OFF",
-    "invertBinary": "0",
-    "template": "",
-    "isVisible": 1,
-    "display": {
-      "forceReturnLineAfter": "1"
-    },
-    "configuration": {
-      "uniqId": "5c0df76624cf12",
-      "topic": "setLevelRaw",
-      "request": "EP=#EP#&Level=1&duration=02",
-      "visibilityCategory": "All"
+    "setLivoloOff2": {
+        "name": "Off 2",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "LIGHT_OFF",
+        "invertBinary": "0",
+        "template": "",
+        "isVisible": 1,
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "configuration": {
+            "topic": "setLevelRaw",
+            "request": "EP=#EP#&Level=1&duration=02",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
     }
-  }
 }

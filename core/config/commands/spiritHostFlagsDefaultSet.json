@@ -1,22 +1,20 @@
 {
-  "spiritHostFlagsDefaultSet": {
-    "isVisible": 0,
-    "name": "Default",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c0dsf7c76eak434",
-      "topic": "WriteAttributeRequestHostFlag",
-      "request": "clusterId=0201&attributeId=4008&EP=01&Proprio=1037&attributeType=22&value=000000",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "spiritHostFlagsDefaultSet": {
+        "isVisible": 0,
+        "name": "Default",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "WriteAttributeRequestHostFlag",
+            "request": "clusterId=0201&attributeId=4008&EP=01&Proprio=1037&attributeType=22&value=000000",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

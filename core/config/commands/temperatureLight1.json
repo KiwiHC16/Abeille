@@ -1,21 +1,20 @@
 {
-  "Temperature-Light": {
-    "isVisible": 1,
-    "name": "temperatureLight",
-    "order": 2,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "LIGHT_COLOR_TEMP",
-    "invertBinary": "0",
-    "template": "badge",
-    "unite": "K",
-    "configuration": {
-      "uniqId": "5407c76622430",
-      "visibilityCategory": "All",
-      "minValue": "2700",
-      "maxValue": "5000",
-      "visibiltyTemplate": "1"
+    "temperatureLight1": {
+        "isVisible": 1,
+        "name": "temperatureLight",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "generic_type": "LIGHT_COLOR_TEMP",
+        "invertBinary": "0",
+        "template": "badge",
+        "unite": "K",
+        "configuration": {
+            "visibilityCategory": "All",
+            "minValue": "2700",
+            "maxValue": "5000",
+            "visibiltyTemplate": "1",
+            "topic": "Temperature-Light"
+        },
+        "type": "info"
     }
-  }
 }

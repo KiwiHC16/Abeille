@@ -1,23 +1,21 @@
 {
-  "BindToZigateButton": {
-    "isVisible": 0,
-    "name": "BindToZigateButton",
-    "order": 13,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07cdd621802",
-      "topic": "bindShort",
-      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=02&ClusterId=FC00&reportToAddress=#ZiGateIEEE#",
-      "visibilityCategory": "Network",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "9"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "BindToZigateButton": {
+        "isVisible": 0,
+        "name": "BindToZigateButton",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "bindShort",
+            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=02&ClusterId=FC00&reportToAddress=#ZiGateIEEE#",
+            "visibilityCategory": "Network",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": "9"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

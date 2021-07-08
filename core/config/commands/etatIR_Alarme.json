@@ -1,18 +1,16 @@
 {
-  "0500-#EP#-0000": {
-    "isVisible": 1,
-    "name": "etat",
-    "order": 2,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "OPENING",
-    "invertBinary": "1",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07sdc76lzegf6sd2341a",
-      "visibilityCategory": "All",
-      "topic": "0500-#EP#-0000"
+    "etatIR_Alarme": {
+        "isVisible": 1,
+        "name": "etat",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "generic_type": "OPENING",
+        "invertBinary": "1",
+        "template": "",
+        "configuration": {
+            "visibilityCategory": "All",
+            "topic": "0500-#EP#-0000"
+        },
+        "type": "info"
     }
-  }
 }

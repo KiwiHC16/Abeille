@@ -1,23 +1,22 @@
 {
-  "0400-#EP#-0000": {
-    "isVisible": 1,
-    "name": "Luminosite",
-    "order": 3,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "BRIGHTNESS",
-    "invertBinary": "0",
-    "template": "",
-    "unite": "Lux",
-    "configuration": {
-      "calculValueOffset": "pow(10,#value#/10000+1/10000)",
-      "uniqId": "5c07c76s6242b1sd",
-      "visibilityCategory": "All",
-      "historizeRound": "0"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "luminositeXiaomi": {
+        "isVisible": 1,
+        "name": "Luminosite",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "generic_type": "BRIGHTNESS",
+        "invertBinary": "0",
+        "template": "",
+        "unite": "Lux",
+        "configuration": {
+            "calculValueOffset": "pow(10,#value#\/10000+1\/10000)",
+            "visibilityCategory": "All",
+            "historizeRound": "0",
+            "topic": "0400-#EP#-0000"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "info"
     }
-  }
 }

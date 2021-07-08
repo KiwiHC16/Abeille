@@ -1,16 +1,15 @@
 {
-  "0012-02-0055": {
-    "isVisible": 1,
-    "name": "Mouvement",
-    "order": 2,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "string",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c76622fb21",
-      "visibilityCategory": "All"
+    "cube_1": {
+        "isVisible": 1,
+        "name": "Mouvement",
+        "isHistorized": "0",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "visibilityCategory": "All",
+            "topic": "0012-02-0055"
+        },
+        "type": "info"
     }
-  }
 }

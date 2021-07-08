@@ -1,19 +1,17 @@
 {
-  "Level": {
-    "isVisible": 1,
-    "name": "setLevel",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "slider",
-    "value": "Level",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c76624df9",
-      "topic": "setLevelVolet",
-      "request": "Level=#slider#&duration=01",
-      "visibilityCategory": "All"
+    "setLevelVolet": {
+        "isVisible": 1,
+        "name": "setLevel",
+        "isHistorized": "0",
+        "subType": "slider",
+        "value": "Level",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "setLevelVolet",
+            "request": "Level=#slider#&duration=01",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
     }
-  }
 }

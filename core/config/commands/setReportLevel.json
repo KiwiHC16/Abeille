@@ -1,23 +1,21 @@
 {
-  "setReportLevel": {
-    "isVisible": 0,
-    "name": "setReportLevel",
-    "order": 30,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c76624fbb",
-      "topic": "setReport",
-      "request": "targetEndpoint=#EP#&ClusterId=0008&AttributeId=0000&AttributeType=20",
-      "visibilityCategory": "Network",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "11"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "setReportLevel": {
+        "isVisible": 0,
+        "name": "setReportLevel",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "setReport",
+            "request": "targetEndpoint=#EP#&ClusterId=0008&AttributeId=0000&AttributeType=20",
+            "visibilityCategory": "Network",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": "11"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

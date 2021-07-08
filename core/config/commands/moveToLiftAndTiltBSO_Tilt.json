@@ -1,21 +1,19 @@
 {
-  "moveToLiftAndTiltBSO_Tilt": {
-    "isVisible": 1,
-    "name": "Set Tilt",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "slider",
-    "value": "Tilt",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210222_1154",
-      "minValue": "0",
-      "maxValue": "90",
-      "topic": "moveToLiftAndTiltBSO",
-      "request": "EP=01&lift=#cmdInfo_Lift_#&inclinaison=#slider#&duration=10",
-      "visibilityCategory": "All"
+    "moveToLiftAndTiltBSO_Tilt": {
+        "isVisible": 1,
+        "name": "Set Tilt",
+        "isHistorized": "0",
+        "subType": "slider",
+        "value": "Tilt",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "minValue": "0",
+            "maxValue": "90",
+            "topic": "moveToLiftAndTiltBSO",
+            "request": "EP=01&lift=#cmdInfo_Lift_#&inclinaison=#slider#&duration=10",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
     }
-  }
 }

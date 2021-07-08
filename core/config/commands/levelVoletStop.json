@@ -1,22 +1,20 @@
 {
-  "Level Stop": {
-    "name": "Stop",
-    "order": 15,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "FLAP_STOP",
-    "invertBinary": "0",
-    "template": "",
-    "isVisible": 1,
-    "display": {
-      "forceReturnLineAfter": "1"
-    },
-    "configuration": {
-	"uniqId": "5c07c76624159",
-      "topic": "setLevelStop",
-      "request": "1",
-      "visibilityCategory": "All"
+    "levelVoletStop": {
+        "name": "Stop",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "FLAP_STOP",
+        "invertBinary": "0",
+        "template": "",
+        "isVisible": 1,
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "configuration": {
+            "topic": "setLevelStop",
+            "request": "1",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
     }
-  }
 }

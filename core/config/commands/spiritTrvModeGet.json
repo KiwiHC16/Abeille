@@ -1,18 +1,16 @@
 {
-  "spiritGetTrvMode": {
-    "isVisible": 0,
-    "name": "Get Trv Mode",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5caaa76623e001",
-      "topic": "ReadAttributeRequest",
-      "request": "EP=01&clusterId=0201&attributeId=4000&Proprio=1037",
-      "visibilityCategory": "additionalCommand"
+    "spiritTrvModeGet": {
+        "isVisible": 0,
+        "name": "Get Trv Mode",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "ReadAttributeRequest",
+            "request": "EP=01&clusterId=0201&attributeId=4000&Proprio=1037",
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "action"
     }
-  }
 }

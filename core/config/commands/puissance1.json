@@ -1,21 +1,20 @@
 {
-  "000C-01-0055": {
-    "isVisible": 0,
-    "Type": "info",
-    "invertBinary": "0",
-    "isHistorized": "1",
-    "name": "Puissance Inst",
-    "unite": "W",
-    "order": 20,
-    "subType": "numeric",
-    "generic_type": "POWER",
-    "template": "badge",
-    "configuration": {
-      "uniqId": "5c07jfc766sd249c9",
-      "historizeRound": "0",
-      "maxValue": "2500",
-      "minValue": "0",
-      "visibilityCategory": "additionalCommand"
+    "puissance1": {
+        "isVisible": 0,
+        "invertBinary": "0",
+        "isHistorized": "1",
+        "name": "Puissance Inst",
+        "unite": "W",
+        "subType": "numeric",
+        "generic_type": "POWER",
+        "template": "badge",
+        "configuration": {
+            "historizeRound": "0",
+            "maxValue": "2500",
+            "minValue": "0",
+            "visibilityCategory": "additionalCommand",
+            "topic": "000C-01-0055"
+        },
+        "type": "info"
     }
-  }
 }

@@ -104,6 +104,7 @@ class AbeilleTools
             /* Ignoring some entries */
             if (in_array($dirEntry, array(".", "..", "README.txt", "LISEZMOI.txt")))
                 continue;
+            // Tcharp38: TODO: Ignore non directories entries instead
 
             $fullPath = $rootDir.$dirEntry.'/'.$dirEntry.".json";
             if (!file_exists($fullPath)) {
@@ -192,121 +193,156 @@ class AbeilleTools
         return false; // Not found
     }
 
-    /*
-     * Read JSON config for given 'device'
-     * Returns: array() or false
-     */
-    public static function getJSonConfig($device, $from="Abeille")
-    {
-        // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate start');
+    // /*
+    //  * Read JSON config for given 'device'
+    //  * Returns: array() or false
+    //  */
+    // public static function getJSonConfig($device, $from="Abeille")
+    // {
+    //     // log::add('Abeille', 'debug', 'getJSonConfig start');
 
-        if ($from == 'Abeille')
-            $deviceFilename = devicesDir.$device.'/'.$device.'.json';
-        else
-            $deviceFilename = devicesLocalDir.$device.'/'.$device.'.json';
+    //     if ($from == 'Abeille')
+    //         $deviceFilename = devicesDir.$device.'/'.$device.'.json';
+    //     else
+    //         $deviceFilename = devicesLocalDir.$device.'/'.$device.'.json';
 
-        if (!is_file($deviceFilename)) {
-            log::add('Abeille', 'error', 'getJSonConfig('.$device.'): file not found '.$deviceFilename);
-            return false;
-            // log::add('Abeille', 'error', 'Nouvel équipement \''.$device.'\' inconnu. Utilisation de la config par défaut. [Modelisation]');
-            // $device = 'defaultUnknown';
-            // $deviceFilename = self::devicesDir.$device.'/'.$device.'.json';
-        }
+    //     if (!is_file($deviceFilename)) {
+    //         log::add('Abeille', 'error', 'getJSonConfig('.$device.'): file not found '.$deviceFilename);
+    //         return false;
+    //         // log::add('Abeille', 'error', 'Nouvel équipement \''.$device.'\' inconnu. Utilisation de la config par défaut. [Modelisation]');
+    //         // $device = 'defaultUnknown';
+    //         // $deviceFilename = self::devicesDir.$device.'/'.$device.'.json';
+    //     }
 
-        $content = file_get_contents($deviceFilename);
-        $deviceTemplate = json_decode($content, true);
-        if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', 'L\'équipement \''.$device.'\' a un mauvais fichier JSON.');
-            log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices(): content='.$content);
-            return;
-        }
+    //     $content = file_get_contents($deviceFilename);
+    //     $deviceTemplate = json_decode($content, true);
+    //     if (json_last_error() != JSON_ERROR_NONE) {
+    //         log::add('Abeille', 'error', 'L\'équipement \''.$device.'\' a un mauvais fichier JSON.');
+    //         log::add('Abeille', 'debug', 'getJSonConfig(): content='.$content);
+    //         return;
+    //     }
 
-        // Basic Commands
-        $deviceCmds = array();
+    //     // Basic Commands
+    //     $deviceCmds = array();
 
-        // Recupere les templates Cmd instanciées
-        foreach ($deviceTemplate[$device]['Commandes'] as $cmd => $file) {
-            if (substr($cmd, 0, 7) == "include") {
-                $deviceCmds += self::getJSonConfigFilebyCmd($file);
-            }
-        }
+    //     // Recupere les templates Cmd instanciées
+    //     foreach ($deviceTemplate[$device]['Commandes'] as $cmd => $file) {
+    //         if (substr($cmd, 0, 7) == "include") {
+    //             $deviceCmds += self::getCommandConfig($file);
+    //         }
+    //     }
 
-        // Ajoute les commandes au master
-        $deviceTemplate[$device]['Commandes'] = $deviceCmds;
+    //     // Ajoute les commandes au master
+    //     $deviceTemplate[$device]['Commandes'] = $deviceCmds;
 
-        // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate end');
-        return $deviceTemplate;
-    }
+    //     // log::add('Abeille', 'debug', 'getJSonConfig end');
+    //     return $deviceTemplate;
+    // }
 
     /**
-     * Needed for Template Generation
+     * Read given command JSON file
      */
-    public static function getJSonConfigFilebyCmd($cmd)
+    public static function getCommandConfig($cmdFile)
     {
-        $cmdFilename = cmdsDir.$cmd.'.json';
-
-        if (!is_file($cmdFilename)) {
-            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename is not a file: '.$cmdFilename);
+        $fullPath = cmdsDir.$cmdFile.'.json';
+        if (!is_file($fullPath)) {
+            log::add('Abeille', 'error', 'getCommandConfig: filename is not a file: '.$cmdFile);
             return array();
         }
 
-        $content = file_get_contents($cmdFilename);
-
-        $cmdJson = json_decode($content, true);
+        $jsonContent = file_get_contents($fullPath);
+        $cmd = json_decode($jsonContent, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: filename content is not a json: '.$content);
+            log::add('Abeille', 'error', 'getCommandConfig: content is not json: '.$jsonContent);
             return array();
         }
 
-        return $cmdJson;
+        return $cmd;
     }
 
     /*
-     * Needed for Template Generation
+     * Read given device JSON file and associated commands.
      */
-    public static function getJSonConfigFilebyDevicesTemplate($device = 'none')
+    public static function getDeviceConfig($deviceName, $from="Abeille")
     {
-        // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate start');
+        // log::add('Abeille', 'debug', 'getDeviceConfig start');
 
-        $deviceFilename = AbeilleTools::getDevicePath($device);
-        if ($deviceFilename === false) {
-            log::add('Abeille', 'error', 'Nouvel équipement \''.$device.'\' inconnu. Utilisation de la config par défaut. [Modelisation]');
-            $device = 'defaultUnknown';
-            $deviceFilename = devicesDir.$device.'/'.$device.'.json';
+        if ($from == 'Abeille')
+            $deviceFilename = devicesDir.$deviceName.'/'.$deviceName.'.json';
+        else
+            $deviceFilename = devicesLocalDir.$deviceName.'/'.$deviceName.'.json';
+        if (!is_file($deviceFilename)) {
+            log::add('Abeille', 'error', 'Equipement \''.$deviceName.'\' inconnu. Utilisation de la config par défaut.');
+            $deviceName = 'defaultUnknown';
+            $deviceFilename = devicesDir.$deviceName.'/'.$deviceName.'.json';
         }
 
-        $content = file_get_contents($deviceFilename);
-
-        // Recupere le template master
-        $deviceTemplate = json_decode($content, true);
+        $jsonContent = file_get_contents($deviceFilename);
+        $device = json_decode($jsonContent, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', 'L\'équipement \''.$device.'\' a un mauvais fichier JSON.');
-            log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices(): content='.$content);
+            log::add('Abeille', 'error', 'L\'équipement \''.$deviceName.'\' a un mauvais fichier JSON.');
+            log::add('Abeille', 'debug', 'getDeviceConfig(): content='.$jsonContent);
             return;
         }
 
-        // Basic Commands
+        // Basic commands
         $deviceCmds = array();
-        $deviceCmds += self::getJSonConfigFilebyCmd("IEEE-Addr");
-        $deviceCmds += self::getJSonConfigFilebyCmd("Link-Quality");
-        $deviceCmds += self::getJSonConfigFilebyCmd("Time-Time");
-        $deviceCmds += self::getJSonConfigFilebyCmd("Time-TimeStamp");
-        $deviceCmds += self::getJSonConfigFilebyCmd("Power-Source");
-        $deviceCmds += self::getJSonConfigFilebyCmd("Short-Addr");
-        $deviceCmds += self::getJSonConfigFilebyCmd("online");
+        $deviceCmds += self::getCommandConfig("IEEE-Addr");
+        $deviceCmds += self::getCommandConfig("Link-Quality");
+        $deviceCmds += self::getCommandConfig("Time-Time");
+        $deviceCmds += self::getCommandConfig("Time-TimeStamp");
+        $deviceCmds += self::getCommandConfig("Power-Source");
+        $deviceCmds += self::getCommandConfig("Short-Addr");
+        $deviceCmds += self::getCommandConfig("online");
 
-        // Recupere les templates Cmd instanciées
-        foreach ($deviceTemplate[$device]['Commandes'] as $cmd => $file) {
-            if (substr($cmd, 0, 7) == "include") {
-                $deviceCmds += self::getJSonConfigFilebyCmd($file);
+        // Other commands
+        if (isset($device[$deviceName]['commands']))
+            $jsonCmds = $device[$deviceName]['commands'];
+        else if (isset($device[$deviceName]['Commandes'])) // Old naming support
+            $jsonCmds = $device[$deviceName]['Commandes'];
+        if (isset($jsonCmds)) {
+            foreach ($jsonCmds as $cmd1 => $cmd2) {
+                if (substr($cmd1, 0, 7) == "include") {
+                    /* Old command JSON format: "includeX": "json_cmd_name" */
+                    $newCmd = self::getCommandConfig($cmd2);
+                    $cmdJName = $newCmd[$cmd2]['name'];
+                    $newCmd[$cmdJName] = $newCmd[$cmd2]; // Top key becomes Jeedom cmd name
+                    unset($newCmd[$cmd2]);
+                    $deviceCmds += $newCmd;
+                } else {
+                    /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
+                    log::add('Abeille', 'debug', 'getDeviceConfig(): New cmd format='.json_encode($cmd2));
+                    $cmdFName = $cmd2['use']; // File name without '.json'
+                    $newCmd = self::getCommandConfig($cmd2['use']);
+
+                    $newCmd[$cmd1] = $newCmd[$cmdFName]; // Top key becomes Jeedom cmd name
+                    unset($newCmd[$cmdFName]);
+
+                    if (isset($cmd2['execAtCreation'])) {
+                        $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
+                    }
+                    if (isset($cmd2['params'])) {
+                        // Overwritting settings with given parameters
+                        $params = explode('&', $cmd2['params']); // EP=01&CLUSTID=0000 => EP=01, CLUSTID=0000
+                        $text = json_encode($newCmd);
+                        foreach ($params as $p) {
+                            list($pName, $pVal) = explode("=", $p);
+                            // $text = str_replace('#EP#', $mainEP, $text);
+                            $text = str_replace('#'.$pName.'#', $pVal, $text);
+                        }
+                        $newCmd = json_decode($text, true);
+                    }
+                    log::add('Abeille', 'debug', 'getDeviceConfig(): newCmd='.json_encode($newCmd));
+                    $deviceCmds += $newCmd;
+                }
             }
         }
 
-        // Ajoute les commandes au master
-        $deviceTemplate[$device]['Commandes'] = $deviceCmds;
+        // $device[$deviceName]['Commandes'] = $deviceCmds;
+        $device[$deviceName]['commands'] = $deviceCmds;
 
-        // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevicesTemplate end');
-        return $deviceTemplate;
+        // log::add('Abeille', 'debug', 'getDeviceConfig end');
+        return $device[$deviceName];
     }
 
     /**

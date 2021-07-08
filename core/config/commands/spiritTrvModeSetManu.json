@@ -1,24 +1,22 @@
 {
-  "spiritTrvModeSetManu": {
-    "isVisible": 0,
-    "name": "Set TRV Mode Manu",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07a7ba2a123",
-      "topic": "WriteAttributeRequestTrvSpiritMode",
-      "request": "clusterId=0201&attributeId=4000&EP=01&Proprio=1037&attributeType=30&value=02",
-      "minValue": "00",
-      "maxValue": "255",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "spiritTrvModeSetManu": {
+        "isVisible": 0,
+        "name": "Set TRV Mode Manu",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "WriteAttributeRequestTrvSpiritMode",
+            "request": "clusterId=0201&attributeId=4000&EP=01&Proprio=1037&attributeType=30&value=02",
+            "minValue": "00",
+            "maxValue": "255",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

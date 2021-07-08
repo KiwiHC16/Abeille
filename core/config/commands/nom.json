@@ -1,17 +1,15 @@
 {
-  "0000-#EP#-0005": {
-    "isVisible": 0,
-    "name": "nom",
-    "order": 0,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "string",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c766243fa",
-      "visibilityCategory": "Network",
-      "topic": "0000-#EP#-0005"
+    "nom": {
+        "isVisible": 0,
+        "name": "nom",
+        "isHistorized": "0",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "visibilityCategory": "Network",
+            "topic": "0000-#EP#-0005"
+        },
+        "type": "info"
     }
-  }
 }

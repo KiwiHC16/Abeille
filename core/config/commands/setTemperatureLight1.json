@@ -1,24 +1,22 @@
 {
-  "setTemperatureLight": {
-    "isVisible": 1,
-    "name": "setTemperatureLight",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "slider",
-    "generic_type": "LIGHT_SET_COLOR_TEMP",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c762430a4",
-      "topic": "setTemperature",
-      "request": "EP=#EP#&slider=#slider#",
-      "minValue": "2700",
-      "maxValue": "5000",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "setTemperatureLight1": {
+        "isVisible": 1,
+        "name": "setTemperatureLight",
+        "isHistorized": "0",
+        "subType": "slider",
+        "generic_type": "LIGHT_SET_COLOR_TEMP",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "setTemperature",
+            "request": "EP=#EP#&slider=#slider#",
+            "minValue": "2700",
+            "maxValue": "5000",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

@@ -1,18 +1,16 @@
 {
-  "Identify": {
-    "isVisible": 0,
-    "name": "Identify",
-    "order": 21,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c76621cea",
-      "topic": "identifySend",
-      "request": "EP=#EP#&duration=0010",
-      "visibilityCategory": "additionalCommand"
+    "Identify": {
+        "isVisible": 0,
+        "name": "Identify",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "identifySend",
+            "request": "EP=#EP#&duration=0010",
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "action"
     }
-  }
 }

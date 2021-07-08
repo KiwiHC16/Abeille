@@ -1,21 +1,19 @@
 {
-  "BindToGroupLevelEP06": {
-    "Comment": "Used to bind the device to a group",
-    "isVisible": 0,
-    "name": "BindToGroupButtonEP6",
-    "order": 28,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210218_0253",
-      "topic": "BindToGroup",
-      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=06&clusterID=0008&reportToGroup=#GroupeEP6#",
-      "visibilityCategory": "Network",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "21"
+    "BindToGroupLevelEP06": {
+        "Comment": "Used to bind the device to a group",
+        "isVisible": 0,
+        "name": "BindToGroupButtonEP6",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "BindToGroup",
+            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=06&clusterID=0008&reportToGroup=#GroupeEP6#",
+            "visibilityCategory": "Network",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": "21"
+        },
+        "type": "action"
     }
-  }
 }

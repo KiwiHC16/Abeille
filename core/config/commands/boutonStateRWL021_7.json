@@ -1,18 +1,17 @@
 {
-  "fc00-02-0004-Event": {
-    "isVisible": 1,
-    "name": "EventButtonO",
-    "order": 3,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "string",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5aa78966232207",
-      "repeatEventManagement": "always",
-      "visibilityCategory": "All"
+    "boutonStateRWL021_7": {
+        "isVisible": 1,
+        "name": "EventButtonO",
+        "isHistorized": "1",
+        "subType": "string",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "visibilityCategory": "All",
+            "topic": "fc00-02-0004-Event"
+        },
+        "type": "info"
     }
-  }
 }

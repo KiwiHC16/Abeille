@@ -1,17 +1,15 @@
 {
-  "0403-01-0014": {
-    "isVisible": 0,
-    "name": "Scale",
-    "order": 6,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "string",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c76624950",
-      "visibilityCategory": "All",
-      "topic": "0403-01-0014"
+    "pressionScale": {
+        "isVisible": 0,
+        "name": "Scale",
+        "isHistorized": "0",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "visibilityCategory": "All",
+            "topic": "0403-01-0014"
+        },
+        "type": "info"
     }
-  }
 }

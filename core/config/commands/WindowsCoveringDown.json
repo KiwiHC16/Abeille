@@ -1,18 +1,17 @@
 {
-  "WindowsCoveringDown": {
-    "isVisible": 1,
-    "name": "Down",
-    "order": 7,
-    "isHistorized": 0,
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "topic": "WindowsCovering",
-      "request": "clusterCommand=01",
-      "visibilityCategory": "All"
+    "WindowsCoveringDown": {
+        "isVisible": 1,
+        "name": "Down",
+        "isHistorized": 0,
+        "subType": "other",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "WindowsCovering",
+            "request": "clusterCommand=01",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
     }
-  }
 }

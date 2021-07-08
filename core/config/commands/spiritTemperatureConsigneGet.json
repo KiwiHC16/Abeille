@@ -1,18 +1,16 @@
 {
-  "getConsigne": {
-    "isVisible": 0,
-    "name": "getConsigne",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5cccc76623e00",
-      "topic": "ReadAttributeRequest",
-      "request": "EP=01&clusterId=0201&attributeId=4003&Proprio=1037",
-      "visibilityCategory": "additionalCommand"
+    "spiritTemperatureConsigneGet": {
+        "isVisible": 0,
+        "name": "getConsigne",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "ReadAttributeRequest",
+            "request": "EP=01&clusterId=0201&attributeId=4003&Proprio=1037",
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "action"
     }
-  }
 }

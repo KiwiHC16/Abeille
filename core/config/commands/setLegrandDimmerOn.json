@@ -1,20 +1,18 @@
 {
-  "DimmerOn": {
-    "isVisible": 0,
-    "name": "DimmerOn",
-    "order": 6,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "configuration": {
-      "uniqId": "5c07c7662525sdsdff",
-      "topic": "WriteAttributeRequestActivateDimmer",
-      "request": "clusterId=fc01&attributeId=0000&attributeType=09&value=0101",
-      "repeatEventManagement": "always",
-      "visibilityCategory": "Network"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "setLegrandDimmerOn": {
+        "isVisible": 0,
+        "name": "DimmerOn",
+        "isHistorized": "0",
+        "subType": "other",
+        "configuration": {
+            "topic": "WriteAttributeRequestActivateDimmer",
+            "request": "clusterId=fc01&attributeId=0000&attributeType=09&value=0101",
+            "repeatEventManagement": "always",
+            "visibilityCategory": "Network"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

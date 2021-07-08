@@ -1,17 +1,16 @@
 {
-  "0006-#EP#-0000": {
-    "isVisible": 1,
-    "name": "etat",
-    "order": 7,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "binary",
-    "generic_type": "FLAP_STATE",
-    "invertBinary": "0",
-    "template": "light",
-    "configuration": {
-	"uniqId": "5c07c766239f7",
-      "visibilityCategory": "All"
+    "etatVolet": {
+        "isVisible": 1,
+        "name": "etat",
+        "isHistorized": "1",
+        "subType": "binary",
+        "generic_type": "FLAP_STATE",
+        "invertBinary": "0",
+        "template": "light",
+        "configuration": {
+            "visibilityCategory": "All",
+            "topic": "0006-#EP#-0000"
+        },
+        "type": "info"
     }
-  }
 }

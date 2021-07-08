@@ -1,18 +1,16 @@
 {
-  "getModelIdentifier": {
-    "isVisible": 0,
-    "name": "getModelIdentifier",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c76623e9b",
-      "topic": "ReadAttributeRequest",
-      "request": "clusterId=0000&attributeId=0005&EP=#EP#",
-      "visibilityCategory": "additionalCommand"
+    "getModelIdentifier": {
+        "isVisible": 0,
+        "name": "getModelIdentifier",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "ReadAttributeRequest",
+            "request": "clusterId=0000&attributeId=0005&EP=#EP#",
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "action"
     }
-  }
 }

@@ -1,21 +1,19 @@
 {
-  "0402-#EP#-0000": {
-    "isVisible": 1,
-    "name": "Temperature",
-    "order": 2,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "TEMPERATURE",
-    "invertBinary": "0",
-    "template": "tempIMG",
-    "configuration": {
-      "uniqId": "5c07cposte76625440",
-      "calculValueOffset": "",
-      "historizeRound": "1",
-      "visibilityCategory": "All",
-      "topic": "0402-#EP#-0000"
-    },
-    "unite": "°C"
-  }
+    "temperaturePrise": {
+        "isVisible": 1,
+        "name": "Temperature",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "generic_type": "TEMPERATURE",
+        "invertBinary": "0",
+        "template": "tempIMG",
+        "configuration": {
+            "calculValueOffset": "",
+            "historizeRound": "1",
+            "visibilityCategory": "All",
+            "topic": "0402-#EP#-0000"
+        },
+        "unite": "\u00b0C",
+        "type": "info"
+    }
 }

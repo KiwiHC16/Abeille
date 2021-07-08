@@ -1,20 +1,19 @@
 {
-  "ColourRGB": {
-    "isVisible": 0,
-    "name": "ColourRGB",
-    "order": 40,
-    "isHistorized": "0",
-    "generic_type": "LIGHT_COLOR",
-    "Type": "info",
-    "subType": "string",
-    "template": "badge",
-    "unite": "",
-    "display": {
-      "forceReturnLineAfter": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07a76622c51",
-      "visibilityCategory": "additionalCommand"
+    "ColourRGB": {
+        "isVisible": 0,
+        "name": "ColourRGB",
+        "isHistorized": "0",
+        "generic_type": "LIGHT_COLOR",
+        "subType": "string",
+        "template": "badge",
+        "unite": "",
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "configuration": {
+            "visibilityCategory": "additionalCommand",
+            "topic": "ColourRGB"
+        },
+        "type": "info"
     }
-  }
 }

@@ -1,19 +1,18 @@
 {
-  "colorRouge": {
-    "isVisible": 0,
-    "name": "colorRouge",
-    "order": 40,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "numeric",
-    "template": "badge",
-    "unite": "",
-    "display": {
-      "forceReturnLineAfter": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76622c51",
-      "visibilityCategory": "additionalCommand"
+    "colorRouge": {
+        "isVisible": 0,
+        "name": "colorRouge",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "template": "badge",
+        "unite": "",
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "configuration": {
+            "visibilityCategory": "additionalCommand",
+            "topic": "colorRouge"
+        },
+        "type": "info"
     }
-  }
 }

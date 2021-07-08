@@ -1,19 +1,17 @@
 {
-  "Vert": {
-    "name": "Vert",
-    "order": 26,
-    "isHistorized": "0",
-    "isVisible": "1",
-    "Type": "action",
-    "subType": "other",
-    "configuration": {
-	"uniqId": "5c07c766229f5",
-      "topic": "setColour",
-      "request": "EP=#EP#&X=147A&Y=D709",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "Vert": {
+        "name": "Vert",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "subType": "other",
+        "configuration": {
+            "topic": "setColour",
+            "request": "EP=#EP#&X=147A&Y=D709",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

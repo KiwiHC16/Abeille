@@ -1,20 +1,19 @@
 {
-  "Click-Middle": {
-    "isVisible": 1,
-    "name": "Click-Middle",
-    "order": 5,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "numeric",
-    "invertBinary": "0",
-    "template": "badge",
-    "configuration": {
-      "repeatEventManagement": "always",
-      "uniqId": "5c0ad76fa25aa",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "Click-Middle": {
+        "isVisible": 1,
+        "name": "Click-Middle",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "visibilityCategory": "All",
+            "topic": "Click-Middle"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "info"
     }
-  }
 }

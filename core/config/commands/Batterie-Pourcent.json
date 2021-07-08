@@ -1,19 +1,20 @@
 {
-  "Batterie-Pourcent": {
-    "isVisible": 0,
-    "name": "BatteriePourcent",
-    "isHistorized": 0,
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "BATTERY",
-    "invertBinary": "0",
-    "template": "vuMeter",
-    "unite": "%",
-    "configuration": {
-      "minValue": "0",
-      "maxValue": "100",
-      "historizeRound": "1",
-      "visibilityCategory": "Network"
+    "Batterie-Pourcent": {
+        "isVisible": 0,
+        "name": "BatteriePourcent",
+        "isHistorized": 0,
+        "subType": "numeric",
+        "generic_type": "BATTERY",
+        "invertBinary": "0",
+        "template": "vuMeter",
+        "unite": "%",
+        "configuration": {
+            "minValue": "0",
+            "maxValue": "100",
+            "historizeRound": "1",
+            "visibilityCategory": "Network",
+            "topic": "Batterie-Pourcent"
+        },
+        "type": "info"
     }
-  }
 }

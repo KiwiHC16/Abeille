@@ -1,18 +1,17 @@
 {
-  "0101-#EP#-0503": {
-    "isVisible": 1,
-    "name": "Angle",
-    "order": 3,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "configuration": {
-	"uniqId": "5c07c766256e4",
-      "repeatEventManagement": "always",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "vibrationAngle": {
+        "isVisible": 1,
+        "name": "Angle",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "visibilityCategory": "All",
+            "topic": "0101-#EP#-0503"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "info"
     }
-  }
 }

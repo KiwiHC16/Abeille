@@ -1,17 +1,16 @@
 {
-  "0006-01-0000": {
-    "isVisible": 1,
-    "name": "etat charge 0",
-    "order": 4,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "binary",
-    "generic_type": "LIGHT_STATE",
-    "invertBinary": "0",
-    "template": "light",
-    "configuration": {
-	"uniqId": "5c07cb66282cb",
-      "visibilityCategory": "All"
+    "etatCharge0": {
+        "isVisible": 1,
+        "name": "etat charge 0",
+        "isHistorized": "1",
+        "subType": "binary",
+        "generic_type": "LIGHT_STATE",
+        "invertBinary": "0",
+        "template": "light",
+        "configuration": {
+            "visibilityCategory": "All",
+            "topic": "0006-01-0000"
+        },
+        "type": "info"
     }
-  }
 }

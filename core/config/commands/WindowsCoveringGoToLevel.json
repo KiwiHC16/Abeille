@@ -1,19 +1,17 @@
 {
-  "WindowsCoveringGoToLevel": {
-    "isVisible": 1,
-    "name": "GoToLevel",
-    "order": 7,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210204_1330",
-      "topic": "WindowsCoveringLevel",
-      "request": "clusterCommand=05&liftValue=#slider#",
-      "visibilityCategory": "All"
+    "WindowsCoveringGoToLevel": {
+        "isVisible": 1,
+        "name": "GoToLevel",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "WindowsCoveringLevel",
+            "request": "clusterCommand=05&liftValue=#slider#",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
     }
-  }
 }

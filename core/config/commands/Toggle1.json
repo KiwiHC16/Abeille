@@ -1,22 +1,20 @@
 {
-  "Toggle1": {
-    "isVisible": 1,
-    "name": "Toggle1",
-    "order": 12,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "LIGHT_TOGGLE",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c7662272a",
-      "topic": "OnOff2",
-      "request": "Toggle",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "Toggle1": {
+        "isVisible": 1,
+        "name": "Toggle1",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "LIGHT_TOGGLE",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "OnOff2",
+            "request": "Toggle",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

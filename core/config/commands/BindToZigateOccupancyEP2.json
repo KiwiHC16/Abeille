@@ -1,19 +1,17 @@
 {
-  "BindToZigateOccupancyEP2": {
-    "Comment": "Used to bind the device to zigate",
-    "isVisible": 0,
-    "name": "BindToZigateOccupancy",
-    "order": 27,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07csd7662sd188qsqf",
-      "topic": "bindShort",
-      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=02&ClusterId=0406&reportToAddress=#ZiGateIEEE#",
-      "visibilityCategory": "Network"
+    "BindToZigateOccupancyEP2": {
+        "Comment": "Used to bind the device to zigate",
+        "isVisible": 0,
+        "name": "BindToZigateOccupancy",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "bindShort",
+            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=02&ClusterId=0406&reportToAddress=#ZiGateIEEE#",
+            "visibilityCategory": "Network"
+        },
+        "type": "action"
     }
-  }
 }

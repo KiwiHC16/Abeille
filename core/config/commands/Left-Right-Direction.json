@@ -1,20 +1,19 @@
 {
-  "80A7-Direction": {
-    "isVisible": 1,
-    "name": "Left-Right-Direction",
-    "order": 5,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "numeric",
-    "invertBinary": "0",
-    "template": "badge",
-    "configuration": {
-      "repeatEventManagement": "always",
-      "uniqId": "5a0af796275aa",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "Left-Right-Direction": {
+        "isVisible": 1,
+        "name": "Left-Right-Direction",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "visibilityCategory": "All",
+            "topic": "80A7-Direction"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "info"
     }
-  }
 }

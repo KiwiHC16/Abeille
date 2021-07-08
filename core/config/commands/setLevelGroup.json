@@ -1,21 +1,19 @@
 {
-  "Level": {
-    "name": "setLevel",
-    "order": 5,
-    "isVisible": 1,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "slider",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c76624d5e",
-      "topic": "CmdAbeille/#addrGroup#/setLevelGroup",
-      "request": "Level=#slider#&duration=01",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "setLevelGroup": {
+        "name": "setLevel",
+        "isVisible": 1,
+        "isHistorized": "0",
+        "subType": "slider",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "CmdAbeille\/#addrGroup#\/setLevelGroup",
+            "request": "Level=#slider#&duration=01",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

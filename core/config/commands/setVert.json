@@ -1,23 +1,21 @@
 {
-  "setVert": {
-    "isVisible": 0,
-    "name": "setVert",
-    "order": 43,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "slider",
-    "generic_type": "DONT",
-    "value": "colorVert",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c766251f1",
-      "topic": "setVert",
-      "request": "EP=#EP#&color=#slider#",
-      "visibilityCategory": "additionalCommand"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "setVert": {
+        "isVisible": 0,
+        "name": "setVert",
+        "isHistorized": "0",
+        "subType": "slider",
+        "generic_type": "DONT",
+        "value": "colorVert",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "setVert",
+            "request": "EP=#EP#&color=#slider#",
+            "visibilityCategory": "additionalCommand"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

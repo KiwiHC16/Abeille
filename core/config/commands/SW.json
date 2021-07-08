@@ -1,16 +1,15 @@
 {
-  "0000-#EP#-4000": {
-    "isVisible": 0,
-    "name": "SW",
-    "order": 2,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "string",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c76622387",
-      "visibilityCategory": "Network"
+    "SW": {
+        "isVisible": 0,
+        "name": "SW",
+        "isHistorized": "0",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "visibilityCategory": "Network",
+            "topic": "0000-#EP#-4000"
+        },
+        "type": "info"
     }
-  }
 }

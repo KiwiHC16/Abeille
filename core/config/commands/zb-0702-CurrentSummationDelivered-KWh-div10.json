@@ -1,15 +1,17 @@
 {
-  "0702-#EP#-0000": {
-    "isVisible": 1,
-    "name": "Total power",
-    "isHistorized": 0,
-    "Type": "info",
-    "subType": "numeric",
-    "invertBinary": "0",
-    "template": "badge",
-    "unite": "KWh",
-    "configuration": {
-        "calculValueOffset": "#value#/10"
+    "zb-0702-CurrentSummationDelivered-KWh-div10": {
+        "comment": "CurrentSummationDelivered, uint48 => dataType = 0x25",
+        "isVisible": 1,
+        "name": "Total power",
+        "isHistorized": 0,
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "unite": "KWh",
+        "configuration": {
+            "calculValueOffset": "#value#\/10",
+            "topic": "0702-#EP#-0000"
+        },
+        "type": "info"
     }
-  }
 }

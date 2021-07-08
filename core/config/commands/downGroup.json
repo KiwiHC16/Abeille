@@ -1,22 +1,20 @@
 {
-  "DownGroup": {
-    "name": "Down",
-    "order": 3,
-    "isVisible": 1,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c7662318e",
-      "topic": "CmdAbeille/#addrGroup#/DownGroup",
-      "request": "2B",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "0",
-      "icon": "<i class=\"icon jeedom2-idea13\"></i>"
+    "downGroup": {
+        "name": "Down",
+        "isVisible": 1,
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "CmdAbeille\/#addrGroup#\/DownGroup",
+            "request": "2B",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "0",
+            "icon": "<i class=\"icon jeedom2-idea13\"><\/i>"
+        },
+        "type": "action"
     }
-  }
 }

@@ -1,19 +1,17 @@
 {
-  "Off": {
-    "isVisible": 1,
-    "name": "Descendre",
-    "order": 12,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "FLAP_DOWN",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-	"uniqId": "5c07c7662456f",
-      "topic": "OnOff",
-      "request": "Off",
-      "visibilityCategory": "All"
+    "offVolet": {
+        "isVisible": 1,
+        "name": "Descendre",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "FLAP_DOWN",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "OnOff",
+            "request": "Off",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
     }
-  }
 }

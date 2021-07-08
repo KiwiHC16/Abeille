@@ -1,18 +1,17 @@
 {
-  "0006-02-0000": {
-    "isVisible": 1,
-    "name": "etat inter 1",
-    "order": 4,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07sdcb66dfdsd28sd2cb",
-      "visibilityCategory": "All",
-      "repeatEventManagement": "always"
+    "etatInter1": {
+        "isVisible": 1,
+        "name": "etat inter 1",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "visibilityCategory": "All",
+            "repeatEventManagement": "always",
+            "topic": "0006-02-0000"
+        },
+        "type": "info"
     }
-  }
 }

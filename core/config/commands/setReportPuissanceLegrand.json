@@ -1,20 +1,18 @@
 {
-  "setReportPuissanceLegrand": {
-    "isVisible": 0,
-    "name": "setReportPuissanceLegrand",
-    "order": 29,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5csd07c76z624fsd46",
-      "topic": "setReport",
-      "request": "targetEndpoint=#EP#&ClusterId=0B04&AttributeId=050B&AttributeType=29",
-      "visibilityCategory": "Network",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "11"
+    "setReportPuissanceLegrand": {
+        "isVisible": 0,
+        "name": "setReportPuissanceLegrand",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "setReport",
+            "request": "targetEndpoint=#EP#&ClusterId=0B04&AttributeId=050B&AttributeType=29",
+            "visibilityCategory": "Network",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": "11"
+        },
+        "type": "action"
     }
-  }
 }

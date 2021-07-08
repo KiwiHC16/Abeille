@@ -1,22 +1,20 @@
 {
-  "onGroupEp7": {
-    "name": "On Gp7",
-    "order": 2,
-    "isVisible": 1,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210219_1015",
-      "topic": "CmdAbeille/#GroupeEP7#/OnOffGroup",
-      "request": "On",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "icon": "<i class=\"icon jeedom-lumiere-on\"></i>",
-      "forceReturnLineAfter": "1"
+    "onGroupEP7": {
+        "name": "On Gp7",
+        "isVisible": 1,
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "CmdAbeille\/#GroupeEP7#\/OnOffGroup",
+            "request": "On",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "icon": "<i class=\"icon jeedom-lumiere-on\"><\/i>",
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

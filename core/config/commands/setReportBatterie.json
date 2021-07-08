@@ -1,22 +1,18 @@
 {
-  "setReportBatterie": {
-    "isVisible": 0,
-    "name": "setReportBatterie",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c76624ea43",
-      "topic": "setReport",
-      "request": "targetEndpoint=#EP#&ClusterId=0001&AttributeId=0021&AttributeType=20&MaxInterval=3500",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "12",
-      "visibilityCategory": "Network",
+    "setReportBatterie": {
+        "isVisible": 0,
+        "name": "setReportBatterie",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "setReport",
+            "request": "targetEndpoint=#EP#&ClusterId=0001&AttributeId=0021&AttributeType=20&MaxInterval=3500",
             "execAtCreation": "Yes",
-      "execAtCreationDelay": "11"
+            "execAtCreationDelay": "11",
+            "visibilityCategory": "Network"
+        },
+        "type": "action"
     }
-  }
 }

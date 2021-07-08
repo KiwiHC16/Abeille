@@ -1,19 +1,19 @@
 {
-  "BindToZigate-0006-03": {
-    "Comment": "Bind cluster 0006 EP 03 to zigate",
-    "isVisible": 0,
-    "name": "BindToZigate-0006-03",
-    "isHistorized": 0,
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "topic": "bindShort",
-      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=03&ClusterId=0006&reportToAddress=#ZiGateIEEE#",
-      "visibilityCategory": "Network",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "10"
+    "bindToZigate-EP03-0006": {
+        "Comment": "Bind cluster 0006 EP 03 to zigate",
+        "isVisible": 0,
+        "name": "BindToZigate-0006-03",
+        "isHistorized": 0,
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "bindShort",
+            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=03&ClusterId=0006&reportToAddress=#ZiGateIEEE#",
+            "visibilityCategory": "Network",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": "10"
+        },
+        "type": "action"
     }
-  }
 }

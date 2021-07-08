@@ -1,22 +1,21 @@
 {
-  "0001-01-0021": {
-    "isVisible": 0,
-    "name": "BatteriePourcent",
-    "order": 4,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "BATTERY",
-    "invertBinary": "0",
-    "template": "vuMeter",
-    "unite": "%",
-    "configuration": {
-      "uniqId": "5c07gh66216df",
-      "minValue": "0",
-      "maxValue": "100",
-      "historizeRound": "1",
-      "visibilityCategory": "Network",
-      "calculValueOffset": "#value#/2"
+    "spiritBatterie-Pourcent": {
+        "isVisible": 0,
+        "name": "BatteriePourcent",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "generic_type": "BATTERY",
+        "invertBinary": "0",
+        "template": "vuMeter",
+        "unite": "%",
+        "configuration": {
+            "minValue": "0",
+            "maxValue": "100",
+            "historizeRound": "1",
+            "visibilityCategory": "Network",
+            "calculValueOffset": "#value#\/2",
+            "topic": "0001-01-0021"
+        },
+        "type": "info"
     }
-  }
 }

@@ -1,24 +1,22 @@
 {
-  "danfossTemperatureConsigneSet": {
-    "isVisible": 1,
-    "name": "Consigne Set",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "slider",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210128_1100",
-      "topic": "WriteAttributeRequestGeneric",
-      "request": "EP=01&Proprio=&clusterId=0201&attributeId=0012&attributeType=29&value=#slider#",
-      "minValue": "5",
-      "maxValue": "30",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "danfossTemperatureConsigneSet": {
+        "isVisible": 1,
+        "name": "Consigne Set",
+        "isHistorized": "0",
+        "subType": "slider",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "WriteAttributeRequestGeneric",
+            "request": "EP=01&Proprio=&clusterId=0201&attributeId=0012&attributeType=29&value=#slider#",
+            "minValue": "5",
+            "maxValue": "30",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

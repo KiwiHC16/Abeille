@@ -1642,9 +1642,9 @@ while ($cron->running()) {
             }
 
             $jsonName = $eqLogic->getConfiguration('modeleJson');
-            $ep = $eqLogic->getConfiguration('mainEP');
             $ieee = $eqLogic->getConfiguration('IEEE');
-            Abeille::createDevice($dest, $addr, $ep, $ieee, $jsonName, "Mise-à-jour de '".$eqLogic->getName()."' à partir de son fichier JSON");
+            $mainEP = $eqLogic->getConfiguration('mainEP');
+            Abeille::createDevice($dest, $addr, $ieee, $mainEP, $jsonName, "Mise-à-jour de '".$eqLogic->getName()."' à partir de son fichier JSON");
 
             return;
         }
@@ -1687,7 +1687,7 @@ while ($cron->running()) {
         //     $trimmedValue = str_replace("\0", '', $trimmedValue);
 
         //     log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: ->'.$trimmedValue.'<-');
-        //     $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevicesTemplate($trimmedValue);
+        //     $AbeilleObjetDefinition = AbeilleTools::getDeviceConfig($trimmedValue);
         //     log::add('Abeille', 'debug', 'Template initial: '.json_encode($AbeilleObjetDefinition));
 
         //     // On recupere le EP
@@ -2183,7 +2183,7 @@ while ($cron->running()) {
             }
 
             /* Create or update device from JSON */
-            Abeille::createDevice($net, $addr, $ep, $ieee, $jsonName);
+            Abeille::createDevice($net, $addr, $ieee, $ep, $jsonName);
 
             if (!is_object($eqLogic))
                 $eqLogic = self::byLogicalId($logicalId, 'Abeille');
@@ -2600,12 +2600,14 @@ while ($cron->running()) {
 
     /* Create or update Jeedom device based on its JSON config.
        This is also used to create Abeille's specific device like "remotecontrol". */
-    public static function createDevice($net, $addr, $ep, $ieee, $jsonName, $userMsg = '') {
+    public static function createDevice($net, $addr, $ieee, $mainEP, $jsonName, $userMsg = '') {
 
         $logicalId = $net.'/'.$addr;
         $abeilleConfig = AbeilleTools::getParameters();
-        $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevicesTemplate($jsonName);
-        $eqType = $AbeilleObjetDefinition[$jsonName]['nameJeedom'];
+        $deviceConfig = AbeilleTools::getDeviceConfig($jsonName);
+        // $deviceConfig = $deviceConfig[$jsonName]; // Removing top key
+
+        $eqType = $deviceConfig['nameJeedom'];
 
         $elogic = self::byLogicalId($net."/".$addr, 'Abeille');
         if (!is_object($elogic)) {
@@ -2638,22 +2640,20 @@ while ($cron->running()) {
         }
 
         /* Whatever creation or update, common steps follows */
+        $objetConfiguration = $deviceConfig["configuration"];
 
-        // Updating '#EP#'
-        // TODO: Tcharp38: Replace should be done only on cmds
-        log::add('Abeille', 'debug', 'createDevice(): EP='.$ep);
-        $AbeilleObjetDefinitionJson = json_encode($AbeilleObjetDefinition);
-        $AbeilleObjetDefinitionJson = str_replace('#EP#', $ep, $AbeilleObjetDefinitionJson);
-        $AbeilleObjetDefinition = json_decode($AbeilleObjetDefinitionJson, true);
-        log::add('Abeille', 'debug', 'createDevice(): Updated EQ config='.json_encode($AbeilleObjetDefinition));
+        // Replacing all remaining '#EP#' with 'mainEP' value
+        // Note that this is possible only with old cmd JSON format (include XXX)
+        log::add('Abeille', 'debug', 'createDevice(): mainEP='.$mainEP);
+        $deviceConfigJson = json_encode($deviceConfig);
+        $deviceConfigJson = str_replace('#EP#', $mainEP, $deviceConfigJson);
+        $deviceConfig = json_decode($deviceConfigJson, true);
+        log::add('Abeille', 'debug', 'createDevice(): Updated EQ config='.json_encode($deviceConfig));
 
-        $objetDefSpecific = $AbeilleObjetDefinition[$jsonName];
-        $objetConfiguration = $objetDefSpecific["configuration"];
+        // $objetDefSpecific = $deviceConfig[$jsonName];
         log::add('Abeille', 'debug', 'Template config='.json_encode($objetConfiguration));
         $elogic->setConfiguration('modeleJson', $jsonName);
-        $elogic->setConfiguration('type', 'topic'); // ??, type = topic car pas json
-        // if (isset($objetConfiguration['uniqId']))
-        //     $elogic->setConfiguration('uniqId', $objetConfiguration["uniqId"]);
+        $elogic->setConfiguration('type', 'topic'); // ??, type = topic car pas json. Tcharp38: what for ?
 
         if (isset($objetConfiguration["icon"]))
             $icon = $objetConfiguration["icon"];
@@ -2712,19 +2712,19 @@ while ($cron->running()) {
             $elogic->setConfiguration('poll', $objetConfiguration['poll']);
         }
 
-        if (isset($objetDefSpecific["isVisible"]))
-            $elogic->setIsVisible($objetDefSpecific["isVisible"]);
+        if (isset($deviceConfig["isVisible"]))
+            $elogic->setIsVisible($deviceConfig["isVisible"]);
         else
             $elogic->setIsVisible(1);
         $elogic->setIsEnable(1);
-        if (isset($objetDefSpecific["timeout"]))
-            $elogic->setTimeout($objetDefSpecific["timeout"]);
+        if (isset($deviceConfig["timeout"]))
+            $elogic->setTimeout($deviceConfig["timeout"]);
 
-        if (isset($objetDefSpecific["category"]))
-            $categories = $objetDefSpecific["category"];
-        else if (isset($objetDefSpecific["Categorie"])) // Old name support
-            $categories = $objetDefSpecific["Categorie"];
-        // $elogic->setCategory(array_keys($objetDefSpecific["Categorie"])[0], $objetDefSpecific["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
+        if (isset($deviceConfig["category"]))
+            $categories = $deviceConfig["category"];
+        else if (isset($deviceConfig["Categorie"])) // Old name support
+            $categories = $deviceConfig["Categorie"];
+        // $elogic->setCategory(array_keys($deviceConfig["Categorie"])[0], $deviceConfig["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
         $allCat = ["heating","security","energy","light","opening","automatism","multimedia","default"];
         foreach ($allCat as $cat) { // Clear all
             $elogic->setCategory($cat, "0");
@@ -2736,10 +2736,10 @@ while ($cron->running()) {
         $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
         $elogic->save();
 
-        if (isset($objetDefSpecific['commands']))
-            $jsonCmds = $objetDefSpecific['commands'];
-        else if (isset($objetDefSpecific['Commandes'])) // Old name support
-            $jsonCmds = $objetDefSpecific['Commandes'];
+        if (isset($deviceConfig['commands']))
+            $jsonCmds = $deviceConfig['commands'];
+        else if (isset($v['Commandes'])) // Old name support
+            $jsonCmds = $deviceConfig['Commandes'];
 
         /* Removing obsolete commands, not listed in JSON.
            Might be needed for ex if device was previously 'defaultUnknown'. */
@@ -2761,32 +2761,38 @@ while ($cron->running()) {
 
         /* Creating or updating commands. */
         $order = 0;
-        foreach ($jsonCmds as $cmd => $cmdValueDefaut) {
+        foreach ($jsonCmds as $cmdKey => $cmdValueDefaut) {
+            // $cmdJName = $cmdValueDefaut["name"]; // Jeedom command name
+            $cmdJName = $cmdKey; // Jeedom command name
+            $cmdAName = $cmdValueDefaut["configuration"]['topic']; // Abeille command name
+            if (isset($cmdValueDefaut["configuration"]['request']))
+                $cmdAParams = $cmdValueDefaut["configuration"]['request']; // Abeille command params
+            else
+                $cmdAParams = '';
+
             /* New or existing cmd ? */
-            $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($elogic->getId(), $cmdValueDefaut["name"]);
+            $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($elogic->getId(), $cmdJName);
             if (!is_object($cmdlogic)) {
-                log::add('Abeille', 'debug', 'createDevice(): '.$eqName.", adding cmd '".$cmdValueDefaut["name"]."' => '".$cmd."'");
+                log::add('Abeille', 'debug', 'createDevice(): '.$eqName.", adding cmd '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
                 $cmdlogic = new AbeilleCmd();
             } else {
-                log::add('Abeille', 'debug', 'createDevice(): '.$eqName.", updating cmd '".$cmdValueDefaut["name"]."' => '".$cmd."'");
+                log::add('Abeille', 'debug', 'createDevice(): '.$eqName.", updating cmd '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
             }
 
             $cmdlogic->setEqLogic_id($elogic->getId());
             $cmdlogic->setEqType('Abeille');
-            $cmdlogic->setLogicalId($cmd);
+            $cmdlogic->setLogicalId($cmdKey);
             // Tcharp38: Cmds now created in order of declarations in device JSON.
             // Does not make sense to be defined in cmd itself since can be reused by different device.
             // if (isset($cmdValueDefaut["order"]))
             //     $cmdlogic->setOrder($cmdValueDefaut["order"]);
             $cmdlogic->setOrder($order++);
-            $cmdlogic->setName($cmdValueDefaut["name"]);
+            $cmdlogic->setName($cmdJName);
 
-            if ($cmdValueDefaut["Type"] == "info") {
-                // $cmdlogic->setConfiguration('topic', $nodeid.'/'.$cmd);
-                $cmdlogic->setConfiguration('topic', $cmd);
-            } else if ($cmdValueDefaut["Type"] == "action") {
-                // $cmdlogic->setConfiguration('retain', '0'); // not needed anymore, was used for mosquitto
-
+            if ($cmdValueDefaut["type"] == "info") {
+                // $cmdlogic->setConfiguration('topic', $cmdKey);
+                // Tcharp38: topic now added to all info cmds
+            } else if ($cmdValueDefaut["type"] == "action") {
                 if (isset($cmdValueDefaut["value"])) {
                     // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
                     log::add('Abeille', 'debug', 'createDevice(): Define cmd info pour cmd action: '.$elogic->getHumanName()." - ".$cmdValueDefaut["value"]);
@@ -2840,7 +2846,7 @@ while ($cron->running()) {
                 $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
                 $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
             }
-            $cmdlogic->setType($cmdValueDefaut["Type"]);
+            $cmdlogic->setType($cmdValueDefaut["type"]);
             $cmdlogic->setSubType($cmdValueDefaut["subType"]);
             if (array_key_exists("generic_type", $cmdValueDefaut))
                 $cmdlogic->setGeneric_type($cmdValueDefaut["generic_type"]);

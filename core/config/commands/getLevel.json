@@ -1,19 +1,17 @@
 {
-  "getLevel": {
-    "isVisible": 0,
-    "name": "getLevel",
-    "order": 13,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c76623d65",
-      "topic": "ReadAttributeRequest",
-      "request": "EP=#EP#&clusterId=0008&attributeId=0000",
-      "RefreshData": "1",
-      "visibilityCategory": "additionalCommand"
+    "getLevel": {
+        "isVisible": 0,
+        "name": "getLevel",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "ReadAttributeRequest",
+            "request": "EP=#EP#&clusterId=0008&attributeId=0000",
+            "RefreshData": "1",
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "action"
     }
-  }
 }

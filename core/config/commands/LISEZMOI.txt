@@ -14,16 +14,17 @@ Format de fichier
 Exemple de commande 'info'
 
     {
-      "0006-#EP#-0000": {
+      "etat": {
         "isVisible": 1,
         "name": "etat",
         "isHistorized": 0,
-        "Type": "info",
+        "type": "info",
         "subType": "binary",
         "generic_type": "LIGHT_STATE_BOOL",
         "invertBinary": "0",
         "template": "light",
         "configuration": {
+          "topic": "0006-#EP#-0000",
           "repeatEventManagement": "always",
           "visibilityCategory": "All"
         }
@@ -37,7 +38,7 @@ Exemple de commande 'action'
         "isVisible": 0,
         "name": "getEtat",
         "isHistorized": 0,
-        "Type": "action",
+        "type": "action",
         "subType": "other",
         "invertBinary": "0",
         "template": "",
@@ -51,13 +52,14 @@ Exemple de commande 'action'
     }
 
 * Clef d'entrée/identificateur: OBLIGATOIRE
-    Si commande info => logicalId
-    Si commande action => Ignoré pour l'instant
+  Doit être identique au nom de fichier.
 
-* name: OBLIGATOIRE
-  Nom de la commande vu par Jeedom.
+* name: OBLIGATOIRE si l'équipement utilise la directive "include", sinon optionnel
+  Nom par défaut de la commande vu par Jeedom.
+  Si le fichier est appelé avec la directive "include", c'est le nom officiel de la commande crée.
+  Si le fichier est appelé avec la directive "use", alors ce nom est ignoré.
 
-* Type: OBLIGATOIRE
+* type: OBLIGATOIRE
   Type de commande: info ou action
 
 * subType: OBLIGATOIRE
@@ -65,22 +67,26 @@ Exemple de commande 'action'
 
 * isVisible: optionnel.
   Indique si la commande est visible dans le widget.
-  Invisible par défaut.
+  Invisible par défaut ("isVisible":0).
 
 * isHistorized: optionnel.
   Indique si la commande doit être historisée.
-  Non par défaut.
+  Non par défaut ("isHistorized":0).
 
 * generic_type: ??
 
 * invertBinary: optionnel.
   Utile uniquement pour une commande 'info' de subType 'binary'.
+  Non inversé par défaut ("invertBinary":0).
 
 * template: ??
 
+* trig: optionnel
+  Permet, pour une commande info, de définir une commande qui sera mise-à-jour avec la valeur de sortie.
+
 * configuration:
 
-    * topic
-    * request
-    * historizeRound: optionnel
-      Nombre de digits apres la virgule pour commande 'info' type 'numeric'.
+  * topic
+  * request
+  * historizeRound: optionnel
+    Nombre de digits apres la virgule pour commande 'info' type 'numeric'.

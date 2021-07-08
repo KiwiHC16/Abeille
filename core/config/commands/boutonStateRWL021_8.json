@@ -1,18 +1,17 @@
 {
-  "fc00-02-0004-Duree": {
-    "isVisible": 1,
-    "name": "DureeButtonO",
-    "order": 3,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "string",
-    "generic_type": "",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5aa78966232248",
-      "repeatEventManagement": "always",
-      "visibilityCategory": "All"
+    "boutonStateRWL021_8": {
+        "isVisible": 1,
+        "name": "DureeButtonO",
+        "isHistorized": "1",
+        "subType": "string",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "visibilityCategory": "All",
+            "topic": "fc00-02-0004-Duree"
+        },
+        "type": "info"
     }
-  }
 }

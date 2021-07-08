@@ -1,19 +1,17 @@
 {
-  "Rouge": {
-    "name": "Rouge",
-    "order": 25,
-    "isHistorized": "0",
-    "isVisible": "1",
-    "Type": "action",
-    "subType": "other",
-    "configuration": {
-	"uniqId": "5c07c766222fe",
-      "topic": "setColour",
-      "request": "EP=#EP#&X=AE13&Y=51EB",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "0"
+    "Rouge": {
+        "name": "Rouge",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "subType": "other",
+        "configuration": {
+            "topic": "setColour",
+            "request": "EP=#EP#&X=AE13&Y=51EB",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "0"
+        },
+        "type": "action"
     }
-  }
 }

@@ -1,19 +1,17 @@
 {
-  "OnEp07": {
-    "isVisible": 1,
-    "name": "On 7",
-    "order": 7,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "generic_type": "LIGHT_ON",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210218_1712",
-      "topic": "OnOff",
-      "request": "Action=On&EP=07",
-      "visibilityCategory": "All"
+    "OnEp07": {
+        "isVisible": 1,
+        "name": "On 7",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "LIGHT_ON",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "OnOff",
+            "request": "Action=On&EP=07",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
     }
-  }
 }

@@ -1,21 +1,19 @@
 {
-  "getBatteryVolt": {
-    "isVisible": 0,
-    "name": "get Battery Volt",
-    "order": 10,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "20210128_1139",
-      "topic": "ReadAttributeRequest",
-      "request": "clusterId=0001&attributeId=0020&EP=01",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "getBatteryVolt": {
+        "isVisible": 0,
+        "name": "get Battery Volt",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "ReadAttributeRequest",
+            "request": "clusterId=0001&attributeId=0020&EP=01",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

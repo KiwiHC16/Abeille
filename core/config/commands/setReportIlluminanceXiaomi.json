@@ -1,20 +1,18 @@
 {
-  "setReportIlluminanceXiaomi": {
-    "isVisible": 0,
-    "name": "setReportIlluminanceXiaomi",
-    "order": 29,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c0789GS8Hdfsdf624f46",
-      "topic": "setReport",
-      "request": "targetEndpoint=#EP#&ClusterId=0400&AttributeId=0000&AttributeType=21&MinInterval=600&MaxInterval=700",
-      "visibilityCategory": "Network",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "9"
+    "setReportIlluminanceXiaomi": {
+        "isVisible": 0,
+        "name": "setReportIlluminanceXiaomi",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "setReport",
+            "request": "targetEndpoint=#EP#&ClusterId=0400&AttributeId=0000&AttributeType=21&MinInterval=600&MaxInterval=700",
+            "visibilityCategory": "Network",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": "9"
+        },
+        "type": "action"
     }
-  }
 }

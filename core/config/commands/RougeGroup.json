@@ -1,19 +1,17 @@
 {
-  "RougeGroup": {
-    "name": "Rouge Group",
-    "order": 25,
-    "isHistorized": "0",
-    "isVisible": "1",
-    "Type": "action",
-    "subType": "other",
-    "configuration": {
-      "uniqId": "5csds07c76sds6222fe",
-      "topic": "CmdAbeille/#addrGroup#/setColourGroup",
-      "request": "X=AE13&Y=51EB",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "0"
+    "RougeGroup": {
+        "name": "Rouge Group",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "subType": "other",
+        "configuration": {
+            "topic": "CmdAbeille\/#addrGroup#\/setColourGroup",
+            "request": "X=AE13&Y=51EB",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "0"
+        },
+        "type": "action"
     }
-  }
 }

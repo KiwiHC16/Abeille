@@ -1,22 +1,21 @@
 {
-  "tbd---puissance--": {
-    "isVisible": 1,
-    "Type": "info",
-    "invertBinary": "0",
-    "isHistorized": "1",
-    "name": "Puissance",
-    "unite": "W",
-    "order": 17,
-    "subType": "numeric",
-    "generic_type": "POWER",
-    "template": "badge",
-    "configuration": {
-      "uniqId": "5c065767c182a",
-      "repeatEventManagement": "always",
-      "historizeRound": "0",
-      "maxValue": "2500",
-      "minValue": "0",
-      "visibilityCategory": "All"
+    "consobis": {
+        "isVisible": 1,
+        "invertBinary": "0",
+        "isHistorized": "1",
+        "name": "Puissance",
+        "unite": "W",
+        "subType": "numeric",
+        "generic_type": "POWER",
+        "template": "badge",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "historizeRound": "0",
+            "maxValue": "2500",
+            "minValue": "0",
+            "visibilityCategory": "All",
+            "topic": "tbd---puissance--"
+        },
+        "type": "info"
     }
-  }
 }

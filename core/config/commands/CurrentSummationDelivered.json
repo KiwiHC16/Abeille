@@ -1,21 +1,20 @@
 {
-  "0702-01-0000": {
-    "isVisible": 1,
-    "name": "Conso",
-    "order": 4,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "invertBinary": "0",
-    "template": "badge",
-    "unite": "Wh",
-    "configuration": {
-      "uniqId": "5c07c76gggg621e11",
-      "minValue": "",
-      "maxValue": "",
-      "historizeRound": "0",
-      "calculValueOffset": "#value#*10",
-      "visibilityCategory": "All"
+    "CurrentSummationDelivered": {
+        "isVisible": 1,
+        "name": "Conso",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "unite": "Wh",
+        "configuration": {
+            "minValue": "",
+            "maxValue": "",
+            "historizeRound": "0",
+            "calculValueOffset": "#value#*10",
+            "visibilityCategory": "All",
+            "topic": "0702-01-0000"
+        },
+        "type": "info"
     }
-  }
 }

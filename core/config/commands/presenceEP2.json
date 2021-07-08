@@ -1,20 +1,19 @@
 {
-  "0406-02-0000": {
-    "isVisible": 1,
-    "name": "etat",
-    "order": 2,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "binary",
-    "generic_type": "PRESENCE",
-    "invertBinary": "1",
-    "template": "presence",
-    "configuration": {
-	"uniqId": "5c07c766dfgdfgf2477f",
-      "returnStateValue": "0",
-      "returnStateTime": "1",
-      "repeatEventManagement": "always",
-      "visibilityCategory": "All"
+    "presenceEP2": {
+        "isVisible": 1,
+        "name": "etat",
+        "isHistorized": "1",
+        "subType": "binary",
+        "generic_type": "PRESENCE",
+        "invertBinary": "1",
+        "template": "presence",
+        "configuration": {
+            "returnStateValue": "0",
+            "returnStateTime": "1",
+            "repeatEventManagement": "always",
+            "visibilityCategory": "All",
+            "topic": "0406-02-0000"
+        },
+        "type": "info"
     }
-  }
 }

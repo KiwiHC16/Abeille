@@ -1,21 +1,20 @@
 {
-  "0001-#EP#-0020": {
-    "isVisible": 0,
-    "name": "Batterie Volt",
-    "order": 9,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "numeric",
-    "generic_type": "BATTERY",
-    "invertBinary": "0",
-    "template": "vuMeter",
-    "unite": "V",
-    "configuration": {
-      "uniqId": "5c07ciussdsd7662165e",
-      "calculValueOffset": "#value#/10",
-      "minValue": "0",
-      "maxValue": "4",
-      "visibilityCategory": "All"
+    "Batterie-Volt-Konke": {
+        "isVisible": 0,
+        "name": "Batterie Volt",
+        "isHistorized": "1",
+        "subType": "numeric",
+        "generic_type": "BATTERY",
+        "invertBinary": "0",
+        "template": "vuMeter",
+        "unite": "V",
+        "configuration": {
+            "calculValueOffset": "#value#\/10",
+            "minValue": "0",
+            "maxValue": "4",
+            "visibilityCategory": "All",
+            "topic": "0001-#EP#-0020"
+        },
+        "type": "info"
     }
-  }
 }

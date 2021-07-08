@@ -1,9 +1,10 @@
 {
-  "0702-#EP#-0300": {
-    "name": "UnitOfMeasure",
-    "Type": "info",
-    "subType": "numeric",
-    "configuration": {
+    "zb-0702-UnitOfMeasure": {
+        "name": "UnitOfMeasure",
+        "subType": "numeric",
+        "configuration": {
+            "topic": "0702-#EP#-0300"
+        },
+        "type": "info"
     }
-  }
 }

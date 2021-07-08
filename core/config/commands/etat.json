@@ -1,18 +1,17 @@
 {
-  "0006-#EP#-0000": {
-    "isVisible": 1,
-    "name": "etat",
-    "order": 3,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "binary",
-    "generic_type": "LIGHT_STATE_BOOL",
-    "invertBinary": "0",
-    "template": "light",
-    "configuration": {
-	"uniqId": "5c07c76623220",
-      "repeatEventManagement": "always",
-      "visibilityCategory": "All"
+    "etat": {
+        "isVisible": 1,
+        "name": "etat",
+        "isHistorized": "1",
+        "subType": "binary",
+        "generic_type": "LIGHT_STATE_BOOL",
+        "invertBinary": "0",
+        "template": "light",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "visibilityCategory": "All",
+            "topic": "0006-#EP#-0000"
+        },
+        "type": "info"
     }
-  }
 }

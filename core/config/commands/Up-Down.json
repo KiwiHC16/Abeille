@@ -1,20 +1,19 @@
 {
-  "Up-Down": {
-    "isVisible": 1,
-    "name": "Up-Down",
-    "order": 5,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "numeric",
-    "invertBinary": "0",
-    "template": "badge",
-    "configuration": {
-      "uniqId": "5c0ad766225aa",
-      "visibilityCategory": "All",
-      "repeatEventManagement": "always"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "Up-Down": {
+        "isVisible": 1,
+        "name": "Up-Down",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+            "visibilityCategory": "All",
+            "repeatEventManagement": "always",
+            "topic": "Up-Down"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "info"
     }
-  }
 }

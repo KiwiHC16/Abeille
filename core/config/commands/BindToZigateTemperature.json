@@ -1,23 +1,19 @@
 {
-  "BindToZigateTemperature": {
-    "Comment": "Used to bind the device to zigate",
-    "isVisible": 0,
-    "name": "BindToZigateTemperature",
-    "order": 27,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c0567SL62188qsqf",
-      "topic": "bindShort",
-      "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=#EP#&ClusterId=0402&reportToAddress=#ZiGateIEEE#",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "10",
-      "visibilityCategory": "Network",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "9"
+    "BindToZigateTemperature": {
+        "Comment": "Used to bind the device to zigate",
+        "isVisible": 0,
+        "name": "BindToZigateTemperature",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "bindShort",
+            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=#EP#&ClusterId=0402&reportToAddress=#ZiGateIEEE#",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": "9",
+            "visibilityCategory": "Network"
+        },
+        "type": "action"
     }
-  }
 }

@@ -1,18 +1,16 @@
 {
-  "getTemperature": {
-    "isVisible": 0,
-    "name": "getTemperature",
-    "order": 14,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5caaa76623e004",
-      "topic": "ReadAttributeRequest",
-      "request": "EP=01&clusterId=0201&attributeId=0000&Proprio=",
-      "visibilityCategory": "additionalCommand"
+    "spiritTemperatureGet": {
+        "isVisible": 0,
+        "name": "getTemperature",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "ReadAttributeRequest",
+            "request": "EP=01&clusterId=0201&attributeId=0000&Proprio=",
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "action"
     }
-  }
 }

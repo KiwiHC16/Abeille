@@ -1,15 +1,16 @@
 {
-  "0B04-#EP#-0508": {
-    "isVisible": 1,
-    "Type": "info",
-    "invertBinary": "0",
-    "isHistorized": 0,
-    "name": "Current",
-    "unite": "mA",
-    "subType": "numeric",
-    "generic_type": "",
-    "template": "badge",
-    "configuration": {
+    "zb-0B04-RMSCurrent": {
+        "isVisible": 1,
+        "invertBinary": "0",
+        "isHistorized": 0,
+        "name": "Current",
+        "unite": "mA",
+        "subType": "numeric",
+        "generic_type": "",
+        "template": "badge",
+        "configuration": {
+            "topic": "0B04-#EP#-0508"
+        },
+        "type": "info"
     }
-  }
 }

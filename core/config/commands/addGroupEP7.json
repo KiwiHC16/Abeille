@@ -1,23 +1,21 @@
 {
-  "addGroupEP7": {
-    "isVisible": 0,
-    "name": "Add Group EP7",
-    "order": 13,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "201210218_0250",
-      "topic": "addGroup",
-      "request": "DestinationEndPoint=07&groupAddress=#GroupeEP7#",
-      "visibilityCategory": "Network",
-      "execAtCreation": "Yes",
-      "execAtCreationDelay": "11"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "addGroupEP7": {
+        "isVisible": 0,
+        "name": "Add Group EP7",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "addGroup",
+            "request": "DestinationEndPoint=07&groupAddress=#GroupeEP7#",
+            "visibilityCategory": "Network",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": "11"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "action"
     }
-  }
 }

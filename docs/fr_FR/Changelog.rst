@@ -1,12 +1,21 @@
 ChangeLog
 =========
 
+- ATTENTION: Format JSON des fichiers de commande modifié !
 - Osram classic B40TW: support préliminaire.
 - Xiaomi Luminosite: Ajout pourcentage batterie basé sur retour tension (#1166).
 - Interne: cron15 amélioré. Pas d'interrogation si eq appartient à zigate inactive.
 - Inclusion: support revu pour périph qui quitte puis revient sur le réseau.
 - Moniteur: Disponible pour tous et plus seulement en mode dev.
 - Firmware 3.1e disponible pour tous.
+- JSON commandes: Mise-à-jour syntaxe fichier de commande
+  - 'order' supprimé (obsolète)
+  - 'uniqId' supprimé (obsolète)
+  - 'Type' renommé en 'type'
+  - Ajout 'topic' si manquant pour commandes 'info'.
+  - Correction clef top commandes 'info' (clef = nom de fichier).
+- JSON équipements: Support préliminaire pour directive "use"
+  - Ex: "cmd_jeedom_name": { "use": "cmd_file_name", "params": "EP=01" }
 - Page EQ/avancé: version préliminaire de l'assistant de découverte.
 
 210704-STABLE-1

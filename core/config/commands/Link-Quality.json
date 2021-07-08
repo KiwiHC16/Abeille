@@ -1,16 +1,15 @@
 {
-  "Link-Quality": {
-    "isVisible": 0,
-    "name": "Link Quality",
-    "order": 19,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "string",
-    "invertBinary": "0",
-    "template": "badge",
-    "configuration": {
-	"uniqId": "5c07c76621e85",
-      "visibilityCategory": "Network"
+    "Link-Quality": {
+        "isVisible": 0,
+        "name": "Link Quality",
+        "isHistorized": "0",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+            "visibilityCategory": "Network",
+            "topic": "Link-Quality"
+        },
+        "type": "info"
     }
-  }
 }

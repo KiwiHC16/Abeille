@@ -1,21 +1,19 @@
 {
-  "sceneGroupRecall2": {
-    "name": "Sc2",
-    "order": 7,
-    "isVisible": 1,
-    "isHistorized": "0",
-    "Type": "action",
-    "subType": "other",
-    "invertBinary": "0",
-    "template": "",
-    "configuration": {
-      "uniqId": "5c07c76624a3e2",
-      "topic": "CmdAbeille/Ruche/sceneGroupRecall",
-      "request": "groupID=#addrGroup#&sceneID=02",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "0"
+    "sceneGroupRecall2": {
+        "name": "Sc2",
+        "isVisible": 1,
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "CmdAbeille\/Ruche\/sceneGroupRecall",
+            "request": "groupID=#addrGroup#&sceneID=02",
+            "visibilityCategory": "All"
+        },
+        "display": {
+            "forceReturnLineAfter": "0"
+        },
+        "type": "action"
     }
-  }
 }

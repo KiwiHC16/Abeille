@@ -1,16 +1,15 @@
 {
-  "0006-04-0000": {
-    "isVisible": 1,
-    "name": "Digital Output 4",
-    "order": 3,
-    "isHistorized": "1",
-    "Type": "info",
-    "subType": "binary",
-    "generic_type": "SWITCH_STATE",
-    "invertBinary": "0",
-    "configuration": {
-      "uniqId": "20210221_1931",
-      "visibilityCategory": "All"
+    "etatEp04out": {
+        "isVisible": 1,
+        "name": "Digital Output 4",
+        "isHistorized": "1",
+        "subType": "binary",
+        "generic_type": "SWITCH_STATE",
+        "invertBinary": "0",
+        "configuration": {
+            "visibilityCategory": "All",
+            "topic": "0006-04-0000"
+        },
+        "type": "info"
     }
-  }
 }

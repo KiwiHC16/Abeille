@@ -1,20 +1,19 @@
 {
-  "80A7-Cmd": {
-    "isVisible": 1,
-    "name": "Left-Right-Cmd",
-    "order": 5,
-    "isHistorized": "0",
-    "Type": "info",
-    "subType": "numeric",
-    "invertBinary": "0",
-    "template": "badge",
-    "configuration": {
-      "repeatEventManagement": "always",
-      "uniqId": "5a0ad796225aa",
-      "visibilityCategory": "All"
-    },
-    "display": {
-      "forceReturnLineAfter": "1"
+    "Left-Right-Cmd": {
+        "isVisible": 1,
+        "name": "Left-Right-Cmd",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "visibilityCategory": "All",
+            "topic": "80A7-Cmd"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        },
+        "type": "info"
     }
-  }
 }

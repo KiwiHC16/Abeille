@@ -37,18 +37,7 @@
         ajax::error(json_encode(array('status' => -1, 'error' => "Non connecté ou session expirée.")));
     }
 
-    // $pluginRoot = __DIR__.'/../..'; // Plugin root (ex: /var/www/html/plugins/Abeille)
-
-    /* Log feature for debug purposes */
-    function logToFile($logFile = '', $logLevel = 'NONE', $msg = "")
-    {
-        if (AbeilleTools::getNumberFromLevel($logLevel) > AbeilleTools::getPluginLogLevel('Abeille'))
-            return; // Nothing to do
-
-        $logDir = __DIR__.'/../../../../log/';
-        /* TODO: How to align logLevel width for better visual aspect ? */
-        file_put_contents($logDir.$logFile, '['.date('Y-m-d H:i:s').']['.$logLevel.'] '.$msg."\n", FILE_APPEND);
-    }
+    include_once __DIR__.'/../php/AbeilleLog.php'; // logDebug()
 
     try {
 
@@ -258,6 +247,22 @@
                 $status = 0;
             else
                 $status = -1; // Not found
+            ajax::success(json_encode(array('status' => $status)));
+        }
+
+        /* Write given text content to file.
+           'path' is relative to plugin root dir (/var/www/html/plugins/Abeille).
+           Returns: status=0 if Ok, -1 else */
+        if (init('action') == 'writeFile') {
+            $path = init('path');
+            $content = init('content');
+//logDebug("action=writeFile, path=".$path.", content=".$content);
+
+            $path = __DIR__.'/../../'.$path;
+            $status = 0;
+            if (file_put_contents($path, $content) === false)
+                $status = -1;
+
             ajax::success(json_encode(array('status' => $status)));
         }
 

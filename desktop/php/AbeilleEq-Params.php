@@ -120,17 +120,14 @@
         </div>
     </div>
 
-    <?php if (isset($dbgDeveloperMode)) { ?>
-        <hr>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Assistant EQ</label>
-            <div class="col-sm-5">
-                <?php
-                    echo '<a class="btn btn-warning" onclick="window.location.href = \'index.php?v=d&m=Abeille&p=AbeilleEqAssist&id='.$eqId.'\'">Lancer</a>';
-                ?>
-            </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Assistant EQ</label>
+        <div class="col-sm-5">
+            <?php
+                echo '<a class="btn btn-warning" onclick="window.location.href=\'index.php?v=d&m=Abeille&p=AbeilleEqAssist&id='.$eqId.'\'">Lancer</a>';
+            ?>
         </div>
-    <?php } ?>
+    </div>
 
     <?php
         // If eq is a zigate (short addr=0000), display special parameters

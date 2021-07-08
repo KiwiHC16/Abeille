@@ -1,15 +1,13 @@
 ChangeLog
 =========
 
-210706-BETA-1
-----------
-
 - Osram classic B40TW: support préliminaire.
 - Xiaomi Luminosite: Ajout pourcentage batterie basé sur retour tension (#1166).
 - Interne: cron15 amélioré. Pas d'interrogation si eq appartient à zigate inactive.
 - Inclusion: support revu pour périph qui quitte puis revient sur le réseau.
 - Moniteur: Disponible pour tous et plus seulement en mode dev.
 - Firmware 3.1e disponible pour tous.
+- Page EQ/avancé: version préliminaire de l'assistant de découverte.
 
 210704-STABLE-1
 ----------

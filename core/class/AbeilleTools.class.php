@@ -306,8 +306,10 @@ class AbeilleTools
                     /* Old command JSON format: "includeX": "json_cmd_name" */
                     $newCmd = self::getCommandConfig($cmd2);
                     $cmdJName = $newCmd[$cmd2]['name'];
-                    $newCmd[$cmdJName] = $newCmd[$cmd2]; // Top key becomes Jeedom cmd name
-                    unset($newCmd[$cmd2]);
+                    if ($cmd2 != $cmdJName) {
+                        $newCmd[$cmdJName] = $newCmd[$cmd2]; // Top key becomes Jeedom cmd name
+                        unset($newCmd[$cmd2]);
+                    }
                     $deviceCmds += $newCmd;
                 } else {
                     /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */

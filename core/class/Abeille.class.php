@@ -2841,8 +2841,9 @@ while ($cron->running()) {
             if (isset($cmdValueDefaut["isVisible"]))
                 $cmdlogic->setConfiguration("visibiltyTemplate", $cmdValueDefaut["isVisible"]);
 
-            // template
-            if (isset($cmdValueDefaut["template"])) {
+            // Default command widget = template
+            // Don't touch anythig if defined empty
+            if (isset($cmdValueDefaut["template"]) && ($cmdValueDefaut["template"] != "")) {
                 $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
                 $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
             }

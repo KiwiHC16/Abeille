@@ -41,7 +41,6 @@ Exemple de commande 'action'
         "type": "action",
         "subType": "other",
         "invertBinary": "0",
-        "template": "",
         "configuration": {
           "topic": "ReadAttributeRequest",
           "request": "EP=#EP#&clusterId=0006&attributeId=0000",
@@ -79,7 +78,8 @@ Exemple de commande 'action'
   Utile uniquement pour une commande 'info' de subType 'binary'.
   Non inversé par défaut ("invertBinary":0).
 
-* template: ??
+* template: optionnel.
+  Permet de définir le widget qui sera utilisé pour l'affichage de la commande.
 
 * trig: optionnel
   Permet, pour une commande info, de définir une commande qui sera mise-à-jour avec la valeur de sortie.

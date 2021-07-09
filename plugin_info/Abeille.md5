@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210708-BETA-1"
+# VERSION="210709-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -50,7 +50,7 @@ ee2be2ec60cb3b00ed0501cb232f7166 *Zigate_Module/ReadJN5168/read.php
 cb4c19627f5c54337889f0a1277fb17b *core/ajax/AbeilleFiles.ajax.php
 7650cfc074038eb9712acec23813d2da *core/ajax/AbeilleZigate.ajax.php
 8ebf0ec2066ea6fc6f6dc8b657f42059 *core/ajax/abeille.ajax.php
-9bf76c50188a037f8816e9e5c5a82e14 *core/class/Abeille.class.php
+5297f37e25d5d6403e43d388650ff9b0 *core/class/Abeille.class.php
 1b168df63dd8f213613058478ed3181f *core/class/AbeilleCmd.class.php
 c5494ce46b25d509ff930c26baea4e8c *core/class/AbeilleCmdPrepare.class.php
 21749ae5eba1db269696ef60e1e9c3db *core/class/AbeilleCmdProcess.class.php
@@ -61,7 +61,7 @@ adb2b059e849be7f417c1213583dc830 *core/class/AbeilleParser.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 2ebb56e1ea41091916d618f74fe15764 *core/class/AbeilleTemplateCommon.class.php
 a583bb8133f5cdfdd2261c2161b4a1e3 *core/class/AbeilleTemplateEq.class.php
-a6574a32a90a0a7063caa0b522399965 *core/class/AbeilleTools.class.php
+8da8e3554848e068bdcdb3ee880c90c8 *core/class/AbeilleTools.class.php
 fb15711b044915f5291add3ce425c751 *core/config/Abeille.config.ini
 3045d83f856c8bc5197fb7402d5a5e82 *core/config/Abeille.config.php
 96b14488adfe25210ff0b340be3f531d *core/config/HueCatalogue.json
@@ -120,7 +120,7 @@ aced9d9b0e07166253c008d580226f4c *core/config/commands/ColourRGB.json
 9022e78527e875893af1fad7b449bc9a *core/config/commands/IEEE-Addr.json
 57dd805b1a091c37254cf2858910a758 *core/config/commands/Identify.json
 47e8c4755830263fedf12749bdf4513e *core/config/commands/IkeaTeleCmdLeftRigth.json
-ec50316f4d239e108faaaefa5d795030 *core/config/commands/LISEZMOI.txt
+8ea2dc98175f352fefbe78de7982ae6a *core/config/commands/LISEZMOI.txt
 1a442327932fe61ced4e07841d15b5d1 *core/config/commands/Left-Right-Cmd.json
 e806667e5131b4916a29d63afccedbe0 *core/config/commands/Left-Right-Direction.json
 e5fe732dad35b34459f0ab89552a1985 *core/config/commands/LegrandContactorAuto.json
@@ -801,7 +801,7 @@ cb205aaa1f4d2269d9b99de9c41cf069 *desktop/php/AbeilleEq.php
 cb121a171c9d45f3e51c17d1e2b92542 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-e7040a941f3d40b081e9f0297c6da369 *docs/fr_FR/Changelog.rst
+c1c179610c4f6657fa4f391b77ae1ed9 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1022,11 +1022,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-40c9e03a4838efa7af05812336abc3ed *plugin_info/Abeille.version
+4d046a7007656be81a79e566e96fb754 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 b621d15e706e786e3db9f176d4163f63 *plugin_info/configuration.php
-4e5291efa612507545e9612128434539 *plugin_info/info.json
+becd7d9447a89d7c73bb0d71084e4709 *plugin_info/info.json
 ec45f2d7ccce5ec06908d4ce7388749e *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 d323b5c18f2b6806a0a79277985f17f6 *resources/AbeilleDeamon/AbeilleInterrogate.php

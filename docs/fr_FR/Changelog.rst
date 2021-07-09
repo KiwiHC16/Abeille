@@ -1,9 +1,6 @@
 ChangeLog
 =========
 
-210708-BETA-1
-----------
-
 - ATTENTION: Format JSON des fichiers de commande modifié !
 - Osram classic B40TW: support préliminaire.
 - Xiaomi Luminosite: Ajout pourcentage batterie basé sur retour tension (#1166).
@@ -22,6 +19,7 @@ ChangeLog
 - Page EQ/avancé: ajout du bouton "reconfigurer".
 - Page gestion: suppression du bouton "Apply Settings to NE".
 - Page EQ/avancé: version préliminaire de l'assistant de découverte.
+- Correction ecrasement widget commande (#2075).
 
 210704-STABLE-1
 ----------

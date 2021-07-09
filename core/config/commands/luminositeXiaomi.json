@@ -11,12 +11,12 @@
         "configuration": {
             "calculValueOffset": "pow(10,#value#\/10000+1\/10000)",
             "visibilityCategory": "All",
-            "historizeRound": "0",
-            "topic": "0400-#EP#-0000"
+            "historizeRound": "0"
         },
         "display": {
             "forceReturnLineAfter": "1"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0400-#EP#-0000"
     }
 }

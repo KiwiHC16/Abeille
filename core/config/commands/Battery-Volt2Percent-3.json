@@ -10,9 +10,9 @@
             "minValue": "0",
             "maxValue": "100",
             "calculValueOffset": "#value#*100\/30",
-            "historizeRound": 1,
-            "topic": "0001-#EP#-0020"
+            "historizeRound": 1
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0001-#EP#-0020"
     }
 }

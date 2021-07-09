@@ -7,9 +7,9 @@
         "invertBinary": "0",
         "template": "badge",
         "configuration": {
-            "visibilityCategory": "Network",
-            "topic": "IEEE-Addr"
+            "visibilityCategory": "Network"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "IEEE-Addr"
     }
 }

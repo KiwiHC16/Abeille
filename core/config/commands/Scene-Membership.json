@@ -7,9 +7,9 @@
         "invertBinary": "0",
         "template": "badge",
         "configuration": {
-            "visibilityCategory": "Network",
-            "topic": "Scene-Membership"
+            "visibilityCategory": "Network"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "Scene-Membership"
     }
 }

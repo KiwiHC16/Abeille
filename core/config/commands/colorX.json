@@ -7,9 +7,9 @@
         "template": "badge",
         "unite": "",
         "configuration": {
-            "visibilityCategory": "additionalCommand",
-            "topic": "0300-#EP#-0003"
+            "visibilityCategory": "additionalCommand"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0300-#EP#-0003"
     }
 }

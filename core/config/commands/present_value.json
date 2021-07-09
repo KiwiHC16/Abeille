@@ -7,13 +7,13 @@
         "invertBinary": "0",
         "template": "badge",
         "configuration": {
-            "visibilityCategory": "All",
-            "topic": "000f-#EP#-0055"
+            "visibilityCategory": "All"
         },
         "display": {
             "repeatEventManagement": "always",
             "forceReturnLineAfter": "1"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "000f-#EP#-0055"
     }
 }

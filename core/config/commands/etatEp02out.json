@@ -7,9 +7,9 @@
         "generic_type": "SWITCH_STATE",
         "invertBinary": "0",
         "configuration": {
-            "visibilityCategory": "All",
-            "topic": "0006-02-0000"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0006-02-0000"
     }
 }

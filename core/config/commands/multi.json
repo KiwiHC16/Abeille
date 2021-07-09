@@ -10,9 +10,9 @@
             "returnStateValue": "0",
             "returnStateTime": "1",
             "repeatEventManagement": "always",
-            "visibilityCategory": "All",
-            "topic": "0006-#EP#-8000"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0006-#EP#-8000"
     }
 }

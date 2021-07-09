@@ -8,12 +8,12 @@
         "template": "badge",
         "configuration": {
             "visibilityCategory": "All",
-            "repeatEventManagement": "always",
-            "topic": "Up-Down"
+            "repeatEventManagement": "always"
         },
         "display": {
             "forceReturnLineAfter": "1"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "Up-Down"
     }
 }

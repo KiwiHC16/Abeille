@@ -8,9 +8,8 @@
         "subType": "numeric",
         "generic_type": "",
         "template": "badge",
-        "configuration": {
-            "topic": "0B04-#EP#-0508"
-        },
-        "type": "info"
+        "configuration": [],
+        "type": "info",
+        "logicalId": "0B04-#EP#-0508"
     }
 }

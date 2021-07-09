@@ -8,9 +8,9 @@
         "template": "badge",
         "configuration": {
             "historizeRound": "2",
-            "visibilityCategory": "All",
-            "topic": "Var-RampUpDown"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "Var-RampUpDown"
     }
 }

@@ -7,9 +7,9 @@
         "subType": "string",
         "template": "badge",
         "configuration": {
-            "visibilityCategory": "All",
-            "topic": "Var-Duration"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "Var-Duration"
     }
 }

@@ -12,9 +12,9 @@
             "historizeRound": "0",
             "maxValue": "2300",
             "minValue": "0",
-            "visibilityCategory": "additionalCommand",
-            "topic": "000C-15-0055"
+            "visibilityCategory": "additionalCommand"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "000C-15-0055"
     }
 }

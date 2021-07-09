@@ -10,10 +10,10 @@
         "configuration": {
             "calculValueOffset": "#value#",
             "historizeRound": "1",
-            "visibilityCategory": "All",
-            "topic": "0201-#EP#-4000"
+            "visibilityCategory": "All"
         },
         "unite": "",
-        "type": "info"
+        "type": "info",
+        "logicalId": "0201-#EP#-4000"
     }
 }

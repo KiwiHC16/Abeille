@@ -10,9 +10,9 @@
             "forceReturnLineAfter": "1"
         },
         "configuration": {
-            "visibilityCategory": "additionalCommand",
-            "topic": "colorRouge"
+            "visibilityCategory": "additionalCommand"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "colorRouge"
     }
 }

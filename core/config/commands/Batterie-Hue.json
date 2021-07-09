@@ -13,9 +13,9 @@
             "minValue": "0",
             "maxValue": "100",
             "historizeRound": "1",
-            "visibilityCategory": "Network",
-            "topic": "0001-#EP#-0021"
+            "visibilityCategory": "Network"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0001-#EP#-0021"
     }
 }

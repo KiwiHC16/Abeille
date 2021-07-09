@@ -13,9 +13,9 @@
             "forceReturnLineAfter": "1"
         },
         "configuration": {
-            "visibilityCategory": "All",
-            "topic": "0403-01-0000"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0403-01-0000"
     }
 }

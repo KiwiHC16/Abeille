@@ -6,12 +6,12 @@
         "subType": "numeric",
         "configuration": {
             "repeatEventManagement": "always",
-            "visibilityCategory": "All",
-            "topic": "0101-#EP#-0503"
+            "visibilityCategory": "All"
         },
         "display": {
             "forceReturnLineAfter": "1"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0101-#EP#-0503"
     }
 }

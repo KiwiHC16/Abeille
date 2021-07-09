@@ -9,9 +9,9 @@
         "template": "badge",
         "configuration": {
             "historizeRound": "3",
-            "visibilityCategory": "All",
-            "topic": "tbd---conso--"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "tbd---conso--"
     }
 }

@@ -13,9 +13,9 @@
             "historizeRound": "0",
             "maxValue": "16000",
             "minValue": "0",
-            "visibilityCategory": "All",
-            "topic": "tbd---current--"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "tbd---current--"
     }
 }

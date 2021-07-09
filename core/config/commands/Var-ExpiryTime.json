@@ -7,9 +7,9 @@
         "subType": "string",
         "template": "badge",
         "configuration": {
-            "visibilityCategory": "All",
-            "topic": "Var-ExpiryTime"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "Var-ExpiryTime"
     }
 }

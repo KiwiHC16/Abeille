@@ -7,9 +7,9 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-            "visibilityCategory": "Time",
-            "topic": "Time-Time"
+            "visibilityCategory": "Time"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "Time-Time"
     }
 }

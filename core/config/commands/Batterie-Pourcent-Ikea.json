@@ -11,9 +11,9 @@
         "configuration": {
             "minValue": "0",
             "maxValue": "100",
-            "visibilityCategory": "All",
-            "topic": "0001-#EP#-0021"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0001-#EP#-0021"
     }
 }

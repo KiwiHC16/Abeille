@@ -12,9 +12,9 @@
             "minValue": "0",
             "maxValue": "100",
             "historizeRound": "1",
-            "visibilityCategory": "Network",
-            "topic": "Batterie-Pourcent"
+            "visibilityCategory": "Network"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "Batterie-Pourcent"
     }
 }

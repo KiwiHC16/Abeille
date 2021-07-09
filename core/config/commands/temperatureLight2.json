@@ -12,9 +12,9 @@
             "visibilityCategory": "All",
             "minValue": "2000",
             "maxValue": "6500",
-            "visibiltyTemplate": "1",
-            "topic": "Temperature-Light"
+            "visibiltyTemplate": "1"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "Temperature-Light"
     }
 }

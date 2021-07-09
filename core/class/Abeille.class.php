@@ -2611,6 +2611,7 @@ while ($cron->running()) {
 
         $elogic = self::byLogicalId($net."/".$addr, 'Abeille');
         if (!is_object($elogic)) {
+            $newEq = true;
             log::add('Abeille', 'debug', 'createDevice(): New device '.$net.'/'.$addr);
             if ($jsonName != "defaultUnknown")
                 message::add("Abeille", "Nouvel équipement identifié (".$eqType."). Création en cours. Rafraîchissez votre dashboard dans qq secondes.", '');
@@ -2627,6 +2628,7 @@ while ($cron->running()) {
             $elogic->setLogicalId($logicalId);
             $elogic->setObject_id($abeilleConfig['AbeilleParentId']);
         } else {
+            $newEq = false;
             log::add('Abeille', 'debug', 'createDevice(): Already existing device '.$net.'/'.$addr);
             $eqName = $elogic->getName();
             $eqPath = $elogic->getHumanName(); // Jeedom hierarchical name
@@ -2790,9 +2792,11 @@ while ($cron->running()) {
             /* New or existing cmd ? */
             $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($elogic->getId(), $cmdJName);
             if (!is_object($cmdlogic)) {
+                $newCmd = true;
                 log::add('Abeille', 'debug', 'createDevice(): '.$eqName.", adding cmd '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
                 $cmdlogic = new AbeilleCmd();
             } else {
+                $newCmd = false;
                 log::add('Abeille', 'debug', 'createDevice(): '.$eqName.", updating cmd '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
             }
 
@@ -2860,20 +2864,23 @@ while ($cron->running()) {
             if (isset($cmdValueDefaut["isVisible"]))
                 $cmdlogic->setConfiguration("visibiltyTemplate", $cmdValueDefaut["isVisible"]);
 
-            // Default command widget = template
-            // Don't touch anythig if defined empty
-            if (isset($cmdValueDefaut["template"]) && ($cmdValueDefaut["template"] != "")) {
-                $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
-                $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
+            /* Command widget: can be defaulted with 'template'
+               Updating only if new command to not overwrite user changes (see issue #2075) */
+            if ($newCmd) {
+                // Don't touch anything if defined empty in JSON
+                if (isset($cmdValueDefaut["template"]) && ($cmdValueDefaut["template"] != "")) {
+                    $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
+                    $cmdlogic->setTemplate('mobile', $cmdValueDefaut["template"]);
+                }
             }
+
             $cmdlogic->setType($cmdValueDefaut["type"]);
             $cmdlogic->setSubType($cmdValueDefaut["subType"]);
             if (array_key_exists("generic_type", $cmdValueDefaut))
                 $cmdlogic->setGeneric_type($cmdValueDefaut["generic_type"]);
 
-                if (isset($cmdValueDefaut["unite"])) {
+            if (isset($cmdValueDefaut["unite"]))
                 $cmdlogic->setUnite($cmdValueDefaut["unite"]);
-            }
 
             if (isset($cmdValueDefaut["isHistorized"]))
                 $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);

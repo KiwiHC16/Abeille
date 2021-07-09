@@ -13,12 +13,12 @@
             "maxValue": "100",
             "historizeRound": "0",
             "calculValueOffset": "#value#\/255*100",
-            "visibilityCategory": "All",
-            "topic": "0008-#EP#-0000"
+            "visibilityCategory": "All"
         },
         "display": {
             "forceReturnLineAfter": "1"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0008-#EP#-0000"
     }
 }

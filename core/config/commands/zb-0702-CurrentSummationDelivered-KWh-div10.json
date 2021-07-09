@@ -9,9 +9,9 @@
         "template": "badge",
         "unite": "KWh",
         "configuration": {
-            "calculValueOffset": "#value#\/10",
-            "topic": "0702-#EP#-0000"
+            "calculValueOffset": "#value#\/10"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0702-#EP#-0000"
     }
 }

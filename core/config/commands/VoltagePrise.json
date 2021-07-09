@@ -14,9 +14,9 @@
             "maxValue": "300",
             "minValue": "0",
             "visibilityCategory": "All",
-            "calculValueOffset": "#value#\/10",
-            "topic": "tbd---volt--"
+            "calculValueOffset": "#value#\/10"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "tbd---volt--"
     }
 }

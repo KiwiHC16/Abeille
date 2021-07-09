@@ -7,9 +7,9 @@
         "invertBinary": "0",
         "template": "badge",
         "configuration": {
-            "visibilityCategory": "Time",
-            "topic": "Time-TimeStamp"
+            "visibilityCategory": "Time"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "Time-TimeStamp"
     }
 }

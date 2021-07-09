@@ -7,9 +7,9 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-            "visibilityCategory": "All",
-            "topic": "000c-03-ff05"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "000c-03-ff05"
     }
 }

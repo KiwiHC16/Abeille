@@ -9,9 +9,9 @@
         "generic_type": "TEMPERATURE",
         "configuration": {
             "calculValueOffset": "#value#\/100",
-            "visibilityCategory": "All",
-            "topic": "0201-01-0012"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0201-01-0012"
     }
 }

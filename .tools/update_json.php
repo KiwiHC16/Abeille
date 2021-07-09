@@ -93,23 +93,6 @@
 
         $cmdUpdated = false;
 
-        /* Fixing info cmd case, where topic was undefined. Cmd key was used instead */
-        if (!isset($cmd[$fileName])) {
-            if ($type == "info") {
-                if (isset($cmd2['configuration']) && isset($cmd2['configuration']['topic']) && ($cmd2['configuration']['topic'] != $cmdKey)) {
-                    newCmdError($fileName, "ERROR", "Top key error but topic already defined");
-                    return;
-                }
-                if (!isset($cmd2['configuration']))
-                    $cmd2['configuration'] = array();
-                $cmd2['configuration']['topic'] = $cmdKey;
-                $cmdUpdated = true;
-                echo "  Corrected top key name & added 'configuration:topic'.\n";
-            } else {
-
-            }
-        }
-
         if (isset($cmd2['order'])) {
             unset($cmd2['order']);
             $cmdUpdated = true;
@@ -127,13 +110,19 @@
             return;
         }
 
-        if (!isset($cmd2['configuration']['topic'])) {
-            if ($type == "info") {
-                $cmd2['configuration']['topic'] = $cmdKey;
-                $cmdUpdated = true;
-                echo "  Added 'configuration:topic' from top key.\n";
-            } else
-                newCmdError($fileName, "ERROR", "Missing 'configuration:topic' field");
+        /* For info cmds, logicalId added = previous configuration:topic */
+        if (($type == "info") && !isset($cmd2['logicalId'])) {
+            if (!isset($cmd2['configuration']['topic'])) {
+                newCmdError($fileName, "ERROR", "Missing 'logicalId' field for info cmd");
+                return;
+            }
+            $cmd2['logicalId'] = $cmd2['configuration']['topic'];
+            unset($cmd2['configuration']['topic']);
+            $cmdUpdated = true;
+            echo "  Moved 'configuration:topic' to 'logicalId'.\n";
+        }
+       if (($type == "action") && !isset($cmd2['configuration']['topic'])) {
+            newCmdError($fileName, "ERROR", "Missing 'configuration:topic' field for action cmd");
         }
         if (isset($cmd2['configuration']['uniqId'])) {
             unset($cmd2['configuration']['uniqId']);

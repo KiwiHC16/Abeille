@@ -1626,7 +1626,7 @@ while ($cron->running()) {
 
             /* Remote control short addr = 'rcXX' */
             $rcAddr = sprintf("rc%02X", $max);
-            Abeille::createDevice($dest, $rcAddr, '', '', 'remotecontrol');
+            Abeille::createDevice($dest, $rcAddr, '', '01', 'remotecontrol');
 
             return;
         }
@@ -2182,7 +2182,8 @@ while ($cron->running()) {
                 }
             }
 
-            /* Create or update device from JSON */
+            /* Create or update device from JSON.
+               Note: ep = first End Point */
             Abeille::createDevice($net, $addr, $ieee, $ep, $jsonName);
 
             if (!is_object($eqLogic))
@@ -2386,7 +2387,6 @@ while ($cron->running()) {
         /* Permit join status (8014 response) */
         if ($msg['type'] == "permitJoin") {
             /* Reminder
-            $msg = array(
                 'src' => 'parser',
                 'type' => 'permitJoin',
                 'net' => $dest,
@@ -2642,6 +2642,11 @@ while ($cron->running()) {
         /* Whatever creation or update, common steps follows */
         $objetConfiguration = $deviceConfig["configuration"];
 
+        /* mainEP:
+           Was used to defined main End Point on which we could read model/manuf/location */
+        if ($mainEP == "#EP#")
+            $mainEP = "01"; // Defaulting to 01
+
         // Replacing all remaining '#EP#' with 'mainEP' value
         // Note that this is possible only with old cmd JSON format (include XXX)
         log::add('Abeille', 'debug', 'createDevice(): mainEP='.$mainEP);
@@ -2762,9 +2767,21 @@ while ($cron->running()) {
         /* Creating or updating commands. */
         $order = 0;
         foreach ($jsonCmds as $cmdKey => $cmdValueDefaut) {
+            if ($cmdValueDefaut["type"] == "info")
+                $type = "info";
+            else if ($cmdValueDefaut["type"] == "action")
+                $type = "action";
+            else {
+                log::add('Abeille', 'error', "La commande '".$cmdJName."' (fichier ".$cmdKey.".json) n'a pas de type défini => ignorée");
+                break;
+            }
+
             // $cmdJName = $cmdValueDefaut["name"]; // Jeedom command name
             $cmdJName = $cmdKey; // Jeedom command name
-            $cmdAName = $cmdValueDefaut["configuration"]['topic']; // Abeille command name
+            if ($type == "info")
+                $cmdAName = $cmdValueDefaut["logicalId"]; // Abeille command name
+            else
+                $cmdAName = $cmdValueDefaut["configuration"]['topic']; // Abeille command name
             if (isset($cmdValueDefaut["configuration"]['request']))
                 $cmdAParams = $cmdValueDefaut["configuration"]['request']; // Abeille command params
             else
@@ -2781,7 +2798,6 @@ while ($cron->running()) {
 
             $cmdlogic->setEqLogic_id($elogic->getId());
             $cmdlogic->setEqType('Abeille');
-            $cmdlogic->setLogicalId($cmdKey);
             // Tcharp38: Cmds now created in order of declarations in device JSON.
             // Does not make sense to be defined in cmd itself since can be reused by different device.
             // if (isset($cmdValueDefaut["order"]))
@@ -2789,10 +2805,13 @@ while ($cron->running()) {
             $cmdlogic->setOrder($order++);
             $cmdlogic->setName($cmdJName);
 
-            if ($cmdValueDefaut["type"] == "info") {
-                // $cmdlogic->setConfiguration('topic', $cmdKey);
-                // Tcharp38: topic now added to all info cmds
-            } else if ($cmdValueDefaut["type"] == "action") {
+            if (isset($cmdValueDefaut["logicalId"])) // Mandatory for info cmds
+                $cmdlogic->setLogicalId($cmdValueDefaut["logicalId"]);
+            else
+                $cmdlogic->setLogicalId($cmdKey);
+
+            if ($type == "info") { // info cmd
+            } else { // action cmd
                 if (isset($cmdValueDefaut["value"])) {
                     // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
                     log::add('Abeille', 'debug', 'createDevice(): Define cmd info pour cmd action: '.$elogic->getHumanName()." - ".$cmdValueDefaut["value"]);
@@ -2810,7 +2829,7 @@ while ($cron->running()) {
             /* Updating 'configuration' fields of eqLogic from JSON.
                In case of update, some fields may no longer be required ($unusedConfKey).
                They are removed if not updated from JSON. */
-            $unusedConfKey = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'uniqId', 'repeatEventManagement'];
+            $unusedConfKey = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'uniqId', 'repeatEventManagement', 'topic'];
             foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
                 // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
                 // $cmdlogic->setConfiguration($confKey, str_replace('#addr#', $addr, $confValue)); // Ce n'est plus necessaire car l adresse est maintenant dans le logicalId
@@ -2832,7 +2851,7 @@ while ($cron->running()) {
                 // Tcharp38: Is it the proper way to know if entry exists ?
                 if ($cmdlogic->getConfiguration($confKey) == null)
                     continue;
-                log::add('Abeille', 'debug', '  Removing obsolete configuration entry: '.$confKey);
+                // log::add('Abeille', 'debug', '  Removing obsolete configuration entry: '.$confKey);
                 $cmdlogic->setConfiguration($confKey, null); // Removing config entry
             }
 

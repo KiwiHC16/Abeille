@@ -11,9 +11,9 @@
             "returnStateTime": "1",
             "returnStateValue": "0",
             "AbeilleRejectValue": "0",
-            "visibilityCategory": "All",
-            "topic": "0006-03-0000"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0006-03-0000"
     }
 }

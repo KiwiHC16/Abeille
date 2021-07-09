@@ -8,9 +8,9 @@
         "invertBinary": "1",
         "template": "alert",
         "configuration": {
-            "visibilityCategory": "All",
-            "topic": "0500-#EP#-0000"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0500-#EP#-0000"
     }
 }

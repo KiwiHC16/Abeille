@@ -12,9 +12,9 @@
             "maxValue": "254",
             "historizeRound": "0",
             "calculValueOffset": "",
-            "visibilityCategory": "All",
-            "topic": "Lift"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "Lift"
     }
 }

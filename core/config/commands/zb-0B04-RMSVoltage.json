@@ -9,9 +9,8 @@
         "subType": "numeric",
         "generic_type": "",
         "template": "badge",
-        "configuration": {
-            "topic": "0B04-#EP#-0505"
-        },
-        "type": "info"
+        "configuration": [],
+        "type": "info",
+        "logicalId": "0B04-#EP#-0505"
     }
 }

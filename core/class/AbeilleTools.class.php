@@ -240,13 +240,15 @@ class AbeilleTools
     // }
 
     /**
-     * Read given command JSON file
+     * Read given command JSON file.
+     *  'cmdFName' = command file name without '.json'
+     * Returns: array()
      */
-    public static function getCommandConfig($cmdFile)
+    public static function getCommandConfig($cmdFName)
     {
-        $fullPath = cmdsDir.$cmdFile.'.json';
+        $fullPath = cmdsDir.$cmdFName.'.json';
         if (!is_file($fullPath)) {
-            log::add('Abeille', 'error', 'getCommandConfig: filename is not a file: '.$cmdFile);
+            log::add('Abeille', 'error', 'getCommandConfig: filename is not a file: '.$cmdFName);
             return array();
         }
 
@@ -255,6 +257,13 @@ class AbeilleTools
         if (json_last_error() != JSON_ERROR_NONE) {
             log::add('Abeille', 'error', 'getCommandConfig: content is not json: '.$jsonContent);
             return array();
+        }
+
+        /* Replacing top key => fileName => jeedomCmdName if different */
+        $cmdJName = $cmd[$cmdFName]['name'];
+        if ($cmdJName != $cmdFName) {
+            $cmd[$cmdJName] = $cmd[$cmdFName];
+            unset($cmd[$cmdFName]);
         }
 
         return $cmd;
@@ -304,21 +313,12 @@ class AbeilleTools
             foreach ($jsonCmds as $cmd1 => $cmd2) {
                 if (substr($cmd1, 0, 7) == "include") {
                     /* Old command JSON format: "includeX": "json_cmd_name" */
-                    $newCmd = self::getCommandConfig($cmd2);
-                    $cmdJName = $newCmd[$cmd2]['name'];
-                    if ($cmd2 != $cmdJName) {
-                        $newCmd[$cmdJName] = $newCmd[$cmd2]; // Top key becomes Jeedom cmd name
-                        unset($newCmd[$cmd2]);
-                    }
-                    $deviceCmds += $newCmd;
+                    $deviceCmds += self::getCommandConfig($cmd2);
                 } else {
                     /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
                     log::add('Abeille', 'debug', 'getDeviceConfig(): New cmd format='.json_encode($cmd2));
                     $cmdFName = $cmd2['use']; // File name without '.json'
                     $newCmd = self::getCommandConfig($cmd2['use']);
-
-                    $newCmd[$cmd1] = $newCmd[$cmdFName]; // Top key becomes Jeedom cmd name
-                    unset($newCmd[$cmdFName]);
 
                     if (isset($cmd2['execAtCreation'])) {
                         $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];

@@ -10,9 +10,9 @@
             "forceReturnLineAfter": "1"
         },
         "configuration": {
-            "visibilityCategory": "additionalCommand",
-            "topic": "0300-#EP#-0004"
+            "visibilityCategory": "additionalCommand"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0300-#EP#-0004"
     }
 }

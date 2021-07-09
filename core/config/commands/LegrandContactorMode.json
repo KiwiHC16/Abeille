@@ -7,9 +7,9 @@
         "invertBinary": "0",
         "template": "badge",
         "configuration": {
-            "visibilityCategory": "Network",
-            "topic": "FC41-#EP#-0000"
+            "visibilityCategory": "Network"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "FC41-#EP#-0000"
     }
 }

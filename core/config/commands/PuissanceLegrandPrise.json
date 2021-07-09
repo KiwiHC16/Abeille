@@ -13,9 +13,9 @@
             "historizeRound": "0",
             "maxValue": "4000",
             "minValue": "0",
-            "visibilityCategory": "All",
-            "topic": "0B04-#EP#-050B"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0B04-#EP#-050B"
     }
 }

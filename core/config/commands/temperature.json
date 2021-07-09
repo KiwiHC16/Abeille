@@ -11,9 +11,9 @@
         "configuration": {
             "calculValueOffset": "#value#\/100",
             "historizeRound": "1",
-            "visibilityCategory": "All",
-            "topic": "0402-#EP#-0000"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0402-#EP#-0000"
     }
 }

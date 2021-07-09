@@ -7,9 +7,9 @@
         "subType": "string",
         "invertBinary": "0",
         "configuration": {
-            "visibilityCategory": "All",
-            "topic": "0204-01-0001"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0204-01-0001"
     }
 }

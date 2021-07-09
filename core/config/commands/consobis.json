@@ -13,9 +13,9 @@
             "historizeRound": "0",
             "maxValue": "2500",
             "minValue": "0",
-            "visibilityCategory": "All",
-            "topic": "tbd---puissance--"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "tbd---puissance--"
     }
 }

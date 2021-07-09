@@ -8,9 +8,9 @@
         "template": "",
         "configuration": {
             "repeatEventManagement": "always",
-            "visibilityCategory": "All",
-            "topic": "0012-03-0055"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0012-03-0055"
     }
 }

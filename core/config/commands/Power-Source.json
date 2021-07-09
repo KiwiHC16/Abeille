@@ -10,9 +10,9 @@
         "invertBinary": "0",
         "template": "AbeillePower",
         "configuration": {
-            "visibilityCategory": "Network",
-            "topic": "Power-Source"
+            "visibilityCategory": "Network"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "Power-Source"
     }
 }

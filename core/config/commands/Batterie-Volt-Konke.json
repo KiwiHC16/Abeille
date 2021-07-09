@@ -12,9 +12,9 @@
             "calculValueOffset": "#value#\/10",
             "minValue": "0",
             "maxValue": "4",
-            "visibilityCategory": "All",
-            "topic": "0001-#EP#-0020"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0001-#EP#-0020"
     }
 }

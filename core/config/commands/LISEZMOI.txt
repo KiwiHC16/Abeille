@@ -17,6 +17,7 @@ Exemple de commande 'info'
       "etat": {
         "isVisible": 1,
         "name": "etat",
+        "logicalId": "0006-#EP#-0000",
         "isHistorized": 0,
         "type": "info",
         "subType": "binary",
@@ -24,7 +25,6 @@ Exemple de commande 'info'
         "invertBinary": "0",
         "template": "light",
         "configuration": {
-          "topic": "0006-#EP#-0000",
           "repeatEventManagement": "always",
           "visibilityCategory": "All"
         }
@@ -64,6 +64,9 @@ Exemple de commande 'action'
 * subType: OBLIGATOIRE
   Type d'information: binary, numeric, ...
 
+* logicalId: OBLIGATOIRE si commande INFO
+  Ex: '0400-01-0000' pour définir l'information 'luminosité'.
+
 * isVisible: optionnel.
   Indique si la commande est visible dans le widget.
   Invisible par défaut ("isVisible":0).
@@ -86,7 +89,15 @@ Exemple de commande 'action'
 
 * configuration:
 
-  * topic
-  * request
+  * topic: OBLIGATOIRE si commmande 'action'
+    Permet de définir la commande interne Abeille
+
+  * request: optionnel
+    Permet de définir les paramétres associés à la commande Abeille.
+
   * historizeRound: optionnel
     Nombre de digits apres la virgule pour commande 'info' type 'numeric'.
+
+  * visibilityCategory: ??
+
+  * repeatEventManagement: ??

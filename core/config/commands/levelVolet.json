@@ -13,9 +13,9 @@
             "maxValue": "100",
             "historizeRound": "0",
             "calculValueOffset": "#value#\/255*100",
-            "visibilityCategory": "All",
-            "topic": "0008-01-0000"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0008-01-0000"
     }
 }

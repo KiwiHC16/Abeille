@@ -7,9 +7,9 @@
         "invertBinary": "0",
         "template": "badge",
         "configuration": {
-            "visibilityCategory": "Network",
-            "topic": "Short-Addr"
+            "visibilityCategory": "Network"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "Short-Addr"
     }
 }

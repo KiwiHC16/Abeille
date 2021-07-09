@@ -13,9 +13,9 @@
             "historizeRound": "0",
             "maxValue": "16",
             "minValue": "0",
-            "visibilityCategory": "All",
-            "topic": "tdb--current--"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "tdb--current--"
     }
 }

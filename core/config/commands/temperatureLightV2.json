@@ -9,12 +9,12 @@
         "unite": "K",
         "configuration": {
             "historizeRound": "0",
-            "visibilityCategory": "All",
-            "topic": "0300-#EP#-0007"
+            "visibilityCategory": "All"
         },
         "display": {
             "forceReturnLineAfter": "1"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0300-#EP#-0007"
     }
 }

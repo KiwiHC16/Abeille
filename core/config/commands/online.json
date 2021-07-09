@@ -10,9 +10,9 @@
         "configuration": {
             "returnStateValue": "0",
             "returnStateTime": "60",
-            "visibilityCategory": "Network",
-            "topic": "online"
+            "visibilityCategory": "Network"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "online"
     }
 }

@@ -8,12 +8,12 @@
         "template": "badge",
         "configuration": {
             "repeatEventManagement": "always",
-            "visibilityCategory": "All",
-            "topic": "80A7-Cmd"
+            "visibilityCategory": "All"
         },
         "display": {
             "forceReturnLineAfter": "1"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "80A7-Cmd"
     }
 }

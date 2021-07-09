@@ -11,9 +11,9 @@
             "forceReturnLineAfter": "1"
         },
         "configuration": {
-            "visibilityCategory": "additionalCommand",
-            "topic": "ColourRGB"
+            "visibilityCategory": "additionalCommand"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "ColourRGB"
     }
 }

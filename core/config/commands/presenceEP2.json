@@ -11,9 +11,9 @@
             "returnStateValue": "0",
             "returnStateTime": "1",
             "repeatEventManagement": "always",
-            "visibilityCategory": "All",
-            "topic": "0406-02-0000"
+            "visibilityCategory": "All"
         },
-        "type": "info"
+        "type": "info",
+        "logicalId": "0406-02-0000"
     }
 }

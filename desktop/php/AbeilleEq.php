@@ -31,6 +31,7 @@
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
     echo '<script>var js_zgNb = '.$zgNb.';</script>'; // PHP to JS
+    echo '<script>var js_queueKeyXmlToCmd = '.queueKeyXmlToCmd.';</script>'; // PHP to JS
 ?>
 
 <!-- For all modals on 'Abeille' page. -->
@@ -378,8 +379,8 @@
     function reconfigure(eqId) {
         console.log("reconfigure("+eqId+")");
 
-        var msg = "{{Vous êtes sur le point de reconfigure cet équipement.";
-        msg += "<br>S'il fonctionne sur batterie, il vous faut le reveiller immediatement après avoir cliqué sur 'Ok'.";
+        var msg = "{{Vous êtes sur le point de reconfigurer cet équipement.";
+        msg += "<br>S'il fonctionne sur batterie, il vous faut le reveiller en même temps que vous cliquez sur 'Ok'.";
         msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
         bootbox.confirm(msg, function (result) {
             if (result == false)
@@ -391,6 +392,34 @@
             xhttp.onreadystatechange = function() {
             };
         });
+    }
+
+    function interrogate(request) {
+        console.log("interrogate("+request+")");
+
+        logicalId = "Abeille"+js_zgNb+"_"+js_eqAddr;
+        if (request == "getRoutingTable") {
+            topic = "Cmd"+logicalId+"_getRoutingTable";
+            payload = "address="+js_eqAddr;
+        } else if (request == "getBindingTable") {
+            topic = "Cmd"+logicalId+"_getBindingTable";
+            payload = "address="+js_eqAddr;
+        } else if (request == "getReportingConfig") {
+            topic = "Cmd"+logicalId+"_getReportingConfig";
+            clustId = document.getElementById("idClustId").value;
+            attrId = document.getElementById("idAttrId").value;
+            payload = "addr="+js_eqAddr+"_clustId="+clustId+"_attrId="+attrId;
+        } else {
+            console.log("Unknown request "+request);
+            return;
+        }
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueKeyXmlToCmd+"&topic="+topic+"&payload="+payload, false);
+        xhttp.send();
+
+        xhttp.onreadystatechange = function() {
+        };
     }
 
 	/*

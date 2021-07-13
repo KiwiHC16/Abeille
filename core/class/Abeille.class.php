@@ -2474,7 +2474,7 @@ while ($cron->running()) {
             $nodeid = implode($topicArray, '/');
             */
 
-        message::add("Abeille", "Création de l objet Ruche en cours, dans quelques secondes rafraichissez votre dashboard pour le voir.", '');
+        message::add("Abeille", "Création de l'équipement 'Ruche' en cours. Rafraichissez votre dashboard dans qq secondes.", '');
         $parameters_info = AbeilleTools::getParameters();
         $elogic = new Abeille();
         //id
@@ -2769,6 +2769,7 @@ while ($cron->running()) {
         /* Creating or updating commands. */
         $order = 0;
         foreach ($jsonCmds as $cmdKey => $cmdValueDefaut) {
+            $cmdJName = $cmdKey; // Jeedom command name
             if ($cmdValueDefaut["type"] == "info")
                 $type = "info";
             else if ($cmdValueDefaut["type"] == "action")
@@ -2779,7 +2780,6 @@ while ($cron->running()) {
             }
 
             // $cmdJName = $cmdValueDefaut["name"]; // Jeedom command name
-            $cmdJName = $cmdKey; // Jeedom command name
             if ($type == "info")
                 $cmdAName = $cmdValueDefaut["logicalId"]; // Abeille command name
             else

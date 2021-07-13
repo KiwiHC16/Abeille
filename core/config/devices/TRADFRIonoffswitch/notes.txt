@@ -29,10 +29,15 @@ MAC capa: 80
 - Clust 0001: 0020/0021/FFFD
 - Clust 0003: 0000/FFFD
 - Clust 0009: FFFD
-- Clust 0009: FFFD
-- Clust 0020: 0000/0001/0002/0003/FFFD
 - Clust 0020: 0000/0001/0002/0003/FFFD
 - Clust 1000: FFFD
-- Clust 1000: FFFD
 - Clust FC7C: 
-- Clust FC7C: 
+
+
+https://www.zigbee2mqtt.io/devices/E1743.html
+
+Binding #
+The E1743 can be bound to groups using binding. It can only be bound to 1 group at a time and cannot be bound to a device.
+
+By default this remote is bound to the default bind group which you first have to unbind it from.
+Right before executing the commands make sure to wake up the device by pressing a button on it.

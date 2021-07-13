@@ -270,7 +270,8 @@
         return "Unknown ".$clustId." cluster";
     }
 
-    /* Returns zigate 8000 cmd status based on given '$status' value. */
+    /* Returns zigate 8000 cmd status based on given '$status' value.
+       Tcharp38: Still unclear how to decode such statutes. */
     function zgGet8000Status($status)
     {
         $status = strtoupper($status);
@@ -283,6 +284,11 @@
             "03" => "Command failed",
             "04" => "Busy", // Node is carrying out a lengthy operation and is currently unable to handle the incoming command
             "05" => "Stack already started", // No new configuration accepted
+
+            // APS codes
+            "A4" => "Invalid binding",
+            "A5" => "Invalid group",
+            "A6" => "Invalid parameter",
         );
 
         if (array_key_exists($status, $statusesTable))

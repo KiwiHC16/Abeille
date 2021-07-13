@@ -573,16 +573,14 @@ parserLog('debug', "  cmds=".json_encode($cmds));
                     continue;
                 parserLog('debug', "    exec cmd ".$cmdJName);
                 $topic = $c['topic'];
-                // $topic = AbeilleCmd::updateField($dest, $cmd, $topic);
                 $request = $c['request'];
-                // $request = AbeilleCmd::updateField($dest, $cmd, $request);
                 // TODO: #EP# defaulted to first EP but should be
                 //       defined in cmd use if different target EP
                 $request = str_replace('#EP#', $eq['epFirst'], $request);
                 $request = str_replace('#addrIEEE#', $eq['ieee'], $request);
                 $zgNb = substr($net, 7); // 'AbeilleX' => 'X'
                 $request = str_replace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgNb]['ieee'], $request);
-parserLog('debug', '      request='.$request);
+parserLog('debug', '      topic='.$topic.', request='.$request);
                 $this->msgToCmd("Cmd".$net."/".$addr."/".$topic, $request);
             }
 
@@ -1353,21 +1351,6 @@ parserLog('debug', '      request='.$request);
          */
         function decode8002($dest, $payload, $lqi) {
 
-            // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
-            // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
-            // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
-            $statusDecode = array(
-                                  0x00 => "Active",
-                                  0x01 => "Dicovery_Underway",
-                                  0x02 => "Discovery_Failed",
-                                  0x03 => "Inactive",
-                                  0x04 => "Validation_Underway", // Got that if interrogate the Zigate
-                                  0x05 => "Reserved",
-                                  0x06 => "Reserved",
-                                  0x07 => "Reserved",
-                                  0x10 => " + Many To One", // 0x10 -> 1 0 000 bin -> Active + no constrain + Many To One + no route required
-                                  );
-
             // Decode first based on https://zigate.fr/documentation/commandes-zigate/
             $status                 = substr($payload, 0, 2);
             $profile                = substr($payload, 2, 4);
@@ -1378,8 +1361,7 @@ parserLog('debug', '      request='.$request);
             $srcAddress             = substr($payload,16, 4);
             $destinationAddressMode = substr($payload,20, 2);
             $dstAddress             = substr($payload,22, 4);
-            // $payload              // Will decode later depending on the message
-            $pl = substr($payload, 26); // Keeping payload only
+            $pl = substr($payload, 26); // Keeping remaining payload
 
             /* Log */
             $msgDecoded = '8002/Data indication'
@@ -1400,54 +1382,124 @@ parserLog('debug', '      request='.$request);
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $srcAddress, 4))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
-            // Routing Table Response
-            if (($profile == "0000") && ($cluster == "8032")) {
+            /* Profile 0000 */
+            if ($profile == "0000") {
+                // Routing Table Response (Mgmt_Rtg_rsp)
+                if ($cluster == "8032") {
 
-                $SQN                    = substr($payload,26, 2);
-                $status                 = substr($payload,28, 2);
-                $tableSize              = hexdec(substr($payload,30, 2));
-                $index                  = hexdec(substr($payload,32, 2));
-                $tableCount             = hexdec(substr($payload,34, 2));
+                    // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
+                    // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
+                    // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
+                    $statusDecode = array(
+                        0x00 => "Active",
+                        0x01 => "Dicovery_Underway",
+                        0x02 => "Discovery_Failed",
+                        0x03 => "Inactive",
+                        0x04 => "Validation_Underway", // Got that if interrogate the Zigate
+                        0x05 => "Reserved",
+                        0x06 => "Reserved",
+                        0x07 => "Reserved",
+                        0x10 => " + Many To One", // 0x10 -> 1 0 000 bin -> Active + no constrain + Many To One + no route required
+                        );
 
-                parserLog('debug', '  Routing table response'
-                           .', SQN='.$SQN
-                           .', Status='.$status
-                           .', tableSize='.$tableSize
-                           .', index='.$index
-                           .', tableCount='.$tableCount,
-                            "8002"
-                            );
+                    $SQN                    = substr($payload,26, 2);
+                    $status                 = substr($payload,28, 2);
+                    $tableSize              = hexdec(substr($payload,30, 2));
+                    $index                  = hexdec(substr($payload,32, 2));
+                    $tableCount             = hexdec(substr($payload,34, 2));
 
-                $routingTable = array();
+                    parserLog('debug', '  Routing table response'
+                            .', SQN='.$SQN
+                            .', Status='.$status
+                            .', tableSize='.$tableSize
+                            .', index='.$index
+                            .', tableCount='.$tableCount,
+                                "8002"
+                                );
 
-                for ($i = $index; $i < $index+$tableSize; $i++) {
+                    $routingTable = array();
 
-                    $addressDest=substr($payload,36+($i*10), 4);
+                    for ($i = $index; $i < $index+$tableSize; $i++) {
 
-                    $statusRouting = substr($payload,36+($i*10)+4,2);
-                    $statusDecoded = $statusDecode[ base_convert( $statusRouting, 16, 2) &  7 ];
-                    if (base_convert($statusRouting, 16, 10)>=0x10) $statusDecoded .= $statusDecode[ base_convert($statusRouting, 16, 2) & 0x10 ];
+                        $addressDest=substr($payload,36+($i*10), 4);
 
-                    $nextHop=substr($payload,36+($i*10)+4+2,4);
+                        $statusRouting = substr($payload,36+($i*10)+4,2);
+                        $statusDecoded = $statusDecode[ base_convert( $statusRouting, 16, 2) &  7 ];
+                        if (base_convert($statusRouting, 16, 10)>=0x10) $statusDecoded .= $statusDecode[ base_convert($statusRouting, 16, 2) & 0x10 ];
 
-                    parserLog('debug', '  address='.$addressDest.' status='.$statusDecoded.'('.$statusRouting.') Next Hop='.$nextHop, "8002");
+                        $nextHop=substr($payload,36+($i*10)+4+2,4);
 
-                    if ((base_convert( $statusRouting, 16, 2) &  7) == "00" ) {
-                        $routingTable[] = array( $addressDest => $nextHop );
+                        parserLog('debug', '  addr='.$addressDest.', status='.$statusRouting.'/'.$statusDecoded.', Next Hop='.$nextHop, "8002");
+
+                        if ((base_convert( $statusRouting, 16, 2) &  7) == "00" ) {
+                            $routingTable[] = array( $addressDest => $nextHop );
+                        }
                     }
+
+                    // if ( $srcAddress == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
+
+                    $abeille = Abeille::byLogicalId($dest.'/'.$srcAddress, 'Abeille');
+                    if ( $abeille ) {
+                        $abeille->setConfiguration('routingTable', json_encode($routingTable) );
+                        $abeille->save();
+                    }
+                    else {
+                        parserLog('debug', '  abeille not found !!!', "8002");
+                    }
+
+                    return;
                 }
 
-                // if ( $srcAddress == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
+                // Binding Table Response (Mgmt_Bind_rsp)
+                if (($profile == "0000") && ($cluster == "8033")) {
 
-                $abeille = Abeille::byLogicalId( $dest.'/'.$srcAddress, 'Abeille');
-                if ( $abeille ) {
-                    $abeille->setConfiguration('routingTable', json_encode($routingTable) );
-                    $abeille->save();
-                }
-                else {
-                    parserLog('debug', '  abeille not found !!!', "8002");
+                    /* Parser exemple
+                    Abeille1, Type=8002/Data indication, Status=00, ProfId=0000, ClustId=8033, SrcEP=00, DestEP=00, SrcAddrMode=02, SrcAddr=9007, DestAddrMode=02, DestAddr=0000
+                        Binding table response, SQN=12, Status=00, tableSize=2, index=0, tableCount=2
+                        04CF8CDF3C77164B, 01, 0004 => EP01 @00158D0001ED3365
+                        04CF8CDF3C77164B, 01, 0100 => EP01 @00158D0001ED3365 */
+
+                    $sqn        = substr($pl, 0, 2);
+                    $status     = substr($pl, 2, 2);
+                    $tableSize  = hexdec(substr($pl, 4, 2));
+                    $index      = hexdec(substr($pl, 6, 2));
+                    $tableCount = hexdec(substr($pl, 8, 2));
+
+                    parserLog('debug', '  Binding table response'
+                            .', SQN='.$sqn
+                            .', Status='.$status
+                            .', tableSize='.$tableSize
+                            .', index='.$index
+                            .', tableCount='.$tableCount, "8002");
+
+                    $pl = substr($pl, 10);
+                    for ($i = 0; $i < $tableCount; $i++) {
+                        $srcIeee  = substr($pl, 0, 16);
+                        $srcIeee = AbeilleTools::reverseHex($srcIeee);
+                        $srcEP  = substr($pl, 16, 2);
+                        $clustId  = substr($pl, 18, 4);
+                        $destAddrMode = substr($pl, 22, 2);
+                        if ($destAddrMode == "01") {
+                            // 16-bit group address for DstAddr and DstEndpoint not present
+                            $destAddr  = substr($pl, 24, 4);
+                            parserLog('debug', '  '.$srcIeee.', '.$srcEP.', '.$clustId.' => group '.$destAddr);
+                            $pl = substr($pl, 28);
+                        } else if ($destAddrMode == "03") {
+                            // 64-bit extended address for DstAddr and DstEndp present
+                            $destIeee  = substr($pl, 24, 16);
+                            $destIeee = AbeilleTools::reverseHex($destIeee);
+                            $destEP  = substr($pl, 40, 2);
+                            parserLog('debug', '  '.$srcIeee.', '.$srcEP.', '.$clustId.' => EP'.$destEP.' @'.$destIeee);
+                            $pl = substr($pl, 42);
+                        } else {
+                            parserLog('debug', '  ERROR: Unexpected destAddrMode '.$destAddrMode);
+                            return;
+                        }
+                    }
+                    return;
                 }
 
+                parserLog('debug', '  Unsupported/ignored profile 0000 message');
                 return;
             }
 
@@ -1701,7 +1753,6 @@ parserLog('debug', '      request='.$request);
                         return;
                     }
                 }
-
             }
 
             // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs
@@ -2320,6 +2371,7 @@ parserLog('debug', '      request='.$request);
 
             $msgDecoded = '8011/APS data ACK, Status='.$Status.', Addr='.$DestAddr.', EP='.$DestEndPoint.', ClustId='.$ClustID;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8011");
+
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $DestAddr, 4))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
@@ -2328,14 +2380,14 @@ parserLog('debug', '      request='.$request);
                     $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ;
                     parserLog('debug', '  Found: '.$eq->getHumanName()." set APS_ACK to 1", "8011");
                     $eq->setStatus('APS_ACK', '1');
-                    parserLog('debug', '  APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
+                    // parserLog('debug', '  APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
                 }
             } else {
                 if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' )) {
                     $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ;
                     parserLog('debug', '  ACK failed: '.$eq->getHumanName().". APS_ACK set to 0", "8011");
                     $eq->setStatus('APS_ACK', '0');
-                    parserLog('debug', '  APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
+                    // parserLog('debug', '  APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
                 }
             }
         }
@@ -2494,15 +2546,20 @@ parserLog('debug', '      request='.$request);
             $this->msgToAbeille($dest."/0000", "Network", "Channel", $dataNetwork);
         }
 
+        // 8030/Bind response
         function decode8030($dest, $payload, $lqi)
         {
-            // Firmware V3.1a: Add fields for 0x8030, 0x8031 Both responses now include source endpoint, addressmode and short address. https://github.com/fairecasoimeme/ZiGate/issues/122
+            // See https://github.com/fairecasoimeme/ZiGate/issues/122
             // <Sequence number: uint8_t>
             // <status: uint8_t>
+            // <Src address mode: uint8_t> (only from v3.1a)
+            // <Src Address : uint16_t> (only from v3.1a)
 
-            parserLog('debug', $dest.', Type=8030/Bind response (decoded but Not Processed - Just send time update and status to Network-Bind in Ruche)'
-                            .', SQN=0x'.substr($payload, 0, 2)
-                            .', Status=0x'.substr($payload, 2, 2), "8030");
+            parserLog('debug', $dest.', Type=8030/Bind response'
+                            .', SQN='.substr($payload, 0, 2)
+                            .', Status='.substr($payload, 2, 2)
+                            .', SrcAddrMode='.substr($payload, 4, 2)
+                            .', SrcAddr='.substr($payload, 6, 4), "8030");
 
             $data = date("Y-m-d H:i:s")." Status (00: Ok, <>0: Error): ".substr($payload, 2, 2);
             $this->msgToAbeille($dest."/0000", "Network", "Bind", $data);
@@ -2567,32 +2624,38 @@ parserLog('debug', '      request='.$request);
             // <number of associated devices: uint8_t>
             // <start index: uint8_t>
             // <device list – data each entry is uint16_t>
-            $SrcAddr = substr($payload,20, 4);
+            $sqn = substr($payload, 0, 2);
+            $status = substr($payload, 2, 2);
+            $ieee = substr($payload, 4, 16);
+            $addr = substr($payload, 20, 4);
+            $nbDevices = substr($payload, 24, 2);
+            $startIdx = substr($payload, 26, 2);
 
             $msgDecoded = '8041/IEEE address response'
-                            .', SQN='                                     .substr($payload, 0, 2)
-                            .', Status='                                  .substr($payload, 2, 2)
-                            .', ExtAddr='                                 .substr($payload, 4,16)
-                            .', Addr='                               .substr($payload,20, 4)
-                            .', NbOfAssociatedDevices='               .substr($payload,24, 2)
-                            .', StartIndex='                              .substr($payload,26, 2);
+                            .', SQN='.$sqn
+                            .', Status='.$status
+                            .', ExtAddr='.$ieee
+                            .', Addr='.$addr
+                            .', NbOfAssociatedDevices='.$nbDevices
+                            .', StartIndex='.$startIdx;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8041");
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $SrcAddr, 4))
+
+            $this->whoTalked[] = $dest.'/'.$addr;
+
+            /* Monitor if required */
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $addr, 4))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
-            if ( substr($payload, 2, 2)!= "00" ) {
-                parserLog('debug', '  Don t use this data there is an error, comme info not known');
+            if ($status != "00") {
+                parserLog('debug', '  Status='.$status.' => Unknown error');
+                return;
             }
 
-            for ($i = 0; $i < (intval(substr($payload,24, 2)) * 4); $i += 4) {
-                parserLog('debug', '  AssociatedDev='    .substr($payload, (28 + $i), 4) );
+            for ($i = 0; $i < (intval($nbDevices) * 4); $i += 4) {
+                parserLog('debug', '  AssociatedDev='.substr($payload, (28 + $i), 4));
             }
 
-            $data = substr($payload, 4,16);
-
-            $this->whoTalked[] = $dest.'/'.$SrcAddr;
-
-            $this->msgToAbeille($dest."/".$SrcAddr, "IEEE", "Addr", $data);
+            $this->msgToAbeille($dest."/".$addr, "IEEE", "Addr", $ieee);
         }
 
         /**

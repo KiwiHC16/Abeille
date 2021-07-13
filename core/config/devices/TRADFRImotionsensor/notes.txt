@@ -1,5 +1,12 @@
 Type de l'équipement : TRADFRI motion sensor
 
+[2021-06-30 21:39:48] Abeille1, Type=8045/Active endpoints response, SQN=2F, Status=00, Addr=9C43, EPCount=01, EPList=01
+[2021-06-30 21:39:49]   ModelIdentifier='TRADFRI motion sensor', trimmed='TRADFRImotionsensor'
+[2021-06-30 21:39:50] Abeille1, Type=8100/Read individual attribute response, SQN=43, Addr=9C43, EP=01, ClustId=0000, AttrId=0010, AttrStatus=86, AttrDataType=FF, AttrSize=0000
+[2021-06-30 21:39:50]   Status 86 => Unsupported attribute type 
+[2021-06-30 21:41:40] Abeille1, Type=8100/Read individual attribute response, SQN=4D, Addr=2C6D, EP=01, ClustId=0000, AttrId=0004, AttrStatus=00, AttrDataType=42, AttrSize=000E
+[2021-06-30 21:41:40]   ManufacturerName='IKEA of Sweden', trimmed='IKEAofSweden'
+
 "cluster": 0
     {
     "attribute": 4,
@@ -31,16 +38,16 @@ Type de l'équipement : TRADFRI motion sensor
     "value": 60
     },
 
-AbeilleParser 2018-12-14 11:27:47[DEBUG]In cluster: 0000 - General: Basic
-AbeilleParser 2018-12-14 11:27:47[DEBUG]In cluster: 0001 - General: Power Config
-AbeilleParser 2018-12-14 11:27:47[DEBUG]In cluster: 0003 - General: Identify
-AbeilleParser 2018-12-14 11:27:47[DEBUG]In cluster: 0009 - General: Alarms
-AbeilleParser 2018-12-14 11:27:47[DEBUG]In cluster: 0B05 - Misc: Diagnostics
-AbeilleParser 2018-12-14 11:27:47[DEBUG]In cluster: 1000 - ZLL: Commissioning
-AbeilleParser 2018-12-14 11:27:47[DEBUG]OutClusterCount : 05
-AbeilleParser 2018-12-14 11:27:47[DEBUG]Out cluster: 0003 - General: Identify
-AbeilleParser 2018-12-14 11:27:47[DEBUG]Out cluster: 0004 - General: Groups
-AbeilleParser 2018-12-14 11:27:47[DEBUG]Out cluster: 0006 - General: On/Off
-AbeilleParser 2018-12-14 11:27:47[DEBUG]Out cluster: 0019 - General: OTA
-AbeilleParser 2018-12-14 11:27:47[DEBUG]Out cluster: 1000 - ZLL: Commissioning
+In cluster: 0000 - General: Basic
+In cluster: 0001 - General: Power Config
+In cluster: 0003 - General: Identify
+In cluster: 0009 - General: Alarms
+In cluster: 0B05 - Misc: Diagnostics
+In cluster: 1000 - ZLL: Commissioning
+OutClusterCount : 05
+Out cluster: 0003 - General: Identify
+Out cluster: 0004 - General: Groups
+Out cluster: 0006 - General: On/Off
+Out cluster: 0019 - General: OTA
+Out cluster: 1000 - ZLL: Commissioning
 

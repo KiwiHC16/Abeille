@@ -6,7 +6,8 @@
     "comment": "S'annonce mais a ignorer. On ne peut rien faire avec",
     "isVisible": 0,
     "Categorie": {
-      "automatism": "1"
+      "automatism": "1",
+      "battery_type": "2x1.5V AAA"
     },
     "configuration": {
       "icone": "ProfaluxTelecommande",

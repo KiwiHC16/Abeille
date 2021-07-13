@@ -16,11 +16,11 @@
     "Commandes": {
       "include1": "SW",
       "include2": "nom",
-      "include4": "luminositeXiaomi",
       "include7": "Xiaomi-ff01",
 
       "BindToZigate-Illuminance": { "use":"bindToZigate", "params":"EP=01&CLUSTID=0400", "execAtCreation":"Yes" },
       "SetReport-Illuminance": { "use":"setReport", "params":"EP=01&CLUSTID=0400&ATTRID=0000&ATTRTYPE=21", "execAtCreation":"Yes" },
+      "include4": "luminositeXiaomi",
 
       "BindToZigate-Power": { "use":"bindToZigate", "params":"EP=01&CLUSTID=0001", "execAtCreation":"Yes" },
       "SetReport-Battery": { "use":"setReport", "params":"EP=01&CLUSTID=0001&ATTRID=0020&ATTRTYPE=20", "execAtCreation":"Yes" },

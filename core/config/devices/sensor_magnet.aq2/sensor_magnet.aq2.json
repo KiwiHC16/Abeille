@@ -1,6 +1,6 @@
 {
   "sensor_magnet.aq2": {
-    "nameJeedom": "Xiaomi Aquara door sensor",
+    "nameJeedom": "Xiaomi Aqara door sensor",
     "manufacturer": "Xiaomi",
     "model": "MCCGQ11LM",
     "timeout": "60",
@@ -10,7 +10,7 @@
     "configuration": {
       "icone": "XiaomiPorte",
       "battery_type": "1x3V CR1632",
-      "mainEP": "#EP#"
+      "mainEP": "01"
     },
     "Commandes": {
       "include1": "SW",

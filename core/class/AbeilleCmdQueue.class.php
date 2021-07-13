@@ -199,6 +199,12 @@
         function addCmdToQueue($priority, $dest, $cmd, $len, $datas='', $shortAddr="") {
             $this->deamonlog("debug", "      addCmdToQueue(".json_encode($dest).", cmd=".json_encode($cmd).", data=".json_encode($datas).", addr=".$shortAddr.", priority=".json_encode($priority).")");
 
+            // Check length
+            if (hexdec($len) != (strlen($datas) / 2)) {
+                $this->deamonlog("debug", "      ERROR: Wrong length");
+                return;
+            }
+
             $this->incStatCmd($cmd);
 
             $i = str_replace( 'Abeille', '', $dest );

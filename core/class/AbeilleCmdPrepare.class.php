@@ -3,6 +3,39 @@
     include_once __DIR__.'/AbeilleCmdProcess.class.php';
 
     class AbeilleCmdPrepare extends AbeilleCmdProcess {
+        // function found at https://secure.php.net/manual/fr/function.parse-str.php
+        // which translate a X=x&Y=y&Z=z en array X=>x Y=>y Z=>z
+        function proper_parse_str($str) {
+            # result array
+            $arr = array();
+
+            # split on outer delimiter
+            $pairs = explode('&', $str);
+
+            # loop through each pair
+            foreach ($pairs as $i) {
+                # split into name and value
+                list($name,$value) = explode('=', $i, 2);
+
+                # if name already exists
+                if( isset($arr[$name]) ) {
+                    # stick multiple values into an array
+                    if( is_array($arr[$name]) ) {
+                        $arr[$name][] = $value;
+                    }
+                    else {
+                        $arr[$name] = array($arr[$name], $value);
+                    }
+                }
+                # otherwise, simply stick it in a scalar
+                else {
+                    $arr[$name] = $value;
+                }
+            }
+
+            # return result array
+            return $arr;
+        }
 
         /**
          * procmsg()
@@ -54,7 +87,7 @@
 
             $fields = preg_split("/[=&]+/", $msg);
             if (count($fields) > 1) {
-                $parameters = proper_parse_str( $msg );
+                $parameters = $this->proper_parse_str($msg);
             }
 
             switch ($action) {
@@ -66,9 +99,18 @@
                     "address" => $address,
                 );
                 break;
+            case "getRoutingTable":
             case "Mgmt_Rtg_req":
                 $Command = array(
-                    "Mgmt_Rtg_req" => "1",
+                    "getRoutingTable" => "1",
+                    "priority" => $priority,
+                    "dest" => $dest,
+                    "address" => $address,
+                );
+                break;
+            case "getBindingTable":
+                $Command = array(
+                    "getBindingTable" => "1",
                     "priority" => $priority,
                     "dest" => $dest,
                     "address" => $address,
@@ -151,7 +193,7 @@
             case "OnOffRaw":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                     $Command = array(
                         "onoffraw"              => "1",
                         "dest"                  => $dest,
@@ -166,7 +208,7 @@
             case "OnOff":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                     $Command = array(
                         "onoff"                 => "1",
                         "dest"                  => $dest,
@@ -237,7 +279,7 @@
             case "commandLegrand":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
 
                 $Command = array(
@@ -311,7 +353,7 @@
             case "OnOffGroupTimed":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str($msg);
+                    $parameters = $this->proper_parse_str($msg);
                 }
 
                 if ($parameters['action'] == "On") {
@@ -335,7 +377,7 @@
             case "WriteAttributeRequest":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
                                 "WriteAttributeRequest" => "1",
@@ -353,7 +395,7 @@
             case "WriteAttributeRequestVibration":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
                                     "WriteAttributeRequestVibration" => "1",
@@ -373,7 +415,7 @@
             case "WriteAttributeRequestHostFlag":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $consigne = $parameters['value'];
                 $consigneHex = $consigne[4].$consigne[5].$consigne[2].$consigne[3].$consigne[0].$consigne[1];
@@ -393,7 +435,7 @@
             case "WriteAttributeRequestTemperatureSpiritConsigne":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $consigne = sprintf( "%04X", $parameters['value']*100 );
                 $consigneHex = $consigne[2].$consigne[3].$consigne[0].$consigne[1];
@@ -414,7 +456,7 @@
             case "WriteAttributeRequestTrvSpiritMode":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $consigne = sprintf( "%02X", $parameters['value'] );
                 $consigneHex = $consigne;
@@ -433,7 +475,7 @@
             case "WriteAttributeRequestGeneric":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $valuePrepared = $parameters['value'];
                 // Example: set Temperature Danfoss Radiator Head
@@ -460,7 +502,7 @@
             case "WriteAttributeRequestActivateDimmer":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
                                     "WriteAttributeRequestActivateDimmer" => "1",
@@ -477,9 +519,9 @@
             case "ReadAttributeRequest":
                 $keywords = preg_split("/[=&]+/", $msg);
                 if (count($keywords) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
-                if ( !isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
+                if (!isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
                 $Command = array(
                                     "ReadAttributeRequest"     => "1",
                                     "priority"                 => $priority,
@@ -531,9 +573,9 @@
             case "ReadAttributeRequestMulti":
                 $keywords = preg_split("/[=&]+/", $msg);
                 if (count($keywords) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
-                if ( !isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
+                if (!isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
                 $Command = array(
                                     "ReadAttributeRequestMulti"     => "1",
                                     "priority"                 => $priority,
@@ -548,7 +590,7 @@
             case "setLevel":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                     $Command = array(
                                     "setLevel"             => "1",
                                     "addressMode"          => "02",
@@ -564,7 +606,7 @@
             case "setLevelRaw":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                     $Command = array(
                                         "setLevel"             => "1",
                                         "addressMode"          => "02",
@@ -598,7 +640,7 @@
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $levelSlider = $parameters['Level'];                // Valeur entre 0 et 100
                 $levelSliderPourcent = $levelSlider/100;            // Valeur entre 0 et 1
@@ -619,7 +661,7 @@
             case "moveToLiftAndTiltBSO":
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
-                        $parameters = proper_parse_str( $msg );
+                        $parameters = $this->proper_parse_str($msg);
                     }
                     $Command = array(
                                     "moveToLiftAndTiltBSO" => "1",
@@ -673,7 +715,7 @@
             case "setLevelGroup":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
                                     "setLevel"             => "1",
@@ -689,7 +731,7 @@
             case "setColour":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                     $Command = array(
                                         "setColour"            => "1",
                                         "addressMode"          => "02",
@@ -706,7 +748,7 @@
             case "setColourGroup":
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
-                        $parameters = proper_parse_str( $msg );
+                        $parameters = $this->proper_parse_str($msg);
                         $Command = array(
                                             "setColour"            => "1",
                                             "addressMode"          => "01",
@@ -722,7 +764,7 @@
             case "setColourRGB":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                     if (strlen($parameters['color']) == 7) {
                         $parameters['color'] = substr($parameters['color'], 1);
                     }
@@ -765,7 +807,7 @@
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
 
                 $Command = array(
@@ -794,7 +836,7 @@
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
 
                 $Command = array(
@@ -823,7 +865,7 @@
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
 
                 $Command = array(
@@ -869,7 +911,7 @@
                 // De ces nombres on calcule l'equation: Y = -0,113333333 * X + 703,3333333
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
                                     "setTemperature"       => "1",
@@ -889,7 +931,7 @@
                 // De ces nombres on calcule l'equation: Y = -0,113333333 * X + 703,3333333
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
                                     "setTemperature"       => "1",
@@ -905,7 +947,7 @@
                 $this->deamonlog( 'debug', '  sceneGroupRecall msg: ' . $msg );
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
 
                 $Command = array(
@@ -939,7 +981,7 @@
             case "identifySend":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
                                     "identifySend" => "1",
@@ -961,10 +1003,11 @@
                                     "DestinationEndPoint" => "0B",
                                     );
                 break;
+
             case "bindShort":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
                                     "bindShort"                => "1",
@@ -978,10 +1021,24 @@
                                     "destinationEndpoint"      => "01",
                                     );
                 break;
+            // case "bindShort":
+            //     $Command = array(
+            //                         "bindShort"                => "1",
+            //                         "priority"                 => $priority,
+            //                         "dest"                     => $dest,
+            //                         "address"                  => $parameters['address'],
+            //                         "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
+            //                         "targetEndpoint"           => $parameters['targetEndpoint'],
+            //                         "clusterID"                => $parameters['ClusterId'],
+            //                         "destinationAddress"       => $parameters['reportToAddress'],
+            //                         "destinationEndpoint"      => "01",
+            //                         );
+            //     break;
+
             case "BindToGroup":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
                                     "BindToGroup"              => "1",
@@ -995,35 +1052,57 @@
                                     "destinationEndpoint"      => "01",
                                     );
                 break;
+
             case "setReportSpirit":
             case "setReport":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
 
-                $Command = array(
-                                    "setReport"                => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $address,
-                                    "targetEndpoint"           => $parameters['targetEndpoint'],
-                                    "ClusterId"                => $parameters['ClusterId'],
-                                    "AttributeId"              => $parameters['AttributeId'],
-                                    );
-                if (isset($parameters["AttributeDirection"]))      { $Command['AttributeDirection']    = $parameters['AttributeDirection']; }
+                if (!isset($parameters['targetEndpoint']) )
+                    $parameters['targetEndpoint'] = "01";
+                if (!isset($parameters['MinInterval']) )
+                    $parameters['MinInterval'] = "0000";
+                else
+                    $parameters['MinInterval'] = str_pad(dechex($parameters['MinInterval']), 4, 0, STR_PAD_LEFT);
 
+                $Command = array(
+                                "setReport"         => "1",
+                                "priority"          => $priority,
+                                "dest"              => $dest,
+                                "address"           => $address,
+                                "targetEndpoint"    => $parameters['targetEndpoint'],
+                                "ClusterId"         => $parameters['ClusterId'],
+                                "AttributeId"       => $parameters['AttributeId'],
+                                "MinInterval"       => $parameters['MinInterval']
+                                );
+                if (isset($parameters["AttributeDirection"]))      { $Command['AttributeDirection']    = $parameters['AttributeDirection']; }
                 if (isset($parameters["AttributeType"]))           { $Command['AttributeType']         = $parameters['AttributeType']; }
-                if (isset($parameters["MinInterval"]))             { $Command['MinInterval']           = str_pad(dechex($parameters['MinInterval']),   4,0,STR_PAD_LEFT); }
                 if (isset($parameters["MaxInterval"]))             { $Command['MaxInterval']           = str_pad(dechex($parameters['MaxInterval']),   4,0,STR_PAD_LEFT); }
                 if (isset($parameters["Change"]))                  { $Command['Change']                = str_pad(dechex($parameters['Change']),        2,0,STR_PAD_LEFT); }
-
                 if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                 break;
+            // case "setReport":
+            //     if (!isset($parameters['targetEndpoint']) )    { $parameters['targetEndpoint'] = "01"; }
+            //     if (!isset($parameters['MaxInterval']) )       { $parameters['MaxInterval']    = "0"; }
+            //     $Command = array(
+            //                         "setReport"                => "1",
+            //                         "priority"                 => $priority,
+            //                         "dest"                     => $dest,
+            //                         "address"                  => $parameters['address'],
+            //                         "targetEndpoint"           => $parameters['targetEndpoint'],
+            //                         "ClusterId"                => $parameters['ClusterId'],
+            //                         "AttributeType"            => $parameters['AttributeType'],
+            //                         "AttributeId"              => $parameters['AttributeId'],
+            //                         "MaxInterval"              => str_pad(dechex($parameters['MaxInterval']),4,0,STR_PAD_LEFT),
+            //                         );
+            //     break;
+
             case "setReportRaw":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
 
                 $Command = array(
@@ -1036,18 +1115,28 @@
                                     "AttributeId"              => $parameters['AttributeId'],
                                     );
                 if (isset($parameters["AttributeDirection"]))      { $Command['AttributeDirection']    = $parameters['AttributeDirection']; }
-
                 if (isset($parameters["AttributeType"]))           { $Command['AttributeType']         = $parameters['AttributeType']; }
                 if (isset($parameters["MinInterval"]))             { $Command['MinInterval']           = str_pad(dechex($parameters['MinInterval']),   4,0,STR_PAD_LEFT); }
                 if (isset($parameters["MaxInterval"]))             { $Command['MaxInterval']           = str_pad(dechex($parameters['MaxInterval']),   4,0,STR_PAD_LEFT); }
                 if (isset($parameters["Change"]))                  { $Command['Change']                = str_pad(dechex($parameters['Change']),        2,0,STR_PAD_LEFT); }
-
                 if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                 break;
+
+            case "readReportingConfig":
+                $Command = array(
+                                    "getReportingConfig"    => "1",
+                                    "priority"              => $priority,
+                                    "dest"                  => $dest,
+                                    "addr"                  => $parameters['addr'],
+                                    "clustId"               => $parameters['clustId'],
+                                    "attrId"                => $parameters['attrId'],
+                                    );
+                break;
+
             case "WindowsCovering":
                 $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
-                        $parameters = proper_parse_str( $msg );
+                        $parameters = $this->proper_parse_str($msg);
                     }
 
                 $Command = array(
@@ -1061,7 +1150,7 @@
             case "WindowsCoveringLevel":
                 $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
-                        $parameters = proper_parse_str( $msg );
+                        $parameters = $this->proper_parse_str($msg);
                     }
 
                 $Command = array(
@@ -1076,7 +1165,7 @@
             case "WindowsCoveringGroup":
                 $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
-                        $parameters = proper_parse_str( $msg );
+                        $parameters = $this->proper_parse_str($msg);
                     }
 
                 $Command = array(
@@ -1090,7 +1179,7 @@
             case "writeAttributeRequestIAS_WD":
                 $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
-                        $parameters = proper_parse_str( $msg );
+                        $parameters = $this->proper_parse_str($msg);
                     }
 
                 $Command = array(
@@ -1105,7 +1194,7 @@
             case "DiscoverAttributesCommand":
                 $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
-                        $parameters = proper_parse_str( $msg );
+                        $parameters = $this->proper_parse_str($msg);
                     }
 
                 $Command = array(
@@ -1119,34 +1208,6 @@
                                     "startAttributeId"              => $parameters['startAttributeId'],
                                     "maxAttributeId"                => $parameters['maxAttributeId'],
                 );
-                break;
-            case "bindShort":
-                $Command = array(
-                                    "bindShort"                => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $parameters['address'],
-                                    "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
-                                    "targetEndpoint"           => $parameters['targetEndpoint'],
-                                    "clusterID"                => $parameters['ClusterId'],
-                                    "destinationAddress"       => $parameters['reportToAddress'],
-                                    "destinationEndpoint"      => "01",
-                                    );
-                break;
-            case "setReport":
-                if ( !isset($parameters['targetEndpoint']) )    { $parameters['targetEndpoint'] = "01"; }
-                if ( !isset($parameters['MaxInterval']) )       { $parameters['MaxInterval']    = "0"; }
-                $Command = array(
-                                    "setReport"                => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $parameters['address'],
-                                    "targetEndpoint"           => $parameters['targetEndpoint'],
-                                    "ClusterId"                => $parameters['ClusterId'],
-                                    "AttributeType"            => $parameters['AttributeType'],
-                                    "AttributeId"              => $parameters['AttributeId'],
-                                    "MaxInterval"              => str_pad(dechex($parameters['MaxInterval']),4,0,STR_PAD_LEFT),
-                                    );
                 break;
 
             case "getGroupMembership":
@@ -1182,7 +1243,7 @@
             // case "addGroup":
             //     $fields = preg_split("/[=&]+/", $msg);
             //     if (count($fields) > 1) {
-            //         $parameters = proper_parse_str( $msg );
+            //         $parameters = $this->proper_parse_str($msg);
             //     }
             //     if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
             //     $Command = array(
@@ -1209,7 +1270,7 @@
                 break;
 
             case "viewScene":
-                if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                if (!isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
                                     "viewScene"                => "1",
                                     "priority"                 => $priority,
@@ -1221,7 +1282,7 @@
                                     );
                 break;
             case "storeScene":
-                if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                if (!isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
                                     "storeScene"               => "1",
                                     "priority"                 => $priority,
@@ -1233,7 +1294,7 @@
                                     );
                 break;
             case "recallScene":
-                if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                if (!isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
                                     "recallScene"              => "1",
                                     "priority"                 => $priority,
@@ -1248,7 +1309,7 @@
                 $this->deamonlog( 'debug', '  sceneGroupRecall msg: ' . $msg );
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
-                    $parameters = proper_parse_str( $msg );
+                    $parameters = $this->proper_parse_str($msg);
                 }
 
                 $Command = array(
@@ -1260,7 +1321,7 @@
                                     );
                 break;
             case "addScene":
-                if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                if (!isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
                                     "addScene"                 => "1",
                                     "priority"                 => $priority,
@@ -1273,7 +1334,7 @@
                                     );
                 break;
             case "getSceneMembership":
-                if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                if (!isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
                                     "getSceneMembership"       => "1",
                                     "priority"                 => $priority,
@@ -1284,7 +1345,7 @@
                                     );
                 break;
             case "removeSceneAll":
-                if ( !isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
+                if (!isset($parameters['DestinationEndPoint']) ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
                                     "removeSceneAll"           => "1",
                                     "priority"                 => $priority,

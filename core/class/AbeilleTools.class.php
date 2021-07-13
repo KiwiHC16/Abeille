@@ -242,9 +242,10 @@ class AbeilleTools
     /**
      * Read given command JSON file.
      *  'cmdFName' = command file name without '.json'
+     *  'newJCmdName' = cmd name to replace (coming from 'use')
      * Returns: array()
      */
-    public static function getCommandConfig($cmdFName)
+    public static function getCommandConfig($cmdFName, $newJCmdName = '')
     {
         $fullPath = cmdsDir.$cmdFName.'.json';
         if (!is_file($fullPath)) {
@@ -259,8 +260,11 @@ class AbeilleTools
             return array();
         }
 
-        /* Replacing top key => fileName => jeedomCmdName if different */
-        $cmdJName = $cmd[$cmdFName]['name'];
+        /* Replacing top key from fileName to jeedomCmdName if different */
+        if ($newJCmdName != '')
+            $cmdJName = $newJCmdName;
+        else
+            $cmdJName = $cmd[$cmdFName]['name'];
         if ($cmdJName != $cmdFName) {
             $cmd[$cmdJName] = $cmd[$cmdFName];
             unset($cmd[$cmdFName]);
@@ -318,7 +322,7 @@ class AbeilleTools
                     /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
                     log::add('Abeille', 'debug', 'getDeviceConfig(): New cmd format='.json_encode($cmd2));
                     $cmdFName = $cmd2['use']; // File name without '.json'
-                    $newCmd = self::getCommandConfig($cmd2['use']);
+                    $newCmd = self::getCommandConfig($cmd2['use'], $cmd1);
 
                     if (isset($cmd2['execAtCreation'])) {
                         $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
@@ -1061,6 +1065,15 @@ class AbeilleTools
     function deamonlog($loglevel = 'NONE', $message = "")
     {
         log::add('Abeille', $loglevel, $message);
+    }
+
+    // Inverse l ordre des des octets.
+    public static function reverseHex($a) {
+        $reverse = "";
+        for ($i = strlen($a) - 2; $i >= 0; $i -= 2) {
+            $reverse .= $a[$i].$a[$i+1];
+        }
+        return $reverse;
     }
 }
 

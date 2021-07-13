@@ -14,24 +14,19 @@
       "battery_type": "1x3V CR2032",
       "lastCommunicationTimeOut": "-1",
       "paramType": "telecommande",
-      "mainEP": "#EP#"
+      "mainEP": "01"
     },
     "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
       "include3": "SW",
+      "include23": "getSWBuild",
+
       "include4": "offGroup",
-      "include5": "toggleGroup",
       "include6": "onGroup",
-      "include7": "Up-Down",
-      "include12": "Click-Middle",
+
       "include8": "Batterie-Pourcent-Ikea",
       "include9": "getBattery",
       "include10": "BindShortToZigateBatterie",
-      "include11": "setReportBatterie",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild"
+      "include11": "setReportBatterie"
     }
   }
 }

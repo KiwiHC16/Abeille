@@ -41,11 +41,7 @@
 ?>
 
 <form class="form-horizontal">
-    <div class="form-group">
-        <div class="col-sm-3"></div>
-        <h3 class="col-sm-5" style="text-align:left">{{Général}}</h3>
-    </div>
-    <hr>
+    <br>
 
     <div class="form-group">
         <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
@@ -477,5 +473,41 @@
                 echo '</div>';
             }
         ?>
+
+    <?php if ($eqAddr != "0000") { ?>
+        <hr>
+        <div class="form-group">
+            <div class="col-sm-3">
+            </div>
+            <h3 class="col-sm-5" style="text-align:left">{{Interrogation de l'équipement. Sortie dans 'AbeilleParser.log'}}</h3>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Config de rapport</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'getReportingConfig\', \''.$eqId.'\')">{{Interroger}}</a>';
+                ?>
+                <input id="idClustId" placeholder="{{Cluster (ex: 0001)}}" />
+                <input id="idAttrId" placeholder="{{Attrib (ex: 0021)}}" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Table de routage</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'getRoutingTable\', \''.$eqId.'\')">{{Interroger}}</a>';
+                ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Table de binding</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'getBindingTable\', \''.$eqId.'\')">{{Interroger}}</a>';
+                ?>
+            </div>
+        </div>
+    <?php } ?>
 
 </form>

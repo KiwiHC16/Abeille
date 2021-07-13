@@ -174,11 +174,11 @@
     "subType": "message",
     "configuration": {
       "topic": "getGroupMembership",
-      "request": "address=#title#&#message#"
+      "request": "address=#ADDR#"
     },
     "display": {
       "forceReturnLineAfter": "1",
-      "title_placeholder": "Adresse courte de l equipement",
+      "title_placeholder": "Adresse courte de l'équipement",
       "message_placeholder": "[DestinationEndPoint=XX]"
     }
   },

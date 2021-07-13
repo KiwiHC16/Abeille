@@ -1,9 +1,6 @@
 ChangeLog
 =========
 
-210709-BETA-3
-----------
-
 - ATTENTION: Format JSON des fichiers de commande modifié !
 - Osram classic B40TW: support préliminaire.
 - Xiaomi Luminosite: Ajout pourcentage batterie basé sur retour tension (#1166).
@@ -23,6 +20,10 @@ ChangeLog
 - Page gestion: suppression du bouton "Apply Settings to NE".
 - Page EQ/avancé: version préliminaire de l'assistant de découverte.
 - Correction ecrasement widget commande (#2075).
+- Interne: plusieurs améliorations pour robustesse et support d'erreurs.
+- Page EQ/avancé: Ajout bouton "interroger table routage"
+- Page EQ/avancé: Ajout bouton "interroger table binding"
+- Page EQ/avancé: Ajout bouton "interroger config reporting"
 
 210704-STABLE-1
 ----------

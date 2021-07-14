@@ -10,7 +10,7 @@
             "topic": "setReport",
             "request": "targetEndpoint=01&ClusterId=0201&AttributeId=0012&AttributeType=29&MaxInterval=3500",
             "execAtCreation": "Yes",
-            "execAtCreationDelay": "12",
+            "execAtCreationDelay": 12,
             "visibilityCategory": "Network"
         },
         "type": "action"

@@ -11,7 +11,7 @@
             "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=01&ClusterId=0201&reportToAddress=#ZiGateIEEE#",
             "visibilityCategory": "Network",
             "execAtCreation": "Yes",
-            "execAtCreationDelay": "9"
+            "execAtCreationDelay": 9
         },
         "display": {
             "forceReturnLineAfter": "1"

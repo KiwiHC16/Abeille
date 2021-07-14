@@ -12,7 +12,7 @@
             "request": "Action=Toggle&EP=#EP#",
             "visibilityCategory": "All",
             "execAtCreation": "Yes",
-            "execAtCreationDelay": "9"
+            "execAtCreationDelay": 9
         },
         "display": {
             "forceReturnLineAfter": "0"

@@ -129,6 +129,13 @@
             $cmdUpdated = true;
             echo "  Removed 'configuration:uniqId'.\n";
         }
+        if (isset($cmd2['configuration']['execAtCreationDelay'])) {
+            if (gettype($cmd2['configuration']['execAtCreationDelay']) == "string") {
+                $cmd2['configuration']['execAtCreationDelay'] = (int)$cmd2['configuration']['execAtCreationDelay'];
+                $cmdUpdated = true;
+                echo "  'execAtCreationDelay' type changed from string to integer.\n";
+            }
+        }
 
         if ($cmdUpdated) {
             $newCmd = array();

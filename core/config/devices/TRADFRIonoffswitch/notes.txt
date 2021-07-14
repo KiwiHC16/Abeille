@@ -31,7 +31,7 @@ MAC capa: 80
 - Clust 0009: FFFD
 - Clust 0020: 0000/0001/0002/0003/FFFD
 - Clust 1000: FFFD
-- Clust FC7C: 
+- Clust FC7C:
 
 
 https://www.zigbee2mqtt.io/devices/E1743.html

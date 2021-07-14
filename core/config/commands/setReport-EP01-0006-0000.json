@@ -11,7 +11,7 @@
             "request": "targetEndpoint=01&ClusterId=0006&AttributeId=0000&AttributeType=10",
             "visibilityCategory": "Network",
             "execAtCreation": "Yes",
-            "execAtCreationDelay": "11"
+            "execAtCreationDelay": 11
         },
         "type": "action"
     }

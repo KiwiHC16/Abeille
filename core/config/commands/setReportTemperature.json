@@ -11,7 +11,7 @@
             "topic": "setReport",
             "request": "targetEndpoint=#EP#&ClusterId=0402&AttributeId=0000&AttributeType=29&MaxInterval=3500",
             "execAtCreation": "Yes",
-            "execAtCreationDelay": "12",
+            "execAtCreationDelay": 12,
             "visibilityCategory": "Network"
         },
         "type": "action"

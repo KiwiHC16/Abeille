@@ -11,7 +11,7 @@
             "request": "targetEndpoint=#EP#&ClusterId=0500&AttributeId=0002&AttributeType=19&MaxInterval=3500",
             "visibilityCategory": "Network",
             "execAtCreation": "Yes",
-            "execAtCreationDelay": "11"
+            "execAtCreationDelay": 11
         },
         "type": "action"
     }

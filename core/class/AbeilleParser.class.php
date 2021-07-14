@@ -218,6 +218,7 @@
         function msgToCmd($topic, $payload)
         {
             // Abeille / short addr / Cluster ID - Attr ID -> data
+            //parserLog("debug", "msgToCmd(): topic=".$topic.", payload=".$payload);
 
             $msgAbeille = new MsgAbeille;
             $msgAbeille->message = array( 'topic' => $topic, 'payload' => $payload );
@@ -571,7 +572,11 @@ parserLog('debug', "  cmds=".json_encode($cmds));
                 $c = $cmd['configuration'];
                 if (!isset($c['execAtCreation']))
                     continue;
-                parserLog('debug', "    exec cmd ".$cmdJName);
+                if (isset($c['execAtCreationDelay']))
+                    $delay = time() + $c['execAtCreationDelay'];
+                else
+                    $delay = 0;
+                parserLog('debug', "    exec cmd ".$cmdJName." with delay ".$delay);
                 $topic = $c['topic'];
                 $request = $c['request'];
                 // TODO: #EP# defaulted to first EP but should be
@@ -581,7 +586,11 @@ parserLog('debug', "  cmds=".json_encode($cmds));
                 $zgNb = substr($net, 7); // 'AbeilleX' => 'X'
                 $request = str_replace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgNb]['ieee'], $request);
 parserLog('debug', '      topic='.$topic.', request='.$request);
-                $this->msgToCmd("Cmd".$net."/".$addr."/".$topic, $request);
+        //         // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$topic."&time=".(time()+$cmd->getConfiguration('execAtCreationDelay')), $request );
+                if ($delay == 0)
+                    $this->msgToCmd("Cmd".$net."/".$addr."/".$topic, $request);
+                else
+                    $this->msgToCmd("TempoCmd".$net."/".$addr."/".$topic.'&time='.$delay, $request);
             }
 
             /* Config ongoing. Informing Abeille for EQ creation/update */
@@ -1451,7 +1460,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
 
                 // Binding Table Response (Mgmt_Bind_rsp)
-                if (($profile == "0000") && ($cluster == "8033")) {
+                if ($cluster == "8033") {
 
                     /* Parser exemple
                     Abeille1, Type=8002/Data indication, Status=00, ProfId=0000, ClustId=8033, SrcEP=00, DestEP=00, SrcAddrMode=02, SrcAddr=9007, DestAddrMode=02, DestAddr=0000
@@ -2105,7 +2114,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $msg = substr($payload, 32);
             }
             parserLog('debug', "  FCF=".$FCF.", SQN=".$SQN.", cmd=".$Cmd.'/'.zgGetZCLCommand($Cmd));
-            parserLog('debug', "  msg=".$msg);
 
             /* 'Cmd' reminder
                 0x01 Read Attributes Response
@@ -2117,6 +2125,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 0x0d Discover Attributes Response
             */
             if ($Cmd == "01") { // Read Attributes Response
+                parserLog('debug', "  Handled by decode8100_8102");
 
                 /* Command frame format:
                     ZCL header
@@ -2136,10 +2145,31 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 //     $attributes[] = $attr;
                 //     $i += $size;
                 // }
+                return;
             } else if ($Cmd == "04") { // Write Attributes Response
+                parserLog('debug', "  msg=".$msg);
             } else if ($Cmd == "07") { // Configure Reporting Response
+                parserLog('debug', "  Handled by decode8120");
+                return;
+            } else if ($Cmd == "09") { // Read Reporting Configuration Response
+                $status = substr($msg, 0, 2);
+                $dir = substr($msg, 2, 2);
+                $attrId = substr($msg, 6, 2).substr($msg, 4, 2);
+                parserLog('debug', '  status='.$status.'/'.zgGetZCLStatus($status).', dir='.$dir.', attrId='.$attrId);
+                if ($status == "00") {
+                    $attrType = substr($msg, 8, 2);
+                    $minInterval = substr($msg, 10, 4);
+                    $maxInterval = substr($msg, 14, 4);
+                    // Variable size => reportable change
+                    // Timeout period => 2B
+                    // TO BE COMPLETED
+                } else {
+                    $msg = substr($msg, 8);
+                }
+                return;
             } else if ($Cmd == "0A") { // Report attributes
-                // Currently treated by decode8100_8102()
+                parserLog('debug', "  Handled by decode8100_8102");
+                return;
             } else if ($Cmd == "0D") { // Discover Attributes Response
                 $completed = substr($msg, 2);
                 $msg = substr($msg, 2); // Skipping 'completed' status
@@ -4307,6 +4337,34 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // Tcharp38: what for ? $attrId does not exist in all cases so what to report ?
             // $data = date("Y-m-d H:i:s")." Attribut: ".$attrId." Status (00: Ok, <>0: Error): ".$status;
             // $this->msgToAbeille($dest."/0000", "Network", "Report", $data);
+        }
+
+        // 8122/Read Reporting Configuration
+        function decode8122($dest, $payload, $lqi)
+        {
+            // <Sequence number: uint8_t>
+            // <Src address : uint16_t>
+            // <Endpoint: uint8_t>
+            // <Cluster id: uint16_t>
+            // <Status: uint8_t>
+            // Attribute type : uint8_t
+            // Attribute id : uint16_t
+            // Min interval : uint16_t
+            // Max interval : uint16_t
+            $sqn = substr($payload, 0, 2);
+            $srcAddr = substr($payload, 2, 4);
+            $ep = substr($payload, 6, 2);
+            $clustId = substr($payload, 8, 4);
+            $status = substr($payload, 12, 2);
+
+            $decoded = '8122/Read reporting config'
+                .', SQN='.$sqn
+                .', Addr='.$srcAddr
+                .', EP='.$ep
+                .', clustId='.$clustId
+                .', status='.$status.'/'.zgGetZCLStatus($status);
+            // TO BE COMPLETED
+            parserLog('debug', $dest.', Type='.$decoded);
         }
 
         function decode8140($dest, $payload, $lqi)

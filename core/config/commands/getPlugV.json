@@ -11,7 +11,7 @@
             "topic": "ReadAttributeRequest",
             "request": "EP=#EP#&clusterId=0B04&attributeId=0505",
             "execAtCreation": "Yes",
-            "execAtCreationDelay": "10",
+            "execAtCreationDelay": 10,
             "Polling": "cron",
             "PollingOnCmdChange": "0006-01-0000",
             "PollingOnCmdChangeDelay": "5"

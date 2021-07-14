@@ -41,27 +41,28 @@
 
     /* Any device to monitor ?
        It is indicated by 'monitor' key in Jeedom 'config' table. */
-       $monId = config::byKey('monitor', 'Abeille', false);
-       if ($monId !== false) {
-           $eqLogic = eqLogic::byId($monId);
-           if (!is_object($eqLogic)) {
-               logMessage('error', 'Mauvais ID pour équipement à surveiller: '.$monId);
-           } else {
-               list($net, $addr) = explode( "/", $eqLogic->getLogicalId());
-               $ieee = $eqLogic->getConfiguration('IEEE', '');
-               $dbgMonitorAddr = $addr;
-               $dbgMonitorAddrExt = $ieee;
-               logMessage("debug", "Device to monitor: ".$eqLogic->getHumanName().', '.$addr.'-'.$ieee);
-               include_once __DIR__.'/AbeilleMonitor.php'; // Tracing monitor for debug purposes
-           }
-       }
+    $monId = config::byKey('monitor', 'Abeille', false);
+    if ($monId !== false) {
+        $eqLogic = eqLogic::byId($monId);
+        if (!is_object($eqLogic)) {
+            logMessage('error', 'Mauvais ID pour équipement à surveiller: '.$monId);
+        } else {
+            list($net, $addr) = explode( "/", $eqLogic->getLogicalId());
+            $ieee = $eqLogic->getConfiguration('IEEE', '');
+            $dbgMonitorAddr = $addr;
+            $dbgMonitorAddrExt = $ieee;
+            logMessage("debug", "Device to monitor: ".$eqLogic->getHumanName().', '.$addr.'-'.$ieee);
+            include_once __DIR__.'/AbeilleMonitor.php'; // Tracing monitor for debug purposes
+        }
+    }
 
     try {
         $AbeilleCmdQueue = new AbeilleCmdQueue($argv[1]);
 
+        // $fromAssistQueue = msg_get_queue(queueKeyAssistToCmd);
+        // $rerouteNet = ""; // Rerouted network if defined (ex: 'Abeille1')
+
         $last = 0;
-        $fromAssistQueue = msg_get_queue(queueKeyAssistToCmd);
-        $rerouteNet = ""; // Rerouted network if defined (ex: 'Abeille1')
         while (true) {
             /* Treat Zigate statuses (0x8000 cmd) coming from parser */
             $AbeilleCmdQueue->traiteLesAckRecus();
@@ -72,34 +73,34 @@
             $AbeilleCmdQueue->processCmdQueueToZigate();
 
             /* Performing msg rerouting from 'EQ assistant' */
-            $max_msg_size = 2048;
-            $msg_type = NULL;
-            if (msg_receive($fromAssistQueue, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) == true) {
-                logMessage('debug', "Received=".json_encode($msg));
-                if ($msg['type'] == 'reroute') {
-                    $rerouteNet = $msg['network'];
-                    /* TODO: Tcharp38: Can be optimized */
-                    $zgNb = str_replace('Abeille', '', $rerouteNet);
-                    $AbeilleCmdQueue->zigateAvailable[$zgNb] = 0;
-                    logMessage('debug', "'".$rerouteNet."' messages must be rerouted");
-                } else if ($msg['type'] == 'reroutestop') {
-                    logMessage('debug', "Stopping '".$rerouteNet."' msg rerouting.");
-                    $rerouteNet = "";
-                    /* TODO: Tcharp38: Can be optimized */
-                    $zgNb = str_replace('Abeille', '', $rerouteNet);
-                    $AbeilleCmdQueue->zigateAvailable[$zgNb] = 1;
-                } else if ($msg['type'] == 'msg') {
-                    logMessage('debug', $rerouteNet.", rerouting: ".$msg['msg']);
-                    /* TODO: Tcharp38: Can be optimized */
-                    $zgNb = str_replace('Abeille', '', $rerouteNet);
-                    if (config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N') == 'Y' ) {
-                        $sp = config::byKey('AbeilleSerialPort'.$zgNb, 'Abeille', '1', 1);
-                        $f = fopen($sp, "w");
-                        fwrite($f, pack("H*", $msg['msg']));
-                        fclose($f);
-                    }
-                }
-            }
+            // $max_msg_size = 2048;
+            // $msg_type = NULL;
+            // if (msg_receive($fromAssistQueue, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) == true) {
+            //     logMessage('debug', "Received=".json_encode($msg));
+            //     if ($msg['type'] == 'reroute') {
+            //         $rerouteNet = $msg['network'];
+            //         /* TODO: Tcharp38: Can be optimized */
+            //         $zgNb = str_replace('Abeille', '', $rerouteNet);
+            //         $AbeilleCmdQueue->zigateAvailable[$zgNb] = 0;
+            //         logMessage('debug', "'".$rerouteNet."' messages must be rerouted");
+            //     } else if ($msg['type'] == 'reroutestop') {
+            //         logMessage('debug', "Stopping '".$rerouteNet."' msg rerouting.");
+            //         $rerouteNet = "";
+            //         /* TODO: Tcharp38: Can be optimized */
+            //         $zgNb = str_replace('Abeille', '', $rerouteNet);
+            //         $AbeilleCmdQueue->zigateAvailable[$zgNb] = 1;
+            //     } else if ($msg['type'] == 'msg') {
+            //         logMessage('debug', $rerouteNet.", rerouting: ".$msg['msg']);
+            //         /* TODO: Tcharp38: Can be optimized */
+            //         $zgNb = str_replace('Abeille', '', $rerouteNet);
+            //         if (config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N') == 'Y' ) {
+            //             $sp = config::byKey('AbeilleSerialPort'.$zgNb, 'Abeille', '1', 1);
+            //             $f = fopen($sp, "w");
+            //             fwrite($f, pack("H*", $msg['msg']));
+            //             fclose($f);
+            //         }
+            //     }
+            // }
 
             $AbeilleCmdQueue->collectAllOtherMessages();
 

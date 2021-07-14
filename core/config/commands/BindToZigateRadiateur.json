@@ -11,7 +11,7 @@
             "topic": "bindShort",
             "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=#EP#&ClusterId=0201&reportToAddress=#ZiGateIEEE#",
             "execAtCreation": "Yes",
-            "execAtCreationDelay": "10",
+            "execAtCreationDelay": 10,
             "visibilityCategory": "Network"
         },
         "type": "action"

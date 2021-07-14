@@ -101,3 +101,11 @@ Exemple de commande 'action'
   * visibilityCategory: ??
 
   * repeatEventManagement: ??
+
+  * execAtCreation:
+    Précise que cette commande doit être exécutée lors de l'appairage de l'équipement.
+    Ne l'est pas par défaut.
+    Ex: 'execAtCreation': 'Yes'
+
+  * execAtCreationDelay
+    Delai d'execution en secondes apres l'annonce de la commande ayant le flag 'execAtCreation'.

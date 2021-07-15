@@ -41,3 +41,8 @@ The E1743 can be bound to groups using binding. It can only be bound to 1 group 
 
 By default this remote is bound to the default bind group which you first have to unbind it from.
 Right before executing the commands make sure to wake up the device by pressing a button on it.
+
+About configure reporting
+=========================
+It looks like it is important to add a delay between dev announce and the configure reporting for battery.
+Even if answer is status 00 the reporting is not set if no delay.

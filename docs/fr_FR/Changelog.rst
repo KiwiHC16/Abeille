@@ -1,9 +1,6 @@
 ChangeLog
 =========
 
-210714-BETA-1
-----------
-
 - ATTENTION: Format JSON des fichiers de commande modifié !
 - Osram classic B40TW: support préliminaire.
 - Xiaomi Luminosite: Ajout pourcentage batterie basé sur retour tension (#1166).
@@ -27,8 +24,9 @@ ChangeLog
 - Page EQ/avancé: Ajout bouton "interroger table routage"
 - Page EQ/avancé: Ajout bouton "interroger table binding"
 - Page EQ/avancé: Ajout bouton "interroger config reporting"
-- JSON: Syntaxe commandes modifiée. Type 'execAtCreationDelay' changé en nombre et non plus string.
+- JSON: Syntaxe commandes modifiée. Type 'execAtCreationDelay' changé en 'nombre' et non plus 'string'.
   Devrait corriger le pb de config de certains equipements à l'inclusion.
+- Correction perte categorie & icone si equipement se réannonce.
 
 210704-STABLE-1
 ----------

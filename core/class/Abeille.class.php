@@ -2645,7 +2645,7 @@ while ($cron->running()) {
         $objetConfiguration = $deviceConfig["configuration"];
 
         /* mainEP:
-           Was used to defined main End Point on which we could read model/manuf/location */
+           Was used to define main End Point on which we could read model/manuf/location */
         if ($mainEP == "#EP#")
             $mainEP = "01"; // Defaulting to 01
 
@@ -2662,13 +2662,15 @@ while ($cron->running()) {
         $elogic->setConfiguration('modeleJson', $jsonName);
         $elogic->setConfiguration('type', 'topic'); // ??, type = topic car pas json. Tcharp38: what for ?
 
-        if (isset($objetConfiguration["icon"]))
-            $icon = $objetConfiguration["icon"];
-        else if (isset($objetConfiguration["icone"])) // Old naming support
-            $icon = $objetConfiguration["icone"];
-        else
-            $icon = '';
-        $elogic->setConfiguration('icone', $icon);
+        if ($newEq) { // Update icon only if new device
+            if (isset($objetConfiguration["icon"]))
+                $icon = $objetConfiguration["icon"];
+            else if (isset($objetConfiguration["icone"])) // Old naming support
+                $icon = $objetConfiguration["icone"];
+            else
+                $icon = '';
+            $elogic->setConfiguration('icone', $icon);
+        }
 
         $elogic->setConfiguration('mainEP', $objetConfiguration["mainEP"]);
         $lastCommTimeout = (array_key_exists("lastCommunicationTimeOut", $objetConfiguration) ? $objetConfiguration["lastCommunicationTimeOut"] : '-1');
@@ -2727,17 +2729,19 @@ while ($cron->running()) {
         if (isset($deviceConfig["timeout"]))
             $elogic->setTimeout($deviceConfig["timeout"]);
 
-        if (isset($deviceConfig["category"]))
-            $categories = $deviceConfig["category"];
-        else if (isset($deviceConfig["Categorie"])) // Old name support
-            $categories = $deviceConfig["Categorie"];
-        // $elogic->setCategory(array_keys($deviceConfig["Categorie"])[0], $deviceConfig["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
-        $allCat = ["heating","security","energy","light","opening","automatism","multimedia","default"];
-        foreach ($allCat as $cat) { // Clear all
-            $elogic->setCategory($cat, "0");
-        }
-        foreach ($categories as $key => $value) {
-            $elogic->setCategory($key, $value);
+        if ($newEq) { // Update category only if new device
+            if (isset($deviceConfig["category"]))
+                $categories = $deviceConfig["category"];
+            else if (isset($deviceConfig["Categorie"])) // Old name support
+                $categories = $deviceConfig["Categorie"];
+            // $elogic->setCategory(array_keys($deviceConfig["Categorie"])[0], $deviceConfig["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
+            $allCat = ["heating","security","energy","light","opening","automatism","multimedia","default"];
+            foreach ($allCat as $cat) { // Clear all
+                $elogic->setCategory($cat, "0");
+            }
+            foreach ($categories as $key => $value) {
+                $elogic->setCategory($key, $value);
+            }
         }
 
         $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));

@@ -105,6 +105,7 @@
         </div>
     </div>
 
+    <?php if ($eqAddr != "0000") { ?>
     <hr>
     <div class="form-group">
         <label class="col-sm-3 control-label">Fichier JSON</label>
@@ -132,6 +133,7 @@
             ?>
         </div>
     </div>
+    <?php } ?>
 
     <?php
         // If eq is a zigate (short addr=0000), display special parameters

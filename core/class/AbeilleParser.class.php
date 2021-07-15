@@ -573,7 +573,7 @@ parserLog('debug', "  cmds=".json_encode($cmds));
                 if (!isset($c['execAtCreation']))
                     continue;
                 if (isset($c['execAtCreationDelay']))
-                    $delay = time() + $c['execAtCreationDelay'];
+                    $delay = $c['execAtCreationDelay'];
                 else
                     $delay = 0;
                 parserLog('debug', "    exec cmd ".$cmdJName." with delay ".$delay);
@@ -589,8 +589,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         //         // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$topic."&time=".(time()+$cmd->getConfiguration('execAtCreationDelay')), $request );
                 if ($delay == 0)
                     $this->msgToCmd("Cmd".$net."/".$addr."/".$topic, $request);
-                else
+                else {
+                    $delay = time() + $delay;
                     $this->msgToCmd("TempoCmd".$net."/".$addr."/".$topic.'&time='.$delay, $request);
+                }
             }
 
             /* Config ongoing. Informing Abeille for EQ creation/update */
@@ -4356,6 +4358,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $ep = substr($payload, 6, 2);
             $clustId = substr($payload, 8, 4);
             $status = substr($payload, 12, 2);
+            if ($status == "00") {
+                $attrType = substr($payload, 14, 2);
+                $attrId = substr($payload, 16, 4);
+                // Tcharp38: min & max seem inverted compared to NXP spec
+                $maxInterval = hexdec(substr($payload, 20, 4));
+                $minInterval = hexdec(substr($payload, 24, 4));
+            }
 
             $decoded = '8122/Read reporting config'
                 .', SQN='.$sqn
@@ -4363,8 +4372,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 .', EP='.$ep
                 .', clustId='.$clustId
                 .', status='.$status.'/'.zgGetZCLStatus($status);
-            // TO BE COMPLETED
             parserLog('debug', $dest.', Type='.$decoded);
+            if ($status == "00")
+                parserLog('debug', '  attrType='.$attrType.', attrId='.$attrId.', minInterval='.$minInterval.', maxInterval='.$maxInterval);
         }
 
         function decode8140($dest, $payload, $lqi)

@@ -558,6 +558,9 @@ if (0) {
                     log::add('Abeille', 'warning', "cron15: 'End Point' principal manquant pour ".$eqName);
                     continue;
                 }
+                if ($mainEP == "#EP#") // Unexpected. Legacy bug from JSON. Should be a hexa value.
+                    $mainEP = "01"; // Defaulting to EP 01
+
                 $poll = 0;
                 if ($eqLogic->getConfiguration("RxOnWhenIdle", 'none') == 1)
                     $poll = 1;
@@ -719,6 +722,8 @@ if (0) {
 
             log::add('Abeille', 'debug', 'cron1: GetEtat/GetLevel, addr='.$address);
             $mainEP = $eqLogic->getConfiguration('mainEP');
+            if ($mainEP == "#EP#") // No longer expected.
+                $mainEP = "01"; // Defaulting to EP 01
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0006&attributeId=0000");
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0008&attributeId=0000");
             $i++;

@@ -1,0 +1,11 @@
+[2021-06-28 06:32:51]   ModelIdentifier='PSE03-v1.1.0', trimmed='PSE03-v1.1.0'
+
+[2021-06-28 06:40:19] Abeille1, Type=8043/Simple descriptor response, SQN=0A, Status=00, Addr=A2E4, Length=14, EP=01, ProfId=0104/ZigBee Home Automation (ZHA), DevId=0403/IAS Warning Device, BitField=00
+[2021-06-28 06:40:19]   InClusterCount=5
+[2021-06-28 06:40:19]   InCluster=0000 => General-Basic
+[2021-06-28 06:40:19]   InCluster=0001 => General-Power Config
+[2021-06-28 06:40:19]   InCluster=0009 => General-Alarms
+[2021-06-28 06:40:19]   InCluster=0500 => Security & Safety-IAS Zone
+[2021-06-28 06:40:19]   InCluster=0502 => Security & Safety-IAS WD
+[2021-06-28 06:40:19]   OutClusterCount=00
+[2021-06-28 06:40:19]   OutCluster=0019 => General-OTA

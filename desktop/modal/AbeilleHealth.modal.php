@@ -90,7 +90,7 @@ Démons:
             <?php } ?> -->
             <th class="header" data-toggle="tooltip" title="Trier par">{{Dernière communication}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Depuis (h)}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Date création}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Dernier LQI}}</th>
         </tr>
     </thead>
     <tbody>
@@ -109,18 +109,18 @@ Démons:
             // ID
             echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getId().'</span></td>';
 
-            $parts = explode("/", $eqLogic->getLogicalId());
+            list($net, $addr) = explode("/", $eqLogic->getLogicalId());
 
             // Ruche
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$parts[0].'</span></td>';
+            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$net.'</span></td>';
 
             // Short Address
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$parts[1].'</span></td>';
+            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$addr.'</span></td>';
 
             /* Extended address/IEEE
                If present in config, taking it.
                If not, asking IEEE adress */
-            if ( $eqLogic->getConfiguration('icone') == "remotecontrol" ) {
+            if ($eqLogic->getConfiguration('icone') == "remotecontrol") {
                 $addrIEEE = "-";
             } else {
                 $addrIEEE = $eqLogic->getConfiguration('IEEE', 'none');
@@ -131,8 +131,8 @@ Démons:
                         $addrIEEE = strtoupper($commandIEEE->execCmd());
                     }
                 }
-                if (strlen($addrIEEE) > 2 ) {
-                    if ( array_key_exists($addrIEEE, $IEEE_Table) ) {
+                if (strlen($addrIEEE) > 2) {
+                    if (array_key_exists($addrIEEE, $IEEE_Table)) {
                         $IEEE_Table[$addrIEEE] += 1;
                     }
                     else {
@@ -179,9 +179,9 @@ Démons:
             // }
 
             // Last comm.
-            if ( $eqLogic->getConfiguration('icone') == "remotecontrol" ) {
+            if ($eqLogic->getConfiguration('icone') == "remotecontrol") {
                 $lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>';
-            } else if ( strlen($eqLogic->getStatus('lastCommunication'))>2 ) {
+            } else if (strlen($eqLogic->getStatus('lastCommunication'))>2) {
                 $lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getStatus('lastCommunication').'</span>';
             } else
                 $lastComm = '<span class="label label-warning" style="font-size: 1em; cursor: default;">No message received !!</span>';
@@ -189,14 +189,23 @@ Démons:
 
             // Depuis
             $Depuis = '<span class="label label-info" style="font-size: 1em; cursor: default;">'.(floor((time() - strtotime($eqLogic->getStatus('lastCommunication'))) / 3600)).'</span>';
-             if ( $eqLogic->getConfiguration('icone') == "remotecontrol" ) {
+             if ($eqLogic->getConfiguration('icone') == "remotecontrol") {
                  $Depuis = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>';
              }
             //if ($eqLogic->getStatus('state') == '-') { $Depuis = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>'; }
             echo '<td>'.$Depuis.'</td>';
 
-            // Date Creation
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getConfiguration('createtime').'</span></td></tr>';
+            // Last LQI
+            if ($addr == "0000")
+                $lastLqi = "-";
+            else {
+                $lqiCmd = $eqLogic->getCmd('info', 'Link-Quality');
+                if (is_object($lqiCmd))
+                    $lastLqi = $lqiCmd->execCmd();
+                else
+                    $lastLqi = "?";
+            }
+            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$lastLqi.'</span></td></tr>';
         }
     ?>
     </tbody>

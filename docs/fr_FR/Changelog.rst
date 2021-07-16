@@ -1,9 +1,6 @@
 ChangeLog
 =========
 
-210715-BETA-1
-----------
-
 - ATTENTION: Format JSON des fichiers de commande modifié !
 - Osram classic B40TW: support préliminaire.
 - Xiaomi Luminosite: Ajout pourcentage batterie basé sur retour tension (#1166).
@@ -30,6 +27,9 @@ ChangeLog
 - JSON: Syntaxe commandes modifiée. Type 'execAtCreationDelay' changé en 'nombre' et non plus 'string'.
   Devrait corriger le pb de config de certains equipements à l'inclusion.
 - Correction perte categorie & icone si equipement se réannonce.
+- Correction perte état historisation & affichage des commandes si equipement se réannonce.
+- Correction mise-à-jour commandes IEEE-Addr, Short-Addr & Power-Source sur réannonce.
+- Page santé: Ajout "dernier LQI" à la place de "Date de création".
 
 210704-STABLE-1
 ----------

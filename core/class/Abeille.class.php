@@ -2186,15 +2186,14 @@ while ($cron->running()) {
                Note: ep = first End Point */
             Abeille::createDevice($net, $addr, $ieee, $ep, $jsonName);
 
-            if (!is_object($eqLogic))
-                $eqLogic = self::byLogicalId($logicalId, 'Abeille');
+            $eqLogic = self::byLogicalId($logicalId, 'Abeille');
 
             /* MAC capa */
             $mc = hexdec($msg['capa']);
             $rxOnWhenIdle = ($mc >> 3) & 0b1;
-            $powerSource = ($mc >> 2) & 0b1;
+            $mainsPowered = ($mc >> 2) & 0b1;
             $eqLogic->setConfiguration('MACCapa', $msg['capa']);
-            if ($powerSource) // 1=mains-powererd
+            if ($mainsPowered) // 1=mains-powererd
                 $eqLogic->setConfiguration('AC_Power', 1);
             else
                 $eqLogic->setConfiguration('AC_Power', 0);
@@ -2206,12 +2205,17 @@ while ($cron->running()) {
 
             Abeille::updateTimestamp($eqLogic, $msg['time']);
 
-            $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($eqLogic->getId(), "Short-Addr");
-            if (!is_object($cmdlogic))
-                $eqLogic->checkAndUpdateCmd($cmdlogic, $addr);
-            $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($eqLogic->getId(), "IEEE-Addr");
-            if (!is_object($cmdlogic))
+            $cmdlogic = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), "Short-Addr");
+            if (is_object($cmdlogic))
+                $ret = $eqLogic->checkAndUpdateCmd($cmdlogic, $addr);
+            $cmdlogic = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), "IEEE-Addr");
+            if (is_object($cmdlogic))
                 $eqLogic->checkAndUpdateCmd($cmdlogic, $ieee);
+            $cmdlogic = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), "Mains-Powered");
+            if (!is_object($cmdlogic))
+                $cmdlogic = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), "Power-Source"); // Old name support
+            if (is_object($cmdlogic))
+                $eqLogic->checkAndUpdateCmd($cmdlogic, $mainsPowered);
 
             return;
         } // End 'eqAnnounce'
@@ -2721,10 +2725,12 @@ while ($cron->running()) {
             $elogic->setConfiguration('poll', $objetConfiguration['poll']);
         }
 
-        if (isset($deviceConfig["isVisible"]))
-            $elogic->setIsVisible($deviceConfig["isVisible"]);
-        else
-            $elogic->setIsVisible(1);
+        if ($newEq) { // Update visibility only if new device
+            if (isset($deviceConfig["isVisible"]))
+                $elogic->setIsVisible($deviceConfig["isVisible"]);
+            else
+                $elogic->setIsVisible(1);
+        }
         $elogic->setIsEnable(1);
         if (isset($deviceConfig["timeout"]))
             $elogic->setTimeout($deviceConfig["timeout"]);
@@ -2886,15 +2892,19 @@ while ($cron->running()) {
             if (isset($cmdValueDefaut["unite"]))
                 $cmdlogic->setUnite($cmdValueDefaut["unite"]);
 
-            if (isset($cmdValueDefaut["isHistorized"]))
-                $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
-            else
-                $cmdlogic->setIsHistorized(0);
+            if ($newCmd) { // Update only if new command
+                if (isset($cmdValueDefaut["isHistorized"]))
+                    $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
+                else
+                    $cmdlogic->setIsHistorized(0);
+            }
 
-            if (isset($cmdValueDefaut["isVisible"]))
-                $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
-            else
-                $cmdlogic->setIsVisible(0);
+            if ($newCmd) { // Update only if new command
+                if (isset($cmdValueDefaut["isVisible"]))
+                    $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
+                else
+                    $cmdlogic->setIsVisible(0);
+            }
 
             // TODO: Update all JSON to move "invertBinary" into "display" section
             if (isset($cmdValueDefaut["invertBinary"])) {
@@ -2942,4 +2952,3 @@ while ($cron->running()) {
             $eqLogic->checkAndUpdateCmd($cmdlogic, 1);
     }
 }
-

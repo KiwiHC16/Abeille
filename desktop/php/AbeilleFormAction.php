@@ -168,7 +168,6 @@
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
                         sendMessageFromFormToCmd('Cmd'.$dest.'/0000/viewScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
-
                     }
                 }
                 break;
@@ -181,7 +180,6 @@
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
                         sendMessageFromFormToCmd('Cmd'.$dest.'/0000/storeScene',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$_POST['groupIdScene2'].'&sceneID='.$_POST['sceneID'] );
-
                     }
                 }
                 break;

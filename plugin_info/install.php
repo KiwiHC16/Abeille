@@ -19,7 +19,7 @@
     /* Developers debug features */
     $dbgFile = __DIR__."/../tmp/debug.json";
     if (file_exists($dbgFile)) {
-        $dbgDeveloperMode = TRUE;
+        $dbgDeveloperMode = true;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../log/AbeillePHP.log');
@@ -193,6 +193,7 @@
            - LogicalId 'AbeilleX/Ruche' updated to 'AbeilleX/0000'
            - Topic 'AbeilleX/Ruche' updated to 'AbeilleX/0000'
            - Removing obsolete entries in config table.
+           - 'mainEP' fix: '#EP#' => '01'
          */
         if (intval($dbVersion) < 20201122) {
             if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
@@ -214,6 +215,7 @@
                 $network = $logicIdArray[0]; // 'AbeilleX'
                 $addr = $logicIdArray[1]; // Get short addr
 
+                // Correcting zigate address: 'Ruche' => '0000'
                 if ($addr == "Ruche") {
                     $eqLogic->setLogicalId($network.'/0000');
                     $topic = $eqLogic->getConfiguration('topic', '');
@@ -224,10 +226,18 @@
                     }
                     $saveEq = true;
                 }
+
+                // Correcting mainEP: '#EP#' => '01'
+                $mainEP = $eqLogic->getConfiguration('mainEP', '');
+                if (($mainEP == '') || ($mainEP == '#EP#')) {
+                    $eqLogic->setConfiguration('mainEP', '01');
+                    $saveEq = true;
+                }
+
                 $name = $eqLogic->getName();
                 $id = $eqLogic->getId(); // Get Jeedom ID for this equipment
                 $pos = stripos($name, $addr); // Any short addr in the name ?
-                if ($pos == FALSE) {
+                if ($pos == false) {
                     /* Current short addr no found in name but could it be
                     one that missed an update so keeping an old short addr ?
                     So updating only if format is "AbeilleX-YYYY..." which
@@ -242,11 +252,12 @@
                         }
                     }
                 }
-                if ($pos != FALSE) {
+                if ($pos != false) {
                     $name = substr_replace($name, $id, $pos, 4);
                     $eqLogic->setName($name);
                     $saveEq = true;
                 }
+
                 if ($saveEq)
                     $eqLogic->save();
             }
@@ -293,7 +304,7 @@
      */
     function Abeille_update() {
 
-        $error = FALSE;
+        $error = false;
 
         /* Collect Abeille's version */
         $file = fopen(__DIR__."/Abeille.version", "r");
@@ -301,11 +312,11 @@
         $version = trim(fgets($file));
         fclose($file);
 
-        if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+        if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == true)) {
             if (validMd5Exists() == 0) {
                 if (checkIntegrity() != 0) {
                     message::add('Abeille', 'Fichiers corrompus detectés ! La version \''.$version.'\' est mal installée. Problème de place ?', null, null);
-                    $error = TRUE;
+                    $error = true;
                 } else
                     doPostUpdateCleanup();
             }
@@ -314,7 +325,7 @@
         /* Updating config DB if required */
         updateConfigDB();
 
-        if ($error == FALSE) {
+        if ($error == false) {
             message::removeAll('Abeille');
             message::add('Abeille', 'Mise à jour '.$version.' terminée avec succès.', null, null);
         }

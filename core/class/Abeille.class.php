@@ -558,8 +558,6 @@ if (0) {
                     log::add('Abeille', 'warning', "cron15: 'End Point' principal manquant pour ".$eqName);
                     continue;
                 }
-                if ($mainEP == "#EP#") // Unexpected. Legacy bug from JSON. Should be a hexa value.
-                    $mainEP = "01"; // Defaulting to EP 01
 
                 $poll = 0;
                 if ($eqLogic->getConfiguration("RxOnWhenIdle", 'none') == 1)
@@ -722,8 +720,6 @@ if (0) {
 
             log::add('Abeille', 'debug', 'cron1: GetEtat/GetLevel, addr='.$address);
             $mainEP = $eqLogic->getConfiguration('mainEP');
-            if ($mainEP == "#EP#") // No longer expected.
-                $mainEP = "01"; // Defaulting to EP 01
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0006&attributeId=0000");
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0008&attributeId=0000");
             $i++;
@@ -1631,7 +1627,7 @@ while ($cron->running()) {
 
             /* Remote control short addr = 'rcXX' */
             $rcAddr = sprintf("rc%02X", $max);
-            Abeille::createDevice($dest, $rcAddr, '', '01', 'remotecontrol');
+            Abeille::createDevice($dest, $rcAddr, '', '', 'remotecontrol');
 
             return;
         }
@@ -1648,8 +1644,7 @@ while ($cron->running()) {
 
             $jsonName = $eqLogic->getConfiguration('modeleJson');
             $ieee = $eqLogic->getConfiguration('IEEE');
-            $mainEP = $eqLogic->getConfiguration('mainEP');
-            Abeille::createDevice($dest, $addr, $ieee, $mainEP, $jsonName, "Mise-à-jour de '".$eqLogic->getName()."' à partir de son fichier JSON");
+            Abeille::createDevice($dest, $addr, $ieee, '', $jsonName, "Mise-à-jour de '".$eqLogic->getName()."' à partir de son fichier JSON");
 
             return;
         }
@@ -2609,7 +2604,7 @@ while ($cron->running()) {
 
     /* Create or update Jeedom device based on its JSON config.
        This is also used to create Abeille's specific device like "remotecontrol". */
-    public static function createDevice($net, $addr, $ieee, $mainEP, $jsonName, $userMsg = '') {
+    public static function createDevice($net, $addr, $ieee, $firstEP, $jsonName, $userMsg = '') {
 
         $logicalId = $net.'/'.$addr;
         $abeilleConfig = AbeilleTools::getParameters();
@@ -2654,9 +2649,18 @@ while ($cron->running()) {
         $objetConfiguration = $deviceConfig["configuration"];
 
         /* mainEP:
-           Was used to define main End Point on which we could read model/manuf/location */
-        if ($mainEP == "#EP#")
-            $mainEP = "01"; // Defaulting to 01
+           Was used to define main End Point on which we could read model/manuf/location;
+           Should NOT be set to #EP# in device JSON.
+           If set to '#EP#' or unset
+             - Set to firstEP if defined
+             - else set to '01 */
+        $mainEP = $objetConfiguration['mainEP'];
+        if (($mainEP == "#EP#") ||($mainEP == "")) {
+            if ($firstEP != "")
+                $mainEP = $firstEP;
+            else
+                $mainEP = "01"; // Defaulting to 01
+        }
 
         // Replacing all remaining '#EP#' with 'mainEP' value
         // Note that this is possible only with old cmd JSON format (include XXX)
@@ -2681,7 +2685,7 @@ while ($cron->running()) {
             $elogic->setConfiguration('icone', $icon);
         }
 
-        $elogic->setConfiguration('mainEP', $objetConfiguration["mainEP"]);
+        $elogic->setConfiguration('mainEP', $mainEP);
         $lastCommTimeout = (array_key_exists("lastCommunicationTimeOut", $objetConfiguration) ? $objetConfiguration["lastCommunicationTimeOut"] : '-1');
         $elogic->setConfiguration('lastCommunicationTimeOut', $lastCommTimeout);
         $elogic->setConfiguration('IEEE', $ieee);

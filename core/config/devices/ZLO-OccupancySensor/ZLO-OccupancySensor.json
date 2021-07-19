@@ -1,25 +1,24 @@
 {
-  "ZLO-OccupancySensor": {
-    "nameJeedom": "ZLO-OccupancySensor for Dev",
-    "timeout": "60",
-    "Categorie": {
-      "security": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76625b0a",
-      "icone": "ZLO-OccupancySensor",
-      "battery_type": "1x3V CR2032",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom",
-      "include3": "presence",
-      "include4": "luminosite",
-      "include5": "Batterie-Volt",
-      "include6": "Batterie-Pourcent",
-      "include7": "Xiaomi-ff01",
-      "include8": "etat"
+    "ZLO-OccupancySensor": {
+        "nameJeedom": "ZLO-OccupancySensor for Dev",
+        "timeout": "60",
+        "Categorie": {
+            "security": "1"
+        },
+        "configuration": {
+            "icone": "ZLO-OccupancySensor",
+            "battery_type": "1x3V CR2032",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom",
+            "include3": "presence",
+            "include4": "luminosite",
+            "include5": "Batterie-Volt",
+            "include6": "Batterie-Pourcent",
+            "include7": "Xiaomi-ff01",
+            "include8": "etat"
+        }
     }
-  }
 }

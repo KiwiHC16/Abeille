@@ -1,33 +1,32 @@
 {
-  "relay.c2acn01": {
-    "nameJeedom": "Xiaomi Module Double Switch Aqara",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07cdsf76625d94",
-      "icone": "relay.c2acn01",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etat",
-      "include4 2": "etatCharge1",
-      "include5": "On",
-      "include5 2": "On1",
-      "include6": "Off",
-      "include6 2": "Off1",
-      "include7": "Toggle",
-      "include7 2": "Toggle1",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier",
-      "include11": "conso",
-      "include12": "Xiaomi-ff01",
-      "include13": "puissance1"
+    "relay.c2acn01": {
+        "nameJeedom": "Xiaomi Module Double Switch Aqara",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "relay.c2acn01",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etat",
+            "include4 2": "etatCharge1",
+            "include5": "On",
+            "include5 2": "On1",
+            "include6": "Off",
+            "include6 2": "Off1",
+            "include7": "Toggle",
+            "include7 2": "Toggle1",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier",
+            "include11": "conso",
+            "include12": "Xiaomi-ff01",
+            "include13": "puissance1"
+        }
     }
-  }
 }

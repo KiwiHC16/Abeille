@@ -1,26 +1,25 @@
 {
-  "ZLO-LTOSensor": {
-    "nameJeedom": "ZLO-LTOSensor for Dev",
-    "timeout": "60",
-    "Categorie": {
-      "security": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76625a0b",
-      "icone": "ZLO-LTOSensor",
-      "battery_type": "1x3V CR2032",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include3 2": "luminosite",
-      "include3 2 2": "temperature",
-      "include3 2 2 2": "presence",
-      "include5": "Batterie-Volt",
-      "include6": "Batterie-Pourcent",
-      "include7": "Xiaomi-ff01"
+    "ZLO-LTOSensor": {
+        "nameJeedom": "ZLO-LTOSensor for Dev",
+        "timeout": "60",
+        "Categorie": {
+            "security": "1"
+        },
+        "configuration": {
+            "icone": "ZLO-LTOSensor",
+            "battery_type": "1x3V CR2032",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include3 2": "luminosite",
+            "include3 2 2": "temperature",
+            "include3 2 2 2": "presence",
+            "include5": "Batterie-Volt",
+            "include6": "Batterie-Pourcent",
+            "include7": "Xiaomi-ff01"
+        }
     }
-  }
 }

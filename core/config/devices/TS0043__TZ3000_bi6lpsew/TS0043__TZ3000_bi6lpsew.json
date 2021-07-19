@@ -1,21 +1,20 @@
 {
-  "TS0043__TZ3000_bi6lpsew": {
-    "nameJeedom": "LoraTap Remote 3 boutons sur piles",
-    "timeout": "250",
-    "Comment": "https://github.com/KiwiHC16/Abeille/issues/1406",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5ceosfqsdshjextssdgdfzsddzze5d41Z4",
-      "icone": "LoraTap3GangRemote",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include3": "nom",
-      "include5 3": "etatInter0",
-      "include5 3 2": "etatInter1",
-      "include5 3 2 2": "etatInter2"
+    "TS0043__TZ3000_bi6lpsew": {
+        "nameJeedom": "LoraTap Remote 3 boutons sur piles",
+        "timeout": "250",
+        "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1406",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "LoraTap3GangRemote",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include3": "nom",
+            "include5 3": "etatInter0",
+            "include5 3 2": "etatInter1",
+            "include5 3 2 2": "etatInter2"
+        }
     }
-  }
 }

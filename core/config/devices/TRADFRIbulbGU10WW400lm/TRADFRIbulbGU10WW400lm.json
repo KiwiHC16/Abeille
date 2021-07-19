@@ -1,36 +1,35 @@
 {
-  "TRADFRIbulbGU10WW400lm": {
-    "nameJeedom": "IKEA Ampoule TRADFRI bulb GU10 W 400lm",
-    "timeout": "60",
-    "Categorie": {
-      "light": "1",
-      "mainEP": "#EP#"
-    },
-    "configuration": {
-      "uniqId": "5dfgc07c76621051",
-      "icone": "IkeaTradfriBulbGU10W400lm"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include4": "etatLight",
-      "include5": "levelLight",
-      "include8": "On",
-      "include9": "Off",
-      "include10": "Toggle",
-      "include11": "setLevel",
-      "include19": "getEtat",
-      "include20": "getLevel",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include27": "BindToZigateLevel",
-      "include28": "setReportEtat",
-      "include29": "setReportLevel"
+    "TRADFRIbulbGU10WW400lm": {
+        "nameJeedom": "IKEA Ampoule TRADFRI bulb GU10 W 400lm",
+        "timeout": "60",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "mainEP": "01",
+            "icone": "IkeaTradfriBulbGU10W400lm"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include4": "etatLight",
+            "include5": "levelLight",
+            "include8": "On",
+            "include9": "Off",
+            "include10": "Toggle",
+            "include11": "setLevel",
+            "include19": "getEtat",
+            "include20": "getLevel",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include26": "BindToZigateEtat",
+            "include27": "BindToZigateLevel",
+            "include28": "setReportEtat",
+            "include29": "setReportLevel"
+        }
     }
-  }
 }

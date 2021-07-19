@@ -1,29 +1,28 @@
 {
-  "ctrl_86plug.aq1": {
-    "nameJeedom": "Xiaomi Prise Murale Encastrée",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76625d44",
-      "icone": "ctrl_86plug.aq1",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etat",
-      "include5": "On",
-      "include6": "Off",
-      "include7": "Toggle",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier",
-      "include11": "conso",
-      "include12": "Xiaomi-ff01",
-      "include13": "puissance"
+    "ctrl_86plug.aq1": {
+        "nameJeedom": "Xiaomi Prise Murale Encastr\u00e9e",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "ctrl_86plug.aq1",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etat",
+            "include5": "On",
+            "include6": "Off",
+            "include7": "Toggle",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier",
+            "include11": "conso",
+            "include12": "Xiaomi-ff01",
+            "include13": "puissance"
+        }
     }
-  }
 }

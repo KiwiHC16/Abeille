@@ -1,29 +1,28 @@
 {
-  "01MINIZB": {
-    "nameJeedom": "Sonoff ZBMINI smart switch",
-    "manufacturer": "Sonoff",
-    "model": "SBMINI",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "20210128_1630",
-      "icone": "01MINIZB",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etat",
-      "include5": "On",
-      "include6": "Off",
-      "include7": "Toggle",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier",
-      "include13 2": "Group-Membership"
+    "01MINIZB": {
+        "nameJeedom": "Sonoff ZBMINI smart switch",
+        "manufacturer": "Sonoff",
+        "model": "SBMINI",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "01MINIZB",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etat",
+            "include5": "On",
+            "include6": "Off",
+            "include7": "Toggle",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier",
+            "include13 2": "Group-Membership"
+        }
     }
-  }
 }

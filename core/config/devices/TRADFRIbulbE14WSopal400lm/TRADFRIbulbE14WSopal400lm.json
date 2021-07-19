@@ -1,45 +1,44 @@
 {
-  "TRADFRIbulbE14WSopal400lm": {
-    "nameJeedom": "TRADFRI bulb E14 White Spectre opal 400lm",
-    "manufacturer": "Ikea",
-    "timeout": "60",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76620b6b",
-      "icone": "IkeaTradfriBulbE14WSOpal400lm",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include4": "etatLight",
-      "include5": "levelLight",
-      "include8": "On",
-      "include9": "Off",
-      "include10": "Toggle",
-      "include11": "setLevel",
-      "include37": "2200K",
-      "include38": "2700K",
-      "include39": "4000K",
-      "include40": "temperatureLight",
-      "include40 2 2": "setTemperatureLight",
-      "include19": "getEtat",
-      "include20": "getLevel",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include25 2": "Scene-Membership",
-      "include26": "BindToZigateEtat",
-      "include27": "BindToZigateLevel",
-      "include29 2": "BindToZigateLightColor",
-      "include28": "setReportEtat",
-      "include29": "setReportLevel",
-      "include29 2 2": "setReportLightColorSpectre"
+    "TRADFRIbulbE14WSopal400lm": {
+        "nameJeedom": "TRADFRI bulb E14 White Spectre opal 400lm",
+        "manufacturer": "Ikea",
+        "timeout": "60",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "IkeaTradfriBulbE14WSOpal400lm",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include4": "etatLight",
+            "include5": "levelLight",
+            "include8": "On",
+            "include9": "Off",
+            "include10": "Toggle",
+            "include11": "setLevel",
+            "include37": "2200K",
+            "include38": "2700K",
+            "include39": "4000K",
+            "include40": "temperatureLight",
+            "include40 2 2": "setTemperatureLight",
+            "include19": "getEtat",
+            "include20": "getLevel",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include25 2": "Scene-Membership",
+            "include26": "BindToZigateEtat",
+            "include27": "BindToZigateLevel",
+            "include29 2": "BindToZigateLightColor",
+            "include28": "setReportEtat",
+            "include29": "setReportLevel",
+            "include29 2 2": "setReportLightColorSpectre"
+        }
     }
-  }
 }

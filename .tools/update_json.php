@@ -11,17 +11,17 @@
     $cmdErrors = []; // Errors/warnings found in commands
 
     /* Register a new device error/warning */
-    // function newDevError($file, $type, $msg) {
-    //     echo "  ".$type.": ".$msg."\n";
+    function newDevError($file, $type, $msg) {
+        echo "  ".$type.": ".$msg."\n";
 
-    //     global $devErrors;
-    //     $e = array(
-    //         "file" => $file,
-    //         "type" => $type,
-    //         "msg" => $msg
-    //     );
-    //     $devErrors[] = $e;
-    // }
+        global $devErrors;
+        $e = array(
+            "file" => $file,
+            "type" => $type,
+            "msg" => $msg
+        );
+        $devErrors[] = $e;
+    }
 
     /* Register a new command error/warning */
     function newCmdError($file, $type, $msg) {
@@ -36,44 +36,33 @@
         $cmdErrors[] = $e;
     }
 
-    // function checkDevice($devName, $dev) {
-    //     global $missingCmds;
-    //     global $commandsList;
+    function updateDevice($devName, $fullPath, $dev) {
+        $devUpdated = false;
 
-    //     if (!isset($dev[$devName])) {
-    //         newDevError($devName, "ERROR", "Corruped JSON. Expecting '".$devName."' top key");
-    //         return;
-    //     }
-    //     // echo "dev=".json_encode($dev)."\n";
+        if (!isset($dev[$devName]['configuration'])) {
+            newDevError($devName, "ERROR", "No configuration defined");
+            return;
+        }
 
-    //     if (!isset($dev[$devName]['configuration'])) {
-    //         newDevError($devName, "WARNING", "No configuration defined");
-    //     } else {
-    //         $config = $dev[$devName]['configuration'];
-    //         if (isset($config['icone'])) {
-    //             $icon = "images/node_".$config['icone'].".png";
-    //             if (!file_exists($icon)) {
-    //                 newDevError($devName, "ERROR", "Missing icon '".$icon."'");
-    //             }
-    //         }
-    //     }
+        $config = $dev[$devName]['configuration'];
+        if (!isset($config['mainEP']))
+            newDevError($devName, "ERROR", "No 'configuration:mainEP' defined");
+        else if ($config['mainEP'] == '#EP#') {
+            $dev[$devName]['configuration']['mainEP'] = "01";
+            $devUpdated = true;
+            echo "  'mainEP' updated from '#EP#' to '01'.\n";
+        }
+        if (isset($config['uniqId'])) {
+            unset($dev[$devName]['configuration']['uniqId']);
+            $devUpdated = true;
+            echo "  Removed 'uniqId'.\n";
+        }
 
-    //     if (!isset($dev[$devName]['Commandes'])) {
-    //         newDevError($devName, "WARNING", "No commands defined");
-    //         return;
-    //     }
-    //     $cmds = $dev[$devName]['Commandes'];
-    //     // echo "cmds=".json_encode($cmds)."\n";
-    //     foreach ($cmds as $key => $value) {
-    //         $path = commandsDir."/".$value.".json";
-    //         if (!file_exists($path)) {
-    //             newDevError($devName, "ERROR", "Unknown command ".$value);
-    //             $missingCmds++;
-    //         } else {
-    //             $commandsList[$value] = $path;
-    //         }
-    //     }
-    // }
+        if ($devUpdated) {
+            $text = json_encode($dev, JSON_PRETTY_PRINT);
+            file_put_contents($fullPath, $text);
+        }
+    }
 
     function updateCommand($fileName, $fullPath, $cmd) {
         global $commandsList;
@@ -145,26 +134,29 @@
         }
     }
 
-    // function buildDevicesList() {
-    //     echo "Building devices list ...\n";
-    //     global $devicesList;
-    //     $devicesList = [];
-    //     $dh = opendir(devicesDir);
-    //     while (($dirEntry = readdir($dh)) !== false) {
-    //          /* Ignoring some entries */
-    //          if (in_array($dirEntry, array(".", "..", "LISEZMOI.txt", "README.txt")))
-    //             continue;
+    function buildDevicesList() {
+        echo "Building devices list ...\n";
+        global $devicesList;
+        $devicesList = [];
+        $dh = opendir(devicesDir);
+        while (($dirEntry = readdir($dh)) !== false) {
+             /* Ignoring some entries */
+             if (in_array($dirEntry, array(".", "..")))
+                continue;
+            $fullPath = devicesDir.'/'.$dirEntry;
+            if (!is_dir($fullPath))
+                continue;
 
-    //         $fullPath = devicesDir.'/'.$dirEntry.'/'.$dirEntry.".json";
-    //         if (!file_exists($fullPath)) {
-    //             echo "- ".$dirEntry.": path access ERROR\n";
-    //             echo "  ".$fullPath."\n";
-    //             continue;
-    //         }
+            $fullPath = devicesDir.'/'.$dirEntry.'/'.$dirEntry.".json";
+            if (!file_exists($fullPath)) {
+                echo "- ".$dirEntry.": path access ERROR\n";
+                echo "  ".$fullPath."\n";
+                continue;
+            }
 
-    //         $devicesList[$dirEntry] = $fullPath;
-    //     }
-    // }
+            $devicesList[$dirEntry] = $fullPath;
+        }
+    }
 
     function buildCommandsList() {
         echo "Building commands list\n";
@@ -189,6 +181,20 @@
             $commandsList[$dirEntry] = $fullPath;
         }
         echo "= Ok";
+    }
+
+    buildDevicesList();
+
+    echo "\nUpdating devices if required ...\n";
+    foreach ($devicesList as $entry => $fullPath) {
+        echo "- ".$entry.".json\n";
+        $jsonContent = file_get_contents($fullPath);
+        $content = json_decode($jsonContent, true);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            newDevError($entry, 'ERROR', 'Corrupted JSON file');
+            continue;
+        }
+        updateDevice($entry, $fullPath, $content);
     }
 
     buildCommandsList();

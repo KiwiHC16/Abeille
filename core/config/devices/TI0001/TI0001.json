@@ -1,39 +1,38 @@
 {
-  "TI0001": {
-    "nameJeedom": "Livolo Switch TI0001",
-    "timeout": "80",
-    "Comment": "Reference: ",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76625baa",
-      "icone": "TI0001",
-      "mainEP": "06"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include3 2": "location",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include24 2 2 2 2 2": "setLivoloOff2",
-      "include24 2 2 2 2 2 3": "setLivoloOff",
-      "include24 2 2 2 2 2 2": "setLivoloOn2",
-      "include24 2 2 2 2 2 2 2": "setLivoloOn",
-      "include4": "etatSwitchLivolo",
-      "include8": "getEtat",
-      "include8 2": "LivoloSwitchTrick1",
-      "include8 2 2": "LivoloSwitchTrick2",
-      "include8 2 2 2": "LivoloSwitchTrick3",
-      "include8 2 2 2 3": "LivoloSwitchTrick4",
-      "include8 2 2 2 2": "BindToZigateEtat",
-      "include8 2 2 2 2 2": "BindToZigateLevel",
-      "include8 2 2 2 2 2 2": "setReportEtat",
-      "include8 2 2 2 2 2 2 2": "setReportLevel"
+    "TI0001": {
+        "nameJeedom": "Livolo Switch TI0001",
+        "timeout": "80",
+        "Comment": "Reference: ",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "TI0001",
+            "mainEP": "06"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include3 2": "location",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include24 2 2 2 2 2": "setLivoloOff2",
+            "include24 2 2 2 2 2 3": "setLivoloOff",
+            "include24 2 2 2 2 2 2": "setLivoloOn2",
+            "include24 2 2 2 2 2 2 2": "setLivoloOn",
+            "include4": "etatSwitchLivolo",
+            "include8": "getEtat",
+            "include8 2": "LivoloSwitchTrick1",
+            "include8 2 2": "LivoloSwitchTrick2",
+            "include8 2 2 2": "LivoloSwitchTrick3",
+            "include8 2 2 2 3": "LivoloSwitchTrick4",
+            "include8 2 2 2 2": "BindToZigateEtat",
+            "include8 2 2 2 2 2": "BindToZigateLevel",
+            "include8 2 2 2 2 2 2": "setReportEtat",
+            "include8 2 2 2 2 2 2 2": "setReportLevel"
+        }
     }
-  }
 }

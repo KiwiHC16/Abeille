@@ -1,23 +1,22 @@
 {
-  "zigbeeNoncolorcontroller": {
-    "nameJeedom": "zigbee Non color controller",
-    "timeout": "60",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c7666hgk237372",
-      "icone": "zigbeeNoncolorcontroller",
-      "lastCommunicationTimeOut": "-1",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "offGroup",
-      "include2": "toggleGroup",
-      "include3": "onGroup",
-      "include4": "downGroup",
-      "include5": "upGroup",
-      "include6": "setLevelGroup"
+    "zigbeeNoncolorcontroller": {
+        "nameJeedom": "zigbee Non color controller",
+        "timeout": "60",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "zigbeeNoncolorcontroller",
+            "lastCommunicationTimeOut": "-1",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "offGroup",
+            "include2": "toggleGroup",
+            "include3": "onGroup",
+            "include4": "downGroup",
+            "include5": "upGroup",
+            "include6": "setLevelGroup"
+        }
     }
-  }
 }

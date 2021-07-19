@@ -1,25 +1,24 @@
 {
-  "Keyfob-ZB3.0": {
-    "nameJeedom": "NEO  Inmax 07046L Keyfob-ZB3.0",
-    "timeout": "60",
-    "Comment": "https://github.com/KiwiHC16/Abeille/issues/1326",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "uniqId": "sddsdkjfsmgrygfgf",
-      "icone": "Keyfob-ZB3.0",
-      "mainEP": "#EP#",
-      "poll": "1"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify"
+    "Keyfob-ZB3.0": {
+        "nameJeedom": "NEO  Inmax 07046L Keyfob-ZB3.0",
+        "timeout": "60",
+        "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1326",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "Keyfob-ZB3.0",
+            "mainEP": "01",
+            "poll": "1"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify"
+        }
     }
-  }
 }

@@ -1,17 +1,16 @@
 {
-  "diy-amp-router": {
-    "nameJeedom": "diy-amp-router",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "20210323_1705",
-      "icone": "diy-amp-router",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include100": "nom"
+    "diy-amp-router": {
+        "nameJeedom": "diy-amp-router",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "diy-amp-router",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include100": "nom"
+        }
     }
-  }
 }

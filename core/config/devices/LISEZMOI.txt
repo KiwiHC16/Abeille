@@ -34,7 +34,7 @@ Exemple: BASICZBR3.json
       },
       "configuration": {
         "icone": "BASICZBR3",
-        "mainEP": "#EP#"
+        "mainEP": "01"
       },
       "commands": {
         "include1": "SW",
@@ -75,10 +75,11 @@ Exemple: BASICZBR3.json
   - automatism
   - multimedia
   - default
-  
+
 * configuration: OBLIGATOIRE
-  A COMPLETER
-  - batteryType: Description type de batterie
+  - mainEP: OBLIGATOIRE
+    Indique sur quel 'End Point' interroger l'équipement. Chaine hexa 2 caractères.
+  - batteryType: Description type de batterie si équipement sur piles/batteries.
     Ex: "1x CR2430 3V"
   - icon: Nom de l'icone associé.
   - paramType: ?

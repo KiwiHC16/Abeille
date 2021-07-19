@@ -1,23 +1,22 @@
 {
-  "3AFE140103020000": {
-    "nameJeedom": "Konke Temperature Humidité Rond",
-    "timeout": "60",
-    "Categorie": {
-      "heating": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07cq7662d6hh2d1",
-      "icone": "3AFE140103020000",
-      "battery_type": "1x3V CR2450",
-      "lastCommunicationTimeOut": "-1",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom",
-      "include3": "temperature",
-      "include4": "humidite",
-      "include4 2": "Batterie-Volt-Konke"
+    "3AFE140103020000": {
+        "nameJeedom": "Konke Temperature Humidit\u00e9 Rond",
+        "timeout": "60",
+        "Categorie": {
+            "heating": "1"
+        },
+        "configuration": {
+            "icone": "3AFE140103020000",
+            "battery_type": "1x3V CR2450",
+            "lastCommunicationTimeOut": "-1",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom",
+            "include3": "temperature",
+            "include4": "humidite",
+            "include4 2": "Batterie-Volt-Konke"
+        }
     }
-  }
 }

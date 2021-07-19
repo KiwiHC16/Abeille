@@ -1,27 +1,26 @@
 {
-  "SA-003-Zigbee": {
-    "nameJeedom": "ZigBee On Off Controller",
-    "timeout": "60",
-    "Comment": "https://www.amazon.fr/dp/B07S72CNWT/ref=cm_sw_r_cp_apa_i_rShRDb0MMJSA9 identical to Lamp_01",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07cqs766sgdfzzze5d44",
-      "icone": "SA-003-Zigbee",
-      "mainEP": "0B"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etat",
-      "include5": "On",
-      "include6": "Off",
-      "include7": "Toggle",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier"
+    "SA-003-Zigbee": {
+        "nameJeedom": "ZigBee On Off Controller",
+        "timeout": "60",
+        "Comment": "https:\/\/www.amazon.fr\/dp\/B07S72CNWT\/ref=cm_sw_r_cp_apa_i_rShRDb0MMJSA9 identical to Lamp_01",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "SA-003-Zigbee",
+            "mainEP": "0B"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etat",
+            "include5": "On",
+            "include6": "Off",
+            "include7": "Toggle",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier"
+        }
     }
-  }
 }

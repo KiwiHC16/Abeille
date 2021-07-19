@@ -1,25 +1,24 @@
 {
-  "sensor_switch": {
-    "nameJeedom": "Xiaomi Interrupteur simple",
-    "manufacturer": "Xiaomi",
-    "timeout": "60",
-    "battery_type": "1xCR2032",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-	"uniqId": "5c07c76626621",
-      "icone": "XiaomiBouton1",
-      "battery_type": "1x3V CR2032",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom",
-      "include3": "etatSwitch",
-      "include4": "multi",
-      "include5": "Batterie-Volt",
-      "include6": "Batterie-Pourcent"
+    "sensor_switch": {
+        "nameJeedom": "Xiaomi Interrupteur simple",
+        "manufacturer": "Xiaomi",
+        "timeout": "60",
+        "battery_type": "1xCR2032",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "XiaomiBouton1",
+            "battery_type": "1x3V CR2032",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom",
+            "include3": "etatSwitch",
+            "include4": "multi",
+            "include5": "Batterie-Volt",
+            "include6": "Batterie-Pourcent"
+        }
     }
-  }
 }

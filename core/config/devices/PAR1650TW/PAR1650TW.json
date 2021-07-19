@@ -1,49 +1,48 @@
 {
-  "PAR1650TW": {
-    "nameJeedom": "PAR1650TW",
-    "timeout": "60",
-    "Comment": "https://www.jeedom.com/forum/viewtopic.php?p=662710#p662710",
-    "Comment 2": "https://github.com/KiwiHC16/Abeille/issues/435",
-    "Comment 3": " OSRAM GU10",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76620a4c",
-      "icone": "PAR1650TW",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include4": "etatLight",
-      "include5": "levelLight",
-      "include8": "On",
-      "include9": "Off",
-      "include10": "Toggle",
-      "include11": "setLevel",
-      "include37": "2200K",
-      "include38": "2700K",
-      "include39": "4000K",
-      "include40": "temperatureLight",
-      "include40 2 2": "setTemperatureLight",
-      "include12": "Colour",
-      "include13": "Blanc",
-      "include14": "Bleu",
-      "include15": "Rouge",
-      "include16": "Vert",
-      "include19": "getEtat",
-      "include20": "getLevel",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include27": "BindToZigateLevel",
-      "include28": "setReportEtat",
-      "include29": "setReportLevel"
+    "PAR1650TW": {
+        "nameJeedom": "PAR1650TW",
+        "timeout": "60",
+        "Comment": "https:\/\/www.jeedom.com\/forum\/viewtopic.php?p=662710#p662710",
+        "Comment 2": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/435",
+        "Comment 3": " OSRAM GU10",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "PAR1650TW",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include4": "etatLight",
+            "include5": "levelLight",
+            "include8": "On",
+            "include9": "Off",
+            "include10": "Toggle",
+            "include11": "setLevel",
+            "include37": "2200K",
+            "include38": "2700K",
+            "include39": "4000K",
+            "include40": "temperatureLight",
+            "include40 2 2": "setTemperatureLight",
+            "include12": "Colour",
+            "include13": "Blanc",
+            "include14": "Bleu",
+            "include15": "Rouge",
+            "include16": "Vert",
+            "include19": "getEtat",
+            "include20": "getLevel",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include26": "BindToZigateEtat",
+            "include27": "BindToZigateLevel",
+            "include28": "setReportEtat",
+            "include29": "setReportLevel"
+        }
     }
-  }
 }

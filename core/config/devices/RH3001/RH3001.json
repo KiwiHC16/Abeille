@@ -1,20 +1,19 @@
 {
-  "RH3001": {
-    "nameJeedom": "Tuya NEO RH3001",
-    "timeout": "60",
-    "Categorie": {
-      "security": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07453535c766sd2639b",
-      "icone": "RH3001",
-      "battery_type": "1x3V CR1632",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom",
-      "include3": "etatDoorAlarme"
+    "RH3001": {
+        "nameJeedom": "Tuya NEO RH3001",
+        "timeout": "60",
+        "Categorie": {
+            "security": "1"
+        },
+        "configuration": {
+            "icone": "RH3001",
+            "battery_type": "1x3V CR1632",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom",
+            "include3": "etatDoorAlarme"
+        }
     }
-  }
 }

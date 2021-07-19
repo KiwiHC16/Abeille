@@ -1,25 +1,24 @@
 {
-  "fuel-tank-level": {
-    "nameJeedom": "fuel-tank-level",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "20210129_1705",
-      "icone": "Fuel-tank-level",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include100": "nom",
-      "include2": "etatEp02in",
-      "include2 1": "getEtatEp02",
-      "include3": "etatEp03in",
-      "include3 1": "getEtatEp03",
-      "include4": "etatEp04in",
-      "include4 1": "getEtatEp04",
-      "include5": "etatEp05in",
-      "include5 1": "getEtatEp05"
+    "fuel-tank-level": {
+        "nameJeedom": "fuel-tank-level",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "Fuel-tank-level",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include100": "nom",
+            "include2": "etatEp02in",
+            "include2 1": "getEtatEp02",
+            "include3": "etatEp03in",
+            "include3 1": "getEtatEp03",
+            "include4": "etatEp04in",
+            "include4 1": "getEtatEp04",
+            "include5": "etatEp05in",
+            "include5 1": "getEtatEp05"
+        }
     }
-  }
 }

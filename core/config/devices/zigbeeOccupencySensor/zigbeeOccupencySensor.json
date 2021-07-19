@@ -1,22 +1,21 @@
 {
-  "zigbeeOccupencySensor": {
-    "nameJeedom": "zigbeeOccupencySensor",
-    "timeout": "60",
-    "Categorie": {
-      "security": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c766sdsds264bf",
-      "icone": "",
-      "battery_type": "1x3V CR2032",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom",
-      "include3": "presence",
-      "include5": "Batterie-Volt",
-      "include6": "Batterie-Pourcent"
+    "zigbeeOccupencySensor": {
+        "nameJeedom": "zigbeeOccupencySensor",
+        "timeout": "60",
+        "Categorie": {
+            "security": "1"
+        },
+        "configuration": {
+            "icone": "",
+            "battery_type": "1x3V CR2032",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom",
+            "include3": "presence",
+            "include5": "Batterie-Volt",
+            "include6": "Batterie-Pourcent"
+        }
     }
-  }
 }

@@ -1,28 +1,27 @@
 {
-  "switch.l0agl1": {
-    "nameJeedom": "Xiaomi MICROMODULE ON/OFF ZIGBEE 3.0 1250W SANS NEUTRE (SSM-U02)",
-    "timeout": "60",
-    "Comment": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "20210228_1026",
-      "icone": "XiaomiPrise",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etat",
-      "include5": "On",
-      "include6": "Off",
-      "include7": "Toggle",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier",
-      "include13 2": "Group-Membership"
+    "switch.l0agl1": {
+        "nameJeedom": "Xiaomi MICROMODULE ON\/OFF ZIGBEE 3.0 1250W SANS NEUTRE (SSM-U02)",
+        "timeout": "60",
+        "Comment": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "XiaomiPrise",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etat",
+            "include5": "On",
+            "include6": "Off",
+            "include7": "Toggle",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier",
+            "include13 2": "Group-Membership"
+        }
     }
-  }
 }

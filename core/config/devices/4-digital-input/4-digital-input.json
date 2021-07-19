@@ -1,25 +1,24 @@
 {
-  "4-digital-input": {
-    "nameJeedom": "4-digital-input",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "20210318_1605",
-      "icone": "4-digital-input",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include100": "nom",
-      "include2": "etatEp02in",
-      "include2 1": "getEtatEp02",
-      "include3": "etatEp03in",
-      "include3 1": "getEtatEp03",
-      "include4": "etatEp04in",
-      "include4 1": "getEtatEp04",
-      "include5": "etatEp05in",
-      "include5 1": "getEtatEp05"
+    "4-digital-input": {
+        "nameJeedom": "4-digital-input",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "4-digital-input",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include100": "nom",
+            "include2": "etatEp02in",
+            "include2 1": "getEtatEp02",
+            "include3": "etatEp03in",
+            "include3 1": "getEtatEp03",
+            "include4": "etatEp04in",
+            "include4 1": "getEtatEp04",
+            "include5": "etatEp05in",
+            "include5 1": "getEtatEp05"
+        }
     }
-  }
 }

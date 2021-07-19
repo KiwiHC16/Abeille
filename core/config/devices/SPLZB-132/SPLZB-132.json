@@ -1,33 +1,30 @@
 {
-  "SPLZB-132": {
-    "nameJeedom": "Frient Smart Plug Mini Type E (French)",
-    "manufacturer": "Frient",
-    "zbManufacturer": "DevelcoProductsAS",
-    "model": "SPLZB-132",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "icone": "Delveco-SPLZB-132",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include0004-1": "Group-Membership",
-
-      "include0006-1": "On",
-      "include0006-2": "Off",
-      "include0006-3": "etat",
-      "include0006-4": "getEtat",
-      "include0006-5": "BindToZigateEtat",
-      "include0006-6": "setReportEtat",
-
-      "include0702-1": "zb-0702-CurrentSummationDelivered-KWh-div1000",
-
-      "include0B04-2": "zb-0B04-RMSVoltage",
-      "include0B04-3": "zb-0B04-RMSCurrent",
-      "include0B04-4": "zb-0B04-ActivePower",
-      "include0B04-5": "getPlugVAW"
+    "SPLZB-132": {
+        "nameJeedom": "Frient Smart Plug Mini Type E (French)",
+        "manufacturer": "Frient",
+        "zbManufacturer": "DevelcoProductsAS",
+        "model": "SPLZB-132",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "Delveco-SPLZB-132",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include0004-1": "Group-Membership",
+            "include0006-1": "On",
+            "include0006-2": "Off",
+            "include0006-3": "etat",
+            "include0006-4": "getEtat",
+            "include0006-5": "BindToZigateEtat",
+            "include0006-6": "setReportEtat",
+            "include0702-1": "zb-0702-CurrentSummationDelivered-KWh-div1000",
+            "include0B04-2": "zb-0B04-RMSVoltage",
+            "include0B04-3": "zb-0B04-RMSCurrent",
+            "include0B04-4": "zb-0B04-ActivePower",
+            "include0B04-5": "getPlugVAW"
+        }
     }
-  }
 }

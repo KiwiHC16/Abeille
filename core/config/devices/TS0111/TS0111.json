@@ -1,28 +1,27 @@
 {
-  "TS0111": {
-    "nameJeedom": "Vanne Zigbee ",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07sdsdc76625d94",
-      "icone": "TS0111",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include1 2": "BasicApplicationVersion",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etat",
-      "include5": "On",
-      "include6": "Off",
-      "include7": "Toggle",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier",
-      "include13 2": "Group-Membership"
+    "TS0111": {
+        "nameJeedom": "Vanne Zigbee ",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "TS0111",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include1 2": "BasicApplicationVersion",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etat",
+            "include5": "On",
+            "include6": "Off",
+            "include7": "Toggle",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier",
+            "include13 2": "Group-Membership"
+        }
     }
-  }
 }

@@ -1,28 +1,27 @@
 {
-  "511.202": {
-    "nameJeedom": "Module 511.202 iluminize",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c7hgk6625d94",
-      "icone": "511.202",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etat",
-      "include5": "On",
-      "include6": "Off",
-      "include7": "Toggle",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier",
-      "include10 2": "BindToZigateEtat",
-      "include10 2 2": "setReportEtat"
+    "511.202": {
+        "nameJeedom": "Module 511.202 iluminize",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "511.202",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etat",
+            "include5": "On",
+            "include6": "Off",
+            "include7": "Toggle",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier",
+            "include10 2": "BindToZigateEtat",
+            "include10 2 2": "setReportEtat"
+        }
     }
-  }
 }

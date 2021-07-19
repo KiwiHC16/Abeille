@@ -1,19 +1,18 @@
 {
-  "diy-mains-fault": {
-    "nameJeedom": "diy-mains-fault",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "20210325_1605",
-      "icone": "diy-mains-fault",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include100": "nom",
-      "include2": "etatEp02in",
-      "include2 1": "getEtatEp02"
+    "diy-mains-fault": {
+        "nameJeedom": "diy-mains-fault",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "diy-mains-fault",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include100": "nom",
+            "include2": "etatEp02in",
+            "include2 1": "getEtatEp02"
+        }
     }
-  }
 }

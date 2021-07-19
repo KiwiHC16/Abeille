@@ -1,20 +1,19 @@
 {
-  "Switch4xEU-LIGHTIFY": {
-    "nameJeedom": "OSRAM Switch Switch4xEU-LIGHTIFY",
-    "timeout": "60",
-    "battery_type": "1xCR2450",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c7dgs662gfdjr6621",
-      "icone": "Switch4xEU-LIGHTIFY",
-      "battery_type": "1x3V CR2450",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom"
+    "Switch4xEU-LIGHTIFY": {
+        "nameJeedom": "OSRAM Switch Switch4xEU-LIGHTIFY",
+        "timeout": "60",
+        "battery_type": "1xCR2450",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "Switch4xEU-LIGHTIFY",
+            "battery_type": "1x3V CR2450",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom"
+        }
     }
-  }
 }

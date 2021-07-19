@@ -1,33 +1,32 @@
 {
-  "TRADFRISHORTCUTButton": {
-    "nameJeedom": "TRADFRI Shortcut Button",
-    "timeout": "60",
-    "Comment": "Ref. IKEA E1812",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07f56667372",
-      "icone": "TRADFRISHORTCUTButton",
-      "battery_type": "1x3V CR2032",
-      "lastCommunicationTimeOut": "-1",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include7": "Up-Down",
-      "include7 1": "Click-Middle",
-      "include8": "Batterie-Pourcent-Ikea",
-      "include9": "getBattery",
-      "include10": "BindShortToZigateBatterie",
-      "include11": "setReportBatterie",
-      "include12": "setReportEtat",
-      "include13": "BindToZigateEtat",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild"
+    "TRADFRISHORTCUTButton": {
+        "nameJeedom": "TRADFRI Shortcut Button",
+        "timeout": "60",
+        "Comment": "Ref. IKEA E1812",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "TRADFRISHORTCUTButton",
+            "battery_type": "1x3V CR2032",
+            "lastCommunicationTimeOut": "-1",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include7": "Up-Down",
+            "include7 1": "Click-Middle",
+            "include8": "Batterie-Pourcent-Ikea",
+            "include9": "getBattery",
+            "include10": "BindShortToZigateBatterie",
+            "include11": "setReportBatterie",
+            "include12": "setReportEtat",
+            "include13": "BindToZigateEtat",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild"
+        }
     }
-  }
 }

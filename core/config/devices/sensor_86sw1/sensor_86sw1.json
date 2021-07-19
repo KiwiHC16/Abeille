@@ -1,21 +1,20 @@
 {
-  "sensor_86sw1": {
-    "nameJeedom": "Xiaomi Interrupteur Carré simple",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c766260b5",
-      "icone": "XiaomiButtonSW861",
-      "battery_type": "1x3V CR2032",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etatSwitchSimple"
+    "sensor_86sw1": {
+        "nameJeedom": "Xiaomi Interrupteur Carr\u00e9 simple",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "XiaomiButtonSW861",
+            "battery_type": "1x3V CR2032",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etatSwitchSimple"
+        }
     }
-  }
 }

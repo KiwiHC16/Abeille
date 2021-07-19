@@ -1,20 +1,19 @@
 {
-  "zigbeeNon-colorscenecontroller": {
-    "nameJeedom": "Template for ZigBee - Non Color Scene Controller",
-    "timeout": "60",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "uniqId": "5c05672320b6b",
-      "icone": "zigbeeNon-colorscenecontroller",
-      "mainEP": "#EP#",
-      "poll": "1"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW"
+    "zigbeeNon-colorscenecontroller": {
+        "nameJeedom": "Template for ZigBee - Non Color Scene Controller",
+        "timeout": "60",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "zigbeeNon-colorscenecontroller",
+            "mainEP": "01",
+            "poll": "1"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW"
+        }
     }
-  }
 }

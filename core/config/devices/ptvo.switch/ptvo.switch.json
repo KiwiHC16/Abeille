@@ -1,21 +1,20 @@
 {
-  "ptvo.switch": {
-    "nameJeedom": "ptvo.switch",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "20210129_1705",
-      "icone": "ptvo.switch",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include3": "nom",
-      "include4": "etatEp08",
-      "include5": "OnEp08",
-      "include6": "OffEp08",
-      "include8": "getEtatEp08"
+    "ptvo.switch": {
+        "nameJeedom": "ptvo.switch",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "ptvo.switch",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include3": "nom",
+            "include4": "etatEp08",
+            "include5": "OnEp08",
+            "include6": "OffEp08",
+            "include8": "getEtatEp08"
+        }
     }
-  }
 }

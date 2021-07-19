@@ -1,34 +1,33 @@
 {
-  "ClassicA60Wclear-LIGHTIFY-2": {
-    "nameJeedom": "OSRAM Classic A60 W clear - LIGHTIFY - 2",
-    "comment": "dummy version to be able to have the a new  icone as ClassicA60Wclear-Lightify",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5cc7c76620623",
-      "icone": "OSRAMClassicA60Wclear-LIGHTIFY-2",
-      "mainEP": "03"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include4": "etatLight",
-      "include5": "levelLight",
-      "include8": "On",
-      "include9": "Off",
-      "include10": "Toggle",
-      "include11": "setLevel",
-      "include19": "getEtat",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include28": "setReportEtat"
+    "ClassicA60Wclear-LIGHTIFY-2": {
+        "nameJeedom": "OSRAM Classic A60 W clear - LIGHTIFY - 2",
+        "comment": "dummy version to be able to have the a new  icone as ClassicA60Wclear-Lightify",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "OSRAMClassicA60Wclear-LIGHTIFY-2",
+            "mainEP": "03"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include4": "etatLight",
+            "include5": "levelLight",
+            "include8": "On",
+            "include9": "Off",
+            "include10": "Toggle",
+            "include11": "setLevel",
+            "include19": "getEtat",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include26": "BindToZigateEtat",
+            "include28": "setReportEtat"
+        }
     }
-  }
 }

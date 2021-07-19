@@ -1,34 +1,33 @@
 {
     "LOM002": {
-      "nameJeedom": "Philips Hue Smart Plug",
-      "timeout": "60",
-      "Categorie": {
-        "automatism": "1"
-      },
-      "configuration": {
-        "uniqId": "54f5576720b6b",
-        "icone": "LOM002",
-        "mainEP": "0B",
-        "poll": "1"
-      },
-      "Commandes": {
-        "include1": "nom",
-        "include2": "societe",
-        "include3": "SW",
-        "include4": "etat",
-        "include8": "On",
-        "include9": "Off",
-        "include10": "Toggle",
-        "include19": "getEtat",
-        "include21": "getManufacturerName",
-        "include22": "getModelIdentifier",
-        "include23": "getSWBuild",
-        "include24": "Identify",
-        "include25": "Group-Membership",
-        "include26": "BindToZigateEtat",
-        "include27": "BindToZigateLevel",
-        "include28": "setReportEtat",
-        "include29": "setReportLevel"
-      }
+        "nameJeedom": "Philips Hue Smart Plug",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "LOM002",
+            "mainEP": "0B",
+            "poll": "1"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include4": "etat",
+            "include8": "On",
+            "include9": "Off",
+            "include10": "Toggle",
+            "include19": "getEtat",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include26": "BindToZigateEtat",
+            "include27": "BindToZigateLevel",
+            "include28": "setReportEtat",
+            "include29": "setReportLevel"
+        }
     }
-  }
+}

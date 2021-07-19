@@ -503,7 +503,8 @@ class AbeilleCmdProcess extends AbeilleDebug {
         $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
     }
 
-    function getParam($priority,$dest,$address,$clusterId,$attributeId,$destinationEndPoint,$Proprio) {
+    // Generate a 'Read attribute request'
+    function readAttribute($priority, $dest, $addr, $destEp, $clustId, $attribId, $manufId = '') {
         /*
             <address mode: uint8_t>
             <target short address: uint16_t>
@@ -511,53 +512,51 @@ class AbeilleCmdProcess extends AbeilleDebug {
             <destination endpoint: uint8_t>
             <Cluster id: uint16_t>
             <direction: uint8_t>
+                0 - from server to client
+                1 - from client to server
             <manufacturer specific: uint8_t>
+                0 – No
+                1 – Yes
             <manufacturer id: uint16_t>
             <number of attributes: uint8_t>
             <attributes list: data list of uint16_t  each>
-            Direction:
-            0 - from server to client
-            1 - from client to server
-            Manufacturer specific :
-            0 – No
-            1 – Yes
         */
 
         $cmd = "0100";
 
-        $addressMode = "02";
-        // $address = $Command['address']; in the fct call
-        $sourceEndpoint = "01";
+        $addrMode = "02";
+        // TODO: Check 'addr' size
+        $srcEp = "01";
+        // TODO: Check 'destEp' size
+        // TODO: Check 'clustId' size
+        $dir = "00";
 
-        $ClusterId = $clusterId;
-        $Direction = "00";
-        if ((strlen($Proprio)<1) || ($Proprio="0000")) {
-            $manufacturerSpecific = "00";
-            $manufacturerId = "0000";
-        }
-        else {
-            $manufacturerSpecific = "01";
-            $manufacturerId = $Proprio;
+        if (($manufId == "") || ($manufId == "0000")) {
+            $manufSpecific = "00";
+            $manufId = "0000";
+        } else {
+            $manufSpecific = "01";
+            // TODO: check manufId size
         }
 
         /* Supporting multi-attributes (ex: '0505,0508,050B')/
            Tcharp38 note: This way is not recommended as Zigate team is unable to tell the max number
               of attributs for the request to be "functional". Seems ok up to 4. */
-        $list = explode(',', $attributeId);
-        $attributesList = "";
+        $list = explode(',', $attribId);
+        $attribList = "";
         $nbAttr = 0;
         foreach ($list as $attrId) {
-            $attributesList .=  $attrId;
+            // TODO: Check 'attrId' size
+            $attribList .=  $attrId;
             $nbAttr++;
         }
-        $numberOfAttributes = sprintf("%02X", $nbAttr);
+        $nbOfAttrib = sprintf("%02X", $nbAttr);
 
-        $data = $addressMode.$address.$sourceEndpoint.$destinationEndPoint.$ClusterId.$Direction.$manufacturerSpecific.$manufacturerId.$numberOfAttributes.$attributesList;
-
-        $lenth = sprintf("%04s", dechex(strlen($data) / 2));
-
-        $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+        $data = $addrMode.$addr.$srcEp.$destEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttrib.$attribList;
+        $len = sprintf("%04s", dechex(strlen($data) / 2));
+        $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
     }
+
     /**
      * getParamMulti
      *
@@ -2357,17 +2356,17 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         // ReadAttributeRequest ------------------------------------------------------------------------------------
         // http://zigate/zigate/sendCmd.php?address=83DF&ReadAttributeRequest=1&clusterId=0000&attributeId=0004
-
-        if ((isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']) && isset($Command['Proprio']))
-        {
-            $this->getParam( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], $Command['EP'], $Command['Proprio'] );
+        if (isset($Command['ReadAttributeRequest'])) {
+            if (isset($Command['address']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']) && isset($Command['Proprio']))
+                $this->readAttribute($priority, $dest, $Command['address'], $Command['EP'], $Command['clusterId'], $Command['attributeId'], $Command['Proprio'] );
+            else if ((isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']))
+                $this->readAttribute($priority, $dest, $Command['address'], $Command['EP'], $Command['clusterId'], $Command['attributeId']);
+            return;
         }
-        else
-        {
-            if ((isset($Command['ReadAttributeRequest'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['EP']))
-            {
-                $this->getParam( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], $Command['EP'], "0000" );
-            }
+
+        if (isset($Command['readAttributeRequest'])) {
+            $this->readAttribute($priority, $dest, $Command['addr'], $Command['ep'], $Command['clustId'], $Command['attrId']);
+            return;
         }
 
         // ReadAttributeRequestMulti ------------------------------------------------------------------------------------
@@ -2384,7 +2383,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // if ($Command['ReadAttributeRequest']==1 )
             //{
             // $this->getParamHue( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B" );
-            $this->getParam( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B", "0000" );
+            $this->readAttribute($priority, $dest, $Command['address'], "0B", $Command['clusterId'], $Command['attributeId']);
             //}
         }
 
@@ -2396,7 +2395,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // if ($Command['ReadAttributeRequest']==1 )
             //{
             // getParamOSRAM( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01" );
-            $this->getParam( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "03", "0000" );
+            $this->readAttribute($priority, $dest, $Command['address'], "03", $Command['clusterId'], $Command['attributeId']);
             //}
         }
 
@@ -2890,19 +2889,19 @@ class AbeilleCmdProcess extends AbeilleDebug {
         if (isset($Command['getManufacturerName']) && isset($Command['address']))
         {
             if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-            $this->getParam( $priority, $dest, $Command['address'], "0000", "0004", $Command['destinationEndPoint'], "0000" );
+            $this->readAttribute($priority, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0004");
         }
 
         if (isset($Command['getName']) && isset($Command['address']))
         {
             if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-            $this->getParam( $priority, $dest, $Command['address'], "0000", "0005", $Command['destinationEndPoint'], "0000" );
+            $this->readAttribute($priority, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0005");
         }
 
         if (isset($Command['getLocation']) && isset($Command['address']))
         {
             if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-            $this->getParam( $priority, $dest, $Command['address'], "0000", "0010", $Command['destinationEndPoint'], "0000" );
+            $this->readAttribute($priority, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0010");
         }
 
         if (isset($Command['setLocation']) && isset($Command['address']))

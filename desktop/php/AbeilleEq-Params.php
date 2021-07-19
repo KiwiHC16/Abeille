@@ -485,6 +485,16 @@
         </div>
 
         <div class="form-group">
+            <label class="col-sm-3 control-label">Attribut</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'readAttribute\', \''.$eqId.'\')">{{Lire}}</a>';
+                ?>
+                <input id="idClustIdA" placeholder="{{Cluster (ex: 0001)}}" />
+                <input id="idAttrIdA" placeholder="{{Attrib (ex: 0021)}}" />
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-sm-3 control-label">Config de rapport</label>
             <div class="col-sm-5">
                 <?php

@@ -18,9 +18,9 @@
                 list($name,$value) = explode('=', $i, 2);
 
                 # if name already exists
-                if( isset($arr[$name]) ) {
+                if(isset($arr[$name]) ) {
                     # stick multiple values into an array
-                    if( is_array($arr[$name]) ) {
+                    if(is_array($arr[$name]) ) {
                         $arr[$name][] = $value;
                     }
                     else {
@@ -48,7 +48,7 @@
          * @return none
          *
          */
-        function procmsg( $message ) {
+        function procmsg($message ) {
 
             $this->deamonlog("debug", "  L2 - procmsg(".json_encode($message).")", $this->debug['procmsg']);
 
@@ -57,7 +57,7 @@
             $priority   = $message->priority;
 
             if (sizeof(explode('/', $topic)) != 3) {
-                $this->deamonlog("error", "procmsg(). Mauvais format de message reçu.");
+                $this->deamonlog("error", "procmsg(): Mauvais format de message reçu.");
                 return ;
             }
 
@@ -74,7 +74,7 @@
                 return;
             }
 
-            $dest = str_replace( 'Cmd', '',  $type );
+            $dest = str_replace('Cmd', '',  $type); // Remove 'Cmd' prefix
 
             $this->deamonlog("debug", '  Msg Received: Topic: {'.$topic.'} => '.$msg, $this->debug['procmsg3']);
             $this->deamonlog("debug", '  (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action, $this->debug['procmsg3']);
@@ -140,8 +140,7 @@
                         "attributeId" => "0005",
                         "EP" => $msg,
                     );
-                }
-                else {
+                } else {
                     if ($msg == "Default") {
                         $Command = array(
                             "ReadAttributeRequest" => "1",
@@ -437,7 +436,7 @@
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
                 }
-                $consigne = sprintf( "%04X", $parameters['value']*100 );
+                $consigne = sprintf("%04X", $parameters['value']*100 );
                 $consigneHex = $consigne[2].$consigne[3].$consigne[0].$consigne[1];
                 $Command = array(
                                     "WriteAttributeRequest"    => "1",
@@ -458,7 +457,7 @@
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
                 }
-                $consigne = sprintf( "%02X", $parameters['value'] );
+                $consigne = sprintf("%02X", $parameters['value'] );
                 $consigneHex = $consigne;
                 $Command = array(
                                     "WriteAttributeRequest" => "1",
@@ -479,12 +478,12 @@
                 }
                 $valuePrepared = $parameters['value'];
                 // Example: set Temperature Danfoss Radiator Head
-                if ( $parameters['attributeType'] = '29' )  {
-                    $valuePrepared = sprintf( "%04X", $parameters['value']*100 );
+                if ($parameters['attributeType'] = '29' )  {
+                    $valuePrepared = sprintf("%04X", $parameters['value']*100 );
                     $valuePrepared = $valuePrepared[2] . $valuePrepared[3] . $valuePrepared[0] . $valuePrepared[1] ;
                 }
-                if ( $parameters['attributeType'] = '30' )  {
-                    $valuePrepared = sprintf( "%02X", $parameters['value'] );
+                if ($parameters['attributeType'] = '30' )  {
+                    $valuePrepared = sprintf("%02X", $parameters['value'] );
                 }
                 $Command = array(
                                     "WriteAttributeRequestGeneric" => "1",
@@ -547,6 +546,25 @@
 
             //     $this->deamonlog('debug', '  Msg Received: '.$msg.' from Ruche');
             //     break;
+            case "readAttributeRequest":
+                $keywords = preg_split("/[=&]+/", $msg);
+                if (count($keywords) > 1) {
+                    $params = $this->proper_parse_str($msg);
+                }
+                if (!isset($params['ep']) || !isset($params['clustId']) || !isset($params['attrId'])) {
+                    $this->deamonlog('debug', '  readAttributeRequest ERROR: missing minimal infos');
+                    return;
+                }
+                $Command = array(
+                                "readAttributeRequest"      => "1",
+                                "priority"                  => $priority,
+                                "dest"                      => $dest,
+                                "addr"                      => $address,
+                                "ep"                        => $params['ep'],
+                                "clustId"                   => $params['clustId'],
+                                "attrId"                    => $params['attrId']
+                                );
+                break;
 
             case "ReadAttributeRequestHue":
                 $keywords = preg_split("/[=&]+/", $msg);
@@ -633,10 +651,10 @@
                                     );
                 break;
             case "setLevelVolet":
-                $eqLogic = eqLogic::byLogicalId( $dest."/".$address, "Abeille" );
-                $a = $eqLogic->getConfiguration( 'paramA', 0);
-                $b = $eqLogic->getConfiguration( 'paramB', 1);
-                $c = $eqLogic->getConfiguration( 'paramC', 0);
+                $eqLogic = eqLogic::byLogicalId($dest."/".$address, "Abeille" );
+                $a = $eqLogic->getConfiguration('paramA', 0);
+                $b = $eqLogic->getConfiguration('paramB', 1);
+                $c = $eqLogic->getConfiguration('paramC', 0);
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -776,10 +794,10 @@
                 $vert  = hexdec(substr($parameters['color'],2,2));
                 $bleu  = hexdec(substr($parameters['color'],4,2));
 
-                $this->publishMosquittoAbeille( queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorRouge', $rouge*100/255      );
-                $this->publishMosquittoAbeille( queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorVert',  $vert*100/255       );
-                $this->publishMosquittoAbeille( queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorBleu',  $bleu*100/255       );
-                $this->publishMosquittoAbeille( queueKeyCmdToAbeille, 'Abeille/'.$address.'/ColourRGB',  $parameters['color']);
+                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorRouge', $rouge*100/255      );
+                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorVert',  $vert*100/255       );
+                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorBleu',  $bleu*100/255       );
+                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, 'Abeille/'.$address.'/ColourRGB',  $parameters['color']);
 
                 $Command = array(
                                     "setColourRGB" => "1",
@@ -793,17 +811,17 @@
                                     );
                 break;
             case "setRouge":
-                $abeille = Abeille::byLogicalId( $dest.'/'.$address,'Abeille');
+                $abeille = Abeille::byLogicalId($dest.'/'.$address,'Abeille');
 
                 $rouge  = $abeille->getCmd('info', 'colorRouge')->execCmd();
                 $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
                 $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
 
-                if ( $rouge=="" ) { $rouge = 1;   }
-                if ( $vert=="" )  { $vert = 1;    }
-                if ( $bleu=="" )  { $bleu = 1;    }
+                if ($rouge=="" ) { $rouge = 1;   }
+                if ($vert=="" )  { $vert = 1;    }
+                if ($bleu=="" )  { $bleu = 1;    }
 
-                $this->publishMosquittoAbeille( queueKeyCmdToAbeille, $dest.'/'.$address.'/colorRouge', $msg );
+                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, $dest.'/'.$address.'/colorRouge', $msg );
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -828,11 +846,11 @@
                 $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
                 $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
 
-                if ( $rouge=="" ) { $rouge = 1;   }
-                if ( $vert=="" )  { $vert = 1;    }
-                if ( $bleu=="" )  { $bleu = 1;    }
+                if ($rouge=="" ) { $rouge = 1;   }
+                if ($vert=="" )  { $vert = 1;    }
+                if ($bleu=="" )  { $bleu = 1;    }
 
-                $this->publishMosquittoAbeille( queueKeyCmdToAbeille, $dest.'/'.$address.'/colorVert', $msg );
+                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, $dest.'/'.$address.'/colorVert', $msg );
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -857,11 +875,11 @@
                 $vert   = $abeille->getCmd('info', 'colorVert')->execCmd();
                 $bleu   = $abeille->getCmd('info', 'colorBleu')->execCmd();
 
-                if ( $rouge=="" ) { $rouge = 1;   }
-                if ( $vert=="" )  { $vert = 1;    }
-                if ( $bleu=="" )  { $bleu = 1;    }
+                if ($rouge=="" ) { $rouge = 1;   }
+                if ($vert=="" )  { $vert = 1;    }
+                if ($bleu=="" )  { $bleu = 1;    }
 
-                $this->publishMosquittoAbeile( queueKeyCmdToAbeille, $dest.'/'.$address.'/colorBleu', $msg );
+                $this->publishMosquittoAbeile(queueKeyCmdToAbeille, $dest.'/'.$address.'/colorBleu', $msg );
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -919,7 +937,7 @@
                                     "priority"             => $priority,
                                     "dest"                 => $dest,
                                     "address"              => $address,
-                                    "temperature"          => sprintf( "%04s", dechex(intval(1000000/$parameters['slider'])) ),
+                                    "temperature"          => sprintf("%04s", dechex(intval(1000000/$parameters['slider'])) ),
                                     "destinationEndPoint"  => $parameters['EP'],
                                     );
                 break;
@@ -939,12 +957,12 @@
                                     "priority"             => $priority,
                                     "dest"                 => $dest,
                                     "address"              => $address,
-                                    "temperature"          => sprintf( "%04s", dechex(intval(1000000/$parameters['slider'])) ),
+                                    "temperature"          => sprintf("%04s", dechex(intval(1000000/$parameters['slider'])) ),
                                     "destinationEndPoint"  => $parameters['EP'],
                                     );
                 break;
             case "sceneGroupRecall":
-                $this->deamonlog( 'debug', '  sceneGroupRecall msg: ' . $msg );
+                $this->deamonlog('debug', '  sceneGroupRecall msg: ' . $msg );
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -1230,7 +1248,7 @@
             //     break;
 
             case "addGroup":
-                if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
+                if (strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
                                     "addGroup"                 => "1",
                                     "priority"                 => $priority,
@@ -1245,7 +1263,7 @@
             //     if (count($fields) > 1) {
             //         $parameters = $this->proper_parse_str($msg);
             //     }
-            //     if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
+            //     if (strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
             //     $Command = array(
             //                         "addGroup"                 => "1",
             //                         "priority"                 => $priority,
@@ -1257,8 +1275,8 @@
             //     break;
 
             case "removeGroup":
-                // if ( $parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
-                if ( strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
+                // if ($parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
+                if (strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
                 $Command = array(
                                     "removeGroup"              => "1",
                                     "priority"                 => $priority,
@@ -1306,7 +1324,7 @@
                                     );
                 break;
             case "sceneGroupRecall":
-                $this->deamonlog( 'debug', '  sceneGroupRecall msg: ' . $msg );
+                $this->deamonlog('debug', '  sceneGroupRecall msg: ' . $msg );
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -1431,7 +1449,7 @@
                 $this->deamonlog('debug', '  WARNING: Unknown command ! (topic='.$topic.')');
             } else {
                 // $this->deamonlog('debug', '  L2 - calling processCmd with Command parameters: '.json_encode($Command), $this->debug['procmsg']);
-                $this->processCmd( $Command );
+                $this->processCmd($Command );
             }
 
             return;

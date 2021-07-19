@@ -123,11 +123,14 @@
             $this->requestedlevel = '' ? 'none' : $argv[1];
             $GLOBALS['requestedlevel'] = $this->requestedlevel ;
 
+            $abQueues = $GLOBALS['abQueues'];
             $this->queueKeyParserToAbeille      = msg_get_queue(queueKeyParserToAbeille);
             $this->queueKeyParserToAbeille2     = msg_get_queue(queueKeyParserToAbeille2);
             $this->queueKeyParserToCmd          = msg_get_queue(queueKeyParserToCmd);
             $this->queueKeyParserToCmdSemaphore = msg_get_queue(queueKeyParserToCmdSemaphore);
-            $this->queueKeyParserToLQI          = msg_get_queue(queueKeyParserToLQI);
+            // $this->queueParserToLQI          = msg_get_queue(queueParserToLQI);
+            $this->queueParserToLQI             = msg_get_queue($abQueues["parserToLQI"]["id"]);
+            $this->queueParserToLQIMax          = $abQueues["parserToLQI"]["max"];
 
             /* Monitor updates */
             if (isset($GLOBALS["dbgMonitorAddr"])) {
@@ -248,34 +251,41 @@
                 parserLog("debug","(fct msgToAbeilleLQI ParserToAbeille) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errorcode);
             }
 
-            if (msg_send( $this->queueKeyParserToLQI, 1, $msgAbeille, true, false)) {
-                // parserLog("debug","(fct msgToAbeilleLQI ParserToLQI) added to queue (queueKeyParserToLQI): ".json_encode($msgAbeille));
+            if (msg_send( $this->queueParserToLQI, 1, $msgAbeille, true, false)) {
+                // parserLog("debug","(fct msgToAbeilleLQI ParserToLQI) added to queue (queueParserToLQI): ".json_encode($msgAbeille));
                 // print_r(msg_stat_queue($queue));
             }
             else {
-                parserLog("debug","(fct msgToAbeilleLQI ParserToLQI) could not add message to queue (queueKeyParserToLQI) with error code : ".$errorcode);
+                parserLog("debug","(fct msgToAbeilleLQI ParserToLQI) could not add message to queue (queueParserToLQI) with error code : ".$errorcode);
             }
         } */
 
         /* Send message to 'AbeilleLQI'.
-           Returns: 0=OK, -1=ERROR */
+           Returns: true=ok, false=ERROR */
         function msgToLQICollector($SrcAddr, $NTableEntries, $NTableListCount, $StartIndex, $NList)
         {
             $msg = array(
-                'Type' => '804E',
-                'SrcAddr' => $SrcAddr,
-                'TableEntries' => $NTableEntries,
-                'TableListCount' => $NTableListCount,
-                'StartIndex' => $StartIndex,
-                'List' => $NList
+                'type' => '804E',
+                'srcAddr' => $SrcAddr,
+                'tableEntries' => $NTableEntries,
+                'tableListCount' => $NTableListCount,
+                'startIndex' => $StartIndex,
+                'list' => $NList
             );
 
-            if (msg_send($this->queueKeyParserToLQI, 1, json_encode($msg), false, false, $errorCode) == TRUE) {
-                return 0;
+            /* Message size control. If too big it would block queue forever */
+            $msgJson = json_encode($msg);
+            $size = strlen($msgJson);
+            $max = $this->queueParserToLQIMax;
+            if ($size > $max) {
+                parserLog("error", "msgToLQICollector(): Message trop gros ignoré (taille=".$size.", max=".$max.")");
+                return false;
             }
+            if (msg_send($this->queueParserToLQI, 1, $msgJson, false, false, $errorCode) == true)
+                return true;
 
             parserLog("error", "msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$errorCode.")");
-            return -1;
+            return false;
         }
 
         /* Send msg to client if queue exists.
@@ -1162,7 +1172,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 //     parserLog('debug', '  Not in inclusion mode => device announce ignored');
                 //     return;
                 // }
-                if (!isset($GLOBALS['eqList'][$dest]) || !isset($GLOBALS['eqList'][$dest][$addr]))
+                if (!isset($GLOBALS['eqList'][$dest]) || !isset($GLOBALS['eqList'][$dest][$Addr]))
                     parserLog('debug', '  Not in inclusion mode but trying to identify unknown device anyway.');
                 else
                     parserLog('debug', '  Not in inclusion mode and got a device announce for already known device.');
@@ -3047,7 +3057,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $NTableEntries = substr($payload, 4, 2);
             $NTableListCount = substr($payload, 6, 2);
             $StartIndex = substr($payload, 8, 2);
-            $SrcAddr = substr($payload, 10 + ($NTableListCount * 42), 4); // 21 bytes per neighbour entry
+            $SrcAddr = substr($payload, 10 + (hexdec($NTableListCount) * 42), 4); // 21 bytes per neighbour entry
 
             $decoded = '804E/Management LQI response'
                 .', SQN='               .$SQN

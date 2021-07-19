@@ -50,15 +50,15 @@
             "TableEntries" => 0,    // Nb of entries in its table
             "TableIndex" => 0,      // Index to interrogate
         );
-        logMessage("", "Nouvel eq à interroger: '".$eqName."' (".$logicId.")");
+        logMessage("", "New device to interrogate: '".$eqName."' (".$logicId.")");
     }
 
     /* Remove any pending messages from parser */
     function msgFromParserFlush() {
-        global $queueKeyParserToLQI;
+        global $queueParserToLQI, $queueParserToLQISize;
 
-        $max_msg_size = 512;
-        while (msg_receive($queueKeyParserToLQI, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT));
+        $msgMaxSize = $queueParserToLQISize;
+        while (msg_receive($queueParserToLQI, 0, $msgType, $msgMaxSize, $msg, true, MSG_IPC_NOWAIT));
     }
 
     /* Treat request responses (804E) from parser.
@@ -67,38 +67,43 @@
         logMessage("", "msgFromParser(eqIndex=".$eqIndex.")");
 
         global $LQI;
-        global $queueKeyParserToLQI;
+        global $queueParserToLQI, $queueParserToLQISize;
         global $eqToInterrogate;
         global $eqKnownFromAbeille;
         global $objKnownFromAbeille;
 
         $timeout = 10; // 10sec (useful when there is unknown eq interrogation during LQI collect)
         for ($t = 0; $t < $timeout; ) {
-            // logMessage("", "  Queue stat=".json_encode(msg_stat_queue($queueKeyParserToLQI)));
-            if (msg_receive($queueKeyParserToLQI, 0, $msg_type, 1024, $msg_json, FALSE, MSG_IPC_NOWAIT, $error_code) == TRUE) {
+            // logMessage("", "  Queue stat=".json_encode(msg_stat_queue($queueParserToLQI)));
+            $msgMaxSize = $queueParserToLQISize;
+            if (msg_receive($queueParserToLQI, 0, $msgType, $msgMaxSize, $msgJson, false, MSG_IPC_NOWAIT, $errorCode) == true) {
                 /* Message received. Let's check it is the expected one */
-                $msg = json_decode($msg_json);
-                if ($msg->Type != "804E") {
-                    logMessage("", "  Unsupported message type (".$msg->Type.") => Ignored.");
+                $msg = json_decode($msgJson);
+                if ($msg->type != "804E") {
+                    logMessage("", "  WARNING: Unsupported message type (".$msg->type.") => Ignored.");
                     continue;
                 }
-                if (hexdec($msg->StartIndex) != $eqToInterrogate[$eqIndex]['TableIndex']) {
+                if (hexdec($msg->startIndex) != $eqToInterrogate[$eqIndex]['TableIndex']) {
                     /* Note: this case is due to too many identical 004E messages sent to eq
                        leading to several identical 804E answers */
-                    logMessage("", "  Unexpected start index (".$msg->StartIndex.") => Ignored.");
+                    logMessage("", "  WARNING: Unexpected start index (".$msg->startIndex.") => Ignored.");
+                    continue;
+                }
+                if ($msg->srcAddr != $eqToInterrogate[$eqIndex]['Addr']) {
+                    logMessage("", "  WARNING: Unexpected source addr (".$msg->srcAddr.") => Ignored.");
                     continue;
                 }
                 break; // Valid message
             }
 
-            if ($error_code == 42) { // No message
+            if ($errorCode == 42) { // No message
                 sleep(1); // Sleep 1s
                 $t += 1;
                 continue;
             }
 
             /* It's an error */
-            logMessage("", "  Error ".$error_code."/".posix_strerror($error_code));
+            logMessage("", "  msg_receive() ERROR: ".$errorCode."/".posix_strerror($errorCode));
             return -1;
         }
         if ($t >= $timeout) {
@@ -109,21 +114,14 @@
         //       This currently can't appear since requests are done sequentially
         //       so no risk to get an answer from an unexpected source.
 
-        // logMessage("", "  Recu ".$msg_json);
-        // $msg = json_decode($msg_json);
-        // if ($msg->Type != "804E") {
-        //     logMessage("", "  Message non LQI => Inattendu.");
-        //     return -1;
-        // }
-
         /* Message format reminder
             $msg = array(
-                'Type' => '804E',
-                'SrcAddr' => $SrcAddr,
-                'TableEntries' => $NTableEntries,
-                'TableListCount' => $NTableListCount,
-                'StartIndex' => $StartIndex,
-                'List' => $NList
+                'type' => '804E',
+                'srcAddr' => $SrcAddr,
+                'tableEntries' => $NTableEntries,
+                'tableListCount' => $NTableListCount,
+                'startIndex' => $StartIndex,
+                'list' => $NList
                     $N = array(
                         "Addr"     => substr($payload, $j + 0, 4),
                         "ExtPANId" => substr($payload, $j + 4, 16),
@@ -134,10 +132,10 @@
                 )
             ); */
 
-        $tableEntries = $msg->TableEntries; // Total entries on interrogated eq
-        $tableListCount = $msg->TableListCount; // Number of neighbours liste in msg
-        $startIndex = $msg->StartIndex;
-        $NList = $msg->List; // List of neighbours
+        $tableEntries = $msg->tableEntries; // Total entries on interrogated eq
+        $tableListCount = $msg->tableListCount; // Number of neighbours liste in msg
+        $startIndex = $msg->startIndex;
+        $NList = $msg->list; // List of neighbours
         // logMessage("", "NList=".json_encode($NList));
         logMessage("", "  tableEntries=".$tableEntries.", tableListCount=".$tableListCount.", startIndex=".$startIndex);
 
@@ -246,8 +244,8 @@
         logMessage("", "msgToCmd: ".json_encode($msgAbeille));
 
         global $queueKeyLQIToCmd;
-        if (msg_send($queueKeyLQIToCmd, priorityInterrogation, $msgAbeille, true, false) == FALSE) {
-            logMessage('error', "msgToCmd: Impossible d'envoyer le message vers AbeilleCmd");
+        if (msg_send($queueKeyLQIToCmd, priorityInterrogation, $msgAbeille, true, false) == false) {
+            logMessage('error', "msgToCmd: Unable to send message to AbeilleCmd");
             return -1;
         }
         return 0;
@@ -258,7 +256,7 @@
     function interrogateEq($netName, $addr, $eqIndex) {
         global $eqToInterrogate;
 
-        while (TRUE) {
+        while (true) {
             $eq = $eqToInterrogate[$eqIndex]; // Read eq status
             msgToCmd($netName, $addr, sprintf("%'.02X", $eq['TableIndex']));
             usleep(200000); // Delay of 200ms to let response to come back
@@ -310,13 +308,13 @@
         $zgStart = 1;
         $zgEnd = config::byKey('zigateNb', 'Abeille', '1', 1);
     } else {
-        logMessage("", "Demande d'interrogation de la zigate ".$zgNb." seulement");
+        logMessage("", "Request to interrogate zigate ".$zgNb." only");
         $zgStart = $zgNb;
         $zgEnd = $zgNb;
     }
 
     // Collecting known equipments list
-    logMessage("", "Equipements connus de Jeedom:");
+    logMessage("", "Known Jeedom equipments:");
     $eqLogics = eqLogic::byType('Abeille');
     $eqKnownFromAbeille = array();
     $objKnownFromAbeille = array();
@@ -334,7 +332,9 @@
     // logMessage("", "Objets connus de Jeedom: ".json_encode($objKnownFromAbeille));
 
     $queueKeyLQIToCmd    = msg_get_queue(queueKeyLQIToCmd);
-    $queueKeyParserToLQI = msg_get_queue(queueKeyParserToLQI);
+    // $queueParserToLQI = msg_get_queue(parserToLQI);
+    $queueParserToLQI = msg_get_queue($abQueues["parserToLQI"]["id"]);
+    $queueParserToLQISize = $abQueues["parserToLQI"]["max"];
     msgFromParserFlush(); // Flush the queue if not empty
 
     for ($zgNb = $zgStart; $zgNb <= $zgEnd; $zgNb++) {
@@ -349,12 +349,12 @@
         $lockFile = $dataFile.".lock";
         if (file_exists($lockFile)) {
             $content = file_get_contents($lockFile);
-            logMessage("", "Contenu ".$netName." lock: '".$content."'");
+            logMessage("", $netName." lock content: '".$content."'");
             if (substr($content, 0, 4) != "done") {
                 exec("pgrep -a php | grep AbeilleLQI", $running);
                 if (sizeof($running) != 0) {
                     echo 'ERROR: Collect already ongoing';
-                    logMessage("", "Une collecte semble déja en cours (fichier lock présent) => nouvelle collecte interrompue");
+                    logMessage("", "LQI collect already ongoing (lock file found) => collect canceled");
                     exit;
                 } else {
                     logMessage("", "Previous LQI collect crashed. Removing lock file.");
@@ -366,7 +366,7 @@
         if ($nbwritten < 1) {
             unlink($lockFile);
             echo "ERROR: Can't write lock file";
-            logMessage("", "Impossible d'écrire le fichier lock (".$lockFile.") => arret");
+            logMessage("", "Unable to write lock file (".$lockFile.") => collect canceled");
             exit;
         }
 
@@ -377,7 +377,7 @@
         $done = 0;
         $eqIndex = 0; // Index of eq to interrogate
         $collectStatus = 0;
-        while (TRUE) {
+        while (true) {
             $total = count($eqToInterrogate);
             logMessage("", "Zigate ".$zgNb." progress: ".$done."/".$total);
 
@@ -395,7 +395,7 @@
             $nbwritten = file_put_contents($lockFile, "Analyse du réseau ".$netName.": ".$done."/".$total." => interrogation de '".$name."' (".$addr.")");
             if ($nbwritten < 1) {
                 echo "ERROR: Can't write lock file";
-                logMessage("", "Impossible d'écrire sur fichier de lock.");
+                logMessage("", "Unable to write lock file.");
                 unlink($lockFile);
                 exit;
             }
@@ -404,7 +404,7 @@
             $done++;
             if ($ret == -1) {
                 $collectStatus = -1; // Collect interrupted due to error
-                logMessage("", "Collecte interrompue pour la zigate ".$zgNb." pour cause d'erreurs.");
+                logMessage("", "Collecte stopped on zigate ".$zgNb." due to errors.");
                 break;
             }
             if ($ret == 1) {

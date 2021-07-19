@@ -3,6 +3,7 @@ ChangeLog
 
 - JSON équipements: mainEP #EP# remplacé par '01'. 'uniqId' supprimé.
 - Interne: tools: Amélioration check_json + update_json
+- Collecte LQI: Correctif parser pour routeur avec plus de 10 childs.
 210718-BETA-1
 ----------
 

@@ -661,23 +661,15 @@ if (0) {
         }
         log::add('Abeille', 'debug', 'cron1: '.$daemons);
 
-        // /* Store infos in "shared mem" to share with other functions */
-        // $shm = shm_attach(12, 200, 0600);
-        // if ($shm === false) {
-        //     log::add('Abeille', 'debug', "cron1: ERROR shm_attach()");
-        // } else {
-        //     // Note: 13 = '$status['running']' ID, 1 bit per running daemon
-        //     shm_put_var($shm, 13, $status['running']);
-        //     shm_detach($shm);
-        // }
-
         // Check ipcs situation pour detecter des soucis eventuels
         // Moved from deamon_info()
+        $abQueues = $GLOBALS['abQueues'];
         if (msg_stat_queue(msg_get_queue(queueKeyAbeilleToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToAbeille');
         if (msg_stat_queue(msg_get_queue(queueKeyAbeilleToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToCmd');
         if (msg_stat_queue(msg_get_queue(queueKeyParserToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToAbeille');
         if (msg_stat_queue(msg_get_queue(queueKeyParserToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmd');
-        if (msg_stat_queue(msg_get_queue(queueKeyParserToLQI))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToLQI');
+        // if (msg_stat_queue(msg_get_queue(queueKeyParserToLQI))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToLQI');
+        if (msg_stat_queue(msg_get_queue($abQueues["parserToLQI"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToLQI');
         if (msg_stat_queue(msg_get_queue(queueKeyCmdToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToAbeille');
         if (msg_stat_queue(msg_get_queue(queueKeyCmdToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToCmd');
         if (msg_stat_queue(msg_get_queue(queueKeyLQIToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyLQIToAbeille');
@@ -1063,11 +1055,12 @@ while ($cron->running()) {
         /* Removing all queues */
         // Tcharp38: Any way to include allQueues from config ?
         // include_once __DIR__.'/../config/Abeille.config.php';
+        $abQueues = $GLOBALS['abQueues'];
         $allQueues = array(
             queueKeyAbeilleToAbeille, queueKeyAbeilleToCmd, queueKeyParserToAbeille, queueKeyParserToAbeille2, queueKeyCmdToAbeille,
             queueKeyCmdToMon, queueKeyParserToMon, queueKeyMonToCmd,
             queueKeyAssistToParser, queueKeyParserToAssist, queueKeyAssistToCmd,
-            queueKeyParserToLQI, queueKeyLQIToAbeille, queueKeyLQIToCmd,
+            $abQueues["parserToLQI"]["id"], queueKeyLQIToAbeille, queueKeyLQIToCmd,
             queueKeyXmlToAbeille, queueKeyXmlToCmd, queueKeyFormToCmd, queueKeyParserToCli,
             queueKeyParserToCmd, queueKeyCmdToCmd, queueKeySerialToParser, queueKeyParserToCmdSemaphore, queueKeyCtrlToParser
         );

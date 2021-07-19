@@ -571,7 +571,9 @@ if (0) {
 
                 if ($poll > 0) {
                     log::add('Abeille', 'debug', "cron15: Interrogating '".$eqName."' (addr ".$addr.", poll-reason=".$poll.")");
-                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $mainEP);
+                    // Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $mainEP);
+                    // Reading ZCLVersion attribute which should always be supported
+                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttributeRequest&time=".(time()+($i*23)), "ep=".$mainEP."&clustId=0000&attrId=0000");
                     $i++;
                 }
             }
@@ -712,8 +714,10 @@ if (0) {
 
             log::add('Abeille', 'debug', 'cron1: GetEtat/GetLevel, addr='.$address);
             $mainEP = $eqLogic->getConfiguration('mainEP');
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0006&attributeId=0000");
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0008&attributeId=0000");
+            // Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0006&attributeId=0000");
+            // Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0008&attributeId=0000");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttributeRequest&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0006&attrId=0000");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttributeRequest&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0008&attrId=0000");
             $i++;
         }
         if (($i * 3) > 60) {

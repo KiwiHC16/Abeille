@@ -27,7 +27,7 @@
     define('queueKeyAssistToCmd',           142); // Assistant to cmd
 
     /* LQI collect queues */
-    define('queueKeyParserToLQI',           225);
+    // define('queueKeyParserToLQI',           225);
     define('queueKeyLQIToAbeille',          521);
     define('queueKeyLQIToCmd',              523);
 
@@ -49,6 +49,8 @@
     $abQueues = array();
     $abQueues["queueSerialToParser"] = array( "id" => 0x336, "max" => 2048 );
     $abQueues["queueCtrlToParser"] = array( "id" => 0x337, "max" => 2048 );
+    $abQueues["parserToLQI"] = array( "id" => 225, "max" => 1024 );
+    $GLOBALS['abQueues'] = $abQueues;
 
     define('priorityMin',           1);
     define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel

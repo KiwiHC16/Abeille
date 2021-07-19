@@ -1,10 +1,14 @@
 ChangeLog
 =========
 
+- Interne: cron15: Lecture ZCLVersion au lieu d'un attribut pas toujours supporté.
+- Page EQ/avancé: ajout bouton lecture attribut.
 - JSON équipements: mainEP #EP# remplacé par '01'. 'uniqId' supprimé.
 - Interne: tools: Amélioration check_json + update_json
+- Modèle JSON telecommande profalux: correction syntaxe type batterie.
 - Collecte LQI: Correctif parser pour routeur avec plus de 10 childs.
-210718-BETA-1
+
+210719-STABLE-1
 ----------
 
 - ATTENTION: Format JSON des fichiers de commande modifié !

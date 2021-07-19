@@ -409,6 +409,11 @@
             clustId = document.getElementById("idClustId").value;
             attrId = document.getElementById("idAttrId").value;
             payload = "addr="+js_eqAddr+"_clustId="+clustId+"_attrId="+attrId;
+        } else if (request == "readAttribute") {
+            topic = "Cmd"+logicalId+"_readAttributeRequest";
+            clustId = document.getElementById("idClustIdA").value;
+            attrId = document.getElementById("idAttrIdA").value;
+            payload = "addr="+js_eqAddr+"_ep=01_clustId="+clustId+"_attrId="+attrId;
         } else {
             console.log("Unknown request "+request);
             return;

@@ -1,23 +1,22 @@
 {
-  "TS0203": {
-    "nameJeedom": "Capteur d'ouverture de porte Tuya zemismart TS0203",
-    "timeout": "60",
-    "Comment": "",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5ceosfqsds76s34567dd6ssdgdfzsddzze5d44",
-      "icone": "TS0203",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier",
-      "include10 2": "etatDoorAlarme"
+    "TS0203": {
+        "nameJeedom": "Capteur d'ouverture de porte Tuya zemismart TS0203",
+        "timeout": "60",
+        "Comment": "",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "TS0203",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier",
+            "include10 2": "etatDoorAlarme"
+        }
     }
-  }
 }

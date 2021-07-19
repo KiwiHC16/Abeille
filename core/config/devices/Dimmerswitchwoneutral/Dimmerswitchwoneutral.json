@@ -1,38 +1,37 @@
 {
-  "Dimmerswitchwoneutral": {
-    "nameJeedom": "Legrand Dimmer Switch w/o neutral",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c7662071f",
-      "icone": "Dimmerswitchwoneutral",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include4": "etat",
-      "include5": "Level",
-      "include8": "On",
-      "include9": "Off",
-      "include10": "Toggle",
-      "include11": "setLevel",
-      "include19": "getEtat",
-      "include20": "getLevel",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include27": "BindToZigateLevel",
-      "include28": "setReportEtat",
-      "include29": "setReportLevel",
-      "include29 2": "setLegrandDimmerOn",
-      "include29 2 2": "setLegrandDimmerOff"
+    "Dimmerswitchwoneutral": {
+        "nameJeedom": "Legrand Dimmer Switch w\/o neutral",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "Dimmerswitchwoneutral",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include4": "etat",
+            "include5": "Level",
+            "include8": "On",
+            "include9": "Off",
+            "include10": "Toggle",
+            "include11": "setLevel",
+            "include19": "getEtat",
+            "include20": "getLevel",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include26": "BindToZigateEtat",
+            "include27": "BindToZigateLevel",
+            "include28": "setReportEtat",
+            "include29": "setReportLevel",
+            "include29 2": "setLegrandDimmerOn",
+            "include29 2 2": "setLegrandDimmerOff"
+        }
     }
-  }
 }

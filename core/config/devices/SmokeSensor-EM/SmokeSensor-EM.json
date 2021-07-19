@@ -1,26 +1,25 @@
 {
-  "SmokeSensor-EM": {
-    "nameJeedom": "Heiman Smoke Sensor",
-    "timeout": "60",
-    "Categorie": {
-      "security": "1"
-    },
-    "configuration": {
-      "uniqId": "sd5678jsq51",
-      "icone": "SmokeSensor-EM",
-      "battery_type": "1x3V CR17335 ou 1x3V CR123A",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom",
-      "include3": "securitySafetySmokeHeiman",
-      "include8": "Batterie-Pourcent-Heiman",
-      "include9": "getBattery",
-      "include10": "BindShortToZigateBatterie",
-      "include11": "setReportBatterie",
-      "include10 2": "BindShortToSmokeHeiman",
-      "include11 2": "setReportSmokeHeiman"
+    "SmokeSensor-EM": {
+        "nameJeedom": "Heiman Smoke Sensor",
+        "timeout": "60",
+        "Categorie": {
+            "security": "1"
+        },
+        "configuration": {
+            "icone": "SmokeSensor-EM",
+            "battery_type": "1x3V CR17335 ou 1x3V CR123A",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom",
+            "include3": "securitySafetySmokeHeiman",
+            "include8": "Batterie-Pourcent-Heiman",
+            "include9": "getBattery",
+            "include10": "BindShortToZigateBatterie",
+            "include11": "setReportBatterie",
+            "include10 2": "BindShortToSmokeHeiman",
+            "include11 2": "setReportSmokeHeiman"
+        }
     }
-  }
 }

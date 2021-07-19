@@ -1,32 +1,31 @@
 {
-  "WarningDevice-EF-3.0": {
-    "nameJeedom": "Alarm Smart Siren Heiman Siren : WarningDevice-EF-3.0",
-    "timeout": "60",
-    "Comment": "Draft",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76626sd4526dsdfsdf88a",
-      "icone": "HS2WD",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include4": "ZCLVersion",
-      "include5": "dateCode",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include28": "setReportEtat",
-      "include28 2": "writeAttributeRequestIAS_WD_Flash",
-      "include28 2 2": "writeAttributeRequestIAS_WD_Sound",
-      "include28 2 2 2": "writeAttributeRequestIAS_WD_FlashSound"
+    "WarningDevice-EF-3.0": {
+        "nameJeedom": "Alarm Smart Siren Heiman Siren : WarningDevice-EF-3.0",
+        "timeout": "60",
+        "Comment": "Draft",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "HS2WD",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include4": "ZCLVersion",
+            "include5": "dateCode",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include26": "BindToZigateEtat",
+            "include28": "setReportEtat",
+            "include28 2": "writeAttributeRequestIAS_WD_Flash",
+            "include28 2 2": "writeAttributeRequestIAS_WD_Sound",
+            "include28 2 2 2": "writeAttributeRequestIAS_WD_FlashSound"
+        }
     }
-  }
 }

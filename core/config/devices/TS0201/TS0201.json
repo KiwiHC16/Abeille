@@ -1,26 +1,25 @@
 {
-  "TS0201": {
-    "nameJeedom": "Wireless Temperature and Humidity",
-    "timeout": "60",
-    "Comment": "",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5ceosfqsds76sdd6ssdgdfzsddzze5d44",
-      "icone": "TS0201",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier",
-      "include3 2": "temperature",
-      "include4": "humidite",
-      "include5": "Batterie-Volt-Konke",
-      "include6": "Batterie-Pourcent-Heiman"
+    "TS0201": {
+        "nameJeedom": "Wireless Temperature and Humidity",
+        "timeout": "60",
+        "Comment": "",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "TS0201",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier",
+            "include3 2": "temperature",
+            "include4": "humidite",
+            "include5": "Batterie-Volt-Konke",
+            "include6": "Batterie-Pourcent-Heiman"
+        }
     }
-  }
 }

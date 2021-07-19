@@ -1,43 +1,42 @@
 {
-  "TRADFRIbulbE27WSopal980lm": {
-    "nameJeedom": "IKEA Ampoule TRADFRI bulb E27 White Spectre opal 980 lm",
-    "manufacturer": "Ikea",
-    "timeout": "60",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76620d9a",
-      "icone": "IkeaTRADFRIbulbE27WSopal980lm",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include4": "etatLight",
-      "include5": "levelLight",
-      "include8": "On",
-      "include9": "Off",
-      "include10": "Toggle",
-      "include11": "setLevel",
-      "include12": "2200K",
-      "include13": "2700K",
-      "include14": "4000K",
-      "include15": "temperatureLight",
-      "include19": "getEtat",
-      "include20": "getLevel",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include27": "BindToZigateLevel",
-      "include27 2": "BindToZigateLightColor",
-      "include28": "setReportEtat",
-      "include29": "setReportLevel",
-      "include29 2": "setReportLightColorSpectre"
+    "TRADFRIbulbE27WSopal980lm": {
+        "nameJeedom": "IKEA Ampoule TRADFRI bulb E27 White Spectre opal 980 lm",
+        "manufacturer": "Ikea",
+        "timeout": "60",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "IkeaTRADFRIbulbE27WSopal980lm",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include4": "etatLight",
+            "include5": "levelLight",
+            "include8": "On",
+            "include9": "Off",
+            "include10": "Toggle",
+            "include11": "setLevel",
+            "include12": "2200K",
+            "include13": "2700K",
+            "include14": "4000K",
+            "include15": "temperatureLight",
+            "include19": "getEtat",
+            "include20": "getLevel",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include26": "BindToZigateEtat",
+            "include27": "BindToZigateLevel",
+            "include27 2": "BindToZigateLightColor",
+            "include28": "setReportEtat",
+            "include29": "setReportLevel",
+            "include29 2": "setReportLightColorSpectre"
+        }
     }
-  }
 }

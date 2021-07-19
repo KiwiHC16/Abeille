@@ -1,26 +1,25 @@
 {
-  "zigbeeOnOffLight": {
-    "nameJeedom": "zigbeeOnOffLight",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c7hzeggk6625d94",
-      "icone": "zigbeeOnOffLight",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etat",
-      "include5": "On",
-      "include6": "Off",
-      "include7": "Toggle",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier"
+    "zigbeeOnOffLight": {
+        "nameJeedom": "zigbeeOnOffLight",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "zigbeeOnOffLight",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etat",
+            "include5": "On",
+            "include6": "Off",
+            "include7": "Toggle",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier"
+        }
     }
-  }
 }

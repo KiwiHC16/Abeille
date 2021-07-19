@@ -1,37 +1,36 @@
 {
-  "LWO001": {
-    "nameJeedom": "Philips Hue White E27 Globe",
-    "Comment": "https://github.com/KiwiHC16/Abeille/issues/1097",
-    "timeout": "60",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76dssdfdfsd620939dsfdsfhbkbfdvh316",
-      "icone": "LWO001",
-      "mainEP": "0B"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include4": "etatLight",
-      "include5": "levelLight",
-      "include8": "On",
-      "include9": "Off",
-      "include10": "Toggle",
-      "include11": "setLevel",
-      "include19": "getEtat",
-      "include20": "getLevel",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include27": "BindToZigateLevel",
-      "include28": "setReportEtat",
-      "include29": "setReportLevel"
+    "LWO001": {
+        "nameJeedom": "Philips Hue White E27 Globe",
+        "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1097",
+        "timeout": "60",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "LWO001",
+            "mainEP": "0B"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include4": "etatLight",
+            "include5": "levelLight",
+            "include8": "On",
+            "include9": "Off",
+            "include10": "Toggle",
+            "include11": "setLevel",
+            "include19": "getEtat",
+            "include20": "getLevel",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include26": "BindToZigateEtat",
+            "include27": "BindToZigateLevel",
+            "include28": "setReportEtat",
+            "include29": "setReportLevel"
+        }
     }
-  }
 }

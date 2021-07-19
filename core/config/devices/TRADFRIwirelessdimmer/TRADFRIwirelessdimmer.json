@@ -1,26 +1,25 @@
 {
-  "TRADFRIwirelessdimmer": {
-    "nameJeedom": "IKEA TRADFRI Dimmer Jaune",
-    "timeout": "60",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76621476",
-      "icone": "IkeaTradfriDimmer",
-      "battery_type": "1x3V CR2032",
-      "lastCommunicationTimeOut": "-1",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "offGroup",
-      "include2": "toggleGroup",
-      "include3": "onGroup",
-      "include6": "setLevelGroup",
-      "include8": "Batterie-Pourcent-Ikea",
-      "include9": "getBattery",
-      "include10": "BindShortToZigateBatterie",
-      "include11": "setReportBatterie"
+    "TRADFRIwirelessdimmer": {
+        "nameJeedom": "IKEA TRADFRI Dimmer Jaune",
+        "timeout": "60",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "IkeaTradfriDimmer",
+            "battery_type": "1x3V CR2032",
+            "lastCommunicationTimeOut": "-1",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "offGroup",
+            "include2": "toggleGroup",
+            "include3": "onGroup",
+            "include6": "setLevelGroup",
+            "include8": "Batterie-Pourcent-Ikea",
+            "include9": "getBattery",
+            "include10": "BindShortToZigateBatterie",
+            "include11": "setReportBatterie"
+        }
     }
-  }
 }

@@ -1,45 +1,44 @@
 {
-  "eTRV0100": {
-    "nameJeedom": "Dansfoss Ally Radiator Thermostat 014G2461",
-    "comment": "Dansfoss Ally Radiator Thermostat 014G2461 ( https://assets.danfoss.com/documents/DOC353849556547/DOC353849556547.pdf ) ",
-    "timeout": "0",
-    "Categorie": {
-      "heating": "1"
-    },
-    "configuration": {
-      "uniqId": "5cfdgh0asd6rt7sdsdf8620b6b",
-      "icone": "eTRV0100",
-      "mainEP": "#EP#",
-      "battery_type": "2x1,5V LR6 (AA)",
-      "poll": "1"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include1 1 - Ok": "danfossTemperatureConsigneValue",
-      "include1 2 - Ok": "danfossTemperatureConsigneGet",
-      "include1 3 - Ok": "danfossTemperatureConsigneSet",
-      "include2 1 - Ok": "Batterie-Pourcent-Heiman",
-      "include2 2 - Ok": "getBattery",
-      "include3 1 - Ok": "Batterie-Volt-Konke",
-      "include3 2 - Ok": "getBatteryVolt",
-      "include4 1 - Ok": "spiritTemperature",
-      "include4 2 - Ok": "spiritTemperatureGet",
-      "include5 1 - Ok": "danfossSystemeModeValue",
-      "include5 2 - Ok": "danfossSystemeModeGet",
-      "include6 1 - Ok": "spiritPiHeatingDemand",
-      "include6 2 - Ok": "spiritPiHeatingDemandGet",
-      "include7 1 - Ok": "danfossUIDisplayModeValue",
-      "include7 2 - Ok": "danfossUIDisplayModeGet",
-      "include7 3 - Refused by rad Head": "danfossUIDisplayModeSet",
-      "include8 1 - Ok": "danfossUIKeyLockValue",
-      "include8 2 - Ok": "danfossUIKeyLockGet",
-      "include8 3 - Ok (0 ou 1)": "danfossUIKeyLockSet",
-      "include9 1 - Ok": "BindShortToZigateBatterie",
-      "include9 2 - Ok": "setReportBatterie",
-      "include9 3 - Ok": "setReportBatterieVolt",
-      "include10 1 - Ok": "BindToZigateRadiateur",
-      "include10 2 - Ok": "setReportRadiateurLocalTemperature",
-      "include10 3 - Ok": "setReportRadiateurConsigneTemperature"
+    "eTRV0100": {
+        "nameJeedom": "Dansfoss Ally Radiator Thermostat 014G2461",
+        "comment": "Dansfoss Ally Radiator Thermostat 014G2461 ( https:\/\/assets.danfoss.com\/documents\/DOC353849556547\/DOC353849556547.pdf ) ",
+        "timeout": "0",
+        "Categorie": {
+            "heating": "1"
+        },
+        "configuration": {
+            "icone": "eTRV0100",
+            "mainEP": "01",
+            "battery_type": "2x1,5V LR6 (AA)",
+            "poll": "1"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include1 1 - Ok": "danfossTemperatureConsigneValue",
+            "include1 2 - Ok": "danfossTemperatureConsigneGet",
+            "include1 3 - Ok": "danfossTemperatureConsigneSet",
+            "include2 1 - Ok": "Batterie-Pourcent-Heiman",
+            "include2 2 - Ok": "getBattery",
+            "include3 1 - Ok": "Batterie-Volt-Konke",
+            "include3 2 - Ok": "getBatteryVolt",
+            "include4 1 - Ok": "spiritTemperature",
+            "include4 2 - Ok": "spiritTemperatureGet",
+            "include5 1 - Ok": "danfossSystemeModeValue",
+            "include5 2 - Ok": "danfossSystemeModeGet",
+            "include6 1 - Ok": "spiritPiHeatingDemand",
+            "include6 2 - Ok": "spiritPiHeatingDemandGet",
+            "include7 1 - Ok": "danfossUIDisplayModeValue",
+            "include7 2 - Ok": "danfossUIDisplayModeGet",
+            "include7 3 - Refused by rad Head": "danfossUIDisplayModeSet",
+            "include8 1 - Ok": "danfossUIKeyLockValue",
+            "include8 2 - Ok": "danfossUIKeyLockGet",
+            "include8 3 - Ok (0 ou 1)": "danfossUIKeyLockSet",
+            "include9 1 - Ok": "BindShortToZigateBatterie",
+            "include9 2 - Ok": "setReportBatterie",
+            "include9 3 - Ok": "setReportBatterieVolt",
+            "include10 1 - Ok": "BindToZigateRadiateur",
+            "include10 2 - Ok": "setReportRadiateurLocalTemperature",
+            "include10 3 - Ok": "setReportRadiateurConsigneTemperature"
+        }
     }
-  }
 }

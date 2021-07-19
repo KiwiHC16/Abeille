@@ -1,25 +1,24 @@
 {
-  "sensor_ht": {
-    "nameJeedom": "Xiaomi Temperature Rond",
-    "timeout": "60",
-    "Categorie": {
-      "heating": "1"
-    },
-    "configuration": {
-	"uniqId": "5c07c766262d1",
-      "icone": "XiaomiTemperatureRond",
-      "battery_type": "1x3V CR2032",
-      "lastCommunicationTimeOut": "-1",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom",
-      "include3": "temperature",
-      "include4": "humidite",
-      "include5": "Batterie-Volt",
-      "include6": "Batterie-Pourcent",
-      "include7": "Xiaomi-ff01"
+    "sensor_ht": {
+        "nameJeedom": "Xiaomi Temperature Rond",
+        "timeout": "60",
+        "Categorie": {
+            "heating": "1"
+        },
+        "configuration": {
+            "icone": "XiaomiTemperatureRond",
+            "battery_type": "1x3V CR2032",
+            "lastCommunicationTimeOut": "-1",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom",
+            "include3": "temperature",
+            "include4": "humidite",
+            "include5": "Batterie-Volt",
+            "include6": "Batterie-Pourcent",
+            "include7": "Xiaomi-ff01"
+        }
     }
-  }
 }

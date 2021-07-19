@@ -1,34 +1,33 @@
 {
-  "PRZ": {
-    "nameJeedom": "PROFALUX Light",
-    "timeout": "60",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "uniqId": "5cfdgh0a678620b6b",
-      "icone": "ProfaluxLigthModule",
-      "mainEP": "#EP#",
-      "poll": "1"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include4": "etatLight",
-      "include8": "On",
-      "include9": "Off",
-      "include10": "Toggle",
-      "include19": "getEtat",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include27": "BindToZigateLevel",
-      "include28": "setReportEtat",
-      "include29": "setReportLevel"
+    "PRZ": {
+        "nameJeedom": "PROFALUX Light",
+        "timeout": "60",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "ProfaluxLigthModule",
+            "mainEP": "01",
+            "poll": "1"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include4": "etatLight",
+            "include8": "On",
+            "include9": "Off",
+            "include10": "Toggle",
+            "include19": "getEtat",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include26": "BindToZigateEtat",
+            "include27": "BindToZigateLevel",
+            "include28": "setReportEtat",
+            "include29": "setReportLevel"
+        }
     }
-  }
 }

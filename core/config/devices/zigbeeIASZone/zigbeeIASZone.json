@@ -1,21 +1,20 @@
 {
-  "zigbeeIASZone": {
-    "nameJeedom": "zigbeeIASZone",
-    "timeout": "60",
-    "Categorie": {
-      "security": "1"
-    },
-    "configuration": {
-      "uniqId": "5c0skhge7c766sdsds264bf",
-      "icone": "",
-      "battery_type": "1x3V CR2",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom",
-      "include3": "presence",
-      "include5": "Batterie-Volt"
+    "zigbeeIASZone": {
+        "nameJeedom": "zigbeeIASZone",
+        "timeout": "60",
+        "Categorie": {
+            "security": "1"
+        },
+        "configuration": {
+            "icone": "",
+            "battery_type": "1x3V CR2",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom",
+            "include3": "presence",
+            "include5": "Batterie-Volt"
+        }
     }
-  }
 }

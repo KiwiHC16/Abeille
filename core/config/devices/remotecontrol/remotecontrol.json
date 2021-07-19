@@ -1,36 +1,36 @@
 {
-  "remotecontrol": {
-    "nameJeedom": "Virtual remote for groups control",
-    "timeout": "",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "icone": "remotecontrol",
-      "battery_type": "",
-      "lastCommunicationTimeOut": "-1",
-      "mainEP": "#EP#",
-      "paramType": "telecommande"
-    },
-    "Commandes": {
-      "include1": "offGroup",
-      "include1 2": "onGroup",
-      "include1 2 2": "onGroupBroadcast",
-      "include1 2 2 2": "offGroupBroadcast",
-      "include2": "toggleGroup",
-      "include3": "onGroupTimed",
-      "include3 2": "offGroupTimed",
-      "include4": "downGroup",
-      "include5": "upGroup",
-      "include6": "setLevelGroup",
-      "include6 2": "setTemperatureLightGroup",
-      "include7": "sceneGroupRecall1",
-      "include7 2": "sceneGroupRecall2",
-      "include7 2 2": "sceneGroupRecall3",
-      "include11 2 2 2 2 2": "BlancGroup",
-      "include11 2 2 2 2 2 2": "BleuGroup",
-      "include11 2 2 2 2 2 2 2": "RougeGroup",
-      "include11 2 2 2 2 2 2 2 2": "VertGroup"
+    "remotecontrol": {
+        "nameJeedom": "Virtual remote for groups control",
+        "timeout": "",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "remotecontrol",
+            "battery_type": "",
+            "lastCommunicationTimeOut": "-1",
+            "mainEP": "01",
+            "paramType": "telecommande"
+        },
+        "Commandes": {
+            "include1": "offGroup",
+            "include1 2": "onGroup",
+            "include1 2 2": "onGroupBroadcast",
+            "include1 2 2 2": "offGroupBroadcast",
+            "include2": "toggleGroup",
+            "include3": "onGroupTimed",
+            "include3 2": "offGroupTimed",
+            "include4": "downGroup",
+            "include5": "upGroup",
+            "include6": "setLevelGroup",
+            "include6 2": "setTemperatureLightGroup",
+            "include7": "sceneGroupRecall1",
+            "include7 2": "sceneGroupRecall2",
+            "include7 2 2": "sceneGroupRecall3",
+            "include11 2 2 2 2 2": "BlancGroup",
+            "include11 2 2 2 2 2 2": "BleuGroup",
+            "include11 2 2 2 2 2 2 2": "RougeGroup",
+            "include11 2 2 2 2 2 2 2 2": "VertGroup"
+        }
     }
-  }
 }

@@ -1,26 +1,25 @@
 {
-  "FNB54-THM17ML1.1": {
-    "nameJeedom": "thermomètre zigbee ewelink",
-    "timeout": "60",
-    "Comment": "thermomètre zigbee ewelink (support) #1525",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5ceosfqsds76sdd6sdsssdgdfzsddzze5d44",
-      "icone": "FNB54-THM17ML1.1",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier",
-      "include3 2": "temperature",
-      "include4": "humidite",
-      "include5": "Batterie-Volt-Konke",
-      "include6": "Batterie-Pourcent-Heiman"
+    "FNB54-THM17ML1.1": {
+        "nameJeedom": "thermom\u00e8tre zigbee ewelink",
+        "timeout": "60",
+        "Comment": "thermom\u00e8tre zigbee ewelink (support) #1525",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "FNB54-THM17ML1.1",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier",
+            "include3 2": "temperature",
+            "include4": "humidite",
+            "include5": "Batterie-Volt-Konke",
+            "include6": "Batterie-Pourcent-Heiman"
+        }
     }
-  }
 }

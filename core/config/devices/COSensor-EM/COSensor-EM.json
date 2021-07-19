@@ -1,26 +1,25 @@
 {
-  "COSensor-EM": {
-    "nameJeedom": "Heiman HS1CA (détecteur de monoxyde de carbone)",
-    "timeout": "60",
-    "Categorie": {
-      "security": "1"
-    },
-    "configuration": {
-      "uniqId": "sd567sdsd8jsq51",
-      "icone": "COSensor-EM",
-      "battery_type": "1x3V CR17335 ou 1x3V CR123A",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom",
-      "include3": "securitySafetySmokeHeiman",
-      "include8": "Batterie-Pourcent-Heiman",
-      "include9": "getBattery",
-      "include10": "BindShortToZigateBatterie",
-      "include11": "setReportBatterie",
-      "include10 2": "BindShortToSmokeHeiman",
-      "include11 2": "setReportSmokeHeiman"
+    "COSensor-EM": {
+        "nameJeedom": "Heiman HS1CA (d\u00e9tecteur de monoxyde de carbone)",
+        "timeout": "60",
+        "Categorie": {
+            "security": "1"
+        },
+        "configuration": {
+            "icone": "COSensor-EM",
+            "battery_type": "1x3V CR17335 ou 1x3V CR123A",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom",
+            "include3": "securitySafetySmokeHeiman",
+            "include8": "Batterie-Pourcent-Heiman",
+            "include9": "getBattery",
+            "include10": "BindShortToZigateBatterie",
+            "include11": "setReportBatterie",
+            "include10 2": "BindShortToSmokeHeiman",
+            "include11 2": "setReportSmokeHeiman"
+        }
     }
-  }
 }

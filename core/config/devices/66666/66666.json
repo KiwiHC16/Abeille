@@ -1,31 +1,30 @@
 {
-  "66666": {
-    "nameJeedom": "Sonoff SNZB-02 temp & humidity",
-    "manufacturer": "Sonoff",
-    "model": "SNZB-02",
-    "comment": "Zigbee ModelIdentifier can be 66666 or TH01",
-    "timeout": "140",
-    "battery_type": "1xCR2450 (3V)",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "dsdsdvdsjliudddsfr2",
-      "icone": "SNZB-02",
-      "battery_type": "1x3V CR2450",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include2": "nom",
-      "include2 2 2 2 2 3": "temperature",
-      "include2 2 2 2": "BindToZigateTemperature",
-      "include2 2 2 2 2": "setReportTemperature",
-      "include2 2 2 2 2 2 2": "humidite",
-      "include2 2 2 2 3": "BindToZigateHumidity",
-      "include2 2 2 2 2 2": "setReportHumidity",
-      "include2 3 2": "Batterie-Pourcent-Heiman",
-      "include2 2 2": "BindToPowerConfig",
-      "include2 2 2 3": "setReportBatterie"
+    "66666": {
+        "nameJeedom": "Sonoff SNZB-02 temp & humidity",
+        "manufacturer": "Sonoff",
+        "model": "SNZB-02",
+        "comment": "Zigbee ModelIdentifier can be 66666 or TH01",
+        "timeout": "140",
+        "battery_type": "1xCR2450 (3V)",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "SNZB-02",
+            "battery_type": "1x3V CR2450",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include2": "nom",
+            "include2 2 2 2 2 3": "temperature",
+            "include2 2 2 2": "BindToZigateTemperature",
+            "include2 2 2 2 2": "setReportTemperature",
+            "include2 2 2 2 2 2 2": "humidite",
+            "include2 2 2 2 3": "BindToZigateHumidity",
+            "include2 2 2 2 2 2": "setReportHumidity",
+            "include2 3 2": "Batterie-Pourcent-Heiman",
+            "include2 2 2": "BindToPowerConfig",
+            "include2 2 2 3": "setReportBatterie"
+        }
     }
-  }
 }

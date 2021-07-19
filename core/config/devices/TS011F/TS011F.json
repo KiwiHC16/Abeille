@@ -1,27 +1,26 @@
 {
-  "TS011F": {
-    "nameJeedom": "Yagusmart Tuya ZigBee Smart Switch",
-    "timeout": "60",
-    "Comment": "Intégration matériel prochaine MAJ #1569",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5ceosfqsds766ssdgdfzsddzze5d4lkjyd4",
-      "icone": "TS0121",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etatCharge0",
-      "include5": "On",
-      "include6": "Off",
-      "include7": "Toggle",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier"
+    "TS011F": {
+        "nameJeedom": "Yagusmart Tuya ZigBee Smart Switch",
+        "timeout": "60",
+        "Comment": "Int\u00e9gration mat\u00e9riel prochaine MAJ #1569",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "TS0121",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etatCharge0",
+            "include5": "On",
+            "include6": "Off",
+            "include7": "Toggle",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier"
+        }
     }
-  }
 }

@@ -1,38 +1,37 @@
 {
-  "switch.b2nacn02": {
-    "nameJeedom": "Xiaomi Wall Switch D1 w Neutral 2 Button",
-    "manufacturer": "Xiaomi",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76ui89625cbd",
-      "icone": "switch_b2nacn02",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include3 2": "location",
-      "include3 2 2": "etatCharge0",
-      "include3 2 2 2": "etatCharge1",
-      "include3 2 2 2 2": "etatSW1",
-      "include3 2 2 2 2 2": "etatSW2",
-      "include3 2 2 2 2 2 2": "On",
-      "include3 2 2 2 2 2 2 2": "Off",
-      "include3 2 2 2 2 2 2 2 2": "Toggle",
-      "include3 2 2 2 2 2 2 2 2 2": "On1",
-      "include3 2 2 2 2 2 2 2 2 2 2": "Off1",
-      "include3 2 2 2 2 2 2 2 2 2 2 2": "Toggle1",
-      "include19": "getEtat",
-      "include20": "getLevel",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership"
+    "switch.b2nacn02": {
+        "nameJeedom": "Xiaomi Wall Switch D1 w Neutral 2 Button",
+        "manufacturer": "Xiaomi",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "switch_b2nacn02",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include3 2": "location",
+            "include3 2 2": "etatCharge0",
+            "include3 2 2 2": "etatCharge1",
+            "include3 2 2 2 2": "etatSW1",
+            "include3 2 2 2 2 2": "etatSW2",
+            "include3 2 2 2 2 2 2": "On",
+            "include3 2 2 2 2 2 2 2": "Off",
+            "include3 2 2 2 2 2 2 2 2": "Toggle",
+            "include3 2 2 2 2 2 2 2 2 2": "On1",
+            "include3 2 2 2 2 2 2 2 2 2 2": "Off1",
+            "include3 2 2 2 2 2 2 2 2 2 2 2": "Toggle1",
+            "include19": "getEtat",
+            "include20": "getLevel",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership"
+        }
     }
-  }
 }

@@ -1,25 +1,24 @@
 {
-  "sensor_cube.aqgl01": {
-    "nameJeedom": "Xiaomi Cube",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c7662623b",
-      "icone": "sensor_cube",
-      "battery_type": "1x3V CR2032 (?)",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom",
-      "include3": "cube_1",
-      "include3 2": "cube_2",
-      "include3 2 2": "cube_3",
-      "include4": "Batterie-Volt",
-      "include5": "Batterie-Pourcent",
-      "include6": "Xiaomi-ff01"
+    "sensor_cube.aqgl01": {
+        "nameJeedom": "Xiaomi Cube",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "sensor_cube",
+            "battery_type": "1x3V CR2032 (?)",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom",
+            "include3": "cube_1",
+            "include3 2": "cube_2",
+            "include3 2 2": "cube_3",
+            "include4": "Batterie-Volt",
+            "include5": "Batterie-Pourcent",
+            "include6": "Xiaomi-ff01"
+        }
     }
-  }
 }

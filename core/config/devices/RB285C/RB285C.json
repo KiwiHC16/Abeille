@@ -1,35 +1,32 @@
 {
-  "RB285C": {
-    "nameJeedom": "Innr RB285C RGBW bulb colour E27",
-    "manufacturer": "Innr",
-    "model": "RB285C",
-    "timeout": "60",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07dsc766df25d94",
-      "icone": "RB285C",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include4": "etat",
-      "include5": "On",
-      "include6": "Off",
-      "include7": "Toggle",
-      "include8": "getEtat",
-
-      "include20": "BindToZigateLevel",
-      "include21": "setReportLevel",
-      "include22": "levelLight",
-      "include23": "setLevel",
-      "include24": "getLevel",
-
-      "include300-1": "temperatureLight",
-      "include300-2": "setTemperatureLight",
-      "include300-3": "2200K",
-      "include300-4": "2700K",
-      "include300-5": "4000K"
+    "RB285C": {
+        "nameJeedom": "Innr RB285C RGBW bulb colour E27",
+        "manufacturer": "Innr",
+        "model": "RB285C",
+        "timeout": "60",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "RB285C",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include4": "etat",
+            "include5": "On",
+            "include6": "Off",
+            "include7": "Toggle",
+            "include8": "getEtat",
+            "include20": "BindToZigateLevel",
+            "include21": "setReportLevel",
+            "include22": "levelLight",
+            "include23": "setLevel",
+            "include24": "getLevel",
+            "include300-1": "temperatureLight",
+            "include300-2": "setTemperatureLight",
+            "include300-3": "2200K",
+            "include300-4": "2700K",
+            "include300-5": "4000K"
+        }
     }
-  }
 }

@@ -1,26 +1,25 @@
 {
-  "Lamp_01": {
-    "nameJeedom": "ZigBee On Off Controller",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07cqs766sgdf25d44",
-      "icone": "Lamp_01",
-      "mainEP": "0B"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etat",
-      "include5": "On",
-      "include6": "Off",
-      "include7": "Toggle",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier"
+    "Lamp_01": {
+        "nameJeedom": "ZigBee On Off Controller",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "Lamp_01",
+            "mainEP": "0B"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etat",
+            "include5": "On",
+            "include6": "Off",
+            "include7": "Toggle",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier"
+        }
     }
-  }
 }

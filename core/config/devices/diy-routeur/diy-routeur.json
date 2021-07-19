@@ -1,24 +1,23 @@
 {
-  "diy-routeur": {
-    "nameJeedom": "diy-routeur",
-    "timeout": "60",
-    "Categorie": {
-      "security": "1"
-    },
-    "configuration": {
-      "uniqId": "20210326_0901",
-      "icone": "diy-routeur",
-      "mainEP": "#EP#",
-      "poll": "0"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify"
+    "diy-routeur": {
+        "nameJeedom": "diy-routeur",
+        "timeout": "60",
+        "Categorie": {
+            "security": "1"
+        },
+        "configuration": {
+            "icone": "diy-routeur",
+            "mainEP": "01",
+            "poll": "0"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify"
+        }
     }
-  }
 }

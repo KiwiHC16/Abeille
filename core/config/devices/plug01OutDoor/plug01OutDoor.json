@@ -1,32 +1,31 @@
 {
-  "plug01OutDoor": {
-    "nameJeedom": "OSRAM Prise Lightify OutDoor",
-    "timeout": "60",
-    "comment": "dummy version to be able to have the OutDoor version icone as plug 01",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76625e53",
-      "icone": "OsramLightifyplug01OutDoor",
-      "mainEP": "03"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etat",
-      "include5": "On",
-      "include6": "Off",
-      "include7": "Toggle",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include28": "setReportEtat"
+    "plug01OutDoor": {
+        "nameJeedom": "OSRAM Prise Lightify OutDoor",
+        "timeout": "60",
+        "comment": "dummy version to be able to have the OutDoor version icone as plug 01",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "OsramLightifyplug01OutDoor",
+            "mainEP": "03"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etat",
+            "include5": "On",
+            "include6": "Off",
+            "include7": "Toggle",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include26": "BindToZigateEtat",
+            "include28": "setReportEtat"
+        }
     }
-  }
 }

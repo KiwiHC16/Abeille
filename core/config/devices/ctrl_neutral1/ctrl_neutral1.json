@@ -1,35 +1,34 @@
 {
-  "ctrl_neutral1": {
-    "nameJeedom": "Xiaomi Wall Switch w/o Neutral 1",
-    "Comment": "Reference: QBKG04LM",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76625bd6",
-      "icone": "ctrl_neutral1",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include3 2": "location",
-      "include19": "getEtat",
-      "include20": "getLevel",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include28": "setReportEtat",
-      "include3 2 2": "etatCharge1",
-      "include3 2 2 2 2": "etatSW1",
-      "include3 2 2 2 2 2 2": "On1",
-      "include3 2 2 2 2 2 2 2": "Off1",
-      "include3 2 2 2 2 2 2 2 2": "Toggle1"
+    "ctrl_neutral1": {
+        "nameJeedom": "Xiaomi Wall Switch w\/o Neutral 1",
+        "Comment": "Reference: QBKG04LM",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "ctrl_neutral1",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include3 2": "location",
+            "include19": "getEtat",
+            "include20": "getLevel",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include26": "BindToZigateEtat",
+            "include28": "setReportEtat",
+            "include3 2 2": "etatCharge1",
+            "include3 2 2 2 2": "etatSW1",
+            "include3 2 2 2 2 2 2": "On1",
+            "include3 2 2 2 2 2 2 2": "Off1",
+            "include3 2 2 2 2 2 2 2 2": "Toggle1"
+        }
     }
-  }
 }

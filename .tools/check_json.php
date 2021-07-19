@@ -46,6 +46,18 @@
         }
         // echo "dev=".json_encode($dev)."\n";
 
+        if (!isset($dev[$devName]['Categorie'])) {
+            newDevError($devName, "ERROR", "No 'Categorie' defined");
+        } else {
+            $allCats = $dev[$devName]['Categorie'];
+            $allowed = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'other'];
+            foreach($allCats as $cat => $catEn) {
+                if (in_array($cat, $allowed))
+                    continue;
+                    newDevError($devName, "ERROR", "Unexpected '".$cat."' category.");
+                }
+        }
+
         if (!isset($dev[$devName]['configuration'])) {
             newDevError($devName, "WARNING", "No configuration defined");
         } else {
@@ -56,6 +68,10 @@
                     newDevError($devName, "ERROR", "Missing icon '".$icon."'");
                 }
             }
+            if (!isset($config['mainEP']))
+                newDevError($devName, "ERROR", "Missing 'configuration:mainEP'");
+            else if (!ctype_xdigit($config['mainEP']))
+                newDevError($devName, "ERROR", "'configuration:mainEP' should be hexa string. #EP# not allowed.");
         }
 
         if (!isset($dev[$devName]['Commandes'])) {
@@ -65,9 +81,15 @@
         $cmds = $dev[$devName]['Commandes'];
         // echo "cmds=".json_encode($cmds)."\n";
         foreach ($cmds as $key => $value) {
-            $path = commandsDir."/".$value.".json";
+            if (substr($key, 0, 7) == "include") {
+                $cmdFName = $value;
+            } else {
+                // 'use'
+                $cmdFName = $value['use'];
+            }
+            $path = commandsDir."/".$cmdFName.".json";
             if (!file_exists($path)) {
-                newDevError($devName, "ERROR", "Unknown command ".$value);
+                newDevError($devName, "ERROR", "Unknown command JSON ".$cmdFName.".json");
                 $missingCmds++;
             } else {
                 $commandsList[$value] = $path;

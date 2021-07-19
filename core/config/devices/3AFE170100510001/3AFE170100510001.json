@@ -1,22 +1,21 @@
 {
-  "3AFE170100510001": {
-    "nameJeedom": "Xiaomi Interrupteur simple",
-    "timeout": "60",
-    "battery_type": "1x3V CR2450",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07azc7662az6621",
-      "icone": "3AFE170100510001",
-      "battery_type": "1x3V CR2450",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom",
-      "include2 2": "etatSwitchKonke",
-      "include4 2": "Batterie-Volt-Konke"
+    "3AFE170100510001": {
+        "nameJeedom": "Xiaomi Interrupteur simple",
+        "timeout": "60",
+        "battery_type": "1x3V CR2450",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "3AFE170100510001",
+            "battery_type": "1x3V CR2450",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom",
+            "include2 2": "etatSwitchKonke",
+            "include4 2": "Batterie-Volt-Konke"
+        }
     }
-  }
 }

@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- JSON équipements: mainEP #EP# remplacé par '01'. 'uniqId' supprimé.
+- Interne: tools: Amélioration check_json + update_json
 210718-BETA-1
 ----------
 

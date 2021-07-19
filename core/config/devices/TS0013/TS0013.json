@@ -1,31 +1,30 @@
 {
-  "TS0013": {
-    "nameJeedom": "Yagusmart Tuya ZigBee Smart Switch 3 Bang",
-    "timeout": "60",
-    "Comment": "",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "20210128_1507",
-      "icone": "TS0013",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etatCharge0",
-      "include4 2": "etatCharge1",
-      "include4 2 2": "etatCharge2",
-      "include5": "On",
-      "include5 2": "On1",
-      "include5 2 2": "On2",
-      "include6": "Off",
-      "include6 2": "Off1",
-      "include6 2 2": "Off2",
-      "include15": "getManufacturerName",
-      "include16": "getModelIdentifier"
+    "TS0013": {
+        "nameJeedom": "Yagusmart Tuya ZigBee Smart Switch 3 Bang",
+        "timeout": "60",
+        "Comment": "",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "TS0013",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etatCharge0",
+            "include4 2": "etatCharge1",
+            "include4 2 2": "etatCharge2",
+            "include5": "On",
+            "include5 2": "On1",
+            "include5 2 2": "On2",
+            "include6": "Off",
+            "include6 2": "Off1",
+            "include6 2 2": "Off2",
+            "include15": "getManufacturerName",
+            "include16": "getModelIdentifier"
+        }
     }
-  }
 }

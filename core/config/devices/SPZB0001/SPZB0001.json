@@ -1,53 +1,52 @@
 {
-  "SPZB0001": {
-    "nameJeedom": "Eurotronic Spirit",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c7822067c",
-      "icone": "SPZB0001",
-      "battery_type": "2x1,5V LR6 AA",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25 2 2 2": "spiritTemperatureConsigne",
-      "include25 2 2": "spiritTemperatureConsigneGet",
-      "include25 2": "spiritTemperatureConsigneSet",
-      "include25 2 2 2 2": "spiritTemperature",
-      "include25 2 2 3": "spiritTemperatureGet",
-      "include25 2 2 2 2 3": "spiritTemperatureBindShortToZigate",
-      "include25 2 2 2 2 2": "spiritTemperatureSetReport",
-      "include25 2 2 3 2 2": "spiritPiHeatingDemand",
-      "include25 2 2 3 2": "spiritPiHeatingDemandGet",
-      "include25 2 2 3 2 2 2": "spiritValvePosition",
-      "include25 2 2 3 2 2 2 2": "spiritValvePositionGet",
-      "include25 2 2 3 2 2 2 2 2": "spiritValvePositionSet",
-      "include25 2 2 3 2 2 3": "spiritTrvMode",
-      "include25 2 2 3 2 3": "spiritTrvModeGet",
-      "include25 2 2 3 2 3 2": "spiritTrvModeSet",
-      "include25 2 2 3 2 3 2 2": "spiritTrvModeSetManu",
-      "include25 2 2 3 2 3 2 2 2": "spiritTrvModeSetValve",
-      "include25 2 2 3 2 3 2 2 2 2 2 2": "spiritBatterie-Pourcent",
-      "include25 2 2 3 2 3 2 2 2 2": "BindShortToZigateBatterie",
-      "include25 2 2 3 2 3 2 2 2 2 2": "spiritSetReportBatterie",
-      "include25 2 2 3 2 3 2 2 2 2 2 3": "spiritHostFlags",
-      "include25 2 2 3 2 3 2 2 2 2 2 3 2": "spiritErrors",
-      "include25 2 3": "spiritHostFlagsDisplayDownSet",
-      "include25 2 3 2": "spiritHostFlagsDefaultSet",
-      "include25 2 3 2 2": "spiritHostFlagsBoostSet",
-      "include25 2 3 2 2 2": "spiritHostFlagsChildLockSet",
-      "include25 2 3 2 2 2 2": "spiritHostFlagsOffSet",
-      "include25 2 3 2 2 2 2 2": "spiritUnknown1",
-      "include25 2 3 2 2 2 2 2 2": "spiritUnknown2"
+    "SPZB0001": {
+        "nameJeedom": "Eurotronic Spirit",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "SPZB0001",
+            "battery_type": "2x1,5V LR6 AA",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25 2 2 2": "spiritTemperatureConsigne",
+            "include25 2 2": "spiritTemperatureConsigneGet",
+            "include25 2": "spiritTemperatureConsigneSet",
+            "include25 2 2 2 2": "spiritTemperature",
+            "include25 2 2 3": "spiritTemperatureGet",
+            "include25 2 2 2 2 3": "spiritTemperatureBindShortToZigate",
+            "include25 2 2 2 2 2": "spiritTemperatureSetReport",
+            "include25 2 2 3 2 2": "spiritPiHeatingDemand",
+            "include25 2 2 3 2": "spiritPiHeatingDemandGet",
+            "include25 2 2 3 2 2 2": "spiritValvePosition",
+            "include25 2 2 3 2 2 2 2": "spiritValvePositionGet",
+            "include25 2 2 3 2 2 2 2 2": "spiritValvePositionSet",
+            "include25 2 2 3 2 2 3": "spiritTrvMode",
+            "include25 2 2 3 2 3": "spiritTrvModeGet",
+            "include25 2 2 3 2 3 2": "spiritTrvModeSet",
+            "include25 2 2 3 2 3 2 2": "spiritTrvModeSetManu",
+            "include25 2 2 3 2 3 2 2 2": "spiritTrvModeSetValve",
+            "include25 2 2 3 2 3 2 2 2 2 2 2": "spiritBatterie-Pourcent",
+            "include25 2 2 3 2 3 2 2 2 2": "BindShortToZigateBatterie",
+            "include25 2 2 3 2 3 2 2 2 2 2": "spiritSetReportBatterie",
+            "include25 2 2 3 2 3 2 2 2 2 2 3": "spiritHostFlags",
+            "include25 2 2 3 2 3 2 2 2 2 2 3 2": "spiritErrors",
+            "include25 2 3": "spiritHostFlagsDisplayDownSet",
+            "include25 2 3 2": "spiritHostFlagsDefaultSet",
+            "include25 2 3 2 2": "spiritHostFlagsBoostSet",
+            "include25 2 3 2 2 2": "spiritHostFlagsChildLockSet",
+            "include25 2 3 2 2 2 2": "spiritHostFlagsOffSet",
+            "include25 2 3 2 2 2 2 2": "spiritUnknown1",
+            "include25 2 3 2 2 2 2 2 2": "spiritUnknown2"
+        }
     }
-  }
 }

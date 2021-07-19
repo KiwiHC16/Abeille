@@ -1,39 +1,38 @@
 {
-  "TS0121": {
-    "nameJeedom": "TS0121",
-    "timeout": "60",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "uniqId": "5cfdgh0as12d6rt78620b6b",
-      "icone": "TS0121",
-      "mainEP": "#EP#",
-      "poll": "0"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include4": "etatLight",
-      "include8": "On",
-      "include9": "Off",
-      "include10": "Toggle",
-      "include19": "getEtat",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include28": "setReportEtat",
-      "include3 2 2 2 2 2": "PuissanceVoltagePrise",
-      "include3 2 2 2 2": "PuissanceCurrentPrise",
-      "include3 2 2 2": "PuissanceLegrandPrise",
-      "include3 2 2 2 3": "CurrentSummationDelivered",
-      "include3 2 2 2 4": "getPlugPower",
-      "include3 2 2 2 4 2": "getPlugA",
-      "include3 2 2 2 4 2 2": "getPlugV"
+    "TS0121": {
+        "nameJeedom": "TS0121",
+        "timeout": "60",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "TS0121",
+            "mainEP": "01",
+            "poll": "0"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include4": "etatLight",
+            "include8": "On",
+            "include9": "Off",
+            "include10": "Toggle",
+            "include19": "getEtat",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include26": "BindToZigateEtat",
+            "include28": "setReportEtat",
+            "include3 2 2 2 2 2": "PuissanceVoltagePrise",
+            "include3 2 2 2 2": "PuissanceCurrentPrise",
+            "include3 2 2 2": "PuissanceLegrandPrise",
+            "include3 2 2 2 3": "CurrentSummationDelivered",
+            "include3 2 2 2 4": "getPlugPower",
+            "include3 2 2 2 4 2": "getPlugA",
+            "include3 2 2 2 4 2 2": "getPlugV"
+        }
     }
-  }
 }

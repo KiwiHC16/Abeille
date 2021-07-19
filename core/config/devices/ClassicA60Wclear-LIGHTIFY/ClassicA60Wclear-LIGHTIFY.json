@@ -1,33 +1,32 @@
 {
-  "ClassicA60Wclear-LIGHTIFY": {
-    "nameJeedom": "OSRAM Classic A60 W clear - LIGHTIFY",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76620623",
-      "icone": "OSRAMClassicA60Wclear-LIGHTIFY",
-      "mainEP": "03"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include3": "SW",
-      "include4": "etatLight",
-      "include5": "levelLight",
-      "include8": "On",
-      "include9": "Off",
-      "include10": "Toggle",
-      "include11": "setLevel",
-      "include19": "getEtat",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-      "include23": "getSWBuild",
-      "include24": "Identify",
-      "include25": "Group-Membership",
-      "include26": "BindToZigateEtat",
-      "include28": "setReportEtat"
+    "ClassicA60Wclear-LIGHTIFY": {
+        "nameJeedom": "OSRAM Classic A60 W clear - LIGHTIFY",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "OSRAMClassicA60Wclear-LIGHTIFY",
+            "mainEP": "03"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW",
+            "include4": "etatLight",
+            "include5": "levelLight",
+            "include8": "On",
+            "include9": "Off",
+            "include10": "Toggle",
+            "include11": "setLevel",
+            "include19": "getEtat",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+            "include26": "BindToZigateEtat",
+            "include28": "setReportEtat"
+        }
     }
-  }
 }

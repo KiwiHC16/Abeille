@@ -1,27 +1,26 @@
 {
-  "remote.b286acn02": {
-    "nameJeedom": "Xiaomi Interrupteur Mural Carré Double D1 (pile)",
-    "timeout": "60",
-    "Commentaire": "https://github.com/KiwiHC16/Abeille/issues/1299",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07ce66zjd25f99",
-      "icone": "XiaomiButtonb286acn02",
-      "battery_type": "1x3V CR2032",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etatSwitchDoubleb286acn01_1",
-      "include4 3": "etatSwitchDoubleb286acn01_2",
-      "include4 3 2": "etatSwitchDoubleb286acn01_3",
-      "include4 2": "Batterie-Volt",
-      "include5": "Batterie-Pourcent",
-      "include6": "Xiaomi-ff01"
+    "remote.b286acn02": {
+        "nameJeedom": "Xiaomi Interrupteur Mural Carr\u00e9 Double D1 (pile)",
+        "timeout": "60",
+        "Commentaire": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1299",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "XiaomiButtonb286acn02",
+            "battery_type": "1x3V CR2032",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etatSwitchDoubleb286acn01_1",
+            "include4 3": "etatSwitchDoubleb286acn01_2",
+            "include4 3 2": "etatSwitchDoubleb286acn01_3",
+            "include4 2": "Batterie-Volt",
+            "include5": "Batterie-Pourcent",
+            "include6": "Xiaomi-ff01"
+        }
     }
-  }
 }

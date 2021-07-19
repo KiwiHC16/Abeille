@@ -1,30 +1,29 @@
 {
-  "plug": {
-    "nameJeedom": "Xiaomi Prise",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76625d94",
-      "icone": "XiaomiPrise",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etat",
-      "include5": "On",
-      "include6": "Off",
-      "include7": "Toggle",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier",
-      "include11": "conso",
-      "include12": "Xiaomi-ff01",
-      "include13": "puissance",
-      "include13 2": "Group-Membership"
+    "plug": {
+        "nameJeedom": "Xiaomi Prise",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "XiaomiPrise",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etat",
+            "include5": "On",
+            "include6": "Off",
+            "include7": "Toggle",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier",
+            "include11": "conso",
+            "include12": "Xiaomi-ff01",
+            "include13": "puissance",
+            "include13 2": "Group-Membership"
+        }
     }
-  }
 }

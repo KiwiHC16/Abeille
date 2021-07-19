@@ -10,7 +10,6 @@
             "automatism": "1"
         },
         "configuration": {
-            "uniqId": "rtlk3k7y3hl0ramoc3fqyaczrf8yn2uv",
             "icone": "TS011F__TZ3000_vzopcetz",
             "mainEP": "01"
         },
@@ -32,7 +31,7 @@
             "include7 2 2": "Toggle2",
             "include8": "getEtat",
             "include9": "BindToZigateEtat",
-            "include10":"setReportEtat",
+            "include10": "setReportEtat",
             "include11": "getManufacturerName",
             "include12": "getModelIdentifier"
         }

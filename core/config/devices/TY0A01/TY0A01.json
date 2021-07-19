@@ -1,21 +1,20 @@
 {
-  "TY0A01": {
-    "nameJeedom": "Wima Lock",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07cqs7sd66sgdf25d44",
-      "icone": "TY0A01",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier"
+    "TY0A01": {
+        "nameJeedom": "Wima Lock",
+        "timeout": "60",
+        "Categorie": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icone": "TY0A01",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier"
+        }
     }
-  }
 }

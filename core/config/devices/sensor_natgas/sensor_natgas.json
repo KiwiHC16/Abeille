@@ -1,24 +1,23 @@
 {
-  "sensor_natgas": {
-    "nameJeedom": "Xiaomi Gaz Sensor",
-    "timeout": "60",
-    "Categorie": {
-      "security": "1"
-    },
-    "configuration": {
-	"uniqId": "5c07c76626528",
-      "icone": "XiaomiSensorGaz",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom",
-      "include3": "securitySafetySmoke",
-      "include4": "Xiaomi-ff01",
-      "include5": "setSmokeSensivityLow",
-      "include6": "setSmokeSensivityMedium",
-      "include7": "setSmokeSensivityHigh",
-      "include8": "testSmoke"
+    "sensor_natgas": {
+        "nameJeedom": "Xiaomi Gaz Sensor",
+        "timeout": "60",
+        "Categorie": {
+            "security": "1"
+        },
+        "configuration": {
+            "icone": "XiaomiSensorGaz",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom",
+            "include3": "securitySafetySmoke",
+            "include4": "Xiaomi-ff01",
+            "include5": "setSmokeSensivityLow",
+            "include6": "setSmokeSensivityMedium",
+            "include7": "setSmokeSensivityHigh",
+            "include8": "testSmoke"
+        }
     }
-  }
 }

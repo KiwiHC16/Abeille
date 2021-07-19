@@ -1,36 +1,35 @@
 {
-  "Remoteswitch": {
-    "nameJeedom": "Legrand Télécommande Depart Arrivée",
-    "timeout": "60",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07csd76dsf621272",
-      "icone": "LegrandRemoteSwitch",
-      "battery_type": "1x3V CR2032",
-      "lastCommunicationTimeOut": "-1",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "offGroup",
-      "include2": "toggleGroup",
-      "include3": "onGroup",
-      "include4": "downGroup",
-      "include5": "upGroup",
-      "include6": "setLevelGroup",
-      "include6 2": "setTemperatureLightGroup",
-      "include7": "sceneGroupRecall1",
-      "include7 2": "sceneGroupRecall2",
-      "include7 2 2": "sceneGroupRecall3",
-      "include8": "Batterie-Pourcent-Ikea",
-      "include9": "getBattery",
-      "include10": "BindShortToZigateBatterie",
-      "include11": "setReportBatterie",
-      "include11 2": "Up-Down",
-      "include11 2 2": "Click-Middle",
-      "include11 2 2 2": "Left-Right-Cmd",
-      "include11 2 2 2 2": "Left-Right-Direction"
+    "Remoteswitch": {
+        "nameJeedom": "Legrand T\u00e9l\u00e9commande Depart Arriv\u00e9e",
+        "timeout": "60",
+        "Categorie": {
+            "light": "1"
+        },
+        "configuration": {
+            "icone": "LegrandRemoteSwitch",
+            "battery_type": "1x3V CR2032",
+            "lastCommunicationTimeOut": "-1",
+            "mainEP": "01"
+        },
+        "Commandes": {
+            "include1": "offGroup",
+            "include2": "toggleGroup",
+            "include3": "onGroup",
+            "include4": "downGroup",
+            "include5": "upGroup",
+            "include6": "setLevelGroup",
+            "include6 2": "setTemperatureLightGroup",
+            "include7": "sceneGroupRecall1",
+            "include7 2": "sceneGroupRecall2",
+            "include7 2 2": "sceneGroupRecall3",
+            "include8": "Batterie-Pourcent-Ikea",
+            "include9": "getBattery",
+            "include10": "BindShortToZigateBatterie",
+            "include11": "setReportBatterie",
+            "include11 2": "Up-Down",
+            "include11 2 2": "Click-Middle",
+            "include11 2 2 2": "Left-Right-Cmd",
+            "include11 2 2 2 2": "Left-Right-Direction"
+        }
     }
-  }
 }

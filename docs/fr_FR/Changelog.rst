@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-210718-BETA-1
+210719-STABLE-1
 ----------
 
 - ATTENTION: Format JSON des fichiers de commande modifié !

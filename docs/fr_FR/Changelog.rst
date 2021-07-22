@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210722-BETA-1
+----------
+
 - Interne: cron15: Lecture ZCLVersion au lieu d'un attribut pas toujours supporté.
 - Page EQ/avancé: ajout bouton lecture attribut.
 - JSON équipements: mainEP #EP# remplacé par '01'. 'uniqId' supprimé.

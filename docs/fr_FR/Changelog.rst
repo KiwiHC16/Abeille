@@ -7,6 +7,7 @@ ChangeLog
 - Interne: tools: Amélioration check_json + update_json
 - Modèle JSON telecommande profalux: correction syntaxe type batterie.
 - Collecte LQI: Correctif parser pour routeur avec plus de 10 childs.
+- Interne: Nettoyage: suppression fichier obsolète 'function.php'.
 - JSON: Correction nom 'Konke multi-function button' pour id 3AFE170100510001.
 - Ajout support 'Konke multi-function button' avec id 3AFE280100510001.
 

@@ -1,5 +1,5 @@
 <?php
-    /* Developers debug features & PHP errors */
+    /* Developpers debug features & PHP errors */
     define("dbgFile", __DIR__."/../../tmp/debug.json");
     if (file_exists(dbgFile)) {
         $dbgDeveloperMode = TRUE;

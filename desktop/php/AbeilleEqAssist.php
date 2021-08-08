@@ -9,7 +9,7 @@
 <?php
     require_once __DIR__.'/../../core/config/Abeille.config.php';
 
-    /* Developers debug features & PHP errors */
+    /* Developers mode & PHP errors */
     if (file_exists(dbgFile)) {
         $dbgDeveloperMode = TRUE;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
@@ -35,6 +35,7 @@
         $jsonPath = 'core/config/devices_local/'.$jsonName.'/'.$jsonName.'.json';
     $eqIeee = $eqLogic->getConfiguration('IEEE', '');
 
+    $abQueues = $GLOBALS['abQueues'];
     echo '<script>var js_zgNb = '.$zgNb.';</script>'; // PHP to JS
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
@@ -42,14 +43,17 @@
     echo '<script>var js_jsonName = "'.$jsonName.'";</script>'; // PHP to JS
     echo '<script>var js_jsonPath = "'.$jsonPath.'";</script>'; // PHP to JS
     echo '<script>var js_queueKeyXmlToCmd = "'.queueKeyXmlToCmd.'";</script>'; // PHP to JS
-    echo '<script>var js_queueKeyCtrlToParser = "'.queueKeyCtrlToParser.'";</script>'; // PHP to JS
+    echo '<script>var js_queueKeyCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
+
+    $pluginDir = __DIR__."/../../"; // Plugin root dir
+    echo '<script>let js_pluginDir = "'.$pluginDir.'";</script>';
 
     // require_once __DIR__.'/../../resources/AbeilleDeamon/includes/config.php';
     define("MAXEP", 10); // Max number of End Points
 ?>
 
 <!-- <div class="col-xs-12"> -->
-    <h3>Assistant de découverte d'équipement</h3>
+    <h3>Assistant de découverte d'équipement (beta)</h3>
     <br>
 
     <style>

@@ -678,7 +678,8 @@ if (0) {
         if (msg_stat_queue(msg_get_queue(queueKeyXmlToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToAbeille');
         if (msg_stat_queue(msg_get_queue(queueKeyXmlToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToCmd');
         if (msg_stat_queue(msg_get_queue(queueKeyFormToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyFormToCmd');
-        if (msg_stat_queue(msg_get_queue(queueKeySerialToParser))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerialToParser');
+        // if (msg_stat_queue(msg_get_queue(queueKeySerialToParser))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerialToParser');
+        if (msg_stat_queue(msg_get_queue($abQueues["serialToParser"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerialToParser');
         if (msg_stat_queue(msg_get_queue(queueKeyParserToCmdSemaphore))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmdSemaphore');
 
         // https://github.com/jeelabs/esp-link
@@ -1056,16 +1057,15 @@ while ($cron->running()) {
         AbeilleTools::stopDaemons();
 
         /* Removing all queues */
-        // Tcharp38: Any way to include allQueues from config ?
-        // include_once __DIR__.'/../config/Abeille.config.php';
+        // Tcharp38 note: when all queues in $abQueues, we can delete $allQueues
         $abQueues = $GLOBALS['abQueues'];
         $allQueues = array(
             queueKeyAbeilleToAbeille, queueKeyAbeilleToCmd, queueKeyParserToAbeille, queueKeyParserToAbeille2, queueKeyCmdToAbeille,
             queueKeyCmdToMon, queueKeyParserToMon, queueKeyMonToCmd,
             queueKeyAssistToParser, queueKeyParserToAssist, queueKeyAssistToCmd,
             $abQueues["parserToLQI"]["id"], queueKeyLQIToAbeille, queueKeyLQIToCmd,
-            queueKeyXmlToAbeille, queueKeyXmlToCmd, queueKeyFormToCmd, queueKeyParserToCli,
-            queueKeyParserToCmd, queueKeyCmdToCmd, queueKeySerialToParser, queueKeyParserToCmdSemaphore, queueKeyCtrlToParser
+            queueKeyXmlToAbeille, queueKeyXmlToCmd, queueKeyFormToCmd, $abQueues["parserToCli"]["id"],
+            queueKeyParserToCmd, queueKeyCmdToCmd, $abQueues["serialToParser"]["id"], queueKeyParserToCmdSemaphore, $abQueues["ctrlToParser"]["id"]
         );
         foreach ($allQueues as $queueId) {
             $queue = msg_get_queue($queueId);

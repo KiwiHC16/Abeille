@@ -14,14 +14,15 @@
 
     logDebug("AbeilleQueueToCli starting");
 
-    $queueId = queueKeyParserToCli;
+    $queueId = $abQueues["parserToCli"]['id'];
+    $queueMax = $abQueues["parserToCli"]['max'];
     $queue = msg_get_queue($queueId);
 
     // while (msg_receive($queue, 0, $msgType, 256, $jsonMsg, false)) {
     //     logDebug("msg=".$jsonMsg);
     //     echo $jsonMsg;
     // };
-    if (msg_receive($queue, 0, $msgType, 1024, $jsonMsg, false, 0, $errCode) == false) {
+    if (msg_receive($queue, 0, $msgType, $queueMax, $jsonMsg, false, 0, $errCode) == false) {
         logDebug("AbeilleQueueToCli: ERROR=".$errCode." => ".posix_strerror($errCode));
         // Note: err 7 => message size bigger than given size
     } else {

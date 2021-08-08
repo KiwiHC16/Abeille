@@ -100,8 +100,8 @@
     //     logMessage("error", "Erreur pcntl_signal()");
 
     // $queueSerialToParser = msg_get_queue(queueSerialToParser);
-    $queueSerialToParser = msg_get_queue($abQueues["queueSerialToParser"]["id"]);
-    $queueMax = $abQueues["queueSerialToParser"]["max"];
+    $queueSerialToParser = msg_get_queue($abQueues["serialToParser"]["id"]);
+    $queueMax = $abQueues["serialToParser"]["max"];
 
     exec(system::getCmdSudo().' chmod 777 '.$serial.' >/dev/null 2>&1');
     exec("stty -F ".$serial." sane", $out, $status);

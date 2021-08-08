@@ -800,6 +800,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 $lenth = sprintf("%04s",dechex(strlen($data) / 2));
                 $this->addCmdToQueue($priority,$dest,$cmd,$lenth,$data);
             }
+            return;
         }
 
         //----------------------------------------------------------------------
@@ -816,30 +817,36 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 $this->deamonlog('debug',"    Set Mode Hybride", $this->debug['processCmd'], $this->debug['processCmd2']);
                 $this->addCmdToQueue($priority, $dest,"0002","0001","02");
             }
+            return;
         }
 
         if (isset($Command['getVersion']) && $Command['getVersion'] == "Version") {
             $this->deamonlog('debug', "    Get Version", $this->debug['processCmd'], $this->debug['processCmd2']);
             $this->addCmdToQueue($priority, $dest,"0010","0000","");
+            return;
         }
 
         if (isset($Command['reset']) && $Command['reset'] == "reset") {
             $this->addCmdToQueue($priority,$dest,"0011","0000","");
+            return;
         }
 
         if (isset($Command['ErasePersistentData']) && $Command['ErasePersistentData'] == "ErasePersistentData") {
             $this->addCmdToQueue($priority,$dest,"0012","0000","");
+            return;
         }
 
         // Resets (“Factory New”) the Control Bridge but persists the frame counters.
         if (isset($Command['FactoryNewReset']) && $Command['FactoryNewReset'] == "FactoryNewReset") {
             $this->addCmdToQueue($priority,$dest,"0013","0000","");
+            return;
         }
 
         // abeilleList abeilleListAll
         if (isset($Command['abeilleList']) && $Command['abeilleList'] == "abeilleListAll") {
             $this->deamonlog('debug', "    Get Abeilles List", $this->debug['processCmd2']);
             $this->addCmdToQueue($priority,$dest,"0015","0000","");
+            return;
         }
 
         //----------------------------------------------------------------------
@@ -858,6 +865,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $data = sprintf("%08s", dechex($Command['time']));
             $lenth = sprintf("%04s", dechex(strlen($data) / 2));
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data);
+            return;
         }
 
         if (isset($Command['getTimeServer'])) {
@@ -867,6 +875,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $data = "";
             $lenth = sprintf("%04s", dechex(strlen($data) / 2));
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data);
+            return;
         }
 
         //----------------------------------------------------------------------
@@ -877,6 +886,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
             $this->addCmdToQueue($priority,$dest,$cmd,$lenth,$data);
+            return;
         }
 
         if (isset($Command['setOffZigateLed'])) {
@@ -886,7 +896,9 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
             $this->addCmdToQueue($priority,$dest,$cmd,$lenth,$data);
+            return;
         }
+
         //----------------------------------------------------------------------
         if (isset($Command['setCertificationCE'])) {
             $this->deamonlog('debug', "    setCertificationCE", $this->debug['processCmd2']);
@@ -895,6 +907,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
             $this->addCmdToQueue($priority,$dest,$cmd,$lenth,$data);
+            return;
         }
 
         if (isset($Command['setCertificationFCC'])) {
@@ -904,7 +917,9 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
             $this->addCmdToQueue($priority,$dest,$cmd,$lenth,$data);
+            return;
         }
+
         //----------------------------------------------------------------------
         // https://github.com/fairecasoimeme/ZiGate/issues/145
         // PHY_PIB_TX_POWER_DEF (default - 0x80)
@@ -918,7 +933,9 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
             $this->addCmdToQueue($priority,$dest,$cmd,$lenth,$data);
+            return;
         }
+
         //----------------------------------------------------------------------
             // https://github.com/fairecasoimeme/ZiGate/issues/145
             // Added cmd 0807 Get Tx Power #175
@@ -932,7 +949,9 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
                 $lenth = sprintf("%04s",dechex(strlen($data) / 2));
                 $this->addCmdToQueue($priority,$dest,$cmd,$lenth,$data);
+                return;
             }
+
         //----------------------------------------------------------------------
         if (isset($Command['setChannelMask'])) {
             $this->deamonlog('debug', "    setChannelMask", $this->debug['processCmd2']);
@@ -941,7 +960,9 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
             $this->addCmdToQueue($priority,$dest,$cmd,$lenth,$data);
+            return;
         }
+
         //----------------------------------------------------------------------
         if (isset($Command['setExtendedPANID'])) {
             $this->deamonlog('debug', "    setExtendedPANID", $this->debug['processCmd2']);
@@ -950,14 +971,18 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
             $this->addCmdToQueue($priority,$dest,$cmd,$lenth,$data);
+            return;
         }
+
         //----------------------------------------------------------------------
         if (isset($Command["startNetwork"]) && $Command['startNetwork']=="StartNetwork") {
             $this->addCmdToQueue($priority,$dest,"0024","0000","");
+            return;
         }
 
         if (isset($Command["getNetworkStatus"]) && $Command['getNetworkStatus']=="getNetworkStatus") {
             $this->addCmdToQueue($priority,$dest,"0009","0000","");
+            return;
         }
 
         if (isset($Command['SetPermit'])) {
@@ -1022,6 +1047,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status" );
             }
+            return;
         }
 
         if (isset($Command['permitJoin']) && $Command['permitJoin']=="Status") {
@@ -1033,6 +1059,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = "0000";
             $data = "";
             $this->addCmdToQueue($priority,$dest,$cmd,$lenth,$data); //1E = 30 secondes
+            return;
         }
 
         //----------------------------------------------------------------------
@@ -1067,6 +1094,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $shortAddress);
+            return;
         }
 
         //----------------------------------------------------------------------
@@ -1293,6 +1321,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+            return;
         }
 
         // Bind Short
@@ -1368,6 +1397,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $data = $data1.$data2;
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+            return;
         }
 
         // setReport
@@ -1621,6 +1651,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+            return;
         }
 
         // CmdAbeille/0000/commissioningGroupAPSLegrand -> address=a048&groupId=AA00
@@ -1682,6 +1713,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data );
+            return;
         }
 
         if (isset($Command['getGroupMembership']) && isset($Command['address']) && isset($Command['DestinationEndPoint'])) {
@@ -1738,6 +1770,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         if (isset($Command['storeScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']))
@@ -1764,6 +1797,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         if (isset($Command['recallScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']))
@@ -1790,6 +1824,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         if (isset($Command['sceneGroupRecall']) && isset($Command['groupID']) && isset($Command['sceneID']))
@@ -1816,6 +1851,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         if (isset($Command['addScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']) && isset($Command['sceneName']))
@@ -1852,6 +1888,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         if (isset($Command['getSceneMembership']) && isset($Command['address']) && isset($Command['DestinationEndPoint']))
@@ -1876,6 +1913,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         if (isset($Command['removeScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']))
@@ -1903,6 +1941,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         if (isset($Command['removeSceneAll']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']))
@@ -1928,6 +1967,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         if (isset($Command['sceneLeftIkea']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']))
@@ -1965,6 +2005,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+            return;
         }
 
         // https://zigate.fr/documentation/commandes-zigate/ Windows covering (v3.0f only)
@@ -1998,6 +2039,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         if (isset($Command['WindowsCoveringLevel']) && isset($Command['address']) && isset($Command['clusterCommand']))
@@ -2030,6 +2072,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+            return;
         }
 
         // https://zigate.fr/documentation/commandes-zigate/ Windows covering (v3.0f only)
@@ -2063,6 +2106,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s", dechex(strlen($data )/2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         /* Expected format:
@@ -2148,6 +2192,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->deamonlog('debug', '    IEEE_Address_request: '.$data.' - '.$lenth, $this->debug['processCmd2']  );
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         if (isset($Command['Management_LQI_request']))
@@ -2166,6 +2211,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $data = $address.$startIndex ;
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         if (isset($Command['identifySend']) && isset($Command['address']) && isset($Command['duration']) && isset($Command['DestinationEndPoint']))
@@ -2201,6 +2247,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $data = $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$time ;
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         // Don't know how to make it works
@@ -2210,6 +2257,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             {
                 $this->addCmdToQueue($priority,$priority,$dest,"00D2","0000");
             }
+            return;
         }
 
         // setLevel on one object
@@ -2245,7 +2293,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2+$Command['duration']), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3+$Command['duration']), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
             }
-
+            return;
         }
 
         if (isset($Command['moveToLiftAndTiltBSO']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['inclinaison']) && isset($Command['duration']))
@@ -2307,6 +2355,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+            return;
         }
 
         // setLevelStop
@@ -2328,30 +2377,35 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         // WriteAttributeRequest ------------------------------------------------------------------------------------
         if ((isset($Command['WriteAttributeRequest'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']))
         {
             $this->setParam3( $dest, $Command );
+            return;
         }
 
         // WriteAttributeRequest ------------------------------------------------------------------------------------
         if ((isset($Command['WriteAttributeRequestGeneric'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['attributeType']) && isset($Command['value']))
         {
             $this->setParamGeneric( $dest, $Command );
+            return;
         }
 
         // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
         if ((isset($Command['WriteAttributeRequestVibration'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']))
         {
             $this->setParamXiaomi( $dest, $Command );
+            return;
         }
 
         // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
         if ((isset($Command['WriteAttributeRequestActivateDimmer'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']))
         {
             $this->setParam4( $dest, $Command );
+            return;
         }
 
         // ReadAttributeRequest ------------------------------------------------------------------------------------
@@ -2373,6 +2427,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         if ((isset($Command['ReadAttributeRequestMulti'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']))
         {
             $this->getParamMulti( $Command );
+            return;
         }
 
         // ReadAttributeRequest ------------------------------------------------------------------------------------
@@ -2385,6 +2440,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // $this->getParamHue( $priority, $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "0B" );
             $this->readAttribute($priority, $dest, $Command['address'], "0B", $Command['clusterId'], $Command['attributeId']);
             //}
+            return;
         }
 
         // ReadAttributeRequest ------------------------------------------------------------------------------------
@@ -2397,6 +2453,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // getParamOSRAM( $dest, $Command['address'], $Command['clusterId'], $Command['attributeId'], "01" );
             $this->readAttribute($priority, $dest, $Command['address'], "03", $Command['clusterId'], $Command['attributeId']);
             //}
+            return;
         }
 
         if (isset($Command['writeAttributeRequestIAS_WD'])) {
@@ -2441,7 +2498,8 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
                 $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
-        }
+                return;
+            }
 
         if (isset($Command['addGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']))
         {
@@ -2469,6 +2527,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $data = $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$groupAddress ;
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         // Add Group APS
@@ -2532,6 +2591,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // $this->deamonlog('debug', "Data: ".$data." len: ".(strlen($data)/2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+            return;
         }
 
         if (isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']))
@@ -2560,6 +2620,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
             $data = $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$groupAddress ;
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         // Replace Equipement
@@ -2583,6 +2644,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $sql = $sql.  "WHERE  eqType = 'Abeille' AND configuration LIKE '%".$old."%' ";
             $this->deamonlog('debug',"    sql: ".$sql, $this->debug['processCmd2']);
             DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
+            return;
         }
 
         //
@@ -2612,6 +2674,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $TransitionTime = "0005"; // 1/10s of a s
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$onoff.$stepMode.$stepSize.$TransitionTime, $address);
+            return;
         }
 
         if (isset($Command['DownGroup']) && isset($Command['address']) && isset($Command['step']))
@@ -2640,6 +2703,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $TransitionTime = "0005"; // 1/10s of a s
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$onoff.$stepMode.$stepSize.$TransitionTime, $address);
+            return;
         }
 
         // ON / OFF with no effects
@@ -2673,7 +2737,8 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
                 }
-        }
+                return;
+            }
 
         // ON / OFF with no effects RAW with no APS ACK
         // Not used as some eq have a strange behavior if the APS ACK is not set (e.g. Xiaomi Plug / should probably test again / bug from the eq ?)
@@ -2729,6 +2794,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         if ($addressMode == "02" ) {
             $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$targetShortAddress."/ReadAttributeRequestMulti&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
         }
+        return;
     }
 
         // On / Off Timed Send
@@ -2768,6 +2834,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+$Command['onTime']), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+$Command['onTime']), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
             }
+            return;
         }
 
         // Move to Colour
@@ -2799,6 +2866,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $data = $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$colourX.$colourY.$duration ;
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         // Take RGB (0-255) convert to X, Y and send the color
@@ -2855,6 +2923,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $data = $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$colourX.$colourY.$duration ;
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         // Move to Colour Temperature
@@ -2884,24 +2953,28 @@ class AbeilleCmdProcess extends AbeilleDebug {
             if ($addressMode == "02" ) {
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0300&attributeId=0007" );
             }
+            return;
         }
 
         if (isset($Command['getManufacturerName']) && isset($Command['address']))
         {
             if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
             $this->readAttribute($priority, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0004");
+            return;
         }
 
         if (isset($Command['getName']) && isset($Command['address']))
         {
             if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
             $this->readAttribute($priority, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0005");
+            return;
         }
 
         if (isset($Command['getLocation']) && isset($Command['address']))
         {
             if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
             $this->readAttribute($priority, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0010");
+            return;
         }
 
         if (isset($Command['setLocation']) && isset($Command['address']))
@@ -2910,6 +2983,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
 
             $this->setParam2( $dest, $Command['address'], "0000", "0010",$Command['destinationEndPoint'],$Command['location'], "42" );
+            return;
         }
 
         if (isset($Command['MgtLeave']) && isset($Command['address']) && isset($Command['IEEE']))
@@ -2943,6 +3017,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
         }
 
         if (isset($Command['LeaveRequest']) && isset($Command['IEEE']))
@@ -3006,11 +3081,13 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data);
+            return;
         }
 
         if (isset($Command['commandLegrand']))
         {
             $this->commandLegrand($dest,$Command);
+            return;
         }
 
         // DiscoverAttributesCommand
@@ -3053,11 +3130,13 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data);
+            return;
         }
 
         if (isset($Command['commandLegrand']))
         {
             $this->commandLegrand($dest,$Command);
+            return;
         }
     }
 }

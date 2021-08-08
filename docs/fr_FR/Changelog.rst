@@ -6,6 +6,7 @@ ChangeLog
   - 'nameJeedom' remplacé par 'type'.
   - 'configuration:icone' remplacé par 'configuration:icon'.
 
+
 210722-BETA-1
 ----------
 

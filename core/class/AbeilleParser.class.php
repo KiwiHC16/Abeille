@@ -128,7 +128,6 @@
             $this->queueKeyParserToAbeille2     = msg_get_queue(queueKeyParserToAbeille2);
             $this->queueKeyParserToCmd          = msg_get_queue(queueKeyParserToCmd);
             $this->queueKeyParserToCmdSemaphore = msg_get_queue(queueKeyParserToCmdSemaphore);
-            // $this->queueParserToLQI          = msg_get_queue(queueParserToLQI);
             $this->queueParserToLQI             = msg_get_queue($abQueues["parserToLQI"]["id"]);
             $this->queueParserToLQIMax          = $abQueues["parserToLQI"]["max"];
 
@@ -232,34 +231,6 @@
             }
         }
 
-        /*
-        function msgToAbeilleLQI( $Addr, $Index, $data)
-        {
-            // Abeille / short addr / Cluster ID - Attr ID -> data
-
-            $msgAbeille = new MsgAbeille;
-            $errorcode = 0;
-            $blocking = false;
-
-            $msgAbeille->message = array( 'topic' => "LQI/".$Addr."/".$Index, 'payload' => $data, $errorcode);
-
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode)) {
-                // parserLog("debug","(fct msgToAbeilleLQI ParserToAbeille) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
-                // print_r(msg_stat_queue($queue));
-            }
-            else {
-                parserLog("debug","(fct msgToAbeilleLQI ParserToAbeille) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errorcode);
-            }
-
-            if (msg_send( $this->queueParserToLQI, 1, $msgAbeille, true, false)) {
-                // parserLog("debug","(fct msgToAbeilleLQI ParserToLQI) added to queue (queueParserToLQI): ".json_encode($msgAbeille));
-                // print_r(msg_stat_queue($queue));
-            }
-            else {
-                parserLog("debug","(fct msgToAbeilleLQI ParserToLQI) could not add message to queue (queueParserToLQI) with error code : ".$errorcode);
-            }
-        } */
-
         /* Send message to 'AbeilleLQI'.
            Returns: true=ok, false=ERROR */
         function msgToLQICollector($SrcAddr, $NTableEntries, $NTableListCount, $StartIndex, $NList)
@@ -306,7 +277,8 @@
                     return; // Not the correct device
             }
 
-            $queue = msg_get_queue(queueKeyParserToCli);
+            $abQueues = $GLOBALS['abQueues'];
+            $queue = msg_get_queue($abQueues['parserToCli']['id']);
             if ($queue === false)
                 return; // No queue
             /* Checking if queue is there alone. Client page might be closed */
@@ -316,8 +288,14 @@
                 return;
             }
 
-            $errorcode = 0;
-            if (msg_send($queue, 1, json_encode($msg), false, false, $errorcode) == false) {
+            $jsonMsg = json_encode($msg);
+            $size = strlen($jsonMsg);
+            $max = $abQueues['parserToCli']['max'];
+            if ($size > $max) {
+                parserLog("error", "msgToClient(): Message trop gros ignoré (taille=".$size.", max=".$max.")");
+                return false;
+            }
+            if (msg_send($queue, 1, $jsonMsg, false, false, $errorcode) == false) {
                 parserLog("debug", "  msgToClient(): ERROR ".$errorcode);
             } else
                 parserLog("debug", "  msgToClient(): Sent ".json_encode($msg));

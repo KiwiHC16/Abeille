@@ -221,18 +221,14 @@
         // $clusterTab = AbeilleTools::getJSonConfigFiles("zigateClusters.json"); // Tcharp38: no longer required
 
         // $queueKeySerialToParser = msg_get_queue(queueSerialToParser);
-        $queueSerialToParser = msg_get_queue($abQueues["queueSerialToParser"]["id"]);
-        $queueSerialToParserMax = $abQueues["queueSerialToParser"]["max"];
+        $queueSerialToParser = msg_get_queue($abQueues["serialToParser"]["id"]);
+        $queueSerialToParserMax = $abQueues["serialToParser"]["max"];
 
         $max_msg_size = 2048;
-
-        // $fromAssistQueue = msg_get_queue(queueKeyAssistToParser);
-        // $toAssistQueue = msg_get_queue(queueKeyParserToAssist);
-        // $rerouteNet = "";
-
         $queueKeyParserToCmd = msg_get_queue(queueKeyParserToCmd);
 
-        $fromCtrlQueue = msg_get_queue(queueKeyCtrlToParser);
+        $queueCtrlToParser = msg_get_queue($abQueues["ctrlToParser"]["id"]);
+        $queueCtrlToParserMax = $abQueues["ctrlToParser"]["max"];
 
         /* Init list of supported & user/custom devices */
         $GLOBALS['supportedEqList'] = AbeilleTools::getDevicesList("Abeille");
@@ -296,21 +292,9 @@
                 logMessage('debug', '  msg_receive(queueSerialToParser) ERROR '.$errorCode);
             }
 
-//             /* Checking if message from EQ assistant */
-//             if (msg_receive($fromAssistQueue, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) == true) {
-// // logMessage('debug', "Received=".json_encode($msg));
-//                 if ($msg['type'] == 'reroute') {
-//                     $rerouteNet = $msg['network'];
-//                     logMessage('debug', $rerouteNet.", messages must be rerouted");
-//                 } else if ($msg['type'] == 'reroutestop') {
-//                     logMessage('debug', $rerouteNet.", stopping msg rerouting.");
-//                     $rerouteNet = "";
-//                 }
-//             }
-
             /* Checking if control message for Parser */
-            if (msg_receive($fromCtrlQueue, 0, $msgType, $max_msg_size, $jsonMsg, false, MSG_IPC_NOWAIT, $errorCode) == true) {
-                logMessage('debug', "fromCtrlQueue=".$jsonMsg);
+            if (msg_receive($queueCtrlToParser, 0, $msgType, $queueCtrlToParserMax, $jsonMsg, false, MSG_IPC_NOWAIT, $errorCode) == true) {
+                logMessage('debug', "queueCtrlToParser=".$jsonMsg);
                 $msg = json_decode($jsonMsg, true);
                 if ($msg['type'] == 'sendToCli') {
                     $GLOBALS['sendToCli']['net'] = $msg['net'];
@@ -318,7 +302,7 @@
                     $GLOBALS['sendToCli']['ieee'] = $msg['ieee'];
                 }
             } else if ($errorCode != 42) { // 42 = No message
-                logMessage('debug', '  msg_receive(fromCtrlQueue) ERROR '.$errorCode);
+                logMessage('debug', '  msg_receive(queueCtrlToParser) ERROR '.$errorCode);
             }
 
             // Check if we have any action scheduled and waiting to be processed

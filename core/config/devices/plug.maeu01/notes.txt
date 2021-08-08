@@ -1,0 +1,32 @@
+EP list: 01/F2
+Manufacturer: 'LUMI'
+ModelId: 'plug.maeu01'
+Location: ''
+MAC capa: 8E
+
+Abeille1, Type=8043/Simple descriptor response, SQN=32, Status=00, Addr=1330, Length=1E, EP=01, ProfId=0104/ZigBee Home Automation (ZHA), DevId=0051/Smart Plug, BitField=01
+  InClusterCount=9
+  InCluster=0000 => General-Basic
+  InCluster=0002 => General-Temperature Config
+  InCluster=0003 => General-Identify
+  InCluster=0004 => General-Groups
+  InCluster=0005 => General-Scenes
+  InCluster=0006 => General-On/Off
+  InCluster=0009 => General-Alarms
+  InCluster=0702 => Smart Energy-Metering
+  InCluster=0B04 => Electrical Measurement
+  OutClusterCount=00
+  OutCluster=000A => General-Time
+  OutCluster=0019 => General-OTA
+
+Abeille1, Type=8043/Simple descriptor response, SQN=33, Status=00, Addr=1330, Length=0A, EP=F2, ProfId=A1E0/Profil A1E0 inconnu, DevId=0061/Profil A1E0 inconnu, BitField=00
+  InClusterCount=0
+  OutClusterCount=01
+  OutCluster=0021 => Unknown 0021 cluster
+
+- Clust 0002: 0000/0010/0012/0014/FFFD
+- Clust 0003: 0000/FFFD
+- Clust 0005: 0000/0001/0002/0003/0004/0005/FFFD
+- Clust 0009: 0000/FFFD
+- Clust 0702: 0000/0200/0300/0301/0302/0303/0304/0306/FFFD
+- Clust 0B04: 0000/050B/0604/0605/0800/0803/FFFD

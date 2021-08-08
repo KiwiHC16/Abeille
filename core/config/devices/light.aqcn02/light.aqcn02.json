@@ -1,13 +1,9 @@
 {
     "light.aqcn02": {
-        "nameJeedom": "Ampoule Aqara Spectre Blanc light.aqcn02",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "light.aqcn02",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "light.aqcn02"
         },
         "Commandes": {
             "include1": "nom",
@@ -36,6 +32,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Ampoule Aqara Spectre Blanc light.aqcn02"
     }
 }

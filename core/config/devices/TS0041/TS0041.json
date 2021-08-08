@@ -1,18 +1,18 @@
 {
     "TS0041": {
-        "nameJeedom": "Zemismart Remote 1 bouton sur pile",
         "timeout": "60",
         "Comment": "Zigate in hybrid mode",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "TS0041",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TS0041"
         },
         "Commandes": {
             "include3": "nom",
             "include5 3": "etatInter0"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Zemismart Remote 1 bouton sur pile"
     }
 }

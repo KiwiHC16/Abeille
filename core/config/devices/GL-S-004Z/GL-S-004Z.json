@@ -1,14 +1,10 @@
 {
     "GL-S-004Z": {
-        "nameJeedom": "GLEDOPTO Spectre Blanc ref: GL-S-004Z",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "GL-S-004Z",
             "mainEP": "0B",
-            "poll": "1"
+            "poll": "1",
+            "icon": "GL-S-004Z"
         },
         "Commandes": {
             "include1": "nom",
@@ -37,6 +33,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "GLEDOPTO Spectre Blanc ref: GL-S-004Z"
     }
 }

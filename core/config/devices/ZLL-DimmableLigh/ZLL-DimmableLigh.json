@@ -1,13 +1,9 @@
 {
     "ZLL-DimmableLigh": {
-        "nameJeedom": "ZLL-DimmableLigh",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "ZLL-DimmableLigh",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "ZLL-DimmableLigh"
         },
         "Commandes": {
             "include1": "nom",
@@ -30,6 +26,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "ZLL-DimmableLigh"
     }
 }

@@ -1,14 +1,10 @@
 {
     "TS0201": {
-        "nameJeedom": "Wireless Temperature and Humidity",
         "timeout": "60",
         "Comment": "",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "TS0201",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TS0201"
         },
         "Commandes": {
             "include1": "SW",
@@ -20,6 +16,10 @@
             "include4": "humidite",
             "include5": "Batterie-Volt-Konke",
             "include6": "Batterie-Pourcent-Heiman"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Wireless Temperature and Humidity"
     }
 }

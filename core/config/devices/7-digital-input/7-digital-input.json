@@ -1,13 +1,9 @@
 {
     "7-digital-input": {
-        "nameJeedom": "7-digital-input",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "7-digital-input",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "7-digital-input"
         },
         "Commandes": {
             "include100": "nom",
@@ -25,6 +21,10 @@
             "include7 1": "getEtatEp07",
             "include8": "etatEp08in",
             "include8 1": "getEtatEp08"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "7-digital-input"
     }
 }

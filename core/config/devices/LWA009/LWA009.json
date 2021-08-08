@@ -1,13 +1,9 @@
 {
     "LWA009": {
-        "nameJeedom": "Philips Hue Ampoule White 1600lm E27",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "LWA009",
-            "mainEP": "0B"
+            "mainEP": "0B",
+            "icon": "LWA009"
         },
         "Commandes": {
             "include1": "nom",
@@ -30,6 +26,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Philips Hue Ampoule White 1600lm E27"
     }
 }

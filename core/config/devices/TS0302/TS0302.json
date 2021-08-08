@@ -1,14 +1,10 @@
 {
     "TS0302": {
-        "nameJeedom": "SM-SW101-CZ",
         "timeout": "60",
         "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1228",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "TS0302",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TS0302"
         },
         "Commandes": {
             "include1": "nom",
@@ -24,6 +20,10 @@
             "include22": "getModelIdentifier",
             "include23": "getSWBuild",
             "include25": "Group-Membership"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "SM-SW101-CZ"
     }
 }

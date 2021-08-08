@@ -1,14 +1,10 @@
 {
     "LIGHTIFYIndoorFlexRGBW": {
-        "nameJeedom": "LIGHTIFY Indoor Flex RGBW",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "LIGHTIFYIndoorFlexRGBW",
             "mainEP": "03",
-            "poll": "1"
+            "poll": "1",
+            "icon": "LIGHTIFYIndoorFlexRGBW"
         },
         "Commandes": {
             "include1": "nom",
@@ -54,6 +50,10 @@
             "include39": "4000K",
             "include40": "temperatureLight",
             "include40 2 2": "setTemperatureLight"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "LIGHTIFY Indoor Flex RGBW"
     }
 }

@@ -1,16 +1,12 @@
 {
     "SML002": {
-        "nameJeedom": "Philips Hue motion sensor",
         "manufacturer": "Philips",
         "model": "9290019758",
         "timeout": "60",
-        "Categorie": {
-            "security": "1"
-        },
         "configuration": {
-            "icone": "SML002",
             "battery_type": "2x AAA",
-            "mainEP": "02"
+            "mainEP": "02",
+            "icon": "SML002"
         },
         "Commandes": {
             "include1": "SW",
@@ -27,6 +23,10 @@
             "include4 2 2 2 2 2": "setReportIlluminance",
             "include4 2 2 2 2 2 2": "setReportTemperature",
             "include4 2 2 2 2 2 2 2": "setReportBatterie"
-        }
+        },
+        "category": {
+            "security": "1"
+        },
+        "type": "Philips Hue motion sensor"
     }
 }

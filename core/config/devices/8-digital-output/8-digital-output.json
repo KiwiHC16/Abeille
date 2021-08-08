@@ -1,13 +1,9 @@
 {
     "8-digital-output": {
-        "nameJeedom": "8-digital-output",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "8-digital-output",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "8-digital-output"
         },
         "Commandes": {
             "include100": "nom",
@@ -51,6 +47,10 @@
             "include8 1 1": "ToggleEp08",
             "include8 1 1 1": "getEtatEp08",
             "include8 1 1 1 1": "etatEp08out"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "8-digital-output"
     }
 }

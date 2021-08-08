@@ -1,14 +1,10 @@
 {
     "TS0001": {
-        "nameJeedom": "Zemismart 1 boutons",
         "timeout": "60",
         "Comment": "",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "TS0001",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TS0001"
         },
         "Commandes": {
             "include1": "SW",
@@ -21,6 +17,10 @@
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Zemismart 1 boutons"
     }
 }

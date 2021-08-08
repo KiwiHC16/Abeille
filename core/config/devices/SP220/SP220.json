@@ -1,13 +1,9 @@
 {
     "SP220": {
-        "nameJeedom": "SP220 Innr",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "SP220",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "SP220"
         },
         "Commandes": {
             "include1": "SW",
@@ -20,6 +16,10 @@
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "SP220 Innr"
     }
 }

@@ -1,14 +1,10 @@
 {
     "SA-003-Zigbee": {
-        "nameJeedom": "ZigBee On Off Controller",
         "timeout": "60",
         "Comment": "https:\/\/www.amazon.fr\/dp\/B07S72CNWT\/ref=cm_sw_r_cp_apa_i_rShRDb0MMJSA9 identical to Lamp_01",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "SA-003-Zigbee",
-            "mainEP": "0B"
+            "mainEP": "0B",
+            "icon": "SA-003-Zigbee"
         },
         "Commandes": {
             "include1": "SW",
@@ -21,6 +17,10 @@
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "ZigBee On Off Controller"
     }
 }

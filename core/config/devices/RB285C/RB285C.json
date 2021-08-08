@@ -1,15 +1,11 @@
 {
     "RB285C": {
-        "nameJeedom": "Innr RB285C RGBW bulb colour E27",
         "manufacturer": "Innr",
         "model": "RB285C",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "RB285C",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "RB285C"
         },
         "Commandes": {
             "include4": "etat",
@@ -27,6 +23,10 @@
             "include300-3": "2200K",
             "include300-4": "2700K",
             "include300-5": "4000K"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Innr RB285C RGBW bulb colour E27"
     }
 }

@@ -1,16 +1,12 @@
 {
     "eTRV0100": {
-        "nameJeedom": "Dansfoss Ally Radiator Thermostat 014G2461",
         "comment": "Dansfoss Ally Radiator Thermostat 014G2461 ( https:\/\/assets.danfoss.com\/documents\/DOC353849556547\/DOC353849556547.pdf ) ",
         "timeout": "0",
-        "Categorie": {
-            "heating": "1"
-        },
         "configuration": {
-            "icone": "eTRV0100",
             "mainEP": "01",
             "battery_type": "2x1,5V LR6 (AA)",
-            "poll": "1"
+            "poll": "1",
+            "icon": "eTRV0100"
         },
         "Commandes": {
             "include1": "nom",
@@ -39,6 +35,10 @@
             "include10 1 - Ok": "BindToZigateRadiateur",
             "include10 2 - Ok": "setReportRadiateurLocalTemperature",
             "include10 3 - Ok": "setReportRadiateurConsigneTemperature"
-        }
+        },
+        "category": {
+            "heating": "1"
+        },
+        "type": "Dansfoss Ally Radiator Thermostat 014G2461"
     }
 }

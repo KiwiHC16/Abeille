@@ -1,15 +1,11 @@
 {
     "sensor_switch.aq3": {
-        "nameJeedom": "Xiaomi Bouton Aqara 3",
         "battery_type": "1xCR2032",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "XiaomiBouton3",
             "battery_type": "1x3V CR2032",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "XiaomiBouton3"
         },
         "Commandes": {
             "include1": "SW",
@@ -19,6 +15,10 @@
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",
             "include7": "Xiaomi-ff01"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Bouton Aqara 3"
     }
 }

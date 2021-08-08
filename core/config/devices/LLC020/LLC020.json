@@ -1,14 +1,10 @@
 {
     "LLC020": {
-        "nameJeedom": "Hue Go LLC020",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "HueGo",
             "mainEP": "0B",
-            "poll": "1"
+            "poll": "1",
+            "icon": "HueGo"
         },
         "Commandes": {
             "include1": "nom",
@@ -49,6 +45,10 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Hue Go LLC020"
     }
 }

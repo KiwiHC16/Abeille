@@ -1,14 +1,10 @@
 {
     "GL-B-008Z": {
-        "nameJeedom": "GL-B-008Z",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "GL-B-008Z",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "GL-B-008Z"
         },
         "Commandes": {
             "include1": "nom",
@@ -55,6 +51,10 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "GL-B-008Z"
     }
 }

@@ -1,14 +1,10 @@
 {
     "ClassicA60RGBW": {
-        "nameJeedom": "Classic A60 RGB W",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "OSRAMClassicA60RGBW",
             "mainEP": "03",
-            "poll": "1"
+            "poll": "1",
+            "icon": "OSRAMClassicA60RGBW"
         },
         "Commandes": {
             "include1": "nom",
@@ -26,6 +22,10 @@
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Classic A60 RGB W"
     }
 }

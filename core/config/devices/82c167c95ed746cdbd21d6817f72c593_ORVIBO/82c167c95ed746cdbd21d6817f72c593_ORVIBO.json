@@ -1,33 +1,33 @@
 {
-  "82c167c95ed746cdbd21d6817f72c593_ORVIBO": {
-    "nameJeedom": "Orvibo multi-functional relay",
-    "manufacturer": "Orvibo",
-    "model": "CM10ZW",
-    "zbManufacturer": "ORVIBO",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "icone": "Orvibo-CM10ZW",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include0006-1": "OnEp01",
-      "include0006-2": "OffEp01",
-      "include0006-3": "getEtatEp01",
-      "include0006-4": "OnEp02",
-      "include0006-5": "OffEp02",
-      "include0006-6": "getEtatEp02",
-      "include0006-7": "OnEp03",
-      "include0006-8": "OffEp03",
-      "include0006-9": "getEtatEp03",
-      "include0006-10": "bindToZigate-EP01-0006",
-      "include0006-11": "bindToZigate-EP02-0006",
-      "include0006-12": "bindToZigate-EP03-0006",
-      "include0006-13": "setReport-EP01-0006-0000",
-      "include0006-14": "setReport-EP02-0006-0000",
-      "include0006-15": "setReport-EP03-0006-0000"
+    "82c167c95ed746cdbd21d6817f72c593_ORVIBO": {
+        "manufacturer": "Orvibo",
+        "model": "CM10ZW",
+        "zbManufacturer": "ORVIBO",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "Orvibo-CM10ZW"
+        },
+        "Commandes": {
+            "include0006-1": "OnEp01",
+            "include0006-2": "OffEp01",
+            "include0006-3": "getEtatEp01",
+            "include0006-4": "OnEp02",
+            "include0006-5": "OffEp02",
+            "include0006-6": "getEtatEp02",
+            "include0006-7": "OnEp03",
+            "include0006-8": "OffEp03",
+            "include0006-9": "getEtatEp03",
+            "include0006-10": "bindToZigate-EP01-0006",
+            "include0006-11": "bindToZigate-EP02-0006",
+            "include0006-12": "bindToZigate-EP03-0006",
+            "include0006-13": "setReport-EP01-0006-0000",
+            "include0006-14": "setReport-EP02-0006-0000",
+            "include0006-15": "setReport-EP03-0006-0000"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Orvibo multi-functional relay"
     }
-  }
 }

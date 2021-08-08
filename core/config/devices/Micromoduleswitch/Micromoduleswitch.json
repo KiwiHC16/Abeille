@@ -1,13 +1,9 @@
 {
     "Micromoduleswitch": {
-        "nameJeedom": "Legrand Micro Module Encastrable 220V avec Neutre et un bouton poussoir",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "Micromoduleswitch",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "Micromoduleswitch"
         },
         "Commandes": {
             "include1": "nom",
@@ -25,6 +21,10 @@
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Legrand Micro Module Encastrable 220V avec Neutre et un bouton poussoir"
     }
 }

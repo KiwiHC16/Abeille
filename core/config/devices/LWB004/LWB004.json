@@ -1,13 +1,9 @@
 {
     "LWB004": {
-        "nameJeedom": "Hue white beta LWB004",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "HueWhite",
-            "mainEP": "0B"
+            "mainEP": "0B",
+            "icon": "HueWhite"
         },
         "Commandes": {
             "include1": "nom",
@@ -30,6 +26,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Hue white beta LWB004"
     }
 }

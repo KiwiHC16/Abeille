@@ -1,16 +1,12 @@
 {
     "router": {
-        "nameJeedom": "router",
         "Comment": "https:\/\/community.jeedom.com\/t\/cc2531-routeur-pour-etendre-reseau-zigbee\/20837",
         "Comment 1": "https:\/\/www.amazon.fr\/gp\/product\/B08438TKYG\/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1",
         "Comment 2": "USB CC2531",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "router",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "router"
         },
         "Commandes": {
             "include1": "nom",
@@ -19,6 +15,10 @@
             "include21": "getManufacturerName",
             "include22": "getModelIdentifier",
             "include23": "getSWBuild"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "router"
     }
 }

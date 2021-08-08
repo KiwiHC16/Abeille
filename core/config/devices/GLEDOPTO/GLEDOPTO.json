@@ -1,15 +1,11 @@
 {
     "GLEDOPTO": {
-        "nameJeedom": "GLEDOPTO",
         "timeout": "60",
         "Comment": "Dimmable GU10 5W 300lm",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "GLEDOPTO",
             "mainEP": "0B",
-            "poll": "1"
+            "poll": "1",
+            "icon": "GLEDOPTO"
         },
         "Commandes": {
             "include1": "nom",
@@ -30,6 +26,10 @@
             "include26": "setLevel",
             "include27": "Group-Membership",
             "include27 2": "Scene-Membership"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "GLEDOPTO"
     }
 }

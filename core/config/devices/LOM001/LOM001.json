@@ -1,14 +1,10 @@
 {
     "LOM001": {
-        "nameJeedom": "Philips Hue Smart Plug",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "LOM001",
             "mainEP": "0B",
-            "poll": "1"
+            "poll": "1",
+            "icon": "LOM001"
         },
         "Commandes": {
             "include1": "nom",
@@ -28,6 +24,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Philips Hue Smart Plug"
     }
 }

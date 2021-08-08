@@ -1,13 +1,9 @@
 {
     "TRADFRIbulbGU10WS400lm": {
-        "nameJeedom": "IKEA Ampoule TRADFRI bulb GU10 White Spectre 400 lm",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "IkeaTRADFRIbulbGU10WS400lm",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "IkeaTRADFRIbulbGU10WS400lm"
         },
         "Commandes": {
             "include1": "nom",
@@ -35,6 +31,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "IKEA Ampoule TRADFRI bulb GU10 White Spectre 400 lm"
     }
 }

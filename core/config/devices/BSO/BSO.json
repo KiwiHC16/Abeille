@@ -1,16 +1,12 @@
 {
     "BSO": {
-        "nameJeedom": "Profalux BSO (brise-soleil orientable)",
         "manufacturer": "Profalux",
         "model": "BSO",
         "timeout": "60",
         "Comment": "Copy of Profalux Volet for BSO Profalux",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "bsoProFalux",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "bsoProFalux"
         },
         "Commandes": {
             "include0 2 2": "Lift",
@@ -41,6 +37,10 @@
             "include29": "setReportLevel",
             "include30": "moveToLiftAndTiltBSO_Lift",
             "include30 2": "moveToLiftAndTiltBSO_Tilt"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Profalux BSO (brise-soleil orientable)"
     }
 }

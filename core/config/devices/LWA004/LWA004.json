@@ -1,39 +1,36 @@
 {
-  "LWA004": {
-    "nameJeedom": "Hue E27 single filament A60 bulb",
-    "manufacturer": "Philips",
-    "model": "LWA004",
-    "zbManufacturer": "Philips",
-    "timeout": "60",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "icone": "HueWhite",
-      "mainEP": "0B"
-    },
-    "Commandes": {
-      "include1": "nom",
-      "include2": "societe",
-      "include21": "getManufacturerName",
-      "include22": "getModelIdentifier",
-
-      "include0003-1": "Identify",
-
-      "include0004-1": "Group-Membership",
-
-      "include4": "etatLight",
-      "include5": "levelLight",
-      "include8": "On",
-      "include9": "Off",
-      "include10": "Toggle",
-      "include11": "setLevel",
-      "include19": "getEtat",
-      "include20": "getLevel",
-      "include26": "BindToZigateEtat",
-      "include27": "BindToZigateLevel",
-      "include28": "setReportEtat",
-      "include29": "setReportLevel"
+    "LWA004": {
+        "manufacturer": "Philips",
+        "model": "LWA004",
+        "zbManufacturer": "Philips",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "0B",
+            "icon": "HueWhite"
+        },
+        "Commandes": {
+            "include1": "nom",
+            "include2": "societe",
+            "include21": "getManufacturerName",
+            "include22": "getModelIdentifier",
+            "include0003-1": "Identify",
+            "include0004-1": "Group-Membership",
+            "include4": "etatLight",
+            "include5": "levelLight",
+            "include8": "On",
+            "include9": "Off",
+            "include10": "Toggle",
+            "include11": "setLevel",
+            "include19": "getEtat",
+            "include20": "getLevel",
+            "include26": "BindToZigateEtat",
+            "include27": "BindToZigateLevel",
+            "include28": "setReportEtat",
+            "include29": "setReportLevel"
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Hue E27 single filament A60 bulb"
     }
-  }
 }

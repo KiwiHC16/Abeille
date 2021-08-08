@@ -1,13 +1,9 @@
 {
     "RB175W": {
-        "nameJeedom": "Ampoule Innr spectre blanc 2200K-2700K E27",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "RB175W",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "RB175W"
         },
         "Commandes": {
             "include1": "nom",
@@ -35,6 +31,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Ampoule Innr spectre blanc 2200K-2700K E27"
     }
 }

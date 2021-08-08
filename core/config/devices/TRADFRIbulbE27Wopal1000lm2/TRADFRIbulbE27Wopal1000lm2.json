@@ -1,14 +1,10 @@
 {
     "TRADFRIbulbE27Wopal1000lm2": {
-        "nameJeedom": "IKEA Ampoule TRADFRI bulb E27 opal 1000lm2",
         "manufacturer": "Ikea",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "IkeaTradfriBulbE27WOpal1000lm2",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "IkeaTradfriBulbE27WOpal1000lm2"
         },
         "Commandes": {
             "include1": "nom",
@@ -26,6 +22,10 @@
             "include21": "getManufacturerName",
             "include22": "getModelIdentifier",
             "include23": "getSWBuild"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "IKEA Ampoule TRADFRI bulb E27 opal 1000lm2"
     }
 }

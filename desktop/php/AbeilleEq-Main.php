@@ -86,9 +86,9 @@
                         $selectBox = array();
                         foreach ($items as $item) {
                             $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevices(AbeilleTools::getTrimmedValueForJsonFiles($item), 'Abeille');
-                            $name = $AbeilleObjetDefinition[$item]['nameJeedom'];
-                            $icone = $AbeilleObjetDefinition[$item]['configuration']['icone'];
-                            $selectBox[ucwords($name)] = $icone;
+                            $name = $AbeilleObjetDefinition[$item]['type'];
+                            $icon = $AbeilleObjetDefinition[$item]['configuration']['icon'];
+                            $selectBox[ucwords($name)] = $icon;
                         }
                         ksort($selectBox);
                         foreach ($selectBox as $key => $value) {

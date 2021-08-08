@@ -1,13 +1,9 @@
 {
     "siren-pni-s002": {
-        "nameJeedom": "siren-pni-s002",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "siren-pni-s002",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "siren-pni-s002"
         },
         "Commandes": {
             "include100": "nom",
@@ -19,6 +15,10 @@
             "include2 1": "OffEp02",
             "include2 1 1 1": "getEtatEp02",
             "include2 1 1 1 1": "etatEp02out"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "siren-pni-s002"
     }
 }

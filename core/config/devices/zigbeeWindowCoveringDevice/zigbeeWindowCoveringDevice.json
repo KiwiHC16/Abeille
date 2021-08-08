@@ -1,14 +1,10 @@
 {
     "zigbeeWindowCoveringDevice": {
-        "nameJeedom": "zigbeeWindowCoveringDevice",
         "Comment": "Modele based on Ikea Store Fyrtur",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "zigbeeWindowCoveringDevice",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "zigbeeWindowCoveringDevice"
         },
         "Commandes": {
             "include1": "nom",
@@ -24,6 +20,10 @@
             "include22": "getModelIdentifier",
             "include23": "getSWBuild",
             "include25": "Group-Membership"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "zigbeeWindowCoveringDevice"
     }
 }

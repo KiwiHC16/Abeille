@@ -1,14 +1,10 @@
 {
     "ClassicA60Wclear-LIGHTIFY-2": {
-        "nameJeedom": "OSRAM Classic A60 W clear - LIGHTIFY - 2",
         "comment": "dummy version to be able to have the a new  icone as ClassicA60Wclear-Lightify",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "OSRAMClassicA60Wclear-LIGHTIFY-2",
-            "mainEP": "03"
+            "mainEP": "03",
+            "icon": "OSRAMClassicA60Wclear-LIGHTIFY-2"
         },
         "Commandes": {
             "include1": "nom",
@@ -28,6 +24,10 @@
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "OSRAM Classic A60 W clear - LIGHTIFY - 2"
     }
 }

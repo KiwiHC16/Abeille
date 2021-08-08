@@ -1,14 +1,10 @@
 {
     "MotionSensor-A": {
-        "nameJeedom": "Osram Motion Sensor-A",
         "timeout": "60",
-        "Categorie": {
-            "security": "1"
-        },
         "configuration": {
-            "icone": "MotionSensor-A",
             "battery_type": "1x3V CR2",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "MotionSensor-A"
         },
         "Commandes": {
             "include1": "SW",
@@ -21,6 +17,10 @@
             "include2 2": "setReportTemperature",
             "include4 2 2 2 3": "BindShortToZigateBatterie",
             "include4 2 2 2 2 2 2 2": "setReportBatterie"
-        }
+        },
+        "category": {
+            "security": "1"
+        },
+        "type": "Osram Motion Sensor-A"
     }
 }

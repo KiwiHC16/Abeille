@@ -1,15 +1,11 @@
 {
     "LCT010": {
-        "nameJeedom": "Phillips Hue LCT010 (Hue White and Color Ambiance A19 E26 (Gen 3)) ",
         "timeout": "60",
         "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1673",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "LCT010",
             "mainEP": "0B",
-            "poll": "1"
+            "poll": "1",
+            "icon": "LCT010"
         },
         "Commandes": {
             "include1": "nom",
@@ -50,6 +46,10 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Phillips Hue LCT010 (Hue White and Color Ambiance A19 E26 (Gen 3)) "
     }
 }

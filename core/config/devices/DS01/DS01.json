@@ -1,17 +1,13 @@
 {
     "DS01": {
-        "nameJeedom": "Sonoff SNZB-04 Wireless Door\/Window Sensor",
         "manufacturer": "Sonoff",
         "model": "SNZB-04",
         "timeout": "140",
         "Comment": "https:\/\/community.jeedom.com\/t\/sonoff-snzb-04-sur-zigate-et-abeille\/39336\/4",
-        "Categorie": {
-            "security": "1"
-        },
         "configuration": {
-            "icone": "SNZB-04",
             "battery_type": "1x3V CR2032",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "SNZB-04"
         },
         "Commandes": {
             "include2": "nom",
@@ -19,6 +15,10 @@
             "include2 3 2": "Batterie-Pourcent-Heiman",
             "include2 2 2": "BindToPowerConfig",
             "include2 2 2 3": "setReportBatterie"
-        }
+        },
+        "category": {
+            "security": "1"
+        },
+        "type": "Sonoff SNZB-04 Wireless Door\/Window Sensor"
     }
 }

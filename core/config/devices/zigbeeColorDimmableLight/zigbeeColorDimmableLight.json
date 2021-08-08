@@ -1,14 +1,10 @@
 {
     "zigbeeColorDimmableLight": {
-        "nameJeedom": "Template for ZigBee - Color Dimmable Light",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "zigbeeColorDimmableLight",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "zigbeeColorDimmableLight"
         },
         "Commandes": {
             "include1": "nom",
@@ -49,6 +45,10 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Template for ZigBee - Color Dimmable Light"
     }
 }

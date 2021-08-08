@@ -1,14 +1,10 @@
 {
     "LLC011": {
-        "nameJeedom": "Hue living-Colors bloom",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "ColorsBloom",
             "mainEP": "0B",
-            "poll": "1"
+            "poll": "1",
+            "icon": "ColorsBloom"
         },
         "Commandes": {
             "include1": "nom",
@@ -49,6 +45,10 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Hue living-Colors bloom"
     }
 }

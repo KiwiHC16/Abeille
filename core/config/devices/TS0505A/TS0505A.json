@@ -1,14 +1,10 @@
 {
     "TS0505A": {
-        "nameJeedom": "Silvercrest Ruban a LED",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "FlexRGBW",
             "mainEP": "03",
-            "poll": "1"
+            "poll": "1",
+            "icon": "FlexRGBW"
         },
         "Commandes": {
             "include1": "nom",
@@ -54,6 +50,10 @@
             "include39": "5000K",
             "include40": "temperatureLight",
             "include40 2 2": "setTemperatureLight_1700_4900"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Silvercrest Ruban a LED"
     }
 }

@@ -1,13 +1,9 @@
 {
     "FYRTURblock-outrollerblind": {
-        "nameJeedom": "FYRTUR blind",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "FYRTURblock-outrollerblind",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "FYRTURblock-outrollerblind"
         },
         "Commandes": {
             "include1": "nom",
@@ -25,6 +21,10 @@
             "include25 2": "WindowsCoveringLevel",
             "include25 2 2": "WindowsCoveringGetLevel",
             "include25 2 2 2": "WindowsCoveringGoToLevel"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "FYRTUR blind"
     }
 }

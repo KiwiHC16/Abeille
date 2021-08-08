@@ -1,13 +1,9 @@
 {
     "TS0111": {
-        "nameJeedom": "Vanne Zigbee ",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "TS0111",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TS0111"
         },
         "Commandes": {
             "include1": "SW",
@@ -22,6 +18,10 @@
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier",
             "include13 2": "Group-Membership"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Vanne Zigbee "
     }
 }

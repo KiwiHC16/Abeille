@@ -1,15 +1,11 @@
 {
     "SmokeSensor-EF-3.0": {
-        "nameJeedom": "Humein Smoke Sensor HS1SA-E",
         "timeout": "60",
         "Comment": "Copy of Heiman Smoke Sensor (SmokeSensor-EM) : Detecteur de fum\u00e9e HEIMAN HS1SA-E\n#1500",
-        "Categorie": {
-            "security": "1"
-        },
         "configuration": {
-            "icone": "SmokeSensor-EM",
             "battery_type": "1x3V CR17335 ou 1x3V CR123A",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "SmokeSensor-EM"
         },
         "Commandes": {
             "include1": "SW",
@@ -21,6 +17,10 @@
             "include11": "setReportBatterie",
             "include10 2": "BindShortToSmokeHeiman",
             "include11 2": "setReportSmokeHeiman"
-        }
+        },
+        "category": {
+            "security": "1"
+        },
+        "type": "Humein Smoke Sensor HS1SA-E"
     }
 }

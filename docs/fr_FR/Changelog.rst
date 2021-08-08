@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+- JSON équipement: tous mis à jour.
+  - 'Categorie' remplacé par 'category'.
+  - 'nameJeedom' remplacé par 'type'.
+  - 'configuration:icone' remplacé par 'configuration:icon'.
+
 210722-BETA-1
 ----------
 

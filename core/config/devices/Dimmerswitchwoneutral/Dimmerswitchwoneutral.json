@@ -1,13 +1,9 @@
 {
     "Dimmerswitchwoneutral": {
-        "nameJeedom": "Legrand Dimmer Switch w\/o neutral",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "Dimmerswitchwoneutral",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "Dimmerswitchwoneutral"
         },
         "Commandes": {
             "include1": "nom",
@@ -32,6 +28,10 @@
             "include29": "setReportLevel",
             "include29 2": "setLegrandDimmerOn",
             "include29 2 2": "setLegrandDimmerOff"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Legrand Dimmer Switch w\/o neutral"
     }
 }

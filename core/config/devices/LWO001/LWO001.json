@@ -1,14 +1,10 @@
 {
     "LWO001": {
-        "nameJeedom": "Philips Hue White E27 Globe",
         "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1097",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "LWO001",
-            "mainEP": "0B"
+            "mainEP": "0B",
+            "icon": "LWO001"
         },
         "Commandes": {
             "include1": "nom",
@@ -31,6 +27,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Philips Hue White E27 Globe"
     }
 }

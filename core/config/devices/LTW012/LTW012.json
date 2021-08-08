@@ -1,14 +1,10 @@
 {
     "LTW012": {
-        "nameJeedom": "Ampoule e14 Philips Hue White ambiance 6w 2200-6500k 470lm 55ma ",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "LTW012",
             "mainEP": "0B",
-            "poll": "1"
+            "poll": "1",
+            "icon": "LTW012"
         },
         "Commandes": {
             "include1": "nom",
@@ -36,6 +32,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Ampoule e14 Philips Hue White ambiance 6w 2200-6500k 470lm 55ma "
     }
 }

@@ -1,14 +1,10 @@
 {
     "TS0115__TYZB01_vkwryfdr": {
-        "nameJeedom": "ZigBee Smart multiprise 16A EU 4p 2USB",
         "timeout": "60",
         "Comment": "https:\/\/fr.aliexpress.com\/item\/4001148859962.html?spm=a2g0s.9042311.0.0.36c76c37kTDh6I",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "TS0003",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TS0003"
         },
         "Commandes": {
             "include1": "SW",
@@ -32,6 +28,10 @@
             "include14": "getEtat",
             "include15": "getManufacturerName",
             "include16": "getModelIdentifier"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "ZigBee Smart multiprise 16A EU 4p 2USB"
     }
 }

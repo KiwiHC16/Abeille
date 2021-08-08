@@ -1,19 +1,14 @@
 {
     "TS0121__TZ3000_rdtixbnu": {
-        "nameJeedom": "Tuya smart socket",
         "manufacturer": "Tuya",
         "model": "Generic smart socket",
         "zgManufacturer": "_TZ3000_rdtixbnu",
         "timeout": "60",
         "Comment": "",
-        "Categorie": {
-            "automatism": "1",
-            "energy": "1"
-        },
         "configuration": {
-            "icone": "TuyaSmartSocket",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "TuyaSmartSocket"
         },
         "Commandes": {
             "include0004-1": "Group-Membership",
@@ -32,6 +27,11 @@
             "include0B04-3": "zb-0B04-RMSCurrent",
             "include0B04-4": "zb-0B04-ActivePower",
             "include0B04-5": "getPlugVAW"
-        }
+        },
+        "category": {
+            "automatism": "1",
+            "energy": "1"
+        },
+        "type": "Tuya smart socket"
     }
 }

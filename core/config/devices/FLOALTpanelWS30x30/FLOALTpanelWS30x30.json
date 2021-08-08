@@ -1,14 +1,10 @@
 {
     "FLOALTpanelWS30x30": {
-        "nameJeedom": "IKEA Panneau TRADFRI FLOALT White Spectre 2800 lm",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "FLOALTpanelWS60x60",
             "mainEP": "01",
-            "poll": "0"
+            "poll": "0",
+            "icon": "FLOALTpanelWS60x60"
         },
         "Commandes": {
             "include1": "nom",
@@ -35,6 +31,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "IKEA Panneau TRADFRI FLOALT White Spectre 2800 lm"
     }
 }

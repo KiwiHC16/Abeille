@@ -1,13 +1,9 @@
 {
     "ZLO-ExtendedColor": {
-        "nameJeedom": "ZLO-ExtendedColor Test for Dev",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "ZLO-ExtendedColor",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "ZLO-ExtendedColor"
         },
         "Commandes": {
             "include1": "nom",
@@ -46,6 +42,10 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "ZLO-ExtendedColor Test for Dev"
     }
 }

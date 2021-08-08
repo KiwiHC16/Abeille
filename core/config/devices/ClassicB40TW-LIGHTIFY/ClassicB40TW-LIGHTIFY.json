@@ -1,16 +1,12 @@
 {
     "ClassicB40TW-LIGHTIFY": {
-        "nameJeedom": "ClassicB40TW-LIGHTIFY",
         "manufacturer": "Osram",
         "model": "B40TW",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "OSRAMClassicE27Dimmable",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "OSRAMClassicE27Dimmable"
         },
         "Commandes": {
             "include1": "nom",
@@ -35,6 +31,10 @@
             "include29": "setReportLevel",
             "include30": "2000K",
             "include31": "6500K"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "ClassicB40TW-LIGHTIFY"
     }
 }

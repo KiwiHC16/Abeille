@@ -1,23 +1,23 @@
 {
     "3AFE170100510001": {
-        "nameJeedom": "Konke Multi-function Button",
         "manufacturer": "Konke",
-        "comment": "https://zigbee.blakadder.com/Konke_KPKEY.html",
+        "comment": "https:\/\/zigbee.blakadder.com\/Konke_KPKEY.html",
         "timeout": "60",
         "battery_type": "1x3V CR2450",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "3AFE170100510001",
             "battery_type": "1x3V CR2450",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "3AFE170100510001"
         },
         "Commandes": {
             "include1": "SW",
             "include2": "nom",
             "include2 2": "etatSwitchKonke",
             "include4 2": "Batterie-Volt-Konke"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Konke Multi-function Button"
     }
 }

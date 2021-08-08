@@ -1,15 +1,11 @@
 {
     "BASICZBR3": {
-        "nameJeedom": "Sonoff BASICZBR3 DIY smart switch",
         "manufacturer": "Sonoff",
         "model": "BASICZBR3",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "BASICZBR3",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "BASICZBR3"
         },
         "Commandes": {
             "include1": "SW",
@@ -23,6 +19,10 @@
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier",
             "include13 2": "Group-Membership"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Sonoff BASICZBR3 DIY smart switch"
     }
 }

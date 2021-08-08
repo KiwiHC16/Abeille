@@ -1,23 +1,23 @@
 {
     "TS004F__TZ3000_xabckq1v": {
-        "nameJeedom": "4 buttons light switch",
         "timeout": "60",
         "manufacturer": "Tuya",
         "model": "ESW-0ZAA-EU",
         "comment": "https:\/\/expo.tuya.com\/product\/785025#detail, battery CR2430 3V",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "Tuya4ButtonsSwitch",
             "mainEP": "01",
-            "battery_type": "1x CR2430 3V"
+            "battery_type": "1x CR2430 3V",
+            "icon": "Tuya4ButtonsSwitch"
         },
         "Commandes": {
             "include0004-1": "Group-Membership",
             "include0006-1": "On",
             "include0006-2": "Off",
             "include4": "etatLight"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "4 buttons light switch"
     }
 }

@@ -1,15 +1,11 @@
 {
     "LCA001": {
-        "nameJeedom": "ampoule philips hue couleur",
         "timeout": "60",
         "Comment": "",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "LCT015",
             "mainEP": "0B",
-            "poll": "1"
+            "poll": "1",
+            "icon": "LCT015"
         },
         "Commandes": {
             "include1": "nom",
@@ -56,6 +52,10 @@
             "include40": "temperatureLight2",
             "include40 2 2": "setTemperatureLight2",
             "include41": "5000K"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "ampoule philips hue couleur"
     }
 }

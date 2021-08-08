@@ -1,14 +1,10 @@
 {
     "TS0003": {
-        "nameJeedom": "Zemismart 3 boutons",
         "timeout": "60",
         "Comment": "",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "TS0003",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TS0003"
         },
         "Commandes": {
             "include1": "SW",
@@ -29,6 +25,10 @@
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Zemismart 3 boutons"
     }
 }

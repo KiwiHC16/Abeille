@@ -1,15 +1,11 @@
 {
     "remote.b186acn02": {
-        "nameJeedom": "Xiaomi Interrupteur Mural Carr\u00e9 Simple",
         "timeout": "60",
         "Commentaire": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1808",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "XiaomiButtonb186acn02",
             "battery_type": "1x3V CR2032",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "XiaomiButtonb186acn02"
         },
         "Commandes": {
             "include1": "SW",
@@ -20,6 +16,10 @@
             "include4 3 2": "etatSwitchDoubleb286acn01_3",
             "include4 2": "Batterie-Volt",
             "include5": "Batterie-Pourcent"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Interrupteur Mural Carr\u00e9 Simple"
     }
 }

@@ -1,14 +1,10 @@
 {
     "zigbeeDimmableLight": {
-        "nameJeedom": "Template for ZigBee - Dimmable Light",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "zigbeeDimmablelight",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "zigbeeDimmablelight"
         },
         "Commandes": {
             "include1": "nom",
@@ -31,6 +27,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Template for ZigBee - Dimmable Light"
     }
 }

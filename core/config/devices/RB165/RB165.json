@@ -1,15 +1,11 @@
 {
     "RB165": {
-        "nameJeedom": "Innr RB165 dimmable white bulb E27",
         "manufacturer": "Innr",
         "model": "RB165",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "defaultUnknown",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "defaultUnknown"
         },
         "Commandes": {
             "include4": "etat",
@@ -27,6 +23,10 @@
             "include300-3": "2200K",
             "include300-4": "2700K",
             "include300-5": "4000K"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Innr RB165 dimmable white bulb E27"
     }
 }

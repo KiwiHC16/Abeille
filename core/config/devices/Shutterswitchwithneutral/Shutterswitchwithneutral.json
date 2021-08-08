@@ -1,13 +1,9 @@
 {
     "Shutterswitchwithneutral": {
-        "nameJeedom": "Shutter switch with neutral",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "Shutterswitchwithneutral",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "Shutterswitchwithneutral"
         },
         "Commandes": {
             "include1": "nom",
@@ -25,6 +21,10 @@
             "include25": "Group-Membership",
             "include27": "BindToZigateCurrent_Position_Lift_Percentage",
             "include29": "setReportCurrent_Position_Lift_Percentage"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Shutter switch with neutral"
     }
 }

@@ -1,14 +1,10 @@
 {
     "defaultUnknown": {
-        "nameJeedom": "defaultUnknown",
         "timeout": "60",
-        "Categorie": {
-            "security": "1"
-        },
         "configuration": {
-            "icone": "defaultUnknown",
             "mainEP": "01",
-            "poll": "0"
+            "poll": "0",
+            "icon": "defaultUnknown"
         },
         "Commandes": {
             "include1": "nom",
@@ -18,6 +14,10 @@
             "include22": "getModelIdentifier",
             "include23": "getSWBuild",
             "include24": "Identify"
-        }
+        },
+        "category": {
+            "security": "1"
+        },
+        "type": "defaultUnknown"
     }
 }

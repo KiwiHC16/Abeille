@@ -2,7 +2,7 @@
 
 ## Plugin pour Jeedom (Gateway ZiGate)
 
-Plugin qui permet de piloter un réseau ZigBee depuis Jeedom par l'intermédiaire de la passerelle ZiGate.
+Plugin pour Jeedom permettant de piloter un réseau ZigBee une passerelle ZiGate.
 
 ## Documentations
 

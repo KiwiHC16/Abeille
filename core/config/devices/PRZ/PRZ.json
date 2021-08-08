@@ -1,14 +1,10 @@
 {
     "PRZ": {
-        "nameJeedom": "PROFALUX Light",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "ProfaluxLigthModule",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "ProfaluxLigthModule"
         },
         "Commandes": {
             "include1": "nom",
@@ -28,6 +24,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "PROFALUX Light"
     }
 }

@@ -1,15 +1,11 @@
 {
     "TRADFRIsignalrepeater": {
-        "nameJeedom": "TRADFRI signal repeater",
         "Comment": "https:\/\/www.ikea.com\/fr\/fr\/catalog\/products\/10400408\/",
         "Comment 1": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/689",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "TRADFRIsignalrepeater",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TRADFRIsignalrepeater"
         },
         "Commandes": {
             "include1": "nom",
@@ -18,6 +14,10 @@
             "include21": "getManufacturerName",
             "include22": "getModelIdentifier",
             "include23": "getSWBuild"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "TRADFRI signal repeater"
     }
 }

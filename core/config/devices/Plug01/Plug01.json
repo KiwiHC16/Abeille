@@ -1,13 +1,9 @@
 {
     "Plug01": {
-        "nameJeedom": "OSRAM Prise Lightify",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "OsramLightify",
-            "mainEP": "03"
+            "mainEP": "03",
+            "icon": "OsramLightify"
         },
         "Commandes": {
             "include1": "SW",
@@ -25,6 +21,10 @@
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "OSRAM Prise Lightify"
     }
 }

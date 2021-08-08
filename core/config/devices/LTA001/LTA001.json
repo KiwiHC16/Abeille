@@ -1,14 +1,10 @@
 {
     "LTA001": {
-        "nameJeedom": "Philips Hue Ampoules LED Connect\u00e9es White Ambiance E27",
         "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1052",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "LTA001",
-            "mainEP": "0B"
+            "mainEP": "0B",
+            "icon": "LTA001"
         },
         "Commandes": {
             "include1": "nom",
@@ -31,6 +27,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Philips Hue Ampoules LED Connect\u00e9es White Ambiance E27"
     }
 }

@@ -1,18 +1,18 @@
 {
     "TS": {
-        "nameJeedom": "Profalux t\u00e9l\u00e9commande",
         "manufacturer": "Profalux",
         "model": "T\u00e9lecommande",
         "comment": "S'annonce mais a ignorer. On ne peut rien faire avec",
         "isVisible": 0,
-        "Categorie": {
+        "configuration": {
+            "mainEP": "01",
+            "battery_type": "2x1.5V AAA",
+            "icon": "ProfaluxTelecommande"
+        },
+        "Commandes": [],
+        "category": {
             "automatism": "1"
         },
-        "configuration": {
-            "icone": "ProfaluxTelecommande",
-            "mainEP": "01",
-            "battery_type": "2x1.5V AAA"
-        },
-        "Commandes": []
+        "type": "Profalux t\u00e9l\u00e9commande"
     }
 }

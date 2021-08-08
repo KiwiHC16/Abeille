@@ -1,14 +1,10 @@
 {
     "511.201": {
-        "nameJeedom": "511.201 Iluminize",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "511.201",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "511.201"
         },
         "Commandes": {
             "include1": "nom",
@@ -31,6 +27,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "511.201 Iluminize"
     }
 }

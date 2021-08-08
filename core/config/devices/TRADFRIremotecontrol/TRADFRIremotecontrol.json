@@ -1,17 +1,13 @@
 {
     "TRADFRIremotecontrol": {
-        "nameJeedom": "IKEA TRADFRI Rond 5 Boutons Remote Control",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "IkeaTradfri5BtnRond",
             "battery_type": "1x3V CR2032",
             "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "paramType": "telecommande",
-            "paramBatterie": "true"
+            "paramBatterie": "true",
+            "icon": "IkeaTradfri5BtnRond"
         },
         "Commandes": {
             "include1": "offGroup",
@@ -37,6 +33,10 @@
             "include11 2 2 2 2 2 2 2": "RougeGroup",
             "include11 2 2 2 2 2 2 2 2": "VertGroup",
             "include11 2 2 2 2 2 2 2 2 2": "IkeaTeleCmdLeftRigth"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "IKEA TRADFRI Rond 5 Boutons Remote Control"
     }
 }

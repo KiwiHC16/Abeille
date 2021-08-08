@@ -214,7 +214,7 @@ class Abeille extends eqLogic
      *
      * @return test   title/decription of the test
      * @return result test result
-     * @return advice comment by question mark icone
+     * @return advice comment by question mark icon
      * @return state  if the test was successful or not
      */
     public static function health()
@@ -231,7 +231,7 @@ class Abeille extends eqLogic
         $return[] = array(
             'test' => 'Ports: ',             // title of the line
             'result' => $result,             // Text which be printed in the line
-            'advice' => 'Ports utilisés',    // Text printed when mouse is on question mark icone
+            'advice' => 'Ports utilisés',    // Text printed when mouse is on question mark icon
             'state' => true,                // Status du plugin: true line will be green, false line will be red.
         );
 
@@ -2607,8 +2607,12 @@ while ($cron->running()) {
         $deviceConfig = AbeilleTools::getDeviceConfig($jsonName);
         // $deviceConfig = $deviceConfig[$jsonName]; // Removing top key
 
-        $eqType = $deviceConfig['nameJeedom'];
+        if (isset($deviceConfig['syntaxError'])) {
+            message::add("Abeille", "Erreurs de syntaxe dans JSON ".$jsonName, '');
+            return;
+        }
 
+        $eqType = $deviceConfig['type'];
         $elogic = self::byLogicalId($net."/".$addr, 'Abeille');
         if (!is_object($elogic)) {
             $newEq = true;
@@ -2674,8 +2678,6 @@ while ($cron->running()) {
         if ($newEq) { // Update icon only if new device
             if (isset($objetConfiguration["icon"]))
                 $icon = $objetConfiguration["icon"];
-            else if (isset($objetConfiguration["icone"])) // Old naming support
-                $icon = $objetConfiguration["icone"];
             else
                 $icon = '';
             $elogic->setConfiguration('icone', $icon);
@@ -2740,11 +2742,8 @@ while ($cron->running()) {
         if (isset($deviceConfig["timeout"]))
             $elogic->setTimeout($deviceConfig["timeout"]);
 
-        if ($newEq) { // Update category only if new device
-            if (isset($deviceConfig["category"]))
-                $categories = $deviceConfig["category"];
-            else if (isset($deviceConfig["Categorie"])) // Old name support
-                $categories = $deviceConfig["Categorie"];
+        if ($newEq && isset($deviceConfig["category"])) { // Update category only if new device
+            $categories = $deviceConfig["category"];
             // $elogic->setCategory(array_keys($deviceConfig["Categorie"])[0], $deviceConfig["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
             $allCat = ["heating","security","energy","light","opening","automatism","multimedia","default"];
             foreach ($allCat as $cat) { // Clear all

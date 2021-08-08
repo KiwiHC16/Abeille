@@ -1,19 +1,19 @@
 {
     "zigbeeNon-colorscenecontroller": {
-        "nameJeedom": "Template for ZigBee - Non Color Scene Controller",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "zigbeeNon-colorscenecontroller",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "zigbeeNon-colorscenecontroller"
         },
         "Commandes": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Template for ZigBee - Non Color Scene Controller"
     }
 }

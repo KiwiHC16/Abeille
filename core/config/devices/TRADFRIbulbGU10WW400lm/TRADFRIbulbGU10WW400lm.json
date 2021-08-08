@@ -1,13 +1,9 @@
 {
     "TRADFRIbulbGU10WW400lm": {
-        "nameJeedom": "IKEA Ampoule TRADFRI bulb GU10 W 400lm",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
             "mainEP": "01",
-            "icone": "IkeaTradfriBulbGU10W400lm"
+            "icon": "IkeaTradfriBulbGU10W400lm"
         },
         "Commandes": {
             "include1": "nom",
@@ -30,6 +26,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "IKEA Ampoule TRADFRI bulb GU10 W 400lm"
     }
 }

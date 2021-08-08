@@ -1,13 +1,9 @@
 {
     "zigbeeOnOffLight": {
-        "nameJeedom": "zigbeeOnOffLight",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "zigbeeOnOffLight",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "zigbeeOnOffLight"
         },
         "Commandes": {
             "include1": "SW",
@@ -20,6 +16,10 @@
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "zigbeeOnOffLight"
     }
 }

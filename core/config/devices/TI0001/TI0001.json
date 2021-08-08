@@ -1,14 +1,10 @@
 {
     "TI0001": {
-        "nameJeedom": "Livolo Switch TI0001",
         "timeout": "80",
         "Comment": "Reference: ",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "TI0001",
-            "mainEP": "06"
+            "mainEP": "06",
+            "icon": "TI0001"
         },
         "Commandes": {
             "include1": "nom",
@@ -33,6 +29,10 @@
             "include8 2 2 2 2 2": "BindToZigateLevel",
             "include8 2 2 2 2 2 2": "setReportEtat",
             "include8 2 2 2 2 2 2 2": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Livolo Switch TI0001"
     }
 }

@@ -46,10 +46,20 @@
         }
         // echo "dev=".json_encode($dev)."\n";
 
-        if (!isset($dev[$devName]['Categorie'])) {
-            newDevError($devName, "ERROR", "No 'Categorie' defined");
+        if (!isset($dev[$devName]['type'])) {
+            if (isset($dev[$devName]['nameJeedom']))
+                newDevError($devName, "ERROR", "'nameJeedom' is obsolete. Use 'type' instead");
+            else
+                newDevError($devName, "ERROR", "No equipment 'type' defined");
+        }
+
+        if (!isset($dev[$devName]['category'])) {
+            if (isset($dev[$devName]['Categorie']))
+                newDevError($devName, "ERROR", "'Categorie' is obsolete. Use 'category' instead");
+            else
+                newDevError($devName, "ERROR", "No 'category' defined");
         } else {
-            $allCats = $dev[$devName]['Categorie'];
+            $allCats = $dev[$devName]['category'];
             $allowed = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'other'];
             foreach($allCats as $cat => $catEn) {
                 if (in_array($cat, $allowed))
@@ -62,12 +72,25 @@
             newDevError($devName, "WARNING", "No configuration defined");
         } else {
             $config = $dev[$devName]['configuration'];
-            if (isset($config['icone'])) {
-                $icon = "images/node_".$config['icone'].".png";
+
+            /* Checking icon */
+            $icon = "";
+            if (!isset($config['icon'])) {
+                if (isset($config['icone'])) {
+                    newDevError($devName, "ERROR", "'icone' is obsolete. Use 'icon' instead.");
+                    $icon = $config['icone'];
+                }
+            } else
+                $icon = $config['icon'];
+            if ($icon == "")
+                newDevError($devName, "ERROR", "No 'icon' defined.");
+            else {
+                $icon = "images/node_".$icon.".png";
                 if (!file_exists($icon)) {
-                    newDevError($devName, "ERROR", "Missing icon '".$icon."'");
+                    newDevError($devName, "ERROR", "Missing icon '".$icon."' file.");
                 }
             }
+
             if (!isset($config['mainEP']))
                 newDevError($devName, "ERROR", "Missing 'configuration:mainEP'");
             else if (!ctype_xdigit($config['mainEP']))

@@ -1,32 +1,31 @@
 {
-  "plug.mmeu01": {
-    "nameJeedom": "Xiaomi Prise EU",
-    "timeout": "60",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "uniqId": "5c07c76625d9",
-      "icone": "XiaomiPriseEU",
-      "mainEP": "#EP#"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "societe",
-      "include3": "nom",
-      "include4": "etat",
-      "include5": "On",
-      "include6": "Off",
-      "include7": "Toggle",
-      "include8": "getEtat",
-      "include9": "getManufacturerName",
-      "include10": "getModelIdentifier",
-      "include13": "puissanceEP15",
-      "include13 2": "conso",
-      "include13 2 2": "VoltagePrise",
-      "include13 2 2 2": "CurrentPrise_mA",
-      "include13 2 2 2 2": "temperaturePrise",
-      "include25": "Group-Membership"
+    "plug.mmeu01": {
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "XiaomiPriseEU"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "societe",
+            "include3": "nom",
+            "include4": "etat",
+            "include5": "On",
+            "include6": "Off",
+            "include7": "Toggle",
+            "include8": "getEtat",
+            "include9": "getManufacturerName",
+            "include10": "getModelIdentifier",
+            "include13": "puissanceEP15",
+            "include13 2": "conso",
+            "include13 2 2": "VoltagePrise",
+            "include13 2 2 2": "CurrentPrise_mA",
+            "include13 2 2 2 2": "temperaturePrise",
+            "include25": "Group-Membership"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Prise EU"
     }
-  }
 }

@@ -1,16 +1,12 @@
 {
     "remotecontrol": {
-        "nameJeedom": "Virtual remote for groups control",
         "timeout": "",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "remotecontrol",
             "battery_type": "",
             "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
-            "paramType": "telecommande"
+            "paramType": "telecommande",
+            "icon": "remotecontrol"
         },
         "Commandes": {
             "include1": "offGroup",
@@ -31,6 +27,10 @@
             "include11 2 2 2 2 2 2": "BleuGroup",
             "include11 2 2 2 2 2 2 2": "RougeGroup",
             "include11 2 2 2 2 2 2 2 2": "VertGroup"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Virtual remote for groups control"
     }
 }

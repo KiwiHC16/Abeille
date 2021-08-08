@@ -39,7 +39,7 @@ class AbeilleTemplateEq {
     public static function getNameJeedomFromTemplate( $uniqId ) {
         $jsonArray = self::getJsonForUniqId( $uniqId );
         foreach ( $jsonArray as $key=>$data ) {
-            return $jsonArray[$key]["nameJeedom"];
+            return $jsonArray[$key]["type"];
         }
     }
 
@@ -65,7 +65,7 @@ class AbeilleTemplateEq {
    public static function getCategorieFromTemplate( $uniqId ) {
        $jsonArray = AbeilleTemplateCommon::getJsonForUniqId( $uniqId );
        foreach ( $jsonArray as $key=>$data ) {
-           return $jsonArray[$key]["Categorie"];
+           return $jsonArray[$key]["category"];
        }
    }
 

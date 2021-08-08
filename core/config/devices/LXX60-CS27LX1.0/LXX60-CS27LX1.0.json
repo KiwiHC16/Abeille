@@ -1,29 +1,25 @@
 {
-  "LXX60-CS27LX1.0": {
-    "nameJeedom": "Zemismart ZW-EC-01 curtain switch",
-    "manufacturer": "Zemismart",
-    "model": "ZW-EC-01",
-    "timeout": "",
-    "Categorie": {
-      "automatism": "1"
-    },
-    "configuration": {
-      "icone": "LXX60-CS27LX1.0",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include0000-1": "societe",
-      "include0000-2": "nom",
-
-      "include0003-1": "Identify",
-
-      "include0004-1": "Group-Membership",
-
-      "include0006-3": "etat",
-
-      "include0102-1": "WindowsCoveringUp",
-      "include0102-2": "WindowsCoveringDown",
-      "include0102-3": "WindowsCoveringStop"
+    "LXX60-CS27LX1.0": {
+        "manufacturer": "Zemismart",
+        "model": "ZW-EC-01",
+        "timeout": "",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "LXX60-CS27LX1.0"
+        },
+        "Commandes": {
+            "include0000-1": "societe",
+            "include0000-2": "nom",
+            "include0003-1": "Identify",
+            "include0004-1": "Group-Membership",
+            "include0006-3": "etat",
+            "include0102-1": "WindowsCoveringUp",
+            "include0102-2": "WindowsCoveringDown",
+            "include0102-3": "WindowsCoveringStop"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Zemismart ZW-EC-01 curtain switch"
     }
-  }
 }

@@ -1,13 +1,9 @@
 {
     "Lamp_01": {
-        "nameJeedom": "ZigBee On Off Controller",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "Lamp_01",
-            "mainEP": "0B"
+            "mainEP": "0B",
+            "icon": "Lamp_01"
         },
         "Commandes": {
             "include1": "SW",
@@ -20,6 +16,10 @@
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "ZigBee On Off Controller"
     }
 }

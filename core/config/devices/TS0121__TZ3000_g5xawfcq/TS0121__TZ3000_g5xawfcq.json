@@ -1,15 +1,11 @@
 {
     "TS0121__TZ3000_g5xawfcq": {
-        "nameJeedom": "Blitzwolf-BW-SHP13",
         "timeout": "60",
         "Comment": "",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "Blitzwolf-BW-SHP13",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "Blitzwolf-BW-SHP13"
         },
         "Commandes": {
             "include1": "nom",
@@ -32,6 +28,10 @@
             "include3 2 2 2": "PuissanceLegrandPrise",
             "include3 2 2 2 3": "CurrentSummationDelivered",
             "include3 2 2 2 4 2 2": "getPlugVAW"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Blitzwolf-BW-SHP13"
     }
 }

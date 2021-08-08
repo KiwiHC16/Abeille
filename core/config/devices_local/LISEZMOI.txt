@@ -14,4 +14,84 @@ Pendant la phase d'inclusion, Abeille va chercher les modèles dans l'ordre suiv
 
 
 Ce répertoire doit suivre la structure
-    <modelIdentifier>/<modelIdentifier>.json
+    <identificateur>/<identificateur>.json
+
+Attention !! Voir 'identificateur' plus bas dans le format du fichier.
+
+Format de fichier
+=================
+
+Exemple: BASICZBR3.json
+
+  {
+    "BASICZBR3": {
+      "type": "Sonoff BASICZBR3 smart switch",
+      "manufacturer": "Sonoff",
+      "model": "BASICZBR3",
+      "timeout": "60",
+      "category": {
+        "automatism": "1"
+      },
+      "configuration": {
+        "icon": "BASICZBR3",
+        "mainEP": "01"
+      },
+      "commands": {
+        "include1": "SW",
+        "include2": "societe",
+        "include3": "nom",
+        "include4": "etat",
+        "include5": "On",
+        "include6": "Off",
+        "include7": "Toggle",
+        "include8": "getEtat",
+        "include9": "getManufacturerName",
+        "include10": "getModelIdentifier",
+        "include13 2": "Group-Membership"
+      }
+    }
+  }
+
+* Clef d'entrée/identificateur: OBLIGATOIRE, = nom du fichier sans extension (ex: BASICZBR3)
+  ATTENTION !! Cette partie est tres importante, surtout pour les équipements génériques qu'on peut retrouver sous differentes marques.
+  Mettre "TS0121" par ex donnera probablement lieu à une mauvaise identification de l'équipement.
+  Il est recommandé de combiner l'identifiant zigbee 'modele' avec celui du 'fabricant' => <zbModelId>_<zbManufId>
+
+* type: OBLIGATOIRE, courte description du type d'équipement
+  Anciennement "nameJeedom".
+
+* manufacturer: OBLIGATOIRE, nom du fabricant/vendeur
+
+* model: OBLIGATOIRE, ref/nom du modèle
+
+* zbManufacturer: identifiant zigbee du fabricant
+
+* timeout: délai (en min) au dela duquel l'équipement est considéré "mort" si aucune nouvelle de lui
+
+* category: OBLIGATOIRE, le ou les catégories auxquelles l'équipement appartient.
+  - light
+  - heating
+  - security
+  - energy
+  - automatism
+  - multimedia
+  - default
+
+* configuration: OBLIGATOIRE
+  - mainEP: OBLIGATOIRE SI au moins une des commandes utilise l'ancienne syntaxe "include"
+    Indique sur quel 'End Point' interroger l'équipement. Chaine hexa 2 caractères.
+  - batteryType: Description type de batterie si équipement sur piles/batteries.
+    Ex: "1x3V CR2430"
+  - icon: Nom de l'icone associé.
+    Ce nom correpond à un fichier PNG disponible dans "images" au format "node_<icon>.png"
+  - paramType: ?
+    "telecommande", "telecommande7groups"
+
+* commands: OBLIGATOIRE, liste des commandes implémentées
+  Nouvelle syntaxe:
+    "<nom_cmde_Jeedom>": { "use": "<nom_cmde_Abeille>", "params": "<xx=01&xy=0003>" }
+  Ancienne syntaxe obsolete:
+    Chaque include correspond à une commande de base existante dans 'core/config/commands'
+    - "include1":"cmd1",
+    - ...
+    - "includeX":"cmdX",

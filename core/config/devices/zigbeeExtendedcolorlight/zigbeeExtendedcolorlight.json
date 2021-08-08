@@ -1,14 +1,10 @@
 {
     "zigbeeExtendedcolorlight": {
-        "nameJeedom": "zigbee Extended color light",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "zigbeeExtendedcolorlight",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "zigbeeExtendedcolorlight"
         },
         "Commandes": {
             "include1": "nom",
@@ -49,6 +45,10 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "zigbee Extended color light"
     }
 }

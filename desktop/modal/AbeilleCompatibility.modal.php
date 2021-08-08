@@ -28,7 +28,7 @@
             echo '<td>'.$eq['model'].'</td>';
             echo '<td>'.$eq['name'].'</td>';
             echo '<td><a href="'.urlProducts.'/'.$eq['zbModelId'].'">'.$eq['zbModelId'].'</a></td>';
-            echo '<td><img src="/plugins/Abeille/images/node_'.$eq['icone'].'.png" width="100" height="100"></td>';
+            echo '<td><img src="/plugins/Abeille/images/node_'.$eq['icon'].'.png" width="100" height="100"></td>';
             echo '</tr>'."\n";
         }
         echo "</table>";
@@ -68,7 +68,7 @@
 
         echo '[cols="<,^"]'."\n";
         echo "|======="."\n";;
-        foreach ( $eqList as $values ) echo '| '.$values['name'].'| image:node_'.$values['icone'].'.png[height=200,width=200]'."\n";
+        foreach ( $eqList as $values ) echo '| '.$values['name'].'| image:node_'.$values['icon'].'.png[height=200,width=200]'."\n";
         echo "|======="."\n";;
     }
 
@@ -102,7 +102,7 @@
             echo "  name  : ".$eq['name']."\n";
 
             addToFile(rstFile, $eq['manufacturer'].", ".$eq['model'].", ".$eq['name']."\n\n");
-            addToFile(rstFile, ".. image:: images/node_".$eq['icone'].".png\n");
+            addToFile(rstFile, ".. image:: images/node_".$eq['icon'].".png\n");
             addToFile(rstFile, "   :width: 200px\n\n");
         }
     }
@@ -128,18 +128,22 @@
             'manufacturer' => $content[$zbModelId]["manufacturer"],
             'model' => $content[$zbModelId]["model"],
             'zbModelId' => $zbModelId,
-            'name' => $content[$zbModelId]["nameJeedom"],
-            'icone' => $content[$zbModelId]["configuration"]["icone"]
+            'name' => $content[$zbModelId]["type"],
+            'icon' => $content[$zbModelId]["configuration"]["icon"]
         );
 
         // Collect all information related to Command used by the products
-        foreach ( $content[$zbModelId]['Commandes'] as $include ) {
+        if (isset($content[$zbModelId]['commands']))
+            $commands = $content[$zbModelId]['commands'];
+        else if (isset($content[$zbModelId]['Commandes']))
+            $commands = $content[$zbModelId]['Commandes'];
+        foreach ($commands as $include) {
             $resultRaw[] = array(
                 'zbModelId' => $zbModelId,
-                'name' => $content[$zbModelId]["nameJeedom"],
+                'name' => $content[$zbModelId]["type"],
                 'fonction' => $include
             );
-            $result[] = "<tr><td>".$content[$zbModelId]["nameJeedom"]."</td><td>".$zbModelId."</td><td>".$include."</td></tr>";
+            $result[] = "<tr><td>".$content[$zbModelId]["type"]."</td><td>".$zbModelId."</td><td>".$include."</td></tr>";
         }
     }
 

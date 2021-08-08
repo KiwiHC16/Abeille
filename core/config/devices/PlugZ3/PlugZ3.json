@@ -1,15 +1,11 @@
 {
     "PlugZ3": {
-        "nameJeedom": "Ledvance Plug Z3 on\/off plug unit",
         "manufacturer": "Ledvance",
         "model": "Plug Z3",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "PlugZ3",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "PlugZ3"
         },
         "Commandes": {
             "include1": "SW",
@@ -25,6 +21,10 @@
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Ledvance Plug Z3 on\/off plug unit"
     }
 }

@@ -1,17 +1,13 @@
 {
     "RWL021": {
-        "nameJeedom": "Hue Dimmer Switch RWL021",
         "manufacturer": "Philips",
         "model": "RWL021",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
             "battery_type": "1x3V CR2032",
             "lastCommunicationTimeOut": "-1",
-            "icone": "RWL021",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "RWL021"
         },
         "Commandes": {
             "include1": "offGroup",
@@ -32,6 +28,10 @@
             "include9 a tester": "getBattery",
             "include10 a tester": "BindShortToZigateBatterie",
             "include11 a tester": "setReportBatterie"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Hue Dimmer Switch RWL021"
     }
 }

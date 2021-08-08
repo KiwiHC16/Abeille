@@ -1,16 +1,12 @@
 {
     "ZB-CL01": {
-        "nameJeedom": "Tuya smart light GU10",
         "manufacturer": "eWeLight",
         "model": "smart bulb",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "ZB-CL01",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "ZB-CL01"
         },
         "Commandes": {
             "include1": "nom",
@@ -56,6 +52,10 @@
             "include39": "4000K",
             "include40": "temperatureLight",
             "include40 2 2": "setTemperatureLight"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Tuya smart light GU10"
     }
 }

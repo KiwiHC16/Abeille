@@ -1,13 +1,9 @@
 {
     "TY0A01": {
-        "nameJeedom": "Wima Lock",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "TY0A01",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TY0A01"
         },
         "Commandes": {
             "include1": "SW",
@@ -15,6 +11,10 @@
             "include3": "nom",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Wima Lock"
     }
 }

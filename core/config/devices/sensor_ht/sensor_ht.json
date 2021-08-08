@@ -1,15 +1,11 @@
 {
     "sensor_ht": {
-        "nameJeedom": "Xiaomi Temperature Rond",
         "timeout": "60",
-        "Categorie": {
-            "heating": "1"
-        },
         "configuration": {
-            "icone": "XiaomiTemperatureRond",
             "battery_type": "1x3V CR2032",
             "lastCommunicationTimeOut": "-1",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "XiaomiTemperatureRond"
         },
         "Commandes": {
             "include1": "SW",
@@ -19,6 +15,10 @@
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",
             "include7": "Xiaomi-ff01"
-        }
+        },
+        "category": {
+            "heating": "1"
+        },
+        "type": "Xiaomi Temperature Rond"
     }
 }

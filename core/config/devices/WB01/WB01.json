@@ -1,17 +1,13 @@
 {
     "WB01": {
-        "nameJeedom": "Sonoff SNZB-01 wireless button",
         "manufacturer": "Sonoff",
         "model": "SNZB-01",
         "timeout": "60",
         "battery_type": "1xCR2032",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "SNZB-01",
             "battery_type": "1x3V CR2450",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "SNZB-01"
         },
         "Commandes": {
             "include2": "nom",
@@ -20,6 +16,10 @@
             "include2 3 2": "Batterie-Pourcent-Heiman",
             "include2 2 2": "BindToPowerConfig",
             "include2 2 2 3": "setReportBatterie"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Sonoff SNZB-01 wireless button"
     }
 }

@@ -1,15 +1,11 @@
 {
     "A60TWZ3": {
-        "nameJeedom": "Ampoule Ledvance Classic E27 Tunable White",
         "timeout": "60",
         "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1533",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "A60TWZ3",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "A60TWZ3"
         },
         "Commandes": {
             "include1": "nom",
@@ -38,6 +34,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Ampoule Ledvance Classic E27 Tunable White"
     }
 }

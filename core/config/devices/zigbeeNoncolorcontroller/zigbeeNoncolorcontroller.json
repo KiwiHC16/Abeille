@@ -1,14 +1,10 @@
 {
     "zigbeeNoncolorcontroller": {
-        "nameJeedom": "zigbee Non color controller",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "zigbeeNoncolorcontroller",
             "lastCommunicationTimeOut": "-1",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "zigbeeNoncolorcontroller"
         },
         "Commandes": {
             "include1": "offGroup",
@@ -17,6 +13,10 @@
             "include4": "downGroup",
             "include5": "upGroup",
             "include6": "setLevelGroup"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "zigbee Non color controller"
     }
 }

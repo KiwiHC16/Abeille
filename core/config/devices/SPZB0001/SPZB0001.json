@@ -1,14 +1,10 @@
 {
     "SPZB0001": {
-        "nameJeedom": "Eurotronic Spirit",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "SPZB0001",
             "battery_type": "2x1,5V LR6 AA",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "SPZB0001"
         },
         "Commandes": {
             "include1": "nom",
@@ -47,6 +43,10 @@
             "include25 2 3 2 2 2 2": "spiritHostFlagsOffSet",
             "include25 2 3 2 2 2 2 2": "spiritUnknown1",
             "include25 2 3 2 2 2 2 2 2": "spiritUnknown2"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Eurotronic Spirit"
     }
 }

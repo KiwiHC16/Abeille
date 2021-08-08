@@ -248,8 +248,8 @@ class AbeilleTools
     public static function getCommandConfig($cmdFName, $newJCmdName = '')
     {
         $fullPath = cmdsDir.$cmdFName.'.json';
-        if (!is_file($fullPath)) {
-            log::add('Abeille', 'error', 'getCommandConfig: filename is not a file: '.$cmdFName);
+        if (!file_exists($fullPath)) {
+            log::add('Abeille', 'error', "La commande '".$cmdFName."' n'existe pas.");
             return array();
         }
 
@@ -274,7 +274,9 @@ class AbeilleTools
     }
 
     /*
-     * Read given device JSON file and associated commands.
+     * Read given device configuration from JSON file and associated commands.
+     * 'deviceName' = JSON file name without extension
+     * 'from' = JSON file location (default=Abeille)
      */
     public static function getDeviceConfig($deviceName, $from="Abeille")
     {
@@ -298,6 +300,29 @@ class AbeilleTools
             return;
         }
 
+        $device = $device[$deviceName]; // Removing top key
+        $device['location'] = $from; // Official device or local one ?
+
+        /* Old names support */
+        if (!isset($device['type'])) {
+            if (isset($device['nameJeedom'])) {
+                $device['type'] = $device['nameJeedom'];
+                unset($device['nameJeedom']);
+            }
+        }
+        if (!isset($device['category'])) {
+            if (isset($device['Categorie'])) {
+                $device['type'] = $device['Categorie'];
+                unset($device['Categorie']);
+            }
+        }
+        if (!isset($device['configuration']['icon'])) {
+            if (isset($device['configuration']['icone'])) {
+                $device['configuration']['icon'] = $device['configuration']['icone'];
+                unset($device['configuration']['icone']);
+            }
+        }
+
         // Basic commands
         $deviceCmds = array();
         $deviceCmds += self::getCommandConfig("IEEE-Addr");
@@ -309,10 +334,10 @@ class AbeilleTools
         $deviceCmds += self::getCommandConfig("online");
 
         // Other commands
-        if (isset($device[$deviceName]['commands']))
-            $jsonCmds = $device[$deviceName]['commands'];
-        else if (isset($device[$deviceName]['Commandes'])) // Old naming support
-            $jsonCmds = $device[$deviceName]['Commandes'];
+        if (isset($device['commands']))
+            $jsonCmds = $device['commands'];
+        else if (isset($device['Commandes'])) // Old naming support
+            $jsonCmds = $device['Commandes'];
         if (isset($jsonCmds)) {
             foreach ($jsonCmds as $cmd1 => $cmd2) {
                 if (substr($cmd1, 0, 7) == "include") {
@@ -344,11 +369,10 @@ class AbeilleTools
             }
         }
 
-        // $device[$deviceName]['Commandes'] = $deviceCmds;
-        $device[$deviceName]['commands'] = $deviceCmds;
+        $device['commands'] = $deviceCmds;
 
         // log::add('Abeille', 'debug', 'getDeviceConfig end');
-        return $device[$deviceName];
+        return $device;
     }
 
     /**

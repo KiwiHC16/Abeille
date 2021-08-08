@@ -1,13 +1,9 @@
 {
     "511.202": {
-        "nameJeedom": "Module 511.202 iluminize",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "511.202",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "511.202"
         },
         "Commandes": {
             "include1": "SW",
@@ -22,6 +18,10 @@
             "include10": "getModelIdentifier",
             "include10 2": "BindToZigateEtat",
             "include10 2 2": "setReportEtat"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Module 511.202 iluminize"
     }
 }

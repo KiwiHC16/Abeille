@@ -39,23 +39,51 @@
     function updateDevice($devName, $fullPath, $dev) {
         $devUpdated = false;
 
-        if (!isset($dev[$devName]['configuration'])) {
-            newDevError($devName, "ERROR", "No configuration defined");
-            return;
+        if (!isset($dev[$devName]['type'])) {
+            if (isset($dev[$devName]['nameJeedom'])) {
+                $dev[$devName]['type'] = $dev[$devName]['nameJeedom'];
+                unset($dev[$devName]['nameJeedom']);
+                $devUpdated = true;
+                echo "  'nameJeedom' renamed to 'type'.\n";
+            }
         }
 
-        $config = $dev[$devName]['configuration'];
-        if (!isset($config['mainEP']))
-            newDevError($devName, "ERROR", "No 'configuration:mainEP' defined");
-        else if ($config['mainEP'] == '#EP#') {
-            $dev[$devName]['configuration']['mainEP'] = "01";
-            $devUpdated = true;
-            echo "  'mainEP' updated from '#EP#' to '01'.\n";
+        if (!isset($dev[$devName]['category'])) {
+            if (isset($dev[$devName]['Categorie'])) {
+                $dev[$devName]['category'] = $dev[$devName]['Categorie'];
+                unset($dev[$devName]['Categorie']);
+                $devUpdated = true;
+                echo "  'Categorie' renamed to 'category'.\n";
+            }
         }
-        if (isset($config['uniqId'])) {
-            unset($dev[$devName]['configuration']['uniqId']);
-            $devUpdated = true;
-            echo "  Removed 'uniqId'.\n";
+
+        if (!isset($dev[$devName]['configuration'])) {
+            newDevError($devName, "ERROR", "No configuration defined");
+        } else {
+            $config = $dev[$devName]['configuration'];
+
+            if (!isset($config['icon'])) {
+                if (isset($config['icone'])) {
+                    $dev[$devName]['configuration']['icon'] = $dev[$devName]['configuration']['icone'];
+                    unset($dev[$devName]['configuration']['icone']);
+                    $devUpdated = true;
+                    echo "  'icone' renamed to 'icon'.\n";
+                }
+            }
+
+            if (!isset($config['mainEP']))
+                newDevError($devName, "ERROR", "No 'configuration:mainEP' defined");
+            else if ($config['mainEP'] == '#EP#') {
+                $dev[$devName]['configuration']['mainEP'] = "01";
+                $devUpdated = true;
+                echo "  'mainEP' updated from '#EP#' to '01'.\n";
+            }
+
+            if (isset($config['uniqId'])) {
+                unset($dev[$devName]['configuration']['uniqId']);
+                $devUpdated = true;
+                echo "  Removed 'uniqId'.\n";
+            }
         }
 
         if ($devUpdated) {

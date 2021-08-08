@@ -1,15 +1,11 @@
 {
     "LST001": {
-        "nameJeedom": "Hue LightStrip 1re g\u00e9n\u00e9ration",
         "timeout": "60",
         "Comment": "",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "LST001",
             "mainEP": "0B",
-            "poll": "1"
+            "poll": "1",
+            "icon": "LST001"
         },
         "Commandes": {
             "include1": "nom",
@@ -50,6 +46,10 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Hue LightStrip 1re g\u00e9n\u00e9ration"
     }
 }

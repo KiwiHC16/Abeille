@@ -1,13 +1,9 @@
 {
     "ctrl_ln1.aq1": {
-        "nameJeedom": "Xiaomi Wall Switch w Neutral 1",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "ctrl_neutral1",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "ctrl_neutral1"
         },
         "Commandes": {
             "include1": "nom",
@@ -26,6 +22,10 @@
             "include23": "getSWBuild",
             "include24": "Identify",
             "include25": "Group-Membership"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Wall Switch w Neutral 1"
     }
 }

@@ -1,14 +1,10 @@
 {
     "SmokeSensor-EM": {
-        "nameJeedom": "Heiman Smoke Sensor",
         "timeout": "60",
-        "Categorie": {
-            "security": "1"
-        },
         "configuration": {
-            "icone": "SmokeSensor-EM",
             "battery_type": "1x3V CR17335 ou 1x3V CR123A",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "SmokeSensor-EM"
         },
         "Commandes": {
             "include1": "SW",
@@ -20,6 +16,10 @@
             "include11": "setReportBatterie",
             "include10 2": "BindShortToSmokeHeiman",
             "include11 2": "setReportSmokeHeiman"
-        }
+        },
+        "category": {
+            "security": "1"
+        },
+        "type": "Heiman Smoke Sensor"
     }
 }

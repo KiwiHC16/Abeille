@@ -1,13 +1,9 @@
 {
     "Connectedoutlet": {
-        "nameJeedom": "Legrand Prise Connected Outlet Mural 220V avec Neutre",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "Connectedoutlet",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "Connectedoutlet"
         },
         "Commandes": {
             "include1": "nom",
@@ -28,6 +24,10 @@
             "include26 2": "BindToZigatePuissanceLegrand",
             "include28 2": "setReportPuissanceLegrand",
             "include11 2": "PuissanceLegrandPrise"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Legrand Prise Connected Outlet Mural 220V avec Neutre"
     }
 }

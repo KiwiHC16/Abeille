@@ -1,13 +1,9 @@
 {
     "4-digital-input": {
-        "nameJeedom": "4-digital-input",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "4-digital-input",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "4-digital-input"
         },
         "Commandes": {
             "include100": "nom",
@@ -19,6 +15,10 @@
             "include4 1": "getEtatEp04",
             "include5": "etatEp05in",
             "include5 1": "getEtatEp05"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "4-digital-input"
     }
 }

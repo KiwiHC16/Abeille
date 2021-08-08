@@ -1,16 +1,12 @@
 {
     "SPLZB-132": {
-        "nameJeedom": "Frient Smart Plug Mini Type E (French)",
         "manufacturer": "Frient",
         "zbManufacturer": "DevelcoProductsAS",
         "model": "SPLZB-132",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "Delveco-SPLZB-132",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "Delveco-SPLZB-132"
         },
         "Commandes": {
             "include0004-1": "Group-Membership",
@@ -25,6 +21,10 @@
             "include0B04-3": "zb-0B04-RMSCurrent",
             "include0B04-4": "zb-0B04-ActivePower",
             "include0B04-5": "getPlugVAW"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Frient Smart Plug Mini Type E (French)"
     }
 }

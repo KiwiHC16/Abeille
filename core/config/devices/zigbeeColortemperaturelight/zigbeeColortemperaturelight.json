@@ -1,14 +1,10 @@
 {
     "zigbeeColortemperaturelight": {
-        "nameJeedom": "Template for ZigBee - Color temperature light",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "zigbeeColortemperaturelight",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "zigbeeColortemperaturelight"
         },
         "Commandes": {
             "include1": "nom",
@@ -36,6 +32,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Template for ZigBee - Color temperature light"
     }
 }

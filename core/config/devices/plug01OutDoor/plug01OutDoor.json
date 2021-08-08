@@ -1,14 +1,10 @@
 {
     "plug01OutDoor": {
-        "nameJeedom": "OSRAM Prise Lightify OutDoor",
         "timeout": "60",
         "comment": "dummy version to be able to have the OutDoor version icone as plug 01",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "OsramLightifyplug01OutDoor",
-            "mainEP": "03"
+            "mainEP": "03",
+            "icon": "OsramLightifyplug01OutDoor"
         },
         "Commandes": {
             "include1": "SW",
@@ -26,6 +22,10 @@
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "OSRAM Prise Lightify OutDoor"
     }
 }

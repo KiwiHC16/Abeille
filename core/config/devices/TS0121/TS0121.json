@@ -1,14 +1,10 @@
 {
     "TS0121": {
-        "nameJeedom": "TS0121",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "TS0121",
             "mainEP": "01",
-            "poll": "0"
+            "poll": "0",
+            "icon": "TS0121"
         },
         "Commandes": {
             "include1": "nom",
@@ -33,6 +29,10 @@
             "include3 2 2 2 4": "getPlugPower",
             "include3 2 2 2 4 2": "getPlugA",
             "include3 2 2 2 4 2 2": "getPlugV"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "TS0121"
     }
 }

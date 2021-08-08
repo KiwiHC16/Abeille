@@ -1,14 +1,10 @@
 {
     "TS0013": {
-        "nameJeedom": "Yagusmart Tuya ZigBee Smart Switch 3 Bang",
         "timeout": "60",
         "Comment": "",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "TS0013",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TS0013"
         },
         "Commandes": {
             "include1": "SW",
@@ -25,6 +21,10 @@
             "include6 2 2": "Off2",
             "include15": "getManufacturerName",
             "include16": "getModelIdentifier"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Yagusmart Tuya ZigBee Smart Switch 3 Bang"
     }
 }

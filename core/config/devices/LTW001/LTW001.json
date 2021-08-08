@@ -1,14 +1,10 @@
 {
     "LTW001": {
-        "nameJeedom": "Philips Hue white ambiance",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "LTW001",
             "mainEP": "0B",
-            "poll": "1"
+            "poll": "1",
+            "icon": "LTW001"
         },
         "Commandes": {
             "include1": "nom",
@@ -36,6 +32,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Philips Hue white ambiance"
     }
 }

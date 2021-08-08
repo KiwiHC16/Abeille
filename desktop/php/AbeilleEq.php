@@ -347,7 +347,7 @@
     sendZigate('getInclusionStatus', ''); // Will update last comm too
     sendZigate('getVersion', ''); // Will update last comm too
 
-    /* Display equipment icone (AbeilleEq-Main) */
+    /* Display equipment icon (AbeilleEq-Main) */
     $("#sel_icon").change(function () {
         var text = 'plugins/Abeille/images/node_' + $("#sel_icon").val() + '.png';
         //$("#icon_visu").attr('src',text);

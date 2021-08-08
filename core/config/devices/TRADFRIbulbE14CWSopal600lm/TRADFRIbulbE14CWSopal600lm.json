@@ -1,14 +1,10 @@
 {
     "TRADFRIbulbE14CWSopal600lm": {
-        "nameJeedom": "IKEA Ampoule TRADFRI bulb E14 Color White Spectre Opal 600lm",
         "manufacturer": "Ikea",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "TRADFRIbulbE14CWSopal600lm",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TRADFRIbulbE14CWSopal600lm"
         },
         "Commandes": {
             "include1": "nom",
@@ -49,6 +45,10 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "IKEA Ampoule TRADFRI bulb E14 Color White Spectre Opal 600lm"
     }
 }

@@ -1,15 +1,11 @@
 {
     "GL-C-007": {
-        "nameJeedom": "GLEDOPTO RGT+CCT LED Controller",
         "timeout": "60",
         "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1219",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "GL-C-008",
             "mainEP": "0B",
-            "poll": "1"
+            "poll": "1",
+            "icon": "GL-C-008"
         },
         "Commandes": {
             "include1": "nom",
@@ -56,6 +52,10 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "GLEDOPTO RGT+CCT LED Controller"
     }
 }

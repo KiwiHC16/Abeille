@@ -1,14 +1,10 @@
 {
     "TRADFRItransformer30W": {
-        "nameJeedom": "IKEA Ampoule TRADFRI transformer 30W",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "TRADFRItransformer30W",
             "light": "1",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TRADFRItransformer30W"
         },
         "Commandes": {
             "include1": "nom",
@@ -31,6 +27,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "IKEA Ampoule TRADFRI transformer 30W"
     }
 }

@@ -1,15 +1,11 @@
 {
     "ZB-RGBCW": {
-        "nameJeedom": "ZB-RGBCW",
         "timeout": "60",
         "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1812",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "ZB-RGBCW",
             "mainEP": "03",
-            "poll": "1"
+            "poll": "1",
+            "icon": "ZB-RGBCW"
         },
         "Commandes": {
             "include1": "nom",
@@ -27,6 +23,10 @@
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "ZB-RGBCW"
     }
 }

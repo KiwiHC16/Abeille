@@ -1,14 +1,10 @@
 {
     "TS011F": {
-        "nameJeedom": "Yagusmart Tuya ZigBee Smart Switch",
         "timeout": "60",
         "Comment": "Int\u00e9gration mat\u00e9riel prochaine MAJ #1569",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "TS0121",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TS0121"
         },
         "Commandes": {
             "include1": "SW",
@@ -21,6 +17,10 @@
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Yagusmart Tuya ZigBee Smart Switch"
     }
 }

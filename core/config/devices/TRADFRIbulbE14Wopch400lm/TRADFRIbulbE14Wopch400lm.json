@@ -1,14 +1,10 @@
 {
     "TRADFRIbulbE14Wopch400lm": {
-        "nameJeedom": "TRADFRI bulb E14 W op ch 400lm",
         "manufacturer": "Ikea",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "TRADFRIbulbE14Wopch400lm",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TRADFRIbulbE14Wopch400lm"
         },
         "Commandes": {
             "include1": "nom",
@@ -31,6 +27,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "TRADFRI bulb E14 W op ch 400lm"
     }
 }

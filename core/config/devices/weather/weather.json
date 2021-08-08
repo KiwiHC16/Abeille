@@ -1,28 +1,28 @@
 {
-  "weather": {
-    "nameJeedom": "Xiaomi temp/humidity/pressure square sensor",
-    "manufacturer": "Xiaomi",
-    "model": "WSDCGQ11LM",
-    "timeout": "60",
-    "Categorie": {
-      "heating": "1"
-    },
-    "configuration": {
-      "icone": "XiaomiTemperatureCarre",
-      "battery_type": "1x3V CR2032",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include1": "SW",
-      "include2": "nom",
-      "include3": "temperature",
-      "include4": "humidite",
-      "include5": "Batterie-Volt",
-      "include6": "Batterie-Pourcent",
-      "include7": "Xiaomi-ff01",
-      "include8": "pression1",
-      "include9": "pression",
-      "include10": "pressionScale"
+    "weather": {
+        "manufacturer": "Xiaomi",
+        "model": "WSDCGQ11LM",
+        "timeout": "60",
+        "configuration": {
+            "battery_type": "1x3V CR2032",
+            "mainEP": "01",
+            "icon": "XiaomiTemperatureCarre"
+        },
+        "Commandes": {
+            "include1": "SW",
+            "include2": "nom",
+            "include3": "temperature",
+            "include4": "humidite",
+            "include5": "Batterie-Volt",
+            "include6": "Batterie-Pourcent",
+            "include7": "Xiaomi-ff01",
+            "include8": "pression1",
+            "include9": "pression",
+            "include10": "pressionScale"
+        },
+        "category": {
+            "heating": "1"
+        },
+        "type": "Xiaomi temp\/humidity\/pressure square sensor"
     }
-  }
 }

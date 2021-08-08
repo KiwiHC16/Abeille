@@ -1,20 +1,16 @@
 {
     "TRADFRImotionsensor": {
-        "nameJeedom": "TRADFRI Detecteur de mouvement",
         "manufacturer": "IKEA",
         "model": "E1745",
         "timeout": "60",
         "comment": "Ref. IKEA E1525 \/ E1745",
         "comment2": "Set a remote control for group control",
-        "Categorie": {
-            "security": "1"
-        },
         "configuration": {
-            "icone": "TRADFRImotionsensorE1745",
             "battery_type": "1x3V CR2032",
             "lastCommunicationTimeOut": "-1",
             "paramType": "telecommande",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TRADFRImotionsensorE1745"
         },
         "Commandes": {
             "include1": "nom",
@@ -35,6 +31,10 @@
             "include11": "setReportBatterie",
             "include-0006-1": "bindToZigate-EP01-0006",
             "include-0006-2": "setReport-EP01-0006-0000"
-        }
+        },
+        "category": {
+            "security": "1"
+        },
+        "type": "TRADFRI Detecteur de mouvement"
     }
 }

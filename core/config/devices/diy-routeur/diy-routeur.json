@@ -1,14 +1,10 @@
 {
     "diy-routeur": {
-        "nameJeedom": "diy-routeur",
         "timeout": "60",
-        "Categorie": {
-            "security": "1"
-        },
         "configuration": {
-            "icone": "diy-routeur",
             "mainEP": "01",
-            "poll": "0"
+            "poll": "0",
+            "icon": "diy-routeur"
         },
         "Commandes": {
             "include1": "nom",
@@ -18,6 +14,10 @@
             "include22": "getModelIdentifier",
             "include23": "getSWBuild",
             "include24": "Identify"
-        }
+        },
+        "category": {
+            "security": "1"
+        },
+        "type": "diy-routeur"
     }
 }

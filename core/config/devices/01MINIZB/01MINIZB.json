@@ -1,15 +1,11 @@
 {
     "01MINIZB": {
-        "nameJeedom": "Sonoff ZBMINI smart switch",
         "manufacturer": "Sonoff",
         "model": "SBMINI",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "01MINIZB",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "01MINIZB"
         },
         "Commandes": {
             "include1": "SW",
@@ -23,6 +19,10 @@
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier",
             "include13 2": "Group-Membership"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Sonoff ZBMINI smart switch"
     }
 }

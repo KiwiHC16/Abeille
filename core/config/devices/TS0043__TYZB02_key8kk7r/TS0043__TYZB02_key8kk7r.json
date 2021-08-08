@@ -1,20 +1,20 @@
 {
     "TS0043__TYZB02_key8kk7r": {
-        "nameJeedom": "Switch Zemismart TS0043 3 boutons sur piles",
         "timeout": "60",
         "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1185",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "TS0043",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TS0043"
         },
         "Commandes": {
             "include3": "nom",
             "include5 3": "etatInter0",
             "include5 3 2": "etatInter1",
             "include5 3 2 2": "etatInter2"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Switch Zemismart TS0043 3 boutons sur piles"
     }
 }

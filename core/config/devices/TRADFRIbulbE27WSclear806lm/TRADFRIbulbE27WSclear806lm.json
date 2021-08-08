@@ -1,14 +1,10 @@
 {
     "TRADFRIbulbE27WSclear806lm": {
-        "nameJeedom": "TRADFRI bulb E27 WS clear 806lm",
         "manufacturer": "Ikea",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "TRADFRIbulbE27WSclear806lm",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "TRADFRIbulbE27WSclear806lm"
         },
         "Commandes": {
             "include1": "nom",
@@ -49,6 +45,10 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "TRADFRI bulb E27 WS clear 806lm"
     }
 }

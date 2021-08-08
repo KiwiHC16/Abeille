@@ -1,17 +1,13 @@
 {
     "TS0121__TZ3000_8nkb7mof": {
-        "nameJeedom": "Girier ZigBee smart plug EU",
         "manufacturer": "Girier",
         "model": "JR-ZPM01",
         "timeout": "60",
         "Comment": "",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "JR-ZPM01",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "JR-ZPM01"
         },
         "Commandes": {
             "include1": "nom",
@@ -34,6 +30,10 @@
             "include3 2 2 2": "PuissanceLegrandPrise",
             "include3 2 2 2 3": "CurrentSummationDelivered",
             "include3 2 2 2 4 2 2": "getPlugVAW"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Girier ZigBee smart plug EU"
     }
 }

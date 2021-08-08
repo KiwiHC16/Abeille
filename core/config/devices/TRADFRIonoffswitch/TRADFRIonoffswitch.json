@@ -1,32 +1,30 @@
 {
-  "TRADFRIonoffswitch": {
-    "nameJeedom": "TRADFRI on/off switch",
-    "manufacturer": "IKEA",
-    "zbManufacturer": "IKEAofSweden",
-    "model": "E1743",
-    "timeout": "60",
-    "Comment": "Ref. FR 704.085.95",
-    "Categorie": {
-      "light": "1"
-    },
-    "configuration": {
-      "icone": "TRADFRIonoffswitch",
-      "battery_type": "1x3V CR2032",
-      "lastCommunicationTimeOut": "-1",
-      "paramType": "telecommande",
-      "mainEP": "01"
-    },
-    "Commandes": {
-      "include3": "SW",
-      "include23": "getSWBuild",
-
-      "include4": "offGroup",
-      "include6": "onGroup",
-
-      "include8": "Batterie-Pourcent-Ikea",
-      "include9": "getBattery",
-      "include10": "BindShortToZigateBatterie",
-      "include11": "setReportBatterie"
+    "TRADFRIonoffswitch": {
+        "manufacturer": "IKEA",
+        "zbManufacturer": "IKEAofSweden",
+        "model": "E1743",
+        "timeout": "60",
+        "Comment": "Ref. FR 704.085.95",
+        "configuration": {
+            "battery_type": "1x3V CR2032",
+            "lastCommunicationTimeOut": "-1",
+            "paramType": "telecommande",
+            "mainEP": "01",
+            "icon": "TRADFRIonoffswitch"
+        },
+        "Commandes": {
+            "include3": "SW",
+            "include23": "getSWBuild",
+            "include4": "offGroup",
+            "include6": "onGroup",
+            "include8": "Batterie-Pourcent-Ikea",
+            "include9": "getBattery",
+            "include10": "BindShortToZigateBatterie",
+            "include11": "setReportBatterie"
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "TRADFRI on\/off switch"
     }
-  }
 }

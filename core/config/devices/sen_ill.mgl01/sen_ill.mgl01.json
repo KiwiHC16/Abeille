@@ -1,17 +1,13 @@
 {
     "sen_ill.mgl01": {
-        "nameJeedom": "Xiaomi GZCGQ01LM smart light sensor",
         "manufacturer": "Xiaomi",
         "model": "GZCGQ01LM",
         "timeout": "60",
         "comment": "Does not support clust 0001 attrib 0021 reporting (battery percent)",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "sen_ill_mgl01",
             "battery_type": "1x3V CR2032",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "sen_ill_mgl01"
         },
         "Commandes": {
             "include1": "SW",
@@ -40,6 +36,10 @@
             },
             "include0001-3": "Battery-Volt2Percent-3",
             "include0001-4": "Batterie-Pourcent-Ikea"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Xiaomi GZCGQ01LM smart light sensor"
     }
 }

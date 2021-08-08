@@ -1,13 +1,9 @@
 {
     "ptvo.switch": {
-        "nameJeedom": "ptvo.switch",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "ptvo.switch",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "ptvo.switch"
         },
         "Commandes": {
             "include3": "nom",
@@ -15,6 +11,10 @@
             "include5": "OnEp08",
             "include6": "OffEp08",
             "include8": "getEtatEp08"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "ptvo.switch"
     }
 }

@@ -1,15 +1,11 @@
 {
     "Keyfob-ZB3.0": {
-        "nameJeedom": "NEO  Inmax 07046L Keyfob-ZB3.0",
         "timeout": "60",
         "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1326",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "Keyfob-ZB3.0",
             "mainEP": "01",
-            "poll": "1"
+            "poll": "1",
+            "icon": "Keyfob-ZB3.0"
         },
         "Commandes": {
             "include1": "nom",
@@ -19,6 +15,10 @@
             "include22": "getModelIdentifier",
             "include23": "getSWBuild",
             "include24": "Identify"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "NEO  Inmax 07046L Keyfob-ZB3.0"
     }
 }

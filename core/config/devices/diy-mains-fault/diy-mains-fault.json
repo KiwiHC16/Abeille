@@ -1,18 +1,18 @@
 {
     "diy-mains-fault": {
-        "nameJeedom": "diy-mains-fault",
         "timeout": "60",
-        "Categorie": {
-            "automatism": "1"
-        },
         "configuration": {
-            "icone": "diy-mains-fault",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "diy-mains-fault"
         },
         "Commandes": {
             "include100": "nom",
             "include2": "etatEp02in",
             "include2 1": "getEtatEp02"
-        }
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "diy-mains-fault"
     }
 }

@@ -1,13 +1,9 @@
 {
     "KiwiHC16_Test_01": {
-        "nameJeedom": "KiwiHC16_Test_01",
         "timeout": "60",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "KiwiHC16_Test_01",
-            "mainEP": "01"
+            "mainEP": "01",
+            "icon": "KiwiHC16_Test_01"
         },
         "Commandes": {
             "include1": "nom",
@@ -30,6 +26,10 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "KiwiHC16_Test_01"
     }
 }

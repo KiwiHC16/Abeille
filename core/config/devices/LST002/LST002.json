@@ -1,15 +1,11 @@
 {
     "LST002": {
-        "nameJeedom": "lightstripe philips hue plus",
         "timeout": "60",
         "Comment": "",
-        "Categorie": {
-            "light": "1"
-        },
         "configuration": {
-            "icone": "LST002",
             "mainEP": "0B",
-            "poll": "1"
+            "poll": "1",
+            "icon": "LST002"
         },
         "Commandes": {
             "include1": "nom",
@@ -50,6 +46,10 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        }
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "lightstripe philips hue plus"
     }
 }

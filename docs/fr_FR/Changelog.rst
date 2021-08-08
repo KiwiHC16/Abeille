@@ -7,6 +7,7 @@ ChangeLog
   - 'configuration:icone' remplacé par 'configuration:icon'.
 
 - Interne: optimisations AbeilleCmdQueue.
+- Page santé: ajout dernier niveau batterie.
 
 210722-BETA-1
 ----------

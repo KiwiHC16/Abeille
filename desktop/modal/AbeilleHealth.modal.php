@@ -88,9 +88,10 @@ Démons:
             <?php if (isset($dbgDeveloperMode)) { ?>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Repond}}</th>
             <?php } ?> -->
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Dernière communication}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Dernière comm.}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Depuis (h)}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Dernier LQI}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par dernier LQI">{{LQI}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par niveau batterie">{{Batterie}}</th>
         </tr>
     </thead>
     <tbody>
@@ -141,7 +142,7 @@ Démons:
                 }
             }
             if ((strlen($addrIEEE) == 16) || ($addrIEEE=="-")) {
-                echo '<td><span class="label label-success" style="font-size: 1em; cursor: default;">'.$addrIEEE.'</span></td>';
+                echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$addrIEEE.'</span></td>';
             } else {
                 echo '<td><span class="label label-warning" style="font-size: 1em; cursor: default;">Manquante</span></td>';
             }
@@ -205,7 +206,17 @@ Démons:
                 else
                     $lastLqi = "?";
             }
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$lastLqi.'</span></td></tr>';
+            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$lastLqi.'</span></td>';
+
+            // Last battery status
+            $bat = $eqLogic->getStatus('battery', '');
+            if ($bat == '')
+                $bat = '-';
+            else
+                $bat = $bat.'%';
+            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$bat.'</span></td>';
+
+            echo '</tr>';
         }
     ?>
     </tbody>

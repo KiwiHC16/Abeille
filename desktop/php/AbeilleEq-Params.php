@@ -112,6 +112,10 @@
         <div class="col-sm-5">
             <span class="eqLogicAttr" data-l1key="configuration" data-l2key="modeleJson"></span>
             <?php
+                $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
+                if ($jsonLocation != 'Abeille') {
+                    echo '<span> (fichier local)</span>';
+                }
                 echo '<a class="btn btn-warning" onclick="updateFromJSON(\''.$eqNet.'\', \''.$eqAddr.'\')">Recharger</a>';
             ?>
         </div>

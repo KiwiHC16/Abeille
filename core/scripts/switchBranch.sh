@@ -116,8 +116,10 @@ if [ ${ERROR} -eq 0 ]; then
         # Note: no need to align on last commit here. Done in later step
     # fi
 
+    # Removing untracked files except 2 locals directories:
+    # 'tmp' & 'core/config/devices_local'
     echo "${PREFIX}Suppression des fichiers non-suivis"
-    sudo sudo git clean -f -d -e tmp/ >/dev/null
+    sudo sudo git clean -f -d -e tmp/ -e core/config/devices_local/ >/dev/null
     if [ $? -ne 0 ]; then
         echo "${PREFIX}= ERREUR: sudo git clean -f -d -e tmp/"
         ERROR=4

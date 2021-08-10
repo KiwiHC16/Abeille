@@ -6,6 +6,7 @@ ChangeLog
   - 'nameJeedom' remplacé par 'type'.
   - 'configuration:icone' remplacé par 'configuration:icon'.
 
+- Profalux: Ajout support nouvelle génération volet (id=MOT-C1Z06C, #2091).
 - Interne: optimisations AbeilleCmdQueue.
 - Page santé: ajout dernier niveau batterie.
 

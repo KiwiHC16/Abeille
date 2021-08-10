@@ -1,8 +1,10 @@
 {
     "GL-B-001Z": {
+        "manufacturer": "Gledopto",
+        "model": "GL-B-001Z",
         "timeout": "60",
         "configuration": {
-            "mainEP": "01",
+            "mainEP": "0B",
             "poll": "1",
             "icon": "GL-B-001Z"
         },
@@ -55,6 +57,6 @@
         "category": {
             "light": "1"
         },
-        "type": "GL-B-001Z"
+        "type": "GL-B-001Z 4W Dual White And Color Candle Bulb"
     }
 }

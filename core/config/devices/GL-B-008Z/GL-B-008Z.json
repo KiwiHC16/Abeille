@@ -2,7 +2,7 @@
     "GL-B-008Z": {
         "timeout": "60",
         "configuration": {
-            "mainEP": "01",
+            "mainEP": "0B",
             "poll": "1",
             "icon": "GL-B-008Z"
         },
@@ -55,6 +55,8 @@
         "category": {
             "light": "1"
         },
-        "type": "GL-B-008Z"
+        "type": "Gledopto GL-B-008Z 12W RGB+Dual White LED Bulb",
+        "manufacturer": "Gledopto",
+        "model": "GL-B-008Z"
     }
 }

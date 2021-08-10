@@ -2418,7 +2418,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             return;
         }
 
-        if (isset($Command['readAttributeRequest'])) {
+        if (isset($Command['readAttribute']) || isset($Command['readAttributeRequest'])) {
             $this->readAttribute($priority, $dest, $Command['addr'], $Command['ep'], $Command['clustId'], $Command['attrId']);
             return;
         }

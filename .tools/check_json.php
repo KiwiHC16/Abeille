@@ -97,25 +97,29 @@
                 newDevError($devName, "ERROR", "'configuration:mainEP' should be hexa string. #EP# not allowed.");
         }
 
-        if (!isset($dev[$devName]['Commandes'])) {
+        if (isset($dev[$devName]['commands']))
+            $commands = $dev[$devName]['commands'];
+        else if (isset($dev[$devName]['Commandes']))
+            $commands = $dev[$devName]['Commandes'];
+        if (!isset($commands)) {
             newDevError($devName, "WARNING", "No commands defined");
-            return;
-        }
-        $cmds = $dev[$devName]['Commandes'];
-        // echo "cmds=".json_encode($cmds)."\n";
-        foreach ($cmds as $key => $value) {
-            if (substr($key, 0, 7) == "include") {
-                $cmdFName = $value;
-            } else {
-                // 'use'
-                $cmdFName = $value['use'];
-            }
-            $path = commandsDir."/".$cmdFName.".json";
-            if (!file_exists($path)) {
-                newDevError($devName, "ERROR", "Unknown command JSON ".$cmdFName.".json");
-                $missingCmds++;
-            } else {
-                $commandsList[$value] = $path;
+        } else {
+            $cmds = $dev[$devName]['commands'];
+            // echo "cmds=".json_encode($cmds)."\n";
+            foreach ($cmds as $key => $value) {
+                if (substr($key, 0, 7) == "include") {
+                    $cmdFName = $value;
+                } else {
+                    // 'use'
+                    $cmdFName = $value['use'];
+                }
+                $path = commandsDir."/".$cmdFName.".json";
+                if (!file_exists($path)) {
+                    newDevError($devName, "ERROR", "Unknown command JSON ".$cmdFName.".json");
+                    $missingCmds++;
+                } else {
+                    $commandsList[$value] = $path;
+                }
             }
         }
     }

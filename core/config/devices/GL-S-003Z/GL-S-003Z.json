@@ -1,5 +1,7 @@
 {
     "GL-S-003Z": {
+        "manufacturer": "Gledopto",
+        "model": "GL-C-003Z",
         "timeout": "60",
         "Comment": "GLEDOPTO RGBW GU10 5W 300lm",
         "configuration": {

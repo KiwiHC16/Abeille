@@ -10,6 +10,7 @@ ChangeLog
 - Aqara WS-EUK01 H1 wall switch: ajout support préliminaire (#2054).
 - Interne: optimisations AbeilleCmdQueue.
 - Page santé: ajout dernier niveau batterie.
+- Gledopto GL-B-008Z: Correction main EP dans modèle JSON (#2096).
 - Gledopto GL-C-006: Modèle préliminaire (#2092).
 
 

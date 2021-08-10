@@ -1,0 +1,59 @@
+***
+*** Nouveau moteur zigbee Profalux
+*** Apparu fev 2021
+***
+
+EP list: 02/F2/01
+Manufacturer: 'Profalux'
+ModelId: 'MOT-C1Z06C'
+Location: ''
+MAC capa: 8E
+8043/Simple descriptor response, SQN=69, Status=00, Addr=B14B, Length=2E, EP=02, ProfId=0104/ZigBee Home Automation (ZHA), DevId=0202/Window Covering Device, BitField=01
+- InClusterCount=14
+- InCluster=0000 => General-Basic
+- InCluster=0001 => General-Power Config
+- InCluster=0002 => General-Temperature Config
+- InCluster=0003 => General-Identify
+- InCluster=0004 => General-Groups
+- InCluster=0005 => General-Scenes
+- InCluster=0009 => General-Alarms
+- InCluster=000A => General-Time
+- InCluster=0015 => General-Commissioning
+- InCluster=0102 => Closures-Window Covering
+- InCluster=0B05 => Diagnostics
+- InCluster=FC02 => Unknown FC02 cluster
+- InCluster=FC20 => Unknown FC20 cluster
+- InCluster=FC21 => Unknown FC21 cluster
+- OutClusterCount=5
+- OutCluster=0003 => General-Identify
+- OutCluster=000A => General-Time
+- OutCluster=0019 => General-OTA
+- OutCluster=0020 => General-Poll Control
+- OutCluster=FC20 => Unknown FC20 cluster
+8043/Simple descriptor response, SQN=6A, Status=00, Addr=B14B, Length=0C, EP=F2, ProfId=A1E0/Profil A1E0 inconnu, DevId=0066/Profil A1E0 inconnu, BitField=01
+- InClusterCount=1
+- InCluster=0021 => Unknown 0021 cluster
+- OutClusterCount=1
+- OutCluster=0021 => Unknown 0021 cluster
+8043/Simple descriptor response, SQN=6B, Status=00, Addr=B14B, Length=24, EP=01, ProfId=0104/ZigBee Home Automation (ZHA), DevId=0200/Shade, BitField=01
+- InClusterCount=11
+- InCluster=0000 => General-Basic
+- InCluster=0003 => General-Identify
+- InCluster=0004 => General-Groups
+- InCluster=0005 => General-Scenes
+- InCluster=0006 => General-On/Off
+- InCluster=0008 => General-Level Control
+- InCluster=000A => General-Time
+- InCluster=0015 => General-Commissioning
+- InCluster=0100 => Closures-Shade Configuration
+- InCluster=FC20 => Unknown FC20 cluster
+- InCluster=FC21 => Unknown FC21 cluster
+- OutClusterCount=3
+- OutCluster=0003 => General-Identify
+- OutCluster=000A => General-Time
+- OutCluster=FC20 => Unknown FC20 cluster
+
+- Clust 0009: FFFD
+- Clust 0015: 0000/0001/0002/0003/0004/0005/0006/0010/0012/0013/0014/0015/0016/0017/0020/0021/0022/0023/0030/0031/0040/0041/0042/FFFD
+- Clust 0002: 0000/0001/0002/0010/0011/0012/FFFD
+- Clust 0100: 0002/0010/0011/FFFD

@@ -1,0 +1,34 @@
+{
+    "MOT-C1Z10C": {
+        "manufacturer": "Profalux",
+        "zbManufacturer": "Profalux",
+        "model": "Volets 2nd gen",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "mainEP": "01",
+            "paramType": "paramABC",
+            "icon": "voletProFalux"
+        },
+        "Commandes": {
+            "include3": "SW",
+            "include4": "ZCLVersion",
+            "include5": "dateCode",
+            "include23": "getSWBuild",
+            "include24": "Identify",
+            "include25": "Group-Membership",
+
+            "include0008-1": "BindToZigateLevel",
+            "include0008-2": "setReportLevel",
+            "include0008-8": "setLevelVoletDown",
+            "include0008-7": "setLevelVoletUp",
+            "include0008-6": "levelVoletStop",
+            "include0008-3": "Level",
+            "include0008-5": "setLevelVolet",
+            "include0008-4": "getLevel"
+        },
+        "type": "Profalux volet gen 2"
+    }
+}

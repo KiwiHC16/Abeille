@@ -1,5 +1,7 @@
 {
     "GL-S-004Z": {
+        "manufacturer": "Gledopto",
+        "model": "GL-C-004Z",
         "timeout": "60",
         "configuration": {
             "mainEP": "0B",

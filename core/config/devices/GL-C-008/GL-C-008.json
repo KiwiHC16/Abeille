@@ -2,6 +2,8 @@
     "GL-C-008": {
         "timeout": "60",
         "Comment": "GLEDOPTO RGT+CCT LED Controller",
+        "manufacturer": "Gledopto",
+        "model": "GL-C-008",
         "configuration": {
             "mainEP": "0B",
             "poll": "1",

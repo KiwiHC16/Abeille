@@ -7,6 +7,7 @@ ChangeLog
   - 'configuration:icone' remplacé par 'configuration:icon'.
 
 - Profalux: Ajout support nouvelle génération volet (id=MOT-C1Z06C, #2091).
+- Aqara WS-EUK01 H1 wall switch: ajout support préliminaire (#2054).
 - Interne: optimisations AbeilleCmdQueue.
 - Page santé: ajout dernier niveau batterie.
 

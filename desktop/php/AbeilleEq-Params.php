@@ -114,7 +114,7 @@
             <?php
                 $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
                 if ($jsonLocation != 'Abeille') {
-                    echo '<span> (fichier local)</span>';
+                    echo '<span style="background-color:red"> (fichier local) </span>';
                 }
                 echo '<a class="btn btn-warning" onclick="updateFromJSON(\''.$eqNet.'\', \''.$eqAddr.'\')">Recharger</a>';
             ?>

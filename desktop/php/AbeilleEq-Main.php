@@ -87,6 +87,8 @@
                         foreach ($items as $item) {
                             $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevices(AbeilleTools::getTrimmedValueForJsonFiles($item), 'Abeille');
                             $name = $AbeilleObjetDefinition[$item]['type'];
+                            if (!isset($AbeilleObjetDefinition[$item]['configuration']))
+                                continue; // No 'configuration' in this JSON, so no icon defined
                             $icon = $AbeilleObjetDefinition[$item]['configuration']['icon'];
                             $selectBox[ucwords($name)] = $icon;
                         }

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210812-BETA-1"
+# VERSION="210812-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -52,7 +52,7 @@ ee2be2ec60cb3b00ed0501cb232f7166 *Zigate_Module/ReadJN5168/read.php
 8ebf0ec2066ea6fc6f6dc8b657f42059 *core/ajax/abeille.ajax.php
 bb79aab5ddda516f2512902a90f951b1 *core/class/Abeille.class.php
 1b168df63dd8f213613058478ed3181f *core/class/AbeilleCmd.class.php
-bf240d0257ae086f1143f67e7a77c702 *core/class/AbeilleCmdPrepare.class.php
+d9965d7a36bd9df0b5d8e96b6659f541 *core/class/AbeilleCmdPrepare.class.php
 1f07e5d2c136ac4c599ad3cdc1118d18 *core/class/AbeilleCmdProcess.class.php
 4cffbca1a16163aefefa0549992d72ea *core/class/AbeilleCmdQueue.class.php
 1d8ecd8f974647271c4e630015a43d7f *core/class/AbeilleDebug.class.php
@@ -460,7 +460,7 @@ e6fceb7cca047b4ba9e478e906d854eb *core/config/commands/spiritValvePosition.json
 8811075ce8cf3602bb59afd063bba49e *core/config/commands/spiritValvePositionGet.json
 4926a818f1323d4d25ce9a78c73451d8 *core/config/commands/spiritValvePositionSet.json
 55f3da57a83917723e2db5d59a8dda66 *core/config/commands/temperature.json
-bcce49b78520ff4034bb9885f08440cf *core/config/commands/temperatureLight.json
+cd8ea498b47ff8513c5b6adae01061f2 *core/config/commands/temperatureLight.json
 072692794f424767da4d160bce41f9cd *core/config/commands/temperatureLight1.json
 407995363be14631d0759f44966a14be *core/config/commands/temperatureLight2.json
 b210ccf808c4f9575251afa8ee4e77fd *core/config/commands/temperatureLightV2.json
@@ -527,7 +527,7 @@ c29d222fa23a54dab4d7f6cc0c87e837 *core/config/devices/FLOALTpanelWS60x60/FLOALTp
 134cdd2263a96612b33c4e831d30b0b7 *core/config/devices/GL-B-001Z/GL-B-001Z.json
 f3b755116a6162dafd1f1f517575c25b *core/config/devices/GL-B-008Z/GL-B-008Z.json
 77a902d8a1e3cb7cf9135ffe86727799 *core/config/devices/GL-B-008Z/notes.txt
-df76f09ca0960fc6e44f5bcceb8ca13d *core/config/devices/GL-C-006/GL-C-006.json
+ef739ea1561dd86717d20079382f52a4 *core/config/devices/GL-C-006/GL-C-006.json
 ea2a99c751c216907bb4a4e94da400f3 *core/config/devices/GL-C-007/GL-C-007.json
 0a2ddf4e7170200dd534c822df8c1530 *core/config/devices/GL-C-008/GL-C-008.json
 ae9bedd8090742ce685783dfa88628fa *core/config/devices/GL-G-001ZS/GL-G-001ZS.json
@@ -631,7 +631,7 @@ a50898fc91396f91aeb200351d81641d *core/config/devices/TRADFRIbulbGU10WS400lm/TRA
 beacbc08021938126a2d22df8af1dc1d *core/config/devices/TRADFRIcontroloutlet/TRADFRIcontroloutlet.json
 22f6776116902151b09f79272cd4d924 *core/config/devices/TRADFRImotionsensor/TRADFRImotionsensor.json
 9f8c258b42d274763f5927927595a9cc *core/config/devices/TRADFRImotionsensor/notes.txt
-a8e6614c4af5ab70e3fa1d9d7ab1e33a *core/config/devices/TRADFRIonoffswitch/TRADFRIonoffswitch.json
+fd57e507a075ebe3ac56429656c4875f *core/config/devices/TRADFRIonoffswitch/TRADFRIonoffswitch.json
 2e04758233bac732dadb741849680cf5 *core/config/devices/TRADFRIonoffswitch/notes.txt
 54f02e07babdcc537204992760212ae8 *core/config/devices/TRADFRIopencloseremote/TRADFRIopencloseremote.json
 4103727f8dfb4b4f16a55c86b577acf7 *core/config/devices/TRADFRIremotecontrol/TRADFRIremotecontrol.json
@@ -703,6 +703,8 @@ f51d0398a82dddf22919f20c72ed7662 *core/config/devices/remote.b186acn02/remote.b1
 132e5aec878dc44126d816e03d949282 *core/config/devices/remote.b1acn01/remote.b1acn01.json
 b1f0c7053fb337b1c0c0aee36a787b26 *core/config/devices/remote.b286acn01/remote.b286acn01.json
 9572d9b5c721779e07f96053704c1ccf *core/config/devices/remote.b286acn02/remote.b286acn02.json
+4e6223c625078821067e63a1e62b08dc *core/config/devices/remote.b686opcn01/notes.txt
+75c0ce7f3418556c06dbe46b3dba4411 *core/config/devices/remote.b686opcn01/remote.b686opcn01.json
 dfa26a6717632a8063e8da4f18577b96 *core/config/devices/remotecontrol/remotecontrol.json
 f058a513b6a18a395394ca0a1419c7b7 *core/config/devices/router/router.json
 ead005f7f10ff94077ca21ee150a2ebc *core/config/devices/sen_ill.mgl01/sen_ill.mgl01.json
@@ -811,11 +813,11 @@ dfd4aa7695cdf247cae1721ac8482f92 *desktop/php/Abeille.php
 234e405e3dfab106d398cbf8cee1862c *desktop/php/AbeilleEq-Main.php
 a58c262bdd9a2c8aafc2710cb959de9e *desktop/php/AbeilleEq-Params.php
 195dd813d482c76539694e777cb8bd82 *desktop/php/AbeilleEq.php
-782438f60d727f8b57e06ed45305a03e *desktop/php/AbeilleEqAssist.php
+e9cf786d8e185f495e32bf5ded2d8fa7 *desktop/php/AbeilleEqAssist.php
 b5d1d0c91e4c244109ac957e9767ec0a *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-02de6659ec053ddf531f0d011aba8229 *docs/fr_FR/Changelog.rst
+097aaa14c715c4f8e0c95c1d22d684e8 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1036,11 +1038,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-02ec927f2b0bf7a6309431b26fdbd325 *plugin_info/Abeille.version
+5f91fab3d50585e88b7c1c8503fc523e *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 d8010b00fb3562a65a66e091bd3d7c5b *plugin_info/configuration.php
-0aad3d3dbc92dfc549c30641df9220d9 *plugin_info/info.json
+98158b8404f426c282a672db08900e00 *plugin_info/info.json
 a8b36afbe004ce359c7ecec1358a12a1 *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 e634b9f544c02b8facd28fefb8771fe0 *resources/AbeilleDeamon/AbeilleInterrogate.php

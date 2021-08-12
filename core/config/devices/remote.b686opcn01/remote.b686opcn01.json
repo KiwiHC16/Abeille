@@ -1,0 +1,44 @@
+{
+    "remote.b686opcn01": {
+        "manufacturer": "Xiaomi",
+        "model": "WXCJKG13LM",
+        "configuration": {
+            "battery_type": "1x3V CR2032",
+            "paramType": "telecommande",
+            "mainEP": "01",
+            "icon": "Aqara-Opple-6buttons"
+        },
+        "Commandes": {
+            "include0006-1": "bindToZigate-EP01-0006",
+            "include0006-2": "setReport-EP01-0006-0000",
+            "include0006-3": "status-EP01-0006",
+
+            "include0006-4": "bindToZigate-EP02-0006",
+            "include0006-5": "setReport-EP02-0006-0000",
+            "include0006-6": "status-EP02-0006",
+
+            "include0006-30": "bindToZigate-EP03-0006",
+            "include0006-31": "setReport-EP03-0006-0000",
+            "include0006-32": "status-EP03-0006",
+
+            "include0006-40": "bindToZigate-EP04-0006",
+            "include0006-41": "setReport-EP04-0006-0000",
+            "include0006-42": "status-EP04-0006",
+
+            "include0006-50": "bindToZigate-EP05-0006",
+            "include0006-51": "setReport-EP05-0006-0000",
+            "include0006-52": "status-EP05-0006",
+
+            "include0006-60": "bindToZigate-EP06-0006",
+            "include0006-61": "setReport-EP06-0006-0000",
+            "include0006-62": "status-EP06-0006",
+
+            "include4 2": "Batterie-Volt",
+            "include5": "Batterie-Pourcent"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Aqara Opple wireless switch 6 buttons"
+    }
+}

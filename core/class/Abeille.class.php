@@ -1622,7 +1622,7 @@ while ($cron->running()) {
 
             /* Remote control short addr = 'rcXX' */
             $rcAddr = sprintf("rc%02X", $max);
-            Abeille::createDevice($dest, $rcAddr, '', '', 'remotecontrol');
+            Abeille::createDevice($dest, $rcAddr, '', '', 'remotecontrol', 'Abeille');
 
             return;
         }
@@ -1638,8 +1638,9 @@ while ($cron->running()) {
             }
 
             $jsonName = $eqLogic->getConfiguration('modeleJson');
+            $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
             $ieee = $eqLogic->getConfiguration('IEEE');
-            Abeille::createDevice($dest, $addr, $ieee, '', $jsonName, "Mise-à-jour de '".$eqLogic->getName()."' à partir de son fichier JSON");
+            Abeille::createDevice($dest, $addr, $ieee, '', $jsonName, $jsonLocation, "Mise-à-jour de '".$eqLogic->getName()."' à partir de son fichier JSON");
 
             return;
         }
@@ -2138,13 +2139,15 @@ while ($cron->running()) {
                     'addr' => $addr,
                     'ieee' => $eq['ieee'],
                     'ep' => $eq['epFirst'],
-                    'jsonId' => $eq['jsonId'],
+                    'jsonId' => $eq['jsonId'], // JSON identifier
+                    'jsonLocation' => '', // 'Abeille' or 'local'
                     'capa' => $eq['capa'],
                     'time' => time()
                 ); */
 
             $logicalId = $net.'/'.$addr;
             $jsonName = $msg['jsonId'];
+            $jsonLocation = $msg['jsonLocation']; // 'Abeille' or 'local'
             log::add('Abeille', 'debug', "msgFromParser(): Eq announce received for ".$net.'/'.$addr.", zbId='".$jsonName."'");
 
             $ieee = $msg['ieee'];
@@ -2179,7 +2182,7 @@ while ($cron->running()) {
 
             /* Create or update device from JSON.
                Note: ep = first End Point */
-            Abeille::createDevice($net, $addr, $ieee, $ep, $jsonName);
+            Abeille::createDevice($net, $addr, $ieee, $ep, $jsonName, $jsonLocation);
 
             $eqLogic = self::byLogicalId($logicalId, 'Abeille');
 
@@ -2599,11 +2602,11 @@ while ($cron->running()) {
 
     /* Create or update Jeedom device based on its JSON config.
        This is also used to create Abeille's specific device like "remotecontrol". */
-    public static function createDevice($net, $addr, $ieee, $firstEP, $jsonName, $userMsg = '') {
+    public static function createDevice($net, $addr, $ieee, $firstEP, $jsonName, $jsonLocation, $userMsg = '') {
 
         $logicalId = $net.'/'.$addr;
         $abeilleConfig = AbeilleTools::getParameters();
-        $deviceConfig = AbeilleTools::getDeviceConfig($jsonName);
+        $deviceConfig = AbeilleTools::getDeviceConfig($jsonName, $jsonLocation);
         // $deviceConfig = $deviceConfig[$jsonName]; // Removing top key
 
         if (isset($deviceConfig['syntaxError'])) {
@@ -2672,6 +2675,10 @@ while ($cron->running()) {
         // $objetDefSpecific = $deviceConfig[$jsonName];
         log::add('Abeille', 'debug', 'Template config='.json_encode($objetConfiguration));
         $elogic->setConfiguration('modeleJson', $jsonName);
+        if ($jsonLocation != "Abeille")
+            $elogic->setConfiguration('ab::jsonLocation', 'local');
+        else
+            $elogic->setConfiguration('ab::jsonLocation', null);
         $elogic->setConfiguration('type', 'topic'); // ??, type = topic car pas json. Tcharp38: what for ?
 
         if ($newEq) { // Update icon only if new device

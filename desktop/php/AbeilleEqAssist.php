@@ -1251,7 +1251,7 @@
     /* Request device info
        clustType = '00' (server cluster) or '01' (client cluster)
      */
-    function requestInfos(infoType, ep = "01", clustId = "0000", clustType = "00") {
+    function requestInfos(infoType, ep = "01", clustId = "0000", option) {
         console.log("requestInfos("+infoType+")");
 
         // 'Cmd'.$device->getLogicalId().'/ReadAttributeRequest', 'EP=01&clusterId=0005&attributeId=0000'
@@ -1273,7 +1273,10 @@
             payload = "address="+js_eqAddr+"_endPoint="+ep;
         } else if (infoType == "attribList") {
             topic = "Cmd"+logicalId+"_DiscoverAttributesCommand";
-            payload = "address="+js_eqAddr+"_EP="+ep+"_clusterId="+clustId+"_startAttributeId=0000_maxAttributeId=FF_direction="+clustType;
+            payload = "address="+js_eqAddr+"_EP="+ep+"_clusterId="+clustId+"_startAttributeId=0000_maxAttributeId=FF_direction="+option;
+        } else if (infoType == "attribValue") {
+            topic = "Cmd"+logicalId+"_readAttribute";
+            payload = "ep="+ep+"_clustId="+clustId+"_attrId="+option;
         } else {
             console.log("requestInfos("+infoType+") => UNEXPECTED type !");
             return;
@@ -1477,7 +1480,7 @@
                     requestInfos('modelId', sEp, clustId);
                     requestInfos('location', sEp, clustId);
                 }
-                requestInfos('attribList', sEp, clustId);
+                requestInfos('attribList', sEp, clustId, '00');
             });
             cliClustArr.forEach((clustId) => {
                 console.log("cliClust="+clustId);
@@ -1517,8 +1520,10 @@
                 clust = ep.cliClusters[sClustId];
             for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
                 sAttr = sAttributes[attrIdx];
-                if (typeof clust[sAttr.id] === "undefined")
+                if (typeof clust[sAttr.id] === "undefined") {
                     clust[sAttr.id] = new Object();
+                    requestInfos('attribValue', sEp, sClustId, sAttr.id); // Read attribute current value
+                }
             }
 
             /* Updating display */

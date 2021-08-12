@@ -3,10 +3,6 @@ ChangeLog
 
 - Commande JSON 'temperatureLight': correction EP.
 - Aqara Opple 6 boutons (#2048).
-
-210812-BETA-1
-----------
-
 - JSON équipement: tous mis à jour.
   - 'Categorie' remplacé par 'category'.
   - 'nameJeedom' remplacé par 'type'.
@@ -19,10 +15,6 @@ ChangeLog
 - Gledopto GL-C-006: Modèle préliminaire (#2092).
 - Interne: Taille queue parser->LQI augmentée à 2048.
 - Interne: Nettoyage: suppression queue obsolete 'queueKeyLQIToAbeille'.
-
-210722-BETA-1
-----------
-
 - Interne: cron15: Lecture ZCLVersion au lieu d'un attribut pas toujours supporté.
 - Page EQ/avancé: ajout bouton lecture attribut.
 - JSON équipements: mainEP #EP# remplacé par '01'. 'uniqId' supprimé.

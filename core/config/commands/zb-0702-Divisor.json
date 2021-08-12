@@ -1,0 +1,9 @@
+{
+    "zb-0702-Divisor": {
+        "name": "Divisor",
+        "subType": "numeric",
+        "configuration": [],
+        "type": "info",
+        "logicalId": "0702-#EP#-0302"
+    }
+}

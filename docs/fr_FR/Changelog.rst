@@ -1,6 +1,7 @@
 ChangeLog
 =========
 
+- Commande JSON 'temperatureLight': correction EP.
 - Aqara Opple 6 boutons (#2048).
 
 210812-BETA-1
@@ -10,7 +11,6 @@ ChangeLog
   - 'Categorie' remplacé par 'category'.
   - 'nameJeedom' remplacé par 'type'.
   - 'configuration:icone' remplacé par 'configuration:icon'.
-
 - Profalux: Ajout support nouvelle génération volet (id=MOT-C1Z06C/10C, #2091).
 - Aqara WS-EUK01 H1 wall switch: ajout support préliminaire (#2054).
 - Interne: optimisations AbeilleCmdQueue.

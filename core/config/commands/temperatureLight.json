@@ -2,7 +2,7 @@
     "temperatureLight": {
         "isVisible": 1,
         "name": "temperatureLight",
-        "isHistorized": "1",
+        "isHistorized": "0",
         "subType": "numeric",
         "generic_type": "LIGHT_COLOR_TEMP",
         "invertBinary": "0",
@@ -10,12 +10,12 @@
         "unite": "K",
         "configuration": {
             "visibilityCategory": "All",
-            "minValue": "2200",
-            "maxValue": "4000",
+            "minValue": "2000",
+            "maxValue": "6500",
             "visibiltyTemplate": "1",
             "calculValueOffset": "intval(1000000\/#value#)"
         },
         "type": "info",
-        "logicalId": "0300-01-0007"
+        "logicalId": "0300-#EP#-0007"
     }
 }

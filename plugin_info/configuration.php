@@ -19,8 +19,8 @@
     /* Developers debug features */
     $dbgFile = __DIR__."/../tmp/debug.json";
     if (file_exists($dbgFile)) {
-        $dbgConfig = json_decode(file_get_contents($dbgFile), TRUE);
-        $dbgDeveloperMode = TRUE;
+        $dbgConfig = json_decode(file_get_contents($dbgFile), true);
+        $dbgDeveloperMode = true;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
         include_once __DIR__."/../core/php/AbeilleGit.php"; // For 'switchBranch' support
         /* Dev mode: enabling PHP errors logging */
@@ -78,13 +78,13 @@
             <div class="col-lg-4">
                 <?php
                     /* Developers only: display current branch & allows to switch to another one */
-                    if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
+                    if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == true)) {
                         /* TODO: Check if GIT repo & GIT present */
                         if (gitIsRepo() == FALSE) {
                             echo "Pas sous GIT";
                         } else {
                             $localChanges = gitHasLocalChanges();
-                            if ($localChanges == TRUE)
+                            if ($localChanges == true)
                                 echo '<div title="Branche courante. Contient des MODIFICATIONS LOCALES !!" class="label label-danger" style="font-size:1em">';
                             else
                                 echo '<div title="Branche courante" class="label label-success" style="font-size:1em">';

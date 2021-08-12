@@ -13,6 +13,10 @@
     if (file_exists(dbgFile)) {
         $dbgDeveloperMode = TRUE;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
+        $dbgConfig = json_decode(file_get_contents(dbgFile), true);
+        if (isset($dbgConfig["dbgTcharp38"]))
+            $dbgTcharp38 = true;
+
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
@@ -78,7 +82,7 @@
                 <div class="col-lg-2">
                     <?php echo '<input type="text" value="'.$eqLogic->getName().'" readonly>'; ?>
                 </div>
-                <?php if (isset($dbgDeveloperMode)) { ?>
+                <?php if (isset($dbgTcharp38)) { ?>
                 <a class="btn btn-warning" title="Met à jour Jeedom à partir du fichier JSON" onclick="updateJeedom()">Mettre à jour</a>
                 <?php } ?>
             </div>
@@ -122,7 +126,7 @@
             </div>
 
             <div class="row">
-                <?php if (isset($dbgDeveloperMode)) { ?>
+                <?php if (isset($dbgTcharp38)) { ?>
                 <a class="btn btn-success pull-left" title="Genère les commandes Jeedom" onclick="zigbeeToCommands()"><i class="fas fa-cloud-download-alt"></i> Mettre à jour JSON</a>
                 <?php } ?>
                 <a class="btn btn-success pull-left" title="Télécharge 'discovery.json'" onclick="downloadInfos()"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
@@ -132,7 +136,7 @@
         </div>
 
         <!-- <div class="row"> -->
-        <?php if (isset($dbgDeveloperMode)) { ?>
+        <?php if (isset($dbgTcharp38)) { ?>
         <div class="col-lg-6">
         <?php } else { ?>
         <div class="col-lg-6" style="display:none;">
@@ -587,7 +591,8 @@
             data: {
                 action: 'getDeviceConfig',
                 jsonId: js_jsonName,
-                jsonLocation: js_jsonLocation
+                jsonLocation: js_jsonLocation,
+                mode: 0 // 1=Do not load command files
             },
             dataType: 'json',
             global: false,
@@ -753,12 +758,12 @@
 
         /* Converting detected attributs to commands */
         var z = {
-            "0000": { // Basic cluster
+            "0000": { // Basic cluster: No need as Jeedom command
                 // Attributes
-                "0000" : { "name" : "ZCLVersion", "type" : "R" },
-                "0004" : { "name" : "ManufacturerName", "type" : "R" },
-                "0005" : { "name" : "ModelIdentifier", "type" : "R" },
-                "0006" : { "name" : "DateCode", "type" : "R" },
+                // "0000" : { "name" : "ZCLVersion", "type" : "R" },
+                // "0004" : { "name" : "ManufacturerName", "type" : "R" },
+                // "0005" : { "name" : "ModelIdentifier", "type" : "R" },
+                // "0006" : { "name" : "DateCode", "type" : "R" },
                 // "0007" : { "name" : "PowerSource", "type" : "R" }, // No need. Got info during dev info
                 // Cmds: none
             },
@@ -1066,14 +1071,16 @@
         /* Format reminder:
             {
                 "BASICZBR3": {
-                    "name": "Sonoff BASICZBR3 smart switch",
+                    "type": "Sonoff BASICZBR3 smart switch",
                     "manufacturer": "Sonoff",
                     "model": "BASICZBR3",
                     "timeout": "60",
                     "category": {
                         "automatism": "1"
                     },
-                    "icon": "BASICZBR3",
+                    "configuration": {
+                        "icon": "BASICZBR3",
+                    }
                     "batteryType": "1x3V CR2032",
                     "batteryVolt": "3",
                     "commands": {
@@ -1094,24 +1101,33 @@
         timeout = document.getElementById("idTimeout").value;
         if (timeout != '')
             jeq2.timeout = timeout;
-        // jeq2.Comment = // Optional
+        // jeq2.comment = // Optional
+
         /* 'category' */
         var cat = new Object();
         cat.automatism = 1;
         jeq2.category = cat;
+
+        // 'configuration'
+        var conf = new Object();
         icon = document.getElementById("idIcon").value;
         if (icon != "")
-            jeq2.icon = icon;
+            conf.icon = icon;
         else
-            jeq2.icon = "node_defaultUnknown";
+            conf.icon = "defaultUnknown";
+        jeq2.configuration = conf;
+
         batteryType = document.getElementById("idBattery").value;
         if (batteryType != '')
             jeq2.batteryType = batteryType;
+
         batteryVolt = document.getElementById("idBatteryMax").value;
         if (batteryVolt != '')
             jeq2.batteryVolt = batteryVolt;
+
         /* 'commands' */
         jeq2.commands = eq.commands;
+
         /* Zigbee discovery if any */
         jeq2.endPoints = eq.endPoints;
 
@@ -1131,6 +1147,7 @@
             missing += "- Nom du modèle\n";
         if (document.getElementById("idType").value == "")
             missing += "- Type d'équipement (ex: Smart curtain switch)\n";
+        // TODO: category is mandatory
 
         if (missing == "")
             return true; // Ok
@@ -1370,13 +1387,34 @@
             // 'attrId' => $AttributId,
             // 'status' => "00", "86"
             // 'value' => $data
+            sEp = res.ep;
+            sClustId = res.clustId;
+            sAttrId = res.attrId;
+            sStatus = res.status;
+            sValue = res.value;
 
-            if (res.clustId == "0000") {
-                if (res.attrId == "0004") {
+            // Updating internal infos
+            if (sStatus == "00") {
+                ep = eq.endPoints[sEp];
+                if (typeof ep.servClusters[sClustId] !== 'undefined') {
+                    attributes = ep.servClusters[sClustId];
+                    if (typeof attributes[sAttrId] === 'undefined')
+                        attr = new Object();
+                    else
+                        attr = attributes[sAttrId];
+                    attr['value'] = sValue;
+                    attributes[sAttrId] = attr;
+                    ep.servClusters[sClustId] = attributes;
+                }
+            }
+
+            // Updating display
+            if (sClustId == "0000") {
+                if (sAttrId == "0004") {
                     var field = document.getElementById("idZigbeeManuf");
-                } else if (res.attrId == "0005") {
+                } else if (sAttrId == "0005") {
                     var field = document.getElementById("idZigbeeModel");
-                } else if (res.attrId == "0010") {
+                } else if (sAttrId == "0010") {
                     var field = document.getElementById("idZigbeeLocation");
                 }
             }
@@ -1479,7 +1517,8 @@
                 clust = ep.cliClusters[sClustId];
             for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
                 sAttr = sAttributes[attrIdx];
-                clust[sAttr.id] = 1;
+                if (typeof clust[sAttr.id] === "undefined")
+                    clust[sAttr.id] = new Object();
             }
 
             /* Updating display */
@@ -1522,7 +1561,11 @@
             // 'ieee' => $IEEE
             console.log("deviceAnnounce: new addr="+res.addr)
             js_eqAddr = res.addr;
+
+            // Updating internal infos
             eq.addr = js_eqAddr;
+
+            // Updating display
             document.getElementById("idAddr").value = res.addr;
         }
 

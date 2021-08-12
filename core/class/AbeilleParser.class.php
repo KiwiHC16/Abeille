@@ -320,36 +320,36 @@
                 /* Search by modelId and manufacturer */
                 if (($eq['manufacturer'] !== false) && ($eq['manufacturer'] != '')) {
                     $identifier = $eq['modelIdentifier'].'_'.$eq['manufacturer'];
-                    if (isset($GLOBALS['supportedEqList'][$identifier])) {
-                        $jsonName = $identifier;
-                        parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
-                    } else if (isset($GLOBALS['customEqList'][$identifier])) {
+                     if (isset($GLOBALS['customEqList'][$identifier])) {
                         $jsonName = $identifier;
                         $jsonLocation = "local";
-                        parserLog('debug', "  EQ is supported as user/custom with '".$identifier."' identifier");
+                        parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' identifier");
+                    } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
+                        $jsonName = $identifier;
+                        parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
                     }
                 }
                 if ($jsonName == '') {
                     $identifier = $eq['modelIdentifier'];
-                    if (isset($GLOBALS['supportedEqList'][$identifier])) {
-                        $jsonName = $identifier;
-                        parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
-                    } else if (isset($GLOBALS['customEqList'][$identifier])) {
+                     if (isset($GLOBALS['customEqList'][$identifier])) {
                         $jsonName = $identifier;
                         $jsonLocation = "local";
-                        parserLog('debug', "  EQ is supported as user/custom with '".$identifier."' identifier");
+                        parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' identifier");
+                    } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
+                        $jsonName = $identifier;
+                        parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
                     }
                 }
             } else {
                 /* Search by location */
                 $identifier = $eq['location'];
-                if (isset($GLOBALS['supportedEqList'][$identifier])) {
-                    $jsonName = $identifier;
-                    parserLog('debug', "  EQ is supported with '".$identifier."' location identifier");
-                } else if (isset($GLOBALS['customEqList'][$identifier])) {
+                 if (isset($GLOBALS['customEqList'][$identifier])) {
                     $jsonName = $identifier;
                     $jsonLocation = "local";
-                    parserLog('debug', "  EQ is supported as user/custom with '".$identifier."' location identifier");
+                    parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' location identifier");
+                } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
+                    $jsonName = $identifier;
+                    parserLog('debug', "  EQ is supported with '".$identifier."' location identifier");
                 }
             }
 
@@ -362,6 +362,7 @@
             // Read JSON to get list of commands to execute
             $eqConfig = AbeilleTools::getDeviceConfig($jsonName, $jsonLocation);
             $eq['jsonId'] = $jsonName;
+            $eq['jsonLocation'] = $jsonLocation;
             $eq['config'] = $eqConfig;
             return true;
         }
@@ -379,6 +380,7 @@
                 'modelIdentifier' => null (undef)/false (unsupported)/'xx'
                 'location' => null (undef)/false (unsupported)/'xx'
                 'jsonId' => '', // JSON identifier
+                'jsonLocation' => '', // JSON location ("Abeille"=default, or "local")
             );
             identifying: req EP list + manufacturer + modelId + location
                          Note: Special case for Xiaomi which may not support "Active EP request".
@@ -440,6 +442,7 @@
                     'modelIdentifier' => null, // null=undef, false=unsupported, else 'value'
                     'location' => null, // null=undef, false=unsupported, else 'value'
                     'jsonId' => '',
+                    'jsonLocation' => ''
                 );
                 $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
             }
@@ -592,6 +595,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'ieee' => $eq['ieee'],
                 'ep' => $eq['epFirst'],
                 'jsonId' => $eq['jsonId'],
+                'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
                 'capa' => $eq['capa'],
                 'time' => time()
             );
@@ -638,6 +642,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'ieee' => $eq['ieee'],
                 'ep' => $eq['epFirst'],
                 'jsonId' => $eq['jsonId'],
+                'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
                 'capa' => $eq['capa'],
                 'time' => time()
             );

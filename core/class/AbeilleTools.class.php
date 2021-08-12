@@ -275,10 +275,12 @@ class AbeilleTools
 
     /*
      * Read given device configuration from JSON file and associated commands.
-     * 'deviceName' = JSON file name without extension
-     * 'from' = JSON file location (default=Abeille)
+     * 'deviceName': JSON file name without extension
+     * 'from': JSON file location (default=Abeille, or 'local')
+     * 'mode': 0/default=load commands too, 1=do not load commands files
+     * Return: device associative array without top level key (jsonId).
      */
-    public static function getDeviceConfig($deviceName, $from="Abeille")
+    public static function getDeviceConfig($deviceName, $from="Abeille", $mode=0)
     {
         // log::add('Abeille', 'debug', 'getDeviceConfig start');
 
@@ -301,7 +303,8 @@ class AbeilleTools
         }
 
         $device = $device[$deviceName]; // Removing top key
-        $device['location'] = $from; // Official device or local one ?
+        $device['jsonId'] = $deviceName;
+        $device['jsonLocation'] = $from; // Official device or local one ?
 
         /* Old names support */
         if (!isset($device['type'])) {
@@ -322,54 +325,60 @@ class AbeilleTools
                 unset($device['configuration']['icone']);
             }
         }
-
-        // Basic commands
-        $deviceCmds = array();
-        $deviceCmds += self::getCommandConfig("IEEE-Addr");
-        $deviceCmds += self::getCommandConfig("Link-Quality");
-        $deviceCmds += self::getCommandConfig("Time-Time");
-        $deviceCmds += self::getCommandConfig("Time-TimeStamp");
-        $deviceCmds += self::getCommandConfig("Power-Source");
-        $deviceCmds += self::getCommandConfig("Short-Addr");
-        $deviceCmds += self::getCommandConfig("online");
-
-        // Other commands
-        if (isset($device['commands']))
-            $jsonCmds = $device['commands'];
-        else if (isset($device['Commandes'])) // Old naming support
-            $jsonCmds = $device['Commandes'];
-        if (isset($jsonCmds)) {
-            foreach ($jsonCmds as $cmd1 => $cmd2) {
-                if (substr($cmd1, 0, 7) == "include") {
-                    /* Old command JSON format: "includeX": "json_cmd_name" */
-                    $deviceCmds += self::getCommandConfig($cmd2);
-                } else {
-                    /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
-                    log::add('Abeille', 'debug', 'getDeviceConfig(): New cmd format='.json_encode($cmd2));
-                    $cmdFName = $cmd2['use']; // File name without '.json'
-                    $newCmd = self::getCommandConfig($cmd2['use'], $cmd1);
-
-                    if (isset($cmd2['execAtCreation'])) {
-                        $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
-                    }
-                    if (isset($cmd2['params'])) {
-                        // Overwritting settings with given parameters
-                        $params = explode('&', $cmd2['params']); // EP=01&CLUSTID=0000 => EP=01, CLUSTID=0000
-                        $text = json_encode($newCmd);
-                        foreach ($params as $p) {
-                            list($pName, $pVal) = explode("=", $p);
-                            // $text = str_replace('#EP#', $mainEP, $text);
-                            $text = str_replace('#'.$pName.'#', $pVal, $text);
-                        }
-                        $newCmd = json_decode($text, true);
-                    }
-                    log::add('Abeille', 'debug', 'getDeviceConfig(): newCmd='.json_encode($newCmd));
-                    $deviceCmds += $newCmd;
-                }
+        if (!isset($device['commands'])) {
+            if (isset($device['Commandes'])) { // Old naming support
+                $device['commands'] = $device['Commandes'];
+                unset($device['Commandes']);
             }
         }
 
-        $device['commands'] = $deviceCmds;
+        if (isset($device['commands'])) {
+            $deviceCmds = array();
+
+            if ($mode == 0) {
+                $jsonCmds = $device['commands'];
+                unset($device['commands']);
+                foreach ($jsonCmds as $cmd1 => $cmd2) {
+                    if (substr($cmd1, 0, 7) == "include") {
+                        /* Old command JSON format: "includeX": "json_cmd_name" */
+                        $deviceCmds += self::getCommandConfig($cmd2);
+                    } else {
+                        /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
+                        log::add('Abeille', 'debug', 'getDeviceConfig(): New cmd format='.json_encode($cmd2));
+                        $cmdFName = $cmd2['use']; // File name without '.json'
+                        $newCmd = self::getCommandConfig($cmd2['use'], $cmd1);
+
+                        if (isset($cmd2['execAtCreation'])) {
+                            $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
+                        }
+                        if (isset($cmd2['params'])) {
+                            // Overwritting settings with given parameters
+                            $params = explode('&', $cmd2['params']); // EP=01&CLUSTID=0000 => EP=01, CLUSTID=0000
+                            $text = json_encode($newCmd);
+                            foreach ($params as $p) {
+                                list($pName, $pVal) = explode("=", $p);
+                                // $text = str_replace('#EP#', $mainEP, $text);
+                                $text = str_replace('#'.$pName.'#', $pVal, $text);
+                            }
+                            $newCmd = json_decode($text, true);
+                        }
+                        log::add('Abeille', 'debug', 'getDeviceConfig(): newCmd='.json_encode($newCmd));
+                        $deviceCmds += $newCmd;
+                    }
+                }
+
+                // Adding base commands
+                $deviceCmds += self::getCommandConfig("IEEE-Addr");
+                $deviceCmds += self::getCommandConfig("Link-Quality");
+                $deviceCmds += self::getCommandConfig("Time-Time");
+                $deviceCmds += self::getCommandConfig("Time-TimeStamp");
+                $deviceCmds += self::getCommandConfig("Power-Source");
+                $deviceCmds += self::getCommandConfig("Short-Addr");
+                $deviceCmds += self::getCommandConfig("online");
+
+                $device['commands'] = $deviceCmds;
+            }
+        } // End isset($device['commands'])
 
         // log::add('Abeille', 'debug', 'getDeviceConfig end');
         return $device;

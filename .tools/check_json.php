@@ -104,9 +104,8 @@
         if (!isset($commands)) {
             newDevError($devName, "WARNING", "No commands defined");
         } else {
-            $cmds = $dev[$devName]['commands'];
-            // echo "cmds=".json_encode($cmds)."\n";
-            foreach ($cmds as $key => $value) {
+            // echo "commands=".json_encode($commands)."\n";
+            foreach ($commands as $key => $value) {
                 if (substr($key, 0, 7) == "include") {
                     $cmdFName = $value;
                 } else {

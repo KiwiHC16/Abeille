@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210812-BETA-1
+----------
+
 - JSON équipement: tous mis à jour.
   - 'Categorie' remplacé par 'category'.
   - 'nameJeedom' remplacé par 'type'.

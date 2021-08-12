@@ -266,6 +266,32 @@
             ajax::success(json_encode(array('status' => $status)));
         }
 
+        /* Retrieve device configuration reading device JSON & associated commands JSON.
+           'jsonId' is JSON device name without extension.
+           Returns: status=0 if found, -1 else */
+        if (init('action') == 'getDeviceConfig') {
+            $jsonId = init('jsonId');
+            $jsonLocation = init('jsonLocation');
+            $mode = init('mode');
+
+            if ($jsonLocation == "Abeille")
+                $fullPath = __DIR__.'/../config/devices/'.$jsonId.'/'.$jsonId.'.json';
+            else
+                $fullPath = __DIR__.'/../config/devices_local/'.$jsonId.'/'.$jsonId.'.json';
+            $status = 0;
+            $error = "";
+            $content = "";
+
+            if (!file_exists($fullPath)) {
+                $status = -1;
+                $error = "Le fichier '".$path."' n'existe pas.";
+            }
+            $devConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation, $mode);
+            $content = json_encode($devConfig);
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'content' => $content)));
+        }
+
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.
            Instead 'success' callback is used. This means that
            - take care of error code returned

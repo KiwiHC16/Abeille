@@ -8,8 +8,6 @@
             "icon": "LXX60-CS27LX1.0"
         },
         "Commandes": {
-            "include0000-1": "societe",
-            "include0000-2": "nom",
             "include0003-1": "Identify",
             "include0004-1": "Group-Membership",
             "include0006-3": "etat",

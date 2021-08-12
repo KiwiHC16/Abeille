@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210812-BETA-1
+----------
+
 - Commande JSON 'temperatureLight': correction EP.
 - Aqara Opple 6 boutons (#2048).
 - JSON équipement: tous mis à jour.

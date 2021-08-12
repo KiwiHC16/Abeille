@@ -28,7 +28,6 @@
 
     /* LQI collect queues */
     // define('queueKeyParserToLQI',           225);
-    define('queueKeyLQIToAbeille',          521);
     define('queueKeyLQIToCmd',              523);
 
     /* Client page to server or server to client */

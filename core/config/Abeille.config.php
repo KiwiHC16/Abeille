@@ -48,7 +48,7 @@
     $abQueues = array();
     $abQueues["serialToParser"] = array( "id" => 0x336, "max" => 2048 );
     $abQueues["ctrlToParser"] = array( "id" => 0x337, "max" => 2048 );
-    $abQueues["parserToLQI"] = array( "id" => 225, "max" => 1024 );
+    $abQueues["parserToLQI"] = array( "id" => 225, "max" => 2048 );
     $abQueues["parserToCli"] = array( "id" => 724, "max" => 1024 );
     $GLOBALS['abQueues'] = $abQueues;
 

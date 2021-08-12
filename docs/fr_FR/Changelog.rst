@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Aqara Opple 6 boutons (#2048).
+
 210812-BETA-1
 ----------
 

@@ -1,0 +1,34 @@
+[2021-06-15 15:35:52] Abeille1, Type=004d/Device announce, Addr=7F30, ExtAddr=04CF8CDF3C7D57E3, MACCapa=84, Rejoin=00
+[2021-06-15 15:35:52]   EQ already known: Addr updated from DB4C to 7F30
+[2021-06-15 15:35:52]   updateEq('epList', '01/02/03/04/05/06'), status=idle
+
+Manufacturer: 'LUMI'
+ModelId: 'remote.b686opcn01'
+Location: ''
+MAC capa: 84
+8043/Simple descriptor response, SQN=F7, Status=00, Addr=0461, Length=16, EP=01, ProfId=0104/ZigBee Home Automation (ZHA), DevId=0105/Color Dimmer Switch, BitField=01
+InClusterCount=03
+InCluster=0000 - General: Basic
+InCluster=0003 - General: Identify
+InCluster=0001 - General: Power Config
+OutClusterCount=04
+OutCluster=0003 - General: Identify
+OutCluster=0006 - General: On/Off
+OutCluster=0008 - General: Level Control
+OutCluster=0300 - Lighting: Color Control
+8043/Simple descriptor response, SQN=F8, Status=00, Addr=0461, Length=0E, EP=02, ProfId=0104/ZigBee Home Automation (ZHA), DevId=0103/On/Off Light Switch, BitField=01
+InClusterCount=01
+InCluster=0003 - General: Identify
+OutClusterCount=02
+OutCluster=0006 - General: On/Off
+OutCluster=0003 - General: Identify
+
+
+
+https://zigate.fr/forum/topic/xiaomi-aqara-opple/?part=2
+    Ce bouton comme ceux de la serie ont deux modes de fonctionnement.
+    Le mode par default qui se fait du broadcast
+    On/Off sur le bouton 1/2
+    Level Control sur le Bouton 3/4
+    Color Control sur le Bouton 5/6
+    Un autre mode est possible , mais il nécessite d'etre configuré par un write attribut

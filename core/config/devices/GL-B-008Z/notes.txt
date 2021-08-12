@@ -1,0 +1,24 @@
+***
+*** New equipement discovery
+***
+EP list: 0B/0D
+Manufacturer: 'GLEDOPTO'
+ModelId: 'GL-B-008Z'
+Location: ''
+MAC capa: 8E
+8043/Simple descriptor response, SQN=68, Status=00, Addr=30E3, Length=16, EP=0B, ProfId=C05E/Zigbee Link Layer (ZLL), DevId=0210/Extended color light, BitField=02
+- InClusterCount=7
+- InCluster=0000 => General-Basic
+- InCluster=0003 => General-Identify
+- InCluster=0004 => General-Groups
+- InCluster=0005 => General-Scenes
+- InCluster=0006 => General-On/Off
+- InCluster=0008 => General-Level Control
+- InCluster=0300 => Lighting-Color Control
+- OutClusterCount=0
+8043/Simple descriptor response, SQN=69, Status=00, Addr=30E3, Length=0C, EP=0D, ProfId=C05E/Zigbee Link Layer (ZLL), DevId=0210/Extended color light, BitField=02
+- InClusterCount=1
+- InCluster=1000 => ZLL-Commissioning
+- OutClusterCount=1
+- OutCluster=1000 => ZLL-Commissioning
+

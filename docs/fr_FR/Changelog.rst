@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-210812-BETA-1
+210812-BETA-2
 ----------
 
 - Commande JSON 'temperatureLight': correction EP.

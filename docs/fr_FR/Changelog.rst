@@ -3,13 +3,9 @@ ChangeLog
 
 - Page EQ/avancé: mise-à-jour de l'assistant de découverte.
 - Page config/options avancées: Support defines.
-
-210812-BETA-2
-----------
-
 - Commande JSON 'temperatureLight': correction EP.
 - Aqara Opple 6 boutons (#2048).
-- JSON équipement: tous mis à jour.
+- JSON équipements: tous mis à jour.
   - 'Categorie' remplacé par 'category'.
   - 'nameJeedom' remplacé par 'type'.
   - 'configuration:icone' remplacé par 'configuration:icon'.

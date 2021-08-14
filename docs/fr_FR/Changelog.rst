@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210814-BETA-1
+----------
+
 - Page EQ/avancé: mise-à-jour de l'assistant de découverte.
 - Page config/options avancées: Support defines.
 - Commande JSON 'temperatureLight': correction EP.

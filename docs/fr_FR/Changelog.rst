@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Page EQ/avancé: mise-à-jour de l'assistant de découverte.
+- Page config/options avancées: Support defines.
+
 210812-BETA-2
 ----------
 

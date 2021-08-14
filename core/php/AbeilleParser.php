@@ -10,7 +10,7 @@
 
     include_once __DIR__.'/../../core/config/Abeille.config.php';
 
-    /* Developpers options */
+    /* Developers options */
     if (file_exists(dbgFile)) {
         $dbgConfig = json_decode(file_get_contents(dbgFile), true);
         if (isset($dbgConfig["dbgParserLog"])) {

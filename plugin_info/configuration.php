@@ -428,6 +428,13 @@
 		    <!-- Following functionalities are visible only if 'tmp/debug.json' file exists (developer mode). -->
             <?php if (isset($dbgConfig)) { ?>
                 <div class="form-group">
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Supprime les fichiers locaux non listés dans 'Abeille.md5'}}">{{Nettoyage des fichiers non requis : }}</label>
+                    <div class="col-lg-5">
+                        <input type="button" onclick="cleanUp()" value="Lancer">
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Liste des messages désactivés dans AbeilleParser.log}}">{{Parser. Messages désactivés : }}</label>
                     <div class="col-lg-5">
                     <?php if (isset($dbgConfig['dbgParserLog'])) {
@@ -441,9 +448,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Supprime les fichiers locaux non listés dans 'Abeille.md5'}}">{{Nettoyage des fichiers non requis : }}</label>
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Autres defines de dev/debug}}">{{Defines : }}</label>
                     <div class="col-lg-5">
-                        <input type="button" onclick="cleanUp()" value="Lancer">
+                    <?php if (isset($dbgConfig['defines'])) {
+                        $dbgDefines = implode(" ", $dbgConfig['defines']);
+                        echo '<input type="text" id="idDefines" title="Defines (ex: Tcharp38)" style="width:400px" value="'.$dbgDefines.'">';
+                    } else
+                        echo '<input type="text" id="idDefines" title="Defines (ex: Tcharp38)" style="width:400px">';
+                    ?>
+                    <input type="button" onclick="saveChanges()" value="Sauver" style="margin-left:8px">
                     </div>
                 </div>
             <?php } ?>
@@ -1041,6 +1054,19 @@
                     devConfig["dbgParserLog"] = dbgParserLog;
                 } else
                     devConfig["dbgParserLog"] = [];
+
+                var dbgDefinesList = document.getElementById('idDefines').value;
+                console.log("dbgDefinesList="+dbgDefinesList);
+                if (dbgDefinesList != "") {
+                    var dbgDefines = [];
+                    var res = dbgDefinesList.split(" ");
+                    res.forEach(function(value) {
+                        console.log("value="+value);
+                        dbgDefines.push(value);
+                    });
+                    devConfig["defines"] = dbgDefines;
+                } else
+                    devConfig["defines"] = [];
 
                 /* Save config */
                 jsonConfig = JSON.stringify(devConfig);

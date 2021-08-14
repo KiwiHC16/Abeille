@@ -515,7 +515,7 @@
                                     );
                 break;
 
-            case "ReadAttributeRequest":
+            case "ReadAttributeRequest": // Obsolete: Use "readAttribute' instead
                 $keywords = preg_split("/[=&]+/", $msg);
                 if (count($keywords) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -533,7 +533,7 @@
                                     );
                 break;
             case "readAttribute":
-            case "readAttributeRequest":
+            case "readAttributeRequest": // Obsolete: Use "readAttribute' instead
                     $keywords = preg_split("/[=&]+/", $msg);
                 if (count($keywords) > 1) {
                     $params = $this->proper_parse_str($msg);
@@ -1197,7 +1197,8 @@
                                     "duration"                        => $parameters['duration'],
                 );
                 break;
-            case "DiscoverAttributesCommand":
+
+            case "DiscoverAttributesCommand": // Obsolete: Use 'discoverAttributes' instead.
                 $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
                         $parameters = $this->proper_parse_str($msg);
@@ -1213,6 +1214,24 @@
                                     "direction"                     => isset($parameters['direction']) ? $parameters['direction'] : "00",
                                     "startAttributeId"              => $parameters['startAttributeId'],
                                     "maxAttributeId"                => $parameters['maxAttributeId'],
+                );
+                break;
+            case "discoverAttributes":
+                $fields = preg_split("/[=&]+/", $msg);
+                    if (count($fields) > 1) {
+                        $parameters = $this->proper_parse_str($msg);
+                    }
+
+                $Command = array(
+                    "discoverAttributes"    => "1",
+                    "priority"              => $priority,
+                    "dest"                  => $dest,
+                    "addr"                  => $address,
+                    "ep"                    => $parameters['ep'],
+                    "clustId"               => $parameters['clustId'],
+                    "dir"                   => isset($parameters['dir']) ? $parameters['dir'] : "00",
+                    "startAttrId"           => isset($parameters['startAttrId']) ? $parameters['startAttrId'] : "0000",
+                    "maxAttrId"             => isset($parameters['maxAttrId']) ? $parameters['maxAttrId'] : "FF",
                 );
                 break;
 

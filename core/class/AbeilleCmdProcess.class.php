@@ -3090,7 +3090,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             return;
         }
 
-        // DiscoverAttributesCommand
+        // DiscoverAttributesCommand: Obsolete. Use 'discoverAttributes' intead.
         if (isset($Command['DiscoverAttributesCommand']) && isset($Command['address']) && isset($Command['startAttributeId']) && isset($Command['maxAttributeId']))
         {
             $this->deamonlog('debug','    DiscoverAttributesCommand for: '.$Command['address']." - ".$Command['startAttributeId']." - ".$Command['maxAttributeId'], $this->debug['processCmd2']);
@@ -3130,6 +3130,47 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $lenth = sprintf("%04s",dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data);
+            return;
+        }
+        // discoverAttributes
+        if (isset($Command['discoverAttributes'])) {
+            $this->deamonlog('debug','    discoverAttributes for: '.$Command['addr']." - ".$Command['startAttrId']." - ".$Command['maxAttrId'], $this->debug['processCmd2']);
+            $cmd = "0140";
+
+            // <address mode: uint8_t>
+            // <target short address: uint16_t>
+            // <source endpoint: uint8_t>
+            // <destination endpoint: uint8_t>
+            // <Cluster id: uint16_t>
+            // <Attribute id : uint16_t>
+            // <direction: uint8_t>
+            //      Direction:
+            //      0 – from server to client
+            //      1 – from client to server
+            // <manufacturer specific: uint8_t>
+            //      Manufacturer specific :
+            //      1 – Yes
+            //      0 – No
+            // <manufacturer id: uint16_t>
+            // <Max number of identifiers: uint8_t>
+
+            $addressMode    = "02";
+            $address        = $Command['addr'];
+            $srcEP          = "01";
+            $dstEP          = sprintf("%02X", hexdec($Command['ep']));
+            $clusterId      = sprintf("%04X", hexdec($Command['clustId']));
+            $attributeId    = $Command['startAttrId'];
+            if (!isset($Command['dir']))
+                $Command['dir'] = '00'; // Get attributes from 'server' cluster by default
+            $direction      = $Command['dir']; //	'00' – server cluster atttrib, '01' – client cluster attrib
+            $manuSpec       = "00"; //  1 – Yes	 0 – No
+            $manuId         = "0000";
+            $maxAttributeId = $Command['maxAttrId'];
+
+            $data = $addressMode.$address.$srcEP.$dstEP.$clusterId.$attributeId.$direction.$manuSpec.$manuId.$maxAttributeId ;
+            $len = sprintf("%04s", dechex(strlen($data) / 2));
+
+            $this->addCmdToQueue($priority, $dest, $cmd, $len, $data);
             return;
         }
 

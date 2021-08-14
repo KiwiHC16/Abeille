@@ -20,11 +20,13 @@
      * AJAX targets to manipulate files
      */
 
+    require_once __DIR__.'/../config/Abeille.config.php';
+
     /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.json";
-    if (file_exists($dbgFile)) {
+    if (file_exists(dbgFile)) {
         // include_once $dbgFile;
         $dbgDeveloperMode = TRUE;
+
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
@@ -269,27 +271,65 @@
         /* Retrieve device configuration reading device JSON & associated commands JSON.
            'jsonId' is JSON device name without extension.
            Returns: status=0 if found, -1 else */
-        if (init('action') == 'getDeviceConfig') {
+        if (init('action') == 'readDeviceConfig') {
             $jsonId = init('jsonId');
             $jsonLocation = init('jsonLocation');
             $mode = init('mode');
+logDebug("readDeviceConfig() id=".$jsonId.", loc=".$jsonLocation);
+            $status = 0;
+            $error = "";
+            $content = "";
 
             if ($jsonLocation == "Abeille")
                 $fullPath = __DIR__.'/../config/devices/'.$jsonId.'/'.$jsonId.'.json';
             else
                 $fullPath = __DIR__.'/../config/devices_local/'.$jsonId.'/'.$jsonId.'.json';
-            $status = 0;
-            $error = "";
-            $content = "";
-
             if (!file_exists($fullPath)) {
                 $status = -1;
-                $error = "Le fichier '".$path."' n'existe pas.";
+                $error = "Le fichier '".$jsonId."' n'existe pas dans '".$jsonLocation."'";
+            } else {
+                $devConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation, $mode);
+                $content = json_encode($devConfig);
             }
-            $devConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation, $mode);
-            $content = json_encode($devConfig);
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'content' => $content)));
+        }
+
+        /* Write device configuration.
+           'jsonId' is JSON device name without extension.
+           'jsonLocation' is 'Abeille' or 'local'.
+           'devConfig' is JSON device config.
+           Returns: status: 0=ok, -1=error */
+        if (init('action') == 'writeDeviceConfig') {
+logDebug("writeDeviceConfig");
+            $jsonId = init('jsonId');
+            $jsonLocation = init('jsonLocation'); // 'Abeille' or 'local'
+            $devConfig = init('devConfig');
+logDebug("jsonId=".$jsonId);
+logDebug("jsonLocation=".$jsonLocation);
+
+            if ($jsonLocation == "Abeille")
+                $jsonDir = __DIR__.'/../config/devices/'.$jsonId;
+            else
+                $jsonDir = __DIR__.'/../config/devices_local/'.$jsonId;
+
+            $status = 0;
+            $error = "";
+
+            if (!file_exists($jsonDir)) {
+                if (mkdir($jsonDir) == false) {
+                    $status = -1;
+                    $error = "Can't create dir '".$jsonDir;
+                }
+            }
+            if ($status == 0) {
+                $fullPath = $jsonDir.'/'.$jsonId.'.json';
+                $json = json_encode($devConfig, JSON_PRETTY_PRINT);
+logDebug("json=".$json);
+                file_put_contents($fullPath, $json);
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.

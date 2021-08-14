@@ -149,37 +149,37 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'resp' => $resp)));
         }
 
-        /* Write device config in JSON format */
-        if (init('action') == 'writeConfigJson') {
-            logDebug('action == writeConfigJson');
+//         /* Write device config in JSON format */
+//         if (init('action') == 'writeConfigJson') {
+//             logDebug('action == writeConfigJson');
 
-            $jsonName = init('jsonName'); // File name = Compresssed Zigbee model identifier
-            $eq = init('eq'); //
+//             $jsonName = init('jsonName'); // File name = Compresssed Zigbee model identifier
+//             $eq = init('eq'); //
 
-            // $zgPort = config::byKey('AbeilleSerialPort'.$zgNb, 'Abeille', '');
-            $status = 0;
-            $error = "";
+//             // $zgPort = config::byKey('AbeilleSerialPort'.$zgNb, 'Abeille', '');
+//             $status = 0;
+//             $error = "";
 
-            /* Request list of end points */
-            logSetConf('AbeilleDebug.log', true);
-            $json = json_encode($eq, JSON_PRETTY_PRINT);
-logDebug("json=".$json);
-            $jsonDir = __DIR__.'/../config/devices_local/'.$jsonName;
-logDebug("jsonDir=".$jsonDir);
-            if (!file_exists($jsonDir)) {
-                if (mkdir($jsonDir) == false) {
-                    $status = -1;
-                    $error = "Can't create dir '".$jsonDir;
-                }
-            }
-            if ($status == 0) {
-                $jsonPath = $jsonDir.'/'.$jsonName.'.json';
-logDebug("jsonPath=".$jsonPath);
-                file_put_contents($jsonPath, $json);
-            }
+//             /* Request list of end points */
+//             logSetConf('AbeilleDebug.log', true);
+//             $json = json_encode($eq, JSON_PRETTY_PRINT);
+// logDebug("json=".$json);
+//             $jsonDir = __DIR__.'/../config/devices_local/'.$jsonName;
+// logDebug("jsonDir=".$jsonDir);
+//             if (!file_exists($jsonDir)) {
+//                 if (mkdir($jsonDir) == false) {
+//                     $status = -1;
+//                     $error = "Can't create dir '".$jsonDir;
+//                 }
+//             }
+//             if ($status == 0) {
+//                 $jsonPath = $jsonDir.'/'.$jsonName.'.json';
+// logDebug("jsonPath=".$jsonPath);
+//                 file_put_contents($jsonPath, $json);
+//             }
 
-            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'resp' => $resp)));
-        }
+//             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'resp' => $resp)));
+//         }
 
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.
             Instead 'success' callback is used. This means that

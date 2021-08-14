@@ -14,8 +14,13 @@
         $dbgDeveloperMode = TRUE;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
         $dbgConfig = json_decode(file_get_contents(dbgFile), true);
-        if (isset($dbgConfig["dbgTcharp38"]))
-            $dbgTcharp38 = true;
+        if (isset($dbgConfig["defines"])) {
+            $arr = $dbgConfig["defines"];
+            foreach ($arr as $idx => $value) {
+                if ($value == "Tcharp38")
+                    $dbgTcharp38 = true;
+            }
+        }
 
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -589,7 +594,7 @@
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',
             data: {
-                action: 'getDeviceConfig',
+                action: 'readDeviceConfig',
                 jsonId: js_jsonName,
                 jsonLocation: js_jsonLocation,
                 mode: 0 // 1=Do not load command files
@@ -1156,7 +1161,8 @@
         return false;
     }
 
-    /* Update/create JSON file */
+    /* Update/create JSON file.
+       Destination is always "devices_local" */
     function writeJSON() {
         console.log("writeJSON()");
 
@@ -1165,24 +1171,26 @@
             return;
 
         js_jsonName = document.getElementById("idJsonName").value;
-        // TODO: Search in following order: devices_local then devices
         js_jsonPath = 'core/config/devices_local/'+js_jsonName+'/'+js_jsonName+'.json';
+        js_jsonLocation = "local";
 
         jeq = prepareJson();
+console.log(jeq);
 
         $.ajax({
             type: 'POST',
-            url: 'plugins/Abeille/core/ajax/AbeilleEqAssist.ajax.php',
+            url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',
             data: {
-                action: 'writeConfigJson',
-                jsonName: js_jsonName,
-                eq: jeq,
+                action: 'writeDeviceConfig',
+                jsonId: js_jsonName,
+                jsonLocation: js_jsonLocation,
+                devConfig: jeq
             },
             dataType: 'json',
             global: false,
             // async: false,
             error: function (request, status, error) {
-                bootbox.alert("ERREUR 'writeConfigJson' !<br>Votre installation semble corrompue.<br>"+error);
+                bootbox.alert("ERREUR 'writeDeviceConfig' !<br>Votre installation semble corrompue.<br>"+error);
                 status = -1;
             },
             success: function (json_res) {
@@ -1260,20 +1268,20 @@
             topic = "Cmd"+logicalId+"_ActiveEndPoint";
             payload = "address="+js_eqAddr;
         } else if (infoType == "manufacturer") {
-            topic = "Cmd"+logicalId+"_readAttributeRequest";
+            topic = "Cmd"+logicalId+"_readAttribute";
             payload = "ep="+ep+"_clustId=0000_attrId=0004"; // Manufacturer
         } else if (infoType == "modelId") {
-            topic = "Cmd"+logicalId+"_readAttributeRequest";
+            topic = "Cmd"+logicalId+"_readAttribute";
             payload = "ep="+ep+"_clustId=0000_attrId=0005"; // Model
         } else if (infoType == "location") {
-            topic = "Cmd"+logicalId+"_readAttributeRequest";
+            topic = "Cmd"+logicalId+"_readAttribute";
             payload = "ep="+ep+"_clustId=0000_attrId=0010"; // Location
         } else if (infoType == "clustersList") {
             topic = "Cmd"+logicalId+"_SimpleDescriptorRequest";
             payload = "address="+js_eqAddr+"_endPoint="+ep;
         } else if (infoType == "attribList") {
-            topic = "Cmd"+logicalId+"_DiscoverAttributesCommand";
-            payload = "address="+js_eqAddr+"_EP="+ep+"_clusterId="+clustId+"_startAttributeId=0000_maxAttributeId=FF_direction="+option;
+            topic = "Cmd"+logicalId+"_discoverAttributes";
+            payload = "ep="+ep+"_clustId="+clustId+"_startAttrId=0000_maxAttrId=FF_dir="+option;
         } else if (infoType == "attribValue") {
             topic = "Cmd"+logicalId+"_readAttribute";
             payload = "ep="+ep+"_clustId="+clustId+"_attrId="+option;
@@ -1398,16 +1406,18 @@
 
             // Updating internal infos
             if (sStatus == "00") {
-                ep = eq.endPoints[sEp];
-                if (typeof ep.servClusters[sClustId] !== 'undefined') {
-                    attributes = ep.servClusters[sClustId];
-                    if (typeof attributes[sAttrId] === 'undefined')
-                        attr = new Object();
-                    else
-                        attr = attributes[sAttrId];
-                    attr['value'] = sValue;
-                    attributes[sAttrId] = attr;
-                    ep.servClusters[sClustId] = attributes;
+                if ((typeof eq.endPoints !== "undefined") && (typeof eq.endPoints[sEp] !== "undefined")) {
+                    ep = eq.endPoints[sEp];
+                    if ((typeof ep.servClusters !== 'undefined') && (typeof ep.servClusters[sClustId] !== 'undefined')) {
+                        attributes = ep.servClusters[sClustId];
+                        if (typeof attributes[sAttrId] === 'undefined')
+                            attr = new Object();
+                        else
+                            attr = attributes[sAttrId];
+                        attr['value'] = sValue;
+                        attributes[sAttrId] = attr;
+                        ep.servClusters[sClustId] = attributes;
+                    }
                 }
             }
 
@@ -1469,12 +1479,14 @@
             }
             servClustArr.forEach((clustId) => {
                 console.log("servClust="+clustId);
+                if (clustId == "")
+                    return; // Empty => exit foreach()
                 if (clustId == "0000") // Basic cluster supported on this EP
                     $("#idEP"+sEp+"Model").show();
                 var newRow = servClustTable.insertRow(-1);
                 var newCol = newRow.insertCell(0);
                 newCol.innerHTML = clustId;
-                newCol.innerHTML += '<a class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\')"><i class="fas fa-sync"></i></a>';
+                newCol.innerHTML += '<a class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
                 if (clustId == "0000") { // Basic cluster supported on this EP
                     requestInfos('manufacturer', sEp, clustId);
                     requestInfos('modelId', sEp, clustId);

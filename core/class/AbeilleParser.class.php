@@ -1507,22 +1507,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 return;
             }
 
-            // Tcharp38: profId=104 & clustId=0001 does not mean it is power report. It could be
-            //   plenty of other "response" (ex: discover attribut response)
-            // // Cluster 0x0001 Power
-            // if (($profile == "0104") && ($cluster == "0001")) {
-            //     // Managed/Processed by Ziagte which send a 8102 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
-            //     parserLog("debug", "  Duplication of 8102 and 8000 => dropped", "8002");
-            //     return;
-            // }
-
-            // Cluster 0x0004 Groups
-            if (($profile == "0104") && ($cluster == "0004")) {
-                // Managed/Processed by Ziagte which send a 8062 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
-                parserLog("debug", "  Duplication of 8102 and 8000 => dropped", "8002");
-                return;
-            }
-
             //  Cluster 0005 Scene (exemple: Boutons lateraux de la telecommande -)
             if (($profile == "0104") && ($cluster == "0005")) {
 
@@ -1760,7 +1744,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs
-            if (($profile == "0104") && ($cluster == "0006")) {
+            // Tcharp38: What is cmd 'FD' ??
+            $cmd = substr($payload,30, 2);
+            if (($profile == "0104") && ($cluster == "0006") && ($cmd == "FD")) {
 
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
@@ -1779,8 +1765,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 return;
             }
 
-            //
-            if (($profile == "0104") && ($cluster == "0008")) {
+            // Tcharp38: What is cmd 'FD' ??
+            if (($profile == "0104") && ($cluster == "0008") && ($cmd == "FD")) {
 
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
@@ -2094,6 +2080,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     }
                 }
             }
+
+            /* WARNING:
+               If reached this step it is assumed that message is "Zigbee cluster library" compliant.
+               This is the case for profile 0104 (ZHA)
+             */
 
             /* Decoding ZCL header */
             $FCF = substr($payload, 26, 2); // Frame Control Field

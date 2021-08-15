@@ -243,21 +243,21 @@ class AbeilleTools
      * Read given command JSON file.
      *  'cmdFName' = command file name without '.json'
      *  'newJCmdName' = cmd name to replace (coming from 'use')
-     * Returns: array()
+     * Returns: array() or false if not found.
      */
     public static function getCommandConfig($cmdFName, $newJCmdName = '')
     {
         $fullPath = cmdsDir.$cmdFName.'.json';
         if (!file_exists($fullPath)) {
-            log::add('Abeille', 'error', "La commande '".$cmdFName."' n'existe pas.");
-            return array();
+            log::add('Abeille', 'error', "Le fichier de commande '".$cmdFName.".json' n'existe pas.");
+            return false;
         }
 
         $jsonContent = file_get_contents($fullPath);
         $cmd = json_decode($jsonContent, true);
         if (json_last_error() != JSON_ERROR_NONE) {
-            log::add('Abeille', 'error', 'getCommandConfig: content is not json: '.$jsonContent);
-            return array();
+            log::add('Abeille', 'error', "Fichier de commande '".$cmdFName.".json' corrompu.");
+            return false;
         }
 
         /* Replacing top key from fileName to jeedomCmdName if different */
@@ -319,10 +319,18 @@ class AbeilleTools
                 unset($device['Categorie']);
             }
         }
-        if (!isset($device['configuration']['icon'])) {
-            if (isset($device['configuration']['icone'])) {
-                $device['configuration']['icon'] = $device['configuration']['icone'];
-                unset($device['configuration']['icone']);
+        if (isset($device['configuration'])) {
+            if (!isset($device['configuration']['icon'])) {
+                if (isset($device['configuration']['icone'])) {
+                    $device['configuration']['icon'] = $device['configuration']['icone'];
+                    unset($device['configuration']['icone']);
+                }
+            }
+            if (!isset($device['configuration']['batteryType'])) {
+                if (isset($device['configuration']['battery_type'])) {
+                    $device['configuration']['batteryType'] = $device['configuration']['battery_type'];
+                    unset($device['configuration']['battery_type']);
+                }
             }
         }
         if (!isset($device['commands'])) {
@@ -341,28 +349,33 @@ class AbeilleTools
                 foreach ($jsonCmds as $cmd1 => $cmd2) {
                     if (substr($cmd1, 0, 7) == "include") {
                         /* Old command JSON format: "includeX": "json_cmd_name" */
-                        $deviceCmds += self::getCommandConfig($cmd2);
+                        $newCmd = self::getCommandConfig($cmd2);
+                        if ($newCmd === false)
+                            continue; // Cmd does not exist.
+                        $deviceCmds += $newCmd;
                     } else {
                         /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
-                        log::add('Abeille', 'debug', 'getDeviceConfig(): New cmd format='.json_encode($cmd2));
+                        // log::add('Abeille', 'debug', 'getDeviceConfig(): New cmd format='.json_encode($cmd2));
                         $cmdFName = $cmd2['use']; // File name without '.json'
-                        $newCmd = self::getCommandConfig($cmd2['use'], $cmd1);
+                        $newCmd = self::getCommandConfig($cmdFName, $cmd1);
+                        if ($newCmd === false)
+                            continue; // Cmd does not exist.
 
                         if (isset($cmd2['execAtCreation'])) {
                             $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
                         }
                         if (isset($cmd2['params'])) {
-                            // Overwritting settings with given parameters
+                            // Overwritting default settings with 'params' content
                             $params = explode('&', $cmd2['params']); // EP=01&CLUSTID=0000 => EP=01, CLUSTID=0000
                             $text = json_encode($newCmd);
                             foreach ($params as $p) {
                                 list($pName, $pVal) = explode("=", $p);
-                                // $text = str_replace('#EP#', $mainEP, $text);
+                                $pName = strtoupper($pName);
                                 $text = str_replace('#'.$pName.'#', $pVal, $text);
                             }
                             $newCmd = json_decode($text, true);
                         }
-                        log::add('Abeille', 'debug', 'getDeviceConfig(): newCmd='.json_encode($newCmd));
+                        // log::add('Abeille', 'debug', 'getDeviceConfig(): newCmd='.json_encode($newCmd));
                         $deviceCmds += $newCmd;
                     }
                 }

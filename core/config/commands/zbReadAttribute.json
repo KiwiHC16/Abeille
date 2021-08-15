@@ -7,7 +7,7 @@
         "subType": "other",
         "configuration": {
             "topic": "readAttribute",
-            "request": "EP=#EP#&clustId=0702&attrId=0300"
+            "request": "ep=#EP#&clustId=#CLUSTID#&attrId=#ATTRID#"
         },
         "type": "action"
     }

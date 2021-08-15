@@ -2148,7 +2148,7 @@ while ($cron->running()) {
             $logicalId = $net.'/'.$addr;
             $jsonName = $msg['jsonId'];
             $jsonLocation = $msg['jsonLocation']; // 'Abeille' or 'local'
-            log::add('Abeille', 'debug', "msgFromParser(): Eq announce received for ".$net.'/'.$addr.", zbId='".$jsonName."'");
+            log::add('Abeille', 'debug', "msgFromParser(): Eq announce received for ".$net.'/'.$addr.", jsonId='".$jsonName."'".", jsonLoc='".$jsonLocation."'");
 
             $ieee = $msg['ieee'];
 
@@ -2607,7 +2607,6 @@ while ($cron->running()) {
         $logicalId = $net.'/'.$addr;
         $abeilleConfig = AbeilleTools::getParameters();
         $deviceConfig = AbeilleTools::getDeviceConfig($jsonName, $jsonLocation);
-        // $deviceConfig = $deviceConfig[$jsonName]; // Removing top key
 
         if (isset($deviceConfig['syntaxError'])) {
             message::add("Abeille", "Erreurs de syntaxe dans JSON ".$jsonName, '');
@@ -2615,7 +2614,7 @@ while ($cron->running()) {
         }
 
         $eqType = $deviceConfig['type'];
-        $elogic = self::byLogicalId($net."/".$addr, 'Abeille');
+        $elogic = self::byLogicalId($logicalId, 'Abeille');
         if (!is_object($elogic)) {
             $newEq = true;
             log::add('Abeille', 'debug', 'createDevice(): New device '.$net.'/'.$addr);
@@ -2646,34 +2645,28 @@ while ($cron->running()) {
             else
                 message::add("Abeille", $userMsg, '');
         }
+        if ($jsonLocation != "Abeille") {
+            $fullPath = __DIR__."/../config/devices/".$jsonName."/".$jsonName.".json";
+            if (file_exists($fullPath))
+                message::add("Abeille", "ATTENTION: Config locale (devices_local) utilisée alors qu'une config officielle existe.", '');
+        }
 
         /* Whatever creation or update, common steps follows */
         $objetConfiguration = $deviceConfig["configuration"];
+        log::add('Abeille', 'debug', 'config='.json_encode($objetConfiguration));
 
         /* mainEP:
-           Was used to define main End Point on which we could read model/manuf/location;
-           Should NOT be set to #EP# in device JSON.
-           If set to '#EP#' or unset
-             - Set to firstEP if defined
-             - else set to '01 */
-        $mainEP = $objetConfiguration['mainEP'];
-        if (($mainEP == "#EP#") ||($mainEP == "")) {
-            if ($firstEP != "")
-                $mainEP = $firstEP;
-            else
-                $mainEP = "01"; // Defaulting to 01
+           Was used to define main End Point on which we could read model/manuf/location
+           but also for all commands using "#EP#".
+           No longer required with latest JSON syntax ("use" instead of "include"). */
+        if (isset($objetConfiguration['mainEP'])) {
+            $mainEP = $objetConfiguration['mainEP'];
+            $elogic->setConfiguration('mainEP', $mainEP);
+        } else {
+            $mainEP = "";
+            $elogic->setConfiguration('mainEP', null); // Remove obsolete entry
         }
 
-        // Replacing all remaining '#EP#' with 'mainEP' value
-        // Note that this is possible only with old cmd JSON format (include XXX)
-        log::add('Abeille', 'debug', 'createDevice(): mainEP='.$mainEP);
-        $deviceConfigJson = json_encode($deviceConfig);
-        $deviceConfigJson = str_replace('#EP#', $mainEP, $deviceConfigJson);
-        $deviceConfig = json_decode($deviceConfigJson, true);
-        log::add('Abeille', 'debug', 'createDevice(): Updated EQ config='.json_encode($deviceConfig));
-
-        // $objetDefSpecific = $deviceConfig[$jsonName];
-        log::add('Abeille', 'debug', 'Template config='.json_encode($objetConfiguration));
         $elogic->setConfiguration('modeleJson', $jsonName);
         if ($jsonLocation != "Abeille")
             $elogic->setConfiguration('ab::jsonLocation', 'local');
@@ -2689,15 +2682,14 @@ while ($cron->running()) {
             $elogic->setConfiguration('icone', $icon);
         }
 
-        $elogic->setConfiguration('mainEP', $mainEP);
         $lastCommTimeout = (array_key_exists("lastCommunicationTimeOut", $objetConfiguration) ? $objetConfiguration["lastCommunicationTimeOut"] : '-1');
         $elogic->setConfiguration('lastCommunicationTimeOut', $lastCommTimeout);
         $elogic->setConfiguration('IEEE', $ieee);
 
         if (isset($objetConfiguration['batteryType']))
             $elogic->setConfiguration('battery_type', $objetConfiguration['batteryType']);
-        else if (isset($objetConfiguration['battery_type'])) // Old name support
-            $elogic->setConfiguration('battery_type', $objetConfiguration['battery_type']);
+        else
+            $elogic->setConfiguration('battery_type', null);
 
         if (isset($objetConfiguration['paramType']))
             $elogic->setConfiguration('paramType', $objetConfiguration['paramType']);
@@ -2763,10 +2755,22 @@ while ($cron->running()) {
         $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
         $elogic->save();
 
-        if (isset($deviceConfig['commands']))
+        if (isset($deviceConfig['commands'])) {
             $jsonCmds = $deviceConfig['commands'];
-        else if (isset($v['Commandes'])) // Old name support
-            $jsonCmds = $deviceConfig['Commandes'];
+            $jsonCmds2 = json_encode($jsonCmds);
+            if (strstr($jsonCmds2, '#EP#') !== false) {
+                if ($mainEP == "")
+                    message::add("Abeille", "'mainEP' est requis mais n'est pas défini dans '".$jsonName.".json'", '');
+                else {
+                    // Replacing all remaining '#EP#' with 'mainEP' value
+                    // Note that this is possible only with old cmd JSON format (include XXX)
+                    log::add('Abeille', 'debug', 'createDevice(): mainEP='.$mainEP);
+                    $jsonCmds2 = str_replace('#EP#', $mainEP, $jsonCmds2);
+                    $jsonCmds = json_decode($jsonCmds2, true);
+                    log::add('Abeille', 'debug', 'createDevice(): Updated commands='.json_encode($jsonCmds));
+                }
+            }
+        }
 
         /* Removing obsolete commands, not listed in JSON.
            Might be needed for ex if device was previously 'defaultUnknown'. */

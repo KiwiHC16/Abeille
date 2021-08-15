@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-210814-BETA-1
+210815-BETA-1
 ----------
 
 - Page EQ/avancé: mise-à-jour de l'assistant de découverte.

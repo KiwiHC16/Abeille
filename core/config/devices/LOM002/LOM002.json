@@ -6,7 +6,11 @@
             "poll": "1",
             "icon": "LOM002"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Philips Hue Smart Plug",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -24,10 +28,6 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Philips Hue Smart Plug"
+        }
     }
 }

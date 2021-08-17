@@ -7,7 +7,11 @@
             "poll": "1",
             "icon": "LST001"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "Hue LightStrip 1re g\u00e9n\u00e9ration",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -46,10 +50,6 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "Hue LightStrip 1re g\u00e9n\u00e9ration"
+        }
     }
 }

@@ -7,7 +7,11 @@
             "mainEP": "01",
             "icon": "LegrandRemoteSwitch"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "Legrand T\u00e9l\u00e9commande Depart Arriv\u00e9e",
+        "commands": {
             "include1": "offGroup",
             "include2": "toggleGroup",
             "include3": "onGroup",
@@ -26,10 +30,6 @@
             "include11 2 2": "Click-Middle",
             "include11 2 2 2": "Left-Right-Cmd",
             "include11 2 2 2 2": "Left-Right-Direction"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "Legrand T\u00e9l\u00e9commande Depart Arriv\u00e9e"
+        }
     }
 }

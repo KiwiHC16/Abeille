@@ -8,17 +8,17 @@
             "mainEP": "01",
             "icon": "XiaomiPorte"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "Xiaomi Aqara door sensor",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "etatDoor",
             "include4": "Batterie-Volt",
             "include5": "Batterie-Pourcent",
             "include6": "Xiaomi-ff01"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "Xiaomi Aqara door sensor"
+        }
     }
 }

@@ -9,7 +9,11 @@
             "poll": "1",
             "icon": "JR-ZPM01"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "Girier ZigBee smart plug EU",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -30,10 +34,6 @@
             "include3 2 2 2": "PuissanceLegrandPrise",
             "include3 2 2 2 3": "CurrentSummationDelivered",
             "include3 2 2 2 4 2 2": "getPlugVAW"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "Girier ZigBee smart plug EU"
+        }
     }
 }

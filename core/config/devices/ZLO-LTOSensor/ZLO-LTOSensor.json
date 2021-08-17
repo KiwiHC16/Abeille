@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "ZLO-LTOSensor"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "ZLO-LTOSensor for Dev",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -16,10 +20,6 @@
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",
             "include7": "Xiaomi-ff01"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "ZLO-LTOSensor for Dev"
+        }
     }
 }

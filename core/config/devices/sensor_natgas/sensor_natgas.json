@@ -5,7 +5,11 @@
             "mainEP": "01",
             "icon": "XiaomiSensorGaz"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "Xiaomi Gaz Sensor",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "securitySafetySmoke",
@@ -14,10 +18,6 @@
             "include6": "setSmokeSensivityMedium",
             "include7": "setSmokeSensivityHigh",
             "include8": "testSmoke"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "Xiaomi Gaz Sensor"
+        }
     }
 }

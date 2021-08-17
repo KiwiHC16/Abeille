@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "TS0013"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Yagusmart Tuya ZigBee Smart Switch 3 Bang",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
@@ -21,10 +25,6 @@
             "include6 2 2": "Off2",
             "include15": "getManufacturerName",
             "include16": "getModelIdentifier"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Yagusmart Tuya ZigBee Smart Switch 3 Bang"
+        }
     }
 }

@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "TRADFRItransformer30W"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "IKEA Ampoule TRADFRI transformer 30W",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -27,10 +31,6 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "IKEA Ampoule TRADFRI transformer 30W"
+        }
     }
 }

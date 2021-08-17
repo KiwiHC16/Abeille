@@ -8,13 +8,17 @@
             "mainEP": "01",
             "icon": "bsoProFalux"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Profalux BSO (brise-soleil orientable)",
+        "commands": {
             "include0 2 2": "Lift",
             "include0 2 2 2": "Tilt",
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
-            "include4": "ZCLVersion",
+            "include4": "zb-0000-ZCLVersion",
             "include5": "dateCode",
             "include6": "location",
             "include7": "etatVolet",
@@ -37,10 +41,6 @@
             "include29": "setReportLevel",
             "include30": "moveToLiftAndTiltBSO_Lift",
             "include30 2": "moveToLiftAndTiltBSO_Tilt"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Profalux BSO (brise-soleil orientable)"
+        }
     }
 }

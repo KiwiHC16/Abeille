@@ -5,16 +5,16 @@
             "mainEP": "01",
             "icon": "TY0A01"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Wima Lock",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Wima Lock"
+        }
     }
 }

@@ -5,14 +5,14 @@
             "mainEP": "01",
             "icon": "1-digital-input"
         },
-        "Commandes": {
-            "include100": "nom",
-            "include2": "etatEp02in",
-            "include2 1": "getEtatEp02"
-        },
         "category": {
             "automatism": "1"
         },
-        "type": "1-digital-input"
+        "type": "1-digital-input",
+        "commands": {
+            "include100": "nom",
+            "include2": "etatEp02in",
+            "include2 1": "getEtatEp02"
+        }
     }
 }

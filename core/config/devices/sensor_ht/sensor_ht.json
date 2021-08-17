@@ -7,7 +7,11 @@
             "mainEP": "01",
             "icon": "XiaomiTemperatureRond"
         },
-        "Commandes": {
+        "category": {
+            "heating": "1"
+        },
+        "type": "Xiaomi Temperature Rond",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "temperature",
@@ -15,10 +19,6 @@
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",
             "include7": "Xiaomi-ff01"
-        },
-        "category": {
-            "heating": "1"
-        },
-        "type": "Xiaomi Temperature Rond"
+        }
     }
 }

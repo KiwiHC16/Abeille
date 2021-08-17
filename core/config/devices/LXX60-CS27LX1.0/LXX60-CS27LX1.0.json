@@ -7,17 +7,17 @@
             "mainEP": "01",
             "icon": "LXX60-CS27LX1.0"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Zemismart ZW-EC-01 curtain switch",
+        "commands": {
             "include0003-1": "Identify",
             "include0004-1": "Group-Membership",
             "include0006-3": "etat",
             "include0102-1": "WindowsCoveringUp",
             "include0102-2": "WindowsCoveringDown",
             "include0102-3": "WindowsCoveringStop"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Zemismart ZW-EC-01 curtain switch"
+        }
     }
 }

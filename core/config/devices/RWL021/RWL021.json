@@ -9,7 +9,11 @@
             "mainEP": "01",
             "icon": "RWL021"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "Hue Dimmer Switch RWL021",
+        "commands": {
             "include1": "offGroup",
             "include2": "toggleGroup",
             "include3": "onGroup",
@@ -28,10 +32,6 @@
             "include9 a tester": "getBattery",
             "include10 a tester": "BindShortToZigateBatterie",
             "include11 a tester": "setReportBatterie"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "Hue Dimmer Switch RWL021"
+        }
     }
 }

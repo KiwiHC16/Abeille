@@ -9,7 +9,11 @@
             "mainEP": "01",
             "icon": "TS011F__TZ3000_vzopcetz"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "SILVERCREST Bloc multiprise USB SPSZ 3 A1",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
@@ -30,10 +34,6 @@
             "include10": "setReportEtat",
             "include11": "getManufacturerName",
             "include12": "getModelIdentifier"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "SILVERCREST Bloc multiprise USB SPSZ 3 A1"
+        }
     }
 }

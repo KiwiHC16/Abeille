@@ -8,7 +8,11 @@
             "poll": "1",
             "icon": "OSRAMClassicE27Dimmable"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "ClassicB40TW-LIGHTIFY",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -31,10 +35,6 @@
             "include29": "setReportLevel",
             "include30": "2000K",
             "include31": "6500K"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "ClassicB40TW-LIGHTIFY"
+        }
     }
 }

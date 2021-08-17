@@ -5,7 +5,11 @@
             "mainEP": "01",
             "icon": "4-digital-input"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "4-digital-input",
+        "commands": {
             "include100": "nom",
             "include2": "etatEp02in",
             "include2 1": "getEtatEp02",
@@ -15,10 +19,6 @@
             "include4 1": "getEtatEp04",
             "include5": "etatEp05in",
             "include5 1": "getEtatEp05"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "4-digital-input"
+        }
     }
 }

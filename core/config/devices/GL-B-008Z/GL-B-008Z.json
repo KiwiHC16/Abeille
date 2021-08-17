@@ -6,7 +6,13 @@
             "poll": "1",
             "icon": "GL-B-008Z"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "Gledopto GL-B-008Z 12W RGB+Dual White LED Bulb",
+        "manufacturer": "Gledopto",
+        "model": "GL-B-008Z",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -51,12 +57,6 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "Gledopto GL-B-008Z 12W RGB+Dual White LED Bulb",
-        "manufacturer": "Gledopto",
-        "model": "GL-B-008Z"
+        }
     }
 }

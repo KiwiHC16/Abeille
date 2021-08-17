@@ -6,7 +6,11 @@
             "poll": "1",
             "icon": "zigbeeDimmablelight"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "Template for ZigBee - Dimmable Light",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -27,10 +31,6 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "Template for ZigBee - Dimmable Light"
+        }
     }
 }

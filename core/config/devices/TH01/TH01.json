@@ -10,7 +10,11 @@
             "mainEP": "01",
             "icon": "SNZB-02"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Sonoff SNZB-02 temp & humidity",
+        "commands": {
             "include2": "nom",
             "include2 2 2 2 2 3": "temperature",
             "include2 2 2 2": "BindToZigateTemperature",
@@ -21,10 +25,6 @@
             "include2 3 2": "Batterie-Pourcent-Heiman",
             "include2 2 2": "BindToPowerConfig",
             "include2 2 2 3": "setReportBatterie"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Sonoff SNZB-02 temp & humidity"
+        }
     }
 }

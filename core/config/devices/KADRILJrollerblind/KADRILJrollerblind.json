@@ -6,11 +6,15 @@
             "mainEP": "01",
             "icon": "FYRTURblock-outrollerblind"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "KADRILJ roller blind",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
-            "include4": "ZCLVersion",
+            "include4": "zb-0000-ZCLVersion",
             "include5": "dateCode",
             "include9": "WindowsCoveringUp",
             "include10": "WindowsCoveringDown",
@@ -19,10 +23,6 @@
             "include22": "getModelIdentifier",
             "include23": "getSWBuild",
             "include25": "Group-Membership"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "KADRILJ roller blind"
+        }
     }
 }

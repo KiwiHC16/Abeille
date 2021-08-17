@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "switch_b2nacn02"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Wall Switch D1 w Neutral 2 Button",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -28,10 +32,6 @@
             "include23": "getSWBuild",
             "include24": "Identify",
             "include25": "Group-Membership"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Xiaomi Wall Switch D1 w Neutral 2 Button"
+        }
     }
 }

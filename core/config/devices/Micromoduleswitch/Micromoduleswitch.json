@@ -5,7 +5,11 @@
             "mainEP": "01",
             "icon": "Micromoduleswitch"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Legrand Micro Module Encastrable 220V avec Neutre et un bouton poussoir",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -21,10 +25,6 @@
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Legrand Micro Module Encastrable 220V avec Neutre et un bouton poussoir"
+        }
     }
 }

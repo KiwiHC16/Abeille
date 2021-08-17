@@ -5,7 +5,11 @@
             "mainEP": "01",
             "icon": "ZLO-ExtendedColor"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "ZLO-ExtendedColor Test for Dev",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -42,10 +46,6 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "ZLO-ExtendedColor Test for Dev"
+        }
     }
 }

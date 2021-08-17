@@ -6,7 +6,11 @@
             "poll": "0",
             "icon": "TS0121"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "TS0121",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -29,10 +33,6 @@
             "include3 2 2 2 4": "getPlugPower",
             "include3 2 2 2 4 2": "getPlugA",
             "include3 2 2 2 4 2 2": "getPlugV"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "TS0121"
+        }
     }
 }

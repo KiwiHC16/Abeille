@@ -6,13 +6,13 @@
             "mainEP": "01",
             "icon": "TS0041"
         },
-        "Commandes": {
-            "include3": "nom",
-            "include5 3": "etatInter0"
-        },
         "category": {
             "automatism": "1"
         },
-        "type": "Zemismart Remote 1 bouton sur pile"
+        "type": "Zemismart Remote 1 bouton sur pile",
+        "commands": {
+            "include3": "nom",
+            "include5 3": "etatInter0"
+        }
     }
 }

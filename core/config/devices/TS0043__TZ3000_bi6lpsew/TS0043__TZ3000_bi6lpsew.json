@@ -6,15 +6,15 @@
             "mainEP": "01",
             "icon": "LoraTap3GangRemote"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "LoraTap Remote 3 boutons sur piles",
+        "commands": {
             "include3": "nom",
             "include5 3": "etatInter0",
             "include5 3 2": "etatInter1",
             "include5 3 2 2": "etatInter2"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "LoraTap Remote 3 boutons sur piles"
+        }
     }
 }

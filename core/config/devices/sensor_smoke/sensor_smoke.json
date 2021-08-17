@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "XiaomiSensorSmoke"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "Xiaomi Smoke Sensor",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "securitySafetySmoke",
@@ -17,10 +21,6 @@
             "include8": "setSmokeSensivityMedium",
             "include9": "setSmokeSensivityHigh",
             "include10": "testSmoke"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "Xiaomi Smoke Sensor"
+        }
     }
 }

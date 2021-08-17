@@ -6,17 +6,17 @@
             "mainEP": "01",
             "icon": "zigbeeNoncolorcontroller"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "zigbee Non color controller",
+        "commands": {
             "include1": "offGroup",
             "include2": "toggleGroup",
             "include3": "onGroup",
             "include4": "downGroup",
             "include5": "upGroup",
             "include6": "setLevelGroup"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "zigbee Non color controller"
+        }
     }
 }

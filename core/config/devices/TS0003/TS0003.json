@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "TS0003"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Zemismart 3 boutons",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
@@ -25,10 +29,6 @@
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Zemismart 3 boutons"
+        }
     }
 }

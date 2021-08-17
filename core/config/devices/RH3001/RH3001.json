@@ -6,14 +6,14 @@
             "mainEP": "01",
             "icon": "RH3001"
         },
-        "Commandes": {
-            "include1": "SW",
-            "include2": "nom",
-            "include3": "etatDoorAlarme"
-        },
         "category": {
             "security": "1"
         },
-        "type": "Tuya NEO RH3001"
+        "type": "Tuya NEO RH3001",
+        "commands": {
+            "include1": "SW",
+            "include2": "nom",
+            "include3": "etatDoorAlarme"
+        }
     }
 }

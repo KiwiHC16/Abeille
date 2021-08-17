@@ -6,7 +6,11 @@
             "mainEP": "06",
             "icon": "TI0001"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "Livolo Switch TI0001",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -29,10 +33,6 @@
             "include8 2 2 2 2 2": "BindToZigateLevel",
             "include8 2 2 2 2 2 2": "setReportEtat",
             "include8 2 2 2 2 2 2 2": "setReportLevel"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "Livolo Switch TI0001"
+        }
     }
 }

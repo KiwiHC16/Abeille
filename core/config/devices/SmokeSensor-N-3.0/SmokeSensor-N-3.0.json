@@ -9,7 +9,11 @@
             "mainEP": "01",
             "icon": "SmokeSensor-EM"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "Heiman HS1SA smoke sensor",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "securitySafetySmokeHeiman2",
@@ -19,10 +23,6 @@
             "include11": "setReportBatterie",
             "include10 2": "BindShortToSmokeHeiman",
             "include11 2": "setReportSmokeHeiman"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "Heiman HS1SA smoke sensor"
+        }
     }
 }

@@ -9,7 +9,11 @@
             "poll": "1",
             "icon": "GL-S-003Z"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "GLEDOPTO Couleur",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -54,10 +58,6 @@
             "include39": "4000K",
             "include40": "temperatureLight",
             "include40 2 2": "setTemperatureLight"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "GLEDOPTO Couleur"
+        }
     }
 }

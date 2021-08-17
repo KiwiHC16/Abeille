@@ -6,7 +6,11 @@
             "poll": "0",
             "icon": "defaultUnknown"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "defaultUnknown",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -14,10 +18,6 @@
             "include22": "getModelIdentifier",
             "include23": "getSWBuild",
             "include24": "Identify"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "defaultUnknown"
+        }
     }
 }

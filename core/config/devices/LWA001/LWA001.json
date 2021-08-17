@@ -6,7 +6,11 @@
             "mainEP": "0B",
             "icon": "LTA001"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1143",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -27,10 +31,6 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1143"
+        }
     }
 }

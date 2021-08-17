@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "MotionSensor-A"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "Osram Motion Sensor-A",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "presenceEP2",
@@ -17,10 +21,6 @@
             "include2 2": "setReportTemperature",
             "include4 2 2 2 3": "BindShortToZigateBatterie",
             "include4 2 2 2 2 2 2 2": "setReportBatterie"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "Osram Motion Sensor-A"
+        }
     }
 }

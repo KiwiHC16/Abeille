@@ -6,7 +6,11 @@
             "mainEP": "03",
             "icon": "OsramLightifyplug01OutDoor"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "OSRAM Prise Lightify OutDoor",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
@@ -22,10 +26,6 @@
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "OSRAM Prise Lightify OutDoor"
+        }
     }
 }

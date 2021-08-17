@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "XiaomiVibration"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "Xiaomi Vibration",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "vibrationType",
@@ -21,10 +25,6 @@
             "include12": "getManufacturerName",
             "include13": "societe",
             "include14": "getModelIdentifier"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "Xiaomi Vibration"
+        }
     }
 }

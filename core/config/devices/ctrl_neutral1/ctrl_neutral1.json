@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "ctrl_neutral1"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Wall Switch w\/o Neutral 1",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -25,10 +29,6 @@
             "include3 2 2 2 2 2 2": "On1",
             "include3 2 2 2 2 2 2 2": "Off1",
             "include3 2 2 2 2 2 2 2 2": "Toggle1"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Xiaomi Wall Switch w\/o Neutral 1"
+        }
     }
 }

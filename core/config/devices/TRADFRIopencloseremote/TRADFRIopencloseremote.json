@@ -7,11 +7,15 @@
             "mainEP": "01",
             "icon": "TRADFRIopencloseremote"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "IKEA TRADFRI Carre 2 Boutons Remote Control livr\u00e9 avec Fyrtur Store",
+        "commands": {
             "include1 2": "nom",
             "include2 2": "societe",
             "include3 2": "SW",
-            "include4": "ZCLVersion",
+            "include4": "zb-0000-ZCLVersion",
             "include5": "dateCode",
             "include9 2": "WindowsCoveringUpGroup",
             "include10 2": "WindowsCoveringDownGroup",
@@ -23,10 +27,6 @@
             "include9": "getBattery",
             "include10": "BindShortToZigateBatterie",
             "include11": "setReportBatterie"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "IKEA TRADFRI Carre 2 Boutons Remote Control livr\u00e9 avec Fyrtur Store"
+        }
     }
 }

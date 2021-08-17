@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "TRADFRIbulbE27WW806lm"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "TRADFRI bulb E27 WW 806lm ",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -27,10 +31,6 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "TRADFRI bulb E27 WW 806lm "
+        }
     }
 }

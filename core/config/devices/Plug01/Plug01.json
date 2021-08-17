@@ -5,7 +5,11 @@
             "mainEP": "03",
             "icon": "OsramLightify"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "OSRAM Prise Lightify",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
@@ -21,10 +25,6 @@
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "OSRAM Prise Lightify"
+        }
     }
 }

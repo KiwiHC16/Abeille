@@ -8,17 +8,17 @@
             "mainEP": "01",
             "icon": "router"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "router",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
             "include21": "getManufacturerName",
             "include22": "getModelIdentifier",
             "include23": "getSWBuild"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "router"
+        }
     }
 }

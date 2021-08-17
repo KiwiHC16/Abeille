@@ -8,7 +8,11 @@
             "paramType": "telecommande",
             "icon": "remotecontrol"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "Virtual remote for groups control",
+        "commands": {
             "include1": "offGroup",
             "include1 2": "onGroup",
             "include1 2 2": "onGroupBroadcast",
@@ -27,10 +31,6 @@
             "include11 2 2 2 2 2 2": "BleuGroup",
             "include11 2 2 2 2 2 2 2": "RougeGroup",
             "include11 2 2 2 2 2 2 2 2": "VertGroup"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "Virtual remote for groups control"
+        }
     }
 }

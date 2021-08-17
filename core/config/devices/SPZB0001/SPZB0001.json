@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "SPZB0001"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Eurotronic Spirit",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -43,10 +47,6 @@
             "include25 2 3 2 2 2 2": "spiritHostFlagsOffSet",
             "include25 2 3 2 2 2 2 2": "spiritUnknown1",
             "include25 2 3 2 2 2 2 2 2": "spiritUnknown2"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Eurotronic Spirit"
+        }
     }
 }

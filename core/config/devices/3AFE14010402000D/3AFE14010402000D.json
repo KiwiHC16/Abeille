@@ -6,15 +6,15 @@
             "mainEP": "01",
             "icon": "3AFE14010402000D"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "Konke IR INfra Rouge Presence",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "etatIR_Alarme",
             "include4 2": "Batterie-Volt-Konke"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "Konke IR INfra Rouge Presence"
+        }
     }
 }

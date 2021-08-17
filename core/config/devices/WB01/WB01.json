@@ -9,17 +9,17 @@
             "mainEP": "01",
             "icon": "SNZB-01"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Sonoff SNZB-01 wireless button",
+        "commands": {
             "include2": "nom",
             "include2 3": "Click-Middle",
             "include2 2": "BindToZigateEtat",
             "include2 3 2": "Batterie-Pourcent-Heiman",
             "include2 2 2": "BindToPowerConfig",
             "include2 2 2 3": "setReportBatterie"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Sonoff SNZB-01 wireless button"
+        }
     }
 }

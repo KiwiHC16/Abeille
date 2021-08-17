@@ -12,24 +12,21 @@
             "mainEP": "01",
             "icon": "TRADFRIonoffswitch"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "TRADFRI on\/off switch",
+        "commands": {
             "include3": "SW",
             "include23": "getSWBuild",
-
             "include4": "offGroup",
             "include6": "onGroup",
-
             "include8": "Batterie-Pourcent-Ikea",
             "include9": "getBattery",
             "include10": "BindShortToZigateBatterie",
             "include11": "setReportBatterie",
-            
-      "include7": "Up-Down",
-      "include12": "Click-Middle"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "TRADFRI on\/off switch"
+            "include7": "Up-Down",
+            "include12": "Click-Middle"
+        }
     }
 }

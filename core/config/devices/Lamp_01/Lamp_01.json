@@ -5,7 +5,11 @@
             "mainEP": "0B",
             "icon": "Lamp_01"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "ZigBee On Off Controller",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
@@ -16,10 +20,6 @@
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "ZigBee On Off Controller"
+        }
     }
 }

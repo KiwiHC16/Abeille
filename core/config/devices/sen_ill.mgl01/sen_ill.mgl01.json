@@ -9,7 +9,11 @@
             "mainEP": "01",
             "icon": "sen_ill_mgl01"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "Xiaomi GZCGQ01LM smart light sensor",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include7": "Xiaomi-ff01",
@@ -36,10 +40,6 @@
             },
             "include0001-3": "Battery-Volt2Percent-3",
             "include0001-4": "Batterie-Pourcent-Ikea"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "Xiaomi GZCGQ01LM smart light sensor"
+        }
     }
 }

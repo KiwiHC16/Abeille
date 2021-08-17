@@ -5,7 +5,11 @@
             "mainEP": "01",
             "icon": "RF265"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "Ampoule Innr Edison RF265 White E27",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -26,10 +30,6 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "Ampoule Innr Edison RF265 White E27"
+        }
     }
 }

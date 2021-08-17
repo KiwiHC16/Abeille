@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "TRADFRIbulbE27WSclear950lm"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "TRADFRI bulb E27 WS clear 950lm",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -45,10 +49,6 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "TRADFRI bulb E27 WS clear 950lm"
+        }
     }
 }

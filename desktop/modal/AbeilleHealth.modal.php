@@ -1,8 +1,9 @@
 <?php
-    /* Developpers debug features & PHP errors */
-    define("dbgFile", __DIR__."/../../tmp/debug.json");
+    require_once __DIR__.'/../../core/config/Abeille.config.php';
+
+    /* Developers debug features & PHP errors */
     if (file_exists(dbgFile)) {
-        $dbgDeveloperMode = TRUE;
+        $dbgDeveloperMode = true;
     }
 
     require_once __DIR__.'/../../../../core/php/core.inc.php';
@@ -24,7 +25,7 @@ Démons:
             echo '<span class="label label-success" style="font-size:1em; margin-left:4px">'.$name.'</span>';
         else {
             echo '<span class="label label-danger" style="font-size:1em; margin-left:4px">'.$name.'</span>';
-            $oneMissing = TRUE;
+            $oneMissing = true;
         }
     }
 
@@ -33,7 +34,7 @@ Démons:
     $running = AbeilleTools::getRunningDaemons();
     $diff = AbeilleTools::diffExpectedRunningDaemons($config, $running);
 // logDebug("diff=".json_encode($diff));
-    $oneMissing = FALSE;
+    $oneMissing = false;
     displayDaemonStatus($diff, "Cmd", $oneMissing);
     displayDaemonStatus($diff, "Parser", $oneMissing);
     $nbOfZigates = $config['zigateNb'];
@@ -77,9 +78,8 @@ Démons:
 <table class="table table-condensed tablesorter" id="table_healthAbeille">
     <thead>
         <tr>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Module}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Equipement}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Type}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{ID}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Ruche}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Adresse}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{IEEE}}</th>
@@ -105,10 +105,11 @@ Démons:
             echo "\n\n\n\n<tr>".'<td><a href="'.$eqLogic->getLinkToConfiguration().'" style="text-decoration: none;">'.$eqLogic->getHumanName(true).'</a></td>';
 
             // Module type
+            // TODO: Put real device type instead of icon
             echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getConfiguration('icone').'</span></td>';
 
             // ID
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getId().'</span></td>';
+            // echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getId().'</span></td>';
 
             list($net, $addr) = explode("/", $eqLogic->getLogicalId());
 

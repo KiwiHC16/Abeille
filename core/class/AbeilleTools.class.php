@@ -355,18 +355,16 @@ class AbeilleTools
                         $deviceCmds += $newCmd;
                     } else {
                         /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
-                        // log::add('Abeille', 'debug', 'getDeviceConfig(): New cmd format='.json_encode($cmd2));
                         $cmdFName = $cmd2['use']; // File name without '.json'
                         $newCmd = self::getCommandConfig($cmdFName, $cmd1);
+// log::add('Abeille', 'debug', 'LA0 newCmd='.json_encode($newCmd));
+// log::add('Abeille', 'debug', 'LA0.1 cmd2='.json_encode($cmd2));
                         if ($newCmd === false)
                             continue; // Cmd does not exist.
 
-                        if (isset($cmd2['execAtCreation'])) {
-                            $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
-                        }
                         if (isset($cmd2['params'])) {
                             // Overwritting default settings with 'params' content
-                            $params = explode('&', $cmd2['params']); // EP=01&CLUSTID=0000 => EP=01, CLUSTID=0000
+                            $params = explode('&', $cmd2['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
                             $text = json_encode($newCmd);
                             foreach ($params as $p) {
                                 list($pName, $pVal) = explode("=", $p);
@@ -374,6 +372,25 @@ class AbeilleTools
                                 $text = str_replace('#'.$pName.'#', $pVal, $text);
                             }
                             $newCmd = json_decode($text, true);
+                        }
+                        if (isset($cmd2['execAtCreation'])) {
+                            $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
+                        }
+                        if (isset($cmd2['isVisible'])) {
+                            $value = $cmd2['isVisible'];
+                            if ($value === "yes")
+                                $value = 1;
+                            else if ($value === "no")
+                                $value = 0;
+                            $newCmd[$cmd1]['isVisible'] = $value;
+// log::add('Abeille', 'debug', 'LA value='.$value.', newCmd='.json_encode($newCmd));
+                        }
+                        if (isset($cmd2['nextLine'])) {
+                            $value = $cmd2['nextLine'];
+                            if ($value === "after")
+                                $newCmd[$cmd1]['display']['forceReturnLineAfter'] = 1;
+                            else if ($value === "before")
+                                $newCmd[$cmd1]['display']['forceReturnLineBefore'] = 1;
                         }
                         // log::add('Abeille', 'debug', 'getDeviceConfig(): newCmd='.json_encode($newCmd));
                         $deviceCmds += $newCmd;

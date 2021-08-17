@@ -2755,20 +2755,21 @@ while ($cron->running()) {
         $elogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
         $elogic->save();
 
+        /* During commands creation #EP# must be replaced by proper endpoint.
+           If not already done, using default (mainEP) value */
         if (isset($deviceConfig['commands'])) {
             $jsonCmds = $deviceConfig['commands'];
             $jsonCmds2 = json_encode($jsonCmds);
             if (strstr($jsonCmds2, '#EP#') !== false) {
-                if ($mainEP == "")
+                if ($mainEP == "") {
                     message::add("Abeille", "'mainEP' est requis mais n'est pas défini dans '".$jsonName.".json'", '');
-                else {
-                    // Replacing all remaining '#EP#' with 'mainEP' value
-                    // Note that this is possible only with old cmd JSON format (include XXX)
-                    log::add('Abeille', 'debug', 'createDevice(): mainEP='.$mainEP);
-                    $jsonCmds2 = str_replace('#EP#', $mainEP, $jsonCmds2);
-                    $jsonCmds = json_decode($jsonCmds2, true);
-                    log::add('Abeille', 'debug', 'createDevice(): Updated commands='.json_encode($jsonCmds));
+                    $mainEP = "01";
                 }
+
+                log::add('Abeille', 'debug', 'createDevice(): mainEP='.$mainEP);
+                $jsonCmds2 = str_replace('#EP#', $mainEP, $jsonCmds2);
+                $jsonCmds = json_decode($jsonCmds2, true);
+                log::add('Abeille', 'debug', 'createDevice(): Updated commands='.json_encode($jsonCmds));
             }
         }
 
@@ -2913,6 +2914,7 @@ while ($cron->running()) {
                     $cmdlogic->setIsHistorized(0);
             }
 
+            // Display stuff is updated only if new eq or new cmd to not overwrite user changes
             if ($newCmd) { // Update only if new command
                 if (isset($cmdValueDefaut["isVisible"]))
                     $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
@@ -2920,14 +2922,19 @@ while ($cron->running()) {
                     $cmdlogic->setIsVisible(0);
             }
 
-            // TODO: Update all JSON to move "invertBinary" into "display" section
-            if (isset($cmdValueDefaut["invertBinary"])) {
-                $cmdlogic->setDisplay('invertBinary', $cmdValueDefaut["invertBinary"]);
-            }
-            if (array_key_exists("display", $cmdValueDefaut))
-                foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
-                    $cmdlogic->setDisplay($confKey, $confValue);
+            // Display stuff is updated only if new eq or new cmd to not overwrite user changes
+            if ($newCmd) {
+                // TODO: Update all JSON to move "invertBinary" into "display" section
+                if (isset($cmdValueDefaut["invertBinary"])) {
+                    $cmdlogic->setDisplay('invertBinary', $cmdValueDefaut["invertBinary"]);
                 }
+                if (array_key_exists("display", $cmdValueDefaut))
+                    foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
+                        $cmdlogic->setDisplay($confKey, $confValue);
+                    }
+                // TODO: Missing a way to remove obsolete entries
+            }
+
             $cmdlogic->save();
         }
     } // End createDevice()

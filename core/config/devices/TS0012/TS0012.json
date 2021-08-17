@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "TS0002"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Zemismart tactile 2gang sans neutre",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
@@ -21,10 +25,6 @@
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Zemismart tactile 2gang sans neutre"
+        }
     }
 }

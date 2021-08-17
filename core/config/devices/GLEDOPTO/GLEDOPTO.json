@@ -7,7 +7,11 @@
             "poll": "1",
             "icon": "GLEDOPTO"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "GLEDOPTO",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -26,10 +30,6 @@
             "include26": "setLevel",
             "include27": "Group-Membership",
             "include27 2": "Scene-Membership"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "GLEDOPTO"
+        }
     }
 }

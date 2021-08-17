@@ -7,7 +7,11 @@
             "mainEP": "01",
             "icon": "SmokeSensor-EM"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "Humein Smoke Sensor HS1SA-E",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "securitySafetySmokeHeiman2",
@@ -17,10 +21,6 @@
             "include11": "setReportBatterie",
             "include10 2": "BindShortToSmokeHeiman",
             "include11 2": "setReportSmokeHeiman"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "Humein Smoke Sensor HS1SA-E"
+        }
     }
 }

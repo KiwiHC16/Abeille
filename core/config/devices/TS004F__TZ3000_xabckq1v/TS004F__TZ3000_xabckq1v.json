@@ -9,15 +9,15 @@
             "battery_type": "1x CR2430 3V",
             "icon": "Tuya4ButtonsSwitch"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "4 buttons light switch",
+        "commands": {
             "include0004-1": "Group-Membership",
             "include0006-1": "On",
             "include0006-2": "Off",
             "include4": "etatLight"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "4 buttons light switch"
+        }
     }
 }

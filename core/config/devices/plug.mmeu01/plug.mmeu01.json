@@ -5,7 +5,11 @@
             "mainEP": "01",
             "icon": "XiaomiPriseEU"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Prise EU",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
@@ -22,10 +26,6 @@
             "include13 2 2 2": "CurrentPrise_mA",
             "include13 2 2 2 2": "temperaturePrise",
             "include25": "Group-Membership"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Xiaomi Prise EU"
+        }
     }
 }

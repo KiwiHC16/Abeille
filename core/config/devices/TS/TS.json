@@ -9,10 +9,10 @@
             "battery_type": "2x1.5V AAA",
             "icon": "ProfaluxTelecommande"
         },
-        "Commandes": [],
         "category": {
             "automatism": "1"
         },
-        "type": "Profalux t\u00e9l\u00e9commande"
+        "type": "Profalux t\u00e9l\u00e9commande",
+        "commands": []
     }
 }

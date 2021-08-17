@@ -7,7 +7,11 @@
             "mainEP": "01",
             "icon": "PlugZ3"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Ledvance Plug Z3 on\/off plug unit",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
@@ -21,10 +25,6 @@
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Ledvance Plug Z3 on\/off plug unit"
+        }
     }
 }

@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "ZLO-OccupancySensor"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "ZLO-OccupancySensor for Dev",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "presence",
@@ -15,10 +19,6 @@
             "include6": "Batterie-Pourcent",
             "include7": "Xiaomi-ff01",
             "include8": "etat"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "ZLO-OccupancySensor for Dev"
+        }
     }
 }

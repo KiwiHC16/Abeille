@@ -8,33 +8,31 @@
             "mainEP": "01",
             "icon": "plug.maeu01"
         },
-        "Commandes": {
-            "include1": "SW",
-            "include2": "societe",
-            "include3": "nom",
-            "include9": "getManufacturerName",
-            "include10": "getModelIdentifier",
-            "include5": "On",
-            "include6": "Off",
-            "include4": "etat",
-            "include8": "getEtat",
-            "include0702-1": "zb-0702-CurrentSummationDelivered-KWh-div10",
-            "include0702-2": "zb-0702-UnitOfMeasure",
-            "include0702-3": "zbGet-0702-UnitOfMeasure",
-            "include0702-4": "zb-0702-Multiplier",
-            "include0702-5": "zbGet-0702-Multiplier",
-            "include0702-6": "zb-0702-Divisor",
-            "include0702-7": "zbGet-0702-Divisor",
-            "include0702-8": "zb-0702-SummationFormatting",
-            "include0702-9": "zbGet-0702-SummationFormatting",
-            "include0006-5": "bindToZigate-EP01-0702",
-            "include0B04-6": "setReport-EP01-0B04-050B",
-            "include0B04-1": "zb-0B04-ActivePower",
-            "include0B04-5": "bindToZigate-EP01-0B04"
-        },
         "category": {
-            "automatism": "1"
+            "automatism": "1",
+            "energy": "1"
         },
-        "type": "Aqara SmartPlug"
+        "type": "Aqara SmartPlug",
+        "commands": {
+            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
+            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
+            "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
+            "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+
+            "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "ep=01&unit=KWh&div=10", "isVisible": 1 },
+            "UnitOfMeasure": { "use": "zb-0702-UnitOfMeasure" },
+            "Get-0702-UnitOfMeasure": { "use": "zbReadAttribute", "params": "ep=01&clustId=0702&attrId=0300" },
+            "include0702-4": "zb-0702-Multiplier",
+            "Get-0702-Multiplier": { "use": "zbReadAttribute", "params": "ep=01&clustId=0702&attrId=0301" },
+            "include0702-6": "zb-0702-Divisor",
+            "Get-0702-Divisor": { "use": "zbReadAttribute", "params": "ep=01&clustId=0702&attrId=0302" },
+            "include0702-8": "zb-0702-SummationFormatting",
+            "Get-0702-SummationFormatting": { "use": "zbReadAttribute", "params": "ep=01&clustId=0702&attrId=0303" },
+            "include0006-5": "bindToZigate-EP01-0702",
+
+            "include0B04-6": "setReport-EP01-0B04-050B",
+            "ActivePower": { "use": "zb-0B04-ActivePower", "isVisible": 1 },
+            "include0B04-5": "bindToZigate-EP01-0B04"
+        }
     }
 }

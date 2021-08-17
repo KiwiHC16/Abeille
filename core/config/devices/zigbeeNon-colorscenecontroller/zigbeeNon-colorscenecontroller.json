@@ -6,14 +6,14 @@
             "poll": "1",
             "icon": "zigbeeNon-colorscenecontroller"
         },
-        "Commandes": {
-            "include1": "nom",
-            "include2": "societe",
-            "include3": "SW"
-        },
         "category": {
             "light": "1"
         },
-        "type": "Template for ZigBee - Non Color Scene Controller"
+        "type": "Template for ZigBee - Non Color Scene Controller",
+        "commands": {
+            "include1": "nom",
+            "include2": "societe",
+            "include3": "SW"
+        }
     }
 }

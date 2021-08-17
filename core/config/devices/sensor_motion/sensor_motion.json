@@ -6,17 +6,17 @@
             "mainEP": "01",
             "icon": "XiaomiInfraRouge"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "Xiaomi Presence",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "presence",
             "include4": "Batterie-Volt",
             "include5": "Batterie-Pourcent",
             "include6": "Xiaomi-ff01"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "Xiaomi Presence"
+        }
     }
 }

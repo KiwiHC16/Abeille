@@ -5,12 +5,12 @@
             "mainEP": "01",
             "icon": "diy-amp-router"
         },
-        "Commandes": {
-            "include100": "nom"
-        },
         "category": {
             "automatism": "1"
         },
-        "type": "diy-amp-router"
+        "type": "diy-amp-router",
+        "commands": {
+            "include100": "nom"
+        }
     }
 }

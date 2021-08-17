@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "TS0003"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "ZigBee Smart multiprise 16A EU 4p 2USB",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
@@ -28,10 +32,6 @@
             "include14": "getEtat",
             "include15": "getManufacturerName",
             "include16": "getModelIdentifier"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "ZigBee Smart multiprise 16A EU 4p 2USB"
+        }
     }
 }

@@ -6,15 +6,15 @@
             "mainEP": "01",
             "icon": ""
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "zigbeeIASZone",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "presence",
             "include5": "Batterie-Volt"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "zigbeeIASZone"
+        }
     }
 }

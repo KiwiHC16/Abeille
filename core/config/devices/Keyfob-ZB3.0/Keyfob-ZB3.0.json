@@ -7,7 +7,11 @@
             "poll": "1",
             "icon": "Keyfob-ZB3.0"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "NEO  Inmax 07046L Keyfob-ZB3.0",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -15,10 +19,6 @@
             "include22": "getModelIdentifier",
             "include23": "getSWBuild",
             "include24": "Identify"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "NEO  Inmax 07046L Keyfob-ZB3.0"
+        }
     }
 }

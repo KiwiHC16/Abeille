@@ -7,7 +7,11 @@
             "mainEP": "01",
             "icon": "IkeaTradfriDimmer"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "IKEA TRADFRI Dimmer Jaune",
+        "commands": {
             "include1": "offGroup",
             "include2": "toggleGroup",
             "include3": "onGroup",
@@ -16,10 +20,6 @@
             "include9": "getBattery",
             "include10": "BindShortToZigateBatterie",
             "include11": "setReportBatterie"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "IKEA TRADFRI Dimmer Jaune"
+        }
     }
 }

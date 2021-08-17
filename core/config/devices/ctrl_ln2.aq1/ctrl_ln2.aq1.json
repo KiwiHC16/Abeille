@@ -5,7 +5,11 @@
             "mainEP": "01",
             "icon": "ctrl_neutral2"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Wall Switch w Neutral 2",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -27,10 +31,6 @@
             "include23": "getSWBuild",
             "include24": "Identify",
             "include25": "Group-Membership"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Xiaomi Wall Switch w Neutral 2"
+        }
     }
 }

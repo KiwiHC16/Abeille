@@ -7,7 +7,11 @@
             "mainEP": "01",
             "icon": "01MINIZB"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Sonoff ZBMINI smart switch",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
@@ -19,10 +23,6 @@
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier",
             "include13 2": "Group-Membership"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Sonoff ZBMINI smart switch"
+        }
     }
 }

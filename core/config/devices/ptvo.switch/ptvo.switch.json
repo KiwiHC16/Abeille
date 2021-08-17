@@ -5,16 +5,16 @@
             "mainEP": "01",
             "icon": "ptvo.switch"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "ptvo.switch",
+        "commands": {
             "include3": "nom",
             "include4": "etatEp08",
             "include5": "OnEp08",
             "include6": "OffEp08",
             "include8": "getEtatEp08"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "ptvo.switch"
+        }
     }
 }

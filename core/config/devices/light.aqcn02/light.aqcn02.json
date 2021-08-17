@@ -5,7 +5,11 @@
             "mainEP": "01",
             "icon": "light.aqcn02"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "Ampoule Aqara Spectre Blanc light.aqcn02",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -32,10 +36,6 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "Ampoule Aqara Spectre Blanc light.aqcn02"
+        }
     }
 }

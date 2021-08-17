@@ -9,16 +9,16 @@
             "mainEP": "01",
             "icon": "SNZB-04"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "Sonoff SNZB-04 Wireless Door\/Window Sensor",
+        "commands": {
             "include2": "nom",
             "include1": "etatSonoff",
             "include2 3 2": "Batterie-Pourcent-Heiman",
             "include2 2 2": "BindToPowerConfig",
             "include2 2 2 3": "setReportBatterie"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "Sonoff SNZB-04 Wireless Door\/Window Sensor"
+        }
     }
 }

@@ -5,7 +5,11 @@
             "mainEP": "01",
             "icon": "ctrl_86plug.aq1"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Prise Murale Encastr\u00e9e",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
@@ -19,10 +23,6 @@
             "include11": "conso",
             "include12": "Xiaomi-ff01",
             "include13": "puissance"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Xiaomi Prise Murale Encastr\u00e9e"
+        }
     }
 }

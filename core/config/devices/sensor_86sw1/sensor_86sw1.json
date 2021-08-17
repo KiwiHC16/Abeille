@@ -6,15 +6,15 @@
             "mainEP": "01",
             "icon": "XiaomiButtonSW861"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Interrupteur Carr\u00e9 simple",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include4": "etatSwitchSimple"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Xiaomi Interrupteur Carr\u00e9 simple"
+        }
     }
 }

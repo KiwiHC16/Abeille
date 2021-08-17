@@ -8,7 +8,11 @@
             "mainEP": "0B",
             "icon": "HueWhite"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "Hue E27 single filament A60 bulb",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include21": "getManufacturerName",
@@ -27,10 +31,6 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "Hue E27 single filament A60 bulb"
+        }
     }
 }

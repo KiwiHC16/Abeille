@@ -6,7 +6,11 @@
             "battery_type": "1x3V CR2450",
             "icon": "sensor_cube"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Cube",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "cubeV1_1",
@@ -15,10 +19,6 @@
             "include4": "Batterie-Volt",
             "include5": "Batterie-Pourcent",
             "include6": "Xiaomi-ff01"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Xiaomi Cube"
+        }
     }
 }

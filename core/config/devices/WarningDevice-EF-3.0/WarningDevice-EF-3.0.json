@@ -6,11 +6,15 @@
             "mainEP": "01",
             "icon": "HS2WD"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Alarm Smart Siren Heiman Siren : WarningDevice-EF-3.0",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
-            "include4": "ZCLVersion",
+            "include4": "zb-0000-ZCLVersion",
             "include5": "dateCode",
             "include21": "getManufacturerName",
             "include22": "getModelIdentifier",
@@ -22,10 +26,6 @@
             "include28 2": "writeAttributeRequestIAS_WD_Flash",
             "include28 2 2": "writeAttributeRequestIAS_WD_Sound",
             "include28 2 2 2": "writeAttributeRequestIAS_WD_FlashSound"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Alarm Smart Siren Heiman Siren : WarningDevice-EF-3.0"
+        }
     }
 }

@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "COSensor-EM"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "Heiman HS1CA (d\u00e9tecteur de monoxyde de carbone)",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "securitySafetySmokeHeiman",
@@ -16,10 +20,6 @@
             "include11": "setReportBatterie",
             "include10 2": "BindShortToSmokeHeiman",
             "include11 2": "setReportSmokeHeiman"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "Heiman HS1CA (d\u00e9tecteur de monoxyde de carbone)"
+        }
     }
 }

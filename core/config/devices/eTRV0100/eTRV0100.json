@@ -8,7 +8,11 @@
             "poll": "1",
             "icon": "eTRV0100"
         },
-        "Commandes": {
+        "category": {
+            "heating": "1"
+        },
+        "type": "Dansfoss Ally Radiator Thermostat 014G2461",
+        "commands": {
             "include1": "nom",
             "include1 1 - Ok": "danfossTemperatureConsigneValue",
             "include1 2 - Ok": "danfossTemperatureConsigneGet",
@@ -35,10 +39,6 @@
             "include10 1 - Ok": "BindToZigateRadiateur",
             "include10 2 - Ok": "setReportRadiateurLocalTemperature",
             "include10 3 - Ok": "setReportRadiateurConsigneTemperature"
-        },
-        "category": {
-            "heating": "1"
-        },
-        "type": "Dansfoss Ally Radiator Thermostat 014G2461"
+        }
     }
 }

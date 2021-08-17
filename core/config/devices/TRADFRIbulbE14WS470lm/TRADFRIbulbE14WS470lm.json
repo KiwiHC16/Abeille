@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "TRADFRIbulbE14WS470lm"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "TRADFRI bulb E14 White Spectre 470lm",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -34,10 +38,6 @@
             "include28": "setReportEtat",
             "include29": "setReportLevel",
             "include29 2": "setReportLightColorSpectre"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "TRADFRI bulb E14 White Spectre 470lm"
+        }
     }
 }

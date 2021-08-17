@@ -5,7 +5,11 @@
             "mainEP": "01",
             "icon": "Contactor"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Legrand Contactor 20AX",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -21,10 +25,6 @@
             "include28 2": "setReportPuissanceLegrand",
             "include28 2 2": "LegrandContactorMode",
             "include28 2 2 2": "LegrandContactorEtat"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Legrand Contactor 20AX"
+        }
     }
 }

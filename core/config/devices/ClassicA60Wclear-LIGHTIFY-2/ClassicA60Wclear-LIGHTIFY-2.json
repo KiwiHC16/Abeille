@@ -6,7 +6,11 @@
             "mainEP": "03",
             "icon": "OSRAMClassicA60Wclear-LIGHTIFY-2"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "OSRAM Classic A60 W clear - LIGHTIFY - 2",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -24,10 +28,6 @@
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "OSRAM Classic A60 W clear - LIGHTIFY - 2"
+        }
     }
 }

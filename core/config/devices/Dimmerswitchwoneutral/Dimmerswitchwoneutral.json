@@ -5,7 +5,11 @@
             "mainEP": "01",
             "icon": "Dimmerswitchwoneutral"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Legrand Dimmer Switch w\/o neutral",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -28,10 +32,6 @@
             "include29": "setReportLevel",
             "include29 2": "setLegrandDimmerOn",
             "include29 2 2": "setLegrandDimmerOff"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Legrand Dimmer Switch w\/o neutral"
+        }
     }
 }

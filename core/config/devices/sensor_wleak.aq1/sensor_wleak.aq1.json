@@ -7,17 +7,17 @@
             "mainEP": "01",
             "icon": "Xiaomiwleak_aq1"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "Xiaomi Inondation Aqara",
+        "commands": {
             "include1": "SW",
             "include2": "nom",
             "include3": "etatFlood",
             "include4": "Batterie-Volt",
             "include5": "Batterie-Pourcent",
             "include6": "Xiaomi-ff01"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "Xiaomi Inondation Aqara"
+        }
     }
 }

@@ -8,9 +8,13 @@
             "paramType": "paramABC",
             "icon": "voletProFalux"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Profalux volet",
+        "commands": {
             "include3": "SW",
-            "include4": "ZCLVersion",
+            "include4": "zb-0000-ZCLVersion",
             "include5": "dateCode",
             "include6": "location",
             "include23": "getSWBuild",
@@ -24,10 +28,6 @@
             "include0008-3": "Level",
             "include0008-5": "setLevelVolet",
             "include0008-4": "getLevel"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Profalux volet"
+        }
     }
 }

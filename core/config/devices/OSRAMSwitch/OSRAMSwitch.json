@@ -7,13 +7,13 @@
             "mainEP": "01",
             "icon": "Switch4xEU-LIGHTIFY"
         },
-        "Commandes": {
-            "include1": "SW",
-            "include2": "nom"
-        },
         "category": {
             "automatism": "1"
         },
-        "type": "OSRAMSwitch"
+        "type": "OSRAMSwitch",
+        "commands": {
+            "include1": "SW",
+            "include2": "nom"
+        }
     }
 }

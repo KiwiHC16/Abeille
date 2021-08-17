@@ -6,7 +6,11 @@
             "poll": "1",
             "icon": "LIGHTIFYIndoorFlexRGBW"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "LIGHTIFY Indoor Flex RGBW",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -50,10 +54,6 @@
             "include39": "4000K",
             "include40": "temperatureLight",
             "include40 2 2": "setTemperatureLight"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "LIGHTIFY Indoor Flex RGBW"
+        }
     }
 }

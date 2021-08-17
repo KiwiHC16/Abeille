@@ -7,7 +7,11 @@
             "mainEP": "01",
             "icon": "XiaomiBouton3"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Bouton Aqara 3",
+        "commands": {
             "include1": "SW",
             "include2 2": "societe",
             "include2": "nom",
@@ -15,10 +19,6 @@
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",
             "include7": "Xiaomi-ff01"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Xiaomi Bouton Aqara 3"
+        }
     }
 }

@@ -8,23 +8,26 @@
             "mainEP": "01",
             "icon": "Delveco-SPLZB-132"
         },
-        "Commandes": {
-            "include0004-1": "Group-Membership",
-            "include0006-1": "On",
-            "include0006-2": "Off",
-            "include0006-3": "etat",
-            "include0006-4": "getEtat",
-            "include0006-5": "BindToZigateEtat",
-            "include0006-6": "setReportEtat",
-            "include0702-1": "zb-0702-CurrentSummationDelivered-KWh-div1000",
-            "include0B04-2": "zb-0B04-RMSVoltage",
-            "include0B04-3": "zb-0B04-RMSCurrent",
-            "include0B04-4": "zb-0B04-ActivePower",
-            "include0B04-5": "getPlugVAW"
-        },
         "category": {
             "automatism": "1"
         },
-        "type": "Frient Smart Plug Mini Type E (French)"
+        "type": "Frient Smart Plug Mini Type E (French)",
+        "commands": {
+            "include0004-1": "Group-Membership",
+
+            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
+            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
+            "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
+            "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+            "include0006-5": "BindToZigateEtat",
+            "include0006-6": "setReportEtat",
+
+            "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "ep=01&unit=KWh&div=1000", "isVisible": 1 },
+
+            "RMSVoltage": { "use": "zb-0B04-RMSVoltage", "isVisible": 0 },
+            "RMSCurrent": { "use": "zb-0B04-RMSCurrent", "isVisible": 1 },
+            "ActivePower": { "use": "zb-0B04-ActivePower", "isVisible": 1 },
+            "include0B04-5": "getPlugVAW"
+        }
     }
 }

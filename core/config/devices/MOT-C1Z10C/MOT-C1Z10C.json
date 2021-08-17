@@ -12,14 +12,14 @@
             "paramType": "paramABC",
             "icon": "voletProFalux"
         },
-        "Commandes": {
+        "type": "Profalux volet gen 2",
+        "commands": {
             "include3": "SW",
-            "include4": "ZCLVersion",
+            "include4": "zb-0000-ZCLVersion",
             "include5": "dateCode",
             "include23": "getSWBuild",
             "include24": "Identify",
             "include25": "Group-Membership",
-
             "include0008-1": "BindToZigateLevel",
             "include0008-2": "setReportLevel",
             "include0008-8": "setLevelVoletDown",
@@ -28,7 +28,6 @@
             "include0008-3": "Level",
             "include0008-5": "setLevelVolet",
             "include0008-4": "getLevel"
-        },
-        "type": "Profalux volet gen 2"
+        }
     }
 }

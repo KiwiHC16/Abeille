@@ -6,7 +6,11 @@
             "poll": "1",
             "icon": "OSRAMClassicE27Dimmable"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "CLA60 TW OSRAM",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -27,10 +31,6 @@
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
             "include29": "setReportLevel"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "CLA60 TW OSRAM"
+        }
     }
 }

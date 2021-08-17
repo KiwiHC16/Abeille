@@ -15,7 +15,11 @@
             "GroupeEP8": "8008",
             "icon": "RC110"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "T\u00e9l\u00e9commande RC110 INNR",
+        "commands": {
             "include1": "offGroup",
             "include2": "toggleGroup",
             "include3": "onGroup",
@@ -58,10 +62,6 @@
             "include44": "setLevelGroupEP6",
             "include45": "setLevelGroupEP7",
             "include46": "setLevelGroupEP8"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "T\u00e9l\u00e9commande RC110 INNR"
+        }
     }
 }

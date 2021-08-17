@@ -9,7 +9,11 @@
             "poll": "1",
             "icon": "GL-C-008"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "GLEDOPTO RGT+CCT LED Controller",
+        "commands": {
             "include1": "nom",
             "include2": "societe",
             "include3": "SW",
@@ -54,10 +58,6 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "GLEDOPTO RGT+CCT LED Controller"
+        }
     }
 }

@@ -9,7 +9,11 @@
             "paramBatterie": "true",
             "icon": "IkeaTradfri5BtnRond"
         },
-        "Commandes": {
+        "category": {
+            "light": "1"
+        },
+        "type": "IKEA TRADFRI Rond 5 Boutons Remote Control",
+        "commands": {
             "include1": "offGroup",
             "include2": "toggleGroup",
             "include3": "onGroup",
@@ -33,10 +37,6 @@
             "include11 2 2 2 2 2 2 2": "RougeGroup",
             "include11 2 2 2 2 2 2 2 2": "VertGroup",
             "include11 2 2 2 2 2 2 2 2 2": "IkeaTeleCmdLeftRigth"
-        },
-        "category": {
-            "light": "1"
-        },
-        "type": "IKEA TRADFRI Rond 5 Boutons Remote Control"
+        }
     }
 }

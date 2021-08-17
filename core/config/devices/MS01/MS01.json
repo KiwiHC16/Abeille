@@ -9,16 +9,16 @@
             "mainEP": "01",
             "icon": "SNZB-03"
         },
-        "Commandes": {
+        "category": {
+            "security": "1"
+        },
+        "type": "Sonoff SNZB-03 motion sensor",
+        "commands": {
             "include2": "nom",
             "include1": "etatSonOffIR",
             "include2 3 2": "Batterie-Pourcent-Heiman",
             "include2 2 2": "BindToPowerConfig",
             "include2 2 2 3": "setReportBatterie"
-        },
-        "category": {
-            "security": "1"
-        },
-        "type": "Sonoff SNZB-03 motion sensor"
+        }
     }
 }

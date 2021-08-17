@@ -8,7 +8,11 @@
             "mainEP": "01",
             "icon": "Orvibo-CM10ZW"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Orvibo multi-functional relay",
+        "commands": {
             "include0006-1": "OnEp01",
             "include0006-2": "OffEp01",
             "include0006-3": "getEtatEp01",
@@ -24,10 +28,6 @@
             "include0006-13": "setReport-EP01-0006-0000",
             "include0006-14": "setReport-EP02-0006-0000",
             "include0006-15": "setReport-EP03-0006-0000"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Orvibo multi-functional relay"
+        }
     }
 }

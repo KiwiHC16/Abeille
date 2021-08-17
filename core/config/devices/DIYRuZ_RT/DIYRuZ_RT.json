@@ -6,7 +6,11 @@
             "mainEP": "01",
             "icon": "DIYRuZ_RT"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "DIYRuZ_RT",
+        "commands": {
             "include1": "SW",
             "include2": "societe",
             "include3": "nom",
@@ -18,10 +22,6 @@
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier",
             "include10 2": "temperature"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "DIYRuZ_RT"
+        }
     }
 }

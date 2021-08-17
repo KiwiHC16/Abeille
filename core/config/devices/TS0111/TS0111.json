@@ -5,7 +5,11 @@
             "mainEP": "01",
             "icon": "TS0111"
         },
-        "Commandes": {
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Vanne Zigbee ",
+        "commands": {
             "include1": "SW",
             "include1 2": "BasicApplicationVersion",
             "include2": "societe",
@@ -18,10 +22,6 @@
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier",
             "include13 2": "Group-Membership"
-        },
-        "category": {
-            "automatism": "1"
-        },
-        "type": "Vanne Zigbee "
+        }
     }
 }

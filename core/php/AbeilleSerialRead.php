@@ -14,7 +14,7 @@
 
     include_once __DIR__.'/../../core/config/Abeille.config.php';
 
-    /* Developpers mode ? */
+    /* Developers mode ? */
     if (file_exists(dbgFile)) {
         // include_once dbgFile;
         /* Dev mode: enabling PHP errors logging */
@@ -103,25 +103,46 @@
     $queueSerialToParser = msg_get_queue($abQueues["serialToParser"]["id"]);
     $queueMax = $abQueues["serialToParser"]["max"];
 
-    exec(system::getCmdSudo().' chmod 777 '.$serial.' >/dev/null 2>&1');
-    exec("stty -F ".$serial." sane", $out, $status);
-    if ($status != 0) {
-        logMessage('debug', 'ERR stty -F '.$serial.' sane');
-    }
-    exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out, $status);
-    if ($status != 0) {
-        logMessage('debug', 'ERR stty -F '.$serial.' speed 115200 cs8 -parenb -cstopb -echo raw');
+    // exec(system::getCmdSudo().' chmod 777 '.$serial.' >/dev/null 2>&1');
+    // exec("stty -F ".$serial." sane", $out, $status);
+    // if ($status != 0) {
+    //     logMessage('debug', 'ERR stty -F '.$serial.' sane');
+    // }
+    // exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out, $status);
+    // if ($status != 0) {
+    //     logMessage('debug', 'ERR stty -F '.$serial.' speed 115200 cs8 -parenb -cstopb -echo raw');
+    // }
+    while (true) {
+        try {
+            exec("stty -F ".$serial." sane", $out, $status);
+            if ($status == 0)
+                exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out, $status);
+            if ($status == 0)
+                break;
+        } catch ( Exception $e ) {
+            logMessage('debug', 'stty err');
+        }
+        sleep(1);
     }
 
-    // Si le lien tombe a l ouverture de $serial c est peut etre par ce que le serveur n'est pas dispo.
-    // Il semblerai que le lien pts soit créé même si la liaison n'est pas établie.
-    $f = fopen($serial, "r");
-    if ($f == false) {
-        logMessage('error', 'Impossible d\'ouvrir le port '.$serial.' en lecture. Arret du démon AbeilleSerialRead'.$abeilleNb);
-        exec('sudo lsof -Fcn '.$serial, $out);
-        logMessage('debug', 'sudo lsof -Fcn '.$serial.' => \''.implode(",", $out).'\'');
-        exit(4);
+    // $f = fopen($serial, "r");
+    // if ($f == false) {
+    //     logMessage('error', 'Impossible d\'ouvrir le port '.$serial.' en lecture. Arret du démon AbeilleSerialRead'.$abeilleNb);
+    //     exec('sudo lsof -Fcn '.$serial, $out);
+    //     logMessage('debug', 'sudo lsof -Fcn '.$serial.' => \''.implode(",", $out).'\'');
+    //     exit(4);
+    // }
+    while (true) {
+        try {
+            $f = fopen($serial, "r");
+            if ($f !== false)
+                break;
+        } catch ( Exception $e ) {
+            logMessage('debug', 'fopen err');
+        }
+        sleep(1);
     }
+    logMessage('debug', $serial.' port opened');
     stream_set_blocking($f, true); // Should be blocking read but is it default ?
 
     /* Inform others that i'm ready to process zigate messages */

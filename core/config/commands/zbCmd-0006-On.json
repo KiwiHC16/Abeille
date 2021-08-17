@@ -1,0 +1,14 @@
+{
+    "zbCmd-0006-On": {
+        "name": "On",
+        "subType": "other",
+        "generic_type": "LIGHT_ON",
+        "invertBinary": "0",
+        "configuration": {
+            "topic": "OnOff",
+            "request": "Action=On&EP=#EP#",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
+    }
+}

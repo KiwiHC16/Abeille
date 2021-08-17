@@ -1,0 +1,13 @@
+{
+    "zbGet-0702-Multiplier": {
+        "isVisible": 0,
+        "name": "get-0702-Multiplier",
+        "isHistorized": 0,
+        "subType": "other",
+        "configuration": {
+            "topic": "ReadAttributeRequest",
+            "request": "EP=#EP#&clusterId=0702&attributeId=0301"
+        },
+        "type": "action"
+    }
+}

@@ -5,10 +5,6 @@ ChangeLog
 - Interne: SerialRead: Ouverture de port améliorée.
 - Silvercrest HG06337-FR: Ajout prise Lidl (#2053).
 - JSON équipements: amélioration nouvelle syntaxe (ajout 'isVisible' & 'nextLine').
-
-210815-BETA-1
-----------
-
 - Page EQ/avancé: mise-à-jour de l'assistant de découverte.
 - Page config/options avancées: Support defines.
 - Commande JSON 'temperatureLight': correction EP.
@@ -17,6 +13,9 @@ ChangeLog
   - 'Categorie' remplacé par 'category'.
   - 'nameJeedom' remplacé par 'type'.
   - 'configuration:icone' remplacé par 'configuration:icon'.
+  - mainEP #EP# remplacé par '01'.
+  - 'uniqId' supprimé.
+  - 'Commandes' => 'commands'
 - Profalux: Ajout support nouvelle génération volet (id=MOT-C1Z06C/10C, #2091).
 - Aqara WS-EUK01 H1 wall switch: ajout support préliminaire (#2054).
 - Interne: optimisations AbeilleCmdQueue.
@@ -27,7 +26,6 @@ ChangeLog
 - Interne: Nettoyage: suppression queue obsolete 'queueKeyLQIToAbeille'.
 - Interne: cron15: Lecture ZCLVersion au lieu d'un attribut pas toujours supporté.
 - Page EQ/avancé: ajout bouton lecture attribut.
-- JSON équipements: mainEP #EP# remplacé par '01'. 'uniqId' supprimé.
 - Interne: tools: Amélioration check_json + update_json
 - Modèle JSON telecommande profalux: correction syntaxe type batterie.
 - Collecte LQI: Correctif parser pour routeur avec plus de 10 childs.

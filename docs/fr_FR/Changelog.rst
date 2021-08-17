@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210817-BETA-1
+----------
+
 - Xiaomi plug EU: JSON revisité (#1578).
 - Interne: SerialRead: Ouverture de port améliorée.
 - Silvercrest HG06337-FR: Ajout prise Lidl (#2053).

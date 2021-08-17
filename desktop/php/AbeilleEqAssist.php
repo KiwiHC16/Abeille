@@ -127,14 +127,14 @@
                 }
             </style>
 
-            <div class="row" id="idEndPoints">
+            <div class="row" id="idendPoints">
             </div>
 
             <div class="row">
                 <?php if (isset($dbgTcharp38)) { ?>
                 <a class="btn btn-success pull-left" title="Genère les commandes Jeedom" onclick="zigbeeToCommands()"><i class="fas fa-cloud-download-alt"></i> Mettre à jour JSON</a>
                 <?php } ?>
-                <a class="btn btn-success pull-left" title="Télécharge 'discovery.json'" onclick="downloadInfos()"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
+                <a class="btn btn-success pull-left" title="Télécharge 'discovery.json'" onclick="downloadDiscovery()"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
                 <br>
                 <br>
             </div>
@@ -243,20 +243,21 @@
     eq.jId = js_eqId; // Jeedom ID, number
     eq.addr = js_eqAddr; // Short addr, hex string
     eq.ieee = js_eqIeee; // Short addr, hex string
-    eq.epCount = 0; // Number of EP, number
-    eq.endPoints = new Array(); // Array of objects
-        // ep = eq.endPoints[epIdx] = new Object(); // End Point object
-        // ep.id = 0; // EP id/number
-        // ep.servClustCount = 0; // IN clusters count
-        // ep.servClustList = new Array();
-        // ep.cliClustCount = 0; // OUT clusters count
-        // ep.cliClustList = new Array();
-        //     clust = new Object();
-        //     clust.id = "0000"; // Cluster id, hex string
-        //     clust.attrList = new Array(); // Attributs for this cluster
-        //         a = new Object(); // Attribut object
-        //         a.id = "0000"; // Attribut id, hex string
-        //         a.type = "00"; // Attribut type, hex string
+    eq.discovery = new Object(); // Zigbee interrogation datas
+        // discovery.epCount = 0; // Number of EP, number
+        // discovery.endPoints = new Array(); // Array of objects
+            // ep = eq.endPoints[epIdx] = new Object(); // End Point object
+            // ep.id = 0; // EP id/number
+            // ep.servClustCount = 0; // IN clusters count
+            // ep.servClustList = new Array();
+            // ep.cliClustCount = 0; // OUT clusters count
+            // ep.cliClustList = new Array();
+            //     clust = new Object();
+            //     clust.id = "0000"; // Cluster id, hex string
+            //     clust.attrList = new Array(); // Attributs for this cluster
+            //         a = new Object(); // Attribut object
+            //         a.id = "0000"; // Attribut id, hex string
+            //         a.type = "00"; // Attribut type, hex string
 
     /* Read JSON if defined */
     if (js_jsonName != '')
@@ -713,8 +714,9 @@
        Purpose is to give a unique Jeedom command name.
        Returns: true is exists, else false */
     function sameAttribInOtherEP(epId, clustId, attrId) {
-        for (var epIdx = 0; epIdx < eq.endPoints.length; epIdx++) {
-            ep = eq.endPoints[epIdx];
+        discovery = eq.discovery;
+        for (var epIdx = 0; epIdx < discovery.endPoints.length; epIdx++) {
+            ep = discovery.endPoints[epIdx];
             if (ep.id == epId)
                 continue; // Current EP
             for (var clustIdx = 0; clustIdx < ep.servClustList.length; clustIdx++) {
@@ -737,8 +739,9 @@
        Purpose is to give a unique Jeedom command name.
        Returns: true is exists, else false */
     function sameZCmdInOtherEP(epId, clustId, cmdName) {
-        for (var epIdx = 0; epIdx < eq.endPoints.length; epIdx++) {
-            ep = eq.endPoints[epIdx];
+        discovery = eq.discovery;
+        for (var epIdx = 0; epIdx < discovery.endPoints.length; epIdx++) {
+            ep = discovery.endPoints[epIdx];
             if (ep.id == epId)
                 continue; // Current EP
 
@@ -972,7 +975,8 @@
          */
         var cmds = new Object();
         var cmdNb = 0;
-        endPoints = eq.endPoints;
+        discovery = eq.discovery;
+        endPoints = discovery.endPoints;
         console.log(endPoints);
         for (var epId in endPoints) {
             console.log("EP "+epId);
@@ -1134,7 +1138,7 @@
         jeq2.commands = eq.commands;
 
         /* Zigbee discovery if any */
-        jeq2.endPoints = eq.endPoints;
+        jeq2.discovery = eq.discovery;
 
         var jeq = new Object();
         jeq[js_jsonName] = jeq2;
@@ -1233,10 +1237,10 @@ console.log(jeq);
     }
 
     /* Save given 'text' to 'fileName' */
-    function downloadInfos() {
-        console.log("downloadInfos()");
+    function downloadDiscovery() {
+        console.log("downloadDiscovery()");
 
-        text = JSON.stringify(eq);
+        text = JSON.stringify(eq.discovery);
         let elem = window.document.createElement('a');
         elem.style = "display: none";
         elem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -1312,23 +1316,22 @@ console.log(jeq);
             // 'net' => $dest,
             // 'addr' => $SrcAddr,
             // 'epList' => $endPointList
-
-            epList = res.epList;
-            epArr = epList.split('/');
+            sEpList = res.epList;
+            sEpArr = sEpList.split('/');
 
             /* Updating internal datas */
-            eq.epCount = epArr.length;
-            endpoints = new Object; // Array of objects
-            epArr.forEach((ep) => {
-                endpoints[ep] = new Object();
+            eq.discovery.epCount = sEpArr.length;
+            endPoints = new Object;
+            sEpArr.forEach((ep) => {
+                endPoints[ep] = new Object();
             });
-            eq.endPoints = endpoints;
+            eq.discovery.endPoints = endPoints;
 
             /* Updating display */
-            document.getElementById("idEPList").value = res.epList;
-            var endpoints = "";
-            $("#idEndPoints").empty();
-            epArr.forEach((ep) => {
+            document.getElementById("idEPList").value = sEpList;
+            var endPoints = "";
+            $("#idendPoints").empty();
+            sEpArr.forEach((ep) => {
                 h = '<br><div id="idEP'+ep+'">';
                 h += '<label id="idClustEP'+ep+'" class="col-lg-2 control-label"></label>';
 
@@ -1377,11 +1380,11 @@ console.log(jeq);
                 h += '<br>';
                 h += '</div>';
                 h += '</div>';
-                $("#idEndPoints").append(h);
+                $("#idendPoints").append(h);
 
-                if (endpoints != "")
-                    endpoints += ", ";
-                endpoints += ep;
+                if (endPoints != "")
+                    endPoints += ", ";
+                endPoints += ep;
                 document.getElementById("idClustEP"+ep).innerHTML = "End point "+ep+":";
                 $("#idEP"+ep).show();
 
@@ -1406,8 +1409,9 @@ console.log(jeq);
 
             // Updating internal infos
             if (sStatus == "00") {
-                if ((typeof eq.endPoints !== "undefined") && (typeof eq.endPoints[sEp] !== "undefined")) {
-                    ep = eq.endPoints[sEp];
+                discovery = eq.discovery;
+                if ((typeof discovery.endPoints !== "undefined") && (typeof discovery.endPoints[sEp] !== "undefined")) {
+                    ep = discovery.endPoints[sEp];
                     if ((typeof ep.servClusters !== 'undefined') && (typeof ep.servClusters[sClustId] !== 'undefined')) {
                         attributes = ep.servClusters[sClustId];
                         if (typeof attributes[sAttrId] === 'undefined')
@@ -1450,12 +1454,13 @@ console.log(jeq);
             cliClustArr = res.outClustList.split('/');
 
             /* Updating internal datas */
-            if (eq.epCount == 0) {
+            discovery = eq.discovery;
+            if (discovery.epCount == 0) {
                 // EP list not received yet
                 console.log("EP list not received yet => simpleDesc ignored.")
                 return;
             }
-            ep = eq.endPoints[res.ep];
+            ep = discovery.endPoints[res.ep];
             ep.servClusters = new Object();
             servClustArr.forEach((clustId) => {
                 ep.servClusters[clustId] = new Object();
@@ -1511,7 +1516,6 @@ console.log(jeq);
             // 'clustId' => $cluster,
             // 'dir' => (hexdec($FCF) >> 3) & 1, // 1=server cluster, 0=client cluster
             // 'attributes' => $attributes
-
             sEp = res.ep;
             sDir = res.dir;
             sClustId = res.clustId;
@@ -1525,17 +1529,17 @@ console.log(jeq);
             }
 
             /* Updating internal datas */
-            ep = eq.endPoints[sEp];
+            ep = eq.discovery.endPoints[sEp];
             if (sDir)
                 clust = ep.servClusters[sClustId];
             else
                 clust = ep.cliClusters[sClustId];
             for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
                 sAttr = sAttributes[attrIdx];
-                if (typeof clust[sAttr.id] === "undefined") {
+                if (typeof clust[sAttr.id] === "undefined")
                     clust[sAttr.id] = new Object();
+                if (typeof clust[sAttr.value] === "undefined")
                     requestInfos('attribValue', sEp, sClustId, sAttr.id); // Read attribute current value
-                }
             }
 
             /* Updating display */

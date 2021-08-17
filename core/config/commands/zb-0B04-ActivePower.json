@@ -1,9 +1,6 @@
 {
     "zb-0B04-ActivePower": {
         "comment": "val = attribute_value * ACPowerDiv \/ AcPowerMultiplier => device specific",
-        "isVisible": 1,
-        "invertBinary": "0",
-        "isHistorized": 0,
         "name": "Power",
         "unite": "W",
         "subType": "numeric",

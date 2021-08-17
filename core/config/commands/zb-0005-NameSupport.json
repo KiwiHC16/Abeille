@@ -1,0 +1,10 @@
+{
+    "zb-0005-NameSupport": {
+        "name": "0005-NameSupport",
+        "comment": "Type map8",
+        "subType": "other",
+        "configuration": [],
+        "type": "info",
+        "logicalId": "0005-#EP#-0004"
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "zbCmd-0006-Toggle": {
+        "name": "Toggle",
+        "subType": "other",
+        "generic_type": "LIGHT_TOGGLE",
+        "configuration": {
+            "topic": "OnOff",
+            "request": "Action=Toggle&EP=#EP#",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
+    }
+}

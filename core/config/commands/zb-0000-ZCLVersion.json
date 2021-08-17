@@ -1,11 +1,7 @@
 {
     "zb-0000-ZCLVersion": {
-        "isVisible": 0,
         "name": "ZCL Version",
-        "isHistorized": "0",
         "subType": "string",
-        "invertBinary": "0",
-        "template": "",
         "configuration": {
             "visibilityCategory": "All"
         },

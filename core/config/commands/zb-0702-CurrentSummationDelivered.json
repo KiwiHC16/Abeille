@@ -1,15 +1,12 @@
 {
-    "zb-0702-CurrentSummationDelivered-KWh-div10": {
+    "zb-0702-CurrentSummationDelivered": {
         "comment": "CurrentSummationDelivered, uint48 => dataType = 0x25",
-        "isVisible": 1,
         "name": "Total power",
-        "isHistorized": 0,
         "subType": "numeric",
-        "invertBinary": "0",
         "template": "badge",
-        "unite": "KWh",
+        "unite": "#UNIT#",
         "configuration": {
-            "calculValueOffset": "#value#\/10"
+            "calculValueOffset": "#value#\/#DIV#"
         },
         "type": "info",
         "logicalId": "0702-#EP#-0000"

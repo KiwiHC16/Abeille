@@ -1,0 +1,14 @@
+{
+    "zb-0006-OnTime": {
+        "name": "OnTime",
+        "subType": "binary",
+        "generic_type": "LIGHT_STATE_BOOL",
+        "template": "light",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "visibilityCategory": "All"
+        },
+        "type": "info",
+        "logicalId": "0006-#EP#-4001"
+    }
+}

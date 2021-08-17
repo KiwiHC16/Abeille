@@ -37,13 +37,12 @@ Exemple de commande 'action'
       "getEtat": {
         "isVisible": 0,
         "name": "getEtat",
-        "isHistorized": 0,
         "type": "action",
         "subType": "other",
         "invertBinary": "0",
         "configuration": {
-          "topic": "ReadAttributeRequest",
-          "request": "EP=#EP#&clusterId=0006&attributeId=0000",
+          "topic": "readAttribute",
+          "request": "ep=#EP#&clustId=0006&attrId=0000",
           "RefreshData": "1",
           "visibilityCategory": "additionalCommand"
         }
@@ -72,7 +71,7 @@ Exemple de commande 'action'
   Invisible par défaut ("isVisible":0).
 
 * isHistorized: optionnel.
-  Indique si la commande doit être historisée.
+  Indique si la commande INFO (pas de sens pour une commande 'action') doit être historisée.
   Non par défaut ("isHistorized":0).
 
 * generic_type: ??

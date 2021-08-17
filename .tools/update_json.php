@@ -37,6 +37,7 @@
     }
 
     function updateDevice($devName, $fullPath, $dev) {
+
         $devUpdated = false;
 
         if (!isset($dev[$devName]['type'])) {
@@ -83,6 +84,39 @@
                 unset($dev[$devName]['configuration']['uniqId']);
                 $devUpdated = true;
                 echo "  Removed 'uniqId'.\n";
+            }
+        }
+
+        if (!isset($dev[$devName]['commands'])) {
+            if (isset($dev[$devName]['Commandes'])) {
+                $dev[$devName]['commands'] = $dev[$devName]['Commandes'];
+                unset($dev[$devName]['Commandes']);
+                $devUpdated = true;
+                echo "  'Commandes' renamed to 'commands'.\n";
+            }
+        }
+        if (isset($dev[$devName]['commands'])) {
+            $commands = $dev[$devName]['commands'];
+            foreach ($commands as $key => $value) {
+                if (substr($key, 0, 7) == "include") {
+                    $cmdFName = $value;
+                    $oldSyntax = true;
+                } else {
+                    // New syntax: "<jCmdName>": { "use": "<fileName>" }
+                    $cmdFName = $value['use'];
+                    $oldSyntax = false;
+                }
+
+                /* ZCLVersion => zb-0000-ZCLVersion */
+                if ($cmdFName == "ZCLVersion") {
+                    if ($oldSyntax)
+                        $dev[$devName]['commands'][$key] = "zb-0000-ZCLVersion";
+                    else
+                        $dev[$devName]['commands'][$cmdFName]['use'] = "zb-0000-ZCLVersion";
+                    $devUpdated = true;
+                    echo "  Cmd 'ZCLVersion' replaced 'zb-0000-ZCLVersion'.\n";
+                    continue;
+                }
             }
         }
 
@@ -212,6 +246,7 @@
     }
 
     buildDevicesList();
+    buildCommandsList();
 
     echo "\nUpdating devices if required ...\n";
     foreach ($devicesList as $entry => $fullPath) {
@@ -224,8 +259,6 @@
         }
         updateDevice($entry, $fullPath, $content);
     }
-
-    buildCommandsList();
 
     echo "\nUpdating commands if required ...\n";
     foreach ($commandsList as $entry => $fullPath) {

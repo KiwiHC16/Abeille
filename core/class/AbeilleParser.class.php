@@ -1486,14 +1486,14 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         if ($destAddrMode == "01") {
                             // 16-bit group address for DstAddr and DstEndpoint not present
                             $destAddr  = substr($pl, 24, 4);
-                            parserLog('debug', '  '.$srcIeee.', '.$srcEP.', '.$clustId.' => group '.$destAddr);
+                            parserLog('debug', '  '.$srcIeee.', EP'.$srcEP.', Clust '.$clustId.' => group '.$destAddr);
                             $pl = substr($pl, 28);
                         } else if ($destAddrMode == "03") {
                             // 64-bit extended address for DstAddr and DstEndp present
                             $destIeee  = substr($pl, 24, 16);
                             $destIeee = AbeilleTools::reverseHex($destIeee);
                             $destEP  = substr($pl, 40, 2);
-                            parserLog('debug', '  '.$srcIeee.', '.$srcEP.', '.$clustId.' => EP'.$destEP.' @'.$destIeee);
+                            parserLog('debug', '  '.$srcIeee.', EP'.$srcEP.', Clust '.$clustId.' => EP'.$destEP.' @'.$destIeee);
                             $pl = substr($pl, 42);
                         } else {
                             parserLog('debug', '  ERROR: Unexpected destAddrMode '.$destAddrMode);
@@ -1839,15 +1839,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
             }
 
-            // Tcharp38: profId=104 & clustId=402 does not mean it is temp report. It could be
-            // plenty of other "response" (ex: discover attribut response)
-            // // Cluster 0x0402 Temperature
-            // if (($profile == "0104") && ($cluster == "0402")) {
-            //     // Managed/Processed by Ziagte which send a 8102 message: sort of duplication of same message on 8000 et 8002, so not decoding it here, otherwise duplication.
-            //     parserLog("debug",  "  Message duplication => dropped");
-            //     return;
-            // }
-
             // Remontée puissance prise TS0121 Issue: #1288
             if (($profile == "0104") && ($cluster == "0702")) {
                 $frameCtrlField         = substr($payload,26, 2);
@@ -2109,6 +2100,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 0x09 Read Reporting Configuration Response
                 0x0a Report attributes
                 0x0d Discover Attributes Response
+                0x12 Discover Commands Received Response
+                0x16 Discover Attributes Extended Response
             */
             if ($Cmd == "01") { // Read Attributes Response
                 parserLog('debug', "  Handled by decode8100_8102");
@@ -2193,6 +2186,67 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'ep' => $srcEndPoint,
                     'clustId' => $cluster,
                     'dir' => (hexdec($FCF) >> 3) & 1,
+                    'attributes' => $attributes
+                );
+                $this->msgToClient($toCli);
+                return;
+            } else if ($Cmd == "12") { // Discover Commands Received Response
+                $completed = substr($msg, 2);
+                $msg = substr($msg, 2); // Skipping 'completed' status
+                $commands = [];
+                $l = strlen($msg);
+                for ($i = 0; $i < $l;) {
+                    $commands[] = substr($msg, $i, 2);
+                    $i += 2;
+                }
+                parserLog('debug', '  Supported received commands: '.implode("/", $commands));
+
+                /* Send to client if required (ex: EQ page opened) */
+                $toCli = array(
+                    'src' => 'parser',
+                    'type' => 'commandsReceived',
+                    'net' => $dest,
+                    'addr' => $srcAddress,
+                    'ep' => $srcEndPoint,
+                    'clustId' => $cluster,
+                    'commands' => $commands
+                );
+                $this->msgToClient($toCli);
+                return;
+            } else if ($Cmd == "16") { // Discover Attributes Extended Response
+                $completed = substr($msg, 2);
+                $msg = substr($msg, 2); // Skipping 'completed' status
+                $attributes = [];
+                $l = strlen($msg);
+                for ($i = 0; $i < $l;) {
+                    $attr = array(
+                        'id' => substr($msg, $i + 2, 2).substr($msg, $i, 2),
+                        'dataType' => substr($msg, $i + 4, 2),
+                        'access' => substr($msg, $i + 6, 2)
+                    );
+                    $attributes[] = $attr;
+                    $i += 8;
+                }
+
+                /* WORK ONGOING */
+
+                $m = '';
+                foreach ($attributes as $attr) {
+                    if ($m != '')
+                        $m .= '/';
+                    $m .= $attr['id'].'-'.$attr['dataType'].'-'.$attr['access'];
+                }
+                parserLog('debug', '  Clust '.$cluster.': '.$m);
+                $this->discoverLog('- Clust '.$cluster.': '.$m);
+
+                /* Send to client if required (ex: EQ page opened) */
+                $toCli = array(
+                    'src' => 'parser',
+                    'type' => 'extendedAttributesDiscovery',
+                    'net' => $dest,
+                    'addr' => $srcAddress,
+                    'ep' => $srcEndPoint,
+                    'clustId' => $cluster,
                     'attributes' => $attributes
                 );
                 $this->msgToClient($toCli);
@@ -2787,7 +2841,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     // parserLog('debug', '  Requesting supported attributs list for EP '.$ep.', clust '.$clustId);
                     // Tcharp38: Some devices may not support discover attribut command and return a "default response" with status 82 (unsupported general command)
                     // Tcharp38: Some devices do not respond at all (ex: Sonoff SNBZ02)
-                    $this->msgToCmd("Cmd".$dest."/0000/DiscoverAttributesCommand", "address=".$SrcAddr.'&EP='.$EPoint.'&clusterId='.$clustId.'&direction=00&startAttributeId=0000&maxAttributeId=FF');
+                    $this->msgToCmd("Cmd".$dest."/".$SrcAddr."/discoverAttributes", "ep=".$EPoint.'&clustId='.$clustId.'&dir=00&startAttrId=0000&maxAttrId=FF');
                 }
                 $this->discoverLog('- OutClusterCount='.$OutClustCount);
                 for ($i = 0; $i < $OutClustCount; $i++) {

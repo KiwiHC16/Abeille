@@ -1105,18 +1105,18 @@ class AbeilleTools
     }
 
     /**
-     * Returns true is Abeille's cron is running.
+     * Returns true is Abeille's cron (main daemon) is running.
      *
      * @return true if running, else false
      */
     public static function isAbeilleCronRunning()
     {
-        if (is_object(cron::byClassAndFunction('Abeille', 'deamon')) &
-            (cron::byClassAndFunction('Abeille', 'deamon')->running())) {
-            //log::add('Abeille', 'debug', 'isAbeilleCronRunning: le plugin est démarré.');
-            return true;
-        }
-        return false;
+        $cron = cron::byClassAndFunction('Abeille', 'deamon');
+        if (!is_object($cron))
+            return false;
+        if ($cron->running() == false)
+            return false;
+        return true;
     }
 
     /**

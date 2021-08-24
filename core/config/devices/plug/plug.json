@@ -10,7 +10,6 @@
         },
         "type": "Xiaomi Prise",
         "commands": {
-            "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include4": "etat",
@@ -23,7 +22,10 @@
             "include11": "conso",
             "include12": "Xiaomi-ff01",
             "include13": "puissance",
-            "include13 2": "Group-Membership"
+            "include13 2": "Group-Membership",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

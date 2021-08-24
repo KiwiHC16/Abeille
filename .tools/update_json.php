@@ -117,6 +117,25 @@
                     echo "  Cmd 'ZCLVersion' replaced 'zb-0000-ZCLVersion'.\n";
                     continue;
                 }
+                /* SW => zb-0000-SWBuildID */
+                if ($cmdFName == "SW") {
+                    $dev[$devName]['commands']['SWBuildID']['use'] = "zb-0000-SWBuildID";
+                    if ($oldSyntax)
+                        unset($dev[$devName]['commands'][$key]);
+                    $devUpdated = true;
+                    echo "  Cmd 'SW' replaced by 'zb-0000-SWBuildID'.\n";
+                    continue;
+                }
+                /* getSWBuild => Get-SWBuildID using zbReadAttribute */
+                if ($cmdFName == "getSWBuild") {
+                    $dev[$devName]['commands']['Get-SWBuildID']['use'] = "zbReadAttribute";
+                    $dev[$devName]['commands']['Get-SWBuildID']['params'] = "clustId=0000&attrId=4000";
+                    if ($oldSyntax)
+                        unset($dev[$devName]['commands'][$key]);
+                    $devUpdated = true;
+                    echo "  Cmd 'getSWBuild' replaced by 'Get-SWBuildID'.\n";
+                    continue;
+                }
             }
         }
 

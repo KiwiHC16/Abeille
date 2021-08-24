@@ -17,12 +17,6 @@
         },
         "type": "TRADFRI Detecteur de mouvement",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
-            "include3": "SW",
-            "include21": "getManufacturerName",
-            "include22": "getModelIdentifier",
-            "include23": "getSWBuild",
             "include4": "offGroup",
             "include4 2": "offGroupTimed",
             "include5": "toggleGroup",
@@ -34,7 +28,14 @@
             "include10": "BindShortToZigateBatterie",
             "include11": "setReportBatterie",
             "include-0006-1": "bindToZigate-EP01-0006",
-            "include-0006-2": "setReport-EP01-0006-0000"
+            "include-0006-2": "setReport-EP01-0006-0000",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            }
         }
     }
 }

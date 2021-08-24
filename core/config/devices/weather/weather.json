@@ -13,7 +13,6 @@
         },
         "type": "Xiaomi temp\/humidity\/pressure square sensor",
         "commands": {
-            "include1": "SW",
             "include2": "nom",
             "include3": "temperature",
             "include4": "humidite",
@@ -22,7 +21,10 @@
             "include7": "Xiaomi-ff01",
             "include8": "pression1",
             "include9": "pression",
-            "include10": "pressionScale"
+            "include10": "pressionScale",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

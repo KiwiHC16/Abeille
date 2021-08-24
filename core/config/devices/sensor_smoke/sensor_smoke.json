@@ -11,7 +11,6 @@
         },
         "type": "Xiaomi Smoke Sensor",
         "commands": {
-            "include1": "SW",
             "include2": "nom",
             "include3": "securitySafetySmoke",
             "include4": "Batterie-Volt",
@@ -20,7 +19,10 @@
             "include7": "setSmokeSensivityLow",
             "include8": "setSmokeSensivityMedium",
             "include9": "setSmokeSensivityHigh",
-            "include10": "testSmoke"
+            "include10": "testSmoke",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

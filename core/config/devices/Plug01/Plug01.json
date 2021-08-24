@@ -10,7 +10,6 @@
         },
         "type": "OSRAM Prise Lightify",
         "commands": {
-            "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include4": "etat",
@@ -20,11 +19,17 @@
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier",
-            "include23": "getSWBuild",
             "include24": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
-            "include28": "setReportEtat"
+            "include28": "setReportEtat",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            }
         }
     }
 }

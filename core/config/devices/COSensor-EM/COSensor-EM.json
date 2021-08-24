@@ -11,7 +11,6 @@
         },
         "type": "Heiman HS1CA (d\u00e9tecteur de monoxyde de carbone)",
         "commands": {
-            "include1": "SW",
             "include2": "nom",
             "include3": "securitySafetySmokeHeiman",
             "include8": "Batterie-Pourcent-Heiman",
@@ -19,7 +18,10 @@
             "include10": "BindShortToZigateBatterie",
             "include11": "setReportBatterie",
             "include10 2": "BindShortToSmokeHeiman",
-            "include11 2": "setReportSmokeHeiman"
+            "include11 2": "setReportSmokeHeiman",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

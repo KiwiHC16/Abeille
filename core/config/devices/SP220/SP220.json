@@ -10,7 +10,6 @@
         },
         "type": "SP220 Innr",
         "commands": {
-            "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include4": "etat",
@@ -19,7 +18,10 @@
             "include7": "Toggle",
             "include8": "getEtat",
             "include9": "getManufacturerName",
-            "include10": "getModelIdentifier"
+            "include10": "getModelIdentifier",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

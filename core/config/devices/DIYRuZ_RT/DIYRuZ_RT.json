@@ -11,7 +11,6 @@
         },
         "type": "DIYRuZ_RT",
         "commands": {
-            "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include4": "etat",
@@ -21,7 +20,10 @@
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier",
-            "include10 2": "temperature"
+            "include10 2": "temperature",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

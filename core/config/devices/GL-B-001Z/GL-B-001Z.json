@@ -15,7 +15,6 @@
         "commands": {
             "include1": "nom",
             "include2": "societe",
-            "include3": "SW",
             "include4": "etatLight",
             "include5": "levelLight",
             "include6 2": "colorX",
@@ -40,7 +39,6 @@
             "include12": "getLevel",
             "include13": "getManufacturerName",
             "include14": "getModelIdentifier",
-            "include15": "getSWBuild",
             "include16": "Identify",
             "include25": "Group-Membership",
             "include25 2": "Scene-Membership",
@@ -56,7 +54,14 @@
             "include33": "colorVert",
             "include34": "setVert",
             "include35": "colorBleu",
-            "include36": "setBleu"
+            "include36": "setBleu",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            }
         }
     }
 }

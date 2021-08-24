@@ -1,0 +1,16 @@
+{
+    "status-EP02-0006": {
+        "isVisible": 1,
+        "name": "Switch 2",
+        "isHistorized": 0,
+        "subType": "numeric",
+        "generic_type": "",
+        "invertBinary": "1",
+        "template": "badge",
+        "configuration": {
+            "visibilityCategory": "All"
+        },
+        "type": "info",
+        "logicalId": "0006-02-0000"
+    }
+}

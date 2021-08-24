@@ -4,6 +4,7 @@
         "model": "GZCGQ01LM",
         "timeout": "60",
         "comment": "Does not support clust 0001 attrib 0021 reporting (battery percent)",
+        "comment2": "Illuminance reporting set to 10mins",
         "configuration": {
             "battery_type": "1x3V CR2032",
             "mainEP": "01",
@@ -14,17 +15,15 @@
         },
         "type": "Xiaomi GZCGQ01LM smart light sensor",
         "commands": {
-            "include1": "SW",
-            "include2": "nom",
             "include7": "Xiaomi-ff01",
             "BindToZigate-Illuminance": {
                 "use": "bindToZigate",
                 "params": "EP=01&CLUSTID=0400",
                 "execAtCreation": "Yes"
             },
-            "SetReport-Illuminance": {
-                "use": "setReport",
-                "params": "EP=01&CLUSTID=0400&ATTRID=0000&ATTRTYPE=21",
+            "Set-IlluminanceReporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=600",
                 "execAtCreation": "Yes"
             },
             "include4": "luminositeXiaomi",
@@ -33,13 +32,16 @@
                 "params": "EP=01&CLUSTID=0001",
                 "execAtCreation": "Yes"
             },
-            "SetReport-Battery": {
-                "use": "setReport",
-                "params": "EP=01&CLUSTID=0001&ATTRID=0020&ATTRTYPE=20",
+            "Set-BatteryReporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "Yes"
             },
             "include0001-3": "Battery-Volt2Percent-3",
-            "include0001-4": "Batterie-Pourcent-Ikea"
+            "include0001-4": "Batterie-Pourcent-Ikea",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

@@ -12,11 +12,13 @@
         },
         "type": "Konke Temperature Humidit\u00e9 Rond",
         "commands": {
-            "include1": "SW",
             "include2": "nom",
             "include3": "temperature",
             "include4": "humidite",
-            "include4 2": "Batterie-Volt-Konke"
+            "include4 2": "Batterie-Volt-Konke",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

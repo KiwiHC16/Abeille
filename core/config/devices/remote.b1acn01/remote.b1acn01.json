@@ -13,14 +13,16 @@
         },
         "type": "Xiaomi Bouton Aqara 2 Copy",
         "commands": {
-            "include1": "SW",
             "include2": "nom",
             "include3": "etatSwitchXiaomiCarre",
             "include3 2": "etatSwitchDoublebSensorSwitchAq3",
             "include4": "multi",
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",
-            "include7": "Xiaomi-ff01"
+            "include7": "Xiaomi-ff01",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

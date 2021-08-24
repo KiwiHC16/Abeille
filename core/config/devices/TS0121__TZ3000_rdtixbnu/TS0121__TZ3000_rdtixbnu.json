@@ -23,7 +23,7 @@
             "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
             "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
             "include0006-5": "BindToZigateEtat",
-            "include0006-6": "setReportEtat",
+            "Set-OnOffReporting": { "use": "zbConfigureReporting", "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000", "execAtCreation": "yes" },
 
             "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "unit=KWh&div=10", "isVisible": 1 },
             "UnitOfMeasure": { "use": "zb-0702-UnitOfMeasure" },

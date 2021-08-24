@@ -10,7 +10,6 @@
         },
         "type": "Module 511.202 iluminize",
         "commands": {
-            "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include4": "etat",
@@ -21,7 +20,10 @@
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier",
             "include10 2": "BindToZigateEtat",
-            "include10 2 2": "setReportEtat"
+            "include10 2 2": "setReportEtat",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

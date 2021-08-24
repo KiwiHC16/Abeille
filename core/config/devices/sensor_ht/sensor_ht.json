@@ -12,13 +12,15 @@
         },
         "type": "Xiaomi Temperature Rond",
         "commands": {
-            "include1": "SW",
             "include2": "nom",
             "include3": "temperature",
             "include4": "humidite",
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",
-            "include7": "Xiaomi-ff01"
+            "include7": "Xiaomi-ff01",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

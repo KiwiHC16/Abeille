@@ -12,7 +12,6 @@
         },
         "type": "Sonoff ZBMINI smart switch",
         "commands": {
-            "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include4": "etat",
@@ -22,7 +21,10 @@
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier",
-            "include13 2": "Group-Membership"
+            "include13 2": "Group-Membership",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

@@ -10,7 +10,6 @@
         },
         "type": "Xiaomi Prise EU",
         "commands": {
-            "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include4": "etat",
@@ -25,7 +24,10 @@
             "include13 2 2": "VoltagePrise",
             "include13 2 2 2": "CurrentPrise_mA",
             "include13 2 2 2 2": "temperaturePrise",
-            "include25": "Group-Membership"
+            "include25": "Group-Membership",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

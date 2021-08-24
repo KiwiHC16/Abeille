@@ -1,7 +1,7 @@
 {
     "TS011F__TZ3000_vzopcetz": {
         "manufacturer": "Silvercrest",
-        "model": "TS011F",
+        "model": "HG06338-FR",
         "zbManufacturer": "_TZ3000_vzopcetz",
         "timeout": "60",
         "Comment": "",
@@ -12,11 +12,12 @@
         "category": {
             "automatism": "1"
         },
-        "type": "SILVERCREST Bloc multiprise USB SPSZ 3 A1",
+        "type": "Silvercrest power strip USB SPSZ 3 A1",
         "commands": {
-            "include1": "SW",
-            "include2": "societe",
-            "include3": "nom",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+
             "include4": "etatCharge0",
             "include4 2": "etatCharge1",
             "include4 2 2": "etatCharge2",
@@ -32,8 +33,10 @@
             "include8": "getEtat",
             "include9": "BindToZigateEtat",
             "include10": "setReportEtat",
-            "include11": "getManufacturerName",
-            "include12": "getModelIdentifier"
+            "include0006-1": "bindToZigate-EP02-0006",
+            "include0006-2": "setReport-EP02-0006-0000",
+            "include0006-3": "bindToZigate-EP03-0006",
+            "include0006-4": "setReport-EP03-0006-0000"
         }
     }
 }

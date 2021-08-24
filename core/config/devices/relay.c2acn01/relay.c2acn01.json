@@ -10,7 +10,6 @@
         },
         "type": "Xiaomi Module Double Switch Aqara",
         "commands": {
-            "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include4": "etat",
@@ -26,7 +25,10 @@
             "include10": "getModelIdentifier",
             "include11": "conso",
             "include12": "Xiaomi-ff01",
-            "include13": "puissance1"
+            "include13": "puissance1",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

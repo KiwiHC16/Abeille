@@ -544,7 +544,7 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label" title="getRoutingTable">ZDO: Table de routage</label>
+            <label class="col-sm-3 control-label" title="getRoutingTable (Mgmt_Rtg_req)">ZDO: Table de routage</label>
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'getRoutingTable\', \''.$eqId.'\')">{{Interroger}}</a>';
@@ -552,11 +552,20 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label" title="getBindingTable">ZDO: Table de binding</label>
+            <label class="col-sm-3 control-label" title="getBindingTable (Mgmt_Bind_req)">ZDO: Table de binding</label>
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'getBindingTable\', \''.$eqId.'\')">{{Interroger}}</a>';
                 ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="getNeighborTable (Mgmt_Lqi_req)">ZDO: Table de voisinage</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'getNeighborTable\', \''.$eqId.'\')">{{Interroger}}</a>';
+                ?>
+                <input id="idStartIdx" title="{{Start index (ex: 00)}}" value="00" />
             </div>
         </div>
     <?php } ?>

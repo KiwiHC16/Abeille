@@ -9,6 +9,7 @@ ChangeLog
 - Page gestion: Bouton 'exclure' pour tous.
 - JSON commandes: suppression de commandes obsolètes.
 - GL-S-003Z: Fichier JSON. Correction end point + divers (#2104).
+- Page EQ/avancé: ajout possibilité interroger LQI (Mgmt_Lqi_req).
 
 210817-BETA-1
 ----------

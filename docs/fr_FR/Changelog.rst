@@ -7,6 +7,8 @@ ChangeLog
   - SW & getSWBuild => SWBuildID & Get-SWBuildID
 - Interne: Ajout commande générique 'configureReporting'.
 - Page gestion: Bouton 'exclure' pour tous.
+- JSON commandes: suppression de commandes obsolètes.
+- GL-S-003Z: Fichier JSON. Correction end point + divers (#2104).
 
 210817-BETA-1
 ----------

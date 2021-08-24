@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210824-BETA-1
+----------
+
 - Ajout support Controleur Tuya LED DC5-24V (#2082).
 - Ajout Ampoule YANDHI E27 (#2087)
 - JSON équipements: tous modifiés

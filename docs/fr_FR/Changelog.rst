@@ -14,7 +14,7 @@ ChangeLog
 - GL-S-003Z: Fichier JSON. Correction end point + divers (#2104).
 - Page EQ/avancé: ajout possibilité interroger LQI (Mgmt_Lqi_req).
 
-210817-BETA-1
+210824-STABLE-1
 ----------
 
 - Xiaomi plug EU: JSON revisité (#1578).

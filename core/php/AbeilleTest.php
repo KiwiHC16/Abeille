@@ -230,8 +230,8 @@
 
         if ($test==124) {
             echo "Test envoie Cmd to DiscoverAttributesCommand\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/DiscoverAttributesCommand';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId='.$argv[3].'&startAttributeId=0000&maxAttributeId=FF';
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/discoverAttributes';
+            $msgAbeille->message['payload'] = 'ep=01&clustId='.$argv[3].'&startAttrId=0000&maxAttrId=FF';
         }
 
         if ($test==125) {

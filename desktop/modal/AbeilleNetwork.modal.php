@@ -355,13 +355,13 @@
                                             // if ( $destination == '0000' ) $destination = 'Ruche';
                                             // if ( $nextHop == '0000' )     $nextHop = 'Ruche';
 
-                                            $sourceEq       = Abeille::byLogicalId($zigate.'/'.$addrShort, Abeille);
-                                            $destinationEq  = Abeille::byLogicalId($zigate.'/'.$destination, Abeille);
-                                            $nextHopEq      = Abeille::byLogicalId($zigate.'/'.$nextHop, Abeille);
+                                            $sourceEq       = Abeille::byLogicalId($zigate.'/'.$addrShort, 'Abeille');
+                                            $destinationEq  = Abeille::byLogicalId($zigate.'/'.$destination, 'Abeille');
+                                            $nextHopEq      = Abeille::byLogicalId($zigate.'/'.$nextHop, 'Abeille');
 
-					    if (!is_object($sourceEq)) 	continue;
-					    if (!is_object($destinationEq)) 	continue;
-					    if (!is_object($nextHopEq)) 	continue;
+                                            if (!is_object($sourceEq)) 	continue;
+                                            if (!is_object($destinationEq)) 	continue;
+                                            if (!is_object($nextHopEq)) 	continue;
 
                                             echo 'Si ' . $sourceEq->getObject()->getName() . '-' .$sourceEq->getName() . ' ('.$sourceEq->getLogicalId()
                                                 . ') veut joindre '.$destinationEq->getObject()->getName() . '-' .$destinationEq->getName() . ' ('.$destinationEq->getLogicalId()

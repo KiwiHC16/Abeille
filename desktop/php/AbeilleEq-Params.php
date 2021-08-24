@@ -133,7 +133,7 @@
         <label class="col-sm-3 control-label">Assistant EQ</label>
         <div class="col-sm-5">
             <?php
-                echo '<a class="btn btn-warning" onclick="window.location.href=\'index.php?v=d&m=Abeille&p=AbeilleEqAssist&id='.$eqId.'\'">Lancer</a>';
+                echo '<a class="btn btn-warning" onclick="window.location.href=\'index.php?v=d&m=Abeille&p=AbeilleEqAssist&id='.$eqId.'\'">Ouvrir</a>';
             ?>
         </div>
     </div>
@@ -489,27 +489,62 @@
         </div>
 
         <div class="form-group">
-            <label class="col-sm-3 control-label">Attribut</label>
+            <label class="col-sm-3 control-label">ZCL: Lecture attribut</label>
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'readAttribute\', \''.$eqId.'\')">{{Lire}}</a>';
+                    echo '<input id="idEpA" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
                 ?>
                 <input id="idClustIdA" placeholder="{{Cluster (ex: 0001)}}" />
                 <input id="idAttrIdA" placeholder="{{Attrib (ex: 0021)}}" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">Config de rapport</label>
+            <label class="col-sm-3 control-label" title="readReportingConfig">ZCL: Lecture configuration de rapport</label>
             <div class="col-sm-5">
                 <?php
-                    echo '<a class="btn btn-warning" onclick="interrogate(\'getReportingConfig\', \''.$eqId.'\')">{{Interroger}}</a>';
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'readReportingConfig\', \''.$eqId.'\')">{{Interroger}}</a>';
                 ?>
                 <input id="idClustId" placeholder="{{Cluster (ex: 0001)}}" />
                 <input id="idAttrId" placeholder="{{Attrib (ex: 0021)}}" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">Table de routage</label>
+            <label class="col-sm-3 control-label" title="discoverCommandsReceived">ZCL: Découverte des commandes RX</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'discoverCommandsReceived\', \''.$eqId.'\')">{{Interroger}}</a>';
+                    echo '<input id="idEpB" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
+                ?>
+                <input id="idClustIdB" placeholder="{{Cluster (ex: 0001)}}" />
+                <!-- <input id="idStartB" placeholder="{{Start (ex: 00)}}" /> -->
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="discoverAttributes">ZCL: Découverte des attributs</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'discoverAttributes\', \''.$eqId.'\')">{{Interroger}}</a>';
+                    echo '<input id="idEpD" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
+                ?>
+                <input id="idClustIdD" placeholder="{{Cluster (ex: 0001)}}" />
+                <!-- <input id="idStartD" placeholder="{{Start (ex: 00)}}" /> -->
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="discoverAttributesExt">ZCL: Découverte des attributs (extended)</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'discoverAttributesExt\', \''.$eqId.'\')">{{Interroger}}</a>';
+                    echo '<input id="idEpC" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
+                ?>
+                <input id="idClustIdC" placeholder="{{Cluster (ex: 0001)}}" />
+                <!-- <input id="idStartC" placeholder="{{Start (ex: 00)}}" /> -->
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="getRoutingTable">ZDO: Table de routage</label>
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'getRoutingTable\', \''.$eqId.'\')">{{Interroger}}</a>';
@@ -517,7 +552,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">Table de binding</label>
+            <label class="col-sm-3 control-label" title="getBindingTable">ZDO: Table de binding</label>
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'getBindingTable\', \''.$eqId.'\')">{{Interroger}}</a>';

@@ -131,10 +131,10 @@
             </div>
 
             <div class="row">
+                <a class="btn btn-success pull-left" title="Télécharge 'discovery.json'" onclick="downloadDiscovery()"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
                 <?php if (isset($dbgTcharp38)) { ?>
                 <a class="btn btn-success pull-left" title="Genère les commandes Jeedom" onclick="zigbeeToCommands()"><i class="fas fa-cloud-download-alt"></i> Mettre à jour JSON</a>
                 <?php } ?>
-                <a class="btn btn-success pull-left" title="Télécharge 'discovery.json'" onclick="downloadDiscovery()"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
                 <br>
                 <br>
             </div>
@@ -823,7 +823,7 @@
                 // Cmds
                 "cmd1" : { "name" : "Off" },
                 "cmd2" : { "name" : "On" },
-                "cmd3" : { "name" : "Toggle" },
+                // "cmd3" : { "name" : "Toggle" },
             },
             "0007": { // On/Off switch config cluster
                 // Attributes
@@ -1068,8 +1068,8 @@
 
         // Refresh display
         displayCommands();
-        zbManuf = document.getElementById("idZigbeeManuf").value;
-        zbModel = document.getElementById("idZigbeeModel").value;
+        zbManuf = document.getElementById("idZigbeeManuf"+epId).value;
+        zbModel = document.getElementById("idZigbeeModel"+epId).value;
         js_jsonName = zbModel+"_"+zbManuf;
         document.getElementById("idJsonName").value = js_jsonName;
     } // End zigbeeToCommands()
@@ -1263,7 +1263,7 @@ console.log(jeq);
     /* Request device info
        clustType = '00' (server cluster) or '01' (client cluster)
      */
-    function requestInfos(infoType, ep = "01", clustId = "0000", option) {
+    function requestInfos(infoType, ep = "01", clustId = "0000", option = "") {
         console.log("requestInfos("+infoType+")");
 
         // 'Cmd'.$device->getLogicalId().'/ReadAttributeRequest', 'EP=01&clusterId=0005&attributeId=0000'
@@ -1289,6 +1289,9 @@ console.log(jeq);
         } else if (infoType == "attribValue") {
             topic = "Cmd"+logicalId+"_readAttribute";
             payload = "ep="+ep+"_clustId="+clustId+"_attrId="+option;
+        } else if (infoType == "discoverCommandsReceived") {
+            topic = "Cmd"+logicalId+"_discoverCommandsReceived";
+            payload = "ep="+ep+"_clustId="+clustId;
         } else {
             console.log("requestInfos("+infoType+") => UNEXPECTED type !");
             return;
@@ -1346,21 +1349,21 @@ console.log(jeq);
                 h += '<label class="col-lg-2 control-label" for="fname">Fabricant:</label>';
                 h += '<div class="col-lg-10">';
                 h += '<a class="btn btn-warning" title="Raffraichi le nom du fabricant" onclick="requestInfos(\'manufacturer\')"><i class="fas fa-sync"></i></a>';
-                h += '<input type="text" id="idZigbeeManuf" value="" readonly>';
+                h += '<input type="text" id="idZigbeeManuf'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
                 h += '<div class="row">';
                 h += '<label class="col-lg-2 control-label" for="fname">Modèle:</label>';
                 h += '<div class="col-lg-10">';
                 h += '<a class="btn btn-warning" title="Raffraichi le nom du modèle" onclick="requestInfos(\'modelId\')"><i class="fas fa-sync"></i></a>';
-                h += '<input type="text" id="idZigbeeModel" value="" readonly>';
+                h += '<input type="text" id="idZigbeeModel'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
                 h += '<div class="row">';
                 h += '<label class="col-lg-2 control-label" for="fname">Localisation:</label>';
                 h += '<div class="col-lg-10">';
                 h += '<a class="btn btn-warning" title="Raffraichi la localisation" onclick="requestInfos(\'location\')"><i class="fas fa-sync"></i></a>';
-                h += '<input type="text" id="idZigbeeLocation" value="" readonly>';
+                h += '<input type="text" id="idZigbeeLocation'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
                 h += '</div>';
@@ -1410,29 +1413,34 @@ console.log(jeq);
             // Updating internal infos
             if (sStatus == "00") {
                 discovery = eq.discovery;
-                if ((typeof discovery.endPoints !== "undefined") && (typeof discovery.endPoints[sEp] !== "undefined")) {
-                    ep = discovery.endPoints[sEp];
-                    if ((typeof ep.servClusters !== 'undefined') && (typeof ep.servClusters[sClustId] !== 'undefined')) {
-                        attributes = ep.servClusters[sClustId];
-                        if (typeof attributes[sAttrId] === 'undefined')
-                            attr = new Object();
-                        else
-                            attr = attributes[sAttrId];
-                        attr['value'] = sValue;
-                        attributes[sAttrId] = attr;
-                        ep.servClusters[sClustId] = attributes;
-                    }
-                }
+                if (typeof discovery.endPoints[sEp] === "undefined")
+                    discovery.endPoints[sEp] = new Object();
+                ep = discovery.endPoints[sEp];
+                if (typeof ep.servClusters === "undefined")
+                    ep.servClusters = new Object();
+                if (typeof ep.servClusters[sClustId] === "undefined")
+                    ep.servClusters[sClustId] = new Object();
+                clust = ep.servClusters[sClustId];
+                if (typeof clust.attributes === "undefined")
+                    clust.attributes = new Object();
+                attributes = clust.attributes;
+                if (typeof attributes[sAttrId] === 'undefined')
+                    attr = new Object();
+                else
+                    attr = attributes[sAttrId];
+                attr['value'] = sValue;
+                attributes[sAttrId] = attr;
+                ep.servClusters[sClustId]['attributes'] = attributes;
             }
 
             // Updating display
             if (sClustId == "0000") {
                 if (sAttrId == "0004") {
-                    var field = document.getElementById("idZigbeeManuf");
+                    var field = document.getElementById("idZigbeeManuf"+sEp);
                 } else if (sAttrId == "0005") {
-                    var field = document.getElementById("idZigbeeModel");
+                    var field = document.getElementById("idZigbeeModel"+sEp);
                 } else if (sAttrId == "0010") {
-                    var field = document.getElementById("idZigbeeLocation");
+                    var field = document.getElementById("idZigbeeLocation"+sEp);
                 }
             }
             if (typeof field !== 'undefined') {
@@ -1489,22 +1497,24 @@ console.log(jeq);
                 if (clustId == "0000") // Basic cluster supported on this EP
                     $("#idEP"+sEp+"Model").show();
                 var newRow = servClustTable.insertRow(-1);
-                var newCol = newRow.insertCell(0);
-                newCol.innerHTML = clustId;
-                newCol.innerHTML += '<a class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
+                var newCell = newRow.insertCell(0);
+                newCell.innerHTML = clustId;
+                // newCell.setAttribute('title', 'toto'); // Tcharp38 TODO: How to retrive cluster name ?
+                newCell.innerHTML += '<a class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
                 if (clustId == "0000") { // Basic cluster supported on this EP
                     requestInfos('manufacturer', sEp, clustId);
                     requestInfos('modelId', sEp, clustId);
                     requestInfos('location', sEp, clustId);
                 }
                 requestInfos('attribList', sEp, clustId, '00');
+                requestInfos('discoverCommandsReceived', sEp, clustId);
             });
             cliClustArr.forEach((clustId) => {
                 console.log("cliClust="+clustId);
                 var newRow = cliClustTable.insertRow(-1);
-                var newCol = newRow.insertCell(0);
-                newCol.innerHTML = clustId;
-                newCol.innerHTML += '<a class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'01\')"><i class="fas fa-sync"></i></a>';
+                var newCell = newRow.insertCell(0);
+                newCell.innerHTML = clustId;
+                newCell.innerHTML += '<a class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'01\')"><i class="fas fa-sync"></i></a>';
                 requestInfos('attribList', sEp, clustId, '01');
             });
         } else if (res.type == "attributeDiscovery") {
@@ -1534,11 +1544,14 @@ console.log(jeq);
                 clust = ep.servClusters[sClustId];
             else
                 clust = ep.cliClusters[sClustId];
+            if (typeof clust.attributes === "undefined")
+                clust.attributes = new Object();
+            attributes = clust.attributes;
             for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
                 sAttr = sAttributes[attrIdx];
-                if (typeof clust[sAttr.id] === "undefined")
-                    clust[sAttr.id] = new Object();
-                if (typeof clust[sAttr.value] === "undefined")
+                if (typeof attributes[sAttr.id] === "undefined")
+                    attributes[sAttr.id] = new Object();
+                if (typeof attributes[sAttr.value] === "undefined")
                     requestInfos('attribValue', sEp, sClustId, sAttr.id); // Read attribute current value
             }
 
@@ -1588,6 +1601,26 @@ console.log(jeq);
 
             // Updating display
             document.getElementById("idAddr").value = res.addr;
+        } else if (res.type == "commandsReceived") {
+            // 'src' => 'parser',
+            // 'type' => 'commandsReceived',
+            // 'net' => $dest,
+            // 'addr' => $srcAddress,
+            // 'ep' => $srcEndPoint,
+            // 'clustId' => $cluster,
+            // 'commands' => $commands
+            sEp = res.ep;
+            sClustId = res.clustId;
+            sCommands = res.commands;
+            console.log("commandsReceived: clust="+sClustId);
+            // console.log(sCommands);
+
+            /* Updating internal datas */
+            ep = eq.discovery.endPoints[sEp];
+            clust = ep.servClusters[sClustId];
+            if (typeof clust.commandsReceived === "undefined")
+                clust.commandsReceived = new Object();
+            clust.commandsReceived = sCommands;
         }
 
         openReturnChannel();

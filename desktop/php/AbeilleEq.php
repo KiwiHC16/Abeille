@@ -27,6 +27,7 @@
     list($eqNet, $eqAddr) = explode("/", $eqLogicId);
     $zgNb = substr($eqNet, 7); // Extracting zigate number from network
     $zgType = config::byKey('AbeilleType'.$zgNb, 'Abeille', '', 1); // USB, WIFI, PIN, DIN
+    $mainEP = $eqLogic->getConfiguration('mainEP', '');
 
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
@@ -404,16 +405,38 @@
         } else if (request == "getBindingTable") {
             topic = "Cmd"+logicalId+"_getBindingTable";
             payload = "address="+js_eqAddr;
-        } else if (request == "getReportingConfig") {
-            topic = "Cmd"+logicalId+"_getReportingConfig";
+        } else if (request == "readReportingConfig") {
+            topic = "Cmd"+logicalId+"_readReportingConfig";
             clustId = document.getElementById("idClustId").value;
             attrId = document.getElementById("idAttrId").value;
             payload = "addr="+js_eqAddr+"_clustId="+clustId+"_attrId="+attrId;
         } else if (request == "readAttribute") {
-            topic = "Cmd"+logicalId+"_readAttributeRequest";
+            topic = "Cmd"+logicalId+"_readAttribute";
+            ep = document.getElementById("idEpA").value;
             clustId = document.getElementById("idClustIdA").value;
             attrId = document.getElementById("idAttrIdA").value;
-            payload = "addr="+js_eqAddr+"_ep=01_clustId="+clustId+"_attrId="+attrId;
+            payload = "addr="+js_eqAddr+"_ep="+ep+"_clustId="+clustId+"_attrId="+attrId;
+        } else if (request == "discoverCommandsReceived") {
+            topic = "Cmd"+logicalId+"_discoverCommandsReceived";
+            ep = document.getElementById("idEpB").value;
+            clustId = document.getElementById("idClustIdB").value;
+            // start = document.getElementById("idStartB").value;
+            start = "00";
+            payload = "addr="+js_eqAddr+"_ep="+ep+"_clustId="+clustId+"_start="+start;
+        } else if (request == "discoverAttributesExt") {
+            topic = "Cmd"+logicalId+"_discoverAttributesExt";
+            ep = document.getElementById("idEpC").value;
+            clustId = document.getElementById("idClustIdC").value;
+            // start = document.getElementById("idStartC").value;
+            start = "00";
+            payload = "addr="+js_eqAddr+"_ep="+ep+"_clustId="+clustId+"_start="+start;
+        } else if (request == "discoverAttributes") {
+            topic = "Cmd"+logicalId+"_discoverAttributes";
+            ep = document.getElementById("idEpD").value;
+            clustId = document.getElementById("idClustIdD").value;
+            // start = document.getElementById("idStartD").value;
+            start = "00";
+            payload = "addr="+js_eqAddr+"_ep="+ep+"_clustId="+clustId+"_start="+start;
         } else {
             console.log("Unknown request "+request);
             return;

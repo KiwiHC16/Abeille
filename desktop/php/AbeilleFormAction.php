@@ -61,7 +61,7 @@
         sendMessageFromFormToCmd('Cmd'.$dest.'/0000/IEEE_Address_request',     'address='.$address                             );
         sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getName',                  'address='.$address.'&destinationEndPoint='.$EP );
         sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getLocation',              'address='.$address.'&destinationEndPoint='.$EP );
-        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getGroupMembership',       'address='.$address.'&DestinationEndPoint='.$EP );
+        sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
         // sendMessageFromFormToCmd('CmdAbeille/0000/getSceneMembership',   'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$grouID, 0);
         // sendMessageFromFormToCmd('CmdAbeille/0000/ReadAttributeRequest', 'address='.$address.'&DestinationEndPoint='.$EP'.'&ClusterId='.$clusterId'.'&attributId='.$attributId'.'&Proprio='.$proprio', 0);
     }
@@ -76,15 +76,15 @@
 
             // Group
             case 'Add Group':
-                    foreach ( $_POST as $item=>$Value ) {
+                foreach ( $_POST as $item=>$Value ) {
                     if ( strpos("-".$item, "eqSelected") == 1 ) {
                         echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/addGroup',           'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/addGroup', 'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
                         sleep(1);
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getGroupMembership', 'address='.$address.'&DestinationEndPoint='.$EP );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
                         sleep(1);
                     }
                 }
@@ -97,7 +97,7 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/commissioningGroupAPS',           'address='.$address.'&groupId='.$_POST['group'] );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/commissioningGroupAPS', 'address='.$address.'&groupId='.$_POST['group'] );
                     }
                 }
                 break;
@@ -109,7 +109,7 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/commissioningGroupAPSLegrand',   'address='.$address.'&groupId='.$_POST['group'] );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/commissioningGroupAPSLegrand', 'address='.$address.'&groupId='.$_POST['group'] );
                     }
                 }
                 break;
@@ -123,7 +123,7 @@
                         $EP = $device->getConfiguration('mainEP');
                         sendMessageFromFormToCmd('Cmd'.$dest.'/0000/removeGroup',        'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
                         sleep(1);
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getGroupMembership', 'address='.$address.'&DestinationEndPoint='.$EP );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
                         sleep(1);
                     }
                 }
@@ -139,7 +139,7 @@
                         echo "Address: ".$address."<br>";
                         $EP = $device->getConfiguration('mainEP');
                         echo "Id: ".$EP."<br>";
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getGroupMembership', 'address='.$address.'&DestinationEndPoint='.$EP );
+                        sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
                     }
                 }
                 break;

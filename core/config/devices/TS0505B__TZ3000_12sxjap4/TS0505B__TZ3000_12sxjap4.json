@@ -1,0 +1,54 @@
+{
+    "TS0505B__TZ3000_12sxjap4": {
+        "manufacturer": "Tuya",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "TRADFRIbulbE27CWSopal600lm"
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "Yandhi E27 Bulb",
+        "commands": {
+            "include16": "Identify",
+            "include25": "Group-Membership",
+            "include6": "On",
+            "include7": "Off",
+            "include4": "etatLight",
+            "include11": "getEtat",
+            "include26": "BindToZigateEtat",
+            "include28": "setReportEtat",
+            "include11 2": "setLevel",
+            "include5": "levelLight",
+            "include12": "getLevel",
+            "include27": "BindToZigateLevel",
+            "include29": "setReportLevel",
+            "include6 2": "colorX",
+            "include7 2": "colorY",
+            "include12 2": "Colour",
+            "include13 2": "Blanc",
+            "include14 2": "Bleu",
+            "include15 2": "Rouge",
+            "include16 2": "Vert",
+            "include17 2": "getColorX",
+            "include18 2": "getColorY",
+            "include12 2 2": "ColourRGB",
+            "include30": "setColourRGB",
+            "include30 2": "setRGB",
+            "include31": "colorRouge",
+            "include32": "setRouge",
+            "include33": "colorVert",
+            "include34": "setVert",
+            "include35": "colorBleu",
+            "include36": "setBleu",
+            "include38": "2700K",
+            "include39": "5000K",
+            "include40": "temperatureLight",
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            }
+        }
+    }
+}

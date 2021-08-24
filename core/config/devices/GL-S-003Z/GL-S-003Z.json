@@ -1,22 +1,18 @@
 {
     "GL-S-003Z": {
         "manufacturer": "Gledopto",
-        "model": "GL-C-003Z",
+        "model": "GL-S-003Z",
         "timeout": "60",
-        "Comment": "GLEDOPTO RGBW GU10 5W 300lm",
         "configuration": {
-            "mainEP": "0C",
+            "mainEP": "0B",
             "poll": "1",
             "icon": "GL-S-003Z"
         },
         "category": {
             "light": "1"
         },
-        "type": "GLEDOPTO Couleur",
+        "type": "Gledopto RGBW GU10 5W 300lm",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
-            "include3": "SW",
             "include4": "etatLight",
             "include5": "levelLight",
             "include6 2": "colorX",
@@ -34,9 +30,6 @@
             "include18 2": "getColorY",
             "include11": "getEtat",
             "include12": "getLevel",
-            "include13": "getManufacturerName",
-            "include14": "getModelIdentifier",
-            "include15": "getSWBuild",
             "include16": "Identify",
             "include25": "Group-Membership",
             "include25 2": "Scene-Membership",
@@ -57,7 +50,14 @@
             "include38": "2700K",
             "include39": "4000K",
             "include40": "temperatureLight",
-            "include40 2 2": "setTemperatureLight"
+            "include40 2 2": "setTemperatureLight",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            }
         }
     }
 }

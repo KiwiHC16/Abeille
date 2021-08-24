@@ -11,9 +11,11 @@
         },
         "type": "Tuya NEO RH3001",
         "commands": {
-            "include1": "SW",
             "include2": "nom",
-            "include3": "etatDoorAlarme"
+            "include3": "etatDoorAlarme",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

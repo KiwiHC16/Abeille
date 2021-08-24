@@ -11,7 +11,6 @@
         },
         "type": "thermom\u00e8tre zigbee ewelink",
         "commands": {
-            "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include9": "getManufacturerName",
@@ -19,7 +18,10 @@
             "include3 2": "temperature",
             "include4": "humidite",
             "include5": "Batterie-Volt-Konke",
-            "include6": "Batterie-Pourcent-Heiman"
+            "include6": "Batterie-Pourcent-Heiman",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

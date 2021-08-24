@@ -11,13 +11,15 @@
         },
         "type": "Xiaomi Presence Aqara 2",
         "commands": {
-            "include1": "SW",
             "include2": "nom",
             "include3": "presence",
             "include4": "luminosite",
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",
-            "include7": "Xiaomi-ff01"
+            "include7": "Xiaomi-ff01",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

@@ -13,10 +13,8 @@
         "commands": {
             "include1": "nom",
             "include2": "societe",
-            "include3": "SW",
             "include21": "getManufacturerName",
             "include22": "getModelIdentifier",
-            "include23": "getSWBuild",
             "include24": "Identify",
             "include25 2 2 2": "spiritTemperatureConsigne",
             "include25 2 2": "spiritTemperatureConsigneGet",
@@ -46,7 +44,14 @@
             "include25 2 3 2 2 2": "spiritHostFlagsChildLockSet",
             "include25 2 3 2 2 2 2": "spiritHostFlagsOffSet",
             "include25 2 3 2 2 2 2 2": "spiritUnknown1",
-            "include25 2 3 2 2 2 2 2 2": "spiritUnknown2"
+            "include25 2 3 2 2 2 2 2 2": "spiritUnknown2",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            }
         }
     }
 }

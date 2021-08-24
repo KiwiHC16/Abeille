@@ -1,0 +1,12 @@
+{
+    "zbConfigureReporting": {
+        "comment": "Generic configure reporting command",
+        "name": "Configure reporting",
+        "subType": "other",
+        "configuration": {
+            "topic": "configureReporting",
+            "request": "ep=#EP#&clustId=#CLUSTID#&attrType=#ATTRTYPE#&attrId=#ATTRID#&minInterval=#MININTERVAL#&maxInterval=#MAXINTERVAL#"
+        },
+        "type": "action"
+    }
+}

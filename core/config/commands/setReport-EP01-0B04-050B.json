@@ -1,0 +1,19 @@
+{
+    "setReport-EP01-0B04-050B": {
+        "comment": "Attrib 050B, signed 16bit int = datatype 0x29",
+        "isVisible": 0,
+        "name": "setReport-EP01-0B04-050B",
+        "isHistorized": 0,
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "setReport",
+            "request": "targetEndpoint=01&ClusterId=0B04&AttributeId=050B&AttributeType=29",
+            "visibilityCategory": "Network",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": 11
+        },
+        "type": "action"
+    }
+}

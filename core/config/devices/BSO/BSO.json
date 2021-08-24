@@ -17,7 +17,6 @@
             "include0 2 2 2": "Tilt",
             "include1": "nom",
             "include2": "societe",
-            "include3": "SW",
             "include4": "zb-0000-ZCLVersion",
             "include5": "dateCode",
             "include6": "location",
@@ -32,7 +31,6 @@
             "include20": "getLevel",
             "include21": "getManufacturerName",
             "include22": "getModelIdentifier",
-            "include23": "getSWBuild",
             "include24": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
@@ -40,7 +38,14 @@
             "include28": "setReportEtat",
             "include29": "setReportLevel",
             "include30": "moveToLiftAndTiltBSO_Lift",
-            "include30 2": "moveToLiftAndTiltBSO_Tilt"
+            "include30 2": "moveToLiftAndTiltBSO_Tilt",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            }
         }
     }
 }

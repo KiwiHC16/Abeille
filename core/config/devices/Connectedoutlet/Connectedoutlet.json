@@ -12,7 +12,6 @@
         "commands": {
             "include1": "nom",
             "include2": "societe",
-            "include3": "SW",
             "include4": "etatLight",
             "include8": "On",
             "include9": "Off",
@@ -20,14 +19,20 @@
             "include19": "getEtat",
             "include21": "getManufacturerName",
             "include22": "getModelIdentifier",
-            "include23": "getSWBuild",
             "include24": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat",
             "include26 2": "BindToZigatePuissanceLegrand",
             "include28 2": "setReportPuissanceLegrand",
-            "include11 2": "PuissanceLegrandPrise"
+            "include11 2": "PuissanceLegrandPrise",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            }
         }
     }
 }

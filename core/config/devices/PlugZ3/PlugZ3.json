@@ -12,7 +12,6 @@
         },
         "type": "Ledvance Plug Z3 on\/off plug unit",
         "commands": {
-            "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include4": "etat",
@@ -24,7 +23,10 @@
             "include10": "getModelIdentifier",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
-            "include28": "setReportEtat"
+            "include28": "setReportEtat",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

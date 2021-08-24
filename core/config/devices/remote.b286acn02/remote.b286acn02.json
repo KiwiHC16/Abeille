@@ -12,7 +12,6 @@
         },
         "type": "Xiaomi Interrupteur Mural Carr\u00e9 Double D1 (pile)",
         "commands": {
-            "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include4": "etatSwitchDoubleb286acn01_1",
@@ -20,7 +19,10 @@
             "include4 3 2": "etatSwitchDoubleb286acn01_3",
             "include4 2": "Batterie-Volt",
             "include5": "Batterie-Pourcent",
-            "include6": "Xiaomi-ff01"
+            "include6": "Xiaomi-ff01",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

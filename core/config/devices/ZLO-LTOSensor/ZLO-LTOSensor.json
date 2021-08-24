@@ -13,13 +13,15 @@
         "commands": {
             "include1": "nom",
             "include2": "societe",
-            "include3": "SW",
             "include3 2": "luminosite",
             "include3 2 2": "temperature",
             "include3 2 2 2": "presence",
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",
-            "include7": "Xiaomi-ff01"
+            "include7": "Xiaomi-ff01",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

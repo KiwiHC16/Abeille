@@ -1,0 +1,11 @@
+{
+    "zb-0000-SWBuildID": {
+        "name": "SWBuildID",
+        "subType": "string",
+        "configuration": {
+            "visibilityCategory": "All"
+        },
+        "type": "info",
+        "logicalId": "0000-#EP#-4000"
+    }
+}

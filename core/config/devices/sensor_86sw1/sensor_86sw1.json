@@ -11,10 +11,12 @@
         },
         "type": "Xiaomi Interrupteur Carr\u00e9 simple",
         "commands": {
-            "include1": "SW",
             "include2": "societe",
             "include3": "nom",
-            "include4": "etatSwitchSimple"
+            "include4": "etatSwitchSimple",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

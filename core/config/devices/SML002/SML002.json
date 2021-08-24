@@ -13,7 +13,6 @@
         },
         "type": "Philips Hue motion sensor",
         "commands": {
-            "include1": "SW",
             "include2": "nom",
             "include3": "presence",
             "include4": "luminositeHue",
@@ -26,7 +25,10 @@
             "include4 2 2 2 2": "setReportOccupancy",
             "include4 2 2 2 2 2": "setReportIlluminance",
             "include4 2 2 2 2 2 2": "setReportTemperature",
-            "include4 2 2 2 2 2 2 2": "setReportBatterie"
+            "include4 2 2 2 2 2 2 2": "setReportBatterie",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

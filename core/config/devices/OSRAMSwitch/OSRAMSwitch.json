@@ -12,8 +12,10 @@
         },
         "type": "OSRAMSwitch",
         "commands": {
-            "include1": "SW",
-            "include2": "nom"
+            "include2": "nom",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

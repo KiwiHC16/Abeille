@@ -11,7 +11,6 @@
         },
         "type": "Osram Motion Sensor-A",
         "commands": {
-            "include1": "SW",
             "include2": "nom",
             "include3": "presenceEP2",
             "include4 3": "temperature",
@@ -20,7 +19,10 @@
             "include4 2 2 2": "BindToZigateTemperature",
             "include2 2": "setReportTemperature",
             "include4 2 2 2 3": "BindShortToZigateBatterie",
-            "include4 2 2 2 2 2 2 2": "setReportBatterie"
+            "include4 2 2 2 2 2 2 2": "setReportBatterie",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

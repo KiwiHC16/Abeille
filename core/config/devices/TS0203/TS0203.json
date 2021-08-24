@@ -11,12 +11,14 @@
         },
         "type": "Capteur d'ouverture de porte Tuya zemismart TS0203",
         "commands": {
-            "include1": "SW",
             "include2": "societe",
             "include3": "nom",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier",
-            "include10 2": "etatDoorAlarme"
+            "include10 2": "etatDoorAlarme",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

@@ -13,7 +13,6 @@
         "commands": {
             "include1": "nom",
             "include2": "societe",
-            "include3": "SW",
             "include4": "etatLight",
             "include8": "On",
             "include9": "Off",
@@ -21,7 +20,6 @@
             "include19": "getEtat",
             "include21": "getManufacturerName",
             "include22": "getModelIdentifier",
-            "include23": "getSWBuild",
             "include24": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
@@ -32,7 +30,14 @@
             "include3 2 2 2 3": "CurrentSummationDelivered",
             "include3 2 2 2 4": "getPlugPower",
             "include3 2 2 2 4 2": "getPlugA",
-            "include3 2 2 2 4 2 2": "getPlugV"
+            "include3 2 2 2 4 2 2": "getPlugV",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            }
         }
     }
 }

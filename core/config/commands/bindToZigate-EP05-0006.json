@@ -1,0 +1,19 @@
+{
+    "bindToZigate-EP05-0006": {
+        "Comment": "Bind cluster 0006 EP 05 to zigate",
+        "isVisible": 0,
+        "name": "BindToZigate-0006-05",
+        "isHistorized": 0,
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "bindShort",
+            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=05&ClusterId=0006&reportToAddress=#ZiGateIEEE#",
+            "visibilityCategory": "Network",
+            "execAtCreation": "Yes",
+            "execAtCreationDelay": 10
+        },
+        "type": "action"
+    }
+}

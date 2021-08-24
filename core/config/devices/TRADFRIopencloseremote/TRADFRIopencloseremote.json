@@ -14,7 +14,6 @@
         "commands": {
             "include1 2": "nom",
             "include2 2": "societe",
-            "include3 2": "SW",
             "include4": "zb-0000-ZCLVersion",
             "include5": "dateCode",
             "include9 2": "WindowsCoveringUpGroup",
@@ -22,11 +21,17 @@
             "include10 2 2": "WindowsCoveringStopGroup",
             "include21": "getManufacturerName",
             "include22": "getModelIdentifier",
-            "include23": "getSWBuild",
             "include8": "Batterie-Pourcent-Ikea",
             "include9": "getBattery",
             "include10": "BindShortToZigateBatterie",
-            "include11": "setReportBatterie"
+            "include11": "setReportBatterie",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            }
         }
     }
 }

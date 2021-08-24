@@ -13,7 +13,9 @@
         "commands": {
             "include1": "nom",
             "include2": "societe",
-            "include3": "SW"
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            }
         }
     }
 }

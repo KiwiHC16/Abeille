@@ -14,7 +14,6 @@
         "commands": {
             "include1": "nom",
             "include2": "societe",
-            "include3": "SW",
             "include4": "etatLight",
             "include5": "levelLight",
             "include6 2": "colorX",
@@ -34,7 +33,6 @@
             "include12": "getLevel",
             "include13": "getManufacturerName",
             "include14": "getModelIdentifier",
-            "include15": "getSWBuild",
             "include16": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
@@ -55,7 +53,14 @@
             "include39": "4000K",
             "include40": "temperatureLight2",
             "include40 2 2": "setTemperatureLight2",
-            "include41": "5000K"
+            "include41": "5000K",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            }
         }
     }
 }

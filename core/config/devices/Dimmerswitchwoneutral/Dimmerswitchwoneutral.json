@@ -12,7 +12,6 @@
         "commands": {
             "include1": "nom",
             "include2": "societe",
-            "include3": "SW",
             "include4": "etat",
             "include5": "Level",
             "include8": "On",
@@ -23,7 +22,6 @@
             "include20": "getLevel",
             "include21": "getManufacturerName",
             "include22": "getModelIdentifier",
-            "include23": "getSWBuild",
             "include24": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
@@ -31,7 +29,14 @@
             "include28": "setReportEtat",
             "include29": "setReportLevel",
             "include29 2": "setLegrandDimmerOn",
-            "include29 2 2": "setLegrandDimmerOff"
+            "include29 2 2": "setLegrandDimmerOff",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            }
         }
     }
 }

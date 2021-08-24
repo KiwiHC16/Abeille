@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-210817-BETA-1
+210824-STABLE-1
 ----------
 
 - Xiaomi plug EU: JSON revisité (#1578).

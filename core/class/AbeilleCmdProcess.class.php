@@ -1162,16 +1162,14 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // Msg Type = 0x0530
             $cmd = "0530";
 
-            // <address mode: uint8_t>              -> 1
-            // <target short address: uint16_t>     -> 2
-            // <source endpoint: uint8_t>           -> 1
-            // <destination endpoint: uint8_t>      -> 1
-
-            // <profile ID: uint16_t>               -> 2
-            // <cluster ID: uint16_t>               -> 2
-
-            // <security mode: uint8_t>             -> 1
-            // <radius: uint8_t>                    -> 1
+            // <address mode: uint8_t>
+            // <target short address: uint16_t>
+            // <source endpoint: uint8_t>
+            // <destination endpoint: uint8_t>
+            // <profile ID: uint16_t>
+            // <cluster ID: uint16_t>
+            // <security mode: uint8_t>
+            // <radius: uint8_t>
 
             $addressMode            = "02"; // Short addr mode
             $targetShortAddress     = $Command['address'];
@@ -1189,27 +1187,10 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
             $data1 = $addressMode.$targetShortAddress.$sourceEndpoint.$destinationEndpoint.$clusterID.$profileID.$securityMode.$radius.$dataLength;
 
-            $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength, $this->debug['processCmd2'] );
-            $this->deamonlog('debug', "  Data2: ".$SQN."-".$startIndex, $this->debug['processCmd2'] );
-
             $data = $data1.$data2;
-
             $len = sprintf("%04s", dechex(strlen($data) / 2));
 
             $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $targetShortAddress);
-            return;
-        }
-
-        // Read Reporting Configuration
-        // Tcharp38: WORK ONGOING. NOT FUNCTIONAL
-        if (isset($Command['readReportingConfig'])) {
-            /* Format reminder
-                ZCL header
-                attribute record 1
-                attribute record 2
-                ...
-                attribute record n */
-
             return;
         }
 
@@ -1403,7 +1384,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // setReport
         // Title => setReport
         // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
-        if (isset($Command['setReport']))
+        if (isset($Command['setReport'])) // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
         {
             $this->deamonlog('debug', "    command setReport", $this->debug['processCmd2']);
             // Configure Reporting request
@@ -1477,7 +1458,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // Title => setReportRaw
         // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
         // For the time being hard coded to run tests but should replace setReport due to a bug on Timeout of command 0120. See my notes.
-        if (isset($Command['setReportRaw'])) {
+        if (isset($Command['setReportRaw'])) { // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
             $this->deamonlog('debug', "   command setReportRaw", $this->debug['processCmd2']);
 
             $cmd = "0530";
@@ -1539,24 +1520,102 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
             return;
         }
+        // Tcharp38: Generic configure reporting command.
+        if (isset($Command['configureReporting'])) {
+            /* Mandatory infos: addr, clustId, attrType, attrId */
+            $required = ['addr', 'clustId', 'attrType', 'attrId'];
+            $missingParam = false;
+            foreach ($required as $idx => $param) {
+                if (isset($Command[$param]))
+                    continue;
+                $this->deamonlog('debug', "    command configureReporting ERROR: Missing '".$param."'");
+                $missingParam = true;
+            }
+            if ($missingParam)
+                return;
+
+            $this->deamonlog('debug', "   command configureReporting", $this->debug['processCmd2']);
+            $cmd = "0530";
+
+            // <address mode: uint8_t>
+            // <target short address: uint16_t>
+            // <source endpoint: uint8_t>
+            // <destination endpoint: uint8_t>
+            // <profile ID: uint16_t>
+            // <cluster ID: uint16_t>
+            // <security mode: uint8_t>
+            // <radius: uint8_t>
+            // <data length: uint8_t>
+
+            // <data: auint8_t>
+            //  ZCL Control Field
+            //  ZCL SQN
+            //  Command Id
+            //  ....
+
+            $addrMode       = "02";
+            $addr           = $Command['addr'];
+            $srcEP          = "01";
+            $destEP         = $Command['ep'];
+            $profID         = "0104";
+            $clustID        = $Command['clustId'];
+            $securityMode   = "02";
+            $radius         = "1E";
+
+            /* ZCL header */
+            $fcf            = "10"; // Frame Control Field
+            $sqn            = "01";
+            $cmdId          = "06";
+
+            /* Attribute Reporting Configuration Record */
+            $dir                    = "00";
+            $attrId                 = $this->reverse_hex($Command['attrId']);
+            $attrType               = $Command['attrType'];
+            $minInterval            = isset($Command['minInterval']) ? $this->reverse_hex($Command['minInterval']) : "0000";
+            $maxInterval            = isset($Command['maxInterval']) ? $this->reverse_hex($Command['maxInterval']) : "0000";
+            switch ($attrType) {
+            case "21":
+                $changeVal = "0001";
+                break;
+            case "20":
+                $changeVal = "01";
+                break;
+
+            // Tcharp38: TO BE COMPLETED !
+            default:
+                $this->deamonlog('debug', "   ERROR: Unsupported attrType ".$attrType, $this->debug['processCmd2']);
+                $changeVal = "01";
+            }
+            $change                 = $this->reverse_hex($changeVal); // Reportable change.
+            // $timeout                = "0000";
+
+            $data2 = $fcf.$sqn.$cmdId.$dir.$attrId.$attrType.$minInterval.$maxInterval.$change;
+            $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
+
+            $data1 = $addrMode.$addr.$srcEP.$destEP.$clustID.$profID.$securityMode.$radius.$dataLen2;
+            $data = $data1.$data2;
+            $len = sprintf("%04s", dechex(strlen($data) / 2));
+
+            $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
+            return;
+        }
 
         // Read Reporting Request
-        // Tcharp38: WORK ONGOING. NOT FUNCTIONAL
-        if (isset($Command['getReportingConfig'])) {
+        if (isset($Command['readReportingConfig'])) {
             if (!isset($Command['addr'])) {
-                $this->deamonlog('debug', "    command getReportingConfig ERROR: Missing 'addr'");
+                $this->deamonlog('debug', "    command readReportingConfig ERROR: Missing 'addr'");
                 return;
             }
             if (!isset($Command['clustId'])) {
-                $this->deamonlog('debug', "    command getReportingConfig ERROR: Missing 'clustId'");
+                $this->deamonlog('debug', "    command readReportingConfig ERROR: Missing 'clustId'");
                 return;
             }
             if (!isset($Command['attrId'])) {
-                $this->deamonlog('debug', "    command getReportingConfig ERROR: Missing 'attrId'");
+                $this->deamonlog('debug', "    command readReportingConfig ERROR: Missing 'attrId'");
                 return;
             }
 
-            $this->deamonlog('debug', "    command getReportingConfig", $this->debug['processCmd2']);
+            $this->deamonlog('debug', "    command readReportingConfig", $this->debug['processCmd2']);
             $cmd = "0122";
 
             // <address mode: uint8_t>
@@ -1716,7 +1775,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             return;
         }
 
-        if (isset($Command['getGroupMembership']) && isset($Command['address']) && isset($Command['DestinationEndPoint'])) {
+        if (isset($Command['getGroupMembership'])) {
             $cmd = "0062";
 
             // <address mode: uint8_t>
@@ -1726,23 +1785,23 @@ class AbeilleCmdProcess extends AbeilleDebug {
             // <group count: uint8_t>
             // <group list:data>
 
-            $addressMode = "02";                                    // Short Address -> 2
-            $address = $Command['address'];                         // -> 4
-            $sourceEndpoint = "01";                                 // -> 2
-            $destinationEndpoint = $Command['DestinationEndPoint']; // -> 2
-            $groupCount = "00";                                     // -> 2
-            $groupList = "";                                        // ? Not mentionned in the ZWGUI -> 0
-            //  2 + 4 + 2 + 2 + 2 + 0 = 12/2 => 6
-            $lenth = "0006";
+            $addressMode = "02";
+            $address = $Command['addr'];
+            $sourceEndpoint = "01";
+            $ep = $Command['ep'];
+            $groupCount = "00";
+            $groupList = "";
 
             /* Correcting EP size if required (ex "1" => "01") */
-            if (strlen($destinationEndpoint) != 2) {
-                $EP = hexdec($destinationEndpoint);
-                $destinationEndpoint = sprintf("%02X", (hexdec($EP)));
+            if (strlen($ep) != 2) {
+                $EP = hexdec($ep);
+                $ep = sprintf("%02X", (hexdec($EP)));
             }
 
-            $data = $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$groupCount.$groupList;
-            $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            $data = $addressMode.$address.$sourceEndpoint.$ep.$groupCount.$groupList;
+            //  2 + 4 + 2 + 2 + 2 + 0 = 12/2 => 6
+            $length = "0006";
+            $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
             return;
         }
 
@@ -2195,7 +2254,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             return;
         }
 
-        if (isset($Command['Management_LQI_request']))
+        if (isset($Command['Management_LQI_request'])) // Mgmt_Lqi_req
         {
             $cmd = "004E";
 
@@ -2650,7 +2709,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         //
         if (isset($Command['UpGroup']) && isset($Command['address']) && isset($Command['step']))
         {
-            $this->deamonlog('debug','    UpOnOffGroup for: '.$Command['address'], $this->debug['processCmd2']);
+            $this->deamonlog('debug','    UpGroup for: '.$Command['address'], $this->debug['processCmd2']);
             // <address mode: uint8_t>          -> 2
             // <target short address: uint16_t> -> 4
             // <source endpoint: uint8_t>       -> 2
@@ -2679,7 +2738,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
 
         if (isset($Command['DownGroup']) && isset($Command['address']) && isset($Command['step']))
         {
-            $this->deamonlog('debug','    UpOnOffGroup for: '.$Command['address'], $this->debug['processCmd2']);
+            $this->deamonlog('debug','    DownGroup for: '.$Command['address'], $this->debug['processCmd2']);
             // <address mode: uint8_t>          -> 2
             // <target short address: uint16_t> -> 4
             // <source endpoint: uint8_t>       -> 2
@@ -2736,9 +2795,9 @@ class AbeilleCmdProcess extends AbeilleDebug {
             if ($addressMode == "02" ) {
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
                 $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
-                }
-                return;
             }
+            return;
+        }
 
         // ON / OFF with no effects RAW with no APS ACK
         // Not used as some eq have a strange behavior if the APS ACK is not set (e.g. Xiaomi Plug / should probably test again / bug from the eq ?)
@@ -3090,49 +3149,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             return;
         }
 
-        // DiscoverAttributesCommand: Obsolete. Use 'discoverAttributes' intead.
-        if (isset($Command['DiscoverAttributesCommand']) && isset($Command['address']) && isset($Command['startAttributeId']) && isset($Command['maxAttributeId']))
-        {
-            $this->deamonlog('debug','    DiscoverAttributesCommand for: '.$Command['address']." - ".$Command['startAttributeId']." - ".$Command['maxAttributeId'], $this->debug['processCmd2']);
-            $cmd = "0140";
-
-            // <address mode: uint8_t>
-            // <target short address: uint16_t>
-            // <source endpoint: uint8_t>
-            // <destination endpoint: uint8_t>
-            // <Cluster id: uint16_t>
-            // <Attribute id : uint16_t>
-            // <direction: uint8_t>
-            //      Direction:
-            //      0 – from server to client
-            //      1 – from client to server
-            // <manufacturer specific: uint8_t>
-            //      Manufacturer specific :
-            //      1 – Yes
-            //      0 – No
-            // <manufacturer id: uint16_t>
-            // <Max number of identifiers: uint8_t>
-
-            $addressMode    = "02";
-            $address        = $Command['address'];
-            $srcEP          = "01";
-            $dstEP          = sprintf("%02X", hexdec($Command['EP']));
-            $clusterId      = sprintf("%04X", hexdec($Command['clusterId']));
-            $attributeId    = $Command['startAttributeId'];
-            if (!isset($Command['direction']))
-                $Command['direction'] = '00'; // Get attributes from 'server' cluster by default
-            $direction      = $Command['direction']; //	'00' – server cluster atttrib, '01' – client cluster attrib
-            $manuSpec       = "00"; //  1 – Yes	 0 – No
-            $manuId         = "0000";
-            $maxAttributeId = $Command['maxAttributeId'];
-
-            $data = $addressMode.$address.$srcEP.$dstEP.$clusterId.$attributeId.$direction.$manuSpec.$manuId.$maxAttributeId ;
-            $lenth = sprintf("%04s",dechex(strlen($data) / 2));
-
-            $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data);
-            return;
-        }
-        // discoverAttributes
+        // ZCL: discoverAttributes command
         if (isset($Command['discoverAttributes'])) {
             $this->deamonlog('debug','    discoverAttributes for: '.$Command['addr']." - ".$Command['startAttrId']." - ".$Command['maxAttrId'], $this->debug['processCmd2']);
             $cmd = "0140";
@@ -3174,9 +3191,125 @@ class AbeilleCmdProcess extends AbeilleDebug {
             return;
         }
 
-        if (isset($Command['commandLegrand']))
-        {
-            $this->commandLegrand($dest,$Command);
+        // ZCL: Discover commands received
+        if (isset($Command['discoverCommandsReceived'])) {
+            /* Mandatory infos: addr, ep, clustId */
+            $required = ['addr', 'ep', 'clustId'];
+            $missingParam = false;
+            foreach ($required as $idx => $param) {
+                if (isset($Command[$param]))
+                    continue;
+                $this->deamonlog('debug', "    command discoverCommandsReceived ERROR: Missing '".$param."'");
+                $missingParam = true;
+            }
+            if ($missingParam)
+                return;
+
+            $this->deamonlog('debug', "   command discoverCommandsReceived", $this->debug['processCmd2']);
+            $cmd = "0530";
+
+            // <address mode: uint8_t>
+            // <target short address: uint16_t>
+            // <source endpoint: uint8_t>
+            // <destination endpoint: uint8_t>
+            // <profile ID: uint16_t>
+            // <cluster ID: uint16_t>
+            // <security mode: uint8_t>
+            // <radius: uint8_t>
+            // <data length: uint8_t>
+
+            // <data: auint8_t>
+            //  ZCL Control Field
+            //  ZCL SQN
+            //  Command Id
+            //  ....
+
+            $addrMode       = "02";
+            $addr           = $Command['addr'];
+            $srcEP          = "01";
+            $destEP         = $Command['ep'];
+            $profID         = "0104";
+            $clustID        = $Command['clustId'];
+            $securityMode   = "02";
+            $radius         = "1E";
+
+            /* ZCL header */
+            $fcf            = "10"; // Frame Control Field
+            $sqn            = "01";
+            $cmdId          = "11"; // Discover Commands Received
+
+            $startId        = isset($Command['startId']) ? $Command['startId'] : "00";
+            $max            = isset($Command['max']) ? $Command['max'] : "FF";
+
+            $data2 = $fcf.$sqn.$cmdId.$startId.$max;
+            $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
+
+            $data1 = $addrMode.$addr.$srcEP.$destEP.$clustID.$profID.$securityMode.$radius.$dataLen2;
+            $data = $data1.$data2;
+            $len = sprintf("%04s", dechex(strlen($data) / 2));
+
+            $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
+            return;
+        }
+
+        // ZCL: Discover Attributes Extended
+        if (isset($Command['discoverAttributesExt'])) {
+            /* Mandatory infos: addr, ep, clustId */
+            $required = ['addr', 'ep', 'clustId'];
+            $missingParam = false;
+            foreach ($required as $idx => $param) {
+                if (isset($Command[$param]))
+                    continue;
+                $this->deamonlog('debug', "    command discoverAttributesExt ERROR: Missing '".$param."'");
+                $missingParam = true;
+            }
+            if ($missingParam)
+                return;
+
+            $this->deamonlog('debug', "   command discoverAttributesExt", $this->debug['processCmd2']);
+            $cmd = "0530";
+
+            // <address mode: uint8_t>
+            // <target short address: uint16_t>
+            // <source endpoint: uint8_t>
+            // <destination endpoint: uint8_t>
+            // <profile ID: uint16_t>
+            // <cluster ID: uint16_t>
+            // <security mode: uint8_t>
+            // <radius: uint8_t>
+            // <data length: uint8_t>
+
+            // <data: auint8_t>
+            //  ZCL Control Field
+            //  ZCL SQN
+            //  Command Id
+            //  ....
+
+            $addrMode       = "02";
+            $addr           = $Command['addr'];
+            $srcEP          = "01";
+            $destEP         = $Command['ep'];
+            $profID         = "0104";
+            $clustID        = $Command['clustId'];
+            $securityMode   = "02";
+            $radius         = "1E";
+
+            /* ZCL header */
+            $fcf            = "10"; // Frame Control Field
+            $sqn            = "01";
+            $cmdId          = "15"; // Discover Attributes Extended
+
+            $startId        = isset($Command['startId']) ? $Command['startId'] : "00";
+            $max            = isset($Command['max']) ? $Command['max'] : "FF";
+
+            $data2 = $fcf.$sqn.$cmdId.$startId.$max;
+            $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
+
+            $data1 = $addrMode.$addr.$srcEP.$destEP.$clustID.$profID.$securityMode.$radius.$dataLen2;
+            $data = $data1.$data2;
+            $len = sprintf("%04s", dechex(strlen($data) / 2));
+
+            $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
             return;
         }
     }

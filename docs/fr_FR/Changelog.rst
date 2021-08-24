@@ -5,6 +5,8 @@ ChangeLog
 - Ajout Ampoule YANDHI E27 (#2087)
 - JSON équipements: tous modifiés
   - SW & getSWBuild => SWBuildID & Get-SWBuildID
+- Interne: Ajout commande générique 'configureReporting'.
+- Page gestion: Bouton 'exclure' pour tous.
 
 210817-BETA-1
 ----------

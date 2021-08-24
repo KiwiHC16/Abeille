@@ -121,7 +121,7 @@
                     "address" => $address,
                 );
                 break;
-            case "Management_LQI_request": // Mgmt_Lqi_req
+            case "Management_LQI_request": // Mgmt_Lqi_req: OBSOLETE: Use 'getNeighborTable' instead
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
                     "Management_LQI_request" => "1",
@@ -129,6 +129,16 @@
                     "dest" => $dest,
                     "address" => $keywords[1],
                     "StartIndex" => $keywords[3],
+                );
+                break;
+            case "getNeighborTable": // Mgmt_Lqi_req
+                $keywords = preg_split("/[=&]+/", $msg);
+                $Command = array(
+                    "getNeighborTable" => "1",
+                    "priority" => $priority,
+                    "dest" => $dest,
+                    "addr" => $address,
+                    "startIndex" => $keywords[1]
                 );
                 break;
             case "IEEE_Address_request":

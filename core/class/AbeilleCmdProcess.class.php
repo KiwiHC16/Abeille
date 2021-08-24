@@ -2254,7 +2254,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             return;
         }
 
-        if (isset($Command['Management_LQI_request'])) // Mgmt_Lqi_req
+        if (isset($Command['Management_LQI_request'])) // Mgmt_Lqi_req. OBSOLETE: Use 'getNeighborTable' instead
         {
             $cmd = "004E";
 
@@ -2270,6 +2270,27 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $data = $address.$startIndex ;
 
             $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $address);
+            return;
+        }
+
+        if (isset($Command['getNeighborTable'])) // Mgmt_Lqi_req
+        {
+            /* Expecting 2 parameters: 'addr' & 'startIndex' */
+
+            $cmd = "004E";
+
+            // <target short address: uint16_t>
+            // <Start Index: uint8_t>
+
+            $address = $Command['addr'];
+            $startIndex = $Command['startIndex'];
+
+            //  4 + 2 = 6/2 => 3
+            $length = "0003";
+
+            $data = $address.$startIndex ;
+
+            $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
             return;
         }
 

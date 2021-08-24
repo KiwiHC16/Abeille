@@ -405,6 +405,10 @@
         } else if (request == "getBindingTable") {
             topic = "Cmd"+logicalId+"_getBindingTable";
             payload = "address="+js_eqAddr;
+        } else if (request == "getNeighborTable") {
+            topic = "Cmd"+logicalId+"_getNeighborTable";
+            startIdx = document.getElementById("idStartIdx").value;
+            payload = "startIndex="+startIdx;
         } else if (request == "readReportingConfig") {
             topic = "Cmd"+logicalId+"_readReportingConfig";
             clustId = document.getElementById("idClustId").value;

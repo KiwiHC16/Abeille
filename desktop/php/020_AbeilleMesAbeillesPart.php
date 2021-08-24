@@ -22,6 +22,9 @@
         /* Remove equipments from Jeedom only */
         echo '<a onclick="removeBeesJeedom('.$i.')" class="btn btn-warning btn-xs" style="margin-top: -10px; margin-left:15px" title="Supprime les équipement(s) sélectionné(s) de Jeedom uniquement.">{{Supprimer de Jeedom}}</a>';
 
+        /* Exclude feature */
+        echo '<a onclick="removeBees('.$i.')" class="btn btn-warning btn-xs" style="margin-top:-10px; margin-left:8px" title="Demande aux équipement(s) sélectionné(s) de sortir du réseau.">{{Exclure}}</a>';
+
         $port = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '');
 
         /* Monitoring feature */
@@ -32,9 +35,6 @@
 
             /* Set timeout on selected equipements */
             echo '<a onclick="setBeesTimeout('.$i.')" class="btn btn-primary btn-xs" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
-
-            /* Exclude feature */
-            echo '<a onclick="removeBees('.$i.')" class="btn btn-primary btn-xs" style="margin-left:8px" title="Demande aux équipement(s) sélectionné(s) de sortir du réseau.">{{Exclure}}</a>';
         }
 
 		echo '<div class="eqLogicThumbnailContainer">';

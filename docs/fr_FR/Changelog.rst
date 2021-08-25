@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210825-BETA-1
+----------
+
 - Assistant de découverte: améliorations.
 - Interne: Collecte LQI: Mise-à-jour mineure.
 - Interne: Parser: Amélioration robustesse.

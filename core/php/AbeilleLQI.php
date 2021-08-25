@@ -8,12 +8,13 @@
      * - Send request thru AbeilleCmd (004E cmd)
      * - Get response from AbeilleParser (804E cmd)
      * - Identify each neighbour
-     * - If neighbour is router, added to list for interrogation
+     * - If neighbor is router, added to list for interrogation
      */
 
+    include_once("../../core/config/Abeille.config.php");
+
     /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.json";
-    if (file_exists($dbgFile)) {
+    if (file_exists(dbgFile)) {
         // include_once $dbgFile;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -22,7 +23,6 @@
     }
 
     include_once __DIR__."/../../../../core/php/core.inc.php";
-    include_once("../../core/config/Abeille.config.php");
     include_once "AbeilleLog.php"; // Log library
 
     /* Add to list a new eq (router or coordinator) to interrogate.
@@ -239,8 +239,10 @@
        Returns: 0=OK, -1=ERROR (fatal since queue issue) */
     function msgToCmd($dest, $addr, $index) {
         $msgAbeille = new MsgAbeille;
-        $msgAbeille->message['topic'] = "Cmd".$dest."/0000/Management_LQI_request";
-        $msgAbeille->message['payload'] = "address=" . $addr . "&StartIndex=" . $index;
+        // $msgAbeille->message['topic'] = "Cmd".$dest."/0000/Management_LQI_request";
+        // $msgAbeille->message['payload'] = "address=" . $addr . "&StartIndex=" . $index;
+        $msgAbeille->message['topic'] = "Cmd".$dest."/".$addr."/getNeighborTable";
+        $msgAbeille->message['payload'] = "startIndex=".$index;
         logMessage("", "msgToCmd: ".json_encode($msgAbeille));
 
         global $queueKeyLQIToCmd;
@@ -299,12 +301,12 @@
     } else
         $zgNb = -1;
     if (($zgNb != -1) && (($zgNb < 1) or ($zgNb > 10))) {
-        logMessage("", "  Mauvaise valeur de zigate => arret");
+        logMessage("", "  Bad zigate id => aborting.");
         exit;
     }
 
     if ($zgNb == -1) {
-        logMessage("", "Demande d'interrogation de toutes les zigates actives");
+        logMessage("", "Request to interrogate all active zigates");
         $zgStart = 1;
         $zgEnd = config::byKey('zigateNb', 'Abeille', '1', 1);
     } else {
@@ -339,7 +341,7 @@
 
     for ($zgNb = $zgStart; $zgNb <= $zgEnd; $zgNb++) {
         if (config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N') != 'Y') {
-            logMessage("", "Zigate ".$zgNb." désactivée => Ignorée.");
+            logMessage("", "Zigate ".$zgNb." disabled => Ignored.");
             continue;
         }
 

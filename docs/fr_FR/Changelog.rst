@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Assistant de découverte: améliorations.
+- Collecte LQI: Mise-à-jour mineure.
 
 210824-BETA-1
 ----------

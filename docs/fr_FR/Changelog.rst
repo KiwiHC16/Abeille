@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Assistant de découverte: améliorations.
+
 210824-BETA-1
 ----------
 

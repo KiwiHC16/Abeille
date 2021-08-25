@@ -277,7 +277,7 @@ class AbeilleTools
      * Read given device configuration from JSON file and associated commands.
      * 'deviceName': JSON file name without extension
      * 'from': JSON file location (default=Abeille, or 'local')
-     * 'mode': 0/default=load commands too, 1=do not load commands files
+     * 'mode': 0/default=load commands too, 1=split cmd call & file
      * Return: device associative array without top level key (jsonId).
      */
     public static function getDeviceConfig($deviceName, $from="Abeille", $mode=0)
@@ -341,9 +341,8 @@ class AbeilleTools
         }
 
         if (isset($device['commands'])) {
-            $deviceCmds = array();
-
             if ($mode == 0) {
+                $deviceCmds = array();
                 $jsonCmds = $device['commands'];
                 unset($device['commands']);
                 foreach ($jsonCmds as $cmd1 => $cmd2) {
@@ -407,6 +406,26 @@ class AbeilleTools
                 $deviceCmds += self::getCommandConfig("online");
 
                 $device['commands'] = $deviceCmds;
+            } else if ($mode == 1) {
+                $jsonCmds = $device['commands'];
+                foreach ($jsonCmds as $cmd1 => $cmd2) {
+                    if (substr($cmd1, 0, 7) == "include") {
+                        /* Old command JSON format: "includeX": "json_cmd_name" */
+                        $cmdFName = $cmd2;
+                        $newCmd = self::getCommandConfig($cmdFName);
+                        if ($newCmd === false)
+                            continue; // Cmd does not exist.
+                    } else {
+                        /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
+                        $cmdFName = $cmd2['use']; // File name without '.json'
+                        $newCmd = self::getCommandConfig($cmdFName, $cmd1);
+                        if ($newCmd === false)
+                            continue; // Cmd does not exist.
+                    }
+                    $cmdsFiles[$cmdFName] = $newCmd;
+                }
+            } else if ($mode == 2) {
+                /* Do not load commands in this mode */
             }
         } // End isset($device['commands'])
 

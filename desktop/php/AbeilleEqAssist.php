@@ -190,7 +190,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <label class="col-lg-2 control-label" for="fname">Catégorie:</label>
+                    <label class="col-lg-2 control-label" for="fname">Catégories:</label>
                     <div class="col-lg-10">
                     <?php
                         /* See jeedom.config.php */
@@ -226,6 +226,13 @@
                     </div>
                 </div>
 
+                <br>
+                <div class="row">
+                    <label class="col-lg-2 control-label" for="fname" title="End Point par défaut">End Point:</label>
+                    <div class="col-lg-10">
+                        <input type="text" value="" id="idMainEP">
+                    </div>
+                </div>
                 <br>
                 <div id="idCommands">
                 </div>
@@ -598,7 +605,7 @@
                 action: 'readDeviceConfig',
                 jsonId: js_jsonName,
                 jsonLocation: js_jsonLocation,
-                mode: 0 // 1=Do not load command files
+                mode: 1 // 1=Do not merge commands & command files
             },
             dataType: 'json',
             global: false,
@@ -616,7 +623,6 @@
                     // console.log(res.content);
                     jeq2 = JSON.parse(res.content);
                     console.log(jeq2);
-                    // jeq2 = jeq[js_jsonName];
 
                     /* Let's refresh display */
 
@@ -628,6 +634,7 @@
                         document.getElementById("idType").value = jeq2.type;
                     if (typeof jeq2.timeout !== 'undefined')
                         document.getElementById("idTimeout").value = jeq2.timeout;
+
                     if ("category" in jeq2)
                         jcat = jeq2.category;
                     if (typeof jcat !== 'undefined') { // No category defined
@@ -638,22 +645,36 @@
                                 document.getElementById("id"+cat).checked = true;
                         }
                     }
-                    if ("icon" in jeq2)
-                        document.getElementById("idIcon").value = jeq2.icon;
-                    if ("batteryType" in jeq2)
-                        document.getElementById("idBattery").value = jeq2.batteryType;
-                    else if ("battery_type" in jeq2) // Old naming support
-                        document.getElementById("idBattery").value = jeq2.configuration.battery_type;
+
+                    if (typeof jeq2.configuration !== 'undefined') {
+                        config = jeq2.configuration;
+                        if (typeof config.mainEP !== 'undefined')
+                            eq.defaultEp = config.mainEP;
+                        if (typeof config.icon !== 'undefined')
+                            eq.icon = config.icon;
+                        if (typeof config.batteryType !== 'undefined')
+                            eq.batteryType = config.batteryType;
+                    }
+                    displayDevice();
 
                     if ("commands" in jeq2)
                         eq.commands = jeq2.commands;
-                    else if ("Commandes" in jeq2) { // Old naming support
-                        eq.commands = jeq2.Commandes;
-                    }
                     displayCommands();
                 }
             }
         });
+    }
+
+    /* Display device infos in JSON area. */
+    function displayDevice() {
+        console.log("displayDevice()");
+
+        if (typeof eq.icon !== 'undefined')
+            document.getElementById("idIcon").value = eq.icon;
+        if (typeof eq.batteryType !== 'undefined')
+            document.getElementById("idBattery").value = eq.batteryType;
+        if (typeof eq.defaultEp !== 'undefined')
+            document.getElementById("idMainEP").value = eq.defaultEp;
     }
 
     /* Display commands in JSON column (coming either from JSON file or Zigbee discovery). */
@@ -661,6 +682,7 @@
         console.log("displayCommands()");
 
         if (typeof eq.commands === 'undefined') { // No commands defined
+            $('#idCommands').empty();
             console.log("=> No cmds defined");
             return;
         }
@@ -671,12 +693,12 @@
         hcmds += '<div class="row">';
         hcmds += '<thead><tr>';
         hcmds += '<th>Cmde Jeedom</th>';
-        hcmds += '<th>Cmde Abeille</th>';
+        hcmds += '<th>Fichier cmde</th>';
         hcmds += '<th>Params</th>';
         hcmds += '<th>ExecAtCreation</th>';
         hcmds += '</tr></thead>';
         for (const [key, value] of Object.entries(cmds)) {
-            // console.log(`${key}: ${value}`);
+            console.log(`${key}: ${value}`);
             if (key.substr(0, 7) == "include")
                 newSyntax = false;
             else
@@ -691,10 +713,10 @@
                     hcmds += '<td>'+value.params+'</td>';
                 else
                     hcmds += '<td></td>';
-                if ("execAtCreation" in value)
-                    hcmds += '<td>'+value.execAtCreation+'</td>';
+                if (("execAtCreation" in value) && (value.execAtCreation == "yes"))
+                    hcmds += '<td><input type="checkbox" checked></td>';
                 else
-                    hcmds += '<td>no</td>';
+                    hcmds += '<td><input type="checkbox"></td>';
                 hcmds += '</tr>';
             } else {
                 // "include3":"cmd12" => key="include3", value="cmd12"
@@ -787,12 +809,13 @@
                 // Attributes
                 "0000" : { "name" : "NameSupport", "type" : "R" },
                 // Cmds
-                "cmd1" : { "name" : "AddGroup" },
-                "cmd2" : { "name" : "ViewGroup" },
-                "cmd3" : { "name" : "GetGroupMembership" },
-                "cmd4" : { "name" : "RemoveGroup" },
-                "cmd5" : { "name" : "RemoveAllGroups" },
-                "cmd6" : { "name" : "AddGroupIfIdent" },
+                // Tcharp38: No need to generate Jeedom commands for this.
+                // "cmd1" : { "name" : "AddGroup" },
+                // "cmd2" : { "name" : "ViewGroup" },
+                // "cmd3" : { "name" : "GetGroupMembership" },
+                // "cmd4" : { "name" : "RemoveGroup" },
+                // "cmd5" : { "name" : "RemoveAllGroups" },
+                // "cmd6" : { "name" : "AddGroupIfIdent" },
             },
             "0005": { // Scene cluster
                 // Attributes
@@ -1413,6 +1436,8 @@ console.log(jeq);
             // Updating internal infos
             if (sStatus == "00") {
                 discovery = eq.discovery;
+                if (typeof discovery.endPoints === "undefined")
+                    discovery.endPoints = new Object();
                 if (typeof discovery.endPoints[sEp] === "undefined")
                     discovery.endPoints[sEp] = new Object();
                 ep = discovery.endPoints[sEp];
@@ -1626,9 +1651,9 @@ console.log(jeq);
         openReturnChannel();
     }
 
-    function returnChannelStateChange() {
-        console.log("returnChannelStateChange(): "+this.readyState);
-    }
+    // function returnChannelStateChange() {
+    //     console.log("returnChannelStateChange(): "+this.readyState);
+    // }
 
     function openReturnChannel() {
         console.log("openReturnChannel()");
@@ -1638,7 +1663,7 @@ console.log(jeq);
         request.open('GET', url, true);
         request.responseType = 'text';
         request.onload = receiveInfos;
-        request.onreadystatechange = returnChannelStateChange;
+        // request.onreadystatechange = returnChannelStateChange;
         request.send();
     }
 

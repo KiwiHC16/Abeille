@@ -85,11 +85,15 @@
 
                         $selectBox = array();
                         foreach ($items as $item) {
-                            $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevices(AbeilleTools::getTrimmedValueForJsonFiles($item), 'Abeille');
-                            $name = $AbeilleObjetDefinition[$item]['type'];
-                            if (!isset($AbeilleObjetDefinition[$item]['configuration']))
+                            $device = AbeilleTools::getDeviceConfig($item, 'Abeille', 2);
+                            if (!isset($device['configuration']))
                                 continue; // No 'configuration' in this JSON, so no icon defined
-                            $icon = $AbeilleObjetDefinition[$item]['configuration']['icon'];
+                            if (!isset($device['configuration']['icon']))
+                                continue; // No icon defined
+                            if (!isset($device['type']))
+                                continue; // No type defined
+                            $icon = $device['configuration']['icon'];
+                            $name = $device['type'];
                             $selectBox[ucwords($name)] = $icon;
                         }
                         ksort($selectBox);
@@ -117,7 +121,7 @@
 
         <hr>
         <div class="form-group" >
-            <label class="col-sm-3 control-label" >{{Source d'alimentation}}</label>
+            <label class="col-sm-3 control-label">{{Source d'alimentation}}</label>
             <div class="col-sm-3">
                 <?php
                 /* If battery powered eq. 'batteryType' is defined in device JSON file */

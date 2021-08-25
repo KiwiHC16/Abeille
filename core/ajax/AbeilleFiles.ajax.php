@@ -275,7 +275,7 @@
             $jsonId = init('jsonId');
             $jsonLocation = init('jsonLocation');
             $mode = init('mode');
-logDebug("readDeviceConfig() id=".$jsonId.", loc=".$jsonLocation);
+
             $status = 0;
             $error = "";
             $content = "";

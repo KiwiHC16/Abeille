@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210825-BETA-1"
+# VERSION="210825-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -700,8 +700,6 @@ fbf50e49d89fe5f7d6f3cd9fcf3f562b *core/config/devices/TS0503B__TZ3000_i8l0nqdu/T
 2f726e9e240c1dd8ef3e66684b6bc3fc *core/config/devices/TS0503B__TZ3000_i8l0nqdu/notes.txt
 6df62bb1aa50856342d0bf6de297090a *core/config/devices/TS0505A/TS0505A.json
 0d47b1d6c7b3a6d7dfc93f8793dad771 *core/config/devices/TS0505B__TZ3000_12sxjap4/TS0505B__TZ3000_12sxjap4.json
-d06f4bf96c61808705c08e5a67eefa04 *core/config/devices/TS503B__TZ3000_i8l0nqdu/TS503B__TZ3000_i8l0nqdu.json
-2f726e9e240c1dd8ef3e66684b6bc3fc *core/config/devices/TS503B__TZ3000_i8l0nqdu/notes.txt
 405da1fb1de91a3073b1e91eff417e2c *core/config/devices/TY0A01/TY0A01.json
 5fa2e129ffa1af2b87d6b2d5cb0f6164 *core/config/devices/Teleruptor/Teleruptor.json
 30a84d844cf9d555762beb4d670f1964 *core/config/devices/WB01/WB01.json
@@ -853,7 +851,7 @@ b8d8947771ea9ac7b2802e6c4778e0d1 *desktop/php/AbeilleEq-Params.php
 49ee93207a7c670f641f2adf341aac00 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-8c56c26a69dcb09b6152f234a3eae192 *docs/fr_FR/Changelog.rst
+71b9d115e1809d48d1d4ab14faeb0ea7 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1075,11 +1073,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-b0a6d391d07b084f1c371cff5b67b44f *plugin_info/Abeille.version
+6c31f99ec77dda8ebd3fc8323d3dbc90 *plugin_info/Abeille.version
 5791e3866cf3d07ec77fc64c2ea55ae1 *plugin_info/AbeilleVersionForMarket.php
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 2b4f2bfccd4b7dc05629f123aeed5c27 *plugin_info/configuration.php
-e5914f8487aa97422149af020212d5df *plugin_info/info.json
+160d91ae8a1389eef33ace07f04fe850 *plugin_info/info.json
 a8b36afbe004ce359c7ecec1358a12a1 *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 e634b9f544c02b8facd28fefb8771fe0 *resources/AbeilleDeamon/AbeilleInterrogate.php

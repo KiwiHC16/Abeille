@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-210825-BETA-1
+210825-BETA-2
 ----------
 
 - Assistant de découverte: améliorations.

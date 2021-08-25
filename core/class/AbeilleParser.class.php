@@ -979,82 +979,75 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          * protocolDatas: Treat messages received from AbeilleSerialRead, check CRC, and if Ok execute proper decode function.
          *
          * @param dest          Network (ex: 'Abeille1')
-         * @param datas         Message sent by the zigate
+         * @param datas         Message received by the zigate
          *
          * @return Status       0=OK, -1=ERROR
          */
         function protocolDatas($dest, $datas) {
             // Reminder: message format received from Zigate.
-            // 01/start & 03/end are already removed.
+            // 01/start & 03/end markers are already removed.
             //   00-03 : Msg Type (2 bytes)
             //   04-07 : Length (2 bytes) => optional payload + LQI
             //   08-09 : crc (1 byte)
             //   10... : Optional data / payload
             //   Last  : LQI (1 byte)
 
-            $crctmp = 0;
-
-            $length = strlen($datas);
-            if ($length < 10) {
-                ParserLog('error', $dest.", Message TOO SHORT (len=".$length.")");
+            // Primary checks to be sure message is valid
+            $msgSize = strlen($datas);
+            $msgSizeB = $msgSize / 2;
+            if ($msgSize < 10) {
+                ParserLog('error', $dest.", Message corrompu (trop court, taille=".$msgSizeB."B)");
                 return -1; // Too short. Min=MsgType+Len+Crc
             }
 
-            //type de message
-            $type = $datas[0].$datas[1].$datas[2].$datas[3];
-            $crctmp = $crctmp ^ hexdec($datas[0].$datas[1]) ^ hexdec($datas[2].$datas[3]);
-
-            // Taille message
+            // Payload size: real size == expected ?
             // see github: AbeilleParser Erreur CRC #1562
-            $ln = $datas[4].$datas[5].$datas[6].$datas[7];
-            $ln = hexdec($ln);
-            // Tcharp38: Why this limit ? Faced it on valid messages.
-            // if ( $ln > 150 ) {
-            //     parserLog('error', $dest.", Message TOO LONG (len=".$length.") => ignored");
-            //     return 0;
-            // }
-            $crctmp = $crctmp ^ hexdec($datas[4].$datas[5]) ^ hexdec($datas[6].$datas[7]);
-
-            //acquisition du CRC
-            $crc = strtolower($datas[8].$datas[9]);
-
-            /* Payload.
-               Payload size is 'Length' - 1 (excluding LQI) but CRC takes LQI into account.
-               See https://github.com/fairecasoimeme/ZiGate/issues/325# */
-            $payloadSize = ($length - 12) / 2; // Real payload size in Bytes. Removing MsgType+Len+Crc+LQI
-            if ($payloadSize != ($ln - 1))
-                parserLog('debug', 'WARNING: Length ('.$ln.') != real payload + LQI size ('.$payloadSize.')');
-            $payload = substr($datas, 10, $payloadSize * 2);
-            // parserLog('debug', 'type='.$type.', payload='.$payload);
-            for ($i = 0; $i < $ln; $i++) {
-                // $payload .= $datas[10 + ($i * 2)].$datas[10 + (($i * 2) + 1)];
-                $crctmp = $crctmp ^ hexdec($datas[10 + ($i * 2)].$datas[10 + (($i * 2) + 1)]);
+            $plSizeExpB = $datas[4].$datas[5].$datas[6].$datas[7];
+            $plSizeExpB = hexdec($plSizeExpB);
+            $plSizeB = $msgSizeB - 5;
+            $plSize = $plSizeB * 2;
+            if ($plSizeB != $plSizeExpB) {
+                ParserLog('error', $dest.", Message corrompu (taille payload incorrecte, taille=".$plSizeB."B, att=".$plSizeExpB."B)");
+                return -1;
             }
 
-            // LQI
-            $quality = $datas[10 + ($i * 2) - 2].$datas[10 + ($i * 2) - 1];
-            $quality = hexdec( $quality );
-
-            //verification du CRC
+            // Computing & checking CRC
+            $crc = strtolower($datas[8].$datas[9]); // Expected CRC
+            $crctmp = 0;
+            $crctmp = $crctmp ^ hexdec($datas[0].$datas[1]) ^ hexdec($datas[2].$datas[3]); // Type
+            $crctmp = $crctmp ^ hexdec($datas[4].$datas[5]) ^ hexdec($datas[6].$datas[7]); // Size
+            for ($i = 0; $i < $plSize; $i += 2) {
+                $crctmp = $crctmp ^ hexdec($datas[10 + $i].$datas[10 + $i + 1]);
+            }
             if (hexdec($crc) != $crctmp) {
                 parserLog('error', 'ERREUR CRC: calc=0x'.dechex($crctmp).', att=0x'.$crc.'. Message ignoré: '.substr($datas, 0, 12).'...'.substr($datas, -2, 2));
                 parserLog('debug', 'Mess ignoré='.$datas);
                 return -1;
             }
 
-            //Traitement PAYLOAD
-            $param1 = "";
-            // if (($type == "8003") || ($type == "8043")) $param1 = $clusterTab; // Tcharp38: no longer used
-            // if ($type == "804E") $param1 = $LQI; // Tcharp38: no longer used
-            // if ($type == "8102") $param1 = $quality; // Tcharp38: always transmitted now
+            // Seems a valid & usable message
+            $plSize -= 2; // Excluding LQI (last 2 chars)
+
+            // Message type
+            $type = $datas[0].$datas[1].$datas[2].$datas[3];
+
+            /* Payload.
+               Payload size is 'Length' - 1 (excluding LQI) but CRC takes LQI into account.
+               See https://github.com/fairecasoimeme/ZiGate/issues/325# */
+            $payload = substr($datas, 10, $plSize);
+            // parserLog('debug', 'type='.$type.', payload='.$payload);
+
+            // LQI: last byte or 2 last chars
+            $lqi = $datas[10 + $plSize].$datas[10 + $plSize + 1];
+            $lqi = hexdec($lqi);
+            // parserLog('debug','Msg='.$datas." => lqi=".$lqi);
 
             $fct = "decode".$type;
-            // parserLog('debug','Calling function: '.$fct);
 
             //  if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none' ) == $ExtendedAddress ) {
             //               config::save( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 1,   'Abeille');
 
-            $commandAcceptedUntilZigateIdentified = array( "decode0300", "decode0208", "decode8009", "decode8024", "decode8000" );
+            $commandAcceptedUntilZigateIdentified = array("decode0300", "decode0208", "decode8009", "decode8024", "decode8000");
 
             /* To be sure there is no port changes, 'AbeilleIEEE_Ok' is set to 0 on daemon start.
                Should be updated by 8009 response */
@@ -1066,7 +1059,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             if (method_exists($this, $fct)) {
-                $this->$fct($dest, $payload, $quality);
+                $this->$fct($dest, $payload, $lqi);
             } else {
                 parserLog('debug', $dest.', Type='.$type.'/'.zgGetMsgByType($type).', ignored (unsupported).');
             }

@@ -2,7 +2,8 @@ ChangeLog
 =========
 
 - Assistant de découverte: améliorations.
-- Collecte LQI: Mise-à-jour mineure.
+- Interne: Collecte LQI: Mise-à-jour mineure.
+- Interne: Parser: Amélioration robustesse.
 
 210824-BETA-1
 ----------

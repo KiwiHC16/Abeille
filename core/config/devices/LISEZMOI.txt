@@ -37,17 +37,12 @@ Exemple: BASICZBR3.json
         "mainEP": "01"
       },
       "commands": {
-        "include1": "SW",
-        "include2": "societe",
-        "include3": "nom",
-        "include4": "etat",
-        "include5": "On",
-        "include6": "Off",
-        "include7": "Toggle",
-        "include8": "getEtat",
-        "include9": "getManufacturerName",
-        "include10": "getModelIdentifier",
-        "include13 2": "Group-Membership"
+        "Groups": { "use": "Group-Membership" },
+
+        "etat": { "use": "etat" },
+        "On": { "use": "On" },
+        "Off": { "use": "Off", "nextLine": "after" },
+        "getEtat": { "use": "getEtat" }
       }
     }
   }
@@ -89,15 +84,20 @@ Exemple: BASICZBR3.json
 
 * commands: OBLIGATOIRE, liste des commandes implémentées
   Nouvelle syntaxe:
-    "<nom_cmde_Jeedom>": { "use": "<nom_cmde_Abeille>", "params": "<xx=01&xy=0003>", "isVisible": 1, "execAtCreation": "yes" }
-    isVisible: Par défaut les commandes sont masquées sur la tuile de l'équipement. Mettre 1 pour rendre la commande visible.
-    execAtCreation: Mettre yes, si cette commande doit etre executée pour configurer l'équipement (inclusion or reconfiguratio).
+    "<nom_cmde_Jeedom>": { "use": "<nom_fichier_cmde_Abeille>", "params": "<xx=01&xy=0003>", "isVisible": 1, "execAtCreation": "yes" }
+    isVisible: 1, 0, 'yes', 'no'.
+        Par défaut les commandes sont masquées sur la tuile de l'équipement. Mettre 1 pour rendre la commande visible.
+    execAtCreation: 1, 0, 'yes', 'no'.
+        Mettre yes, si cette commande doit etre executée pour configurer l'équipement (inclusion or reconfiguratio).
+    nextLine: 'after' ou 'before'
+        Pour forcer un saut de ligne apres ou avant la commande dans la tuile.
+
+  Exemples de nouvelle syntaxe:
+    "Status": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },
+    "ActivePower": { "use": "zb-0B04-ActivePower", "params": "ep=01", "isVisible": 1 },
+
   Ancienne syntaxe OBSOLETE:
     Chaque include correspond à une commande de base existante dans 'core/config/commands'
     - "include1":"cmd1",
     - ...
     - "includeX":"cmdX",
-
-  Exemples de nouvelle syntaxe:
-    "Status": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },
-    "ActivePower": { "use": "zb-0B04-ActivePower", "params": "ep=01", "isVisible": 1 },

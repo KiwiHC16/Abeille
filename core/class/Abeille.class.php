@@ -406,12 +406,17 @@ class Abeille extends eqLogic
     {
         log::add('Abeille', 'debug', 'Starting cronDaily ------------------------------------------------------------------------------------------------------------------------');
 
-        // Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
-        log::add('Abeille', 'debug', 'cronD: Lancement de l\'analyse réseau (AbeilleLQI.php)');
-        $ROOT = __DIR__."/../php";
-        $cmd = "cd ".$ROOT."; nohup /usr/bin/php AbeilleLQI.php 1>/dev/null 2>/dev/null &";
-        log::add('Abeille', 'debug', 'cronD: cmd=\''.$cmd.'\'');
-        exec($cmd);
+        $preventLQIRequest = config::byKey('preventLQIRequest', 'Abeille', 'no');
+        if ($preventLQIRequest == "yes") {
+            log::add('Abeille', 'debug', 'cronD: LQI request (AbeilleLQI.php) prevented on user request.');
+        } else {
+            // Refresh LQI once a day to get IEEE in prevision of futur changes, to get network topo as fresh as possible in json
+            log::add('Abeille', 'debug', 'cronD: Starting LQI request (AbeilleLQI.php)');
+            $ROOT = __DIR__."/../php";
+            $cmd = "cd ".$ROOT."; nohup /usr/bin/php AbeilleLQI.php 1>/dev/null 2>/dev/null &";
+            log::add('Abeille', 'debug', 'cronD: cmd=\''.$cmd.'\'');
+            exec($cmd);
+        }
 
         // Poll Cmd
         self::pollingCmd("cronDaily");

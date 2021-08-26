@@ -389,6 +389,16 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage interrogation LQI à minuit.}}">{{Blocage interrogation LQI à minuit : }}</label>
+                <div class="col-lg-5">
+                    <select class="configKey form-control" data-l1key="preventLQIRequest" style="width:150px" data-toggle="tooltip" title="{{Si 'oui', empeche l'interrogation du réseau tout les jours à minuit}}">
+                        <option value="yes">{{Oui}}</option>
+                        <option value="no" selected>{{Non}}</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- Tcharp38: dev announce can no longer be ignored even if not in inclusion mode. -->
             <!-- <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage du traitement des annonces, par defaut le laisser sur Non.}}">{{Blocage traitement Annonces : }}</label>

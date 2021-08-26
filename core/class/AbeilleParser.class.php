@@ -714,7 +714,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         }
 
         // Fonction dupliquée dans Abeille.
-        public function volt2pourcent( $voltage ) {
+        public function volt2pourcent($voltage) {
             $max = 3.135;
             $min = 2.8;
             if ( $voltage/1000 > $max ) {
@@ -3709,11 +3709,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     $etat = substr($payload, 80, 2);
 
-                    parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent( $voltage ).', Etat=' .$etat);
+                    parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage).', Etat=' .$etat);
 
                     $this->msgToAbeille($dest."/".$SrcAddr, '0006',     '01-0000', $etat, $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
                     return; // Nothing more to publish
                 }
 
@@ -3742,11 +3742,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
                     $humidity = hexdec( substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2) );
 
-                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent( $voltage ).', Temp='.$temperature.', Humidity='.$humidity );
+                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity );
 
                     $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, '0402', '01-0000', $temperature, $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, '0405', '01-0000', $humidity, $lqi);
                     return; // Nothing more to publish
@@ -3770,11 +3770,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     $voltage = hexdec(substr($payload, 28+2, 2).substr($payload, 28, 2));
                     $lux = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
-                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent( $voltage ).', Lux='.$lux);
+                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Lux='.$lux);
 
-                    $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, '$this->decoded as Volt-Temperature-Humidity', $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, '0400', '01-0000', $lux, $lqi); // Luminosite
                     return;
                 }
@@ -3786,11 +3786,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     $etat = substr($payload, 88, 2);
-                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent( $voltage ).', Etat='.$etat);
+                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Etat='.$etat);
 
-                    $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, '$this->decoded as Volt-Temperature-Humidity', $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
                     return;
                 }
 
@@ -3815,6 +3815,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, '0402', '01-0000', $temperature, $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, '0405', '01-0000', $humidity, $lqi);
+                    return;
+                }
+
+                // Xiaomi Vibration
+                elseif (($AttributId == 'FF01') && ($AttributSize == "002E")) {
+                    // Assuming $dataType == "42"
+                    parserLog('debug', '   Xiaomi proprietary (Vibration)');
+
+                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
+
+                    $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId, '$this->decoded as Volt-Temperature-Humidity', $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
                     return;
                 }
 
@@ -3864,7 +3878,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
 
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
                     return;
                 }
             } // End cluster 0000
@@ -4127,10 +4141,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
 
-                    parserLog('debug', '  Voltage='.$voltage.' Voltage%='.$this->volt2pourcent( $voltage ));
+                    parserLog('debug', '  Voltage='.$voltage.' Voltage%='.$this->volt2pourcent($voltage));
 
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
                 }
 
                 // // Xiaomi capteur Presence V2
@@ -4151,11 +4165,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                 //     $voltage        = hexdec(substr($payload, 28+2, 2).substr($payload, 28, 2));
                 //     $lux            = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
-                //     parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent( $voltage ).', Lux='.$lux);
+                //     parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent($voltage).', Lux='.$lux);
 
                 //     $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
                 //     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                //     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                //     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
                 //     $this->msgToAbeille($dest."/".$SrcAddr, '0400', '01-0000', $lux, $lqi); // Luminosite
 
                 //     // $this->msgToAbeille( $SrcAddr, '0402', '0000', $temperature,      $lqi);
@@ -4169,11 +4183,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     parserLog('debug', '  Champ proprietaire Xiaomi (Bouton Aqara Wireless Switch V3)');
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent( $voltage ));
+                    parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent($voltage));
 
                     $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt', $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
                 }
 
                 // Xiaomi Smoke Sensor
@@ -4181,11 +4195,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     parserLog('debug', '  Champ proprietaire Xiaomi (Sensor Smoke)');
 
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent( $voltage ));
+                    parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
 
                     $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt', $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
                 }
 
                 // Xiaomi Cube
@@ -4194,28 +4208,16 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     parserLog('debug', '  Champ proprietaire Xiaomi (Cube)');
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
+                    parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent($voltage));
 
                     $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
 
                     // $this->msgToAbeille( $SrcAddr, '0402', '0000', $temperature,      $lqi);
                     // $this->msgToAbeille( $SrcAddr, '0405', '0000', $humidity,         $lqi);
                     // $this->msgToAbeille( $SrcAddr, '0403', '0010', $pression / 10,    $lqi);
                     // $this->msgToAbeille( $SrcAddr, '0403', '0000', $pression / 100,   $lqi);
-                }
-
-                // Xiaomi Vibration
-                elseif (($AttributId == 'FF01') && ($AttributSize == "002E")) {
-                    parserLog('debug', '  Champ proprietaire Xiaomi (Vibration)');
-
-                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent( $voltage ));
-
-                    $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId, $AttributId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
                 }
 
                 // Xiaomi Capteur Presence
@@ -4225,10 +4227,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     parserLog("debug","  Champ proprietaire Xiaomi (Bouton Carre)" );
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent( $voltage ));
+                    parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent($voltage));
 
                     $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent( $voltage ), $lqi);
+                    $this->msgToAbeille($dest."/".$SrcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
                 }
 
                 // ne traite pas les FF01 inconnus

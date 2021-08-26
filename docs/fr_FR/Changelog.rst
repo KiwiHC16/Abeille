@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210826-BETA-1
+----------
+
 - Page config/options avancées: possibilité de bloquer requetes LQI journalieres.
 
 210825-BETA-2

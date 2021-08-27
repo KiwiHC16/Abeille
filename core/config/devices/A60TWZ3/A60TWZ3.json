@@ -1,7 +1,6 @@
 {
     "A60TWZ3": {
         "timeout": "60",
-        "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1533",
         "configuration": {
             "mainEP": "01",
             "poll": "1",
@@ -43,6 +42,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1533"
     }
 }

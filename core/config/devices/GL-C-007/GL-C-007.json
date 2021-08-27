@@ -1,7 +1,6 @@
 {
     "GL-C-007": {
         "timeout": "60",
-        "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1219",
         "manufacturer": "Gledopto",
         "model": "GL-C-007",
         "configuration": {
@@ -63,6 +62,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1219"
     }
 }

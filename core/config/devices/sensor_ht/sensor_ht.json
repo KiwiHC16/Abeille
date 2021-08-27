@@ -2,10 +2,10 @@
     "sensor_ht": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
-            "icon": "XiaomiTemperatureRond"
+            "icon": "XiaomiTemperatureRond",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "heating": "1"

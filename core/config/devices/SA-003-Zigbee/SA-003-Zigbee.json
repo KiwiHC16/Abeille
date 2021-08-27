@@ -1,7 +1,6 @@
 {
     "SA-003-Zigbee": {
         "timeout": "60",
-        "Comment": "https:\/\/www.amazon.fr\/dp\/B07S72CNWT\/ref=cm_sw_r_cp_apa_i_rShRDb0MMJSA9 identical to Lamp_01",
         "configuration": {
             "mainEP": "0B",
             "icon": "SA-003-Zigbee"
@@ -23,6 +22,7 @@
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }
-        }
+        },
+        "comment": "https:\/\/www.amazon.fr\/dp\/B07S72CNWT\/ref=cm_sw_r_cp_apa_i_rShRDb0MMJSA9 identical to Lamp_01"
     }
 }

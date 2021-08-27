@@ -4,32 +4,34 @@
         "zbManufacturer": "IKEAofSweden",
         "model": "E1743",
         "timeout": "60",
-        "Comment": "Ref. FR 704.085.95",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "lastCommunicationTimeOut": "-1",
             "paramType": "telecommande",
             "mainEP": "01",
-            "icon": "TRADFRIonoffswitch"
+            "icon": "TRADFRIonoffswitch",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "light": "1"
         },
         "type": "TRADFRI on\/off switch",
         "commands": {
-            "SWBuild": { "use": "zb-0000-SWBuildID" },
-            "Get-SWBuild": { "use": "zbReadAttribute", "params": "clustId=0000&attrId=4000" },
-
+            "SWBuild": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuild": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
             "include4": "offGroup",
             "include6": "onGroup",
-
             "include8": "Batterie-Pourcent-Ikea",
             "include9": "getBattery",
             "include10": "BindShortToZigateBatterie",
             "include11": "setReportBatterie",
-
             "include7": "Up-Down",
             "include12": "Click-Middle"
-        }
+        },
+        "comment": "Ref. FR 704.085.95"
     }
 }

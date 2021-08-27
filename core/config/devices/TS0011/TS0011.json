@@ -1,7 +1,6 @@
 {
     "TS0011": {
         "timeout": "60",
-        "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1092",
         "configuration": {
             "mainEP": "01",
             "icon": "TS0011"
@@ -22,6 +21,7 @@
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }
-        }
+        },
+        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1092"
     }
 }

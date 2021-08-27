@@ -2,9 +2,9 @@
     "SML001": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "2x AAA",
             "mainEP": "02",
-            "icon": "SML001"
+            "icon": "SML001",
+            "batteryType": "2x AAA"
         },
         "category": {
             "security": "1"

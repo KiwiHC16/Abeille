@@ -2,9 +2,9 @@
     "3AFE14010402000D": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR2450",
             "mainEP": "01",
-            "icon": "3AFE14010402000D"
+            "icon": "3AFE14010402000D",
+            "batteryType": "1x3V CR2450"
         },
         "category": {
             "security": "1"

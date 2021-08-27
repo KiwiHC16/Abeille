@@ -1,7 +1,6 @@
 {
     "GLEDOPTO": {
         "timeout": "60",
-        "Comment": "Dimmable GU10 5W 300lm",
         "configuration": {
             "mainEP": "0B",
             "poll": "1",
@@ -35,6 +34,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "Dimmable GU10 5W 300lm"
     }
 }

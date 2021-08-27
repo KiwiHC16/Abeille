@@ -3,11 +3,10 @@
         "manufacturer": "Sonoff",
         "model": "SNZB-04",
         "timeout": "140",
-        "Comment": "https:\/\/community.jeedom.com\/t\/sonoff-snzb-04-sur-zigate-et-abeille\/39336\/4",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "mainEP": "01",
-            "icon": "SNZB-04"
+            "icon": "SNZB-04",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "security": "1"
@@ -19,6 +18,7 @@
             "include2 3 2": "Batterie-Pourcent-Heiman",
             "include2 2 2": "BindToPowerConfig",
             "include2 2 2 3": "setReportBatterie"
-        }
+        },
+        "comment": "https:\/\/community.jeedom.com\/t\/sonoff-snzb-04-sur-zigate-et-abeille\/39336\/4"
     }
 }

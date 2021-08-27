@@ -2,10 +2,10 @@
     "3AFE140103020000": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR2450",
             "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
-            "icon": "3AFE140103020000"
+            "icon": "3AFE140103020000",
+            "batteryType": "1x3V CR2450"
         },
         "category": {
             "heating": "1"

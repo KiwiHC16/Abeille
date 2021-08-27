@@ -2,9 +2,9 @@
     "sensor_smoke": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR17345",
             "mainEP": "01",
-            "icon": "XiaomiSensorSmoke"
+            "icon": "XiaomiSensorSmoke",
+            "batteryType": "1x3V CR17345"
         },
         "category": {
             "security": "1"

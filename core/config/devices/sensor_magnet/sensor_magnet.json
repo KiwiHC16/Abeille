@@ -3,9 +3,9 @@
         "manufacturer": "Xiaomi",
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR1632",
             "mainEP": "01",
-            "icon": "XiaomiPorte1"
+            "icon": "XiaomiPorte1",
+            "batteryType": "1x3V CR1632"
         },
         "category": {
             "security": "1"

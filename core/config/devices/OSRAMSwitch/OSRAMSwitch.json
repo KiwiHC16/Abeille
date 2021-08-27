@@ -1,11 +1,10 @@
 {
     "OSRAMSwitch": {
         "timeout": "60",
-        "battery_type": "1xCR2450",
         "configuration": {
-            "battery_type": "1x3V CR2450",
             "mainEP": "01",
-            "icon": "Switch4xEU-LIGHTIFY"
+            "icon": "Switch4xEU-LIGHTIFY",
+            "batteryType": "1x3V CR2450"
         },
         "category": {
             "automatism": "1"

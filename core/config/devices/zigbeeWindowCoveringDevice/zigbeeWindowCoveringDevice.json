@@ -1,6 +1,5 @@
 {
     "zigbeeWindowCoveringDevice": {
-        "Comment": "Modele based on Ikea Store Fyrtur",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -29,6 +28,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "Modele based on Ikea Store Fyrtur"
     }
 }

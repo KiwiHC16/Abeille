@@ -1,6 +1,5 @@
 {
     "ctrl_neutral1": {
-        "Comment": "Reference: QBKG04LM",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -34,6 +33,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "Reference: QBKG04LM"
     }
 }

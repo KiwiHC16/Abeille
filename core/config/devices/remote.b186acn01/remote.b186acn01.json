@@ -1,11 +1,11 @@
 {
     "remote.b186acn01": {
         "timeout": "60",
-        "Commentaire": "Remonte le nom remote.b186acn01 apres association, equipement similaire a lumi.sensor_86sw2Un",
+        "comment": "Remonte le nom remote.b186acn01 apres association, equipement similaire a lumi.sensor_86sw2Un",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "mainEP": "01",
-            "icon": "XiaomiButtonb186acn01"
+            "icon": "XiaomiButtonb186acn01",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "automatism": "1"

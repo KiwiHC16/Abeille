@@ -4,7 +4,6 @@
         "model": "HG06338-FR",
         "zbManufacturer": "_TZ3000_vzopcetz",
         "timeout": "60",
-        "Comment": "",
         "configuration": {
             "mainEP": "01",
             "icon": "TS011F__TZ3000_vzopcetz"
@@ -17,7 +16,6 @@
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },
-
             "include4": "etatCharge0",
             "include4 2": "etatCharge1",
             "include4 2 2": "etatCharge2",
@@ -37,6 +35,7 @@
             "include0006-2": "setReport-EP02-0006-0000",
             "include0006-3": "bindToZigate-EP03-0006",
             "include0006-4": "setReport-EP03-0006-0000"
-        }
+        },
+        "comment": ""
     }
 }

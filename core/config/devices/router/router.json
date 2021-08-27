@@ -1,8 +1,7 @@
 {
     "router": {
-        "Comment": "https:\/\/community.jeedom.com\/t\/cc2531-routeur-pour-etendre-reseau-zigbee\/20837",
-        "Comment 1": "https:\/\/www.amazon.fr\/gp\/product\/B08438TKYG\/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1",
-        "Comment 2": "USB CC2531",
+        "comment 1": "https:\/\/www.amazon.fr\/gp\/product\/B08438TKYG\/ref=ppx_yo_dt_b_asin_title_o00_s00?ie=UTF8&psc=1",
+        "comment 2": "USB CC2531",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -24,6 +23,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "https:\/\/community.jeedom.com\/t\/cc2531-routeur-pour-etendre-reseau-zigbee\/20837"
     }
 }

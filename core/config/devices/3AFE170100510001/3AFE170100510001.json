@@ -3,11 +3,10 @@
         "manufacturer": "Konke",
         "comment": "https:\/\/zigbee.blakadder.com\/Konke_KPKEY.html",
         "timeout": "60",
-        "battery_type": "1x3V CR2450",
         "configuration": {
-            "battery_type": "1x3V CR2450",
             "mainEP": "01",
-            "icon": "3AFE170100510001"
+            "icon": "3AFE170100510001",
+            "batteryType": "1x3V CR2450"
         },
         "category": {
             "automatism": "1"

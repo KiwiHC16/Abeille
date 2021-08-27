@@ -148,6 +148,16 @@
                     unset($unusedCmds[$i]); // $cmdFName is used
             }
         }
+
+        /* Checking supported keywords */
+        $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible'];
+        foreach ($dev[$devName] as $key => $value) {
+            if (in_array($key, $supportedKeys))
+                continue;
+            if (substr($key, 0, 7) == "comment")
+                continue;
+            newDevError($devName, "ERROR", "Invalid key '".$key."'");
+        }
     }
 
     function checkCommand($cmdName, $cmd) {

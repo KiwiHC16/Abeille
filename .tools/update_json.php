@@ -72,6 +72,15 @@
                 }
             }
 
+            if (!isset($config['batteryType'])) {
+                if (isset($config['battery_type'])) {
+                    $dev[$devName]['configuration']['batteryType'] = $dev[$devName]['configuration']['battery_type'];
+                    unset($dev[$devName]['configuration']['battery_type']);
+                    $devUpdated = true;
+                    echo "  'battery_type' renamed to 'batteryType'.\n";
+                }
+            }
+
             if (!isset($config['mainEP']))
                 newDevError($devName, "ERROR", "No 'configuration:mainEP' defined");
             else if ($config['mainEP'] == '#EP#') {
@@ -137,6 +146,13 @@
                     continue;
                 }
             }
+        }
+
+        if (isset($dev[$devName]['Comment'])) {
+            $dev[$devName]['comment'] = $dev[$devName]['Comment'];
+            unset($dev[$devName]['Comment']);
+            $devUpdated = true;
+            echo "  'Comment' renamed to 'comment'.\n";
         }
 
         if ($devUpdated) {

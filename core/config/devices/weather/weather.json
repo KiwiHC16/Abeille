@@ -4,9 +4,9 @@
         "model": "WSDCGQ11LM",
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "mainEP": "01",
-            "icon": "XiaomiTemperatureCarre"
+            "icon": "XiaomiTemperatureCarre",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "heating": "1"

@@ -2,9 +2,9 @@
     "sensor_motion.aq2": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "mainEP": "01",
-            "icon": "XiaomiInfraRouge2"
+            "icon": "XiaomiInfraRouge2",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "security": "1"

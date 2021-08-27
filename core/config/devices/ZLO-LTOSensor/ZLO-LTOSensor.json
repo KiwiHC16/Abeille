@@ -2,9 +2,9 @@
     "ZLO-LTOSensor": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "mainEP": "01",
-            "icon": "ZLO-LTOSensor"
+            "icon": "ZLO-LTOSensor",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "security": "1"

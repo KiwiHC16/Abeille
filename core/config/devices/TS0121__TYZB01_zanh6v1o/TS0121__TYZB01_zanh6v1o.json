@@ -1,7 +1,6 @@
 {
     "TS0121__TYZB01_zanh6v1o": {
         "timeout": "60",
-        "Comment": "",
         "configuration": {
             "mainEP": "01",
             "poll": "1",
@@ -37,6 +36,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": ""
     }
 }

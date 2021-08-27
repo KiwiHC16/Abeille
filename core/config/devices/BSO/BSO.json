@@ -3,7 +3,6 @@
         "manufacturer": "Profalux",
         "model": "BSO",
         "timeout": "60",
-        "Comment": "Copy of Profalux Volet for BSO Profalux",
         "configuration": {
             "mainEP": "01",
             "icon": "bsoProFalux"
@@ -46,6 +45,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "Copy of Profalux Volet for BSO Profalux"
     }
 }

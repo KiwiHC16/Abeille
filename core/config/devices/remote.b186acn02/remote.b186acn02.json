@@ -1,11 +1,11 @@
 {
     "remote.b186acn02": {
         "timeout": "60",
-        "Commentaire": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1808",
+        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1808",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "mainEP": "01",
-            "icon": "XiaomiButtonb186acn02"
+            "icon": "XiaomiButtonb186acn02",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "automatism": "1"

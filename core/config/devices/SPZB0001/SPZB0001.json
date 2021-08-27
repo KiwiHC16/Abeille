@@ -2,9 +2,9 @@
     "SPZB0001": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "2x1,5V LR6 AA",
             "mainEP": "01",
-            "icon": "SPZB0001"
+            "icon": "SPZB0001",
+            "batteryType": "2x1,5V LR6 AA"
         },
         "category": {
             "automatism": "1"

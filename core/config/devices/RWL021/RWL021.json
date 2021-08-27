@@ -4,10 +4,10 @@
         "model": "RWL021",
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
-            "icon": "RWL021"
+            "icon": "RWL021",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "light": "1"

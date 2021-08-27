@@ -2,9 +2,9 @@
     "ZLO-OccupancySensor": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "mainEP": "01",
-            "icon": "ZLO-OccupancySensor"
+            "icon": "ZLO-OccupancySensor",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "security": "1"

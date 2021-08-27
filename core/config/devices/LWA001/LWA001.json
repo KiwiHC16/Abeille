@@ -1,6 +1,5 @@
 {
     "LWA001": {
-        "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1143",
         "timeout": "60",
         "configuration": {
             "mainEP": "0B",
@@ -36,6 +35,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1143"
     }
 }

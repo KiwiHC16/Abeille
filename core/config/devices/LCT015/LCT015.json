@@ -1,7 +1,6 @@
 {
     "LCT015": {
         "timeout": "60",
-        "Comment": "",
         "configuration": {
             "mainEP": "0B",
             "poll": "1",
@@ -61,6 +60,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": ""
     }
 }

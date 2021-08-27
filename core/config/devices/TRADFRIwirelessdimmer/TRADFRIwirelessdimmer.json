@@ -2,10 +2,10 @@
     "TRADFRIwirelessdimmer": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
-            "icon": "IkeaTradfriDimmer"
+            "icon": "IkeaTradfriDimmer",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "light": "1"

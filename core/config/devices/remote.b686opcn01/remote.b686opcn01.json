@@ -3,10 +3,10 @@
         "manufacturer": "Xiaomi",
         "model": "WXCJKG13LM",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "paramType": "telecommande",
             "mainEP": "01",
-            "icon": "Aqara-Opple-6buttons"
+            "icon": "Aqara-Opple-6buttons",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "automatism": "1"

@@ -1,7 +1,6 @@
 {
     "PSE03-v1.1.0": {
         "timeout": "60",
-        "Comment": "Draft",
         "configuration": {
             "mainEP": "01",
             "icon": "PSE03-v1.1.0"
@@ -31,6 +30,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "Draft"
     }
 }

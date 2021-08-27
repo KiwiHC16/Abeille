@@ -2,11 +2,11 @@
     "remotecontrol": {
         "timeout": "",
         "configuration": {
-            "battery_type": "",
             "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "paramType": "telecommande",
-            "icon": "remotecontrol"
+            "icon": "remotecontrol",
+            "batteryType": ""
         },
         "category": {
             "light": "1"

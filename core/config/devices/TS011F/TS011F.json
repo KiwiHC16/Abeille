@@ -1,7 +1,6 @@
 {
     "TS011F": {
         "timeout": "60",
-        "Comment": "Int\u00e9gration mat\u00e9riel prochaine MAJ #1569",
         "configuration": {
             "mainEP": "01",
             "icon": "TS0121"
@@ -23,6 +22,7 @@
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }
-        }
+        },
+        "comment": "Int\u00e9gration mat\u00e9riel prochaine MAJ #1569"
     }
 }

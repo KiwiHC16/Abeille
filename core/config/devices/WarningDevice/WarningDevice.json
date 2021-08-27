@@ -1,7 +1,6 @@
 {
     "WarningDevice": {
         "timeout": "60",
-        "Comment": "Draft",
         "configuration": {
             "mainEP": "01",
             "icon": "HS2WD"
@@ -31,6 +30,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "Draft"
     }
 }

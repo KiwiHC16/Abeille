@@ -4,11 +4,10 @@
         "model": "SNZB-02",
         "comment": "Zigbee ModelIdentifier can be 66666 or TH01",
         "timeout": "140",
-        "battery_type": "1xCR2450 (3V)",
         "configuration": {
-            "battery_type": "1x3V CR2450",
             "mainEP": "01",
-            "icon": "SNZB-02"
+            "icon": "SNZB-02",
+            "batteryType": "1x3V CR2450"
         },
         "category": {
             "automatism": "1"

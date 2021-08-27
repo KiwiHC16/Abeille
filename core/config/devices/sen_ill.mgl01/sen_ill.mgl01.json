@@ -6,9 +6,9 @@
         "comment": "Does not support clust 0001 attrib 0021 reporting (battery percent)",
         "comment2": "Illuminance reporting set to 10mins",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "mainEP": "01",
-            "icon": "sen_ill_mgl01"
+            "icon": "sen_ill_mgl01",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "light": "1"

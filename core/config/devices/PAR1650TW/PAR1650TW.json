@@ -1,9 +1,8 @@
 {
     "PAR1650TW": {
         "timeout": "60",
-        "Comment": "https:\/\/www.jeedom.com\/forum\/viewtopic.php?p=662710#p662710",
-        "Comment 2": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/435",
-        "Comment 3": " OSRAM GU10",
+        "comment 2": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/435",
+        "comment 3": " OSRAM GU10",
         "configuration": {
             "mainEP": "01",
             "icon": "PAR1650TW"
@@ -48,6 +47,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "https:\/\/www.jeedom.com\/forum\/viewtopic.php?p=662710#p662710"
     }
 }

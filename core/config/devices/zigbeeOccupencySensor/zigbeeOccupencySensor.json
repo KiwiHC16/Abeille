@@ -2,9 +2,9 @@
     "zigbeeOccupencySensor": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "mainEP": "01",
-            "icon": ""
+            "icon": "",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "security": "1"

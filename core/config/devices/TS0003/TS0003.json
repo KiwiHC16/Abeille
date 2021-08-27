@@ -1,7 +1,6 @@
 {
     "TS0003": {
         "timeout": "60",
-        "Comment": "",
         "configuration": {
             "mainEP": "01",
             "icon": "TS0003"
@@ -31,6 +30,7 @@
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }
-        }
+        },
+        "comment": ""
     }
 }

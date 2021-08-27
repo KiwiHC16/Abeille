@@ -3,11 +3,10 @@
         "manufacturer": "Sonoff",
         "model": "SNZB-03",
         "timeout": "140",
-        "Comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1324",
         "configuration": {
-            "battery_type": "1x3V CR2450",
             "mainEP": "01",
-            "icon": "SNZB-03"
+            "icon": "SNZB-03",
+            "batteryType": "1x3V CR2450"
         },
         "category": {
             "security": "1"
@@ -19,6 +18,7 @@
             "include2 3 2": "Batterie-Pourcent-Heiman",
             "include2 2 2": "BindToPowerConfig",
             "include2 2 2 3": "setReportBatterie"
-        }
+        },
+        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1324"
     }
 }

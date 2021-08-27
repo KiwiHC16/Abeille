@@ -1,12 +1,10 @@
 {
     "remote.b1acn01": {
-        "battery_type": "1xCR2032",
-        "Comment": "Bouton Carr\u00e9 V2 qui remonte le nom remote.b1acn01 alors qu il a la meme reference que sensor_switch.aq2",
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "mainEP": "01",
-            "icon": "XiaomiBouton"
+            "icon": "XiaomiBouton",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "automatism": "1"
@@ -23,6 +21,7 @@
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }
-        }
+        },
+        "comment": "Bouton Carr\u00e9 V2 qui remonte le nom remote.b1acn01 alors qu il a la meme reference que sensor_switch.aq2"
     }
 }

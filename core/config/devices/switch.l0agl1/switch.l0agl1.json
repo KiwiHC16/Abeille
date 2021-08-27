@@ -1,7 +1,6 @@
 {
     "switch.l0agl1": {
         "timeout": "60",
-        "Comment": "60",
         "configuration": {
             "mainEP": "01",
             "icon": "XiaomiPrise"
@@ -24,6 +23,7 @@
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }
-        }
+        },
+        "comment": "60"
     }
 }

@@ -2,9 +2,9 @@
     "3AFE130104020015": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR1632",
             "mainEP": "01",
-            "icon": "3AFE130104020015"
+            "icon": "3AFE130104020015",
+            "batteryType": "1x3V CR1632"
         },
         "category": {
             "security": "1"

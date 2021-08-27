@@ -1,7 +1,6 @@
 {
     "DIYRuZ_RT": {
         "timeout": "3",
-        "Comment": "TimeOut a 3 minutes car il remonte sa temperature toutes les minutes.",
         "configuration": {
             "mainEP": "01",
             "icon": "DIYRuZ_RT"
@@ -24,6 +23,7 @@
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }
-        }
+        },
+        "comment": "TimeOut a 3 minutes car il remonte sa temperature toutes les minutes."
     }
 }

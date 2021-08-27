@@ -1,7 +1,6 @@
 {
     "TRADFRIsignalrepeater": {
-        "Comment": "https:\/\/www.ikea.com\/fr\/fr\/catalog\/products\/10400408\/",
-        "Comment 1": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/689",
+        "comment 1": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/689",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -23,6 +22,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "https:\/\/www.ikea.com\/fr\/fr\/catalog\/products\/10400408\/"
     }
 }

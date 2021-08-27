@@ -1,7 +1,6 @@
 {
     "FNB54-THM17ML1.1": {
         "timeout": "60",
-        "Comment": "thermom\u00e8tre zigbee ewelink (support) #1525",
         "configuration": {
             "mainEP": "01",
             "icon": "FNB54-THM17ML1.1"
@@ -22,6 +21,7 @@
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }
-        }
+        },
+        "comment": "thermom\u00e8tre zigbee ewelink (support) #1525"
     }
 }

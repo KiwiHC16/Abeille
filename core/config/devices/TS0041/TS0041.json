@@ -1,7 +1,6 @@
 {
     "TS0041": {
         "timeout": "60",
-        "Comment": "Zigate in hybrid mode",
         "configuration": {
             "mainEP": "01",
             "icon": "TS0041"
@@ -13,6 +12,7 @@
         "commands": {
             "include3": "nom",
             "include5 3": "etatInter0"
-        }
+        },
+        "comment": "Zigate in hybrid mode"
     }
 }

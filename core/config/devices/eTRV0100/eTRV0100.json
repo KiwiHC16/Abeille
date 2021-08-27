@@ -4,9 +4,9 @@
         "timeout": "0",
         "configuration": {
             "mainEP": "01",
-            "battery_type": "2x1,5V LR6 (AA)",
             "poll": "1",
-            "icon": "eTRV0100"
+            "icon": "eTRV0100",
+            "batteryType": "2x1,5V LR6 (AA)"
         },
         "category": {
             "heating": "1"

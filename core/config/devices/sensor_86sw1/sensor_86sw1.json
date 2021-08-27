@@ -2,9 +2,9 @@
     "sensor_86sw1": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "mainEP": "01",
-            "icon": "XiaomiButtonSW861"
+            "icon": "XiaomiButtonSW861",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "automatism": "1"

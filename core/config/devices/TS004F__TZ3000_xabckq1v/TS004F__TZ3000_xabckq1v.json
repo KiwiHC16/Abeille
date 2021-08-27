@@ -6,8 +6,8 @@
         "comment": "https:\/\/expo.tuya.com\/product\/785025#detail, battery CR2430 3V",
         "configuration": {
             "mainEP": "01",
-            "battery_type": "1x CR2430 3V",
-            "icon": "Tuya4ButtonsSwitch"
+            "icon": "Tuya4ButtonsSwitch",
+            "batteryType": "1x CR2430 3V"
         },
         "category": {
             "light": "1"

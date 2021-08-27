@@ -2,9 +2,9 @@
     "SmokeSensor-EM": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR17335 ou 1x3V CR123A",
             "mainEP": "01",
-            "icon": "SmokeSensor-EM"
+            "icon": "SmokeSensor-EM",
+            "batteryType": "1x3V CR17335 ou 1x3V CR123A"
         },
         "category": {
             "security": "1"

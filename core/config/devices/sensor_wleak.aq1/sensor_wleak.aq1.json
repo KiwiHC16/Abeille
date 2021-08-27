@@ -1,11 +1,10 @@
 {
     "sensor_wleak.aq1": {
-        "battery_type": "1x3V CR2032",
         "timeout": "60",
         "configuration": {
-            "battery_type": "1x3V CR2032",
             "mainEP": "01",
-            "icon": "Xiaomiwleak_aq1"
+            "icon": "Xiaomiwleak_aq1",
+            "batteryType": "1x3V CR2032"
         },
         "category": {
             "security": "1"

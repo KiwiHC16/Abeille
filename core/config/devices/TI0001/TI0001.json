@@ -1,7 +1,6 @@
 {
     "TI0001": {
         "timeout": "80",
-        "Comment": "Reference: ",
         "configuration": {
             "mainEP": "06",
             "icon": "TI0001"
@@ -38,6 +37,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "Reference: "
     }
 }

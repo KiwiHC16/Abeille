@@ -2,7 +2,6 @@
     "RC110": {
         "timeout": "60",
         "configuration": {
-            "battery_type": "2x1.5V",
             "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "paramType": "telecommande7groups",
@@ -13,7 +12,8 @@
             "GroupeEP6": "6006",
             "GroupeEP7": "7007",
             "GroupeEP8": "8008",
-            "icon": "RC110"
+            "icon": "RC110",
+            "batteryType": "2x1.5V"
         },
         "category": {
             "light": "1"

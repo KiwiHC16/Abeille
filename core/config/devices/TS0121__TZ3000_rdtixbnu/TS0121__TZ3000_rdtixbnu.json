@@ -2,9 +2,8 @@
     "TS0121__TZ3000_rdtixbnu": {
         "manufacturer": "Tuya",
         "model": "Generic smart socket",
-        "zgManufacturer": "_TZ3000_rdtixbnu",
+        "zbManufacturer": "_TZ3000_rdtixbnu",
         "timeout": "60",
-        "Comment": "",
         "configuration": {
             "mainEP": "01",
             "poll": "1",
@@ -17,24 +16,63 @@
         "type": "Tuya smart socket",
         "commands": {
             "include0004-1": "Group-Membership",
-
-            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
-            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
-            "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
-            "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
+            "Status": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "include0006-5": "BindToZigateEtat",
-            "Set-OnOffReporting": { "use": "zbConfigureReporting", "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000", "execAtCreation": "yes" },
-
-            "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "unit=KWh&div=10", "isVisible": 1 },
-            "UnitOfMeasure": { "use": "zb-0702-UnitOfMeasure" },
-            "Get-0702-UnitOfMeasure": { "use": "zbReadAttribute", "params": "clustId=0702&attrId=0300" },
-            "SummationFormatting": { "use": "zb-0702-SummationFormatting", "params": "ep=01" },
-            "Get-0702-SummationFormatting": { "use": "zbReadAttribute", "params": "clustId=0702&attrId=0303" },
-
-            "RMSVoltage": { "use": "zb-0B04-RMSVoltage", "isVisible": 0 },
-            "RMSCurrent": { "use": "zb-0B04-RMSCurrent", "isVisible": 1 },
-            "ActivePower": { "use": "zb-0B04-ActivePower", "isVisible": 1 },
+            "Set-OnOffReporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "yes"
+            },
+            "Total power": {
+                "use": "zb-0702-CurrentSummationDelivered",
+                "params": "unit=KWh&div=10",
+                "isVisible": 1
+            },
+            "UnitOfMeasure": {
+                "use": "zb-0702-UnitOfMeasure"
+            },
+            "Get-0702-UnitOfMeasure": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0702&attrId=0300"
+            },
+            "SummationFormatting": {
+                "use": "zb-0702-SummationFormatting",
+                "params": "ep=01"
+            },
+            "Get-0702-SummationFormatting": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0702&attrId=0303"
+            },
+            "RMSVoltage": {
+                "use": "zb-0B04-RMSVoltage",
+                "isVisible": 0
+            },
+            "RMSCurrent": {
+                "use": "zb-0B04-RMSCurrent",
+                "isVisible": 1
+            },
+            "ActivePower": {
+                "use": "zb-0B04-ActivePower",
+                "isVisible": 1
+            },
             "include0B04-5": "getPlugVAW"
-        }
+        },
+        "comment": ""
     }
 }

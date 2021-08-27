@@ -6,8 +6,8 @@
         "isVisible": 0,
         "configuration": {
             "mainEP": "01",
-            "battery_type": "2x1.5V AAA",
-            "icon": "ProfaluxTelecommande"
+            "icon": "ProfaluxTelecommande",
+            "batteryType": "2x1.5V AAA"
         },
         "category": {
             "automatism": "1"

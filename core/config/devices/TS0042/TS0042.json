@@ -1,7 +1,6 @@
 {
     "TS0042": {
         "timeout": "60",
-        "Comment": "Zigate in hybrid mode https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1550",
         "configuration": {
             "mainEP": "01",
             "icon": "TS0042"
@@ -14,6 +13,7 @@
             "include3": "nom",
             "include5 3": "etatInter0",
             "include5 3 2": "etatInter1"
-        }
+        },
+        "comment": "Zigate in hybrid mode https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1550"
     }
 }

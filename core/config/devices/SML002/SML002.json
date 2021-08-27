@@ -4,9 +4,9 @@
         "model": "9290019758",
         "timeout": "60",
         "configuration": {
-            "battery_type": "2x AAA",
             "mainEP": "02",
-            "icon": "SML002"
+            "icon": "SML002",
+            "batteryType": "2x AAA"
         },
         "category": {
             "security": "1"

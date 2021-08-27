@@ -1,7 +1,6 @@
 {
     "KADRILJrollerblind": {
         "timeout": "60",
-        "Comment": "Int\u00e9gration Store Ikea Github issue 1081",
         "configuration": {
             "mainEP": "01",
             "icon": "FYRTURblock-outrollerblind"
@@ -28,6 +27,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        }
+        },
+        "comment": "Int\u00e9gration Store Ikea Github issue 1081"
     }
 }

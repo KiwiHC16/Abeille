@@ -3,8 +3,8 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "battery_type": "1x3V CR2450",
-            "icon": "sensor_cube"
+            "icon": "sensor_cube",
+            "batteryType": "1x3V CR2450"
         },
         "category": {
             "automatism": "1"

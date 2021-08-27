@@ -1,7 +1,7 @@
 {
     "GUNNARPpanelround": {
-        "Commnet": "IKEA LED ceiling\/wall lamp, white dimmable, white spectrum, 40 cm",
-        "Commnet 2": "https:\/\/www.ikea.com\/jo\/en\/p\/gunnarp-led-ceiling-wall-lamp-white-dimmable-white-spectrum-40360076\/",
+        "comment": "IKEA LED ceiling\/wall lamp, white dimmable, white spectrum, 40 cm",
+        "comment 2": "https:\/\/www.ikea.com\/jo\/en\/p\/gunnarp-led-ceiling-wall-lamp-white-dimmable-white-spectrum-40360076\/",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",

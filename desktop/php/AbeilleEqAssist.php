@@ -96,7 +96,12 @@
 
         <!-- Colonne Zigbee -->
         <div class="col-lg-6 b">
-            <h3><span>Interrogation Zigbee</span></h1>
+            <h3>
+                <span>Interrogation Zigbee</span>
+            <?php
+	            echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/AjoutNouvelEquipement.html#assistant-de-decouverte-zigbee"><i class="fas fa-book"></i>{{Documentation}}</a>';
+	        ?>
+            </h3>
 
             <div class="row">
                 <label class="col-lg-2 control-label" for="fname">Adresse:</label>

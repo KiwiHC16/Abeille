@@ -835,12 +835,12 @@ if (0) {
             }
         }
 
-        // Desactive les Zigate pour eviter de discuter avec une zigate sur le mauvais port
-        // AbeilleIEEE_Ok = -1 si la Zigate detectée n est pas la bonne
-        //     "          =  0 pour demarrer
-        //     "          =  1 Si la zigate detectée est la bonne
-        for ($i = 1; $i <= config::byKey('zigateNb', 'Abeille', '1', 1); $i++) {
-            config::save("AbeilleIEEE_Ok".$i, 0, 'Abeille');
+        // Clear zigate IEEE status to detect any port switch.
+        // AbeilleIEEE_Ok=-1: Zigate IEEE is NOT the expected one (port switch ?)
+        //     "         = 0: IEEE check to be done
+        //     "         = 1: Zigate on the right port
+        for ($zgId = 1; $zgId <= config::byKey('zigateNb', 'Abeille', '1', 1); $zgId++) {
+            config::save("AbeilleIEEE_Ok".$zgId, 0, 'Abeille');
         }
 
         /* Checking configuration DB version.
@@ -927,21 +927,8 @@ if (0) {
             }
         }
 
-        // /* Shared mem access */
-        // $shm = shm_attach(12, 200, 0600);
-        // if ($shm === false) {
-        //     log::add('Abeille', 'debug', "deamon_start(): ERROR shm_attach()");
-        // } else {
-        //     // Note: 13 = '$status['running']' ID, 1 bit per running daemon
-        //     shm_put_var($shm, 13, 0); // Clear 'running' status
-        //     // shm_detach($shm);
-        // }
-
         /* Starting all required daemons */
         AbeilleTools::startDaemons($param);
-
-        // Starting main daemon; this will start to treat received messages
-        cron::byClassAndFunction('Abeille', 'deamon')->run();
 
         /* Waiting for background daemons to be up & running.
            If not, the return of first commands sent to zigate might be lost.
@@ -963,6 +950,9 @@ if (0) {
         }
         if ($t == $timeout)
             log::add('Abeille', 'debug', 'deamon_start(): ERROR, still some missing daemons after timeout');
+
+        // Starting main daemon; this will start to treat received messages
+        cron::byClassAndFunction('Abeille', 'deamon')->run();
 
         // Tcharp38: Moved to main daemon (deamon())
         // // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
@@ -1146,7 +1136,8 @@ while ($cron->running()) {
             // log::add('Abeille', 'debug', 'deamon(): ***** Set Time réseau Zigbee '.$i.' ********');
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setTimeServer", "");
             /* Get network state to get Zigate IEEE asap and confirm no port change */
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/getNetworkStatus", "getNetworkStatus");
+            // Tcharp38: moved to parser.
+            // Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/getNetworkStatus", "getNetworkStatus");
 
             // Set the mode of the zigate, important from 3.1D.
             $version = "";

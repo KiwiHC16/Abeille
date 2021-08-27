@@ -3,9 +3,9 @@
     /*
      * AbeilleParser
      *
-     * - Pop data from FIFO file
-     * - translate them into a understandable message,
-     * - then publish them to mosquitto
+     * - Pop data from zigates (msg_receive)
+     * - translate them into a understandable message
+     * - then publish them (msg_send)
      */
 
     include_once __DIR__.'/../../core/config/Abeille.config.php';
@@ -27,15 +27,13 @@
         ini_set('log_errors', 'On');
     }
 
-    // Annonce -> populate NE-> get EP -> getName -> getLocation -> unset NE
-
     include_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/../class/AbeilleTools.class.php';
-    include_once __DIR__.'/AbeilleLog.php';              // Abeille log features
-    include_once __DIR__.'/AbeilleZigateConst.php';      // Zigate constants
-    include_once __DIR__.'/../class/AbeilleCmd.class.php';      // AbeilleCmdClass
-    include_once __DIR__.'/../class/AbeilleParser.class.php';   // AbeilleParserClass
-    include_once __DIR__.'/../class/Abeille.class.php';         // AbeilleClass
+    include_once __DIR__.'/AbeilleLog.php'; // Abeille log features
+    include_once __DIR__.'/AbeilleZigateConst.php'; // Zigate constants
+    include_once __DIR__.'/../class/AbeilleCmd.class.php';
+    include_once __DIR__.'/../class/AbeilleParser.class.php';
+    include_once __DIR__.'/../class/Abeille.class.php';
 
     // Needed for decode8701 and decode8702
     // Voir https://github.com/fairecasoimeme/ZiGate/issues/161
@@ -183,12 +181,13 @@
     // ***********************************************************************************************
     // exemple d appel
     // php AbeilleParser.php /dev/ttyUSB0 127.0.0.1 1883 jeedom jeedom 0 debug
-    //check already running
     logSetConf("AbeilleParser.log", true);
     logMessage("info", ">>> Démarrage d'AbeilleParser");
-    $parameters = AbeilleTools::getParameters();
+
+    // Check if already running
+    $config = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
-    $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters, $running);
+    $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons: '.json_encode($daemons));
     if ($daemons["parser"] > 1) {
         logMessage('error', 'Le démon est déja lancé! '.json_encode($daemons));
@@ -215,10 +214,6 @@
     try {
         // On crée l objet AbeilleParser
         $AbeilleParser = new AbeilleParser("AbeilleParser");
-
-        $NE = array(); // Ne doit exister que le temps de la creation de l objet. On collecte les info du message annonce et on envoie les info a jeedom et apres on vide la tableau.
-        // $LQI = array(); // Tcharp38: no longer used
-        // $clusterTab = AbeilleTools::getJSonConfigFiles("zigateClusters.json"); // Tcharp38: no longer required
 
         // $queueKeySerialToParser = msg_get_queue(queueSerialToParser);
         $queueSerialToParser = msg_get_queue($abQueues["serialToParser"]["id"]);
@@ -257,6 +252,19 @@
                 'jsonId' => $eqLogic->getConfiguration('modeleJson', ''),
             );
             $GLOBALS['eqList'][$net][$addr] = $eq;
+        }
+
+        /* Requesting network status. Key to be sure that IEEE/port association is correct */
+        for ($zgId = 1; $zgId <= $config['zigateNb']; $zgId++) {
+            if (($config['AbeilleSerialPort'.$zgId] == 'none') or ($config['AbeilleActiver'.$zgId] != 'Y'))
+                continue; // Undefined or disabled
+            $zigate = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+            if (!is_object($zigate))
+                continue; // Probably deleted on Jeedom side.
+            if (!$zigate->getIsEnable())
+                continue; // Zigate disabled
+
+            $AbeilleParser->msgToCmd("CmdAbeille".$zgId."/0000/getNetworkStatus", "getNetworkStatus");
         }
 
         $msgType = null;

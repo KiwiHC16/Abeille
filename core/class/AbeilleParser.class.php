@@ -1051,9 +1051,14 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             /* To be sure there is no port changes, 'AbeilleIEEE_Ok' is set to 0 on daemon start.
                Should be updated by 8009 response */
-            if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 'Abeille', '0', 1 ) == 0 ) {
+            $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
+            $confIeeeOkVal = config::byKey($confIeeeOk, 'Abeille', '0');
+            if ($confIeeeOkVal != 1) {
                 if (!in_array($fct, $commandAcceptedUntilZigateIdentified)) {
-                    parserLog('debug', $dest.', AbeilleIEEE_Ok==0 => msg '.$type." ignored");
+                    if ($confIeeeOkVal == 0)
+                        parserLog('debug', $dest.', AbeilleIEEE_Ok=='.$confIeeeOkVal.' => msg '.$type." ignored. Waiting 8009.");
+                    else
+                        parserLog('debug', $dest.', AbeilleIEEE_Ok=='.$confIeeeOkVal.' => msg '.$type." ignored. Port switch ??");
                     return 0;
                 }
             }
@@ -2318,10 +2323,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $Ext_PAN_ID         = substr($payload, 24,16);
             $Channel            = hexdec(substr($payload, 40, 2));
 
-            // Local storage for speed optimization
-            $zgNb = substr($dest, 7);
-            $GLOBALS['zigate'.$zgNb]['ieee'] = $ExtendedAddress;
-
             $msgDecoded = '8009/Network state response, Addr='.$ShortAddress.', ExtAddr='.$ExtendedAddress.', PANId='.$PAN_ID.', ExtPANId='.$Ext_PAN_ID.', Chan='.$Channel;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8009");
 
@@ -2331,16 +2332,22 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $ShortAddress, 4))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
+            // Local storage for speed optimization
+            $zgNb = substr($dest, 7);
+            $GLOBALS['zigate'.$zgNb]['ieee'] = $ExtendedAddress;
+
+            $confIeee = str_replace('Abeille', 'AbeilleIEEE', $dest); // AbeilleX => AbeilleIEEEX
+            $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
+
             /* Checking USB port unexpected switch */
-            if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none', 1 ) == "none" ) {
-                config::save( str_replace('Abeille', 'AbeilleIEEE', $dest), $ExtendedAddress,   'Abeille');
-            }
-            if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none', 1 ) == $ExtendedAddress ) {
-                config::save( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 1,   'Abeille');
-            }
-            else {
-                config::save( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), -1,   'Abeille');
-                message::add("Abeille", "La zigate ".$dest." detectee ne semble pas etre la bonne (IEEE qui remonte: ".$ExtendedAddress." alors que j ai en memoire: ".config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none', 1 )."). Je la bloque pour ne pas créer de soucis.", "Verifiez que les zigates sont bien sur le bon port tty par example suite  a un reboot..", 'Abeille/Demon');
+            if (config::byKey($confIeee, 'Abeille', 'none', 1 ) == "none") {
+                config::save($confIeee, $ExtendedAddress, 'Abeille');
+                config::save($confIeeeOk, 1, 'Abeille');
+            } else  if (config::byKey($confIeee, 'Abeille', 'none', 1) == $ExtendedAddress) {
+                config::save($confIeeeOk, 1, 'Abeille');
+            } else {
+                config::save($confIeeeOk, -1, 'Abeille');
+                message::add("Abeille", "Mauvais port détecté pour zigate ".$zgNb.". Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
                 return;
             }
 

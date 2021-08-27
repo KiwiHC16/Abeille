@@ -3,6 +3,8 @@ ChangeLog
 
 - All JSON: 'configuration:battery_type' => 'configuration:batteryType'.
 - Assistant: Ajout doc préliminaire pour découverte Zigbee.
+- Interne: Séquence de démarrage revisitée pour #2093.
+
 210826-BETA-1
 ----------
 

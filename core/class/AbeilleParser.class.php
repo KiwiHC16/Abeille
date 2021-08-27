@@ -171,40 +171,40 @@
         }
 
         // Tcharp38: This function is obsolete is smoothly replaced by msgToAbeille2() with new msg format
-        function msgToAbeilleFct($SrcAddr, $fct, $data)
-        {
-            // $SrcAddr = dest / shortaddr
-            // dest / short addr / Cluster ID - Attr ID -> data
+        // function msgToAbeilleFct($SrcAddr, $fct, $data)
+        // {
+        //     // $SrcAddr = dest / shortaddr
+        //     // dest / short addr / Cluster ID - Attr ID -> data
 
-            $msgAbeille = new MsgAbeille;
-            $msgAbeille->message = array( 'topic' => $SrcAddr."/".$fct, 'payload' => $data, );
+        //     $msgAbeille = new MsgAbeille;
+        //     $msgAbeille->message = array( 'topic' => $SrcAddr."/".$fct, 'payload' => $data, );
 
-            $errorcode = 0;
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false, $errorcode)) {
-                // parserLog("debug","(fct msgToAbeilleFct) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
-            }
-            else {
-                parserLog("debug", "(fct msgToAbeilleFct) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errorcode);
-            }
-        }
+        //     $errorcode = 0;
+        //     if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false, $errorcode)) {
+        //         // parserLog("debug","(fct msgToAbeilleFct) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
+        //     }
+        //     else {
+        //         parserLog("debug", "(fct msgToAbeilleFct) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errorcode);
+        //     }
+        // }
 
         // Tcharp38: This function is obsolete is smoothly replaced by msgToAbeille2() with new msg format
-        function msgToAbeilleCmdFct( $fct, $data)
-        {
-             // Abeille / short addr / Cluster ID - Attr ID -> data
+        // function msgToAbeilleCmdFct( $fct, $data)
+        // {
+        //      // Abeille / short addr / Cluster ID - Attr ID -> data
 
-            $msgAbeille = new MsgAbeille;
-            $msgAbeille->message = array( 'topic' => $fct, 'payload' => $data, );
+        //     $msgAbeille = new MsgAbeille;
+        //     $msgAbeille->message = array( 'topic' => $fct, 'payload' => $data, );
 
-            $errorcode = 0;
-            if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false, $errorcode)) {
-                // parserLog("debug","(fct msgToAbeilleFct) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
-                // print_r(msg_stat_queue($queue));
-            }
-            else {
-                parserLog("debug","(fct msgToAbeilleFct) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errorcode);
-            }
-        }
+        //     $errorcode = 0;
+        //     if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false, $errorcode)) {
+        //         // parserLog("debug","(fct msgToAbeilleCmdFct) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
+        //         // print_r(msg_stat_queue($queue));
+        //     }
+        //     else {
+        //         parserLog("debug","(fct msgToAbeilleCmdFct) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errorcode);
+        //     }
+        // }
 
         /* New function to send msg to Abeille.
            Msg format is now flexible and can transport a bunch of infos coming from zigbee event instead of splitting them
@@ -503,15 +503,18 @@
                 /* Any other info missing to identify device ? */
                 if (!isset($eq['manufacturer'])) {
                     parserLog('debug', '  Requesting manufacturer from EP '.$eq['epFirst']);
-                    $this->msgToCmd("Cmd".$net."/0000/getManufacturerName", "address=".$addr.'&destinationEndPoint='.$eq['epFirst']);
+                    // $this->msgToCmd("Cmd".$net."/0000/getManufacturerName", "address=".$addr.'&destinationEndPoint='.$eq['epFirst']);
+                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
                 }
                 if (!isset($eq['modelIdentifier'])) {
                     parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
-                    $this->msgToCmd("Cmd".$net."/0000/getName", "address=".$addr.'&destinationEndPoint='.$eq['epFirst']);
+                    // $this->msgToCmd("Cmd".$net."/0000/getName", "address=".$addr.'&destinationEndPoint='.$eq['epFirst']);
+                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
                 }
                 if (!isset($eq['location'])) {
                     parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
-                    $this->msgToCmd("Cmd".$net."/0000/getLocation", "address=".$addr.'&destinationEndPoint='.$eq['epFirst']);
+                    // $this->msgToCmd("Cmd".$net."/0000/getLocation", "address=".$addr.'&destinationEndPoint='.$eq['epFirst']);
+                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
                 }
             }
 

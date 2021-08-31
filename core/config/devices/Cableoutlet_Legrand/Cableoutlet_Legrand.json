@@ -1,0 +1,37 @@
+{
+    "Cableoutlet_Legrand": {
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "Legrand-Cableoutlet"
+        },
+        "category": {
+            "heating": "1"
+        },
+        "type": "Legrand Cable Outlet 3000W",
+        "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+
+            "include25": "Group-Membership",
+
+            "include24": "Identify",
+
+            "include4": "etatLight",
+            "include8": "On",
+            "include9": "Off",
+            "include19": "getEtat",
+            "include26": "BindToZigateEtat",
+            "include28": "setReportEtat",
+
+            "include26 2": "BindToZigatePuissanceLegrand",
+            "include28 2": "setReportPuissanceLegrand",
+            "include11 2": "PuissanceLegrandPrise"
+        }
+    }
+}

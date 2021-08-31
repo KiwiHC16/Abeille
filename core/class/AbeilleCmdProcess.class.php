@@ -1697,19 +1697,12 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $groupType              = "00";
 
             $data2 = $zclControlField.$transactionSequence.$cmdId.$total.$startIndex.$count.$groupId.$groupType;
-
-            $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2));
-
+            $dataLength = sprintf( "%02s", dechex(strlen($data2) / 2));
             $data1 = $addressMode.$targetShortAddress.$sourceEndpoint.$destinationEndpoint.$clusterID.$profileID.$securityMode.$radius.$dataLength;
-
-            $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd2']);
-            $this->deamonlog('debug', "  Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd2']);
-
             $data = $data1.$data2;
+            $length = sprintf("%04s", dechex(strlen($data) / 2));
 
-            $lenth = sprintf("%04s",dechex(strlen($data) / 2));
-
-            $this->addCmdToQueue($priority, $dest, $cmd, $lenth, $data, $targetShortAddress);
+            $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
             return;
         }
 

@@ -1,5 +1,8 @@
 ChangeLog
 =========
+210831-BETA-1
+----------
+
 - Frient SPLZB-131: Support préliminaire.
 - Legrand Cable outlet: Ajout support préliminaire (#850). Manque controle fil pilote.
 

@@ -1504,12 +1504,27 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     return;
                 }
 
-                parserLog('debug', '  Unsupported/ignored profile 0000 message');
+                switch ($cluster) {
+                case "8031":
+                    parserLog('debug', '  Handled by decode804E');
+                    break;
+                default:
+                    parserLog('debug', '  Unsupported/ignored profile 0000 message');
+                }
                 return;
             }
 
             //  Cluster 0005 Scene (exemple: Boutons lateraux de la telecommande -)
             if (($profile == "0104") && ($cluster == "0005")) {
+
+                // Tcharp38: WARNING: There is probably something wrong there.
+                // There are cases where 0005 message is neither supported by this part nor by 8100_8102 decode.
+                // Example:
+                // [2021-08-30 16:44:31] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0005, SrcEP=01, DestEP=01, SrcAddrMode=02, SrcAddr=7C4F, DestAddrMode=02, DestAddr=0000
+                // [2021-08-30 16:44:31]   FCF=08, SQN=7C, cmd=01/Read Attributes Response
+                // [2021-08-30 16:44:31]   Handled by decode8100_8102
+                // [2021-08-30 16:44:31] Abeille1, Type=8100/Read individual attribute response, SQN=7C, Addr=7C4F, EP=01, ClustId=0005, AttrId=0001, AttrStatus=00, AttrDataType=20, AttrSize=0001
+                // [2021-08-30 16:44:31]   Processed in 8002 => dropped
 
                 $abeille = Abeille::byLogicalId($dest."/".$srcAddress,'Abeille');
                 $sceneStored = json_decode( $abeille->getConfiguration('sceneJson','{}') , True );
@@ -2074,8 +2089,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             /* WARNING:
-               If reached this step it is assumed that message is "Zigbee cluster library" compliant.
-               This is the case for profile 0104 (ZHA)
+               If execution reached here it is assumed that message is "Zigbee cluster library" compliant
+               and NOT treated above.
+               Compliant profiles: 0104 (ZHA)
              */
 
             /* Decoding ZCL header */

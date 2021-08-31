@@ -1,0 +1,32 @@
+{
+    "SPLZB-131": {
+        "manufacturer": "Frient",
+        "model": "SPLZB-131",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "02",
+            "icon": "Delveco-SPLZB-132"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Frient Smart Plug Mini Type F",
+        "commands": {
+            "include0004-1": "Group-Membership",
+
+            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
+            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
+            "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
+            "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+            "include0006-5": "BindToZigateEtat",
+            "include0006-6": "setReportEtat",
+
+            "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "unit=KWh&div=1000", "isVisible": 1 },
+
+            "RMSVoltage": { "use": "zb-0B04-RMSVoltage", "isVisible": 0 },
+            "RMSCurrent": { "use": "zb-0B04-RMSCurrent", "isVisible": 1 },
+            "ActivePower": { "use": "zb-0B04-ActivePower", "isVisible": 1 },
+            "include0B04-5": "getPlugVAW"
+        }
+    }
+}

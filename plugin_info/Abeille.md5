@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210827-BETA-1"
+# VERSION="210831-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -53,11 +53,11 @@ ee2be2ec60cb3b00ed0501cb232f7166 *Zigate_Module/ReadJN5168/read.php
 dfdf7e7993cebd45605bbf23a91076bd *core/class/Abeille.class.php
 1b168df63dd8f213613058478ed3181f *core/class/AbeilleCmd.class.php
 66dc252a41b62d78fc1cbd07ae00d3a6 *core/class/AbeilleCmdPrepare.class.php
-735e90d7958fcd100d56770ac2060f22 *core/class/AbeilleCmdProcess.class.php
+b255adec2e0927f7ab99e5559a9b0065 *core/class/AbeilleCmdProcess.class.php
 4cffbca1a16163aefefa0549992d72ea *core/class/AbeilleCmdQueue.class.php
 1d8ecd8f974647271c4e630015a43d7f *core/class/AbeilleDebug.class.php
 17e48d546034f737716d4532d29a29af *core/class/AbeilleMsg.php
-15210119ff3a692420fca98e80dd3c13 *core/class/AbeilleParser.class.php
+10bd71511bfa3032403079eb2f96dba3 *core/class/AbeilleParser.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 2ebb56e1ea41091916d618f74fe15764 *core/class/AbeilleTemplateCommon.class.php
 aea82feb4106a0bcb6ee4f6ab877c416 *core/class/AbeilleTemplateEq.class.php
@@ -537,6 +537,7 @@ cd4d2b9255e64aef89c7ea65c3996d77 *core/config/devices/BSO/BSO.json
 8e59915ca149b42d0fc515d58796d69d *core/config/devices/CLA60RGBWOSRAM/CLA60RGBWOSRAM.json
 7cec73c3c9396d09b514bbc314675799 *core/config/devices/CLA60TWOSRAM/CLA60TWOSRAM.json
 f5c626f6a9f18b0ddca1bd1597868eda *core/config/devices/COSensor-EM/COSensor-EM.json
+f9ed35193595c45c02eee79dbfce74db *core/config/devices/Cableoutlet_Legrand/Cableoutlet_Legrand.json
 a160cb45eafd5249521e58b1df6a4430 *core/config/devices/ClassicA60RGBW/ClassicA60RGBW.json
 200f6b2e3186d50ad63b7bd3ed8109cf *core/config/devices/ClassicA60Wclear-LIGHTIFY-2/ClassicA60Wclear-LIGHTIFY-2.json
 02023f33333ba96bac2ebd83d3a27a06 *core/config/devices/ClassicA60Wclear-LIGHTIFY/ClassicA60Wclear-LIGHTIFY.json
@@ -625,6 +626,7 @@ aae2181f0e0340ff86124acbf8be5eeb *core/config/devices/SM309/SM309.json
 b46cceb2f3cced2dadb5a1deb2fc4f6d *core/config/devices/SML001/SML001.json
 9e2698af4068f21aa4357c239e5eccbc *core/config/devices/SML002/SML002.json
 155f8f2b1d974051b2ac1cc6c8fc5b3f *core/config/devices/SP220/SP220.json
+8d024a3420e90d36575bb5f065cb52f1 *core/config/devices/SPLZB-131/SPLZB-131.json
 46de5c589ee4509c1284fd4dccb80e0f *core/config/devices/SPLZB-132/SPLZB-132.json
 42340e96412ab3ef9ef95950f79762bf *core/config/devices/SPZB0001/SPZB0001.json
 2427a44d1e7797f7eaf81a541f46210e *core/config/devices/Shutterswitchwithneutral/Shutterswitchwithneutral.json
@@ -851,7 +853,7 @@ b8d8947771ea9ac7b2802e6c4778e0d1 *desktop/php/AbeilleEq-Params.php
 49ee93207a7c670f641f2adf341aac00 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-02a070cfe8823493d24544df01a237bb *docs/fr_FR/Changelog.rst
+f989b91d293bbaf7d2458819b8851391 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -931,6 +933,7 @@ ba5d7e89e000b0cfadb3e2d5470746a6 *images/node_LTW013.png
 a6570ef735600c0148a7aad57eb01064 *images/node_LWO001.png
 ccb34d97ffa00e0f4f038193d9a7bb1e *images/node_LXX60-CS27LX1.0.png
 e855c47cef73a6e579bb8ad8dbb94b93 *images/node_Lamp_01.png
+c09f2a421b5e19cf32bc7d55e3f2a83c *images/node_Legrand-Cableoutlet.png
 d2971679b1a853a60739cddbd5c3eccc *images/node_LegrandRemoteSwitch.png
 14efe6ba9f33aa1d91c704f46438c3d6 *images/node_LoraTap3GangRemote.png
 461f8ed3c0921452f935b36b7caaef87 *images/node_MR16TWOSRAM.png
@@ -1073,10 +1076,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-e36d6d1ebbcc61869d4e84f0de6d12a0 *plugin_info/Abeille.version
+886b1dae7a1ec015df0d83ad194cf0a0 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 fe1c3a5a27b352d6439f123237a4b071 *plugin_info/configuration.php
-33a68b1a5a181a1da88361bf22a541aa *plugin_info/info.json
+4008fb7b540ed102c5706c01b7aac769 *plugin_info/info.json
 a8b36afbe004ce359c7ecec1358a12a1 *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 e634b9f544c02b8facd28fefb8771fe0 *resources/AbeilleDeamon/AbeilleInterrogate.php

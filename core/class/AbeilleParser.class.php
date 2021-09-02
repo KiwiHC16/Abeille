@@ -3860,8 +3860,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                 // Xiaomi Wall Plug (Kiwi: ZNCZ02LM, rvitch: )
                 elseif (($AttributId == "FF01") && (($AttributSize == "0031") || ($AttributSize == "002B"))) {
-                    $logMessage = "";
-                    $logMessage .= "  Xiaomi proprietary (Wall Plug)";
+                    parserLog('debug', "  Xiaomi proprietary (Wall Plug)");
 
                     $onOff = hexdec(substr($payload, 24 + 2 * 2, 2));
 
@@ -3871,8 +3870,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $conso = unpack('f', pack('H*', substr($payload, 24 + 14 * 2, 8)));
                     $consoValue = $conso[1];
 
-                    $logMessage .= '  OnOff='.$onOff.', Puissance='.$puissanceValue.', Consommation='.$consoValue;
-                    parserLog('debug', $logMessage);
+                    parserLog('debug', '  OnOff='.$onOff.', Puissance='.$puissanceValue.', Consommation='.$consoValue);
 
                     // $this->msgToAbeille($SrcAddr,$ClusterId,$AttributId,'$this->decoded as OnOff-Puissance-Conso', $lqi);
                     $this->msgToAbeille($dest."/".$SrcAddr, '0006',  '-01-0000',        $onOff,             $lqi);
@@ -4116,48 +4114,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $data = substr($payload, 24, 4);
             }
 
-            // else if ($dataType == "39") {
-            //     if (($ClusterId=="000C") && ($AttributId=="0055")  ) {
-            //         if ($EPoint=="01") {
-            //             // Remontée puissance (instantannée) relay double switch 1
-            //             // On va envoyer ca sur la meme variable que le champ ff01
-            //             $hexNumber = substr($payload, 24, 8);
-            //             $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
-            //             $bin = pack('H*', $hexNumberOrder );
-            //             $data = unpack("f", $bin )[1];
-
-            //             $puissanceValue = $data;
-            //             // $this->msgToAbeille( $SrcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $lqi);
-
-            //             // Relay Double
-            //             $this->msgToAbeille($dest."/".$SrcAddr, '000C',     '01-0055',    $puissanceValue,    $lqi);
-            //         }
-            //         if (($EPoint=="02") || ($EPoint=="15")) {
-            //             // Remontée puissance (instantannée) de la prise xiaomi et relay double switch 2
-            //             // On va envoyer ca sur la meme variable que le champ ff01
-            //             $hexNumber = substr($payload, 24, 8);
-            //             $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
-            //             $bin = pack('H*', $hexNumberOrder );
-            //             $data = unpack("f", $bin )[1];
-
-            //             $puissanceValue = $data;
-            //             // Relay Double - Prise Xiaomi
-            //             $this->msgToAbeille($dest."/".$SrcAddr, $ClusterId,     $EPoint.'-'.$AttributId,    $puissanceValue,    $lqi);
-            //         }
-            //         if ($EPoint=="03") {
-            //             // Example Cube Xiaomi
-            //             // Sniffer dit Single Precision Floating Point
-            //             // b9 1e 38 c2 -> -46,03
-            //             // $data = hexdec(substr($payload, 24, 4));
-            //             // $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
-            //             $hexNumber = substr($payload, 24, 8);
-            //             $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
-            //             $bin = pack('H*', $hexNumberOrder );
-            //             $data = unpack("f", $bin )[1];
-            //         }
-            //     }
-            // }
-
             else if ($dataType == "42") {
                 // ------------------------------------------------------- Xiaomi ----------------------------------------------------------
                 // Xiaomi Bouton V2 Carré
@@ -4289,6 +4245,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 else {
                     $data = pack('H*', $Attribut);
                 }
+            }
+
+            else if ($dataType == "48") { // Array
+                // Tcharp38: Don't know how to handle it.
+                parserLog('debug', "  WARNING: Don't know how to decode 'array' data type.");
+                $data = "00"; // Fake value
             }
 
             /* Note: If $data is not set, then nothing to send to Abeille. This might be because data type is unsupported */

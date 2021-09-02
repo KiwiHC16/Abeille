@@ -1,5 +1,7 @@
 ChangeLog
 =========
+- Interne: SerialRead, mise-à-jour pour "permission denied".
+
 210831-BETA-1
 ----------
 

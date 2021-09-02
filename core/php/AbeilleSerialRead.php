@@ -114,11 +114,14 @@
     // }
     while (true) {
         try {
-            exec("stty -F ".$serial." sane", $out, $status);
+            exec(system::getCmdSudo().' chmod 666 '.$serial.' >/dev/null 2>&1');
+            exec("stty -F ".$serial." sane >/dev/null 2>&1", $out, $status);
             if ($status == 0)
-                exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out, $status);
+                exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw >/dev/null 2>&1", $out, $status);
             if ($status == 0)
                 break;
+            $err = implode("/", $out);
+            logMessage('debug', 'stty error: '.$err);
         } catch ( Exception $e ) {
             logMessage('debug', 'stty err');
         }

@@ -121,7 +121,7 @@
             <div class="row">
                 <label class="col-lg-2 control-label" for="fname">End points:</label>
                 <div class="col-lg-10">
-                    <a class="btn btn-warning" title="Raffraichi la liste des End Points" onclick="requestInfos('epList')"><i class="fas fa-sync"></i></a>
+                    <a id="idEPListRB" class="btn btn-warning" title="Raffraichi la liste des End Points" onclick="requestInfos('epList')"><i class="fas fa-sync"></i></a>
                     <input type="text" id="idEPList" value="" readonly>
                 </div>
             </div>
@@ -136,6 +136,7 @@
             </div>
 
             <div class="row">
+                <br>
                 <a class="btn btn-success pull-left" title="Télécharge 'discovery.json'" onclick="downloadDiscovery()"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
                 <?php if (isset($dbgTcharp38)) { ?>
                 <a class="btn btn-success pull-left" title="Genère les commandes Jeedom" onclick="zigbeeToCommands()"><i class="fas fa-cloud-download-alt"></i> Mettre à jour JSON</a>
@@ -1289,37 +1290,36 @@ console.log(jeq);
     }
 
     /* Request device info
-       clustType = '00' (server cluster) or '01' (client cluster)
      */
-    function requestInfos(infoType, ep = "01", clustId = "0000", option = "") {
+    function requestInfos(infoType, epId = "01", clustId = "0000", option = "") {
         console.log("requestInfos("+infoType+")");
 
-        // 'Cmd'.$device->getLogicalId().'/ReadAttributeRequest', 'EP=01&clusterId=0005&attributeId=0000'
+        // 'Cmd'.$device->getLogicalId().'/readAttribute', 'ep=01&clustId=0005&attrId=0000'
         logicalId = "Abeille"+js_zgNb+"_"+js_eqAddr;
         if (infoType == "epList") {
             topic = "Cmd"+logicalId+"_ActiveEndPoint";
             payload = "address="+js_eqAddr;
         } else if (infoType == "manufacturer") {
             topic = "Cmd"+logicalId+"_readAttribute";
-            payload = "ep="+ep+"_clustId=0000_attrId=0004"; // Manufacturer
+            payload = "ep="+epId+"_clustId=0000_attrId=0004"; // Manufacturer
         } else if (infoType == "modelId") {
             topic = "Cmd"+logicalId+"_readAttribute";
-            payload = "ep="+ep+"_clustId=0000_attrId=0005"; // Model
+            payload = "ep="+epId+"_clustId=0000_attrId=0005"; // Model
         } else if (infoType == "location") {
             topic = "Cmd"+logicalId+"_readAttribute";
-            payload = "ep="+ep+"_clustId=0000_attrId=0010"; // Location
+            payload = "ep="+epId+"_clustId=0000_attrId=0010"; // Location
         } else if (infoType == "clustersList") {
             topic = "Cmd"+logicalId+"_SimpleDescriptorRequest";
-            payload = "address="+js_eqAddr+"_endPoint="+ep;
+            payload = "address="+js_eqAddr+"_endPoint="+epId;
         } else if (infoType == "attribList") {
             topic = "Cmd"+logicalId+"_discoverAttributes";
-            payload = "ep="+ep+"_clustId="+clustId+"_startAttrId=0000_maxAttrId=FF_dir="+option;
+            payload = "ep="+epId+"_clustId="+clustId+"_startAttrId=0000_maxAttrId=FF_dir="+option;
         } else if (infoType == "attribValue") {
             topic = "Cmd"+logicalId+"_readAttribute";
-            payload = "ep="+ep+"_clustId="+clustId+"_attrId="+option;
+            payload = "ep="+epId+"_clustId="+clustId+"_attrId="+option;
         } else if (infoType == "discoverCommandsReceived") {
             topic = "Cmd"+logicalId+"_discoverCommandsReceived";
-            payload = "ep="+ep+"_clustId="+clustId;
+            payload = "ep="+epId+"_clustId="+clustId;
         } else {
             console.log("requestInfos("+infoType+") => UNEXPECTED type !");
             return;
@@ -1329,6 +1329,30 @@ console.log(jeq);
         var url = "plugins/Abeille/core/php/AbeilleCliToQueue.php";
         xhttp.open("GET", url+"?action=sendMsg&queueId="+js_queueKeyXmlToCmd+"&topic="+topic+"&payload="+payload, true);
         xhttp.send();
+    }
+
+    /* Request read of missing attribute values for given ep-clustId */
+    function requestAttribValues(epId = "01", clustId = "0000") {
+        console.log("requestAttribValues("+epId+", "+clustId+")");
+
+        ep = eq.discovery.endPoints[epId];
+        clust = ep.servClusters[clustId];
+        attributes = clust.attributes;
+console.log(attributes);
+        for (const [attrId, attr] of Object.entries(attributes)) {
+            if (typeof attr.value !== "undefined")
+                continue;
+console.log("missing value for "+attrId);
+            requestInfos("attribValue", epId, clustId, attrId);
+        }
+    }
+
+    /* Replace a particular class for given element id */
+    function changeClass(id, oldClass, newClass) {
+        // document.getElementById(id).className = "btn btn-success tooltipstered";
+        if ($('#'+id).hasClass(oldClass))
+            $('#'+id).removeClass(oldClass);
+        $('#'+id).addClass(newClass);
     }
 
     /* Treat async infos received from server to display them. */
@@ -1360,6 +1384,7 @@ console.log(jeq);
 
             /* Updating display */
             document.getElementById("idEPList").value = sEpList;
+            changeClass("idEPListRB", "btn-warning", "btn-success");
             var endPoints = "";
             $("#idendPoints").empty();
             sEpArr.forEach((ep) => {
@@ -1367,7 +1392,7 @@ console.log(jeq);
                 h += '<label id="idClustEP'+ep+'" class="col-lg-2 control-label"></label>';
 
                 h += '<div class="col-lg-10">';
-                h += '<a class="btn btn-warning" title="Raffraichi la liste des clusters" onclick="requestInfos(\'clustersList\', \''+ep+'\')"><i class="fas fa-sync"></i></a>';
+                // h += '<a class="btn btn-warning" title="Raffraichi la liste des clusters" onclick="requestInfos(\'clustersList\', \''+ep+'\')"><i class="fas fa-sync"></i></a>';
                 h += '<br><br>';
                 h += '</div>';
 
@@ -1376,21 +1401,21 @@ console.log(jeq);
                 h += '<div class="row">';
                 h += '<label class="col-lg-2 control-label" for="fname">Fabricant:</label>';
                 h += '<div class="col-lg-10">';
-                h += '<a class="btn btn-warning" title="Raffraichi le nom du fabricant" onclick="requestInfos(\'manufacturer\')"><i class="fas fa-sync"></i></a>';
+                h += '<a id="idZigbeeManuf'+ep+'RB" class="btn btn-warning" title="Raffraichi le nom du fabricant" onclick="requestInfos(\'manufacturer\')"><i class="fas fa-sync"></i></a>';
                 h += '<input type="text" id="idZigbeeManuf'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
                 h += '<div class="row">';
                 h += '<label class="col-lg-2 control-label" for="fname">Modèle:</label>';
                 h += '<div class="col-lg-10">';
-                h += '<a class="btn btn-warning" title="Raffraichi le nom du modèle" onclick="requestInfos(\'modelId\')"><i class="fas fa-sync"></i></a>';
+                h += '<a id="idZigbeeModel'+ep+'RB" class="btn btn-warning" title="Raffraichi le nom du modèle" onclick="requestInfos(\'modelId\')"><i class="fas fa-sync"></i></a>';
                 h += '<input type="text" id="idZigbeeModel'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
                 h += '<div class="row">';
                 h += '<label class="col-lg-2 control-label" for="fname">Localisation:</label>';
                 h += '<div class="col-lg-10">';
-                h += '<a class="btn btn-warning" title="Raffraichi la localisation" onclick="requestInfos(\'location\')"><i class="fas fa-sync"></i></a>';
+                h += '<a id="idZigbeeLocation'+ep+'RB" class="btn btn-warning" title="Raffraichi la localisation" onclick="requestInfos(\'location\')"><i class="fas fa-sync"></i></a>';
                 h += '<input type="text" id="idZigbeeLocation'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
@@ -1461,23 +1486,42 @@ console.log(jeq);
                 attr['value'] = sValue;
                 attributes[sAttrId] = attr;
                 ep.servClusters[sClustId]['attributes'] = attributes;
-            }
+            } else
+                attributes = null;
 
             // Updating display
+            field = null;
             if (sClustId == "0000") {
                 if (sAttrId == "0004") {
-                    var field = document.getElementById("idZigbeeManuf"+sEp);
+                    field = document.getElementById("idZigbeeManuf"+sEp);
+                    idRB = "idZigbeeManuf"+sEp+"RB"; // Refresh button
                 } else if (sAttrId == "0005") {
-                    var field = document.getElementById("idZigbeeModel"+sEp);
+                    field = document.getElementById("idZigbeeModel"+sEp);
+                    idRB = "idZigbeeModel"+sEp+"RB"; // Refresh button
                 } else if (sAttrId == "0010") {
-                    var field = document.getElementById("idZigbeeLocation"+sEp);
+                    field = document.getElementById("idZigbeeLocation"+sEp);
+                    idRB = "idZigbeeLocation"+sEp+"RB"; // Refresh button
                 }
             }
-            if (typeof field !== 'undefined') {
+            if (field !== null) {
                 if (res.status != "00")
                     field.value = "-- Non supporté --";
                 else
                     field.value = res.value;
+                changeClass(idRB, "btn-warning", "btn-success");
+            }
+
+            // If all attributes values are known, change button class
+            if (attributes !== null) {
+                allDone = true;
+                for (const [attrId, attr] of Object.entries(attributes)) {
+                    if (typeof attr.value === "undefined") {
+                        allDone = false;
+                        break;
+                    }
+                }
+                if (allDone)
+                    changeClass("idServClust"+sEp+"-"+sClustId+"RB2", "btn-warning", "btn-success");
             }
         } else if (res.type == "simpleDesc") {
             // 'src' => 'parser',
@@ -1530,7 +1574,7 @@ console.log(jeq);
                 var newCell = newRow.insertCell(0);
                 newCell.innerHTML = clustId;
                 // newCell.setAttribute('title', 'toto'); // Tcharp38 TODO: How to retrive cluster name ?
-                newCell.innerHTML += '<a class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
+                newCell.innerHTML += '<a id="idServClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
                 if (clustId == "0000") { // Basic cluster supported on this EP
                     requestInfos('manufacturer', sEp, clustId);
                     requestInfos('modelId', sEp, clustId);
@@ -1614,9 +1658,12 @@ console.log(jeq);
             // Fills row
             for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
                 rattr = sAttributes[attrIdx];
-                var newCol = row.insertCell(-1);
-                newCol.innerHTML = rattr.id;
+                var newCell = row.insertCell(-1);
+                newCell.innerHTML = rattr.id;
+                if (sDir && (attrIdx == sAttrCount - 1)) // Server attributes only
+                    newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
             }
+            changeClass("idServClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
         } else if (res.type == "deviceAnnounce") {
             // 'src' => 'parser',
             // 'type' => 'deviceAnnounce',

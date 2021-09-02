@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210902-BETA-1
+----------
+
 - Améliorations assistant EQ.
 - Interne: SerialRead, mise-à-jour pour "permission denied".
 

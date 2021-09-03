@@ -1,6 +1,7 @@
 ChangeLog
 =========
 
+- Améliorations assistant EQ.
 - Interne: Séquence de démarrage revisitée pour #2093.
 210902-BETA-1
 ----------

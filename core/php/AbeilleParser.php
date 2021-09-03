@@ -254,19 +254,6 @@
             $GLOBALS['eqList'][$net][$addr] = $eq;
         }
 
-        /* Requesting network status. Key to be sure that IEEE/port association is correct */
-        for ($zgId = 1; $zgId <= $config['zigateNb']; $zgId++) {
-            if (($config['AbeilleSerialPort'.$zgId] == 'none') or ($config['AbeilleActiver'.$zgId] != 'Y'))
-                continue; // Undefined or disabled
-            $zigate = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
-            if (!is_object($zigate))
-                continue; // Probably deleted on Jeedom side.
-            if (!$zigate->getIsEnable())
-                continue; // Zigate disabled
-
-            $AbeilleParser->msgToCmd("CmdAbeille".$zgId."/0000/getNetworkStatus", "getNetworkStatus");
-        }
-
         $msgType = null;
         while (true) {
 

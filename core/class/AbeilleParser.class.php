@@ -1045,27 +1045,26 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $lqi = hexdec($lqi);
             // parserLog('debug','Msg='.$datas." => lqi=".$lqi);
 
-            $fct = "decode".$type;
-
-            //  if ( config::byKey( str_replace('Abeille', 'AbeilleIEEE', $dest), 'Abeille', 'none' ) == $ExtendedAddress ) {
-            //               config::save( str_replace('Abeille', 'AbeilleIEEE_Ok', $dest), 1,   'Abeille');
-
-            $commandAcceptedUntilZigateIdentified = array("decode0300", "decode0208", "decode8009", "decode8024", "decode8000");
-
-            /* To be sure there is no port changes, 'AbeilleIEEE_Ok' is set to 0 on daemon start.
-               Should be updated by 8009 response */
+            /* To be sure there is no port changes, checking received IEEE vs stored one.
+               'AbeilleIEEE_Ok' is set to 0 on daemon start when interrogation is not done yet.
+               Should be updated by 8009 or 8024 responses */
+            $commandAcceptedUntilZigateIdentified = array("0208", "0300", "8000", "8009", "8024");
             $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
             $confIeeeOkVal = config::byKey($confIeeeOk, 'Abeille', '0');
-            if ($confIeeeOkVal != 1) {
-                if (!in_array($fct, $commandAcceptedUntilZigateIdentified)) {
-                    if ($confIeeeOkVal == 0)
-                        parserLog('debug', $dest.', AbeilleIEEE_Ok=='.$confIeeeOkVal.' => msg '.$type." ignored. Waiting 8009.");
-                    else
-                        parserLog('debug', $dest.', AbeilleIEEE_Ok=='.$confIeeeOkVal.' => msg '.$type." ignored. Port switch ??");
+            if ($confIeeeOkVal == -1) {
+                parserLog('debug', $dest.', AbeilleIEEE_Ok=='.$confIeeeOkVal.' => msg '.$type." ignored. Port switch ??");
+                return 0;
+            } else if ($confIeeeOkVal == 0) {
+                $zgId = substr($dest, 7); // AbeilleX => X
+                $this->msgToCmd("CmdAbeille".$zgId."/0000/getNetworkStatus", "getNetworkStatus");
+
+                if (!in_array($type, $commandAcceptedUntilZigateIdentified)) {
+                    parserLog('debug', $dest.', AbeilleIEEE_Ok=='.$confIeeeOkVal.' => msg '.$type." ignored. Waiting 8009 or 8024.");
                     return 0;
                 }
             }
 
+            $fct = "decode".$type;
             if (method_exists($this, $fct)) {
                 $this->$fct($dest, $payload, $lqi);
             } else {
@@ -2355,19 +2354,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $zgNb = substr($dest, 7);
             $GLOBALS['zigate'.$zgNb]['ieee'] = $ExtendedAddress;
 
+            /* If still required, checking USB port unexpected switch */
             $confIeee = str_replace('Abeille', 'AbeilleIEEE', $dest); // AbeilleX => AbeilleIEEEX
             $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
-
-            /* Checking USB port unexpected switch */
-            if (config::byKey($confIeee, 'Abeille', 'none', 1 ) == "none") {
-                config::save($confIeee, $ExtendedAddress, 'Abeille');
-                config::save($confIeeeOk, 1, 'Abeille');
-            } else  if (config::byKey($confIeee, 'Abeille', 'none', 1) == $ExtendedAddress) {
-                config::save($confIeeeOk, 1, 'Abeille');
-            } else {
-                config::save($confIeeeOk, -1, 'Abeille');
-                message::add("Abeille", "Mauvais port détecté pour zigate ".$zgNb.". Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
-                return;
+            if (config::byKey($confIeeeOk, 'Abeille', 0) == 0) {
+                if (config::byKey($confIeee, 'Abeille', 'none', 1) == "none") {
+                    config::save($confIeee, $ExtendedAddress, 'Abeille');
+                    config::save($confIeeeOk, 1, 'Abeille');
+                } else if (config::byKey($confIeee, 'Abeille', 'none', 1) == $ExtendedAddress) {
+                    config::save($confIeeeOk, 1, 'Abeille');
+                } else {
+                    config::save($confIeeeOk, -1, 'Abeille');
+                    message::add("Abeille", "Mauvais port détecté pour zigate ".$zgNb.". Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
+                    return;
+                }
             }
 
             $msg = array(
@@ -2627,6 +2627,23 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             /* Log */
             parserLog('debug', $dest.', Type=8024/Network joined-formed, Status=\''.$data.'\', Addr='.$dataShort.', ExtAddr='.$dataIEEE.', Chan='.$dataNetwork, "8024");
+
+            /* If still required, checking USB port unexpected switch */
+            $confIeee = str_replace('Abeille', 'AbeilleIEEE', $dest); // AbeilleX => AbeilleIEEEX
+            $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
+            if (config::byKey($confIeeeOk, 'Abeille', 0) == 0) {
+                if (config::byKey($confIeee, 'Abeille', 'none', 1) == "none") {
+                    config::save($confIeee, $dataIEEE, 'Abeille');
+                    config::save($confIeeeOk, 1, 'Abeille');
+                } else if (config::byKey($confIeee, 'Abeille', 'none', 1) == $dataIEEE) {
+                    config::save($confIeeeOk, 1, 'Abeille');
+                } else {
+                    config::save($confIeeeOk, -1, 'Abeille');
+                    $zgId = substr($dest, 7); // AbeilleX => X
+                    message::add("Abeille", "Mauvais port détecté pour zigate ".$zgId.". Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
+                    return;
+                }
+            }
 
             // Envoi Status
             $this->msgToAbeille($dest."/0000", "Network", "Status", $data);

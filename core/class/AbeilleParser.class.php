@@ -1513,6 +1513,16 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 return;
             }
 
+            /*
+             * Code hereafter is covering ZCL compliant messages.
+             * Profiles: 0104/ZHA
+             */
+
+            if ($profile !== "0104") {
+                parserLog('debug', '  Unsupported/ignored profile '.$profile.' message');
+                return;
+            }
+
             //  Cluster 0005 Scene (exemple: Boutons lateraux de la telecommande -)
             if (($profile == "0104") && ($cluster == "0005")) {
 
@@ -1881,23 +1891,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
             }
 
-            // Remontée puissance module Legrand 20AX / prise Blitzwolf BW-SHP13 #1231
             // Electrical measurement cluster
-            if (($profile == "0104") && ($cluster == "0B04")) {
+            // Info: Used for power reporting on Legrand 20AX / prise Blitzwolf BW-SHP13 #1231
+            if ($cluster == "0B04") {
 
                 $frameCtrlField = substr($payload, 26, 2);
                 $SQN = substr($payload, 28, 2);
                 $cmd = substr($payload, 30, 2);
-                if ($cmd == "01") $cmdTxt = "01/Read attributes response";
-                else if ($cmd == "0A") $cmdTxt = "0A/Report attribut";
                 parserLog('debug', '  FCF='.$frameCtrlField
                    .', SQN='.$SQN
                    .', cmd='.$cmd.'/'.zgGetZCLCommand($cmd));
 
                 if ($cmd == '01') {
-
-                    $attributs = substr($payload,32);
-                    parserLog('debug', '  Attributs received: '.$attributs, "8002");
+                    $attributs = substr($payload, 32);
+                    // parserLog('debug', '  Attributs received: '.$attributs, "8002");
 
                     while (strlen($attributs) > 0) {
 
@@ -1915,13 +1922,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         $realValue = $this->decodeDataType(substr($attributs, 8), $dataType, true, $dataSize, $hexValue);
                         $attributs = substr($attributs, 8 + ($dataSize * 2));
 
-                        // $listType = array("21", "29");
-                        // if ( in_array( $dataType, $listType)) {
-                        //     $valueRevHex = substr($attributs, 8, 4);
-                        //     $value = $valueRevHex[2].$valueRevHex[3].$valueRevHex[0].$valueRevHex[1];
-                        //     $attributs = substr($attributs,12);
-                        // }
-
+                        $attrName = "?";
                         $msg = array(
                             'src' => 'parser',
                             'type' => 'attributeReport',
@@ -1929,67 +1930,47 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             'addr' => $srcAddress,
                             'ep' => $srcEndPoint,
                             'name' => $cluster.'-'.$srcEndPoint.'-'.$attribute,
-                            'value' => false, // False = unsupported
+                            'value' => $realValue, // False = unsupported
                             'time' => time(),
                             'lqi' => $lqi
                         );
 
-                        // example: Remontée V prise Blitzwolf BW-SHP13
                         if ($attribute == '0505') {
-                            // '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
-
-                            parserLog('debug', '  RMS Voltage'
-                               .', attrib='.$attribute
-                               .', dataType='.$dataType
-                               .', value='.$hexValue.' => '.$realValue,
-                                "8002");
-
-                            // $this->msgToAbeille($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, $realValue);
-                            $msg['value'] = $realValue;
-                            $this->msgToAbeille2($msg);
+                            $attrName = "RMS Voltage";
+                        } else if ($attribute == '0508') {
+                            $attrName = "RMS Current";
+                        } else if ($attribute == '050B') {
+                            $attrName = "Active Power";
                         }
 
-                        // example: Remontée A prise Blitzwolf BW-SHP13
-                        else if ($attribute == '0508') {
-                            // '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
+                        parserLog('debug', '  '.$attrName
+                            .', attrib='.$attribute
+                            .', dataType='.$dataType
+                            .', value='.$hexValue.' => '.$realValue,
+                            "8002"
+                        );
 
-                            parserLog('debug', '  RMS Current'
-                               .', attrib='.$attribute
-                               .', dataType='.$dataType
-                               .', value='.$hexValue.' => '.$realValue,
-                                "8002"
-                                );
+                        $this->msgToAbeille2($msg);
 
-                            // $this->msgToAbeille($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, $realValue);
-                            $msg['value'] = $realValue;
-                            $this->msgToAbeille2($msg);
-                        }
-
-                        // example: Remontée puissance prise Blitzwolf BW-SHP13
-                        else if ($attribute == '050B') {
-                            // '29' => array( 'Int16', 2 ), // Signed 16-bit int
-
-                            parserLog('debug', '  Active Power'
-                               .', attrib='.$attribute
-                               .', dataType='.$dataType
-                               .', value='.$hexValue.' => '.$realValue,
-                                "8002"
-                                );
-
-                            // $this->msgToAbeille($dest."/".$srcAddress, $cluster.'-'.$destEndPoint, $attribute, $realValue);
-                            $msg['value'] = $realValue;
-                            $this->msgToAbeille2($msg);
-                        }
-
-                        else {
-                            parserLog('debug', '  Attribut analysis: '.$attribute.'-'.$status.'-'.$dataType.'-'.$hexValue , "8002");
-                        }
+                        /* Send to client if required (ex: EQ page opened) */
+                        $toCli = array(
+                            'src' => 'parser',
+                            'type' => 'attributeReport',
+                            'net' => $dest,
+                            'addr' => $srcAddress,
+                            'ep' => $srcEndPoint,
+                            'clustId' => $cluster,
+                            'attrId' => $attribute,
+                            'status' => $status,
+                            'value' => $realValue
+                        );
+                        $this->msgToClient($toCli);
                     }
                     return;
-                }
+                } // End cmd==01
 
                 // exemple: emontée puissance module Legrand 20AX
-                if (($cmd == '0A')) {
+                if ($cmd == '0A') {
                     $attribute = substr($payload,34, 2).substr($payload,32, 2);
                     $dataType  = substr($payload,36, 2);
                     if (($attribute == '050B') && ($dataType == '29')) {
@@ -4461,6 +4442,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                .', ClustId='.$Cluster;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8140");
             /* Tcharp38: Treated by decode8002() */
+            parserLog('debug', '  Handled by decode8002', "8140");
         }
 
         // Codé sur la base des messages Xiaomi Inondation

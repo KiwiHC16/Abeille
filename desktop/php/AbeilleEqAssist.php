@@ -1097,8 +1097,8 @@
 
         // Refresh display
         displayCommands();
-        zbManuf = document.getElementById("idZigbeeManuf"+epId).value;
-        zbModel = document.getElementById("idZigbeeModel"+epId).value;
+        zbManuf = document.getElementById("idZbManuf"+epId).value;
+        zbModel = document.getElementById("idZbModel"+epId).value;
         js_jsonName = zbModel+"_"+zbManuf;
         document.getElementById("idJsonName").value = js_jsonName;
     } // End zigbeeToCommands()
@@ -1305,6 +1305,9 @@ console.log(jeq);
         } else if (infoType == "modelId") {
             topic = "Cmd"+logicalId+"_readAttribute";
             payload = "ep="+epId+"_clustId=0000_attrId=0005"; // Model
+        } else if (infoType == "powerSource") {
+            topic = "Cmd"+logicalId+"_readAttribute";
+            payload = "ep="+epId+"_clustId=0000_attrId=0007"; // PowerSource
         } else if (infoType == "location") {
             topic = "Cmd"+logicalId+"_readAttribute";
             payload = "ep="+epId+"_clustId=0000_attrId=0010"; // Location
@@ -1401,22 +1404,29 @@ console.log("missing value for "+attrId);
                 h += '<div class="row">';
                 h += '<label class="col-lg-2 control-label" for="fname">Fabricant:</label>';
                 h += '<div class="col-lg-10">';
-                h += '<a id="idZigbeeManuf'+ep+'RB" class="btn btn-warning" title="Raffraichi le nom du fabricant" onclick="requestInfos(\'manufacturer\')"><i class="fas fa-sync"></i></a>';
-                h += '<input type="text" id="idZigbeeManuf'+ep+'" value="" readonly>';
+                h += '<a id="idZbManuf'+ep+'RB" class="btn btn-warning" title="Raffraichi le nom du fabricant" onclick="requestInfos(\'manufacturer\')"><i class="fas fa-sync"></i></a>';
+                h += '<input type="text" id="idZbManuf'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
                 h += '<div class="row">';
                 h += '<label class="col-lg-2 control-label" for="fname">Modèle:</label>';
                 h += '<div class="col-lg-10">';
-                h += '<a id="idZigbeeModel'+ep+'RB" class="btn btn-warning" title="Raffraichi le nom du modèle" onclick="requestInfos(\'modelId\')"><i class="fas fa-sync"></i></a>';
-                h += '<input type="text" id="idZigbeeModel'+ep+'" value="" readonly>';
+                h += '<a id="idZbModel'+ep+'RB" class="btn btn-warning" title="Raffraichi le nom du modèle" onclick="requestInfos(\'modelId\')"><i class="fas fa-sync"></i></a>';
+                h += '<input type="text" id="idZbModel'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
                 h += '<div class="row">';
                 h += '<label class="col-lg-2 control-label" for="fname">Localisation:</label>';
                 h += '<div class="col-lg-10">';
-                h += '<a id="idZigbeeLocation'+ep+'RB" class="btn btn-warning" title="Raffraichi la localisation" onclick="requestInfos(\'location\')"><i class="fas fa-sync"></i></a>';
-                h += '<input type="text" id="idZigbeeLocation'+ep+'" value="" readonly>';
+                h += '<a id="idZbLocation'+ep+'RB" class="btn btn-warning" title="Raffraichi la localisation" onclick="requestInfos(\'location\')"><i class="fas fa-sync"></i></a>';
+                h += '<input type="text" id="idZbLocation'+ep+'" value="" readonly>';
+                h += '</div>';
+                h += '</div>';
+                h += '<div class="row">';
+                h += '<label class="col-lg-2 control-label" for="fname">Source d\'alim:</label>';
+                h += '<div class="col-lg-10">';
+                h += '<a id="idZbPowerSource'+ep+'RB" class="btn btn-warning" title="Raffraichi la source d\'alimentation" onclick="requestInfos(\'powerSource\')"><i class="fas fa-sync"></i></a>';
+                h += '<input type="text" id="idZbPowerSource'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
                 h += '</div>';
@@ -1447,82 +1457,6 @@ console.log("missing value for "+attrId);
                 /* Requesting clusters list for each EP */
                 requestInfos('clustersList', ep);
             });
-        } else if (res.type == "attributeReport") {
-            // 'src' => 'parser',
-            // 'type' => 'attributeReport', // 8100 or 8102
-            // 'net' => $dest,
-            // 'addr' => $SrcAddr,
-            // 'ep' => $EPoint,
-            // 'clustId' => $ClusterId,
-            // 'attrId' => $AttributId,
-            // 'status' => "00", "86"
-            // 'value' => $data
-            sEp = res.ep;
-            sClustId = res.clustId;
-            sAttrId = res.attrId;
-            sStatus = res.status;
-            sValue = res.value;
-
-            // Updating internal infos
-            if (sStatus == "00") {
-                discovery = eq.discovery;
-                if (typeof discovery.endPoints === "undefined")
-                    discovery.endPoints = new Object();
-                if (typeof discovery.endPoints[sEp] === "undefined")
-                    discovery.endPoints[sEp] = new Object();
-                ep = discovery.endPoints[sEp];
-                if (typeof ep.servClusters === "undefined")
-                    ep.servClusters = new Object();
-                if (typeof ep.servClusters[sClustId] === "undefined")
-                    ep.servClusters[sClustId] = new Object();
-                clust = ep.servClusters[sClustId];
-                if (typeof clust.attributes === "undefined")
-                    clust.attributes = new Object();
-                attributes = clust.attributes;
-                if (typeof attributes[sAttrId] === 'undefined')
-                    attr = new Object();
-                else
-                    attr = attributes[sAttrId];
-                attr['value'] = sValue;
-                attributes[sAttrId] = attr;
-                ep.servClusters[sClustId]['attributes'] = attributes;
-            } else
-                attributes = null;
-
-            // Updating display
-            field = null;
-            if (sClustId == "0000") {
-                if (sAttrId == "0004") {
-                    field = document.getElementById("idZigbeeManuf"+sEp);
-                    idRB = "idZigbeeManuf"+sEp+"RB"; // Refresh button
-                } else if (sAttrId == "0005") {
-                    field = document.getElementById("idZigbeeModel"+sEp);
-                    idRB = "idZigbeeModel"+sEp+"RB"; // Refresh button
-                } else if (sAttrId == "0010") {
-                    field = document.getElementById("idZigbeeLocation"+sEp);
-                    idRB = "idZigbeeLocation"+sEp+"RB"; // Refresh button
-                }
-            }
-            if (field !== null) {
-                if (res.status != "00")
-                    field.value = "-- Non supporté --";
-                else
-                    field.value = res.value;
-                changeClass(idRB, "btn-warning", "btn-success");
-            }
-
-            // If all attributes values are known, change button class
-            if (attributes !== null) {
-                allDone = true;
-                for (const [attrId, attr] of Object.entries(attributes)) {
-                    if (typeof attr.value === "undefined") {
-                        allDone = false;
-                        break;
-                    }
-                }
-                if (allDone)
-                    changeClass("idServClust"+sEp+"-"+sClustId+"RB2", "btn-warning", "btn-success");
-            }
         } else if (res.type == "simpleDesc") {
             // 'src' => 'parser',
             // 'type' => 'simpleDesc',
@@ -1588,7 +1522,7 @@ console.log("missing value for "+attrId);
                 var newRow = cliClustTable.insertRow(-1);
                 var newCell = newRow.insertCell(0);
                 newCell.innerHTML = clustId;
-                newCell.innerHTML += '<a class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'01\')"><i class="fas fa-sync"></i></a>';
+                newCell.innerHTML += '<a id="idCliClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'01\')"><i class="fas fa-sync"></i></a>';
                 requestInfos('attribList', sEp, clustId, '01');
             });
         } else if (res.type == "attributeDiscovery") {
@@ -1663,7 +1597,98 @@ console.log("missing value for "+attrId);
                 if (sDir && (attrIdx == sAttrCount - 1)) // Server attributes only
                     newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
             }
-            changeClass("idServClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
+            if (sDir)
+                changeClass("idServClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
+            else
+                changeClass("idCliClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
+        } else if (res.type == "attributeReport") {
+            // 'src' => 'parser',
+            // 'type' => 'attributeReport', // 8100 or 8102
+            // 'net' => $dest,
+            // 'addr' => $SrcAddr,
+            // 'ep' => $EPoint,
+            // 'clustId' => $ClusterId,
+            // 'attrId' => $AttributId,
+            // 'status' => "00", "86"
+            // 'value' => $data
+            sEp = res.ep;
+            sClustId = res.clustId;
+            sAttrId = res.attrId;
+            sStatus = res.status;
+            sValue = res.value;
+
+            // Updating internal infos
+            if (sStatus == "00") {
+                discovery = eq.discovery;
+                if (typeof discovery.endPoints === "undefined")
+                    discovery.endPoints = new Object();
+                if (typeof discovery.endPoints[sEp] === "undefined")
+                    discovery.endPoints[sEp] = new Object();
+                ep = discovery.endPoints[sEp];
+                if (typeof ep.servClusters === "undefined")
+                    ep.servClusters = new Object();
+                if (typeof ep.servClusters[sClustId] === "undefined")
+                    ep.servClusters[sClustId] = new Object();
+                clust = ep.servClusters[sClustId];
+                if (typeof clust.attributes === "undefined")
+                    clust.attributes = new Object();
+                attributes = clust.attributes;
+                if (typeof attributes[sAttrId] === 'undefined')
+                    attr = new Object();
+                else
+                    attr = attributes[sAttrId];
+                attr['value'] = sValue;
+                attributes[sAttrId] = attr;
+                ep.servClusters[sClustId]['attributes'] = attributes;
+
+                /* Checking Cluster-000/PowerSource */
+                if ((sClustId == "0000") && (sAttrId == "0007")) {
+                    if (sValue == "03")
+                        discovery.powerSource = "battery";
+                    else
+                        discovery.powerSource = "mains";
+                }
+            } else
+                attributes = null;
+
+            // Updating display
+            field = null;
+            if (sClustId == "0000") {
+                if (sAttrId == "0004") {
+                    field = document.getElementById("idZbManuf"+sEp);
+                    idRB = "idZbManuf"+sEp+"RB"; // Refresh button
+                } else if (sAttrId == "0005") {
+                    field = document.getElementById("idZbModel"+sEp);
+                    idRB = "idZbModel"+sEp+"RB"; // Refresh button
+                } else if (sAttrId == "0007") {
+                    field = document.getElementById("idZbPowerSource"+sEp);
+                    idRB = "idZbPowerSource"+sEp+"RB"; // Refresh button
+                    sValue = discovery.powerSource;
+                } else if (sAttrId == "0010") {
+                    field = document.getElementById("idZbLocation"+sEp);
+                    idRB = "idZbLocation"+sEp+"RB"; // Refresh button
+                }
+            }
+            if (field !== null) {
+                if (res.status != "00")
+                    field.value = "-- Non supporté --";
+                else
+                    field.value = sValue;
+                changeClass(idRB, "btn-warning", "btn-success");
+            }
+
+            // If all attributes values are known, change button class
+            if (attributes !== null) {
+                allDone = true;
+                for (const [attrId, attr] of Object.entries(attributes)) {
+                    if (typeof attr.value === "undefined") {
+                        allDone = false;
+                        break;
+                    }
+                }
+                if (allDone)
+                    changeClass("idServClust"+sEp+"-"+sClustId+"RB2", "btn-warning", "btn-success");
+            }
         } else if (res.type == "deviceAnnounce") {
             // 'src' => 'parser',
             // 'type' => 'deviceAnnounce',

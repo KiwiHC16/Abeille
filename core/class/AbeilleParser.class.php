@@ -813,11 +813,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         // }
 
         /* Convert hex string to proper data type.
-           'hexString' = input hexa string
+           'hexString' = input data (hexa string format)
            'reorder' = true if input is raw string, else false
            'dataSize' is size of value in Bytes
            'hexValue' is the extracted & reordered hex string value
-           Returns value according to type. */
+           Returns value according to type or false if error. */
         function decodeDataType($hexString, $dataType, $reorder, &$dataSize, &$hexValue) {
             // Compute value size according to data type
             switch ($dataType) {
@@ -829,35 +829,41 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             case "29": // Int16
                 $dataSize = 2;
                 break;
+            case "0A": // Discrete: 24-bit data
             case "22": // Uint24
             case "2A": // Int24
                 $dataSize = 3;
                 break;
-            case "23":  // Uint32
+            case "23": // Uint32
             case "2B": // Int32
                 $dataSize = 4;
                 break;
-            case "24":  // Uint40
+            case "24": // Uint40
             case "2C": // Int40
                 $dataSize = 5;
                 break;
-            case "25":  // Uint48
+            case "25": // Uint48
             case "2D": // Int48
                 $dataSize = 6;
                 break;
-            case "26":  // Uint56
+            case "26": // Uint56
             case "2E": // Int56
                 $dataSize = 7;
                 break;
-            case "27":  // Uint64
+            case "27": // Uint64
             case "2F": // Int64
                 $dataSize = 8;
                 break;
             default:
-                parserLog('debug', "  decodeDataType(): Unsupported type ".$dataType);
-                $dataSize = 0;
-                $hexValue = '';
-                return '';
+                parserLog('debug', "  decodeDataType() ERROR: Unsupported type ".$dataType);
+                return false;
+            }
+
+            // Checking size
+            $l = strlen($hexString);
+            if ($l < (2 * $dataSize)) {
+                parserLog('debug', "  decodeDataType() ERROR: Data too short (malformed packet ?)");
+                return false;
             }
 
             // Reordering raw bytes
@@ -904,8 +910,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $value -= 0x1000000;
                 break;
             default:
-                parserLog('debug', "  decodeDataType(): Unsupported type ".$dataType);
-                return '';
+                parserLog('debug', "  decodeDataType() ERROR: Unsupported type ".$dataType);
+                return false;
             }
             return $value;
         }
@@ -1320,13 +1326,19 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
         }
 
-        /* Called from decode8002() to decode a "Read Attribute Status Record" */
+        /* Called from decode8002() to decode a "Read Attribute Status Record"
+           Returns: false if error */
         function decode8002_ReadAttrStatusRecord($hexString, &$size) {
             /* Attributes status record format:
                 Attr id = 2B
                 Status = 1B
                 Attr data type = 1B
                 Attr = <according to data type> */
+            $l = strlen($hexString);
+            if ($l < 6) {
+                parserLog('debug', "  decode8002_ReadAttrStatusRecord() ERROR: Unexpected record size ".$l);
+                return false;
+            }
             $attr = array(
                 'id' => substr($hexString, 2, 2).substr($hexString, 0, 2),
                 'status' => substr($hexString, 4, 2),
@@ -1337,7 +1349,36 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             if ($attr['status'] != '00')
                 return;
             $attr['dataType'] = substr($hexString, 6, 2);
+            $hexString = substr($hexString, 8);
             $attr['value'] = $this->decodeDataType($hexString, $attr['dataType'], true, $dataSize, $hexValue);
+            if ($attr['value'] === false)
+                return false;
+            $size = 6 + 2 + (2 * $dataSize);
+            return $attr;
+        }
+
+        /* Called from decode8002() to decode a "Report attribute"
+           Returns: false if error */
+        function decode8002_ReportAttribute($hexString, &$size) {
+            /* Attributes status record format:
+                Attr id = 2B
+                Attr data type = 1B
+                Attr = <according to data type> */
+            $l = strlen($hexString);
+            if ($l < 8) { // 4 + 2 + 2 at least
+                parserLog('debug', "  decode8002_ReportAttribute() ERROR: Unexpected record size ".$l);
+                return false;
+            }
+            $attr = array(
+                'id' => substr($hexString, 2, 2).substr($hexString, 0, 2),
+                'dataType' => substr($hexString, 4, 2),
+                'value' => null
+            );
+            $hexString = substr($hexString, 6);
+            $attr['value'] = $this->decodeDataType($hexString, $attr['dataType'], true, $dataSize, $hexValue);
+            if ($attr['value'] === false)
+                return false;
+            $size = 6 + (2 * $dataSize);
             return $attr;
         }
 
@@ -1525,7 +1566,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             //  Cluster 0005 Scene (exemple: Boutons lateraux de la telecommande -)
-            if (($profile == "0104") && ($cluster == "0005")) {
+            if ($cluster == "0005") {
 
                 // Tcharp38: WARNING: There is probably something wrong there.
                 // There are cases where 0005 message is neither supported by this part nor by 8100_8102 decode.
@@ -1772,7 +1813,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs
             // Tcharp38: What is cmd 'FD' ??
             $cmd = substr($payload,30, 2);
-            if (($profile == "0104") && ($cluster == "0006") && ($cmd == "FD")) {
+            if (($cluster == "0006") && ($cmd == "FD")) {
 
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
@@ -1792,7 +1833,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             // Tcharp38: What is cmd 'FD' ??
-            if (($profile == "0104") && ($cluster == "0008") && ($cmd == "FD")) {
+            if (($cluster == "0008") && ($cmd == "FD")) {
 
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
@@ -1811,7 +1852,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 return;
             }
 
-            if (($profile == "0104") && ($cluster == "000A")) {
+            if ($cluster == "000A") {
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
                 $cmd                    = substr($payload,30, 2);
@@ -1834,7 +1875,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
             }
 
-            if (($profile == "0104") && ($cluster == "0204")) {
+            if ($cluster == "0204") {
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
                 $cmd                    = substr($payload,30, 2);
@@ -1866,7 +1907,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             // Remontée puissance prise TS0121 Issue: #1288
-            if (($profile == "0104") && ($cluster == "0702")) {
+            if ($cluster == "0702") {
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
                 $cmd                    = substr($payload,30, 2); if ( $cmd == "0A" ) $cmd = "0A - report attribut";
@@ -1945,8 +1986,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         }
 
                         parserLog('debug', '  '.$attrName
-                            .', attrib='.$attribute
-                            .', dataType='.$dataType
+                            .', attrId='.$attribute
+                            .', attrType='.$dataType
                             .', value='.$hexValue.' => '.$realValue,
                             "8002"
                         );
@@ -1992,7 +2033,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             // Remontée etat relai module Legrand 20AX
             // 80020019F4000104 FC41 010102D2B9020000180B0A000030000100100084
-            if (($profile == "0104") && ($cluster == "FC41")) {
+            if ($cluster == "FC41") {
 
                 $frameCtrlField         = substr($payload,26, 2);
                 $SQN                    = substr($payload,28, 2);
@@ -2037,7 +2078,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             // Prise Xiaomi
-            if (($profile == "0104") && ($cluster == "FCC0")) {
+            if ($cluster == "FCC0") {
                 $FCF = substr($payload,26, 2);
                 if ( $FCF=='1C' ) {
                     $Manufacturer   = substr($payload,30, 2).substr($payload,28, 2);
@@ -2078,17 +2119,22 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             /* Decoding ZCL header */
             $FCF = substr($payload, 26, 2); // Frame Control Field
             $manufSpecific = hexdec($FCF) & (1 << 2);
+            $dir = (hexdec($FCF) >> 3) & 1;
+            if ($dir)
+                $fcfTxt = "Serv->Cli";
+            else
+                $fcfTxt = "Cli->Serv";
             if ($manufSpecific) {
                 /* 16bits for manuf specific code */
                 $SQN = substr($payload, 32, 2); // Sequence Number
                 $Cmd = substr($payload, 34, 2); // Command
-                $msg = substr($payload, 34);
+                $msg = substr($payload, 36);
             } else {
                 $SQN = substr($payload, 28, 2); // Sequence Number
                 $Cmd = substr($payload, 30, 2); // Command
                 $msg = substr($payload, 32);
             }
-            parserLog('debug', "  FCF=".$FCF.", SQN=".$SQN.", cmd=".$Cmd.'/'.zgGetZCLCommand($Cmd));
+            parserLog('debug', "  FCF=".$FCF."/".$fcfTxt.", SQN=".$SQN.", cmd=".$Cmd.'/'.zgGetZCLCommand($Cmd));
 
             /* 'Cmd' reminder
                 0x01 Read Attributes Response
@@ -2102,7 +2148,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 0x16 Discover Attributes Extended Response
             */
             if ($Cmd == "01") { // Read Attributes Response
-                parserLog('debug', "  Handled by decode8100_8102");
+                // Some clusters are directly handled by 8100/8102 decode
+                $acceptedCmd01 = ['0020']; // Clusters handled here
+                if (!in_array($cluster, $acceptedCmd01)) {
+                    parserLog('debug', "  Handled by decode8100_8102");
+                    return;
+                }
 
                 /* Command frame format:
                     ZCL header
@@ -2115,16 +2166,45 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     Attr data type = 1B
                     Attr = <according to data type> */
 
-                // $l = strlen($msg);
-                // for ($i = 0; $i < $l;) {
-                //     $size = 0;
-                //     $attr = $this->decode8002_ReadAttrStatusRecord($msg, $size);
-                //     $attributes[] = $attr;
-                //     $i += $size;
-                // }
+                $l = strlen($msg);
+                $attributes = [];
+                for ($i = 0; $i < $l;) {
+                    $size = 0;
+                    $attr = $this->decode8002_ReadAttrStatusRecord(substr($msg, $i), $size);
+                    if ($attr === false)
+                        return;
+                    parserLog('debug', '  attrId='.$attr['id']
+                        .', status='.$attr['status']
+                        .', attrType='.$attr['dataType']
+                        .', value='.$attr['value'],
+                        "8002"
+                    );
+                    $attributes[] = $attr;
+                    $i += $size;
+                }
+
+                // TODO: Report to Abeille
+
+                /* Send to client if required (ex: EQ page opened) */
+                // TODO: For optimization purposes, create grouped message
+                $toCli = array(
+                    'src' => 'parser',
+                    'type' => 'attributeReport',
+                    'net' => $dest,
+                    'addr' => $srcAddress,
+                    'ep' => $srcEndPoint,
+                    'clustId' => $cluster,
+                );
+                foreach($attributes as $attr) {
+                    $toCli['attrId'] = $attr['id'];
+                    $toCli['status'] = $attr['status'];
+                    $toCli['value'] = $attr['value'];
+                    $this->msgToClient($toCli);
+                }
+
                 return;
             } else if ($Cmd == "04") { // Write Attributes Response
-                parserLog('debug', "  msg=".$msg);
+                // parserLog('debug', "  msg=".$msg);
             } else if ($Cmd == "07") { // Configure Reporting Response
                 parserLog('debug', "  Handled by decode8120");
                 return;
@@ -2145,7 +2225,31 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
                 return;
             } else if ($Cmd == "0A") { // Report attributes
-                parserLog('debug', "  Handled by decode8100_8102");
+                // Some clusters are directly handled by 8100/8102 decode
+                $acceptedCmd0A = ['0300']; // Clusters handled here
+                if (!in_array($cluster, $acceptedCmd0A)) {
+                    parserLog('debug', "  Handled by decode8100_8102");
+                    return;
+                }
+
+                $l = strlen($msg);
+                $attributes = [];
+                for ($i = 0; $i < $l;) {
+                    $attr = $this->decode8002_ReportAttribute(substr($msg, $i), $size);
+                    if ($attr === false) {
+                        parserLog("debug", "  Rejected msg: ".substr($msg, $i));
+                        return;
+                    }
+
+                    parserLog('debug', '  attrId='.$attr['id']
+                        .', attrType='.$attr['dataType']
+                        .', value='.$attr['value'],
+                        "8002"
+                    );
+                    $attributes[] = $attr;
+                    $i += $size;
+                }
+
                 return;
             } else if ($Cmd == "0D") { // Discover Attributes Response
                 $completed = substr($msg, 2);
@@ -3183,7 +3287,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <Group id :        uint16_t> (added only from 3.0f version)
             // <Src Addr:         uint16_t> (added only from 3.0f version)
 
-            parserLog('debug', $dest.', Type=8060/Add a group response (ignoré)'
+            parserLog('debug', $dest.', Type=8060/Add a group response'
                             .', SQN='           .substr($payload, 0, 2)
                             .', EndPoint='      .substr($payload, 2, 2)
                             .', ClusterId='     .substr($payload, 4, 4)
@@ -3218,6 +3322,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                .', Capacity='.$capa
                .', GroupCount='.$groupCount
                .', Addr='.$SrcAddr;
+
             parserLog('debug', $dest.', Type='.$decoded);
 
             $groups = "";
@@ -3247,7 +3352,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <Group id: uint16_t>         -> 4
             // <Src Addr: uint16_t> (added only from 3.0f version)
 
-            parserLog('debug', $dest.', Type=8063/Remove a group response (ignoré)'
+            parserLog('debug', $dest.', Type=8063/Remove a group response'
                             .', SQN='          .substr($payload, 0, 2)
                             .', EndPoint='     .substr($payload, 2, 2)
                             .', clusterId='    .substr($payload, 4, 4)
@@ -3278,11 +3383,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         // Remote won't tell which button was released left or right, but it will be same button that was last hold.
         // Remote is unable to send other button commands at least when left or right is hold down.
 
-        // function decode8084($dest, $payload, $lqi) {
-            // J ai eu un crash car le soft cherchait cette fonction mais elle n'est pas documentée...
-            // parserLog('debug', $dest.', Type=8084/? (ignoré)');
-        // }
-
         function decode8085($dest, $payload, $lqi)
         {
             // <Sequence number: uin8_t>    -> 2
@@ -3291,52 +3391,46 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <address_mode: uint8_t>      -> 2
             // <addr: uint16_t>             -> 4
             // <cmd: uint8>                 -> 2
+            //  2: 'click', 1: 'hold', 3: 'release'
 
-            // 2: 'click', 1: 'hold', 3: 'release'
+            $srcAddr = substr($payload, 10, 4);
+            $cmd = substr($payload, 14, 2);
 
             parserLog('debug', $dest.', Type=8085/Remote button pressed (ClickHoldRelease) a group response)'
-                            .', SQN='           .substr($payload, 0, 2)
-                            .', EndPoint='      .substr($payload, 2, 2)
-                            .', clusterId='     .substr($payload, 4, 4)
-                            .', address_mode='  .substr($payload, 8, 2)
-                            .', SrcAddr='   .substr($payload,10, 4)
-                            .', Cmd='           .substr($payload,14, 2) );
+                            .', SQN='.substr($payload, 0, 2)
+                            .', EP='.substr($payload, 2, 2)
+                            .', ClustId='.substr($payload, 4, 4)
+                            .', AddrMode='.substr($payload, 8, 2)
+                            .', SrcAddr='.$srcAddr
+                            .', Cmd='.$cmd);
 
-            $source         = substr($payload,10, 4);
-            $ClusterId      = "Up";
-            $AttributId     = "Down";
-            $data           = substr($payload,14, 2);
+            $this->whoTalked[] = $dest.'/'.$srcAddr;
 
-            $this->whoTalked[] = $dest.'/'.$source;
-
-            $this->msgToAbeille($dest.'/'.$source, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest.'/'.$srcAddr, "Up", "Down", $cmd);
         }
 
         function decode8095($dest, $payload, $lqi)
         {
-            // <Sequence number: uin8_t>    -> 2
-            // <endpoint: uint8_t>          -> 2
-            // <Cluster id: uint16_t>       -> 4
-            // <address_mode: uint8_t>      -> 2
-            // <SrcAddr: uint16_t>          -> 4
-            // <status: uint8>              -> 2
+            // <Sequence number: uin8_t>
+            // <endpoint: uint8_t>
+            // <Cluster id: uint16_t>
+            // <address_mode: uint8_t>
+            // <SrcAddr: uint16_t>
+            // <status: uint8>
+            $srcAddr = substr($payload, 10, 4);
+            $status = substr($payload, 14, 2);
 
             parserLog('debug', $dest.', Type=8095/Remote button pressed (ONOFF_UPDATE) a group response)'
-                            .', SQN='          .substr($payload, 0, 2)
-                            .', EndPoint='     .substr($payload, 2, 2)
-                            .', ClusterId='    .substr($payload, 4, 4)
-                            .', Addr Mode='    .substr($payload, 8, 2)
-                            .', SrcAddr='      .substr($payload,10, 4)
-                            .', Status='       .substr($payload,14, 2) );
+                .', SQN='.substr($payload, 0, 2)
+                .', EP='.substr($payload, 2, 2)
+                .', clustId='.substr($payload, 4, 4)
+                .', addrMode='.substr($payload, 8, 2)
+                .', srcAddr='.$srcAddr
+                .', status='.$status);
 
-            $source         = substr($payload,10, 4);
-            $ClusterId      = "Click";
-            $AttributId     = "Middle";
-            $data           = substr($payload,14, 2);
+            $this->whoTalked[] = $dest.'/'.$srcAddr;
 
-            $this->whoTalked[] = $dest.'/'.$source;
-
-            $this->msgToAbeille($dest.'/'.$source, $ClusterId, $AttributId, $data);
+            $this->msgToAbeille($dest.'/'.$srcAddr, "Click","Middle", $status);
         }
 
         //----------------------------------------------------------------------------------------------------------------
@@ -3363,7 +3457,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <extensions data: data each element is uint8_t>      -> 2
             // <Src Addr: uint16_t> (added only from 3.0f version)
 
-            parserLog('debug', $dest.', Type=80A0/Scene View (ignoré)'
+            parserLog('debug', $dest.', Type=80A0/Scene View'
                             .', SQN='                           .substr($payload, 0, 2)
                             .', EndPoint='                      .substr($payload, 2, 2)
                             .', ClusterId='                     .substr($payload, 4, 4)
@@ -3391,7 +3485,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <group ID: uint16_t>         -> 4
             // <Src Addr: uint16_t> (added only from 3.0f version)
 
-            parserLog('debug', $dest.', Type=80A3/Remove All Scene (ignoré)'
+            parserLog('debug', $dest.', Type=80A3/Remove All Scene'
                             .', SQN='          .substr($payload, 0, 2)
                             .', EndPoint='     .substr($payload, 2, 2)
                             .', ClusterId='    .substr($payload, 4, 4)
@@ -3410,7 +3504,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <scene ID: uint8_t>          -> 2
             // <Src Addr: uint16_t> (added only from 3.0f version)
 
-            parserLog('debug', $dest.', Type=80A4/Store Scene Response (ignoré)'
+            parserLog('debug', $dest.', Type=80A4/Store Scene Response'
                             .', SQN='          .substr($payload, 0, 2)
                             .', EndPoint='     .substr($payload, 2, 2)
                             .', ClusterId='    .substr($payload, 4, 4)
@@ -3434,7 +3528,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 // <group ID: uint16_t>                     -> 4
                 // sceneId: uint8_t                       ->2
 
-                parserLog('debug', $dest.', Type=80A6/Scene Membership (Processed->$this->decoded but not sent to MQTT)'
+                parserLog('debug', $dest.', Type=80A6/Scene Membership'
                                 .', SQN='          .substr($payload, 0, 2)      // 1
                                 .', EndPoint='     .substr($payload, 2, 2)      // 1
                                 .', ClusterId='    .substr($payload, 4, 4)      // 1
@@ -3465,7 +3559,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $source     = substr($payload,18+$sceneCount*2, 4);
 
                 if ($status!=0) {
-                    parserLog('debug', $dest.', Type=80A6/Scene Membership (Processed->$this->decoded but not sent to MQTT) => Status NOT null'
+                    parserLog('debug', $dest.', Type=80A6/Scene Membership => Status != 0'
                                     .', SQN='          .substr($payload, 0, 2)      // 1
                                     .', EndPoint='     .substr($payload, 2, 2)      // 1
                                     .', source='       .$source
@@ -3492,7 +3586,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $AttributId = "Membership";
                 if ( $sceneId == "" ) { $data = $groupID."-none"; } else { $data = $groupID.$sceneId; }
 
-                parserLog('debug', $dest.', Type=80A6/Scene Membership (Processed->$this->decoded but not sent to MQTT)'
+                parserLog('debug', $dest.', Type=80A6/Scene Membership'
                                 .', SQN='          .$seqNumber
                                 .', EndPoint='     .$endpoint
                                 .', ClusterId='    .$clusterId

@@ -1292,7 +1292,7 @@ console.log(jeq);
     /* Request device info
      */
     function requestInfos(infoType, epId = "01", clustId = "0000", option = "") {
-        console.log("requestInfos("+infoType+")");
+        console.log("requestInfos("+infoType+", ep="+epId+")");
 
         // 'Cmd'.$device->getLogicalId().'/readAttribute', 'ep=01&clustId=0005&attrId=0000'
         logicalId = "Abeille"+js_zgNb+"_"+js_eqAddr;
@@ -1404,28 +1404,28 @@ console.log("missing value for "+attrId);
                 h += '<div class="row">';
                 h += '<label class="col-lg-2 control-label" for="fname">Fabricant:</label>';
                 h += '<div class="col-lg-10">';
-                h += '<a id="idZbManuf'+ep+'RB" class="btn btn-warning" title="Raffraichi le nom du fabricant" onclick="requestInfos(\'manufacturer\')"><i class="fas fa-sync"></i></a>';
+                h += '<a id="idZbManuf'+ep+'RB" class="btn btn-warning" title="Raffraichi le nom du fabricant" onclick="requestInfos(\'manufacturer\', \''+ep+'\')"><i class="fas fa-sync"></i></a>';
                 h += '<input type="text" id="idZbManuf'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
                 h += '<div class="row">';
                 h += '<label class="col-lg-2 control-label" for="fname">Modèle:</label>';
                 h += '<div class="col-lg-10">';
-                h += '<a id="idZbModel'+ep+'RB" class="btn btn-warning" title="Raffraichi le nom du modèle" onclick="requestInfos(\'modelId\')"><i class="fas fa-sync"></i></a>';
+                h += '<a id="idZbModel'+ep+'RB" class="btn btn-warning" title="Raffraichi le nom du modèle" onclick="requestInfos(\'modelId\', \''+ep+'\')"><i class="fas fa-sync"></i></a>';
                 h += '<input type="text" id="idZbModel'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
                 h += '<div class="row">';
                 h += '<label class="col-lg-2 control-label" for="fname">Localisation:</label>';
                 h += '<div class="col-lg-10">';
-                h += '<a id="idZbLocation'+ep+'RB" class="btn btn-warning" title="Raffraichi la localisation" onclick="requestInfos(\'location\')"><i class="fas fa-sync"></i></a>';
+                h += '<a id="idZbLocation'+ep+'RB" class="btn btn-warning" title="Raffraichi la localisation" onclick="requestInfos(\'location\', \''+ep+'\')"><i class="fas fa-sync"></i></a>';
                 h += '<input type="text" id="idZbLocation'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
                 h += '<div class="row">';
                 h += '<label class="col-lg-2 control-label" for="fname">Source d\'alim:</label>';
                 h += '<div class="col-lg-10">';
-                h += '<a id="idZbPowerSource'+ep+'RB" class="btn btn-warning" title="Raffraichi la source d\'alimentation" onclick="requestInfos(\'powerSource\')"><i class="fas fa-sync"></i></a>';
+                h += '<a id="idZbPowerSource'+ep+'RB" class="btn btn-warning" title="Raffraichi la source d\'alimentation" onclick="requestInfos(\'powerSource\', \''+ep+'\')"><i class="fas fa-sync"></i></a>';
                 h += '<input type="text" id="idZbPowerSource'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
@@ -1539,12 +1539,12 @@ console.log("missing value for "+attrId);
             sClustId = res.clustId;
             sAttributes = res.attributes;
             let sAttrCount = sAttributes.length;
-            console.log("attributeDiscovery: clust="+sClustId+", nb of attr="+sAttrCount)
+            console.log("attributeDiscovery: clustId="+sClustId+", attrCount="+sAttrCount)
 
-            if (sAttrCount == 0) {
-                openReturnChannel();
-                return;
-            }
+            // if (sAttrCount == 0) {
+            //     openReturnChannel();
+            //     return;
+            // }
 
             /* Updating internal datas */
             ep = eq.discovery.endPoints[sEp];

@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-210903-BETA-1
+210905-STABLE-1
 ----------
 
 - Améliorations assistant EQ.

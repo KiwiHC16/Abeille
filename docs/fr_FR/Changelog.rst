@@ -1,39 +1,22 @@
 ChangeLog
 =========
 
-210903-BETA-1
+- Correction mauvais message: "ATTENTION: config locale utilisée ...".
+- Interne: Améliorations parser.
+
+210905-STABLE-1
 ----------
 
 - Améliorations assistant EQ.
 - Interne: Séquence de démarrage revisitée pour #2093.
-
-210902-BETA-1
-----------
-
 - Améliorations assistant EQ.
 - Interne: SerialRead, mise-à-jour pour "permission denied".
-
-210831-BETA-1
-----------
-
 - Frient SPLZB-131: Support préliminaire.
 - Legrand Cable outlet: Ajout support préliminaire (#850). Manque controle fil pilote.
-
-210827-BETA-1
-----------
-
 - All JSON: 'configuration:battery_type' => 'configuration:batteryType'.
 - Assistant: Ajout doc préliminaire pour découverte Zigbee.
 - Interne: Séquence de démarrage revisitée pour #2093.
-
-210826-BETA-1
-----------
-
 - Page config/options avancées: possibilité de bloquer requetes LQI journalieres.
-
-210825-BETA-2
-----------
-
 - Assistant de découverte: améliorations.
 - Interne: Collecte LQI: Mise-à-jour mineure.
 - Interne: Parser: Amélioration robustesse.

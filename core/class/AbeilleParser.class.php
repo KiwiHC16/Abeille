@@ -355,6 +355,7 @@
 
             if ($jsonName == '') {
                 $eq['jsonId'] = "defaultUnknown";
+                $eq['jsonLocation'] = "Abeille";
                 parserLog('debug', "  EQ is UNsupported. 'defaultUnknown' config will be used");
                 return false;
             }

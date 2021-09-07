@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Ajout FW 3.1e Optimized PDM + 3.20 legacy + 3.20 Optimized PDM
+- Osram CLA60 TW: Correction end point par défaut (#2117).
 210905-BETA-1
 ----------
 

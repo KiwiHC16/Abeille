@@ -265,7 +265,7 @@
                     <?php
                         echo '<div id="idUpdFw'.$i.'" class="col-lg-3">';
                             echo 'Mise-à-jour FW :';
-                            echo '<select id="idFW'.$i.'" style="width:55px" title="{{Firmwares disponibles}}">';
+                            echo '<select id="idFW'.$i.'" style="width:100px" title="{{Firmwares disponibles}}">';
                             foreach (ls(__DIR__.'/../resources/fw_zigate', '*.bin') as $fwName) {
                                 $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
                                 if (substr($fwVers, -4) == ".dev") {
@@ -275,7 +275,7 @@
                                     $fwVers = substr($fwVers, 0, -4); // Removing ".dev" suffix
                                 }
                                 $fwVers = substr($fwVers, 8); // Removing "ZiGate_v" prefix
-                                if ($fwVers == "3.1d")
+                                if ($fwVers == "3.1e-legacy")
                                     echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
                                 else
                                     echo '<option value='.$fwName.'>'.$fwVers.'</option>';

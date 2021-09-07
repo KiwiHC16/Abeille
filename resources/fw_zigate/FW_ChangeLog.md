@@ -1,7 +1,12 @@
 # Zigate firmware change log
 
 Dernieres infos: https://zigate.fr/category/informations/
+Releases: https://github.com/fairecasoimeme/ZiGate/releases
 
+## Version 3.20
+
+* Fix IASZONE to be more flexible
+* Fix Wiser endpoint
 
 ## Version 3.1e
 

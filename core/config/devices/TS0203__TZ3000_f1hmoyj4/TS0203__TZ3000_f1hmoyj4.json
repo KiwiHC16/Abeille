@@ -1,0 +1,30 @@
+{
+    "TS0203__TZ3000_f1hmoyj4": {
+        "manufacturer": "Zemismart",
+        "zbManufacturer": "_TZ3000_f1hmoyj4",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "batteryType": "1x3V CR2032",
+            "icon": "Zemismart-DoorSensor"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Zemismart Tuya door sensor",
+        "commands": {
+            "BindToZigate-Power": {
+                "use": "bindToZigate",
+                "params": "CLUSTID=0001",
+                "execAtCreation": "Yes"
+            },
+            "Set-BatteryReporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+                "execAtCreation": "Yes"
+            },
+
+            "include0500-1": "etatDoorAlarme"
+        }
+    }
+}

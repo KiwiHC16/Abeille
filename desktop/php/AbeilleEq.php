@@ -375,6 +375,29 @@
         };
     }
 
+    /* Remove given local JSON file */
+    function removeLocalJSON(jsonId) {
+        console.log("removeLocalJSON("+jsonId+")");
+
+        path = "core/config/devices_local/"+jsonId+"/"+jsonId+".json";
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',
+            data: {
+                action: 'delFile',
+                file: path
+            },
+            dataType: 'json',
+            global: false,
+            success: function (json_res) {
+                var msg = "{{Le fichier de configuration local a été supprimé.<br>";
+                msg += "L'équipement ayant été inclu avec ce fichier vous devez peut-être refaire une inclusion ou recharger le JSON & reconfigurer pour être à jour.}}";
+                bootbox.confirm(msg, function (result) {
+                });
+            }
+        });
+    }
+
     /* Reconfigure device by sending 'execAtCreation' commands.
        WARNING: If battery powered, device must be wake up. */
     function reconfigure(eqId) {

@@ -39,7 +39,6 @@ Exemple de commande 'action'
         "name": "getEtat",
         "type": "action",
         "subType": "other",
-        "invertBinary": "0",
         "configuration": {
           "topic": "readAttribute",
           "request": "ep=#EP#&clustId=0006&attrId=0000",
@@ -88,7 +87,7 @@ Exemple de commande 'action'
 
 * configuration:
 
-  * topic: OBLIGATOIRE si commmande 'action'
+  * topic: OBLIGATOIRE SI commmande 'action'
     Permet de définir la commande interne Abeille
 
   * request: optionnel
@@ -101,10 +100,10 @@ Exemple de commande 'action'
 
   * repeatEventManagement: ??
 
-  * execAtCreation:
+  * execAtCreation: optionnel
     Précise que cette commande doit être exécutée lors de l'appairage de l'équipement.
     Ne l'est pas par défaut.
     Ex: 'execAtCreation': 'Yes'
 
-  * execAtCreationDelay
+  * execAtCreationDelay: optionnel
     Delai d'execution en secondes apres l'annonce de la commande ayant le flag 'execAtCreation'.

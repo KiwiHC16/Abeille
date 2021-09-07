@@ -1,18 +1,16 @@
 {
-    "TS0203__TZ3000_f1hmoyj4": {
+    "TS0042__TYZB02_keyjhapk": {
         "manufacturer": "Zemismart",
-        "zbManufacturer": "_TZ3000_f1hmoyj4",
-        "model": "ZXZDS",
+        "zbManufacturer": "_TYZB02_keyjhapk",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "batteryType": "1x3V CR2032",
-            "icon": "Zemismart-DoorSensor"
+            "icon": "TS0042"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Zemismart door & window sensor",
+        "type": "Zemismart Remote 2 boutons sur pile",
         "commands": {
             "BindToZigate-Power": {
                 "use": "bindToZigate",
@@ -25,7 +23,9 @@
                 "execAtCreation": "Yes"
             },
 
-            "include0500-1": "etatDoorAlarme"
-        }
+            "include5 3": "etatInter0",
+            "include5 3 2": "etatInter1"
+        },
+        "comment": "Zigate in hybrid mode https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1550"
     }
 }

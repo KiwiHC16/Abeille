@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- Zemismart TS0042 2 buttons (#1272).
+- Interne: Parser: Modificaiton support custom single/double/long click pour Tuya.
+- Tuya 4 buttons scene switch: Mise-à-jour modèle (#2122).
+
 210907-BETA-1
 ----------
 

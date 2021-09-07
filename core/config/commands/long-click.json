@@ -1,0 +1,12 @@
+{
+    "long-click": {
+        "isVisible": 0,
+        "name": "Long-click",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "badge",
+        "type": "info",
+        "logicalId": "#EP#-long-click"
+    }
+}

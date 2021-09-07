@@ -59,7 +59,7 @@ Exemple: BASICZBR3.json
 
 * model: OBLIGATOIRE, ref/nom du modèle
 
-* zbManufacturer: identifiant zigbee du fabricant
+* zbManufacturer: optionnel, identifiant zigbee du fabricant
 
 * timeout: délai (en min) au dela duquel l'équipement est considéré "mort" si aucune nouvelle de lui
 
@@ -96,7 +96,7 @@ Exemple: BASICZBR3.json
     "Status": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },
     "ActivePower": { "use": "zb-0B04-ActivePower", "params": "ep=01", "isVisible": 1 },
 
-  Ancienne syntaxe OBSOLETE:
+  Pour info: Ancienne syntaxe OBSOLETE:
     Chaque include correspond à une commande de base existante dans 'core/config/commands'
     - "include1":"cmd1",
     - ...

@@ -31,6 +31,7 @@
     include_once __DIR__.'/../class/AbeilleTools.class.php';
     include_once __DIR__.'/AbeilleLog.php'; // Abeille log features
     include_once __DIR__.'/AbeilleZigateConst.php'; // Zigate constants
+    include_once __DIR__.'/AbeilleZigbeeConst.php'; // Zigbee constants
     include_once __DIR__.'/../class/AbeilleCmd.class.php';
     include_once __DIR__.'/../class/AbeilleParser.class.php';
     include_once __DIR__.'/../class/Abeille.class.php';

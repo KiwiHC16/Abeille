@@ -24,10 +24,14 @@
                 "execAtCreation": "Yes"
             },
 
-            "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1 },
-            "Status 2": { "use": "zb-0006-OnOff", "params": "ep=02", "isVisible": 1 },
-            "Status 3": { "use": "zb-0006-OnOff", "params": "ep=03", "isVisible": 1 },
-            "Status 4": { "use": "zb-0006-OnOff", "params": "ep=04", "isVisible": 1 }
+            "Single click 1": { "use": "single-click", "params": "ep=01", "isVisible": 1 },
+            "Single click 2": { "use": "single-click", "params": "ep=02", "isVisible": 1 },
+            "Single click 3": { "use": "single-click", "params": "ep=03", "isVisible": 1 },
+            "Single click 4": { "use": "single-click", "params": "ep=04", "isVisible": 1 },
+            "Double click 1": { "use": "double-click", "params": "ep=01", "isVisible": 0 },
+            "Double click 2": { "use": "double-click", "params": "ep=02", "isVisible": 0 },
+            "Double click 3": { "use": "double-click", "params": "ep=03", "isVisible": 0 },
+            "Double click 4": { "use": "double-click", "params": "ep=04", "isVisible": 0 }
         },
         "comment": ""
     }

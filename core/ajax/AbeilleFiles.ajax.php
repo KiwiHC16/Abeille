@@ -215,6 +215,30 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'zipFile' => $zipFile)));
         }
 
+        /* Remove given 'file' relative to Abeille plugin directory.
+           Returns: status=0 if ok, 1 =not found, -1=other error */
+        if (init('action') == 'delFile') {
+            $file = init('file');
+
+            $path = __DIR__."/../../".$file;
+            $status = 0;
+            $error = "";
+            // logDebug("action=delFile, file=".$file.", path=".$path);
+
+            if (!file_exists($path)) {
+                $status = 1;
+                $error = "Le fichier '".$file."' n'existe pas.";
+            }
+            if ($status == 0) {
+                if (unlink($path) == FALSE) {
+                    $status = -1;
+                    $error = "Impossible de détruire '".$file."'.";
+                }
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
         /* Remove given file from Jeedom temp directory.
            'file' is relative to Jeedom official temp dir.
            Returns: status=0 if ok, 1 =not found, -1=other error */

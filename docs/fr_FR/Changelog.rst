@@ -4,6 +4,8 @@ ChangeLog
 - Ajout FW 3.1e Optimized PDM + 3.20 legacy + 3.20 Optimized PDM
 - Osram CLA60 TW: Correction end point par défaut (#2117).
 - Tuya contact sensor TS0203: Ajout reporting batterie (#1270).
+- Tuya 4 buttons scene switch: Ajout support (#2122).
+
 210905-BETA-1
 ----------
 

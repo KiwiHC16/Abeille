@@ -1,18 +1,17 @@
 {
     "CLA60TWOSRAM": {
+        "manufacturer": "Osram",
         "timeout": "60",
         "configuration": {
-            "mainEP": "01",
+            "mainEP": "03",
             "poll": "1",
             "icon": "OSRAMClassicE27Dimmable"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "CLA60 TW OSRAM",
+        "type": "Osram CLA60 TW",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
             "include4": "etatLight",
             "include5": "levelLight",
             "include8": "On",
@@ -21,8 +20,6 @@
             "include11": "setLevel",
             "include19": "getEtat",
             "include20": "getLevel",
-            "include21": "getManufacturerName",
-            "include22": "getModelIdentifier",
             "include24": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",

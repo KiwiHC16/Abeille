@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210905-BETA-1"
+# VERSION="210907-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -136,6 +136,7 @@ e5fe732dad35b34459f0ab89552a1985 *core/config/commands/LegrandContactorAuto.json
 e45a72111e48ffd48dd484a8033984c9 *core/config/commands/LivoloSwitchTrick3.json
 20c8070f4369383160d2710e01f5f405 *core/config/commands/LivoloSwitchTrick4.json
 99c815895256064fbfc5eab5f2085e4b *core/config/commands/OBSOLETE/CurrentPrise.json
+655e5221906e41edd019637ec6947562 *core/config/commands/OBSOLETE/Power-Source.json
 98bb9abaa5b2ef2b53d04c919710615c *core/config/commands/OBSOLETE/SW.json
 b2f39d34a086a3cbef85e04dbc4546cb *core/config/commands/OBSOLETE/ZCLVersion.json
 27c65ff5272d20a1c94616f1d16dc474 *core/config/commands/OBSOLETE/conso2.json
@@ -144,6 +145,7 @@ a35b490d038bcb77eaa52414918b2e2c *core/config/commands/OBSOLETE/getSWBuild.json
 0a788c33ebc86264797d6f73611215bc *core/config/commands/OBSOLETE/present_value.json
 a63c7f3d49dea30868e9815c8bbdc96c *core/config/commands/OBSOLETE/puissance2.json
 c938eefcd4c59e5509917ed346b96184 *core/config/commands/OBSOLETE/setReport-EP01-0702-0000.json
+401b63d5c81d46d63262a8103c7a7d86 *core/config/commands/OBSOLETE/setReport.json
 188b843129d5c0a1c6122c2fa6a8129e *core/config/commands/OBSOLETE/setReportIlluminanceXiaomi.json
 d999bfd275004ff2903ef540d8ebc700 *core/config/commands/OBSOLETE/setReportOccupancyEP2.json
 8560bd164db8f22d18de3b8aed21f9e6 *core/config/commands/OBSOLETE/setReportPuissance.json
@@ -177,7 +179,6 @@ b394217acf9389bace4df91e91298489 *core/config/commands/OnEp02.json
 76181f6949d1e77f833165838c486406 *core/config/commands/OnEp06.json
 8257ff66c7e9d6c9ba1784fb1f62ce67 *core/config/commands/OnEp07.json
 9e06523ef9f3669643c5f2f5e451f0ab *core/config/commands/OnEp08.json
-655e5221906e41edd019637ec6947562 *core/config/commands/Power-Source.json
 6c97e2716ec8505377b789c74793df67 *core/config/commands/PuissanceCurrentPrise.json
 5321a96fdaf0396a49f4efa292225367 *core/config/commands/PuissanceLegrandPrise.json
 b3ea92afd772bd0ac522540a1ea366cd *core/config/commands/PuissanceVoltagePrise.json
@@ -273,7 +274,7 @@ d55f0ef98a25bb2abb04185b9c4f3353 *core/config/commands/etat.json
 b57c0f264820c8f20ec9acf2bc4cb817 *core/config/commands/etatCharge3.json
 b26d236e35616e846ad0898c10d23cf7 *core/config/commands/etatCharge6.json
 7c7c1e4e138172a4d42fa70ba232a0e4 *core/config/commands/etatDoor.json
-d8578466975d7d7624b817bf4f28b233 *core/config/commands/etatDoorAlarme.json
+f755fffb3debba45827a1644a4e2f629 *core/config/commands/etatDoorAlarme.json
 044f119b2fa533d4261a432051a6afc2 *core/config/commands/etatEp01in.json
 83af6842044bd72fdae9d1ec4c8b6cce *core/config/commands/etatEp01out.json
 e45501e3d9899e71c3fcdb3502c18686 *core/config/commands/etatEp02in.json
@@ -416,7 +417,6 @@ f83c856a18113707e5102404c73678b1 *core/config/commands/setReport-EP03-0006-0000.
 df2c30adfef65cd07f7fa30219dc1717 *core/config/commands/setReport-EP04-0006-0000.json
 d080d923ad0ebe178dc01b4ae7b7e3be *core/config/commands/setReport-EP05-0006-0000.json
 3cbd9ad912d6c7868df06e6834b59726 *core/config/commands/setReport-EP06-0006-0000.json
-401b63d5c81d46d63262a8103c7a7d86 *core/config/commands/setReport.json
 c31d6df432ae1612f794644c4ed1a21d *core/config/commands/setReportBatterie.json
 269ecbcc15bfe9b843961fa5e03893a1 *core/config/commands/setReportBatterieVolt.json
 2664460f4c5591e9a7c8997d6078186e *core/config/commands/setReportCurrent_Position_Lift_Percentage.json
@@ -535,7 +535,7 @@ e171aa668bd91c85b3b0935bff4d2fb8 *core/config/devices/7-digital-input/7-digital-
 9942681892f7a08f35db5f3e0d65009d *core/config/devices/BASICZBR3/BASICZBR3.json
 cd4d2b9255e64aef89c7ea65c3996d77 *core/config/devices/BSO/BSO.json
 8e59915ca149b42d0fc515d58796d69d *core/config/devices/CLA60RGBWOSRAM/CLA60RGBWOSRAM.json
-7cec73c3c9396d09b514bbc314675799 *core/config/devices/CLA60TWOSRAM/CLA60TWOSRAM.json
+321ddcbc22c5c4ab7549127cd306f650 *core/config/devices/CLA60TWOSRAM/CLA60TWOSRAM.json
 f5c626f6a9f18b0ddca1bd1597868eda *core/config/devices/COSensor-EM/COSensor-EM.json
 f9ed35193595c45c02eee79dbfce74db *core/config/devices/Cableoutlet_Legrand/Cableoutlet_Legrand.json
 a160cb45eafd5249521e58b1df6a4430 *core/config/devices/ClassicA60RGBW/ClassicA60RGBW.json
@@ -682,6 +682,7 @@ d231f28c5a3f7a8f1cff9bcf16ef6cda *core/config/devices/TS0041/TS0041.json
 781e2b285ff4ab5d9c6032b9f42d35c3 *core/config/devices/TS0042/TS0042.json
 15de7d2b7159b4853bf4f5f8ad3a2c35 *core/config/devices/TS0043__TYZB02_key8kk7r/TS0043__TYZB02_key8kk7r.json
 0dc37fb24155853019a292a68f218d89 *core/config/devices/TS0043__TZ3000_bi6lpsew/TS0043__TZ3000_bi6lpsew.json
+1b8c9647bfa5df428963e5fb44af9439 *core/config/devices/TS0044__TZ3000_vp6clf9d/TS0044__TZ3000_vp6clf9d.json
 ac6a52d011be27380cb6a41e01a684af *core/config/devices/TS004F__TZ3000_xabckq1v/TS004F__TZ3000_xabckq1v.json
 d62114cd53007b33a57df518f087d4cc *core/config/devices/TS0111/TS0111.json
 9f903ecc4c3cc3a5b818477c4333ed03 *core/config/devices/TS0115/TS0115.json
@@ -696,7 +697,8 @@ dd94f2997d54a90df2f2a6497a8e9ff5 *core/config/devices/TS0121__TZ3000_g5xawfcq/TS
 07a1ef8a8bc9784d43bd55404936d40c *core/config/devices/TS0121__TZ3000_rdtixbnu/TS0121__TZ3000_rdtixbnu.json
 fe19b037bdc2d88127e28df7947b4262 *core/config/devices/TS0121__TZ3000_rdtixbnu/discovery.json
 1198150c34d5c0f5437b35c8d55e851e *core/config/devices/TS0201/TS0201.json
-65df2b13a9f191d2a4521dc513b4a253 *core/config/devices/TS0203/TS0203.json
+15c8edeb9e34de3e410bb7993ba5ff15 *core/config/devices/TS0203__TZ3000_f1hmoyj4/TS0203__TZ3000_f1hmoyj4.json
+4fd13e1246a575965ffecc793427c22c *core/config/devices/TS0203__TZ3000_f1hmoyj4/discovery.json
 00ec25c2b2a067defcb369511ee84518 *core/config/devices/TS0302/TS0302.json
 fbf50e49d89fe5f7d6f3cd9fcf3f562b *core/config/devices/TS0503B__TZ3000_i8l0nqdu/TS0503B__TZ3000_i8l0nqdu.json
 2f726e9e240c1dd8ef3e66684b6bc3fc *core/config/devices/TS0503B__TZ3000_i8l0nqdu/notes.txt
@@ -802,6 +804,7 @@ d895561f278f734f65a7813d2566a9b4 *core/php/AbeilleSocat.php
 37e74dd1957a655bfd80d39372bbd530 *core/php/AbeilleTest.php
 bb8c6e0c56ca801d80c9eacfd1c035ee *core/php/AbeilleZigate.php
 455e0994693165e197a7967a7b948a32 *core/php/AbeilleZigateConst.php
+9e78467017ad3158225fae7ce08e9ae6 *core/php/AbeilleZigbeeConst.php
 f452636740f529d1b1ade0b4617c766e *core/scripts/checkSocat.sh
 b76a3ce2ed465d107311329f7ab3091d *core/scripts/checkTTY.sh
 0e976aa3c9dceb4638b16cd060c8e6f6 *core/scripts/checkWifi.sh
@@ -853,7 +856,7 @@ fa9a268dd361c1b3e0e5d2b2e388a9fb *desktop/php/AbeilleEqAssist.php
 49ee93207a7c670f641f2adf341aac00 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-bdfcd1313e357ae0418f0b0c22d15992 *docs/fr_FR/Changelog.rst
+71ad8a66e6c8dc19706c1762be19020e *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -946,6 +949,7 @@ e3d676647cd34ad626b10b2e7a9debde *images/node_OSRAMClassicE27Dimmable.png
 c6e10d6051f4d81b2f3d1ca4ab31f6d9 *images/node_Orvibo-CM10ZW.png
 66667f6e546c036d411e49ed5c6f243d *images/node_OsramLightify.png
 582b6363039df92297be4ebc2eea3b48 *images/node_OsramLightifyplug01OutDoor.png
+b5eac13c96d07af900271890339882d8 *images/node_OsramSwitchMini.png
 661d4ae23cdd37361076b31d26a684dd *images/node_PAR1650TW.png
 8241012385542efa86248f28d1d405c3 *images/node_PAR16RGBWZ3.png
 c6d0633524dde492fc571404ff9b76d5 *images/node_PSE03-v1.1.0.png
@@ -1013,6 +1017,7 @@ fd7c5b212ebe7dd6f3221947326be831 *images/node_TS0121.png
 b74b94322f48a14c7a3e40a99ec3ed8a *images/node_TS0302.png
 d97fc5b541766d3ebcb7e717fe6e2e31 *images/node_TS0505A.png
 992b6d2473f467697af3e7029cad12b4 *images/node_TY0A01.png
+ba49b9033ff4d4b1499b3d4a00d474a8 *images/node_Tuya4ButtonsSceneSwitch.png
 f015a0211c351a2b2bb38d23da37d2a9 *images/node_Tuya4ButtonsSwitch.png
 38146e8c9b9a31746b4730b19f61a4ba *images/node_TuyaSmartSocket.png
 7848ede9d58c39d81a2d7c644a9bbb74 *images/node_WS2812_light_controller.png
@@ -1042,6 +1047,7 @@ df4a7515cb2b3d2d5d69c3031a64252c *images/node_ZLL-DimmableLigh.png
 fc8fdb896567c4d73fb073aff681cb9d *images/node_ZLO-ExtendedColor.png
 a974ffe61a8e3f502fcd24ae31c6ac9e *images/node_ZLO-LTOSensor.png
 807e8ad00803ee38ea14435d36a33c1a *images/node_ZLO-OccupancySensor.png
+bb69f46bc88f0a988ba4da5646d86952 *images/node_Zemismart-DoorSensor.png
 ece3df103bb9d9278db499ecaa57fc6a *images/node_bsoProFalux.png
 0abbf0a7a7cce78de303e48e206a31c4 *images/node_ctrl_86plug.aq1.png
 6e5c178ccce618a80a906bf3cd44142f *images/node_ctrl_ln1.aq1.png
@@ -1076,10 +1082,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-1be9f26057eb8950052aa837c58ff6ad *plugin_info/Abeille.version
+1c8af7abc328f539f5d03e10a873645f *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
-fe1c3a5a27b352d6439f123237a4b071 *plugin_info/configuration.php
-cca82e21709f9da7639c88bd1a805290 *plugin_info/info.json
+1d007935ff99e51bdac2dccd68303bbb *plugin_info/configuration.php
+ba44dcdc71f9034a75e771871c07a3c0 *plugin_info/info.json
 a8b36afbe004ce359c7ecec1358a12a1 *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 e634b9f544c02b8facd28fefb8771fe0 *resources/AbeilleDeamon/AbeilleInterrogate.php
@@ -1107,11 +1113,13 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/syncconf.abeille.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/syncconf.sh
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/zigateClusters.json
 b30943fb5fbe4f4944ac60c06f50cb70 *resources/fw_DIY/DIYRuZRT.zip
-bfb48054fb3a643a2ec7e5691608e890 *resources/fw_zigate/FW_ChangeLog.md
-746899598a7d2a43c5f29d6ce965d091 *resources/fw_zigate/ZiGate_v3.1c.bin
+cc3b38a996db56d1a3f3b099cb4f1bf7 *resources/fw_zigate/FW_ChangeLog.md
 27198557070a42767d7acb2c8e2a1234 *resources/fw_zigate/ZiGate_v3.1d.bin
 9322f8c93173c2a3c2e976b2d395330f *resources/fw_zigate/ZiGate_v3.1d_pre_PDMhost.dev.bin
-9051651cd4ca597b47a09315f7817f47 *resources/fw_zigate/ZiGate_v3.1e.bin
+f9d92463d7b5f9099dcf0fa4187aafd4 *resources/fw_zigate/ZiGate_v3.1e-OPDM.bin
+9051651cd4ca597b47a09315f7817f47 *resources/fw_zigate/ZiGate_v3.1e-legacy.bin
+12251c759fb62e528a5d761af6d62941 *resources/fw_zigate/ZiGate_v3.20-OPDM.bin
+bd33a4811081bdedab814080ff552cb8 *resources/fw_zigate/ZiGate_v3.20-legacy.bin
 b72399d5a204b159944b19883ea99870 *resources/prog_jennic-0.7/README.md
 152f3cf4a01ed7a9530807ceff981133 *resources/prog_jennic-0.7/README.txt
 4d2446fe85771dffa2b14e2caebfac85 *resources/prog_jennic-0.7/build/FlashProgrammerExtension_JN5168.bin

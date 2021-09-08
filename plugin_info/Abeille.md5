@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210907-BETA-2"
+# VERSION="210908-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -61,7 +61,7 @@ b255adec2e0927f7ab99e5559a9b0065 *core/class/AbeilleCmdProcess.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 2ebb56e1ea41091916d618f74fe15764 *core/class/AbeilleTemplateCommon.class.php
 aea82feb4106a0bcb6ee4f6ab877c416 *core/class/AbeilleTemplateEq.class.php
-6db047823a3c495ee115b3ceabc2d775 *core/class/AbeilleTools.class.php
+b2a5c4087d3c3b5bb8f5925eb6c13e22 *core/class/AbeilleTools.class.php
 fb15711b044915f5291add3ce425c751 *core/config/Abeille.config.ini
 3ef3d1ddb75fd3a4208ddad901a13307 *core/config/Abeille.config.php
 96b14488adfe25210ff0b340be3f531d *core/config/HueCatalogue.json
@@ -682,7 +682,7 @@ a14adf938f00da12c1eae711428695b4 *core/config/devices/TS0003/TS0003.json
 04eb2bcf8dea5254316358c2c7081100 *core/config/devices/TS0012/TS0012.json
 000c0b5ad47df0daeb53cff7ed83fbf3 *core/config/devices/TS0013/TS0013.json
 d231f28c5a3f7a8f1cff9bcf16ef6cda *core/config/devices/TS0041/TS0041.json
-46bdebc0ff91841d17b63eff5fc751fa *core/config/devices/TS0042__TYZB02_keyjhapk/TS0042__TYZB02_keyjhapk.json
+0cc22b30b0b6e95104b26d86fc637092 *core/config/devices/TS0042__TYZB02_keyjhapk/TS0042__TYZB02_keyjhapk.json
 15de7d2b7159b4853bf4f5f8ad3a2c35 *core/config/devices/TS0043__TYZB02_key8kk7r/TS0043__TYZB02_key8kk7r.json
 0dc37fb24155853019a292a68f218d89 *core/config/devices/TS0043__TZ3000_bi6lpsew/TS0043__TZ3000_bi6lpsew.json
 3bbe1565ad437dd781da839ebe0b74b3 *core/config/devices/TS0044__TZ3000_vp6clf9d/TS0044__TZ3000_vp6clf9d.json
@@ -859,7 +859,7 @@ fa9a268dd361c1b3e0e5d2b2e388a9fb *desktop/php/AbeilleEqAssist.php
 49ee93207a7c670f641f2adf341aac00 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-1d1c473f030a13d6ddeabe8ef825c16f *docs/fr_FR/Changelog.rst
+01065ddadeb963b4e2f1ba69c920744f *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1009,7 +1009,6 @@ b3d3a024b10286b98e4fe995be34e96e *images/node_TRADFRItransformer30W.png
 e2ef9eb522f8133cd43290a906883144 *images/node_TS0011.png
 4797ba3ff7f90cad894f8f59297d0042 *images/node_TS0012.png
 c12385a1271343c3e0c0fab1dc9a6122 *images/node_TS0041.png
-b7eb63dff5703896147781076f9989a4 *images/node_TS0042.png
 9a77fde58d5f9e1ff34ee34724669eb1 *images/node_TS0043.png
 d8b6d0586b4ece1c8c55b282654ddd1d *images/node_TS0111.png
 30d83fcbdca413a2239d7a6e5c1ec313 *images/node_TS0115.png
@@ -1050,6 +1049,7 @@ df4a7515cb2b3d2d5d69c3031a64252c *images/node_ZLL-DimmableLigh.png
 fc8fdb896567c4d73fb073aff681cb9d *images/node_ZLO-ExtendedColor.png
 a974ffe61a8e3f502fcd24ae31c6ac9e *images/node_ZLO-LTOSensor.png
 807e8ad00803ee38ea14435d36a33c1a *images/node_ZLO-OccupancySensor.png
+b7eb63dff5703896147781076f9989a4 *images/node_Zemismart-2ButtonsSwitch.png
 bb69f46bc88f0a988ba4da5646d86952 *images/node_Zemismart-DoorSensor.png
 ece3df103bb9d9278db499ecaa57fc6a *images/node_bsoProFalux.png
 0abbf0a7a7cce78de303e48e206a31c4 *images/node_ctrl_86plug.aq1.png
@@ -1085,10 +1085,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-0e80b9968a9ab34aab115f414fd8bc8c *plugin_info/Abeille.version
+55c2528128c3ea605ad197fc059520a4 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 1d007935ff99e51bdac2dccd68303bbb *plugin_info/configuration.php
-165fb3c92b47ef056652d323eaf58257 *plugin_info/info.json
+339131f831c30bf8af0a861dc9730ff2 *plugin_info/info.json
 a8b36afbe004ce359c7ecec1358a12a1 *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 e634b9f544c02b8facd28fefb8771fe0 *resources/AbeilleDeamon/AbeilleInterrogate.php

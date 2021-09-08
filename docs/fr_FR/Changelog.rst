@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210908-BETA-1
+----------
+
 - Correction regression: crash pendant l'inclusion (#2125).
 
 210907-BETA-2

@@ -2,15 +2,17 @@
     "TS0042__TYZB02_keyjhapk": {
         "manufacturer": "Zemismart",
         "zbManufacturer": "_TYZB02_keyjhapk",
+        "model": "YC-ZS-LO3C-A",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "TS0042"
+            "batteryType": "1x3V CR2032",
+            "icon": "Zemismart-2ButtonsSwitch"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Zemismart Remote 2 boutons sur pile",
+        "type": "Zemismart 2 buttons wireless switch",
         "commands": {
             "BindToZigate-Power": {
                 "use": "bindToZigate",

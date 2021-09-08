@@ -397,13 +397,12 @@ class AbeilleTools
                 }
 
                 // Adding base commands
-                $deviceCmds += self::getCommandConfig("IEEE-Addr");
-                $deviceCmds += self::getCommandConfig("Link-Quality");
-                $deviceCmds += self::getCommandConfig("Time-Time");
-                $deviceCmds += self::getCommandConfig("Time-TimeStamp");
-                $deviceCmds += self::getCommandConfig("Power-Source");
-                $deviceCmds += self::getCommandConfig("Short-Addr");
-                $deviceCmds += self::getCommandConfig("online");
+                $baseCmds = ['IEEE-Addr', 'Link-Quality', 'Time-Time', 'Time-TimeStamp', 'Power-Source', 'Short-Addr', 'online'];
+                foreach ($baseCmds as $base) {
+                    $c = self::getCommandConfig($base);
+                    if ($c !== false)
+                        $deviceCmds += $c;
+                }
 
                 $device['commands'] = $deviceCmds;
             } else if ($mode == 1) {

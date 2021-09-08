@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Correction regression: crash pendant l'inclusion (#2125).
+
 210907-BETA-2
 ----------
 
@@ -17,7 +19,7 @@ ChangeLog
 - Tuya 4 buttons scene switch: Ajout support (#2122).
 
 210905-BETA-1
-----------
+-------------
 
 - Correction mauvais message: "ATTENTION: config locale utilisée ...".
 - Interne: Améliorations parser.

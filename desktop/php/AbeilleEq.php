@@ -393,6 +393,7 @@
                 var msg = "{{Le fichier de configuration local a été supprimé.<br>";
                 msg += "L'équipement ayant été inclu avec ce fichier vous devez peut-être refaire une inclusion ou recharger le JSON & reconfigurer pour être à jour.}}";
                 bootbox.confirm(msg, function (result) {
+                    window.location.reload();
                 });
             }
         });

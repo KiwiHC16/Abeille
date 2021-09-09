@@ -121,9 +121,23 @@
                 "47" => array( "name" => "Stop Move Step" ),
                 "4B" => array( "name" => "Move Color Temperature" ),
                 "4C" => array( "name" => "Step Color Temperature" ),
-            )
+            ),
         ),
-    );
+        "0702" => array( // Metering (Smart Energy) cluster
+            "attributes" => array(
+                "0000" => array( "name" => "CurrentSummationDelivered", "access" => "R" ),
+                "0001" => array( "name" => "CurrentSummationReceived", "access" => "R" ),
+                "0002" => array( "name" => "CurrentMaxDemandDelivered", "access" => "R" ),
+                "0003" => array( "name" => "CurrentMaxDemandReceived", "access" => "R" ),
+            ),
+            // "commands" => array(
+                // "cmd1" => array( "name" => "GetProfile" ),
+                // "cmd2" => array( "name" => "RequestMirrorResponse" ),
+                // "cmd3" => array( "name" => "MirrorRemoved" ),
+                // "cmd4" => array( "name" => "RequestFastPollMode" ),
+            // ),
+        ),
+);
 
     /* Returns Zigbee ZCL global command name from id. */
     function zbGetZCLGlobalCmdName($cmdId)
@@ -185,5 +199,30 @@
            if ($cmd === false)
                return "Unknown cmd ".$clustId."-".$cmdId;
            return $cmd['name'];
+    }
+
+    /* Based on ZCL spec.
+       Returns attribute infos for $clustId-$attrId or false if unknown */
+    function zbGetZCLAttribute($clustId, $attrId)
+       {
+           global $zbClusters;
+
+           $clustId = strtoupper($clustId);
+           $attrId = strtoupper($attrId);
+
+           if (!array_key_exists($clustId, $zbClusters))
+               return false;
+           if (!array_key_exists($attrId, $zbClusters[$clustId]['attributes']))
+               return false;
+           return $zbClusters[$clustId]['attributes'][$attrId];
        }
-   ?>
+
+    /* Based on ZCL spec.
+       Returns cluster specific command name from $clustId-$cmdId. */
+    function zbGetZCLAttributeName($clustId, $attrId) {
+        $attr = zbGetZCLAttribute($clustId, $attrId);
+        if ($attr === false)
+            return "Unknown attr ".$clustId."-".$attrId;
+        return $attrId['name'];
+    }
+?>

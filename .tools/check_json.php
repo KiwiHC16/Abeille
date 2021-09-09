@@ -174,23 +174,29 @@
             return;
         }
         $type = $c['type'];
-
-        if (!isset($c['configuration'])) {
-            newCmdError($cmdName, "ERROR", "Missing 'configuration' section");
+        if (($type == "action") && ($type == "info")) {
+            newCmdError($cmdName, "ERROR", "Invalid 'type' value ".$type." ('info' or 'action' allowed)");
             return;
         }
 
-        // 'configuration' section exists
-        $conf = $c['configuration'];
-        if ($type == "info") {
-            if (!isset($c['logicalId']))
-                newCmdError($cmdName, "ERROR", "Missing 'logicalId' field for info command");
+        if (!isset($c['configuration'])) {
+            if ($type == "action") {
+                newCmdError($cmdName, "ERROR", "Missing 'configuration' section for 'action' command");
+                return;
+            }
         } else {
-            if (!isset($conf['topic']))
-                newCmdError($cmdName, "ERROR", "Missing 'configuration:topic' field");
-        }
-        if (isset($conf['execAtCreationDelay']) && (gettype($conf['execAtCreationDelay']) == "string")) {
-            newCmdError($cmdName, "ERROR", "'execAtCreationDelay' must be number and NOT string");
+            // 'configuration' section exists
+            $conf = $c['configuration'];
+            if ($type == "info") {
+                if (!isset($c['logicalId']))
+                    newCmdError($cmdName, "ERROR", "Missing 'logicalId' field for info command");
+            } else {
+                if (!isset($conf['topic']))
+                    newCmdError($cmdName, "ERROR", "Missing 'configuration:topic' field");
+            }
+            if (isset($conf['execAtCreationDelay']) && (gettype($conf['execAtCreationDelay']) == "string")) {
+                newCmdError($cmdName, "ERROR", "'execAtCreationDelay' must be number and NOT string");
+            }
         }
     }
 

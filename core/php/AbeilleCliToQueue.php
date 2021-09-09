@@ -93,6 +93,8 @@
 
         $cmds = $eqConfig['commands'];
         foreach ($cmds as $cmdJName => $cmd) {
+            if (!isset($cmd['configuration']))
+                continue;
             $c = $cmd['configuration'];
             if (!isset($c['execAtCreation']))
                 continue;

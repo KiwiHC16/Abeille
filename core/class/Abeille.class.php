@@ -2278,7 +2278,7 @@ while ($cron->running()) {
             return;
         } // End 'leaveIndication'
 
-        /* Attribut report (8100 & 8102 responses) */
+        /* Attribute report (8100 & 8102 responses) */
         if ($msg['type'] == "attributeReport") {
             /* Reminder
                 $msg = array(
@@ -2293,7 +2293,7 @@ while ($cron->running()) {
                     'lqi' => $lqi
                 ); */
 
-            log::add('Abeille', 'debug', "msgFromParser(): Attribut report from '".$net."/".$addr."/".$ep."': attr='".$msg['name']."', val='".$msg['value']."'");
+            log::add('Abeille', 'debug', "msgFromParser(): Attribute report from '".$net."/".$addr."/".$ep."': attr='".$msg['name']."', val='".$msg['value']."'");
             $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
                 log::add('Abeille', 'debug', "  Unknown device");
@@ -2855,19 +2855,21 @@ while ($cron->running()) {
                In case of update, some fields may no longer be required ($unusedConfKey).
                They are removed if not updated from JSON. */
             $unusedConfKey = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'uniqId', 'repeatEventManagement', 'topic'];
-            foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
-                // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
-                // $cmdlogic->setConfiguration($confKey, str_replace('#addr#', $addr, $confValue)); // Ce n'est plus necessaire car l adresse est maintenant dans le logicalId
+            if (isset($cmdValueDefaut["configuration"])) {
+                foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
+                    // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
+                    // $cmdlogic->setConfiguration($confKey, str_replace('#addr#', $addr, $confValue)); // Ce n'est plus necessaire car l adresse est maintenant dans le logicalId
 
-                // Ne pas effacer, en cours de dev.
-                // $cmdlogic->setConfiguration($confKey, str_replace('#addrIEEE#',     '#addrIEEE#',   $confValue));
-                // $cmdlogic->setConfiguration($confKey, str_replace('#ZiGateIEEE#',   '#ZiGateIEEE#', $confValue));
+                    // Ne pas effacer, en cours de dev.
+                    // $cmdlogic->setConfiguration($confKey, str_replace('#addrIEEE#',     '#addrIEEE#',   $confValue));
+                    // $cmdlogic->setConfiguration($confKey, str_replace('#ZiGateIEEE#',   '#ZiGateIEEE#', $confValue));
 
-                $cmdlogic->setConfiguration($confKey, $confValue);
-                foreach ($unusedConfKey as $uk => $uv) {
-                    if ($uv != $confKey)
-                        continue;
-                    unset($unusedConfKey[$uk]);
+                    $cmdlogic->setConfiguration($confKey, $confValue);
+                    foreach ($unusedConfKey as $uk => $uv) {
+                        if ($uv != $confKey)
+                            continue;
+                        unset($unusedConfKey[$uk]);
+                    }
                 }
             }
 

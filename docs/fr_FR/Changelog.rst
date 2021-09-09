@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Améliorations parser + robustesse.
+
 210908-BETA-1
 ----------
 

@@ -397,7 +397,7 @@ class AbeilleTools
                 }
 
                 // Adding base commands
-                $baseCmds = ['IEEE-Addr', 'Link-Quality', 'Time-Time', 'Time-TimeStamp', 'Power-Source', 'Short-Addr', 'online'];
+                $baseCmds = ['IEEE-Addr', 'Link-Quality', 'Time-Time', 'Time-TimeStamp', 'Short-Addr', 'online'];
                 foreach ($baseCmds as $base) {
                     $c = self::getCommandConfig($base);
                     if ($c !== false)

@@ -201,7 +201,7 @@
     if ($monId !== false) {
         $eqLogic = eqLogic::byId($monId);
         if (!is_object($eqLogic)) {
-            logMessage('error', 'Mauvais ID pour équipement à surveiller: '.$monId);
+            logMessage('debug', 'Bad ID for device to monitor: '.$monId);
         } else {
             list($net, $addr) = explode( "/", $eqLogic->getLogicalId());
             $ieee = $eqLogic->getConfiguration('IEEE', '');
@@ -209,6 +209,18 @@
             $dbgMonitorAddrExt = $ieee;
             logMessage("debug", "Device to monitor: ".$eqLogic->getHumanName().', '.$addr.'-'.$ieee);
             include_once __DIR__.'/AbeilleMonitor.php'; // Tracing monitor for debug purposes
+        }
+    }
+
+    // In case parser only is restarted, let's get zigates IEEE if known */
+    for ($zgId = 1; $zgId <= config::byKey('zigateNb', 'Abeille', '1', 1); $zgId++) {
+        if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
+            continue; // This Zigate is not enabled
+        $ieeeOk = config::byKey('AbeilleIEEE_Ok'.$zgId, 'Abeille', 0);
+        if ($ieeeOk == 1) { // IEEE addr already verified & valid
+            $extAddr = config::byKey('AbeilleIEEE'.$zgId, 'Abeille', "1212121212121212");
+            $GLOBALS['zigate'.$zgId]['ieee'] = $extAddr;
+            logMessage("debug", "Zigate ".$zgId." already verified IEEE: ".$extAddr);
         }
     }
 
@@ -308,7 +320,7 @@
             $AbeilleParser->processWakeUpQueue();
 
             // Sleep not tu use CPU for nothing
-            time_nanosleep( 0, 10000000 ); // 1/100s
+            time_nanosleep(0, 10000000 ); // 1/100s
         }
 
         unset($AbeilleParser);

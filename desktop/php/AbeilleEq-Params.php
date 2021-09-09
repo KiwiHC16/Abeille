@@ -112,11 +112,7 @@
         <div class="col-sm-5">
             <span class="eqLogicAttr" data-l1key="configuration" data-l2key="modeleJson"></span>
             <?php
-                $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
-                if ($jsonLocation != 'Abeille') {
-                    echo '<span style="background-color:red" title="La configuration vient d\'un fichier local (core/config/devices_local)"> (ATTENTION: inclu à partir d\'un fichier local) </span>';
-                }
-                echo '<a class="btn btn-warning" onclick="updateFromJSON(\''.$eqNet.'\', \''.$eqAddr.'\')">Recharger</a>';
+                echo '<a class="btn btn-warning" onclick="updateFromJSON(\''.$eqNet.'\', \''.$eqAddr.'\')" title="Mets à jour les commandes Jeedom">Recharger</a>';
             ?>
         </div>
     </div>
@@ -124,7 +120,14 @@
         <label class="col-sm-3 control-label">Reconfigurer</label>
         <div class="col-sm-5">
             <?php
-                echo '<a class="btn btn-warning" onclick="reconfigure(\''.$eqId.'\')">Reconfigurer</a>';
+                echo '<a class="btn btn-warning" onclick="reconfigure(\''.$eqId.'\')" title="Reconfigure l\'équipement">Reconfigurer</a>';
+                $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
+                if ($jsonLocation != 'Abeille') {
+                    echo '<span style="background-color:red" title="La configuration vient d\'un fichier local (core/config/devices_local)"> (ATTENTION: inclu à partir d\'un fichier local) </span>';
+                    $jsonId = $eqLogic->getConfiguration('modeleJson', '');
+                    if (file_exists(__DIR__."/../../core/config/devices_local/".$jsonId."/".$jsonId.".json"))
+                        echo '<a class="btn btn-warning" onclick="removeLocalJSON(\''.$jsonId.'\')" title="Supprime la version locale du fichier de config JSON">Supprimer version locale</a>';
+                }
             ?>
         </div>
     </div>
@@ -543,6 +546,7 @@
             </div>
         </div>
 
+        <br>
         <div class="form-group">
             <label class="col-sm-3 control-label" title="getRoutingTable (Mgmt_Rtg_req)">ZDO: Table de routage</label>
             <div class="col-sm-5">

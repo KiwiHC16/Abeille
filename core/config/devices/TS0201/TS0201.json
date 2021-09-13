@@ -17,7 +17,10 @@
             "include3 2": "temperature",
             "include4": "humidite",
             "include5": "Batterie-Volt-Konke",
-            "include6": "Batterie-Pourcent-Heiman",
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

@@ -13,6 +13,10 @@
             "light": "1"
         },
         "commands": {
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            },
             "BindToZigate-Power": {
                 "use": "bindToZigate",
                 "params": "CLUSTID=0001",
@@ -24,18 +28,10 @@
                 "execAtCreation": "Yes"
             },
 
-            "Single click 1": { "use": "single-click", "params": "ep=01", "isVisible": 1 },
-            "Single click 2": { "use": "single-click", "params": "ep=02", "isVisible": 1 },
-            "Single click 3": { "use": "single-click", "params": "ep=03", "isVisible": 1 },
-            "Single click 4": { "use": "single-click", "params": "ep=04", "isVisible": 1, "nextLine": "after" },
-            "Double click 1": { "use": "double-click", "params": "ep=01", "isVisible": 0 },
-            "Double click 2": { "use": "double-click", "params": "ep=02", "isVisible": 0 },
-            "Double click 3": { "use": "double-click", "params": "ep=03", "isVisible": 0 },
-            "Double click 4": { "use": "double-click", "params": "ep=04", "isVisible": 0, "nextLine": "after" },
-            "Long click 1": { "use": "long-click", "params": "ep=01", "isVisible": 0 },
-            "Long click 2": { "use": "long-click", "params": "ep=02", "isVisible": 0 },
-            "Long click 3": { "use": "long-click", "params": "ep=03", "isVisible": 0 },
-            "Long click 4": { "use": "long-click", "params": "ep=04", "isVisible": 0 }
+            "Click 1": { "use": "click", "params": "ep=01", "isVisible": 1 },
+            "Click 2": { "use": "click", "params": "ep=02", "isVisible": 1 },
+            "Click 3": { "use": "click", "params": "ep=03", "isVisible": 1 },
+            "Click 4": { "use": "click", "params": "ep=04", "isVisible": 1 }
         },
         "comment": ""
     }

@@ -24,7 +24,10 @@
             "include7": "sceneGroupRecall1",
             "include7 2": "sceneGroupRecall2",
             "include7 2 2": "sceneGroupRecall3",
-            "include8": "Batterie-Pourcent-Ikea",
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            },
             "include9": "getBattery",
             "include10": "BindShortToZigateBatterie",
             "include11": "setReportBatterie",

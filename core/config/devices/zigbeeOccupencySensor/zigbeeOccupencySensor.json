@@ -3,7 +3,7 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "",
+            "icon": "defaultUnknown",
             "batteryType": "1x3V CR2032"
         },
         "category": {

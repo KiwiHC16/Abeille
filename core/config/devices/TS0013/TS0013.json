@@ -3,7 +3,7 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "TS0013"
+            "icon": "defaultUnknown"
         },
         "category": {
             "automatism": "1"

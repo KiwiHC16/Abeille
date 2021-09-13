@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210913-BETA-1
+----------
+
 - Interne: Optimisation parser: transfert groupé d'attributs.
 - Interne: Link-Quality mis à jour sur attribut report.
 - JSON équipements: Mise-à-jour commandes pourcentage batterie.

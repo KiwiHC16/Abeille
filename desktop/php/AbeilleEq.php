@@ -60,9 +60,9 @@
             <?php include 'AbeilleEq-Main.php'; ?>
         </div>
 
-        <!-- Displays Zigbee/equipement specifics  -->
+        <!-- Displays advanced & Zigbee specifics  -->
         <div role="tabpanel" class="tab-pane" id="paramtab">
-            <?php include 'AbeilleEq-Params.php'; ?>
+            <?php include 'AbeilleEq-Advanced.php'; ?>
         </div>
 
         <!-- Displays Jeedom commands  -->

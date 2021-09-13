@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Optimisation parser: transfert groupé d'attributs.
+- Interne: Link-Quality mis à jour sur attribut report.
 210909-BETA-1
 ----------
 

@@ -1942,12 +1942,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // Info: Used for power reporting on Legrand 20AX / prise Blitzwolf BW-SHP13 #1231
             if ($cluster == "0B04") {
 
-                $frameCtrlField = substr($payload, 26, 2);
-                $SQN = substr($payload, 28, 2);
-                $cmd = substr($payload, 30, 2);
-                parserLog('debug', '  FCF='.$frameCtrlField
-                   .', SQN='.$SQN
-                   .', cmd='.$cmd.'/'.zbGetZCLGlobalCmdName($cmd));
+            //     $frameCtrlField = substr($payload, 26, 2);
+            //     $SQN = substr($payload, 28, 2);
+            //     $cmd = substr($payload, 30, 2);
+            //     parserLog('debug', '  FCF='.$frameCtrlField
+            //        .', SQN='.$SQN
+            //        .', cmd='.$cmd.'/'.zbGetZCLGlobalCmdName($cmd));
 
                 // if ($cmd == '01') {
                 //     $attributs = substr($payload, 32);
@@ -2016,25 +2016,25 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 //     return;
                 // } // End cmd==01
 
-                // exemple: emontée puissance module Legrand 20AX
-                if ($cmd == '0A') {
-                    $attribute = substr($payload,34, 2).substr($payload,32, 2);
-                    $dataType  = substr($payload,36, 2);
-                    if (($attribute == '050B') && ($dataType == '29')) {
-                        // '29' => array( 'Int16', 2 ), // Signed 16-bit int
-                        $value = substr($payload,40, 2).substr($payload,38, 2);
+                // // exemple: emontée puissance module Legrand 20AX
+                // if ($cmd == '0A') {
+                //     $attribute = substr($payload,34, 2).substr($payload,32, 2);
+                //     $dataType  = substr($payload,36, 2);
+                //     if (($attribute == '050B') && ($dataType == '29')) {
+                //         // '29' => array( 'Int16', 2 ), // Signed 16-bit int
+                //         $value = substr($payload,40, 2).substr($payload,38, 2);
 
-                        parserLog('debug', '  ActivePower'
-                           .', attrib='.$attribute
-                           .', dataType='.$dataType
-                           .', value='.$value.' - '.hexdec($value),
-                            "8002");
+                //         parserLog('debug', '  ActivePower'
+                //            .', attrib='.$attribute
+                //            .', dataType='.$dataType
+                //            .', value='.$value.' - '.hexdec($value),
+                //             "8002");
 
-                        $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$destEp, $attribute, hexdec($value));
-                        return;
-                    }
-                }
-            }
+                //         $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$destEp, $attribute, hexdec($value));
+                //         return;
+                //     }
+                // }
+            // }
 
             // Remontée etat relai module Legrand 20AX
             // 80020019F4000104 FC41 010102D2B9020000180B0A000030000100100084
@@ -2186,13 +2186,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         if ($attr === false)
                             break; // Stop decode there
 
-                        // if ($attr['id'] == '0505') {
-                        //     $attrName = "RMS Voltage";
-                        // } else if ($attr['id'] == '0508') {
-                        //     $attrName = "RMS Current";
-                        // } else if ($attr['id'] == '050B') {
-                        //     $attrName = "Active Power";
-                        // } else
                         $attrName = zbGetZCLAttributeName($cluster, $attr['id']);
                         parserLog('debug', '  attrId='.$attr['id'].'/'.$attrName
                             .', status='.$attr['status']
@@ -2200,45 +2193,39 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             .', value='.$attr['valueHex'].' => '.$attr['value'],
                             "8002"
                         );
-                        $attributes[] = $attr;
+                        $attrId = $attr['id'];
+                        unset($attr['id']); // Remove 'id' from object for optimization
+                        $attributes[$attrId] = $attr;
                         $i += $size;
                     }
                     if (sizeof($attributes) == 0)
                         return;
 
-                    // Reporting to Abeille
-                    // TODO: For optimization purposes, create grouped message
+                    // Reporting grouped attributes to Abeille
                     $toAbeille = array(
                         'src' => 'parser',
-                        'type' => 'attributeReport',
-                        'net' => $dest,
-                        'addr' => $srcAddr,
-                        'ep' => $srcEp,
-                        'time' => time(),
-                        'lqi' => $lqi
-                    );
-                    foreach($attributes as $attr) {
-                        $toAbeille['name'] = $cluster.'-'.$srcEp.'-'.$attr['id'];
-                        $toAbeille['value'] = $attr['value'];
-                        $this->msgToAbeille2($toAbeille);
-                    }
-
-                    /* Send to client if required (ex: EQ page opened) */
-                    // TODO: For optimization purposes, create grouped message
-                    $toCli = array(
-                        'src' => 'parser',
-                        'type' => 'attributeReport',
+                        'type' => 'readAttributesResponse',
                         'net' => $dest,
                         'addr' => $srcAddr,
                         'ep' => $srcEp,
                         'clustId' => $cluster,
+                        'attributes' => $attributes,
+                        'time' => time(),
+                        'lqi' => $lqi
                     );
-                    foreach($attributes as $attr) {
-                        $toCli['attrId'] = $attr['id'];
-                        $toCli['status'] = $attr['status'];
-                        $toCli['value'] = $attr['value'];
-                        $this->msgToClient($toCli);
-                    }
+                    $this->msgToAbeille2($toAbeille);
+
+                    /* Send to client if required (ex: EQ page opened) */
+                    $toCli = array(
+                        'src' => 'parser',
+                        'type' => 'readAttributesResponse',
+                        'net' => $dest,
+                        'addr' => $srcAddr,
+                        'ep' => $srcEp,
+                        'clustId' => $cluster,
+                        'attributes' => $attributes
+                    );
+                    $this->msgToClient($toCli);
 
                     return;
                 } else if ($cmd == "07") { // Configure Reporting Response
@@ -2262,7 +2249,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     return;
                 } else if ($cmd == "0A") { // Report attributes
                     // Some clusters are directly handled by 8100/8102 decode
-                    $acceptedCmd0A = ['0300']; // Clusters handled here
+                    $acceptedCmd0A = ['0300', '050B']; // Clusters handled here
                     if (!in_array($cluster, $acceptedCmd0A)) {
                         parserLog('debug', "  Handled by decode8100_8102");
                         return;
@@ -2272,19 +2259,36 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $attributes = [];
                     for ($i = 0; $i < $l;) {
                         $attr = $this->decode8002_ReportAttribute(substr($msg, $i), $size);
-                        if ($attr === false) {
-                            parserLog("debug", "  Rejected msg: ".substr($msg, $i));
-                            return;
-                        }
+                        if ($attr === false)
+                            break;
 
-                        parserLog('debug', '  attrId='.$attr['id']
+                        $attrName = zbGetZCLAttributeName($cluster, $attr['id']);
+                        parserLog('debug', '  attrId='.$attr['id'].'/'.$attrName
                             .', attrType='.$attr['dataType']
                             .', value='.$attr['value'],
                             "8002"
                         );
-                        $attributes[] = $attr;
+                        $attrId = $attr['id'];
+                        unset($attr['id']); // Remove 'id' from object for optimization
+                        $attributes[$attrId] = $attr;
                         $i += $size;
                     }
+                    if (sizeof($attributes) == 0)
+                        return;
+
+                    // Reporting grouped attributes to Abeille
+                    $toAbeille = array(
+                        'src' => 'parser',
+                        'type' => 'reportAttributes',
+                        'net' => $dest,
+                        'addr' => $srcAddr,
+                        'ep' => $srcEp,
+                        'clustId' => $cluster,
+                        'attributes' => $attributes,
+                        'time' => time(),
+                        'lqi' => $lqi,
+                    );
+                    $this->msgToAbeille2($toAbeille);
 
                     return;
                 } else if ($cmd == "0D") { // Discover Attributes Response
@@ -2318,12 +2322,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     /* Send to client if required (EQ page opened) */
                     $toCli = array(
                         'src' => 'parser',
-                        'type' => 'attributeDiscovery',
+                        'type' => 'discoverAttributesResponse',
                         'net' => $dest,
                         'addr' => $srcAddr,
                         'ep' => $srcEp,
                         'clustId' => $cluster,
-                        'dir' => (hexdec($FCF) >> 3) & 1,
+                        'dir' => (hexdec($fcf) >> 3) & 1,
                         'attributes' => $attributes
                     );
                     $this->msgToClient($toCli);
@@ -2390,6 +2394,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $this->msgToClient($toCli);
                     return;
                 }
+
                 parserLog("debug", "  Ignored global command", "8002");
                 return;
             }
@@ -2423,7 +2428,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 return;
             }
 
-            parserLog("debug", "  Ignored cluster specific command", "8002");
+            parserLog("debug", "  Ignored cluster specific command ".$cluster."-".$cmd, "8002");
         }
 
         // Tcharp38: No longer required.
@@ -3170,7 +3175,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'net' => $dest,
                 'ieee' => $IEEE,
                 'rejoin' => $RejoinStatus,
-                'time' => time()
+                'time' => time(),
+                'lqi' => $lqi
             );
             $this->msgToAbeille2($msg);
 

@@ -1525,7 +1525,7 @@ console.log("missing value for "+attrId);
                 newCell.innerHTML += '<a id="idCliClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'01\')"><i class="fas fa-sync"></i></a>';
                 requestInfos('attribList', sEp, clustId, '01');
             });
-        } else if (res.type == "attributeDiscovery") {
+        } else if (res.type == "discoverAttributesResponse") {
             // 'src' => 'parser',
             // 'type' => 'attributeDiscovery',
             // 'net' => $dest,
@@ -1539,7 +1539,7 @@ console.log("missing value for "+attrId);
             sClustId = res.clustId;
             sAttributes = res.attributes;
             let sAttrCount = sAttributes.length;
-            console.log("attributeDiscovery: clustId="+sClustId+", attrCount="+sAttrCount)
+            console.log("discoverAttributesResponse: clustId="+sClustId+", attrCount="+sAttrCount)
 
             // if (sAttrCount == 0) {
             //     openReturnChannel();
@@ -1675,6 +1675,95 @@ console.log("missing value for "+attrId);
                 else
                     field.value = sValue;
                 changeClass(idRB, "btn-warning", "btn-success");
+            }
+
+            // If all attributes values are known, change button class
+            if (attributes !== null) {
+                allDone = true;
+                for (const [attrId, attr] of Object.entries(attributes)) {
+                    if (typeof attr.value === "undefined") {
+                        allDone = false;
+                        break;
+                    }
+                }
+                if (allDone)
+                    changeClass("idServClust"+sEp+"-"+sClustId+"RB2", "btn-warning", "btn-success");
+            }
+        } else if (res.type == "readAttributesResponse") {
+            // 'src' => 'parser',
+            // 'type' => 'readAttributesResponse',
+            // 'net' => $dest,
+            // 'addr' => $srcAddr,
+            // 'ep' => $srcEp,
+            // 'clustId' => $cluster,
+            // 'attributes' => $attributes
+            sEp = res.ep;
+            sClustId = res.clustId;
+            sAttributes = res.attributes;
+
+            discovery = eq.discovery;
+            if (typeof discovery.endPoints === "undefined")
+                discovery.endPoints = new Object();
+            if (typeof discovery.endPoints[sEp] === "undefined")
+                discovery.endPoints[sEp] = new Object();
+            ep = discovery.endPoints[sEp];
+            if (typeof ep.servClusters === "undefined")
+                ep.servClusters = new Object();
+            if (typeof ep.servClusters[sClustId] === "undefined")
+                ep.servClusters[sClustId] = new Object();
+            clust = ep.servClusters[sClustId];
+            if (typeof clust.attributes === "undefined")
+                clust.attributes = new Object();
+            attributes = clust.attributes;
+
+            for (const [sAttrId, sAttr] of Object.entries(sAttributes)) {
+                sStatus = sAttr.status;
+                sValue = sAttr.value;
+
+                // Updating internal infos
+                if (sStatus == "00") {
+                    if (typeof attributes[sAttrId] === 'undefined')
+                        attr = new Object();
+                    else
+                        attr = attributes[sAttrId];
+                    attr['value'] = sValue;
+                    attributes[sAttrId] = attr;
+                    ep.servClusters[sClustId]['attributes'] = attributes;
+
+                    /* Checking Cluster-000/PowerSource */
+                    if ((sClustId == "0000") && (sAttrId == "0007")) {
+                        if (sValue == "03")
+                            discovery.powerSource = "battery";
+                        else
+                            discovery.powerSource = "mains";
+                    }
+                }
+
+                // Updating display
+                field = null;
+                if (sClustId == "0000") {
+                    if (sAttrId == "0004") {
+                        field = document.getElementById("idZbManuf"+sEp);
+                        idRB = "idZbManuf"+sEp+"RB"; // Refresh button
+                    } else if (sAttrId == "0005") {
+                        field = document.getElementById("idZbModel"+sEp);
+                        idRB = "idZbModel"+sEp+"RB"; // Refresh button
+                    } else if (sAttrId == "0007") {
+                        field = document.getElementById("idZbPowerSource"+sEp);
+                        idRB = "idZbPowerSource"+sEp+"RB"; // Refresh button
+                        sValue = discovery.powerSource;
+                    } else if (sAttrId == "0010") {
+                        field = document.getElementById("idZbLocation"+sEp);
+                        idRB = "idZbLocation"+sEp+"RB"; // Refresh button
+                    }
+                }
+                if (field !== null) {
+                    if (sStatus != "00")
+                        field.value = "-- Non supporté --";
+                    else
+                        field.value = sValue;
+                    changeClass(idRB, "btn-warning", "btn-success");
+                }
             }
 
             // If all attributes values are known, change button class

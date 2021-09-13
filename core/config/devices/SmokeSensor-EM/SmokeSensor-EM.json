@@ -13,7 +13,10 @@
         "commands": {
             "include2": "nom",
             "include3": "securitySafetySmokeHeiman",
-            "include8": "Batterie-Pourcent-Heiman",
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            },
             "include9": "getBattery",
             "include10": "BindShortToZigateBatterie",
             "include11": "setReportBatterie",

@@ -3,7 +3,9 @@ ChangeLog
 
 - Interne: Optimisation parser: transfert groupé d'attributs.
 - Interne: Link-Quality mis à jour sur attribut report.
+- JSON équipements: Mise-à-jour commandes pourcentage batterie.
 - Tuya inter 4 buttons: mise-à-jour support 'click' (#2122).
+
 210909-BETA-1
 ----------
 

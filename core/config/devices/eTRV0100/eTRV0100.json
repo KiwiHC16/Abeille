@@ -17,7 +17,10 @@
             "include1 1 - Ok": "danfossTemperatureConsigneValue",
             "include1 2 - Ok": "danfossTemperatureConsigneGet",
             "include1 3 - Ok": "danfossTemperatureConsigneSet",
-            "include2 1 - Ok": "Batterie-Pourcent-Heiman",
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            },
             "include2 2 - Ok": "getBattery",
             "include3 1 - Ok": "Batterie-Volt-Konke",
             "include3 2 - Ok": "getBatteryVolt",

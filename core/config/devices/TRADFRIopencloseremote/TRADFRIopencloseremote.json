@@ -21,7 +21,10 @@
             "include10 2 2": "WindowsCoveringStopGroup",
             "include21": "getManufacturerName",
             "include22": "getModelIdentifier",
-            "include8": "Batterie-Pourcent-Ikea",
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            },
             "include9": "getBattery",
             "include10": "BindShortToZigateBatterie",
             "include11": "setReportBatterie",

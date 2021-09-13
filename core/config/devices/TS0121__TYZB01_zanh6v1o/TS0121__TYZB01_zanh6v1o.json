@@ -4,7 +4,7 @@
         "configuration": {
             "mainEP": "01",
             "poll": "1",
-            "icon": "PriseTuya"
+            "icon": "defaultUnknown"
         },
         "category": {
             "light": "1"

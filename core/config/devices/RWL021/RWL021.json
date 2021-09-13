@@ -28,7 +28,10 @@
             "include6 2 2 2 2 2 2": "boutonStateRWL021_7",
             "include6 2 2 2 2 2 2 2": "boutonStateRWL021_8",
             "include7": "BindToZigateButton",
-            "include8 a tester": "Batterie-Pourcent-Ikea",
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            },
             "include9 a tester": "getBattery",
             "include10 a tester": "BindShortToZigateBatterie",
             "include11 a tester": "setReportBatterie"

@@ -15,7 +15,10 @@
         "commands": {
             "include2": "nom",
             "include1": "etatSonOffIR",
-            "include2 3 2": "Batterie-Pourcent-Heiman",
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            },
             "include2 2 2": "BindToPowerConfig",
             "include2 2 2 3": "setReportBatterie"
         },

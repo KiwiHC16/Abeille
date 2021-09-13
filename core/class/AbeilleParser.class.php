@@ -1940,7 +1940,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             // Electrical measurement cluster
             // Info: Used for power reporting on Legrand 20AX / prise Blitzwolf BW-SHP13 #1231
-            if ($cluster == "0B04") {
+            // if ($cluster == "0B04") {
 
             //     $frameCtrlField = substr($payload, 26, 2);
             //     $SQN = substr($payload, 28, 2);
@@ -2408,11 +2408,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                 $value = substr($payload, 32, 2);
                 if ($value == "00")
-                    $action = 'single-click';
+                    $value = 'single';
                 else if ($value == "01")
-                    $action = 'double-click';
+                    $value = 'double';
                 else if ($value == "02")
-                    $action = 'long-click';
+                    $value = 'long';
                 else {
                     parserLog('debug',  '  Tuya 0006-FD specific command'
                         .', value='.$value.' => UNSUPPORTED', "8002");
@@ -2422,9 +2422,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 parserLog('debug',  '  Tuya 0006-FD specific command'
                                 .', value='.$value.' => '.$action, "8002");
 
-                // Generating an event on 'EP-<action>' Jeedom cmd (ex: 01-single-click)
-                $this->msgToAbeille($dest."/".$srcAddr, $srcEp, $action, 1);
-                $this->msgToAbeille($dest."/".$srcAddr, $srcEp, $action, 0);
+                // Generating an event on 'EP-click' Jeedom cmd (ex: '01-click' = 'single')
+                $this->msgToAbeille($dest."/".$srcAddr, $srcEp, "click", $value);
                 return;
             }
 

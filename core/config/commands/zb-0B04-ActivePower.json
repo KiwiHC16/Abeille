@@ -7,7 +7,6 @@
         "generic_type": "POWER",
         "template": "badge",
         "configuration": {
-            "repeatEventManagement": "always",
             "historizeRound": "0",
             "maxValue": "4000",
             "minValue": "0",

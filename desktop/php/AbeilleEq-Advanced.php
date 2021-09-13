@@ -1,7 +1,9 @@
-<!-- This file displays equipment specifics/zigbee infos.
+<!-- This file displays advanced equipment/zigbee infos.
      Included by 'AbeilleEq.php' -->
 
 <?php
+    require_once __DIR__.'/../../core/php/AbeilleZigbeeConst.php';
+
     function addDocButton($chapter) {
         // $urlUserMan = "https://kiwihc16.github.io/AbeilleDoc"; // Constant defined in Abeille config
         echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/'.$chapter.'"><i class="fas fa-book"></i> ?</a>';
@@ -483,7 +485,20 @@
             }
         ?>
 
-    <?php if ($eqAddr != "0000") { ?>
+    <?php if ($eqAddr != "0000") {
+        function addEpButton($id, $defEp) {
+            echo '<input id="'.$id.'" title="{{End Point, format hexa (ex: 01)}}" value="'.$defEp.'"  style="width:30px; margin-left: 8px" />';
+        }
+        // $GLOBALS['zbClusters'] = $zbClusters;
+        function addClusterButton($id) {
+            global $zbClusters;
+            echo '<select id="'.$id.'" title="{{Cluster}}" style="width:140px; margin-left: 8px">';
+            foreach ($zbClusters as $clustId => $clust) {
+                echo '<option value="'.$clustId.'">'.$clustId.'/'.$clust['name'].'</option>';
+            }
+            echo '</select>';
+        }
+    ?>
         <hr>
         <div class="form-group">
             <div class="col-sm-3">
@@ -496,9 +511,11 @@
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'readAttribute\', \''.$eqId.'\')">{{Lire}}</a>';
-                    echo '<input id="idEpA" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
+                    // echo '<input id="idEpA" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
+                    addEpButton("idEpA", $mainEP);
+                    addClusterButton("idClustIdA");
                 ?>
-                <input id="idClustIdA" placeholder="{{Cluster (ex: 0001)}}" />
+                <!-- <input id="idClustIdA" placeholder="{{Cluster (ex: 0001)}}" /> -->
                 <input id="idAttrIdA" placeholder="{{Attrib (ex: 0021)}}" />
             </div>
         </div>
@@ -507,8 +524,9 @@
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'readReportingConfig\', \''.$eqId.'\')">{{Interroger}}</a>';
+                    addClusterButton("idClustId");
                 ?>
-                <input id="idClustId" placeholder="{{Cluster (ex: 0001)}}" />
+                <!-- <input id="idClustId" placeholder="{{Cluster (ex: 0001)}}" /> -->
                 <input id="idAttrId" placeholder="{{Attrib (ex: 0021)}}" />
             </div>
         </div>
@@ -517,9 +535,11 @@
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'discoverCommandsReceived\', \''.$eqId.'\')">{{Interroger}}</a>';
-                    echo '<input id="idEpB" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
+                    // echo '<input id="idEpB" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
+                    addEpButton("idEpB", $mainEP);
+                    addClusterButton("idClustIdB");
                 ?>
-                <input id="idClustIdB" placeholder="{{Cluster (ex: 0001)}}" />
+                <!-- <input id="idClustIdB" placeholder="{{Cluster (ex: 0001)}}" /> -->
                 <!-- <input id="idStartB" placeholder="{{Start (ex: 00)}}" /> -->
             </div>
         </div>
@@ -528,9 +548,11 @@
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'discoverAttributes\', \''.$eqId.'\')">{{Interroger}}</a>';
-                    echo '<input id="idEpD" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
+                    // echo '<input id="idEpD" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
+                    addEpButton("idEpD", $mainEP);
+                    addClusterButton("idClustIdD");
                 ?>
-                <input id="idClustIdD" placeholder="{{Cluster (ex: 0001)}}" />
+                <!-- <input id="idClustIdD" placeholder="{{Cluster (ex: 0001)}}" /> -->
                 <!-- <input id="idStartD" placeholder="{{Start (ex: 00)}}" /> -->
             </div>
         </div>
@@ -539,9 +561,11 @@
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'discoverAttributesExt\', \''.$eqId.'\')">{{Interroger}}</a>';
-                    echo '<input id="idEpC" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
+                    // echo '<input id="idEpC" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
+                    addEpButton("idEpC", $mainEP);
+                    addClusterButton("idClustIdC");
                 ?>
-                <input id="idClustIdC" placeholder="{{Cluster (ex: 0001)}}" />
+                <!-- <input id="idClustIdC" placeholder="{{Cluster (ex: 0001)}}" /> -->
                 <!-- <input id="idStartC" placeholder="{{Start (ex: 00)}}" /> -->
             </div>
         </div>

@@ -577,7 +577,7 @@ if (0) {
                     log::add('Abeille', 'debug', "cron15: Interrogating '".$eqName."' (addr ".$addr.", poll-reason=".$poll.")");
                     // Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $mainEP);
                     // Reading ZCLVersion attribute which should always be supported
-                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttributeRequest&time=".(time()+($i*23)), "ep=".$mainEP."&clustId=0000&attrId=0000");
+                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+($i*23)), "ep=".$mainEP."&clustId=0000&attrId=0000");
                     $i++;
                 }
             }
@@ -720,8 +720,8 @@ if (0) {
             $mainEP = $eqLogic->getConfiguration('mainEP');
             // Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0006&attributeId=0000");
             // Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0008&attributeId=0000");
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttributeRequest&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0006&attrId=0000");
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttributeRequest&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0008&attrId=0000");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0006&attrId=0000");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+($i*3)), "ep=".$mainEP."&clustId=0008&attrId=0000");
             $i++;
         }
         if (($i * 3) > 60) {
@@ -2216,15 +2216,14 @@ while ($cron->running()) {
 
         /* Parser has received a "leave indication" */
         if ($msg['type'] == "leaveIndication") {
-            /* Msg reminder
-                $msg = array(
-                    'src' => 'parser',
-                    'type' => 'leaveIndication',
-                    'net' => $dest,
-                    'ieee' => $IEEE,
-                    'rejoin' => $RejoinStatus,
-                    'time' => time()
-                );
+            /* $msg reminder
+                'src' => 'parser',
+                'type' => 'leaveIndication',
+                'net' => $dest,
+                'ieee' => $IEEE,
+                'rejoin' => $RejoinStatus,
+                'time' => time(),
+                'lqi' => $lqi
             */
 
             $ieee = $msg['ieee'];
@@ -2271,7 +2270,7 @@ while ($cron->running()) {
                 $eqLogic->save();
                 $eqLogic->refresh();
 
-                Abeille::updateTimestamp($eqLogic, $msg['time']);
+                Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
             } else
                 log::add('Abeille', 'debug', 'msgFromParser(): WARNING: Device with IEEE '.$ieee.' NOT found in Jeedom');
 
@@ -2280,18 +2279,17 @@ while ($cron->running()) {
 
         /* Attribute report (8100 & 8102 responses) */
         if ($msg['type'] == "attributeReport") {
-            /* Reminder
-                $msg = array(
-                    'src' => 'parser',
-                    'type' => 'attributeReport',
-                    'net' => $net,
-                    'addr' => $addr,
-                    'ep' => 'xx', // End point hex string
-                    'name' => 'xxx', // Attribut name = cmd logical ID
-                    'value' => false, // False = unsupported
-                    'time' => time(),
-                    'lqi' => $lqi
-                ); */
+            /* $msg reminder
+                'src' => 'parser',
+                'type' => 'attributeReport',
+                'net' => $net,
+                'addr' => $addr,
+                'ep' => 'xx', // End point hex string
+                'name' => 'xxx', // Attribut name = cmd logical ID
+                'value' => false, // False = unsupported
+                'time' => time(),
+                'lqi' => $lqi
+            */
 
             log::add('Abeille', 'debug', "msgFromParser(): Attribute report from '".$net."/".$addr."/".$ep."': attr='".$msg['name']."', val='".$msg['value']."'");
             $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
@@ -2307,9 +2305,45 @@ while ($cron->running()) {
             }
             $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['value']);
 
-            Abeille::updateTimestamp($eqLogic, $msg['time']);
+            Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
             return;
         } // End 'attributeReport'
+
+        /* Grouped attributes read or report (8002 response, cmds 01 or 0A) */
+        if (($msg['type'] == "reportAttributes") || ($msg['type'] == "readAttributesResponse")) {
+            /* $msg reminder
+                'src' => 'parser',
+                'type' => 'reportAttributes', // or 'readAttributesResponse'
+                'net' => $dest,
+                'addr' => $srcAddr,
+                'ep' => $srcEp,
+                'clustId' => $cluster,
+                'attributes' => $attributes,
+                'time' => time(),
+                'lqi' => $lqi,
+            */
+
+            log::add('Abeille', 'debug', "msgFromParser(): Attributes report from '".$net."/".$addr."/".$ep);
+            $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'debug', "  Unknown device");
+                return; // Unknown device
+            }
+            foreach ($msg['attributes'] as $attrId => $attr) {
+                log::add('Abeille', 'debug', "  attrId='".$attrId."', val='".$attr['value']."'");
+
+                $cmdName = $msg['clustId'].'-'.$ep.'-'.$attrId;
+                $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $cmdName);
+                if (!is_object($cmdLogic)) {
+                    log::add('Abeille', 'debug', "  Unknown command logicalid ".$cmdName);
+                    return; // Unknown command
+                }
+                $eqLogic->checkAndUpdateCmd($cmdLogic, $cmdName);
+            }
+
+            Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
+            return;
+        } // End 'reportAttributes' or 'readAttributesResponse'
 
         /* Zigate version (8010 response) */
         if ($msg['type'] == "zigateVersion") {
@@ -2937,13 +2971,13 @@ while ($cron->running()) {
         }
     } // End createDevice()
 
-    /* Update all infos related to last communication time of given device.
+    /* Update all infos related to last communication time & LQI of given device.
        This is based on timestamp of last communication received from device itself. */
-    public static function updateTimestamp($eqLogic, $timestamp) {
+    public static function updateTimestamp($eqLogic, $timestamp, $lqi = null) {
         $eqLogicId = $eqLogic->getLogicalId();
         $eqId = $eqLogic->getId();
 
-        log::add('Abeille', 'debug', "updateTimestamp(): Updating last comm. time for '".$eqLogicId."'");
+        log::add('Abeille', 'debug', "  updateTimestamp(): Updating last comm. time for '".$eqLogicId."'");
 
         // Updating directly eqLogic/setStatus/'lastCommunication' & 'timeout' with real timestamp
         $eqLogic->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
@@ -2954,20 +2988,28 @@ while ($cron->running()) {
 
         $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-TimeStamp");
         if (!is_object($cmdlogic))
-            log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-TimeStamp'");
+            log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-TimeStamp'");
         else
             $eqLogic->checkAndUpdateCmd($cmdlogic, $timestamp);
 
         $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, "Time-Time");
         if (!is_object($cmdlogic))
-            log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-Time'");
+            log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Time-Time'");
         else
             $eqLogic->checkAndUpdateCmd($cmdlogic, date("Y-m-d H:i:s", $timestamp));
 
         $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
         if (!is_object($cmdlogic))
-            log::add('Abeille', 'debug', 'updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
+            log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
         else
             $eqLogic->checkAndUpdateCmd($cmdlogic, 1);
+
+        if ($lqi != null) {
+            $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Link-Quality');
+            if (!is_object($cmdlogic))
+                log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'Link-Quality'");
+            else
+                $eqLogic->checkAndUpdateCmd($cmdlogic, $lqi);
+        }
     }
 }

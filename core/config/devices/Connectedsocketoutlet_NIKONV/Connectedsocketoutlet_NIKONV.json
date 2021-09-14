@@ -1,0 +1,74 @@
+{
+    "Connectedsocketoutlet_NIKONV": {
+        "manufacturer": "Niko",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "Connectedoutlet"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Niko connected outlet socket",
+        "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+
+            "include25": "Group-Membership",
+
+            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
+            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
+            "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
+            "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+            "Bind-0006-ToZigate" : { "use": "BindToZigateEtat" },
+            "Set-OnOffReporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "yes"
+            },
+
+            "Total power": {
+                "use": "zb-0702-CurrentSummationDelivered",
+                "params": "unit=KWh&div=10",
+                "isVisible": 1
+            },
+
+            "RMSVoltage": {
+                "use": "zb-0B04-RMSVoltage",
+                "isVisible": 0
+            },
+            "RMSCurrent": {
+                "use": "zb-0B04-RMSCurrent",
+                "isVisible": 1
+            },
+            "ActivePower": {
+                "use": "zb-0B04-ActivePower",
+                "params": "mult=1&div=10",
+                "isVisible": 1
+            },
+            "Set-RMSVoltageReporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0B04&attrType=21&attrId=0505&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "yes"
+            },
+            "Set-RMSCurrentReporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "yes"
+            },
+            "Set-ActivePowerReporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "yes"
+            },
+            "Bind-0B04-ToZigate": {
+                "use": "BindToZigatePuissanceLegrand"
+            }
+        }
+    }
+}

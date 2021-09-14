@@ -185,13 +185,25 @@
         "0502" => array(
             "name" => "IAS WD",
         ),
-        "0702" => array( // Metering (Smart Energy) cluster
+        "0702" => array(
             "name" => "Metering (Smart Energy)",
             "attributes" => array(
+                // Reading information attribute set
                 "0000" => array( "name" => "CurrentSummationDelivered", "access" => "R" ),
                 "0001" => array( "name" => "CurrentSummationReceived", "access" => "R" ),
                 "0002" => array( "name" => "CurrentMaxDemandDelivered", "access" => "R" ),
                 "0003" => array( "name" => "CurrentMaxDemandReceived", "access" => "R" ),
+                "0006" => array( "name" => "PowerFactor", "access" => "R" ),
+
+                // Meter status attribute set
+                "0200" => array( "name" => "Status", "access" => "R" ),
+
+                // Formatting set
+                "0300" => array( "name" => "UnitofMeasure", "access" => "R" ),
+                "0301" => array( "name" => "Multiplier", "access" => "R" ),
+                "0302" => array( "name" => "Divisor", "access" => "R" ),
+                "0303" => array( "name" => "SummationFormatting", "access" => "R" ),
+                "0306" => array( "name" => "MeteringDeviceType", "access" => "R" ),
             ),
             // "commands" => array(
                 // "cmd1" => array( "name" => "GetProfile" ),
@@ -204,10 +216,13 @@
             "name" => "Electrical measurement",
             "attributes" => array(
                 "0000" => array( "name" => "Measurement Type", "access" => "R" ),
+
                 "0300" => array( "name" => "AC Frequency", "access" => "R" ),
-                "0505" => array( "name" => "RMS Voltage", "access" => "R" ),
-                "0508" => array( "name" => "RMS Current", "access" => "R" ),
-                "050B" => array( "name" => "Active Power", "access" => "R" ),
+
+                "0505" => array( "name" => "RMS Voltage", "access" => "R", "dataType" => 0x21 ),
+                "0508" => array( "name" => "RMS Current", "access" => "R", "dataType" => 0x21 ),
+                "050B" => array( "name" => "Active Power", "access" => "R", "dataType" => 0x29 ),
+
                 "0602" => array( "name" => "AC Current Multiplier", "access" => "R" ),
                 "0603" => array( "name" => "AC Current Divisor", "access" => "R" ),
                 "0604" => array( "name" => "AC Power Multiplier", "access" => "R" ),

@@ -1148,8 +1148,8 @@ while ($cron->running()) {
                     $version = $cmdlogic->execCmd();
                 }
             }
-            if (($version == '031D') || ($version == '031E')) {
-                log::add('Abeille', 'debug', 'deamon(): Configuring zigate '.$i.' in hybrid mode');
+            if (hexdec($version) >= 0x031D) {
+                log::add('Abeille', 'debug', 'deamon(): FW version >= 3.1D => Configuring zigate '.$i.' in hybrid mode');
                 Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setModeHybride", "hybride");
             } else {
                 log::add('Abeille', 'debug', 'deamon(): Configuring zigate '.$i.' in normal mode');
@@ -2093,14 +2093,21 @@ while ($cron->running()) {
                Syntax: 'trig': 'trig-cmd-logicalId' */
             $trigLogicId = $cmdlogic->getConfiguration('ab::trig');
             if ($trigLogicId) {
-                $newvalue = $cmdlogic->execCmd(); // Value might be updated with a "calculValueOffset" rule
+                $newValue = $cmdlogic->execCmd(); // Value might be updated with a "calculValueOffset" rule
+                $trigOffset = $cmdlogic->getConfiguration('ab::trigOffset');
+                if ($trigOffset)
+                    $trigValue = jeedom::evaluateExpression(str_replace('#value#', $newValue, $trigOffset));
+                else
+                    $trigValue = $newValue;
+
                 $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($elogic->getId(), $trigLogicId);
-                if ($trigCmd)
-                    $elogic->checkAndUpdateCmd($trigCmd, $newvalue);
+                if ($trigCmd) {
+                    $elogic->checkAndUpdateCmd($trigCmd, $trigValue);
+                }
 
                 if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
-                    log::add('Abeille', 'debug', "  Battery % reporting: ".$trigLogicId.", val=".$newvalue);
-                    $elogic->setStatus('battery', $newvalue);
+                    log::add('Abeille', 'debug', "  Battery % reporting: ".$trigLogicId.", val=".$trigValue);
+                    $elogic->setStatus('battery', $trigValue);
                     $elogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
                 }
             }
@@ -2115,6 +2122,27 @@ while ($cron->running()) {
         log::add('Abeille', 'debug', "  WARNING: Unexpected state at end of message().");
         return;
     } // End message()
+
+    /* Trig another command defined by 'trigLogicId'.
+       The 'newValue' is computed with 'trigOffset' if required then applied to 'trigLogicId' */
+    public static function trigCommand($eqLogic, $newValue, $trigLogicId, $trigOffset = null) {
+        if ($trigOffset)
+            $trigValue = jeedom::evaluateExpression(str_replace('#value#', $newValue, $trigOffset));
+        else
+            $trigValue = $newValue;
+
+        $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $trigLogicId);
+        if ($trigCmd) {
+            log::add('Abeille', 'debug', "  Triggering cmd '".$trigLogicId."' with val=".$trigValue);
+            $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
+        }
+
+        if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
+            log::add('Abeille', 'debug', "  Battery % reporting: ".$trigLogicId.", val=".$trigValue);
+            $eqLogic->setStatus('battery', $trigValue);
+            $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+        }
+    }
 
     /* Deal with messages coming from parser.
        Note: this is the new way to handle messages from parser, replacing progressively 'message()' */
@@ -2291,19 +2319,26 @@ while ($cron->running()) {
                 'lqi' => $lqi
             */
 
-            log::add('Abeille', 'debug', "msgFromParser(): Attribute report from '".$net."/".$addr."/".$ep."': attr='".$msg['name']."', val='".$msg['value']."'");
+            log::add('Abeille', 'debug', "msgFromParser(): Attribute report from '".$net."/".$addr."/".$ep."': Attr='".$msg['name']."', Val='".$msg['value']."'");
             $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                log::add('Abeille', 'debug', "  Unknown device");
+                log::add('Abeille', 'debug', "  Unknown device ".$net."/".$addr);
                 return; // Unknown device
             }
 
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $msg['name']);
             if (!is_object($cmdLogic)) {
-                log::add('Abeille', 'debug', "  Unknown command");
+                log::add('Abeille', 'debug', "  Unknown command ".$msg['name']);
                 return; // Unknown command
             }
             $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['value']);
+
+            // Trig another command ?
+            $trigLogicId = $cmdLogic->getConfiguration('ab::trig');
+            if ($trigLogicId) {
+                $trigOffset = $cmdLogic->getConfiguration('ab::trigOffset');
+                Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
+            }
 
             Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
             return;
@@ -2330,7 +2365,7 @@ while ($cron->running()) {
                 return; // Unknown device
             }
             foreach ($msg['attributes'] as $attrId => $attr) {
-                log::add('Abeille', 'debug', "  attrId='".$attrId."', val='".$attr['value']."'");
+                log::add('Abeille', 'debug', "  AttrId='".$attrId."', Val='".$attr['value']."'");
 
                 $cmdName = $msg['clustId'].'-'.$ep.'-'.$attrId;
                 $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $cmdName);
@@ -2339,6 +2374,13 @@ while ($cron->running()) {
                     return; // Unknown command
                 }
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $cmdName);
+
+                // Trig another command ?
+                $trigLogicId = $cmdLogic->getConfiguration('ab::trig');
+                if ($trigLogicId) {
+                    $trigOffset = $cmdLogic->getConfiguration('ab::trigOffset');
+                    Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
+                }
             }
 
             Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
@@ -2363,12 +2405,39 @@ while ($cron->running()) {
                 log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
                 return;
             }
+
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'SW-Application');
             if ($cmdLogic)
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['major']);
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'SW-SDK');
             if ($cmdLogic)
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['minor']);
+
+            Abeille::updateTimestamp($eqLogic, $msg['time']);
+
+            return;
+        }
+
+        /* Zigate time (8017 response) */
+        if ($msg['type'] == "zigateTime") {
+            /* $msg reminder
+                'src' => 'parser',
+                'type' => 'zigateTime',
+                'net' => $dest,
+                'timeServer' => $data,
+                'time' => time()
+             */
+
+            log::add('Abeille', 'debug', "msgFromParser(): ".$net.", Zigate timeServer ".$msg['time']);
+            $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
+                return;
+            }
+            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'ZiGate-Time');
+            if ($cmdLogic)
+                $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['timeServer']);
+
             Abeille::updateTimestamp($eqLogic, $msg['time']);
 
             return;
@@ -2407,6 +2476,45 @@ while ($cron->running()) {
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Ext_PAN-ID');
             if ($cmdLogic)
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['extPanId']);
+            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Network-Channel');
+            if ($cmdLogic)
+                $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['chan']);
+
+            Abeille::updateTimestamp($eqLogic, $msg['time']);
+
+            return;
+        }
+
+        /* Network started (8024 response) */
+        if ($msg['type'] == "networkStarted") {
+            /* Reminder
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'networkStarted',
+                'net' => $dest,
+                'status' => $status,
+                'statusTxt' => $data,
+                'addr' => $dataShort, // Should be always 0000
+                'ieee' => $dataIEEE, // Zigate IEEE
+                'chan' => $dataNetwork,
+                'time' => time()
+            ); */
+
+            log::add('Abeille', 'debug', "msgFromParser(): ".$net.", network started, ieee=".$msg['ieee'].", chan=".$msg['chan']);
+            $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
+                return;
+            }
+            $ieee = $eqLogic->getConfiguration('IEEE', 'none');
+            if ($ieee != $msg['ieee']) {
+                log::add('Abeille', 'debug', "  ERROR: IEEE mistmatch, got ".$msg['ieee']." while expecting ".$ieee);
+                return;
+            }
+            $eqId = $eqLogic->getId();
+            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Network-Status');
+            if ($cmdLogic)
+                $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['statusTxt']);
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Network-Channel');
             if ($cmdLogic)
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['chan']);
@@ -2685,17 +2793,14 @@ while ($cron->running()) {
         $objetConfiguration = $deviceConfig["configuration"];
         log::add('Abeille', 'debug', 'config='.json_encode($objetConfiguration));
 
-        /* mainEP:
-           Was used to define main End Point on which we could read model/manuf/location
-           but also for all commands using "#EP#".
-           No longer required with latest JSON syntax ("use" instead of "include"). */
+        /* mainEP: Used to define default end point to target, when undefined in command itself (use of '#EP#'). */
         if (isset($objetConfiguration['mainEP'])) {
             $mainEP = $objetConfiguration['mainEP'];
-            $elogic->setConfiguration('mainEP', $mainEP);
         } else {
-            $mainEP = "";
-            $elogic->setConfiguration('mainEP', null); // Remove obsolete entry
+            log::add('Abeille', 'debug', '  WARNING: Undefined mainEP => defaulting to 01');
+            $mainEP = "01";
         }
+        $elogic->setConfiguration('mainEP', $mainEP);
 
         $elogic->setConfiguration('modeleJson', $jsonName);
         if ($jsonLocation != "Abeille")
@@ -2880,23 +2985,30 @@ while ($cron->running()) {
                 }
             }
 
-            if (isset($cmdValueDefaut["trig"]))
-                $cmdlogic->setConfiguration('ab::trig', $cmdValueDefaut["trig"]);
-            else
-                $cmdlogic->setConfiguration('ab::trig', null); // Removing config entry
-
             /* Updating 'configuration' fields of eqLogic from JSON.
                In case of update, some fields may no longer be required ($unusedConfKey).
                They are removed if not updated from JSON. */
             $unusedConfKey = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'uniqId', 'repeatEventManagement', 'topic'];
+            array_push($unusedConfKey, 'ab::trig', 'ab::trigOffset');
             if (isset($cmdValueDefaut["configuration"])) {
-                foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
-                    // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
-                    // $cmdlogic->setConfiguration($confKey, str_replace('#addr#', $addr, $confValue)); // Ce n'est plus necessaire car l adresse est maintenant dans le logicalId
+                $configuration = $cmdValueDefaut["configuration"];
 
-                    // Ne pas effacer, en cours de dev.
-                    // $cmdlogic->setConfiguration($confKey, str_replace('#addrIEEE#',     '#addrIEEE#',   $confValue));
-                    // $cmdlogic->setConfiguration($confKey, str_replace('#ZiGateIEEE#',   '#ZiGateIEEE#', $confValue));
+                if (isset($configuration["trig"]))
+                    $cmdlogic->setConfiguration('ab::trig', $configuration["trig"]);
+                else
+                    $cmdlogic->setConfiguration('ab::trig', null); // Removing config entry
+                if (isset($configuration["trigOffset"]))
+                    $cmdlogic->setConfiguration('ab::trigOffset', $configuration["trigOffset"]);
+                else
+                    $cmdlogic->setConfiguration('ab::trigOffset', null); // Removing config entry
+
+                foreach ($configuration as $confKey => $confValue) {
+                    // Trick for conversion 'key' => 'ab::key' for Abeille specifics
+                    // Note: this is currently not applied to all Abeille specific fields.
+                    if ($confKey == 'trig')
+                        $confKey = "ab::trig";
+                    else if ($confKey == 'trigOffset')
+                        $confKey = "ab::trigOffset";
 
                     $cmdlogic->setConfiguration($confKey, $confValue);
                     foreach ($unusedConfKey as $uk => $uv) {
@@ -2907,7 +3019,7 @@ while ($cron->running()) {
                 }
             }
 
-            /* Removing any obsolete configuration field */
+            /* Removing any obsolete 'configuration' field */
             foreach ($unusedConfKey as $confKey) {
                 // Tcharp38: Is it the proper way to know if entry exists ?
                 if ($cmdlogic->getConfiguration($confKey) == null)

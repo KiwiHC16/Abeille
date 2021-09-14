@@ -1403,21 +1403,21 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         function decode8002($dest, $payload, $lqi) {
 
             // Decode first based on https://zigate.fr/documentation/commandes-zigate/
-            $status                 = substr($payload, 0, 2);
-            $profile                = substr($payload, 2, 4);
-            $cluster                = substr($payload, 6, 4);
-            $srcEp            = substr($payload,10, 2);
-            $destEp           = substr($payload,12, 2);
-            $srcAddrMode      = substr($payload,14, 2);
-            $srcAddr             = substr($payload,16, 4);
-            $destAddrMode = substr($payload,20, 2);
-            $dstAddress             = substr($payload,22, 4);
+            $status         = substr($payload, 0, 2);
+            $profId         = substr($payload, 2, 4);
+            $cluster        = substr($payload, 6, 4);
+            $srcEp          = substr($payload,10, 2);
+            $destEp         = substr($payload,12, 2);
+            $srcAddrMode    = substr($payload,14, 2);
+            $srcAddr        = substr($payload,16, 4);
+            $destAddrMode   = substr($payload,20, 2);
+            $dstAddress     = substr($payload,22, 4);
             $pl = substr($payload, 26); // Keeping remaining payload
 
             /* Log */
             $msgDecoded = '8002/Data indication'
                             .', Status='.$status
-                            .', ProfId='.$profile
+                            .', ProfId='.$profId
                             .', ClustId='.$cluster
                             .", SrcEP=".$srcEp
                             .", DestEP=".$destEp
@@ -1434,7 +1434,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
             /* Profile 0000 */
-            if ($profile == "0000") {
+            if ($profId == "0000") {
                 // Routing Table Response (Mgmt_Rtg_rsp)
                 if ($cluster == "8032") {
 
@@ -1480,7 +1480,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                         $nextHop=substr($payload,36+($i*10)+4+2,4);
 
-                        parserLog('debug', '  addr='.$addressDest.', status='.$statusRouting.'/'.$statusDecoded.', Next Hop='.$nextHop, "8002");
+                        parserLog('debug', '  Addr='.$addressDest.', Status='.$statusRouting.'/'.$statusDecoded.', Next Hop='.$nextHop, "8002");
 
                         if ((base_convert( $statusRouting, 16, 2) &  7) == "00" ) {
                             $routingTable[] = array( $addressDest => $nextHop );
@@ -1527,20 +1527,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     for ($i = 0; $i < $tableCount; $i++) {
                         $srcIeee  = substr($pl, 0, 16);
                         $srcIeee = AbeilleTools::reverseHex($srcIeee);
-                        $srcEP  = substr($pl, 16, 2);
+                        $srcEp  = substr($pl, 16, 2);
                         $clustId  = substr($pl, 18, 4);
                         $destAddrMode = substr($pl, 22, 2);
                         if ($destAddrMode == "01") {
                             // 16-bit group address for DstAddr and DstEndpoint not present
                             $destAddr  = substr($pl, 24, 4);
-                            parserLog('debug', '  '.$srcIeee.', EP'.$srcEP.', Clust '.$clustId.' => group '.$destAddr);
+                            parserLog('debug', '  '.$srcIeee.', EP'.$srcEp.', Clust '.$clustId.' => group '.$destAddr);
                             $pl = substr($pl, 28);
                         } else if ($destAddrMode == "03") {
                             // 64-bit extended address for DstAddr and DstEndp present
                             $destIeee  = substr($pl, 24, 16);
                             $destIeee = AbeilleTools::reverseHex($destIeee);
                             $destEP  = substr($pl, 40, 2);
-                            parserLog('debug', '  '.$srcIeee.', EP'.$srcEP.', Clust '.$clustId.' => EP'.$destEP.' @'.$destIeee);
+                            parserLog('debug', '  '.$srcIeee.', EP'.$srcEp.', Clust '.$clustId.' => '.$destIeee.', EP'.$destEP);
                             $pl = substr($pl, 42);
                         } else {
                             parserLog('debug', '  ERROR: Unexpected destAddrMode '.$destAddrMode);
@@ -1565,8 +1565,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
              * Profiles: 0104/ZHA
              */
 
-            if ($profile !== "0104") {
-                parserLog('debug', '  Unsupported/ignored profile '.$profile.' message');
+            if ($profId !== "0104") {
+                parserLog('debug', '  Unsupported/ignored profile '.$profId.' message');
                 return;
             }
 
@@ -1608,7 +1608,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                                        .', value='.$value
                                         );
 
-                        $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$srcEp, '0000', $value );
+                        $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$srcEp, '0000', $value);
                         return;
                     }
                 }
@@ -1833,7 +1833,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             //                      "8002"
             //                      );
 
-            //     $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$srcEp, '0000', $value );
+            //     $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$srcEp, '0000', $value);
             //     return;
             // }
 
@@ -1853,32 +1853,33 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                                  "8002"
                                 );
 
-                $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$srcEp, '0000', $value );
+                $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$srcEp, '0000', $value);
                 return;
             }
 
-            if ($cluster == "000A") {
-                $frameCtrlField         = substr($payload,26, 2);
-                $SQN                    = substr($payload,28, 2);
-                $cmd                    = substr($payload,30, 2);
+            // Tcharp38: Do nothing right now. To be added in ZCL standard decode
+            // if ($cluster == "000A") {
+            //     $frameCtrlField         = substr($payload,26, 2);
+            //     $SQN                    = substr($payload,28, 2);
+            //     $cmd                    = substr($payload,30, 2);
 
-                if ($cmd == '00') {
-                    $attributTime                  = substr($payload,34, 2).substr($payload,32, 2);
-                    $attributTimeZone              = substr($payload,38, 2).substr($payload,36, 2);
-                    if ( isset($this->debug["8002"])) {
-                        parserLog('debug', '  Time Request - (decoded but not processed) '
-                                       .', frameCtrlField='.$frameCtrlField
-                                       .', SQN='.$SQN
-                                       .', cmd='.$cmd
-                                       .', attributTime='.$attributTime
-                                       .', attributTimeZone='.$attributTimeZone
-                                        );
-                                    }
+            //     if ($cmd == '00') {
+            //         $attributTime                  = substr($payload,34, 2).substr($payload,32, 2);
+            //         $attributTimeZone              = substr($payload,38, 2).substr($payload,36, 2);
+            //         if ( isset($this->debug["8002"])) {
+            //             parserLog('debug', '  Time Request - (decoded but not processed) '
+            //                            .', frameCtrlField='.$frameCtrlField
+            //                            .', SQN='.$SQN
+            //                            .', cmd='.$cmd
+            //                            .', attributTime='.$attributTime
+            //                            .', attributTimeZone='.$attributTimeZone
+            //                             );
+            //                         }
 
-                    // Here we should reply to the device with the time. I though this Time Cluster was implemented in the zigate....
-                    return;
-                }
-            }
+            //         // Here we should reply to the device with the time. I though this Time Cluster was implemented in the zigate....
+            //         return;
+            //     }
+            // }
 
             if ($cluster == "0204") {
                 $frameCtrlField         = substr($payload,26, 2);
@@ -1906,37 +1907,41 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                                    .', value='.$value
                                     );
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$destEp, $attribute, $value );
+                    $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$destEp, $attribute, $value);
                     return;
                 }
             }
 
-            // Remontée puissance prise TS0121 Issue: #1288
-            if ($cluster == "0702") {
-                $frameCtrlField         = substr($payload,26, 2);
-                $SQN                    = substr($payload,28, 2);
-                $cmd                    = substr($payload,30, 2); if ( $cmd == "0A" ) $cmd = "0A - report attribut";
-                $attribute              = substr($payload,34, 2).substr($payload,32, 2);
-                $dataType               = substr($payload,36, 2);
+            // Tcharp38: No longer required. This case is handled by decode8102
+            // [2021-09-13 11:42:10] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0702, SrcEP=01, DestEP=01, SrcAddrMode=02, SrcAddr=4E85, DestAddrMode=02, DestAddr=0000
+            // [2021-09-13 11:42:10]   Remontée puissance prise TS0121 , frameCtrlField=08, SQN=1E, cmd=0A - report attribut, attribute=0000, dataType=25, value=00000000007D - 125
+            // [2021-09-13 11:42:10] Abeille1, Type=8102/Attribute report, SQN=1E, Addr=4E85, EP=01, ClustId=0702, AttrId=0000, AttrStatus=00, AttrDataType=25, AttrSize=0006
+            // // Remontée puissance prise TS0121 Issue: #1288
+            // if ($cluster == "0702") {
+            //     $frameCtrlField         = substr($payload,26, 2);
+            //     $SQN                    = substr($payload,28, 2);
+            //     $cmd                    = substr($payload,30, 2); if ( $cmd == "0A" ) $cmd = "0A - report attribut";
+            //     $attribute              = substr($payload,34, 2).substr($payload,32, 2);
+            //     $dataType               = substr($payload,36, 2);
 
-                // Remontée puissance prise TS0121 Issue: #1288
-                if (($attribute == '0000') && ($dataType==25)) {
-                    // '25' => array( 'Uint48', 6 ), // Unsigned 48-bit int
-                    $value = substr($payload,48, 2).substr($payload,46, 2).substr($payload,44, 2).substr($payload,42, 2).substr($payload,40, 2).substr($payload,38, 2);
-                    parserLog('debug', '  Remontée puissance prise TS0121 '
-                                   .', frameCtrlField='.$frameCtrlField
-                                   .', SQN='.$SQN
-                                   .', cmd='.$cmd
-                                   .', attribute='.$attribute
-                                   .', dataType='.$dataType
-                                   .', value='.$value.' - '.hexdec($value),
-                                    "8002"
-                                    );
+            //     // Remontée puissance prise TS0121 Issue: #1288
+            //     if (($attribute == '0000') && ($dataType==25)) {
+            //         // '25' => array( 'Uint48', 6 ), // Unsigned 48-bit int
+            //         $value = substr($payload,48, 2).substr($payload,46, 2).substr($payload,44, 2).substr($payload,42, 2).substr($payload,40, 2).substr($payload,38, 2);
+            //         parserLog('debug', '  Remontée puissance prise TS0121 '
+            //                        .', frameCtrlField='.$frameCtrlField
+            //                        .', SQN='.$SQN
+            //                        .', cmd='.$cmd
+            //                        .', attribute='.$attribute
+            //                        .', dataType='.$dataType
+            //                        .', value='.$value.' - '.hexdec($value),
+            //                         "8002"
+            //                         );
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$destEp, $attribute, hexdec($value));
-                    return;
-                }
-            }
+            //         $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$destEp, $attribute, hexdec($value));
+            //         return;
+            //     }
+            // }
 
             // Electrical measurement cluster
             // Info: Used for power reporting on Legrand 20AX / prise Blitzwolf BW-SHP13 #1231
@@ -2102,12 +2107,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                                     $FCC0 = $this->decodeFF01(substr($payload, 44, $dataLength*2));
                                     // parserLog('debug', "  ".json_encode($FCC0));
 
-                                    $this->msgToAbeille($dest."/".$srcAddr, '0006', '01-0000',     $FCC0["Etat SW 1 Binaire"]["valueConverted"],  $lqi);    // On Off Etat
-                                    $this->msgToAbeille($dest."/".$srcAddr, '0402', '01-0000',     $FCC0["Device Temperature"]["valueConverted"], $lqi);    // Device Temperature
-                                    $this->msgToAbeille($dest."/".$srcAddr, '000C', '15-0055',     $FCC0["Puissance"]["valueConverted"],          $lqi);    // Puissance
-                                    $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--conso--',   $FCC0["Consommation"]["valueConverted"],       $lqi);    // Consumption
-                                    $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--volt--',    $FCC0["Voltage"]["valueConverted"],            $lqi);    // Voltage
-                                    $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--current--', $FCC0["Current"]["valueConverted"],            $lqi);    // Current
+                                    $this->msgToAbeille($dest."/".$srcAddr, '0006', '01-0000',     $FCC0["Etat SW 1 Binaire"]["valueConverted"]);    // On Off Etat
+                                    $this->msgToAbeille($dest."/".$srcAddr, '0402', '01-0000',     $FCC0["Device Temperature"]["valueConverted"]);    // Device Temperature
+                                    $this->msgToAbeille($dest."/".$srcAddr, '000C', '15-0055',     $FCC0["Puissance"]["valueConverted"]);    // Puissance
+                                    $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--conso--',   $FCC0["Consommation"]["valueConverted"]);    // Consumption
+                                    $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--volt--',    $FCC0["Voltage"]["valueConverted"]);    // Voltage
+                                    $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--current--', $FCC0["Current"]["valueConverted"]);    // Current
                                 }
                             }
                         }
@@ -2187,10 +2192,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             break; // Stop decode there
 
                         $attrName = zbGetZCLAttributeName($cluster, $attr['id']);
-                        parserLog('debug', '  attrId='.$attr['id'].'/'.$attrName
-                            .', status='.$attr['status']
-                            .', attrType='.$attr['dataType']
-                            .', value='.$attr['valueHex'].' => '.$attr['value'],
+                        parserLog('debug', '  AttrId='.$attr['id'].'/'.$attrName
+                            .', Status='.$attr['status']
+                            .', AttrType='.$attr['dataType']
+                            .', Value='.$attr['valueHex'].' => '.$attr['value'],
                             "8002"
                         );
                         $attrId = $attr['id'];
@@ -2235,7 +2240,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $status = substr($msg, 0, 2);
                     $dir = substr($msg, 2, 2);
                     $attrId = substr($msg, 6, 2).substr($msg, 4, 2);
-                    parserLog('debug', '  status='.$status.'/'.zbGetZCLStatus($status).', dir='.$dir.', attrId='.$attrId);
+                    parserLog('debug', '  Status='.$status.'/'.zbGetZCLStatus($status).', Dir='.$dir.', AttrId='.$attrId);
                     if ($status == "00") {
                         $attrType = substr($msg, 8, 2);
                         $minInterval = substr($msg, 10, 4);
@@ -2263,7 +2268,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             break;
 
                         $attrName = zbGetZCLAttributeName($cluster, $attr['id']);
-                        parserLog('debug', '  attrId='.$attr['id'].'/'.$attrName
+                        parserLog('debug', '  AttrId='.$attr['id'].'/'.$attrName
                             .', attrType='.$attr['dataType']
                             .', value='.$attr['value'],
                             "8002"
@@ -2438,12 +2443,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         //     // <cluster list: data each entry is uint16_t>
 
         //     $srcEp = substr($payload, 0, 2);
-        //     $profileID   = substr($payload, 2, 4);
+        //     $$profId   = substr($payload, 2, 4);
 
         //     $len = (strlen($payload)-2-4-2)/4;
         //     for ($i = 0; $i < $len; $i++) {
         //         $clustId = substr($payload, 6 + ($i * 4), 4);
-        //         parserLog('debug', $dest.', Type=8003/Clusters list, SrcEP='.$srcEp.', ProfId='.$profileID.', ClustId='.$clustId.' - '.zgGetCluster($clustId), "8003");
+        //         parserLog('debug', $dest.', Type=8003/Clusters list, SrcEP='.$srcEp.', ProfId='.$$profId.', ClustId='.$clustId.' - '.zgGetCluster($clustId), "8003");
         //     }
         // }
 
@@ -2456,12 +2461,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         //     // <attribute list: data each entry is uint16_t>
 
         //     $srcEp = substr($payload, 0, 2);
-        //     $profileID   = substr($payload, 2, 4);
+        //     $$profId   = substr($payload, 2, 4);
         //     $clustId   = substr($payload, 6, 4);
 
         //     $len = (strlen($payload)-2-4-4-2)/4;
         //     for ($i = 0; $i < $len; $i++) {
-        //         parserLog('debug', $dest.', Type=8004/Liste des Attributs de l’objet, SrcEP='.$srcEp.', ProfileID='.$profileID.', ClustId='.$clustId.', Attribute='.substr($payload, (10 + ($i*4) ), 4) );
+        //         parserLog('debug', $dest.', Type=8004/Liste des Attributs de l’objet, SrcEP='.$srcEp.', ProfileID='.$$profId.', ClustId='.$clustId.', Attribute='.substr($payload, (10 + ($i*4) ), 4) );
         //     }
         // }
 
@@ -2476,12 +2481,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         //     //<command ID list:data each entry is uint8_t>
 
         //     $srcEp = substr($payload, 0, 2);
-        //     $profileID   = substr($payload, 2, 4);
+        //     $$profId   = substr($payload, 2, 4);
         //     $clustId   = substr($payload, 6, 4);
 
         //     $len = (strlen($payload)-2-4-4-2)/2;
         //     for ($i = 0; $i < $len; $i++) {
-        //         parserLog('debug', $dest.', Type=8005/Liste des commandes de l’objet, SrcEP='.$srcEp.', ProfID='.$profileID.', ClustId='.$clustId.', Commandes='.substr($payload, (10 + ($i*2) ), 2) );
+        //         parserLog('debug', $dest.', Type=8005/Liste des commandes de l’objet, SrcEP='.$srcEp.', ProfID='.$$profId.', ClustId='.$clustId.', Commandes='.substr($payload, (10 + ($i*2) ), 2) );
         //     }
         // }
 
@@ -2750,12 +2755,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         function decode8017($dest, $payload, $lqi)
         {
             // <Timestamp UTC: uint32_t> from 2000-01-01 00:00:00
-            $Timestamp = substr($payload, 0, 8);
-            parserLog('debug', $dest.', Type=8017/Get time server response, Timestamp='.hexdec($Timestamp), "8017");
+            $timestamp = substr($payload, 0, 8);
+            parserLog('debug', $dest.', Type=8017/Get time server response, Timestamp='.hexdec($timestamp), "8017");
 
             // Note: updating timestamp ref from 2000 to 1970
-            $data = date(DATE_RFC2822, hexdec($Timestamp) + mktime(0, 0, 0, 1, 1, 2000));
-            $this->msgToAbeille($dest."/0000", "ZiGate", "Time", $data);
+            $data = date(DATE_RFC2822, hexdec($timestamp) + mktime(0, 0, 0, 1, 1, 2000));
+            // $this->msgToAbeille($dest."/0000", "ZiGate", "Time", $data);
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'zigateTime',
+                'net' => $dest,
+                'timeServer' => $data,
+                'time' => time()
+            );
+            $this->msgToAbeille2($msg);
         }
 
         /* Network joined/formed */
@@ -2775,10 +2788,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <channel: uint8_t>
 
             /* Decode */
-            if( substr($payload, 0, 2) == "00" ) { $data = "Joined existing network"; }
-            if( substr($payload, 0, 2) == "01" ) { $data = "Formed new network"; }
-            if( substr($payload, 0, 2) == "04" ) { $data = "Network (already) formed"; }
-            if( substr($payload, 0, 2)  > "04" ) { $data = "Failed (ZigBee event codes): ".substr($payload, 0, 2); }
+            $status = substr($payload, 0, 2);
+            if ($status == "00") { $data = "Joined existing network"; }
+            if ($status == "01") { $data = "Formed new network"; }
+            if ($status == "04") { $data = "Network (already) formed"; }
+            if ($status  > "04") { $data = "Failed (ZigBee event codes): ".substr($payload, 0, 2); }
             $dataShort = substr($payload, 2, 4);
             $dataIEEE = substr($payload, 6, 16);
             $dataNetwork = hexdec(substr($payload, 22, 2));
@@ -2808,10 +2822,22 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             // Envoi Status
-            $this->msgToAbeille($dest."/0000", "Network", "Status", $data);
-            $this->msgToAbeille($dest."/0000", "Short", "Addr", $dataShort);
-            $this->msgToAbeille($dest."/0000", "IEEE", "Addr", $dataIEEE);
-            $this->msgToAbeille($dest."/0000", "Network", "Channel", $dataNetwork);
+            // $this->msgToAbeille($dest."/0000", "Network", "Status", $data);
+            // $this->msgToAbeille($dest."/0000", "Short", "Addr", $dataShort);
+            // $this->msgToAbeille($dest."/0000", "IEEE", "Addr", $dataIEEE);
+            // $this->msgToAbeille($dest."/0000", "Network", "Channel", $dataNetwork);
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'networkStarted',
+                'net' => $dest,
+                'status' => $status,
+                'statusTxt' => $data,
+                'addr' => $dataShort, // Should be always 0000
+                'ieee' => $dataIEEE, // Zigate IEEE
+                'chan' => $dataNetwork,
+                'time' => time()
+            );
+            $this->msgToAbeille2($msg);
         }
 
         // 8030/Bind response
@@ -2959,8 +2985,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $Status     = substr($payload, 2, 2);
             $srcAddr    = substr($payload, 4, 4);
             $Len        = substr($payload, 8, 2);
-            $EPoint     = substr($payload,10, 2);
-            $profile    = substr($payload,12, 4);
+            $ep         = substr($payload,10, 2);
+            $profId    = substr($payload,12, 4);
             $deviceId   = substr($payload,16, 4);
 
             /* Log */
@@ -2969,9 +2995,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             .', Status='      .$Status
                             .', Addr='        .$srcAddr
                             .', Length='      .$Len
-                            .', EP='          .$EPoint
-                            .', ProfId='     .$profile.'/'.zgGetProfile($profile)
-                            .', DevId='       .$deviceId.'/'.zgGetDevice($profile, $deviceId)
+                            .', EP='          .$ep
+                            .', ProfId='     .$profId.'/'.zgGetProfile($profId)
+                            .', DevId='       .$deviceId.'/'.zgGetDevice($profId, $deviceId)
                             .', BitField='    .substr($payload,20, 2);
             parserLog('debug', $dest.', Type='.$msgDecoded, "8043");
 
@@ -3007,7 +3033,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             // Envoie l info a Abeille: Tcharp38: What for ?
-            // $data = zgGetDevice($profile, $deviceId);
+            // $data = zgGetDevice($profId, $deviceId);
             // $this->msgToAbeille($dest."/".$srcAddr, "SimpleDesc", "DeviceDescription", $data);
 
             /* Log */
@@ -3039,7 +3065,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     // parserLog('debug', '  Requesting supported attributs list for EP '.$ep.', clust '.$clustId);
                     // Tcharp38: Some devices may not support discover attribut command and return a "default response" with status 82 (unsupported general command)
                     // Tcharp38: Some devices do not respond at all (ex: Sonoff SNBZ02)
-                    $this->msgToCmd("Cmd".$dest."/".$srcAddr."/discoverAttributes", "ep=".$EPoint.'&clustId='.$clustId.'&dir=00&startAttrId=0000&maxAttrId=FF');
+                    $this->msgToCmd("Cmd".$dest."/".$srcAddr."/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=00&startAttrId=0000&maxAttrId=FF');
                 }
                 $this->discoverLog('- OutClusterCount='.$OutClustCount);
                 for ($i = 0; $i < $OutClustCount; $i++) {
@@ -3054,16 +3080,16 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'type' => 'simpleDesc',
                 'net' => $dest,
                 'addr' => $srcAddr,
-                'ep' => $EPoint,
+                'ep' => $ep,
                 'inClustList' => $inputClusters, // Format: 'xxxx/yyyy/zzzz'
                 'outClustList' => $outputClusters // Format: 'xxxx/yyyy/zzzz'
             );
             $this->msgToClient($toCli);
 
             // Tcharp38: Send to Abeille. What for ?
-            // $data = 'zigbee'.zgGetDevice($profile, $deviceId);
+            // $data = 'zigbee'.zgGetDevice($profId, $deviceId);
             // if ( strlen( $data) > 1 ) {
-            //     $this->msgToAbeille($dest."/".$srcAddr, "SimpleDesc-".$EPoint, "DeviceDescription", $data);
+            //     $this->msgToAbeille($dest."/".$srcAddr, "SimpleDesc-".$ep, "DeviceDescription", $data);
             // }
         }
 
@@ -3768,15 +3794,15 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             //<Attribute data type: uint8_t>
             //<Size Of the attributes in bytes: uint16_t>
             //<Data byte list : stream of uint8_t>
-            $SQN                = substr($payload,  0, 2);
-            $srcAddr            = substr($payload,  2, 4);
-            $EPoint             = substr($payload,  6, 2);
-            $clustId          = substr($payload,  8, 4);
-            $attrId         = substr($payload, 12, 4);
-            $AttributStatus     = substr($payload, 16, 2);
-            $dataType           = substr($payload, 18, 2);
-            $attrSize       = substr($payload, 20, 4);
-            $Attribut           = substr($payload, 24, hexdec($attrSize) * 2);
+            $SQN        = substr($payload,  0, 2);
+            $srcAddr    = substr($payload,  2, 4);
+            $ep         = substr($payload,  6, 2);
+            $clustId    = substr($payload,  8, 4);
+            $attrId     = substr($payload, 12, 4);
+            $attrStatus = substr($payload, 16, 2);
+            $dataType   = substr($payload, 18, 2);
+            $attrSize   = substr($payload, 20, 4);
+            $Attribut   = substr($payload, 24, hexdec($attrSize) * 2);
 
             if ($type == "8100")
                 $msg = '8100/Read individual attribute response';
@@ -3784,10 +3810,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $msg = '8102/Attribute report';
             $msg .= ', SQN='            .$SQN
                     .', Addr='          .$srcAddr
-                    .', EP='            .$EPoint
+                    .', EP='            .$ep
                     .', ClustId='       .$clustId
                     .', AttrId='        .$attrId
-                    .', AttrStatus='    .$AttributStatus
+                    .', AttrStatus='    .$attrStatus
                     .', AttrDataType='  .$dataType
                     .', AttrSize='      .$attrSize;
 
@@ -3798,14 +3824,14 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
             if ($clustId == "0005") {
-                parserLog('debug', '  Processed in 8002 => dropped');
+                parserLog('debug', '  Handled by decode8002');
                 return;
             }
 
             /* Params: SrcAddr, ClustId, AttrId, Data */
             $this->msgToAbeille($dest."/".$srcAddr, 'Link', 'Quality', $lqi);
 
-            if ($AttributStatus == '86') {
+            if ($attrStatus == '86') {
                 parserLog('debug', '  Status 86 => Unsupported attribute type ', $type);
                 if ($clustId == "0000") {
                     switch ($attrId) {
@@ -3829,8 +3855,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'type' => 'attributeReport',
                     'net' => $dest,
                     'addr' => $srcAddr,
-                    'ep' => $EPoint,
-                    'name' => $clustId.'-'.$EPoint.'-'.$attrId,
+                    'ep' => $ep,
+                    'name' => $clustId.'-'.$ep.'-'.$attrId,
                     'value' => false, // False = unsupported
                     'time' => time(),
                     'lqi' => $lqi
@@ -3843,7 +3869,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'type' => 'attributeReport', // 8100 or 8102
                     'net' => $dest,
                     'addr' => $srcAddr,
-                    'ep' => $EPoint,
+                    'ep' => $ep,
                     'clustId' => $clustId,
                     'attrId' => $attrId,
                     'status' => "86"
@@ -3852,7 +3878,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                 return;
             }
-            if ($AttributStatus != '00') {
+            if ($attrStatus != '00') {
                 parserLog('debug', '  Status != 0 => Ignored', $type);
                 return;
             }
@@ -3907,9 +3933,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage).', Etat=' .$etat);
 
-                    $this->msgToAbeille($dest."/".$srcAddr, '0006',     '01-0000', $etat, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, '0006',     '01-0000', $etat);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                     return; // Nothing more to publish
                 }
 
@@ -3924,9 +3950,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
 
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
                     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    $this->msgToAbeille($dest."/".$srcAddr, '0006', '01-0000', $etat, $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, '0006', '01-0000', $etat);
                     return; // Nothing more to publish
                 }
 
@@ -3940,11 +3966,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity );
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, '0402', '01-0000', $temperature, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, '0405', '01-0000', $humidity, $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt-Temperature-Humidity');
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
+                    $this->msgToAbeille($dest."/".$srcAddr, '0402', '01-0000', $temperature);
+                    $this->msgToAbeille($dest."/".$srcAddr, '0405', '01-0000', $humidity);
                     return; // Nothing more to publish
                 }
 
@@ -3968,10 +3994,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $lux = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
                     parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Lux='.$lux);
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity', $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, '0400', '01-0000', $lux, $lqi); // Luminosite
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity');
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
+                    $this->msgToAbeille($dest."/".$srcAddr, '0400', '01-0000', $lux); // Luminosite
                     return;
                 }
 
@@ -3984,9 +4010,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $etat = substr($payload, 88, 2);
                     parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Etat='.$etat);
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity', $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity');
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                     return;
                 }
 
@@ -4006,11 +4032,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     // parserLog('debug', 'ff01/25: Humidity: '     .$humidity);
                     // parserLog('debug', 'ff01/25: Pression: '     .$pression);
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity', $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, '0402', '01-0000', $temperature, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, '0405', '01-0000', $humidity, $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity');
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
+                    $this->msgToAbeille($dest."/".$srcAddr, '0402', '01-0000', $temperature);
+                    $this->msgToAbeille($dest."/".$srcAddr, '0405', '01-0000', $humidity);
                     return;
                 }
 
@@ -4022,9 +4048,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity', $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity');
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                     return;
                 }
 
@@ -4042,10 +4068,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     parserLog('debug', '  OnOff='.$onOff.', Puissance='.$puissanceValue.', Consommation='.$consoValue);
 
-                    // $this->msgToAbeille($srcAddr,$clustId,$attrId,'$this->decoded as OnOff-Puissance-Conso', $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, '0006',  '-01-0000',        $onOff,             $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'tbd',   '--puissance--',   $puissanceValue,    $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'tbd',   '--conso--',       $consoValue,        $lqi);
+                    // $this->msgToAbeille($srcAddr,$clustId,$attrId,'$this->decoded as OnOff-Puissance-Conso');
+                    $this->msgToAbeille($dest."/".$srcAddr, '0006',  '-01-0000',        $onOff);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'tbd',   '--puissance--',   $puissanceValue);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'tbd',   '--conso--',       $consoValue);
                     return;
                 }
 
@@ -4055,10 +4081,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     parserLog('debug', "  Xiaomi proprietary (Double relay)");
                     parserLog('debug', "  ".json_encode($FF01));
 
-                    $this->msgToAbeille($dest."/".$srcAddr, '0006', '01-0000',   $FF01["Etat SW 1 Binaire"]["valueConverted"], $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, '0006', '02-0000',   $FF01["Etat SW 2 Binaire"]["valueConverted"], $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, '000C', '01-0055',   $FF01["Puissance"]["valueConverted"],         $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--conso--', $FF01["Consommation"]["valueConverted"],      $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, '0006', '01-0000',   $FF01["Etat SW 1 Binaire"]["valueConverted"]);
+                    $this->msgToAbeille($dest."/".$srcAddr, '0006', '02-0000',   $FF01["Etat SW 2 Binaire"]["valueConverted"]);
+                    $this->msgToAbeille($dest."/".$srcAddr, '000C', '01-0055',   $FF01["Puissance"]["valueConverted"]);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--conso--', $FF01["Consommation"]["valueConverted"]);
                     return;
                 }
 
@@ -4071,8 +4097,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
 
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                     return;
                 }
             } // End cluster 0000
@@ -4110,7 +4136,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 if ($attrId == "0055") {
                     // assuming $dataType == "39"
 
-                    if ($EPoint=="01") {
+                    if ($ep=="01") {
                         // Remontée puissance (instantannée) relay double switch 1
                         // On va envoyer ca sur la meme variable que le champ ff01
                         $hexNumber = substr($payload, 24, 8);
@@ -4119,12 +4145,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         $data = unpack("f", $bin )[1];
 
                         $puissanceValue = $data;
-                        // $this->msgToAbeille( $srcAddr, 'tbd',     '--puissance--',    $puissanceValue,    $lqi);
+                        // $this->msgToAbeille( $srcAddr, 'tbd',     '--puissance--',    $puissanceValue);
 
                         // Relay Double
-                        $this->msgToAbeille($dest."/".$srcAddr, '000C',     '01-0055',    $puissanceValue, $lqi);
+                        $this->msgToAbeille($dest."/".$srcAddr, '000C',     '01-0055',    $puissanceValue);
                     }
-                    if (($EPoint=="02") || ($EPoint=="15")) {
+                    if (($ep=="02") || ($ep=="15")) {
                         // Remontée puissance (instantannée) de la prise xiaomi et relay double switch 2
                         // On va envoyer ca sur la meme variable que le champ ff01
                         $hexNumber = substr($payload, 24, 8);
@@ -4134,9 +4160,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                         $puissanceValue = $data;
                         // Relay Double - Prise Xiaomi
-                        $this->msgToAbeille($dest."/".$srcAddr, $clustId, $EPoint.'-'.$attrId,    $puissanceValue, $lqi);
+                        $this->msgToAbeille($dest."/".$srcAddr, $clustId, $ep.'-'.$attrId, $puissanceValue);
                     }
-                    if ($EPoint=="03") {
+                    if ($ep=="03") {
                         // Example Cube Xiaomi
                         // Sniffer dit Single Precision Floating Point
                         // b9 1e 38 c2 -> -46,03
@@ -4194,7 +4220,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             /* If $data is set it means message already treated before */
             if (isset($data)) {
                 /* Send to Abeille */
-                $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$EPoint, $attrId, $data);
+                $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId, $data);
 
                 /* Send to client page if connection opened */
                 $toCli = array(
@@ -4202,7 +4228,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'type' => 'attributeReport', // 8100 or 8102
                     'net' => $dest,
                     'addr' => $srcAddr,
-                    'ep' => $EPoint,
+                    'ep' => $ep,
                     'clustId' => $clustId,
                     'attrId' => $attrId,
                     'status' => "00",
@@ -4255,15 +4281,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             // Tcharp38: uintX decode is now supported by decodeDataType()
             else if ((hexdec($dataType) >= 0x20) && (hexdec($dataType) <= 0x27)) {
-                // $data = hexdec(substr($payload, 24, 2));
                 $data = $this->decodeDataType(substr($payload, 24), $dataType, false, $dataSize, $hexString);
             }
-
-            // else if ($dataType == "21") {
-            //     $data = hexdec(substr($payload, 24, 4));
-            // }
-            // Utilisé pour remonter la pression par capteur Xiaomi Carré.
-            // Octet 8 bits man pack ne prend pas le 8 bits, il prend à partir de 16 bits.
 
             else if ($dataType == "28") {
                 // $data = hexdec(substr($payload, 24, 2));
@@ -4295,8 +4314,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     parserLog('debug', '  Voltage='.$voltage.' Voltage%='.$this->volt2pourcent($voltage));
 
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                 }
 
                 // // Xiaomi capteur Presence V2
@@ -4319,15 +4338,15 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 //     $lux            = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
                 //     parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent($voltage).', Lux='.$lux);
 
-                //     $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
-                //     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                //     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
-                //     $this->msgToAbeille($dest."/".$srcAddr, '0400', '01-0000', $lux, $lqi); // Luminosite
+                //     $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt-Temperature-Humidity');
+                //     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                //     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
+                //     $this->msgToAbeille($dest."/".$srcAddr, '0400', '01-0000', $lux); // Luminosite
 
-                //     // $this->msgToAbeille( $srcAddr, '0402', '0000', $temperature,      $lqi);
-                //     // $this->msgToAbeille( $srcAddr, '0405', '0000', $humidity,         $lqi);
-                //     // $this->msgToAbeille( $srcAddr, '0403', '0010', $pression / 10,    $lqi);
-                //     // $this->msgToAbeille( $srcAddr, '0403', '0000', $pression / 100,   $lqi);
+                //     // $this->msgToAbeille( $srcAddr, '0402', '0000', $temperature);
+                //     // $this->msgToAbeille( $srcAddr, '0405', '0000', $humidity);
+                //     // $this->msgToAbeille( $srcAddr, '0403', '0010', $pression / 10);
+                //     // $this->msgToAbeille( $srcAddr, '0403', '0000', $pression / 100);
                 // }
 
                 // Xiaomi bouton Aqara Wireless Switch V3 #712 (https://github.com/KiwiHC16/Abeille/issues/712)
@@ -4337,9 +4356,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent($voltage));
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt', $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt');
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                 }
 
                 // Xiaomi Smoke Sensor
@@ -4349,9 +4368,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt', $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt');
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                 }
 
                 // Xiaomi Cube
@@ -4362,14 +4381,14 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent($voltage));
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt-Temperature-Humidity', $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt-Temperature-Humidity');
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
 
-                    // $this->msgToAbeille( $srcAddr, '0402', '0000', $temperature,      $lqi);
-                    // $this->msgToAbeille( $srcAddr, '0405', '0000', $humidity,         $lqi);
-                    // $this->msgToAbeille( $srcAddr, '0403', '0010', $pression / 10,    $lqi);
-                    // $this->msgToAbeille( $srcAddr, '0403', '0000', $pression / 100,   $lqi);
+                    // $this->msgToAbeille( $srcAddr, '0402', '0000', $temperature);
+                    // $this->msgToAbeille( $srcAddr, '0405', '0000', $humidity);
+                    // $this->msgToAbeille( $srcAddr, '0403', '0010', $pression / 10);
+                    // $this->msgToAbeille( $srcAddr, '0403', '0000', $pression / 100);
                 }
 
                 // Xiaomi Capteur Presence
@@ -4382,7 +4401,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent($voltage));
 
                     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage), $lqi);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                 }
 
                 // ne traite pas les FF01 inconnus
@@ -4403,12 +4422,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                                                );
                     // parserLog("debug","  Champ proprietaire Philips Hue, decodons le et envoyons a Abeille les informations ->".pack('H*', substr($payload, 24+2, (strlen($payload) - 24 - 2)) )."<-" );
                     $button = $attrId;
-                    $buttonEvent = substr($payload, 24+2, 2 );
-                    $buttonDuree = hexdec(substr($payload, 24+6, 2 ));
+                    $buttonEvent = substr($payload, 24 + 2, 2);
+                    $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
                     parserLog("debug", "  Champ proprietaire Philips Hue: Bouton=".$button.", Event=".$buttonEvent.", EventText=".$buttonEventTexte[$buttonEvent]." et duree: ".$buttonDuree);
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$EPoint, $attrId."-Event", $buttonEvent);
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$EPoint, $attrId."-Duree", $buttonDuree);
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId."-Event", $buttonEvent);
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId."-Duree", $buttonDuree);
                 }
 
                 // ------------------------------------------------------- Tous les autres cas ----------------------------------------------------------
@@ -4429,7 +4448,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             if (isset($data)) {
-                $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$EPoint, $attrId, $data);
+                // $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId, $data);
+                /* Forwarding unsupported atttribute to Abeille */
+                $toAbeille = array(
+                    'src' => 'parser',
+                    'type' => 'attributeReport',
+                    'net' => $dest,
+                    'addr' => $srcAddr,
+                    'ep' => $ep,
+                    'name' => $clustId.'-'.$ep.'-'.$attrId,
+                    'value' => $data,
+                    'time' => time(),
+                    'lqi' => $lqi
+                );
+                $this->msgToAbeille2($toAbeille);
 
                 /* Send to client if connection opened */
                 $toCli = array(
@@ -4437,7 +4469,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'type' => 'attributeReport', // 8100 or 8102
                     'net' => $dest,
                     'addr' => $srcAddr,
-                    'ep' => $EPoint,
+                    'ep' => $ep,
                     'clustId' => $clustId,
                     'attrId' => $attrId,
                     'status' => "00",
@@ -4561,11 +4593,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 .', SQN='.$sqn
                 .', Addr='.$srcAddr
                 .', EP='.$ep
-                .', clustId='.$clustId
-                .', status='.$status.'/'.zbGetZCLStatus($status);
+                .', ClustId='.$clustId
+                .', Status='.$status.'/'.zbGetZCLStatus($status);
             parserLog('debug', $dest.', Type='.$decoded);
             if ($status == "00")
-                parserLog('debug', '  attrType='.$attrType.', attrId='.$attrId.', minInterval='.$minInterval.', maxInterval='.$maxInterval);
+                parserLog('debug', '  AttrType='.$attrType.', AttrId='.$attrId.', MinInterval='.$minInterval.', MaxInterval='.$maxInterval);
         }
 
         function decode8140($dest, $payload, $lqi)
@@ -4709,7 +4741,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <destination address: uint64_t>
             // <seq number: uint8_t>
             $status     = substr($payload, 0, 2);
-            $SrcEP      = substr($payload, 2, 2);
+            $srcEp      = substr($payload, 2, 2);
             $DestEP     = substr($payload, 4, 2);
             $DestMode   = substr($payload, 6, 2);
             $DestAddr   = substr($payload, 8, 4);
@@ -4718,7 +4750,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $msgDecoded = '8702/APS data confirm fail'
                 //.', Status='.$status.'/'.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
                .', Status='.$status.'/'.$allErrorCode[$status][0]
-               .', SrcEP='.$SrcEP
+               .', SrcEP='.$srcEp
                .', DestEP='.$DestEP
                .', AddrMode='.$DestMode
                .', Addr='.$DestAddr

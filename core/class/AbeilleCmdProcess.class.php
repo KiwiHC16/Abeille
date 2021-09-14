@@ -1606,6 +1606,8 @@ class AbeilleCmdProcess extends AbeilleDebug {
                 $this->deamonlog('debug', "    command readReportingConfig ERROR: Missing 'addr'");
                 return;
             }
+            if (!isset($Command['ep']))
+                $Command['ep'] = "01";
             if (!isset($Command['clustId'])) {
                 $this->deamonlog('debug', "    command readReportingConfig ERROR: Missing 'clustId'");
                 return;
@@ -1633,7 +1635,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
             $addrMode = "02";
             $addr = $Command['addr'];
             $srcEp = "01";
-            $destEp = "01";
+            $destEp = $Command['ep'];
             $clustId = $Command['clustId'];
             $dir = "00"; // 00=attribute is reported, 01=attribute is received
             $nbOfAttr = "01";

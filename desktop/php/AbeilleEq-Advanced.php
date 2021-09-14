@@ -524,6 +524,7 @@
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'readReportingConfig\', \''.$eqId.'\')">{{Interroger}}</a>';
+                    addEpButton("idEp", $mainEP);
                     addClusterButton("idClustId");
                 ?>
                 <!-- <input id="idClustId" placeholder="{{Cluster (ex: 0001)}}" /> -->

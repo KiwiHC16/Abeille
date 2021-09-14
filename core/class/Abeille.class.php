@@ -2361,19 +2361,20 @@ while ($cron->running()) {
             log::add('Abeille', 'debug', "msgFromParser(): Attributes report from '".$net."/".$addr."/".$ep);
             $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                log::add('Abeille', 'debug', "  Unknown device");
+                log::add('Abeille', 'debug', "  Unknown device ".$net.'/'.$addr);
                 return; // Unknown device
             }
+            $clustId = $msg['clustId'];
             foreach ($msg['attributes'] as $attrId => $attr) {
-                log::add('Abeille', 'debug', "  AttrId='".$attrId."', Val='".$attr['value']."'");
+                log::add('Abeille', 'debug', "  ClustId=".$clustId.", AttrId='".$attrId."', Val='".$attr['value']."'");
 
-                $cmdName = $msg['clustId'].'-'.$ep.'-'.$attrId;
+                $cmdName = $clustId.'-'.$ep.'-'.$attrId;
                 $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $cmdName);
                 if (!is_object($cmdLogic)) {
                     log::add('Abeille', 'debug', "  Unknown command logicalid ".$cmdName);
                     return; // Unknown command
                 }
-                $eqLogic->checkAndUpdateCmd($cmdLogic, $cmdName);
+                $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
 
                 // Trig another command ?
                 $trigLogicId = $cmdLogic->getConfiguration('ab::trig');

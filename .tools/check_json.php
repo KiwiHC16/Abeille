@@ -107,6 +107,13 @@
                 newDevError($devName, "ERROR", "Missing 'configuration:mainEP'");
             else if (!ctype_xdigit($config['mainEP']))
                 newDevError($devName, "ERROR", "'configuration:mainEP' should be hexa string. #EP# not allowed.");
+
+            /* Checking 'configuration' fields validity */
+            $supportedKeys = ['icon', 'mainEP', 'trig', 'trigOffset', 'batteryType', 'poll', 'lastCommunicationTimeOut', 'paramType'];
+            foreach ($config as $fieldName => $fieldValue) {
+                if (!in_array($fieldName, $supportedKeys))
+                    newDevError($devName, "ERROR", "Invalid '".$fieldName."' configuration field");
+            }
         }
 
         $unusedCmds = &$GLOBALS['unusedCmds'];

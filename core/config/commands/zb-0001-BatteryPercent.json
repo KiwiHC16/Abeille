@@ -11,6 +11,7 @@
         "configuration": {
             "minValue": "0",
             "maxValue": "100",
+            "historizeRound": 1,
             "visibilityCategory": "All"
         },
         "type": "info",

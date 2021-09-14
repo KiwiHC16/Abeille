@@ -32,12 +32,12 @@
                 "params": "EP=01&CLUSTID=0001",
                 "execAtCreation": "Yes"
             },
-            "Set-BatteryReporting": {
+            "Set-BatteryVoltReporting": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "Yes"
             },
-            "include0001-3": "Battery-Volt2Percent-3",
+            "BatteryVolt2Percent": { "use": "battery-Volt2Percent-3" },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1

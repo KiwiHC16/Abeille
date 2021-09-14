@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210914-BETA-1"
+# VERSION="210914-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -50,7 +50,7 @@ ee2be2ec60cb3b00ed0501cb232f7166 *Zigate_Module/ReadJN5168/read.php
 0450d7f27baae2fdcdc8c7291ec9a8d5 *core/ajax/AbeilleFiles.ajax.php
 7650cfc074038eb9712acec23813d2da *core/ajax/AbeilleZigate.ajax.php
 8ebf0ec2066ea6fc6f6dc8b657f42059 *core/ajax/abeille.ajax.php
-cd4d4cff3131ab68e01dea545110a814 *core/class/Abeille.class.php
+9a12bae27fa03517bd1b5b7963df85b7 *core/class/Abeille.class.php
 1b168df63dd8f213613058478ed3181f *core/class/AbeilleCmd.class.php
 66dc252a41b62d78fc1cbd07ae00d3a6 *core/class/AbeilleCmdPrepare.class.php
 33e9d669f1b055999a7e95ee90e95a3c *core/class/AbeilleCmdProcess.class.php
@@ -508,7 +508,7 @@ e0020e2a3080aabc610ff80df56c2ea0 *core/config/commands/zb-0702-Divisor.json
 6b78d1bd474eed644b3218a18a914150 *core/config/commands/zb-0702-Multiplier.json
 406b1b88462cd04bf7df6393da42bb66 *core/config/commands/zb-0702-SummationFormatting.json
 34ed42a8d2ce82885857e3b75d277d5f *core/config/commands/zb-0702-UnitOfMeasure.json
-fa44a88452ba5f8c49a862e2b1403f43 *core/config/commands/zb-0B04-ActivePower.json
+426705dede5279030c29e174cb0c940b *core/config/commands/zb-0B04-ActivePower.json
 4be92b45ed895ad4858d30e81487f88c *core/config/commands/zb-0B04-RMSCurrent.json
 046aa08f2f1d9649f3d67b870175867a *core/config/commands/zb-0B04-RMSVoltage.json
 d49d7ffb501e11fb1a76f07daf999659 *core/config/commands/zbCmd-0006-Off.json
@@ -698,7 +698,7 @@ ca3b6464d6dcae8d24dbcaa93615d86a *core/config/devices/TS011F__TZ3000_vzopcetz/TS
 1aee9ddcfe207ef86646b4e2e80ae3a5 *core/config/devices/TS0121__TYZB01_zanh6v1o/TS0121__TYZB01_zanh6v1o.json
 7d8eb0059aee81e028892bd9ebc2f47b *core/config/devices/TS0121__TZ3000_8nkb7mof/TS0121__TZ3000_8nkb7mof.json
 dd94f2997d54a90df2f2a6497a8e9ff5 *core/config/devices/TS0121__TZ3000_g5xawfcq/TS0121__TZ3000_g5xawfcq.json
-0aba55a6d26ba57d383c6525610fe539 *core/config/devices/TS0121__TZ3000_rdtixbnu/TS0121__TZ3000_rdtixbnu.json
+1bef55fd958287957529c1dccfdc31f9 *core/config/devices/TS0121__TZ3000_rdtixbnu/TS0121__TZ3000_rdtixbnu.json
 fe19b037bdc2d88127e28df7947b4262 *core/config/devices/TS0121__TZ3000_rdtixbnu/discovery.json
 a786ac5f2a556df45d14331b7c577e00 *core/config/devices/TS0201/TS0201.json
 7c7ce1b325e75e07f03de05d30f578ba *core/config/devices/TS0203__TZ3000_f1hmoyj4/TS0203__TZ3000_f1hmoyj4.json
@@ -1086,10 +1086,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-f5b7552d0d58fe12c7086d20967fff5a *plugin_info/Abeille.version
+eb5b4adee25ea64b9db8e64eba07741c *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 1d007935ff99e51bdac2dccd68303bbb *plugin_info/configuration.php
-1e3e815c9490d1f2ee178deffa020c2c *plugin_info/info.json
+a247bb30c2b49dd04bd080eb49e70a48 *plugin_info/info.json
 a8b36afbe004ce359c7ecec1358a12a1 *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 e634b9f544c02b8facd28fefb8771fe0 *resources/AbeilleDeamon/AbeilleInterrogate.php

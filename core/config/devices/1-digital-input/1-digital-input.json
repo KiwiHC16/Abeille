@@ -10,9 +10,11 @@
         },
         "type": "1-digital-input",
         "commands": {
-            "include100": "nom",
             "include2": "etatEp02in",
-            "include2 1": "getEtatEp02"
+            "Get-OnOffStatus 2": {
+                "use": "zbReadAttribute",
+                "params": "ep=02&clustId=0006&attrId=0000"
+            }
         }
     }
 }

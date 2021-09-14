@@ -60,7 +60,7 @@ Exemple de commande 'action'
   Type de commande: info ou action
 
 * subType: OBLIGATOIRE
-  Type d'information: binary, numeric, ...
+  Type d'information: 'binary', 'numeric', 'string'
 
 * logicalId: OBLIGATOIRE si commande INFO
   Ex: '0400-01-0000' pour définir l'information 'luminosité'.
@@ -82,9 +82,6 @@ Exemple de commande 'action'
 * template: optionnel.
   Permet de définir le widget qui sera utilisé pour l'affichage de la commande.
 
-* trig: optionnel
-  Permet, pour une commande info, de définir une commande qui sera mise-à-jour avec la valeur de sortie.
-
 * configuration:
 
   * topic: OBLIGATOIRE SI commmande 'action'
@@ -98,7 +95,11 @@ Exemple de commande 'action'
 
   * visibilityCategory: ??
 
-  * repeatEventManagement: ??
+  * repeatEventManagement: optionnel
+    N'est utile que pour une commande info mais du type "evenement" (la valeur remontée est toujours la meme).
+    Exemple:
+        Certains équipements remontent l'info "click" et non pas "bouton appuyé, bouton relaché".
+        Dans ce cas 'repeatEventManagement' doit être mis sur 'always'.
 
   * execAtCreation: optionnel
     Précise que cette commande doit être exécutée lors de l'appairage de l'équipement.
@@ -107,3 +108,9 @@ Exemple de commande 'action'
 
   * execAtCreationDelay: optionnel
     Delai d'execution en secondes apres l'annonce de la commande ayant le flag 'execAtCreation'.
+
+  * trig: optionnel
+    Permet, pour une commande info, de définir une commande qui sera mise-à-jour avec la valeur de sortie.
+
+  * trigOffset: optionnel
+    Permet, si 'trig' est utilisé, de modifier la valeur reçue avant de l'appliquer à la commande pointée par 'trig'.

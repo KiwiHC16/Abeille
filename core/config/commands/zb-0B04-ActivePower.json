@@ -1,12 +1,13 @@
 {
     "zb-0B04-ActivePower": {
-        "comment": "val = attribute_value * ACPowerDiv \/ AcPowerMultiplier => device specific",
+        "comment": "val = device specific = (attribute_value / ACPowerDiv) * AcPowerMultiplier",
         "name": "Power",
         "unite": "W",
         "subType": "numeric",
         "generic_type": "POWER",
         "template": "badge",
         "configuration": {
+            "calculValueOffset": "#value#*#MULT#\/#DIV#"
             "historizeRound": "0",
             "maxValue": "4000",
             "minValue": "0",

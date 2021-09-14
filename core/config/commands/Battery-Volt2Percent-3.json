@@ -1,16 +1,13 @@
 {
-    "Battery-Volt2Percent-3": {
+    "battery-Volt2Percent-3": {
         "name": "Battery-Volt2Percent-3",
         "comment": "Computing battery percent from received voltage, max=3V",
         "comment2": "Reported voltage currently 10 x value",
         "subType": "numeric",
-        "trig": "0001-#EP#-0021",
-        "unite": "%",
+        "unite": "V",
         "configuration": {
-            "minValue": "0",
-            "maxValue": "100",
-            "calculValueOffset": "#value#*100\/30",
-            "historizeRound": 1
+            "trig": "0001-#EP#-0021",
+            "trigOffset": "#value#*100\/30"
         },
         "type": "info",
         "logicalId": "0001-#EP#-0020"

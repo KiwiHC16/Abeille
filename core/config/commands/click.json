@@ -4,7 +4,7 @@
         "name": "click",
         "comment": "value = single, double or long",
         "isHistorized": "0",
-        "subType": "numeric",
+        "subType": "string",
         "invertBinary": "0",
         "template": "badge",
         "type": "info",

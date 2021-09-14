@@ -7,7 +7,7 @@
         "generic_type": "POWER",
         "template": "badge",
         "configuration": {
-            "calculValueOffset": "#value#*#MULT#\/#DIV#"
+            "calculValueOffset": "#value#*#MULT#\/#DIV#",
             "historizeRound": "0",
             "maxValue": "4000",
             "minValue": "0",

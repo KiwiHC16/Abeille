@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210914-BETA-1
+----------
+
 - JSON commandes: 'trig' revu + 'trigOffset' ajouté.
 - Niko connected socket: ajout support (#2003).
 - JSON commandes: suppression de qq cmds obsoletes.

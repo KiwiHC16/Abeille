@@ -27,7 +27,7 @@
     list($eqNet, $eqAddr) = explode("/", $eqLogicId);
     $zgNb = substr($eqNet, 7); // Extracting zigate number from network
     $zgType = config::byKey('AbeilleType'.$zgNb, 'Abeille', '', 1); // USB, WIFI, PIN, DIN
-    $mainEP = $eqLogic->getConfiguration('mainEP', '');
+    $mainEP = $eqLogic->getConfiguration('mainEP', '01');
 
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
@@ -435,9 +435,10 @@
             payload = "startIndex="+startIdx;
         } else if (request == "readReportingConfig") {
             topic = "Cmd"+logicalId+"_readReportingConfig";
+            ep = document.getElementById("idEp").value;
             clustId = document.getElementById("idClustId").value;
             attrId = document.getElementById("idAttrId").value;
-            payload = "addr="+js_eqAddr+"_clustId="+clustId+"_attrId="+attrId;
+            payload = "addr="+js_eqAddr+"_ep="+ep+"_clustId="+clustId+"_attrId="+attrId;
         } else if (request == "readAttribute") {
             topic = "Cmd"+logicalId+"_readAttribute";
             ep = document.getElementById("idEpA").value;

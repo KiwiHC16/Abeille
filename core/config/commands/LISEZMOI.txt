@@ -4,9 +4,19 @@
 ***
 
 Ce répertoire contient l'ensemble des commandes de base supportées par Abeille.
-Les équipements reposent sur certaines d'entre elles.
+Chaque équipement en utilise un certain nombre.
 
 Attention !! Toute modification de ce répertoire sera écrasée lors des mises-à-jour du plugin.
+
+Nom des commandes
+=================
+En dehors des commandes "historiques" en passe d'être normalisées, les noms de fichiers doivent suivre les regles suivantes:
+- Toute commande specifique Zigbee (issu de la spec) commence par "zb"
+- Le nom des commandes commence par une minuscule (ex: click.json)
+- zbCmd-<cluster>-<cmdName>.json : une commande du 'cluster' (ex: zbCmd-0006-On). Donc forcement commande Jeedom ACTION.
+- zb-<cluster>-<attribName>.json: un attribut du 'cluster' (ex: zb-0001-BatteryPercent) = Command Jeedom du type INFO.
+  Ces commandes Jeedom sont mises à jour par un "attribute report" ou "read attribute response".
+- zbConfigureReporting, zbReadAttribute... actions du standard Zigbee.
 
 Format de fichier
 =================

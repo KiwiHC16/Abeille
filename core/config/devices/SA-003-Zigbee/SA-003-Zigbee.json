@@ -15,12 +15,15 @@
             "include4": "etat",
             "include5": "On",
             "include6": "Off",
-            "include7": "Toggle",
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
             }
         },
         "comment": "https:\/\/www.amazon.fr\/dp\/B07S72CNWT\/ref=cm_sw_r_cp_apa_i_rShRDb0MMJSA9 identical to Lamp_01"

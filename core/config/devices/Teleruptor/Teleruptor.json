@@ -15,7 +15,6 @@
             "include4": "etat",
             "include8": "On",
             "include9": "Off",
-            "include10": "Toggle",
             "include19": "getEtat",
             "include21": "getManufacturerName",
             "include22": "getModelIdentifier",
@@ -29,6 +28,10 @@
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
             }
         }
     }

@@ -18,7 +18,6 @@
             "include5 2": "On1",
             "include6": "Off",
             "include6 2": "Off1",
-            "include7": "Toggle",
             "include7 2": "Toggle1",
             "include8": "getEtat",
             "include9": "getManufacturerName",
@@ -28,6 +27,10 @@
             "include13": "puissance1",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
             }
         }
     }

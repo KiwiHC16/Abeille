@@ -17,7 +17,6 @@
             "include5": "levelLight",
             "include6": "On",
             "include7": "Off",
-            "include8": "Toggle",
             "include9": "Level",
             "include11": "getEtat",
             "include12": "getLevel",
@@ -33,6 +32,10 @@
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
             }
         },
         "comment": "Dimmable GU10 5W 300lm"

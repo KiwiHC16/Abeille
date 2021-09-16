@@ -17,7 +17,10 @@
             "include4": "etat",
             "include5": "on",
             "include6": "off",
-            "include7": "toggle",
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
+            },
             "include8": "getetat"
         },
         "type": "Girier DIY Smart Switch"

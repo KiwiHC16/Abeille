@@ -18,7 +18,6 @@
             "include5": "levelLight",
             "include6": "On",
             "include7": "Off",
-            "include8": "Toggle",
             "include11 2": "setLevel",
             "include-0300-1": "2200K",
             "include-0300-2": "2700K",
@@ -35,7 +34,11 @@
             "include26": "BindToZigateEtat",
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
-            "include29": "setReportLevel"
+            "include29": "setReportLevel",
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
+            }
         }
     }
 }

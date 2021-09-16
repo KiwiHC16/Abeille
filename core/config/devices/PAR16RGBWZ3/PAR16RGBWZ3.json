@@ -19,7 +19,6 @@
             "include7": "colorY",
             "include8": "On",
             "include9": "Off",
-            "include10": "Toggle",
             "include11": "setLevel",
             "include12": "Colour",
             "include13": "Blanc",
@@ -53,6 +52,10 @@
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
             }
         },
         "comment": "OSRAM Smart+ Spot LED Connect\u00e9e Culot GU10 Dimmable 16 Millions de couleurs 6W Zigbee"

@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-210914-BETA-2
+210916-STABLE-1
 ----------
 
 - JSON commandes: 'trig' revu + 'trigOffset' ajouté.

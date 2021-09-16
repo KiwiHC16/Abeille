@@ -1,0 +1,16 @@
+{
+    "zbBind": {
+        "isVisible": 0,
+        "name": "Bind device to device",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "bind0030",
+            "request": "addr=#IEEE#&ep=#EP#&clustId=#CLUSTID#&destAddr=#DESTADDR#&destEp=#DESTEP#",
+            "execAtCreation": "Yes"
+        },
+        "type": "action"
+    }
+}

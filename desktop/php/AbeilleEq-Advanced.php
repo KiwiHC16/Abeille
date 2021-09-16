@@ -494,7 +494,19 @@
             global $zbClusters;
             echo '<select id="'.$id.'" title="{{Cluster}}" style="width:140px; margin-left: 8px">';
             foreach ($zbClusters as $clustId => $clust) {
-                echo '<option value="'.$clustId.'">'.$clustId.'/'.$clust['name'].'</option>';
+                echo '<option value="'.$clustId.'">'.$clustId.' - '.$clust['name'].'</option>';
+            }
+            echo '</select>';
+        }
+        function addIeeeListButton($id) {
+            echo '<select id="'.$id.'" title="{{Equipements}}" style="width:140px; margin-left: 8px">';
+            $eqLogics = eqLogic::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                $ieee = $eqLogic->getConfiguration('IEEE', '');
+                if ($ieee == '')
+                    continue;
+                $eqName = $eqLogic->getName();
+                echo '<option value="'.$ieee.'">'.$eqName.'/'.$ieee.'</option>';
             }
             echo '</select>';
         }
@@ -512,6 +524,7 @@
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'readAttribute\', \''.$eqId.'\')">{{Lire}}</a>';
                     // echo '<input id="idEpA" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
+logDebug("MainEP=".$mainEP);
                     addEpButton("idEpA", $mainEP);
                     addClusterButton("idClustIdA");
                 ?>
@@ -573,7 +586,7 @@
 
         <br>
         <div class="form-group">
-            <label class="col-sm-3 control-label" title="getRoutingTable (Mgmt_Rtg_req)">ZDO: Table de routage</label>
+            <label class="col-sm-3 control-label" title="getRoutingTable (Mgmt_Rtg_req)">Table de routage</label>
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'getRoutingTable\', \''.$eqId.'\')">{{Interroger}}</a>';
@@ -581,7 +594,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label" title="getBindingTable (Mgmt_Bind_req)">ZDO: Table de binding</label>
+            <label class="col-sm-3 control-label" title="getBindingTable (Mgmt_Bind_req)">Table de binding</label>
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'getBindingTable\', \''.$eqId.'\')">{{Interroger}}</a>';
@@ -589,12 +602,36 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label" title="getNeighborTable (Mgmt_Lqi_req)">ZDO: Table de voisinage</label>
+            <label class="col-sm-3 control-label" title="getNeighborTable (Mgmt_Lqi_req)">Table de voisinage</label>
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'getNeighborTable\', \''.$eqId.'\')">{{Interroger}}</a>';
                 ?>
                 <input id="idStartIdx" title="{{Start index (ex: 00)}}" value="00" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="bind cet équipement vers un autre">Bind to device</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'bindToDevice\', \''.$eqId.'\')">{{Bind}}</a>';
+                    addEpButton("idEpE", $mainEP);
+                    addClusterButton("idClustIdE");
+                    // <input id="idIeeeE" title="{{Adresse IEEE de destination (ex: 5C0272FFFE2857A3)}}" />
+                    addIeeeListButton("idIeeeE");
+                ?>
+                <?php addEpButton("idEpE2", $mainEP); ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="bind cet équipement vers un groupe">Bind to group</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'bindToGroup\', \''.$eqId.'\')">{{Bind}}</a>';
+                    addEpButton("idEpF", $mainEP);
+                    addClusterButton("idClustIdF");
+                ?>
+                <input id="idGroupF" title="{{Adresse du groupe de destination (ex: 0001)}}" />
             </div>
         </div>
     <?php } ?>

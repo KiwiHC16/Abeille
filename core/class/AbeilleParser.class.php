@@ -1525,20 +1525,18 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     $pl = substr($pl, 10);
                     for ($i = 0; $i < $tableCount; $i++) {
-                        $srcIeee  = substr($pl, 0, 16);
-                        $srcIeee = AbeilleTools::reverseHex($srcIeee);
+                        $srcIeee = AbeilleTools::reverseHex(substr($pl, 0, 16));
                         $srcEp  = substr($pl, 16, 2);
-                        $clustId  = substr($pl, 18, 4);
+                        $clustId = AbeilleTools::reverseHex(substr($pl, 18, 4));
                         $destAddrMode = substr($pl, 22, 2);
                         if ($destAddrMode == "01") {
                             // 16-bit group address for DstAddr and DstEndpoint not present
-                            $destAddr  = substr($pl, 24, 4);
+                            $destAddr = AbeilleTools::reverseHex(substr($pl, 24, 4));
                             parserLog('debug', '  '.$srcIeee.', EP'.$srcEp.', Clust '.$clustId.' => group '.$destAddr);
                             $pl = substr($pl, 28);
                         } else if ($destAddrMode == "03") {
                             // 64-bit extended address for DstAddr and DstEndp present
-                            $destIeee  = substr($pl, 24, 16);
-                            $destIeee = AbeilleTools::reverseHex($destIeee);
+                            $destIeee = AbeilleTools::reverseHex(substr($pl, 24, 16));
                             $destEP  = substr($pl, 40, 2);
                             parserLog('debug', '  '.$srcIeee.', EP'.$srcEp.', Clust '.$clustId.' => '.$destIeee.', EP'.$destEP);
                             $pl = substr($pl, 42);
@@ -2413,11 +2411,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                 $value = substr($payload, 32, 2);
                 if ($value == "00")
-                    $value = 'single';
+                    $click = 'single';
                 else if ($value == "01")
-                    $value = 'double';
+                    $click = 'double';
                 else if ($value == "02")
-                    $value = 'long';
+                    $click = 'long';
                 else {
                     parserLog('debug',  '  Tuya 0006-FD specific command'
                         .', value='.$value.' => UNSUPPORTED', "8002");
@@ -2425,11 +2423,17 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
 
                 parserLog('debug',  '  Tuya 0006-FD specific command'
-                                .', value='.$value.' => '.$action, "8002");
+                                .', value='.$value.' => click='.$click, "8002");
 
                 // Generating an event on 'EP-click' Jeedom cmd (ex: '01-click' = 'single')
-                $this->msgToAbeille($dest."/".$srcAddr, $srcEp, "click", $value);
+                $this->msgToAbeille($dest."/".$srcAddr, $srcEp, "click", $click);
                 return;
+            }
+            if ($cluster == "0006") {
+                if (($cmd == "00") || ($cmd == 01)) {
+                    parserLog('debug', "  Handled by decode8095");
+                    return;
+                }
             }
 
             parserLog("debug", "  Ignored cluster specific command ".$cluster."-".$cmd, "8002");
@@ -3520,20 +3524,42 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <address_mode: uint8_t>
             // <SrcAddr: uint16_t>
             // <status: uint8>
+            $ep = substr($payload, 2, 2);
+            $clustId = substr($payload, 4, 4);
+            $addrMode = substr($payload, 8, 2);
             $srcAddr = substr($payload, 10, 4);
             $status = substr($payload, 14, 2);
 
-            parserLog('debug', $dest.', Type=8095/Remote button pressed (ONOFF_UPDATE) a group response)'
+            parserLog('debug', $dest.', Type=8095/OnOff update'
                 .', SQN='.substr($payload, 0, 2)
-                .', EP='.substr($payload, 2, 2)
-                .', clustId='.substr($payload, 4, 4)
-                .', addrMode='.substr($payload, 8, 2)
-                .', srcAddr='.$srcAddr
-                .', status='.$status);
+                .', EP='.$ep
+                .', ClustId='.$clustId
+                .', AddrMode='.$addrMode
+                .', Addr='.$srcAddr
+                .', Status='.$status);
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
-            $this->msgToAbeille($dest.'/'.$srcAddr, "Click","Middle", $status);
+            /* Forwarding to Abeille */
+            // $this->msgToAbeille($dest.'/'.$srcAddr, "Click", "Middle", $status);
+            // Tcharp38: The 'Click-Middle' must be avoided. Can't define EP so the source of this "click".
+            //           Moreover no sense since there may have no link with "middle". It's is just a OnOff cmd FROM a device to Zigate.
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'attributeReport',
+                'net' => $dest,
+                'addr' => $srcAddr,
+                'ep' => $ep,
+                'name' => 'Click-Middle',
+                'value' => $status,
+                'time' => time(),
+                'lqi' => $lqi
+            );
+            $this->msgToAbeille2($msg);
+
+            // Tcharp38: New way of handling this event (OnOff cmd coming from a device)
+            $msg['name'] = $ep.'-cmd-onoff';
+            $this->msgToAbeille2($msg);
         }
 
         //----------------------------------------------------------------------------------------------------------------

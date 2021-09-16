@@ -151,6 +151,22 @@
                     "shortAddress"              => $keywords[1],
                 );
                 break;
+            case "bind0030":
+                $fields = preg_split("/[=&]+/", $msg);
+                if (count($fields) > 1) {
+                    $parameters = $this->proper_parse_str($msg);
+                }
+                $Command = array(
+                    "bind0030" => "1",
+                    "priority" => $priority,
+                    "dest" => $dest,
+                    "addr" => $parameters['addr'], // IEEE source addr
+                    "ep" => $parameters['ep'], // Source EP
+                    "clustId" => $parameters['clustId'], // Source cluster
+                    "destAddr" => $parameters['destAddr'], // Dest IEEE addr or group addr
+                    "destEp" => $parameters['destEp'], // Dest EP if IEEE addr
+                );
+                break;
             case "bindShort":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -168,19 +184,6 @@
                                     "destinationEndpoint"      => "01",
                                     );
                 break;
-            // case "bindShort":
-            //     $Command = array(
-            //                         "bindShort"                => "1",
-            //                         "priority"                 => $priority,
-            //                         "dest"                     => $dest,
-            //                         "address"                  => $parameters['address'],
-            //                         "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
-            //                         "targetEndpoint"           => $parameters['targetEndpoint'],
-            //                         "clusterID"                => $parameters['ClusterId'],
-            //                         "destinationAddress"       => $parameters['reportToAddress'],
-            //                         "destinationEndpoint"      => "01",
-            //                         );
-            //     break;
             case "BindToGroup":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {

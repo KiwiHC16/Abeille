@@ -28,9 +28,11 @@
     $zgNb = substr($eqNet, 7); // Extracting zigate number from network
     $zgType = config::byKey('AbeilleType'.$zgNb, 'Abeille', '', 1); // USB, WIFI, PIN, DIN
     $mainEP = $eqLogic->getConfiguration('mainEP', '01');
+    $eqIeee = $eqLogic->getConfiguration('IEEE', '');
 
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
+    echo '<script>var js_eqIeee = "'.$eqIeee.'";</script>'; // PHP to JS
     echo '<script>var js_zgNb = '.$zgNb.';</script>'; // PHP to JS
     echo '<script>var js_queueKeyXmlToCmd = '.queueKeyXmlToCmd.';</script>'; // PHP to JS
 ?>
@@ -466,6 +468,19 @@
             // start = document.getElementById("idStartD").value;
             start = "00";
             payload = "addr="+js_eqAddr+"_ep="+ep+"_clustId="+clustId+"_start="+start;
+        } else if (request == "bindToDevice") {
+            topic = "Cmd"+logicalId+"_bind0030";
+            ep = document.getElementById("idEpE").value;
+            clustId = document.getElementById("idClustIdE").value;
+            destIeee = document.getElementById("idIeeeE").value;
+            destEp = document.getElementById("idEpE2").value;
+            payload = "addr="+js_eqIeee+"_ep="+ep+"_clustId="+clustId+"_destAddr="+destIeee+"_destEp="+destEp;
+        } else if (request == "bindToGroup") {
+            topic = "Cmd"+logicalId+"_bind0030";
+            ep = document.getElementById("idEpF").value;
+            clustId = document.getElementById("idClustIdF").value;
+            destGroup = document.getElementById("idGroupF").value;
+            payload = "addr="+js_eqIeee+"_ep="+ep+"_clustId="+clustId+"_destAddr="+destGroup;
         } else {
             console.log("Unknown request "+request);
             return;

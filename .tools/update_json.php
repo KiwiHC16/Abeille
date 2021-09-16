@@ -145,6 +145,18 @@
                     echo "  Cmd 'getSWBuild' replaced by 'Get-SWBuildID'.\n";
                     continue;
                 }
+                /* include ToggleEpxx => Toggle use zbCmd-0006-Toggle */
+                if (substr($cmdFName, 0, 8) == "ToggleEp") {
+                    $epId = substr($cmdFName, 8);
+                    $dev[$devName]['commands']['Toggle '.$epId]['use'] = "zbCmd-0006-Toggle";
+                    $dev[$devName]['commands']['Toggle '.$epId]['params'] = "ep=".$epId;
+                    $dev[$devName]['commands']['Toggle '.$epId]['nextLine'] = "after";
+                    if ($oldSyntax)
+                        unset($dev[$devName]['commands'][$key]);
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' replaced by 'zbCmd-0006-Toggle'.\n";
+                    continue;
+                }
             }
         }
 

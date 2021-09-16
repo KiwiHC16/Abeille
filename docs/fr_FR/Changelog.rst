@@ -1,49 +1,29 @@
 ChangeLog
 =========
 
-210914-BETA-2
+- JSON équipements: Mise à jour des commandes du type 'toggle'.
+- Page EQ/avancé: ajout possibilité de faire un "bind" vers équipement ou groupe.
+- Parser: Correction table de binding.
+
+210916-STABLE-1
 ----------
 
 - JSON commandes: 'trig' revu + 'trigOffset' ajouté.
 - Niko connected socket: ajout support (#2003).
 - JSON commandes: suppression de qq cmds obsoletes.
-
-210913-BETA-1
-----------
-
 - Interne: Optimisation parser: transfert groupé d'attributs.
 - Interne: Link-Quality mis à jour sur attribut report.
 - JSON équipements: Mise-à-jour commandes pourcentage batterie.
 - Tuya inter 4 buttons: mise-à-jour support 'click' (#2122).
-
-210909-BETA-1
-----------
-
 - Interne: Améliorations parser + robustesse.
-
-210908-BETA-1
-----------
-
 - Correction regression: crash pendant l'inclusion (#2125).
-
-210907-BETA-2
-----------
-
 - Zemismart TS0042 2 buttons (#1272).
 - Interne: Parser: Modificaiton support custom single/double/long click pour Tuya.
 - Tuya 4 buttons scene switch: Mise-à-jour modèle (#2122).
-
-210907-BETA-1
-----------
-
 - Ajout FW 3.1e Optimized PDM + 3.20 legacy + 3.20 Optimized PDM
 - Osram CLA60 TW: Correction end point par défaut (#2117).
 - Tuya contact sensor TS0203: Ajout reporting batterie (#1270).
 - Tuya 4 buttons scene switch: Ajout support (#2122).
-
-210905-BETA-1
--------------
-
 - Correction mauvais message: "ATTENTION: config locale utilisée ...".
 - Interne: Améliorations parser.
 

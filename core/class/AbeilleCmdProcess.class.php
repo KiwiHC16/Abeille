@@ -1198,7 +1198,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // Bind
         // Title => 000B57fffe3025ad (IEEE de l ampoule)
         // message => reportToAddress=00158D0001B22E24&ClusterId=0006
-        if (isset($Command['bind']))
+        if (isset($Command['bind'])) // Tcharp38: OBSOLETE !! Use "bind0030" instead
         {
             $this->deamonlog('debug', "    command bind", $this->debug['processCmd2']);
             // Msg Type = 0x0030
@@ -1241,8 +1241,68 @@ class AbeilleCmdProcess extends AbeilleDebug {
             return;
         }
 
+        // Bind, thru command 0030
+        if (isset($Command['bind0030']))
+        {
+            /* Mandatory infos: addr, clustId, attrType, attrId */
+            $required = ['addr', 'ep', 'clustId', 'destAddr'];
+            $missingParam = false;
+            foreach ($required as $idx => $param) {
+                if (isset($Command[$param]))
+                    continue;
+                $this->deamonlog('debug', "    command bind0030 ERROR: Missing '".$param."'");
+                $missingParam = true;
+            }
+            if ($missingParam)
+                return;
+            if ((strlen($Command['destAddr']) == 16) && !isset($Command['destEp'])) {
+                $this->deamonlog('debug', "    command bind0030 ERROR: Missing 'destEp'");
+                return;
+            }
+
+            $this->deamonlog('debug', "    command bind0030", $this->debug['processCmd2']);
+
+            $cmd = "0030";
+
+            // <target extended address: uint64_t>
+            // <target endpoint: uint8_t>
+            // <cluster ID: uint16_t>
+            // <destination address mode: uint8_t>
+            // <destination address:uint16_t or uint64_t>
+            // <destination endpoint (value ignored for group address): uint8_t>
+
+            // Source
+            $addr = $Command['addr'];
+            if (strlen($addr) != 16) {
+                $this->deamonlog('debug', "    command bind0030 ERROR: Invalid addr length");
+                return;
+            }
+            $ep = $Command['ep'];
+            $clustId = $Command['clustId'];
+
+            // Dest
+            // $destAddr: 01=16bit group addr, destEp ignored
+            // $destAddr: 03=64bit ext addr, destEp required
+            $destAddr = $Command['destAddr'];
+            if (strlen($destAddr) == 4)
+                $destAddrMode = "01";
+            else if (strlen($destAddr) == 16)
+                $destAddrMode = "03";
+            else {
+                $this->deamonlog('debug', "    command bind0030 ERROR: Invalid dest addr length");
+                return;
+            }
+            $destEp = $Command['destEp'];
+
+            $data = $addr.$ep.$clustId.$destAddrMode.$destAddr.$destEp;
+            $length = sprintf( "%04x", strlen($data) / 2);
+            $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
+            return;
+        }
+
         // BindToGroup
         // Pour Telecommande RC110
+        // Tcharp38: Why the need of a 0530 based function ?
         if (isset($Command['BindToGroup']))
         {
             $this->deamonlog('debug', "    command BindToGroup", $this->debug['processCmd2']);
@@ -1308,6 +1368,7 @@ class AbeilleCmdProcess extends AbeilleDebug {
         // Bind Short
         // Title => 000B57fffe3025ad (IEEE de l ampoule) <= to be reviewed
         // message => reportToAddress=00158D0001B22E24&ClusterId=0006 <= to be reviewed
+        // Tcharp38: Why the need of a 0530 based function ?
         if (isset($Command['bindShort']))
         {
             $this->deamonlog('debug', "    command bind short", $this->debug['processCmd2']);

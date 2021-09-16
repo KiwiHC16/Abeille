@@ -15,7 +15,6 @@
             "include4": "etat",
             "include5": "On",
             "include6": "Off",
-            "include7": "Toggle",
             "include8": "getEtat",
             "include20": "BindToZigateLevel",
             "include21": "setReportLevel",
@@ -26,7 +25,11 @@
             "include300-2": "setTemperatureLight",
             "include300-3": "2200K",
             "include300-4": "2700K",
-            "include300-5": "4000K"
+            "include300-5": "4000K",
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
+            }
         }
     }
 }

@@ -15,7 +15,6 @@
             "include4": "etat",
             "include5": "On",
             "include6": "Off",
-            "include7": "Toggle",
             "include8": "getEtat",
             "include9": "getManufacturerName",
             "include10": "getModelIdentifier",
@@ -23,6 +22,10 @@
             "include10 2 2": "setReportEtat",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
             }
         }
     }

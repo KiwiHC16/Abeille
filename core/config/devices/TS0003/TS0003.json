@@ -21,7 +21,6 @@
             "include6": "Off",
             "include6 2": "Off1",
             "include6 2 2": "Off2",
-            "include7": "Toggle",
             "include7 2": "Toggle1",
             "include7 2 2": "Toggle2",
             "include8": "getEtat",
@@ -29,6 +28,10 @@
             "include10": "getModelIdentifier",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
             }
         },
         "comment": ""

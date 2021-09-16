@@ -16,7 +16,6 @@
             "include5": "levelLight",
             "include8": "On",
             "include9": "Off",
-            "include10": "Toggle",
             "include11": "setLevel",
             "include37": "2200K",
             "include38": "2700K",
@@ -39,6 +38,10 @@
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
             }
         }
     }

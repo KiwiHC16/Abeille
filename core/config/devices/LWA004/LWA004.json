@@ -23,14 +23,17 @@
             "include5": "levelLight",
             "include8": "On",
             "include9": "Off",
-            "include10": "Toggle",
             "include11": "setLevel",
             "include19": "getEtat",
             "include20": "getLevel",
             "include26": "BindToZigateEtat",
             "include27": "BindToZigateLevel",
             "include28": "setReportEtat",
-            "include29": "setReportLevel"
+            "include29": "setReportLevel",
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
+            }
         }
     }
 }

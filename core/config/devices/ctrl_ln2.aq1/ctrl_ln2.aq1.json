@@ -19,7 +19,6 @@
             "include3 2 2 2 2 2": "etatSW2",
             "include3 2 2 2 2 2 2": "On",
             "include3 2 2 2 2 2 2 2": "Off",
-            "include3 2 2 2 2 2 2 2 2": "Toggle",
             "include3 2 2 2 2 2 2 2 2 2": "On1",
             "include3 2 2 2 2 2 2 2 2 2 2": "Off1",
             "include3 2 2 2 2 2 2 2 2 2 2 2": "Toggle1",
@@ -35,6 +34,10 @@
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
             }
         }
     }

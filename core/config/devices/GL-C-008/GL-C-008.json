@@ -21,7 +21,6 @@
             "include7 2": "colorY",
             "include6": "On",
             "include7": "Off",
-            "include8": "Toggle",
             "include11 2": "setLevel",
             "include37": "2200K",
             "include38": "2700K",
@@ -61,6 +60,10 @@
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
             }
         },
         "comment": "GLEDOPTO RGT+CCT LED Controller"

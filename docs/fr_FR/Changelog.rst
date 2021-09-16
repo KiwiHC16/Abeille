@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210916-BETA-1
+----------
+
 - JSON équipements: Mise à jour des commandes du type 'toggle'.
 - Page EQ/avancé: ajout possibilité de faire un "bind" vers équipement ou groupe.
 - Parser: Correction table de binding.

@@ -55,10 +55,9 @@
     }
 
     // Clusters definition
-    // Attributes on server side only
-    // Commands received only
+    //  'attributes' = Server attributes
+    //  'commands' = commands received
     // All hex are UPPER case
-    // Note about names: Attributes are usually without any space (as ZCL spec) but cmds contain spaces
     $GLOBALS['zbClusters'] = array(
         "0000" => array(
             "name" => "Basic",
@@ -75,7 +74,18 @@
         "0003" => array(
             "name" => "Identify",
         ),
-        "0006" => array( // On/Off cluster
+        "0005" => array(
+            "name" => "Scenes",
+            "attributes" => array(
+                "0000" => array( "name" => "SceneCount", "access" => "R" ),
+                "0001" => array( "name" => "CurrentScene", "access" => "R" ),
+                "0002" => array( "name" => "CurrentGroup", "access" => "R" ),
+                "0003" => array( "name" => "SceneValid", "access" => "R" ),
+                "0004" => array( "name" => "NameSupport", "access" => "R" ),
+                "0005" => array( "name" => "LastConfiguredBy", "access" => "R" ),
+            ),
+        ),
+        "0006" => array(
             "name" => "On/Off",
             "attributes" => array(
                 "0000" => array( "name" => "OnOff", "access" => "R" ),

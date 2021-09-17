@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- JSON équipements: Nettoyage setReport-EPxx => zbConfigureReporting.
+- Assistant de découverte: améliorations et mise à jour doc.
+- Interne: Parser: Amélioration pour découverte cluster 0005/Scenes.
+
 210917-BETA-1
 ----------
 

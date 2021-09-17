@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- Interne: Correction warning pour "bind to group".
+- Page EQ/avancé: ajout bouton "reset to factory".
+- Interne: AbeilleCmdPrepare + Process updates.
+
 210916-BETA-1
 ----------
 

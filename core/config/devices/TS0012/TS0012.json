@@ -10,26 +10,24 @@
         },
         "type": "Zemismart tactile 2gang sans neutre",
         "commands": {
-            "include2": "societe",
-            "include3": "nom",
             "include4": "etatCharge0",
             "include4 2": "etatCharge1",
             "include5": "On",
             "include5 2": "On1",
             "include6": "Off",
             "include6 2": "Off1",
-            "include7 2": "Toggle1",
+            "Toggle 1": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Toggle 2": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=02"
+            },
             "include8": "getEtat",
-            "include9": "getManufacturerName",
-            "include10": "getModelIdentifier",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
-            },
-            "Toggle": {
-                "use": "zbCmd-0006-Toggle",
-                "nextLine": "after"
             }
-        },
-        "comment": ""
+        }
     }
 }

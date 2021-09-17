@@ -164,8 +164,9 @@
                     "ep" => $parameters['ep'], // Source EP
                     "clustId" => $parameters['clustId'], // Source cluster
                     "destAddr" => $parameters['destAddr'], // Dest IEEE addr or group addr
-                    "destEp" => $parameters['destEp'], // Dest EP if IEEE addr
                 );
+                if (isset($parameters['destEp'])) // Not required if group address
+                    $Command['destEp'] = $parameters['destEp']; // Dest EP if IEEE addr
                 break;
             case "bindShort":
                 $fields = preg_split("/[=&]+/", $msg);
@@ -318,22 +319,6 @@
                 if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                 break;
 
-            // case "setReport":
-            //     if (!isset($parameters['targetEndpoint']) )    { $parameters['targetEndpoint'] = "01"; }
-            //     if (!isset($parameters['MaxInterval']) )       { $parameters['MaxInterval']    = "0"; }
-            //     $Command = array(
-            //                         "setReport"                => "1",
-            //                         "priority"                 => $priority,
-            //                         "dest"                     => $dest,
-            //                         "address"                  => $parameters['address'],
-            //                         "targetEndpoint"           => $parameters['targetEndpoint'],
-            //                         "ClusterId"                => $parameters['ClusterId'],
-            //                         "AttributeType"            => $parameters['AttributeType'],
-            //                         "AttributeId"              => $parameters['AttributeId'],
-            //                         "MaxInterval"              => str_pad(dechex($parameters['MaxInterval']),4,0,STR_PAD_LEFT),
-            //                         );
-            //     break;
-
             case "setReportRaw": // OBSOLETE: Use 'configureReporting' instead
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -394,65 +379,65 @@
 
             case "readReportingConfig":
                 $Command = array(
-                                    "readReportingConfig"    => "1",
-                                    "priority"              => $priority,
-                                    "dest"                  => $dest,
-                                    "addr"                  => $parameters['addr'],
-                                    "clustId"               => $parameters['clustId'],
-                                    "attrId"                => $parameters['attrId'],
-                                    );
-                break;
-
-            case "discoverCommandsReceived":
-                $Command = array(
-                                    "discoverCommandsReceived"    => "1",
-                                    "priority"              => $priority,
-                                    "dest"                  => $dest,
-                                    "addr"                  => $address,
-                                    "ep"                    => isset($parameters['ep']) ? $parameters['ep']: null,
-                                    "clustId"               => isset($parameters['clustId']) ? $parameters['clustId']: null,
-                                    "startId"               => isset($parameters['startId']) ? $parameters['startId']: null,
-                                    "max"                   => isset($parameters['max']) ? $parameters['max']: null,
-                                    );
-                break;
-
-            case "discoverAttributes":
-                $fields = preg_split("/[=&]+/", $msg);
-                    if (count($fields) > 1) {
-                        $parameters = $this->proper_parse_str($msg);
-                    }
-
-                $Command = array(
-                    "discoverAttributes"    => "1",
+                    "readReportingConfig"    => "1",
                     "priority"              => $priority,
                     "dest"                  => $dest,
-                    "addr"                  => $address,
-                    "ep"                    => $parameters['ep'],
+                    "addr"                  => $parameters['addr'],
                     "clustId"               => $parameters['clustId'],
-                    "dir"                   => isset($parameters['dir']) ? $parameters['dir'] : "00",
-                    "startAttrId"           => isset($parameters['startAttrId']) ? $parameters['startAttrId'] : "0000",
-                    "maxAttrId"             => isset($parameters['maxAttrId']) ? $parameters['maxAttrId'] : "FF",
-                );
+                    "attrId"                => $parameters['attrId'],
+                    );
                 break;
 
-            case "discoverAttributesExt": // Discover Attributes Extended: WORK ONGOING
-                $fields = preg_split("/[=&]+/", $msg);
-                    if (count($fields) > 1) {
-                        $parameters = $this->proper_parse_str($msg);
-                    }
+            // case "discoverCommandsReceived":
+            //     $Command = array(
+            //                         "discoverCommandsReceived"    => "1",
+            //                         "priority"              => $priority,
+            //                         "dest"                  => $dest,
+            //                         "addr"                  => $address,
+            //                         "ep"                    => isset($parameters['ep']) ? $parameters['ep']: null,
+            //                         "clustId"               => isset($parameters['clustId']) ? $parameters['clustId']: null,
+            //                         "startId"               => isset($parameters['startId']) ? $parameters['startId']: null,
+            //                         "max"                   => isset($parameters['max']) ? $parameters['max']: null,
+            //                         );
+            //     break;
 
-                $Command = array(
-                    "discoverAttributesExt"    => "1",
-                    "priority"              => $priority,
-                    "dest"                  => $dest,
-                    "addr"                  => $address,
-                    "ep"                    => $parameters['ep'],
-                    "clustId"               => $parameters['clustId'],
-                    "dir"                   => isset($parameters['dir']) ? $parameters['dir'] : "00",
-                    "startAttrId"           => isset($parameters['startAttrId']) ? $parameters['startAttrId'] : "0000",
-                    "maxAttrId"             => isset($parameters['maxAttrId']) ? $parameters['maxAttrId'] : "FF",
-                );
-                break;
+            // case "discoverAttributes":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //         if (count($fields) > 1) {
+            //             $parameters = $this->proper_parse_str($msg);
+            //         }
+
+            //     $Command = array(
+            //         "discoverAttributes"    => "1",
+            //         "priority"              => $priority,
+            //         "dest"                  => $dest,
+            //         "addr"                  => $address,
+            //         "ep"                    => $parameters['ep'],
+            //         "clustId"               => $parameters['clustId'],
+            //         "dir"                   => isset($parameters['dir']) ? $parameters['dir'] : "00",
+            //         "startAttrId"           => isset($parameters['startAttrId']) ? $parameters['startAttrId'] : "0000",
+            //         "maxAttrId"             => isset($parameters['maxAttrId']) ? $parameters['maxAttrId'] : "FF",
+            //     );
+            //     break;
+
+            // case "discoverAttributesExt": // Discover Attributes Extended: WORK ONGOING
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //         if (count($fields) > 1) {
+            //             $parameters = $this->proper_parse_str($msg);
+            //         }
+
+            //     $Command = array(
+            //         "discoverAttributesExt"    => "1",
+            //         "priority"              => $priority,
+            //         "dest"                  => $dest,
+            //         "addr"                  => $address,
+            //         "ep"                    => $parameters['ep'],
+            //         "clustId"               => $parameters['clustId'],
+            //         "dir"                   => isset($parameters['dir']) ? $parameters['dir'] : "00",
+            //         "startAttrId"           => isset($parameters['startAttrId']) ? $parameters['startAttrId'] : "0000",
+            //         "maxAttrId"             => isset($parameters['maxAttrId']) ? $parameters['maxAttrId'] : "FF",
+            //     );
+            //     break;
 
             /*
              * Unsorted yet
@@ -1480,74 +1465,109 @@
                 break;
 
             default:
-                $this->deamonlog("debug", '  Unidentified cmd. Trying auto-detection.');
-                $keywords = preg_split("/[=&]+/", $msg);
+                $this->deamonlog("debug", '  Forwarding cmd to AbeilleCmdProcess.');
+                // $this->deamonlog("debug", '  msg='.json_encode($msg));
 
-                // Si une string simple
-                if (count($keywords) == 1) {
-                    $Command = array(
-                                    $action => $msg,
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    );
-                } else if (count($keywords) == 2) { // Si une command type get http param1=value1&param2=value2
-                    $Command = array(
-                                    $action => $action,
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    $keywords[0] => $keywords[1],
-                                    );
-                } else if (count($keywords) == 4) {
-                    $Command = array(
-                                    $action => $action,
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    $keywords[0] => $keywords[1],
-                                    $keywords[2] => $keywords[3],
-                                    );
-                } else if (count($keywords) == 6) {
-                    $Command = array(
-                                    $action => $action,
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    $keywords[0] => $keywords[1],
-                                    $keywords[2] => $keywords[3],
-                                    $keywords[4] => $keywords[5],
-                                    );
-                } else if (count($keywords) == 8) {
-                    $Command = array(
-                                    $action => $action,
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    $keywords[0] => $keywords[1],
-                                    $keywords[2] => $keywords[3],
-                                    $keywords[4] => $keywords[5],
-                                    $keywords[6] => $keywords[7],
-                                    );
-                } else if (count($keywords) == 10) {
-                    $Command = array(
-                                    $action => $action,
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    $keywords[0] => $keywords[1],
-                                    $keywords[2] => $keywords[3],
-                                    $keywords[4] => $keywords[5],
-                                    $keywords[6] => $keywords[7],
-                                    $keywords[8] => $keywords[9],
-                                    );
-                } else if (count($keywords) == 12) {
-                    $Command = array(
-                                    $action => $action,
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    $keywords[0] => $keywords[1],
-                                    $keywords[2] => $keywords[3],
-                                    $keywords[4] => $keywords[5],
-                                    $keywords[6] => $keywords[7],
-                                    $keywords[8] => $keywords[9],
-                                    $keywords[10] => $keywords[11],
-                                    );
+                /* Tcharp38 notes:
+                   This part forward directly message to 'AbeilleCmdProcess'.
+                   Should be the default to later remove this 'AbeilleCmdPrepare' step.
+                   Incoming messages have 2 parts:
+                     - Target device (ex: CmdAbeille1/FE70/discoverAttributesExt) => address + command
+                     - Command params (ex: ep=01&clustId=0000&start=00)
+                   During this conversion process a key point is 'addr'. Device addr is taken if 'addr' is not already
+                   part of parameters.
+                 */
+
+                $Command =  array(
+                    $action => $action, // Tcharp38: Legacy. To be removed at some point.
+                    "name" => $action,
+                    "priority" => $priority,
+                    "dest" => $dest,
+                );
+                $keywords = preg_split("/[=&]+/", $msg);
+                $addrFound = false;
+                for($i = 0; $i < count($keywords); $i += 2) {
+                    if (($i + 1) < count($keywords))
+                        $Command[$keywords[$i]] = $keywords[$i + 1];
+                    else
+                        $Command[$keywords[$i]] = 1; // Special case. Ex: CmdAbeille1/0000/SetPermit -> Inclusion
+                    if ($Command[$keywords[$i]] == "addr")
+                        $addrFound = true;
                 }
+                if ($addrFound == false)
+                    $Command['addr'] = $address;
+
+                // if (count($keywords) == 1) {
+                //     $Command = array(
+                //                     $action => $msg,
+                //                     "name" => $action,
+                //                     "priority" => $priority,
+                //                     "dest" => $dest,
+                //                     );
+                // } else if (count($keywords) == 2) { // Si une command type get http param1=value1&param2=value2
+                //     $Command = array(
+                //                     $action => $action,
+                //                     "name" => $action,
+                //                     "priority" => $priority,
+                //                     "dest" => $dest,
+                //                     $keywords[0] => $keywords[1],
+                //                     );
+                // } else if (count($keywords) == 4) {
+                //     $Command = array(
+                //                     $action => $action,
+                //                     "name" => $action,
+                //                     "priority" => $priority,
+                //                     "dest" => $dest,
+                //                     $keywords[0] => $keywords[1],
+                //                     $keywords[2] => $keywords[3],
+                //                     );
+                // } else if (count($keywords) == 6) {
+                //     $Command = array(
+                //                     $action => $action,
+                //                     "name" => $action,
+                //                     "priority" => $priority,
+                //                     "dest" => $dest,
+                //                     $keywords[0] => $keywords[1],
+                //                     $keywords[2] => $keywords[3],
+                //                     $keywords[4] => $keywords[5],
+                //                     );
+                // } else if (count($keywords) == 8) {
+                //     $Command = array(
+                //                     $action => $action,
+                //                     "name" => $action,
+                //                     "priority" => $priority,
+                //                     "dest" => $dest,
+                //                     $keywords[0] => $keywords[1],
+                //                     $keywords[2] => $keywords[3],
+                //                     $keywords[4] => $keywords[5],
+                //                     $keywords[6] => $keywords[7],
+                //                     );
+                // } else if (count($keywords) == 10) {
+                //     $Command = array(
+                //                     $action => $action,
+                //                     "name" => $action,
+                //                     "priority" => $priority,
+                //                     "dest" => $dest,
+                //                     $keywords[0] => $keywords[1],
+                //                     $keywords[2] => $keywords[3],
+                //                     $keywords[4] => $keywords[5],
+                //                     $keywords[6] => $keywords[7],
+                //                     $keywords[8] => $keywords[9],
+                //                     );
+                // } else if (count($keywords) == 12) {
+                //     $Command = array(
+                //                     $action => $action,
+                //                     "name" => $action,
+                //                     "priority" => $priority,
+                //                     "dest" => $dest,
+                //                     $keywords[0] => $keywords[1],
+                //                     $keywords[2] => $keywords[3],
+                //                     $keywords[4] => $keywords[5],
+                //                     $keywords[6] => $keywords[7],
+                //                     $keywords[8] => $keywords[9],
+                //                     $keywords[10] => $keywords[11],
+                //                     );
+                // }
                 break;
             } // switch action
 

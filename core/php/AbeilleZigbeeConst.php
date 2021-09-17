@@ -62,6 +62,9 @@
     $GLOBALS['zbClusters'] = array(
         "0000" => array(
             "name" => "Basic",
+            "commands" => array(
+                "00" => array( "name" => "Reset to factory defaults" ),
+            ),
         ),
         "0001" => array(
             "name" => "Power configuration",

@@ -125,6 +125,12 @@
                     <input type="text" id="idEPList" value="" readonly>
                 </div>
             </div>
+            <div class="row">
+                <label class="col-lg-2 control-label" for="fname">Source d'alim:</label>
+                <div class="col-lg-10">
+                    <input type="text" id="idZbPowerSource" value="" readonly>
+                </div>
+            </div>
 
             <style>
                 table, td {
@@ -1422,13 +1428,6 @@ console.log("missing value for "+attrId);
                 h += '<input type="text" id="idZbLocation'+ep+'" value="" readonly>';
                 h += '</div>';
                 h += '</div>';
-                h += '<div class="row">';
-                h += '<label class="col-lg-2 control-label" for="fname">Source d\'alim:</label>';
-                h += '<div class="col-lg-10">';
-                h += '<a id="idZbPowerSource'+ep+'RB" class="btn btn-warning" title="Raffraichi la source d\'alimentation" onclick="requestInfos(\'powerSource\', \''+ep+'\')"><i class="fas fa-sync"></i></a>';
-                h += '<input type="text" id="idZbPowerSource'+ep+'" value="" readonly>';
-                h += '</div>';
-                h += '</div>';
                 h += '</div>';
 
                 /* Display server clusters */
@@ -1661,8 +1660,8 @@ console.log("missing value for "+attrId);
                     field = document.getElementById("idZbModel"+sEp);
                     idRB = "idZbModel"+sEp+"RB"; // Refresh button
                 } else if (sAttrId == "0007") {
-                    field = document.getElementById("idZbPowerSource"+sEp);
-                    idRB = "idZbPowerSource"+sEp+"RB"; // Refresh button
+                    field = document.getElementById("idZbPowerSource");
+                    idRB = null; // No refresh button
                     sValue = discovery.powerSource;
                 } else if (sAttrId == "0010") {
                     field = document.getElementById("idZbLocation"+sEp);
@@ -1674,7 +1673,8 @@ console.log("missing value for "+attrId);
                     field.value = "-- Non supporté --";
                 else
                     field.value = sValue;
-                changeClass(idRB, "btn-warning", "btn-success");
+                if (idRB)
+                    changeClass(idRB, "btn-warning", "btn-success");
             }
 
             // If all attributes values are known, change button class
@@ -1749,8 +1749,8 @@ console.log("missing value for "+attrId);
                         field = document.getElementById("idZbModel"+sEp);
                         idRB = "idZbModel"+sEp+"RB"; // Refresh button
                     } else if (sAttrId == "0007") {
-                        field = document.getElementById("idZbPowerSource"+sEp);
-                        idRB = "idZbPowerSource"+sEp+"RB"; // Refresh button
+                        field = document.getElementById("idZbPowerSource");
+                        idRB = null; // No refresh button
                         sValue = discovery.powerSource;
                     } else if (sAttrId == "0010") {
                         field = document.getElementById("idZbLocation"+sEp);
@@ -1762,7 +1762,8 @@ console.log("missing value for "+attrId);
                         field.value = "-- Non supporté --";
                     else
                         field.value = sValue;
-                    changeClass(idRB, "btn-warning", "btn-success");
+                    if (idRB)
+                        changeClass(idRB, "btn-warning", "btn-success");
                 }
             }
 

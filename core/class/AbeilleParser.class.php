@@ -823,6 +823,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         function decodeDataType($hexString, $dataType, $reorder, &$dataSize, &$dataRaw) {
             // Compute value size according to data type
             switch ($dataType) {
+            case "10": // Boolean
+            case "18": // 8-bit bitmap
             case "20": // Uint8
             case "28": // Int8
                 $dataSize = 1;
@@ -886,6 +888,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             // Computing value
             switch ($dataType) {
+            case "10": // Boolean
+            case "18": // 8-bit bitmap
             case "20": // Uint8
             case "21": // Uint16
             case "22": // Uint24
@@ -1570,6 +1574,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             //  Cluster 0005 Scene (exemple: Boutons lateraux de la telecommande -)
             if ($cluster == "0005") {
+                $frameCtrlField = substr($payload, 26, 2);
+                parserLog("debug", '  Cluster 0005: FCF='.$frameCtrlField);
 
                 // Tcharp38: WARNING: There is probably something wrong there.
                 // There are cases where 0005 message is neither supported by this part nor by 8100_8102 decode.
@@ -1582,8 +1588,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                 $abeille = Abeille::byLogicalId($dest."/".$srcAddr,'Abeille');
                 $sceneStored = json_decode( $abeille->getConfiguration('sceneJson','{}') , True );
-
-                $frameCtrlField = substr($payload,26, 2);
 
                 if ( $frameCtrlField=='05' ) {
                     $Manufacturer   = substr($payload,30, 2).substr($payload,28, 2);
@@ -1611,69 +1615,70 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     }
                 }
 
-                if ( $frameCtrlField=='18' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 00
-                    $SQN                    = substr($payload,28, 2);
-                    $cmd                    = substr($payload,30, 2);
-                    parserLog("debug", '  cmd :'.$cmd );
+                // Tcharp38: Moved this part in ZCL global commands decode with questions.
+                // if ( $frameCtrlField=='18' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 00
+                //     $SQN                    = substr($payload,28, 2);
+                //     $cmd                    = substr($payload,30, 2);
+                //     parserLog("debug", '  cmd :'.$cmd );
 
-                    if ($cmd=="01") { // Read Attribut
-                        $attribut           = substr($payload,34, 2).substr($payload,32, 2);
-                        $status             = substr($payload,36, 2);
-                        if ( $status != "00" ) {
-                            parserLog("debug", '  Attribut Read Status error.');
-                            return;
-                        }
-                        if ( $attribut == "0000" ) {
-                            $dataType   = substr($payload,38, 2);
-                            $sceneCount = substr($payload,40, 2);
-                            $sceneStored["sceneCount"]           = $sceneCount-1; // On ZigLight need to remove one
-                            $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
-                            $abeille->save();
+                    // if ($cmd=="01") { // Read Attribut
+                    //     $attribut           = substr($payload,34, 2).substr($payload,32, 2);
+                    //     $status             = substr($payload,36, 2);
+                    //     if ( $status != "00" ) {
+                    //         parserLog("debug", '  Attribut Read Status error.');
+                    //         return;
+                    //     }
+                        // if ( $attribut == "0000" ) {
+                        //     $dataType   = substr($payload,38, 2);
+                        //     $sceneCount = substr($payload,40, 2);
+                        //     $sceneStored["sceneCount"]           = $sceneCount-1; // On ZigLight need to remove one
+                        //     $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                        //     $abeille->save();
 
-                            parserLog("debug", '  '.json_encode($sceneStored) );
+                        //     parserLog("debug", '  '.json_encode($sceneStored) );
 
-                            return;
-                        }
+                        //     return;
+                        // }
 
-                        if ( $attribut == "0001" ) {
-                            $dataType   = substr($payload,38, 2);
-                            $sceneCurrent = substr($payload,40, 2);
-                            $sceneStored["sceneCurrent"]           = $sceneCurrent;
-                            $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
-                            $abeille->save();
+                        // if ( $attribut == "0001" ) {
+                        //     $dataType   = substr($payload,38, 2);
+                        //     $sceneCurrent = substr($payload,40, 2);
+                        //     $sceneStored["sceneCurrent"]           = $sceneCurrent;
+                        //     $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                        //     $abeille->save();
 
-                            parserLog("debug", '  '.json_encode($sceneStored) );
+                        //     parserLog("debug", '  '.json_encode($sceneStored) );
 
-                            return;
-                        }
+                        //     return;
+                        // }
 
-                        if ( $attribut == "0002" ) {
-                            $dataType       = substr($payload,38, 2);
-                            $groupCurrent   = substr($payload,40, 4);
-                            $sceneStored["groupCurrent"]           = $groupCurrent;
-                            $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
-                            $abeille->save();
+                        // if ( $attribut == "0002" ) {
+                        //     $dataType       = substr($payload,38, 2);
+                        //     $groupCurrent   = substr($payload,40, 4);
+                        //     $sceneStored["groupCurrent"]           = $groupCurrent;
+                        //     $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                        //     $abeille->save();
 
-                            parserLog("debug", '  '.json_encode($sceneStored) );
+                        //     parserLog("debug", '  '.json_encode($sceneStored) );
 
-                            return;
-                        }
+                        //     return;
+                        // }
 
-                        if ( $attribut == "0003" ) {
-                            $dataType   = substr($payload,38, 2);
-                            $sceneActive = substr($payload,40, 2);
-                            $sceneStored["sceneActive"]           = $sceneActive;
-                            $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
-                            $abeille->save();
+                        // if ( $attribut == "0003" ) {
+                        //     $dataType   = substr($payload,38, 2);
+                        //     $sceneActive = substr($payload,40, 2);
+                        //     $sceneStored["sceneActive"]           = $sceneActive;
+                        //     $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                        //     $abeille->save();
 
-                            parserLog("debug", '  '.json_encode($sceneStored) );
+                        //     parserLog("debug", '  '.json_encode($sceneStored) );
 
-                            return;
-                        }
+                        //     return;
+                        // }
 
-                        parserLog("debug", '  Attribut inconnu :'.$attribut );
-                    }
-                }
+                    //     parserLog("debug", '  Attribut inconnu :'.$attribut );
+                    // }
+                // }
 
                 if ( $frameCtrlField=='19' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 01
                     $SQN                    = substr($payload,28, 2);
@@ -2148,6 +2153,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $msg = substr($payload, 32);
             }
 
+            /*
+             * General ZCL command
+             */
+
             if ($frameType == 0) { // General command
                 parserLog('debug', "  FCF=".$fcf."/".$fcfTxt.", SQN=".$SQN.", cmd=".$cmd.'/'.zbGetZCLGlobalCmdName($cmd));
 
@@ -2164,7 +2173,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 */
                 if ($cmd == "01") { // Read Attributes Response
                     // Some clusters are directly handled by 8100/8102 decode
-                    $acceptedCmd01 = ['0020', '0B04']; // Clusters handled here
+                    $acceptedCmd01 = ['0005', '0020', '0B04']; // Clusters handled here
                     if (!in_array($cluster, $acceptedCmd01)) {
                         parserLog('debug', "  Handled by decode8100_8102");
                         return;
@@ -2205,7 +2214,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         return;
 
                     // Reporting grouped attributes to Abeille
-                    $toAbeille = array(
+                    $msgTo = array(
                         'src' => 'parser',
                         'type' => 'readAttributesResponse',
                         'net' => $dest,
@@ -2216,25 +2225,46 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         'time' => time(),
                         'lqi' => $lqi
                     );
-                    $this->msgToAbeille2($toAbeille);
+                    $this->msgToAbeille2($msgTo);
 
-                    /* Send to client if required (ex: EQ page opened) */
-                    $toCli = array(
-                        'src' => 'parser',
-                        'type' => 'readAttributesResponse',
-                        'net' => $dest,
-                        'addr' => $srcAddr,
-                        'ep' => $srcEp,
-                        'clustId' => $cluster,
-                        'attributes' => $attributes
-                    );
-                    $this->msgToClient($toCli);
+                    /* Send to client page if required (ex: EQ page opened) */
+                    $this->msgToClient($msgTo);
+
+                    /* Tcharp38: Cluster 0005 specific case.
+                       Why is it handled here in Parser ?? Moreover why in decode8002 since supported by decode8100 ? */
+                    if ($cluster == "0005") {
+                        $abeille = Abeille::byLogicalId($dest."/".$srcAddr,'Abeille');
+                        $sceneStored = json_decode($abeille->getConfiguration('sceneJson', '{}'), true);
+                        foreach ($attributes as $attrId => $attr) {
+                            if ($attrId == "0000") {
+                                $sceneCount = $attr['value'];
+                                $sceneStored["sceneCount"] = $sceneCount - 1; // On ZigLight need to remove one
+                            } else if ($attrId == "0001") {
+                                $sceneCurrent = $attr['value'];
+                                $sceneStored["sceneCurrent"] = $sceneCurrent;
+                            } else if ($attrId == "0002") {
+                                $groupCurrent = $attr['value'];
+                                $sceneStored["groupCurrent"] = $groupCurrent;
+                            } else if ($attrId == "0003") {
+                                $sceneActive = $attr['value'];
+                                $sceneStored["sceneActive"] = $sceneActive;
+                            }
+                        }
+                        $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                        $abeille->save();
+                        parserLog("debug", '  '.json_encode($sceneStored));
+                        return;
+                    }
 
                     return;
-                } else if ($cmd == "07") { // Configure Reporting Response
+                } // End '$cmd == "01"'
+
+                else if ($cmd == "07") { // Configure Reporting Response
                     parserLog('debug', "  Handled by decode8120");
                     return;
-                } else if ($cmd == "09") { // Read Reporting Configuration Response
+                }
+
+                else if ($cmd == "09") { // Read Reporting Configuration Response
                     $status = substr($msg, 0, 2);
                     $dir = substr($msg, 2, 2);
                     $attrId = substr($msg, 6, 2).substr($msg, 4, 2);
@@ -2250,7 +2280,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         $msg = substr($msg, 8);
                     }
                     return;
-                } else if ($cmd == "0A") { // Report attributes
+                }
+
+                else if ($cmd == "0A") { // Report attributes
                     // Some clusters are directly handled by 8100/8102 decode
                     $acceptedCmd0A = ['0300', '050B']; // Clusters handled here
                     if (!in_array($cluster, $acceptedCmd0A)) {
@@ -2294,7 +2326,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $this->msgToAbeille2($toAbeille);
 
                     return;
-                } else if ($cmd == "0D") { // Discover Attributes Response
+                }
+
+                else if ($cmd == "0D") { // Discover Attributes Response
                     $completed = substr($msg, 2);
                     $msg = substr($msg, 2); // Skipping 'completed' status
 
@@ -2335,7 +2369,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     );
                     $this->msgToClient($toCli);
                     return;
-                } else if ($cmd == "12") { // Discover Commands Received Response
+                }
+
+                else if ($cmd == "12") { // Discover Commands Received Response
                     $completed = substr($msg, 2);
                     $msg = substr($msg, 2); // Skipping 'completed' status
                     $commands = [];
@@ -2358,7 +2394,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     );
                     $this->msgToClient($toCli);
                     return;
-                } else if ($cmd == "16") { // Discover Attributes Extended Response
+                }
+
+                else if ($cmd == "16") { // Discover Attributes Extended Response
                     $completed = substr($msg, 2);
                     $msg = substr($msg, 2); // Skipping 'completed' status
                     $attributes = [];
@@ -2402,7 +2440,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 return;
             }
 
-            // Cluster specific command
+            /*
+             * Cluster specific command
+             */
+
             parserLog('debug', "  FCF=".$fcf."/".$fcfTxt.", SQN=".$SQN.", cmd=".$cmd.'/'.zbGetZCLClusterCmdName($cluster, $cmd));
 
             // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs

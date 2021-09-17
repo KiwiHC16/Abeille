@@ -10,27 +10,26 @@
         },
         "type": "Xiaomi Module Double Switch Aqara",
         "commands": {
-            "include2": "societe",
-            "include3": "nom",
             "include4": "etat",
             "include4 2": "etatCharge1",
             "include5": "On",
             "include5 2": "On1",
             "include6": "Off",
             "include6 2": "Off1",
-            "include7 2": "Toggle1",
+            "Toggle 1": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Toggle 2": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=02"
+            },
             "include8": "getEtat",
-            "include9": "getManufacturerName",
-            "include10": "getModelIdentifier",
             "include11": "conso",
             "include12": "Xiaomi-ff01",
             "include13": "puissance1",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
-            },
-            "Toggle": {
-                "use": "zbCmd-0006-Toggle",
-                "nextLine": "after"
             }
         }
     }

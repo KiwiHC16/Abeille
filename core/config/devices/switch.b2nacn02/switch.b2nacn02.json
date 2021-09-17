@@ -11,8 +11,6 @@
         },
         "type": "Xiaomi Wall Switch D1 w Neutral 2 Button",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
             "include3 2": "location",
             "include3 2 2": "etatCharge0",
             "include3 2 2 2": "etatCharge1",
@@ -22,11 +20,16 @@
             "include3 2 2 2 2 2 2 2": "Off",
             "include3 2 2 2 2 2 2 2 2 2": "On1",
             "include3 2 2 2 2 2 2 2 2 2 2": "Off1",
-            "include3 2 2 2 2 2 2 2 2 2 2 2": "Toggle1",
+            "Toggle 1": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Toggle 2": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=02"
+            },
             "include19": "getEtat",
             "include20": "getLevel",
-            "include21": "getManufacturerName",
-            "include22": "getModelIdentifier",
             "include24": "Identify",
             "include25": "Group-Membership",
             "SWBuildID": {
@@ -35,10 +38,6 @@
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
-            },
-            "Toggle": {
-                "use": "zbCmd-0006-Toggle",
-                "nextLine": "after"
             }
         }
     }

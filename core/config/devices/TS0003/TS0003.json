@@ -10,8 +10,6 @@
         },
         "type": "Zemismart 3 boutons",
         "commands": {
-            "include2": "societe",
-            "include3": "nom",
             "include4": "etatCharge0",
             "include4 2": "etatCharge1",
             "include4 2 2": "etatCharge2",
@@ -21,11 +19,15 @@
             "include6": "Off",
             "include6 2": "Off1",
             "include6 2 2": "Off2",
-            "include7 2": "Toggle1",
-            "include7 2 2": "Toggle2",
+            "Toggle 1": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Toggle 2": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=02"
+            },
             "include8": "getEtat",
-            "include9": "getManufacturerName",
-            "include10": "getModelIdentifier",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

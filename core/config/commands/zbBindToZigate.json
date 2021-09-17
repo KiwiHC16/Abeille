@@ -1,0 +1,14 @@
+{
+    "zbBindToZigate": {
+        "name": "Bind device to Zigate",
+        "comment": "Simplified version of zbBind",
+        "subType": "other",
+        "template": "",
+        "configuration": {
+            "topic": "bind0030",
+            "request": "addr=#IEEE#&ep=#EP#&clustId=#CLUSTID#&destAddr=#ZigateIEEE#&destEp=01",
+            "execAtCreation": "Yes"
+        },
+        "type": "action"
+    }
+}

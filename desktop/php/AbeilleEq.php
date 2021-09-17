@@ -460,7 +460,7 @@
             clustId = document.getElementById("idClustIdC").value;
             // start = document.getElementById("idStartC").value;
             start = "00";
-            payload = "addr="+js_eqAddr+"_ep="+ep+"_clustId="+clustId+"_start="+start;
+            payload = "ep="+ep+"_clustId="+clustId+"_start="+start;
         } else if (request == "discoverAttributes") {
             topic = "Cmd"+logicalId+"_discoverAttributes";
             ep = document.getElementById("idEpD").value;
@@ -481,6 +481,10 @@
             clustId = document.getElementById("idClustIdF").value;
             destGroup = document.getElementById("idGroupF").value;
             payload = "addr="+js_eqIeee+"_ep="+ep+"_clustId="+clustId+"_destAddr="+destGroup;
+        } else if (request == "resetToFactory") {
+            topic = "Cmd"+logicalId+"_cmd-0000";
+            ep = document.getElementById("idEpG").value;
+            payload = "ep="+ep+"_cmd=00";
         } else {
             console.log("Unknown request "+request);
             return;

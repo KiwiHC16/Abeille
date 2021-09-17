@@ -583,6 +583,15 @@ logDebug("MainEP=".$mainEP);
                 <!-- <input id="idStartC" placeholder="{{Start (ex: 00)}}" /> -->
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="Cluster 0000, commande ResetToFactory">ZCL: Reset aux valeurs d'usine</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'resetToFactory\', \''.$eqId.'\')">{{Reset}}</a>';
+                    addEpButton("idEpG", $mainEP);
+                ?>
+            </div>
+        </div>
 
         <br>
         <div class="form-group">
@@ -611,7 +620,7 @@ logDebug("MainEP=".$mainEP);
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label" title="bind cet équipement vers un autre">Bind to device</label>
+            <label class="col-sm-3 control-label" title="Bind cet équipement vers un autre (Bind_req)">Bind to device</label>
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'bindToDevice\', \''.$eqId.'\')">{{Bind}}</a>';
@@ -624,7 +633,7 @@ logDebug("MainEP=".$mainEP);
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label" title="bind cet équipement vers un groupe">Bind to group</label>
+            <label class="col-sm-3 control-label" title="Bind cet équipement vers un groupe (Bind_req)">Bind to group</label>
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'bindToGroup\', \''.$eqId.'\')">{{Bind}}</a>';

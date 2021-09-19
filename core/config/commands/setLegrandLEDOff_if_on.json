@@ -1,0 +1,19 @@
+{
+    "setLegrandLEDOff_if_on": {
+        "isVisible": 0,
+        "name": "LedOff_if_on",
+        "order": 6,
+        "isHistorized": "0",
+        "type": "action",
+        "subType": "other",
+        "configuration": {
+            "topic": "WriteAttributeRequestActivateDimmer",
+            "request": "clusterId=fc01&attributeId=0002&attributeType=10&value=00",
+            "repeatEventManagement": "always",
+            "visibilityCategory": "Network"
+        },
+        "display": {
+            "forceReturnLineAfter": "1"
+        }
+    }
+}

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210919-BETA-1
+----------
+
 - Legrand dimmer: Mise à jour JSON (#983).
 - Monitor: Correction bug (Device announce loupé).
 - JSON équipements: Mise-à-jour setReport-EPxx => zbConfigureReporting.

@@ -1,6 +1,7 @@
 ChangeLog
 =========
 
+- Legrand dimmer: Mise à jour JSON (#983).
 - Monitor: Correction bug (Device announce loupé).
 
 210917-BETA-2

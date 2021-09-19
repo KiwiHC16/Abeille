@@ -1,26 +1,34 @@
 {
     "Dimmerswitchwoneutral": {
+        "type": "Legrand Dimmer Switch w/o neutral",
         "timeout": "60",
-        "configuration": {
-            "mainEP": "01",
-            "icon": "Dimmerswitchwoneutral"
-        },
         "category": {
             "automatism": "1"
         },
-        "type": "Legrand Dimmer Switch w\/o neutral",
+        "configuration": {
+            "icon": "Dimmerswitchwoneutral",
+            "mainEP": "01"
+        },
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
             "include4": "etat",
             "include5": "Level",
+            "include6": "Onlevel",
             "include8": "On",
             "include9": "Off",
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
+            },
             "include11": "setLevel",
             "include19": "getEtat",
             "include20": "getLevel",
-            "include21": "getManufacturerName",
-            "include22": "getModelIdentifier",
             "include24": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",
@@ -29,17 +37,10 @@
             "include29": "setReportLevel",
             "include29 2": "setLegrandDimmerOn",
             "include29 2 2": "setLegrandDimmerOff",
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
-            "Toggle": {
-                "use": "zbCmd-0006-Toggle",
-                "nextLine": "after"
-            }
+            "include30": "setLegrandLEDOn",
+            "include31": "setLegrandLEDOff",
+            "include32": "setLegrandLEDOn_if_on",
+            "include33": "setLegrandLEDOff_if_on"
         }
     }
 }

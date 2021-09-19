@@ -130,12 +130,6 @@
             $this->queueKeyParserToCmdSemaphore = msg_get_queue(queueKeyParserToCmdSemaphore);
             $this->queueParserToLQI             = msg_get_queue($abQueues["parserToLQI"]["id"]);
             $this->queueParserToLQIMax          = $abQueues["parserToLQI"]["max"];
-
-            /* Monitor updates */
-            if (isset($GLOBALS["dbgMonitorAddr"])) {
-                /* Extracting IEEE address from '<short>-<ieee>' format. */
-                $GLOBALS["dbgMonitorAddrExt"] = substr($GLOBALS["dbgMonitorAddr"], 5);
-            }
         }
 
         // $srcAddr = dest / shortaddr
@@ -1249,7 +1243,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', $dest.', Type='.$msgDecoded);
 
             /* Monitor if requested */
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
             $clustId  = "0006-".$EPS;
@@ -1295,9 +1289,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $PacketType = substr($payload, 4, 4);
 
             $msgDecoded = '8000/Status'
-           .', Status='.$status.'/'.zgGet8000Status($status)
-           .', SQN='.$SQN
-           .', PacketType='.$PacketType;
+                .', Status='.$status.'/'.zgGet8000Status($status)
+                .', SQN='.$SQN
+                .', PacketType='.$PacketType;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8000");
 
             // On envoie un message MQTT vers la ruche pour le processer dans Abeille
@@ -1434,7 +1428,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
             /* Monitor if requested */
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
             /* Profile 0000 */
@@ -2179,6 +2173,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         return;
                     }
 
+                    /* Monitor if requested */
+                    if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
+                        monMsgFromZigate("8002/Read attributes response"); // Send message to monitor
+
                     /* Command frame format:
                         ZCL header
                         Read attribut status record 1
@@ -2289,6 +2287,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         parserLog('debug', "  Handled by decode8100_8102");
                         return;
                     }
+
+                    /* Monitor if requested */
+                    if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
+                        monMsgFromZigate("8002/Report attributes response"); // Send message to monitor
 
                     $l = strlen($msg);
                     $attributes = [];
@@ -2555,7 +2557,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $this->whoTalked[] = $dest.'/'.$addr;
 
             /* Monitor if requested */
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $addr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
             // Zigate IEEE local storage
@@ -2669,7 +2671,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $msgDecoded = '8011/APS data ACK, Status='.$Status.', Addr='.$DestAddr.', EP='.$destEp.', ClustId='.$ClustID;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8011");
 
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $DestAddr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $DestAddr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
             if ($Status=="00") {
@@ -2940,7 +2942,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                .', StartIndex='                              .substr($payload,26, 2);
             parserLog('debug', $dest.', Type='.$msgDecoded, "8040");
 
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $Addr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $Addr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
             if ( substr($payload, 2, 2) != "00" ) {
@@ -2982,7 +2984,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $this->whoTalked[] = $dest.'/'.$addr;
 
             /* Monitor if required */
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $addr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
             if ($status != "00") {
@@ -3049,7 +3051,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
             /* Send to Monitor if requested */
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($msgDecoded);
 
             $discovering = $this->discoveringState($dest, $srcAddr);
@@ -3179,7 +3181,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
             /* Monitor is required */
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
             /* Send to client */
@@ -3367,7 +3369,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', $dest.', Type='.$decoded);
 
             /* Monitor if requested */
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($decoded); // Send message to monitor
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
@@ -3483,7 +3485,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $groups = "none";
             parserLog('debug', "  Groups: ".$groups);
 
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr, 4)) {
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr)) {
                 monMsgFromZigate($decoded); // Send message to monitor
                 monMsgFromZigate("  Groups: ".$groups); // Send message to monitor
             }
@@ -3885,7 +3887,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     .', AttrSize='      .$attrSize;
 
             parserLog('debug', $dest.', Type='.$msg, $type);
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($msg); // Send message to monitor
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
@@ -4623,7 +4625,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                .', Status='.$status;
             }
             parserLog('debug', $dest.', Type='.$msg);
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $addr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
                 monMsgFromZigate($msg); // Send message to monitor
 
             // Tcharp38: what for ? $attrId does not exist in all cases so what to report ?
@@ -4744,7 +4746,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                .', ZoneId='.substr($payload,20, 2)
                .', Delay='.substr($payload,22, 4);
             parserLog('debug', $dest.', Type='.$msgDecoded);
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($msg); // Send message to monitor
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
@@ -4781,7 +4783,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                    .', NwkStatus='.$nwkStatus.' ('.$allErrorCode[$nwkStatus][0].'->'.$allErrorCode[$nwkStatus][1].')'
                    .', Addr='.$Addr;
             parserLog('debug', $dest.', Type='.$msg, "8701");
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $Addr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $Addr))
                 monMsgFromZigate($msg); // Send message to monitor
         }
 
@@ -4823,7 +4825,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                .', Addr='.$DestAddr
                .', SQN='.$SQN;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8702");
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strncasecmp($GLOBALS["dbgMonitorAddr"], $DestAddr, 4))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $DestAddr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
             // // On envoie un message MQTT vers la ruche pour le processer dans Abeille

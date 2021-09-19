@@ -197,20 +197,20 @@
                         logMessage("debug", "<= ".$msg['msg']);
                 } else {
                     /* Should be 'newaddr' msg type */
-                    logMessage("debug", "<= Nouvelle adresse courte pour ".$msg['ieee'].": ".$msg['addr']);
+                    logMessage("debug", "<= New short addr for ".$msg['ieee'].": ".$msg['addr']);
 
                     /* Informing 'AbeilleCmd' that addr has changed.
                        Note: 2 ways to inform AbeilleCmd, either thru a dedicated queue (current case) or restarting it */
                     monMsgToCmd($msg['addr']);
 
-                    /* Updating 'debug.json' content */
-                    if (file_exists($dbgFile))
-                        $devConfig = json_decode(file_get_contents($dbgFile), true);
-                    else
-                        $devConfig = array();
-                    $devConfig["dbgMonitorAddr"] = $msg['addr'];
-                    file_put_contents($dbgFile, json_encode($devConfig));
-                    chmod($dbgFile, 0666); // Allow read & write
+                    // /* Updating 'debug.json' content */
+                    // if (file_exists($dbgFile))
+                    //     $devConfig = json_decode(file_get_contents($dbgFile), true);
+                    // else
+                    //     $devConfig = array();
+                    // $devConfig["dbgMonitorAddr"] = $msg['addr'];
+                    // file_put_contents($dbgFile, json_encode($devConfig));
+                    // chmod($dbgFile, 0666); // Allow read & write
                 }
             }
         }

@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Monitor: Correction bug (Device announce loupé).
+
 210917-BETA-2
 ----------
 

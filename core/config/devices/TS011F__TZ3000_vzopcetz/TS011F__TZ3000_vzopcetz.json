@@ -41,9 +41,17 @@
             "include9": "BindToZigateEtat",
             "include10": "setReportEtat",
             "include0006-1": "bindToZigate-EP02-0006",
-            "include0006-2": "setReport-EP02-0006-0000",
+            "Set-OnOffReporting-02": {
+                "use": "zbConfigureReporting",
+                "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "Yes"
+            },
             "include0006-3": "bindToZigate-EP03-0006",
-            "include0006-4": "setReport-EP03-0006-0000"
+            "Set-OnOffReporting-03": {
+                "use": "zbConfigureReporting",
+                "params": "ep=03&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "Yes"
+            }
         }
     }
 }

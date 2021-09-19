@@ -10,8 +10,9 @@
 
 # Automatically solve conflicts for the following files.
 # Note: They need to be updated anyway after a merge.
-# Note: Using ours for one & theirs for the other
+# Note: Using keepMine for MD5 & keepTheir for version
 #       in order to have different branch name
 #       and prevent wrong integrity check.
-plugin_info/Abeille.md5 merge=ours
-plugin_info/Abeille.version merge=theirs
+plugin_info/Abeille.md5 merge=keepMine
+plugin_info/Abeille.version merge=keepTheir
+plugin_info/info.json merge=keepTheir

@@ -30,6 +30,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
+            
             "Total power": {
                 "use": "zb-0702-CurrentSummationDelivered",
                 "params": "ep=01&unit=KWh&div=10",
@@ -58,7 +59,11 @@
                 "params": "ep=01&clustId=0702&attrId=0303"
             },
             "include0006-5": "bindToZigate-EP01-0702",
-            "include0B04-6": "setReport-EP01-0B04-050B",
+            "Set-0B04-050B-Reporting": {
+                "use": "zbConfigureReporting",
+                "params": "ep=01&clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=3600",
+                "execAtCreation": "Yes"
+            },
             "ActivePower": {
                 "use": "zb-0B04-ActivePower",
                 "isVisible": 1

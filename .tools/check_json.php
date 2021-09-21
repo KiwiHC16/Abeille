@@ -6,6 +6,7 @@
 
     $devicesList = [];
     $commandsList = [];
+    $allCommandsList = []; // All available commands
     $missingCmds = 0;
     $devErrors = []; // Errors/warnings found in devices
     $cmdErrors = []; // Errors/warnings found in commands
@@ -22,7 +23,7 @@
         }
     }
 
-    /* Register a new device error/warning */
+    /* Register a new device error/warning and returns 'true' */
     function newDevError($file, $type, $msg) {
         // echo "  ".$type.": ".$msg."\n";
 
@@ -33,6 +34,7 @@
             "msg" => $msg
         );
         $devErrors[] = $e;
+        return true;
     }
 
     /* Register a new command error/warning */
@@ -54,34 +56,36 @@
 
         if (!isset($dev[$devName])) {
             newDevError($devName, "ERROR", "Corruped JSON. Expecting '".$devName."' top key");
+            step('E');
             return;
         }
         // echo "dev=".json_encode($dev)."\n";
 
+        $error = false;
         if (!isset($dev[$devName]['type'])) {
             if (isset($dev[$devName]['nameJeedom']))
-                newDevError($devName, "ERROR", "'nameJeedom' is obsolete. Use 'type' instead");
+                $error = newDevError($devName, "ERROR", "'nameJeedom' is obsolete. Use 'type' instead");
             else
-                newDevError($devName, "ERROR", "No equipment 'type' defined");
+                $error = newDevError($devName, "ERROR", "No equipment 'type' defined");
         }
 
         if (!isset($dev[$devName]['category'])) {
             if (isset($dev[$devName]['Categorie']))
-                newDevError($devName, "ERROR", "'Categorie' is obsolete. Use 'category' instead");
+                $error = newDevError($devName, "ERROR", "'Categorie' is obsolete. Use 'category' instead");
             else
-                newDevError($devName, "ERROR", "No 'category' defined");
+                $error = newDevError($devName, "ERROR", "No 'category' defined");
         } else {
             $allCats = $dev[$devName]['category'];
             $allowed = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'other'];
             foreach($allCats as $cat => $catEn) {
                 if (in_array($cat, $allowed))
                     continue;
-                    newDevError($devName, "ERROR", "Unexpected '".$cat."' category.");
+                    $error = newDevError($devName, "ERROR", "Unexpected '".$cat."' category.");
                 }
         }
 
         if (!isset($dev[$devName]['configuration'])) {
-            newDevError($devName, "WARNING", "No configuration defined");
+            $error = newDevError($devName, "WARNING", "No configuration defined");
         } else {
             $config = $dev[$devName]['configuration'];
 
@@ -89,30 +93,30 @@
             $icon = "";
             if (!isset($config['icon'])) {
                 if (isset($config['icone'])) {
-                    newDevError($devName, "ERROR", "'icone' is obsolete. Use 'icon' instead.");
+                    $error = newDevError($devName, "ERROR", "'icone' is obsolete. Use 'icon' instead.");
                     $icon = $config['icone'];
                 }
             } else
                 $icon = $config['icon'];
             if ($icon == "")
-                newDevError($devName, "ERROR", "No 'icon' defined.");
+                $error = newDevError($devName, "ERROR", "No 'icon' defined.");
             else {
                 $icon = "images/node_".$icon.".png";
                 if (!file_exists($icon)) {
-                    newDevError($devName, "ERROR", "Missing icon '".$icon."' file.");
+                    $error = newDevError($devName, "ERROR", "Missing icon '".$icon."' file.");
                 }
             }
 
             if (!isset($config['mainEP']))
-                newDevError($devName, "ERROR", "Missing 'configuration:mainEP'");
+                $error = newDevError($devName, "ERROR", "Missing 'configuration:mainEP'");
             else if (!ctype_xdigit($config['mainEP']))
-                newDevError($devName, "ERROR", "'configuration:mainEP' should be hexa string. #EP# not allowed.");
+                $error = newDevError($devName, "ERROR", "'configuration:mainEP' should be hexa string. #EP# not allowed.");
 
             /* Checking 'configuration' fields validity */
             $supportedKeys = ['icon', 'mainEP', 'trig', 'trigOffset', 'batteryType', 'poll', 'lastCommunicationTimeOut', 'paramType'];
             foreach ($config as $fieldName => $fieldValue) {
                 if (!in_array($fieldName, $supportedKeys))
-                    newDevError($devName, "ERROR", "Invalid '".$fieldName."' configuration field");
+                    $error = newDevError($devName, "ERROR", "Invalid '".$fieldName."' configuration field");
             }
         }
 
@@ -123,7 +127,7 @@
         else if (isset($dev[$devName]['Commandes']))
             $commands = $dev[$devName]['Commandes'];
         if (!isset($commands)) {
-            newDevError($devName, "WARNING", "No commands defined");
+            $error = newDevError($devName, "WARNING", "No commands defined");
         } else {
             // echo "commands=".json_encode($commands)."\n";
             foreach ($commands as $key => $value) {
@@ -137,7 +141,7 @@
                 }
                 $path = commandsDir."/".$cmdFName.".json";
                 if (!file_exists($path)) {
-                    newDevError($devName, "ERROR", "Unknown command JSON ".$cmdFName.".json");
+                    $error = newDevError($devName, "ERROR", "Unknown command JSON ".$cmdFName.".json");
                     $missingCmds++;
                 }
 
@@ -145,7 +149,7 @@
                     $supportedKeys = ['use', 'params', 'isVisible', 'execAtCreation', 'nextLine'];
                     foreach ($value as $key2 => $value2) {
                         if (!in_array($key2, $supportedKeys))
-                            newDevError($devName, "ERROR", "Invalid '".$key2."' key for '".$key."' Jeedom command");
+                            $error = newDevError($devName, "ERROR", "Invalid '".$key2."' key for '".$key."' Jeedom command");
                     }
                 }
 
@@ -154,6 +158,11 @@
                 if ($i !== false)
                     unset($unusedCmds[$i]); // $cmdFName is used
             }
+
+            if ($error)
+                step('E');
+            else
+                step('.');
         }
 
         /* Checking supported keywords */
@@ -231,10 +240,10 @@
         }
     }
 
-    function buildCommandsList() {
-        echo "Building commands list ...\n";
-        global $commandsList, $unusedCmds;
-        $commandsList = [];
+    function buildAllCommandsList() {
+        echo "Building all commands list ...\n";
+        global $allCommandsList, $unusedCmds;
+        $allCommandsList = [];
         $dh = opendir(commandsDir);
         while (($dirEntry = readdir($dh)) !== false) {
             /* Ignoring some entries */
@@ -251,32 +260,147 @@
             }
 
             $dirEntry = substr($dirEntry, 0, -5); // Removing file extension
-            $commandsList[$dirEntry] = $fullPath;
+            $allCommandsList[$dirEntry] = $fullPath;
             $unusedCmds[] = $dirEntry;
         }
     }
 
-    /* If JSON name not given on cmd line, parsing all
+    function getCommandConfig($cmdFName, $newJCmdName = '') {
+        $fullPath = commandsDir.'/'.$cmdFName.'.json';
+        if (!file_exists($fullPath)) {
+            return false;
+        }
+
+        $jsonContent = file_get_contents($fullPath);
+        $cmd = json_decode($jsonContent, true);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            return false;
+        }
+
+        /* Replacing top key from fileName to jeedomCmdName if different */
+        if ($newJCmdName != '')
+            $cmdJName = $newJCmdName;
+        else
+            $cmdJName = $cmd[$cmdFName]['name'];
+        if ($cmdJName != $cmdFName) {
+            $cmd[$cmdJName] = $cmd[$cmdFName];
+            unset($cmd[$cmdFName]);
+        }
+
+        return $cmd;
+    }
+
+    /* Check use of commands */
+    function checkDevicecommands($devName, $fullPath) {
+        $jsonContent = file_get_contents($fullPath);
+        if ($jsonContent === false) {
+            step('E');
+            return;
+        }
+        $device = json_decode($jsonContent, true);
+        if (json_last_error() != JSON_ERROR_NONE) {
+            step('E');
+            return;
+        }
+
+        $device = $device[$devName]; // Removing top key
+        if (!isset($device['commands'])) {
+            step('.');
+            return;
+        }
+
+        $jsonCmds = $device['commands'];
+        $error = false;
+// echo "jsonCmds=".json_encode($jsonCmds)."\n";
+        foreach ($jsonCmds as $cmd1 => $cmd2) {
+            if (substr($cmd1, 0, 7) == "include") {
+                /* Old command JSON commands syntax: "includeX": "json_cmd_name" */
+                $newCmd = getCommandConfig($cmd2);
+                if ($newCmd === false)
+                    continue; // Cmd does not exist.
+                $cmdJName = $cmd2;
+                $newCmdText = json_encode($newCmd);
+            } else {
+                /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
+                $cmdFName = $cmd2['use']; // File name without '.json'
+                $newCmd = getCommandConfig($cmdFName, $cmd1);
+                if ($newCmd === false)
+                    continue; // Cmd does not exist.
+                $cmdJName = $cmd1;
+                $newCmdText = json_encode($newCmd);
+
+                if (isset($cmd2['params'])) {
+                    // Overwritting default settings with 'params' content
+                    $params = explode('&', $cmd2['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
+                    foreach ($params as $p) {
+                        list($pName, $pVal) = explode("=", $p);
+                        $pName = strtoupper($pName);
+                        $newCmdText = str_replace('#'.$pName.'#', $pVal, $newCmdText);
+                    }
+                    $newCmd = json_decode($newCmdText, true);
+                }
+            }
+
+// echo "newCmdText=".$newCmdText."\n";
+            while (true) {
+                $start = strpos($newCmdText, "#"); // Start
+                if ($start === false)
+                    break;
+                $len = strpos(substr($newCmdText, $start + 1), "#"); // Length
+                if ($len === false) {
+                    newDevError($devName, "ERROR", "No closing dash (#) for cmd '".$cmdJName."'");
+                    $error = true;
+                    break;
+                }
+                $len += 2;
+// echo "S=".$start.", L=".$len."\n";
+                $var = substr($newCmdText, $start, $len);
+
+                if ($var == "#EP#") {
+                    if (!isset($device['configuration']['mainEP'])) {
+                        newDevError($devName, "ERROR", "'#EP#' found but NO 'mainEP'");
+                        $error = true;
+                    }
+                } else {
+                    $allowed = ['#value#', '#slider#', '#title#', '#message#', '#color#', '#onTime#', '#IEEE#', '#addrIEEE#', '#ZigateIEEE#', '#ZiGateIEEE#', '#addrGroup#'];
+                    // Tcharp38 note: don't know purpose of slider/title/message/color/onTime
+                    if (!in_array($var, $allowed)) {
+                        newDevError($devName, "ERROR", "Missing '".$var."' variable data for cmd '".$cmdJName."'");
+                        $error = true;
+                    }
+                }
+
+                $newCmdText = substr($newCmdText, $start + $len);
+            }
+// break;
+        }
+        if ($error)
+            step('E');
+        else
+            step('.');
+    }
+
+    /* TODO: If JSON name not given on cmd line, parsing all
        devices & commands */
     buildDevicesList();
-    buildCommandsList();
+    buildAllCommandsList();
 
     // echo "devl=".json_encode($devicesList)."\n";
-    echo "Checking devices\n- ";
+    echo "Checking devices syntax\n- ";
     $idx = 2;
     foreach ($devicesList as $devName => $fullPath) {
-        step('.');
         $jsonContent = file_get_contents($fullPath);
         $content = json_decode($jsonContent, true);
-        if (json_last_error() != JSON_ERROR_NONE)
+        if (json_last_error() != JSON_ERROR_NONE) {
             newDevError($devName, 'ERROR', 'Corrupted JSON file');
-        else
+            step('E');
+        } else
             checkDevice($devName, $content);
     }
 
-    echo "\nChecking commands\n- ";
+    echo "\nChecking ALL commands syntax\n- ";
     $idx = 2;
-    foreach ($commandsList as $entry => $fullPath) {
+    foreach ($allCommandsList as $entry => $fullPath) {
         step('.');
         $jsonContent = file_get_contents($fullPath);
         $content = json_decode($jsonContent, true);
@@ -285,6 +409,12 @@
             continue;
         }
         checkCommand($entry, $content);
+    }
+
+    echo "\nChecking command variables\n- ";
+    $idx = 2;
+    foreach ($devicesList as $devName => $fullPath) {
+        checkDeviceCommands($devName, $fullPath);
     }
 
     echo "\n\nDevices errors summary\n";

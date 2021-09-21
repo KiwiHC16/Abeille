@@ -794,41 +794,22 @@
         return false;
     }
 
+    function newCmd($use, $params = "", $exec = "") {
+        cmd = new Object;
+        cmd['use'] = $use;
+        if ($params != "")
+            cmd['params'] = $params;
+        if ($exec != "")
+            cmd["execAtCreation"] = $exec;
+        return cmd;
+    }
+
     /* Generate Jeedom commands using zigbee discovery datas */
     function zigbeeToCommands() {
         console.log("zigbeeToCommands()");
 
         /* Converting detected attributs to commands */
         var z = {
-            "0000": { // Basic cluster: No need as Jeedom command
-                // Attributes
-                // "0000" : { "name" : "ZCLVersion", "type" : "R" },
-                // "0004" : { "name" : "ManufacturerName", "type" : "R" },
-                // "0005" : { "name" : "ModelIdentifier", "type" : "R" },
-                // "0006" : { "name" : "DateCode", "type" : "R" },
-                // "0007" : { "name" : "PowerSource", "type" : "R" }, // No need. Got info during dev info
-                // Cmds: none
-            },
-            "0003": { // Identify cluster
-                // Attributes
-                "0000" : { "name" : "IdentifyTime", "type" : "RW" },
-                // Cmds
-                "cmd1" : { "name" : "Identify" },
-                "cmd2" : { "name" : "IdentifyQuery" },
-                "cmd3" : { "name" : "TriggerEffect" },
-            },
-            "0004": { // Groups cluster
-                // Attributes
-                "0000" : { "name" : "NameSupport", "type" : "R" },
-                // Cmds
-                // Tcharp38: No need to generate Jeedom commands for this.
-                // "cmd1" : { "name" : "AddGroup" },
-                // "cmd2" : { "name" : "ViewGroup" },
-                // "cmd3" : { "name" : "GetGroupMembership" },
-                // "cmd4" : { "name" : "RemoveGroup" },
-                // "cmd5" : { "name" : "RemoveAllGroups" },
-                // "cmd6" : { "name" : "AddGroupIfIdent" },
-            },
             "0005": { // Scene cluster
                 // Attributes
                 "0000" : { "name" : "SceneCount", "type" : "R" },
@@ -1018,84 +999,110 @@
             ep = endPoints[epId];
 
             for (var clustId in ep.servClusters) {
+                attributes = ep.servClusters[clustId]['attributes'];
+
+                if (clustId == "0000") {
+                    /* Basic cluster.
+                       Only attribute 4000 is converted to user command.
+                       No sense for others */
+                    if (isset(attributes['4000'])) {
+                        cmds["SWBuildID"] = newCmd("zb-0000-SWBuildID");
+                        cmds["Get-SWBuildID"] = newCmd("zbReadAttribute", "clustId=0000&attrId=4000");
+                    }
+                } else if (clustId == "0001") {
+                    /* Power configuration */
+                    if (isset(attributes['0021'])) {
+                        cmds["Battery-Percent"] = newCmd("zb-0001-BatteryPercent");
+                        cmds["Battery-Percent"]["isVisible"] = 1;
+                        cmds["Set-BatteryPercentReporting"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600", "yes");
+                    } else if (isset(attributes['0020'])) {
+                        cmds["Set-BatteryVoltReporting"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600", "yes");
+                    }
+                    cmds["BindToZigate-Power"] = newCmd("bindToZigate", "clustId=0001", "yes");
+                } else if (clustId == "0004") {
+                    /* Groups cluster */
+                    cmds["Groups"] = newCmd("Group-Membership");
+                } else if (clustId == "0006") {
+                    /* OnOff cluster */
+                }
                 // Tcharp38: How to ignore cluster > 0x7fff (manuf specific clusters) ?
 
-                if (!(clustId in z)) {
-                    console.log("SERV cluster ID "+clustId+" ignored");
-                    continue;
-                }
-                console.log("SERV clustId="+clustId);
+                // if (!(clustId in z)) {
+                //     console.log("SERV cluster ID "+clustId+" ignored");
+                //     continue;
+                // }
+                // console.log("SERV clustId="+clustId);
 
-                clust = ep.servClusters[clustId];
-                zClust = z[clustId];
+                // clust = ep.servClusters[clustId];
+                // zClust = z[clustId];
 
                 // console.log("clust.attrList.length="+clust.attrList.length);
-                for (var attrId in clust) {
-                    if (attrId in zClust) {
-                        console.log("attrId="+attrId);
-                        /* Adding attributes access commands */
-                        if (sameAttribInOtherEP(epId, clustId, attrId))
-                            duplicated = true; // Same attribut used in other EP
-                        else
-                            duplicated = false;
-                        zAttr = zClust[attrId];
-                        if ((zAttr["type"] == "R") || (zAttr["type"] == "RW")) {
-                            // Action command => use "zbReadAttribute.json" generic command
-                            if (duplicated)
-                                cActionName = "Get-"+epId+"-"+clustId+"-"+zAttr["name"];
-                            else
-                                cActionName = "Get-"+clustId+"-"+zAttr["name"];
-                            cmds[cActionName] = new Object;
-                            cmds[cActionName]['use'] = "zbReadAttribute";
-                            let params = "";
-                            if (epId != 1)
-                                params = "ep="+epId+"&";
-                            params += "clustId="+clustId+"&attrId="+attrId;
-                            cmds[cActionName]['params'] = params;
+                // for (var attrId in clust) {
+                //     if (attrId in zClust) {
+                //         console.log("attrId="+attrId);
+                //         /* Adding attributes access commands */
+                //         if (sameAttribInOtherEP(epId, clustId, attrId))
+                //             duplicated = true; // Same attribut used in other EP
+                //         else
+                //             duplicated = false;
+                //         zAttr = zClust[attrId];
+                //         if ((zAttr["type"] == "R") || (zAttr["type"] == "RW")) {
+                //             // Action command => use "zbReadAttribute.json" generic command
+                //             if (duplicated)
+                //                 cActionName = "Get-"+epId+"-"+clustId+"-"+zAttr["name"];
+                //             else
+                //                 cActionName = "Get-"+clustId+"-"+zAttr["name"];
+                //             cmds[cActionName] = new Object;
+                //             cmds[cActionName]['use'] = "zbReadAttribute";
+                //             let params = "";
+                //             if (epId != 1)
+                //                 params = "ep="+epId+"&";
+                //             params += "clustId="+clustId+"&attrId="+attrId;
+                //             cmds[cActionName]['params'] = params;
 
-                            // Info command
-                            if (duplicated)
-                                cInfoName = epId+"-"+clustId+"-"+zAttr["name"];
-                            else
-                                cInfoName = clustId+"-"+zAttr["name"];
-                            cmds[cInfoName] = new Object;
-                            cmds[cInfoName]['use'] = "zb-"+clustId+"-"+zAttr["name"];
-                            if (epId != 1)
-                                cmds[cInfoName]['params'] = "ep="+epId;
-                        } else if ((zAttr["type"] == "W") || (zAttr["type"] == "RW")) {
-                            // Action command
-                            cInfoName = "Set"+"-"+zAttr["name"]; // Jeedom command name
-                            cmds[cInfoName] = new Object;
-                            cmds[cInfoName]['use'] = "zbSet-"+clustId+"-"+zAttr["name"];
-                            if (epId != 1)
-                                cmds[cInfoName]['params'] = "ep="+epId;
-                        }
-                    } else {
-                        console.log("attrId="+attrId+": ignored for server cluster ID "+clustId);
-                    }
-                }
+                //             // Info command
+                //             if (duplicated)
+                //                 cInfoName = epId+"-"+clustId+"-"+zAttr["name"];
+                //             else
+                //                 cInfoName = clustId+"-"+zAttr["name"];
+                //             cmds[cInfoName] = new Object;
+                //             cmds[cInfoName]['use'] = "zb-"+clustId+"-"+zAttr["name"];
+                //             if (epId != 1)
+                //                 cmds[cInfoName]['params'] = "ep="+epId;
+                //         } else if ((zAttr["type"] == "W") || (zAttr["type"] == "RW")) {
+                //             // Action command
+                //             cInfoName = "Set"+"-"+zAttr["name"]; // Jeedom command name
+                //             cmds[cInfoName] = new Object;
+                //             cmds[cInfoName]['use'] = "zbSet-"+clustId+"-"+zAttr["name"];
+                //             if (epId != 1)
+                //                 cmds[cInfoName]['params'] = "ep="+epId;
+                //         }
+                //     } else {
+                //         console.log("attrId="+attrId+": ignored for server cluster ID "+clustId);
+                //     }
+                // }
 
                 /* Adding cluster specific commands */
-                if ("cmd1" in zClust) {
-                    zCmdNb = 1;
-                    zCmd = "cmd1";
-                    while(zCmd in zClust) {
-                        if (sameZCmdInOtherEP(epId, clustId, zClust[zCmd]["name"]))
-                            duplicated = true;
-                        else
-                            duplicated = false;
+                // if ("cmd1" in zClust) {
+                //     zCmdNb = 1;
+                //     zCmd = "cmd1";
+                //     while(zCmd in zClust) {
+                //         if (sameZCmdInOtherEP(epId, clustId, zClust[zCmd]["name"]))
+                //             duplicated = true;
+                //         else
+                //             duplicated = false;
 
-                        if (duplicated)
-                            cName = "Cmd-"+epId+"-"+clustId+"-"+zClust[zCmd]["name"];
-                        else
-                            cName = "Cmd-"+clustId+"-"+zClust[zCmd]["name"];
-                        cmds[cName] = new Object;
-                        cmds[cName]['use'] = "zbCmd-"+clustId+"-"+zClust[zCmd]["name"];
+                //         if (duplicated)
+                //             cName = "Cmd-"+epId+"-"+clustId+"-"+zClust[zCmd]["name"];
+                //         else
+                //             cName = "Cmd-"+clustId+"-"+zClust[zCmd]["name"];
+                //         cmds[cName] = new Object;
+                //         cmds[cName]['use'] = "zbCmd-"+clustId+"-"+zClust[zCmd]["name"];
 
-                        zCmdNb++;
-                        zCmd = "cmd"+zCmdNb;
-                    }
-                }
+                //         zCmdNb++;
+                //         zCmd = "cmd"+zCmdNb;
+                //     }
+                // }
             }
         }
         console.log(cmds);

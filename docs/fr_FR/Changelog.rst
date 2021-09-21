@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210921-BETA-3
+----------
+
 - Interne: Correction requete "discover attributes extended".
 
 210921-BETA-2

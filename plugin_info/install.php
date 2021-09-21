@@ -280,13 +280,13 @@
             config::remove('onlyTimer', 'Abeille');
 
             // Remove obsolete log files
-            $obsolete = ['../../log/AbeilleCmd', '../../log/AbeilleMQTTCmd', '../../log/AbeilleMQTTCmdTimer', '../../log/AbeilleSocat', '../../log/AbeilleSerialRead' ];
+            $obsolete = ['AbeilleCmd', 'AbeilleMQTTCmd', 'AbeilleMQTTCmdTimer', 'AbeilleSocat', 'AbeilleSerialRead'];
             for ($z = 1; $z <= 10; $z++) {
-                $obsolete[] = '../../log/AbeilleSocat'.$z;
-                $obsolete[] = '../../log/AbeilleSerialRead'.$z;
+                $obsolete[] = 'AbeilleSocat'.$z;
+                $obsolete[] = 'AbeilleSerialRead'.$z;
             }
             foreach ($obsolete as $file) {
-                $path = __DIR__."/../".$file;
+                $path = __DIR__."/../../../log/".$file;
                 if (!file_exists($path))
                     continue;
                 unlink($path);

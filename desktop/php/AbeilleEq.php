@@ -459,8 +459,8 @@
             ep = document.getElementById("idEpC").value;
             clustId = document.getElementById("idClustIdC").value;
             // start = document.getElementById("idStartC").value;
-            start = "00";
-            payload = "ep="+ep+"_clustId="+clustId+"_start="+start;
+            startId = "0000";
+            payload = "ep="+ep+"_clustId="+clustId+"_startId="+startId;
         } else if (request == "discoverAttributes") {
             topic = "Cmd"+logicalId+"_discoverAttributes";
             ep = document.getElementById("idEpD").value;

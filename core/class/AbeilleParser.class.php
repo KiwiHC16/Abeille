@@ -834,6 +834,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 break;
             case "23": // Uint32
             case "2B": // Int32
+            case "E0": // Time analog: ToD
+            case "E1": // Time analog: Date
+            case "E2": // Time analog: UTC
                 $dataSize = 4;
                 break;
             case "24": // Uint40
@@ -851,6 +854,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             case "27": // Uint64
             case "2F": // Int64
                 $dataSize = 8;
+                break;
+            case "41": // String discrete: octstr
+            case "42": // String discrete: string
+                $dataSize = hexdec(substr($hexString, 0, 2));
+                $hexString = substr($hexString, 2);
                 break;
             default:
                 parserLog('debug', "  decodeDataType() ERROR: Unsupported type ".$dataType);
@@ -892,6 +900,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             case "25": // Uint48
             case "26": // Uint56
             case "27": // Uint64
+            case "E0": // Time analog: ToD
+            case "E1": // Time analog: Date
+            case "E2": // Time analog: UTC
                 $value = hexdec($hs);
                 break;
             case "28": // int8
@@ -908,6 +919,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $value = hexdec($hs);
                 if ($value > 0x7fffff) // is negative
                 $value -= 0x1000000;
+                break;
+            case "41": // String discrete: octstr
+            case "42": // String discrete: string
+                $value = $hs;
                 break;
             default:
                 parserLog('debug', "  decodeDataType() ERROR: Unsupported type ".$dataType);
@@ -4513,7 +4528,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             /* Note: If $data is not set, then nothing to send to Abeille. This might be because data type is unsupported */
             else if (!isset($data)) {
-                parserLog('debug', "  WARNING: Unsupported data type ".$dataType);
+                $data = $this->decodeDataType(substr($payload, 24), $dataType, false, $dataSize, $hexString);
             }
 
             if (isset($data)) {

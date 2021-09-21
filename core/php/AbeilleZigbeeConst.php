@@ -51,7 +51,7 @@
 
         if (array_key_exists($status, $statusesTable))
             return $statusesTable[$status];
-        return "Unknown status ".$status;
+        return "Unknown-".$status;
     }
 
     // Clusters definition
@@ -61,6 +61,13 @@
     $GLOBALS['zbClusters'] = array(
         "0000" => array(
             "name" => "Basic",
+            "attributes" => array(
+                "0000" => array( "name" => "ZCLVersion", "access" => "R" ),
+                "0004" => array( "name" => "ManufacturerName", "access" => "R" ),
+                "0005" => array( "name" => "ModelIdentifier", "access" => "R" ),
+                "0006" => array( "name" => "DateCode", "access" => "R" ),
+                "0007" => array( "name" => "PowerSource", "access" => "R" ), // No need. Got info during dev info
+            ),
             "commands" => array(
                 "00" => array( "name" => "Reset to factory defaults" ),
             ),
@@ -73,6 +80,28 @@
         ),
         "0003" => array(
             "name" => "Identify",
+            "attributes" => array(
+                "0000" => array( "name" => "IdentifyTime", "access" => "RW" ),
+            ),
+            "commands" => array(
+                "00" => array( "name" => "Identify" ),
+                "01" => array( "name" => "IdentifyQuery" ),
+                "40" => array( "name" => "TriggerEffect" ),
+            ),
+        ),
+        "0004" => array(
+            "name" => "Groups",
+            "attributes" => array(
+                "0000" => array( "name" => "NameSupport", "access" => "R" ),
+            ),
+            "commands" => array(
+                "00" => array( "name" => "AddGroup" ),
+                "01" => array( "name" => "ViewGroup" ),
+                "02" => array( "name" => "GetGroupMembership" ),
+                "03" => array( "name" => "RemoveGroup" ),
+                "04" => array( "name" => "RemoveAllGroups" ),
+                "05" => array( "name" => "AddGroupIfIdent" ),
+            ),
         ),
         "0005" => array(
             "name" => "Scenes",
@@ -102,7 +131,7 @@
                 "42" => array( "name" => "Off With Timed Off" ),
             ),
         ),
-        "0008" => array( // Level control cluster
+        "0008" => array(
             "name" => "Level control",
             "attributes" => array(
                 "0000" => array( "name" => "CurrentLevel", "access" => "R" ),
@@ -287,7 +316,7 @@
 
         if (array_key_exists($id, $cmdsTable))
             return $cmdsTable[$id];
-        return "Unknown cmd ".$id;
+        return "Unknown-".$id;
     }
 
     /* Based on ZCL spec.
@@ -311,7 +340,7 @@
     function zbGetZCLClusterCmdName($clustId, $cmdId) {
         $cmd = zbGetZCLClusterCmd($clustId, $cmdId);
         if ($cmd === false)
-            return "Unknown cmd ".$clustId."-".$cmdId;
+            return "Unknown-".$clustId."-".$cmdId;
         return $cmd['name'];
     }
 
@@ -335,7 +364,7 @@
     function zbGetZCLAttributeName($clustId, $attrId) {
         $attr = zbGetZCLAttribute($clustId, $attrId);
         if ($attr === false)
-            return "Unknown attr ".$clustId."-".$attrId;
+            return "Unknown-".$clustId."-".$attrId;
         return $attr['name'];
     }
 ?>

@@ -10,8 +10,6 @@
         },
         "type": "ZLO-ExtendedColor Test for Dev",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
             "include4": "etatLight",
             "include5": "levelLight",
             "include6": "colorX",
@@ -28,8 +26,6 @@
             "include18": "getColorY",
             "include19": "getEtat",
             "include20": "getLevel",
-            "include21": "getManufacturerName",
-            "include22": "getModelIdentifier",
             "include24": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",

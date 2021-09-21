@@ -5,7 +5,7 @@
         "model": "SPLZB-132",
         "timeout": "60",
         "configuration": {
-            "mainEP": "01",
+            "mainEP": "02",
             "icon": "Delveco-SPLZB-132"
         },
         "category": {
@@ -22,11 +22,11 @@
             "include0006-5": "BindToZigateEtat",
             "include0006-6": "setReportEtat",
 
-            "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "ep=01&unit=KWh&div=1000", "isVisible": 1 },
+            "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "unit=KWh&div=1000", "isVisible": 1 },
 
-            "RMSVoltage": { "use": "zb-0B04-RMSVoltage", "isVisible": 0 },
+            "RMSVoltage": { "use": "zb-0B04-RMSVoltage", "isVisible": 0, "params": "mult=1&div=100" },
             "RMSCurrent": { "use": "zb-0B04-RMSCurrent", "isVisible": 1 },
-            "ActivePower": { "use": "zb-0B04-ActivePower", "isVisible": 1 },
+            "ActivePower": { "use": "zb-0B04-ActivePower", "isVisible": 1, "params": "mult=1&div=1" },
             "include0B04-5": "getPlugVAW"
         }
     }

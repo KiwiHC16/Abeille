@@ -1,5 +1,7 @@
 {
     "switch.l0agl1": {
+        "manufacturer": "Xiaomi",
+        "model": "SSM-U02",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -8,25 +10,22 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Xiaomi MICROMODULE ON\/OFF ZIGBEE 3.0 1250W SANS NEUTRE (SSM-U02)",
+        "type": "Xiaomi Single Switch Module T1 (No Neutral)",
         "commands": {
-            "include2": "societe",
-            "include3": "nom",
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+
+            "include13 2": "Group-Membership",
+
             "include4": "etat",
             "include5": "On",
             "include6": "Off",
             "include8": "getEtat",
-            "include9": "getManufacturerName",
-            "include10": "getModelIdentifier",
-            "include13 2": "Group-Membership",
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            },
             "Toggle": {
                 "use": "zbCmd-0006-Toggle",
                 "nextLine": "after"
             }
-        },
-        "comment": "60"
+        }
     }
 }

@@ -40,6 +40,7 @@
 
             "RMSVoltage": {
                 "use": "zb-0B04-RMSVoltage",
+                "params": "mult=1&div=10",
                 "isVisible": 0
             },
             "RMSCurrent": {

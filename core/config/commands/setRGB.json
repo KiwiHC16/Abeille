@@ -13,7 +13,6 @@
         },
         "display": {
             "forceReturnLineAfter": "1",
-            "color_placeholder": "#RRGGBB",
             "visibilityCategory": "additionalCommand"
         },
         "type": "action"

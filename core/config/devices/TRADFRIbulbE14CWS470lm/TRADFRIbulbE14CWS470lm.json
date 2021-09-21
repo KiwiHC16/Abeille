@@ -1,0 +1,61 @@
+{
+    "TRADFRIbulbE14CWS470lm": {
+        "manufacturer": "Ikea",
+        "zbManufacturer": "IKEAofSweden",
+        "model": "LED 470 lm 5.2W E14",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "TRADFRIbulbE14CWSopal600lm"
+        },
+        "category": {
+            "light": "1"
+        },
+        "type": "IKEA TRADFRI LED 470 lm 5.2W E14",
+        "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+
+            "include24": "Identify",
+
+            "include25": "Group-Membership",
+
+            "include19": "getEtat",
+            "include26": "BindToZigateEtat",
+            "include28": "setReportEtat",
+            "include8": "On",
+            "include9": "Off",
+
+            "include20": "getLevel",
+            "include27": "BindToZigateLevel",
+            "include29": "setReportLevel",
+            "include11": "setLevel",
+
+            "include4": "etatLight",
+            "include5": "levelLight",
+            "include6": "colorX",
+            "include7": "colorY",
+            "include12": "Colour",
+            "include13": "Blanc",
+            "include14": "Bleu",
+            "include15": "Rouge",
+            "include16": "Vert",
+            "include17": "getColorX",
+            "include18": "getColorY",
+            "include12 2": "ColourRGB",
+            "include30": "setColourRGB",
+            "include30 2": "setRGB",
+            "include31": "colorRouge",
+            "include32": "setRouge",
+            "include33": "colorVert",
+            "include34": "setVert",
+            "include35": "colorBleu",
+            "include36": "setBleu"
+        }
+    }
+}

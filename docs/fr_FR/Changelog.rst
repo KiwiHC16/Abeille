@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Loratap 3 boutons: Correction regression (#2138).
+- Interne: Restoration support historique cmd 0006-FD special Tuya.
+
 210921-BETA-1
 ----------
 

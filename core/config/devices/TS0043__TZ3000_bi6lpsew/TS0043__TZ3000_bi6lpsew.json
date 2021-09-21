@@ -1,5 +1,7 @@
 {
     "TS0043__TZ3000_bi6lpsew": {
+        "manufacturer": "LoraTap",
+        "model": "SS600ZB",
         "timeout": "250",
         "configuration": {
             "mainEP": "01",
@@ -8,13 +10,13 @@
         "category": {
             "automatism": "1"
         },
-        "type": "LoraTap Remote 3 boutons sur piles",
+        "type": "LoraTap Zigbee 3 gang remote",
         "commands": {
-            "include3": "nom",
-            "include5 3": "etatInter0",
-            "include5 3 2": "etatInter1",
-            "include5 3 2 2": "etatInter2"
+            "Click 1": { "use": "click", "params": "ep=01", "isVisible": 1 },
+            "Click 2": { "use": "click", "params": "ep=02", "isVisible": 1 },
+            "Click 3": { "use": "click", "params": "ep=03", "isVisible": 1 }
         },
-        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1406"
+        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1406",
+        "comment2": "https://github.com/KiwiHC16/Abeille/issues/2138#"
     }
 }

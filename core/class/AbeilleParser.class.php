@@ -2485,6 +2485,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                 // Generating an event on 'EP-click' Jeedom cmd (ex: '01-click' = 'single')
                 $this->msgToAbeille($dest."/".$srcAddr, $srcEp, "click", $click);
+
+                // Legacy code to be revisited
+                // TODO: Replace commands '0006-EP-0000' to 'EP-click' in JSON
+                $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$srcEp, '0000', $value);
+
                 return;
             }
             if ($cluster == "0006") {

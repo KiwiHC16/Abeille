@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210921-BETA-1
+----------
+
 - TRADFRIbulbGU10CWS345lm support preliminaire.
 - TRADFRIbulbE14CWS470lm support preliminaire.
 - SPLZB-132: Correction EP.

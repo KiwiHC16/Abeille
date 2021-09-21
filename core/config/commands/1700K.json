@@ -1,0 +1,16 @@
+{
+  "1700K": {
+    "isVisible": 1,
+    "name": "1700K",
+    "isHistorized": "0",
+    "type": "action",
+    "subType": "other",
+    "invertBinary": "0",
+    "template": "",
+    "configuration": {
+      "topic": "setTemperature",
+      "request": "EP=#EP#&slider=1700",
+      "visibilityCategory": "All"
+    }
+  }
+}

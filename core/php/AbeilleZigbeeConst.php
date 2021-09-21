@@ -113,6 +113,18 @@
                 "0004" => array( "name" => "NameSupport", "access" => "R" ),
                 "0005" => array( "name" => "LastConfiguredBy", "access" => "R" ),
             ),
+            "commands" => array(
+                "00" => array( "name" => "AddScene" ),
+                "01" => array( "name" => "ViewScene" ),
+                "02" => array( "name" => "RemoveScene" ),
+                "03" => array( "name" => "RemoveAllScenes" ),
+                "04" => array( "name" => "StoreScene" ),
+                "05" => array( "name" => "RecallScene" ),
+                "06" => array( "name" => "GetSceneMembership" ),
+                "40" => array( "name" => "EnhancedAddScene" ),
+                "41" => array( "name" => "EnhancedViewScene" ),
+                "42" => array( "name" => "CopyScene" ),
+            ),
         ),
         "0006" => array(
             "name" => "On/Off",
@@ -129,6 +141,13 @@
                 "40" => array( "name" => "Off With Effect" ),
                 "41" => array( "name" => "Off With Recall Global Scene" ),
                 "42" => array( "name" => "Off With Timed Off" ),
+            ),
+        ),
+        "0007" => array(
+            "name" => "On/Off switch config",
+            "attributes" => array(
+                "0000" => array( "name" => "SwitchType", "access" => "R" ),
+                "0010" => array( "name" => "SwitchActions", "access" => "RW" ),
             ),
         ),
         "0008" => array(
@@ -247,11 +266,13 @@
                 "0303" => array( "name" => "SummationFormatting", "access" => "R" ),
                 "0306" => array( "name" => "MeteringDeviceType", "access" => "R" ),
             ),
+            // Commands received: none
+            // Commands generated
             // "commands" => array(
-                // "cmd1" => array( "name" => "GetProfile" ),
-                // "cmd2" => array( "name" => "RequestMirrorResponse" ),
-                // "cmd3" => array( "name" => "MirrorRemoved" ),
-                // "cmd4" => array( "name" => "RequestFastPollMode" ),
+                // "00" => array( "name" => "Get Profile" ),
+                // "01" => array( "name" => "Request Mirror" ),
+                // "02" => array( "name" => "Mirror Removed" ),
+                // "03" => array( "name" => "Request Fast Poll Mode" ),
             // ),
         ),
         "0B04" => array( // Electrical measurement cluster
@@ -270,15 +291,27 @@
                 "0604" => array( "name" => "AC Power Multiplier", "access" => "R" ),
                 "0605" => array( "name" => "AC Power Divisor", "access" => "R" ),
             ),
-            "commands" => array(
-                // "cmd1" => array( "name" => "GetProfile" ),
-                // "cmd2" => array( "name" => "RequestMirrorResponse" ),
-                // "cmd3" => array( "name" => "MirrorRemoved" ),
-                // "cmd4" => array( "name" => "RequestFastPollMode" ),
-            ),
+            // "commands" => array(
+            //     // "cmd1" => array( "name" => "GetProfile" ),
+            //     // "cmd2" => array( "name" => "RequestMirrorResponse" ),
+            //     // "cmd3" => array( "name" => "MirrorRemoved" ),
+            //     // "cmd4" => array( "name" => "RequestFastPollMode" ),
+            // ),
         ),
         "1000" => array(
             "name" => "Touchlink",
+            "commands" => array(
+                "00" => array( "name" => "Scan Request" ),
+                "02" => array( "name" => "Dev Info Req" ),
+                "06" => array( "name" => "Identify Req" ),
+                "07" => array( "name" => "Reset To Factory Req" ),
+                "10" => array( "name" => "Network Start Req" ),
+                "12" => array( "name" => "Network Join Router Req" ),
+                "14" => array( "name" => "Network Join End Device Req" ),
+                "16" => array( "name" => "Network Update Req" ),
+                "41" => array( "name" => "Get Group Id Req" ),
+                "42" => array( "name" => "Get EP List Req" ),
+            ),
         ),
     );
 

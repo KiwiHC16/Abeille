@@ -363,10 +363,12 @@
                     }
                 } else {
                     $allowed = ['#value#', '#slider#', '#title#', '#message#', '#color#', '#onTime#', '#IEEE#', '#addrIEEE#', '#ZigateIEEE#', '#ZiGateIEEE#', '#addrGroup#'];
-                    // Tcharp38 note: don't know purpose of slider/title/message/color/onTime
+                    // Tcharp38 note: don't know purpose of slider/title/message/color/onTime/GroupeEPx
                     if (!in_array($var, $allowed)) {
-                        newDevError($devName, "ERROR", "Missing '".$var."' variable data for cmd '".$cmdJName."'");
-                        $error = true;
+                        if (substr($var, 0, 9) != "#GroupeEP") {
+                            newDevError($devName, "ERROR", "Missing '".$var."' variable data for cmd '".$cmdJName."'");
+                            $error = true;
+                        }
                     }
                 }
 

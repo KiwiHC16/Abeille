@@ -12,19 +12,25 @@
         },
         "type": "Xiaomi Single Switch Module T1 (No Neutral)",
         "commands": {
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            },
+            "Groups": { "use": "Group-Membership" },
 
-            "include13 2": "Group-Membership",
-
-            "include4": "etat",
-            "include5": "On",
-            "include6": "Off",
-            "include8": "getEtat",
+            "Status": { "use": "zb-0006-OnOff", "isVisible": 1 },
+            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
+            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
             "Toggle": {
                 "use": "zbCmd-0006-Toggle",
                 "nextLine": "after"
+            },
+            "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+            "BindToZigate-OnOff": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Set-OnOffReporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "yes"
             }
         }
     }

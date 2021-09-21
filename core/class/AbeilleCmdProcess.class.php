@@ -3367,7 +3367,7 @@
                     $sqn            = "01";
                     $cmdId          = "15"; // Discover Attributes Extended
 
-                    $startId        = isset($Command['startId']) ? $Command['startId'] : "00";
+                    $startId        = isset($Command['startId']) ? $Command['startId'] : "0000";
                     $max            = isset($Command['max']) ? $Command['max'] : "FF";
 
                     $data2 = $fcf.$sqn.$cmdId.$startId.$max;

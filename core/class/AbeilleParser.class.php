@@ -2281,16 +2281,18 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $status = substr($msg, 0, 2);
                     $dir = substr($msg, 2, 2);
                     $attrId = substr($msg, 6, 2).substr($msg, 4, 2);
-                    parserLog('debug', '  Status='.$status.'/'.zbGetZCLStatus($status).', Dir='.$dir.', AttrId='.$attrId);
                     if ($status == "00") {
                         $attrType = substr($msg, 8, 2);
                         $minInterval = substr($msg, 10, 4);
                         $maxInterval = substr($msg, 14, 4);
-                        // Variable size => reportable change
+                        // Reportable change => Variable size
                         // Timeout period => 2B
                         // TO BE COMPLETED
+                        parserLog('debug', '  Status='.$status.'/'.zbGetZCLStatus($status).', Dir='.$dir.', AttrId='.$attrId
+                            .', AttrType='.$attrType.', minInterval='.$minInterval.', maxInterval='.$maxInterval);
                     } else {
-                        $msg = substr($msg, 8);
+                        // $msg = substr($msg, 8);
+                        parserLog('debug', '  Status='.$status.'/'.zbGetZCLStatus($status).', Dir='.$dir.', AttrId='.$attrId);
                     }
                     return;
                 }
@@ -2416,25 +2418,31 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 else if ($cmd == "16") { // Discover Attributes Extended Response
                     $completed = substr($msg, 2);
                     $msg = substr($msg, 2); // Skipping 'completed' status
+
                     $attributes = [];
                     $l = strlen($msg);
                     for ($i = 0; $i < $l;) {
+                        $attrId = substr($msg, $i + 2, 2).substr($msg, $i, 2);
                         $attr = array(
-                            'id' => substr($msg, $i + 2, 2).substr($msg, $i, 2),
                             'dataType' => substr($msg, $i + 4, 2),
                             'access' => substr($msg, $i + 6, 2)
                         );
-                        $attributes[] = $attr;
+                        $attributes[$attrId] = $attr;
                         $i += 8;
                     }
 
-                    /* WORK ONGOING */
-
                     $m = '';
-                    foreach ($attributes as $attr) {
+                    foreach ($attributes as $attrId => $attr) {
                         if ($m != '')
                             $m .= '/';
-                        $m .= $attr['id'].'-'.$attr['dataType'].'-'.$attr['access'];
+                        $m .= $attrId.'-'.$attr['dataType'].'-';
+                        $access = hexdec($attr['access']);
+                        if ($access & 1)
+                            $m .= 'R'; // Readable
+                        if ($access & 2)
+                            $m .= 'W'; // Writable
+                        if ($access & 4)
+                            $m .= 'P'; // Reportable
                     }
                     parserLog('debug', '  Clust '.$cluster.': '.$m);
                     $this->discoverLog('- Clust '.$cluster.': '.$m);

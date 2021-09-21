@@ -810,42 +810,6 @@
 
         /* Converting detected attributs to commands */
         var z = {
-            "0005": { // Scene cluster
-                // Attributes
-                "0000" : { "name" : "SceneCount", "type" : "R" },
-                "0001" : { "name" : "CurrentScene", "type" : "R" },
-                "0002" : { "name" : "CurrentGroup", "type" : "R" },
-                "0003" : { "name" : "SceneValid", "type" : "R" },
-                "0004" : { "name" : "NameSupport", "type" : "R" },
-                "0005" : { "name" : "LastConfiguredBy", "type" : "R" },
-                // Cmds
-                "cmd0" : { "name" : "AddScene" },
-                "cmd1" : { "name" : "ViewScene" },
-                "cmd2" : { "name" : "RemoveScene" },
-                "cmd3" : { "name" : "RemoveAllScenes" },
-                "cmd4" : { "name" : "StoreScene" },
-                "cmd5" : { "name" : "RecallScene" },
-                "cmd6" : { "name" : "GetSceneMembership" },
-                "cmd40" : { "name" : "EnhancedAddScene" },
-                "cmd41" : { "name" : "EnhancedViewScene" },
-                "cmd42" : { "name" : "CopyScene" },
-            },
-            "0006": { // On/Off cluster
-                // Attributes
-                "0000" : { "name" : "OnOff", "type" : "R" },
-                "4000" : { "name" : "GlobalSceneControl", "type" : "R" },
-                "4001" : { "name" : "OnTime", "type" : "RW" },
-                "4002" : { "name" : "OffWaitTime", "type" : "RW" },
-                // Cmds
-                "cmd1" : { "name" : "Off" },
-                "cmd2" : { "name" : "On" },
-                // "cmd3" : { "name" : "Toggle" },
-            },
-            "0007": { // On/Off switch config cluster
-                // Attributes
-                "0000" : { "name" : "SwitchType", "type" : "R" },
-                "0010" : { "name" : "SwitchActions", "type" : "RW" },
-            },
             "0008": { // Level control cluster
                 // Attributes
                 "0000" : { "name" : "CurrentLevel", "type" : "R" },
@@ -954,33 +918,6 @@
                 "cmd6" : { "name" : "GotoTiltVal" },
                 "cmd7" : { "name" : "GotoTiltPercent" },
             },
-            "0702": { // Metering (Smart Energy) cluster
-                // Attributes
-                "0000" : { "name" : "CurrentSummationDelivered", "type" : "R" },
-                "0001" : { "name" : "CurrentSummationReceived", "type" : "R" },
-                "0002" : { "name" : "CurrentMaxDemandDelivered", "type" : "R" },
-                "0003" : { "name" : "CurrentMaxDemandReceived", "type" : "R" },
-                // TO BE COMPLETED
-                // Cmds
-                "cmd1" : { "name" : "GetProfile" },
-                "cmd2" : { "name" : "RequestMirrorResponse" },
-                "cmd3" : { "name" : "MirrorRemoved" },
-                "cmd4" : { "name" : "RequestFastPollMode" },
-            },
-            "1000": { // Touchlink commissioning cluster
-                // Attributes: none
-                // Cmds
-                "cmd1" : { "name" : "ScanRequest" },
-                "cmd2" : { "name" : "DevInfoReq" },
-                "cmd3" : { "name" : "IdentifyReq" },
-                "cmd4" : { "name" : "ResetToFactoryReq" },
-                "cmd5" : { "name" : "NetworkStartReq" },
-                "cmd6" : { "name" : "NetworkJoinRouterReq" },
-                "cmd7" : { "name" : "NetworkJoinEndDeviceReq" },
-                "cmd8" : { "name" : "NetworkUpdateReq" },
-                "cmd9" : { "name" : "GetGroupIdReq" },
-                "cmd10" : { "name" : "GetEPListReq" },
-            }
         };
 
         /* Jeedom commands naming reminder:
@@ -1024,6 +961,20 @@
                     cmds["Groups"] = newCmd("Group-Membership");
                 } else if (clustId == "0006") {
                     /* OnOff cluster */
+                    if (isset(attributes['0000'])) {
+                        cmds["Status"] = newCmd("zb-0006-OnOff");
+                        cmds["Status"]["isVisible"] = 1;
+                        cmds["Get-Status"] = newCmd("zbReadAttribute", "clustId=0006&attrId=0000");
+                        // Adding on/off & toggle commands but assuming all supported
+                        cmds["On"] = newCmd("zbCmd-0006-On");
+                        cmds["On"]["isVisible"] = 1;
+                        cmds["Off"] = newCmd("zbCmd-0006-Off");
+                        cmds["Off"]["isVisible"] = 1;
+                        cmds["Toggle"] = newCmd("zbCmd-0006-Toggle");
+                        // Adding bind + configureReporting but assuming supported
+                        cmds["BindToZigate-OnOff"] = newCmd("zbBindToZigate", "clustId=0006", "yes");
+                        cmds["Set-OnOffReporting"] = newCmd("zbConfigureReporting", "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000", "yes");
+                    }
                 }
                 // Tcharp38: How to ignore cluster > 0x7fff (manuf specific clusters) ?
 

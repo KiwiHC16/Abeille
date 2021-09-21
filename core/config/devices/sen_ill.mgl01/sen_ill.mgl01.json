@@ -23,7 +23,7 @@
             },
             "Set-IlluminanceReporting": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=600",
+                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=600&maxInterval=0",
                 "execAtCreation": "Yes"
             },
             "include4": "luminositeXiaomi",

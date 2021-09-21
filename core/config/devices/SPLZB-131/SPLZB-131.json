@@ -23,9 +23,14 @@
 
             "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "unit=KWh&div=1000", "isVisible": 1 },
 
-            "RMSVoltage": { "use": "zb-0B04-RMSVoltage", "isVisible": 0 },
+            "RMSVoltage": { "use": "zb-0B04-RMSVoltage", "isVisible": 0, "params": "mult=1&div=100" },
             "RMSCurrent": { "use": "zb-0B04-RMSCurrent", "isVisible": 1 },
-            "ActivePower": { "use": "zb-0B04-ActivePower", "isVisible": 1 },
+            "Set-RMSCurrentReporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "yes"
+            },
+            "ActivePower": { "use": "zb-0B04-ActivePower", "isVisible": 1, "params": "mult=1&div=1" },
             "include0B04-5": "getPlugVAW"
         }
     }

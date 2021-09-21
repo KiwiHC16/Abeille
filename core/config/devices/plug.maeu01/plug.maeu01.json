@@ -66,6 +66,7 @@
             },
             "ActivePower": {
                 "use": "zb-0B04-ActivePower",
+                "params": "mult=1&div=1",
                 "isVisible": 1
             },
             "include0B04-5": "bindToZigate-EP01-0B04"

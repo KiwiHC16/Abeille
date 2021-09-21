@@ -6,8 +6,10 @@
         "subType": "numeric",
         "generic_type": "",
         "template": "badge",
-        "configuration": [],
         "type": "info",
-        "logicalId": "0B04-#EP#-0505"
+        "logicalId": "0B04-#EP#-0505",
+        "configuration": {
+            "calculValueOffset": "#value#*#MULT#\/#DIV#"
+        }
     }
 }

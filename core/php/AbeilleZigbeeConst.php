@@ -169,7 +169,49 @@
                 "04" => array( "name" => "Move To Level With OnOff" ),
                 "05" => array( "name" => "Move With OnOff" ),
                 "06" => array( "name" => "Step With OnOff" ),
-                // "07" : { "name" : "Stop" ), // Another "stop" (0x07) ?
+                // "07" => array( "name" => "Stop" ), // Another "stop" (0x07) ?
+            ),
+        ),
+        "0009" => array(
+            "name" => "Alarm",
+            "attributes" => array(
+                "0000" => array( "name" => "AlarmCount", "access" => "R" ),
+            ),
+            "commands" => array(
+                "00" => array( "name" => "ResetAlarm" ),
+                "01" => array( "name" => "ResetAllAlarms" ),
+                "02" => array( "name" => "GetAlarm" ),
+                "03" => array( "name" => "ResetAlarmLog" ),
+            ),
+        ),
+        "000A" => array(
+            "name" => "Time",
+            "attributes" => array(
+                "0000" => array( "name" => "Time", "access" => "RW" ),
+                "0001" => array( "name" => "TimeStatus", "access" => "RW" ),
+                "0002" => array( "name" => "TimeZone", "access" => "RW" ),
+                "0003" => array( "name" => "DstStart", "access" => "RW" ),
+                "0004" => array( "name" => "DstEnd", "access" => "RW" ),
+                "0005" => array( "name" => "DstShift", "access" => "RW" ),
+                "0006" => array( "name" => "StandardTime", "access" => "R" ),
+                "0007" => array( "name" => "LocalTime", "access" => "R" ),
+                "0008" => array( "name" => "LastSetTime", "access" => "R" ),
+                "0009" => array( "name" => "ValidUntilTime", "access" => "RW" ),
+            ),
+        ),
+        "0014" => array(
+            "name" => "Multistate Value",
+            "attributes" => array(
+                "000E" => array( "name" => "StateText", "access" => "RW" ),
+                "001C" => array( "name" => "Description", "access" => "RW" ),
+                "004A" => array( "name" => "NumberOfStates", "access" => "RW" ),
+                "0051" => array( "name" => "OutOfService", "access" => "RW" ),
+                "0055" => array( "name" => "PresentValue", "access" => "RW" ),
+                "0057" => array( "name" => "PriorityArray", "access" => "RW" ),
+                "0067" => array( "name" => "Reliability", "access" => "RW" ),
+                "0068" => array( "name" => "RelinquishDefault", "access" => "RW" ),
+                "006F" => array( "name" => "StatusFlags", "access" => "R" ),
+                "0100" => array( "name" => "ApplicationType", "access" => "R" ),
             ),
         ),
         "0015" => array(
@@ -193,14 +235,69 @@
                 "09" => array( "name" => "Query Device Specific File Response" ),
             ),
         ),
+        "0020" => array(
+            "name" => "Poll control",
+            "attributes" => array(
+                "0000" => array( "name" => "CheckInInterval", "access" => "RW" ),
+                "0001" => array( "name" => "LongPollInterval", "access" => "R" ),
+                "0002" => array( "name" => "ShortPollInterval", "access" => "R" ),
+                "0003" => array( "name" => "FastPollTimeout", "access" => "RW" ),
+                "0004" => array( "name" => "CheckInIntervalMin", "access" => "R" ),
+                "0005" => array( "name" => "LongPollIntervalMin", "access" => "R" ),
+                "0006" => array( "name" => "FastPollTimeoutMax", "access" => "R" ),
+            ),
+            "commands" => array(
+                "00" => array( "name" => "CheckIn" ),
+            ),
+        ),
         "0100" => array(
             "name" => "Shade Configuration",
+            "attributes" => array(
+                "0000" => array( "name" => "PhysicalClosedLimit", "access" => "R" ),
+                "0001" => array( "name" => "MotorStepSize", "access" => "R" ),
+                "0002" => array( "name" => "Status", "access" => "RW" ),
+                "0010" => array( "name" => "ClosedLimit", "access" => "RW" ),
+                "0011" => array( "name" => "Mode", "access" => "RW" ),
+            ),
         ),
         "0101" => array(
             "name" => "Door Lock",
         ),
         "0102" => array(
             "name" => "Window Covering",
+            "attributes" => array(
+                // Information attributes
+                "0000" => array( "name" => "WindowCoveringType", "access" => "R" ),
+                "0001" => array( "name" => "PhysClosedLimitLift", "access" => "R" ),
+                "0002" => array( "name" => "PhysClosedLimitTilt", "access" => "R" ),
+                "0003" => array( "name" => "CurPosLift", "access" => "R" ),
+                "0004" => array( "name" => "CurPosTilt", "access" => "R" ),
+                "0005" => array( "name" => "NbOfActuationsLift", "access" => "R" ),
+                "0006" => array( "name" => "NbOfActuationsTilt", "access" => "R" ),
+                "0007" => array( "name" => "ConfigStatus", "access" => "R" ),
+                "0008" => array( "name" => "CurPosLiftPercent", "access" => "R" ),
+                "0009" => array( "name" => "CurPosTiltPercent", "access" => "R" ),
+                // Settings attributes
+                "0010" => array( "name" => "InstalledOpenLimitLift", "access" => "R" ),
+                "0011" => array( "name" => "InstalledClosedLimitLift", "access" => "R" ),
+                "0012" => array( "name" => "InstalledOpenLimitTilt", "access" => "R" ),
+                "0013" => array( "name" => "InstalledClosedLimitTilt", "access" => "R" ),
+                "0014" => array( "name" => "VelocityLift", "access" => "RW" ),
+                "0015" => array( "name" => "AccelTimeLift", "access" => "RW" ),
+                "0016" => array( "name" => "DecelTimeLift", "access" => "RW" ),
+                "0017" => array( "name" => "Mode", "access" => "RW" ),
+                "0018" => array( "name" => "IntermSetpointsLift", "access" => "RW" ),
+                "0019" => array( "name" => "IntermSetpointsTilt", "access" => "RW" ),
+            ),
+            "commands" => array(
+                "00" => array( "name" => "UpOpen" ),
+                "01" => array( "name" => "DownClose" ),
+                "02" => array( "name" => "Stop" ),
+                "04" => array( "name" => "GotoLiftVal" ),
+                "05" => array( "name" => "GotoLiftPercent" ),
+                "07" => array( "name" => "GotoTiltVal" ),
+                "08" => array( "name" => "GotoTiltPercent" ),
+            ),
         ),
         "0300" => array( // On/Off cluster
             "name" => "Color control",

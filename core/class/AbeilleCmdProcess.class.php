@@ -2403,7 +2403,8 @@
             // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
             if ((isset($Command['WriteAttributeRequestVibration'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']))
             {
-                $this->setParamXiaomi( $dest, $Command );
+                // Tcharp38: WHere is this code ??? $this->setParamXiaomi($dest, $Command);
+                $this->deamonlog('debug', "ERROR: WriteAttributeRequestVibration() CAN'T be executed. Missing setParamXiaomi()", $this->debug['processCmd2']);
                 return;
             }
 

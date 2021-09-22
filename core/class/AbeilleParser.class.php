@@ -4137,6 +4137,19 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     return;
                 }
 
+                // Xiaomi Smoke Sensor
+                elseif (($attrId == 'FF01') && ($attrSize == "0028")) {
+                    parserLog('debug', '  Xiaomi proprietary (Smoke Sensor)');
+
+                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
+
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt');
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
+                    return;
+                }
+
                 // Xiaomi Vibration
                 elseif (($attrId == 'FF01') && ($attrSize == "002E")) {
                     // Assuming $dataType == "42"
@@ -4452,18 +4465,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent($voltage));
-
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt');
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                }
-
-                // Xiaomi Smoke Sensor
-                elseif (($attrId == 'FF01') && ($attrSize == "0028")) {
-                    parserLog('debug', '  Champ proprietaire Xiaomi (Sensor Smoke)');
-
-                    $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
 
                     $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt');
                     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);

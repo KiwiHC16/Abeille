@@ -808,118 +808,6 @@
     function zigbeeToCommands() {
         console.log("zigbeeToCommands()");
 
-        /* Converting detected attributs to commands */
-        var z = {
-            "0008": { // Level control cluster
-                // Attributes
-                "0000" : { "name" : "CurrentLevel", "type" : "R" },
-                "0001" : { "name" : "RemainingTime", "type" : "R" },
-                "0010" : { "name" : "OnOffTransitionTime", "type" : "RW" },
-                "0011" : { "name" : "OnLevel", "type" : "RW" },
-                "0012" : { "name" : "OnTransitionTime", "type" : "RW" },
-                "0013" : { "name" : "OffTransitionTime", "type" : "RW" },
-                "0014" : { "name" : "DefaultMoveRate", "type" : "RW" },
-                // Cmds
-                "cmd1" : { "name" : "MoveToLevel" },
-                "cmd2" : { "name" : "Move" },
-                "cmd3" : { "name" : "Step" },
-                "cmd4" : { "name" : "Stop" },
-                "cmd5" : { "name" : "MoveToLevelWithOnOff" },
-                "cmd6" : { "name" : "MoveWithOnOff" },
-                "cmd7" : { "name" : "StepWithOnOff" },
-                // "cmd8" : { "name" : "Stop" }, // Another "stop" (0x07) ?
-            },
-            "0009": { // Alarm cluster
-                // Attributes
-                "0000" : { "name" : "AlarmCount", "type" : "R" },
-                // Cmds
-                "cmd1" : { "name" : "ResetAlarm" },
-                "cmd2" : { "name" : "ResetAllAlarms" },
-                "cmd3" : { "name" : "GetAlarm" },
-                "cmd4" : { "name" : "ResetAlarmLog" },
-            },
-            "000A": { // Time cluster
-                // Attributes
-                "0000" : { "name" : "Time", "type" : "RW" },
-                "0001" : { "name" : "TimeStatus", "type" : "RW" },
-                "0002" : { "name" : "TimeZone", "type" : "RW" },
-                "0003" : { "name" : "DstStart", "type" : "RW" },
-                "0004" : { "name" : "DstEnd", "type" : "RW" },
-                "0005" : { "name" : "DstShift", "type" : "RW" },
-                "0006" : { "name" : "StandardTime", "type" : "R" },
-                "0007" : { "name" : "LocalTime", "type" : "R" },
-                "0008" : { "name" : "LastSetTime", "type" : "R" },
-                "0009" : { "name" : "ValidUntilTime", "type" : "RW" },
-                // Cmds: none
-            },
-            "0014": { // Multistate Value cluster
-                // Attributes
-                "000E" : { "name" : "StateText", "type" : "RW" },
-                "001C" : { "name" : "Description", "type" : "RW" },
-                "004A" : { "name" : "NumberOfStates", "type" : "RW" },
-                "0051" : { "name" : "OutOfService", "type" : "RW" },
-                "0055" : { "name" : "PresentValue", "type" : "RW" },
-                "0057" : { "name" : "PriorityArray", "type" : "RW" },
-                "0067" : { "name" : "Reliability", "type" : "RW" },
-                "0068" : { "name" : "RelinquishDefault", "type" : "RW" },
-                "006F" : { "name" : "StatusFlags", "type" : "R" },
-                "0100" : { "name" : "ApplicationType", "type" : "R" },
-                // Cmds: none
-            },
-            "0020": { // Poll control cluster
-                // Attributes
-                "0000" : { "name" : "CheckInInterval", "type" : "RW" },
-                "0001" : { "name" : "LongPollInterval", "type" : "R" },
-                "0002" : { "name" : "ShortPollInterval", "type" : "R" },
-                "0003" : { "name" : "FastPollTimeout", "type" : "RW" },
-                "0004" : { "name" : "CheckInIntervalMin", "type" : "R" },
-                "0005" : { "name" : "LongPollIntervalMin", "type" : "R" },
-                "0006" : { "name" : "FastPollTimeoutMax", "type" : "R" },
-                "cmd1" : { "name" : "CheckIn" },
-            },
-            "0100": { // Shade Configuration cluster
-                // Attributes
-                "0000" : { "name" : "PhysicalClosedLimit", "type" : "R" },
-                "0001" : { "name" : "MotorStepSize", "type" : "R" },
-                "0002" : { "name" : "Status", "type" : "RW" },
-                "0010" : { "name" : "ClosedLimit", "type" : "RW" },
-                "0011" : { "name" : "Mode", "type" : "RW" },
-                // Cmds: none
-            },
-            "0102": { // Window covering cluster
-                // Information attributes
-                "0000" : { "name" : "WindowCoveringType", "type" : "R" },
-                "0001" : { "name" : "PhysClosedLimitLift", "type" : "R" },
-                "0002" : { "name" : "PhysClosedLimitTilt", "type" : "R" },
-                "0003" : { "name" : "CurPosLift", "type" : "R" },
-                "0004" : { "name" : "CurPosTilt", "type" : "R" },
-                "0005" : { "name" : "NbOfActuationsLift", "type" : "R" },
-                "0006" : { "name" : "NbOfActuationsTilt", "type" : "R" },
-                "0007" : { "name" : "ConfigStatus", "type" : "R" },
-                "0008" : { "name" : "CurPosLiftPercent", "type" : "R" },
-                "0009" : { "name" : "CurPosTiltPercent", "type" : "R" },
-                // Settings attributes
-                "0010" : { "name" : "InstalledOpenLimitLift", "type" : "R" },
-                "0011" : { "name" : "InstalledClosedLimitLift", "type" : "R" },
-                "0012" : { "name" : "InstalledOpenLimitTilt", "type" : "R" },
-                "0013" : { "name" : "InstalledClosedLimitTilt", "type" : "R" },
-                "0014" : { "name" : "VelocityLift", "type" : "RW" },
-                "0015" : { "name" : "AccelTimeLift", "type" : "RW" },
-                "0016" : { "name" : "DecelTimeLift", "type" : "RW" },
-                "0017" : { "name" : "Mode", "type" : "RW" },
-                "0018" : { "name" : "IntermSetpointsLift", "type" : "RW" },
-                "0019" : { "name" : "IntermSetpointsTilt", "type" : "RW" },
-                // Cmds
-                "cmd1" : { "name" : "UpOpen" },
-                "cmd2" : { "name" : "DownClose" },
-                "cmd3" : { "name" : "Stop" },
-                "cmd4" : { "name" : "GotoLiftVal" },
-                "cmd5" : { "name" : "GotoLiftPercent" },
-                "cmd6" : { "name" : "GotoTiltVal" },
-                "cmd7" : { "name" : "GotoTiltPercent" },
-            },
-        };
-
         /* Jeedom commands naming reminder:
            - for attributes: ['Get-'/'Set-'/''][EP]-<clustId>-<attribute_name>
            - for commands: Cmd-[EP-]<clustId>-<cmd_name>
@@ -975,6 +863,8 @@
                         cmds["BindToZigate-OnOff"] = newCmd("zbBindToZigate", "clustId=0006", "yes");
                         cmds["Set-OnOffReporting"] = newCmd("zbConfigureReporting", "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000", "yes");
                     }
+                } else if (clustId == "0B04") {
+                    /* Electrical Measurement cluster */
                 }
                 // Tcharp38: How to ignore cluster > 0x7fff (manuf specific clusters) ?
 

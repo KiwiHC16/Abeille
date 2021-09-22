@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Xiaomi smoke detector: bouton test genere crash d'AbeilleCmd (#2143).
+
 210922-BETA-1
 ----------
 

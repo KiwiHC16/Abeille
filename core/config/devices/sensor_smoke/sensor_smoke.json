@@ -1,5 +1,7 @@
 {
     "sensor_smoke": {
+        "manufacturer": "Xiaomi",
+        "model": "?",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -11,7 +13,6 @@
         },
         "type": "Xiaomi Smoke Sensor",
         "commands": {
-            "include2": "nom",
             "include3": "securitySafetySmoke",
             "include4": "Batterie-Volt",
             "include5": "Batterie-Pourcent",

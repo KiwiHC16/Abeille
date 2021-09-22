@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210922-BETA-1
+----------
+
 - Aqara TVOC moniteur d'air AAQS-S01: Support préliminaire (#2135).
 
 210922-STABLE-1

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210921-BETA-3"
+# VERSION="210922-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -508,6 +508,8 @@ fe4a5820814e11fce272e27de283c38f *core/config/commands/zb-0005-NameSupport.json
 9bc07fe41f8153c9fed8cedbf70ca98c *core/config/commands/zb-0006-OffWaitTime.json
 b2258371850a96333a903ef8e354e9d4 *core/config/commands/zb-0006-OnOff.json
 447d9d0a6fd7ec93ea1d2f9d7c6752bc *core/config/commands/zb-0006-OnTime.json
+3851d190855b955e5d020fdab286145d *core/config/commands/zb-0402-MeasuredValue.json
+d0fdfd1fa773e84201dd81bf996fb32a *core/config/commands/zb-0405-MeasuredValue.json
 6843abe7a61b1ffcd7a05b9957bb34ef *core/config/commands/zb-0702-CurrentSummationDelivered.json
 e0020e2a3080aabc610ff80df56c2ea0 *core/config/commands/zb-0702-Divisor.json
 6b78d1bd474eed644b3218a18a914150 *core/config/commands/zb-0702-Multiplier.json
@@ -552,7 +554,7 @@ f9ed35193595c45c02eee79dbfce74db *core/config/devices/Cableoutlet_Legrand/Cableo
 fafc88fd34d58786131c945beea58a8e *core/config/devices/ClassicA60Wclear-LIGHTIFY/ClassicA60Wclear-LIGHTIFY.json
 28905cfb002045647c9f3ff689f0e6d8 *core/config/devices/ClassicB40TW-LIGHTIFY/ClassicB40TW-LIGHTIFY.json
 7c6472b9ca19b914f5e96b93fce292d0 *core/config/devices/Connectedoutlet/Connectedoutlet.json
-83371f229747c15464df45fe561cfc0b *core/config/devices/Connectedsocketoutlet_NIKONV/Connectedsocketoutlet_NIKONV.json
+3d9e96988232f1630d64ad39b0fe55ae *core/config/devices/Connectedsocketoutlet_NIKONV/Connectedsocketoutlet_NIKONV.json
 5349ed798fe5359da85da4c95f5d02d7 *core/config/devices/Connectedsocketoutlet_NIKONV/discovery.json
 4de5520e01007ff42bb717f6eeeced23 *core/config/devices/Contactor/Contactor.json
 3356ed4bf045363852e4922fa9d05f45 *core/config/devices/DIYRuZ_RT/DIYRuZ_RT.json
@@ -723,7 +725,7 @@ fbf50e49d89fe5f7d6f3cd9fcf3f562b *core/config/devices/TS0503B__TZ3000_i8l0nqdu/T
 0d47b1d6c7b3a6d7dfc93f8793dad771 *core/config/devices/TS0505B__TZ3000_12sxjap4/TS0505B__TZ3000_12sxjap4.json
 405da1fb1de91a3073b1e91eff417e2c *core/config/devices/TY0A01/TY0A01.json
 ae58db602fae6552a3f4238d5a115db6 *core/config/devices/Teleruptor/Teleruptor.json
-6b6a012c4c1e06de2d87b528c52a3c6c *core/config/devices/WB01/WB01.json
+028bbb43b3dde5f6e044b1121583523b *core/config/devices/WB01/WB01.json
 accbe2fc8393fb149dedf9330a11dbde *core/config/devices/WS2812_light_controller/WS2812_light_controller.json
 a44757047895434681fc6948f2c988f6 *core/config/devices/WarningDevice-EF-3.0/WarningDevice-EF-3.0.json
 bb9ff0830717cdd6ec8302a277bcea6e *core/config/devices/WarningDevice/WarningDevice.json
@@ -734,6 +736,7 @@ ed2212ca4dc8ecd116dc8c8d43c18f0b *core/config/devices/ZLL-DimmableLigh/ZLL-Dimma
 3fe5eb50ae54c8b35573bd13c5c0279c *core/config/devices/ZLO-ExtendedColor/ZLO-ExtendedColor.json
 eefc58e8c96eb96927b92cea3fb900eb *core/config/devices/ZLO-LTOSensor/ZLO-LTOSensor.json
 4b777b7d81291c0130ba01ff22217f91 *core/config/devices/ZLO-OccupancySensor/ZLO-OccupancySensor.json
+e6365e62c38b61f1d4735703f8772dce *core/config/devices/airmonitor.acn01/airmonitor.acn01.json
 82af591cf24123300977ff9af1b229e4 *core/config/devices/ctrl_86plug.aq1/ctrl_86plug.aq1.json
 acfdaba2df6961f69ed2428d719ed1c5 *core/config/devices/ctrl_ln1.aq1/ctrl_ln1.aq1.json
 7beb01ec0ac5b7c23901a83196700aa8 *core/config/devices/ctrl_ln2.aq1/ctrl_ln2.aq1.json
@@ -874,7 +877,7 @@ a257759c0cf270d4df6728b469e8f64b *desktop/php/AbeilleEq.php
 49ee93207a7c670f641f2adf341aac00 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-2f391544dad21c355a9cfb0183bb5521 *docs/fr_FR/Changelog.rst
+59e78d68b17fdeaceb43b710f2e63c4e *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1100,10 +1103,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-bf35deef830b0b1378b99156a6815e40 *plugin_info/Abeille.version
+b7cfb1d1a0ee72357845b8ea8e071590 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 1d007935ff99e51bdac2dccd68303bbb *plugin_info/configuration.php
-637423fdacf9897e9f53158abdd9c4ca *plugin_info/info.json
+7bd6dac7c55eaeaa51d3a802ff229af6 *plugin_info/info.json
 adb199122fff93fd3be6dd9f956e1b8f *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 e634b9f544c02b8facd28fefb8771fe0 *resources/AbeilleDeamon/AbeilleInterrogate.php

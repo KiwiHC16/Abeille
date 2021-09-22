@@ -1,0 +1,78 @@
+{
+    "airmonitor.acn01": {
+        "manufacturer": "Xiaomi Aqara",
+        "model": "AAQS-S01",
+        "type": "Aqara AAQS-S01 TVOC air quality monitor",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "batteryType": "2x3V CR2450",
+            "icon": "Connectedoutlet"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+
+            "Bind-0001-ToZigate": {
+                "use": "bindToZigate",
+                "params": "CLUSTID=0001",
+                "execAtCreation": "Yes"
+            },
+            "Set-0001-0020-Reporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600",
+                "execAtCreation": "Yes"
+            },
+            "BatteryVolt2Percent": { "use": "battery-Volt2Percent-3" },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
+
+            "Bind-000C-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=000C",
+                "execAtCreation": "Yes"
+            },
+            
+            "Bind-0402-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0402",
+                "execAtCreation": "Yes"
+            },
+            "Set-0402-0000-Reporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0402&attrType=29&attrId=0000&minInterval=300&maxInterval=3600",
+                "execAtCreation": "Yes"
+            },
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": 1
+            },
+            "Get-Temperature": { "use": "zbReadAttribute", "params": "clustId=0402&attrId=0000" },
+
+            "Bind-0405-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0405",
+                "execAtCreation": "Yes"
+            },
+            "Set-0405-0000-Reporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0405&attrType=29&attrId=0000&minInterval=300&maxInterval=3600",
+                "execAtCreation": "Yes"
+            },
+            "Humidity": {
+                "use": "zb-0405-MeasuredValue",
+                "isVisible": 1
+            },
+            "Get-Humidity": { "use": "zbReadAttribute", "params": "clustId=0405&attrId=0000" }
+        }
+    }
+}

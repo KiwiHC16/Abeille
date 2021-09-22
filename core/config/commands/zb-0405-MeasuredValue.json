@@ -1,0 +1,10 @@
+{
+    "zb-0405-MeasuredValue": {
+        "comment": "0405/Humidity measurement cluster, attrib 0000/MeasuredValue",
+        "name": "MeasuredValue",
+        "subType": "numeric",
+        "configuration": [],
+        "type": "info",
+        "logicalId": "0405-#EP#-0000"
+    }
+}

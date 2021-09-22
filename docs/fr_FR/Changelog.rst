@@ -1,20 +1,14 @@
 ChangeLog
 =========
 
-210921-BETA-3
+- Aqara TVOC moniteur d'air AAQS-S01: Support préliminaire (#2135).
+
+210922-STABLE-1
 ----------
 
 - Interne: Correction requete "discover attributes extended".
-
-210921-BETA-2
-----------
-
 - Loratap 3 boutons: Correction regression (#2138).
 - Interne: Restoration support historique cmd 0006-FD special Tuya.
-
-210921-BETA-1
-----------
-
 - TRADFRIbulbGU10CWS345lm support preliminaire.
 - TRADFRIbulbE14CWS470lm support preliminaire.
 - SPLZB-132: Correction EP.
@@ -23,31 +17,15 @@ ChangeLog
 - Interne: Parser: Support prélim data type 41, 42, E0, E1, E2.
 - Suppression des messages de "réannonce" si équipement connu et activé.
    Attention. Si l'équipement quitte (leave) puis revient, le message est toujours présent.
-
-210919-BETA-1
--------------
-
 - Legrand dimmer: Mise à jour JSON (#983).
 - Monitor: Correction bug (Device announce loupé).
 - JSON équipements: Mise-à-jour setReport-EPxx => zbConfigureReporting.
-
-210917-BETA-2
--------------
-
 - JSON équipements: Nettoyage setReport-EPxx => zbConfigureReporting.
 - Assistant de découverte: améliorations et mise à jour doc.
 - Interne: Parser: Amélioration pour découverte cluster 0005/Scenes.
-
-210917-BETA-1
--------------
-
 - Interne: Correction warning pour "bind to group".
 - Page EQ/avancé: ajout bouton "reset to factory".
 - Interne: AbeilleCmdPrepare + Process updates.
-
-210916-BETA-1
--------------
-
 - JSON équipements: Mise à jour des commandes du type 'toggle'.
 - Page EQ/avancé: ajout possibilité de faire un "bind" vers équipement ou groupe.
 - Parser: Correction table de binding.

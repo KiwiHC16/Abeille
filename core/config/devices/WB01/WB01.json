@@ -17,8 +17,7 @@
             "include2 3": "Click-Middle",
             "include2 2": "BindToZigateEtat",
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
-                "isVisible": 1
+                "use": "zb-0001-BatteryPercent"
             },
             "include2 2 2": "BindToPowerConfig",
             "include2 2 2 3": "setReportBatterie"

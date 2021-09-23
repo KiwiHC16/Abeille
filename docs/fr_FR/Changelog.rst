@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+- Ruban LED Lidl: Mise à jour JSON (#1737).
+- TRADFRIbulbGU10CWS345lm: Mise a jour (#2137).
+- Interne: Correction erreur PHP: Undefined index: battery_type in AbeilleLQI_Map.php
+- Interne: Correction crash inclusion dans cas ou "value" pointe sur commande inexistante.
+
 210922-BETA-2
 ----------
 

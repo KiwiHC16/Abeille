@@ -16,3 +16,10 @@ https://kiwihc16.github.io/AbeilleDoc/devices/CompatibilityList.html
 
 https://kiwihc16.github.io/AbeilleDoc/Presentation.html#cagnotte
 
+## Generer une beta (master->beta) ou un stable (beta->stable)
+
+.tools/create_branch.sh
+
+## Generer 'CompatibilityList.rst'
+
+php desktop/modal/AbeilleCompatibility.modal.php rst

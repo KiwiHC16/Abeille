@@ -2507,8 +2507,8 @@ while ($cron->running()) {
                 log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
                 return;
             }
-            $ieee = $eqLogic->getConfiguration('IEEE', 'none');
-            if ($ieee != $msg['ieee']) {
+            $ieee = $eqLogic->getConfiguration('IEEE', '');
+            if (($ieee != '') && ($ieee != $msg['ieee'])) {
                 log::add('Abeille', 'debug', "  ERROR: IEEE mistmatch, got ".$msg['ieee']." while expecting ".$ieee);
                 return;
             }
@@ -2991,7 +2991,8 @@ while ($cron->running()) {
                     log::add('Abeille', 'debug', 'createDevice(): Define cmd info pour cmd action: '.$eqLogic->getHumanName()." - ".$cmdValueDefaut["value"]);
 
                     $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName("Abeille", $eqLogic->getName(), $cmdValueDefaut["value"]);
-                    $cmdlogic->setValue($cmdPointeur_Value->getId());
+                    if ($cmdPointeur_Value)
+                        $cmdlogic->setValue($cmdPointeur_Value->getId());
                 }
             }
 

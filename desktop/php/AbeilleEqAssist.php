@@ -825,125 +825,82 @@
 
             for (var clustId in ep.servClusters) {
                 attributes = ep.servClusters[clustId]['attributes'];
-
-                if (clustId == "0000") {
-                    /* Basic cluster.
-                       Only attribute 4000 is converted to user command.
-                       No sense for others */
-                    if (isset(attributes['4000'])) {
-                        cmds["SWBuildID"] = newCmd("zb-0000-SWBuildID");
-                        cmds["Get-SWBuildID"] = newCmd("zbReadAttribute", "clustId=0000&attrId=4000");
+                for (const [attrId, attr] of Object.entries(attributes)) {
+                    if (clustId == "0000") {
+                        /* Basic cluster.
+                        Only attribute 4000 is converted to user command.
+                        No sense for others */
+                        if (isset(attributes['4000'])) {
+                            cmds["SWBuildID"] = newCmd("zb-0000-SWBuildID");
+                            cmds["Get-SWBuildID"] = newCmd("zbReadAttribute", "clustId=0000&attrId=4000");
+                        }
+                    } else if (clustId == "0001") {
+                        /* Power configuration */
+                        if (isset(attributes['0021'])) {
+                            cmds["Battery-Percent"] = newCmd("zb-0001-BatteryPercent");
+                            cmds["Battery-Percent"]["isVisible"] = 1;
+                            cmds["Set-BatteryPercentReporting"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600", "yes");
+                        } else if (isset(attributes['0020'])) {
+                            cmds["Set-BatteryVoltReporting"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600", "yes");
+                        }
+                        cmds["BindToZigate-Power"] = newCmd("bindToZigate", "clustId=0001", "yes");
+                    } else if (clustId == "0004") {
+                        /* Groups cluster */
+                        cmds["Groups"] = newCmd("Group-Membership");
+                    } else if (clustId == "0006") {
+                        /* OnOff cluster */
+                        if (isset(attributes['0000'])) {
+                            cmds["Status"] = newCmd("zb-0006-OnOff");
+                            cmds["Status"]["isVisible"] = 1;
+                            cmds["Get-Status"] = newCmd("zbReadAttribute", "clustId=0006&attrId=0000");
+                            // Adding on/off & toggle commands but assuming all supported
+                            cmds["On"] = newCmd("zbCmd-0006-On");
+                            cmds["On"]["isVisible"] = 1;
+                            cmds["Off"] = newCmd("zbCmd-0006-Off");
+                            cmds["Off"]["isVisible"] = 1;
+                            cmds["Toggle"] = newCmd("zbCmd-0006-Toggle");
+                            // Adding bind + configureReporting but assuming supported
+                            cmds["BindToZigate-OnOff"] = newCmd("zbBindToZigate", "clustId=0006", "yes");
+                            cmds["Set-OnOffReporting"] = newCmd("zbConfigureReporting", "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000", "yes");
+                        }
+                    } else if (clustId == "0300") {
+                        /* Color cluster */
+                        if (isset(attributes['0000'])) {
+                            cmds["Current HUE"] = newCmd("zb-0300-CurrentHue");
+                            cmds["Current HUE"]["isVisible"] = 1;
+                            cmds["Get-Current HUE"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0000");
+                        }
+                        else if (isset(attributes['0001'])) {
+                            cmds["Current Saturation"] = newCmd("zb-0300-CurrentSaturation");
+                            cmds["Current SaturationX"]["isVisible"] = 1;
+                            cmds["Get-Current Saturation"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0001");
+                        }
+                        else if (isset(attributes['0003'])) {
+                            cmds["Current X"] = newCmd("zb-0300-CurrentX");
+                            cmds["Current X"]["isVisible"] = 1;
+                            cmds["Get-Current X"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0003");
+                        }
+                        else if (isset(attributes['0004'])) {
+                            cmds["Current Y"] = newCmd("zb-0300-CurrentY");
+                            cmds["Current Y"]["isVisible"] = 1;
+                            cmds["Get-Current Y"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0004");
+                        }
+                        else if (isset(attributes['0008'])) {
+                            cmds["Color mode"] = newCmd("zb-0300-ColorMode");
+                            cmds["Color mode"]["isVisible"] = 1;
+                            cmds["Color mode"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0008");
+                        }
+                    } else if (clustId == "0B04") {
+                        /* Electrical Measurement cluster */
                     }
-                } else if (clustId == "0001") {
-                    /* Power configuration */
-                    if (isset(attributes['0021'])) {
-                        cmds["Battery-Percent"] = newCmd("zb-0001-BatteryPercent");
-                        cmds["Battery-Percent"]["isVisible"] = 1;
-                        cmds["Set-BatteryPercentReporting"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600", "yes");
-                    } else if (isset(attributes['0020'])) {
-                        cmds["Set-BatteryVoltReporting"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600", "yes");
-                    }
-                    cmds["BindToZigate-Power"] = newCmd("bindToZigate", "clustId=0001", "yes");
-                } else if (clustId == "0004") {
-                    /* Groups cluster */
-                    cmds["Groups"] = newCmd("Group-Membership");
-                } else if (clustId == "0006") {
-                    /* OnOff cluster */
-                    if (isset(attributes['0000'])) {
-                        cmds["Status"] = newCmd("zb-0006-OnOff");
-                        cmds["Status"]["isVisible"] = 1;
-                        cmds["Get-Status"] = newCmd("zbReadAttribute", "clustId=0006&attrId=0000");
-                        // Adding on/off & toggle commands but assuming all supported
-                        cmds["On"] = newCmd("zbCmd-0006-On");
-                        cmds["On"]["isVisible"] = 1;
-                        cmds["Off"] = newCmd("zbCmd-0006-Off");
-                        cmds["Off"]["isVisible"] = 1;
-                        cmds["Toggle"] = newCmd("zbCmd-0006-Toggle");
-                        // Adding bind + configureReporting but assuming supported
-                        cmds["BindToZigate-OnOff"] = newCmd("zbBindToZigate", "clustId=0006", "yes");
-                        cmds["Set-OnOffReporting"] = newCmd("zbConfigureReporting", "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000", "yes");
-                    }
-                } else if (clustId == "0B04") {
-                    /* Electrical Measurement cluster */
                 }
-                // Tcharp38: How to ignore cluster > 0x7fff (manuf specific clusters) ?
 
-                // if (!(clustId in z)) {
-                //     console.log("SERV cluster ID "+clustId+" ignored");
-                //     continue;
-                // }
-                // console.log("SERV clustId="+clustId);
-
-                // clust = ep.servClusters[clustId];
-                // zClust = z[clustId];
-
-                // console.log("clust.attrList.length="+clust.attrList.length);
-                // for (var attrId in clust) {
-                //     if (attrId in zClust) {
-                //         console.log("attrId="+attrId);
-                //         /* Adding attributes access commands */
-                //         if (sameAttribInOtherEP(epId, clustId, attrId))
-                //             duplicated = true; // Same attribut used in other EP
-                //         else
-                //             duplicated = false;
-                //         zAttr = zClust[attrId];
-                //         if ((zAttr["type"] == "R") || (zAttr["type"] == "RW")) {
-                //             // Action command => use "zbReadAttribute.json" generic command
-                //             if (duplicated)
-                //                 cActionName = "Get-"+epId+"-"+clustId+"-"+zAttr["name"];
-                //             else
-                //                 cActionName = "Get-"+clustId+"-"+zAttr["name"];
-                //             cmds[cActionName] = new Object;
-                //             cmds[cActionName]['use'] = "zbReadAttribute";
-                //             let params = "";
-                //             if (epId != 1)
-                //                 params = "ep="+epId+"&";
-                //             params += "clustId="+clustId+"&attrId="+attrId;
-                //             cmds[cActionName]['params'] = params;
-
-                //             // Info command
-                //             if (duplicated)
-                //                 cInfoName = epId+"-"+clustId+"-"+zAttr["name"];
-                //             else
-                //                 cInfoName = clustId+"-"+zAttr["name"];
-                //             cmds[cInfoName] = new Object;
-                //             cmds[cInfoName]['use'] = "zb-"+clustId+"-"+zAttr["name"];
-                //             if (epId != 1)
-                //                 cmds[cInfoName]['params'] = "ep="+epId;
-                //         } else if ((zAttr["type"] == "W") || (zAttr["type"] == "RW")) {
-                //             // Action command
-                //             cInfoName = "Set"+"-"+zAttr["name"]; // Jeedom command name
-                //             cmds[cInfoName] = new Object;
-                //             cmds[cInfoName]['use'] = "zbSet-"+clustId+"-"+zAttr["name"];
-                //             if (epId != 1)
-                //                 cmds[cInfoName]['params'] = "ep="+epId;
-                //         }
-                //     } else {
-                //         console.log("attrId="+attrId+": ignored for server cluster ID "+clustId);
-                //     }
-                // }
-
-                /* Adding cluster specific commands */
-                // if ("cmd1" in zClust) {
-                //     zCmdNb = 1;
-                //     zCmd = "cmd1";
-                //     while(zCmd in zClust) {
-                //         if (sameZCmdInOtherEP(epId, clustId, zClust[zCmd]["name"]))
-                //             duplicated = true;
-                //         else
-                //             duplicated = false;
-
-                //         if (duplicated)
-                //             cName = "Cmd-"+epId+"-"+clustId+"-"+zClust[zCmd]["name"];
-                //         else
-                //             cName = "Cmd-"+clustId+"-"+zClust[zCmd]["name"];
-                //         cmds[cName] = new Object;
-                //         cmds[cName]['use'] = "zbCmd-"+clustId+"-"+zClust[zCmd]["name"];
-
-                //         zCmdNb++;
-                //         zCmd = "cmd"+zCmdNb;
-                //     }
-                // }
+                commandsReceived = ep.servClusters[clustId]['commandsReceived'];
+                for (cmd in commandsReceived) {
+                    if (clustId == "0300") {
+                        /* Color cluster */
+                    }
+                }
             }
         }
         console.log(cmds);

@@ -1,9 +1,10 @@
 {
-    "TS0505A": {
-        "manufacturer": "Tuya",
+    "TS0505A__TZ3000_riwp3k79": {
+        "manufacturer": "Silvercrest",
+        "comment": "https://github.com/KiwiHC16/Abeille/issues/1737#",
         "timeout": "60",
         "configuration": {
-            "mainEP": "03",
+            "mainEP": "01",
             "poll": "1",
             "icon": "FlexRGBW"
         },
@@ -65,9 +66,11 @@
             "include34": "setVert",
             "include35": "colorBleu",
             "include36": "setBleu",
+            "include381": "1700K",
             "include38": "2700K",
             "include39": "5000K",
-            "include40": "temperatureLight"
+            "include40": "temperatureLight",
+            "include40 2 2": "setTemperatureLight_1700_4900"
         }
     }
 }

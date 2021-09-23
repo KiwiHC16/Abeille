@@ -93,17 +93,17 @@
                 $Z = $abeille->getConfiguration()["positionZ"];
             }
         }
-        
+
         $table[$shortAddress]['x'] = $X;
         $table[$shortAddress]['y'] = $Y;
         $table[$shortAddress]['z'] = $Z;
 
-        if ( $abeille->getConfiguration()["battery_type"]== "" ) {
+        $batteryType = $abeille->getConfiguration("battery_type", "");
+        if ($batteryType == "") {
             $table[$shortAddress]['color'] = "Orange";
         } else {
             $table[$shortAddress]['color'] = "Green";
         }
-        
     }
 
     $liste = "";

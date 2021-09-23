@@ -25,28 +25,45 @@
 
             "include25": "Group-Membership",
 
-            "include19": "getEtat",
-            "include26": "BindToZigateEtat",
-            "include28": "setReportEtat",
-            "include8": "On",
-            "include9": "Off",
+            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
+            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle"
+            },
+            "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
+            "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+            "Bind-0006-ToZigate": {
+                "use": "bindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Set-OnOffReporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "yes"
+            },
 
             "include20": "getLevel",
             "include27": "BindToZigateLevel",
             "include29": "setReportLevel",
             "include11": "setLevel",
-
-            "include4": "etatLight",
             "include5": "levelLight",
-            "include6": "colorX",
-            "include7": "colorY",
+
+            "Current Hue": { "use": "zb-0300-CurrentHue", "isVisible": 1 },
+            "Get-Current Hue": { "use": "zbReadAttribute", "params": "clustId=0300&attrId=0000" },
+            "Current Saturation": { "use": "zb-0300-CurrentSaturation", "isVisible": 1 },
+            "Get-Current Saturation": { "use": "zbReadAttribute", "params": "clustId=0300&attrId=0001" },
+            "Current X": { "use": "zb-0300-CurrentX", "isVisible": 1 },
+            "Get-Current X": { "use": "zbReadAttribute", "params": "clustId=0300&attrId=0003" },
+            "Current Y": { "use": "zb-0300-CurrentY", "isVisible": 1 },
+            "Get-Current Y": { "use": "zbReadAttribute", "params": "clustId=0300&attrId=0004" },
+            "Color mode": { "use": "zb-0300-ColorMode", "isVisible": 1 },
+            "Get-Color mode": { "use": "zbReadAttribute", "params": "clustId=0300&attrId=0008" },
             "include12": "Colour",
             "include13": "Blanc",
             "include14": "Bleu",
             "include15": "Rouge",
             "include16": "Vert",
-            "include17": "getColorX",
-            "include18": "getColorY",
             "include12 2": "ColourRGB",
             "include30": "setColourRGB",
             "include30 2": "setRGB",

@@ -1128,6 +1128,9 @@ console.log(jeq);
         } else if (infoType == "attribList") {
             topic = "Cmd"+logicalId+"_discoverAttributes";
             payload = "ep="+epId+"_clustId="+clustId+"_startAttrId=0000_maxAttrId=FF_dir="+option;
+        } else if (infoType == "attribExtList") {
+            topic = "Cmd"+logicalId+"_discoverAttributesExt";
+            payload = "ep="+epId+"_clustId="+clustId+"_startAttrId=0000_maxAttrId=FF_dir="+option;
         } else if (infoType == "attribValue") {
             topic = "Cmd"+logicalId+"_readAttribute";
             payload = "ep="+epId+"_clustId="+clustId+"_attrId="+option;
@@ -1312,14 +1315,15 @@ console.log("missing value for "+attrId);
                 var newCell = newRow.insertCell(0);
                 newCell.innerHTML = clustId;
                 // newCell.setAttribute('title', 'toto'); // Tcharp38 TODO: How to retrive cluster name ?
+                newCell.innerHTML += '<a id="idServClust'+sEp+'-'+clustId+'RBEx" class="btn btn-warning" title="Découverte étendue des attributs" onclick="requestInfos(\'attribExtList\', \''+res.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
                 newCell.innerHTML += '<a id="idServClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
                 if (clustId == "0000") { // Basic cluster supported on this EP
                     requestInfos('manufacturer', sEp, clustId);
                     requestInfos('modelId', sEp, clustId);
                     requestInfos('location', sEp, clustId);
                 }
-                requestInfos('attribList', sEp, clustId, '00');
-                requestInfos('discoverCommandsReceived', sEp, clustId);
+                requestInfos('attribExtList', sEp, clustId, '00');
+                // requestInfos('discoverCommandsReceived', sEp, clustId);
             });
             cliClustArr.forEach((clustId) => {
                 console.log("cliClust="+clustId);
@@ -1329,9 +1333,9 @@ console.log("missing value for "+attrId);
                 newCell.innerHTML += '<a id="idCliClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'01\')"><i class="fas fa-sync"></i></a>';
                 requestInfos('attribList', sEp, clustId, '01');
             });
-        } else if (res.type == "discoverAttributesResponse") {
+        } else if ((res.type == "discoverAttributesResponse") || (res.type == "discoverAttributesExtendedResponse")) {
             // 'src' => 'parser',
-            // 'type' => 'attributeDiscovery',
+            // 'type' => 'discoverAttributesResponse' or 'discoverAttributesExtendedResponse'
             // 'net' => $dest,
             // 'addr' => $srcAddress,
             // 'ep' => $srcEndPoint,
@@ -1343,7 +1347,13 @@ console.log("missing value for "+attrId);
             sClustId = res.clustId;
             sAttributes = res.attributes;
             let sAttrCount = sAttributes.length;
-            console.log("discoverAttributesResponse: clustId="+sClustId+", attrCount="+sAttrCount)
+            if (res.type == "discoverAttributesResponse") {
+                console.log("discoverAttributesResponse: clustId="+sClustId+", attrCount="+sAttrCount);
+                extended = false;
+            } else {
+                console.log("discoverAttributesExtendedResponse: clustId="+sClustId+", attrCount="+sAttrCount);
+                extended = true;
+            }
 
             // if (sAttrCount == 0) {
             //     openReturnChannel();
@@ -1359,12 +1369,22 @@ console.log("missing value for "+attrId);
             if (typeof clust.attributes === "undefined")
                 clust.attributes = new Object();
             attributes = clust.attributes;
-            for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
-                sAttr = sAttributes[attrIdx];
-                if (typeof attributes[sAttr.id] === "undefined")
-                    attributes[sAttr.id] = new Object();
-                if (typeof attributes[sAttr.value] === "undefined")
-                    requestInfos('attribValue', sEp, sClustId, sAttr.id); // Read attribute current value
+            // for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
+            //     sAttr = sAttributes[attrIdx];
+            //     if (typeof attributes[sAttr.id] === "undefined")
+            //         attributes[sAttr.id] = new Object();
+            //     if (typeof attributes[sAttr.value] === "undefined")
+            //         requestInfos('attribValue', sEp, sClustId, sAttr.id); // Read attribute current value
+            // }
+            for (const [sAttrId, sAttr] of Object.entries(sAttributes)) {
+                if (typeof attributes[sAttrId] === "undefined")
+                    attributes[sAttrId] = new Object();
+                if (extended) {
+                    attributes[sAttrId]['dataType'] = sAttr['dataType'];
+                    attributes[sAttrId]['access'] = sAttr['access'];
+                }
+                if (typeof attributes[sAttrId]['value'] === "undefined")
+                    requestInfos('attribValue', sEp, sClustId, sAttrId); // Read attribute current value
             }
 
             /* Updating display */
@@ -1394,16 +1414,28 @@ console.log("missing value for "+attrId);
                 row.deleteCell(i);
             }
             // Fills row
-            for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
-                rattr = sAttributes[attrIdx];
+            // for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
+            //     rattr = sAttributes[attrIdx];
+            //     var newCell = row.insertCell(-1);
+            //     newCell.innerHTML = rattr.id;
+            //     if (sDir && (attrIdx == sAttrCount - 1)) // Server attributes only
+            //         newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+            // }
+            for (const [sAttrId, sAttr] of Object.entries(sAttributes)) {
+                // rattr = sAttributes[sAttrId];
                 var newCell = row.insertCell(-1);
-                newCell.innerHTML = rattr.id;
-                if (sDir && (attrIdx == sAttrCount - 1)) // Server attributes only
-                    newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                newCell.innerHTML = sAttrId;
+                // if (sDir && (attrIdx == sAttrCount - 1)) // Server attributes only
+                //     newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
             }
-            if (sDir)
+            if (sDir) {
+                var newCell = row.insertCell(-1);
+                newCell.innerHTML = '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB3" class="btn btn-warning" title="Interrogation des commandes reçues" onclick="requestInfos(\'discoverCommandsReceived\', \''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                requestInfos('discoverCommandsReceived', sEp, sClustId);
+                changeClass("idServClust"+sEp+"-"+sClustId+"RBEx", "btn-warning", "btn-success");
                 changeClass("idServClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
-            else
+            } else
                 changeClass("idCliClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
         } else if (res.type == "attributeReport") {
             // 'src' => 'parser',
@@ -1618,6 +1650,32 @@ console.log("missing value for "+attrId);
             if (typeof clust.commandsReceived === "undefined")
                 clust.commandsReceived = new Object();
             clust.commandsReceived = sCommands;
+        } else if (res.type == "defaultResponse") {
+            // 'src' => 'parser',
+            // 'type' => 'defaultResponse',
+            // 'net' => $dest,
+            // 'addr' => $srcAddr,
+            // 'ep' => $srcEp,
+            // 'clustId' => $cluster,
+            // 'cmd' => $cmdId,
+            // 'status' => $status
+            sEp = res.ep;
+            sClustId = res.clustId;
+            sCmd = res.cmd;
+
+            /* Updating internal datas & display */
+            ep = eq.discovery.endPoints[sEp];
+            clust = ep.servClusters[sClustId];
+            if (sCmd == "11") { // Discover Commands Received
+                if (typeof clust.commandsReceived === "undefined")
+                    clust.commandsReceived = new Object();
+                clust.commandsReceived = "UNSUPPORTED";
+
+                id='idServClust'+sEp+'-'+sClustId+'RB3';
+                changeClass(id, "btn-warning", "btn-success");
+                button = document.getElementById(id);
+                button.setAttribute('disabled', true);
+            }
         }
 
         openReturnChannel();

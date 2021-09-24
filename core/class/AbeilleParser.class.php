@@ -1347,8 +1347,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             /* Attributes status record format:
                 Attr id = 2B
                 Status = 1B
-                Attr data type = 1B
-                Attr = <according to data type> */
+                Attr data type = 1B (if status == 0)
+                Attr = <according to data type> (if status == 0) */
             $l = strlen($hexString);
             if ($l < 6) {
                 parserLog('debug', "  decode8002_ReadAttrStatusRecord() ERROR: Unexpected record size ".$l);
@@ -1363,7 +1363,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             );
             $size = 6;
             if ($attr['status'] != '00')
-                return;
+                return $attr;
             $attr['dataType'] = substr($hexString, 6, 2);
             $hexString = substr($hexString, 8);
             $attr['value'] = $this->decodeDataType($hexString, $attr['dataType'], true, $dataSize, $valueHex);
@@ -2176,6 +2176,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     0x07 Configure Reporting Response
                     0x09 Read Reporting Configuration Response
                     0x0a Report attributes
+                    0x0b Default Response
                     0x0d Discover Attributes Response
                     0x12 Discover Commands Received Response
                     0x16 Discover Attributes Extended Response
@@ -2347,6 +2348,29 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     return;
                 }
 
+                else if ($cmd == "0B") { // Default Response
+                    // Tcharp38 note: Decoded here because 8101 message does not contain source address
+                    $cmdId = substr($msg, 0, 2);
+                    $status = substr($msg, 2, 2);
+
+                    parserLog('debug', '  Cmd='.$cmdId
+                        .', Status='.$status.' => '.zbGetZCLStatus($status));
+
+                    /* Send to client if connection opened */
+                    $toCli = array(
+                        'src' => 'parser',
+                        'type' => 'defaultResponse',
+                        'net' => $dest,
+                        'addr' => $srcAddr,
+                        'ep' => $srcEp,
+                        'clustId' => $cluster,
+                        'cmd' => $cmdId,
+                        'status' => $status
+                    );
+                    $this->msgToClient($toCli);
+                    return;
+                }
+
                 else if ($cmd == "0D") { // Discover Attributes Response
                     $completed = substr($msg, 2);
                     $msg = substr($msg, 2); // Skipping 'completed' status
@@ -2358,19 +2382,19 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     //      $attr['dataType']
                     $l = strlen($msg);
                     for ($i = 0; $i < $l;) {
+                        $attrId = substr($msg, $i + 2, 2).substr($msg, $i, 2);
                         $attr = array(
-                            'id' => substr($msg, $i + 2, 2).substr($msg, $i, 2),
                             'dataType' => substr($msg, $i + 4, 2)
                         );
-                        $attributes[] = $attr;
+                        $attributes[$attrId] = $attr;
                         $i += 6;
                     }
 
                     $m = '';
-                    foreach ($attributes as $attr) {
+                    foreach ($attributes as $attrId => $attr) {
                         if ($m != '')
                             $m .= '/';
-                        $m .= $attr['id'];
+                        $m .= $attrId;
                     }
                     parserLog('debug', '  Clust '.$cluster.': '.$m);
                     $this->discoverLog('- Clust '.$cluster.': '.$m);
@@ -2450,18 +2474,19 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     /* Send to client if required (ex: EQ page opened) */
                     $toCli = array(
                         'src' => 'parser',
-                        'type' => 'extendedAttributesDiscovery',
+                        'type' => 'discoverAttributesExtendedResponse',
                         'net' => $dest,
                         'addr' => $srcAddr,
                         'ep' => $srcEp,
                         'clustId' => $cluster,
+                        'dir' => (hexdec($fcf) >> 3) & 1,
                         'attributes' => $attributes
                     );
                     $this->msgToClient($toCli);
                     return;
                 }
 
-                parserLog("debug", "  Ignored global command", "8002");
+                parserLog("debug", "  Ignored general command", "8002");
                 return;
             }
 
@@ -4590,15 +4615,14 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $clustId = substr($payload, 4, 4);
             $status = substr($payload, 10, 2);
 
-            //.'; Le probleme c est qu on ne sait pas qui envoie le message, on a pas la source, sinon il faut faire un mapping avec SQN, ce que je ne veux pas faire.'
+            // Tcharp38: Decoding it inside 8002 to get source address.
             parserLog('debug', $dest.', Type=8101/Default response'
                             .', SQN='.$sqn
                             .', EP='.substr($payload, 2, 2)
                             .', ClustId='.$clustId.'/'.zgGetCluster($clustId)
                             .', Cmd='.substr($payload, 8, 2)
-                            .', Status='.$status);
-            if ($status != "00")
-                parserLog('debug', '  Status '.$status.' => '.zbGetZCLStatus($status));
+                            .', Status='.$status
+                            .' => Handled by decode8002');
         }
 
         /* Attribute report */

@@ -11,7 +11,6 @@
         },
         "type": "ZLO-OccupancySensor for Dev",
         "commands": {
-            "include2": "nom",
             "include3": "presence",
             "include4": "luminosite",
             "include5": "Batterie-Volt",

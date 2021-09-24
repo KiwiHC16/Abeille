@@ -10,7 +10,6 @@
         },
         "type": "fuel-tank-level",
         "commands": {
-            "include100": "nom",
             "include2": "etatEp02in",
             "include2 1": "getEtatEp02",
             "include3": "etatEp03in",

@@ -2,7 +2,6 @@ ChangeLog
 =========
 
 - Commandes JSON: nettoyage.
-- Assistant Zigbee: Améliorations: ajout découverte etendue des attributs.
 
 210924-BETA-1
 ----------

@@ -11,7 +11,6 @@
         },
         "type": "Xiaomi Vibration",
         "commands": {
-            "include2": "nom",
             "include3": "vibrationType",
             "include4": "vibrationAngle",
             "include5": "setVibrationSensivityLow",
@@ -20,9 +19,6 @@
             "include8": "Batterie-Volt",
             "include9": "Batterie-Pourcent",
             "include10": "Xiaomi-ff01",
-            "include12": "getManufacturerName",
-            "include13": "societe",
-            "include14": "getModelIdentifier",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

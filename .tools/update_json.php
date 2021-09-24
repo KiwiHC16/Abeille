@@ -157,6 +157,16 @@
                     echo "  Cmd '".$cmdFName."' replaced by 'zbCmd-0006-Toggle'.\n";
                     continue;
                 }
+                if (($cmdFName == "getManufacturerName") && $oldSyntax) {
+                    unset($dev[$devName]['commands'][$key]);
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' REMOVED.\n";
+                }
+                if (($cmdFName == "getModelIdentifier") && $oldSyntax) {
+                    unset($dev[$devName]['commands'][$key]);
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' REMOVED.\n";
+                }
             }
         }
 

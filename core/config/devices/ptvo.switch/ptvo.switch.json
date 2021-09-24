@@ -10,7 +10,6 @@
         },
         "type": "ptvo.switch",
         "commands": {
-            "include3": "nom",
             "include4": "etatEp08",
             "include5": "OnEp08",
             "include6": "OffEp08",

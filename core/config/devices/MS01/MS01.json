@@ -13,7 +13,6 @@
         },
         "type": "Sonoff SNZB-03 motion sensor",
         "commands": {
-            "include2": "nom",
             "include1": "etatSonOffIR",
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",

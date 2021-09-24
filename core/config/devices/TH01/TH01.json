@@ -14,7 +14,6 @@
         },
         "type": "Sonoff SNZB-02 temp & humidity",
         "commands": {
-            "include2": "nom",
             "include2 2 2 2 2 3": "temperature",
             "include2 2 2 2": "BindToZigateTemperature",
             "include2 2 2 2 2": "setReportTemperature",

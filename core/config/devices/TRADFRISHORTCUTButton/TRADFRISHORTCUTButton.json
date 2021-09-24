@@ -12,8 +12,6 @@
         },
         "type": "TRADFRI Shortcut Button",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
             "include7": "Up-Down",
             "include7 1": "Click-Middle",
             "Battery-Percent": {
@@ -25,8 +23,6 @@
             "include11": "setReportBatterie",
             "include12": "setReportEtat",
             "include13": "BindToZigateEtat",
-            "include21": "getManufacturerName",
-            "include22": "getModelIdentifier",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

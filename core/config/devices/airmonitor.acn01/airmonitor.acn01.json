@@ -44,7 +44,7 @@
             
             "Bind-0402-ToZigate": {
                 "use": "zbBindToZigate",
-                "params": "ep=01&clustId=0402",
+                "params": "clustId=0402",
                 "execAtCreation": "Yes"
             },
             "Set-0402-0000-Reporting": {

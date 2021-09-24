@@ -13,8 +13,6 @@
         },
         "type": "GLEDOPTO Spectre Blanc ref: GL-S-004Z",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
             "include4": "etatLight",
             "include5": "levelLight",
             "include8": "On",
@@ -27,8 +25,6 @@
             "include40 2 2": "setTemperatureLight",
             "include19": "getEtat",
             "include20": "getLevel",
-            "include21": "getManufacturerName",
-            "include22": "getModelIdentifier",
             "include24": "Identify",
             "include25": "Group-Membership",
             "include25 2": "Scene-Membership",

@@ -11,7 +11,6 @@
         },
         "type": "OSRAM Switch Switch4xEU-LIGHTIFY",
         "commands": {
-            "include2": "nom",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

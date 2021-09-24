@@ -10,7 +10,6 @@
         },
         "type": "8-digital-output",
         "commands": {
-            "include100": "nom",
             "include1": "OnEp01",
             "include1 1": "OffEp01",
             "include1 1 1 1": "getEtatEp01",

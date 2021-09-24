@@ -12,7 +12,6 @@
         },
         "type": "Xiaomi Door Sensor",
         "commands": {
-            "include2": "nom",
             "include3": "etatDoor",
             "include4": "Batterie-Volt",
             "include5": "Batterie-Pourcent",

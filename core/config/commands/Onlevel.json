@@ -3,7 +3,6 @@
         "logicalId": "0008-#EP#-0011",
         "isVisible": 1,
         "name": "Onlevel",
-        "order": 5,
         "isHistorized": "0",
         "type": "info",
         "subType": "numeric",
@@ -14,7 +13,7 @@
             "minValue": "0",
             "maxValue": "100",
             "historizeRound": "0",
-            "calculValueOffset": "#value#/255*100",
+            "calculValueOffset": "#value#\/255*100",
             "visibilityCategory": "All"
         }
     }

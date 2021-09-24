@@ -12,7 +12,6 @@
         },
         "type": "Xiaomi Interrupteur simple",
         "commands": {
-            "include2": "nom",
             "include3": "etatSwitch",
             "include4": "multi",
             "include5": "Batterie-Volt",

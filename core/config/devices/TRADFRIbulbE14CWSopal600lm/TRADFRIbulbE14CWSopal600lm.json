@@ -11,8 +11,6 @@
         },
         "type": "IKEA Ampoule TRADFRI bulb E14 Color White Spectre Opal 600lm",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
             "include4": "etatLight",
             "include5": "levelLight",
             "include6": "colorX",
@@ -29,8 +27,6 @@
             "include18": "getColorY",
             "include19": "getEtat",
             "include20": "getLevel",
-            "include21": "getManufacturerName",
-            "include22": "getModelIdentifier",
             "include24": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",

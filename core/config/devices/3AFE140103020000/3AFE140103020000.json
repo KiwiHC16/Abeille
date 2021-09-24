@@ -12,7 +12,6 @@
         },
         "type": "Konke Temperature Humidit\u00e9 Rond",
         "commands": {
-            "include2": "nom",
             "include3": "temperature",
             "include4": "humidite",
             "include4 2": "Batterie-Volt-Konke",

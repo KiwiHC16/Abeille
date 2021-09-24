@@ -13,7 +13,6 @@
         },
         "type": "Sonoff SNZB-04 Wireless Door\/Window Sensor",
         "commands": {
-            "include2": "nom",
             "include1": "etatSonoff",
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",

@@ -11,7 +11,6 @@
         },
         "type": "Konke IR INfra Rouge Presence",
         "commands": {
-            "include2": "nom",
             "include3": "etatIR_Alarme",
             "include4 2": "Batterie-Volt-Konke",
             "SWBuildID": {

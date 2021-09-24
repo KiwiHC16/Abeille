@@ -2,7 +2,6 @@
     "setLegrandLEDOff_if_on": {
         "isVisible": 0,
         "name": "LedOff_if_on",
-        "order": 6,
         "isHistorized": "0",
         "type": "action",
         "subType": "other",

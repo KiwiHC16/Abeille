@@ -11,10 +11,6 @@
         },
         "type": "Eurotronic Spirit",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
-            "include21": "getManufacturerName",
-            "include22": "getModelIdentifier",
             "include24": "Identify",
             "include25 2 2 2": "spiritTemperatureConsigne",
             "include25 2 2": "spiritTemperatureConsigneGet",

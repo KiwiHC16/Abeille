@@ -13,7 +13,6 @@
         },
         "type": "Dansfoss Ally Radiator Thermostat 014G2461",
         "commands": {
-            "include1": "nom",
             "include1 1 - Ok": "danfossTemperatureConsigneValue",
             "include1 2 - Ok": "danfossTemperatureConsigneGet",
             "include1 3 - Ok": "danfossTemperatureConsigneSet",

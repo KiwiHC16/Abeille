@@ -10,10 +10,6 @@
         },
         "type": "Wireless Temperature and Humidity",
         "commands": {
-            "include2": "societe",
-            "include3": "nom",
-            "include9": "getManufacturerName",
-            "include10": "getModelIdentifier",
             "include3 2": "temperature",
             "include4": "humidite",
             "include5": "Batterie-Volt-Konke",

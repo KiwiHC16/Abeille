@@ -10,10 +10,6 @@
         },
         "type": "Wima Lock",
         "commands": {
-            "include2": "societe",
-            "include3": "nom",
-            "include9": "getManufacturerName",
-            "include10": "getModelIdentifier",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

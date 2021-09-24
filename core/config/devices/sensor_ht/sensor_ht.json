@@ -12,7 +12,6 @@
         },
         "type": "Xiaomi Temperature Rond",
         "commands": {
-            "include2": "nom",
             "include3": "temperature",
             "include4": "humidite",
             "include5": "Batterie-Volt",

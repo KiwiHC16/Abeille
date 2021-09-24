@@ -11,8 +11,6 @@
         },
         "type": "Flex RGBW OSRAM",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
             "include4": "etatLight",
             "include5": "levelLight",
             "include6 2": "colorX",
@@ -29,8 +27,6 @@
             "include18 2": "getColorY",
             "include11": "getEtat",
             "include12": "getLevel",
-            "include13": "getManufacturerName",
-            "include14": "getModelIdentifier",
             "include16": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",

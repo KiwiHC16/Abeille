@@ -13,10 +13,6 @@
         },
         "type": "Hue E27 single filament A60 bulb",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
-            "include21": "getManufacturerName",
-            "include22": "getModelIdentifier",
             "include0003-1": "Identify",
             "include0004-1": "Group-Membership",
             "include4": "etatLight",

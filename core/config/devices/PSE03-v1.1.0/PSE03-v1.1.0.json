@@ -10,12 +10,8 @@
         },
         "type": "Alarm PSE03-v1.1.0",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
             "include4": "zb-0000-ZCLVersion",
             "include5": "dateCode",
-            "include21": "getManufacturerName",
-            "include22": "getModelIdentifier",
             "include24": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",

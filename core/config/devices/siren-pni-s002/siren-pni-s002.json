@@ -10,7 +10,6 @@
         },
         "type": "siren-pni-s002",
         "commands": {
-            "include100": "nom",
             "include1": "OnEp01",
             "include1 1": "OffEp01",
             "include1 1 1 1": "getEtatEp01",

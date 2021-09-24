@@ -11,7 +11,6 @@
         },
         "type": "Heiman HS1CA (d\u00e9tecteur de monoxyde de carbone)",
         "commands": {
-            "include2": "nom",
             "include3": "securitySafetySmokeHeiman",
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",

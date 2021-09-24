@@ -13,7 +13,6 @@
         },
         "type": "Philips Hue motion sensor",
         "commands": {
-            "include2": "nom",
             "include3": "presence",
             "include4": "luminositeHue",
             "include4 3": "temperature",

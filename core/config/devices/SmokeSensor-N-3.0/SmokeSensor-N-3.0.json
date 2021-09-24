@@ -13,7 +13,6 @@
         },
         "type": "Heiman HS1SA smoke sensor",
         "commands": {
-            "include2": "nom",
             "include3": "securitySafetySmokeHeiman2",
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",

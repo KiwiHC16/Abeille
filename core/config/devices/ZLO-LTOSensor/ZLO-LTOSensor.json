@@ -11,8 +11,6 @@
         },
         "type": "ZLO-LTOSensor for Dev",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
             "include3 2": "luminosite",
             "include3 2 2": "temperature",
             "include3 2 2 2": "presence",

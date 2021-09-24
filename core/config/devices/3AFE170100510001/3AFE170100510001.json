@@ -13,7 +13,6 @@
         },
         "type": "Konke Multi-function Button",
         "commands": {
-            "include2": "nom",
             "include2 2": "etatSwitchKonke",
             "include4 2": "Batterie-Volt-Konke",
             "SWBuildID": {

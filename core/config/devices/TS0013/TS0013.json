@@ -10,8 +10,6 @@
         },
         "type": "Yagusmart Tuya ZigBee Smart Switch 3 Bang",
         "commands": {
-            "include2": "societe",
-            "include3": "nom",
             "include4": "etatCharge0",
             "include4 2": "etatCharge1",
             "include4 2 2": "etatCharge2",
@@ -21,8 +19,6 @@
             "include6": "Off",
             "include6 2": "Off1",
             "include6 2 2": "Off2",
-            "include15": "getManufacturerName",
-            "include16": "getModelIdentifier",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

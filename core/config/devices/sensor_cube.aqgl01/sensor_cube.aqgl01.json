@@ -11,7 +11,6 @@
         },
         "type": "Xiaomi Cube",
         "commands": {
-            "include2": "nom",
             "include3": "cube_1",
             "include3 2": "cube_2",
             "include3 2 2": "cube_3",

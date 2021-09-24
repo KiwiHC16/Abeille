@@ -11,7 +11,6 @@
         },
         "type": "Humein Smoke Sensor HS1SA-E",
         "commands": {
-            "include2": "nom",
             "include3": "securitySafetySmokeHeiman2",
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",

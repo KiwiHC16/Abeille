@@ -2,7 +2,6 @@
     "setLegrandLEDOn": {
         "isVisible": 0,
         "name": "LedOn",
-        "order": 6,
         "isHistorized": "0",
         "type": "action",
         "subType": "other",

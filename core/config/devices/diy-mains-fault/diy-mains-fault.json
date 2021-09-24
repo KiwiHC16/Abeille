@@ -10,7 +10,6 @@
         },
         "type": "diy-mains-fault",
         "commands": {
-            "include100": "nom",
             "include2": "etatEp02in",
             "include2 1": "getEtatEp02"
         }

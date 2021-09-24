@@ -11,7 +11,6 @@
         },
         "type": "Xiaomi Presence Aqara 2",
         "commands": {
-            "include2": "nom",
             "include3": "presence",
             "include4": "luminosite",
             "include5": "Batterie-Volt",

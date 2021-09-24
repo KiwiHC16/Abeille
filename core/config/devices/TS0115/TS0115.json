@@ -10,8 +10,6 @@
         },
         "type": "ZigBee Smart multiprise 16A EU 4p 2USB",
         "commands": {
-            "include2": "societe",
-            "include3": "nom",
             "include4": "etatCharge0",
             "include4 2": "etatCharge1",
             "include4 2 2": "etatCharge2",
@@ -28,8 +26,6 @@
             "include6 2 2 2": "Off3",
             "include6 2 2 2 2": "Off6",
             "include14": "getEtat",
-            "include15": "getManufacturerName",
-            "include16": "getModelIdentifier",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

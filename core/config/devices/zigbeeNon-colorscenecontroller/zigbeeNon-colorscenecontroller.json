@@ -11,8 +11,6 @@
         },
         "type": "Template for ZigBee - Non Color Scene Controller",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

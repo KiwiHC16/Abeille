@@ -11,8 +11,6 @@
         },
         "type": "Ampoule Ledvance Classic E27 Tunable White",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
             "include4": "etatLight",
             "include5": "levelLight",
             "include5 2": "getColorTemperature",
@@ -26,8 +24,6 @@
             "include40 2 2": "setTemperatureLight_2700_6500",
             "include19": "getEtat",
             "include20": "getLevel",
-            "include21": "getManufacturerName",
-            "include22": "getModelIdentifier",
             "include24": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",

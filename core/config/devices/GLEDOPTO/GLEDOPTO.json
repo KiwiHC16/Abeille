@@ -11,8 +11,6 @@
         },
         "type": "GLEDOPTO",
         "commands": {
-            "include1": "nom",
-            "include2": "societe",
             "include4": "etat",
             "include5": "levelLight",
             "include6": "On",
@@ -20,8 +18,6 @@
             "include9": "Level",
             "include11": "getEtat",
             "include12": "getLevel",
-            "include13": "getManufacturerName",
-            "include14": "getModelIdentifier",
             "include16": "Identify",
             "include26": "setLevel",
             "include27": "Group-Membership",

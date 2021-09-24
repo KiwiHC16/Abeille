@@ -15,6 +15,7 @@
         // }
 
         // Ne semble pas fonctionner et me fait planté la ZiGate, idem ques etParam()
+        // Tcharp38: See https://github.com/KiwiHC16/Abeille/issues/2143#
         function ReportParamXiaomi($dest,$Command) {
             // Write Attribute request
             // Msg Type = 0x0110
@@ -2404,7 +2405,8 @@
             if ((isset($Command['WriteAttributeRequestVibration'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']))
             {
                 // Tcharp38: WHere is this code ??? $this->setParamXiaomi($dest, $Command);
-                $this->deamonlog('debug', "ERROR: WriteAttributeRequestVibration() CAN'T be executed. Missing setParamXiaomi()", $this->debug['processCmd2']);
+                // $this->deamonlog('debug', "ERROR: WriteAttributeRequestVibration() CAN'T be executed. Missing setParamXiaomi()", $this->debug['processCmd2']);
+                $this->ReportParamXiaomi($dest, $Command);
                 return;
             }
 

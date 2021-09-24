@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Xiaomi Mijia Honeywell Détecteur de Fumée: Tentative correction bouton test (#2143).
+
 210923-BETA-1
 ----------
 

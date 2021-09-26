@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210926-BETA-1
+----------
+
 - Commandes JSON: nettoyage.
 - Assistant Zigbee: Améliorations: ajout découverte etendue des attributs.
 - ZLinky TIC: Support préliminaire.

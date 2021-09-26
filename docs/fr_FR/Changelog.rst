@@ -3,6 +3,9 @@ ChangeLog
 
 - Commandes JSON: nettoyage.
 - Assistant Zigbee: Améliorations: ajout découverte etendue des attributs.
+- ZLinky TIC: Support préliminaire.
+- Interne: Parser: Nettoyage.
+- Aqara SSM-U02: Correction icone.
 
 210924-BETA-1
 ----------

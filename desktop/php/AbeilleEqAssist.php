@@ -146,6 +146,8 @@
                 <a class="btn btn-success pull-left" title="Télécharge 'discovery.json'" onclick="downloadDiscovery()"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
                 <?php if (isset($dbgTcharp38)) { ?>
                 <a class="btn btn-success pull-left" title="Genère les commandes Jeedom" onclick="zigbeeToCommands()"><i class="fas fa-cloud-download-alt"></i> Mettre à jour JSON</a>
+                <input type="file" id="files" name="files[]" multiple />
+                <output id="list"></output>
                 <?php } ?>
                 <br>
                 <br>
@@ -262,9 +264,9 @@
     eq.jId = js_eqId; // Jeedom ID, number
     eq.addr = js_eqAddr; // Short addr, hex string
     eq.ieee = js_eqIeee; // Short addr, hex string
-    eq.discovery = new Object(); // Zigbee interrogation datas
-        // discovery.epCount = 0; // Number of EP, number
-        // discovery.endPoints = new Array(); // Array of objects
+    zigbee = new Object(); // Zigbee interrogation datas
+        // zigbee.epCount = 0; // Number of EP, number
+        // zigbee.endPoints = new Array(); // Array of objects
             // ep = eq.endPoints[epIdx] = new Object(); // End Point object
             // ep.id = 0; // EP id/number
             // ep.servClustCount = 0; // IN clusters count
@@ -655,6 +657,8 @@
                             // console.log("cat="+cat);
                             if (cat in jcat)
                                 document.getElementById("id"+cat).checked = true;
+                            else
+                                document.getElementById("id"+cat).checked = false;
                         }
                     }
 
@@ -748,9 +752,8 @@
        Purpose is to give a unique Jeedom command name.
        Returns: true is exists, else false */
     function sameAttribInOtherEP(epId, clustId, attrId) {
-        discovery = eq.discovery;
-        for (var epIdx = 0; epIdx < discovery.endPoints.length; epIdx++) {
-            ep = discovery.endPoints[epIdx];
+        for (var epIdx = 0; epIdx < zigbee.endPoints.length; epIdx++) {
+            ep = zigbee.endPoints[epIdx];
             if (ep.id == epId)
                 continue; // Current EP
             for (var clustIdx = 0; clustIdx < ep.servClustList.length; clustIdx++) {
@@ -773,9 +776,8 @@
        Purpose is to give a unique Jeedom command name.
        Returns: true is exists, else false */
     function sameZCmdInOtherEP(epId, clustId, cmdName) {
-        discovery = eq.discovery;
-        for (var epIdx = 0; epIdx < discovery.endPoints.length; epIdx++) {
-            ep = discovery.endPoints[epIdx];
+        for (var epIdx = 0; epIdx < zigbee.endPoints.length; epIdx++) {
+            ep = zigbee.endPoints[epIdx];
             if (ep.id == epId)
                 continue; // Current EP
 
@@ -816,8 +818,7 @@
          */
         var cmds = new Object();
         var cmdNb = 0;
-        discovery = eq.discovery;
-        endPoints = discovery.endPoints;
+        endPoints = zigbee.endPoints;
         console.log(endPoints);
         for (var epId in endPoints) {
             console.log("EP "+epId);
@@ -977,9 +978,6 @@
         /* 'commands' */
         jeq2.commands = eq.commands;
 
-        /* Zigbee discovery if any */
-        jeq2.discovery = eq.discovery;
-
         var jeq = new Object();
         jeq[js_jsonName] = jeq2;
 
@@ -1080,7 +1078,7 @@ console.log(jeq);
     function downloadDiscovery() {
         console.log("downloadDiscovery()");
 
-        text = JSON.stringify(eq.discovery);
+        text = JSON.stringify(zigbee);
         let elem = window.document.createElement('a');
         elem.style = "display: none";
         elem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -1152,7 +1150,7 @@ console.log(jeq);
     function requestAttribValues(epId = "01", clustId = "0000") {
         console.log("requestAttribValues("+epId+", "+clustId+")");
 
-        ep = eq.discovery.endPoints[epId];
+        ep = zigbee.endPoints[epId];
         clust = ep.servClusters[clustId];
         attributes = clust.attributes;
 console.log(attributes);
@@ -1192,12 +1190,12 @@ console.log("missing value for "+attrId);
             sEpArr = sEpList.split('/');
 
             /* Updating internal datas */
-            eq.discovery.epCount = sEpArr.length;
+            zigbee.epCount = sEpArr.length;
             endPoints = new Object;
             sEpArr.forEach((ep) => {
                 endPoints[ep] = new Object();
             });
-            eq.discovery.endPoints = endPoints;
+            zigbee.endPoints = endPoints;
 
             /* Updating display */
             document.getElementById("idEPList").value = sEpList;
@@ -1277,13 +1275,12 @@ console.log("missing value for "+attrId);
             cliClustArr = res.outClustList.split('/');
 
             /* Updating internal datas */
-            discovery = eq.discovery;
-            if (discovery.epCount == 0) {
+            if (zigbee.epCount == 0) {
                 // EP list not received yet
                 console.log("EP list not received yet => simpleDesc ignored.")
                 return;
             }
-            ep = discovery.endPoints[res.ep];
+            ep = zigbee.endPoints[res.ep];
             ep.servClusters = new Object();
             servClustArr.forEach((clustId) => {
                 ep.servClusters[clustId] = new Object();
@@ -1361,7 +1358,7 @@ console.log("missing value for "+attrId);
             // }
 
             /* Updating internal datas */
-            ep = eq.discovery.endPoints[sEp];
+            ep = zigbee.endPoints[sEp];
             if (sDir)
                 clust = ep.servClusters[sClustId];
             else
@@ -1455,12 +1452,11 @@ console.log("missing value for "+attrId);
 
             // Updating internal infos
             if (sStatus == "00") {
-                discovery = eq.discovery;
-                if (typeof discovery.endPoints === "undefined")
-                    discovery.endPoints = new Object();
-                if (typeof discovery.endPoints[sEp] === "undefined")
-                    discovery.endPoints[sEp] = new Object();
-                ep = discovery.endPoints[sEp];
+                if (typeof zigbee.endPoints === "undefined")
+                    zigbee.endPoints = new Object();
+                if (typeof zigbee.endPoints[sEp] === "undefined")
+                    zigbee.endPoints[sEp] = new Object();
+                ep = zigbee.endPoints[sEp];
                 if (typeof ep.servClusters === "undefined")
                     ep.servClusters = new Object();
                 if (typeof ep.servClusters[sClustId] === "undefined")
@@ -1480,9 +1476,9 @@ console.log("missing value for "+attrId);
                 /* Checking Cluster-000/PowerSource */
                 if ((sClustId == "0000") && (sAttrId == "0007")) {
                     if (sValue == "03")
-                        discovery.powerSource = "battery";
+                        zigbee.powerSource = "battery";
                     else
-                        discovery.powerSource = "mains";
+                        zigbee.powerSource = "mains";
                 }
             } else
                 attributes = null;
@@ -1499,7 +1495,7 @@ console.log("missing value for "+attrId);
                 } else if (sAttrId == "0007") {
                     field = document.getElementById("idZbPowerSource");
                     idRB = null; // No refresh button
-                    sValue = discovery.powerSource;
+                    sValue = zigbee.powerSource;
                 } else if (sAttrId == "0010") {
                     field = document.getElementById("idZbLocation"+sEp);
                     idRB = "idZbLocation"+sEp+"RB"; // Refresh button
@@ -1538,12 +1534,11 @@ console.log("missing value for "+attrId);
             sClustId = res.clustId;
             sAttributes = res.attributes;
 
-            discovery = eq.discovery;
-            if (typeof discovery.endPoints === "undefined")
-                discovery.endPoints = new Object();
-            if (typeof discovery.endPoints[sEp] === "undefined")
-                discovery.endPoints[sEp] = new Object();
-            ep = discovery.endPoints[sEp];
+            if (typeof zigbee.endPoints === "undefined")
+                zigbee.endPoints = new Object();
+            if (typeof zigbee.endPoints[sEp] === "undefined")
+                zigbee.endPoints[sEp] = new Object();
+            ep = zigbee.endPoints[sEp];
             if (typeof ep.servClusters === "undefined")
                 ep.servClusters = new Object();
             if (typeof ep.servClusters[sClustId] === "undefined")
@@ -1570,9 +1565,9 @@ console.log("missing value for "+attrId);
                     /* Checking Cluster-000/PowerSource */
                     if ((sClustId == "0000") && (sAttrId == "0007")) {
                         if (sValue == "03")
-                            discovery.powerSource = "battery";
+                            zigbee.powerSource = "battery";
                         else
-                            discovery.powerSource = "mains";
+                            zigbee.powerSource = "mains";
                     }
                 }
 
@@ -1588,7 +1583,7 @@ console.log("missing value for "+attrId);
                     } else if (sAttrId == "0007") {
                         field = document.getElementById("idZbPowerSource");
                         idRB = null; // No refresh button
-                        sValue = discovery.powerSource;
+                        sValue = zigbee.powerSource;
                     } else if (sAttrId == "0010") {
                         field = document.getElementById("idZbLocation"+sEp);
                         idRB = "idZbLocation"+sEp+"RB"; // Refresh button
@@ -1645,7 +1640,7 @@ console.log("missing value for "+attrId);
             // console.log(sCommands);
 
             /* Updating internal datas */
-            ep = eq.discovery.endPoints[sEp];
+            ep = zigbee.endPoints[sEp];
             clust = ep.servClusters[sClustId];
             if (typeof clust.commandsReceived === "undefined")
                 clust.commandsReceived = new Object();
@@ -1664,7 +1659,7 @@ console.log("missing value for "+attrId);
             sCmd = res.cmd;
 
             /* Updating internal datas & display */
-            ep = eq.discovery.endPoints[sEp];
+            ep = zigbee.endPoints[sEp];
             clust = ep.servClusters[sClustId];
             if (sCmd == "11") { // Discover Commands Received
                 if (typeof clust.commandsReceived === "undefined")
@@ -1715,5 +1710,24 @@ console.log("missing value for "+attrId);
             - reload JSON to update commands
          */
     }
+
+    /* 'discovery.json' file upload */
+    function handleFileSelect(evt) {
+        console.log('handleFileSelect()');
+        var files = evt.target.files; // FileList object
+        if (files.length > 1) {
+            alert("Un seul fichier doit être selectionné.");
+            return;
+        }
+
+        f = files[0];
+        var reader = new FileReader();
+        reader.onload = function(){
+            zigbee = JSON.parse(reader.result);
+            console.log(reader.result.substring(0, 200));
+        };
+        reader.readAsText(f);
+    }
+    document.getElementById('files').addEventListener('change', handleFileSelect, false);
 
 </script>

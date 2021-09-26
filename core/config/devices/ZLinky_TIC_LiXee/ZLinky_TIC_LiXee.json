@@ -1,0 +1,47 @@
+{
+    "ZLinky_TIC_LiXee": {
+        "manufacturer": "LiXee",
+        "model": "ZLinky_TIC",
+        "type": "LiXee Zlinky TIC module",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "01MINIZB"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "commands": {
+            "ADC0": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0308" },
+            "BASE": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0000" },
+            "OTARIF": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0000" },
+            "ISOUSC": { "use": "zb-CustomInfo", "params": "clustId=0B01&attrId=0000" },
+            "HCHC": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0102" },
+            "HCHP": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0100" },
+            "EJPHN": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0100" },
+            "EJPHPM": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0102" },
+            "BBRHCJB": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0100" },
+            "BBRHPJB": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0102" },
+            "BBRHCJW": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0104" },
+            "BBRHPJW": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0106" },
+            "BBRHCJR": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0108" },
+            "BBRHPJR": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=010A" },
+            "IINST": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=0508" },
+            "IINST1": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=0508" },
+            "IINST2": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=0908" },
+            "IINST3": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=0A08" },
+            "IMAX": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=050A" },
+            "IMAX1": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=050A" },
+            "IMAX2": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=090A" },
+            "IMAX3": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=0A0A" },
+            "PMAX": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=050D" },
+            "PAPP": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=050F" },
+            "PTEC": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0020" },
+            "DEMAIN": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0001" },
+            "HHPHC": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0002" },
+            "PPOT": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0003" },
+            "PEJP": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0004" },
+            "ADPS": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0005" }
+        }
+    }
+}

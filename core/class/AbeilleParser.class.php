@@ -1300,12 +1300,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         function decode8000($dest, $payload, $lqi)
         {
             $status     = substr($payload, 0, 2);
-            $SQN        = substr($payload, 2, 2);
+            $sqn        = substr($payload, 2, 2);
             $PacketType = substr($payload, 4, 4);
 
             $msgDecoded = '8000/Status'
                 .', Status='.$status.'/'.zgGet8000Status($status)
-                .', SQN='.$SQN
+                .', SQN='.$sqn
                 .', PacketType='.$PacketType;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8000");
 
@@ -1319,7 +1319,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $msgAbeille = array ('dest'         => $dest,
                                  'type'         => "8000",
                                  'status'       => $status,
-                                 'SQN'          => $SQN,
+                                 'SQN'          => $sqn,
                                  'PacketType'   => $PacketType , // The value of the initiating command request.
                                  );
 
@@ -1466,14 +1466,14 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         0x10 => " + Many To One", // 0x10 -> 1 0 000 bin -> Active + no constrain + Many To One + no route required
                         );
 
-                    $SQN                    = substr($payload,26, 2);
+                    $sqn                    = substr($payload,26, 2);
                     $status                 = substr($payload,28, 2);
                     $tableSize              = hexdec(substr($payload,30, 2));
                     $index                  = hexdec(substr($payload,32, 2));
                     $tableCount             = hexdec(substr($payload,34, 2));
 
                     parserLog('debug', '  Routing table response'
-                            .', SQN='.$SQN
+                            .', SQN='.$sqn
                             .', Status='.$status
                             .', tableSize='.$tableSize
                             .', index='.$index
@@ -1602,7 +1602,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $Manufacturer   = substr($payload,30, 2).substr($payload,28, 2);
                     if ( $Manufacturer=='117C' ) {
 
-                        $SQN                    = substr($payload,32, 2);
+                        $sqn                    = substr($payload,32, 2);
                         $cmd                    = substr($payload,34, 2);
                         if ( $cmd != "07" ) {
                             parserLog("debug", '  Message can t be decoded. Looks like Telecommande Ikea Ronde but not completely.');
@@ -1614,7 +1614,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         parserLog("debug", '  Telecommande Ikea Ronde'
                                        .', frameCtrlField='.$frameCtrlField
                                        .', Manufacturer='.$Manufacturer
-                                       .', SQN='.$SQN
+                                       .', SQN='.$sqn
                                        .', cmd='.$cmd
                                        .', value='.$value
                                         );
@@ -1626,7 +1626,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                 // Tcharp38: Moved this part in ZCL global commands decode with questions.
                 // if ( $frameCtrlField=='18' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 00
-                //     $SQN                    = substr($payload,28, 2);
+                //     $sqn                    = substr($payload,28, 2);
                 //     $cmd                    = substr($payload,30, 2);
                 //     parserLog("debug", '  cmd :'.$cmd );
 
@@ -1690,7 +1690,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 // }
 
                 if ( $frameCtrlField=='19' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 01
-                    $SQN                    = substr($payload,28, 2);
+                    $sqn                    = substr($payload,28, 2);
                     $cmd                    = substr($payload,30, 2);
 
                     // Add Scene Response
@@ -1833,13 +1833,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // if (($cluster == "0006") && ($cmd == "FD")) {
 
             //     $frameCtrlField         = substr($payload,26, 2);
-            //     $SQN                    = substr($payload,28, 2);
+            //     $sqn                    = substr($payload,28, 2);
             //     $cmd                    = substr($payload,30, 2); if ( $cmd != "FD" ) return;
             //     $value                  = substr($payload,32, 2);
 
             //     parserLog('debug',  '  Interrupteur sur pile TS0043 bouton'
             //                     .', frameCtrlField='.$frameCtrlField
-            //                     .', SQN='.$SQN
+            //                     .', SQN='.$sqn
             //                     .', cmd='.$cmd
             //                     .', value='.$value,
             //                      "8002"
@@ -1853,13 +1853,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             if (($cluster == "0008") && ($cmd == "FD")) {
 
                 $frameCtrlField         = substr($payload,26, 2);
-                $SQN                    = substr($payload,28, 2);
+                $sqn                    = substr($payload,28, 2);
                 $cmd                    = substr($payload,30, 2); if ( $cmd != "FD" ) return;
                 $value                  = substr($payload,32, 2);
 
                 parserLog('debug', '  '
                                .', frameCtrlField='.$frameCtrlField
-                                .', SQN='.$SQN
+                                .', SQN='.$sqn
                                 .', cmd='.$cmd
                                 .', value='.$value,
                                  "8002"
@@ -1872,7 +1872,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // Tcharp38: Do nothing right now. To be added in ZCL standard decode
             // if ($cluster == "000A") {
             //     $frameCtrlField         = substr($payload,26, 2);
-            //     $SQN                    = substr($payload,28, 2);
+            //     $sqn                    = substr($payload,28, 2);
             //     $cmd                    = substr($payload,30, 2);
 
             //     if ($cmd == '00') {
@@ -1881,7 +1881,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             //         if ( isset($this->debug["8002"])) {
             //             parserLog('debug', '  Time Request - (decoded but not processed) '
             //                            .', frameCtrlField='.$frameCtrlField
-            //                            .', SQN='.$SQN
+            //                            .', SQN='.$sqn
             //                            .', cmd='.$cmd
             //                            .', attributTime='.$attributTime
             //                            .', attributTimeZone='.$attributTimeZone
@@ -1895,7 +1895,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             if ($cluster == "0204") {
                 $frameCtrlField         = substr($payload,26, 2);
-                $SQN                    = substr($payload,28, 2);
+                $sqn                    = substr($payload,28, 2);
                 $cmd                    = substr($payload,30, 2);
 
                 if ($cmd == '01') { // Read Response
@@ -1911,7 +1911,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     parserLog('debug', '  Time Request - (decoded but not processed) '
                                    .', frameCtrlField='.$frameCtrlField
-                                   .', SQN='.$SQN
+                                   .', SQN='.$sqn
                                    .', cmd='.$cmd
                                    .', attribute='.$attribute
                                    .', status='.$status
@@ -1931,7 +1931,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // // Remontée puissance prise TS0121 Issue: #1288
             // if ($cluster == "0702") {
             //     $frameCtrlField         = substr($payload,26, 2);
-            //     $SQN                    = substr($payload,28, 2);
+            //     $sqn                    = substr($payload,28, 2);
             //     $cmd                    = substr($payload,30, 2); if ( $cmd == "0A" ) $cmd = "0A - report attribut";
             //     $attribute              = substr($payload,34, 2).substr($payload,32, 2);
             //     $dataType               = substr($payload,36, 2);
@@ -1942,7 +1942,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             //         $value = substr($payload,48, 2).substr($payload,46, 2).substr($payload,44, 2).substr($payload,42, 2).substr($payload,40, 2).substr($payload,38, 2);
             //         parserLog('debug', '  Remontée puissance prise TS0121 '
             //                        .', frameCtrlField='.$frameCtrlField
-            //                        .', SQN='.$SQN
+            //                        .', SQN='.$sqn
             //                        .', cmd='.$cmd
             //                        .', attribute='.$attribute
             //                        .', dataType='.$dataType
@@ -1960,10 +1960,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // if ($cluster == "0B04") {
 
             //     $frameCtrlField = substr($payload, 26, 2);
-            //     $SQN = substr($payload, 28, 2);
+            //     $sqn = substr($payload, 28, 2);
             //     $cmd = substr($payload, 30, 2);
             //     parserLog('debug', '  FCF='.$frameCtrlField
-            //        .', SQN='.$SQN
+            //        .', SQN='.$sqn
             //        .', cmd='.$cmd.'/'.zbGetZCLGlobalCmdName($cmd));
 
                 // if ($cmd == '01') {
@@ -2058,7 +2058,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             if ($cluster == "FC41") {
 
                 $frameCtrlField         = substr($payload,26, 2);
-                $SQN                    = substr($payload,28, 2);
+                $sqn                    = substr($payload,28, 2);
                 $cmd                    = substr($payload,30, 2); if ( $cmd == "0a" ) $cmd = "0a - report attribut";
 
                 $attribute              = substr($payload,34, 2).substr($payload,32, 2);
@@ -2067,7 +2067,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                 parserLog('debug', '  Remontée etat relai module Legrand 20AX '
                                    .', frameCtrlField='.$frameCtrlField
-                                   .', SQN='.$SQN
+                                   .', SQN='.$sqn
                                    .', cmd='.$cmd
                                    .', attribute='.$attribute
                                    .', dataType='.$dataType
@@ -2085,7 +2085,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     parserLog('debug', '  Remontée etat relai module Legrand 20AX '
                                    .', frameCtrlField='.$frameCtrlField
-                                   .', SQN='.$SQN
+                                   .', SQN='.$sqn
                                    .', cmd='.$cmd
                                    .', attribute='.$attribute
                                    .', dataType='.$dataType
@@ -2105,7 +2105,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 if ( $FCF=='1C' ) {
                     $Manufacturer   = substr($payload,30, 2).substr($payload,28, 2);
                     if ( $Manufacturer=='115F' ) {
-                        $SQN = substr($payload,32, 2);
+                        $sqn = substr($payload,32, 2);
                         $Cmd = substr($payload,34, 2);
                         if ( $Cmd=='0A') {
                             $Attribut   = substr($payload,38, 2).substr($payload,36, 2);
@@ -2153,11 +2153,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $fcfTxt .= "/Cli->Serv";
             if ($manufSpecific) {
                 /* 16bits for manuf specific code */
-                $SQN = substr($payload, 32, 2); // Sequence Number
+                $sqn = substr($payload, 32, 2); // Sequence Number
                 $cmd = substr($payload, 34, 2); // Command
                 $msg = substr($payload, 36);
             } else {
-                $SQN = substr($payload, 28, 2); // Sequence Number
+                $sqn = substr($payload, 28, 2); // Sequence Number
                 $cmd = substr($payload, 30, 2); // Command
                 $msg = substr($payload, 32);
             }
@@ -2167,7 +2167,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
              */
 
             if ($frameType == 0) { // General command
-                parserLog('debug', "  FCF=".$fcf."/".$fcfTxt.", SQN=".$SQN.", cmd=".$cmd.'/'.zbGetZCLGlobalCmdName($cmd));
+                parserLog('debug', "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLGlobalCmdName($cmd));
 
                 /* General 'Cmd' reminder
                     0x01 Read Attributes Response
@@ -2494,7 +2494,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
              * Cluster specific command
              */
 
-            parserLog('debug', "  FCF=".$fcf."/".$fcfTxt.", SQN=".$SQN.", cmd=".$cmd.'/'.zbGetZCLClusterCmdName($cluster, $cmd));
+            parserLog('debug', "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLClusterCmdName($cluster, $cmd));
 
             // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs
             // Tuya 1,2,3,4 buttons switch
@@ -3081,7 +3081,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <OutClusterCount: uint8_t>   -> 2
             // <Out cluster list: data each entry is uint16_t> -> 4
 
-            $SQN        = substr($payload, 0, 2);
+            $sqn        = substr($payload, 0, 2);
             $Status     = substr($payload, 2, 2);
             $srcAddr    = substr($payload, 4, 4);
             $Len        = substr($payload, 8, 2);
@@ -3091,7 +3091,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             /* Log */
             $msgDecoded = '8043/Simple descriptor response'
-                            .', SQN='         .$SQN
+                            .', SQN='         .$sqn
                             .', Status='      .$Status
                             .', Addr='        .$srcAddr
                             .', Length='      .$Len
@@ -3209,7 +3209,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          */
         function decode8045($dest, $payload, $lqi)
         {
-            $SQN            = substr($payload, 0, 2);
+            $sqn            = substr($payload, 0, 2);
             $status         = substr($payload, 2, 2);
             $srcAddr        = substr($payload, 4, 4);
             $EndPointCount  = substr($payload, 8, 2);
@@ -3224,7 +3224,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             $msgDecoded = '8045/Active endpoints response'
-               .', SQN='.$SQN
+               .', SQN='.$sqn
                .', Status='.$status
                .', Addr='.$srcAddr
                .', EPCount='.$EndPointCount
@@ -3327,7 +3327,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // app_general_events_handler.c
             // E_SL_MSG_MANAGEMENT_NETWORK_UPDATE_RESPONSE
 
-            $SQN = substr($payload, 0, 2);
+            $sqn = substr($payload, 0, 2);
             $Status = substr($payload, 2, 2);
             $TotalTransmission = substr($payload, 4, 4);
             $TransmFailures = substr($payload, 8, 4);
@@ -3335,7 +3335,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $ScannedChannelsCount = substr($payload, 20, 2);
 
             $msgDecoded = '804A/Management network update response'
-               .', SQN='.$SQN
+               .', SQN='.$sqn
                .', Status='.$Status
                .', TotTx='.$TotalTransmission
                .', TxFailures='.$TransmFailures
@@ -3405,7 +3405,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             //          bit 6-7 Rx On When Idle status (1-On 0-Off)
             // <Src Address : uint16_t> (only since v3.1a)
 
-            $SQN = substr($payload, 0, 2);
+            $sqn = substr($payload, 0, 2);
             $Status = substr($payload, 2, 2);
             $NTableEntries = substr($payload, 4, 2);
             $NTableListCount = substr($payload, 6, 2);
@@ -3413,7 +3413,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $srcAddr = substr($payload, 10 + (hexdec($NTableListCount) * 42), 4); // 21 bytes per neighbour entry
 
             $decoded = '804E/Management LQI response'
-                .', SQN='               .$SQN
+                .', SQN='               .$sqn
                 .', Status='            .$Status
                 .', NTableEntries='     .$NTableEntries
                 .', NTableListCount='   .$NTableListCount
@@ -3916,7 +3916,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             //<Attribute data type: uint8_t>
             //<Size Of the attributes in bytes: uint16_t>
             //<Data byte list : stream of uint8_t>
-            $SQN        = substr($payload,  0, 2);
+            $sqn        = substr($payload,  0, 2);
             $srcAddr    = substr($payload,  2, 4);
             $ep         = substr($payload,  6, 2);
             $clustId    = substr($payload,  8, 4);
@@ -3930,7 +3930,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $msg = '8100/Read individual attribute response';
             else
                 $msg = '8102/Attribute report';
-            $msg .= ', SQN='            .$SQN
+            $msg .= ', SQN='            .$sqn
                     .', Addr='          .$srcAddr
                     .', EP='            .$ep
                     .', ClustId='       .$clustId
@@ -3938,8 +3938,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     .', AttrStatus='    .$attrStatus
                     .', AttrDataType='  .$dataType
                     .', AttrSize='      .$attrSize;
-
             parserLog('debug', $dest.', Type='.$msg, $type);
+
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($msg); // Send message to monitor
 
@@ -3949,9 +3949,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 parserLog('debug', '  Handled by decode8002');
                 return;
             }
-
-            /* Params: SrcAddr, ClustId, AttrId, Data */
-            $this->msgToAbeille($dest."/".$srcAddr, 'Link', 'Quality', $lqi);
 
             if ($attrStatus == '86') {
                 parserLog('debug', '  Status 86 => Unsupported attribute type ', $type);
@@ -4005,6 +4002,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 return;
             }
 
+            /* Params: SrcAddr, ClustId, AttrId, Data */
+            $this->msgToAbeille($dest."/".$srcAddr, 'Link', 'Quality', $lqi);
+
             /* Treating message in the following order
                - by clustId
                - then attribId.
@@ -4043,6 +4043,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                         $this->deviceUpdate($dest, $srcAddr, 'location', $trimmedValue);
                     }
+                }
+
+                // Xiaomi Bouton V2 Carré
+                elseif (($attrId == "FF01") && ($attrSize == "001A")) {
+                    // Assuming $dataType == "42"
+                    parserLog("debug", "  Xiaomi proprietary (Square button)" );
+
+                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+
+                    parserLog('debug', '  Voltage='.$voltage.' Voltage%='.$this->volt2pourcent($voltage));
+
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
+                    return; // Nothing more to publish
                 }
 
                 // Xiaomi lumi.sensor_86sw1 (Wall 1 Switch sur batterie)
@@ -4162,6 +4176,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     return;
                 }
 
+                // Xiaomi bouton Aqara Wireless Switch V3 #712 (https://github.com/KiwiHC16/Abeille/issues/712)
+                elseif (($attrId == 'FF01') && ($attrSize == "0026")) {
+                    // Assuming $dataType == "42"
+                    parserLog('debug', '  Xiaomi proprietary (Aqara Wireless Switch V3)');
+
+                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent($voltage));
+
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt');
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
+                    return;
+                }
+
                 // Xiaomi Smoke Sensor
                 elseif (($attrId == 'FF01') && ($attrSize == "0028")) {
                     parserLog('debug', '  Xiaomi proprietary (Smoke Sensor)');
@@ -4170,6 +4198,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
 
                     $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt');
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
+                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
+                    return;
+                }
+
+                // Xiaomi Cube
+                // Xiaomi capteur Inondation
+                elseif (($attrId == 'FF01') && ($attrSize == "002A")) {
+                    parserLog('debug', '  Xiaomi proprietary (Cube)');
+
+                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent($voltage));
+
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt-Temperature-Humidity');
                     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
                     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                     return;
@@ -4236,6 +4278,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                     return;
                 }
+
+                // Xiaomi Capteur Presence
+                // Je ne vois pas ce message pour ce cateur et sur appui lateral il n envoie rien
+                // Je mets un Attribut Size a XX en attendant. Le code et la il reste juste a trouver la taille de l attribut si il est envoyé.
+                // elseif (($attrId == "FF01") && ($attrSize == "00XX")) {
+                //     parserLog("debug","  Champ proprietaire Xiaomi (Bouton Carre)" );
+
+                //     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                //     parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent($voltage));
+
+                //     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
+                //     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
+                // }
+
             } // End cluster 0000
 
             else if ($clustId == "0001") { // Power configuration cluster
@@ -4352,6 +4408,26 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
             } // End cluster 0406
 
+            // Bouton Telecommande Philips Hue RWL021
+            else if ($clustId == "FC00") {
+
+                $buttonEventTexte = array (
+                                            '00' => 'appui',
+                                            '01' => 'appui maintenu',
+                                            '02' => 'relâche sur appui court',
+                                            '03' => 'relâche sur appui long',
+                                            );
+                // parserLog("debug","  Champ proprietaire Philips Hue, decodons le et envoyons a Abeille les informations ->".pack('H*', substr($payload, 24+2, (strlen($payload) - 24 - 2)) )."<-" );
+                $button = $attrId;
+                $buttonEvent = substr($payload, 24 + 2, 2);
+                $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
+                parserLog("debug", "  Champ proprietaire Philips Hue: Bouton=".$button.", Event=".$buttonEvent.", EventText=".$buttonEventTexte[$buttonEvent]." et duree: ".$buttonDuree);
+
+                $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId."-Event", $buttonEvent);
+                $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId."-Duree", $buttonDuree);
+                return;
+            }
+
             /* If $data is set it means message already treated before */
             if (isset($data)) {
                 /* Send to Abeille */
@@ -4373,11 +4449,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 return;
             }
 
-            /* Tcharp38
-               Code hereafter to be migrated above to be sorted by clustId/attribId but need to be sure of clustId first.
-               Only remaining code should be dataType to value conversion for "standard" values that do not require
-               extra compute (value received is the real value and for ex no div required).
-             */
+            /* Core hereafter is performing default conversion according to data type */
 
             // 0x00 Null
             // 0x10 boolean                 -> hexdec
@@ -4401,22 +4473,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // 0x30 Enumeration : 8bit
             // 0x42 string                  -> hex2bin
 
-            if ($dataType == "10") {
-                $data = hexdec(substr($payload, 24, 2));
-            }
-
-            else if ($dataType == "18") {
+            if ($dataType == "18") {
                 $data = substr($payload, 24, 2);
             }
 
             // Exemple Heiman Smoke Sensor Attribut 0002 sur cluster 0500
             else if ($dataType == "19") {
                 $data = substr($payload, 24, 4);
-            }
-
-            // Tcharp38: uintX decode is now supported by decodeDataType()
-            else if ((hexdec($dataType) >= 0x20) && (hexdec($dataType) <= 0x27)) {
-                $data = $this->decodeDataType(substr($payload, 24), $dataType, false, $dataSize, $hexString);
             }
 
             else if ($dataType == "28") {
@@ -4438,127 +4501,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $data = substr($payload, 24, 4);
             }
 
-            else if ($dataType == "42") {
-                // ------------------------------------------------------- Xiaomi ----------------------------------------------------------
-                // Xiaomi Bouton V2 Carré
-                // elseif (($attrId == "FF01") && ($attrSize == "001A")) {
-                if (($attrId == "FF01") && ($attrSize == "001A")) {
-                    parserLog("debug", "  Champ proprietaire Xiaomi (Bouton carré)" );
-
-                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-
-                    parserLog('debug', '  Voltage='.$voltage.' Voltage%='.$this->volt2pourcent($voltage));
-
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                }
-
-                // // Xiaomi capteur Presence V2
-                // // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102; (Attribute report)(Processed->MQTT); SQN: 01; Src Addr : a2e1; End Point : 01; Cluster ID : 0000; Attr ID : ff01; Attr Status : 00; Attr Data Type : 42; Attr Size : 0021; Data byte list : 0121e50B0328150421a80105213300062400000000000A2100006410000B212900
-                // // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102;Champ proprietaire Xiaomi, decodons le et envoyons a Abeille les informations (Capteur Presence V2)
-                // // AbeilleParser 2019-01-30 22:51:11[DEBUG];Type; 8102;Voltage; 3045
-                // // 01 21 e50B param 1 - uint16 - be5 (3.045V) /24
-                // // 03 28 15                                   /32
-                // // 04 21 a801                                 /38
-                // // 05 21 3300                                 /46
-                // // 06 24 0000000000                           /54
-                // // 0A 21 0000 - Param 0xA 10dec - uint16 - 0x0 0dec /68
-                // // 64 10 00 - parm 0x64 100dec - Boolean - 0      (Presence ?)  /76
-                // // 0B 21 2900 - Param 0xB 11dec - uint16 - 0x0029 (41dec Lux ?) /82
-
-                // elseif (($attrId == 'FF01') && ($attrSize == "0021")) {
-                //     parserLog('debug', '  Champ proprietaire Xiaomi (Capteur Presence V2)');
-
-                //     $voltage        = hexdec(substr($payload, 28+2, 2).substr($payload, 28, 2));
-                //     $lux            = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
-                //     parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent($voltage).', Lux='.$lux);
-
-                //     $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt-Temperature-Humidity');
-                //     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                //     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                //     $this->msgToAbeille($dest."/".$srcAddr, '0400', '01-0000', $lux); // Luminosite
-
-                //     // $this->msgToAbeille( $srcAddr, '0402', '0000', $temperature);
-                //     // $this->msgToAbeille( $srcAddr, '0405', '0000', $humidity);
-                //     // $this->msgToAbeille( $srcAddr, '0403', '0010', $pression / 10);
-                //     // $this->msgToAbeille( $srcAddr, '0403', '0000', $pression / 100);
-                // }
-
-                // Xiaomi bouton Aqara Wireless Switch V3 #712 (https://github.com/KiwiHC16/Abeille/issues/712)
-                elseif (($attrId == 'FF01') && ($attrSize == "0026")) {
-                    parserLog('debug', '  Champ proprietaire Xiaomi (Bouton Aqara Wireless Switch V3)');
-
-                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent($voltage));
-
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt');
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                }
-
-                // Xiaomi Cube
-                // Xiaomi capteur Inondation
-                elseif (($attrId == 'FF01') && ($attrSize == "002A")) {
-                    parserLog('debug', '  Champ proprietaire Xiaomi (Cube)');
-
-                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent($voltage));
-
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt-Temperature-Humidity');
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-
-                    // $this->msgToAbeille( $srcAddr, '0402', '0000', $temperature);
-                    // $this->msgToAbeille( $srcAddr, '0405', '0000', $humidity);
-                    // $this->msgToAbeille( $srcAddr, '0403', '0010', $pression / 10);
-                    // $this->msgToAbeille( $srcAddr, '0403', '0000', $pression / 100);
-                }
-
-                // Xiaomi Capteur Presence
-                // Je ne vois pas ce message pour ce cateur et sur appui lateral il n envoie rien
-                // Je mets un Attribut Size a XX en attendant. Le code et la il reste juste a trouver la taille de l attribut si il est envoyé.
-                elseif (($attrId == "FF01") && ($attrSize == "00XX")) {
-                    parserLog("debug","  Champ proprietaire Xiaomi (Bouton Carre)" );
-
-                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent($voltage));
-
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage, $lqi);
-                    $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                }
-
-                // ne traite pas les FF01 inconnus
-                elseif ($attrId == "FF01") {
-                    parserLog("debug", "  Ignored. Unknown attribut FF01");
-                    return;
-                }
-
-                // ------------------------------------------------------- Philips ----------------------------------------------------------
-                // Bouton Telecommande Philips Hue RWL021
-                elseif (($clustId == "FC00")) {
-
-                    $buttonEventTexte = array (
-                                               '00' => 'appui',
-                                               '01' => 'appui maintenu',
-                                               '02' => 'relâche sur appui court',
-                                               '03' => 'relâche sur appui long',
-                                               );
-                    // parserLog("debug","  Champ proprietaire Philips Hue, decodons le et envoyons a Abeille les informations ->".pack('H*', substr($payload, 24+2, (strlen($payload) - 24 - 2)) )."<-" );
-                    $button = $attrId;
-                    $buttonEvent = substr($payload, 24 + 2, 2);
-                    $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
-                    parserLog("debug", "  Champ proprietaire Philips Hue: Bouton=".$button.", Event=".$buttonEvent.", EventText=".$buttonEventTexte[$buttonEvent]." et duree: ".$buttonDuree);
-
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId."-Event", $buttonEvent);
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId."-Duree", $buttonDuree);
-                }
-
-                // ------------------------------------------------------- Tous les autres cas ----------------------------------------------------------
-                else {
-                    $data = pack('H*', $Attribut);
-                }
-            }
-
             else if ($dataType == "48") { // Array
                 // Tcharp38: Don't know how to handle it.
                 parserLog('debug', "  WARNING: Don't know how to decode 'array' data type.");
@@ -4566,56 +4508,56 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             /* Note: If $data is not set, then nothing to send to Abeille. This might be because data type is unsupported */
-            else if (!isset($data)) {
+            else {
                 $data = $this->decodeDataType(substr($payload, 24), $dataType, false, $dataSize, $hexString);
+                if ($data === false)
+                    return; // Unsupported data type
             }
 
-            if (isset($data)) {
-                // $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId, $data);
-                /* Forwarding unsupported atttribute to Abeille */
-                $toAbeille = array(
-                    'src' => 'parser',
-                    'type' => 'attributeReport',
-                    'net' => $dest,
-                    'addr' => $srcAddr,
-                    'ep' => $ep,
-                    'name' => $clustId.'-'.$ep.'-'.$attrId,
-                    'value' => $data,
-                    'time' => time(),
-                    'lqi' => $lqi
-                );
-                $this->msgToAbeille2($toAbeille);
+            // $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId, $data);
+            /* Forwarding unsupported atttribute to Abeille */
+            $toAbeille = array(
+                'src' => 'parser',
+                'type' => 'attributeReport',
+                'net' => $dest,
+                'addr' => $srcAddr,
+                'ep' => $ep,
+                'name' => $clustId.'-'.$ep.'-'.$attrId,
+                'value' => $data,
+                'time' => time(),
+                'lqi' => $lqi
+            );
+            $this->msgToAbeille2($toAbeille);
 
-                /* Send to client if connection opened */
-                $toCli = array(
-                    'src' => 'parser',
-                    'type' => 'attributeReport', // 8100 or 8102
-                    'net' => $dest,
-                    'addr' => $srcAddr,
-                    'ep' => $ep,
-                    'clustId' => $clustId,
-                    'attrId' => $attrId,
-                    'status' => "00",
-                    'value' => $data
-                );
-                $this->msgToClient($toCli);
-            }
+            /* Send to client if connection opened */
+            $toCli = array(
+                'src' => 'parser',
+                'type' => 'attributeReport', // 8100 or 8102
+                'net' => $dest,
+                'addr' => $srcAddr,
+                'ep' => $ep,
+                'clustId' => $clustId,
+                'attrId' => $attrId,
+                'status' => "00",
+                'value' => $data
+            );
+            $this->msgToClient($toCli);
         }
 
-        /* 0x8100/Read individual Attribute Response */
+        /* 8100/Read individual Attribute Response */
         function decode8100($dest, $payload, $lqi)
         {
             $this->decode8100_8102("8100", $dest, $payload, $lqi);
         }
 
-        /* Default response */
+        /* 8101/Default response */
         function decode8101($dest, $payload, $lqi)
         {
             $sqn = substr($payload, 0, 2);
             $clustId = substr($payload, 4, 4);
             $status = substr($payload, 10, 2);
 
-            // Tcharp38: Decoding it inside 8002 to get source address.
+            // Tcharp38: Decoded in 8002 to get source address.
             parserLog('debug', $dest.', Type=8101/Default response'
                             .', SQN='.$sqn
                             .', EP='.substr($payload, 2, 2)
@@ -4867,7 +4809,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $DestEP     = substr($payload, 4, 2);
             $DestMode   = substr($payload, 6, 2);
             $DestAddr   = substr($payload, 8, 4);
-            $SQN        = substr($payload,12, 2);
+            $sqn        = substr($payload,12, 2);
 
             $msgDecoded = '8702/APS data confirm fail'
                 //.', Status='.$status.'/'.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
@@ -4876,7 +4818,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                .', DestEP='.$DestEP
                .', AddrMode='.$DestMode
                .', Addr='.$DestAddr
-               .', SQN='.$SQN;
+               .', SQN='.$sqn;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8702");
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $DestAddr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor

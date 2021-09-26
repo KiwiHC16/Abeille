@@ -13,8 +13,19 @@
         },
         "type": "Aqara Opple wireless switch 6 buttons",
         "commands": {
-            "include4 2": "Batterie-Volt",
-            "include5": "Batterie-Pourcent",
+            "Bind-0001-ToZigate": {
+                "use": "bindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "Set-0001-0021-Reporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+                "execAtCreation": "Yes"
+            },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
 
             "include0006-1": "bindToZigate-EP01-0006",
             "Set-OnOffReporting-01": {

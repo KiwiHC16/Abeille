@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Assistant Zigbee: Ajout forcage EP01.
+
 210926-BETA-1
 ----------
 

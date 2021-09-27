@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210926-BETA-1"
+# VERSION="210927-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -884,11 +884,11 @@ ca2b9cff60f4427af768364e6928a2f8 *desktop/php/AbeilleEq-Advanced.php
 1e3c250e68d1d2e70b8a9107564cd628 *desktop/php/AbeilleEq-Cmds.php
 24e42d9c8bfd6af08c84b3bae4ebbda9 *desktop/php/AbeilleEq-Main.php
 a257759c0cf270d4df6728b469e8f64b *desktop/php/AbeilleEq.php
-9c5692dbe6a25403cb20b64113881741 *desktop/php/AbeilleEqAssist.php
+4d48d55c5e03c03cb88cb5181a19f371 *desktop/php/AbeilleEqAssist.php
 49ee93207a7c670f641f2adf341aac00 *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-1ee8b98eddc1c40b5bf8f43de0ff0c37 *docs/fr_FR/Changelog.rst
+c6dedf617e4ac44f664824cfca493c75 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1115,10 +1115,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-6e1e174cbcf5a900e15105af2c4ad5c0 *plugin_info/Abeille.version
+78d29f9cbef23ddc8363ba4e49b4e2a6 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 1d007935ff99e51bdac2dccd68303bbb *plugin_info/configuration.php
-34f2fea29a7dd1561700758ba4119569 *plugin_info/info.json
+f21ac5e22974fadec9c9c0c82a260dc7 *plugin_info/info.json
 adb199122fff93fd3be6dd9f956e1b8f *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 e634b9f544c02b8facd28fefb8771fe0 *resources/AbeilleDeamon/AbeilleInterrogate.php

@@ -121,7 +121,8 @@
             <div class="row">
                 <label class="col-lg-2 control-label" for="fname">End points:</label>
                 <div class="col-lg-10">
-                    <a id="idEPListRB" class="btn btn-warning" title="Raffraichi la liste des End Points" onclick="requestInfos('epList')"><i class="fas fa-sync"></i></a>
+                    <a id="idEPListRB" class="btn btn-warning" title="Demande la liste des End Points" onclick="requestInfos('epList')"><i class="fas fa-sync"></i></a>
+                    <a id="idEPListRB2" class="btn btn-warning" title="Force le End Point 01" onclick="forceEP01()"><i class="fas fa-sync"></i></a>
                     <input type="text" id="idEPList" value="" readonly>
                 </div>
             </div>
@@ -138,7 +139,7 @@
                 }
             </style>
 
-            <div class="row" id="idendPoints">
+            <div class="row" id="idEndPoints">
             </div>
 
             <div class="row">
@@ -1098,8 +1099,21 @@ console.log(jeq);
         window.open('plugins/Abeille/core/php/AbeilleDownload.php?pathfile='+js_jsonPath, "_blank", null);
     }
 
-    /* Request device info
-     */
+    /* Force End Point 01. This is a work-around for devices that do not respond to "active endpoints" request */
+    function forceEP01() {
+        console.log("forceEP01()");
+
+        /* Updating internal datas */
+        zigbee.epCount = 1;
+        endPoints = new Object;
+        endPoints['01'] = new Object();
+        zigbee.endPoints = endPoints;
+
+        /* Updating display */
+        updateZigbeeDisplay("epList", true);
+    }
+
+    /* Request device info */
     function requestInfos(infoType, epId = "01", clustId = "0000", option = "") {
         console.log("requestInfos("+infoType+", ep="+epId+")");
 
@@ -1170,6 +1184,82 @@ console.log("missing value for "+attrId);
         $('#'+id).addClass(newClass);
     }
 
+    /* Refresh display from 'zigbee' informations */
+    function updateZigbeeDisplay($type, $requestNext = false) {
+        console.log('updateZigbeeDisplay('+$type+')');
+
+        if ($type == "epList") {
+            zEndPoints = zigbee.endPoints;
+console.log(zEndPoints);
+
+            changeClass("idEPListRB", "btn-warning", "btn-success");
+            changeClass("idEPListRB2", "btn-warning", "btn-success");
+            var endPoints = "";
+            $("#idEndPoints").empty();
+            for (const [zEpId, zEp] of Object.entries(zEndPoints)) {
+                h = '<br><div id="idEP'+zEpId+'">';
+                h += '<label id="idClustEP'+zEpId+'" class="col-lg-2 control-label"></label>';
+
+                h += '<div class="col-lg-10">';
+                // h += '<a class="btn btn-warning" title="Raffraichi la liste des clusters" onclick="requestInfos(\'clustersList\', \''+ep+'\')"><i class="fas fa-sync"></i></a>';
+                h += '<br><br>';
+                h += '</div>';
+
+                /* Display manufacturer/modelId & location if cluster 0000 is supported */
+                h += '<div id="idEP'+zEpId+'Model" style="margin-left:30px; display: none">';
+                h += '<div class="row">';
+                h += '<label class="col-lg-2 control-label" for="fname">Fabricant:</label>';
+                h += '<div class="col-lg-10">';
+                h += '<a id="idZbManuf'+zEpId+'RB" class="btn btn-warning" title="Raffraichi le nom du fabricant" onclick="requestInfos(\'manufacturer\', \''+zEpId+'\')"><i class="fas fa-sync"></i></a>';
+                h += '<input type="text" id="idZbManuf'+zEpId+'" value="" readonly>';
+                h += '</div>';
+                h += '</div>';
+                h += '<div class="row">';
+                h += '<label class="col-lg-2 control-label" for="fname">Modèle:</label>';
+                h += '<div class="col-lg-10">';
+                h += '<a id="idZbModel'+zEpId+'RB" class="btn btn-warning" title="Raffraichi le nom du modèle" onclick="requestInfos(\'modelId\', \''+zEpId+'\')"><i class="fas fa-sync"></i></a>';
+                h += '<input type="text" id="idZbModel'+zEpId+'" value="" readonly>';
+                h += '</div>';
+                h += '</div>';
+                h += '<div class="row">';
+                h += '<label class="col-lg-2 control-label" for="fname">Localisation:</label>';
+                h += '<div class="col-lg-10">';
+                h += '<a id="idZbLocation'+zEpId+'RB" class="btn btn-warning" title="Raffraichi la localisation" onclick="requestInfos(\'location\', \''+zEpId+'\')"><i class="fas fa-sync"></i></a>';
+                h += '<input type="text" id="idZbLocation'+zEpId+'" value="" readonly>';
+                h += '</div>';
+                h += '</div>';
+                h += '</div>';
+
+                /* Display server clusters */
+                h += '<div style="margin-left:30px">';
+                h += '<label for="fname">Server/input clusters:</label>';
+                h += '<br>';
+                h += '<table id="idServClust'+zEpId+'">';
+                h += '</table>';
+                h += '<br>';
+
+                /* Display client clusters */
+                h += '<label for="fname">Client/output clusters:</label>';
+                h += '<table id="idCliClust'+zEpId+'">';
+                h += '</table>';
+                h += '<br>';
+                h += '</div>';
+                h += '</div>';
+                $("#idEndPoints").append(h);
+                document.getElementById("idClustEP"+zEpId).innerHTML = "End point "+zEpId+":";
+                $("#idEP"+zEpId).show();
+
+                if (endPoints != "")
+                    endPoints += ", ";
+                endPoints += zEpId;
+
+                if ($requestNext)
+                    requestInfos('clustersList', zEpId);
+            }
+            document.getElementById("idEPList").value = endPoints;
+        }
+    }
+
     /* Treat async infos received from server to display them. */
     function receiveInfos() {
         console.log("receiveInfos()");
@@ -1197,71 +1287,8 @@ console.log("missing value for "+attrId);
             });
             zigbee.endPoints = endPoints;
 
-            /* Updating display */
-            document.getElementById("idEPList").value = sEpList;
-            changeClass("idEPListRB", "btn-warning", "btn-success");
-            var endPoints = "";
-            $("#idendPoints").empty();
-            sEpArr.forEach((ep) => {
-                h = '<br><div id="idEP'+ep+'">';
-                h += '<label id="idClustEP'+ep+'" class="col-lg-2 control-label"></label>';
-
-                h += '<div class="col-lg-10">';
-                // h += '<a class="btn btn-warning" title="Raffraichi la liste des clusters" onclick="requestInfos(\'clustersList\', \''+ep+'\')"><i class="fas fa-sync"></i></a>';
-                h += '<br><br>';
-                h += '</div>';
-
-                /* Display manufacturer/modelId & location if cluster 0000 is supported */
-                h += '<div id="idEP'+ep+'Model" style="margin-left:30px; display: none">';
-                h += '<div class="row">';
-                h += '<label class="col-lg-2 control-label" for="fname">Fabricant:</label>';
-                h += '<div class="col-lg-10">';
-                h += '<a id="idZbManuf'+ep+'RB" class="btn btn-warning" title="Raffraichi le nom du fabricant" onclick="requestInfos(\'manufacturer\', \''+ep+'\')"><i class="fas fa-sync"></i></a>';
-                h += '<input type="text" id="idZbManuf'+ep+'" value="" readonly>';
-                h += '</div>';
-                h += '</div>';
-                h += '<div class="row">';
-                h += '<label class="col-lg-2 control-label" for="fname">Modèle:</label>';
-                h += '<div class="col-lg-10">';
-                h += '<a id="idZbModel'+ep+'RB" class="btn btn-warning" title="Raffraichi le nom du modèle" onclick="requestInfos(\'modelId\', \''+ep+'\')"><i class="fas fa-sync"></i></a>';
-                h += '<input type="text" id="idZbModel'+ep+'" value="" readonly>';
-                h += '</div>';
-                h += '</div>';
-                h += '<div class="row">';
-                h += '<label class="col-lg-2 control-label" for="fname">Localisation:</label>';
-                h += '<div class="col-lg-10">';
-                h += '<a id="idZbLocation'+ep+'RB" class="btn btn-warning" title="Raffraichi la localisation" onclick="requestInfos(\'location\', \''+ep+'\')"><i class="fas fa-sync"></i></a>';
-                h += '<input type="text" id="idZbLocation'+ep+'" value="" readonly>';
-                h += '</div>';
-                h += '</div>';
-                h += '</div>';
-
-                /* Display server clusters */
-                h += '<div style="margin-left:30px">';
-                h += '<label for="fname">Server/input clusters:</label>';
-                h += '<br>';
-                h += '<table id="idServClust'+ep+'">';
-                h += '</table>';
-                h += '<br>';
-
-                /* Display client clusters */
-                h += '<label for="fname">Client/output clusters:</label>';
-                h += '<table id="idCliClust'+ep+'">';
-                h += '</table>';
-                h += '<br>';
-                h += '</div>';
-                h += '</div>';
-                $("#idendPoints").append(h);
-
-                if (endPoints != "")
-                    endPoints += ", ";
-                endPoints += ep;
-                document.getElementById("idClustEP"+ep).innerHTML = "End point "+ep+":";
-                $("#idEP"+ep).show();
-
-                /* Requesting clusters list for each EP */
-                requestInfos('clustersList', ep);
-            });
+            /* Updating display & request clusters list*/
+            updateZigbeeDisplay("epList", true);
         } else if (res.type == "simpleDesc") {
             // 'src' => 'parser',
             // 'type' => 'simpleDesc',

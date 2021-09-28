@@ -448,30 +448,33 @@
 
             if ($eq['epList'] != '') {
                 /* 'epList' is already known => trig next step */
-                $this->deviceUpdate($net, $addr, 'epList', $eq['epList']);
+                $this->deviceUpdate($net, $addr, '', 'epList', $eq['epList']);
                 return;
             }
 
             /* Special trick for Xiaomi for which some devices (at least v1) do not answer to "Active EP request".
                 Old sensor even not answer to manufacturer request. */
-            $xiaomi = (substr($ieee, 0, 9) == "00158D000") ? true : false;
-            if ($xiaomi) {
-                parserLog('debug', '  Xiaomi specific identification.');
-                $eq['manufacturer'] = 'LUMI';
-                $eq['epList'] = "01";
-                $eq['epFirst'] = "01";
-                $this->deviceUpdate($net, $addr, 'epList', $eq['epList']);
-                return;
-            }
+            // Tcharp38: Trick too dangerous. IEEE is NXP not Xiaomi, leading to issues on ZLinky for ex.
+            // $xiaomi = (substr($ieee, 0, 9) == "00158D000") ? true : false;
+            // if ($xiaomi) {
+            //     parserLog('debug', '  Xiaomi specific identification.');
+            //     $eq['manufacturer'] = 'LUMI';
+            //     $eq['epList'] = "01";
+            //     $eq['epFirst'] = "01";
+            //     $this->deviceUpdate($net, $addr, 'epList', $eq['epList']);
+            //     return;
+            // }
 
-            /* Default identification: need EP list */
+            /* Default identification: need EP list.
+               Tcharp38 note: Some devices may not answer to active endpoints request but will send
+                 their model identifier automatically (ex: old Xiaomi dev). */
             parserLog('debug', '  Requesting active end points list');
             $this->msgToCmd("Cmd".$net."/0000/ActiveEndPoint", "address=".$addr);
         }
 
         /* 2nd step of identification phase.
            Wait for enough info to identify device (manuf, modelId, location) */
-        function deviceUpdate($net, $addr, $updType, $value) {
+        function deviceUpdate($net, $addr, $ep, $updType, $value) {
             if (!isset($GLOBALS['eqList']))
                 return; // No dev announce before
             if (!isset($GLOBALS['eqList'][$net]))
@@ -489,6 +492,8 @@
                 $eqArr = explode('/', $value);
                 $eq['epFirst'] = $eqArr[0];
             }
+            if ($eq['epList'] == '')
+                $eq['epList'] = $ep; // There is at least EP where update is coming from
 
             /* If not in 'identifying' phase, no more to do */
             if ($eq['status'] != 'identifying')
@@ -498,17 +503,14 @@
                 /* Any other info missing to identify device ? */
                 if (!isset($eq['manufacturer'])) {
                     parserLog('debug', '  Requesting manufacturer from EP '.$eq['epFirst']);
-                    // $this->msgToCmd("Cmd".$net."/0000/getManufacturerName", "address=".$addr.'&destinationEndPoint='.$eq['epFirst']);
                     $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
                 }
                 if (!isset($eq['modelIdentifier'])) {
                     parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
-                    // $this->msgToCmd("Cmd".$net."/0000/getName", "address=".$addr.'&destinationEndPoint='.$eq['epFirst']);
                     $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
                 }
-                if (!isset($eq['location'])) {
+                if (($eq['modelIdentifier'] === null || $eq['modelIdentifier'] === false) && !isset($eq['location'])) {
                     parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
-                    // $this->msgToCmd("Cmd".$net."/0000/getLocation", "address=".$addr.'&destinationEndPoint='.$eq['epFirst']);
                     $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
                 }
             }
@@ -2300,7 +2302,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                 else if ($cmd == "0A") { // Report attributes
                     // Some clusters are directly handled by 8100/8102 decode
-                    $acceptedCmd0A = ['0300', '050B']; // Clusters handled here
+                    $acceptedCmd0A = ['0300', '050B', '0B04']; // Clusters handled here
                     if (!in_array($cluster, $acceptedCmd0A)) {
                         parserLog('debug', "  Handled by decode8100_8102");
                         return;
@@ -3253,7 +3255,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             /* Update equipement key infos */
-            $this->deviceUpdate($dest, $srcAddr, 'epList', $endPointList);
+            $this->deviceUpdate($dest, $srcAddr, '', 'epList', $endPointList);
 
             // parserLog('debug', '  Asking details for EP '.$EP.' [Modelisation]' );
             // $this->msgToCmd("Cmd".$dest."/0000/getManufacturerName", "address=".$srcAddr.'&destinationEndPoint='.$EP );
@@ -3955,13 +3957,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 if ($clustId == "0000") {
                     switch ($attrId) {
                     case "0004":
-                        $this->deviceUpdate($dest, $srcAddr, 'manufacturer', false);
+                        $this->deviceUpdate($dest, $srcAddr, $ep, 'manufacturer', false);
                         break;
                     case "0005":
-                        $this->deviceUpdate($dest, $srcAddr, 'modelIdentifier', false);
+                        $this->deviceUpdate($dest, $srcAddr, $ep, 'modelIdentifier', false);
                         break;
                     case "0010":
-                        $this->deviceUpdate($dest, $srcAddr, 'location', false);
+                        $this->deviceUpdate($dest, $srcAddr, $ep, 'location', false);
                         break;
                     default:
                         break;
@@ -4029,19 +4031,19 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."'");
                         $data = $trimmedValue;
 
-                        $this->deviceUpdate($dest, $srcAddr, 'manufacturer', $trimmedValue);
+                        $this->deviceUpdate($dest, $srcAddr, $ep, 'manufacturer', $trimmedValue);
                     } else if ($attrId == "0005") { // 0x0005 ModelIdentifier string
                         $trimmedValue = $this->cleanModelId($trimmedValue);
 
                         parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."'");
                         $data = $trimmedValue;
 
-                        $this->deviceUpdate($dest, $srcAddr, 'modelIdentifier', $trimmedValue);
+                        $this->deviceUpdate($dest, $srcAddr, $ep, 'modelIdentifier', $trimmedValue);
                     } else if ($attrId == "0010") { // Location
                         parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."'");
                         $data = $trimmedValue;
 
-                        $this->deviceUpdate($dest, $srcAddr, 'location', $trimmedValue);
+                        $this->deviceUpdate($dest, $srcAddr, $ep, 'location', $trimmedValue);
                     }
                 }
 

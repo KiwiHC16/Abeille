@@ -982,11 +982,11 @@ if (0) {
         //     if ($version == '031D') {
         //         log::add('Abeille', 'debug', 'deamon_start(): Configuring zigate '. $i.' in hybrid mode');
         //         // message::add("Abeille", "Demande de fonctionnement de la zigate en mode hybride (firmware >= 3.1D).");
-        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setModeHybride", "hybride");
+        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/zgSetMode", "mode=hybrid");
         //     } else {
         //         log::add('Abeille', 'debug', 'deamon_start(): Configuring zigate '.$i.' in normal mode');
         //         // message::add("Abeille", "Demande de fonctionnement de la zigate en mode normal (firmware < 3.1D).");
-        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setModeHybride", "normal");
+        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/zgSetMode", "mode=normal");
         //     }
         // }
 
@@ -1150,10 +1150,10 @@ while ($cron->running()) {
             }
             if (hexdec($version) >= 0x031D) {
                 log::add('Abeille', 'debug', 'deamon(): FW version >= 3.1D => Configuring zigate '.$i.' in hybrid mode');
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setModeHybride", "hybride");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/zgSetMode", "mode=hybrid");
             } else {
                 log::add('Abeille', 'debug', 'deamon(): Configuring zigate '.$i.' in normal mode');
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setModeHybride", "normal");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/zgSetMode", "mode=normal");
             }
         }
 

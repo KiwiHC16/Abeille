@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Interne: Modification astuce identification vieux modeles Xiaomi basé sur IEEE. Non compatible ZLinky.
+- Correction regression 'setModeHybride' + mise-à-jour commande interne.
+
 210927-BETA-1
 ----------
 

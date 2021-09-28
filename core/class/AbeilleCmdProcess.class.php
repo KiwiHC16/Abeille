@@ -802,21 +802,6 @@
 
             //----------------------------------------------------------------------
 
-            // En gros 0 normal, 1 RAW mode, 2 Mode hybride
-            if (isset($Command['setModeHybride'])) {
-                if ($Command['setModeHybride'] == "normal") {
-                    $this->deamonlog('debug',"    Set Mode Hybride", $this->debug['processCmd'], $this->debug['processCmd2']);
-                    $this->addCmdToQueue($priority, $dest,"0002","0001","00");
-                } elseif ($Command['setModeHybride'] == "RAW") {
-                    $this->deamonlog('debug',"    Set Mode Hybride", $this->debug['processCmd'], $this->debug['processCmd2']);
-                    $this->addCmdToQueue($priority, $dest,"0002","0001","01");
-                } elseif ($Command['setModeHybride'] == "hybride") {
-                    $this->deamonlog('debug',"    Set Mode Hybride", $this->debug['processCmd'], $this->debug['processCmd2']);
-                    $this->addCmdToQueue($priority, $dest,"0002","0001","02");
-                }
-                return;
-            }
-
             // abeilleList abeilleListAll
             if (isset($Command['abeilleList'])) {
                 $this->deamonlog('debug', "    Get Abeilles List", $this->debug['processCmd2']);
@@ -3109,7 +3094,21 @@
                    - Zigbee cluster library cluster specific commands */
 
                 // Zigate specific command
-                if ($cmdName == 'SetPermit') {
+                if ($cmdName == 'zgSetMode') {
+                    $mode = $Command['mode'];
+                    if ($mode == "raw") {
+                        $modeVal = "01";
+                    } else if ($mode == "hybrid") {
+                        $modeVal = "02";
+                    } else // Normal
+                        $modeVal = "00";
+                    $this->deamonlog('debug',"    Setting mode ".$mode."/".$modeVal);
+                    $this->addCmdToQueue($priority, $dest, "0002", "0001", $modeVal);
+                    return;
+                }
+
+                // Zigate specific command
+                else if ($cmdName == 'SetPermit') {
                     if (isset($Command['Inclusion'])) {
                         $cmd = "0049";
                         $length = "0004";

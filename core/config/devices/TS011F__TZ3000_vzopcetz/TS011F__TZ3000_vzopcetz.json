@@ -22,9 +22,9 @@
             "include5": "On",
             "include5 2": "On1",
             "include5 2 2": "On2",
-            "include6": "Off",
-            "include6 2": "Off1",
-            "include6 2 2": "Off2",
+            "Off": { "use": "zbCmd-0006-Off", "params": "ep=01" },
+            "Off1": { "use": "zbCmd-0006-Off", "params": "ep=02" },
+            "Off2": { "use": "zbCmd-0006-Off", "params": "ep=03" },
             "Toggle 1": {
                 "use": "zbCmd-0006-Toggle",
                 "params": "ep=01"

@@ -361,7 +361,7 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'getTime Z'.$zigateId ) {
                 echo "getTime request processing";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/getTimeServer', "" );
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/getTimeServer', "");
             }
         }
 
@@ -369,7 +369,7 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'SetLedOn Z'.$zigateId ) {
                 echo "SetTime request processing";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setOnZigateLed', "" );
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setOnZigateLed', "");
             }
         }
 
@@ -377,7 +377,7 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'SetLedOff Z'.$zigateId ) {
                 echo "getTime request processing";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setOffZigateLed', "" );
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setOffZigateLed', "");
             }
         }
 
@@ -385,7 +385,7 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Certification CE Z'.$zigateId ) {
                 echo "Set Certification CE";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setCertificationCE', "" );
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setCertificationCE', "");
             }
         }
 
@@ -393,7 +393,7 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Certification FCC Z'.$zigateId ) {
                 echo "Set Certification FCC";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setCertificationFCC', "" );
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setCertificationFCC', "");
             }
         }
 
@@ -401,7 +401,7 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Start Network Z'.$zigateId ) {
                 echo "Start Network";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/startNetwork', "StartNetwork" );
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/startNetwork', "StartNetwork");
             }
         }
 
@@ -409,19 +409,19 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Normal Mode Z'.$zigateId ) {
                 echo "Set Hybride Mode";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setModeHybride', "normal" );
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/zgSetMode', "mode=normal");
             }
         }
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Raw Mode Z'.$zigateId ) {
                 echo "Set Hybride Mode";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setModeHybride', "RAW" );
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/zgSetMode', "mode=raw");
             }
         }
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Hybride Mode Z'.$zigateId ) {
                 echo "Set Hybride Mode";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setModeHybride', "hybride" );
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/zgSetMode', "mode=hybrid");
             }
         }
 

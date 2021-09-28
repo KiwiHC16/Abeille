@@ -267,13 +267,13 @@
             payload = 'StartNetwork';
             break;
         case "setMode":
-            topic = 'CmdAbeille'+js_zgNb+'/0000/setModeHybride';
+            topic = 'CmdAbeille'+js_zgNb+'/0000/zgSetMode';
             if (param == "Normal")
-                payload = 'normal';
+                payload = 'mode=normal';
             else if (param == "Raw")
-                payload = 'RAW';
+                payload = 'mode=raw';
             else
-                payload = 'hybride';
+                payload = 'mode=hybrid';
             break;
         case "setExtPANId": // Not critical. No need so far.
             topic = 'CmdAbeille'+js_zgNb+'/0000/setExtendedPANID';

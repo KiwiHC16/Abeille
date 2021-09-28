@@ -20,7 +20,7 @@
             "include3 2 2": "etatCharge1",
             "include3 2 2 2 2": "etatSW1",
             "include3 2 2 2 2 2 2": "On1",
-            "include3 2 2 2 2 2 2 2": "Off1",
+            "Off1": { "use": "zbCmd-0006-Off", "params": "ep=02" },
             "Toggle 2": {
                 "use": "zbCmd-0006-Toggle",
                 "params": "ep=02"

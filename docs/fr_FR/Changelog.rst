@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+210929-BETA-1
+----------
+
 - Interne: Identification périph revisitée.
 - Assistant Zigbee: Correction & amélioration.
 

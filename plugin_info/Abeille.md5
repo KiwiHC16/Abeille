@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="210928-BETA-1"
+# VERSION="210929-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -57,7 +57,7 @@ f5960423e082e2dd782037a8f65ab7a7 *core/class/Abeille.class.php
 4cffbca1a16163aefefa0549992d72ea *core/class/AbeilleCmdQueue.class.php
 1d8ecd8f974647271c4e630015a43d7f *core/class/AbeilleDebug.class.php
 17e48d546034f737716d4532d29a29af *core/class/AbeilleMsg.php
-0afe43ccd5db7db0a714838ee8c0f92b *core/class/AbeilleParser.class.php
+90a67b5ed4d2c8a4a1f7ccffb3dcfb6d *core/class/AbeilleParser.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 2ebb56e1ea41091916d618f74fe15764 *core/class/AbeilleTemplateCommon.class.php
 aea82feb4106a0bcb6ee4f6ab877c416 *core/class/AbeilleTemplateEq.class.php
@@ -884,11 +884,11 @@ ca2b9cff60f4427af768364e6928a2f8 *desktop/php/AbeilleEq-Advanced.php
 1e3c250e68d1d2e70b8a9107564cd628 *desktop/php/AbeilleEq-Cmds.php
 24e42d9c8bfd6af08c84b3bae4ebbda9 *desktop/php/AbeilleEq-Main.php
 16389c6774ff13783af84f8612d0cf65 *desktop/php/AbeilleEq.php
-4d48d55c5e03c03cb88cb5181a19f371 *desktop/php/AbeilleEqAssist.php
+764becb9075885097d2a4ffd7c86f751 *desktop/php/AbeilleEqAssist.php
 4804600011b4d9d38450a49f6292287d *desktop/php/AbeilleFormAction.php
 e7e61e384fe62ba68131886e899d7e92 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-ca2140c641585e8e48982bc7498514a1 *docs/fr_FR/Changelog.rst
+54644b2a8a5848ec9eeb5c95d184480c *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1115,10 +1115,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-9e40bf6543c4593f62a1a2bc4519adb0 *plugin_info/Abeille.version
+02dc58ea82047471f25b1e1e27dfc5aa *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 1d007935ff99e51bdac2dccd68303bbb *plugin_info/configuration.php
-47586858c2518f9665fee251eac5d42d *plugin_info/info.json
+b52b4c600b672e0758cc4fd28c9de4e2 *plugin_info/info.json
 adb199122fff93fd3be6dd9f956e1b8f *plugin_info/install.php
 aff1bf191ad384a52ce4fa8c9f692f8f *plugin_info/pre_install.php
 e634b9f544c02b8facd28fefb8771fe0 *resources/AbeilleDeamon/AbeilleInterrogate.php

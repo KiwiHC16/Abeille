@@ -486,14 +486,12 @@
             $v = ($value === false) ? 'false' : $value;
             parserLog('debug', "  deviceUpdate('".$updType."', '".$v."'), status=".$eq['status']);
 
-            /* Updating entry */
+            /* Updating entry: 'epList', 'manufacturer', 'modelIdentifier' or 'location' */
             $eq[$updType] = $value;
-            if ($updType == 'epList') {
+            if ($updType == 'epList') { // Active end points response
                 $eqArr = explode('/', $value);
                 $eq['epFirst'] = $eqArr[0];
             }
-            if ($eq['epList'] == '')
-                $eq['epList'] = $ep; // There is at least EP where update is coming from
 
             /* If not in 'identifying' phase, no more to do */
             if ($eq['status'] != 'identifying')
@@ -509,10 +507,16 @@
                     parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
                     $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
                 }
+                /* Location might be required for cases (First Profalux Zigbee) where modelIdentifier is not supported */
                 if (($eq['modelIdentifier'] === null || $eq['modelIdentifier'] === false) && !isset($eq['location'])) {
                     parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
                     $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
                 }
+            } else if ($eq['epList'] == '') { // Probably got modelId BEFORE end points list
+                $eq['epList'] = $ep; // There is at least EP where update is coming from
+                $eq['epFirst'] = $ep; // There is at least EP where update is coming from
+                parserLog('debug', '  Requesting manufacturer from EP '.$ep);
+                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=0000&attrId=0004");
             }
 
             /* Enough infos to try to identify device ?
@@ -1333,12 +1337,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
 
             if ($PacketType == "0002") {
-                if ( $status == "00" ) {
-                    parserLog("debug","  Le mode de fonctionnement de la zigate a bien été modifié.");
-                    // message::add("Abeille", "Le mode de fonctionnement de la zigate a bien été modifié.","" );
+                if ($status == "00") {
+                    parserLog("debug","  Zigate mode has been properly changed.");
                 } else {
-                    parserLog("debug", "  Durant la demande de modification du mode de fonctionnement de la zigate, une erreur a été détectée.");
-                    message::add("Abeille", "Durant la demande de modification du mode de fonctionnement de la zigate, une erreur a été détectée.","" );
+                    parserLog("debug", "  WARNING: Failed to change Zigate mode.");
+                    message::add("Abeille", "Erreur lors du changement de mode de la Zigate.", "");
                 }
             }
         }
@@ -2430,7 +2433,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     /* Send to client if required (ex: EQ page opened) */
                     $toCli = array(
                         'src' => 'parser',
-                        'type' => 'commandsReceived',
+                        'type' => 'discoverCommandsReceivedResponse',
                         'net' => $dest,
                         'addr' => $srcAddr,
                         'ep' => $srcEp,

@@ -892,6 +892,21 @@
                             cmds["Color mode"]["isVisible"] = 1;
                             cmds["Color mode"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0008");
                         }
+                    } else if (clustId == "0702") {
+                        /* Metering (Smart Energy) */
+                        cmdName = "Total power"; // Default cmd name
+                        unit = "KWh"; // Default unit
+                        div = 1; // Default div
+                        if (isset(attributes['0303'])) { // SummationFormatting
+                            val = attributes['0303']['value'];
+                            val = val & 7; // Keep bits 2:0 only => right digits
+                            div = Math.pow(10, val);
+                        }
+                        if (isset(attributes['0000'])) {
+                            cmds[cmdName] = newCmd("zb-0702-CurrentSummationDelivered", "unit="+unit+"&div="+div);
+                            cmds[cmdName]["isVisible"] = 1;
+                            cmds["Get-"+cmdName] = newCmd("zbReadAttribute", "clustId=0702&attrId=0000");
+                        }
                     } else if (clustId == "0B04") {
                         /* Electrical Measurement cluster */
                     }
@@ -1080,6 +1095,7 @@ console.log(jeq);
         console.log("downloadDiscovery()");
 
         text = JSON.stringify(zigbee);
+
         let elem = window.document.createElement('a');
         elem.style = "display: none";
         elem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
@@ -1087,6 +1103,14 @@ console.log(jeq);
         document.body.appendChild(elem);
         elem.click();
         document.body.removeChild(elem);
+
+        // Tcharp38: Attempt to solve "Not allowed to navigate top frame to data URL" error.
+        // TO BE TESTED
+        // var hiddenElement = document.createElement('a');
+        // hiddenElement.href = 'data:text/plain;'+'charset=utf-8,' + encodeURI(text);
+        // hiddenElement.target = '_blank';
+        // hiddenElement.download = "discovery.json";
+        // hiddenElement.click();
     }
 
     function download2() {
@@ -1652,9 +1676,9 @@ console.log(zEndPoints);
 
             // Updating display
             document.getElementById("idAddr").value = res.addr;
-        } else if (res.type == "commandsReceived") {
+        } else if (res.type == "discoverCommandsReceivedResponse") {
             // 'src' => 'parser',
-            // 'type' => 'commandsReceived',
+            // 'type' => 'discoverCommandsReceivedResponse',
             // 'net' => $dest,
             // 'addr' => $srcAddress,
             // 'ep' => $srcEndPoint,
@@ -1663,7 +1687,7 @@ console.log(zEndPoints);
             sEp = res.ep;
             sClustId = res.clustId;
             sCommands = res.commands;
-            console.log("commandsReceived: clust="+sClustId);
+            // console.log("commandsReceived: clust="+sClustId);
             // console.log(sCommands);
 
             /* Updating internal datas */
@@ -1672,6 +1696,10 @@ console.log(zEndPoints);
             if (typeof clust.commandsReceived === "undefined")
                 clust.commandsReceived = new Object();
             clust.commandsReceived = sCommands;
+
+            /* Updating display: button moved to green */
+            id='idServClust'+sEp+'-'+sClustId+'RB3';
+            changeClass(id, "btn-warning", "btn-success");
         } else if (res.type == "defaultResponse") {
             // 'src' => 'parser',
             // 'type' => 'defaultResponse',

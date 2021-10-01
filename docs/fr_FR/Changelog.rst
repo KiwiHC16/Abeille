@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- Correction mauvaise config lors de l'inclusion si #IEEE# ou #ZigateIEEE# utilisé.
+- Page santé: correction IEEE manquante pour Ruche.
+- Inclusion: Correction pour vieux équipements type Xiaomi (ne repond pas à lecture attribut manufacturer).
+
 210929-BETA-1
 ----------
 

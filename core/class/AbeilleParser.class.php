@@ -507,7 +507,7 @@
                     parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
                     $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
                 }
-                /* Location might be required for cases (First Profalux Zigbee) where modelIdentifier is not supported */
+                /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
                 if (($eq['modelIdentifier'] === null || $eq['modelIdentifier'] === false) && !isset($eq['location'])) {
                     parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
                     $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
@@ -517,41 +517,47 @@
                 $eq['epFirst'] = $ep; // There is at least EP where update is coming from
                 parserLog('debug', '  Requesting manufacturer from EP '.$ep);
                 $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=0000&attrId=0004");
-            }
-
-            /* Enough infos to try to identify device ?
-               Identification process reminder
-                - if modelId is supported
-                    - search for JSON with 'modelId_manuf' then 'modelId'
-                    - if found => configure
-                    - if not found => discover
-                - else if location is supported
-                    - search for JSON with 'location'
-                    - if found => configure
-                    - if not found => discover */
-            if (!isset($eq['modelIdentifier']))
-                return; // Need value or false (unsupported)
-            if ($eq['modelIdentifier'] !== false) {
-                if (!isset($eq['manufacturer']))
-                    return; // Need value or false (unsupported)
-                /* Manufacturer & modelId attributes returned */
-                $this->findJsonConfig($eq, 'modelIdentifier');
-            } else if (!isset($eq['location'])) {
-                return; // Need value or false (unsupported)
-            } else if ($eq['location'] !== false) {
-                /* ModelId UNsupported. Trying with 'location' */
-                $this->findJsonConfig($eq, 'location');
+                /* To support devices that may not respond to manufacturer request (ex: Old Xiaomi),
+                   let's check if we can already identfy device by modelId only */
+                if ($this->findJsonConfig($eq, 'modelIdentifier') == false)
+                    return;
             } else {
-                parserLog('debug', "  WARNING: Unidentified device ! Can't do anything.");
-                return;
+                /* Enough infos to try to identify device ?
+                Identification process reminder
+                    - if modelId is supported
+                        - search for JSON with 'modelId_manuf' then 'modelId'
+                        - if found => configure
+                        - if not found => discover
+                    - else if location is supported
+                        - search for JSON with 'location'
+                        - if found => configure
+                        - if not found => discover */
+                if (!isset($eq['modelIdentifier']))
+                    return; // Need value or false (unsupported)
+                if ($eq['modelIdentifier'] !== false) {
+                    if (!isset($eq['manufacturer']))
+                        return; // Need value or false (unsupported)
+                    /* Manufacturer & modelId attributes returned */
+                    $this->findJsonConfig($eq, 'modelIdentifier');
+                } else if (!isset($eq['location'])) {
+                    return; // Need value or false (unsupported)
+                } else if ($eq['location'] !== false) {
+                    /* ModelId UNsupported. Trying with 'location' */
+                    $this->findJsonConfig($eq, 'location');
+                } else {
+                    parserLog('debug', "  WARNING: Unidentified device ! Can't do anything.");
+                    return;
+                }
             }
 
-            /* Device is identified and 'jsonId' indicates how to support it. */
+            /* If device is identified, 'jsonId' indicates how to support it. */
             // Tcharp38: If new dev announce of already known device, should we reconfigure it anyway ?
-            if ($eq['jsonId'] != 'defaultUnknown')
-                $this->deviceConfigure($net, $addr);
-            else
-                $this->deviceDiscover($net, $addr);
+            if ($eq['jsonId'] != '') {
+                if ($eq['jsonId'] != 'defaultUnknown')
+                    $this->deviceConfigure($net, $addr);
+                else
+                    $this->deviceDiscover($net, $addr);
+            }
         } // End deviceUpdate()
 
         /* Go thru EQ commands and execute all those marked 'execAtCreation' */
@@ -578,10 +584,11 @@
                 $request = $c['request'];
                 // TODO: #EP# defaulted to first EP but should be
                 //       defined in cmd use if different target EP
-                $request = str_replace('#EP#', $eq['epFirst'], $request);
-                $request = str_replace('#addrIEEE#', $eq['ieee'], $request);
+                $request = str_ireplace('#EP#', $eq['epFirst'], $request);
+                $request = str_ireplace('#addrIEEE#', $eq['ieee'], $request);
+                $request = str_ireplace('#IEEE#', $eq['ieee'], $request);
                 $zgId = substr($net, 7); // 'AbeilleX' => 'X'
-                $request = str_replace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgId]['ieee'], $request);
+                $request = str_ireplace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgId]['ieee'], $request);
 parserLog('debug', '      topic='.$topic.', request='.$request);
         //         // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$topic."&time=".(time()+$cmd->getConfiguration('execAtCreationDelay')), $request );
                 if ($delay == 0)
@@ -2636,6 +2643,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     message::add("Abeille", "Mauvais port détecté pour zigate ".$zgId.". Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
                     return;
                 }
+            }
+            // Tcharp38: Zigate IEEE stored in 2 many locations. Need to optimize
+            $eqLogic = Abeille::byLogicalId($dest.'/'.$addr, 'Abeille');
+            $ieee2 = $eqLogic->getConfiguration('IEEE', '');
+            if ($ieee2 == "") {
+                $eqLogic->setConfiguration('IEEE', $extAddr);
+                $eqLogic->save();
             }
 
             $msg = array(

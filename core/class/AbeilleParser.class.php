@@ -507,7 +507,7 @@
                     parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
                     $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
                 }
-                /* Location might be required for cases (First Profalux Zigbee) where modelIdentifier is not supported */
+                /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
                 if (($eq['modelIdentifier'] === null || $eq['modelIdentifier'] === false) && !isset($eq['location'])) {
                     parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
                     $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
@@ -517,41 +517,47 @@
                 $eq['epFirst'] = $ep; // There is at least EP where update is coming from
                 parserLog('debug', '  Requesting manufacturer from EP '.$ep);
                 $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=0000&attrId=0004");
-            }
-
-            /* Enough infos to try to identify device ?
-               Identification process reminder
-                - if modelId is supported
-                    - search for JSON with 'modelId_manuf' then 'modelId'
-                    - if found => configure
-                    - if not found => discover
-                - else if location is supported
-                    - search for JSON with 'location'
-                    - if found => configure
-                    - if not found => discover */
-            if (!isset($eq['modelIdentifier']))
-                return; // Need value or false (unsupported)
-            if ($eq['modelIdentifier'] !== false) {
-                if (!isset($eq['manufacturer']))
-                    return; // Need value or false (unsupported)
-                /* Manufacturer & modelId attributes returned */
-                $this->findJsonConfig($eq, 'modelIdentifier');
-            } else if (!isset($eq['location'])) {
-                return; // Need value or false (unsupported)
-            } else if ($eq['location'] !== false) {
-                /* ModelId UNsupported. Trying with 'location' */
-                $this->findJsonConfig($eq, 'location');
+                /* To support devices that may not respond to manufacturer request (ex: Old Xiaomi),
+                   let's check if we can already identfy device by modelId only */
+                if ($this->findJsonConfig($eq, 'modelIdentifier') == false)
+                    return;
             } else {
-                parserLog('debug', "  WARNING: Unidentified device ! Can't do anything.");
-                return;
+                /* Enough infos to try to identify device ?
+                Identification process reminder
+                    - if modelId is supported
+                        - search for JSON with 'modelId_manuf' then 'modelId'
+                        - if found => configure
+                        - if not found => discover
+                    - else if location is supported
+                        - search for JSON with 'location'
+                        - if found => configure
+                        - if not found => discover */
+                if (!isset($eq['modelIdentifier']))
+                    return; // Need value or false (unsupported)
+                if ($eq['modelIdentifier'] !== false) {
+                    if (!isset($eq['manufacturer']))
+                        return; // Need value or false (unsupported)
+                    /* Manufacturer & modelId attributes returned */
+                    $this->findJsonConfig($eq, 'modelIdentifier');
+                } else if (!isset($eq['location'])) {
+                    return; // Need value or false (unsupported)
+                } else if ($eq['location'] !== false) {
+                    /* ModelId UNsupported. Trying with 'location' */
+                    $this->findJsonConfig($eq, 'location');
+                } else {
+                    parserLog('debug', "  WARNING: Unidentified device ! Can't do anything.");
+                    return;
+                }
             }
 
-            /* Device is identified and 'jsonId' indicates how to support it. */
+            /* If device is identified, 'jsonId' indicates how to support it. */
             // Tcharp38: If new dev announce of already known device, should we reconfigure it anyway ?
-            if ($eq['jsonId'] != 'defaultUnknown')
-                $this->deviceConfigure($net, $addr);
-            else
-                $this->deviceDiscover($net, $addr);
+            if ($eq['jsonId'] != '') {
+                if ($eq['jsonId'] != 'defaultUnknown')
+                    $this->deviceConfigure($net, $addr);
+                else
+                    $this->deviceDiscover($net, $addr);
+            }
         } // End deviceUpdate()
 
         /* Go thru EQ commands and execute all those marked 'execAtCreation' */
@@ -578,10 +584,11 @@
                 $request = $c['request'];
                 // TODO: #EP# defaulted to first EP but should be
                 //       defined in cmd use if different target EP
-                $request = str_replace('#EP#', $eq['epFirst'], $request);
-                $request = str_replace('#addrIEEE#', $eq['ieee'], $request);
+                $request = str_ireplace('#EP#', $eq['epFirst'], $request);
+                $request = str_ireplace('#addrIEEE#', $eq['ieee'], $request);
+                $request = str_ireplace('#IEEE#', $eq['ieee'], $request);
                 $zgId = substr($net, 7); // 'AbeilleX' => 'X'
-                $request = str_replace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgId]['ieee'], $request);
+                $request = str_ireplace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgId]['ieee'], $request);
 parserLog('debug', '      topic='.$topic.', request='.$request);
         //         // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$topic."&time=".(time()+$cmd->getConfiguration('execAtCreationDelay')), $request );
                 if ($delay == 0)
@@ -863,6 +870,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 break;
             case "41": // String discrete: octstr
             case "42": // String discrete: string
+parserLog('debug', "  hexString=".$hexString);
                 $dataSize = hexdec(substr($hexString, 0, 2));
                 $hexString = substr($hexString, 2);
                 break;
@@ -874,7 +882,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // Checking size
             $l = strlen($hexString);
             if ($l < (2 * $dataSize)) {
-                parserLog('debug', "  decodeDataType() ERROR: Data too short (malformed packet ?)");
+                parserLog('debug', "  decodeDataType() ERROR: Data too short (got=".($l/2)."B, exp=".$dataSize."B)");
                 return false;
             }
 
@@ -2188,7 +2196,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 */
                 if ($cmd == "01") { // Read Attributes Response
                     // Some clusters are directly handled by 8100/8102 decode
-                    $acceptedCmd01 = ['0005', '0020', '0B04']; // Clusters handled here
+                    $acceptedCmd01 = ['0005', '0009', '0020', '0B04', '1000']; // Clusters handled here
                     if (!in_array($cluster, $acceptedCmd01)) {
                         parserLog('debug', "  Handled by decode8100_8102");
                         return;
@@ -2537,6 +2545,31 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
             }
 
+            if ($cluster == "0008") {
+                if ($cmd == "04") {
+                    parserLog('debug', "  Handled by decode8085");
+                    return;
+                }
+            }
+
+            if ($cluster == "0300") {
+                // Tcharp38: Covering all 0300 commands
+                parserLog("debug", "  msg=".$msg, "8002");
+                $msg = array(
+                    'src' => 'parser',
+                    'type' => 'attributeReport',
+                    'net' => $dest,
+                    'addr' => $srcAddr,
+                    'ep' => $srcEp,
+                    'name' => $srcEp.'-0300-cmd'.$cmd,
+                    'value' => $msg, // Rest of command data to be decoded if required
+                    'time' => time(),
+                    'lqi' => $lqi
+                );
+                $this->msgToAbeille2($msg);
+                return;
+            }
+
             parserLog("debug", "  Ignored cluster specific command ".$cluster."-".$cmd, "8002");
         }
 
@@ -2636,6 +2669,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     message::add("Abeille", "Mauvais port détecté pour zigate ".$zgId.". Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
                     return;
                 }
+            }
+            // Tcharp38: Zigate IEEE stored in 2 many locations. Need to optimize
+            $eqLogic = Abeille::byLogicalId($dest.'/'.$addr, 'Abeille');
+            $ieee2 = $eqLogic->getConfiguration('IEEE', '');
+            if ($ieee2 == "") {
+                $eqLogic->setConfiguration('IEEE', $extAddr);
+                $eqLogic->save();
             }
 
             $msg = array(
@@ -3591,6 +3631,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         // Remote won't tell which button was released left or right, but it will be same button that was last hold.
         // Remote is unable to send other button commands at least when left or right is hold down.
 
+        /* Level cluster command coming from a device (broadcast or unicast to Zigate) */
         function decode8085($dest, $payload, $lqi)
         {
             // <Sequence number: uin8_t>    -> 2
@@ -3601,22 +3642,49 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <cmd: uint8>                 -> 2
             //  2: 'click', 1: 'hold', 3: 'release'
 
-            $srcAddr = substr($payload, 10, 4);
+            $ep = substr($payload, 2, 2);
+            $clustId = substr($payload, 4, 4);
+            $srcAddr = substr($payload, 10, 4); // Assuming short addr mode
             $cmd = substr($payload, 14, 2);
 
-            parserLog('debug', $dest.', Type=8085/Remote button pressed (ClickHoldRelease) a group response)'
-                            .', SQN='.substr($payload, 0, 2)
-                            .', EP='.substr($payload, 2, 2)
-                            .', ClustId='.substr($payload, 4, 4)
-                            .', AddrMode='.substr($payload, 8, 2)
-                            .', SrcAddr='.$srcAddr
-                            .', Cmd='.$cmd);
+            $decoded = '8085/Level update'
+                .', SQN='.substr($payload, 0, 2)
+                .', EP='.$ep
+                .', ClustId='.$clustId
+                .', AddrMode='.substr($payload, 8, 2)
+                .', SrcAddr='.$srcAddr
+                .', Cmd='.$cmd;
+            parserLog('debug', $dest.', Type='.$decoded);
+
+            // Monitor if required
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr)) {
+                monMsgFromZigate($decoded); // Send message to monitor
+            }
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
-            $this->msgToAbeille($dest.'/'.$srcAddr, "Up", "Down", $cmd);
+            // $this->msgToAbeille($dest.'/'.$srcAddr, "Up", "Down", $cmd);
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'attributeReport',
+                'net' => $dest,
+                'addr' => $srcAddr,
+                'ep' => $ep,
+                'name' => 'Up-Down', // OBSOLETE: Do not use !!
+                'value' => $cmd,
+                'time' => time(),
+                'lqi' => $lqi
+            );
+            $this->msgToAbeille2($msg);
+
+            // Tcharp38: New way of handling this event (Level cluster cmd coming from a device)
+            $msg['name'] = $ep.'-0008-cmd'.$cmd;
+            $msg['value'] = 1; // Equivalent to a click. No special value
+            // Tcharp38: Where is the data associated to cmd ? May need to decode that with 8002 instead.
+            $this->msgToAbeille2($msg);
         }
 
+        /* OnOff cluster command coming from a device (broadcast or unicast to Zigate) */
         function decode8095($dest, $payload, $lqi)
         {
             // <Sequence number: uin8_t>
@@ -3631,13 +3699,21 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $srcAddr = substr($payload, 10, 4);
             $status = substr($payload, 14, 2);
 
-            parserLog('debug', $dest.', Type=8095/OnOff update'
+            // Log
+            $decoded = '8095/OnOff update'
                 .', SQN='.substr($payload, 0, 2)
                 .', EP='.$ep
                 .', ClustId='.$clustId
                 .', AddrMode='.$addrMode
                 .', Addr='.$srcAddr
-                .', Status='.$status);
+                .', Status='.$status;
+            parserLog('debug', $dest.', Type='.$decoded);
+
+            // Monitor if required
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr)) {
+                monMsgFromZigate($decoded); // Send message to monitor
+                monMsgFromZigate("  Groups: ".$groups); // Send message to monitor
+            }
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
@@ -3651,7 +3727,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'net' => $dest,
                 'addr' => $srcAddr,
                 'ep' => $ep,
-                'name' => 'Click-Middle',
+                'name' => 'Click-Middle', // OBSOLETE: Do not use !!
                 'value' => $status,
                 'time' => time(),
                 'lqi' => $lqi
@@ -3659,7 +3735,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $this->msgToAbeille2($msg);
 
             // Tcharp38: New way of handling this event (OnOff cmd coming from a device)
-            $msg['name'] = $ep.'-cmd-onoff';
+            $msg['name'] = $ep.'-0006-cmd'.$status;
+            $msg['value'] = 1; // Equivalent to a click. No special value
             $this->msgToAbeille2($msg);
         }
 

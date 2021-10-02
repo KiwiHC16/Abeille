@@ -2,8 +2,12 @@ ChangeLog
 =========
 
 - Page EQ/avancé: correction bouton 'reconfiguer' + amélioration message.
+- Correction mauvaise config lors de l'inclusion si #IEEE# ou #ZigateIEEE# utilisé.
+- Interne: Parser: Support remontée commandes du cluster 0300 en provenance d'un équipement.
 - Osram smart switch mini: Mise-à-jour. Ne supporte que le controle vers Jeedom.
+- Page santé: correction IEEE manquante pour Ruche.
 - Suppression log obsolete AbeilleParser (sans '.log') lors de la mise-à-jour/installation.
+- Inclusion: Correction pour vieux équipements type Xiaomi (ne repond pas à lecture attribut manufacturer).
 
 210929-BETA-1
 ----------

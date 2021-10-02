@@ -1,0 +1,12 @@
+{
+    "zbCmdR-Custom": {
+        "name": "Custom info fom received cmd",
+        "comment": "Indicates that a command has been received from cluster. Value is always the same.",
+        "subType": "binary",
+        "type": "info",
+        "logicalId": "#EP#-#CLUSTID#-cmd#CMDID#",
+        "configuration": {
+            "repeatEventManagement": "always"
+        }
+    }
+}

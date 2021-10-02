@@ -1,0 +1,54 @@
+{
+    "LightifySwitchMini_OSRAM": {
+        "manufacturer": "Osram",
+        "model": "AC0251100NJ",
+        "type": "Osram Smart+ Switch Mini",
+        "comment": "This remote broadcasts OnOff cmds by default. 'Binding' required to prevent that.",
+        "comment2": "Hidden since nothing to report on dashboard. Useful only for scenaris",
+        "isVisible": 0,
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Osram-SwitchMini",
+            "mainEP": "01",
+            "batteryType": "1x3V CR2450"
+        },
+        "commands": {
+            "Bind-0001-ToZigate": {
+                "use": "bindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "Set-0001-0020-Reporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600",
+                "execAtCreation": "Yes"
+            },
+            "BatteryVolt2Percent": { "use": "battery-Volt2Percent-3" },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
+
+            "Bind-01-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Up": { "use": "zbCmdR-Custom", "params": "ep=01&clustId=0006&cmdId=01", "isVisible": 1 },
+            "Bind-02-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=02&clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Down": { "use": "zbCmdR-Custom", "params": "ep=02&clustId=0006&cmdId=00", "isVisible": 1 },
+            "Bind-03-0300-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=03&clustId=0300",
+                "execAtCreation": "Yes"
+            },
+            "Stop": { "use": "zbCmdR-Custom", "params": "ep=03&clustId=0300&cmdId=0A", "isVisible": 1 }
+        }
+    }
+}

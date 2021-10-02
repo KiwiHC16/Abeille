@@ -1,0 +1,44 @@
+***
+*** Osram Smart+ Switch Mini
+*** By Ledvance
+***
+
+Par défaut cette telecommande envoi des message On/Off en BROADCAST.
+Donc tout equipement supportant On/Off recevra cet ordre.
+
+https://github.com/Koenkk/zigbee2mqtt/issues/962#issuecomment-478301484
+
+
+Top button, short press
+    [2021-09-30 12:53:34] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0006, SrcEP=01, DestEP=01, SrcAddrMode=02, SrcAddr=FE70, DestAddrMode=02, DestAddr=FFFD
+    [2021-09-30 12:53:34]   FCF=11/Cluster-specific/Cli->Serv, SQN=50, cmd=01/On
+    [2021-09-30 12:53:34]   Handled by decode8095
+    [2021-09-30 12:53:34] Abeille1, Type=8095/OnOff update, SQN=50, EP=01, ClustId=0006, AddrMode=02, Addr=FE70, Status=01
+
+Bottom button, short press
+    [2021-09-30 12:55:38] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0006, SrcEP=02, DestEP=01, SrcAddrMode=02, SrcAddr=FE70, DestAddrMode=02, DestAddr=FFFD
+    [2021-09-30 12:55:38]   FCF=11/Cluster-specific/Cli->Serv, SQN=51, cmd=00/Off
+    [2021-09-30 12:55:38]   Handled by decode8095
+    [2021-09-30 12:55:38] Abeille1, Type=8095/OnOff update, SQN=51, EP=02, ClustId=0006, AddrMode=02, Addr=FE70, Status=00
+
+Middle button, short press
+    [2021-09-30 12:57:32] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0008, SrcEP=03, DestEP=01, SrcAddrMode=02, SrcAddr=FE70, DestAddrMode=02, DestAddr=FFFD
+    [2021-09-30 12:57:32]   FCF=11/Cluster-specific/Cli->Serv, SQN=56, cmd=04/Move To Level With OnOff
+    [2021-09-30 12:57:32]   Ignored cluster specific command 0008-04
+    [2021-09-30 12:57:32] Abeille1, Type=8085/Remote button pressed (ClickHoldRelease) a group response), SQN=56, EP=03, ClustId=0008, AddrMode=02, SrcAddr=FE70, Cmd=04
+    [2021-09-30 12:57:33] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0300, SrcEP=03, DestEP=01, SrcAddrMode=02, SrcAddr=FE70, DestAddrMode=02, DestAddr=FFFD
+    [2021-09-30 12:57:33]   FCF=11/Cluster-specific/Cli->Serv, SQN=57, cmd=0A/Move To Color Temperature
+    [2021-09-30 12:57:33]   Ignored cluster specific command 0300-0A
+    [2021-09-30 12:57:33] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0300, SrcEP=03, DestEP=01, SrcAddrMode=02, SrcAddr=FE70, DestAddrMode=02, DestAddr=FFFD
+    [2021-09-30 12:57:33]   FCF=11/Cluster-specific/Cli->Serv, SQN=57, cmd=0A/Move To Color Temperature
+    [2021-09-30 12:57:33]   Ignored cluster specific command 0300-0A
+
+Top button, long press
+    [2021-09-30 12:44:31] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0008, SrcEP=01, DestEP=01, SrcAddrMode=02, SrcAddr=FE70, DestAddrMode=02, DestAddr=FFFD
+    [2021-09-30 12:44:31]   FCF=11/Cluster-specific/Cli->Serv, SQN=46, cmd=05/Move With OnOff
+    [2021-09-30 12:44:31]   Ignored cluster specific command 0008-05
+    [2021-09-30 12:44:31] Abeille1, Type=8085/Remote button pressed (ClickHoldRelease) a group response), SQN=46, EP=01, ClustId=0008, AddrMode=02, SrcAddr=FE70, Cmd=05
+    [2021-09-30 12:44:34] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0008, SrcEP=01, DestEP=01, SrcAddrMode=02, SrcAddr=FE70, DestAddrMode=02, DestAddr=FFFD
+    [2021-09-30 12:44:34]   FCF=11/Cluster-specific/Cli->Serv, SQN=47, cmd=03/Stop
+    [2021-09-30 12:44:34]   Ignored cluster specific command 0008-03
+    [2021-09-30 12:44:34] Abeille1, Type=8085/Remote button pressed (ClickHoldRelease) a group response), SQN=47, EP=01, ClustId=0008, AddrMode=02, SrcAddr=FE70, Cmd=03

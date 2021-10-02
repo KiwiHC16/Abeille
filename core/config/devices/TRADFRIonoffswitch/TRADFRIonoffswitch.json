@@ -23,15 +23,23 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
+
             "include4": "offGroup",
             "include6": "onGroup",
-            "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
-                "isVisible": 1
-            },
+
+            "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
             "include9": "getBattery",
-            "include10": "BindShortToZigateBatterie",
-            "include11": "setReportBatterie",
+            "Bind-0001-ToZigate": {
+                "use": "bindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "Set-0001-0021-Reporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+                "execAtCreation": "Yes"
+            },
+
             "include7": "Up-Down",
             "include12": "Click-Middle"
         },

@@ -1,6 +1,7 @@
 ChangeLog
 =========
 
+- Osram smart switch mini: Mise-à-jour. Ne supporte que le controle vers Jeedom.
 - Suppression log obsolete AbeilleParser (sans '.log') lors de la mise-à-jour/installation.
 
 210929-BETA-1

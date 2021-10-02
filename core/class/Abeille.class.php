@@ -1606,8 +1606,8 @@ while ($cron->running()) {
                 list($net2, $addr2) = explode("/", $eqLogic->getLogicalId());
                 if ($net2 != $net)
                     continue; // Wrong network
-                $jsonName2 = $eqLogic->getConfiguration('modeleJson');
-                if ($jsonName2 != "remotecontrol")
+                $jsonId2 = $eqLogic->getConfiguration('modeleJson');
+                if ($jsonId2 != "remotecontrol")
                     continue; // Not a remote
                 if ($addr2 == '')
                     continue; // No addr for remote on '210607-STABLE-1' leading to 1 remote only per zigate.
@@ -1618,7 +1618,7 @@ while ($cron->running()) {
 
             /* Remote control short addr = 'rcXX' */
             $rcAddr = sprintf("rc%02X", $max);
-            Abeille::createDevice($dest, $rcAddr, '', 'remotecontrol', 'Abeille');
+            Abeille::createDevice("create", $dest, $rcAddr, '', 'remotecontrol', 'Abeille');
 
             return;
         }
@@ -1633,10 +1633,25 @@ while ($cron->running()) {
                 return;
             }
 
-            $jsonName = $eqLogic->getConfiguration('modeleJson');
+            Abeille::createDevice("update", $dest, $addr);
+
+            return;
+        }
+
+        /* Request to reset device from JSON. Useful to avoid reinclusion */
+        if ($cmdId == "resetFromJson") {
+            log::add('Abeille', 'debug', 'message(): resetFromJson, '.$net.'/'.$addr);
+
+            $eqLogic = Abeille::byLogicalId($net.'/'.$addr, 'Abeille');
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'debug', '  ERROR: Unknown device');
+                return;
+            }
+
+            $jsonId = $eqLogic->getConfiguration('modeleJson');
             $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
             $ieee = $eqLogic->getConfiguration('IEEE');
-            Abeille::createDevice($dest, $addr, $ieee, $jsonName, $jsonLocation, "Mise-à-jour de '".$eqLogic->getName()."' à partir de son fichier JSON");
+            Abeille::createDevice("reset", $dest, $addr);
 
             return;
         }
@@ -1692,10 +1707,10 @@ while ($cron->running()) {
         //     log::add('Abeille', 'debug', 'Template mis a jour avec EP: '.json_encode($AbeilleObjetDefinition));
 
         //     if (array_key_exists($trimmedValue, $AbeilleObjetDefinition)) {
-        //         $jsonName = $trimmedValue;
+        //         $jsonId = $trimmedValue;
         //     }
         //     if (array_key_exists('defaultUnknown', $AbeilleObjetDefinition)) {
-        //         $jsonName = 'defaultUnknown';
+        //         $jsonId = 'defaultUnknown';
         //     }
 
         //     /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -1717,7 +1732,7 @@ while ($cron->running()) {
         //     $eqLogic->setName($name);
         //     $eqLogic->setLogicalId($nodeid);
         //     $eqLogic->setObject_id($parameters_info['AbeilleParentId']);
-        //     $objetDefSpecific = $AbeilleObjetDefinition[$jsonName];
+        //     $objetDefSpecific = $AbeilleObjetDefinition[$jsonId];
         //     $objetConfiguration = $objetDefSpecific["configuration"];
         //     log::add('Abeille', 'debug', 'Template configuration: '.json_encode($objetConfiguration));
         //     $eqLogic->setConfiguration('modeleJson', $trimmedValue);
@@ -2170,9 +2185,9 @@ while ($cron->running()) {
                 ); */
 
             $logicalId = $net.'/'.$addr;
-            $jsonName = $msg['jsonId'];
+            $jsonId = $msg['jsonId'];
             $jsonLocation = $msg['jsonLocation']; // 'Abeille' or 'local'
-            log::add('Abeille', 'debug', "msgFromParser(): Eq announce received for ".$net.'/'.$addr.", jsonId='".$jsonName."'".", jsonLoc='".$jsonLocation."'");
+            log::add('Abeille', 'debug', "msgFromParser(): Eq announce received for ".$net.'/'.$addr.", jsonId='".$jsonId."'".", jsonLoc='".$jsonLocation."'");
 
             $ieee = $msg['ieee'];
 
@@ -2206,7 +2221,7 @@ while ($cron->running()) {
 
             /* Create or update device from JSON.
                Note: ep = first End Point */
-            Abeille::createDevice($net, $addr, $ieee, $jsonName, $jsonLocation);
+            Abeille::createDevice("create", $net, $addr, $ieee, $jsonId, $jsonLocation);
 
             $eqLogic = self::byLogicalId($logicalId, 'Abeille');
 
@@ -2741,24 +2756,36 @@ while ($cron->running()) {
 
     /* Create or update Jeedom device based on its JSON config.
        Called in the following cases
-       - On 'eqAnnounce' message from parser (device announce)
-       - To create a virtual 'remotecontrol'
-       - To reload JSON & update commands (EQ page/advanced/reload JSON) */
-    public static function createDevice($net, $addr, $ieee, $jsonName, $jsonLocation, $userMsg = '') {
+       - On 'eqAnnounce' message from parser (device announce) => action = 'create'
+       - To create a virtual 'remotecontrol' => action = 'create'
+       - To reload JSON & update commands (EQ page/advanced/reload JSON) => action = 'update'
+       - To reset from JSON (identical to new inclusion) => action = 'reset'
+     */
+    public static function createDevice($action, $net, $addr, $ieee = '', $jsonId = '', $jsonLocation = '') {
+        log::add('Abeille', 'debug', 'createDevice('.$action.', net='.$net.', addr='.$addr.')');
 
         $logicalId = $net.'/'.$addr;
-        $abeilleConfig = AbeilleTools::getParameters();
-        $deviceConfig = AbeilleTools::getDeviceConfig($jsonName, $jsonLocation);
 
-        $eqType = $deviceConfig['type'];
+        if ($jsonId != '' && $jsonLocation != '') {
+            $deviceConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation);
+            $eqType = $deviceConfig['type'];
+        }
+
         $eqLogic = self::byLogicalId($logicalId, 'Abeille');
         if (!is_object($eqLogic)) {
             $newEq = true;
-            log::add('Abeille', 'debug', 'createDevice(): New device '.$net.'/'.$addr);
-            if ($jsonName != "defaultUnknown")
+
+            if (($action == 'update') || ($action == 'reset')) { // Update or reset from JSON
+                log::add('Abeille', 'debug', '  ERROR: Action='.$action.' but device '.$logicalId.' does not exist');
+                return;
+            }
+
+            // $action == 'create'
+            log::add('Abeille', 'debug', '  New device '.$logicalId);
+            if ($jsonId != "defaultUnknown")
                 message::add("Abeille", "Nouvel équipement identifié (".$eqType."). Création en cours. Rafraîchissez votre dashboard dans qq secondes.", '');
             else
-                message::add("Abeille", "Nouvel équipement détecté mais non reconnu. Création en cours avec la config par défaut (".$jsonName."). Rafraîchissez votre dashboard dans qq secondes.", '');
+                message::add("Abeille", "Nouvel équipement détecté mais non supporté. Création en cours avec la config par défaut (".$jsonId."). Rafraîchissez votre dashboard dans qq secondes.", '');
 
             $eqLogic = new Abeille();
             $eqLogic->setEqType_name('Abeille');
@@ -2768,40 +2795,51 @@ while ($cron->running()) {
             $eqName = $net."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
             $eqLogic->setName($eqName);
             $eqLogic->setLogicalId($logicalId);
+            $abeilleConfig = AbeilleTools::getParameters();
             $eqLogic->setObject_id($abeilleConfig['AbeilleParentId']);
         } else {
             $newEq = false;
-            log::add('Abeille', 'debug', 'createDevice(): Already existing device '.$net.'/'.$addr);
-
-            $eqPath = $eqLogic->getHumanName(); // Jeedom hierarchical name
-            $eqCurJsonId = $eqLogic->getConfiguration('modeleJson'); // Current JSON ID
-            if (($eqCurJsonId == 'defaultUnknown') && ($jsonName != 'defaultUnknown'))
-                message::add("Abeille", "'".$eqPath."' s'est réannoncé. Mise-à-jour de la config par défaut vers '".$eqType."'", '');
-            else if ($userMsg != '')
-                message::add("Abeille", $userMsg, '');
-            else {
-                /* Tcharp38: Following https://github.com/KiwiHC16/Abeille/issues/2132#, device re-announce is just ignored here
-                   to not generate plenty messages, unless device was disabled.
-                   Other reasons to generate message ?
-                 */
-                if ($eqLogic->getIsEnable() == 1) {
-                    log::add('Abeille', 'debug', 'createDevice(): Device is already enabled. Doing nothing.');
-                    return; // Doing nothing on re-announce
-                }
-                message::add("Abeille", "'".$eqPath."' s'est réannoncé. Mise-à-jour en cours.", '');
-            }
-
             $eqName = $eqLogic->getName();
+            $eqHName = $eqLogic->getHumanName(); // Jeedom hierarchical name
+            log::add('Abeille', 'debug', '  Already existing device '.$logicalId.' => '.$eqHName);
+
+            if (($action == 'update') || ($action == 'reset')) { // Update or reset from JSON
+                $jsonId = $eqLogic->getConfiguration('modeleJson');
+                $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
+                $ieee = $eqLogic->getConfiguration('IEEE');
+                if ($action == "update")
+                    message::add("Abeille", "Mise-à-jour de '".$eqHName."' à partir de son fichier JSON");
+                else
+                    message::add("Abeille", "Réinitialisation de '".$eqHName."' à partir de son fichier JSON");
+                $deviceConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation);
+            } else { // action == create
+                $eqCurJsonId = $eqLogic->getConfiguration('modeleJson'); // Current JSON ID
+                if (($eqCurJsonId == 'defaultUnknown') && ($jsonId != 'defaultUnknown'))
+                    message::add("Abeille", "'".$eqHName."' s'est réannoncé. Mise-à-jour de la config par défaut vers '".$eqType."'", '');
+                else if ($userMsg != '')
+                    message::add("Abeille", $userMsg, '');
+                else {
+                    /* Tcharp38: Following https://github.com/KiwiHC16/Abeille/issues/2132#, device re-announce is just ignored here
+                        to not generate plenty messages, unless device was disabled.
+                        Other reasons to generate message ?
+                    */
+                    if ($eqLogic->getIsEnable() == 1) {
+                        log::add('Abeille', 'debug', '  Device is already enabled. Doing nothing.');
+                        return; // Doing nothing on re-announce
+                    }
+                    message::add("Abeille", "'".$eqHName."' s'est réannoncé. Mise-à-jour en cours.", '');
+                }
+            }
         }
         if ($jsonLocation != "Abeille") {
-            $fullPath = __DIR__."/../config/devices/".$jsonName."/".$jsonName.".json";
+            $fullPath = __DIR__."/../config/devices/".$jsonId."/".$jsonId.".json";
             if (file_exists($fullPath))
                 message::add("Abeille", "ATTENTION: Config locale (devices_local) utilisée alors qu'une config officielle existe.", '');
         }
 
         /* Whatever creation or update, common steps follows */
         $objetConfiguration = $deviceConfig["configuration"];
-        log::add('Abeille', 'debug', 'config='.json_encode($objetConfiguration));
+        log::add('Abeille', 'debug', '  config='.json_encode($objetConfiguration));
 
         /* mainEP: Used to define default end point to target, when undefined in command itself (use of '#EP#'). */
         if (isset($objetConfiguration['mainEP'])) {
@@ -2812,14 +2850,14 @@ while ($cron->running()) {
         }
         $eqLogic->setConfiguration('mainEP', $mainEP);
 
-        $eqLogic->setConfiguration('modeleJson', $jsonName);
+        $eqLogic->setConfiguration('modeleJson', $jsonId);
         if ($jsonLocation != "Abeille")
             $eqLogic->setConfiguration('ab::jsonLocation', 'local');
         else
             $eqLogic->setConfiguration('ab::jsonLocation', null);
         $eqLogic->setConfiguration('type', 'topic'); // ??, type = topic car pas json. Tcharp38: what for ?
 
-        if ($newEq) { // Update icon only if new device
+        if (($action == 'reset') || $newEq) { // Update icon only if new device
             if (isset($objetConfiguration["icon"]))
                 $icon = $objetConfiguration["icon"];
             else
@@ -2875,7 +2913,7 @@ while ($cron->running()) {
             $eqLogic->setConfiguration('poll', $objetConfiguration['poll']);
         }
 
-        if ($newEq) { // Update visibility only if new device
+        if (($action == 'reset') || $newEq) { // Update visibility only if new device
             if (isset($deviceConfig["isVisible"]))
                 $eqLogic->setIsVisible($deviceConfig["isVisible"]);
             else
@@ -2885,7 +2923,7 @@ while ($cron->running()) {
         if (isset($deviceConfig["timeout"]))
             $eqLogic->setTimeout($deviceConfig["timeout"]);
 
-        if ($newEq && isset($deviceConfig["category"])) { // Update category only if new device
+        if (($action == 'reset') || ($newEq && isset($deviceConfig["category"]))) { // Update category only if new device
             $categories = $deviceConfig["category"];
             // $eqLogic->setCategory(array_keys($deviceConfig["Categorie"])[0], $deviceConfig["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
             $allCat = ["heating","security","energy","light","opening","automatism","multimedia","default"];
@@ -2907,14 +2945,14 @@ while ($cron->running()) {
             $jsonCmds2 = json_encode($jsonCmds);
             if (strstr($jsonCmds2, '#EP#') !== false) {
                 if ($mainEP == "") {
-                    message::add("Abeille", "'mainEP' est requis mais n'est pas défini dans '".$jsonName.".json'", '');
+                    message::add("Abeille", "'mainEP' est requis mais n'est pas défini dans '".$jsonId.".json'", '');
                     $mainEP = "01";
                 }
 
-                log::add('Abeille', 'debug', 'createDevice(): mainEP='.$mainEP);
-                $jsonCmds2 = str_replace('#EP#', $mainEP, $jsonCmds2);
+                log::add('Abeille', 'debug', '  mainEP='.$mainEP);
+                $jsonCmds2 = str_ireplace('#EP#', $mainEP, $jsonCmds2);
                 $jsonCmds = json_decode($jsonCmds2, true);
-                log::add('Abeille', 'debug', 'createDevice(): Updated commands='.json_encode($jsonCmds));
+                log::add('Abeille', 'debug', '  Updated commands='.json_encode($jsonCmds));
             }
         }
 
@@ -2931,7 +2969,7 @@ while ($cron->running()) {
                 }
             }
             if ($found == false) {
-                log::add('Abeille', 'debug', 'createDevice(): '.$eqName.", removing cmd '".$cmdName."'");
+                log::add('Abeille', 'debug', "  Removing cmd '".$cmdName."'");
                 $cmdLogic->remove(); // No longer required
             }
         }
@@ -2963,11 +3001,11 @@ while ($cron->running()) {
             $cmdlogic = AbeilleCmd::byEqLogicIdCmdName($eqLogic->getId(), $cmdJName);
             if (!is_object($cmdlogic)) {
                 $newCmd = true;
-                log::add('Abeille', 'debug', 'createDevice(): '.$eqName.", adding cmd '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
+                log::add('Abeille', 'debug', "  Adding cmd '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
                 $cmdlogic = new AbeilleCmd();
             } else {
                 $newCmd = false;
-                log::add('Abeille', 'debug', 'createDevice(): '.$eqName.", updating cmd '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
+                log::add('Abeille', 'debug', "  Updating cmd '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
             }
 
             $cmdlogic->setEqLogic_id($eqLogic->getId());
@@ -2988,7 +3026,7 @@ while ($cron->running()) {
             } else { // action cmd
                 if (isset($cmdValueDefaut["value"])) {
                     // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
-                    log::add('Abeille', 'debug', 'createDevice(): Define cmd info pour cmd action: '.$eqLogic->getHumanName()." - ".$cmdValueDefaut["value"]);
+                    log::add('Abeille', 'debug', '  Define cmd info pour cmd action: '.$eqLogic->getHumanName()." - ".$cmdValueDefaut["value"]);
 
                     $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName("Abeille", $eqLogic->getName(), $cmdValueDefaut["value"]);
                     if ($cmdPointeur_Value)
@@ -3046,7 +3084,7 @@ while ($cron->running()) {
 
             /* Command widget: can be defaulted with 'template'
                Updating only if new command to not overwrite user changes (see issue #2075) */
-            if ($newCmd) {
+            if (($action == 'reset') || $newCmd) {
                 // Don't touch anything if defined empty in JSON
                 if (isset($cmdValueDefaut["template"]) && ($cmdValueDefaut["template"] != "")) {
                     $cmdlogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
@@ -3062,7 +3100,7 @@ while ($cron->running()) {
             if (isset($cmdValueDefaut["unite"]))
                 $cmdlogic->setUnite($cmdValueDefaut["unite"]);
 
-            if ($newCmd) { // Update only if new command
+            if (($action == 'reset') || $newCmd) { // Update only if new command
                 if (isset($cmdValueDefaut["isHistorized"]))
                     $cmdlogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
                 else
@@ -3070,7 +3108,7 @@ while ($cron->running()) {
             }
 
             // Display stuff is updated only if new eq or new cmd to not overwrite user changes
-            if ($newCmd) { // Update only if new command
+            if (($action == 'reset') || $newCmd) { // Update only if new command
                 if (isset($cmdValueDefaut["isVisible"]))
                     $cmdlogic->setIsVisible($cmdValueDefaut["isVisible"]);
                 else
@@ -3078,7 +3116,7 @@ while ($cron->running()) {
             }
 
             // Display stuff is updated only if new eq or new cmd to not overwrite user changes
-            if ($newCmd) {
+            if (($action == 'reset') || $newCmd) {
                 // TODO: Update all JSON to move "invertBinary" into "display" section
                 if (isset($cmdValueDefaut["invertBinary"])) {
                     $cmdlogic->setDisplay('invertBinary', $cmdValueDefaut["invertBinary"]);

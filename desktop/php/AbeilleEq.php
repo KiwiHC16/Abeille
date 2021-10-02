@@ -23,18 +23,24 @@
 
     $eqId = $_GET['id'];
     $eqLogic = eqLogic::byId($eqId);
+    if (!$eqLogic)
+        exit("L'équipement dont l'ID est ".$eqId." n'existe plus. Merci de raffraichir votre page.");
+
     $eqLogicId = $eqLogic->getLogicalid();
     list($eqNet, $eqAddr) = explode("/", $eqLogicId);
-    $zgNb = substr($eqNet, 7); // Extracting zigate number from network
-    $zgType = config::byKey('AbeilleType'.$zgNb, 'Abeille', '', 1); // USB, WIFI, PIN, DIN
+    $zgId = substr($eqNet, 7); // Extracting zigate number from network
+    $zgType = config::byKey('AbeilleType'.$zgId, 'Abeille', '', 1); // USB, WIFI, PIN, DIN
     $mainEP = $eqLogic->getConfiguration('mainEP', '01');
     $eqIeee = $eqLogic->getConfiguration('IEEE', '');
+    $batteryType = $eqLogic->getConfiguration('battery_type', '');
+    $eqName = $eqLogic->getName();
 
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
     echo '<script>var js_eqIeee = "'.$eqIeee.'";</script>'; // PHP to JS
-    echo '<script>var js_zgNb = '.$zgNb.';</script>'; // PHP to JS
+    echo '<script>var js_zgId = '.$zgId.';</script>'; // PHP to JS
     echo '<script>var js_queueKeyXmlToCmd = '.queueKeyXmlToCmd.';</script>'; // PHP to JS
+    echo '<script>var js_batteryType = "'.$batteryType.'";</script>'; // PHP to JS
 ?>
 
 <!-- For all modals on 'Abeille' page. -->
@@ -252,22 +258,22 @@
         switch(action) {
         case "setLED":
             if (param == "ON")
-                topic = 'CmdAbeille'+js_zgNb+'/0000/setOnZigateLed';
+                topic = 'CmdAbeille'+js_zgId+'/0000/setOnZigateLed';
             else
-                topic = 'CmdAbeille'+js_zgNb+'/0000/setOffZigateLed';
+                topic = 'CmdAbeille'+js_zgId+'/0000/setOffZigateLed';
             break;
         case "setCertif":
             if (param == "CE")
-                topic = 'CmdAbeille'+js_zgNb+'/0000/setCertificationCE';
+                topic = 'CmdAbeille'+js_zgId+'/0000/setCertificationCE';
             else
-                topic = 'CmdAbeille'+js_zgNb+'/0000/setCertificationFCC';
+                topic = 'CmdAbeille'+js_zgId+'/0000/setCertificationFCC';
             break;
         case "startNetwork": // Not required for end user but for developper.
-            topic = 'CmdAbeille'+js_zgNb+'/0000/startNetwork';
+            topic = 'CmdAbeille'+js_zgId+'/0000/startNetwork';
             payload = 'StartNetwork';
             break;
         case "setMode":
-            topic = 'CmdAbeille'+js_zgNb+'/0000/zgSetMode';
+            topic = 'CmdAbeille'+js_zgId+'/0000/zgSetMode';
             if (param == "Normal")
                 payload = 'mode=normal';
             else if (param == "Raw")
@@ -276,11 +282,11 @@
                 payload = 'mode=hybrid';
             break;
         case "setExtPANId": // Not critical. No need so far.
-            topic = 'CmdAbeille'+js_zgNb+'/0000/setExtendedPANID';
+            topic = 'CmdAbeille'+js_zgId+'/0000/setExtendedPANID';
             payload = "";
             break;
         case "setChannelMask":
-            topic = 'CmdAbeille'+js_zgNb+'/0000/setChannelMask';
+            topic = 'CmdAbeille'+js_zgId+'/0000/setChannelMask';
             mask = document.getElementById("idChannelMask").value;
             console.log("mask="+mask);
             if (mask == "") {
@@ -306,34 +312,34 @@
             payload = mask;
             break;
         case "setTXPower":
-            topic = 'CmdAbeille'+js_zgNb+'/0000/TxPower';
+            topic = 'CmdAbeille'+js_zgId+'/0000/TxPower';
             payload = "ff"; // TODO
             break;
         case "getTime":
-            topic = 'CmdAbeille'+js_zgNb+'/0000/getTimeServer';
+            topic = 'CmdAbeille'+js_zgId+'/0000/getTimeServer';
             payload = "";
             break;
         case "setTime":
-            topic = 'CmdAbeille'+js_zgNb+'/0000/setTimeServer';
+            topic = 'CmdAbeille'+js_zgId+'/0000/setTimeServer';
             payload = ""; // Using current time from host.
             break;
         case "erasePersistantDatas": // Erase PDM
-            msg = '{{Vous êtes sur le point de d\'effacer la PDM de la zigate}} <b>'+js_zgNb+'</b>';
+            msg = '{{Vous êtes sur le point de d\'effacer la PDM de la zigate}} <b>'+js_zgId+'</b>';
             msg += '{{<br>Tous les équipements connus de la zigate seront perdus et devront être réinclus.}}'
             msg += '{{<br>Si ils existent encore côté Jeedom ils passeront vite en time-out.}}'
             msg += '{{<br><br>Etes vous sur de vouloir continuer ?}}'
             bootbox.confirm(msg, function (result) {
                 if (result)
-                    sendToZigate('CmdAbeille'+js_zgNb+'/0000/ErasePersistentData', 'ErasePersistentData');
+                    sendToZigate('CmdAbeille'+js_zgId+'/0000/ErasePersistentData', 'ErasePersistentData');
                 return;
             });
             break;
         case "getInclusionStatus":
-            topic = 'CmdAbeille'+js_zgNb+'/0000/permitJoin';
+            topic = 'CmdAbeille'+js_zgId+'/0000/permitJoin';
             payload = "Status";
             break;
         case "getVersion":
-            topic = 'CmdAbeille'+js_zgNb+'/0000/getVersion';
+            topic = 'CmdAbeille'+js_zgId+'/0000/getVersion';
             payload = "Version";
             break;
         default:
@@ -407,7 +413,9 @@
         console.log("reconfigure("+eqId+")");
 
         var msg = "{{Vous êtes sur le point de reconfigurer cet équipement.";
-        msg += "<br>S'il fonctionne sur batterie, il vous faut le reveiller en même temps que vous cliquez sur 'Ok'.";
+        if (js_batteryType != '') {
+            msg += "<br>Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.";
+        }
         msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
         bootbox.confirm(msg, function (result) {
             if (result == false)
@@ -421,10 +429,31 @@
         });
     }
 
+    /* Reinit Jeedom device & reconfigure.
+       WARNING: If battery powered, device must be wake up. */
+    function reinit(eqId) {
+        console.log("reinit("+eqId+")");
+
+        var msg = "{{Vous êtes sur le point de réinitialiser cet équipement (équivalent à nouvelle inclusion).";
+        msg += "<br><br>Tout sera remis à jour à partir du fichier JSON excepté le nom, l'ID Jeedom ainsi que ses adresses.";
+        if (js_batteryType != '') {
+            msg += "<br>Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.";
+        }
+        msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
+        bootbox.confirm(msg, function (result) {
+            if (result == false)
+                return
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reinit&eqId="+eqId, false);
+            xhttp.send();
+        });
+    }
+
     function interrogate(request) {
         console.log("interrogate("+request+")");
 
-        logicalId = "Abeille"+js_zgNb+"_"+js_eqAddr;
+        logicalId = "Abeille"+js_zgId+"_"+js_eqAddr;
         if (request == "getRoutingTable") {
             topic = "Cmd"+logicalId+"_getRoutingTable";
             payload = "address="+js_eqAddr;

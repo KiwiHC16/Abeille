@@ -13,6 +13,19 @@
      */
 
     require_once __DIR__.'/../../core/config/Abeille.config.php'; // Queues
+
+    /* Developers mode & PHP errors */
+    if (file_exists(dbgFile)) {
+        $dbgConfig = json_decode(file_get_contents(dbgFile), true);
+        if (isset($dbgConfig["defines"])) {
+            $arr = $dbgConfig["defines"];
+            foreach ($arr as $idx => $value) {
+                if ($value == "Tcharp38")
+                    $dbgTcharp38 = true;
+            }
+        }
+    }
+
     require_once __DIR__.'/../../../../core/php/core.inc.php';
     require_once __DIR__.'/AbeilleLog.php'; // logDebug()
 
@@ -20,6 +33,8 @@
         $action = $_GET['action'];
     else
         $action = "sendMsg";
+
+    if ($dbgTcharp38) logDebug("CliToQueue: action=".$action);
 
     if ($action == "sendMsg") {
         // Default target queue = 'queueKeyXmlToAbeille'
@@ -35,7 +50,7 @@
             $topic = str_replace('_', '/', $topic);
             $payload = $_GET['payload'];
             $payload = str_replace('_', '&', $payload);
-            logDebug("CliToQueue: topic=".$topic.", payload=".$payload);
+            if ($dbgTcharp38) logDebug("CliToQueue: topic=".$topic.", payload=".$payload);
 
             Class MsgAbeille {
                 public $message = array(
@@ -58,7 +73,7 @@
             }
         } else {
             $msgString = $_GET['msg'];
-            logDebug("CliToQueue: ".$msgString);
+            if ($dbgTcharp38) logDebug("CliToQueue: ".$msgString);
             $msgArr = explode('_', $msgString);
             $m = array();
             foreach ($msgArr as $idx => $value) {
@@ -66,7 +81,7 @@
                 $a = explode(':', $value);
                 $m[$a[0]] = $a[1];
             }
-            logDebug("CliToQueue: ".json_encode($m));
+            if ($dbgTcharp38) logDebug("CliToQueue: ".json_encode($m));
             msg_send($queue, 1, json_encode($m), false, false);
         }
 
@@ -75,7 +90,9 @@
 
     /* Request to reconfigure device.
        This is done by executing action cmds with 'execAtCreation' flag set. */
-    if ($action == "reconfigure") {
+    /* Tcharp38: TODO: Better to put 'reconfigure' functionality inside AbeilleCmd and remove it
+       from here & parser too. */
+    if (($action == "reconfigure") || ($action == "reinit")) {
         $eqId = $_GET['eqId'];
 // logDebug("reconfigure: eqId=".$eqId);
         $eqLogic = eqLogic::byId($eqId);
@@ -87,8 +104,8 @@
         $mainEP = $eqLogic->getConfiguration('mainEP', '');
         $ieee = $eqLogic->getConfiguration('IEEE', '');
         list($eqNet, $eqAddr) = explode("/", $eqLogic->getLogicalId());
-        $zgNb = substr($eqNet, 7); // AbeilleX => X
-        $zigate = eqLogic::byLogicalId('Abeille'.$zgNb.'/0000', 'Abeille');
+        $zgId = substr($eqNet, 7); // AbeilleX => X
+        $zigate = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
         $zgIeee = $zigate->getConfiguration('IEEE', '');
 
         $cmds = $eqConfig['commands'];
@@ -104,10 +121,12 @@
 
             // TODO: #EP# defaulted to first EP but should be
             //       defined in cmd use if different target EP
-            $request = str_replace('#EP#', $mainEP, $request);
+            $request = str_ireplace('#ep#', $mainEP, $request); // Case insensitive
 
-            $request = str_replace('#addrIEEE#', $ieee, $request);
-            $request = str_replace('#ZiGateIEEE#', $zgIeee, $request);
+            $request = str_ireplace('#ieee#', $ieee, $request); // Case insensitive
+            $request = str_ireplace('#addrIeee#', $ieee, $request); // Case insensitive
+
+            $request = str_ireplace('#zigateIeee#', $zgIeee, $request); // Case insensitive
 
             $queue = msg_get_queue(queueKeyXmlToCmd);
             $msg = new MsgAbeille;
@@ -116,6 +135,17 @@
                                 'payload' => $request,
                                 );
 // logDebug("msg=".json_encode($msg));
+            msg_send($queue, 1, $msg, true, false);
+        }
+
+        if ($action == "reinit") {
+            $queue = msg_get_queue(queueKeyXmlToAbeille);
+            $msg = new MsgAbeille;
+            $msg->message = array(
+                                'topic' => "CmdCreate".$eqNet."/".$eqAddr."/resetFromJson",
+                                'payload' => '',
+                                );
+            if ($dbgTcharp38) logDebug("reinit msg to Abeille: ".json_encode($msg));
             msg_send($queue, 1, $msg, true, false);
         }
     } // End $action == "reconfigure"

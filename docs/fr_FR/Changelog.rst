@@ -1,6 +1,7 @@
 ChangeLog
 =========
 
+- Page EQ/avancé: correction bouton 'reconfiguer' + amélioration message.
 - Osram smart switch mini: Mise-à-jour. Ne supporte que le controle vers Jeedom.
 - Suppression log obsolete AbeilleParser (sans '.log') lors de la mise-à-jour/installation.
 

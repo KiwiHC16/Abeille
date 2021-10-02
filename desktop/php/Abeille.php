@@ -103,9 +103,6 @@
 
         <?php include '070_AbeilleReplaceZigatePart.php'; ?>
 
-        <!-- Affichage de la zone developpeur  -->
-        <?php include '080_AbeilleZoneDevPart.php'; ?>
-
     </div> <!-- Fin - Barre d outils horizontale  -->
 
 	</form>

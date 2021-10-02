@@ -3,6 +3,7 @@ ChangeLog
 
 - Page EQ/avancé: correction bouton 'reconfiguer' + amélioration message.
 - Interne: Zigbee const: corrections pour éviter warning PHP.
+- Page équipements: Suppression zone developpeur (bas de page).
 - Correction mauvaise config lors de l'inclusion si #IEEE# ou #ZigateIEEE# utilisé.
 - Interne: Parser: Support remontée commandes du cluster 0300 en provenance d'un équipement.
 - Osram smart switch mini: Mise-à-jour. Ne supporte que le controle vers Jeedom.

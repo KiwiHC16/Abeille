@@ -34,7 +34,13 @@ do
         if [[ "${L}" == "- "* ]]; then
             # It's a list (starts with '- '). Need to add version title (# VERSION)
             echo "${VERSION}" >> ${TMP}
-            echo "----------" >> ${TMP}
+            S=${#VERSION}
+            UNDER=""
+            for (( c=1; c<=$S; c++ ))
+            do
+                UNDER="${UNDER}-"
+            done
+            echo ${UNDER} >> ${TMP}
             echo "" >> ${TMP}
             echo "${L}" >> ${TMP}
         else

@@ -1691,6 +1691,11 @@ console.log(zEndPoints);
             // console.log(sCommands);
 
             /* Updating internal datas */
+            if (typeof zigbee.endPoints[sEp] === "undefined") {
+                openReturnChannel();
+                return;
+            }
+
             ep = zigbee.endPoints[sEp];
             clust = ep.servClusters[sClustId];
             if (typeof clust.commandsReceived === "undefined")

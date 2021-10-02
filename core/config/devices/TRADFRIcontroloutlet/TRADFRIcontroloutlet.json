@@ -10,16 +10,8 @@
         "category": {
             "automatism": "1"
         },
-        "type": "IKEA control outlet",
+        "type": "Ikea control outlet",
         "commands": {
-            "include4": "etat",
-            "include5": "On",
-            "include6": "Off",
-            "include8": "getEtat",
-            "include24": "Identify",
-            "include25": "Group-Membership",
-            "include26": "BindToZigateEtat",
-            "include28": "setReportEtat",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },
@@ -27,9 +19,25 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "Toggle": {
-                "use": "zbCmd-0006-Toggle",
-                "nextLine": "after"
+
+            "Identify": { "use": "Identify" },
+
+            "Groups": { "use": "Group-Membership" },
+
+            "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
+            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
+            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
+            "Toggle": { "use": "zbCmd-0006-Toggle" },
+            "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+            "Bind-0006-ToZigate": {
+                "use": "bindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Set-0006-0000-Reporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "yes"
             }
         }
     }

@@ -32,3 +32,5 @@ https://zigate.fr/forum/topic/xiaomi-aqara-opple/?part=2
     Level Control sur le Bouton 3/4
     Color Control sur le Bouton 5/6
     Un autre mode est possible , mais il nécessite d'etre configuré par un write attribut
+
+https://zigbee.blakadder.com/Xiaomi_WXCJKG13LM.html

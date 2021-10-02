@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Suppression log obsolete AbeilleParser (sans '.log') lors de la mise-à-jour/installation.
+
 210929-BETA-1
 ----------
 

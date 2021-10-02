@@ -299,7 +299,7 @@
                 "08" => array( "name" => "GotoTiltPercent" ),
             ),
         ),
-        "0300" => array( // On/Off cluster
+        "0300" => array(
             "name" => "Color control",
             "attributes" => array(
             ),
@@ -459,9 +459,11 @@
         $cmdId = strtoupper($cmdId);
 
         if (!array_key_exists($clustId, $zbClusters))
-            return false;
+            return false; // Unknown cluster
+        if (!isset($zbClusters[$clustId]['commands']))
+            return false; // No commands defined
         if (!array_key_exists($cmdId, $zbClusters[$clustId]['commands']))
-            return false;
+            return false; // Unknown command
         return $zbClusters[$clustId]['commands'][$cmdId];
     }
 
@@ -483,9 +485,11 @@
         $attrId = strtoupper($attrId);
 
         if (!array_key_exists($clustId, $zbClusters))
-            return false;
+            return false; // Unknown cluster
+        if (!isset($zbClusters[$clustId]['attributes']))
+            return false; // No attributes defined
         if (!array_key_exists($attrId, $zbClusters[$clustId]['attributes']))
-            return false;
+            return false; // Unknown attribute
         return $zbClusters[$clustId]['attributes'][$attrId];
     }
 

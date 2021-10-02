@@ -280,7 +280,7 @@
             config::remove('onlyTimer', 'Abeille');
 
             // Remove obsolete log files
-            $obsolete = ['AbeilleCmd', 'AbeilleMQTTCmd', 'AbeilleMQTTCmdTimer', 'AbeilleSocat', 'AbeilleSerialRead'];
+            $obsolete = ['AbeilleCmd', 'AbeilleMQTTCmd', 'AbeilleMQTTCmdTimer', 'AbeilleSocat', 'AbeilleSerialRead', 'AbeilleParser'];
             for ($z = 1; $z <= 10; $z++) {
                 $obsolete[] = 'AbeilleSocat'.$z;
                 $obsolete[] = 'AbeilleSerialRead'.$z;

@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-211001-BETA-1
+211004-STABLE-1
 ----------
 
 - Correction mauvaise config lors de l'inclusion si #IEEE# ou #ZigateIEEE# utilisé.

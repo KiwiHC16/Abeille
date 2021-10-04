@@ -354,11 +354,8 @@
                 return false;
             }
 
-            // Read JSON to get list of commands to execute
-            $eqConfig = AbeilleTools::getDeviceConfig($jsonName, $jsonLocation);
             $eq['jsonId'] = $jsonName;
             $eq['jsonLocation'] = $jsonLocation;
-            $eq['config'] = $eqConfig;
             return true;
         }
 
@@ -377,11 +374,11 @@
                 'jsonId' => '', // JSON identifier
                 'jsonLocation' => '', // JSON location ("Abeille"=default, or "local")
             );
-            identifying: req EP list + manufacturer + modelId + location
-                         Note: Special case for Xiaomi which may not support "Active EP request".
-            configuring: execute cmds with 'execAtCreation' flag
-            discovering: for unknown EQ
-            idle: all actions ended
+            'status':
+                identifying: req EP list + manufacturer + modelId with special cases support.
+                configuring: execute cmds with 'execAtCreation' flag
+                discovering: for unknown EQ
+                idle: all actions ended
         */
 
         /* Called on device announce. */
@@ -466,10 +463,17 @@
             // }
 
             /* Default identification: need EP list.
-               Tcharp38 note: Some devices may not answer to active endpoints request but will send
-                 their model identifier automatically (ex: old Xiaomi dev). */
+               Tcharp38 note: Some devices may not answer to active endpoints request at all. */
             parserLog('debug', '  Requesting active end points list');
             $this->msgToCmd("Cmd".$net."/0000/ActiveEndPoint", "address=".$addr);
+
+            /* Special trick for NXP based devices.
+            Some of them (ex: old Xiaomi) do not answer to "Active EP request" and do not send modelIdentifier themself. */
+            $nxp = (substr($ieee, 0, 9) == "00158D000") ? true : false;
+            if ($nxp) {
+                parserLog('debug', '  NXP based device. Requesting modelIdentifier from EP 01');
+                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=01&clustId=0000&attrId=0005");
+            }
         }
 
         /* 2nd step of identification phase.
@@ -491,63 +495,73 @@
             if ($updType == 'epList') { // Active end points response
                 $eqArr = explode('/', $value);
                 $eq['epFirst'] = $eqArr[0];
+            } else if ($eq['epList'] == '') { // Probably got modelIdentifier BEFORE end points list
+                $eq['epList'] = $ep; // There is at least this EP where update is coming from
+                $eq['epFirst'] = $ep; // There is at least this EP where update is coming from
             }
 
             /* If not in 'identifying' phase, no more to do */
             if ($eq['status'] != 'identifying')
                 return;
 
-            if ($updType == 'epList') {
-                /* Any other info missing to identify device ? */
-                if (!isset($eq['manufacturer'])) {
-                    parserLog('debug', '  Requesting manufacturer from EP '.$eq['epFirst']);
-                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
-                }
-                if (!isset($eq['modelIdentifier'])) {
-                    parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
-                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
-                }
-                /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
-                if (($eq['modelIdentifier'] === null || $eq['modelIdentifier'] === false) && !isset($eq['location'])) {
-                    parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
-                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
-                }
-            } else if ($eq['epList'] == '') { // Probably got modelId BEFORE end points list
-                $eq['epList'] = $ep; // There is at least EP where update is coming from
-                $eq['epFirst'] = $ep; // There is at least EP where update is coming from
-                parserLog('debug', '  Requesting manufacturer from EP '.$ep);
-                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=0000&attrId=0004");
-                /* To support devices that may not respond to manufacturer request (ex: Old Xiaomi),
-                   let's check if we can already identfy device by modelId only */
-                if ($this->findJsonConfig($eq, 'modelIdentifier') == false)
-                    return;
-            } else {
-                /* Enough infos to try to identify device ?
+            /* Identification phase is key but there are unfortunately several cases:
+                - Standard case zigbee compliant:
+                    - The device respond to "active endpoints request".
+                    - Then gives 'manufacturer' and 'modelIdentifier'.
+                - Special case (ex: old Xiaomi):
+                    - The device does not respond neither to "active endpoints request" nor to "manufacturer" BUT gives its modelIdentifier.
+                - Special case (ex: old Xiaomi):
+                    - The device does not respond neither to "active endpoints request" nor to "manufacturer" AND does not send modelIdentifier.
+                    - In that case no choice but read EP 01 attribute 0005 to identify.
+                - Special case (ex: old Profalux):
+                    - The device does not support "modelIdentifier" or "manufacturer" attributes but supports "location"
+            */
+
+            /* Any info missing to identify device ? */
+            if (!isset($eq['manufacturer'])) {
+                parserLog('debug', '  Requesting manufacturer from EP '.$eq['epFirst']);
+                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
+            }
+            if (!isset($eq['modelIdentifier'])) {
+                parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
+                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
+            }
+            /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
+            if (($eq['modelIdentifier'] == null || $eq['modelIdentifier'] === false) && !isset($eq['location'])) {
+                parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
+                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
+            }
+
+            /* Trying to identify device ?
                 Identification process reminder
-                    - if modelId is supported
-                        - search for JSON with 'modelId_manuf' then 'modelId'
-                        - if found => configure
-                        - if not found => discover
-                    - else if location is supported
-                        - search for JSON with 'location'
-                        - if found => configure
-                        - if not found => discover */
-                if (!isset($eq['modelIdentifier']))
-                    return; // Need value or false (unsupported)
-                if ($eq['modelIdentifier'] !== false) {
-                    if (!isset($eq['manufacturer']))
-                        return; // Need value or false (unsupported)
+                - if modelId is supported
+                    - search for JSON with 'modelId_manuf' then 'modelId'
+                - else (modelId is not supported) if location is supported
+                    - search for JSON with 'location'
+            */
+            if (!isset($eq['modelIdentifier']))
+                return; // Need at least false/unsupported or a value
+            if ($eq['modelIdentifier'] !== false) {
+                if (!isset($eq['manufacturer'])) {
+                    /* Checking if device is supported without manufacturer attribute for those who do not respond to such request
+                       but if not, default config is not accepted since manufacturer may not be arrived yet. */
+                    if ($this->findJsonConfig($eq, 'modelIdentifier') === false) {
+                        $eq['jsonId'] = ''; // 'defaultUnknown' case not accepted there
+                        return;
+                    }
+                } else {
                     /* Manufacturer & modelId attributes returned */
                     $this->findJsonConfig($eq, 'modelIdentifier');
-                } else if (!isset($eq['location'])) {
-                    return; // Need value or false (unsupported)
-                } else if ($eq['location'] !== false) {
-                    /* ModelId UNsupported. Trying with 'location' */
-                    $this->findJsonConfig($eq, 'location');
-                } else {
-                    parserLog('debug', "  WARNING: Unidentified device ! Can't do anything.");
-                    return;
                 }
+            } else if (!isset($eq['location'])) {
+                return; // Need value or false (unsupported)
+            } else if ($eq['location'] !== false) {
+                /* ModelId UNsupported. Trying with 'location' */
+                $this->findJsonConfig($eq, 'location');
+            } else { // Neither modelId nor location supported ?! Ouahhh...
+                parserLog('debug', "  WARNING: Neither modelId nor location supported => using default config.");
+                $eq['jsonId'] = 'defaultUnknown';
+                $eq['jsonLocation'] = "Abeille";
             }
 
             /* If device is identified, 'jsonId' indicates how to support it. */
@@ -562,12 +576,21 @@
 
         /* Go thru EQ commands and execute all those marked 'execAtCreation' */
         function deviceConfigure($net, $addr) {
-            parserLog('debug', "  deviceConfigure(".$net.", ".$addr.")");
-
             $eq = &$GLOBALS['eqList'][$net][$addr];
-            $eq['status'] = 'configuring';
+            parserLog('debug', "  deviceConfigure(".$net.", ".$addr.", jsonId=".$eq['jsonId'].")");
 
-            $cmds = $eq['config']['commands'];
+            // Read JSON to get list of commands to execute
+            $eqConfig = AbeilleTools::getDeviceConfig($eq['jsonId'], $eq['jsonLocation']);
+            if ($eqConfig === false)
+                return;
+
+            $eq['status'] = 'configuring';
+            if (!isset($eqConfig['commands'])) {
+                parserLog('debug', "    No cmds in JSON file.");
+                return;
+            }
+            $cmds = $eqConfig['commands'];
+
             parserLog('debug', "    cmds=".json_encode($cmds));
             foreach ($cmds as $cmdJName => $cmd) {
                 if (!isset($cmd['configuration']))

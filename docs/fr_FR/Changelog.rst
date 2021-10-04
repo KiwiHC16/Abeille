@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211004-BETA-1
+-------------
+
 - Page EQ/avancé: correction bouton 'reconfiguer' + amélioration message.
 - Interne: Zigbee const: corrections pour éviter warning PHP.
 - Page équipements: Suppression zone developpeur (bas de page).

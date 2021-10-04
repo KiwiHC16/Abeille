@@ -514,6 +514,9 @@
             topic = "Cmd"+logicalId+"_cmd-0000";
             ep = document.getElementById("idEpG").value;
             payload = "ep="+ep+"_cmd=00";
+        } else if (request == "getActiveEndPoints") {
+            topic = "Cmd"+logicalId+"_ActiveEndPoint";
+            payload = "address="+js_eqAddr;
         } else {
             console.log("Unknown request "+request);
             return;

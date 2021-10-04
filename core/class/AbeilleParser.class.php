@@ -354,11 +354,8 @@
                 return false;
             }
 
-            // Read JSON to get list of commands to execute
-            $eqConfig = AbeilleTools::getDeviceConfig($jsonName, $jsonLocation);
             $eq['jsonId'] = $jsonName;
             $eq['jsonLocation'] = $jsonLocation;
-            $eq['config'] = $eqConfig;
             return true;
         }
 
@@ -377,11 +374,11 @@
                 'jsonId' => '', // JSON identifier
                 'jsonLocation' => '', // JSON location ("Abeille"=default, or "local")
             );
-            identifying: req EP list + manufacturer + modelId + location
-                         Note: Special case for Xiaomi which may not support "Active EP request".
-            configuring: execute cmds with 'execAtCreation' flag
-            discovering: for unknown EQ
-            idle: all actions ended
+            'status':
+                identifying: req EP list + manufacturer + modelId with special cases support.
+                configuring: execute cmds with 'execAtCreation' flag
+                discovering: for unknown EQ
+                idle: all actions ended
         */
 
         /* Called on device announce. */
@@ -466,10 +463,17 @@
             // }
 
             /* Default identification: need EP list.
-               Tcharp38 note: Some devices may not answer to active endpoints request but will send
-                 their model identifier automatically (ex: old Xiaomi dev). */
+               Tcharp38 note: Some devices may not answer to active endpoints request at all. */
             parserLog('debug', '  Requesting active end points list');
             $this->msgToCmd("Cmd".$net."/0000/ActiveEndPoint", "address=".$addr);
+
+            /* Special trick for NXP based devices.
+            Some of them (ex: old Xiaomi) do not answer to "Active EP request" and do not send modelIdentifier themself. */
+            $nxp = (substr($ieee, 0, 9) == "00158D000") ? true : false;
+            if ($nxp) {
+                parserLog('debug', '  NXP based device. Requesting modelIdentifier from EP 01');
+                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=01&clustId=0000&attrId=0005");
+            }
         }
 
         /* 2nd step of identification phase.
@@ -491,63 +495,73 @@
             if ($updType == 'epList') { // Active end points response
                 $eqArr = explode('/', $value);
                 $eq['epFirst'] = $eqArr[0];
+            } else if ($eq['epList'] == '') { // Probably got modelIdentifier BEFORE end points list
+                $eq['epList'] = $ep; // There is at least this EP where update is coming from
+                $eq['epFirst'] = $ep; // There is at least this EP where update is coming from
             }
 
             /* If not in 'identifying' phase, no more to do */
             if ($eq['status'] != 'identifying')
                 return;
 
-            if ($updType == 'epList') {
-                /* Any other info missing to identify device ? */
-                if (!isset($eq['manufacturer'])) {
-                    parserLog('debug', '  Requesting manufacturer from EP '.$eq['epFirst']);
-                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
-                }
-                if (!isset($eq['modelIdentifier'])) {
-                    parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
-                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
-                }
-                /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
-                if (($eq['modelIdentifier'] === null || $eq['modelIdentifier'] === false) && !isset($eq['location'])) {
-                    parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
-                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
-                }
-            } else if ($eq['epList'] == '') { // Probably got modelId BEFORE end points list
-                $eq['epList'] = $ep; // There is at least EP where update is coming from
-                $eq['epFirst'] = $ep; // There is at least EP where update is coming from
-                parserLog('debug', '  Requesting manufacturer from EP '.$ep);
-                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=0000&attrId=0004");
-                /* To support devices that may not respond to manufacturer request (ex: Old Xiaomi),
-                   let's check if we can already identfy device by modelId only */
-                if ($this->findJsonConfig($eq, 'modelIdentifier') == false)
-                    return;
-            } else {
-                /* Enough infos to try to identify device ?
+            /* Identification phase is key but there are unfortunately several cases:
+                - Standard case zigbee compliant:
+                    - The device respond to "active endpoints request".
+                    - Then gives 'manufacturer' and 'modelIdentifier'.
+                - Special case (ex: old Xiaomi):
+                    - The device does not respond neither to "active endpoints request" nor to "manufacturer" BUT gives its modelIdentifier.
+                - Special case (ex: old Xiaomi):
+                    - The device does not respond neither to "active endpoints request" nor to "manufacturer" AND does not send modelIdentifier.
+                    - In that case no choice but read EP 01 attribute 0005 to identify.
+                - Special case (ex: old Profalux):
+                    - The device does not support "modelIdentifier" or "manufacturer" attributes but supports "location"
+            */
+
+            /* Any info missing to identify device ? */
+            if (!isset($eq['manufacturer'])) {
+                parserLog('debug', '  Requesting manufacturer from EP '.$eq['epFirst']);
+                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
+            }
+            if (!isset($eq['modelIdentifier'])) {
+                parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
+                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
+            }
+            /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
+            if (($eq['modelIdentifier'] == null || $eq['modelIdentifier'] === false) && !isset($eq['location'])) {
+                parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
+                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
+            }
+
+            /* Trying to identify device ?
                 Identification process reminder
-                    - if modelId is supported
-                        - search for JSON with 'modelId_manuf' then 'modelId'
-                        - if found => configure
-                        - if not found => discover
-                    - else if location is supported
-                        - search for JSON with 'location'
-                        - if found => configure
-                        - if not found => discover */
-                if (!isset($eq['modelIdentifier']))
-                    return; // Need value or false (unsupported)
-                if ($eq['modelIdentifier'] !== false) {
-                    if (!isset($eq['manufacturer']))
-                        return; // Need value or false (unsupported)
+                - if modelId is supported
+                    - search for JSON with 'modelId_manuf' then 'modelId'
+                - else (modelId is not supported) if location is supported
+                    - search for JSON with 'location'
+            */
+            if (!isset($eq['modelIdentifier']))
+                return; // Need at least false/unsupported or a value
+            if ($eq['modelIdentifier'] !== false) {
+                if (!isset($eq['manufacturer'])) {
+                    /* Checking if device is supported without manufacturer attribute for those who do not respond to such request
+                       but if not, default config is not accepted since manufacturer may not be arrived yet. */
+                    if ($this->findJsonConfig($eq, 'modelIdentifier') === false) {
+                        $eq['jsonId'] = ''; // 'defaultUnknown' case not accepted there
+                        return;
+                    }
+                } else {
                     /* Manufacturer & modelId attributes returned */
                     $this->findJsonConfig($eq, 'modelIdentifier');
-                } else if (!isset($eq['location'])) {
-                    return; // Need value or false (unsupported)
-                } else if ($eq['location'] !== false) {
-                    /* ModelId UNsupported. Trying with 'location' */
-                    $this->findJsonConfig($eq, 'location');
-                } else {
-                    parserLog('debug', "  WARNING: Unidentified device ! Can't do anything.");
-                    return;
                 }
+            } else if (!isset($eq['location'])) {
+                return; // Need value or false (unsupported)
+            } else if ($eq['location'] !== false) {
+                /* ModelId UNsupported. Trying with 'location' */
+                $this->findJsonConfig($eq, 'location');
+            } else { // Neither modelId nor location supported ?! Ouahhh...
+                parserLog('debug', "  WARNING: Neither modelId nor location supported => using default config.");
+                $eq['jsonId'] = 'defaultUnknown';
+                $eq['jsonLocation'] = "Abeille";
             }
 
             /* If device is identified, 'jsonId' indicates how to support it. */
@@ -562,12 +576,21 @@
 
         /* Go thru EQ commands and execute all those marked 'execAtCreation' */
         function deviceConfigure($net, $addr) {
-            parserLog('debug', "  deviceConfigure(".$net.", ".$addr.")");
-
             $eq = &$GLOBALS['eqList'][$net][$addr];
-            $eq['status'] = 'configuring';
+            parserLog('debug', "  deviceConfigure(".$net.", ".$addr.", jsonId=".$eq['jsonId'].")");
 
-            $cmds = $eq['config']['commands'];
+            // Read JSON to get list of commands to execute
+            $eqConfig = AbeilleTools::getDeviceConfig($eq['jsonId'], $eq['jsonLocation']);
+            if ($eqConfig === false)
+                return;
+
+            $eq['status'] = 'configuring';
+            if (!isset($eqConfig['commands'])) {
+                parserLog('debug', "    No cmds in JSON file.");
+                return;
+            }
+            $cmds = $eqConfig['commands'];
+
             parserLog('debug', "    cmds=".json_encode($cmds));
             foreach ($cmds as $cmdJName => $cmd) {
                 if (!isset($cmd['configuration']))
@@ -822,12 +845,14 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         // }
 
         /* Convert hex string to proper data type.
-           'hexString' = input data (hexa string format)
-           'reorder' = true if input is raw string, else false
-           'dataSize' is size of value in Bytes
-           'dataRaw' is the extracted & reordered hex string value
+           'iHs' = input data (hexa string format)
+           'dataType' = data type
+           'raw' = true if input is raw string (need reordering), else false
+           'dataSize' = data size required form some attributes (ex: 41/42) if 'raw' == 'false'.
+           'oSize' = size of 'iHs' extracted part
+           'oHs' is the extracted & reordered hex string value
            Returns value according to type or false if error. */
-        function decodeDataType($hexString, $dataType, $reorder, &$dataSize, &$dataRaw) {
+        function decodeDataType($iHs, $dataType, $raw, $dataSize, &$oSize = null, &$oHs = null) {
             // Compute value size according to data type
             switch ($dataType) {
             case "10": // Boolean
@@ -870,9 +895,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 break;
             case "41": // String discrete: octstr
             case "42": // String discrete: string
-parserLog('debug', "  hexString=".$hexString);
-                $dataSize = hexdec(substr($hexString, 0, 2));
-                $hexString = substr($hexString, 2);
+parserLog('debug', "  iHs=".$iHs);
+                if ($raw) {
+                    $dataSize = hexdec(substr($iHs, 0, 2));
+                    $oSize = $dataSize + 1;
+                    $iHs = substr($iHs, 2); // Skip header byte
+                } // else $dataSize provided from caller
                 break;
             default:
                 parserLog('debug', "  decodeDataType() ERROR: Unsupported type ".$dataType);
@@ -880,27 +908,26 @@ parserLog('debug', "  hexString=".$hexString);
             }
 
             // Checking size
-            $l = strlen($hexString);
+            $l = strlen($iHs);
             if ($l < (2 * $dataSize)) {
                 parserLog('debug', "  decodeDataType() ERROR: Data too short (got=".($l/2)."B, exp=".$dataSize."B)");
                 return false;
             }
 
             // Reordering raw bytes
-            if ($reorder) {
+            if ($raw) {
                 // 'hs' is now reduced to proper size
                 if ($dataSize == 1)
-                    $hs = substr($hexString, 0, 2);
+                    $hs = substr($iHs, 0, 2);
                 else {
                     $hs = '';
                     for ($i = 0; $i < ($dataSize * 2); $i += 4) {
-                        $hs .= substr($hexString, $i + 2, 2).substr($hexString, $i, 2);
+                        $hs .= substr($iHs, $i + 2, 2).substr($iHs, $i, 2);
                     }
                 }
             } else
-                $hs = substr($hexString, 0, $dataSize * 2);
+                $hs = substr($iHs, 0, $dataSize * 2);
 // parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexString." => hs=".$hs);
-            $dataRaw = $hs;
 
             // Computing value
             switch ($dataType) {
@@ -935,13 +962,19 @@ parserLog('debug', "  hexString=".$hexString);
                 $value -= 0x1000000;
                 break;
             case "41": // String discrete: octstr
-            case "42": // String discrete: string
                 $value = $hs;
+                break;
+            case "42": // String discrete: string
+                $value = pack("H*", $hs);
                 break;
             default:
                 parserLog('debug', "  decodeDataType() ERROR: Unsupported type ".$dataType);
                 return false;
             }
+
+            $oHs = $hs;
+            if (!isset($oSize))
+                $oSize = $dataSize;
             return $value;
         }
 
@@ -1379,7 +1412,7 @@ parserLog('debug', "  hexString=".$hexString);
                 return $attr;
             $attr['dataType'] = substr($hexString, 6, 2);
             $hexString = substr($hexString, 8);
-            $attr['value'] = $this->decodeDataType($hexString, $attr['dataType'], true, $dataSize, $valueHex);
+            $attr['value'] = $this->decodeDataType($hexString, $attr['dataType'], true, null, $dataSize, $valueHex);
             if ($attr['value'] === false)
                 return false;
             $attr['valueHex'] = $valueHex;
@@ -1405,7 +1438,7 @@ parserLog('debug', "  hexString=".$hexString);
                 'value' => null
             );
             $hexString = substr($hexString, 6);
-            $attr['value'] = $this->decodeDataType($hexString, $attr['dataType'], true, $dataSize, $valueHex);
+            $attr['value'] = $this->decodeDataType($hexString, $attr['dataType'], true, null, $dataSize, $valueHex);
             if ($attr['value'] === false)
                 return false;
             $attr['valueHex'] = $valueHex;
@@ -4461,7 +4494,7 @@ parserLog('debug', "  hexString=".$hexString);
             else if ($clustId == "0402") { // Temperature Measurement cluster
                 if ($attrId == "0000") { // MeasuredValue
                     $MeasuredValue = substr($Attribut, 0, 4); // int16
-                    $temp = $this->decodeDataType($MeasuredValue, $dataType, false, $dataSize, $hexString) / 100;
+                    $temp = $this->decodeDataType($MeasuredValue, $dataType, false, hexdec($attrSize)) / 100;
                     parserLog('debug', '  Temp, MeasuredValue='.$MeasuredValue.' => '.$temp.'C');
                 }
             } // End cluster 0402
@@ -4469,7 +4502,7 @@ parserLog('debug', "  hexString=".$hexString);
             else if ($clustId == "0403") { // Pressure Measurement cluster
                 if ($attrId == "0000") { // MeasuredValue
                     $MeasuredValue = substr($Attribut, 0, 4); // int16, MeasuredValue = 10 x Pressure
-                    $pressure = $this->decodeDataType($Attribut, $dataType, false, $dataSize, $hexString) / 10;
+                    $pressure = $this->decodeDataType($Attribut, $dataType, false, hexdec($attrSize)) / 10;
                     parserLog('debug', '  Pressure, MeasuredValue='.$MeasuredValue.' => '.$pressure.'kPa');
                 }
             } // End cluster 0403
@@ -4591,7 +4624,7 @@ parserLog('debug', "  hexString=".$hexString);
 
             /* Note: If $data is not set, then nothing to send to Abeille. This might be because data type is unsupported */
             else {
-                $data = $this->decodeDataType(substr($payload, 24), $dataType, false, $dataSize, $hexString);
+                $data = $this->decodeDataType(substr($payload, 24), $dataType, false, hexdec($attrSize));
                 if ($data === false)
                     return; // Unsupported data type
             }

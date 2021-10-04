@@ -2816,8 +2816,6 @@ while ($cron->running()) {
                 $eqCurJsonId = $eqLogic->getConfiguration('modeleJson'); // Current JSON ID
                 if (($eqCurJsonId == 'defaultUnknown') && ($jsonId != 'defaultUnknown'))
                     message::add("Abeille", "'".$eqHName."' s'est réannoncé. Mise-à-jour de la config par défaut vers '".$eqType."'", '');
-                else if ($userMsg != '')
-                    message::add("Abeille", $userMsg, '');
                 else {
                     /* Tcharp38: Following https://github.com/KiwiHC16/Abeille/issues/2132#, device re-announce is just ignored here
                         to not generate plenty messages, unless device was disabled.

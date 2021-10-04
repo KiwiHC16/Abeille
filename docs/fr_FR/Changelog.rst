@@ -4,65 +4,40 @@ ChangeLog
 - Page EQ/avancé: correction bouton 'reconfiguer' + amélioration message.
 - Interne: Zigbee const: corrections pour éviter warning PHP.
 - Page équipements: Suppression zone developpeur (bas de page).
-- Correction mauvaise config lors de l'inclusion si #IEEE# ou #ZigateIEEE# utilisé.
+- Page EQ/avancé: Ajout interrogation des 'Active end points'.
+- Interne: Parser: decodeDataType() revu pour types 41 & 42.
+- Interne: Procedure d'inclusion avec support "cas speciaux".
+- Suppression log obsolete AbeilleParser (sans '.log') lors de la mise-à-jour/installation.
 - Page équipement: Message si équipement à disparu depuis l'ouverture de la page.
 - Interne: Parser: Support remontée commandes du cluster 0300 en provenance d'un équipement.
 - Osram smart switch mini: Mise-à-jour. Ne supporte que le controle vers Jeedom.
+
+211004-STABLE-1
+---------------
+
+- Correction mauvaise config lors de l'inclusion si #IEEE# ou #ZigateIEEE# utilisé.
 - Page santé: correction IEEE manquante pour Ruche.
-- Suppression log obsolete AbeilleParser (sans '.log') lors de la mise-à-jour/installation.
 - Inclusion: Correction pour vieux équipements type Xiaomi (ne repond pas à lecture attribut manufacturer).
-
-210929-BETA-1
-----------
-
 - Interne: Identification périph revisitée.
 - Assistant Zigbee: Correction & amélioration.
-
-210928-BETA-1
-----------
-
 - Interne: Modification astuce identification vieux modeles Xiaomi basé sur IEEE. Non compatible ZLinky.
 - Correction regression 'setModeHybride' + mise-à-jour commande interne.
-
-210927-BETA-1
-----------
-
 - Assistant Zigbee: Ajout forcage EP01.
-
-210926-BETA-1
-----------
-
 - Commandes JSON: nettoyage.
 - Assistant Zigbee: Améliorations: ajout découverte etendue des attributs.
 - ZLinky TIC: Support préliminaire.
 - Interne: Parser: Nettoyage.
 - Aqara SSM-U02: Correction icone.
-
-210924-BETA-1
-----------
-
 - Xiaomi Mijia Honeywell Détecteur de Fumée: Tentative correction bouton test (#2143).
-
-210923-BETA-1
-----------
-
 - Ruban LED Lidl: Mise à jour JSON (#1737).
 - TRADFRIbulbGU10CWS345lm: Mise a jour (#2137).
 - Interne: Correction erreur PHP: Undefined index: battery_type in AbeilleLQI_Map.php
 - Interne: Correction crash inclusion dans cas ou "value" pointe sur commande inexistante.
-
-210922-BETA-2
-----------
-
 - Xiaomi smoke detector: bouton test genere crash d'AbeilleCmd (#2143).
-
-210922-BETA-1
-----------
-
 - Aqara TVOC moniteur d'air AAQS-S01: Support préliminaire (#2135).
 
 210922-STABLE-1
-----------
+---------------
 
 - Interne: Correction requete "discover attributes extended".
 - Loratap 3 boutons: Correction regression (#2138).

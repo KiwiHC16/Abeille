@@ -278,7 +278,7 @@ class AbeilleTools
      * 'deviceName': JSON file name without extension
      * 'from': JSON file location (default=Abeille, or 'local')
      * 'mode': 0/default=load commands too, 1=split cmd call & file
-     * Return: device associative array without top level key (jsonId).
+     * Return: device associative array without top level key (jsonId) or false if error.
      */
     public static function getDeviceConfig($deviceName, $from="Abeille", $mode=0)
     {
@@ -299,7 +299,7 @@ class AbeilleTools
         if (json_last_error() != JSON_ERROR_NONE) {
             log::add('Abeille', 'error', 'L\'équipement \''.$deviceName.'\' a un mauvais fichier JSON.');
             log::add('Abeille', 'debug', 'getDeviceConfig(): content='.$jsonContent);
-            return;
+            return false;
         }
 
         $device = $device[$deviceName]; // Removing top key

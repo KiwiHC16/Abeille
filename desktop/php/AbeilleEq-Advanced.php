@@ -631,6 +631,14 @@ logDebug("MainEP=".$mainEP);
             </div>
         </div>
         <div class="form-group">
+            <label class="col-sm-3 control-label" title="getActiveEndPoints">Liste des 'end points'</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'getActiveEndPoints\', \''.$eqId.'\')">{{Interroger}}</a>';
+                ?>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-sm-3 control-label" title="Bind cet équipement vers un autre (Bind_req)">Bind to device</label>
             <div class="col-sm-5">
                 <?php

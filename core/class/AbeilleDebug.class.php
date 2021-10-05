@@ -1,8 +1,7 @@
 <?php
-
     include_once __DIR__.'/../../core/class/AbeilleTools.class.php';
 
-class AbeilleDebug extends AbeilleTools {
+    class AbeilleDebug extends AbeilleTools {
         public $debug = array(
             "cli"                    => 0, // commande line mode or jeedom
             "Checksum"                => 0, // Debug checksum calculation
@@ -12,7 +11,6 @@ class AbeilleDebug extends AbeilleTools {
             "procmsg2"                => 0, // Debug fct procmsg avec un seul msg
             "procmsg3"                => 0, // Debug fct procmsg avec un seul msg
             "processCmd"              => 1, // Debug fct processCmd
-            "processCmd2"             => 0, // Debug fct processCmd2
             "sendCmd"                 => 1, // Debug fct sendCmd
             "sendCmd2"                => 0, // Debug fct sendCmd
             "cmdQueue"                => 0, // Debug cmdQueue

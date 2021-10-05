@@ -370,11 +370,12 @@
                     "addr"                  => $address,
                     "ep"                    => $parameters['ep'],
                     "clustId"               => $parameters['clustId'],
-                    "attrType"              => $parameters['attrType'],
                     "attrId"                => $parameters['attrId'],
                     "minInterval"           => $parameters['minInterval'],
                     "maxInterval"           => $parameters['maxInterval']
                 );
+                if (isset($parameters['attrType']) )
+                    $Command["attrType"] = $parameters['attrType']; // Auto-detected if not filled
                 break;
 
             case "readReportingConfig":

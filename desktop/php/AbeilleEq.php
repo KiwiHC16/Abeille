@@ -517,6 +517,12 @@
         } else if (request == "getActiveEndPoints") {
             topic = "Cmd"+logicalId+"_ActiveEndPoint";
             payload = "address="+js_eqAddr;
+        } else if (request == "configureReporting") {
+            topic = "Cmd"+logicalId+"_configureReporting";
+            ep = document.getElementById("idEpCR").value;
+            clustId = document.getElementById("idClustIdCR").value;
+            attrId = document.getElementById("idAttrIdCR").value;
+            payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId;
         } else {
             console.log("Unknown request "+request);
             return;

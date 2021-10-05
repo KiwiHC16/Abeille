@@ -521,6 +521,9 @@
             }
             echo '</select>';
         }
+        function addAttrInput($id) {
+            echo '<input id="'.$id.'" style="width:120px; margin-left: 8px" placeholder="{{Attrib (ex: 0021)}}" title="Attribut, format hex 4 caracteres (ex: 0508)"/>';
+        }
     ?>
         <hr>
         <div class="form-group">
@@ -535,24 +538,21 @@
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'readAttribute\', \''.$eqId.'\')">{{Lire}}</a>';
                     // echo '<input id="idEpA" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
-logDebug("MainEP=".$mainEP);
                     addEpButton("idEpA", $mainEP);
                     addClusterButton("idClustIdA");
+                    addAttrInput("idAttrIdA");
                 ?>
-                <!-- <input id="idClustIdA" placeholder="{{Cluster (ex: 0001)}}" /> -->
-                <input id="idAttrIdA" placeholder="{{Attrib (ex: 0021)}}" />
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label" title="readReportingConfig">ZCL: Lecture configuration de rapport</label>
+            <label class="col-sm-3 control-label" title="readReportingConfig">ZCL: Lecture configuration de reporting</label>
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'readReportingConfig\', \''.$eqId.'\')">{{Interroger}}</a>';
                     addEpButton("idEp", $mainEP);
                     addClusterButton("idClustId");
+                    addAttrInput("idAttrId");
                 ?>
-                <!-- <input id="idClustId" placeholder="{{Cluster (ex: 0001)}}" /> -->
-                <input id="idAttrId" placeholder="{{Attrib (ex: 0021)}}" />
             </div>
         </div>
         <div class="form-group">
@@ -560,12 +560,9 @@ logDebug("MainEP=".$mainEP);
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'discoverCommandsReceived\', \''.$eqId.'\')">{{Interroger}}</a>';
-                    // echo '<input id="idEpB" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
                     addEpButton("idEpB", $mainEP);
                     addClusterButton("idClustIdB");
                 ?>
-                <!-- <input id="idClustIdB" placeholder="{{Cluster (ex: 0001)}}" /> -->
-                <!-- <input id="idStartB" placeholder="{{Start (ex: 00)}}" /> -->
             </div>
         </div>
         <div class="form-group">
@@ -573,12 +570,9 @@ logDebug("MainEP=".$mainEP);
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'discoverAttributes\', \''.$eqId.'\')">{{Interroger}}</a>';
-                    // echo '<input id="idEpD" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
                     addEpButton("idEpD", $mainEP);
                     addClusterButton("idClustIdD");
                 ?>
-                <!-- <input id="idClustIdD" placeholder="{{Cluster (ex: 0001)}}" /> -->
-                <!-- <input id="idStartD" placeholder="{{Start (ex: 00)}}" /> -->
             </div>
         </div>
         <div class="form-group">
@@ -586,12 +580,9 @@ logDebug("MainEP=".$mainEP);
             <div class="col-sm-5">
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'discoverAttributesExt\', \''.$eqId.'\')">{{Interroger}}</a>';
-                    // echo '<input id="idEpC" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
                     addEpButton("idEpC", $mainEP);
                     addClusterButton("idClustIdC");
                 ?>
-                <!-- <input id="idClustIdC" placeholder="{{Cluster (ex: 0001)}}" /> -->
-                <!-- <input id="idStartC" placeholder="{{Start (ex: 00)}}" /> -->
             </div>
         </div>
         <div class="form-group">
@@ -600,6 +591,17 @@ logDebug("MainEP=".$mainEP);
                 <?php
                     echo '<a class="btn btn-warning" onclick="interrogate(\'resetToFactory\', \''.$eqId.'\')">{{Reset}}</a>';
                     addEpButton("idEpG", $mainEP);
+                ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut">ZCL: Configurer le reporting</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'configureReporting\', \''.$eqId.'\')">{{Configurer}}</a>';
+                    addEpButton("idEpCR", $mainEP);
+                    addClusterButton("idClustIdCR");
+                    addAttrInput("idAttrIdCR");
                 ?>
             </div>
         </div>

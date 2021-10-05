@@ -15,7 +15,8 @@
         },
         "type": "Tuya smart socket",
         "commands": {
-            "include0004-1": "Group-Membership",
+            "Groups": { "use": "Group-Membership" },
+
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1
@@ -33,12 +34,17 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include0006-5": "BindToZigateEtat",
-            "Set-OnOffReporting": {
+            "Bind-0006-ToZigate": {
+                "use": "bindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0006-0000": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
                 "execAtCreation": "yes"
             },
+
             "Total power": {
                 "use": "zb-0702-CurrentSummationDelivered",
                 "params": "unit=KWh&div=10",
@@ -59,6 +65,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0702&attrId=0303"
             },
+
             "RMSVoltage": {
                 "use": "zb-0B04-RMSVoltage",
                 "params": "mult=1&div=100",
@@ -68,13 +75,20 @@
                 "use": "zb-0B04-RMSCurrent",
                 "isVisible": 1
             },
+            "Get-0B04-RMSCurrent": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0B04&attrId=0508"
+            },
             "ActivePower": {
                 "use": "zb-0B04-ActivePower",
                 "params": "mult=1&div=1",
                 "isVisible": 1
             },
+            "Get-0B04-ActivePower": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0B04&attrId=050B"
+            },
             "include0B04-5": "getPlugVAW"
-        },
-        "comment": ""
+        }
     }
 }

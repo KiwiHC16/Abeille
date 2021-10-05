@@ -1,5 +1,7 @@
 {
     "TRADFRISHORTCUTButton": {
+        "manufacturer": "Ikea",
+        "model": "Shortcut button E1812",
         "timeout": "60",
         "configuration": {
             "lastCommunicationTimeOut": "-1",
@@ -10,26 +12,36 @@
         "category": {
             "automatism": "1"
         },
-        "type": "TRADFRI Shortcut Button",
+        "type": "Ikea Tradfri shortcut button",
         "commands": {
-            "include7": "Up-Down",
-            "include7 1": "Click-Middle",
-            "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
-                "isVisible": 1
-            },
-            "include9": "getBattery",
-            "include10": "BindShortToZigateBatterie",
-            "include11": "setReportBatterie",
-            "include12": "setReportEtat",
-            "include13": "BindToZigateEtat",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
-            }
+            },
+
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            },
+            "include9": "getBattery",
+            "Bind-0001-ToZigate": {
+                "use": "bindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0001-0021": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+                "execAtCreation": "Yes"
+            },
+
+            "include7": "Up-Down",
+            "include7 1": "Click-Middle",
+            "include12": "setReportEtat",
+            "include13": "BindToZigateEtat"
         },
         "comment": "Ref. IKEA E1812"
     }

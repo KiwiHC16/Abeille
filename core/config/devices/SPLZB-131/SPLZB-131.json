@@ -12,16 +12,25 @@
         },
         "type": "Frient Smart Plug Mini Type F",
         "commands": {
-            "include0004-1": "Group-Membership",
+            "Groups": { "use": "Group-Membership" },
 
             "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
             "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
             "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
             "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
-            "include0006-5": "BindToZigateEtat",
-            "include0006-6": "setReportEtat",
+            "Bind-0006-ToZigate": {
+                "use": "bindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Set-0006-0000-Reporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "yes"
+            },
 
             "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "unit=KWh&div=1000", "isVisible": 1 },
+            "Get-Total power": { "use": "zbReadAttribute", "params": "clustId=0702&attrId=0000" },
 
             "RMSVoltage": { "use": "zb-0B04-RMSVoltage", "isVisible": 0, "params": "mult=1&div=100" },
             "RMSCurrent": { "use": "zb-0B04-RMSCurrent", "isVisible": 1 },

@@ -2320,7 +2320,24 @@ parserLog('debug', "  iHs=".$iHs);
                 } // End '$cmd == "01"'
 
                 else if ($cmd == "07") { // Configure Reporting Response
-                    parserLog('debug', "  Handled by decode8120");
+                    // Some clusters are directly handled by 8120 decode
+                    $acceptedCmd07 = ['0B04']; // Clusters handled here
+                    if (!in_array($cluster, $acceptedCmd07)) {
+                        parserLog('debug', "  Handled by decode8120");
+                        return;
+                    }
+
+                    $l = strlen($msg);
+                    $status = substr($msg, 0, 2);
+                    if ($l > 2)
+                        $dir = substr($msg, 2, 2);
+                    else
+                        $dir = "?";
+                    if ($l > 4)
+                        $attrId = substr($msg, 6, 2).substr($msg, 4, 2);
+                    else
+                        $attrId = "?";
+                    parserLog('debug', "  Status=".$status.", dir=".$dir.", attrId=".$attrId);
                     return;
                 }
 
@@ -2329,6 +2346,7 @@ parserLog('debug', "  iHs=".$iHs);
                     $dir = substr($msg, 2, 2);
                     $attrId = substr($msg, 6, 2).substr($msg, 4, 2);
                     if ($status == "00") {
+                        $l = strlen($msg);
                         $attrType = substr($msg, 8, 2);
                         $minInterval = substr($msg, 10, 4);
                         $maxInterval = substr($msg, 14, 4);
@@ -2353,8 +2371,10 @@ parserLog('debug', "  iHs=".$iHs);
                     }
 
                     /* Monitor if requested */
-                    if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
+                    if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr)) {
                         monMsgFromZigate("8002/Report attributes response"); // Send message to monitor
+                        $monitor = true;
+                    }
 
                     $l = strlen($msg);
                     $attributes = [];
@@ -2364,11 +2384,13 @@ parserLog('debug', "  iHs=".$iHs);
                             break;
 
                         $attrName = zbGetZCLAttributeName($cluster, $attr['id']);
-                        parserLog('debug', '  AttrId='.$attr['id'].'/'.$attrName
-                            .', attrType='.$attr['dataType']
-                            .', value='.$attr['value'],
-                            "8002"
-                        );
+                        $m = '  AttrId='.$attr['id'].'/'.$attrName
+                            .', AttrType='.$attr['dataType']
+                            .', Value='.$attr['value'];
+                        parserLog('debug', $m, "8002");
+                        if (isset($monitor))
+                            monMsgFromZigate($m); // Send message to monitor
+
                         $attrId = $attr['id'];
                         unset($attr['id']); // Remove 'id' from object for optimization
                         $attributes[$attrId] = $attr;

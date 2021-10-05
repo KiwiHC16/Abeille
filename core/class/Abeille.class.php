@@ -2960,8 +2960,9 @@ while ($cron->running()) {
         foreach ($cmds as $cmdLogic) {
             $found = false;
             $cmdName = $cmdLogic->getName();
-            foreach ($jsonCmds as $cmd => $cmdValueDefaut) {
-                if ($cmdName == $cmdValueDefaut["name"]) {
+            foreach ($jsonCmds as $cmdKey => $cmdValueDefaut) {
+                $cmdJName = $cmdKey; // Jeedom command name
+                if ($cmdName == $cmdJName) {
                     $found = true;
                     break; // Listed in JSON
                 }

@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- Niko connected socket outlet: Mise-à-jour image.
+- Page EQ/avancé: Ajout possibilité de configurer le reporting.
+- Interne: Parser: Support 'configure reporting response' pour 0B04.
+
 211004-BETA-1
 -------------
 

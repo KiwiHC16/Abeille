@@ -4,7 +4,7 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "Connectedoutlet"
+            "icon": "Niko-ConnectedSocketOutlet"
         },
         "category": {
             "automatism": "1"
@@ -19,7 +19,7 @@
                 "params": "clustId=0000&attrId=4000"
             },
 
-            "include25": "Group-Membership",
+            "Groups": { "use": "Group-Membership" },
 
             "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
             "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
@@ -27,10 +27,10 @@
             "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
             "Bind-0006-ToZigate": {
                 "use": "bindToZigate",
-                "params": "CLUSTID=0006",
+                "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
-            "Set-OnOffReporting": {
+            "Set-0006-0000-Reporting": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
                 "execAtCreation": "yes"
@@ -41,6 +41,7 @@
                 "params": "unit=KWh&div=10000",
                 "isVisible": 1
             },
+            "Get-Total power": { "use": "zbReadAttribute", "params": "clustId=0702&attrId=0000" },
 
             "RMSVoltage": {
                 "use": "zb-0B04-RMSVoltage",
@@ -74,7 +75,7 @@
             },
             "Bind-0B04-ToZigate": {
                 "use": "bindToZigate",
-                "params": "CLUSTID=0B04",
+                "params": "clustId=0B04",
                 "execAtCreation": "Yes"
             }
         }

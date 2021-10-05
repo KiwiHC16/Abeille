@@ -1,6 +1,6 @@
 {
     "zb-0702-CurrentSummationDelivered": {
-        "comment": "CurrentSummationDelivered, uint48 => dataType = 0x25",
+        "comment": "CurrentSummationDelivered, attribute 0000, uint48 => dataType = 0x25",
         "name": "Total power",
         "subType": "numeric",
         "template": "badge",

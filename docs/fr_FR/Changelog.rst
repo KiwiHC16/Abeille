@@ -7,6 +7,7 @@ ChangeLog
 - Interne: AbeilleCmd: Correction bin0030 vers groupe.
 - Page EQ/avancé: Ajout possibilité d'écrire un attribut.
 - Interne: AbeilleCmd: Message d'erreur si pb lecture queues.
+- Interne: Commandes JSON 'getEtatEpXX' deviennent obsoletes.
 
 211004-BETA-1
 -------------

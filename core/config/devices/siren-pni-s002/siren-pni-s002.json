@@ -12,11 +12,11 @@
         "commands": {
             "include1": "OnEp01",
             "include1 1": "OffEp01",
-            "include1 1 1 1": "getEtatEp01",
+            "Get-Etat 1": { "use": "zbReadAttribute", "params": "ep=01&clustId=0006&attrId=0000" },
             "include1 1 1 1 1": "etatEp01out",
             "include2": "OnEp02",
             "include2 1": "OffEp02",
-            "include2 1 1 1": "getEtatEp02",
+            "Get-Etat 2": { "use": "zbReadAttribute", "params": "ep=02&clustId=0006&attrId=0000" },
             "include2 1 1 1 1": "etatEp02out"
         }
     }

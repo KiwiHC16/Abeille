@@ -11,7 +11,7 @@
         "type": "diy-mains-fault",
         "commands": {
             "include2": "etatEp02in",
-            "include2 1": "getEtatEp02"
+            "Get-Etat 2": { "use": "zbReadAttribute", "params": "ep=02&clustId=0006&attrId=0000" }
         }
     }
 }

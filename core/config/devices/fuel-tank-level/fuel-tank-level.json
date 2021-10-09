@@ -11,13 +11,13 @@
         "type": "fuel-tank-level",
         "commands": {
             "include2": "etatEp02in",
-            "include2 1": "getEtatEp02",
+            "Get-Etat 2": { "use": "zbReadAttribute", "params": "ep=02&clustId=0006&attrId=0000" },
             "include3": "etatEp03in",
-            "include3 1": "getEtatEp03",
+            "Get-Etat 3": { "use": "zbReadAttribute", "params": "ep=03&clustId=0006&attrId=0000" },
             "include4": "etatEp04in",
-            "include4 1": "getEtatEp04",
+            "Get-Etat 4": { "use": "zbReadAttribute", "params": "ep=04&clustId=0006&attrId=0000" },
             "include5": "etatEp05in",
-            "include5 1": "getEtatEp05"
+            "Get-Etat 5": { "use": "zbReadAttribute", "params": "ep=05&clustId=0006&attrId=0000" }
         }
     }
 }

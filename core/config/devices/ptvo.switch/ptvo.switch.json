@@ -13,7 +13,7 @@
             "include4": "etatEp08",
             "include5": "OnEp08",
             "include6": "OffEp08",
-            "include8": "getEtatEp08"
+            "Get-Etat 8": { "use": "zbReadAttribute", "params": "ep=08&clustId=0006&attrId=0000" }
         }
     }
 }

@@ -16,13 +16,8 @@
         },
         "type": "TRADFRI on\/off switch",
         "commands": {
-            "SWBuild": {
-                "use": "zb-0000-SWBuildID"
-            },
-            "Get-SWBuild": {
-                "use": "zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
+            "SWBuild": { "use": "zb-0000-SWBuildID" },
+            "Get-SWBuild": { "use": "zbReadAttribute", "params": "clustId=0000&attrId=4000" },
 
             "include4": "offGroup",
             "include6": "onGroup",

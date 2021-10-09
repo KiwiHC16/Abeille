@@ -5,6 +5,7 @@ ChangeLog
 - Page EQ/avancé: Ajout possibilité de configurer le reporting.
 - Interne: Parser: Support 'configure reporting response' pour 0B04.
 - Interne: AbeilleCmd: Correction bin0030 vers groupe.
+- Page EQ/avancé: Ajout possibilité d'écrire un attribut.
 - Interne: AbeilleCmd: Message d'erreur si pb lecture queues.
 
 211004-BETA-1

@@ -545,6 +545,18 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="col-sm-3 control-label">ZCL: Ecriture attribut</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-danger" onclick="interrogate(\'writeAttribute\', \''.$eqId.'\')">{{Ecrire}}</a>';
+                    addEpButton("idEpWA", $mainEP);
+                    addClusterButton("idClustIdWA");
+                    addAttrInput("idAttrIdWA");
+                ?>
+                <input id="idValueWA" title="{{Valeur à écrire. Format hex string}}" />
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-sm-3 control-label" title="readReportingConfig">ZCL: Lecture configuration de reporting</label>
             <div class="col-sm-5">
                 <?php
@@ -589,7 +601,7 @@
             <label class="col-sm-3 control-label" title="Cluster 0000, commande ResetToFactory">ZCL: Reset aux valeurs d'usine</label>
             <div class="col-sm-5">
                 <?php
-                    echo '<a class="btn btn-warning" onclick="interrogate(\'resetToFactory\', \''.$eqId.'\')">{{Reset}}</a>';
+                    echo '<a class="btn btn-danger" onclick="interrogate(\'resetToFactory\', \''.$eqId.'\')">{{Reset}}</a>';
                     addEpButton("idEpG", $mainEP);
                 ?>
             </div>
@@ -598,7 +610,7 @@
             <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut">ZCL: Configurer le reporting</label>
             <div class="col-sm-5">
                 <?php
-                    echo '<a class="btn btn-warning" onclick="interrogate(\'configureReporting\', \''.$eqId.'\')">{{Configurer}}</a>';
+                    echo '<a class="btn btn-danger" onclick="interrogate(\'configureReporting\', \''.$eqId.'\')">{{Configurer}}</a>';
                     addEpButton("idEpCR", $mainEP);
                     addClusterButton("idClustIdCR");
                     addAttrInput("idAttrIdCR");
@@ -644,7 +656,7 @@
             <label class="col-sm-3 control-label" title="Bind cet équipement vers un autre (Bind_req)">Bind to device</label>
             <div class="col-sm-5">
                 <?php
-                    echo '<a class="btn btn-warning" onclick="interrogate(\'bindToDevice\', \''.$eqId.'\')">{{Bind}}</a>';
+                    echo '<a class="btn btn-danger" onclick="interrogate(\'bindToDevice\', \''.$eqId.'\')">{{Bind}}</a>';
                     addEpButton("idEpE", $mainEP);
                     addClusterButton("idClustIdE");
                     // <input id="idIeeeE" title="{{Adresse IEEE de destination (ex: 5C0272FFFE2857A3)}}" />
@@ -657,7 +669,7 @@
             <label class="col-sm-3 control-label" title="Bind cet équipement vers un groupe (Bind_req)">Bind to group</label>
             <div class="col-sm-5">
                 <?php
-                    echo '<a class="btn btn-warning" onclick="interrogate(\'bindToGroup\', \''.$eqId.'\')">{{Bind}}</a>';
+                    echo '<a class="btn btn-danger" onclick="interrogate(\'bindToGroup\', \''.$eqId.'\')">{{Bind}}</a>';
                     addEpButton("idEpF", $mainEP);
                     addClusterButton("idClustIdF");
                 ?>

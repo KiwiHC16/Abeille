@@ -475,7 +475,14 @@
             ep = document.getElementById("idEpA").value;
             clustId = document.getElementById("idClustIdA").value;
             attrId = document.getElementById("idAttrIdA").value;
-            payload = "addr="+js_eqAddr+"_ep="+ep+"_clustId="+clustId+"_attrId="+attrId;
+            payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId;
+        } else if (request == "writeAttribute") {
+            topic = "Cmd"+logicalId+"_writeAttribute";
+            ep = document.getElementById("idEpWA").value;
+            clustId = document.getElementById("idClustIdWA").value;
+            attrId = document.getElementById("idAttrIdWA").value;
+            value = document.getElementById("idValueWA").value;
+            payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId+"_value="+value;
         } else if (request == "discoverCommandsReceived") {
             topic = "Cmd"+logicalId+"_discoverCommandsReceived";
             ep = document.getElementById("idEpB").value;

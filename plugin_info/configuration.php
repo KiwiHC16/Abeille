@@ -1111,7 +1111,8 @@
     }
 
     /* Cleanup Abeille plugin removing files no longer required.
-       This is based on "Abeille.md5" reference file */
+       This is based on "Abeille.md5" reference file.
+       WARNING: To be sure that MD5 file is aligned with current content, integrity check must return SUCCESS. */
     function cleanUp() {
         console.log("cleanUp() button click")
 

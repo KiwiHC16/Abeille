@@ -3791,7 +3791,8 @@ parserLog('debug', "  iHs=".$iHs);
 
             // Tcharp38: New way of handling this event (OnOff cmd coming from a device)
             $msg['name'] = $ep.'-0006-cmd'.$status;
-            $msg['value'] = 1; // Equivalent to a click. No special value
+            $msg['value'] = 1; // Currently fake value. Not required for Off-00/On-01/Toggle-02 cmds
+            // Tcharp38: TODO: Value should return payload when there is (cmds 40/41/42) but must be decoded by 8002 instead to get it.
             $this->msgToAbeille2($msg);
         }
 

@@ -439,7 +439,9 @@
         function traiteLesAckRecus() {
             $msg_type = NULL;
             $max_msg_size = 512;
-            if (!msg_receive($this->queueKeyParserToCmdSemaphore, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+            if (msg_receive($this->queueKeyParserToCmdSemaphore, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode) == false) {
+                if ($errCode != 42) // 42 = No message
+                    logMessage("debug", "traiteLesAckRecus() ERROR ".$errCode);
                 return;
             }
 
@@ -518,14 +520,15 @@
             foreach ($listQueue as $queue) {
                 $msg = NULL;
                 $max_msg_size = 512;
-                if (msg_receive($queue, 0, $msg_priority, $max_msg_size, $msg, true, MSG_IPC_NOWAIT)) {
+                if (msg_receive($queue, 0, $msg_priority, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
                     $this->deamonlog("debug", "Message from ".$this->getQueueName($queue).": ".$msg->message['topic']." -> ".$msg->message['payload'], $this->debug['AbeilleCmdClass']);
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     $message->priority = $msg_priority;
                     $this->procmsg($message);
                 } else {
-                    // $this->deamonlog("debug", "Queue: ".$this->getQueueName($queue)." Pas de message");
+                    if ($errCode != 42) // 42 = No message
+                        logMessage("debug", "collectAllOtherMessages() ERROR ".$errCode." on queue ".$this->getQueueName($queue));
                 }
             }
         }

@@ -8,7 +8,7 @@
 
     include_once __DIR__.'/../config/Abeille.config.php';
 
-    /* Developpers options */
+    /* Developers options */
     if (file_exists(dbgFile)) {
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -16,9 +16,12 @@
         ini_set('log_errors', 'On');
     }
 
+    include_once __DIR__.'/AbeilleLog.php';
+    logSetConf("AbeilleCmd.log", true);
+    logMessage('info', '>>> AbeilleCmd starting');
+
     include_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/../class/AbeilleMsg.php';
-    include_once __DIR__.'/AbeilleLog.php';
     include_once __DIR__.'/../class/AbeilleCmdQueue.class.php';
 
     // ***********************************************************************************************
@@ -27,8 +30,7 @@
     // exemple d appel
     // php AbeilleCmd.php debug
     //check already running
-    logSetConf("AbeilleCmd.log", true);
-    logMessage('info', '>>> AbeilleCmd starting');
+
     $parameters = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);

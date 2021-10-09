@@ -1466,7 +1466,7 @@
                 break;
 
             default:
-                $this->deamonlog("debug", '  Forwarding cmd to AbeilleCmdProcess.');
+                $this->deamonlog("debug", '  No prepare function. Forwarding cmd to AbeilleCmdProcess.');
                 // $this->deamonlog("debug", '  msg='.json_encode($msg));
 
                 /* Tcharp38 notes:

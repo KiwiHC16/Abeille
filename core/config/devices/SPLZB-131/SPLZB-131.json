@@ -23,7 +23,7 @@
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
-            "Set-0006-0000-Reporting": {
+            "SetReporting-0006-0000": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
                 "execAtCreation": "yes"
@@ -34,13 +34,28 @@
 
             "RMSVoltage": { "use": "zb-0B04-RMSVoltage", "isVisible": 0, "params": "mult=1&div=100" },
             "RMSCurrent": { "use": "zb-0B04-RMSCurrent", "isVisible": 1 },
-            "Set-RMSCurrentReporting": {
+            "ActivePower": { "use": "zb-0B04-ActivePower", "isVisible": 1, "params": "mult=1&div=1" },
+            "Bind-0B04-ToZigate": {
+                "use": "bindToZigate",
+                "params": "clustId=0B04",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0B04-RMSVoltage": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0B04&attrType=21&attrId=0505&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "yes"
+            },
+            "SetReporting-0B04-RMSCurrent": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000",
                 "execAtCreation": "yes"
             },
-            "ActivePower": { "use": "zb-0B04-ActivePower", "isVisible": 1, "params": "mult=1&div=1" },
-            "include0B04-5": "getPlugVAW"
-        }
+            "SetReporting-0B04-ActivePower": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000",
+                "execAtCreation": "yes"
+            }
+        },
+        "comment": "getPlugVAW"
     }
 }

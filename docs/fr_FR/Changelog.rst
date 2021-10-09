@@ -4,7 +4,11 @@ ChangeLog
 - Niko connected socket outlet: Mise-à-jour image.
 - Page EQ/avancé: Ajout possibilité de configurer le reporting.
 - Interne: Parser: Support 'configure reporting response' pour 0B04.
+- TRADFRI bulb GU10 CWS 345lm: Correction icone E14 => GU10 (#2137).
+- Ikea Tradfri LED 470lm E14: Mise-à-jour config JSON (#2111).
+- Tuya 4 boutons: Mise-à-jour (#2155).
 - Interne: AbeilleCmd: Correction bin0030 vers groupe.
+- SPLZB-131: Mise-à-jour JSON. Reporting activé. (#2109).
 - Page EQ/avancé: Ajout possibilité d'écrire un attribut.
 - Interne: AbeilleCmd: Message d'erreur si pb lecture queues.
 - Interne: Commandes JSON 'getEtatEpXX' deviennent obsoletes.

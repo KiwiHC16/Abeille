@@ -23,7 +23,7 @@
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },
-            "Set-0001-0021-Reporting": {
+            "SetReporting-0001-0021": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "Yes"

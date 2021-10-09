@@ -6,7 +6,7 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "TRADFRIbulbE14CWSopal600lm"
+            "icon": "IkeaTradfriBulbGU10W400lm"
         },
         "category": {
             "light": "1"
@@ -21,9 +21,9 @@
                 "params": "clustId=0000&attrId=4000"
             },
 
-            "include24": "Identify",
+            "Identify": { "use": "Identify" },
 
-            "include25": "Group-Membership",
+            "Groups": { "use": "Group-Membership" },
 
             "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
             "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },

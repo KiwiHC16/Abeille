@@ -2337,13 +2337,13 @@ while ($cron->running()) {
             log::add('Abeille', 'debug', "msgFromParser(): Attribute report from '".$net."/".$addr."/".$ep."': Attr='".$msg['name']."', Val='".$msg['value']."'");
             $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                log::add('Abeille', 'debug', "  Unknown device ".$net."/".$addr);
+                log::add('Abeille', 'debug', "  Unknown device '".$net."/".$addr."'");
                 return; // Unknown device
             }
 
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $msg['name']);
             if (!is_object($cmdLogic)) {
-                log::add('Abeille', 'debug', "  Unknown command ".$msg['name']);
+                log::add('Abeille', 'debug', "  Unknown command '".$msg['name']."'");
                 return; // Unknown command
             }
             $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['value']);
@@ -3159,9 +3159,9 @@ while ($cron->running()) {
             $eqLogic->checkAndUpdateCmd($cmdlogic, date("Y-m-d H:i:s", $timestamp));
 
         $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'online');
-        if (!is_object($cmdlogic))
-            log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
-        else
+        if (is_object($cmdlogic))
+        //     log::add('Abeille', 'debug', '  updateTimestamp(): WARNING: '.$eqLogicId.", missing cmd 'online'");
+        // else
             $eqLogic->checkAndUpdateCmd($cmdlogic, 1);
 
         if ($lqi != null) {

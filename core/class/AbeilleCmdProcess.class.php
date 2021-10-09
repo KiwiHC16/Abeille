@@ -15,6 +15,21 @@
         //     return $reverse;
         // }
 
+        /* Check if required param are set in 'Command'.
+           Returns: true if ok, else false */
+        function checkRequiredParams($required, $Command) {
+            $missingParam = false;
+            foreach ($required as $idx => $param) {
+                if (isset($Command[$param]))
+                    continue;
+                $this->deamonlog('debug', "    ERROR: Missing '".$param."'");
+                $missingParam = true;
+            }
+            if ($missingParam)
+                return false;
+            return true;
+        }
+
         // Ne semble pas fonctionner et me fait planté la ZiGate, idem ques etParam()
         // Tcharp38: See https://github.com/KiwiHC16/Abeille/issues/2143#
         function ReportParamXiaomi($dest,$Command) {
@@ -1111,6 +1126,7 @@
                 }
                 if ($missingParam)
                     return;
+                // If 'destAddr' == IEEE then need 'destEp' too.
                 if ((strlen($Command['destAddr']) == 16) && !isset($Command['destEp'])) {
                     $this->deamonlog('debug', "    command bind0030 ERROR: Missing 'destEp'");
                     return;
@@ -1148,7 +1164,7 @@
                     $this->deamonlog('debug', "    command bind0030 ERROR: Invalid dest addr length");
                     return;
                 }
-                $destEp = $Command['destEp'];
+                $destEp = isset($Command['destEp']) ? $Command['destEp'] : "00"; // destEp ignored if group address
 
                 $data = $addr.$ep.$clustId.$destAddrMode.$destAddr.$destEp;
                 $length = sprintf( "%04x", strlen($data) / 2);
@@ -3105,6 +3121,10 @@
                    - Zigbee cluster library global commands
                    - Zigbee cluster library cluster specific commands */
 
+                /*
+                 * Zigate specific commands
+                 */
+
                 // Zigate specific command
                 if ($cmdName == 'zgSetMode') {
                     $mode = $Command['mode'];
@@ -3230,6 +3250,55 @@
                     $data = "";
                     $length = sprintf("%04s", dechex(strlen($data) / 2));
                     $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
+                    return;
+                }
+
+                /*
+                 * ZCL general commands
+                 */
+
+                // Tcharp38: Generic 'write attribute request' function
+                // ZCL global: writeAttribute command
+                else if ($cmdName == 'writeAttribute') {
+                    /* Checking that mandatory infos are there */
+                    $required = ['ep', 'clustId', 'attrId'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    /* Cmd 0110 reminder:
+                        <address mode: uint8_t>
+                        <target short address: uint16_t>
+                        <source endpoint: uint8_t>
+                        <destination endpoint: uint8_t>
+                        <Cluster id: uint16_t>
+                        <direction: uint8_t>
+                            0 - from server to client
+                            1 - from client to server
+                        <manufacturer specific: uint8_t>
+                        <manufacturer id: uint16_t>
+                        <number of attributes: uint8_t>
+                        <attributes list: data list of uint16_t  each>
+                    */
+
+                    $priority = $Command['priority'];
+
+                    $cmd            = "0110";
+
+                    $addrMode       = "02";
+                    $addr           = $Command['addr'];
+                    $srcEp          = "01";
+                    $destEp         = $Command['ep'];
+                    $clustId        = $Command['clustId'];
+                    $dir            = "01";
+                    $manufSpecific  = "00";
+                    $manufId        = "0000";
+                    $nbOfAttributes = "01";
+                    $attrList       = $Command['attrId'];
+
+                    $data = $addrMode.$addr.$srcEp.$destEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttributes.$attrList;
+                    $len = sprintf("%04s", dechex(strlen($data) / 2));
+
+                    $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
                     return;
                 }
 
@@ -3394,6 +3463,10 @@
                     $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
                     return;
                 }
+
+                /*
+                 * ZCL cluster specific commands
+                 */
 
                 // ZCL cluster 0000 specific: (received) commands
                 else if ($cmdName == 'cmd-0000') {

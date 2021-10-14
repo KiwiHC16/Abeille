@@ -861,15 +861,18 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             case "28": // Int8
                 $dataSize = 1;
                 break;
+            case "19": // map16
             case "21": // Uint16
             case "29": // Int16
                 $dataSize = 2;
                 break;
             case "0A": // Discrete: 24-bit data
+            case "1A": // map24
             case "22": // Uint24
             case "2A": // Int24
                 $dataSize = 3;
                 break;
+            case "1B": // map32
             case "23": // Uint32
             case "2B": // Int32
             case "E0": // Time analog: ToD
@@ -933,6 +936,9 @@ parserLog('debug', "  iHs=".$iHs);
             switch ($dataType) {
             case "10": // Boolean
             case "18": // 8-bit bitmap
+            case "19": // map16
+            case "1A": // map24
+            case "1B": // map32
             case "20": // Uint8
             case "21": // Uint16
             case "22": // Uint24
@@ -2190,7 +2196,7 @@ parserLog('debug', "  iHs=".$iHs);
             $manufSpecific = (hexdec($fcf) >> 2) & 1;
             $dir = (hexdec($fcf) >> 3) & 1;
             if ($frameType == 0)
-                $fcfTxt = "Global";
+                $fcfTxt = "General";
             else
                 $fcfTxt = "Cluster-specific";
             if ($dir)
@@ -2713,6 +2719,10 @@ parserLog('debug', "  iHs=".$iHs);
             /* If still required, checking USB port unexpected switch */
             $confIeee = str_replace('Abeille', 'AbeilleIEEE', $dest); // AbeilleX => AbeilleIEEEX
             $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
+$confIeeeOkval = config::byKey($confIeeeOk, 'Abeille', 'nopi');
+parserLog('debug', '  '.$confIeeeOk."=".$confIeeeOkval);
+$confIeeeval = config::byKey($confIeee, 'Abeille', 'nopi3');
+parserLog('debug', '  '.$confIeee."=".$confIeeeval);
             if (config::byKey($confIeeeOk, 'Abeille', 0) == 0) {
                 if (config::byKey($confIeee, 'Abeille', 'none', 1) == "none") {
                     config::save($confIeee, $extAddr, 'Abeille');
@@ -3007,6 +3017,10 @@ parserLog('debug', "  iHs=".$iHs);
             /* If still required, checking USB port unexpected switch */
             $confIeee = str_replace('Abeille', 'AbeilleIEEE', $dest); // AbeilleX => AbeilleIEEEX
             $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
+$confIeeeOkval = config::byKey($confIeeeOk, 'Abeille', 'nopi1');
+parserLog('debug', '  '.$confIeeeOk."=".$confIeeeOkval);
+$confIeeeval = config::byKey($confIeee, 'Abeille', 'nopi13');
+parserLog('debug', '  '.$confIeee."=".$confIeeeval);
             if (config::byKey($confIeeeOk, 'Abeille', 0) == 0) {
                 if (config::byKey($confIeee, 'Abeille', 'none', 1) == "none") {
                     config::save($confIeee, $dataIEEE, 'Abeille');
@@ -4647,9 +4661,11 @@ parserLog('debug', "  iHs=".$iHs);
 
             /* Note: If $data is not set, then nothing to send to Abeille. This might be because data type is unsupported */
             else {
-                $data = $this->decodeDataType(substr($payload, 24), $dataType, false, hexdec($attrSize));
+                $data = $this->decodeDataType(substr($payload, 24), $dataType, false, hexdec($attrSize), $oSize, $hexValue);
                 if ($data === false)
                     return; // Unsupported data type
+                $attrName = zbGetZCLAttributeName($clustId, $attrId);
+                parserLog('debug', '  '.$attrName.', hexValue='.$hexValue.' => '.$data);
             }
 
             // $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId, $data);

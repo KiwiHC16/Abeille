@@ -12,14 +12,15 @@
         },
         "type": "Sonoff ZBMINI smart switch",
         "commands": {
+            "SWBuildID": { "use": "zb-0000-SWBuildID" },
+            "Get-SWBuildID": { "use": "zbReadAttribute", "params": "clustId=0000&attrId=4000" },
+
+            "Groups": { "use": "Group-Membership" },
+
             "include4": "etat",
             "include5": "On",
             "include6": "Off",
             "include8": "getEtat",
-            "include13 2": "Group-Membership",
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            },
             "Toggle": {
                 "use": "zbCmd-0006-Toggle",
                 "nextLine": "after"

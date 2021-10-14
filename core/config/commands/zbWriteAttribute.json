@@ -1,0 +1,14 @@
+{
+    "zbWriteAttribute": {
+        "comment": "Generic command to write any attribute",
+        "isVisible": 0,
+        "name": "WriteAttribute",
+        "isHistorized": 0,
+        "subType": "other",
+        "configuration": {
+            "topic": "writeAttribute",
+            "request": "ep=#EP#&clustId=#CLUSTID#&attrId=#ATTRID#"
+        },
+        "type": "action"
+    }
+}

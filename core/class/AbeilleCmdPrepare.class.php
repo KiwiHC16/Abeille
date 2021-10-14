@@ -225,7 +225,6 @@
                                     );
                 break;
 
-            case "readAttribute":
             case "readAttributeRequest": // OBSOLETE: Use "readAttribute' instead
                     $keywords = preg_split("/[=&]+/", $msg);
                 if (count($keywords) > 1) {

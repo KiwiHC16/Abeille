@@ -194,6 +194,7 @@
            - Topic 'AbeilleX/Ruche' updated to 'AbeilleX/0000'
            - Removing obsolete entries in config table.
            - 'mainEP' fix: '#EP#' => '01'
+           - Removing several zigate cmds now handled directly in equipement advanced page.
          */
         if (intval($dbVersion) < 20201122) {
             if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
@@ -291,7 +292,26 @@
                     continue;
                 unlink($path);
             }
-        //    config::save('DbVersion', '20201122', 'Abeille');
+
+            // Removing obsolete commands from Zigate now handled in equipement advanced page
+            $nbOfZigates = config::byKey('zigateNb', 'Abeille', '0');
+            for ($zgId = 1; $zgId <= $nbOfZigates; $zgId++) {
+                $zg = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+                if (!is_object($zg))
+                    continue;
+
+                $eqId = $zg->getId();
+                $obsoletes = ['Bind', 'BindShort', 'setReport', 'Get Name', 'Get Location', 'Set Location', 'Write Attribut', 'Get Attribut', 'ActiveEndPoint', 'SimpleDescriptorRequest'];
+                foreach ($obsoletes as $cmdJName) {
+                    $cmd = AbeilleCmd::byEqLogicIdCmdName($eqId, $cmdJName);
+                    if (!is_object($cmd))
+                        continue;
+                    log::add('Abeille', 'debug', '  Zigate '.$zgId.": Removing obsolete cmd '".$cmdJName."'");
+                    $cmd->remove();
+                }
+            }
+
+            //    config::save('DbVersion', '20201122', 'Abeille');
         }
     }
 

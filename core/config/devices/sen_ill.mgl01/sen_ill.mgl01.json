@@ -15,24 +15,15 @@
         },
         "type": "Xiaomi GZCGQ01LM smart light sensor",
         "commands": {
-            "include7": "Xiaomi-ff01",
-            "BindToZigate-Illuminance": {
-                "use": "bindToZigate",
-                "params": "EP=01&CLUSTID=0400",
-                "execAtCreation": "Yes"
-            },
-            "Set-IlluminanceReporting": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=600&maxInterval=0",
-                "execAtCreation": "Yes"
-            },
-            "include4": "luminositeXiaomi",
+            "SWBuildID": { "use": "zb-0000-SWBuildID" },
+            "Get-SWBuildID": { "use": "zbReadAttribute", "params": "clustId=0000&attrId=4000" },
+
             "BindToZigate-Power": {
-                "use": "bindToZigate",
-                "params": "EP=01&CLUSTID=0001",
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0001",
                 "execAtCreation": "Yes"
             },
-            "Set-BatteryVoltReporting": {
+            "SetReporting-BatteryVolt": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "Yes"
@@ -42,9 +33,19 @@
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1
             },
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            }
+            
+            "include7": "Xiaomi-ff01",
+            "BindToZigate-Illuminance": {
+                "use": "zbBindToZigate",
+                "params": "EP=01&clustId=0400",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-Illuminance": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=600&maxInterval=0",
+                "execAtCreation": "Yes"
+            },
+            "include4": "luminositeXiaomi"
         }
     }
 }

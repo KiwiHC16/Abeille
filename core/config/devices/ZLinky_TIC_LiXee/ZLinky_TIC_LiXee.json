@@ -4,20 +4,21 @@
         "model": "ZLinky_TIC",
         "type": "LiXee Zlinky TIC module",
         "timeout": "60",
+        "comment": "https://github.com/fairecasoimeme/Zlinky_TIC",
         "configuration": {
             "mainEP": "01",
-            "icon": "01MINIZB"
+            "icon": "Linky"
         },
         "category": {
-            "automatism": "1"
+            "energy": "1"
         },
         "commands": {
             "ADC0": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0308" },
-            "BASE": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0000" },
-            "OTARIF": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0000" },
+            "BASE": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0000", "template": "badge", "isVisible": 1 },
+            "OPTARIF": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0000", "template": "badge", "isVisible": 1 },
             "ISOUSC": { "use": "zb-CustomInfo", "params": "clustId=0B01&attrId=0000" },
-            "HCHC": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0102" },
-            "HCHP": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0100" },
+            "HCHC": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0102", "template": "badge", "isVisible": 1 },
+            "HCHP": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0100", "template": "badge", "isVisible": 1 },
             "EJPHN": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0100" },
             "EJPHPM": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0102" },
             "BBRHCJB": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0100" },

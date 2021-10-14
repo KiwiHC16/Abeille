@@ -269,8 +269,8 @@
                 topic = 'CmdAbeille'+js_zgId+'/0000/setCertificationFCC';
             break;
         case "startNetwork": // Not required for end user but for developper.
-            topic = 'CmdAbeille'+js_zgId+'/0000/startNetwork';
-            payload = 'StartNetwork';
+            topic = 'CmdAbeille'+js_zgId+'/0000/zgStartNetwork';
+            payload = '';
             break;
         case "setMode":
             topic = 'CmdAbeille'+js_zgId+'/0000/zgSetMode';
@@ -412,21 +412,22 @@
     function reconfigure(eqId) {
         console.log("reconfigure("+eqId+")");
 
-        var msg = "{{Vous êtes sur le point de reconfigurer cet équipement.";
         if (js_batteryType != '') {
+            var msg = "{{Vous êtes sur le point de reconfigurer cet équipement.";
             msg += "<br>Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.";
-        }
-        msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
-        bootbox.confirm(msg, function (result) {
-            if (result == false)
-                return
+            msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
+            bootbox.confirm(msg, function (result) {
+                if (result == false)
+                    return
                 var xhttp = new XMLHttpRequest();
+                xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reconfigure&eqId="+eqId, false);
+                xhttp.send();
+            });
+        } else {
+            var xhttp = new XMLHttpRequest();
             xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reconfigure&eqId="+eqId, false);
             xhttp.send();
-
-            xhttp.onreadystatechange = function() {
-            };
-        });
+        }
     }
 
     /* Reinit Jeedom device & reconfigure.

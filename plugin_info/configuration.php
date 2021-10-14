@@ -275,7 +275,7 @@
                                     $fwVers = substr($fwVers, 0, -4); // Removing ".dev" suffix
                                 }
                                 $fwVers = substr($fwVers, 8); // Removing "ZiGate_v" prefix
-                                if ($fwVers == "3.1e-legacy")
+                                if ($fwVers == "3.20-OPDM")
                                     echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
                                 else
                                     echo '<option value='.$fwName.'>'.$fwVers.'</option>';
@@ -817,7 +817,14 @@
         }
         var zgPort = $("#idSelSP" + zgNb).val();
         var zgFW = $("#idFW" + zgNb).val();
-        bootbox.confirm('{{Vous êtes sur le point de mettre à jour la Zigate<br> - type    : '+zgType+'<br> - port    : '+zgPort+'<br> - firmware: '+zgFW+'<br><br>Voulez vous continuer ?}}', function (result) {
+        msg = '{{Vous êtes sur le point de mettre à jour la Zigate}}';
+        msg += '<br> - type: '+zgType+'<br> - port: '+zgPort+'<br> - firmware: '+zgFW+'<br><br>';
+        if (zgFW.indexOf("OPDM") == -1) {
+            msg += '{{Attention !! La version Optimized PDM est FORTEMENT recommandée.}}<br><br>';
+        }
+        msg += "{{Si vous passez d'une version 'legacy' à 'OPDM', un effacement de la PDM + réapparairage complet est requis.}}<br><br>";
+        msg += '{{Etes vous sur de vouloir continuer ?}}';
+        bootbox.confirm(msg, function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Mise-à-jour du FW de la Zigate}}"});
                 $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateFW&zgtype=\"'+zgType+'\"&zgport=\"'+zgPort+'\"&fwfile=\"'+zgFW+'\"').dialog('open');
@@ -1135,4 +1142,9 @@
             }
         });
     }
+
+    // Tcharp38: Might be useful. Seems to be called when plugin config has been saved
+    // function Abeille_postSaveConfiguration() {
+    //     console.log("Abeille_postSaveConfiguration()");
+    // }
 </script>

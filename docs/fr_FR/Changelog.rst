@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211014-BETA-1
+-------------
+
 - Zigate: plusieurs commandes supprimées => supportées dans page équipement/avancé.
 - Interne: Parser: Améliorations decodeDataType().
 - UseeLink prise SM-SO306: Ajout support (#2160).

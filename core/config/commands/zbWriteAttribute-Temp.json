@@ -1,0 +1,14 @@
+{
+    "zbWriteAttribute-Temp": {
+        "comment": "TEMPORARY Generic command to write any attribute",
+        "isVisible": 0,
+        "name": "WriteAttribute",
+        "isHistorized": 0,
+        "subType": "other",
+        "configuration": {
+            "topic": "WriteAttributeRequestGeneric",
+            "request": "destinationEndpoint=#EP#&Proprio=&clusterId=#CLUSTID#&attributeId=#ATTRID#&attributeType=#ATTRTYPE#&value=#ATTRVALUE#"
+        },
+        "type": "action"
+    }
+}

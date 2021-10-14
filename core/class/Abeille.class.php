@@ -1132,7 +1132,8 @@ while ($cron->running()) {
             Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$i);
 
             // log::add('Abeille', 'debug', 'deamon(): ***** Demarrage du réseau Zigbee '.$i.' ********');
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/startNetwork", "StartNetwork");
+            // Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/startNetwork", "StartNetwork");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/zgStartNetwork", "");
             // log::add('Abeille', 'debug', 'deamon(): ***** Set Time réseau Zigbee '.$i.' ********');
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setTimeServer", "");
             /* Get network state to get Zigate IEEE asap and confirm no port change */
@@ -1174,63 +1175,63 @@ while ($cron->running()) {
             $message = new MsgAbeille;
 
             // https: github.com/torvalds/linux/blob/master/include/uapi/asm-generic/errno.h
-            // #define    ENOMSG        42    /* No message of desired type */
-            $errorcodeMsg = 0;
+            // const int EINVAL = 22;
+            // const int ENOMSG = 42; /* No message of desired type */
 
             while (true) {
-                if (msg_receive($queueKeyAbeilleToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcodeMsg)) {
+                if (msg_receive($queueKeyAbeilleToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     self::message($message);
                     $msg_type = NULL;
                     $msg = NULL;
-                }
-                if (($errorcodeMsg != 42) and ($errorcodeMsg != 0)) {
-                    log::add('Abeille', 'error', 'deamon(): msg_receive queueKeyAbeilleToAbeille error '.$errorcodeMsg);
+                } else { // Error
+                    if ($errCode != 42)
+                        log::add('Abeille', 'error', 'deamon(): msg_receive queueKeyAbeilleToAbeille error '.$errCode);
                 }
 
                 /* New path parser to Abeille */
-                if (msg_receive($queueKeyParserToAbeille2, 0, $msg_type, $max_msg_size, $msg_json, false, MSG_IPC_NOWAIT, $errorcodeMsg)) {
+                if (msg_receive($queueKeyParserToAbeille2, 0, $msg_type, $max_msg_size, $msg_json, false, MSG_IPC_NOWAIT, $errCode)) {
                     self::msgFromParser(json_decode($msg_json, true));
                     $msg_type = NULL;
                     $msg = NULL;
-                }
-                if (($errorcodeMsg != 42) and ($errorcodeMsg != 0)) {
-                    log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyParserToAbeille2 error '.$errorcodeMsg);
+                } else { // Error
+                    if ($errCode != 42)
+                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyParserToAbeille2 error '.$errCode);
                 }
 
                 /* Legacy path parser to Abeille. To be progressively removed */
-                if (msg_receive($queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcodeMsg)) {
+                if (msg_receive($queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     self::message($message);
                     $msg_type = NULL;
                     $msg = NULL;
-                }
-                if (($errorcodeMsg != 42) and ($errorcodeMsg != 0)) {
-                    log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyParserToAbeille error '.$errorcodeMsg);
+                } else { // Error
+                    if ($errCode != 42)
+                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyParserToAbeille error '.$errCode);
                 }
 
-                if (msg_receive($queueKeyCmdToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcodeMsg)) {
+                if (msg_receive($queueKeyCmdToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     self::message($message);
                     $msg_type = NULL;
                     $msg = NULL;
-                }
-                if (($errorcodeMsg != 42) and ($errorcodeMsg != 0)) {
-                    log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyCmdToAbeille error '.$errorcodeMsg);
+                } else { // Error
+                    if ($errCode != 42)
+                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyCmdToAbeille error '.$errCode);
                 }
 
-                if (msg_receive($queueKeyXmlToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errorcodeMsg)) {
+                if (msg_receive($queueKeyXmlToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     self::message($message);
                     $msg_type = NULL;
                     $msg = NULL;
-                }
-                if (($errorcodeMsg != 42) and ($errorcodeMsg != 0)) {
-                    log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyXmlToAbeille error '.$errorcodeMsg);
+                } else { // Error
+                    if ($errCode != 42)
+                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyXmlToAbeille error '.$errCode);
                 }
 
                 time_nanosleep(0, 10000000); // 1/100s
@@ -1289,6 +1290,7 @@ while ($cron->running()) {
 
     public static function postSave()
     {
+        log::add('Abeille', 'debug', 'postSave()');
         /* Tcharp38: Strange. postSave() called when starting daemons.
            No sense to re-start main daemon from their then */
         // log::add('Abeille', 'debug', 'postSave()');

@@ -923,11 +923,6 @@
             }
 
             //----------------------------------------------------------------------
-            if (isset($Command["startNetwork"])) {
-                $this->addCmdToQueue($priority,$dest,"0024","0000","");
-                return;
-            }
-
             if (isset($Command["getNetworkStatus"])) {
                 $this->addCmdToQueue($priority, $dest, "0009", "0000", "");
                 return;
@@ -1519,16 +1514,17 @@
                 $minInterval            = isset($Command['minInterval']) ? AbeilleTools::reverseHex($Command['minInterval']) : "0000";
                 $maxInterval            = isset($Command['maxInterval']) ? AbeilleTools::reverseHex($Command['maxInterval']) : "0000";
                 switch ($attrType) {
-                case "21":
+                case "21": // Uint16
                     $changeVal = "0001";
                     break;
-                case "20":
+                case "10": // Boolean
+                case "20": // Uint8
                     $changeVal = "01";
                     break;
 
                 // Tcharp38: TO BE COMPLETED ! changeVal size depends on attribute type
                 default:
-                    $this->deamonlog('debug', "   ERROR: Unsupported attrType ".$attrType, $this->debug['processCmd']);
+                    $this->deamonlog('debug', "    ERROR: Unsupported attrType ".$attrType, $this->debug['processCmd']);
                     $changeVal = "01";
                 }
                 $change                 = AbeilleTools::reverseHex($changeVal); // Reportable change.
@@ -2307,11 +2303,11 @@
                 $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
 
                 if ($addressMode=="02") {
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
+                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
 
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2+$Command['duration']), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3+$Command['duration']), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2+$Command['duration']), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
+                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3+$Command['duration']), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
                 }
                 return;
             }
@@ -2440,7 +2436,7 @@
                 return;
             }
 
-            if (isset($Command['readAttribute']) || isset($Command['readAttributeRequest'])) {
+            if (isset($Command['readAttributeRequest'])) {
                 $this->readAttribute($priority, $dest, $Command['addr'], $Command['ep'], $Command['clustId'], $Command['attrId']);
                 return;
             }
@@ -2756,8 +2752,8 @@
                 $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
 
                 if ($addressMode == "02" ) {
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
+                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
                 }
                 return;
             }
@@ -2849,11 +2845,11 @@
                 $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
 
                 if ($addressMode == "02" ) {
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+3), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
+                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
 
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+$Command['onTime']), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+$Command['onTime']), "EP=".$destinationEndpoint."&clusterId=0008&attributeId=0000" );
+                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['onTime']), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
+                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['onTime']), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
                 }
                 return;
             }
@@ -2972,7 +2968,7 @@
                 $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
 
                 if ($addressMode == "02" ) {
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0300&attributeId=0007" );
+                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$destinationEndpoint."&clustId=0300&attrId=0007" );
                 }
                 return;
             }
@@ -3253,9 +3249,26 @@
                     return;
                 }
 
+                // Zigate specific command
+                else if (($cmdName == 'zgStartNetwork') || ($cmdName == 'startNetwork')) {
+                    $this->addCmdToQueue($priority, $dest, "0024", "0000", "");
+                    return;
+                }
+
                 /*
                  * ZCL general commands
                  */
+
+                // ZCL global: readAttribute command
+                else if ($cmdName == 'readAttribute') {
+                    /* Checking that mandatory infos are there */
+                    $required = ['addr', 'ep', 'clustId', 'attrId'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $this->readAttribute($priority, $dest, $Command['addr'], $Command['ep'], $Command['clustId'], $Command['attrId']);
+                    return;
+                }
 
                 // Tcharp38: Generic 'write attribute request' function
                 // ZCL global: writeAttribute command

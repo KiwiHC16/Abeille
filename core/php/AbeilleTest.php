@@ -157,63 +157,63 @@
 
         if ($test==112) {
             echo "Test envoie Cmd With Tempo\n";
-            $msgAbeille->message['topic'] =  'Tempo'.'CmdAbeille1/'.$argv[2].'/ReadAttributeRequest' . '&time=' . (time() + 3);
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0B04&attributeId=050B';
+            $msgAbeille->message['topic'] =  'Tempo'.'CmdAbeille1/'.$argv[2].'/readAttribute' . '&time=' . (time() + 3);
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0B04&attrId=050B';
         }
 
         // All Cluster 0000 - attribut 0 to 7
         if ($test==113) {
             echo "Test envoie Cmd to get ZCL version\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0000&attributeId=0000';
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0000&attrId=0000';
         }
 
         if ($test==114) {
             echo "Test envoie Cmd to get Application version\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0000&attributeId=0001';
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0000&attrId=0001';
         }
 
         if ($test==115) {
             echo "Test envoie Cmd to get Stack version\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0000&attributeId=0002';
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0000&attrId=0002';
         }
 
         if ($test==116) {
             echo "Test envoie Cmd to get HW version\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0000&attributeId=0003';
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0000&attrId=0003';
         }
 
         if ($test==117) {
             echo "Test envoie Cmd to get ManufacturerName\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0000&attributeId=0004';
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0000&attrId=0004';
         }
 
         if ($test==118) {
             echo "Test envoie Cmd to get ModelIdentifier\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0000&attributeId=0005';
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0000&attrId=0005';
         }
 
         if ($test==119) {
             echo "Test envoie Cmd to get DateCode\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0000&attributeId=0006';
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0000&attrId=0006';
         }
 
         if ($test==120) {
             echo "Test envoie Cmd to get PowerSource\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0000&attributeId=0007';
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0000&attrId=0007';
         }
 
         if ($test==121) {
             echo "Test envoie Cmd to get batterie voltage\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0001&attributeId=0021';
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0001&attrId=0021';
         }
 
         if ($test==122) {
@@ -242,26 +242,26 @@
 
         if ($test==126) {
             echo "Test recuperation parametre Scene Count\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0005&attributeId=0000';
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0005&attrId=0000';
         }
 
         if ($test==127) {
             echo "Test recuperation parametre Scene Current\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0005&attributeId=0001';
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0005&attrId=0001';
         }
 
         if ($test==128) {
             echo "Test recuperation parametre Group Current for scene\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0005&attributeId=0002';
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0005&attrId=0002';
         }
 
         if ($test==129) {
             echo "Test recuperation parametre scene active\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0005&attributeId=0003';
+            $msgAbeille->message['topic']   = 'CmdAbeille1/'.$argv[2].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0005&attrId=0003';
         }
 
         if ($test==130) {
@@ -272,8 +272,8 @@
 
         if ($test==131) {
             echo "Read white spectre color of an Ikea bulb\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille2/'.$argv[2].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=01&clusterId=0300&attributeId=0007';
+            $msgAbeille->message['topic']   = 'CmdAbeille2/'.$argv[2].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=01&clustId=0300&attrId=0007';
         }
 
         if ($test==132) {
@@ -434,20 +434,20 @@
 
         if ($test==500) {
             echo "Test envoie Cmd to get ZCL version\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP=08&clusterId=0000&attributeId=0000';
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep=08&clustId=0000&attrId=0000';
         }
 
         if ($test==504) {
             echo "Test envoie Cmd to get ManufacturerName\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP='.$argv[4].'&clusterId=0000&attributeId=0004';
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep='.$argv[4].'&clustId=0000&attrId=0004';
         }
 
         if ($test==505) {
             echo "Test envoie Cmd to get ModelIdentifier\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/ReadAttributeRequest';
-            $msgAbeille->message['payload'] = 'EP='.$argv[4].'&clusterId=0000&attributeId=0005';
+            $msgAbeille->message['topic']   = 'CmdAbeille'.$argv[2].'/'.$argv[3].'/readAttribute';
+            $msgAbeille->message['payload'] = 'ep='.$argv[4].'&clustId=0000&attrId=0005';
         }
 
         // php AbeilleTest.php 510 2 F0C0 08

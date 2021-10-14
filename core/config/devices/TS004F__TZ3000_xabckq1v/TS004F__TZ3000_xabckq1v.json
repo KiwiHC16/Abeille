@@ -16,7 +16,7 @@
         "commands": {
             "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
             "Bind-0001-ToZigate": {
-                "use": "bindToZigate",
+                "use": "zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },
@@ -26,17 +26,22 @@
                 "execAtCreation": "Yes"
             },
 
+            "Change config": {
+                "use": "zbWriteAttribute-Temp",
+                "params": "clustId=0006&attrId=8004&attrType=30&attrValue=01",
+                "execAtCreation": "Yes"
+            },
             "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
             "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
             "Status": { "use": "zb-0006-OnOff", "isVisible": 1 },
             "Bind-0006-ToZigate": {
-                "use": "bindToZigate",
+                "use": "zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
 
             "Bind-0008-ToZigate": {
-                "use": "bindToZigate",
+                "use": "zbBindToZigate",
                 "params": "clustId=0008",
                 "execAtCreation": "Yes"
             }

@@ -63,10 +63,19 @@
             "name" => "Basic",
             "attributes" => array(
                 "0000" => array( "name" => "ZCLVersion", "access" => "R" ),
+                "0001" => array( "name" => "ApplicationVersion", "access" => "R" ),
+                "0002" => array( "name" => "StackVersion", "access" => "R" ),
+                "0003" => array( "name" => "HWVersion", "access" => "R" ),
                 "0004" => array( "name" => "ManufacturerName", "access" => "R" ),
                 "0005" => array( "name" => "ModelIdentifier", "access" => "R" ),
                 "0006" => array( "name" => "DateCode", "access" => "R" ),
-                "0007" => array( "name" => "PowerSource", "access" => "R" ), // No need. Got info during dev info
+                "0007" => array( "name" => "PowerSource", "access" => "R" ),
+                "0010" => array( "name" => "LocationDescription", "access" => "RW" ),
+                "0011" => array( "name" => "PhysicalEnvironment", "access" => "RW" ),
+                "0012" => array( "name" => "DeviceEnabled", "access" => "RW" ),
+                "0013" => array( "name" => "AlarmMask", "access" => "RW" ),
+                "0014" => array( "name" => "DisableLocalConfig", "access" => "RW" ),
+                "4000" => array( "name" => "SWBuildID", "access" => "R" ),
             ),
             "commands" => array(
                 "00" => array( "name" => "Reset to factory defaults" ),
@@ -74,6 +83,11 @@
         ),
         "0001" => array(
             "name" => "Power configuration",
+            "attributes" => array(
+                "0000" => array( "name" => "MainsVoltage", "access" => "R" ),
+                "0020" => array( "name" => "BatteryVoltage", "access" => "R" ),
+                "0021" => array( "name" => "BatteryPercentageRemaining", "access" => "R" ),
+            ),
         ),
         "0002" => array(
             "name" => "Device temperature config",
@@ -330,9 +344,22 @@
         ),
         "0400" => array(
             "name" => "Illuminance Measurement",
+            "attributes" => array(
+                "0000" => array( "name" => "MeasuredValue", "access" => "R" ),
+            ),
         ),
         "0401" => array(
             "name" => "Illuminance Level Sensing",
+        ),
+        "0405" => array(
+            "name" => "Relative Humidity",
+            "attributes" => array(
+                // Relative Humidity Measurement Information
+                "0000" => array( "name" => "MeasuredValue", "access" => "R" ),
+                "0001" => array( "name" => "MinMeasuredValue", "access" => "R" ),
+                "0002" => array( "name" => "MaxMeasuredValue", "access" => "R" ),
+                "0003" => array( "name" => "Tolerance", "access" => "R" ),
+            ),
         ),
         "0500" => array(
             "name" => "IAS Zone",

@@ -11,14 +11,10 @@
         },
         "type": "defaultUnknown",
         "commands": {
-            "include24": "Identify",
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            }
+            "SWBuildID": { "use": "zb-0000-SWBuildID" },
+            "Get-SWBuildID": { "use": "zbReadAttribute", "params": "clustId=0000&attrId=4000" },
+
+            "include24": "Identify"
         }
     }
 }

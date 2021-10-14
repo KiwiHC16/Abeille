@@ -391,6 +391,10 @@ class AbeilleTools
                             else if ($value === "before")
                                 $newCmd[$cmd1]['display']['forceReturnLineBefore'] = 1;
                         }
+                        if (isset($cmd2['template'])) {
+                            $value = $cmd2['template'];
+                            $newCmd[$cmd1]['template'] = $value;
+                        }
                         // log::add('Abeille', 'debug', 'getDeviceConfig(): newCmd='.json_encode($newCmd));
                         $deviceCmds += $newCmd;
                     }

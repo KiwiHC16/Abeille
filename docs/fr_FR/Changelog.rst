@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+- Zigate: plusieurs commandes supprimées => supportées dans page équipement/avancé.
+- Interne: Parser: Améliorations decodeDataType().
+- UseeLink prise SM-SO306: Ajout support (#2160).
+- Version FW 3.20 Optimized PDM fortement recommandée mais nécessite effacement PDM + réapparairage complet si migration d'une version "legacy".
+- Syntaxe JSON équipement: Ajout possibilité surcharge 'template'.
+- Zlinky TIC: Mise-à-jour JSON + icone.
+
 211009-BETA-1
 -------------
 

@@ -63,7 +63,6 @@
         sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getLocation',              'address='.$address.'&destinationEndPoint='.$EP );
         sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
         // sendMessageFromFormToCmd('CmdAbeille/0000/getSceneMembership',   'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$grouID, 0);
-        // sendMessageFromFormToCmd('CmdAbeille/0000/ReadAttributeRequest', 'address='.$address.'&DestinationEndPoint='.$EP'.'&ClusterId='.$clusterId'.'&attributId='.$attributId'.'&Proprio='.$proprio', 0);
     }
 
     try {
@@ -152,10 +151,10 @@
                         $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
                         list( $dest, $address ) = explode( "/", $device->getLogicalId() );
                         $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd( 'Cmd'.$device->getLogicalId().'/ReadAttributeRequest', 'EP=01&clusterId=0005&attributeId=0000' );
-                        sendMessageFromFormToCmd( 'Cmd'.$device->getLogicalId().'/ReadAttributeRequest', 'EP=01&clusterId=0005&attributeId=0001' );
-                        sendMessageFromFormToCmd( 'Cmd'.$device->getLogicalId().'/ReadAttributeRequest', 'EP=01&clusterId=0005&attributeId=0002' );
-                        sendMessageFromFormToCmd( 'Cmd'.$device->getLogicalId().'/ReadAttributeRequest', 'EP=01&clusterId=0005&attributeId=0003' );
+                        sendMessageFromFormToCmd( 'Cmd'.$device->getLogicalId().'/readAttribute', 'ep=01&clustId=0005&attrId=0000' );
+                        sendMessageFromFormToCmd( 'Cmd'.$device->getLogicalId().'/readAttribute', 'ep=01&clustId=0005&attrId=0001' );
+                        sendMessageFromFormToCmd( 'Cmd'.$device->getLogicalId().'/readAttribute', 'ep=01&clustId=0005&attrId=0002' );
+                        sendMessageFromFormToCmd( 'Cmd'.$device->getLogicalId().'/readAttribute', 'ep=01&clustId=0005&attrId=0003' );
                     }
                 }
                 break;
@@ -401,7 +400,7 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Start Network Z'.$zigateId ) {
                 echo "Start Network";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/startNetwork', "StartNetwork");
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/zgStartNetwork', "");
             }
         }
 

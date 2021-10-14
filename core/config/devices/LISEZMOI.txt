@@ -91,6 +91,8 @@ Exemple: BASICZBR3.json
         Mettre yes, si cette commande doit etre executée pour configurer l'équipement (inclusion or reconfiguratio).
     nextLine: 'after' ou 'before'
         Pour forcer un saut de ligne apres ou avant la commande dans la tuile.
+    template: Surcharge du template par defaut.
+        Permet de définir le widget à utiliser pour destkop & mobile.
 
   Exemples de nouvelle syntaxe:
     "Status": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },

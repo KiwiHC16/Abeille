@@ -22,8 +22,8 @@
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "startNetwork",
-      "request": "StartNetwork"
+      "topic": "zgStartNetwork",
+      "request": ""
     }
   },
   "get Network Status": {
@@ -317,142 +317,6 @@
       "message_placeholder": "DestinationEndPoint=XX&groupID=YYYY"
     }
   },
-  "Bind": {
-    "name": "Bind",
-    "order": 19,
-    "isHistorized": "0",
-    "isVisible": "0",
-    "Type": "action",
-    "subType": "message",
-    "configuration": {
-      "topic": "bind",
-      "request": "address=#title#&#message#"
-    },
-    "display": {
-      "forceReturnLineAfter": "0",
-      "title_placeholder": "Adresse IEEE de l equipement",
-      "message_placeholder": "targetEndpoint=XX&ClusterId=YYYY&reportToAddress=ZZZZZZZZZZZZZZZZ"
-    }
-  },
-  "BindShort": {
-    "name": "BindShort",
-    "order": 20,
-    "isHistorized": "0",
-    "isVisible": "0",
-    "Type": "action",
-    "subType": "message",
-    "configuration": {
-      "topic": "bindShort",
-      "request": "address=#title#&#message#"
-    },
-    "display": {
-      "forceReturnLineAfter": "0",
-      "title_placeholder": "Adresse IEEE de l equipement",
-      "message_placeholder": "targetExtendedAddress=XXXXXXXXXXXXXXXX&targetEndpoint=YY&ClusterId=ZZZZ&reportToAddress=AAAAAAAAAAAAAAAA"
-    }
-  },
-  "SetReport": {
-    "name": "setReport",
-    "order": 21,
-    "isHistorized": "0",
-    "isVisible": "0",
-    "Type": "action",
-    "subType": "message",
-    "configuration": {
-      "topic": "setReport",
-      "request": "address=#title#&#message#"
-    },
-    "display": {
-      "forceReturnLineAfter": "1",
-      "title_placeholder": "Adresse courte de l equipement",
-      "message_placeholder": "targetEndpoint=XX&ClusterId=YYYY&AttributeType=ZZ&AttributeId=xxxx"
-    }
-  },
-  "getName": {
-    "name": "Get Name",
-    "order": 22,
-    "isHistorized": "0",
-    "isVisible": "0",
-    "Type": "action",
-    "subType": "message",
-    "configuration": {
-      "topic": "getName",
-      "request": "address=#title#&destinationEndPoint=#message#"
-    },
-    "display": {
-      "forceReturnLineAfter": "0",
-      "title_placeholder": "Adresse courte de l equipement",
-      "message_placeholder": "[targetEndpoint(XX)]"
-    }
-  },
-  "getLocation": {
-    "name": "Get Location",
-    "order": 23,
-    "isHistorized": "0",
-    "isVisible": "0",
-    "Type": "action",
-    "subType": "message",
-    "configuration": {
-      "topic": "getLocation",
-      "request": "address=#title#&destinationEndPoint=#message#"
-    },
-    "display": {
-      "forceReturnLineAfter": "0",
-      "title_placeholder": "Adresse courte de l equipement",
-      "message_placeholder": "[targetEndpoint(XX)]"
-    }
-  },
-  "setLocation": {
-    "name": "Set Location",
-    "order": 24,
-    "isHistorized": "0",
-    "isVisible": "0",
-    "Type": "action",
-    "subType": "message",
-    "configuration": {
-      "topic": "setLocation",
-      "request": "address=#title#&#message#"
-    },
-    "display": {
-      "forceReturnLineAfter": "1",
-      "title_placeholder": "Adresse courte de l equipement",
-      "message_placeholder": "location=xxxxxx[&destinationEndPoint=(XX)]"
-    }
-  },
-  "WriteAttributeRequest": {
-    "name": "Write Attribut",
-    "order": 25,
-    "isHistorized": "0",
-    "isVisible": "0",
-    "Type": "action",
-    "subType": "message",
-    "configuration": {
-      "topic": "WriteAttributeRequest",
-      "request": "address=#title#&#message#"
-    },
-    "display": {
-      "forceReturnLineAfter": "0",
-      "title_placeholder": "Adresse courte de l equipement",
-      "message_placeholder": "Proprio=ZZZZ&clusterId=XXXX&attributeId=YYYY"
-    }
-  },
-  "ReadAttributeRequest": {
-    "name": "Get Attribut",
-    "order": 26,
-    "isHistorized": "0",
-    "isVisible": "0",
-    "Type": "action",
-    "subType": "message",
-    "configuration": {
-      "topic": "ReadAttributeRequest",
-      "request": "address=#title#&#message#"
-    },
-    "display": {
-      "forceReturnLineAfter": "1",
-      "title_placeholder": "Adresse courte de l equipement",
-      "message_placeholder": "clusterId=XXXX&attributId=YYYY&Proprio=ZZZZ&EP=XX"
-    }
-  },
   "AbeilleList": {
     "name": "Liste Equipements",
     "order": 27,
@@ -586,42 +450,6 @@
     "subType": "string",
     "invertBinary": "0",
     "template": ""
-  },
-  "ActiveEndPoint": {
-    "name": "ActiveEndPoint",
-    "order": 40,
-    "isHistorized": "0",
-    "isVisible": "0",
-    "Type": "action",
-    "subType": "message",
-    "configuration": {
-      "topic": "ActiveEndPoint",
-      "request": "address=#title#",
-      "retain": "0"
-    },
-    "display": {
-      "forceReturnLineAfter": "0",
-      "title_placeholder": "Adresse courte de l equipement",
-      "message_placeholder": "Laisser vide"
-    }
-  },
-  "SimpleDescriptorRequest": {
-    "name": "SimpleDescriptorRequest",
-    "order": 41,
-    "isHistorized": "0",
-    "isVisible": "0",
-    "Type": "action",
-    "subType": "message",
-    "configuration": {
-      "topic": "SimpleDescriptorRequest",
-      "request": "address=#title#&endPoint=#message#",
-      "retain": "0"
-    },
-    "display": {
-      "forceReturnLineAfter": "0",
-      "title_placeholder": "Adresse courte de l equipement",
-      "message_placeholder": "[endPoint(XX)]"
-    }
   },
   "Reset": {
     "name": "Reset",

@@ -1225,7 +1225,7 @@ console.log(zEndPoints);
                 h += '<label id="idClustEP'+zEpId+'" class="col-lg-2 control-label"></label>';
 
                 h += '<div class="col-lg-10">';
-                // h += '<a class="btn btn-warning" title="Raffraichi la liste des clusters" onclick="requestInfos(\'clustersList\', \''+ep+'\')"><i class="fas fa-sync"></i></a>';
+                h += '<a class="btn btn-warning" title="Raffraichi la liste des clusters" onclick="requestInfos(\'clustersList\', \''+zEpId+'\')"><i class="fas fa-sync"></i></a>';
                 h += '<br><br>';
                 h += '</div>';
 

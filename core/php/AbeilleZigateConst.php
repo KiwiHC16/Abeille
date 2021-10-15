@@ -1,7 +1,7 @@
 
 <?php
     /*
-     * Zigate & zigbee constants
+     * Zigate specific constants
      */
 
     /* Returns Zigate message name based on given '$msgType' */
@@ -294,7 +294,7 @@
 
         if (array_key_exists($status, $statusesTable))
             return $statusesTable[$status];
-        return "Unknown ".$status." status";
+        return "Unknown-".$status;
     }
 
     /* Returns a string corresponding to 804E bitmap info, based on given '$bitMap' value.

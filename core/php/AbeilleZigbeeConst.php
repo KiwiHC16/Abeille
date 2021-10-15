@@ -143,10 +143,10 @@
         "0006" => array(
             "name" => "On/Off",
             "attributes" => array(
-                "0000" => array( "name" => "OnOff", "access" => "R" ),
-                "4000" => array( "name" => "GlobalSceneControl", "access" => "R" ),
-                "4001" => array( "name" => "OnTime", "access" => "RW" ),
-                "4002" => array( "name" => "OffWaitTime", "access" => "RW" ),
+                "0000" => array( "name" => "OnOff", "access" => "R", "dataType" => 0x10 ),
+                "4000" => array( "name" => "GlobalSceneControl", "access" => "R", "dataType" => 0x10 ),
+                "4001" => array( "name" => "OnTime", "access" => "RW", "dataType" => 0x21 ),
+                "4002" => array( "name" => "OffWaitTime", "access" => "RW", "dataType" => 0x21 ),
             ),
             "commands" => array(
                 "00" => array( "name" => "Off" ),

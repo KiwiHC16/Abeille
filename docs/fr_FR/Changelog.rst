@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- Firmware: L'équipe Zigate recommande FORTEMENT d'utiliser le **FW Optimized PDM** (donc 3.20/3.1e).
+   - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+   - Mais **ATTENTION** si vous migrez d'une version "legacy" il vous faut **effacer la PDM et réapparairer tous vos équipements**.
+
 - Interne: Correction 'writeAttribute' + mise-à-jour reponse 8110.
 - Tuya 4 buttons (TS004F__TZ3000_xabckq1v): Mise-à-jour support (#2155).
 - Commandes JSON: Suppression 'binToZigate-EPXX-0006' => obsolètes.
@@ -13,7 +17,6 @@ ChangeLog
 - Zigate: plusieurs commandes supprimées => supportées dans page équipement/avancé.
 - Interne: Parser: Améliorations decodeDataType().
 - UseeLink prise SM-SO306: Ajout support (#2160).
-- Version FW 3.20 Optimized PDM fortement recommandée mais nécessite effacement PDM + réapparairage complet si migration d'une version "legacy".
 - Syntaxe JSON équipement: Ajout possibilité surcharge 'template'.
 - Zlinky TIC: Mise-à-jour JSON + icone.
 

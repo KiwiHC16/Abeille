@@ -91,7 +91,7 @@ class AbeilleTools
         else if ($from == "local")
             $rootDir = devicesLocalDir;
         else {
-            log::add('Abeille', 'error', 'getDevicesList(): wrong type '.$from);
+            log::add('Abeille', 'error', "Emplacement JSON '".$from."' invalide");
             return false;
         }
 
@@ -102,33 +102,39 @@ class AbeilleTools
         }
         while (($dirEntry = readdir($dh)) !== false) {
             /* Ignoring some entries */
-            if (in_array($dirEntry, array(".", "..", "README.txt", "LISEZMOI.txt")))
+            if (in_array($dirEntry, array(".", "..")))
                 continue;
-            // Tcharp38: TODO: Ignore non directories entries instead
+            $fullPath = $rootDir.$dirEntry;
+            if (!is_dir($fullPath))
+                continue;
 
             $fullPath = $rootDir.$dirEntry.'/'.$dirEntry.".json";
             if (!file_exists($fullPath)) {
-                log::add('Abeille', 'debug', 'getDevicesList(): path access error '.$fullPath);
+                log::add('Abeille', 'debug', 'getDevicesList(): does not exist '.$fullPath);
                 continue;
             }
 
-            /* If filename includes manufacturer, let's split */
-            $modelId = $dirEntry;
-            $manufacturer = '';
-            $content = file_get_contents($fullPath);
-            $devConf = json_decode($content, true);
-            if (isset($devConf['zbManufacturer'])) {
-                $modelId = substr($dirEntry, 0, -(strlen($devConf['zbManufacturer']) + 1));
-                $manufacturer = $devConf['zbManufacturer'];
-                log::add('Abeille', 'debug', 'getDevicesList(): splitted modelId='.$modelId.', manuf='.$manufacturer);
-            }
-
             $dev = array(
-                'modelId' => $modelId,
-                'manufacturer' => $manufacturer,
-                'type' => $from
+                'jsonId' => $dirEntry,
+                'location' => $from
             );
             $devicesList[$dirEntry] = $dev;
+
+            /* Check if config is compliant with other device identification */
+            $content = file_get_contents($fullPath);
+            $devConf = json_decode($content, true);
+            $devConf = $devConf[$dirEntry]; // Removing top key
+            if (isset($devConf['alternateIds'])) {
+                $idList = explode(',', $devConf['alternateIds']);
+                foreach ($idList as $id) {
+                    log::add('Abeille', 'debug', "getDevicesList(): Alternate ID '".$id."' for '".$dirEntry."'");
+                    $dev = array(
+                        'jsonId' => $dirEntry,
+                        'location' => $from
+                    );
+                    $devicesList[$id] = $dev;
+                }
+            }
         }
         closedir($dh);
 

@@ -308,29 +308,29 @@
                - If not found, look with '<modelId>' identifier
                - And if still not found, use 'defaultUnknown'
              */
-            $jsonName = '';
+            $zigbeeId = ''; // Successful identifier (<modelId_manuf> or <modelId> or <location>)
             $jsonLocation = "Abeille"; // Default location
             if ($by == 'modelIdentifier') {
                 /* Search by modelId and manufacturer */
                 if (($eq['manufacturer'] !== false) && ($eq['manufacturer'] != '')) {
                     $identifier = $eq['modelIdentifier'].'_'.$eq['manufacturer'];
                      if (isset($GLOBALS['customEqList'][$identifier])) {
-                        $jsonName = $identifier;
+                        $zigbeeId = $identifier;
                         $jsonLocation = "local";
                         parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' identifier");
                     } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
-                        $jsonName = $identifier;
+                        $zigbeeId = $identifier;
                         parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
                     }
                 }
-                if ($jsonName == '') {
+                if ($zigbeeId == '') {
                     $identifier = $eq['modelIdentifier'];
                      if (isset($GLOBALS['customEqList'][$identifier])) {
-                        $jsonName = $identifier;
+                        $zigbeeId = $identifier;
                         $jsonLocation = "local";
                         parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' identifier");
                     } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
-                        $jsonName = $identifier;
+                        $zigbeeId = $identifier;
                         parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
                     }
                 }
@@ -338,24 +338,30 @@
                 /* Search by location */
                 $identifier = $eq['location'];
                  if (isset($GLOBALS['customEqList'][$identifier])) {
-                    $jsonName = $identifier;
+                    $zigbeeId = $identifier;
                     $jsonLocation = "local";
                     parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' location identifier");
                 } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
-                    $jsonName = $identifier;
+                    $zigbeeId = $identifier;
                     parserLog('debug', "  EQ is supported with '".$identifier."' location identifier");
                 }
             }
 
-            if ($jsonName == '') {
+            if ($zigbeeId == '') {
+                $eq['zigbeeId'] = "";
                 $eq['jsonId'] = "defaultUnknown";
                 $eq['jsonLocation'] = "Abeille";
                 parserLog('debug', "  EQ is UNsupported. 'defaultUnknown' config will be used");
                 return false;
             }
 
-            $eq['jsonId'] = $jsonName;
+            $eq['zigbeeId'] = $zigbeeId;
+            if ($jsonLocation == "Abeille")
+                $eq['jsonId'] = $GLOBALS['supportedEqList'][$zigbeeId]['jsonId'];
+            else
+                $eq['jsonId'] = $GLOBALS['customEqList'][$zigbeeId]['jsonId'];
             $eq['jsonLocation'] = $jsonLocation;
+            parserLog('debug', "  JSON id '".$eq['jsonId']."', location '".$jsonLocation."'");
             return true;
         }
 
@@ -371,6 +377,7 @@
                 'manufacturer' => null (undef)/false (unsupported)/'xx'
                 'modelIdentifier' => null (undef)/false (unsupported)/'xx'
                 'location' => null (undef)/false (unsupported)/'xx'
+                'zigbeeId' => null (undef)/'' (unsupported)
                 'jsonId' => '', // JSON identifier
                 'jsonLocation' => '', // JSON location ("Abeille"=default, or "local")
             );
@@ -1349,7 +1356,7 @@ parserLog('debug', "  iHs=".$iHs);
             $this->msgToCmd("Cmd".$dest."/0000/PDM", "req=E_SL_MSG_PDM_EXISTENCE_RESPONSE&recordId=".$id);
         }
 
-        // Zigate Status
+        // 8000/Zigate Status
         function decode8000($dest, $payload, $lqi)
         {
             $status     = substr($payload, 0, 2);
@@ -2324,6 +2331,11 @@ parserLog('debug', "  iHs=".$iHs);
 
                     return;
                 } // End '$cmd == "01"'
+
+                else if ($cmd == "04") { // Write Attributes Response
+                    parserLog('debug', "  Handled by decode8110");
+                    return;
+                } // End '$cmd == "04"'
 
                 else if ($cmd == "07") { // Configure Reporting Response
                     // Some clusters are directly handled by 8120 decode
@@ -3807,6 +3819,7 @@ parserLog('debug', '  '.$confIeee."=".$confIeeeval);
             $msg['name'] = $ep.'-0006-cmd'.$status;
             $msg['value'] = 1; // Currently fake value. Not required for Off-00/On-01/Toggle-02 cmds
             // Tcharp38: TODO: Value should return payload when there is (cmds 40/41/42) but must be decoded by 8002 instead to get it.
+            // Tcharp38: Note: Cmd FD (seen as Tuya specific cluster 0006 cmd) may be returned too with recent FW.
             $this->msgToAbeille2($msg);
         }
 
@@ -4727,13 +4740,37 @@ parserLog('debug', '  '.$confIeee."=".$confIeeeval);
             $this->decode8100_8102("8102", $dest, $payload, $lqi);
         }
 
+        /* 8110/Write attribute response */
         function decode8110($dest, $payload, $lqi)
         {
-            parserLog('debug', $dest.', Type=8110/Write attribute response'
-                        //   .': Dest='.$dest
-                        //   .', Level=0x'.substr($payload, 0, 2)
-                        //   .', Message='.$this->hex2str(substr($payload, 2, strlen($payload) - 2))
-                         );
+            /* Decode
+                <Sequence number: uint8_t>
+                <Src address : uint16_t>
+                <Endpoint: uint8_t>
+                <Cluster id: uint16_t>
+                <Attribute Enum: uint16_t>
+                <Attribute status: uint8_t>
+                <Attribute data type: uint8_t>
+                <Size Of the attributes in bytes: uint16_t>
+                <Data byte list : stream of uint8_t> */
+            $sqn = substr($payload, 0, 2);
+            $srcAddr = substr($payload, 2, 4);
+            $ep = substr($payload, 6, 2);
+            $clustId = substr($payload, 8, 4);
+            $attrId = substr($payload, 12, 4);
+            $status = substr($payload, 16, 2);
+
+            $decoded = '8110/Write attribute response'
+                .', SrcAddr='.$srcAddr
+                .', EP='.$ep
+                .', ClustID='.$clustId
+                .', AttrId='.$attrId
+                .', Status='.$status;
+
+            // Log
+            parserLog('debug', $dest.', Type='.$decoded);
+
+            // Monitor
         }
 
         function decode8120($dest, $payload, $lqi)

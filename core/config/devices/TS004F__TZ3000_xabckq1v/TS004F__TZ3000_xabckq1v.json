@@ -31,20 +31,11 @@
                 "params": "clustId=0006&attrId=8004&attrType=30&attrValue=01",
                 "execAtCreation": "Yes"
             },
-            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
-            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
-            "Status": { "use": "zb-0006-OnOff", "isVisible": 1 },
-            "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
-                "params": "clustId=0006",
-                "execAtCreation": "Yes"
-            },
 
-            "Bind-0008-ToZigate": {
-                "use": "zbBindToZigate",
-                "params": "clustId=0008",
-                "execAtCreation": "Yes"
-            }
+            "Click 1": { "use": "click", "params": "ep=03", "isVisible": 1 },
+            "Click 2": { "use": "click", "params": "ep=04", "isVisible": 1 },
+            "Click 3": { "use": "click", "params": "ep=02", "isVisible": 1 },
+            "Click 4": { "use": "click", "params": "ep=01", "isVisible": 1 }
        }
     }
 }

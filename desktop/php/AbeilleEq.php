@@ -483,7 +483,10 @@
             clustId = document.getElementById("idClustIdWA").value;
             attrId = document.getElementById("idAttrIdWA").value;
             value = document.getElementById("idValueWA").value;
-            payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId+"_value="+value;
+            payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId+"_attrVal="+value;
+            attrType = document.getElementById("idAttrTypeWA").value;
+            if (attrType != '')
+                payload += "_attrType="+attrType;
         } else if (request == "discoverCommandsReceived") {
             topic = "Cmd"+logicalId+"_discoverCommandsReceived";
             ep = document.getElementById("idEpB").value;

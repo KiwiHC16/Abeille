@@ -553,7 +553,8 @@
                     addClusterButton("idClustIdWA");
                     addAttrInput("idAttrIdWA");
                 ?>
-                <input id="idValueWA" title="{{Valeur à écrire. Format hex string}}" />
+                <input id="idAttrTypeWA" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" />
+                <input id="idValueWA" title="{{Valeur à écrire. Format hex string}}"  placeholder="{{Data}}" />
             </div>
         </div>
         <div class="form-group">

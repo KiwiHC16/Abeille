@@ -7,7 +7,7 @@
         "subType": "other",
         "configuration": {
             "topic": "writeAttribute",
-            "request": "ep=#EP#&clustId=#CLUSTID#&attrId=#ATTRID#"
+            "request": "ep=#EP#&clustId=#CLUSTID#&attrId=#ATTRID#&attrVal=#ATTRVAL#"
         },
         "type": "action"
     }

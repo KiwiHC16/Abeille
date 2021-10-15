@@ -3274,23 +3274,34 @@
                 // ZCL global: writeAttribute command
                 else if ($cmdName == 'writeAttribute') {
                     /* Checking that mandatory infos are there */
-                    $required = ['ep', 'clustId', 'attrId'];
+                    $required = ['ep', 'clustId', 'attrId', 'attrVal'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
+                    if (!isset($Command['attrType'])) {
+                        /* Attempting to find attribute type according to its id */
+                        $attr = zbGetZCLAttribute($Command['clustId'], $Command['attrId']);
+                        if (($attr === false) || !isset($attr['dataType'])) {
+                            $this->deamonlog('debug', "    command writeAttribute ERROR: Missing 'attrType'");
+                            return;
+                        }
+                        $Command['attrType'] = sprintf("%02X", $attr['dataType']);
+                        $this->deamonlog('debug', "    Using attrType ".$Command['attrType'], $this->debug['processCmd']);
+                    }
 
                     /* Cmd 0110 reminder:
-                        <address mode: uint8_t>
+                        <address mode: uint8_t>	Data Indication
                         <target short address: uint16_t>
                         <source endpoint: uint8_t>
                         <destination endpoint: uint8_t>
                         <Cluster id: uint16_t>
                         <direction: uint8_t>
-                            0 - from server to client
-                            1 - from client to server
                         <manufacturer specific: uint8_t>
                         <manufacturer id: uint16_t>
                         <number of attributes: uint8_t>
-                        <attributes list: data list of uint16_t  each>
+                        <attributes list: data list of uint16_t each>
+                            Attribute ID : uint16_t
+                            Attribute Type : uint8_t
+                            Attribute Data : byte[32]
                     */
 
                     $priority = $Command['priority'];
@@ -3306,7 +3317,7 @@
                     $manufSpecific  = "00";
                     $manufId        = "0000";
                     $nbOfAttributes = "01";
-                    $attrList       = $Command['attrId'];
+                    $attrList       = $Command['attrId'].$Command['attrType'].$Command['attrVal'];
 
                     $data = $addrMode.$addr.$srcEp.$destEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttributes.$attrList;
                     $len = sprintf("%04s", dechex(strlen($data) / 2));

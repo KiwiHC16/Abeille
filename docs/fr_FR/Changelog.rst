@@ -1,6 +1,7 @@
 ChangeLog
 =========
 
+- Interne: Correction 'writeAttribute' + mise-à-jour reponse 8110.
 - Commandes JSON: Suppression 'binToZigate-EPXX-0006' => obsolètes.
 211014-BETA-1
 -------------

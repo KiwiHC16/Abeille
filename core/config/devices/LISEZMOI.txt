@@ -52,6 +52,9 @@ Exemple: BASICZBR3.json
   Mettre "TS0121" par ex donnera probablement lieu à une mauvaise identification de l'équipement.
   Il est recommandé de combiner l'identifiant zigbee 'modele' avec celui du 'fabricant' => <zbModelId>_<zbManufId>
 
+* alternateIds: optionnel
+  Permet de définir un autre identifiant pour le même type d'équipement (ex: TRAFRISignalRepeater & TRAFRIsignalrepeater).
+
 * type: OBLIGATOIRE, courte description du type d'équipement
   Anciennement "nameJeedom".
 

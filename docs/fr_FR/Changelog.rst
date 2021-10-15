@@ -5,6 +5,7 @@ ChangeLog
 - Tuya 4 buttons (TS004F__TZ3000_xabckq1v): Mise-à-jour support (#2155).
 - Commandes JSON: Suppression 'binToZigate-EPXX-0006' => obsolètes.
 - JSON équipements: Ajout support multiple identifiants (ex: 'signalrepeater' & 'SignalRepeater').
+- UseeLink prise SM-SO306: Mise-à-jour (#2160).
 
 211014-BETA-1
 -------------

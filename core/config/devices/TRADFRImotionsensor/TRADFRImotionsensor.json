@@ -39,7 +39,7 @@
             "include10": "BindShortToZigateBatterie",
             "include11": "setReportBatterie",
 
-            "include-0006-1": "bindToZigate-EP01-0006",
+            "Bind-01-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0006", "execAtCreation": "Yes" },
             "Set-OnOffReporting-01": {
                 "use": "zbConfigureReporting",
                 "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",

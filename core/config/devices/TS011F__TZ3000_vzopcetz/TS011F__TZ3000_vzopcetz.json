@@ -25,10 +25,7 @@
             "Off": { "use": "zbCmd-0006-Off", "params": "ep=01" },
             "Off1": { "use": "zbCmd-0006-Off", "params": "ep=02" },
             "Off2": { "use": "zbCmd-0006-Off", "params": "ep=03" },
-            "Toggle 1": {
-                "use": "zbCmd-0006-Toggle",
-                "params": "ep=01"
-            },
+            "Toggle 1": { "use": "zbCmd-0006-Toggle", "params": "ep=01" },
             "Toggle 2": {
                 "use": "zbCmd-0006-Toggle",
                 "params": "ep=02"
@@ -40,13 +37,13 @@
             "include8": "getEtat",
             "include9": "BindToZigateEtat",
             "include10": "setReportEtat",
-            "include0006-1": "bindToZigate-EP02-0006",
+            "Bind-02-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=02&clustId=0006", "execAtCreation": "Yes" },
             "Set-OnOffReporting-02": {
                 "use": "zbConfigureReporting",
                 "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
                 "execAtCreation": "Yes"
             },
-            "include0006-3": "bindToZigate-EP03-0006",
+            "Bind-03-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=03&clustId=0006", "execAtCreation": "Yes" },
             "Set-OnOffReporting-03": {
                 "use": "zbConfigureReporting",
                 "params": "ep=03&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",

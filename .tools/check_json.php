@@ -146,7 +146,7 @@
                 }
 
                 if ($newSyntax) {
-                    $supportedKeys = ['use', 'params', 'isVisible', 'execAtCreation', 'nextLine'];
+                    $supportedKeys = ['use', 'params', 'isVisible', 'execAtCreation', 'nextLine', 'template'];
                     foreach ($value as $key2 => $value2) {
                         if (!in_array($key2, $supportedKeys))
                             $error = newDevError($devName, "ERROR", "Invalid '".$key2."' key for '".$key."' Jeedom command");
@@ -166,7 +166,7 @@
         }
 
         /* Checking supported keywords */
-        $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible'];
+        $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds'];
         foreach ($dev[$devName] as $key => $value) {
             if (in_array($key, $supportedKeys))
                 continue;

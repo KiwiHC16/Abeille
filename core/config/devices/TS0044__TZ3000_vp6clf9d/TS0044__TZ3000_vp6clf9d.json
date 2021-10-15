@@ -18,8 +18,8 @@
                 "isVisible": 1
             },
             "BindToZigate-Power": {
-                "use": "bindToZigate",
-                "params": "CLUSTID=0001",
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },
             "Set-BatteryReporting": {

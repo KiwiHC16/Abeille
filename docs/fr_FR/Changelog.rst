@@ -1,6 +1,7 @@
 ChangeLog
 =========
 
+- Commandes JSON: Suppression 'binToZigate-EPXX-0006' => obsolètes.
 211014-BETA-1
 -------------
 

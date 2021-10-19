@@ -15,7 +15,7 @@
             "include5": "levelLight",
             "include6 2": "colorX",
             "include7 2": "colorY",
-            "include6": "On",
+            "On": { "use": "zbCmd-0006-On" },
             "include7": "Off",
             "include11 2": "setLevel",
             "include12 2": "Colour",

@@ -13,7 +13,7 @@
             "include3 2": "location",
             "include3 2 2": "etatCharge0",
             "include3 2 2 2 2": "etatSW1",
-            "include3 2 2 2 2 2 2": "On",
+            "On": { "use": "zbCmd-0006-On" },
             "include3 2 2 2 2 2 2 2": "Off",
             "include19": "getEtat",
             "include20": "getLevel",

@@ -5,18 +5,18 @@
 
 Ce répertoire contient les modèles d'équipement supportés par Abeille.
 
-Attention !! Toute modification de ce répertoire sera écrasée lors des mises-à-jour du plugin.
+ATTENTION !! Toute modification de ce répertoire sera écrasée lors des mises-à-jour du plugin.
 
 Pendant la phase d'inclusion, Abeille va chercher les modèles dans l'ordre suivant
-- dans ce répertoire officiel 'devices'
-- puis dans le répertoire 'devices_local' pour les équipements locaux/custom
+- dans le répertoire 'devices_local' pour les équipements locaux/custom ou en cours de dev
+- puis dans ce répertoire officiel 'devices'
 - et enfin si toujours pas trouvé, le modèle 'defaultUnknown.json' sera utilisé
 
 
 Ce répertoire doit suivre la structure
     <identificateur>/<identificateur>.json
 
-Attention !! Voir 'identificateur' plus bas dans le format du fichier.
+    ATTENTION !! Voir 'identificateur' plus bas dans le format du fichier.
 
 Format de fichier
 =================
@@ -39,18 +39,18 @@ Exemple: BASICZBR3.json
       "commands": {
         "Groups": { "use": "Group-Membership" },
 
-        "etat": { "use": "etat" },
-        "On": { "use": "On" },
-        "Off": { "use": "Off", "nextLine": "after" },
+        "etat": { "use": "etat", "isVisible": 1 },
+        "On": { "use": "On", "isVisible": 1 },
+        "Off": { "use": "Off", "isVisible": 1, "nextLine": "after" },
         "getEtat": { "use": "getEtat" }
       }
     }
   }
 
 * Clef d'entrée/identificateur: OBLIGATOIRE, = nom du fichier sans extension (ex: BASICZBR3)
-  ATTENTION !! Cette partie est tres importante, surtout pour les équipements génériques qu'on peut retrouver sous differentes marques.
+  ATTENTION !! Cette partie est tres importante, surtout pour les équipements génériques qu'on peut retrouver sous différentes marques.
   Mettre "TS0121" par ex donnera probablement lieu à une mauvaise identification de l'équipement.
-  Il est recommandé de combiner l'identifiant zigbee 'modele' avec celui du 'fabricant' => <zbModelId>_<zbManufId>
+  Il est recommandé de combiner l'identifiant zigbee 'modele' avec celui du 'fabricant' => '<zbModelId>_<zbManufId>'
 
 * alternateIds: optionnel
   Permet de définir un autre identifiant pour le même type d'équipement (ex: TRAFRISignalRepeater & TRAFRIsignalrepeater).
@@ -98,7 +98,8 @@ Exemple: BASICZBR3.json
         Permet de définir le widget à utiliser pour destkop & mobile.
 
   Exemples de nouvelle syntaxe:
-    "Status": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },
+    "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },
+    "Status 2": { "use": "zb-0006-OnOff", "params": "ep=02", "isVisible": 1, "nextLine": "after" },
     "ActivePower": { "use": "zb-0B04-ActivePower", "params": "ep=01", "isVisible": 1 },
 
   Pour info: Ancienne syntaxe OBSOLETE:

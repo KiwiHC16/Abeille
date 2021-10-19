@@ -14,7 +14,7 @@
             "include4": "etatLight",
             "include5": "levelLight",
             "include5 2": "getColorTemperature",
-            "include8": "On",
+            "On": { "use": "zbCmd-0006-On" },
             "include9": "Off",
             "include11": "setLevel",
             "include38": "2700K",

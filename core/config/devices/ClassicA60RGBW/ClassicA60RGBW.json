@@ -12,7 +12,7 @@
         "type": "Classic A60 RGB W",
         "commands": {
             "include4": "etatLight",
-            "include8": "On",
+            "On": { "use": "zbCmd-0006-On" },
             "include9": "Off",
             "include19": "getEtat",
             "include24": "Identify",

@@ -20,7 +20,7 @@
             "include4": "etat",
             "include5": "Level",
             "include6": "Onlevel",
-            "include8": "On",
+            "On": { "use": "zbCmd-0006-On" },
             "include9": "Off",
             "Toggle": {
                 "use": "zbCmd-0006-Toggle",

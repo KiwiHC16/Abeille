@@ -866,11 +866,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             case "18": // 8-bit bitmap
             case "20": // Uint8
             case "28": // Int8
+            case "30": // enum8
                 $dataSize = 1;
                 break;
             case "19": // map16
             case "21": // Uint16
             case "29": // Int16
+            case "31": // enum16
                 $dataSize = 2;
                 break;
             case "0A": // Discrete: 24-bit data
@@ -901,7 +903,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 break;
             case "27": // Uint64
             case "2F": // Int64
+            case "F0": // IEEE addr
                 $dataSize = 8;
+                break;
+            case "F1": // 128bits key
+                $dataSize = 16;
                 break;
             case "41": // String discrete: octstr
             case "42": // String discrete: string
@@ -954,10 +960,12 @@ parserLog('debug', "  iHs=".$iHs);
             case "25": // Uint48
             case "26": // Uint56
             case "27": // Uint64
+            case "30": // enum8
+            case "31": // enum16
             case "E0": // Time analog: ToD
             case "E1": // Time analog: Date
             case "E2": // Time analog: UTC
-                $value = hexdec($hs);
+                $value = hexdec($hs); // Convert to number
                 break;
             case "28": // int8
                 $value = hexdec($hs);
@@ -975,7 +983,9 @@ parserLog('debug', "  iHs=".$iHs);
                 $value -= 0x1000000;
                 break;
             case "41": // String discrete: octstr
-                $value = $hs;
+            case "F0": // IEEE addr
+            case "F1": // 128bits key
+                $value = $hs; // No conversion. Copy extracted string.
                 break;
             case "42": // String discrete: string
                 $value = pack("H*", $hs);
@@ -2242,7 +2252,7 @@ parserLog('debug', "  iHs=".$iHs);
                 */
                 if ($cmd == "01") { // Read Attributes Response
                     // Some clusters are directly handled by 8100/8102 decode
-                    $acceptedCmd01 = ['0005', '0009', '0020', '0B04', '1000']; // Clusters handled here
+                    $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0100', '0B04', '1000']; // Clusters handled here
                     if (!in_array($cluster, $acceptedCmd01)) {
                         parserLog('debug', "  Handled by decode8100_8102");
                         return;
@@ -4473,20 +4483,6 @@ parserLog('debug', '  '.$confIeee."=".$confIeeeval);
                     $data = $percent;
                 }
             } // End cluster 0001/power configuration
-
-            else if ($clustId == "0006") { // On/Off cluster
-                if ($attrId == "0000") { // OnOff
-                    $OnOff = substr($Attribut, 0, 2);
-                    parserLog('debug', '  OnOff='.$OnOff);
-                }
-            } // End cluster 0006/onoff
-
-            else if ($clustId == "0008") { // Level control cluster
-                if ($attrId == "0000") { // CurrentLevel
-                    $CurrentLevel = substr($Attribut, 0, 2);
-                    parserLog('debug', '  CurrentLevel='.$CurrentLevel);
-                }
-            } // End cluster 0006/onoff
 
             else if ($clustId == "000C") { // Analog input cluster
                 if ($attrId == "0055") {

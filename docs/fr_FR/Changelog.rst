@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-211015-BETA-1
+211019-STABLE-1
 -------------
 
 - Firmware: L'équipe Zigate recommande FORTEMENT d'utiliser le **FW Optimized PDM** (donc 3.20/3.1e).

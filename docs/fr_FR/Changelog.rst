@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211019-BETA-1
+-------------
+
 - Firmware: L'équipe Zigate recommande FORTEMENT d'utiliser le **FW Optimized PDM** (donc 3.20/3.1e).
    - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
    - Mais **ATTENTION** si vous migrez d'une version "legacy" il vous faut **effacer la PDM et réapparairer tous vos équipements**.

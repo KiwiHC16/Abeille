@@ -21,8 +21,8 @@
      */
 
     /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.json";
-    if (file_exists($dbgFile)) {
+    require_once __DIR__.'/../config/Abeille.config.php'; // dbgFile constant
+    if (file_exists(dbgFile)) {
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
@@ -50,7 +50,7 @@ try {
     require_once __DIR__.'/../class/Abeille.class.php';
     require_once __DIR__.'/../php/AbeilleZigate.php';
     include_once __DIR__.'/../class/AbeilleTools.class.php'; // deamonlogFilter()
-    require_once __DIR__.'/../php/AbeillePreInstall.php'; // checkIntegrity()
+    require_once __DIR__.'/../php/AbeilleInstall.php'; // checkIntegrity()
     include_once __DIR__.'/../php/AbeilleLog.php'; // logDebug()
 
     include_file('core', 'authentification', 'php');

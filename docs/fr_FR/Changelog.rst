@@ -7,6 +7,7 @@ ChangeLog
 
 - JSON commandes: Nettoyage. Suppression commandes obsolètes.
 - Interne: decodeDataType(): ajout support enum8/enum16 + ieee.
+- Test d'intégrité et nettoyage automatique à la mise-à-jour.
 
 211019-STABLE-1
 ---------------

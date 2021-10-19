@@ -17,8 +17,8 @@
     */
 
     /* Developers debug features */
-    $dbgFile = __DIR__."/../tmp/debug.json";
-    if (file_exists($dbgFile)) {
+    require_once __DIR__.'/../core/config/Abeille.config.php';
+    if (file_exists(dbgFile)) {
         $dbgDeveloperMode = true;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -27,7 +27,7 @@
     }
 
     include_once __DIR__.'/../../../core/php/core.inc.php';
-    require_once __DIR__.'/../core/php/AbeillePreInstall.php';
+    require_once __DIR__.'/../core/php/AbeilleInstall.php';
 
     /**
      * Fonction exécutée automatiquement après l'installation du plugin
@@ -326,20 +326,12 @@
 
         $error = false;
 
-        /* Collect Abeille's version */
-        $file = fopen(__DIR__."/Abeille.version", "r");
-        $line = fgets($file); // Should be a comment
-        $version = trim(fgets($file));
-        fclose($file);
-
-        if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == true)) {
-            if (validMd5Exists() == 0) {
-                if (checkIntegrity() != 0) {
-                    message::add('Abeille', 'Fichiers corrompus detectés ! La version \''.$version.'\' est mal installée. Problème de place ?', null, null);
-                    $error = true;
-                } else
-                    doPostUpdateCleanup();
-            }
+        if (validMd5Exists($version)) {
+            if (checkIntegrity() != true) {
+                message::add('Abeille', 'Fichiers corrompus detectés ! La version \''.$version.'\' est mal installée. Problème de place ?', null, null);
+                $error = true;
+            } else
+                doPostUpdateCleanup();
         }
 
         /* Updating config DB if required */

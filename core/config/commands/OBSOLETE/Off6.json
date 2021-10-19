@@ -1,0 +1,17 @@
+{
+    "Off6": {
+        "isVisible": 1,
+        "name": "Off7",
+        "isHistorized": "0",
+        "subType": "other",
+        "generic_type": "LIGHT_OFF",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "OnOff",
+            "request": "Action=Off&EP=07",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
+    }
+}

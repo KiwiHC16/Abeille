@@ -23,7 +23,11 @@ OutClusterCount=02
 OutCluster=0006 - General: On/Off
 OutCluster=0003 - General: Identify
 
+Boutons
 
+    1/off       2/on
+    3/level-    4/level+
+    5/color-    6/color+
 
 https://zigate.fr/forum/topic/xiaomi-aqara-opple/?part=2
     Ce bouton comme ceux de la serie ont deux modes de fonctionnement.

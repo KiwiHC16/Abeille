@@ -11,7 +11,7 @@
         "type": "Xiaomi Prise Murale Encastr\u00e9e",
         "commands": {
             "include4": "etat",
-            "include5": "On",
+            "On": { "use": "zbCmd-0006-On" },
             "include6": "Off",
             "include8": "getEtat",
             "include11": "conso",

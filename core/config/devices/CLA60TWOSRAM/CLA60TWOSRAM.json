@@ -14,7 +14,7 @@
         "commands": {
             "include4": "etatLight",
             "include5": "levelLight",
-            "include8": "On",
+            "On": { "use": "zbCmd-0006-On" },
             "include9": "Off",
             "include11": "setLevel",
             "include19": "getEtat",

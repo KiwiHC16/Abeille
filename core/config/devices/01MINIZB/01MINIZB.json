@@ -18,7 +18,7 @@
             "Groups": { "use": "Group-Membership" },
 
             "include4": "etat",
-            "include5": "On",
+            "On": { "use": "zbCmd-0006-On", "params": "ep=01" },
             "include6": "Off",
             "include8": "getEtat",
             "Toggle": {

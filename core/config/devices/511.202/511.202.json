@@ -11,7 +11,7 @@
         "type": "Module 511.202 iluminize",
         "commands": {
             "include4": "etat",
-            "include5": "On",
+            "On": { "use": "zbCmd-0006-On" },
             "include6": "Off",
             "include8": "getEtat",
             "include10 2": "BindToZigateEtat",

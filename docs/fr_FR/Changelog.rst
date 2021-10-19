@@ -7,6 +7,7 @@ ChangeLog
 
 - JSON commandes: Nettoyage. Suppression commandes obsolètes.
 - Interne: decodeDataType(): ajout support enum8/enum16 + ieee.
+- Tuya ZM-CG205 door sensor: Ajout support (#2165).
 - Test d'intégrité et nettoyage automatique à la mise-à-jour.
 
 211019-STABLE-1

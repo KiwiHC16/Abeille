@@ -17,9 +17,9 @@
     */
 
     /* Developers debug features */
-    $dbgFile = __DIR__."/../tmp/debug.json";
-    if (file_exists($dbgFile)) {
-        $dbgConfig = json_decode(file_get_contents($dbgFile), true);
+    require_once __DIR__.'/../core/config/Abeille.config.php';
+    if (file_exists(dbgFile)) {
+        $dbgConfig = json_decode(file_get_contents(dbgFile), true);
         $dbgDeveloperMode = true;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
         include_once __DIR__."/../core/php/AbeilleGit.php"; // For 'switchBranch' support
@@ -37,7 +37,7 @@
     }
 
     require_once __DIR__.'/../core/class/Abeille.class.php';
-    include_once __DIR__."/../core/php/AbeillePreInstall.php";
+    include_once __DIR__."/../core/php/AbeilleInstall.php";
 
     $zigateNbMax = 10;
     $zigateNb = config::byKey('zigateNb', 'Abeille', 1);
@@ -367,7 +367,7 @@
                 <p><i>{{Attention ! Vous n'avez normalement rien à faire dans cette section.}}</i></p>
             </div>
 
-            <?php if (validMd5Exists() == 0) { ?>
+            <?php if (validMd5Exists()) { ?>
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Vérifie l'integrité du plugin}}">{{Test d'intégrité : }}</label>
                 <div class="col-lg-5">
@@ -427,7 +427,7 @@
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Mode dédié aux développeurs}}">{{Mode developpeur : }}</label>
                 <div class="col-lg-5">
                     <?php
-                        if (file_exists($dbgFile))
+                        if (file_exists(dbgFile))
                             echo '<input type="button" onclick="xableDevMode(0)" value="Désactiver" title="Désactive le mode developpeur">';
                         else
                             echo '<input type="button" onclick="xableDevMode(1)" value="Activer" title="Active le mode developpeur">';
@@ -863,7 +863,7 @@
             },
             success: function (json_res) {
                 $res = JSON.parse(json_res.result);
-                if ($res.status == 0) {
+                if ($res.status == true) {
                     $('.integrityStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
                 } else {
                     $('.integrityStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');

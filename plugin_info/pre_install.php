@@ -1,7 +1,7 @@
 <?php
 
     include_once __DIR__.'/../../../core/php/core.inc.php';
-    include_once __DIR__."/../core/php/AbeillePreInstall.php";
+    include_once __DIR__."/../core/php/AbeilleInstall.php";
 
     /**
      * Function call by jeedom core before doing the update of the plugin from the Market

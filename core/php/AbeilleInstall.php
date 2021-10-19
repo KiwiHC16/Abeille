@@ -70,13 +70,13 @@
     /**
      * Check if valid 'Abeille.md5' is present and up-to-date.
      *
-     * @param   none
-     * @return 0=OK, -1=No MD5 file, -2=out-dated
+     * @param none
+     * @return true: Ok and valid, false: missing or invalid
      */
-    function validMd5Exists() {
+    function validMd5Exists(&$version = '') {
         global $md5File;
         if (!file_exists($md5File))
-            return -1;
+            return false;
 
         /* To ensure it is up to date, checking version against md5 file header.
            MD5 file must be generated after Abeille's version update.
@@ -97,26 +97,27 @@
 
         if ($md5Version != $abeilleVersion) {
             // logDebug("'Abeille.md5' is out-dated: abeilleVersion=".$abeilleVersion.", md5version=".$md5Version);
-            return -2; // Out dated
+            return false; // Out dated
         }
 
-        return 0;
+        $version = $abeilleVersion;
+        return true;
     }
 
     /**
      * Check plugin code integrity if 'Abeille.md5' is present and up-to-date.
-     * Messages logged in 'integrityCheck.log', then 'AbeilleConfig.log' if error.
-     * @param   none
-     * @return 0=OK, -1=no MD5 file, -2=checksum error)
+     * Messages logged in 'AbeilleIntegrity.log', then 'AbeilleConfig.log' if error.
+     * @param none
+     * @return true: check ok, false: error
      */
     function checkIntegrity() {
         global $md5File;
         if (!file_exists($md5File))
-            return -1;
+            return false;
 
         $logFile = __DIR__."/../../../../log/AbeilleConfig.log";
         $tmpDir = jeedom::getTmpFolder('Abeille');
-        $tmpFile = $tmpDir."/integrityCheck.log";
+        $tmpFile = $tmpDir."/AbeilleIntegrity.log";
         logSetConf($logFile, true); // Init AbeilleLog lib.
         logMessage("info", "Test d'intégrité d'Abeille");
         /* Note: Using 2 logs to be able to catch md5sum error if something bad found */
@@ -129,10 +130,10 @@
             exec($cmd, $out, $status);
             logMessage("info", "= ERREUR: Les fichiers ci-dessus sont corrompus.");
             logMessage("info", "= L'installation s'est mal déroulée, peut-être par manque de place.");
-            return -2;
+            return false;
         }
         logMessage("debug", "= Ok, tout semble correct.");
-        return 0;
+        return true;
     }
 
     /**

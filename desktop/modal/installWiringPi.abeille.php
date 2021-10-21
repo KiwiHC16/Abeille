@@ -29,7 +29,7 @@ Lancement des operations.
 <script>
     $.ajax({
         type: 'POST',
-        url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+        url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
         data: {
             action: 'installWiringPi',
         },

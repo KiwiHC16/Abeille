@@ -17,7 +17,8 @@
     class AbeilleParser  {
         public $queueKeyParserToAbeille = null; // Old communication path to Abeille
         public $queueKeyParserToAbeille2 = null; // New communication path to Abeille
-        public $queueKeyParserToCmd = null;
+        public $queueParserToCmd = null;
+        public $queueParserToCmdMax;
         public $parameters_info;
         public $actionQueue; // queue of action to be done in Parser like config des NE ou get info des NE
         public $wakeUpQueue; // queue of command to be sent when the device wakes up.
@@ -126,8 +127,10 @@
             $abQueues = $GLOBALS['abQueues'];
             $this->queueKeyParserToAbeille      = msg_get_queue(queueKeyParserToAbeille);
             $this->queueKeyParserToAbeille2     = msg_get_queue(queueKeyParserToAbeille2);
-            $this->queueKeyParserToCmd          = msg_get_queue(queueKeyParserToCmd);
-            $this->queueKeyParserToCmdSemaphore = msg_get_queue(queueKeyParserToCmdSemaphore);
+            $this->queueParserToCmd             = msg_get_queue($abQueues["parserToCmd"]["id"]);
+            $this->queueParserToCmdMax          = $abQueues["parserToCmd"]["max"];
+            $this->queueParserToCmdAck          = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
+            $this->queueParserToCmdAckMax       = $abQueues["parserToCmdAck"]["max"];
             $this->queueParserToLQI             = msg_get_queue($abQueues["parserToLQI"]["id"]);
             $this->queueParserToLQIMax          = $abQueues["parserToLQI"]["max"];
         }
@@ -139,27 +142,27 @@
             // dest / short addr / Cluster ID - Attr ID -> data
 
             $msgAbeille = new MsgAbeille;
-            $errorcode = 0;
+            $errCode = 0;
             $blocking = true;
 
             $msgAbeille->message = array(
                                     'topic' => $srcAddr."/".$clustId."-".$attrId,
                                     'payload' => $data,
                                      );
-            if (msg_send($this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode) == false) {
-                parserLog("error", "msg_send() ERREUR ".$errorcode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
+            if (msg_send($this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errCode) == false) {
+                parserLog("error", "msg_send() ERREUR ".$errCode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
                 parserLog("error", "  Message=".json_encode($msgAbeille));
             }
 
             $msgAbeille->message = array('topic' => $srcAddr."/Time-TimeStamp", 'payload' => time());
-            if (msg_send($this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode) == false) {
-                parserLog("error", "msg_send() ERREUR ".$errorcode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
+            if (msg_send($this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errCode) == false) {
+                parserLog("error", "msg_send() ERREUR ".$errCode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
                 parserLog("error", "  Message=".json_encode($msgAbeille));
             }
 
             $msgAbeille->message = array('topic' => $srcAddr."/Time-Time", 'payload' => date("Y-m-d H:i:s"));
-            if (msg_send($this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errorcode) == false) {
-                parserLog("error", "msg_send() ERREUR ".$errorcode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
+            if (msg_send($this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errCode) == false) {
+                parserLog("error", "msg_send() ERREUR ".$errCode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
                 parserLog("error", "  Message=".json_encode($msgAbeille));
             }
         }
@@ -173,12 +176,12 @@
         //     $msgAbeille = new MsgAbeille;
         //     $msgAbeille->message = array( 'topic' => $srcAddr."/".$fct, 'payload' => $data, );
 
-        //     $errorcode = 0;
-        //     if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false, $errorcode)) {
+        //     $errCode = 0;
+        //     if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false, $errCode)) {
         //         // parserLog("debug","(fct msgToAbeilleFct) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
         //     }
         //     else {
-        //         parserLog("debug", "(fct msgToAbeilleFct) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errorcode);
+        //         parserLog("debug", "(fct msgToAbeilleFct) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errCode);
         //     }
         // }
 
@@ -190,13 +193,13 @@
         //     $msgAbeille = new MsgAbeille;
         //     $msgAbeille->message = array( 'topic' => $fct, 'payload' => $data, );
 
-        //     $errorcode = 0;
-        //     if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false, $errorcode)) {
+        //     $errCode = 0;
+        //     if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false, $errCode)) {
         //         // parserLog("debug","(fct msgToAbeilleCmdFct) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
         //         // print_r(msg_stat_queue($queue));
         //     }
         //     else {
-        //         parserLog("debug","(fct msgToAbeilleCmdFct) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errorcode);
+        //         parserLog("debug","(fct msgToAbeilleCmdFct) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errCode);
         //     }
         // }
 
@@ -204,9 +207,9 @@
            Msg format is now flexible and can transport a bunch of infos coming from zigbee event instead of splitting them
            into several messages to Abeille. */
         function msgToAbeille2($msg) {
-            $errorcode = 0;
-            if (msg_send($this->queueKeyParserToAbeille2, 1, json_encode($msg), false, false, $errorcode) == false) {
-                parserLog("debug", "msgToAbeille2(): ERROR ".$errorcode);
+            $errCode = 0;
+            if (msg_send($this->queueKeyParserToAbeille2, 1, json_encode($msg), false, false, $errCode) == false) {
+                parserLog("debug", "msgToAbeille2(): ERROR ".$errCode);
             }
         }
 
@@ -219,9 +222,9 @@
             $msgAbeille = new MsgAbeille;
             $msgAbeille->message = array( 'topic' => $topic, 'payload' => $payload );
 
-            $errorcode = 0;
-            if (msg_send($this->queueKeyParserToCmd, 1, $msgAbeille, true, false, $errorcode) == false) {
-                parserLog("debug", "msgToCmd() ERROR: Can't write to 'queueKeyParserToCmd', error=".$errorcode);
+            $errCode = 0;
+            if (msg_send($this->queueParserToCmd, 1, $msgAbeille, true, false, $errCode) == false) {
+                parserLog("debug", "msgToCmd() ERROR: Can't write to 'queueParserToCmd', error=".$errCode);
             }
         }
 
@@ -246,10 +249,10 @@
                 parserLog("error", "msgToLQICollector(): Message trop gros ignoré (taille=".$size.", max=".$max.")");
                 return false;
             }
-            if (msg_send($this->queueParserToLQI, 1, $msgJson, false, false, $errorCode) == true)
+            if (msg_send($this->queueParserToLQI, 1, $msgJson, false, false, $errCode) == true)
                 return true;
 
-            parserLog("error", "msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$errorCode.")");
+            parserLog("error", "msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$errCode.")");
             return false;
         }
 
@@ -289,8 +292,8 @@
                 parserLog("error", "msgToClient(): Message trop gros ignoré (taille=".$size.", max=".$max.")");
                 return false;
             }
-            if (msg_send($queue, 1, $jsonMsg, false, false, $errorcode) == false) {
-                parserLog("debug", "  msgToClient(): ERROR ".$errorcode);
+            if (msg_send($queue, 1, $jsonMsg, false, false, $errCode) == false) {
+                parserLog("debug", "  msgToClient(): ERROR ".$errCode);
             } else
                 parserLog("debug", "  msgToClient(): Sent ".json_encode($msg));
         }
@@ -1386,18 +1389,26 @@ parserLog('debug', "  iHs=".$iHs);
             // $data       = $this->displayStatus($status);
             // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, $data);
 
-            $msgAbeille = array ('dest'         => $dest,
-                                 'type'         => "8000",
-                                 'status'       => $status,
-                                 'SQN'          => $sqn,
-                                 'PacketType'   => $PacketType , // The value of the initiating command request.
-                                 );
+            $msgAbeille = array (
+                'dest'         => $dest,
+                'type'         => "8000",
+                'status'       => $status,
+                'SQN'          => $sqn,
+                'PacketType'   => $PacketType , // The value of the initiating command request.
+            );
 
             // Envoie du message 8000 (Status) pour AbeilleMQTTCmd pour la gestion du flux de commandes vers la zigate
-            if (msg_send( $this->queueKeyParserToCmdSemaphore, 1, $msgAbeille, true, false)) {
+            $msgJson = json_encode($msgAbeille);
+            $size = strlen($msgJson);
+            $max = $this->queueParserToCmdAckMax;
+            if ($size > $max) {
+                parserLog("error", "decode8000(): Message trop gros ignoré (taille=".$size.", max=".$max.")");
+                return false;
+            }
+            if (msg_send($this->queueParserToCmdAck, 1, $msgJson, false, false)) {
                 // parserLog("debug","(fct msgToAbeille) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille), "8000");
             } else {
-                parserLog("debug", "  Could not add message to 'queueKeyParserToCmd' queue: ".json_encode($msgAbeille), "8000");
+                parserLog("debug", "  Could not add message to 'queueParserToCmdAck' queue: ".$msgJson, "8000");
             }
 
             if ($PacketType == "0002") {

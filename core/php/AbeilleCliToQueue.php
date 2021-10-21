@@ -96,7 +96,7 @@
         $eqId = $_GET['eqId'];
 // logDebug("reconfigure: eqId=".$eqId);
         $eqLogic = eqLogic::byId($eqId);
-        $jsonName = $eqLogic->getConfiguration('modeleJson', '');
+        $jsonName = $eqLogic->getConfiguration('ab::jsonId', '');
         if ($jsonName == '')
             return; // ERROR
         $jsonLocation = "Abeille";

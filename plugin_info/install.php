@@ -195,6 +195,7 @@
            - Removing obsolete entries in config table.
            - 'mainEP' fix: '#EP#' => '01'
            - Removing several zigate cmds now handled directly in equipement advanced page.
+           - Eq config: 'modeleJson' => 'ab::jsonId'
          */
         if (intval($dbVersion) < 20201122) {
             if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
@@ -235,18 +236,19 @@
                     $saveEq = true;
                 }
 
-                $name = $eqLogic->getName();
+                // Correcting name based on short addr => using eq ID now
+                $eqName = $eqLogic->getName();
                 $id = $eqLogic->getId(); // Get Jeedom ID for this equipment
-                $pos = stripos($name, $addr); // Any short addr in the name ?
+                $pos = stripos($eqName, $addr); // Any short addr in the name ?
                 if ($pos == false) {
                     /* Current short addr no found in name but could it be
                     one that missed an update so keeping an old short addr ?
                     So updating only if format is "AbeilleX-YYYY..." which
                     sounds like the previous default naming. */
                     $l = strlen($network);
-                    if (!substr_compare($name, $network, 0, $l)) {
+                    if (!substr_compare($eqName, $network, 0, $l)) {
                         /* Name starts with "AbeilleX" */
-                        $a = substr($name, $l + 1, 4);
+                        $a = substr($eqName, $l + 1, 4);
                         if ((strlen($a) == 4) && ctype_xdigit($a)) {
                             /* 4 hexa digits found. Assuming an old short addr */
                             $pos = $l + 1;
@@ -254,8 +256,17 @@
                     }
                 }
                 if ($pos != false) {
-                    $name = substr_replace($name, $id, $pos, 4);
-                    $eqLogic->setName($name);
+                    $eqName = substr_replace($eqName, $id, $pos, 4);
+                    $eqLogic->setName($eqName);
+                    $saveEq = true;
+                }
+
+                // Updating 'modeleJson' to 'ab::jsonId'
+                $jsonId = $eqLogic->getConfiguration('modeleJson', '');
+                if ($jsonId != '') {
+                    $eqLogic->setConfiguration('ab::jsonId', $jsonId);
+                    $eqLogic->setConfiguration('modeleJson', null);
+                    log::add('Abeille', 'debug', '  '.$eqName.": 'modeleJson' updated to 'ab::jsonId'");
                     $saveEq = true;
                 }
 

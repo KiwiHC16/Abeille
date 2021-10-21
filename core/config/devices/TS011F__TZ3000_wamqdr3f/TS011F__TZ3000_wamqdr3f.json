@@ -12,15 +12,6 @@
             "icon": "Silvercrest-HG06337-FR"
         },
         "commands": {
-            "Get-0004-NameSupport": {
-                "use": "zbReadAttribute",
-                "params": "ep=0B&clustId=0004&attrId=0000"
-            },
-            "0004-NameSupport": {
-                "use": "zb-0004-NameSupport",
-                "params": "ep=0B"
-            },
-
             "Get-0006-OnTime": {
                 "use": "zbReadAttribute",
                 "params": "ep=0B&clustId=0006&attrId=4001"

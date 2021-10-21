@@ -43,7 +43,7 @@
 
         ajax::init();
 
-        logDebug('abeille.ajax.php: action='.init('action'));
+        logDebug('Abeille.ajax.php: action='.init('action'));
 
         if (init('action') == 'getEPList') {
             logDebug('action == getEPList');

@@ -27,8 +27,8 @@
             },
 
             "Change config": {
-                "use": "zbWriteAttribute-Temp",
-                "params": "clustId=0006&attrId=8004&attrType=30&attrValue=01",
+                "use": "zbWriteAttribute",
+                "params": "clustId=0006&attrId=8004&attrType=30&attrVal=01",
                 "execAtCreation": "Yes"
             },
 

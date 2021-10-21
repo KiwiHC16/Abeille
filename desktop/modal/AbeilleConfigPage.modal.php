@@ -39,7 +39,7 @@ Lancement des operations.
 
     $.ajax({
             type: 'POST',
-            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
                 action: action,
                 zgtype: zgtype,

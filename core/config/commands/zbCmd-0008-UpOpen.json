@@ -1,0 +1,17 @@
+{
+    "zbCmd-0008-UpOpen": {
+        "isVisible": 0,
+        "name": "Up/Open",
+        "comment": "Cluster 0008, move to level 100%",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "setLevel",
+            "request": "Level=100&duration=0000&EP=#EP#",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
+    }
+}

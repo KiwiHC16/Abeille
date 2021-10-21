@@ -534,7 +534,7 @@ if (0) {
                     continue; // Equipment disabled
 
                 /* Special case: should ignore virtual remote */
-                if ($eqLogic->getConfiguration("modeleJson") == "remotecontrol")
+                if ($eqLogic->getConfiguration("ab::jsonId") == "remotecontrol")
                     continue; // Abeille virtual remote
 
                 $eqName = $eqLogic->getname();
@@ -673,18 +673,16 @@ if (0) {
         if (msg_stat_queue(msg_get_queue(queueKeyAbeilleToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToAbeille');
         if (msg_stat_queue(msg_get_queue(queueKeyAbeilleToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToCmd');
         if (msg_stat_queue(msg_get_queue(queueKeyParserToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToAbeille');
-        if (msg_stat_queue(msg_get_queue(queueKeyParserToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmd');
-        // if (msg_stat_queue(msg_get_queue(queueKeyParserToLQI))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToLQI');
-        if (msg_stat_queue(msg_get_queue($abQueues["parserToLQI"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToLQI');
+        if (msg_stat_queue(msg_get_queue($abQueues["parserToCmd"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueParserToCmd');
+        if (msg_stat_queue(msg_get_queue($abQueues["parserToLQI"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueParserToLQI');
         if (msg_stat_queue(msg_get_queue(queueKeyCmdToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToAbeille');
         if (msg_stat_queue(msg_get_queue(queueKeyCmdToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToCmd');
         if (msg_stat_queue(msg_get_queue(queueKeyLQIToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyLQIToCmd');
         if (msg_stat_queue(msg_get_queue(queueKeyXmlToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToAbeille');
         if (msg_stat_queue(msg_get_queue(queueKeyXmlToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToCmd');
         if (msg_stat_queue(msg_get_queue(queueKeyFormToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyFormToCmd');
-        // if (msg_stat_queue(msg_get_queue(queueKeySerialToParser))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerialToParser');
         if (msg_stat_queue(msg_get_queue($abQueues["serialToParser"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerialToParser');
-        if (msg_stat_queue(msg_get_queue(queueKeyParserToCmdSemaphore))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmdSemaphore');
+        if (msg_stat_queue(msg_get_queue($abQueues["parserToCmdAck"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmdAck');
 
         // https://github.com/jeelabs/esp-link
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
@@ -1059,7 +1057,7 @@ while ($cron->running()) {
             queueKeyAssistToParser, queueKeyParserToAssist, queueKeyAssistToCmd,
             $abQueues["parserToLQI"]["id"], queueKeyLQIToCmd,
             queueKeyXmlToAbeille, queueKeyXmlToCmd, queueKeyFormToCmd, $abQueues["parserToCli"]["id"],
-            queueKeyParserToCmd, queueKeyCmdToCmd, $abQueues["serialToParser"]["id"], queueKeyParserToCmdSemaphore, $abQueues["ctrlToParser"]["id"]
+            $abQueues["parserToCmd"]["id"], queueKeyCmdToCmd, $abQueues["serialToParser"]["id"], $abQueues["parserToCmdAck"]["id"], $abQueues["ctrlToParser"]["id"]
         );
         foreach ($allQueues as $queueId) {
             $queue = msg_get_queue($queueId);
@@ -1608,7 +1606,7 @@ while ($cron->running()) {
                 list($net2, $addr2) = explode("/", $eqLogic->getLogicalId());
                 if ($net2 != $net)
                     continue; // Wrong network
-                $jsonId2 = $eqLogic->getConfiguration('modeleJson');
+                $jsonId2 = $eqLogic->getConfiguration('ab::jsonId');
                 if ($jsonId2 != "remotecontrol")
                     continue; // Not a remote
                 if ($addr2 == '')
@@ -1650,7 +1648,7 @@ while ($cron->running()) {
                 return;
             }
 
-            $jsonId = $eqLogic->getConfiguration('modeleJson');
+            $jsonId = $eqLogic->getConfiguration('ab::jsonId');
             $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
             $ieee = $eqLogic->getConfiguration('IEEE');
             Abeille::createDevice("reset", $dest, $addr);
@@ -1737,7 +1735,7 @@ while ($cron->running()) {
         //     $objetDefSpecific = $AbeilleObjetDefinition[$jsonId];
         //     $objetConfiguration = $objetDefSpecific["configuration"];
         //     log::add('Abeille', 'debug', 'Template configuration: '.json_encode($objetConfiguration));
-        //     $eqLogic->setConfiguration('modeleJson', $trimmedValue);
+        //     $eqLogic->setConfiguration('ab::jsonId', $trimmedValue);
         //     // $eqLogic->setConfiguration('topic', $nodeid); // not needed as the info is in logicalId.
         //     $eqLogic->setConfiguration('type', $type);
         //     $eqLogic->setConfiguration('uniqId', $objetConfiguration["uniqId"]);
@@ -2806,7 +2804,7 @@ while ($cron->running()) {
             log::add('Abeille', 'debug', '  Already existing device '.$logicalId.' => '.$eqHName);
 
             if (($action == 'update') || ($action == 'reset')) { // Update or reset from JSON
-                $jsonId = $eqLogic->getConfiguration('modeleJson');
+                $jsonId = $eqLogic->getConfiguration('ab::jsonId');
                 $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
                 $ieee = $eqLogic->getConfiguration('IEEE');
                 if ($action == "update")
@@ -2815,7 +2813,7 @@ while ($cron->running()) {
                     message::add("Abeille", "Réinitialisation de '".$eqHName."' à partir de son fichier JSON");
                 $deviceConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation);
             } else { // action == create
-                $eqCurJsonId = $eqLogic->getConfiguration('modeleJson'); // Current JSON ID
+                $eqCurJsonId = $eqLogic->getConfiguration('ab::jsonId'); // Current JSON ID
                 if (($eqCurJsonId == 'defaultUnknown') && ($jsonId != 'defaultUnknown'))
                     message::add("Abeille", "'".$eqHName."' s'est réannoncé. Mise-à-jour de la config par défaut vers '".$eqType."'", '');
                 else {
@@ -2850,7 +2848,7 @@ while ($cron->running()) {
         }
         $eqLogic->setConfiguration('mainEP', $mainEP);
 
-        $eqLogic->setConfiguration('modeleJson', $jsonId);
+        $eqLogic->setConfiguration('ab::jsonId', $jsonId);
         if ($jsonLocation != "Abeille")
             $eqLogic->setConfiguration('ab::jsonLocation', 'local');
         else

@@ -1,7 +1,6 @@
 #! /bin/bash
 
-NOW=`date +"%Y-%m-%d %H:%M:%S"`
-echo "[${NOW}] Démarrage de '$(basename $0)'"
+echo "Démarrage de '$(basename $0)'"
 
 # 'socat'
 echo "Vérification de l'installation du package 'socat'"

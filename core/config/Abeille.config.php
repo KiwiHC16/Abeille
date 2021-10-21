@@ -37,19 +37,17 @@
     // define('queueKeyParserToCli',           724);
 
     /* Misc */
-    define('queueKeyParserToCmd',           223);
     define('queueKeyCmdToCmd',              323);
-    // define('queueKeySerialToParser',        822);  // 0x336
-    define('queueKeyParserToCmdSemaphore',  999);  // Queue pour passer les messages Ack entre parcer et Cmd.
-    // define('queueKeyCtrlToParser', 0x337); // To pass control message to Parser
 
     /* New way to declare queues, allowing to define a max message size per queue.
        array['<queueName>'] = array("id" => queueId, "max" => maxMsgSize) */
     $abQueues = array();
     $abQueues["serialToParser"] = array( "id" => 0x336, "max" => 2048 );
-    $abQueues["ctrlToParser"] = array( "id" => 0x337, "max" => 2048 );
-    $abQueues["parserToLQI"] = array( "id" => 225, "max" => 2048 );
-    $abQueues["parserToCli"] = array( "id" => 724, "max" => 1024 );
+    $abQueues["ctrlToParser"] = array( "id" => 0x337, "max" => 2048 ); // Ctrl messages for parser
+    $abQueues["parserToLQI"] = array( "id" => 0xE1, "max" => 2048 );
+    $abQueues["parserToCli"] = array( "id" => 0x2D4, "max" => 1024 );
+    $abQueues["parserToCmd"] = array( "id" => 0x3E6, "max" => 512 );
+    $abQueues["parserToCmdAck"] = array( "id" => 0x3E7, "max" => 512 ); // Parser to cmd for 8000 status
     $GLOBALS['abQueues'] = $abQueues;
 
     define('priorityMin',           1);

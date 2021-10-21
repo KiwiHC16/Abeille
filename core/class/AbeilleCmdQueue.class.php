@@ -28,13 +28,15 @@
         );
 
         public $queueKeyAbeilleToCmd;
-        public $queueKeyParserToCmd;
+        public $queueParserToCmd;
+        public $queueParserToCmdMax;
         public $queueKeyCmdToCmd;
         public $queueKeyCmdToAbeille;
         public $queueKeyLQIToCmd;
         public $queueKeyXmlToCmd;
         public $queueKeyFormToCmd;
-        public $queueKeyParserToCmdSemaphore;
+        public $queueParserToCmdAck;
+        public $queueParserToCmdAckMax;
         public $tempoMessageQueue;
 
         public $cmdQueue;                         // When a cmd is to be sent to the zigate we store it first, then try to send it if the cmdAck is low. Flow Control.
@@ -51,14 +53,17 @@
             $this->deamonlog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
             $this->deamonlog("debug", "Recuperation des queues de messages", $this->debug["AbeilleCmdClass"]);
 
-            $this->queueKeyAbeilleToCmd           = msg_get_queue(queueKeyAbeilleToCmd);
-            $this->queueKeyParserToCmd            = msg_get_queue(queueKeyParserToCmd);
-            $this->queueKeyCmdToCmd               = msg_get_queue(queueKeyCmdToCmd);
-            $this->queueKeyCmdToAbeille           = msg_get_queue(queueKeyCmdToAbeille);
-            $this->queueKeyLQIToCmd               = msg_get_queue(queueKeyLQIToCmd);
-            $this->queueKeyXmlToCmd               = msg_get_queue(queueKeyXmlToCmd);
-            $this->queueKeyFormToCmd              = msg_get_queue(queueKeyFormToCmd);
-            $this->queueKeyParserToCmdSemaphore   = msg_get_queue(queueKeyParserToCmdSemaphore);
+            $abQueues = $GLOBALS['abQueues'];
+            $this->queueKeyAbeilleToCmd     = msg_get_queue(queueKeyAbeilleToCmd);
+            $this->queueParserToCmd         = msg_get_queue($abQueues["parserToCmd"]["id"]);
+            $this->queueParserToCmdMax      = $abQueues["parserToCmd"]["max"];
+            $this->queueKeyCmdToCmd         = msg_get_queue(queueKeyCmdToCmd);
+            $this->queueKeyCmdToAbeille     = msg_get_queue(queueKeyCmdToAbeille);
+            $this->queueKeyLQIToCmd         = msg_get_queue(queueKeyLQIToCmd);
+            $this->queueKeyXmlToCmd         = msg_get_queue(queueKeyXmlToCmd);
+            $this->queueKeyFormToCmd        = msg_get_queue(queueKeyFormToCmd);
+            $this->queueParserToCmdAck      = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
+            $this->queueParserToCmdAckMax   = $abQueues["parserToCmdAck"]["max"];
 
             $this->tempoMessageQueue               = array();
 
@@ -410,8 +415,8 @@
                 case $this->queueKeyAbeilleToCmd:
                     $queueTopic="queueKeyAbeilleToCmd";
                     break;
-                case $this->queueKeyParserToCmd:
-                    $queueTopic="queueKeyParserToCmd";
+                case $this->queueParserToCmd:
+                    $queueTopic="queueParserToCmd";
                     break;
                 case $this->queueKeyCmdToCmd:
                     $queueTopic="queueKeyCmdToCmd";
@@ -428,8 +433,8 @@
                 case $this->queueKeyFormToCmd:
                     $queueTopic="queueKeyFormToCmd";
                     break;
-                case $this->queueKeyParserToCmdSemaphore:
-                    $queueTopic="queueKeyParserToCmdSemaphore";
+                case $this->queueParserToCmdAck:
+                    $queueTopic="queueParserToCmdAck";
                     break;
             }
             return $queueTopic;
@@ -438,13 +443,14 @@
         /* Treat Zigate statuses (0x8000 cmd) coming from parser */
         function traiteLesAckRecus() {
             $msg_type = NULL;
-            $max_msg_size = 512;
-            if (msg_receive($this->queueKeyParserToCmdSemaphore, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode) == false) {
+            $max_msg_size = $this->queueParserToCmdAckMax;
+            if (msg_receive($this->queueParserToCmdAck, 0, $msg_type, $max_msg_size, $msg, false, MSG_IPC_NOWAIT, $errCode) == false) {
                 if ($errCode != 42) // 42 = No message
                     logMessage("debug", "traiteLesAckRecus() ERROR ".$errCode);
                 return;
             }
 
+            $msg = json_decode($msg, true);
             $i = str_replace('Abeille', '', $msg['dest']);
 
             $this->deamonlog("debug", "traiteLesAckRecus())", $this->debug['traiteLesAckRecus']);
@@ -509,7 +515,7 @@
 
             $listQueue = array(
                 $this->queueKeyAbeilleToCmd,
-                $this->queueKeyParserToCmd,
+                $this->queueParserToCmd,
                 $this->queueKeyCmdToCmd,
                 $this->queueKeyLQIToCmd,
                 $this->queueKeyXmlToCmd,

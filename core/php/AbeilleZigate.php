@@ -202,7 +202,9 @@
                 logMessage('debug', 'Mauvaise réponse. 8010 attendu.');
                 $status = -1;
             } else {
-                $version = substr($zgMsg, 14, 4);
+                $major = substr($zgMsg, 10, 4);
+                $minor = substr($zgMsg, 14, 4);
+                $version = $major.'-'.$minor;
                 logMessage('info', 'FW version '.$version);
             }
         }

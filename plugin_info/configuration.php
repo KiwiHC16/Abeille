@@ -192,10 +192,13 @@
                         <?php
                         echo '<select id="idSelZgType'.$i.'" class="configKey form-control" data-l1key="AbeilleType'.$i.'" onchange="checkZigateType('.$i.')"  title="{{Type de zigate}}">';
                         ?>
-                            <option value="USB" selected>{{USB}}</option>
+                            <option value="USB" selected>{{USB v1}}</option>
                             <option value="WIFI">{{WIFI}}</option>
-                            <option value="PI">{{PI}}</option>
-                            <option value="DIN">{{DIN}}</option>
+                            <option value="PI">{{PI v1}}</option>
+                            <option value="DIN">{{DIN v1}}</option>
+                            <option value="USBv2" selected>{{USB +/v2}}</option>
+                            <option value="PIv2">{{PI +/v2}}</option>
+                            <option value="DINv2">{{DIN +/v2}}</option>
                         </select>
                     </div>
                     <div class="col-lg-1">
@@ -583,7 +586,7 @@
         // console.log("wifiAddr=" + wifiAddr + ", ssp=" + ssp);
         // $.ajax({
             // type: 'POST',
-            // url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            // url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             // data: {
                 // action: 'checkWifi',
                 // zgport: wifiAddr,
@@ -626,7 +629,7 @@
     function checkSocatInstallation() {
         $.ajax({
             type: 'POST',
-            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
                 action: 'checkSocat',
             },
@@ -705,7 +708,7 @@
         window.checkWiringPiOngoing = true;
         $.ajax({
             type: 'POST',
-            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
                 action: 'checkWiringPi',
             },
@@ -737,7 +740,7 @@
     $('#bt_checkTTY').on('click', function() {
         $.ajax({
             type: 'POST',
-            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
                 action: 'checkTTY',
                 zgport: document.getElementById("ZiGatePort").value,
@@ -778,7 +781,7 @@
         // }
         $.ajax({
             type: 'POST',
-            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
                 action: 'checkTTY',
                 zgport: $("#idSelSP" + zgNb).val(),
@@ -790,10 +793,11 @@
                 bootbox.alert("ERREUR 'checkSerialPort' !<br>Votre installation semble corrompue.");
             },
             success: function (json_res) {
-                $res = JSON.parse(json_res.result);
-                if ($res.status == 0) {
-                    $fw = $res.fw;
-                    $('.serialPortStatus' + zgNb).empty().append('<span class="label label-success" style="font-size:1em;">FW ' + $fw + '</span>');
+                res = JSON.parse(json_res.result);
+                if (res.status == 0) {
+                    fw = res.fw;
+                    console.log("FW="+fw)
+                    $('.serialPortStatus' + zgNb).empty().append('<span class="label label-success" style="font-size:1em;">FW '+fw+'</span>');
                 } else {
                     $('.serialPortStatus' + zgNb).empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
                 }
@@ -851,7 +855,7 @@
         $.showLoading()
         $.ajax({
             type: 'POST',
-            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
                 action: 'checkIntegrity'
             },
@@ -933,7 +937,7 @@
                 var updateOnly = ""
             $.ajax({
                 type: 'POST',
-                url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+                url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
                 data: {
                     action: 'switchBranch',
                     branch: branchName,
@@ -953,7 +957,7 @@
             //     console.log("checkCompletion()");
             //     $.ajax({
             //         type: 'POST',
-            //         url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            //         url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             //         data: {
             //             action: 'fileExists',
             //             path: 'tmp/switchBranch.done'
@@ -994,7 +998,7 @@
                 //     console.log("Before fileExists() t="+t)
                 //     $.ajax({
                 //         type: 'POST',
-                //         url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+                //         url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
                 //         data: {
                 //             action: 'fileExists',
                 //             path: 'tmp/switchBranch.done'
@@ -1126,7 +1130,7 @@
         $.showLoading()
         $.ajax({
             type: 'POST',
-            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
                 action: 'doPostUpdateCleanup',
             },

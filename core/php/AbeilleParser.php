@@ -233,7 +233,8 @@
         $queueSerialToParserMax = $abQueues["serialToParser"]["max"];
 
         $max_msg_size = 2048;
-        $queueKeyParserToCmd = msg_get_queue(queueKeyParserToCmd);
+        $queueParserToCmd = msg_get_queue($abQueues["parserToCmd"]["id"]);
+        $queueParserToCmdMax = $abQueues["parserToCmd"]["max"];
 
         $queueCtrlToParser = msg_get_queue($abQueues["ctrlToParser"]["id"]);
         $queueCtrlToParserMax = $abQueues["ctrlToParser"]["max"];
@@ -262,7 +263,7 @@
                 'manufacturer' => null, // null(undef)/false(unsupported)/'xx'
                 'modelIdentifier' => null, // null(undef)/false(unsupported)/'xx'
                 'location' => null, // null(undef)/false(unsupported)/'xx'
-                'jsonId' => $eqLogic->getConfiguration('modeleJson', ''),
+                'jsonId' => $eqLogic->getConfiguration('ab::jsonId', ''),
             );
             $GLOBALS['eqList'][$net][$addr] = $eq;
         }

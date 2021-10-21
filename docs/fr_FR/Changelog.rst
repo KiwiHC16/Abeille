@@ -1,12 +1,22 @@
 ChangeLog
 =========
 
+- Firmware: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM), donc dispo depuis la version '3.1e'.
+   - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+   - Les firmwares avant 3.1e sont forcement 'legacy'.
+   - Mais **ATTENTION** si vous migrez d'une version 'legacy' ver 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+- **ATTENTION**: Format DB interne modifié. Restaurer sauvegarde si besoin de revenir à une version antérieure.
+
+- Interne: DB équipement: 'modeleJson' => 'ab::jsonId'.
+- Interne: Suppression 'archives'.
+- Page config: Affichage version firmware complète (ex: 0004-0320).
+- Commandes JSON: Suppression 'zbWriteAttribute-Temp'.
+- Interne: Parser vers cmd: queues revisitées.
+- Silvercrest HG06337: Mise-à-jour JSON (#2168).
+- Assistant de découverte: Améliorations.
+
 211019-BETA-1
 -------------
-
-- Firmware: L'équipe Zigate recommande FORTEMENT d'utiliser le **FW Optimized PDM** (donc 3.20/3.1e).
-   - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-   - Mais **ATTENTION** si vous migrez d'une version "legacy" il vous faut **effacer la PDM et réapparairer tous vos équipements**.
 
 - JSON commandes: Nettoyage. Suppression commandes obsolètes.
 - Interne: decodeDataType(): ajout support enum8/enum16 + ieee.
@@ -16,10 +26,6 @@ ChangeLog
 
 211019-STABLE-1
 ---------------
-
-- Firmware: L'équipe Zigate recommande FORTEMENT d'utiliser le **FW Optimized PDM** (donc 3.20/3.1e).
-   - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-   - Mais **ATTENTION** si vous migrez d'une version "legacy" il vous faut **effacer la PDM et réapparairer tous vos équipements**.
 
 - Interne: Correction 'writeAttribute' + mise-à-jour reponse 8110.
 - Tuya 4 buttons (TS004F__TZ3000_xabckq1v): Mise-à-jour support (#2155).

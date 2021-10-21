@@ -328,7 +328,7 @@ function removeBeesJeedom(zgNb) {
 
         $.ajax({
             type: 'POST',
-            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
                 action: 'removeEqJeedom',
                 eqList: eqList
@@ -378,7 +378,7 @@ function removeBees(zgNb) {
 
         $.ajax({
             type: 'POST',
-            url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
                 action: 'removeEqZigbee',
                 eqIdList: eqIdList
@@ -450,7 +450,7 @@ function monitorIt(zgNb, zgPort) {
     $.ajax({
         type: 'POST',
         // url: 'plugins/Abeille/core/ajax/AbeilleDev.ajax.php',
-        url: 'plugins/Abeille/core/ajax/abeille.ajax.php',
+        url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
         data: {
             action: 'monitor',
             eqId: eqId

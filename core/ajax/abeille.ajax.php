@@ -60,7 +60,7 @@ try {
 
     ajax::init();
 
-    // logDebug('abeille.ajax.php: action='.init('action'));
+    // logDebug('Abeille.ajax.php: action='.init('action'));
 
     /* For Wifi Zigate
        - check 'Addr:Port' via ping
@@ -107,7 +107,8 @@ try {
     }
 
     if (init('action') == 'checkSocat') {
-        $cmd = '/bin/bash '.__DIR__.'/../scripts/checkSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+        $prefix = logGetPrefix(""); // Get log prefix
+        $cmd = '/bin/bash '.__DIR__."/../scripts/checkSocat.sh | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
         exec($cmd, $out, $status);
         ajax::success(json_encode($status));
     }
@@ -378,7 +379,7 @@ try {
             Instead 'success' callback is used. This means that
             - take care of error code returned
             - convert to JSON since dataType is set to 'json' */
-        $error = "La méthode '".init('action')."' n'existe pas dans 'abeille.ajax.php'";
+        $error = "La méthode '".init('action')."' n'existe pas dans 'Abeille.ajax.php'";
         throw new Exception($error, -1);
     } catch (Exception $e) {
         /* Catch exeption */

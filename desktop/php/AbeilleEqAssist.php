@@ -38,7 +38,7 @@
     $eqLogicId = $eqLogic->getLogicalid();
     list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
     $zgNb = substr($eqNet, 7); // Extracting zigate number from network
-    $jsonName = $eqLogic->getConfiguration('modeleJson', ''); // TODO: rename to 'ab::jsonId'
+    $jsonName = $eqLogic->getConfiguration('ab::jsonId', ''); // TODO: rename to 'ab::jsonId'
     $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
     $eqIeee = $eqLogic->getConfiguration('IEEE', '');
 
@@ -94,8 +94,15 @@
         </div>
         <br>
 
+        <!-- Tab links -->
+        <div class="tab">
+        <button class="tablinks">Zigbee</button>
+        <button class="tablinks">JSON</button>
+        </div>
+
         <!-- Colonne Zigbee -->
-        <div class="col-lg-6 b">
+        <!-- <div class="col-lg-6 b"> -->
+        <div id="idZigbee" class="tabcontent">
             <h3>
                 <span>Interrogation Zigbee</span>
             <?php
@@ -155,9 +162,8 @@
             </div>
         </div>
 
-        <!-- <div class="row"> -->
         <?php if (isset($dbgTcharp38)) { ?>
-        <div class="col-lg-6">
+        <div id="idJson" class="tabcontent" style="display:none;">
         <?php } else { ?>
         <div class="col-lg-6" style="display:none;">
         <?php } ?>
@@ -1477,9 +1483,11 @@ console.log(zEndPoints);
                 //     newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
             }
             if (sDir) {
-                var newCell = row.insertCell(-1);
-                newCell.innerHTML = '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
-                newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB3" class="btn btn-warning" title="Interrogation des commandes reçues" onclick="requestInfos(\'discoverCommandsReceived\', \''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                if (sAttrCount != 0) {
+                    var newCell = row.insertCell(-1);
+                    newCell.innerHTML = '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                    newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB3" class="btn btn-warning" title="Interrogation des commandes reçues" onclick="requestInfos(\'discoverCommandsReceived\', \''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                }
                 requestInfos('discoverCommandsReceived', sEp, sClustId);
                 changeClass("idServClust"+sEp+"-"+sClustId+"RBEx", "btn-warning", "btn-success");
                 changeClass("idServClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
@@ -1766,7 +1774,7 @@ console.log(zEndPoints);
     /* Update Jeedom infos based on current JSON part */
     function updateJeedom() {
         /* TODO: To be updated
-            - configuration:modeleJson
+            - configuration:ab::jsonId
             - reload JSON to update commands
          */
     }

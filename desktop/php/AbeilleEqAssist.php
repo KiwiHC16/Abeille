@@ -67,6 +67,7 @@
         .b {
             border: 1px solid black;
             border-radius: 10px;
+            padding: 8px;
         }
         .b h3 {
             text-align: center;
@@ -75,39 +76,40 @@
             font-size: 15px; */
         }
     </style>
-    <form>
-        <div class="b">
-            <h3><span>Jeedom</span></h1>
-            <div class="row">
-                <label class="col-lg-2 control-label" for="fname">ID:</label>
-                <div class="col-lg-2">
-                    <?php echo '<input type="text" value="'.$eqId.'" readonly>'; ?>
-                </div>
-                <label class="col-lg-2 control-label" for="fname">Nom:</label>
-                <div class="col-lg-2">
-                    <?php echo '<input type="text" value="'.$eqLogic->getName().'" readonly>'; ?>
-                </div>
-                <?php if (isset($dbgTcharp38)) { ?>
-                <a class="btn btn-warning" title="Met à jour Jeedom à partir du fichier JSON" onclick="updateJeedom()">Mettre à jour</a>
-                <?php } ?>
+
+    <div class="b">
+        <h3><span>Jeedom</span></h1>
+        <div class="row">
+            <label class="col-lg-2 control-label" for="fname">ID:</label>
+            <div class="col-lg-2">
+                <?php echo '<input type="text" value="'.$eqId.'" readonly>'; ?>
             </div>
+            <label class="col-lg-2 control-label" for="fname">Nom:</label>
+            <div class="col-lg-2">
+                <?php echo '<input type="text" value="'.$eqLogic->getName().'" readonly>'; ?>
+            </div>
+            <?php if (isset($dbgTcharp38)) { ?>
+            <a class="btn btn-warning" title="Met à jour Jeedom à partir du fichier JSON" onclick="updateJeedom()">Mettre à jour</a>
+            <?php } ?>
         </div>
-        <br>
+    </div>
+    <br>
 
-        <!-- Tab links -->
-        <div class="tab">
-        <button class="tablinks">Zigbee</button>
-        <button class="tablinks">JSON</button>
-        </div>
+    <!-- Tab links -->
+    <!-- <div class="tab">
+    <button class="tablinks">Zigbee</button>
+    <button class="tablinks">JSON</button>
+    </div> -->
 
+    <!-- <form> -->
         <!-- Colonne Zigbee -->
         <!-- <div class="col-lg-6 b"> -->
-        <div id="idZigbee" class="tabcontent">
+        <div id="idZigbee" class="form b">
             <h3>
                 <span>Interrogation Zigbee</span>
-            <?php
+                <?php
 	            echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/AjoutNouvelEquipement.html#assistant-de-decouverte-zigbee"><i class="fas fa-book"></i>{{Documentation}}</a>';
-	        ?>
+	            ?>
             </h3>
 
             <div class="row">
@@ -149,7 +151,7 @@
             <div class="row" id="idEndPoints">
             </div>
 
-            <div class="row">
+            <div class="row" style="margin-left:10px">
                 <br>
                 <a class="btn btn-success pull-left" title="Télécharge 'discovery.json'" onclick="downloadDiscovery()"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
                 <?php if (isset($dbgTcharp38)) { ?>
@@ -162,11 +164,7 @@
             </div>
         </div>
 
-        <?php if (isset($dbgTcharp38)) { ?>
-        <div id="idJson" class="tabcontent" style="display:none;">
-        <?php } else { ?>
-        <div class="col-lg-6" style="display:none;">
-        <?php } ?>
+        <div id="idJson" style="display:none;">
             <div class="b">
                 <h3><span>Fichier JSON</span></h1>
                 <div class="row">
@@ -847,9 +845,9 @@
                         if (isset(attributes['0021'])) {
                             cmds["Battery-Percent"] = newCmd("zb-0001-BatteryPercent");
                             cmds["Battery-Percent"]["isVisible"] = 1;
-                            cmds["Set-BatteryPercentReporting"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600", "yes");
+                            cmds["SetReporting-BatteryPercent"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600", "yes");
                         } else if (isset(attributes['0020'])) {
-                            cmds["Set-BatteryVoltReporting"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600", "yes");
+                            cmds["SetReporting-BatteryVolt"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600", "yes");
                         }
                         cmds["BindToZigate-Power"] = newCmd("bindToZigate", "clustId=0001", "yes");
                     } else if (clustId == "0004") {
@@ -868,8 +866,8 @@
                             cmds["Off"]["isVisible"] = 1;
                             cmds["Toggle"] = newCmd("zbCmd-0006-Toggle");
                             // Adding bind + configureReporting but assuming supported
-                            cmds["BindToZigate-OnOff"] = newCmd("zbBindToZigate", "clustId=0006", "yes");
-                            cmds["Set-OnOffReporting"] = newCmd("zbConfigureReporting", "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000", "yes");
+                            cmds["Bind-OnOff-ToZigate"] = newCmd("zbBindToZigate", "clustId=0006", "yes");
+                            cmds["SetReporting-OnOff"] = newCmd("zbConfigureReporting", "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000", "yes");
                         }
                     } else if (clustId == "0300") {
                         /* Color cluster */
@@ -1231,7 +1229,7 @@ console.log(zEndPoints);
                 h += '<label id="idClustEP'+zEpId+'" class="col-lg-2 control-label"></label>';
 
                 h += '<div class="col-lg-10">';
-                h += '<a class="btn btn-warning" title="Raffraichi la liste des clusters" onclick="requestInfos(\'clustersList\', \''+zEpId+'\')"><i class="fas fa-sync"></i></a>';
+                h += '<a id="idEP'+zEpId+'-RB1" class="btn btn-warning" title="Raffraichi la liste des clusters" onclick="requestInfos(\'clustersList\', \''+zEpId+'\')"><i class="fas fa-sync"></i></a>';
                 h += '<br><br>';
                 h += '</div>';
 
@@ -1387,6 +1385,8 @@ console.log(zEndPoints);
                 newCell.innerHTML += '<a id="idCliClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'01\')"><i class="fas fa-sync"></i></a>';
                 requestInfos('attribList', sEp, clustId, '01');
             });
+
+            changeClass("idEP"+sEp+"-RB1", "btn-warning", "btn-success");
         } else if ((res.type == "discoverAttributesResponse") || (res.type == "discoverAttributesExtendedResponse")) {
             // 'src' => 'parser',
             // 'type' => 'discoverAttributesResponse' or 'discoverAttributesExtendedResponse'
@@ -1485,8 +1485,8 @@ console.log(zEndPoints);
             if (sDir) {
                 if (sAttrCount != 0) {
                     var newCell = row.insertCell(-1);
-                    newCell.innerHTML = '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
-                    newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB3" class="btn btn-warning" title="Interrogation des commandes reçues" onclick="requestInfos(\'discoverCommandsReceived\', \''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                    newCell.innerHTML = '<a id="id'+sEp+'-Serv'+sClustId+'-RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                    newCell.innerHTML += '<a id="idEP'+sEp+'-Serv'+sClustId+'-RB4" class="btn btn-warning" title="Interrogation des commandes reçues" onclick="requestInfos(\'discoverCommandsReceived\', \''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
                 }
                 requestInfos('discoverCommandsReceived', sEp, sClustId);
                 changeClass("idServClust"+sEp+"-"+sClustId+"RBEx", "btn-warning", "btn-success");
@@ -1579,7 +1579,7 @@ console.log(zEndPoints);
                     }
                 }
                 if (allDone)
-                    changeClass("idServClust"+sEp+"-"+sClustId+"RB2", "btn-warning", "btn-success");
+                    changeClass("id"+sEp+"-Serv"+sClustId+"-RB2", "btn-warning", "btn-success");
             }
         } else if (res.type == "readAttributesResponse") {
             // 'src' => 'parser',
@@ -1668,7 +1668,7 @@ console.log(zEndPoints);
                     }
                 }
                 if (allDone)
-                    changeClass("idServClust"+sEp+"-"+sClustId+"RB2", "btn-warning", "btn-success");
+                    changeClass("id"+sEp+"-Serv"+sClustId+"-RB2", "btn-warning", "btn-success");
             }
         } else if (res.type == "deviceAnnounce") {
             // 'src' => 'parser',
@@ -1711,7 +1711,7 @@ console.log(zEndPoints);
             clust.commandsReceived = sCommands;
 
             /* Updating display: button moved to green */
-            id='idServClust'+sEp+'-'+sClustId+'RB3';
+            id='idEP'+sEp+'-Serv'+sClustId+'-RB4';
             changeClass(id, "btn-warning", "btn-success");
         } else if (res.type == "defaultResponse") {
             // 'src' => 'parser',
@@ -1734,7 +1734,7 @@ console.log(zEndPoints);
                     clust.commandsReceived = new Object();
                 clust.commandsReceived = "UNSUPPORTED";
 
-                id='idServClust'+sEp+'-'+sClustId+'RB3';
+                id='idEP'+sEp+'-Serv'+sClustId+'-RB4';
                 changeClass(id, "btn-warning", "btn-success");
                 button = document.getElementById(id);
                 button.setAttribute('disabled', true);

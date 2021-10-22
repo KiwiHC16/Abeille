@@ -13,31 +13,31 @@
         },
         "type": "Orvibo multi-functional relay",
         "commands": {
-            "include0006-1": "OnEp01",
-            "include0006-2": "OffEp01",
+            "On 1": { "use": "zbCmd-0006-On", "params": "ep=01", "isVisible": 1 },
+            "Off 1": { "use": "zbCmd-0006-Off", "params": "ep=01", "isVisible": 1 },
             "Get-Etat 1": { "use": "zbReadAttribute", "params": "ep=01&clustId=0006&attrId=0000" },
-            "include0006-4": "OnEp02",
-            "include0006-5": "OffEp02",
+            "On 2": { "use": "zbCmd-0006-On", "params": "ep=02", "isVisible": 1 },
+            "Off 2": { "use": "zbCmd-0006-Off", "params": "ep=02", "isVisible": 1 },
             "Get-Etat 2": { "use": "zbReadAttribute", "params": "ep=02&clustId=0006&attrId=0000" },
-            "include0006-7": "OnEp03",
-            "include0006-8": "OffEp03",
+            "On 3": { "use": "zbCmd-0006-On", "params": "ep=03", "isVisible": 1 },
+            "Off 3": { "use": "zbCmd-0006-Off", "params": "ep=03", "isVisible": 1 },
             "Get-Etat 3": { "use": "zbReadAttribute", "params": "ep=03&clustId=0006&attrId=0000" },
             "Bind-01-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0006", "execAtCreation": "Yes" },
             "Bind-02-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=02&clustId=0006", "execAtCreation": "Yes" },
             "Bind-03-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=03&clustId=0006", "execAtCreation": "Yes" },
             "Set-OnOffReporting-01": {
                 "use": "zbConfigureReporting",
-                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes"
             },
             "Set-OnOffReporting-02": {
                 "use": "zbConfigureReporting",
-                "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes"
             },
             "Set-OnOffReporting-03": {
                 "use": "zbConfigureReporting",
-                "params": "ep=03&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "params": "ep=03&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes"
             }
         }

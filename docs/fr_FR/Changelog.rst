@@ -1,13 +1,12 @@
 ChangeLog
 =========
 
-211021-BETA-1
--------------
+  .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM), donc dispo depuis la version '3.1e'.
 
-- Firmware: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM), donc dispo depuis la version '3.1e'.
-   - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-   - Les firmwares avant 3.1e sont forcement 'legacy'.
-   - Mais **ATTENTION** si vous migrez d'une version 'legacy' ver 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+    - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+    - Les firmwares avant 3.1e sont forcement 'legacy'.
+    - Mais **ATTENTION** si vous migrez d'une version 'legacy' ver 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
 - **ATTENTION**: Format DB interne modifié. Restaurer sauvegarde si besoin de revenir à une version antérieure.
 
 - Interne: DB équipement: 'modeleJson' => 'ab::jsonId'.
@@ -17,6 +16,13 @@ ChangeLog
 - Interne: Parser vers cmd: queues revisitées.
 - Silvercrest HG06337: Mise-à-jour JSON (#2168).
 - Assistant de découverte: Améliorations.
+- Tuya QS-Zigbee-C01 volet roulant: Ajout support (#2169).
+- JSON commandes: Suppression commandes obsoletes 'OnEpXX' & 'OffEpXX'.
+- Prise Tuya TS0121__TZ3000_rdtixbnu: Correction RMS Voltage.
+- Interne: 'configureReporting' revu pour support 'reportableChange'.
+- Page EQ/avancé: Amélioration configureReporting pour support min, max & changeVal.
+- Prise NIKO: JSON revisité pour réduire le nombre de reporting RMSvoltage (#2003).
+- Prise TS0121 _TZ3000_8nkb7mof: Mise-à-jour JSON (#2167).
 
 211019-BETA-1
 -------------

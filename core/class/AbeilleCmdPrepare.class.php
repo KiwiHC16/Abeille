@@ -341,41 +341,41 @@
                 if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                 break;
 
-            case "configureReporting":
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
+            // case "configureReporting":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //     }
 
-                /* Call example:
-                    configureReporting&ep=EE&clustId=XXXX&attrType=TT&attrId=YYYY&minInterval=ZZZZ&maxInterval=CCCC
-                    'minInterval' & 'maxInterval' are supposed to be decimal numbers. */
+            //     /* Call example:
+            //         configureReporting&ep=EE&clustId=XXXX&attrType=TT&attrId=YYYY&minInterval=ZZZZ&maxInterval=CCCC
+            //         'minInterval' & 'maxInterval' are supposed to be decimal numbers. */
 
-                if (!isset($parameters['ep']) )
-                    $parameters['ep'] = "01";
-                if (!isset($parameters['minInterval']) )
-                    $parameters['minInterval'] = "0000";
-                else
-                    $parameters['minInterval'] = str_pad(dechex($parameters['minInterval']), 4, 0, STR_PAD_LEFT);
-                if (!isset($parameters["maxInterval"]) || ($parameters["maxInterval"] == "#MAXINTERVAL#"))
-                    $parameters['maxInterval'] = "0000";
-                else
-                    $parameters["maxInterval"] = str_pad(dechex($parameters['maxInterval']), 4, 0, STR_PAD_LEFT);
+            //     if (!isset($parameters['ep']) )
+            //         $parameters['ep'] = "01";
+            //     if (!isset($parameters['minInterval']) )
+            //         $parameters['minInterval'] = "0000";
+            //     else
+            //         $parameters['minInterval'] = str_pad(dechex($parameters['minInterval']), 4, 0, STR_PAD_LEFT);
+            //     if (!isset($parameters["maxInterval"]) || ($parameters["maxInterval"] == "#MAXINTERVAL#"))
+            //         $parameters['maxInterval'] = "0000";
+            //     else
+            //         $parameters["maxInterval"] = str_pad(dechex($parameters['maxInterval']), 4, 0, STR_PAD_LEFT);
 
-                $Command = array(
-                    "configureReporting"    => "1",
-                    "priority"              => $priority,
-                    "dest"                  => $dest,
-                    "addr"                  => $address,
-                    "ep"                    => $parameters['ep'],
-                    "clustId"               => $parameters['clustId'],
-                    "attrId"                => $parameters['attrId'],
-                    "minInterval"           => $parameters['minInterval'],
-                    "maxInterval"           => $parameters['maxInterval']
-                );
-                if (isset($parameters['attrType']) )
-                    $Command["attrType"] = $parameters['attrType']; // Auto-detected if not filled
-                break;
+            //     $Command = array(
+            //         "configureReporting"    => "1",
+            //         "priority"              => $priority,
+            //         "dest"                  => $dest,
+            //         "addr"                  => $address,
+            //         "ep"                    => $parameters['ep'],
+            //         "clustId"               => $parameters['clustId'],
+            //         "attrId"                => $parameters['attrId'],
+            //         "minInterval"           => $parameters['minInterval'],
+            //         "maxInterval"           => $parameters['maxInterval']
+            //     );
+            //     if (isset($parameters['attrType']) )
+            //         $Command["attrType"] = $parameters['attrType']; // Auto-detected if not filled
+            //     break;
 
             case "readReportingConfig":
                 $Command = array(

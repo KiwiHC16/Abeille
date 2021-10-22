@@ -5,7 +5,7 @@
         "subType": "other",
         "configuration": {
             "topic": "configureReporting",
-            "request": "ep=#EP#&clustId=#CLUSTID#&attrType=#ATTRTYPE#&attrId=#ATTRID#&minInterval=#MININTERVAL#&maxInterval=#MAXINTERVAL#"
+            "request": "ep=#EP#&clustId=#CLUSTID#&attrType=#ATTRTYPE#&attrId=#ATTRID#&minInterval=#MININTERVAL#&maxInterval=#MAXINTERVAL#&changeVal=#CHANGEVAL#"
         },
         "type": "action"
     }

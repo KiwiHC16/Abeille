@@ -25,7 +25,7 @@
             },
             "SetReporting-BatteryVolt": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600",
+                "params": "clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600&changeVal=",
                 "execAtCreation": "Yes"
             },
             "BatteryVolt2Percent": { "use": "battery-Volt2Percent-3" },
@@ -42,7 +42,7 @@
             },
             "SetReporting-Illuminance": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=600&maxInterval=0",
+                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=600&maxInterval=0&changeVal=",
                 "execAtCreation": "Yes"
             },
             "include4": "luminositeXiaomi"

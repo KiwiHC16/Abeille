@@ -30,9 +30,9 @@
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
-            "Set-0006-0000-Reporting": {
+            "SetReporting-0006-0000": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
 
@@ -58,19 +58,19 @@
                 "params": "mult=1&div=10",
                 "isVisible": 1
             },
-            "Set-RMSVoltageReporting": {
+            "SetReporting-RMSVoltage": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0B04&attrType=21&attrId=0505&minInterval=0000&maxInterval=0000",
+                "params": "clustId=0B04&attrType=21&attrId=0505&minInterval=0000&maxInterval=0000&changeVal=000A",
                 "execAtCreation": "yes"
             },
-            "Set-RMSCurrentReporting": {
+            "SetReporting-RMSCurrent": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000",
+                "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-            "Set-ActivePowerReporting": {
+            "SetReporting-ActivePower": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000",
+                "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
             "Bind-0B04-ToZigate": {

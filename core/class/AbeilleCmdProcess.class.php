@@ -1449,98 +1449,6 @@
                 return;
             }
 
-            // Tcharp38: Generic configure reporting command.
-            // Why don't we use 0120 zigate command instead of 0530 ??
-            if (isset($Command['configureReporting'])) {
-                /* Mandatory infos: addr, clustId, attrId. 'attrType' can be auto-detected */
-                $required = ['addr', 'clustId', 'attrId'];
-                $missingParam = false;
-                foreach ($required as $idx => $param) {
-                    if (isset($Command[$param]))
-                        continue;
-                    $this->deamonlog('debug', "    command configureReporting ERROR: Missing '".$param."'");
-                    $missingParam = true;
-                }
-                if ($missingParam)
-                    return;
-                if (!isset($Command['attrType'])) {
-                    /* Attempting to find attribute type according to its id */
-                    $attr = zbGetZCLAttribute($Command['clustId'], $Command['attrId']);
-                    if (($attr === false) || !isset($attr['dataType'])) {
-                        $this->deamonlog('debug', "    command configureReporting ERROR: Missing 'attrType'");
-                        return;
-                    }
-                    $Command['attrType'] = sprintf("%02X", $attr['dataType']);
-                    $this->deamonlog('debug', "    Using attrType ".$Command['attrType'], $this->debug['processCmd']);
-                }
-
-                $this->deamonlog('debug', "    command configureReporting", $this->debug['processCmd']);
-                $cmd = "0530";
-
-                // <address mode: uint8_t>
-                // <target short address: uint16_t>
-                // <source endpoint: uint8_t>
-                // <destination endpoint: uint8_t>
-                // <profile ID: uint16_t>
-                // <cluster ID: uint16_t>
-                // <security mode: uint8_t>
-                // <radius: uint8_t>
-                // <data length: uint8_t>
-
-                // <data: auint8_t>
-                //  ZCL Control Field
-                //  ZCL SQN
-                //  Command Id
-                //  ....
-
-                $addrMode       = "02";
-                $addr           = $Command['addr'];
-                $srcEp          = "01";
-                $destEp         = $Command['ep'];
-                $profId         = "0104";
-                $clustId        = $Command['clustId'];
-                $securityMode   = "02";
-                $radius         = "1E";
-
-                /* ZCL header */
-                $fcf            = "10"; // Frame Control Field
-                $sqn            = "01";
-                $cmdId          = "06";
-
-                /* Attribute Reporting Configuration Record */
-                $dir                    = "00";
-                $attrId                 = AbeilleTools::reverseHex($Command['attrId']);
-                $attrType               = $Command['attrType'];
-                $minInterval            = isset($Command['minInterval']) ? AbeilleTools::reverseHex($Command['minInterval']) : "0000";
-                $maxInterval            = isset($Command['maxInterval']) ? AbeilleTools::reverseHex($Command['maxInterval']) : "0000";
-                switch ($attrType) {
-                case "21": // Uint16
-                    $changeVal = "0001";
-                    break;
-                case "10": // Boolean
-                case "20": // Uint8
-                    $changeVal = "01";
-                    break;
-
-                // Tcharp38: TO BE COMPLETED ! changeVal size depends on attribute type
-                default:
-                    $this->deamonlog('debug', "    ERROR: Unsupported attrType ".$attrType, $this->debug['processCmd']);
-                    $changeVal = "01";
-                }
-                $change                 = AbeilleTools::reverseHex($changeVal); // Reportable change.
-                // $timeout                = "0000";
-
-                $data2 = $fcf.$sqn.$cmdId.$dir.$attrId.$attrType.$minInterval.$maxInterval.$change;
-                $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
-
-                $data1 = $addrMode.$addr.$srcEp.$destEp.$clustId.$profId.$securityMode.$radius.$dataLen2;
-                $data = $data1.$data2;
-                $len = sprintf("%04s", dechex(strlen($data) / 2));
-
-                $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
-                return;
-            }
-
             // Read Reporting Request
             if (isset($Command['readReportingConfig'])) {
                 if (!isset($Command['addr'])) {
@@ -3487,6 +3395,107 @@
                     $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
                     return;
                 }
+
+                // ZCL global: Configure reporting command
+                // Mandatory parameters: addr, clustId, attrId
+                // Optional parameters: attrType, minInterval, maxInterval, changeVal
+                // Tcharp38: Why don't we use 0120 zigate command instead of 0530 ??
+                else if ($cmdName == 'configureReporting') {
+                    /* Mandatory infos: addr, clustId, attrId. 'attrType' can be auto-detected */
+                    $required = ['addr', 'clustId', 'attrId'];
+                    $missingParam = false;
+                    foreach ($required as $idx => $param) {
+                        if (isset($Command[$param]))
+                            continue;
+                        $this->deamonlog('debug', "    command configureReporting ERROR: Missing '".$param."'");
+                        $missingParam = true;
+                    }
+                    if ($missingParam)
+                        return;
+                    if (!isset($Command['attrType'])) {
+                        /* Attempting to find attribute type according to its id */
+                        $attr = zbGetZCLAttribute($Command['clustId'], $Command['attrId']);
+                        if (($attr === false) || !isset($attr['dataType'])) {
+                            $this->deamonlog('debug', "    command configureReporting ERROR: Missing 'attrType'");
+                            return;
+                        }
+                        $Command['attrType'] = sprintf("%02X", $attr['dataType']);
+                    }
+
+                    $cmd = "0530";
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <profile ID: uint16_t>
+                    // <cluster ID: uint16_t>
+                    // <security mode: uint8_t>
+                    // <radius: uint8_t>
+                    // <data length: uint8_t>
+
+                    // <data: auint8_t>
+                    //  ZCL Control Field
+                    //  ZCL SQN
+                    //  Command Id
+                    //  ....
+
+                    $addrMode       = "02";
+                    $addr           = $Command['addr'];
+                    $srcEp          = "01";
+                    $destEp         = $Command['ep'];
+                    $profId         = "0104";
+                    $clustId        = $Command['clustId'];
+                    $securityMode   = "02";
+                    $radius         = "1E";
+
+                    /* ZCL header */
+                    $fcf            = "10"; // Frame Control Field
+                    $sqn            = "01";
+                    $cmdId          = "06";
+
+                    /* Attribute Reporting Configuration Record */
+                    $dir                    = "00";
+                    $attrId                 = AbeilleTools::reverseHex($Command['attrId']);
+                    $attrType               = $Command['attrType'];
+                    $minInterval            = isset($Command['minInterval']) ? $Command['minInterval'] : "0000";
+                    $maxInterval            = isset($Command['maxInterval']) ? $Command['maxInterval'] : "0000";
+                    $changeVal              = ''; // Reportable change.
+                    if (isset($Command['changeVal'])) {
+                        $changeVal = $Command['changeVal'];
+                    } else {
+                        // switch ($attrType) {
+                        // case "21": // Uint16
+                        //     $changeVal = "0001";
+                        //     break;
+                        // case "10": // Boolean
+                        // case "20": // Uint8
+                        //     $changeVal = "01";
+                        //     break;
+
+                        // // Tcharp38: TO BE COMPLETED ! changeVal size depends on attribute type
+                        // default:
+                        //     $this->deamonlog('debug', "    ERROR: Unsupported attrType ".$attrType, $this->debug['processCmd']);
+                        //     $changeVal = "01";
+                        // }
+                    }
+                    // $change = AbeilleTools::reverseHex($changeVal); // Reportable change.
+                    // $timeout = "0000";
+
+                    $this->deamonlog('debug', "    Using attrType='".$attrType."', min='".$minInterval."', max='".$maxInterval."', changeVal='".$changeVal."'", $this->debug['processCmd']);
+                    $minInterval = AbeilleTools::reverseHex($minInterval);
+                    $maxInterval = AbeilleTools::reverseHex($maxInterval);
+                    $changeVal = AbeilleTools::reverseHex($changeVal);
+                    $data2 = $fcf.$sqn.$cmdId.$dir.$attrId.$attrType.$minInterval.$maxInterval.$changeVal;
+                    $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
+
+                    $data1 = $addrMode.$addr.$srcEp.$destEp.$clustId.$profId.$securityMode.$radius.$dataLen2;
+                    $data = $data1.$data2;
+                    $len = sprintf("%04s", dechex(strlen($data) / 2));
+
+                    $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
+                    return;
+                } // End 'configureReporting'
 
                 /*
                  * ZCL cluster specific commands

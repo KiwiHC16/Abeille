@@ -24,7 +24,7 @@
             },
             "SetReporting-01-0006-0000": {
                 "use": "zbConfigureReporting",
-                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
 
@@ -40,7 +40,7 @@
             },
             "SetReporting-02-0006-0000": {
                 "use": "zbConfigureReporting",
-                "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
 
@@ -56,7 +56,7 @@
             },
             "SetReporting-03-0006-0000": {
                 "use": "zbConfigureReporting",
-                "params": "ep=03&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "params": "ep=03&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
 
@@ -72,7 +72,7 @@
             },
             "SetReporting-04-0006-0000": {
                 "use": "zbConfigureReporting",
-                "params": "ep=04&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "params": "ep=04&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
 
@@ -88,7 +88,7 @@
             },
             "SetReporting-05-0006-0000": {
                 "use": "zbConfigureReporting",
-                "params": "ep=05&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "params": "ep=05&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             }
         }

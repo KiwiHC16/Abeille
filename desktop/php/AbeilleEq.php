@@ -533,7 +533,16 @@
             ep = document.getElementById("idEpCR").value;
             clustId = document.getElementById("idClustIdCR").value;
             attrId = document.getElementById("idAttrIdCR").value;
+            min = document.getElementById("idMinCR").value;
+            max = document.getElementById("idMaxCR").value;
+            change = document.getElementById("idChangeCR").value;
             payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId;
+            if (min != '')
+                payload += "_minInterval="+min;
+            if (max != '')
+                payload += "_maxInterval="+max;
+            if (change != '')
+                payload += "_changeVal="+change;
         } else {
             console.log("Unknown request "+request);
             return;

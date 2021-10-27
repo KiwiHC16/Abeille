@@ -9,6 +9,11 @@ ChangeLog
 
 - Zlinky TIC: Diverses corrections dont lecture option tarifaire.
 - Tuya repeteur zigbee RP280: Ajout support.
+- Page de config
+
+  - Options avancées: Nettoyage autorisé si test d'intégrité ok.
+  - Partie mise-à-jour (vérification) caché. Pas assez fiable. A revoir.
+  - Partie 'zigates' revue.
 
 211022-BETA-1
 -------------

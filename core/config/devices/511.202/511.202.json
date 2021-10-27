@@ -10,18 +10,35 @@
         },
         "type": "Module 511.202 iluminize",
         "commands": {
-            "include4": "etat",
-            "On": { "use": "zbCmd-0006-On" },
-            "include6": "Off",
-            "include8": "getEtat",
-            "include10 2": "BindToZigateEtat",
-            "include10 2 2": "setReportEtat",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },
-            "Toggle": {
-                "use": "zbCmd-0006-Toggle",
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+
+            "Status": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1,
                 "nextLine": "after"
+            },
+            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
+            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
+            "Toggle": { "use": "zbCmd-0006-Toggle", "nextLine": "after" },
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0006-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
             }
         }
     }

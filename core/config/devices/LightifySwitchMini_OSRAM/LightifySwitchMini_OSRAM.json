@@ -36,19 +36,19 @@
                 "params": "ep=01&clustId=0006",
                 "execAtCreation": "Yes"
             },
-            "Up": { "use": "zbCmdR-Custom", "params": "ep=01&clustId=0006&cmdId=01", "isVisible": 1 },
+            "Up": { "use": "zbCmdR-Custom", "params": "ep=01&clustId=0006&cmdId=01" },
             "Bind-02-0006-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "ep=02&clustId=0006",
                 "execAtCreation": "Yes"
             },
-            "Down": { "use": "zbCmdR-Custom", "params": "ep=02&clustId=0006&cmdId=00", "isVisible": 1 },
+            "Down": { "use": "zbCmdR-Custom", "params": "ep=02&clustId=0006&cmdId=00" },
             "Bind-03-0300-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "ep=03&clustId=0300",
                 "execAtCreation": "Yes"
             },
-            "Stop": { "use": "zbCmdR-Custom", "params": "ep=03&clustId=0300&cmdId=0A", "isVisible": 1 }
+            "Stop": { "use": "zbCmdR-Custom", "params": "ep=03&clustId=0300&cmdId=0A" }
         }
     }
 }

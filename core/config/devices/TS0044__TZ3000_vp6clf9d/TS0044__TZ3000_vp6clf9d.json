@@ -24,7 +24,7 @@
             },
             "Set-BatteryReporting": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600&changeVal=",
                 "execAtCreation": "Yes"
             },
 
@@ -32,7 +32,6 @@
             "Click 2": { "use": "click", "params": "ep=02", "isVisible": 1 },
             "Click 3": { "use": "click", "params": "ep=03", "isVisible": 1 },
             "Click 4": { "use": "click", "params": "ep=04", "isVisible": 1 }
-        },
-        "comment": ""
+        }
     }
 }

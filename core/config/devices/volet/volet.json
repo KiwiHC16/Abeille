@@ -13,26 +13,18 @@
         },
         "type": "Profalux volet",
         "commands": {
-            "include4": "zb-0000-ZCLVersion",
-            "include5": "dateCode",
-            "include6": "location",
-            "include24": "Identify",
-            "include25": "Group-Membership",
-            "include0008-1": "BindToZigateLevel",
-            "include0008-2": "setReportLevel",
+            "Identify": { "use": "Identify" },
+
+            "Groups": { "use": "Group-Membership" },
+
             "include0008-8": "setLevelVoletDown",
             "include0008-7": "setLevelVoletUp",
             "include0008-6": "levelVoletStop",
             "include0008-3": "Level",
             "include0008-5": "setLevelVolet",
-            "include0008-4": "getLevel",
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            }
+            "include0008-1": "BindToZigateLevel",
+            "include0008-2": "setReportLevel",
+            "include0008-4": "getLevel"
         }
     }
 }

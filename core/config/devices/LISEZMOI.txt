@@ -96,6 +96,10 @@ Exemple: BASICZBR3.json
         Pour forcer un saut de ligne apres ou avant la commande dans la tuile.
     template: Surcharge du template par defaut.
         Permet de définir le widget à utiliser pour destkop & mobile.
+    subType: Surcharge du sous-type par defaut.
+        Permet de changer le sous-type de la commande choisie.
+        Ex: "Get-OPTARIF": { "use": "zbReadAttribute", "params": "clustId=FF66&attrId=0000", "subType": "string" },
+
 
   Exemples de nouvelle syntaxe:
     "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },

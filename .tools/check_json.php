@@ -146,7 +146,7 @@
                 }
 
                 if ($newSyntax) {
-                    $supportedKeys = ['use', 'params', 'isVisible', 'execAtCreation', 'nextLine', 'template'];
+                    $supportedKeys = ['use', 'params', 'isVisible', 'execAtCreation', 'nextLine', 'template', 'subType', 'unit'];
                     foreach ($value as $key2 => $value2) {
                         if (!in_array($key2, $supportedKeys))
                             $error = newDevError($devName, "ERROR", "Invalid '".$key2."' key for '".$key."' Jeedom command");

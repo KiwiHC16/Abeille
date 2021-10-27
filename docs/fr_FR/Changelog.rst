@@ -1,14 +1,19 @@
 ChangeLog
 =========
 
-211022-BETA-1
+  .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM), donc dispo depuis la version '3.1e'.
 
     - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
     - Les firmwares avant 3.1e sont forcement 'legacy'.
-    - Mais **ATTENTION** si vous migrez d'une version 'legacy' ver 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+    - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+- Zlinky TIC: Diverses corrections dont lecture option tarifaire.
+- Tuya repeteur zigbee RP280: Ajout support.
+
+211022-BETA-1
+-------------
 
 - **ATTENTION**: Format DB interne modifié. Restaurer sauvegarde si besoin de revenir à une version antérieure.
-
 - Interne: DB équipement: 'modeleJson' => 'ab::jsonId'.
 - Interne: Suppression 'archives'.
 - Page config: Affichage version firmware complète (ex: 0004-0320).

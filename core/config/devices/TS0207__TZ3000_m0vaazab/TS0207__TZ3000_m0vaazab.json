@@ -1,0 +1,18 @@
+{
+    "TS0207__TZ3000_m0vaazab": {
+        "manufacturer": "Tuya",
+        "zbManufacturer": "_TZ3000_m0vaazab",
+        "model": "RP280",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "Tuya-Repeater-RP280"
+        },
+        "category": {
+            "other": "1"
+        },
+        "type": "Tuya RP280 zigbee repeater",
+        "commands": {
+        }
+    }
+}

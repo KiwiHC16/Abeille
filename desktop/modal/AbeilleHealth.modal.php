@@ -37,8 +37,7 @@ Démons:
     $oneMissing = false;
     displayDaemonStatus($diff, "Cmd", $oneMissing);
     displayDaemonStatus($diff, "Parser", $oneMissing);
-    $nbOfZigates = $config['zigateNb'];
-    for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
+    for ($zgNb = 1; $zgNb <= maxNbOfZigate; $zgNb++) {
         if ($config['AbeilleActiver'.$zgNb] != "Y")
             continue; // Zigate disabled
         displayDaemonStatus($diff, "SerialRead".$zgNb, $oneMissing);
@@ -50,7 +49,7 @@ Démons:
 
     /* Checking if active Zigates are not in timeout */
     echo "  Zigates: ";
-    for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
+    for ($zgNb = 1; $zgNb <= maxNbOfZigate; $zgNb++) {
         if ($config['AbeilleActiver'.$zgNb] != "Y")
             continue; // Zigate disabled
 

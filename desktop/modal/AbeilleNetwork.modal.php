@@ -36,7 +36,6 @@
     }
 
     $eqLogics = eqLogic::byType('Abeille');
-    $nbOfZigates = config::byKey('zigateNb', 'Abeille', '1');
 
     // Node Count
     $nodesCount = count($eqLogics);
@@ -155,7 +154,7 @@
                     <br />
                     <div id="div_routingTable">
                         <?php
-                            displayButtons($nbOfZigates, "linksTable");
+                            displayButtons(maxNbOfZigate, "linksTable");
                         ?>
                         <br />
                         <hr>
@@ -206,7 +205,7 @@
 
                     <br />
                     <?php
-                        displayButtons($nbOfZigates, "linksGraph");
+                        displayButtons(maxNbOfZigate, "linksGraph");
                     ?>
                     <br />
                     <hr>

@@ -13,7 +13,7 @@
 		<br/>
 		<select name="zigateZ" style="width : 40%">
 		<?php
-			for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '0', 1); $i++ ) {
+			for ( $i=1; $i<= maxNbOfZigate; $i++ ) {
 				echo '<option value="' . $i . '">Zigate' . $i . '</option>';
 			}
 		?>

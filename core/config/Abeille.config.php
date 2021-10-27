@@ -58,9 +58,10 @@
     define('priorityLostNE',        5); // Si le NE est en TimeOut il n'est pas prioritaire car il est peut etre off.
     define('priorityMax',           5); // est egale aux max des priorités définies.
 
-    define('maxNbOfZigate',        10);
+    define('maxNbOfZigate', 10); // Number of supported zigates
+    $GLOBALS['maxNbOfZigate'] = maxNbOfZigate;
 
-    define('maxRetryDefault',       3);
+    define('maxRetryDefault', 3);
 
     /* URL to access documentations */
     define('urlProducts', "https://github.com/KiwiHC16/AbeilleDoc/blob/master/docs/products");

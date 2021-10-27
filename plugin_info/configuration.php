@@ -39,11 +39,6 @@
     require_once __DIR__.'/../core/class/Abeille.class.php';
     include_once __DIR__."/../core/php/AbeilleInstall.php";
 
-    $zigateNbMax = 10;
-    $zigateNb = config::byKey('zigateNb', 'Abeille', 1);
-    echo '<script>var js_NbMaxOfZigates = '.$zigateNbMax.';</script>'; // PHP to JS
-    echo '<script>var js_NbOfZigates = '.$zigateNb.';</script>'; // PHP to JS
-
     /* Reading version */
     $file = fopen(__DIR__."/Abeille.version", "r");
     $line = fgets($file); // Should be a comment
@@ -829,7 +824,9 @@
                 if (res.status == 0) {
                     fw = res.fw;
                     console.log("FW="+fw)
-                    $('.serialPortStatus' + zgNb).empty().append('<span class="label label-success" style="font-size:1em;">FW '+fw+'</span>');
+                    $('.serialPortStatus' + zgId).empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                    // $('#idFwVersion'+zgId).empty().append('<span class="label label-success" style="font-size:1em;">'+fw+'</span>');
+                    document.getElementById("idFwVersion"+zgId).value = fw;
                 } else {
                     $('.serialPortStatus' + zgId).empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
                 }

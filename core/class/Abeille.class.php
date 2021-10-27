@@ -64,7 +64,7 @@ class Abeille extends eqLogic
             log::add('Abeille', 'debug', 'L Abeille na pas d adresse IEEE connue, je ne peux faire l operation.');
         }
 
-        if ($zigateY > config::byKey('zigateNb', 'Abeille', '0', 1)) {
+        if ($zigateY > $GLOBALS['maxNbOfZigate']) {
             log::add('Abeille', 'debug', 'Cette Zigate n existe pas: '.$zigateY.', je ne peux faire l operation.');
             return;
         }
@@ -222,7 +222,7 @@ class Abeille extends eqLogic
         $return = array();
         $result = '';
 
-        for ($i = 1; $i <= config::byKey('zigateNb', 'Abeille', '1', 1); $i++) {
+        for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
             if ( config::byKey('AbeilleActiver'.$i, 'Abeille', '1', 1) ) {
                 $result .= config::byKey('AbeilleSerialPort'.$i, 'Abeille', '', 1);
             }
@@ -516,7 +516,7 @@ if (0) {
         log::add('Abeille', 'debug', 'cron15: Interrogating devices silent for more than 15mins.');
         $config = AbeilleTools::getParameters();
         $i = 0;
-        for ($zgNb = 1; $zgNb <= $config['zigateNb']; $zgNb++) {
+        for ($zgNb = 1; $zgNb <= $GLOBALS['maxNbOfZigate']; $zgNb++) {
             $zigate = Abeille::byLogicalId('Abeille'.$zgNb.'/0000', 'Abeille');
             if (!is_object($zigate))
                 continue; // Probably deleted on Jeedom side.
@@ -687,7 +687,7 @@ if (0) {
         // https://github.com/jeelabs/esp-link
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
         // so I need to create a minimum of traffic, so pull zigate every minutes
-        for ($i = 1; $i <= $param['zigateNb']; $i++) {
+        for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
             if ($param['AbeilleActiver'.$i] != 'Y')
                 continue; // Zigate disabled
             if ($param['AbeilleSerialPort'.$i] == "none")
@@ -763,7 +763,7 @@ if (0) {
         // Si Inclusion status est à 1 on demande un Refresh de l information
         // Je regarde si j ai deux zigate en inclusion et si oui je genere une alarme.
         $count = array();
-        for ($i = 1; $i <= $param['zigateNb']; $i++) {
+        for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
             if (self::checkInclusionStatus("Abeille".$i) == 1) {
                 Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/permitJoin", "Status");
                 $count[] = $i;
@@ -825,7 +825,7 @@ if (0) {
         message::removeAll('Abeille');
 
         // Remove temporary files
-        for ($i = 1; $i <= config::byKey('zigateNb', 'Abeille', '1', 1); $i++) {
+        for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
             $lockFile = jeedom::getTmpFolder('Abeille').'/AbeilleLQI_MapDataAbeille'.$i.'.json.lock';
             if (file_exists($lockFile)) {
                 unlink($lockFile);
@@ -837,7 +837,7 @@ if (0) {
         // AbeilleIEEE_Ok=-1: Zigate IEEE is NOT the expected one (port switch ?)
         //     "         = 0: IEEE check to be done
         //     "         = 1: Zigate on the right port
-        for ($zgId = 1; $zgId <= config::byKey('zigateNb', 'Abeille', '1', 1); $zgId++) {
+        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
             config::save("AbeilleIEEE_Ok".$zgId, 0, 'Abeille');
         }
 
@@ -886,7 +886,7 @@ if (0) {
 
         /* Checking config */
         // TODO Tcharp38: Should be done during deamon_info() and report proper 'launchable'
-        for ($zgNb = 1; $zgNb <= $param['zigateNb']; $zgNb++) {
+        for ($zgNb = 1; $zgNb <= $GLOBALS['maxNbOfZigate']; $zgNb++) {
             if ($param['AbeilleActiver'.$zgNb] != 'Y')
                 continue; // Disabled
 
@@ -916,7 +916,7 @@ if (0) {
             - port 0 = RESET
             - port 2 = FLASH
             - Production mode: FLASH=1, RESET=0 then 1 */
-        for ($i = 1; $i <= $param['zigateNb']; $i++) {
+        for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
             if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
                 continue; // Undefined or disabled
             if ($param['AbeilleType'.$i] == "PI") {
@@ -932,7 +932,7 @@ if (0) {
            If not, the return of first commands sent to zigate might be lost.
            This was sometimes the case for 0009 cmd which is key to 'enable' msg receive on parser side. */
         $expected = 0; // 1 bit per expected serial read daemon
-        for ($zgNb = 1; $zgNb <= $param['zigateNb']; $zgNb++) {
+        for ($zgNb = 1; $zgNb <= $GLOBALS['maxNbOfZigate']; $zgNb++) {
             if (($param['AbeilleSerialPort'.$zgNb] == 'none') or ($param['AbeilleActiver'.$zgNb] != 'Y'))
                 continue; // Undefined or disabled
             $expected |= constant("daemonSerialRead".$zgNb);
@@ -954,7 +954,7 @@ if (0) {
 
         // Tcharp38: Moved to main daemon (deamon())
         // // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
-        // for ($i = 1; $i <= $param['zigateNb']; $i++) {
+        // for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
         //     if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
         //         continue; // Undefined or disabled
 
@@ -1006,7 +1006,7 @@ if (0) {
     // {
     //     $param = AbeilleTools::getParameters();
 
-    //     for ($i = 1; $i <= $param['zigateNb']; $i++) {
+    //     for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
     //         if ($Abeille == "Abeille".$i) return basename($param['AbeilleSerialPort'.$i]);
     //     }
     // }
@@ -1021,7 +1021,7 @@ if (0) {
     // {
     //     $param = AbeilleTools::getParameters();
 
-    //     for ($i = 1; $i <= $param['zigateNb']; $i++) {
+    //     for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
     //         if ($port == $param['AbeilleSerialPort'.$i]) return "Abeille".$i;
     //     }
     // }
@@ -1122,7 +1122,7 @@ while ($cron->running()) {
         // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
         // Tcharp38: Moved from deamon_start()
         $param = AbeilleTools::getParameters();
-        for ($i = 1; $i <= $param['zigateNb']; $i++) {
+        for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
             if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
                 continue; // Undefined or disabled
 
@@ -1245,13 +1245,13 @@ while ($cron->running()) {
     //     // return 1 si Ok, 0 si erreur
     //     $param = Abeille::getParameters();
 
-    //     if ( !isset($param['zigateNb']) ) { return 0; }
-    //     if ( $param['zigateNb'] < 1 ) { return 0; }
-    //     if ( $param['zigateNb'] > 9 ) { return 0; }
+    //     if ( !isset($GLOBALS['maxNbOfZigate']) ) { return 0; }
+    //     if ( $GLOBALS['maxNbOfZigate'] < 1 ) { return 0; }
+    //     if ( $GLOBALS['maxNbOfZigate'] > 9 ) { return 0; }
 
     //     // Testons la validité de la configuration
     //     $atLeastOneZigateActiveWithOnePortDefined = 0;
-    //     for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
+    //     for ( $i=1; $i<=$GLOBALS['maxNbOfZigate']; $i++ ) {
     //         if ($return['AbeilleActiver'.$i ]=='Y') {
     //             if ($return['AbeilleSerialPort'.$i]!='none') {
     //                 $atLeastOneZigateActiveWithOnePortDefined++;
@@ -1265,7 +1265,7 @@ while ($cron->running()) {
     //     }
 
     //     // Vérifions l existence des ports
-    //     for ( $i=1; $i<=$param['zigateNb']; $i++ ) {
+    //     for ( $i=1; $i<=$GLOBALS['maxNbOfZigate']; $i++ ) {
     //         if ($return['AbeilleActiver'.$i ]=='Y') {
     //             if ($return['AbeilleSerialPort'.$i] != 'none') {
     //                 if (@!file_exists($return['AbeilleSerialPort'.$i])) {

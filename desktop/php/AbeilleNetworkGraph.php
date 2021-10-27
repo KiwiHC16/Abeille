@@ -1,4 +1,3 @@
-
 <?php
     /* Developers debug features */
     $dbgFile = __DIR__."/../../tmp/debug.json";
@@ -10,6 +9,7 @@
     }
 
     require_once __DIR__.'/../../../../core/php/core.inc.php';
+    require_once __DIR__.'/../../core/config/Abeille.config.php';
 ?>
 
 <script type="text/javascript">
@@ -789,7 +789,6 @@ console.log("res="+json_res);
         Placement réseau
     </div>
     <?php
-    $zigateNb = config::byKey('zigateNb', 'Abeille', 1); // Warning: number of zigates and not zigate number.
     // Reading URL parameter: "...?zigate=X", where X is zigate number
     if (isset($_GET['zigate']))
         $ZigateX = $_GET['zigate'];
@@ -810,7 +809,7 @@ console.log("res="+json_res);
             <td>
                 <!-- Select 1st Zigate if none passed as argument (zigate=X) -->
                 <?php
-                for ($i=1; $i<=$zigateNb; $i++) {
+                for ($i=1; $i<=maxNbOfZigate; $i++) {
                     if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y' )
                         continue;
                     if ($i == $ZigateX)

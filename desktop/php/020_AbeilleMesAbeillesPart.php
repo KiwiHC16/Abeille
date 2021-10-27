@@ -4,7 +4,7 @@
 <?php
     $NbOfZigatesON = 0; // Number of enabled zigates
     // $eqAll = array(); // All equipments, sorted per zigate
-    for ( $i=1; $i<=$zigateNb; $i++ ) {
+    for ( $i=1; $i <= maxNbOfZigate; $i++ ) {
         if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y' )
             continue; // This Zigate is not enabled
 
@@ -53,13 +53,10 @@
 
     if ($NbOfZigatesON == 0) { // No Zigate to display. UNEXPECTED !
         echo "<div style=\"background: #e9e9e9; font-weight: bold; padding: .2em 2em;\"><br>";
-        echo "   <span style=\"color:red\">";
-        if ($zigateNb == 0)
-            echo "Aucune Zigate n'est définie !";
-        else
-            echo "Aucune Zigate n'est activée !";
-        echo "   </span><br>";
-        echo "    Veuillez aller à la page de configuration pour corriger.<br><br>";
+            echo "<span style=\"color:red\">";
+                echo "Aucune Zigate n'est activée !";
+            echo "</span><br>";
+            echo "Veuillez aller à la page de configuration pour corriger.<br><br>";
         echo "</div>";
     }
 ?>

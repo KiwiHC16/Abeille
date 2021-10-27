@@ -184,7 +184,7 @@
     function zigateDetails($logFile) {
         $space = '    ';
         echoTitle($logFile, '3/ Firmware');
-        for ($i = 1; $i <= config::byKey('zigateNb', 'Abeille', '1', 1); $i++) {
+        for ($i = 1; $i <= maxNbOfZigate; $i++) {
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y') {
                 continue; // Zigate disabled
             }

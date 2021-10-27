@@ -308,7 +308,7 @@
     if ($zgNb == -1) {
         logMessage("", "Request to interrogate all active zigates");
         $zgStart = 1;
-        $zgEnd = config::byKey('zigateNb', 'Abeille', '1', 1);
+        $zgEnd = maxNbOfZigate;
     } else {
         logMessage("", "Request to interrogate zigate ".$zgNb." only");
         $zgStart = $zgNb;

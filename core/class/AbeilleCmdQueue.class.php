@@ -67,7 +67,7 @@
 
             $this->tempoMessageQueue               = array();
 
-            $this->zigateNb = config::byKey('zigateNb', 'Abeille', '1', 1);
+            $this->zigateNb = maxNbOfZigate;
             for ($i = 1; $i <= $this->zigateNb; $i++) {
                 $this->zigateAvailable[$i] = 1;
                 $this->timeLastAck[$i] = 0;

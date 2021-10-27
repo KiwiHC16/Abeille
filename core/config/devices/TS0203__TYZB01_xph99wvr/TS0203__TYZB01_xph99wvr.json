@@ -19,14 +19,15 @@
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1
             },
-            "BindToZigate-Power": {
-                "use": "bindToZigate",
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },
-            "SetReporting-BatteryPercent": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+
+            "Bind-0500-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0500",
                 "execAtCreation": "Yes"
             }
         }

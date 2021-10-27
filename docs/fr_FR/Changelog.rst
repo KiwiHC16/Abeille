@@ -7,6 +7,7 @@ ChangeLog
     - Les firmwares avant 3.1e sont forcement 'legacy'.
     - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
 
+- JSON équipement: Amélioration syntaxe permettant de surcharger 'subType' ou 'unite'.
 - Zlinky TIC: Diverses corrections dont lecture option tarifaire.
 - Tuya repeteur zigbee RP280: Ajout support.
 - Page de config
@@ -14,6 +15,8 @@ ChangeLog
   - Options avancées: Nettoyage autorisé si test d'intégrité ok.
   - Partie mise-à-jour (vérification) caché. Pas assez fiable. A revoir.
   - Partie 'zigates' revue.
+- Tuya ZM-CG205 door sensor: Mise-à-jour JSON (#2165).
+- eWeLink ZB-SW01: Support préliminaire (#2172).
 
 211022-BETA-1
 -------------

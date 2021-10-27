@@ -2,6 +2,8 @@
     "TS0121__TZ3000_8nkb7mof": {
         "manufacturer": "Girier",
         "model": "JR-ZPM01",
+        "type": "Girier/Tuya ZigBee smart plug EU",
+        "comment": "Seems to be sold also under Tuya brand",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -9,15 +11,14 @@
             "icon": "JR-ZPM01"
         },
         "category": {
-            "light": "1"
+            "energy": "1"
         },
-        "type": "Girier ZigBee smart plug EU",
         "commands": {
-            "include24": "Identify",
+            "Identify": { "use": "Identify" },
 
-            "include25": "Group-Membership",
+            "Groups": { "use": "Group-Membership" },
 
-            "include4": "etatLight",
+            "Status": { "use": "zb-0006-OnOff", "isVisible": 1 },
             "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
             "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
             "Toggle": { "use": "zbCmd-0006-Toggle", "nextLine": "after" },
@@ -36,7 +37,11 @@
                 "execAtCreation": "yes"
             },
 
-            "include3 2 2 2 3": "CurrentSummationDelivered",
+            "Total power": {
+                "use": "zb-0702-CurrentSummationDelivered",
+                "params": "mult=1&div=1&unit=Wh",
+                "isVisible": 1
+            },
 
             "RMSVoltage": {
                 "use": "zb-0B04-RMSVoltage",
@@ -58,7 +63,6 @@
                 "execAtCreation": "yes"
             },
             "include3 2 2 2 4 2 2": "getPlugVAW"
-        },
-        "comment": ""
+        }
     }
 }

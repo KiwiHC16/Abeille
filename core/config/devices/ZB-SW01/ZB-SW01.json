@@ -1,0 +1,27 @@
+{
+    "ZB-SW01": {
+        "manufacturer": "eWeLink",
+        "model": "ZB-SW01",
+        "type": "eWeLink ZB-SW01 smart light switch",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "eWeLink-ZB-SW01"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "commands": {
+            "Identify": { "use": "Identify" },
+
+            "Groups": { "use": "Group-Membership" },
+
+            "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
+            "On": { "use": "zbCmd-0006-On", "params": "", "isVisible": 1 },
+            "Off": { "use": "zbCmd-0006-Off", "params": "", "isVisible": 1 },
+            "Toggle": { "use": "zbCmd-0006-Toggle", "nextLine": "after" },
+            "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+            "Bind-01-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0006", "execAtCreation": "Yes" }
+        }
+    }
+}

@@ -21,7 +21,9 @@
                 "params": "clustId=0000&attrId=4000"
             },
 
-            "include25": "Group-Membership",
+            "include16": "Identify",
+
+            "Groups": { "use": "Group-Membership" },
 
             "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
             "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
@@ -31,17 +33,16 @@
             "Etat": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
             "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
             "Bind-0006-ToZigate": {
-                "use": "bindToZigate",
+                "use": "zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
-            "Set-OnOffReporting": {
+            "SetReporting-OnOff": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
 
-            "include4": "etatLight",
             "include5": "levelLight",
             "include6 2": "colorX",
             "include7 2": "colorY",
@@ -54,7 +55,6 @@
             "include17 2": "getColorX",
             "include18 2": "getColorY",
             "include12": "getLevel",
-            "include16": "Identify",
             "include27": "BindToZigateLevel",
             "include29": "setReportLevel",
             "include12 2 2": "ColourRGB",

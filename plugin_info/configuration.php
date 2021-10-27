@@ -61,9 +61,125 @@
     }
 </style>
 
+<?php
+    function displayZigate($zgId) {
+        echo '<div class="form-group">';
+            echo '<div class="col-lg-3">';
+                echo '<h4>';
+                    echo 'Zigate '.$zgId;
+                echo '</h4>';
+            echo '</div>';
+            echo '<div class="col-lg-9">';
+            echo '</div>';
+        echo '</div>';
+
+        echo '<div class="form-group">';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Nom : }}</label>';
+            echo '<div class="col-lg-4">';
+                if (Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille')) {
+                    $zgName = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille')->getName();
+                } else {
+                    $zgName = "";
+                }
+                echo '<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="'.$zgName.'" disabled title="{{Nom de la zigate; N\'est modifiable que via la page de gestion d\'Abeille après sauvegarde.}}">';
+            echo '</div>';
+        echo '</div>';
+
+        echo '<div class="form-group">';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Type : }}</label>';
+            echo '<div class="col-lg-4">';
+                echo '<select id="idSelZgType'.$zgId.'" class="configKey form-control" data-l1key="AbeilleType'.$zgId.'" onchange="checkZigateType('.$zgId.')"  title="{{Type de zigate}}">';
+                    echo '<option value="USB" selected>{{USB v1}}</option>';
+                    echo '<option value="WIFI">{{WIFI}}</option>';
+                    echo '<option value="PI">{{PI v1}}</option>';
+                    echo '<option value="DIN">{{DIN v1}}</option>';
+                    echo '<option value="USBv2" selected>{{USB +/v2}}</option>';
+                    echo '<option value="PIv2">{{PI +/v2}}</option>';
+                    echo '<option value="DINv2">{{DIN +/v2}}</option>';
+                echo '</select>';
+            echo '</div>';
+        echo '</div>';
+
+        echo '<div class="form-group">';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Port série}} : </label>';
+            echo '<div class="col-lg-4">';
+                echo '<select id="idSelSP'.$zgId.'" class="configKey form-control" data-l1key="AbeilleSerialPort'.$zgId.'" title="{{Port série si zigate USB, Pi ou DIN.}}" disabled>';
+                    echo '<option value="none" selected>{{Aucun}}</option>';
+                    echo '<option value="/dev/zigate'.$zgId.'" >{{WIFI'.$zgId.'}}</option>';
+                    echo '<option value="/dev/monitZigate'.$zgId.'" >{{Monit'.$zgId.'}}</option>';
+                    foreach (jeedom::getUsbMapping('', false) as $name => $value) {
+                        $value2 = substr($value, 5); // Remove '/dev/'
+                        echo '<option value="'.$value.'">'.$value2.' ('.$name.')</option>';
+                    }
+                    foreach (ls('/dev/', 'tty*') as $value) {
+                        echo '<option value="/dev/'.$value.'">'.$value.'</option>';
+                    }
+                echo '</select>';
+            echo '</div>';
+            echo '<div class="col-lg-5">';
+                echo '<div id="idCommTest'.$zgId.'" >';
+                    echo '<a id="idCheckSP'.$zgId.'" class="btn btn-default" onclick="checkSerialPort('.$zgId.')" title="{{Test de communication et lecture de la version du firmware.}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
+                    echo '<a class="serialPortStatus'.$zgId.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
+                        echo '<span class="label label-success" style="font-size:1em">-?-</span>';
+                    echo '</a>';
+                    echo '<a class="btn btn-danger ml4px" onclick="installTTY()" title="{{Tentative d\'activation du port}}"><i class="fas fa-sync"></i> {{Activer}}</a>';
+                echo '</div>';
+            echo '</div>';
+        echo '</div>';
+
+        echo '<div class="form-group">';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Adresse IP (IP:Port) : }}</label>';
+            echo '<div class="col-lg-4">';
+                echo '<input id="idWifiAddr'.$zgId.'" class="configKey form-control" data-l1key="IpWifiZigate'.$zgId.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
+            echo '</div>';
+        echo '</div>';
+
+        echo '<div class="form-group">';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Firmware}} : </label>';
+            echo '<div class="col-lg-2">';
+                echo '<input id="idFwVersion'.$zgId.'" type="text" title="{{Version actuelle du firmware}}" disabled>';
+            echo '</div>';
+            echo '<div class="col-lg-2">';
+                echo '<a id="idReadFwB'.$zgId.'" class="btn btn-default" onclick="checkSerialPort('.$zgId.')" title="{{Lecture de la version du firmware}}"><i class="fas fa-sync"></i> {{Lire}}</a>';
+            echo '</div>';
+            echo '<div class="col-lg-5">';
+                    echo '<div id="idUpdFw'.$zgId.'">';
+                    echo '<a id="idUpdateFW'.$zgId.'" class="btn btn-danger" onclick="updateFW('.$zgId.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre à jour}}</a>';
+                    echo '<select id="idFW'.$zgId.'" style="width:100px; margin-left:4px" title="{{Firmwares disponibles}}">';
+                    foreach (ls(__DIR__.'/../resources/fw_zigate', '*.bin') as $fwName) {
+                        $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
+                        if (substr($fwVers, -4) == ".dev") {
+                            /* FW for developer mode only */
+                            if (!isset($dbgDeveloperMode) || ($dbgDeveloperMode == FALSE))
+                                continue; // Not in developer mode. Ignoring this FW
+                            $fwVers = substr($fwVers, 0, -4); // Removing ".dev" suffix
+                        }
+                        $fwVers = substr($fwVers, 8); // Removing "ZiGate_v" prefix
+                        if ($fwVers == "3.20-OPDM")
+                            echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
+                        else
+                            echo '<option value='.$fwName.'>'.$fwVers.'</option>';
+                    }
+                    echo '</select>';
+                echo '</div>';
+            echo '</div>';
+        echo '</div>';
+
+        echo '<div class="form-group">';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Status : }}</label>';
+            echo '<div class="col-lg-4">';
+                echo '<select id="idSelZgStatus'.$zgId.'" class="configKey form-control" data-l1key="AbeilleActiver'.$zgId.'" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';
+                    echo '<option value="N" selected>{{Désactivée}}</option>';
+                    echo '<option value="Y">{{Activée}}</option>';
+                echo '</select>';
+            echo '</div>';
+        echo '</div>';
+    }
+?>
+
 <form class="form-horizontal">
     <fieldset>
-        <legend><i class="fa fa-list-alt"></i> {{Général}}</legend>
+        <legend><i class="fa fa-list-alt"></i><strong> {{Général}}</strong></legend>
         <div>
             <p><i> Suivez toutes les dernieres informations <a href="https://community.jeedom.com/t/news-de-la-ruche-par-abeille-plugin-abeille/26524"><strong>sur ce forum</strong> </a>.</i></p>
             <p><i> Les discussions et questions se feront via <a href="https://community.jeedom.com/tags/plugin-abeille"><strong>ce forum</strong> </a>. Pensez à mettre le flag "plugin-abeille" dans tous vos posts.</i></p>
@@ -131,227 +247,95 @@
         </div>
 
         <legend>
-            <i class="fa fa-list-alt"></i> {{Zigates}}
-            <a id="idZigatesShowHide" class="btn btn-success" >{{Afficher}}</a>
+            <i class="fa fa-list-alt"></i><strong> {{Zigates}}</strong>
+            <!-- <a id="idZigatesShowHide" class="btn btn-success" >{{Afficher}}</a> -->
         </legend>
-        <div id="Connection">
-            <div>
+        <div id="idZigates">
+            <!-- <div>
                 <p><i>{{Ce plugin supporte 4 types de Zigates: USB, Wifi, "PI" ou DIN}}</i></p>
                 <p><i>{{- Si USB, Pi ou DIN, le champ 'Port série' doit indiquer le port correspondant (ex: ttyUSB0 ou ttyS1)}}</i></p>
                 <p><i>{{- Si Wifi, le champ 'Adresse IP' doit indiquer l'adresse de la Zigate et son port (ex: 192.168.4.1:9999)}}</i></p>
                 <p><i>{{Les zigates non utilisées doivent être désactivées.}}</i></p>
+            </div> -->
+
+            <!-- Display dependancies -->
+            <div class="form-group">
+                <div class="col-lg-3">
+                    <h4>
+                        Dépendances
+                    </h4>
+                </div>
+                <div class="col-lg-9">
+                </div>
             </div>
 
             <div class="form-group">
-                <label class="col-lg-3 control-label" data-toggle="tooltip">{{Nombre de zigates : }}</label>
-                <div class="col-lg-2">
-                    <select id="nbOfZigates" class="configKey form-control" data-l1key="zigateNb" title="{{Nombre de zigates.}}">
-                        <option value="1" selected>1</option>
-                        <?php
-                        for ( $i=2; $i<=$zigateNbMax; $i++ ) {
-                            echo '<option value="'.$i.'">'.$i.'</option>';
-                        }
-                        ?>
-                    </select>
+                <div class="col-lg-6">
+                    <label class="col-lg-3 control-label" data-toggle="tooltip" title="Wiring PI est nécéssaire pour les Zigate PI">{{Wiring Pi}} : </label>
+                    <div id="idWiringPi" class="col-lg-4">
+                        <input id="idWiringPiStatus" type="text" title="{{Status d'installation du package Wiring PI}}" disabled>
+                        <!-- <a class="WiringPiStatus" title="">
+                            <span class="label label-success" style="font-size:1em;">-?-</span>
+                        </a> -->
+                    </div>
+                    <div class="col-lg-5">
+                        <a class="btn btn-default" id="bt_installWiringPi" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <label class="col-lg-3 control-label" data-toggle="tooltip">{{Socat}} : </label>
+                    <div class="col-lg-4">
+                        <input id="idSocatStatus" type="text" title="{{Status d'installation du package socat}}" disabled>
+                    </div>
+                    <!-- <div id="idSocat'.$zgId.'" class="col-lg-6">
+                        <a class="socatStatus" title="Status d'installation du package socat">
+                            <span class="label label-success" style="font-size:1em;">-?-</span>
+                        </a>
+                        </div> -->
+                    <div class="col-lg-5">
+                        <a class="btn btn-default" id="bt_installSocat" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
+                    </div>
                 </div>
             </div>
 
+            <!-- Display zigates 2 per line -->
             <?php
-            for ( $i=1; $i<=$zigateNbMax; $i++ ) {
-                echo '<div id="idZigateGroup'.$i.'" style="display:none">';
-            ?>
-                <div class="form-group">
-                    <div class="col-lg-3">
-                    </div>
-                    <div class="col-lg-6">
-                        <h3>
-                        <?php
-                        echo 'Zigate '.$i;
-                        ?>
-                        </h3>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-3 control-label" data-toggle="tooltip">{{Nom : }}</label>
-                    <div class="col-lg-2">
-                        <?php
-                        if (Abeille::byLogicalId('Abeille'.$i.'/0000', 'Abeille')) {
-                            $zgName = Abeille::byLogicalId('Abeille'.$i.'/0000', 'Abeille')->getName();
-                        } else {
-                            $zgName = "";
-                        }
-                        echo '<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="'.$zgName.'" disabled title="{{Nom de la zigate; N\'est modifiable que via la page de gestion d\'Abeille après sauvegarde.}}">';
-                    echo '</div>';
-                    ?>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-3 control-label" data-toggle="tooltip">{{Type : }}</label>
-                    <div class="col-lg-2">
-                        <?php
-                        echo '<select id="idSelZgType'.$i.'" class="configKey form-control" data-l1key="AbeilleType'.$i.'" onchange="checkZigateType('.$i.')"  title="{{Type de zigate}}">';
-                        ?>
-                            <option value="USB" selected>{{USB v1}}</option>
-                            <option value="WIFI">{{WIFI}}</option>
-                            <option value="PI">{{PI v1}}</option>
-                            <option value="DIN">{{DIN v1}}</option>
-                            <option value="USBv2" selected>{{USB +/v2}}</option>
-                            <option value="PIv2">{{PI +/v2}}</option>
-                            <option value="DINv2">{{DIN +/v2}}</option>
-                        </select>
-                    </div>
-                    <div class="col-lg-1">
-                    </div>
-                    <?php echo '<div id="idWiringPi'.$i.'" class="col-lg-3">'; ?>
-                        Wiring Pi :
-                        <a class="WiringPiStatus" title="Status du package">
-                            <span class="label label-success" style="font-size:1em;">-?-</span>
-                        </a>
-                        <a class="btn btn-warning" id="bt_installWiringPi" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
-                    </div>
-                    <?php echo '<div id="idSocat'.$i.'" class="col-lg-3">'; ?>
-                        Socat :
-                        <a class="socatStatus" title="Status d'installation du package">
-                            <span class="label label-success" style="font-size:1em;">-?-</span>
-                        </a>
-                        <a class="btn btn-warning" id="bt_installSocat" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-3 control-label" data-toggle="tooltip">{{Port série : }}</label>
-                    <div class="col-lg-2">
-                        <?php
-                            echo '<select id="idSelSP'.$i.'" class="configKey form-control" data-l1key="AbeilleSerialPort'.$i.'" title="{{Port série si zigate USB, Pi ou DIN.}}" disabled>';
-                            echo '<option value="none" selected>{{Aucun}}</option>';
-                            echo '<option value="/dev/zigate'.$i.'" >{{WIFI'.$i.'}}</option>';
-                            echo '<option value="/dev/monitZigate'.$i.'" >{{Monit'.$i.'}}</option>';
-
-                            foreach (jeedom::getUsbMapping('', false) as $name => $value) {
-                                $value2 = substr($value, 5); // Remove '/dev/'
-                                echo '<option value="'.$value.'">'.$value2.' ('.$name.')</option>';
-                            }
-                            foreach (ls('/dev/', 'tty*') as $value) {
-                                echo '<option value="/dev/'.$value.'">'.$value.'</option>';
-                            }
-                        ?>
-                        </select>
-                    </div>
-                    <div class="col-lg-1">
-                    </div>
-                    <?php
-                        echo '<div id="idCommTest'.$i.'" class="col-lg-3">';
-                            echo 'Test de comm. :';
-                            echo '<a class="serialPortStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
-                            echo '<span class="label label-success" style="font-size:1em">-?-</span>';
-                            echo '</a>';
-                            echo '<a id="idCheckSP'.$i.'" class="btn btn-warning ml4px" onclick="checkSerialPort('.$i.')" title="{{Test de communication: Arret des démons, interrogation de la zigate, et redémarrage.}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
-                        ?>
-                        <a class="btn btn-danger" onclick="installTTY()" title="{{Tentative d'activation du port}}"><i class="fas fa-sync"></i> {{Activer}}</a>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-3 control-label" data-toggle="tooltip">{{Adresse IP (IP:Port) : }}</label>
-                    <div class="col-lg-2">
-                        <?php
-                        echo '<input id="idWifiAddr'.$i.'" class="configKey form-control" data-l1key="IpWifiZigate'.$i.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
-                        // echo '<a id="idCheckWifi'.$i.'" class="btn btn-warning ml4px" onclick="checkWifi('.$i.')" title="{{Test de communication}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
-                        // echo '<a class="wifiStatus'.$i.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
-                        ?>
-                            <!-- <span class="label label-success" style="font-size:1em;">-?-</span> -->
-                        <!-- </a> -->
-                    </div>
-                    <div class="col-lg-1">
-                    </div>
-                    <?php
-                        echo '<div id="idUpdFw'.$i.'" class="col-lg-3">';
-                            echo 'Mise-à-jour FW :';
-                            echo '<select id="idFW'.$i.'" style="width:100px" title="{{Firmwares disponibles}}">';
-                            foreach (ls(__DIR__.'/../resources/fw_zigate', '*.bin') as $fwName) {
-                                $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
-                                if (substr($fwVers, -4) == ".dev") {
-                                    /* FW for developer mode only */
-                                    if (!isset($dbgDeveloperMode) || ($dbgDeveloperMode == FALSE))
-                                        continue; // Not in developer mode. Ignoring this FW
-                                    $fwVers = substr($fwVers, 0, -4); // Removing ".dev" suffix
-                                }
-                                $fwVers = substr($fwVers, 8); // Removing "ZiGate_v" prefix
-                                if ($fwVers == "3.20-OPDM")
-                                    echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
-                                else
-                                    echo '<option value='.$fwName.'>'.$fwVers.'</option>';
-                            }
-                        ?>
-                        </select>
-                        <?php
-                            echo '<a id="idUpdateFW'.$i.'" class="btn btn-warning" onclick="updateFW('.$i.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre à jour}}</a>';
-                        ?>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="col-lg-3 control-label" data-toggle="tooltip">{{Status : }}</label>
-                    <div class="col-lg-2">
-                        <?php echo '<select id="idSelZgStatus'.$i.'" class="configKey form-control" data-l1key="AbeilleActiver'.$i.'" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">'; ?>
-                            <option value="N" selected>{{Désactivée}}</option>
-                            <option value="Y">{{Activée}}</option>
-                        </select>
-                    </div>
-                    <div class="col-lg-1">
-                    </div>
-                </div>
-                </div>
-            <?php
+            // How many zigates to display ? (check if enabled or not)
+            $maxId = 1;
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                $status = config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N');
+                if ($status == "Y")
+                    $maxId = $zgId;
             }
-            ?>
+            for ($zgId = 1, $zgG = 1; $zgId <= maxNbOfZigate; $zgId++, $zgG++) {
+                if ($zgId > $maxId)
+                    echo '<div id="idZigateGroup'.$zgG.'" class="form-group" style="display:none">';
+                else {
+                    echo '<div id="idZigateGroup'.$zgG.'" class="form-group">';
+                    $lastDisplayedG = $zgG;
+                }
+                    echo '<div class="col-lg-6">';
+                        displayZigate($zgId);
+                    echo '</div>';
+                    $zgId++;
+                    if ($zgId <= maxNbOfZigate) {
+                        echo '<div class="col-lg-6">';
+                            displayZigate($zgId);
+                        echo '</div>';
+                    }
+                echo '</div>';
+            }
+            echo '<script>lastDisplayedG = '.$lastDisplayedG.'</script>';
+            echo '<script>maxNbOfZigate = '.maxNbOfZigate.'</script>';
+            echo '<a id="idShowMoreZigatesB" class="btn btn-success" onclick="showMoreZigates()">{{Plus de zigates}}</a>';
+            echo '<a id="idShowLessZigatesB" class="btn btn-success" onclick="showLessZigates()" style="display:none;margin-left:8px">{{Moins de zigates}}</a>';
+        ?>
         </div>
 
-        <!-- <br>
-        <br> -->
-        <!-- <legend><i class="fa fa-list-alt"></i> {{PiZigate}}</legend>
-        <a id="idPiShowHide" class="btn btn-success" >{{Afficher}}</a>
-        <div id="PiZigate">
-            <div>
-                <p><i>{{La PiZiGate est controllée par un port TTY + 2x GPIO dépendant de votre plateforme.}}</i></p>
-                <p><i>{{Le logiciel 'WiringPi' (ou équivalent) est nécessaire pour piloter ces GPIOs.}}</i></p>
-                <p><i>{{L'accès aux GPIOs peut se faire depuis un container sous Docker, il faut ajouter --device /dev/mem et --cap_add SYS_RAWIO). Dans ce cas, faites les manipulations au lancement du conteneur.}}</i></p>
-            </div>
-
-            <div class="form-group">
-                <label class="col-lg-4 control-label">{{Port TTY : }}</label>
-                <div class="col-lg-5">
-                    <select style="width:150px" id="ZiGatePort" data-toggle="tooltip" title="{{Port de communication avec la PiZigate}}">
-                        <?php
-                            /* Selecting default port.
-                               TODO: Currently choosing first port but missing a way to confirm it is PiZigate */
-                            if ($zigateNb == 0)
-                                echo '<option value="none" selected>{{aucun}}</option>';
-                            else {
-                                for ($i=1; $i<=$zigateNb; $i++) {
-                                    $port = config::byKey('AbeilleSerialPort' . $i, 'Abeille', '');
-                                    if ($i == 1)
-                                        echo '<option value="' . $port . '" selected>' . $port . '</option>';
-                                    else
-                                        echo '<option value="' . $port . '">' . $port . '</option>';
-                                }
-                            }
-                        ?>
-                    </select>
-                    <a class="btn btn-warning" id="bt_installTTY" title="{{Tentative d'activation du port}}"><i class="fas fa-sync"></i> {{Activer}}</a>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-lg-4 control-label">{{Reset (HW) PiZigate : }}</label>
-                <div class="col-lg-5">
-                    <a class="btn btn-warning" id="bt_resetPiZigate" title="{{Reset HW de la PiZigate}}"><i class="fas fa-sync"></i> {{Reset}}</a>
-                </div>
-            </div>
-        </div> -->
-
-        <legend>
+        <!-- Tcharp38: Not reliable enough to bring useful info to end user (ex: it is always ok for me while it tells me not enough space for upgrade).
+        To be revisited. Moreover, better to rely on integrity to know if potential space issues. -->
+        <!-- <legend>
             <i class="fa fa-list-alt"></i> {{Mise à jour (Vérification)}}
             <a id="idUpdateCheckShowHide" class="btn btn-success" >{{Afficher}}</a>
         </legend>
@@ -359,15 +343,15 @@
             <?php
                 Abeille_pre_update_analysis(0, 1);
             ?>
-        </div>
+        </div> -->
 
         <legend>
-            <i class="fa fa-list-alt"></i> {{Options avancées}}
+            <i class="fa fa-list-alt"></i><strong> {{Options avancées}}</strong>
             <a id="idAdvOptionsShowHide" class="btn btn-success" >{{Afficher}}</a>
         </legend>
         <div id="idAdvOptions">
             <div>
-                <p><i>{{Attention ! Vous n'avez normalement rien à faire dans cette section.}}</i></p>
+                <p><i>{{Attention ! Ne touchez des éléments de cette section que si vous savez parfaitement de quoi il en retourne.}}</i></p>
             </div>
 
             <?php if (validMd5Exists()) { ?>
@@ -378,6 +362,12 @@
                     <a class="integrityStatus ml4px" title="{{Status d'intégrité d'Abeille. Voir 'AbeilleConfig.log' si 'NOK'.}}">
                         <span class="label label-success" style="font-size:1em">-?-</span>
                     </a>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Supprime les fichiers locaux inutiles si test d'intégrité OK}}">{{Nettoyage des fichiers non requis : }}</label>
+                <div class="col-lg-5">
+                    <input id="idCleanUpB" type="button" onclick="cleanUp()" value="Lancer" " title="Lance le nettoyage si le test d'intégrité est OK" disabled>
                 </div>
             </div>
             <?php } ?>
@@ -440,12 +430,6 @@
 
 		    <!-- Following functionalities are visible only if 'tmp/debug.json' file exists (developer mode). -->
             <?php if (isset($dbgConfig)) { ?>
-                <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Supprime les fichiers locaux non listés dans 'Abeille.md5'}}">{{Nettoyage des fichiers non requis : }}</label>
-                    <div class="col-lg-5">
-                        <input type="button" onclick="cleanUp()" value="Lancer">
-                    </div>
-                </div>
 
                 <div class="form-group">
                     <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Liste des messages désactivés dans AbeilleParser.log}}">{{Parser. Messages désactivés : }}</label>
@@ -479,93 +463,148 @@
 
 <script>
     /* Show only groups in line with number of zigates (1 most of the time) */
-    for (z = 1; z <= js_NbOfZigates; z++) {
-        console.log("Showing idZigateGroup"+z);
-        $("#idZigateGroup"+z).show();
-    }
+    // for (z = 1; z <= js_NbOfZigates; z++) {
+    //     console.log("Showing idZigateGroup"+z);
+    //     $("#idZigateGroup"+z).show();
+    // }
 
-    $("#Connection").hide();
+    // $("#idZigates").hide();
     // $("#zigatewifi").hide();
     // $("#PiZigate").hide();
-    $("#UpdateCheck").hide();
+    // $("#UpdateCheck").hide();
     $("#idAdvOptions").hide();
 
-    $('#idZigatesShowHide').on('click', function () {
-        var Label = document.getElementById("idZigatesShowHide").innerText;
-        console.log("ZigatesShowHide click: Label=" + Label);
-        if (Label == "Afficher") {
-            document.getElementById("idZigatesShowHide").innerText = "Cacher";
-            document.getElementById("idZigatesShowHide").className = "btn btn-danger";
-            $("#Connection").show();
-        } else {
-            document.getElementById("idZigatesShowHide").innerText = "Afficher";
-            document.getElementById("idZigatesShowHide").className = "btn btn-success";
-            $("#Connection").hide();
+    // $('#idZigatesShowHide').on('click', function () {
+    //     var Label = document.getElementById("idZigatesShowHide").innerText;
+    //     console.log("ZigatesShowHide click: Label=" + Label);
+    //     if (Label == "Afficher") {
+    //         document.getElementById("idZigatesShowHide").innerText = "Cacher";
+    //         document.getElementById("idZigatesShowHide").className = "btn btn-danger";
+    //         $("#idZigates").show();
+    //     } else {
+    //         document.getElementById("idZigatesShowHide").innerText = "Afficher";
+    //         document.getElementById("idZigatesShowHide").className = "btn btn-success";
+    //         $("#idZigates").hide();
+    //     }
+    // });
+
+    function showMoreZigates() {
+        console.log("showMoreZigates(), lastDisplayedG="+lastDisplayedG);
+        lastDisplayedG++;
+        $("#idZigateGroup"+lastDisplayedG).show();
+        if ((lastDisplayedG * 2) >= maxNbOfZigate)
+            $("#idShowMoreZigatesB").hide();
+        $("#idShowLessZigatesB").show();
+    }
+
+    function showLessZigates() {
+        console.log("showLessZigates(), lastDisplayedG="+lastDisplayedG);
+        $("#idZigateGroup"+lastDisplayedG).hide();
+        lastDisplayedG--;
+        $("#idShowMoreZigatesB").show();
+        if (lastDisplayedG == 1) {
+            $("#idShowLessZigatesB").hide();
         }
-    });
+    }
 
     /* Number of zigates changed. Display more or less 'idZigateGroup'
        and be sure any new zigate is disabled by default */
-    $("#nbOfZigates").change(function() {
-        var nbOfZigates = Number($("#nbOfZigates").val());
-        console.log("Nb Zigates: now=" + nbOfZigates + ", prev=" + js_NbOfZigates);
-        if (nbOfZigates > js_NbOfZigates) {
-            for (z = js_NbOfZigates + 1; z <= nbOfZigates; z++) {
-                $("#idSelZgStatus" + z).val('N'); // Disabled
-                $("#idSelZgStatus" + z).change();
-                $("#idZigateGroup" + z).show();
-            }
-        } else if (nbOfZigates < js_NbOfZigates) {
-            for (z = nbOfZigates + 1; z <= js_NbOfZigates; z++) {
-                $("#idSelZgStatus" + z).val('N'); // To be saved as disabled
-                $("#idZigateGroup" + z).hide();
-            }
-        }
-        js_NbOfZigates = nbOfZigates;
-    });
+    // $("#nbOfZigates").change(function() {
+    //     var nbOfZigates = Number($("#nbOfZigates").val());
+    //     console.log("Nb Zigates: now=" + nbOfZigates + ", prev=" + js_NbOfZigates);
+    //     if (nbOfZigates > js_NbOfZigates) {
+    //         for (z = js_NbOfZigates + 1; z <= nbOfZigates; z++) {
+    //             $("#idSelZgStatus" + z).val('N'); // Disabled
+    //             $("#idSelZgStatus" + z).change();
+    //             $("#idZigateGroup" + z).show();
+    //         }
+    //     } else if (nbOfZigates < js_NbOfZigates) {
+    //         for (z = nbOfZigates + 1; z <= js_NbOfZigates; z++) {
+    //             $("#idSelZgStatus" + z).val('N'); // To be saved as disabled
+    //             $("#idZigateGroup" + z).hide();
+    //         }
+    //     }
+    //     js_NbOfZigates = nbOfZigates;
+    // });
 
     /* Called when Zigate type (USB, WIFI, PI, DIN) is changed */
-    function checkZigateType(zgNb) {
-        console.log("checkZigateType(zgNb=" + zgNb + ")");
-        if (zgNb > js_NbOfZigates) {
-            console.log("zgNb > js_NbOfZigates => ignored");
-            return;
-        }
-        var zgType = $("#idSelZgType" + zgNb).val();
-        var idSelSP = document.querySelector('#idSelSP' + zgNb);
-        // var idCheckSP = document.querySelector('#idCheckSP' + zgNb);
-        var idFW = document.querySelector('#idFW' + zgNb);
-        // var idUpdateFW = document.querySelector('#idUpdateFW' + zgNb);
-        var idWifiAddr = document.querySelector('#idWifiAddr' + zgNb);
-        // var idCheckWifi = document.querySelector('#idCheckWifi' + zgNb);
+    function checkZigateType(zgId) {
+        console.log("checkZigateType(zgId=" + zgId + ")");
 
-        $("#idSocat"+zgNb).hide();
-        $("#idWiringPi"+zgNb).hide();
-        $("#idCommTest"+zgNb).hide();
-        $("#idUpdFw"+zgNb).hide();
+        var zgType = $("#idSelZgType" + zgId).val();
+        var idSelSP = document.querySelector('#idSelSP' + zgId);
+        // var idCheckSP = document.querySelector('#idCheckSP' + zgId);
+        var idFW = document.querySelector('#idFW' + zgId);
+        // var idUpdateFW = document.querySelector('#idUpdateFW' + zgId);
+        var idWifiAddr = document.querySelector('#idWifiAddr' + zgId);
+        // var idCheckWifi = document.querySelector('#idCheckWifi' + zgId);
+
+        // $("#idSocat"+zgId).hide();
+        // $("#idWiringPi"+zgNb).hide();
+        // $("#idCommTest"+zgId).hide();
         idSelSP.removeAttribute('disabled');
         idWifiAddr.setAttribute('disabled', true);
 
         if (zgType == "WIFI") {
             console.log('Type changed to Wifi');
-            $("#idSocat"+zgNb).show();
             checkSocatInstallation();
 
-            $("#idSelSP" + zgNb).val('/dev/zigate' + zgNb);
-            idSelSP.setAttribute('disabled', true);
-            idWifiAddr.removeAttribute('disabled');
+            // $("#idSelSP" + zgId).val('/dev/zigate' + zgId);
+            // idSelSP.setAttribute('disabled', true);
+            // idWifiAddr.removeAttribute('disabled');
+            // $("#idUpdFw"+zgId).hide();
+            // $("#idReadFwB"+zgId).hide();
         } else { // USB, PI or DIN
             console.log('Type changed to "'+zgType+'"');
-            $("#idCommTest"+zgNb).show();
+            // $("#idCommTest"+zgId).show();
 
-            if (zgType == "PI") {
-                $("#idWiringPi"+zgNb).show();
+            if ((zgType == "PI") || (zgType == "PIv2")) {
+                // $("#idWiringPi"+zgNb).show();
                 checkWiringPi(); // Force WiringPi check
-                $("#idUpdFw"+zgNb).show();
-            } else if (zgType == "DIN") {
-                $("#idUpdFw"+zgNb).show();
             }
+            //     $("#idUpdFw"+zgId).show();
+            // } else if (zgType == "DIN") {
+            //     $("#idUpdFw"+zgId).show();
+            // }
         }
+
+        allowReadFw = false;
+        allowUpdFw = false;
+        switch (zgType) {
+        case "USB":
+            allowReadFw = true;
+            break;
+        case "WIFI":
+            break;
+        case "PI":
+            allowReadFw = true;
+            allowUpdFw = true;
+            break;
+        case "DIN":
+            allowReadFw = true;
+            allowUpdFw = true;
+            break;
+        case "USBv2":
+            allowReadFw = true;
+            break;
+        case "PIv2":
+            allowReadFw = true;
+            break;
+        case "DINv2":
+            allowReadFw = true;
+            break;
+        }
+        if (allowReadFw) {
+            $("#idReadFwB"+zgId).show();
+            $("#idCommTest"+zgId).show();
+        } else {
+            $("#idReadFwB"+zgId).hide();
+            $("#idCommTest"+zgId).hide();
+        }
+        if (allowUpdFw)
+            $("#idUpdFw"+zgId).show();
+        else
+            $("#idUpdFw"+zgId).hide();
     }
 
     /* Called when 'IP:port' test button is pressed (Wifi case) */
@@ -639,10 +678,13 @@
                 bootbox.alert("ERREUR 'checkSocat' !<br>Votre installation semble corrompue.");
             },
             success: function (res) {
-                if (res.result == 0)
-                    $('.socatStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
-                else
-                    $('.socatStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                if (res.result == 0) {
+                    // $('.socatStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                    document.getElementById("idSocatStatus").value = "OK";
+                } else {
+                    // $('.socatStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                    document.getElementById("idSocatStatus").value = "NOK";
+                }
             }
         });
     }
@@ -655,22 +697,6 @@
             }
         });
     })
-
-    // $('#idPiShowHide').on('click', function () {
-    //         var Label = document.getElementById("idPiShowHide").innerText;
-    //         console.log("PiShowHide click: Label=" + Label);
-    //         if (Label == "Afficher") {
-    //             // $("#bt_checkWiringPi").click(); // Force WiringPi check
-    //             document.getElementById("idPiShowHide").innerText = "Cacher";
-    //             document.getElementById("idPiShowHide").className = "btn btn-danger";
-    //             $("#PiZigate").show();
-    //         } else {
-    //             document.getElementById("idPiShowHide").innerText = "Afficher";
-    //             document.getElementById("idPiShowHide").className = "btn btn-success";
-    //             $("#PiZigate").hide();
-    //         }
-    //     }
-    // );
 
     $('#idUpdateCheckShowHide').on('click', function () {
             var Label = document.getElementById("idUpdateCheckShowHide").innerText;
@@ -719,10 +745,13 @@
                 window.checkWiringPiOngoing = false;
             },
             success: function (res) {
-                if (res.result == 0)
-                    $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
-                else
-                    $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                if (res.result == 0) {
+                    // $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                    document.getElementById("idWiringPiStatus").value = "OK";
+                } else {
+                    // $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                    document.getElementById("idWiringPiStatus").value = "NOK";
+                }
                 window.checkWiringPiOngoing = false;
             }
         });
@@ -771,35 +800,38 @@
     });
 
     /* Called when serial port test button is pressed */
-    function checkSerialPort(zgNb) {
-        console.log("checkSerialPort(zgNb=" + zgNb + ")");
+    function checkSerialPort(zgId) {
+        console.log("checkSerialPort(zgId=" + zgId + ")");
         /* Note. Onclick seems still active even if button is disabled (wifi case) */
         // var idCheckSP = document.querySelector('#idCheckSP'+zgNb);
         // if (idCheckSP.getAttribute('disabled') != null) {
         //     console.log("=> DISABLED");
         //     return;
         // }
+        $.showLoading()
         $.ajax({
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
                 action: 'checkTTY',
-                zgport: $("#idSelSP" + zgNb).val(),
-                zgtype: $("#idSelZgType" + zgNb).val(),
+                zgport: $("#idSelSP" + zgId).val(),
+                zgtype: $("#idSelZgType" + zgId).val(),
             },
             dataType: 'json',
             global: false,
             error: function (request, status, error) {
+                $.hideLoading()
                 bootbox.alert("ERREUR 'checkSerialPort' !<br>Votre installation semble corrompue.");
             },
             success: function (json_res) {
+                $.hideLoading()
                 res = JSON.parse(json_res.result);
                 if (res.status == 0) {
                     fw = res.fw;
                     console.log("FW="+fw)
                     $('.serialPortStatus' + zgNb).empty().append('<span class="label label-success" style="font-size:1em;">FW '+fw+'</span>');
                 } else {
-                    $('.serialPortStatus' + zgNb).empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                    $('.serialPortStatus' + zgId).empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
                 }
             }
         });
@@ -869,6 +901,8 @@
                 $res = JSON.parse(json_res.result);
                 if ($res.status == true) {
                     $('.integrityStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                    var cleanUpB = document.querySelector('#idCleanUpB');
+                    cleanUpB.removeAttribute('disabled');
                 } else {
                     $('.integrityStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
                 }

@@ -1,6 +1,6 @@
 <?php
-
     require_once __DIR__.'/../php/AbeilleLog.php';
+    require_once __DIR__.'/../config/Abeille.config.php';
 
     define('corePhpDir', __DIR__.'/../php/');
     define('devicesDir', __DIR__.'/../config/devices/'); // Abeille's supported devices
@@ -401,6 +401,16 @@ class AbeilleTools
                             $value = $cmd2['template'];
                             $newCmd[$cmd1]['template'] = $value;
                         }
+                        if (isset($cmd2['subType'])) {
+                            $value = $cmd2['subType'];
+                            $newCmd[$cmd1]['subType'] = $value;
+// log::add('Abeille', 'debug', 'LA value='.$value.', newCmd='.json_encode($newCmd));
+                        }
+                        if (isset($cmd2['unit'])) {
+                            $value = $cmd2['unit'];
+                            $newCmd[$cmd1]['unite'] = $value;
+// log::add('Abeille', 'debug', 'LA value='.$value.', newCmd='.json_encode($newCmd));
+                        }
                         // log::add('Abeille', 'debug', 'getDeviceConfig(): newCmd='.json_encode($newCmd));
                         $deviceCmds += $newCmd;
                     }
@@ -592,9 +602,8 @@ class AbeilleTools
 
         //Most Fields are defined with default values
         $return['AbeilleParentId'] = config::byKey('AbeilleParentId', 'Abeille', '1', 1);
-        $return['zigateNb'] = config::byKey('zigateNb', 'Abeille', '1', 1);
 
-        for ($i = 1; $i <= $return['zigateNb']; $i++) {
+        for ($i = 1; $i <= maxNbOfZigate; $i++) {
             $return['AbeilleType'.$i] = config::byKey('AbeilleType'.$i, 'Abeille', 'none', 1);
             $return['AbeilleSerialPort'.$i] = config::byKey('AbeilleSerialPort'.$i, 'Abeille', 'none', 1);
             $return['IpWifiZigate'.$i] = config::byKey('IpWifiZigate'.$i, 'Abeille', '', 1);
@@ -710,7 +719,6 @@ class AbeilleTools
     public
     static function diffExpectedRunningDaemons($parameters, $running): array
     {
-        $nbZigate = $parameters['zigateNb'];
         $nbProcessExpected = 2; // parser and cmd
 
         $activedZigate = 0;
@@ -718,7 +726,7 @@ class AbeilleTools
         $found['parser'] = 0;
 
         // Count number of processes we should have based on configuration, init $found['process x'] to 0.
-        for ($n = 1; $n <= $nbZigate; $n++) {
+        for ($n = 1; $n <= maxNbOfZigate; $n++) {
             if ($parameters['AbeilleActiver'.$n] == "Y") {
                 $activedZigate++;
 
@@ -769,7 +777,7 @@ class AbeilleTools
 
     /**
      * @param $isCron   is cron daemon for this plugin started
-     * @param $parameters (parametersCheck, parametersCheck_message, AbeilleParentId, zigateNb,
+     * @param $parameters (parametersCheck, parametersCheck_message, AbeilleParentId,
      * AbeilleType,AbeilleSerialPortX, IpWifiZigateX, AbeilleActiverX
      * @param $running
      * return true if any missing daemons
@@ -913,7 +921,7 @@ class AbeilleTools
         if ($daemons == "") {
             /* Note: starting input daemons first to not loose any returned
                value/status as opposed to cmd being started first */
-            for ($zgNb = 1; $zgNb <= $config['zigateNb']; $zgNb++) {
+            for ($zgNb = 1; $zgNb <= maxNbOfZigate; $zgNb++) {
                 if ($config['AbeilleActiver'.$zgNb] != "Y")
                     continue; // Zigate disabled
 
@@ -1048,7 +1056,7 @@ class AbeilleTools
     static function clearSystemMessage($parameters, $which = 'all')
     {
         if ($which == 'all') {
-            for ($n = 1; $n <= $parameters['zigateNb']; $n++) {
+            for ($n = 1; $n <= maxNbOfZigate; $n++) {
                 if ($parameters['AbeilleActiver'.$n] == "Y") {
                     // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' clearing zigate '.$n);
                     AbeilleTools::sendMessageToRuche("daemon$n", "");

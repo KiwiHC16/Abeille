@@ -51,7 +51,6 @@
     }
     // if (isset($dbgConfig))
     //     logDebug("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
-    $zigateNb = config::byKey('zigateNb', 'Abeille', '1');
     $parametersAbeille = AbeilleTools::getParameters();
 
     $outils = array(

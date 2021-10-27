@@ -196,6 +196,7 @@
            - 'mainEP' fix: '#EP#' => '01'
            - Removing several zigate cmds now handled directly in equipement advanced page.
            - Eq config: 'modeleJson' => 'ab::jsonId'
+           - Removing 'zigateNb' (obsolete) from config DB.
          */
         if (intval($dbVersion) < 20201122) {
             if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
@@ -278,18 +279,16 @@
             config::remove('affichageCmdAdd', 'Abeille');
             config::remove('affichageNetwork', 'Abeille');
             config::remove('affichageTime', 'Abeille');
-
             config::remove('AbeilleSerialPort', 'Abeille');
             config::remove('IpWifiZigate', 'Abeille');
-
             config::remove('AbeilleAddress', 'Abeille');
             config::remove('AbeilleConId', 'Abeille');
             config::remove('AbeillePort', 'Abeille');
-
             config::remove('mqttPass', 'Abeille');
             config::remove('mqttTopic', 'Abeille');
             config::remove('mqttUser', 'Abeille');
             config::remove('onlyTimer', 'Abeille');
+            config::remove('zigateNb', 'Abeille');
 
             // Remove obsolete log files
             $obsolete = ['AbeilleCmd', 'AbeilleMQTTCmd', 'AbeilleMQTTCmdTimer', 'AbeilleSocat', 'AbeilleSerialRead', 'AbeilleParser'];
@@ -305,8 +304,7 @@
             }
 
             // Removing obsolete commands from Zigate now handled in equipement advanced page
-            $nbOfZigates = config::byKey('zigateNb', 'Abeille', '0');
-            for ($zgId = 1; $zgId <= $nbOfZigates; $zgId++) {
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
                 $zg = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
                 if (!is_object($zg))
                     continue;

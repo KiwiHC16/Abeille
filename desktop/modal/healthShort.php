@@ -18,6 +18,7 @@
     require_once dirname(__FILE__).'/../../../../core/php/core.inc.php';
     include_once(dirname(__FILE__).'/../../core/class/AbeilleTools.class.php');
     include_once(dirname(__FILE__).'/../../desktop/php/200_AbeilleScript.php');
+    include_once __DIR__.'/../../core/config/Abeille.config.php';
     /*
     if (!isConnect('admin')) {
         throw new Exception('401 Unauthorized');
@@ -43,8 +44,7 @@
     $oneMissing = FALSE;
     displayDaemonStatus($diff, "Cmd", $oneMissing);
     displayDaemonStatus($diff, "Parser", $oneMissing);
-    $nbOfZigates = $parameters['zigateNb'];
-    for ($zgNb = 1; $zgNb <= $nbOfZigates; $zgNb++) {
+    for ($zgNb = 1; $zgNb <= maxNbOfZigate; $zgNb++) {
         if ($parameters['AbeilleActiver'.$zgNb] != "Y")
             continue; // Zigate disabled
         displayDaemonStatus($diff, "SerialRead".$zgNb, $oneMissing);
@@ -54,8 +54,7 @@
 
     echo "<hr>";
 
-    $zigateNb = config::byKey('zigateNb', 'Abeille', '1', 1);
-    for ($i = 1; $i <= $zigateNb; $i++) {
+    for ($i = 1; $i <= maxNbOfZigate; $i++) {
         if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N', 1) == "Y") {
 ?>
         <div class="ui-block-a">

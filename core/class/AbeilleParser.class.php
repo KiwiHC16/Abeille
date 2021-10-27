@@ -914,11 +914,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 break;
             case "41": // String discrete: octstr
             case "42": // String discrete: string
-parserLog('debug', "  iHs=".$iHs);
+// parserLog('debug', "  iHs=".$iHs);
                 if ($raw) {
                     $dataSize = hexdec(substr($iHs, 0, 2));
                     $oSize = $dataSize + 1;
                     $iHs = substr($iHs, 2); // Skip header byte
+                    $raw = false; // Seems no reordering required.
                 } // else $dataSize provided from caller
                 break;
             default:
@@ -1642,11 +1643,17 @@ parserLog('debug', "  iHs=".$iHs);
                 }
 
                 switch ($cluster) {
-                case "8031":
+                case "8005": // Active_EP_rsp
+                    parserLog('debug', '  Handled by decode8045');
+                    break;
+                case "8021": // Bind_rsp
+                    parserLog('debug', '  Handled by decode8030');
+                    break;
+                case "8031": // Mgmt_Lqi_rsp
                     parserLog('debug', '  Handled by decode804E');
                     break;
                 default:
-                    parserLog('debug', '  Unsupported/ignored profile 0000 message');
+                    parserLog('debug', '  Unsupported/ignored profile 0000, cluster '.$cluster.' message');
                 }
                 return;
             }
@@ -2263,7 +2270,8 @@ parserLog('debug', "  iHs=".$iHs);
                 */
                 if ($cmd == "01") { // Read Attributes Response
                     // Some clusters are directly handled by 8100/8102 decode
-                    $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0100', '0B04', '1000']; // Clusters handled here
+                    // Tcharp38 note: At some point do the opposite => what's handled by 8100
+                    $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0100', '0B01', '0B04', '1000', 'FF66']; // Clusters handled here
                     if (!in_array($cluster, $acceptedCmd01)) {
                         parserLog('debug', "  Handled by decode8100_8102");
                         return;

@@ -16,6 +16,7 @@ ChangeLog
   - Partie mise-à-jour (vérification) caché. Pas assez fiable. A revoir.
   - Partie 'zigates' revue.
 - Tuya ZM-CG205 door sensor: Mise-à-jour JSON (#2165).
+- Interne: Suppression entrée 'zigateNb' de la DB config.
 - eWeLink ZB-SW01: Support préliminaire (#2172).
 
 211022-BETA-1

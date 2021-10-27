@@ -546,7 +546,7 @@
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">ZCL: Ecriture attribut</label>
-            <div class="col-sm-5">
+            <div class="col-sm-9">
                 <?php
                     echo '<a class="btn btn-danger" onclick="interrogate(\'writeAttribute\', \''.$eqId.'\')">{{Ecrire}}</a>';
                     addEpButton("idEpWA", $mainEP);
@@ -609,7 +609,7 @@
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut">ZCL: Configurer le reporting</label>
-            <div class="col-sm-5">
+            <div class="col-sm-9">
                 <?php
                     echo '<a class="btn btn-danger" onclick="interrogate(\'configureReporting\', \''.$eqId.'\')">{{Configurer}}</a>';
                     addEpButton("idEpCR", $mainEP);

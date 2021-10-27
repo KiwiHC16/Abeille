@@ -28,7 +28,7 @@
 					$commandIEEE = new AbeilleCmd();
 
 					// foreach ($eqLogics as $key => $eqLogic) {
-					for ($zgNb = 1; $zgNb <= $zigateNb; $zgNb++) {
+					for ($zgNb = 1; $zgNb <= maxNbOfZigate; $zgNb++) {
 						if (config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N') != 'Y')
 							continue; // This Zigate is disabled
 

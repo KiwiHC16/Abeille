@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+  .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM), donc dispo depuis la version '3.1e'.
+
+    - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+    - Les firmwares avant 3.1e sont forcement 'legacy'.
+    - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
 - Tuya ZM-CG205 door sensor: Mise-à-jour JSON. Ajout 'ZoneStatus' (#2165).
 - Interne: Parser: Support réponse cluster 000A/Time, attrib 0007 + ...
 - Xiaomi Aqara QBKG26LM: Ajout support (#2174).
@@ -18,14 +24,8 @@ ChangeLog
 - Identification modeles Tuya: modifié. Fabricant/vendeur obligatoire pour éviter de prendre mauvais JSON identifié par modèle seul.
 - Silvercrest HG06337-FR: Mise-à-jour JSON pour groups & identify.
 
-211027-BETA-1
--------------
-
-  .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM), donc dispo depuis la version '3.1e'.
-
-    - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-    - Les firmwares avant 3.1e sont forcement 'legacy'.
-    - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+211030-STABLE-2
+---------------
 
 - JSON équipement: Amélioration syntaxe permettant de surcharger 'subType' ou 'unite'.
 - Zlinky TIC: Diverses corrections dont lecture option tarifaire.

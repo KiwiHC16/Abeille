@@ -554,7 +554,10 @@
             if ($eq['modelIdentifier'] !== false) {
                 if (!isset($eq['manufacturer'])) {
                     /* Checking if device is supported without manufacturer attribute for those who do not respond to such request
-                       but if not, default config is not accepted since manufacturer may not be arrived yet. */
+                       but if not, default config is not accepted since manufacturer may not be arrived yet.
+                       For Tuya case (model=TSxxxx), manufacturer is MANDATORY. */
+                    if ((substring($eq['modelIdentifier'], 0, 2) == "TS") && (strlen($eq['modelIdentifier']) == 6))
+                        return; // Tuya case. Waiting for manufacturer to return.
                     if ($this->findJsonConfig($eq, 'modelIdentifier') === false) {
                         $eq['jsonId'] = ''; // 'defaultUnknown' case not accepted there
                         return;
@@ -1956,30 +1959,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 return;
             }
 
-            // Tcharp38: Do nothing right now. To be added in ZCL standard decode
-            // if ($cluster == "000A") {
-            //     $frameCtrlField         = substr($payload,26, 2);
-            //     $sqn                    = substr($payload,28, 2);
-            //     $cmd                    = substr($payload,30, 2);
-
-            //     if ($cmd == '00') {
-            //         $attributTime                  = substr($payload,34, 2).substr($payload,32, 2);
-            //         $attributTimeZone              = substr($payload,38, 2).substr($payload,36, 2);
-            //         if ( isset($this->debug["8002"])) {
-            //             parserLog('debug', '  Time Request - (decoded but not processed) '
-            //                            .', frameCtrlField='.$frameCtrlField
-            //                            .', SQN='.$sqn
-            //                            .', cmd='.$cmd
-            //                            .', attributTime='.$attributTime
-            //                            .', attributTimeZone='.$attributTimeZone
-            //                             );
-            //                         }
-
-            //         // Here we should reply to the device with the time. I though this Time Cluster was implemented in the zigate....
-            //         return;
-            //     }
-            // }
-
             if ($cluster == "0204") {
                 $frameCtrlField         = substr($payload,26, 2);
                 $sqn                    = substr($payload,28, 2);
@@ -2257,6 +2236,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 parserLog('debug', "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLGlobalCmdName($cmd));
 
                 /* General 'Cmd' reminder
+                    0x00 Read Attributes
                     0x01 Read Attributes Response
                     0x04 Write Attributes Response
                     0x05 Write Attributes No Response
@@ -2268,7 +2248,35 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     0x12 Discover Commands Received Response
                     0x16 Discover Attributes Extended Response
                 */
-                if ($cmd == "01") { // Read Attributes Response
+                if ($cmd == "00") { // Read Attributes
+                    /* Monitor if requested */
+                    if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
+                        monMsgFromZigate("8002/Read attributes"); // Send message to monitor
+
+                    $l = strlen($msg);
+                    $attributes = "";
+                    for ($i = 0; $i < $l; $i += 4) {
+                        $attrId = AbeilleTools::reverseHex(substr($msg, $i, 4));
+                        if ($i != 0)
+                            $attributes .= "/";
+                        $attributes .= $attrId;
+                    }
+                    parserLog('debug', "  Attributes: ".$attributes);
+
+                    if ($cluster == "000A") { // Time cluster
+                        if ($attrId == "0007") { // LocalTime
+                            // Reminder: Zigbee uses 00:00:00 @1st of jan 2000 as ref
+                            //           PHP uses 00:00:00 @1st of jan 1970 (Linux ref)
+                            // Attr 0007, type uint32/0x23
+                            $lt = localtime(null, true);
+                            $localTime = mktime($lt['tm_hour'], $lt['tm_min'], $lt['tm_sec'], $lt['tm_mon'], $lt['tm_mday'], $lt['tm_year']);
+                            $localTime -= mktime(0, 0, 0, 1, 1, 2000); // PHP to Zigbee shift
+                            $localTime = sprintf("%04X", $localTime);
+                            $this->msgToCmd("Cmd".$dest."/".$srcAddr."/sendReadAttributesResponse", 'ep='.$srcEp.'&clustId='.$cluster.'&attrId='.$attrId.'&status=00&attrType=23&attrVal='.$localTime);
+                        }
+                        return;
+                    }
+                } else if ($cmd == "01") { // Read Attributes Response
                     // Some clusters are directly handled by 8100/8102 decode
                     // Tcharp38 note: At some point do the opposite => what's handled by 8100
                     $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0100', '0B01', '0B04', '1000', 'FF66']; // Clusters handled here
@@ -2632,12 +2640,26 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                                 .', value='.$value.' => click='.$click, "8002");
 
                 // Generating an event on 'EP-click' Jeedom cmd (ex: '01-click' = 'single')
-                $this->msgToAbeille($dest."/".$srcAddr, $srcEp, "click", $click);
+                // $this->msgToAbeille($dest."/".$srcAddr, $srcEp, "click", $click);
+                $msg = array(
+                    'src' => 'parser',
+                    'type' => 'attributeReport',
+                    'net' => $dest,
+                    'addr' => $srcAddr,
+                    'ep' => $srcEp,
+                    'name' => $srcEp.'-click',
+                    'value' => $click,
+                    'time' => time(),
+                    'lqi' => $lqi
+                );
+                $this->msgToAbeille2($msg);
 
-                // Legacy code to be revisited
+                // Legacy code to be removed at some point
                 // TODO: Replace commands '0006-EP-0000' to 'EP-click' in JSON
                 $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$srcEp, '0000', $value);
-
+                $msg['name'] =$cluster.'-'.$srcEp.'-0000';
+                $msg['value'] = $value;
+                $this->msgToAbeille2($msg);
                 return;
             }
             if ($cluster == "0006") {
@@ -2652,6 +2674,19 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     parserLog('debug', "  Handled by decode8085");
                     return;
                 }
+            }
+
+            // OTA cluster specific
+            if ($cluster == "0019") {
+                if ($cmd == "01") {
+                    $fieldControl = substr($msg, 0, 2);
+                    $manufCode = substr($msg, 2, 4);
+                    $imgType = substr($msg, 6, 4);
+                    $curFileVers = substr($msg, 10, 8);
+                    $hwVers = substr($msg, 18, 4);
+                    parserLog('debug', "  fieldCtrl=".$fieldControl.", manufCode=".$manufCode.", imgType=".$imgType.", fileVers=".$curFileVers.", hwVers=".$hwVers);
+                }
+                return;
             }
 
             if ($cluster == "0300") {
@@ -2760,10 +2795,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             /* If still required, checking USB port unexpected switch */
             $confIeee = str_replace('Abeille', 'AbeilleIEEE', $dest); // AbeilleX => AbeilleIEEEX
             $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
-$confIeeeOkval = config::byKey($confIeeeOk, 'Abeille', 'nopi');
-parserLog('debug', '  '.$confIeeeOk."=".$confIeeeOkval);
-$confIeeeval = config::byKey($confIeee, 'Abeille', 'nopi3');
-parserLog('debug', '  '.$confIeee."=".$confIeeeval);
             if (config::byKey($confIeeeOk, 'Abeille', 0) == 0) {
                 if (config::byKey($confIeee, 'Abeille', 'none', 1) == "none") {
                     config::save($confIeee, $extAddr, 'Abeille');
@@ -3058,10 +3089,6 @@ parserLog('debug', '  '.$confIeee."=".$confIeeeval);
             /* If still required, checking USB port unexpected switch */
             $confIeee = str_replace('Abeille', 'AbeilleIEEE', $dest); // AbeilleX => AbeilleIEEEX
             $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
-$confIeeeOkval = config::byKey($confIeeeOk, 'Abeille', 'nopi1');
-parserLog('debug', '  '.$confIeeeOk."=".$confIeeeOkval);
-$confIeeeval = config::byKey($confIeee, 'Abeille', 'nopi13');
-parserLog('debug', '  '.$confIeee."=".$confIeeeval);
             if (config::byKey($confIeeeOk, 'Abeille', 0) == 0) {
                 if (config::byKey($confIeee, 'Abeille', 'none', 1) == "none") {
                     config::save($confIeee, $dataIEEE, 'Abeille');
@@ -3103,15 +3130,33 @@ parserLog('debug', '  '.$confIeee."=".$confIeeeval);
             // <status: uint8_t>
             // <Src address mode: uint8_t> (only from v3.1a)
             // <Src Address : uint16_t> (only from v3.1a)
+            $status = substr($payload, 2, 2);
+            $srcAddrMode = substr($payload, 4, 2);
+            $srcAddr = substr($payload, 6, 4);
 
-            parserLog('debug', $dest.', Type=8030/Bind response'
-                            .', SQN='.substr($payload, 0, 2)
-                            .', Status='.substr($payload, 2, 2)
-                            .', SrcAddrMode='.substr($payload, 4, 2)
-                            .', SrcAddr='.substr($payload, 6, 4), "8030");
+            $msgDecoded = '8030/Bind response'
+                .', SQN='.substr($payload, 0, 2)
+                .', Status='.$status
+                .', SrcAddrMode='.$srcAddrMode
+                .', SrcAddr='.$srcAddr;
+            parserLog('debug', $dest.', Type='.$msgDecoded, "8030");
 
-            $data = date("Y-m-d H:i:s")." Status (00: Ok, <>0: Error): ".substr($payload, 2, 2);
-            $this->msgToAbeille($dest."/0000", "Network", "Bind", $data);
+            // Monitor if required
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
+                monMsgFromZigate($msgDecoded); // Send message to monitor
+
+            // $data = date("Y-m-d H:i:s")." Status (00: Ok, <>0: Error): ".substr($payload, 2, 2);
+            // $this->msgToAbeille($dest."/0000", "Network", "Bind", $data);
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'bindResponse',
+                'net' => $dest,
+                'addr' => $srcAddr,
+                'status' => $status,
+                'time' => time(),
+                'lqi' => $lqi,
+            );
+            $this->msgToAbeille2($msg);
         }
 
         /* 8035/PDM event code. Since FW 3.1b */

@@ -7,7 +7,6 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "poll": "1",
             "icon": "JR-ZPM01"
         },
         "category": {
@@ -39,8 +38,13 @@
 
             "Total power": {
                 "use": "zb-0702-CurrentSummationDelivered",
-                "params": "mult=1&div=1&unit=Wh",
+                "params": "mult=1&div=1&unit=KWh",
                 "isVisible": 1
+            },
+            "Bind-0702-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0702",
+                "execAtCreation": "Yes"
             },
 
             "RMSVoltage": {
@@ -57,12 +61,26 @@
                 "params": "mult=1&div=1",
                 "isVisible": 1
             },
+            "Bind-0B04-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0B04",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-RMSVoltage": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0B04&attrType=21&attrId=0505&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "SetReporting-RMSCurrent": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
             "SetReporting-ActivePower": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
-            },
-            "include3 2 2 2 4 2 2": "getPlugVAW"
+            }
         }
     }
 }

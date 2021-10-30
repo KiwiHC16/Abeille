@@ -278,13 +278,13 @@
 
         if ($test==132) {
             echo "Set Time to Zigate\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille' . $argv[2] . '/0000/setTimeServer';
+            $msgAbeille->message['topic']   = 'CmdAbeille' . $argv[2] . '/0000/setZgTimeServer';
             $msgAbeille->message['payload'] = '';
         }
 
         if ($test==133) {
-            echo "Get Time to Zigate\n";
-            $msgAbeille->message['topic']   = 'CmdAbeille' . $argv[2] . '/0000/getTimeServer';
+            echo "Get Time from Zigate\n";
+            $msgAbeille->message['topic']   = 'CmdAbeille' . $argv[2] . '/0000/getZgTimeServer';
             $msgAbeille->message['payload'] = '';
         }
 

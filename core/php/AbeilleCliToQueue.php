@@ -12,7 +12,7 @@
        but also 'AbeilleFormAction.php' (more work there)
      */
 
-    require_once __DIR__.'/../../core/config/Abeille.config.php'; // Queues
+    require_once __DIR__.'/../config/Abeille.config.php'; // dbgFile + queues
 
     /* Developers mode & PHP errors */
     if (file_exists(dbgFile)) {
@@ -24,6 +24,10 @@
                     $dbgTcharp38 = true;
             }
         }
+        /* Dev mode: enabling PHP errors logging */
+        error_reporting(E_ALL);
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
+        ini_set('log_errors', 'On');
     }
 
     require_once __DIR__.'/../../../../core/php/core.inc.php';
@@ -34,7 +38,7 @@
     else
         $action = "sendMsg";
 
-    if ($dbgTcharp38) logDebug("CliToQueue: action=".$action);
+    if (isset($dbgTcharp38)) logDebug("CliToQueue: action=".$action);
 
     if ($action == "sendMsg") {
         // Default target queue = 'queueKeyXmlToAbeille'
@@ -50,7 +54,7 @@
             $topic = str_replace('_', '/', $topic);
             $payload = $_GET['payload'];
             $payload = str_replace('_', '&', $payload);
-            if ($dbgTcharp38) logDebug("CliToQueue: topic=".$topic.", payload=".$payload);
+            if (isset($dbgTcharp38)) logDebug("CliToQueue: topic=".$topic.", payload=".$payload);
 
             Class MsgAbeille {
                 public $message = array(
@@ -73,7 +77,7 @@
             }
         } else {
             $msgString = $_GET['msg'];
-            if ($dbgTcharp38) logDebug("CliToQueue: ".$msgString);
+            if (isset($dbgTcharp38)) logDebug("CliToQueue: ".$msgString);
             $msgArr = explode('_', $msgString);
             $m = array();
             foreach ($msgArr as $idx => $value) {
@@ -81,7 +85,7 @@
                 $a = explode(':', $value);
                 $m[$a[0]] = $a[1];
             }
-            if ($dbgTcharp38) logDebug("CliToQueue: ".json_encode($m));
+            if (isset($dbgTcharp38)) logDebug("CliToQueue: ".json_encode($m));
             msg_send($queue, 1, json_encode($m), false, false);
         }
 
@@ -97,10 +101,16 @@
 // logDebug("reconfigure: eqId=".$eqId);
         $eqLogic = eqLogic::byId($eqId);
         $jsonName = $eqLogic->getConfiguration('ab::jsonId', '');
-        if ($jsonName == '')
+        if ($jsonName == '') {
+            if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: jsonId empty");
             return; // ERROR
+        }
         $jsonLocation = "Abeille";
         $eqConfig = AbeilleTools::getDeviceConfig($jsonName, $jsonLocation);
+        if ($eqConfig === false) {
+            if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: No device config");
+            return; // ERROR
+        }
         $mainEP = $eqLogic->getConfiguration('mainEP', '');
         $ieee = $eqLogic->getConfiguration('IEEE', '');
         list($eqNet, $eqAddr) = explode("/", $eqLogic->getLogicalId());
@@ -109,6 +119,7 @@
         $zgIeee = $zigate->getConfiguration('IEEE', '');
 
         $cmds = $eqConfig['commands'];
+        if (isset($dbgTcharp38)) logDebug("CliToQueue: cmds=".json_encode($cmds));
         foreach ($cmds as $cmdJName => $cmd) {
             if (!isset($cmd['configuration']))
                 continue;
@@ -135,7 +146,10 @@
                                 'payload' => $request,
                                 );
 // logDebug("msg=".json_encode($msg));
-            msg_send($queue, 1, $msg, true, false);
+        if (isset($dbgTcharp38)) logDebug("CliToQueue: msg_send(): ".json_encode($msg));
+        if (msg_send($queue, 1, $msg, true, false) == false) {
+                if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: msg_send()");
+            }
         }
 
         if ($action == "reinit") {
@@ -145,7 +159,7 @@
                                 'topic' => "CmdCreate".$eqNet."/".$eqAddr."/resetFromJson",
                                 'payload' => '',
                                 );
-            if ($dbgTcharp38) logDebug("reinit msg to Abeille: ".json_encode($msg));
+            if (isset($dbgTcharp38)) logDebug("reinit msg to Abeille: ".json_encode($msg));
             msg_send($queue, 1, $msg, true, false);
         }
     } // End $action == "reconfigure"

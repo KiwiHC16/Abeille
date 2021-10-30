@@ -585,14 +585,14 @@
     }
   },
   "Set Time": {
-    "name": "Set Time",
+    "name": "Set Zigate-Time",
     "order": 51,
     "isHistorized": "0",
     "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "setTimeServer",
+      "topic": "setZgTimeServer",
       "request": ""
     }
   },
@@ -610,14 +610,14 @@
     }
   },
   "Get Time": {
-    "name": "Get Time",
+    "name": "Get Zigate-Time",
     "order": 52,
     "isHistorized": "0",
     "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "getTimeServer",
+      "topic": "getZgTimeServer",
       "request": ""
     }
   },

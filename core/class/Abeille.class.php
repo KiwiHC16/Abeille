@@ -964,7 +964,7 @@ if (0) {
         //     // log::add('Abeille', 'debug', 'deamon_start(): ***** Demarrage du réseau Zigbee '.$i.' ********');
         //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/startNetwork", "StartNetwork");
         //     // log::add('Abeille', 'debug', 'deamon_start(): ***** Set Time réseau Zigbee '.$i.' ********');
-        //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setTimeServer", "");
+        //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setZgTimeServer", "");
         //     /* Get network state to get Zigate IEEE asap and confirm no port change */
         //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/getNetworkStatus", "getNetworkStatus");
 
@@ -980,11 +980,11 @@ if (0) {
         //     if ($version == '031D') {
         //         log::add('Abeille', 'debug', 'deamon_start(): Configuring zigate '. $i.' in hybrid mode');
         //         // message::add("Abeille", "Demande de fonctionnement de la zigate en mode hybride (firmware >= 3.1D).");
-        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/zgSetMode", "mode=hybrid");
+        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setZgMode", "mode=hybrid");
         //     } else {
         //         log::add('Abeille', 'debug', 'deamon_start(): Configuring zigate '.$i.' in normal mode');
         //         // message::add("Abeille", "Demande de fonctionnement de la zigate en mode normal (firmware < 3.1D).");
-        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/zgSetMode", "mode=normal");
+        //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setZgMode", "mode=normal");
         //     }
         // }
 
@@ -1133,7 +1133,7 @@ while ($cron->running()) {
             // Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/startNetwork", "StartNetwork");
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/zgStartNetwork", "");
             // log::add('Abeille', 'debug', 'deamon(): ***** Set Time réseau Zigbee '.$i.' ********');
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setTimeServer", "");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setZgTimeServer", "");
             /* Get network state to get Zigate IEEE asap and confirm no port change */
             // Tcharp38: moved to parser.
             // Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/getNetworkStatus", "getNetworkStatus");
@@ -1149,10 +1149,10 @@ while ($cron->running()) {
             }
             if (hexdec($version) >= 0x031D) {
                 log::add('Abeille', 'debug', 'deamon(): FW version >= 3.1D => Configuring zigate '.$i.' in hybrid mode');
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/zgSetMode", "mode=hybrid");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setZgMode", "mode=hybrid");
             } else {
                 log::add('Abeille', 'debug', 'deamon(): Configuring zigate '.$i.' in normal mode');
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/zgSetMode", "mode=normal");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setZgMode", "mode=normal");
             }
         }
 
@@ -2343,7 +2343,7 @@ while ($cron->running()) {
 
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $msg['name']);
             if (!is_object($cmdLogic)) {
-                log::add('Abeille', 'debug', "  Unknown command '".$msg['name']."'");
+                log::add('Abeille', 'debug', "  Unknown Jeedom command '".$msg['name']."'");
                 return; // Unknown command
             }
             $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['value']);
@@ -2565,8 +2565,25 @@ while ($cron->running()) {
             return;
         }
 
-        log::add('Abeille', 'debug', "msgFromParser(): WARNING: Unsupported msg");
-        log::add('Abeille', 'debug', "msgFromParser(): ".json_encode($msg));
+        /* Bind response (8030 response) */
+        if ($msg['type'] == "bindResponse") {
+            // 'src' => 'parser',
+            // 'type' => 'bindResponse',
+            // 'net' => $dest,
+            // 'addr' => $srcAddr,
+            // 'status' => $status,
+            // 'time' => time(),
+            // 'lqi' => $lqi,
+            log::add('Abeille', 'debug', "msgFromParser(): ".$net."/".$addr.", Bind response, status=".$msg['status']);
+
+            $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
+            if ($eqLogic)
+                Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
+
+            return;
+    }
+
+        log::add('Abeille', 'debug', "msgFromParser(): Ignored msg type '".$msg['type']."'");
     } // End msgFromParser()
 
     public static function publishMosquitto($queueId, $priority, $topic, $payload)
@@ -3137,7 +3154,7 @@ while ($cron->running()) {
         $eqLogicId = $eqLogic->getLogicalId();
         $eqId = $eqLogic->getId();
 
-        log::add('Abeille', 'debug', "  updateTimestamp(): Updating last comm. time for '".$eqLogicId."'");
+        // log::add('Abeille', 'debug', "  updateTimestamp(): Updating last comm. time for '".$eqLogicId."'");
 
         // Updating directly eqLogic/setStatus/'lastCommunication' & 'timeout' with real timestamp
         $eqLogic->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));

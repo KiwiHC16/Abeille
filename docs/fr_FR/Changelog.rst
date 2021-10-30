@@ -2,6 +2,9 @@ ChangeLog
 =========
 
 211027-BETA-1
+-------------
+
+  .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM), donc dispo depuis la version '3.1e'.
 
     - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
     - Les firmwares avant 3.1e sont forcement 'legacy'.

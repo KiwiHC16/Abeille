@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-211030-STABLE-1
+211030-STABLE-2
 -------------
 
   .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM), donc dispo depuis la version '3.1e'.

@@ -135,7 +135,7 @@
                 echo '<input id="idFwVersion'.$zgId.'" type="text" title="{{Version actuelle du firmware}}" disabled>';
             echo '</div>';
             echo '<div class="col-lg-2">';
-                echo '<a id="idReadFwB'.$zgId.'" class="btn btn-default" onclick="checkSerialPort('.$zgId.')" title="{{Lecture de la version du firmware}}"><i class="fas fa-sync"></i> {{Lire}}</a>';
+                echo '<a id="idReadFwB'.$zgId.'" class="btn btn-default form-control" onclick="checkSerialPort('.$zgId.')" title="{{Lecture de la version du firmware}}"><i class="fas fa-sync"></i> {{Lire}}</a>';
             echo '</div>';
             echo '<div class="col-lg-5">';
                     echo '<div id="idUpdFw'.$zgId.'">';
@@ -266,30 +266,34 @@
 
             <div class="form-group">
                 <div class="col-lg-6">
-                    <label class="col-lg-3 control-label" data-toggle="tooltip" title="Wiring PI est nécéssaire pour les Zigate PI">{{Wiring Pi}} : </label>
-                    <div id="idWiringPi" class="col-lg-4">
-                        <input id="idWiringPiStatus" type="text" title="{{Status d'installation du package Wiring PI}}" disabled>
-                        <!-- <a class="WiringPiStatus" title="">
-                            <span class="label label-success" style="font-size:1em;">-?-</span>
-                        </a> -->
-                    </div>
-                    <div class="col-lg-5">
-                        <a class="btn btn-default" id="bt_installWiringPi" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label" data-toggle="tooltip" title="Wiring PI est nécéssaire pour les Zigate PI">{{Wiring Pi}} : </label>
+                        <div id="idWiringPi" class="col-lg-4">
+                            <input id="idWiringPiStatus" type="text" class="form-control" title="{{Status d'installation du package Wiring PI}}" disabled>
+                            <!-- <a class="WiringPiStatus" title="">
+                                <span class="label label-success" style="font-size:1em;">-?-</span>
+                            </a> -->
+                        </div>
+                        <div class="col-lg-5">
+                            <a class="btn btn-default" id="bt_installWiringPi" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
+                        </div>
                     </div>
                 </div>
 
                 <div class="col-lg-6">
-                    <label class="col-lg-3 control-label" data-toggle="tooltip">{{Socat}} : </label>
-                    <div class="col-lg-4">
-                        <input id="idSocatStatus" type="text" title="{{Status d'installation du package socat}}" disabled>
-                    </div>
-                    <!-- <div id="idSocat'.$zgId.'" class="col-lg-6">
-                        <a class="socatStatus" title="Status d'installation du package socat">
-                            <span class="label label-success" style="font-size:1em;">-?-</span>
-                        </a>
-                        </div> -->
-                    <div class="col-lg-5">
-                        <a class="btn btn-default" id="bt_installSocat" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label" data-toggle="tooltip">{{Socat}} : </label>
+                        <div class="col-lg-4">
+                            <input id="idSocatStatus" type="text" class="form-control" title="{{Status d'installation du package socat}}" disabled>
+                        </div>
+                        <!-- <div id="idSocat'.$zgId.'" class="col-lg-6">
+                            <a class="socatStatus" title="Status d'installation du package socat">
+                                <span class="label label-success" style="font-size:1em;">-?-</span>
+                            </a>
+                            </div> -->
+                        <div class="col-lg-5">
+                            <a class="btn btn-default" id="bt_installSocat" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
+                        </div>
                     </div>
                 </div>
             </div>

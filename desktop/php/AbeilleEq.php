@@ -273,7 +273,7 @@
             payload = '';
             break;
         case "setMode":
-            topic = 'CmdAbeille'+js_zgId+'/0000/zgSetMode';
+            topic = 'CmdAbeille'+js_zgId+'/0000/setZgMode';
             if (param == "Normal")
                 payload = 'mode=normal';
             else if (param == "Raw")
@@ -316,11 +316,11 @@
             payload = "ff"; // TODO
             break;
         case "getTime":
-            topic = 'CmdAbeille'+js_zgId+'/0000/getTimeServer';
+            topic = 'CmdAbeille'+js_zgId+'/0000/getZgTimeServer';
             payload = "";
             break;
         case "setTime":
-            topic = 'CmdAbeille'+js_zgId+'/0000/setTimeServer';
+            topic = 'CmdAbeille'+js_zgId+'/0000/setZgTimeServer';
             payload = ""; // Using current time from host.
             break;
         case "erasePersistantDatas": // Erase PDM

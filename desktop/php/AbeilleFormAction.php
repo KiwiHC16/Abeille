@@ -352,7 +352,7 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'SetTime Z'.$zigateId ) {
                 echo "SetTime request processing";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setTimeServer', "time=".time() );
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setZgTimeServer', "time=".time() );
             }
         }
 
@@ -360,7 +360,7 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'getTime Z'.$zigateId ) {
                 echo "getTime request processing";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/getTimeServer', "");
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/getZgTimeServer', "");
             }
         }
 
@@ -408,19 +408,19 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Normal Mode Z'.$zigateId ) {
                 echo "Set Hybride Mode";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/zgSetMode', "mode=normal");
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setZgMode', "mode=normal");
             }
         }
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Raw Mode Z'.$zigateId ) {
                 echo "Set Hybride Mode";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/zgSetMode', "mode=raw");
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setZgMode', "mode=raw");
             }
         }
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Hybride Mode Z'.$zigateId ) {
                 echo "Set Hybride Mode";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/zgSetMode', "mode=hybrid");
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setZgMode', "mode=hybrid");
             }
         }
 

@@ -3030,7 +3030,7 @@
                  */
 
                 // Zigate specific command
-                if ($cmdName == 'zgSetMode') {
+                if ($cmdName == 'setZgMode') {
                     $mode = $Command['mode'];
                     if ($mode == "raw") {
                         $modeVal = "01";
@@ -3131,12 +3131,12 @@
 
                 // Zigate specific command
                 // Set Time server (v3.0f)
-                else if ($cmdName == 'setTimeServer') {
+                else if (($cmdName == 'setZgTimeServer') || ($cmdName == 'setTimeServer')) {
                     if (!isset($Command['time'])) {
                         $zgRef = mktime(0, 0, 0, 1, 1, 2000); // 2000-01-01 00:00:00
                         $Command['time'] = time() - $zgRef;
                     }
-                    $this->deamonlog('debug', "    setTimeServer, time=".$Command['time'], $this->debug['processCmd']);
+                    $this->deamonlog('debug', "    setZgTimeServer, time=".$Command['time'], $this->debug['processCmd']);
 
                     /* Cmd 0016 reminder
                     payload = <timestamp UTC: uint32_t> from 2000-01-01 00:00:00
@@ -3149,7 +3149,7 @@
                 }
 
                 // Zigate specific command
-                else if ($cmdName == 'getTimeServer') {
+                else if (($cmdName == 'getZgTimeServer') || ($cmdName == 'getTimeServer')) {
                     $cmd = "0017";
                     $data = "";
                     $length = sprintf("%04s", dechex(strlen($data) / 2));
@@ -3326,6 +3326,74 @@
                     $max            = isset($Command['max']) ? $Command['max'] : "FF";
 
                     $data2 = $fcf.$sqn.$cmdId.$startId.$max;
+                    $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
+
+                    $data1 = $addrMode.$addr.$srcEp.$destEp.$clustId.$profId.$securityMode.$radius.$dataLen2;
+                    $data = $data1.$data2;
+                    $len = sprintf("%04s", dechex(strlen($data) / 2));
+
+                    $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
+                    return;
+                }
+
+                // ZCL global: Read Attributes Response
+                // WORK ONGOING !!!
+                else if ($cmdName == 'sendReadAttributesResponse') {
+                    /* Mandatory infos: addr, ep, clustId */
+                    $required = ['addr', 'ep', 'clustId', 'attrId', 'status', 'attrType', 'attrVal'];
+                    $missingParam = false;
+                    foreach ($required as $idx => $param) {
+                        if (isset($Command[$param]))
+                            continue;
+                        $this->deamonlog('debug', "    ERROR: Missing '".$param."'");
+                        $missingParam = true;
+                    }
+                    if ($missingParam)
+                        return;
+
+                    $cmd = "0530";
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <profile ID: uint16_t>
+                    // <cluster ID: uint16_t>
+                    // <security mode: uint8_t>
+                    // <radius: uint8_t>
+                    // <data length: uint8_t>
+
+                    // <data: auint8_t>
+                    //  ZCL Control Field
+                    //  ZCL SQN
+                    //  Command Id
+                    //  ....
+
+                    $addrMode       = "02";
+                    $addr           = $Command['addr'];
+                    $srcEp          = "01";
+                    $destEp         = $Command['ep'];
+                    $profId         = "0104";
+                    $clustId        = $Command['clustId'];
+                    $securityMode   = "02";
+                    $radius         = "1E";
+
+                    /* ZCL header */
+                    $fcf            = "10"; // Frame Control Field
+                    $sqn            = "23";
+                    $cmdId          = "01"; // Read Attributes Response
+                    $data2 = $fcf.$sqn.$cmdId;
+
+                    // if (!isset($Command['attrId']) || !isset($Command['status']) || !isset($Command['attrType'])) {}
+                    //     $this->deamonlog('debug', "    ERROR: Missing '".$param."'");
+                    //     return;
+                    // }
+                    $attrId = AbeilleTools::reverseHex($Command['attrId']);
+                    $status = $Command['status'];
+                    $attrType = $Command['attrType'];
+                    $attrVal = AbeilleTools::reverseHex($Command['attrVal']);
+                    $data2 = $data2.$attrId.$status.$attrType.$attrVal;
+
                     $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
 
                     $data1 = $addrMode.$addr.$srcEp.$destEp.$clustId.$profId.$securityMode.$radius.$dataLen2;

@@ -12,26 +12,10 @@
             "icon": "Silvercrest-HG06337-FR"
         },
         "commands": {
-            "Get-0006-OnTime": {
-                "use": "zbReadAttribute",
-                "params": "ep=0B&clustId=0006&attrId=4001"
-            },
-            "OnTime": {
-                "use": "zb-0006-OnTime",
-                "params": "ep=0B"
-            },
-            "Get-0006-OffWaitTime": {
-                "use": "zbReadAttribute",
-                "params": "ep=0B&clustId=0006&attrId=4002"
-            },
-            "OffWaitTime": {
-                "use": "zb-0006-OffWaitTime",
-                "params": "ep=0B"
-            },
-            "Get-0006-OnOff": {
-                "use": "zbReadAttribute",
-                "params": "ep=0B&clustId=0006&attrId=0000"
-            },
+            "Identify": { "use": "Identify" },
+
+            "Groups": { "use": "Group-Membership" },
+
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1
@@ -44,6 +28,10 @@
                 "use": "zb-0006-OnOff",
                 "params": "ep=0B",
                 "isVisible": 1
+            },
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "ep=0B&clustId=0006&attrId=0000"
             }
         }
     }

@@ -276,6 +276,16 @@
         ),
         "0101" => array(
             "name" => "Door Lock",
+            "attributes" => array(
+                "0000" => array( "name" => "LockState", "access" => "R" ),
+                "0001" => array( "name" => "LockType", "access" => "R" ),
+                "0002" => array( "name" => "ActuatorEnabled", "access" => "R" ),
+                "0003" => array( "name" => "DoorState", "access" => "R" ),
+                "0004" => array( "name" => "DoorOpenEvents", "access" => "RW" ),
+                "0005" => array( "name" => "DoorClosedEvents", "access" => "RW" ),
+                "0006" => array( "name" => "OpenPeriod", "access" => "RW" ),
+                // To be completed
+            ),
         ),
         "0102" => array(
             "name" => "Window Covering",
@@ -363,6 +373,11 @@
         ),
         "0500" => array(
             "name" => "IAS Zone",
+            "attributes" => array(
+                "0000" => array( "name" => "ZoneState", "access" => "R" ),
+                "0001" => array( "name" => "ZoneType", "access" => "R" ),
+                "0002" => array( "name" => "ZoneStatus", "access" => "R" ),
+            ),
         ),
         "0501" => array(
             "name" => "IAS ACE",

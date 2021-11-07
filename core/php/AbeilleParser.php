@@ -35,6 +35,7 @@
     include_once __DIR__.'/../class/AbeilleCmd.class.php';
     include_once __DIR__.'/../class/AbeilleParser.class.php';
     include_once __DIR__.'/../class/Abeille.class.php';
+    include_once __DIR__.'/AbeilleOTA.php';
 
     // Needed for decode8701 and decode8702
     // Voir https://github.com/fairecasoimeme/ZiGate/issues/161
@@ -223,6 +224,9 @@
             logMessage("debug", "Zigate ".$zgId." already verified IEEE: ".$extAddr);
         }
     }
+
+    // Reading available OTA firmwares
+    otaReadFirmwares();
 
     try {
         // On crée l objet AbeilleParser

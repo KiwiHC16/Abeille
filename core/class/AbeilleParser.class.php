@@ -556,7 +556,7 @@
                     /* Checking if device is supported without manufacturer attribute for those who do not respond to such request
                        but if not, default config is not accepted since manufacturer may not be arrived yet.
                        For Tuya case (model=TSxxxx), manufacturer is MANDATORY. */
-                    if ((substring($eq['modelIdentifier'], 0, 2) == "TS") && (strlen($eq['modelIdentifier']) == 6))
+                    if ((substr($eq['modelIdentifier'], 0, 2) == "TS") && (strlen($eq['modelIdentifier']) == 6))
                         return; // Tuya case. Waiting for manufacturer to return.
                     if ($this->findJsonConfig($eq, 'modelIdentifier') === false) {
                         $eq['jsonId'] = ''; // 'defaultUnknown' case not accepted there
@@ -1635,7 +1635,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             // 64-bit extended address for DstAddr and DstEndp present
                             $destIeee = AbeilleTools::reverseHex(substr($pl, 24, 16));
                             $destEP  = substr($pl, 40, 2);
-                            parserLog('debug', '  '.$srcIeee.', EP'.$srcEp.', Clust '.$clustId.' => '.$destIeee.', EP'.$destEP);
+                            parserLog('debug', '  '.$srcIeee.', EP'.$srcEp.', Clust '.$clustId.' => device '.$destIeee.', EP'.$destEP);
                             $pl = substr($pl, 42);
                         } else {
                             parserLog('debug', '  ERROR: Unexpected destAddrMode '.$destAddrMode);
@@ -2403,8 +2403,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     if ($status == "00") {
                         $l = strlen($msg);
                         $attrType = substr($msg, 8, 2);
-                        $minInterval = substr($msg, 10, 4);
-                        $maxInterval = substr($msg, 14, 4);
+                        $minInterval = AbeilleTools::reverseHex(substr($msg, 10, 4));
+                        $maxInterval = AbeilleTools::reverseHex(substr($msg, 14, 4));
                         // Reportable change => Variable size
                         // Timeout period => 2B
                         // TO BE COMPLETED
@@ -2656,7 +2656,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                 // Legacy code to be removed at some point
                 // TODO: Replace commands '0006-EP-0000' to 'EP-click' in JSON
-                $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$srcEp, '0000', $value);
+                // $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$srcEp, '0000', $value);
                 $msg['name'] =$cluster.'-'.$srcEp.'-0000';
                 $msg['value'] = $value;
                 $this->msgToAbeille2($msg);
@@ -2678,13 +2678,43 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             // OTA cluster specific
             if ($cluster == "0019") {
-                if ($cmd == "01") {
+                if ($cmd == "01") { // Query Next Image Request
                     $fieldControl = substr($msg, 0, 2);
-                    $manufCode = substr($msg, 2, 4);
-                    $imgType = substr($msg, 6, 4);
-                    $curFileVers = substr($msg, 10, 8);
-                    $hwVers = substr($msg, 18, 4);
+                    $manufCode = AbeilleTools::reverseHex(substr($msg, 2, 4));
+                    $imgType = AbeilleTools::reverseHex(substr($msg, 6, 4));
+                    $curFileVers = AbeilleTools::reverseHex(substr($msg, 10, 8));
+                    $hwVers = AbeilleTools::reverseHex(substr($msg, 18, 4));
                     parserLog('debug', "  fieldCtrl=".$fieldControl.", manufCode=".$manufCode.", imgType=".$imgType.", fileVers=".$curFileVers.", hwVers=".$hwVers);
+                    if (!isset($GLOBALS['ota_fw']) || !isset($GLOBALS['ota_fw'][$manufCode])) {
+                        parserLog('debug', "  NO fw update available for this manufacturer.");
+                        // TODO: Respond to device: no image
+                        return;
+                    }
+                    if (!isset($GLOBALS['ota_fw'][$manufCode][$imgType])) {
+                        parserLog('debug', "  NO fw update available for this image type.");
+                        // TODO: Respond to device: no image
+                        return;
+                    }
+                    $fw = $GLOBALS['ota_fw'][$manufCode][$imgType];
+                    if (hexdec($curFileVers) >= hexdec($fw['fileVersion'])) {
+                        parserLog('debug', "  Found compliant FW but same version or older.");
+                        // TODO: Respond to device: no image
+                        return;
+                    }
+                    // Responding to device: image found
+                    $imgVers = $fw['fileVersion'];
+                    $imgSize = $fw['fileSize'];
+                    parserLog('debug', "  FW version ".$imgVers." available.");
+                    $this->msgToCmd("Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
+                } else if ($cmd == "03") { // Image Block Request
+                    $fieldControl = substr($msg, 0, 2);
+                    $manufCode = AbeilleTools::reverseHex(substr($msg, 2, 4));
+                    $imgType = AbeilleTools::reverseHex(substr($msg, 6, 4));
+                    $fileVersion = AbeilleTools::reverseHex(substr($msg, 10, 8));
+                    $fileOffset = AbeilleTools::reverseHex(substr($msg, 18, 8));
+                    $maxDataSize = AbeilleTools::reverseHex(substr($msg, 26, 2));
+                    parserLog('debug', "  fieldCtrl=".$fieldControl.", manufCode=".$manufCode.", imgType=".$imgType.", fileVers=".$fileVersion.", fileOffset=".$fileOffset.", maxData=".$maxDataSize);
+                    $this->msgToCmd("Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
                 }
                 return;
             }
@@ -2709,61 +2739,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             parserLog("debug", "  Ignored cluster specific command ".$cluster."-".$cmd, "8002");
         }
-
-        // Tcharp38: No longer required.
-        // https://github.com/fairecasoimeme/ZiGate/issues/295
-        // function decode8003($dest, $payload, $ln, $lqi, $clusterTab) {
-        //     // <source endpoint: uint8_t t>
-        //     // <profile ID: uint16_t>
-        //     // <cluster list: data each entry is uint16_t>
-
-        //     $srcEp = substr($payload, 0, 2);
-        //     $$profId   = substr($payload, 2, 4);
-
-        //     $len = (strlen($payload)-2-4-2)/4;
-        //     for ($i = 0; $i < $len; $i++) {
-        //         $clustId = substr($payload, 6 + ($i * 4), 4);
-        //         parserLog('debug', $dest.', Type=8003/Clusters list, SrcEP='.$srcEp.', ProfId='.$$profId.', ClustId='.$clustId.' - '.zgGetCluster($clustId), "8003");
-        //     }
-        // }
-
-        // Tcharp38: No longer required.
-        // https://github.com/fairecasoimeme/ZiGate/issues/295
-        // function decode8004($dest, $payload, $lqi) {
-        //     // <source endpoint: uint8_t>
-        //     // <profile ID: uint16_t>
-        //     // <cluster ID: uint16_t>
-        //     // <attribute list: data each entry is uint16_t>
-
-        //     $srcEp = substr($payload, 0, 2);
-        //     $$profId   = substr($payload, 2, 4);
-        //     $clustId   = substr($payload, 6, 4);
-
-        //     $len = (strlen($payload)-2-4-4-2)/4;
-        //     for ($i = 0; $i < $len; $i++) {
-        //         parserLog('debug', $dest.', Type=8004/Liste des Attributs de l’objet, SrcEP='.$srcEp.', ProfileID='.$$profId.', ClustId='.$clustId.', Attribute='.substr($payload, (10 + ($i*4) ), 4) );
-        //     }
-        // }
-
-        // Tcharp38: No longer required.
-        // https://github.com/fairecasoimeme/ZiGate/issues/295
-        // function decode8005($dest, $payload, $lqi) {
-        //     // parserLog('debug',';type: 8005: (Liste des commandes de l’objet)(Not Processed)' );
-
-        //     // <source endpoint: uint8_t>
-        //     // <profile ID: uint16_t>
-        //     // <cluster ID: uint16_t>
-        //     //<command ID list:data each entry is uint8_t>
-
-        //     $srcEp = substr($payload, 0, 2);
-        //     $$profId   = substr($payload, 2, 4);
-        //     $clustId   = substr($payload, 6, 4);
-
-        //     $len = (strlen($payload)-2-4-4-2)/2;
-        //     for ($i = 0; $i < $len; $i++) {
-        //         parserLog('debug', $dest.', Type=8005/Liste des commandes de l’objet, SrcEP='.$srcEp.', ProfID='.$$profId.', ClustId='.$clustId.', Commandes='.substr($payload, (10 + ($i*2) ), 2) );
-        //     }
-        // }
 
         /* 8009/Network State Reponse */
         function decode8009($dest, $payload, $lqi)
@@ -3715,7 +3690,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $ep = substr($payload, 2, 2);
             $clustId = substr($payload, 4, 4);
             $capa = substr($payload, 8, 2);
-            $groupCount = substr($payload,10, 2);
+            $groupCount = substr($payload, 10, 2);
             $srcAddr = substr($payload, 12 + ($groupCount * 4), 4);
 
             $decoded = '8062/Group membership'
@@ -3743,7 +3718,19 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 monMsgFromZigate("  Groups: ".$groups); // Send message to monitor
             }
 
-            $this->msgToAbeille($dest."/".$srcAddr, "Group", "Membership", $groups);
+            // $this->msgToAbeille($dest."/".$srcAddr, "Group", "Membership", $groups);
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'attributeReport',
+                'net' => $dest,
+                'addr' => $srcAddr,
+                'ep' => $ep,
+                'name' => 'Group-Membership',
+                'value' => $groups,
+                'time' => time(),
+                'lqi' => $lqi
+            );
+            $this->msgToAbeille2($msg);
         }
 
         function decode8063($dest, $payload, $lqi)
@@ -4341,7 +4328,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity );
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt-Temperature-Humidity');
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity');
                     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
                     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                     $this->msgToAbeille($dest."/".$srcAddr, '0402', '01-0000', $temperature);
@@ -4423,7 +4410,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent($voltage));
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt');
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt');
                     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
                     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                     return;
@@ -4450,7 +4437,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent($voltage));
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId,'$this->decoded as Volt-Temperature-Humidity');
+                    $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity');
                     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
                     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                     return;
@@ -4564,7 +4551,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         // $this->msgToAbeille( $srcAddr, 'tbd',     '--puissance--',    $puissanceValue);
 
                         // Relay Double
-                        $this->msgToAbeille($dest."/".$srcAddr, '000C',     '01-0055',    $puissanceValue);
+                        $this->msgToAbeille($dest."/".$srcAddr, '000C', '01-0055', $puissanceValue);
                     }
                     if (($ep=="02") || ($ep=="15")) {
                         // Remontée puissance (instantannée) de la prise xiaomi et relay double switch 2
@@ -4999,8 +4986,15 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             // On transmettre l info sur Cluster 0500 et Cmd: 0000 (Jusqu'a present on etait sur ClusterId-AttributeId, ici ClusterId-CommandId)
             $attrId = "0000";
-            $data       = substr($payload,14, 4);
+            $data = substr($payload,14, 4);
             $this->msgToAbeille($dest."/".$srcAddr, $clustId, $EP.'-'.$attrId, $data);
+        }
+
+        // OTA specific: ZiGate will receive this command when device asks OTA firmware
+        function decode8501($dest, $payload, $lqi)
+        {
+            $msg = '8501/OTA block request => handled by decode8002';
+            parserLog('debug', $dest.', Type='.$msg, "8501");
         }
 
         /**

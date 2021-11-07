@@ -381,6 +381,9 @@ class AbeilleTools
                         if (isset($cmd2['execAtCreation'])) {
                             $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
                         }
+                        if (isset($cmd2['execAtCreationDelay'])) {
+                            $newCmd[$cmd1]['configuration']['execAtCreationDelay'] = $cmd2['execAtCreationDelay'];
+                        }
                         if (isset($cmd2['isVisible'])) {
                             $value = $cmd2['isVisible'];
                             if ($value === "yes")

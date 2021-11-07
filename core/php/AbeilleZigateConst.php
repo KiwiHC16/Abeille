@@ -38,16 +38,17 @@
             "80A2" => "Remove scene response",
             "8110" => "Write attribute response",
             "8140" => "Configure reporting response",
-            "8200" => "Save record request respose",
+            "8200" => "Save record request response",
             "8201" => "Load record response",
             "8300" => "Host PDM available response",
             "8401" => "Zone status change notification",
+            "8501" => "OTA block request",
             "8531" => "Complex descriptor response",
         );
 
         if (array_key_exists($msgType, $zgMessages))
             return $zgMessages[$msgType];
-        return "Type ".$msgType." inconnu";
+        return "Unknown-".$msgType;
     }
 
 
@@ -79,7 +80,7 @@
 
         if (array_key_exists($code, $zgPDMEvents))
             return $zgPDMEvents[$code];
-        return "Code PDM ".$code." inconnu";
+        return "Unknown-".$code;
     }
 
     /* Returns zigbee profile name based on given 'profId' */
@@ -95,7 +96,7 @@
 
         if (array_key_exists($profId, $profilesTable))
             return $profilesTable[$profId];
-        return "Profil ".$profId." inconnu";
+        return "Unknown-".$profId;
     }
 
     /* Returns zigbee device name based on given 'profId/devId' couple. */

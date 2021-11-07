@@ -1727,6 +1727,8 @@ console.log(zEndPoints);
             sCmd = res.cmd;
 
             /* Updating internal datas & display */
+            if ((typeof zigbee.endPoints === "undefined") || (typeof zigbee.endPoints[sEp] === "undefined"))
+                zigbee.endPoints[sEp] = new Object();
             ep = zigbee.endPoints[sEp];
             clust = ep.servClusters[sClustId];
             if (sCmd == "11") { // Discover Commands Received
@@ -1737,7 +1739,8 @@ console.log(zEndPoints);
                 id='idEP'+sEp+'-Serv'+sClustId+'-RB4';
                 changeClass(id, "btn-warning", "btn-success");
                 button = document.getElementById(id);
-                button.setAttribute('disabled', true);
+                if (button)
+                    button.setAttribute('disabled', true);
             }
         }
 

@@ -338,9 +338,9 @@
             topic = 'CmdAbeille'+js_zgId+'/0000/permitJoin';
             payload = "Status";
             break;
-        case "getVersion":
-            topic = 'CmdAbeille'+js_zgId+'/0000/getVersion';
-            payload = "Version";
+        case "getZgVersion":
+            topic = 'CmdAbeille'+js_zgId+'/0000/getZgVersion';
+            payload = "";
             break;
         default:
             console.log("ERROR: Unsupported action '"+action+"'");
@@ -354,7 +354,7 @@
     /* Force update of some dynamic fields */
     sendZigate('getTime', ''); // Will update last comm too
     sendZigate('getInclusionStatus', ''); // Will update last comm too
-    sendZigate('getVersion', ''); // Will update last comm too
+    sendZigate('getZgVersion', ''); // Will update last comm too
 
     /* Display equipment icon (AbeilleEq-Main) */
     $("#sel_icon").change(function () {
@@ -521,10 +521,6 @@
             clustId = document.getElementById("idClustIdF").value;
             destGroup = document.getElementById("idGroupF").value;
             payload = "addr="+js_eqIeee+"_ep="+ep+"_clustId="+clustId+"_destAddr="+destGroup;
-        } else if (request == "resetToFactory") {
-            topic = "Cmd"+logicalId+"_cmd-0000";
-            ep = document.getElementById("idEpG").value;
-            payload = "ep="+ep+"_cmd=00";
         } else if (request == "getActiveEndPoints") {
             topic = "Cmd"+logicalId+"_ActiveEndPoint";
             payload = "address="+js_eqAddr;
@@ -543,7 +539,24 @@
                 payload += "_maxInterval="+max;
             if (change != '')
                 payload += "_changeVal="+change;
-        } else {
+        }
+
+        /* Cluster specific commands */
+        else if (request == "0000-ResetToFactory") {
+            topic = "Cmd"+logicalId+"_cmd-0000";
+            ep = document.getElementById("idEpG").value;
+            payload = "ep="+ep+"_cmd=00";
+        } else if (request == "1000-GetGroups") {
+            topic = "Cmd"+logicalId+"_cmd-1000";
+            ep = document.getElementById("idEpC1000-41").value;
+            payload = "ep="+ep+"_cmd=41_startIdx=00";
+        } else if (request == "1000-GetEndpoints") {
+            topic = "Cmd"+logicalId+"_cmd-1000";
+            ep = document.getElementById("idEpC1000-42").value;
+            payload = "ep="+ep+"_cmd=42_startIdx=00";
+        }
+
+        else {
             console.log("Unknown request "+request);
             return;
         }

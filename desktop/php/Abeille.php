@@ -6,9 +6,9 @@
     }
 
     /* Developers debug features & PHP errors */
-    $dbgFile = __DIR__."/../../tmp/debug.json";
-    if (file_exists($dbgFile)) {
-        $dbgConfig = json_decode(file_get_contents($dbgFile), true);
+    require_once __DIR__.'/../../core/config/Abeille.config.php';
+    if (file_exists(dbgFile)) {
+        $dbgConfig = json_decode(file_get_contents(dbgFile), true);
         $dbgDeveloperMode = true;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
         /* Dev mode: enabling PHP errors logging */
@@ -83,7 +83,16 @@
         <!-- Groups management  -->
         <?php include '030_AbeilleGroupPart.php'; ?>
 
-        <legend><i class="fa fa-cogs"></i> {{Appliquer les commandes sur la selection}}</legend>
+        <!-- Gestion des ghosts / remplacement d equipements  -->
+        <?php include '050_AbeilleRemplacementPart.php'; ?>
+
+        <!-- Gestion des ReHome / migration d equipements  -->
+        <?php include '060_AbeilleReHomePart.php'; ?>
+
+        <?php include '070_AbeilleReplaceZigatePart.php'; ?>
+
+        <?php if (isset($dbgDeveloperMode)) { ?>
+        <legend><i class="fa fa-cogs"></i> {{Visible en MODE DEV UNIQUEMENT}}</legend>
         <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
 
             <!-- Gestion des groupes et des scenes  -->
@@ -93,14 +102,7 @@
             <?php include '040_AbeilleScenePart.php'; ?>
 
         </div>
-
-        <!-- Gestion des ghosts / remplacement d equipements  -->
-        <?php include '050_AbeilleRemplacementPart.php'; ?>
-
-        <!-- Gestion des ReHome / migration d equipements  -->
-        <?php include '060_AbeilleReHomePart.php'; ?>
-
-        <?php include '070_AbeilleReplaceZigatePart.php'; ?>
+        <?php } ?>
 
     </div> <!-- Fin - Barre d outils horizontale  -->
 

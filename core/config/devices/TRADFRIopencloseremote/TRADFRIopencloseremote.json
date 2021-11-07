@@ -12,25 +12,33 @@
         },
         "type": "IKEA TRADFRI Carre 2 Boutons Remote Control livr\u00e9 avec Fyrtur Store",
         "commands": {
-            "include4": "zb-0000-ZCLVersion",
-            "include5": "dateCode",
-            "include9 2": "WindowsCoveringUpGroup",
-            "include10 2": "WindowsCoveringDownGroup",
-            "include10 2 2": "WindowsCoveringStopGroup",
-            "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
-                "isVisible": 1
-            },
-            "include9": "getBattery",
-            "include10": "BindShortToZigateBatterie",
-            "include11": "setReportBatterie",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
-            }
+            },
+            "include5": "dateCode",
+
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            },
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0001-0021": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "Yes"
+            },
+
+            "include9 2": "WindowsCoveringUpGroup",
+            "include10 2": "WindowsCoveringDownGroup",
+            "include10 2 2": "WindowsCoveringStopGroup"
         }
     }
 }

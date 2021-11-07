@@ -8,9 +8,6 @@
         "invertBinary": "0",
         "template": "",
         "isVisible": 1,
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
         "configuration": {
             "topic": "setLevel",
             "request": "EP=#EP#&Level=#slider#&duration=10",

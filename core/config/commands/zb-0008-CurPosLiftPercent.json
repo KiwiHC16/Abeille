@@ -2,7 +2,7 @@
     "zb-0008-CurPosLiftPercent": {
         "isVisible": 0,
         "name": "Current position",
-        "isHistorized": "1",
+        "isHistorized": "0",
         "subType": "numeric",
         "invertBinary": "0",
         "template": "",

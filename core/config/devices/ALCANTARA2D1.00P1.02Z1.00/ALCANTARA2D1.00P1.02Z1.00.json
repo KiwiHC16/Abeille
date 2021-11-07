@@ -1,0 +1,21 @@
+{
+    "ALCANTARA2D1.00P1.02Z1.00": {
+        "type": "Acova Alcantara 2",
+        "manufacturer": "Acova",
+        "model": "Alcantara 2",
+        "timeout": "60",
+        "category": {
+            "heating": 1
+        },
+        "configuration": {
+            "icon": "ALCANTARA2D1.00P1.02Z1.00",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Local temp": {
+                "use": "zb-0201-LocalTemperature",
+                "isVisible": 1
+            }
+        }
+    }
+}

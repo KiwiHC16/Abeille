@@ -93,14 +93,14 @@ echo "$MSG // expected: $MESSAGE //transmitted: $(cat sub1.log) "
 echo -e "\nChecking connection mosquitto->zigate->mosquitto"
 [[ -f sub2.log ]] && rm sub2.log
 
-TOPIC="Abeille/Ruche/SW-SDK"
+TOPIC="Abeille/0000/SW-SDK"
 ##nohup $MOSQUITTO_SUB -h $HOST -i $IDENTSUB -p $PORT -t $TOPIC -u $USER -P $PASS -q 0 -C 1 >sub.log 2>&1 &
 nohup  mosquitto_sub -h localhost -i toto -p 1883 -t $TOPIC -u jeedom -P jeedom -q 0 -C 1 >sub2.log 2>&1 &
 SUBPID=$!
 
 sleep 3
 
-TOPIC="CmdAbeille/Ruche/getVersion"
+TOPIC="CmdAbeille/0000/getZgVersion"
 MESSAGE="Version"
 $MOSQUITTO_PUB -h $HOST -i $IDENTPUB -t $TOPIC -u $USER -P $PASS -m "$MESSAGE" -q 0 -d
 

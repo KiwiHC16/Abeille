@@ -151,23 +151,23 @@
                     "shortAddress"              => $keywords[1],
                 );
                 break;
-            case "bind0030":
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
-                $Command = array(
-                    "bind0030" => "1",
-                    "priority" => $priority,
-                    "dest" => $dest,
-                    "addr" => $parameters['addr'], // IEEE source addr
-                    "ep" => $parameters['ep'], // Source EP
-                    "clustId" => $parameters['clustId'], // Source cluster
-                    "destAddr" => $parameters['destAddr'], // Dest IEEE addr or group addr
-                );
-                if (isset($parameters['destEp'])) // Not required if group address
-                    $Command['destEp'] = $parameters['destEp']; // Dest EP if IEEE addr
-                break;
+            // case "bind0030":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //     }
+            //     $Command = array(
+            //         "bind0030" => "1",
+            //         "priority" => $priority,
+            //         "dest" => $dest,
+            //         "addr" => $parameters['addr'], // IEEE source addr
+            //         "ep" => $parameters['ep'], // Source EP
+            //         "clustId" => $parameters['clustId'], // Source cluster
+            //         "destAddr" => $parameters['destAddr'], // Dest IEEE addr or group addr
+            //     );
+            //     if (isset($parameters['destEp'])) // Not required if group address
+            //         $Command['destEp'] = $parameters['destEp']; // Dest EP if IEEE addr
+            //     break;
             case "bindShort":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -1478,20 +1478,24 @@
                    part of parameters.
                  */
 
-                $Command =  array(
+                $Command = array(
                     $action => $action, // Tcharp38: Legacy. To be removed at some point.
                     "name" => $action,
                     "priority" => $priority,
                     "dest" => $dest,
                 );
-                $keywords = preg_split("/[=&]+/", $msg);
+                // Splitting by '&' then by '='
+                $couples = preg_split("/[&]+/", $msg);
+// $this->deamonlog("debug", '  couples='.json_encode($couples));
                 $addrFound = false;
-                for($i = 0; $i < count($keywords); $i += 2) {
-                    if (($i + 1) < count($keywords))
-                        $Command[$keywords[$i]] = $keywords[$i + 1];
+                for($i = 0; $i < count($couples); $i++) {
+                    $keywords = preg_split("/[=]+/", $couples[$i]);
+// $this->deamonlog("debug", '  keywords='.json_encode($keywords));
+                    if (isset($keywords[1]))
+                        $Command[$keywords[0]] = $keywords[1];
                     else
-                        $Command[$keywords[$i]] = 1; // Special case. Ex: CmdAbeille1/0000/SetPermit -> Inclusion
-                    if ($Command[$keywords[$i]] == "addr")
+                        $Command[$keywords[0]] = 1; // Special case. Ex: CmdAbeille1/0000/SetPermit -> Inclusion
+                    if ($keywords[0] == "addr")
                         $addrFound = true;
                 }
                 if ($addrFound == false)

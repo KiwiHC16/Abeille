@@ -234,7 +234,17 @@
         "0019" => array( // OTA
             "name" => "OTA upgrade",
             "attributes" => array(
-                // TO BE COMPLETED
+                "0000" => array( "name" => "UpgradeServerID", "access" => "R" ),
+                "0001" => array( "name" => "FileOffset", "access" => "R" ),
+                "0002" => array( "name" => "CurrentFileVersion", "access" => "R" ),
+                "0003" => array( "name" => "CurrentZigBeeStackVersion", "access" => "R" ),
+                "0004" => array( "name" => "DownloadedFileVersion", "access" => "R" ),
+                "0005" => array( "name" => "DownloadedZigBeeStackVersion", "access" => "R" ),
+                "0006" => array( "name" => "ImageUpgradeStatus", "access" => "R" ),
+                "0007" => array( "name" => "Manufacturer ID", "access" => "R" ),
+                "0008" => array( "name" => "Image Type ID", "access" => "R" ),
+                "0009" => array( "name" => "MinimumBlockPeriod", "access" => "R" ),
+                "000A" => array( "name" => "Image Stamp", "access" => "R" ),
             ),
             "commands" => array(
                 "00" => array( "name" => "Image Notify" ),

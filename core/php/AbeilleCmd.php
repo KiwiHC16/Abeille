@@ -18,11 +18,12 @@
 
     include_once __DIR__.'/AbeilleLog.php';
     logSetConf("AbeilleCmd.log", true);
-    logMessage('info', '>>> AbeilleCmd starting');
+    logMessage('info', '>>> Démarrage d\'AbeilleCmd');
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/../class/AbeilleMsg.php';
     include_once __DIR__.'/../class/AbeilleCmdQueue.class.php';
+    include_once __DIR__.'/AbeilleOTA.php';
 
     // ***********************************************************************************************
     // MAIN
@@ -56,6 +57,9 @@
             include_once __DIR__.'/AbeilleMonitor.php'; // Tracing monitor for debug purposes
         }
     }
+
+    // Reading available OTA firmwares
+    otaReadFirmwares();
 
     try {
         $AbeilleCmdQueue = new AbeilleCmdQueue($argv[1]);

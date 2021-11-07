@@ -6,6 +6,7 @@
     $in = "/tmp/AbeilleDeamonInput";
     $resourcePath = realpath(__DIR__.'/../../resources');
     $WifiLink = "/dev/zigate";
+    define('otaDir', __DIR__.'/../../resources/fw_ota'); // OTA FW location
 
     /* Inter-daemons queues */
 
@@ -67,7 +68,7 @@
     define('urlProducts', "https://github.com/KiwiHC16/AbeilleDoc/blob/master/docs/products");
     define('urlUserMan', "https://kiwihc16.github.io/AbeilleDoc/");
 
-    /* Developper config file */
+    /* Developer config file */
     define('dbgFile', __DIR__.'/../../tmp/debug.json');
 
     /* A bit per daemon */

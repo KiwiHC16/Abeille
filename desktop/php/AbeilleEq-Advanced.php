@@ -532,6 +532,69 @@
             <h3 class="col-sm-5" style="text-align:left">{{Interrogation de l'équipement. Sortie dans 'AbeilleParser.log'}}</h3>
         </div>
 
+        <!-- Zigbee standard commands -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="getRoutingTable (Mgmt_Rtg_req)">Table de routage</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'getRoutingTable\', \''.$eqId.'\')">{{Interroger}}</a>';
+                ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="getBindingTable (Mgmt_Bind_req)">Table de binding</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'getBindingTable\', \''.$eqId.'\')">{{Interroger}}</a>';
+                ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="getNeighborTable (Mgmt_Lqi_req)">Table de voisinage</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'getNeighborTable\', \''.$eqId.'\')">{{Interroger}}</a>';
+                ?>
+                <input id="idStartIdx" title="{{Start index (ex: 00)}}" value="00" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="getActiveEndPoints">Liste des 'end points'</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'getActiveEndPoints\', \''.$eqId.'\')">{{Interroger}}</a>';
+                ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="Bind cet équipement vers un autre (Bind_req)">Bind to device</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-danger" onclick="interrogate(\'bindToDevice\', \''.$eqId.'\')">{{Bind}}</a>';
+                    addEpButton("idEpE", $mainEP);
+                    addClusterButton("idClustIdE");
+                    // <input id="idIeeeE" title="{{Adresse IEEE de destination (ex: 5C0272FFFE2857A3)}}" />
+                    echo ' TO';
+                    addIeeeListButton("idIeeeE");
+                ?>
+                <?php addEpButton("idEpE2", $mainEP); ?>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label" title="Bind cet équipement vers un groupe (Bind_req)">Bind to group</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-danger" onclick="interrogate(\'bindToGroup\', \''.$eqId.'\')">{{Bind}}</a>';
+                    addEpButton("idEpF", $mainEP);
+                    addClusterButton("idClustIdF");
+                    echo ' TO';
+                ?>
+                <input id="idGroupF" title="{{Adresse du groupe de destination (ex: 0001)}}" />
+            </div>
+        </div>
+
+        <!-- ZCL commands -->
+        <br>
         <div class="form-group">
             <label class="col-sm-3 control-label">ZCL: Lecture attribut</label>
             <div class="col-sm-5">
@@ -599,15 +662,6 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label" title="Cluster 0000, commande ResetToFactory">ZCL: Reset aux valeurs d'usine</label>
-            <div class="col-sm-5">
-                <?php
-                    echo '<a class="btn btn-danger" onclick="interrogate(\'resetToFactory\', \''.$eqId.'\')">{{Reset}}</a>';
-                    addEpButton("idEpG", $mainEP);
-                ?>
-            </div>
-        </div>
-        <div class="form-group">
             <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut">ZCL: Configurer le reporting</label>
             <div class="col-sm-9">
                 <?php
@@ -623,63 +677,35 @@
         </div>
 
         <br>
+        <!-- ZCL cluster specific commands -->
         <div class="form-group">
-            <label class="col-sm-3 control-label" title="getRoutingTable (Mgmt_Rtg_req)">Table de routage</label>
+            <label class="col-sm-3 control-label" title="Cluster 0000, commande ResetToFactory">ZCL: 0000 - Reset aux valeurs d'usine</label>
             <div class="col-sm-5">
                 <?php
-                    echo '<a class="btn btn-warning" onclick="interrogate(\'getRoutingTable\', \''.$eqId.'\')">{{Interroger}}</a>';
+                    echo '<a class="btn btn-danger" onclick="interrogate(\'0000-ResetToFactory\', \''.$eqId.'\')">{{Reset}}</a>';
+                    addEpButton("idEpG", $mainEP);
                 ?>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label" title="getBindingTable (Mgmt_Bind_req)">Table de binding</label>
+            <label class="col-sm-3 control-label" title="Cluster 1000, Get group identifiers (cmd 41)">ZCL: 1000 - Groupes</label>
             <div class="col-sm-5">
                 <?php
-                    echo '<a class="btn btn-warning" onclick="interrogate(\'getBindingTable\', \''.$eqId.'\')">{{Interroger}}</a>';
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'1000-GetGroups\', \''.$eqId.'\')">{{Interroger}}</a>';
+                    addEpButton("idEpC1000-41", $mainEP);
                 ?>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label" title="getNeighborTable (Mgmt_Lqi_req)">Table de voisinage</label>
+            <label class="col-sm-3 control-label" title="Cluster 1000, Get endpont list (cmd 42)">ZCL: 1000 - End points</label>
             <div class="col-sm-5">
                 <?php
-                    echo '<a class="btn btn-warning" onclick="interrogate(\'getNeighborTable\', \''.$eqId.'\')">{{Interroger}}</a>';
-                ?>
-                <input id="idStartIdx" title="{{Start index (ex: 00)}}" value="00" />
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label" title="getActiveEndPoints">Liste des 'end points'</label>
-            <div class="col-sm-5">
-                <?php
-                    echo '<a class="btn btn-warning" onclick="interrogate(\'getActiveEndPoints\', \''.$eqId.'\')">{{Interroger}}</a>';
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'1000-GetEndpoints\', \''.$eqId.'\')">{{Interroger}}</a>';
+                    addEpButton("idEpC1000-42", $mainEP);
                 ?>
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label" title="Bind cet équipement vers un autre (Bind_req)">Bind to device</label>
-            <div class="col-sm-5">
-                <?php
-                    echo '<a class="btn btn-danger" onclick="interrogate(\'bindToDevice\', \''.$eqId.'\')">{{Bind}}</a>';
-                    addEpButton("idEpE", $mainEP);
-                    addClusterButton("idClustIdE");
-                    // <input id="idIeeeE" title="{{Adresse IEEE de destination (ex: 5C0272FFFE2857A3)}}" />
-                    addIeeeListButton("idIeeeE");
-                ?>
-                <?php addEpButton("idEpE2", $mainEP); ?>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label" title="Bind cet équipement vers un groupe (Bind_req)">Bind to group</label>
-            <div class="col-sm-5">
-                <?php
-                    echo '<a class="btn btn-danger" onclick="interrogate(\'bindToGroup\', \''.$eqId.'\')">{{Bind}}</a>';
-                    addEpButton("idEpF", $mainEP);
-                    addClusterButton("idClustIdF");
-                ?>
-                <input id="idGroupF" title="{{Adresse du groupe de destination (ex: 0001)}}" />
-            </div>
-        </div>
+
     <?php } ?>
 
 </form>

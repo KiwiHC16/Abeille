@@ -25,14 +25,18 @@ do
     #
     # - JSON: Correction setReportTemp (#1918).
 
+    # remove trailing whitespace characters
+    L="${L%"${L##*[![:space:]]}"}"
+
     if [ ${STEP} -eq 0 ]; then
         echo "${L}" >> ${TMP}
         if [[ ${L} == "==="* ]]; then
             STEP=1 # Title found
         fi
     elif [ ${STEP} -eq 1 ]; then
-        if [[ "${L}" == "- "* ]]; then
-            # It's a list (starts with '- '). Need to add version title (# VERSION)
+        if [[ "${L}" == "- "* ]] || [[ "${L}" == " "* ]]; then
+            # It's a list (starts with '- ') or something starting with space
+            # => Need to add version title (# VERSION)
             echo "${VERSION}" >> ${TMP}
             S=${#VERSION}
             UNDER=""
@@ -44,8 +48,6 @@ do
             echo "" >> ${TMP}
             echo "${L}" >> ${TMP}
         else
-            # remove trailing whitespace characters
-            L="${L%"${L##*[![:space:]]}"}"
             if [ "${L}" == "" ]; then
                 echo >> ${TMP}
                 continue

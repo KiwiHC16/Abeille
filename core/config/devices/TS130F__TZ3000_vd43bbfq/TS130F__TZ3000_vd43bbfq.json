@@ -11,7 +11,7 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Tuya QS-Zigbee-C01 Curtain Switch Module",
+        "type": "Tuya QS-Zigbee-C01 Curtain Module",
         "commands": {
             "Groups": { "use": "Group-Membership" },
 

@@ -1,0 +1,348 @@
+{
+  "epCount": 4,
+  "endPoints": {
+    "01": {
+      "servClusters": {
+        "0000": {
+          "attributes": {
+            "0005": {
+              "value": "ALCANTARA2D1.00P1.02Z1.00",
+              "dataType": "42",
+              "access": "05"
+            },
+            "0004": {
+              "value": "ZEHNDERGROUPVAUXANDIGNY",
+              "dataType": "42",
+              "access": "05"
+            },
+            "0000": {
+              "dataType": "20",
+              "access": "05",
+              "value": 3
+            },
+            "0003": {
+              "dataType": "20",
+              "access": "05",
+              "value": 0
+            },
+            "0006": {
+              "dataType": "42",
+              "access": "05",
+              "value": "20200710FH1X3\u0000\u0000\u0000"
+            },
+            "0007": {
+              "dataType": "30",
+              "access": "05",
+              "value": "01"
+            },
+            "FFFD": {
+              "dataType": "21",
+              "access": "05",
+              "value": 1
+            }
+          },
+          "commandsReceived": [
+            "00"
+          ]
+        },
+        "0003": {
+          "attributes": {
+            "0000": {
+              "dataType": "21",
+              "access": "07",
+              "value": 0
+            },
+            "FFFD": {
+              "dataType": "21",
+              "access": "05",
+              "value": 1
+            }
+          },
+          "commandsReceived": [
+            "00",
+            "01"
+          ]
+        },
+        "0201": {
+          "attributes": {
+            "0000": {
+              "dataType": "29",
+              "access": "05",
+              "value": 1700
+            },
+            "0002": {
+              "dataType": "18",
+              "access": "05",
+              "value": "01"
+            },
+            "0003": {
+              "dataType": "29",
+              "access": "05",
+              "value": 700
+            },
+            "0004": {
+              "dataType": "29",
+              "access": "05",
+              "value": 2800
+            },
+            "0010": {
+              "dataType": "28",
+              "access": "07",
+              "value": 0
+            },
+            "0011": {
+              "dataType": "29",
+              "access": "07",
+              "value": 2600
+            },
+            "0012": {
+              "dataType": "29",
+              "access": "07",
+              "value": 1900
+            },
+            "0014": {
+              "dataType": "29",
+              "access": "07",
+              "value": 1550
+            },
+            "001B": {
+              "dataType": "30",
+              "access": "07",
+              "value": "02"
+            },
+            "001C": {
+              "dataType": "30",
+              "access": "07",
+              "value": "01"
+            },
+            "001E": {
+              "dataType": "30",
+              "access": "05",
+              "value": "04"
+            },
+            "0029": {
+              "dataType": "19",
+              "access": "05",
+              "value": "0000"
+            },
+            "0030": {
+              "dataType": "30",
+              "access": "05",
+              "value": "02"
+            },
+            "FFFD": {
+              "dataType": "21",
+              "access": "05",
+              "value": 1
+            }
+          },
+          "commandsReceived": []
+        }
+      },
+      "cliClusters": {
+        "0003": {
+          "attributes": {
+            "FFFD": {}
+          }
+        }
+      }
+    },
+    "02": {
+      "servClusters": {
+        "0000": {
+          "attributes": {
+            "0000": {
+              "dataType": "20",
+              "access": "05",
+              "value": 3
+            },
+            "0003": {
+              "dataType": "20",
+              "access": "05",
+              "value": 0
+            },
+            "0004": {
+              "value": "ZEHNDERGROUPVAUXANDIGNY",
+              "dataType": "42",
+              "access": "05"
+            },
+            "0005": {
+              "value": "ALCANTARA2D1.00P1.02Z1.00",
+              "dataType": "42",
+              "access": "05"
+            },
+            "0006": {
+              "dataType": "42",
+              "access": "05",
+              "value": "20200710FH1X3\u0000\u0000\u0000"
+            },
+            "0007": {
+              "dataType": "30",
+              "access": "05",
+              "value": "01"
+            },
+            "FFFD": {
+              "dataType": "21",
+              "access": "05",
+              "value": 1
+            }
+          },
+          "commandsReceived": [
+            "00"
+          ]
+        },
+        "0003": {
+          "attributes": {
+            "0000": {
+              "dataType": "21",
+              "access": "07",
+              "value": 0
+            },
+            "FFFD": {
+              "dataType": "21",
+              "access": "05",
+              "value": 1
+            }
+          },
+          "commandsReceived": [
+            "00",
+            "01"
+          ]
+        },
+        "0406": {
+          "attributes": {
+            "0000": {
+              "dataType": "18",
+              "access": "05",
+              "value": "01"
+            },
+            "0001": {
+              "dataType": "30",
+              "access": "05",
+              "value": "00"
+            },
+            "0002": {
+              "dataType": "18",
+              "access": "05",
+              "value": "00"
+            },
+            "FFFD": {
+              "dataType": "21",
+              "access": "05",
+              "value": 1
+            }
+          },
+          "commandsReceived": []
+        }
+      },
+      "cliClusters": {
+        "0003": {
+          "attributes": {
+            "FFFD": {}
+          }
+        }
+      }
+    },
+    "03": {
+      "servClusters": {
+        "0000": {
+          "attributes": {
+            "0004": {
+              "value": "ZEHNDERGROUPVAUXANDIGNY",
+              "dataType": "42",
+              "access": "05"
+            },
+            "0000": {
+              "dataType": "20",
+              "access": "05",
+              "value": 3
+            },
+            "0003": {
+              "dataType": "20",
+              "access": "05",
+              "value": 0
+            },
+            "0005": {
+              "dataType": "42",
+              "access": "05",
+              "value": "ALCANTARA2D1.00P1.02Z1.00"
+            },
+            "0006": {
+              "dataType": "42",
+              "access": "05",
+              "value": "20200710FH1X3\u0000\u0000\u0000"
+            },
+            "0007": {
+              "dataType": "30",
+              "access": "05",
+              "value": "01"
+            },
+            "FFFD": {
+              "dataType": "21",
+              "access": "05",
+              "value": 1
+            }
+          },
+          "commandsReceived": [
+            "00"
+          ]
+        },
+        "0003": {
+          "attributes": {
+            "0000": {
+              "dataType": "21",
+              "access": "07",
+              "value": 0
+            },
+            "FFFD": {
+              "dataType": "21",
+              "access": "05",
+              "value": 1
+            }
+          },
+          "commandsReceived": [
+            "00",
+            "01"
+          ]
+        },
+        "000F": {
+          "attributes": {
+            "0051": {
+              "dataType": "10",
+              "access": "07"
+            },
+            "0055": {
+              "dataType": "10",
+              "access": "07"
+            },
+            "006F": {
+              "dataType": "18",
+              "access": "05"
+            },
+            "FFFD": {
+              "dataType": "21",
+              "access": "05"
+            }
+          },
+          "commandsReceived": []
+        }
+      },
+      "cliClusters": {
+        "0003": {
+          "attributes": {
+            "FFFD": {}
+          }
+        }
+      }
+    },
+    "F2": {
+      "servClusters": {
+        "": {}
+      },
+      "cliClusters": {
+        "0021": {}
+      }
+    }
+  },
+  "powerSource": "mains"
+}

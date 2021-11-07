@@ -25,7 +25,7 @@
             },
             "Set-BatteryReporting": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600&changeVal=",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
 

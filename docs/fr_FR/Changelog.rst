@@ -1,11 +1,26 @@
 ChangeLog
 =========
 
-211030-BETA-1
+  .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM), donc dispo depuis la version '3.1e'.
 
     - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
     - Les firmwares avant 3.1e sont forcement 'legacy'.
     - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+- Page Abeilles: Fonctionalité 'scenes' cachée. Scénaris offrent l'équivalent.
+- Identification modèles Tuya: Correction.
+- Interne: AbeilleCmd, bind0030: Supression fonction prepare.
+- Interne: AbeilleCmdPrepare: Correctif pour nmbre de params impair.
+- Interne: getVersion => getZgVersion.
+- JSON équipements: Amélioration syntaxe permettant de surcharger 'execAtCreationDelay'.
+- Sonoff SNZB-02: JSON revu. 'TH01.json' supporte identifiants 'TH01' & '66666'.
+- JSON équipements: Correction valeur minInterval & maxInterval (décimal => hexa).
+- Page EQ/avancé: Support préliminaire cmds 41 & 42, cluster 1000/Commissioning.
+- Silvercrest HG06106C light bulb: Ajout support (#2050).
+- Legrand 16AX: Mise-à-jour icone.
+
+211030-BETA-1
+-------------
 
 - Tuya ZM-CG205 door sensor: Mise-à-jour JSON. Ajout 'ZoneStatus' (#2165).
 - Interne: Parser: Support réponse cluster 000A/Time, attrib 0007 + ...

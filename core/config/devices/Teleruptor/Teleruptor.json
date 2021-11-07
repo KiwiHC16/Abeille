@@ -1,14 +1,16 @@
 {
     "Teleruptor": {
         "timeout": "60",
+        "manufacturer": "Legrand",
+        "model": "16AX",
         "configuration": {
             "mainEP": "01",
-            "icon": "Teleruptor"
+            "icon": "Legrand-Teleruptor"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Legrand Teleruptor",
+        "type": "Legrand 16AX Teleruptor",
         "commands": {
             "include4": "etat",
             "include8": "On",

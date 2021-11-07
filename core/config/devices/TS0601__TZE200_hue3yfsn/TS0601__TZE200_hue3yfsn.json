@@ -1,0 +1,20 @@
+{
+    "TS0601__TZE200_hue3yfsn": {
+        "manufacturer": "Tuya",
+        "model": "TV02",
+        "comment": "Empty model. Need to understand how to use cluster EF00",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "Tuya-TV02",
+            "batteryType": "To be defined"
+        },
+        "category": {
+            "heating": "1"
+        },
+        "type": "Tuya TV02",
+        "commands": {
+            "Groups": { "use": "Group-Membership" }
+        }
+    }
+}

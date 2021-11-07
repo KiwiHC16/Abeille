@@ -86,6 +86,9 @@ Exemple: BASICZBR3.json
     "telecommande", "telecommande7groups"
 
 * commands: OBLIGATOIRE, liste des commandes implémentées
+  ATTENTION !! TOUS les nombres sont donnés en HEXA.
+    Ex: minInterval=1800. Si 1800sec alors c'est FAUX => minInterval=0708
+
   Nouvelle syntaxe:
     "<nom_cmde_Jeedom>": { "use": "<nom_fichier_cmde_Abeille>", "params": "<xx=01&xy=0003>", "isVisible": 1, "execAtCreation": "yes" }
     isVisible: 1, 0, 'yes', 'no'.

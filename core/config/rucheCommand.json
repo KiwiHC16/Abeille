@@ -1,14 +1,14 @@
 {
-  "Version": {
-    "name": "Version",
+  "Get FW version": {
+    "name": "Get FW version",
     "order": 0,
     "isHistorized": "0",
     "isVisible": "0",
     "Type": "action",
     "subType": "other",
     "configuration": {
-      "topic": "getVersion",
-      "request": "Version"
+      "topic": "getZgVersion",
+      "request": ""
     },
     "display": {
       "forceReturnLineAfter": "1"

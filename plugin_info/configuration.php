@@ -528,21 +528,24 @@
 
     /* Called when Zigate type (USB, WIFI, PI, DIN) is changed */
     function checkZigateType(zgId) {
-        console.log("checkZigateType(zgId=" + zgId + ")");
+        console.log("checkZigateType(zgId="+zgId+")");
 
         var zgType = $("#idSelZgType" + zgId).val();
-        var idSelSP = document.querySelector('#idSelSP' + zgId);
+        var idSelSP = document.querySelector('#idSelSP'+zgId);
         // var idCheckSP = document.querySelector('#idCheckSP' + zgId);
         var idFW = document.querySelector('#idFW' + zgId);
         // var idUpdateFW = document.querySelector('#idUpdateFW' + zgId);
-        var idWifiAddr = document.querySelector('#idWifiAddr' + zgId);
+        var idWifiAddr = document.querySelector('#idWifiAddr'+zgId);
         // var idCheckWifi = document.querySelector('#idCheckWifi' + zgId);
 
         // $("#idSocat"+zgId).hide();
         // $("#idWiringPi"+zgNb).hide();
         // $("#idCommTest"+zgId).hide();
-        idSelSP.removeAttribute('disabled');
-        idWifiAddr.setAttribute('disabled', true);
+
+        // Default: Type USBv1 => SelSP allowed, WifiAddr disallowed
+        idSelSP.removeAttribute('disabled'); // Serial port selection allowed by default
+        idWifiAddr.setAttribute('disabled', true); // Wifi addr disallowed by default
+        $("#idUpdFw"+zgId).hide(); // Update FW disallowed by default
 
         if (zgType == "WIFI") {
             console.log('Type changed to Wifi');
@@ -567,13 +570,17 @@
             // }
         }
 
+        allowSelSP = true; // Serial port selection ALLOWED by default
+        allowWifiAddr = false; // Wifi addr DISALLOWED by default
         allowReadFw = false;
-        allowUpdFw = false;
+        allowUpdFw = false; // Update FW disallowed by default
         switch (zgType) {
         case "USB":
             allowReadFw = true;
             break;
         case "WIFI":
+            allowSelSP = false;
+            allowWifiAddr = true;
             break;
         case "PI":
             allowReadFw = true;
@@ -593,6 +600,10 @@
             allowReadFw = true;
             break;
         }
+        if (allowSelSP == false)
+            idSelSP.setAttribute('disabled', true);
+        if (allowWifiAddr)
+            idWifiAddr.removeAttribute('disabled');
         if (allowReadFw) {
             $("#idReadFwB"+zgId).show();
             $("#idCommTest"+zgId).show();
@@ -602,8 +613,6 @@
         }
         if (allowUpdFw)
             $("#idUpdFw"+zgId).show();
-        else
-            $("#idUpdFw"+zgId).hide();
     }
 
     /* Called when 'IP:port' test button is pressed (Wifi case) */

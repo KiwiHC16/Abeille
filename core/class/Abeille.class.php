@@ -434,7 +434,7 @@ class Abeille extends eqLogic
         log::add('Abeille', 'debug', 'Starting cronHourly ------------------------------------------------------------------------------------------------------------------------');
         log::add('Abeille', 'debug', 'Check Zigate Presence');
 
-        $param = AbeilleTools::getParameters();
+        $config = AbeilleTools::getParameters();
 if (0) {
         //--------------------------------------------------------
         // Refresh Ampoule Ikea Bind et set Report
@@ -652,10 +652,10 @@ if (0) {
         }
 
         // log::add( 'Abeille', 'debug', 'cron1: Start ------------------------------------------------------------------------------------------------------------------------' );
-        $param = AbeilleTools::getParameters();
+        $config = AbeilleTools::getParameters();
 
         $running = AbeilleTools::getRunningDaemons();
-        $status = AbeilleTools::checkAllDaemons($param, $running);
+        $status = AbeilleTools::checkAllDaemons($config, $running);
 
         /* For debug purposes, display 'PID/daemonShortName' */
         $status = AbeilleTools::getRunningDaemons2();
@@ -688,12 +688,12 @@ if (0) {
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
         // so I need to create a minimum of traffic, so pull zigate every minutes
         for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-            if ($param['AbeilleActiver'.$i] != 'Y')
+            if ($config['AbeilleActiver'.$i] != 'Y')
                 continue; // Zigate disabled
-            if ($param['AbeilleSerialPort'.$i] == "none")
+            if ($config['AbeilleSerialPort'.$i] == "none")
                 continue; // Serial port undefined
             // TODO Tcharp38: Currently leads to PI zigate timeout. No sense since still alive.
-            // if ($param['AbeilleType'.$i] != "WIFI")
+            // if ($config['AbeilleType'.$i] != "WIFI")
             //     continue; // Not a WIFI zigate. No polling required
 
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/0000/getZgVersion&time=".(time() + 20), "");
@@ -882,30 +882,30 @@ if (0) {
         /* Cleanup */
         self::deamon_start_cleanup();
 
-        $param = AbeilleTools::getParameters();
+        $config = AbeilleTools::getParameters();
 
         /* Checking config */
         // TODO Tcharp38: Should be done during deamon_info() and report proper 'launchable'
         for ($zgNb = 1; $zgNb <= $GLOBALS['maxNbOfZigate']; $zgNb++) {
-            if ($param['AbeilleActiver'.$zgNb] != 'Y')
+            if ($config['AbeilleActiver'.$zgNb] != 'Y')
                 continue; // Disabled
 
             /* This zigate is enabled. Checking other parameters */
             $error = "";
-            $sp = $param['AbeilleSerialPort'.$zgNb];
+            $sp = $config['AbeilleSerialPort'.$zgNb];
             if (($sp == 'none') || ($sp == "")) {
                 $error = "Port série de la zigate ".$zgNb." INVALIDE";
             }
             if ($error == "") {
-                if ($param['AbeilleType'.$zgNb] == "WIFI") {
-                    $wifiAddr = $param['IpWifiZigate'.$zgNb];
+                if ($config['AbeilleType'.$zgNb] == "WIFI") {
+                    $wifiAddr = $config['IpWifiZigate'.$zgNb];
                     if (($wifiAddr == 'none') || ($wifiAddr == "")) {
                         $error = "Adresse Wifi de la zigate ".$zgNb." INVALIDE";
                     }
                 }
             }
             if ($error != "") {
-                $param['AbeilleActiver'.$zgNb] = 'N';
+                $config['AbeilleActiver'.$zgNb] = 'N';
                 config::save('AbeilleActiver'.$zgNb, 'N', 'Abeille');
                 log::add('Abeille', 'error', $error." ! Zigate désactivée.");
             }
@@ -917,26 +917,26 @@ if (0) {
             - port 2 = FLASH
             - Production mode: FLASH=1, RESET=0 then 1 */
         for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-            if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
+            if (($config['AbeilleSerialPort'.$i] == 'none') or ($config['AbeilleActiver'.$i] != 'Y'))
                 continue; // Undefined or disabled
-            if ($param['AbeilleType'.$i] == "PI") {
+            if ($config['AbeilleType'.$i] == "PI") {
                 AbeilleTools::checkGpio(); // Found an active PI Zigate, needed once
                 break;
             }
         }
 
         /* Starting all required daemons */
-        AbeilleTools::startDaemons($param);
+        AbeilleTools::startDaemons($config);
 
         /* Waiting for background daemons to be up & running.
            If not, the return of first commands sent to zigate might be lost.
            This was sometimes the case for 0009 cmd which is key to 'enable' msg receive on parser side. */
         $expected = 0; // 1 bit per expected serial read daemon
         for ($zgNb = 1; $zgNb <= $GLOBALS['maxNbOfZigate']; $zgNb++) {
-            if (($param['AbeilleSerialPort'.$zgNb] == 'none') or ($param['AbeilleActiver'.$zgNb] != 'Y'))
+            if (($config['AbeilleSerialPort'.$zgNb] == 'none') or ($config['AbeilleActiver'.$zgNb] != 'Y'))
                 continue; // Undefined or disabled
             $expected |= constant("daemonSerialRead".$zgNb);
-            if ($param['AbeilleType'.$zgNb] == 'WIFI')
+            if ($config['AbeilleType'.$zgNb] == 'WIFI')
                 $expected |= constant("daemonSocat".$zgNb);
         }
         $timeout = 10;
@@ -955,10 +955,10 @@ if (0) {
         // Tcharp38: Moved to main daemon (deamon())
         // // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
         // for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-        //     if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
+        //     if (($config['AbeilleSerialPort'.$i] == 'none') or ($config['AbeilleActiver'.$i] != 'Y'))
         //         continue; // Undefined or disabled
 
-        //     // log::add('Abeille', 'debug', 'deamon_start(): ***** creation de ruche '.$i.' (Abeille): '.basename($param['AbeilleSerialPort'.$i]));
+        //     // log::add('Abeille', 'debug', 'deamon_start(): ***** creation de ruche '.$i.' (Abeille): '.basename($config['AbeilleSerialPort'.$i]));
         //     Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$i);
 
         //     // log::add('Abeille', 'debug', 'deamon_start(): ***** Demarrage du réseau Zigbee '.$i.' ********');
@@ -1004,10 +1004,10 @@ if (0) {
     //  */
     // public static function mapAbeillePort($Abeille)
     // {
-    //     $param = AbeilleTools::getParameters();
+    //     $config = AbeilleTools::getParameters();
 
     //     for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-    //         if ($Abeille == "Abeille".$i) return basename($param['AbeilleSerialPort'.$i]);
+    //         if ($Abeille == "Abeille".$i) return basename($config['AbeilleSerialPort'.$i]);
     //     }
     // }
 
@@ -1019,10 +1019,10 @@ if (0) {
     //  */
     // public static function mapPortAbeille($port)
     // {
-    //     $param = AbeilleTools::getParameters();
+    //     $config = AbeilleTools::getParameters();
 
     //     for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-    //         if ($port == $param['AbeilleSerialPort'.$i]) return "Abeille".$i;
+    //         if ($port == $config['AbeilleSerialPort'.$i]) return "Abeille".$i;
     //     }
     // }
 
@@ -1121,12 +1121,12 @@ while ($cron->running()) {
 
         // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
         // Tcharp38: Moved from deamon_start()
-        $param = AbeilleTools::getParameters();
+        $config = AbeilleTools::getParameters();
         for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-            if (($param['AbeilleSerialPort'.$i] == 'none') or ($param['AbeilleActiver'.$i] != 'Y'))
+            if (($config['AbeilleSerialPort'.$i] == 'none') or ($config['AbeilleActiver'.$i] != 'Y'))
                 continue; // Undefined or disabled
 
-            // log::add('Abeille', 'debug', 'deamon(): ***** creation de ruche '.$i.' (Abeille): '.basename($param['AbeilleSerialPort'.$i]));
+            // log::add('Abeille', 'debug', 'deamon(): ***** creation de ruche '.$i.' (Abeille): '.basename($config['AbeilleSerialPort'.$i]));
             Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$i);
 
             // log::add('Abeille', 'debug', 'deamon(): ***** Demarrage du réseau Zigbee '.$i.' ********');
@@ -1243,7 +1243,7 @@ while ($cron->running()) {
 
     // public static function checkParameters() {
     //     // return 1 si Ok, 0 si erreur
-    //     $param = Abeille::getParameters();
+    //     $config = Abeille::getParameters();
 
     //     if ( !isset($GLOBALS['maxNbOfZigate']) ) { return 0; }
     //     if ( $GLOBALS['maxNbOfZigate'] < 1 ) { return 0; }
@@ -1386,7 +1386,7 @@ while ($cron->running()) {
             return;
         }
 
-        $parameters_info = AbeilleTools::getParameters();
+        $config = AbeilleTools::getParameters();
 
         $convert = array(
             "affichageNetwork" => "Network",
@@ -1403,7 +1403,7 @@ while ($cron->running()) {
             case 'N':
                 break;
             case 'toggle':
-                if ($parameters_info[$affichageType] == 'Y') {
+                if ($config[$affichageType] == 'Y') {
                     $Visibility = 'N';
                 } else {
                     $Visibility = 'Y';
@@ -1475,7 +1475,7 @@ while ($cron->running()) {
             return;
         }
 
-        $parameters_info = AbeilleTools::getParameters();
+        $config = AbeilleTools::getParameters();
 
         // if (!preg_match("(Time|Link-Quality)", $message->topic)) {
         //    log::add('Abeille', 'debug', "fct message Topic: ->".$message->topic."<- Value ->".$message->payload."<-");
@@ -1731,7 +1731,7 @@ while ($cron->running()) {
         //     message::add("Abeille", "Nouvel équipement détecté: ".$name.". Création en cours. Rafraîchissez votre dashboard dans qq secondes.", '');
         //     $eqLogic->setName($name);
         //     $eqLogic->setLogicalId($nodeid);
-        //     $eqLogic->setObject_id($parameters_info['AbeilleParentId']);
+        //     $eqLogic->setObject_id($config['AbeilleParentId']);
         //     $objetDefSpecific = $AbeilleObjetDefinition[$jsonId];
         //     $objetConfiguration = $objetDefSpecific["configuration"];
         //     log::add('Abeille', 'debug', 'Template configuration: '.json_encode($objetConfiguration));
@@ -1879,7 +1879,7 @@ while ($cron->running()) {
         //         }
         //         // La boucle est pour info et pour action
         //         // isVisible
-        //         $parameters_info = AbeilleTools::getParameters();
+        //         $config = AbeilleTools::getParameters();
         //         $isVisible = $cmdValueDefaut["isVisible"];
 
         //         if (array_key_exists("display", $cmdValueDefaut))
@@ -2614,7 +2614,7 @@ while ($cron->running()) {
             }
         }
 
-        // $parameters_info = AbeilleTools::getParameters();
+        // $config = AbeilleTools::getParameters();
 
         $msgAbeille = new MsgAbeille;
         $msgAbeille->message['topic'] = $topic;
@@ -2648,13 +2648,13 @@ while ($cron->running()) {
             */
 
         message::add("Abeille", "Création de l'équipement 'Ruche' en cours. Rafraichissez votre dashboard dans qq secondes.", '');
-        $parameters_info = AbeilleTools::getParameters();
+        $config = AbeilleTools::getParameters();
         $eqLogic = new Abeille();
         //id
         $eqLogic->setName("Ruche-".$dest);
         $eqLogic->setLogicalId($dest."/0000");
-        if ($parameters_info['AbeilleParentId'] > 0) {
-            $eqLogic->setObject_id($parameters_info['AbeilleParentId']);
+        if ($config['AbeilleParentId'] > 0) {
+            $eqLogic->setObject_id($config['AbeilleParentId']);
         } else {
             $eqLogic->setObject_id(jeeObject::rootObject()->getId());
         }

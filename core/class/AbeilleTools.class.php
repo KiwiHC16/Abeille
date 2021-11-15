@@ -613,6 +613,7 @@ class AbeilleTools
             $return['AbeilleActiver'.$i] = config::byKey('AbeilleActiver'.$i, 'Abeille', 'N', 1);
         }
 
+        $return['monitor'] = config::byKey('monitor', 'Abeille', false);
         return $return;
     }
 
@@ -940,13 +941,8 @@ class AbeilleTools
             $daemons .= " AbeilleParser AbeilleCmd";
 
             /* Starting 'AbeilleMonitor' daemon too if required */
-            /* Reread 'debug.json' to avoid PHP cache issues */
-            if (file_exists(dbgFile)) {
-                $dbgConfig = json_decode(file_get_contents(dbgFile), true);
-                if (isset($dbgConfig["dbgMonitorAddr"])) {
-                    $daemons .= " AbeilleMonitor";
-                }
-            }
+            if ($config['monitor'] !== false)
+                $daemons .= " AbeilleMonitor";
         }
         log::add('Abeille', 'debug', "startDaemons(): ".$daemons);
         $daemonsArr = explode(" ", $daemons);

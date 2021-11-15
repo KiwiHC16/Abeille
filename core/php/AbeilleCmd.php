@@ -47,7 +47,7 @@
     if ($monId !== false) {
         $eqLogic = eqLogic::byId($monId);
         if (!is_object($eqLogic)) {
-            logMessage('error', 'Mauvais ID pour équipement à surveiller: '.$monId);
+            logMessage('debug', 'Bad ID to monitor: '.$monId);
         } else {
             list($net, $addr) = explode( "/", $eqLogic->getLogicalId());
             $ieee = $eqLogic->getConfiguration('IEEE', '');

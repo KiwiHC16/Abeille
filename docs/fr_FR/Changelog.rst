@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211115-BETA-1
+-------------
+
 - Page de config: Correction bug écriture impossible adresse Wifi.
 
 211107-BETA-1

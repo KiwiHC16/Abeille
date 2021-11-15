@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211115-BETA-2
+-------------
+
 - Moniteur: Suppression message sur équipement inexistant (#2186).
 - Moniteur: Correction lancement démon.
 

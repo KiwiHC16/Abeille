@@ -1,6 +1,19 @@
 ChangeLog
 =========
 
+  .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM), donc dispo depuis la version '3.1e'.
+
+    - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+    - Les firmwares avant 3.1e sont forcement 'legacy'.
+    - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+- Acova Alcantara: Ajout support préliminaire (#2180).
+- Interne: Nettoyage AbeilleZigateConst.
+- Mise-à-jour OTA (Over-The-Air): Ajout support préliminaire.
+- Interne: Correction CmdPrepare/WriteAttributeRequestGeneric. Impacte Danfoss Ally (#1881).
+- Ikea bulb E27 White Spectre opal 1055lm: Ajout support (#2187).
+- Moes ZSS-ZK-THL-C: Ajout support (#2191).
+
 211115-BETA-2
 -------------
 
@@ -14,12 +27,6 @@ ChangeLog
 
 211107-BETA-1
 -------------
-
-  .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM), donc dispo depuis la version '3.1e'.
-
-    - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-    - Les firmwares avant 3.1e sont forcement 'legacy'.
-    - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
 
 - Page Abeilles: Fonctionalité 'scenes' cachée. Scénaris offrent l'équivalent.
 - Identification modèles Tuya: Correction.

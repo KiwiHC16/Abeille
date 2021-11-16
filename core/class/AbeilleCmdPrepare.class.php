@@ -805,12 +805,14 @@
                 }
                 $valuePrepared = $parameters['value'];
                 // Example: set Temperature Danfoss Radiator Head
-                if ($parameters['attributeType'] = '29' )  {
-                    $valuePrepared = sprintf("%04X", $parameters['value']*100 );
-                    $valuePrepared = $valuePrepared[2] . $valuePrepared[3] . $valuePrepared[0] . $valuePrepared[1] ;
-                }
-                if ($parameters['attributeType'] = '30' )  {
-                    $valuePrepared = sprintf("%02X", $parameters['value'] );
+                if ($parameters['attributeType'] == '29')  {
+                    $valuePrepared = sprintf("%04X", $parameters['value'] * 100);
+                    $valuePrepared = $valuePrepared[2] . $valuePrepared[3] . $valuePrepared[0] . $valuePrepared[1];
+                } else if ($parameters['attributeType'] == '30')  {
+                    $valuePrepared = sprintf("%02X", $parameters['value']);
+                } else {
+                    $this->deamonlog('debug', '  WriteAttributeRequestGeneric ERROR: unsupported attribute type '.$parameters['attributeType']);
+                    return;
                 }
                 $Command = array(
                                     "WriteAttributeRequestGeneric" => "1",

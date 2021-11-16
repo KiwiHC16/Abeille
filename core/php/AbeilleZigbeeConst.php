@@ -55,8 +55,12 @@
     }
 
     // Clusters definition
-    //  'attributes' = Server attributes
-    //  'commands' = commands received
+    //  'name' = Cluster name
+    //  'attributes' = Array. Server attributes
+    //      'name' = String. Attribute name
+    //      'access' = String. Access type Read, Write, rePortable
+    //      'dataType' = Number.
+    //  'commands' = Array. commands received
     // All hex are UPPER case
     $GLOBALS['zbClusters'] = array(
         "0000" => array(
@@ -333,6 +337,15 @@
                 "08" => array( "name" => "GotoTiltPercent" ),
             ),
         ),
+        "0201" => array(
+            "name" => "Thermostat",
+            "attributes" => array(
+                "0000" => array( "name" => "LocalTemperature", "access" => "RP" ),
+                "0002" => array( "name" => "Occupancy", "access" => "R" ),
+                "0012" => array( "name" => "OccupiedHeatingSetpoint", "access" => "RW" ),
+                "0014" => array( "name" => "UnoccupiedHeatingSetpoint", "access" => "RW" ),
+            ),
+        ),
         "0300" => array(
             "name" => "Color control",
             "attributes" => array(
@@ -463,6 +476,15 @@
             ),
         ),
     );
+
+    /* Returns cluster name from its ID */
+    function zbGetZCLClusterName($clustId) {
+        global $zbClusters;
+        $clustId = strtoupper($clustId);
+        if (!array_key_exists($clustId, $zbClusters))
+            return "Unknown-".$clustId; // Unknown cluster
+        return $zbClusters[$clustId]['name'];
+    }
 
     /* Returns Zigbee ZCL global command name from id. */
     function zbGetZCLGlobalCmdName($cmdId)

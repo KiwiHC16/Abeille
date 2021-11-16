@@ -43,6 +43,7 @@
             "8300" => "Host PDM available response",
             "8401" => "Zone status change notification",
             "8501" => "OTA block request",
+            "8503" => "OTA upgrade end request",
             "8531" => "Complex descriptor response",
         );
 
@@ -202,75 +203,76 @@
         return $devicesTable[$profId][$devId];
     }
 
-    /* Returns zigbee cluster name based on given 'clustId'. */
-    function zgGetCluster($clustId)
-    {
-        $clustId = strtoupper($clustId);
+    // Tcharp38: Moved to 'zigbee' constants.
+    // /* Returns zigbee cluster name based on given 'clustId'. */
+    // function zgGetCluster($clustId)
+    // {
+    //     $clustId = strtoupper($clustId);
 
-        /* List of known devices per profile */
-        $clustersTable = array (
-            "0000" => "General-Basic",
-            "0001" => "General-Power Config",
-            "0002" => "General-Temperature Config",
-            "0003" => "General-Identify",
-            "0004" => "General-Groups",
-            "0005" => "General-Scenes",
-            "0006" => "General-On/Off",
-            "0007" => "General-On/Off Config",
-            "0008" => "General-Level Control",
-            "0009" => "General-Alarms",
-            "000A" => "General-Time",
-            "000B" => "General-RSSI Location",
-            "000C" => "General-Analog Input (Basic)",
-            "000D" => "General-Analog Output (Basic)",
-            "000E" => "General-Analog Value (Basic)",
-            "000F" => "General-Binary Input (Basic)",
-            "0010" => "General-Binary Output (Basic)",
-            "0011" => "General-Binary Value (Basic)",
-            "0012" => "General-Multistate Input (Basic)",
-            "0013" => "General-Multistate Output (Basic)",
-            "0014" => "General-Multistate Value (Basic)",
-            "0015" => "General-Commissioning",
-            "0019" => "General-OTA",
-            "0020" => "General-Poll Control",
-            "0021" => "General-GreenPower",
-            "0100" => "Closures-Shade Configuration",
-            "0101" => "Closures-Door Lock",
-            "0102" => "Closures-Window Covering",
-            "0200" => "Pump Configuration and Control",
-            "0201" => "HVAC-Thermostat",
-            "0202" => "HVAC-Fan Control",
-            "0203" => "HVAC-Dehumidification Control",
-            "0204" => "HVAC-Thermostat User Interface Configuration",
-            "0300" => "Lighting-Color Control",
-            "0301" => "Lighting-Ballast Configuration",
-            "0400" => "Measurement-Illuminance",
-            "0401" => "Measurement-Illuminance level sensing",
-            "0402" => "Measurement-Temperature",
-            "0403" => "Measurement-Pression atmosphérique",
-            "0404" => "Measurement-Flow Measurement",
-            "0405" => "Measurement-Humidity",
-            "0406" => "Measurement-Occupancy Sensing",
-            "0500" => "Security & Safety-IAS Zone",
-            "0501" => "Security & Safety-IAS ACE",
-            "0502" => "Security & Safety-IAS WD",
-            "0702" => "Smart Energy-Metering",
-            "0703" => "Smart Energy-Messaging",
-            "0B05" => "Misc-Diagnostics",
-            "0B04" => "Electrical Measurement",
-            "0B05" => "Diagnostics",
-            "1000" => "ZLL-Commissioning",
-            "FC01" => "Legrand private",
-            "FC41" => "Legrand private",
-            "FF01" => "Xiaomi private",
-            "FF02" => "Xiaomi private",
-            "FFFF" => "Xiaomi private"
-        );
+    //     /* List of known devices per profile */
+    //     $clustersTable = array (
+    //         "0000" => "General-Basic",
+    //         "0001" => "General-Power Config",
+    //         "0002" => "General-Temperature Config",
+    //         "0003" => "General-Identify",
+    //         "0004" => "General-Groups",
+    //         "0005" => "General-Scenes",
+    //         "0006" => "General-On/Off",
+    //         "0007" => "General-On/Off Config",
+    //         "0008" => "General-Level Control",
+    //         "0009" => "General-Alarms",
+    //         "000A" => "General-Time",
+    //         "000B" => "General-RSSI Location",
+    //         "000C" => "General-Analog Input (Basic)",
+    //         "000D" => "General-Analog Output (Basic)",
+    //         "000E" => "General-Analog Value (Basic)",
+    //         "000F" => "General-Binary Input (Basic)",
+    //         "0010" => "General-Binary Output (Basic)",
+    //         "0011" => "General-Binary Value (Basic)",
+    //         "0012" => "General-Multistate Input (Basic)",
+    //         "0013" => "General-Multistate Output (Basic)",
+    //         "0014" => "General-Multistate Value (Basic)",
+    //         "0015" => "General-Commissioning",
+    //         "0019" => "General-OTA",
+    //         "0020" => "General-Poll Control",
+    //         "0021" => "General-GreenPower",
+    //         "0100" => "Closures-Shade Configuration",
+    //         "0101" => "Closures-Door Lock",
+    //         "0102" => "Closures-Window Covering",
+    //         "0200" => "Pump Configuration and Control",
+    //         "0201" => "HVAC-Thermostat",
+    //         "0202" => "HVAC-Fan Control",
+    //         "0203" => "HVAC-Dehumidification Control",
+    //         "0204" => "HVAC-Thermostat User Interface Configuration",
+    //         "0300" => "Lighting-Color Control",
+    //         "0301" => "Lighting-Ballast Configuration",
+    //         "0400" => "Measurement-Illuminance",
+    //         "0401" => "Measurement-Illuminance level sensing",
+    //         "0402" => "Measurement-Temperature",
+    //         "0403" => "Measurement-Pression atmosphérique",
+    //         "0404" => "Measurement-Flow Measurement",
+    //         "0405" => "Measurement-Humidity",
+    //         "0406" => "Measurement-Occupancy Sensing",
+    //         "0500" => "Security & Safety-IAS Zone",
+    //         "0501" => "Security & Safety-IAS ACE",
+    //         "0502" => "Security & Safety-IAS WD",
+    //         "0702" => "Smart Energy-Metering",
+    //         "0703" => "Smart Energy-Messaging",
+    //         "0B05" => "Misc-Diagnostics",
+    //         "0B04" => "Electrical Measurement",
+    //         "0B05" => "Diagnostics",
+    //         "1000" => "ZLL-Commissioning",
+    //         "FC01" => "Legrand private",
+    //         "FC41" => "Legrand private",
+    //         "FF01" => "Xiaomi private",
+    //         "FF02" => "Xiaomi private",
+    //         "FFFF" => "Xiaomi private"
+    //     );
 
-        if (array_key_exists($clustId, $clustersTable))
-            return $clustersTable[$clustId];
-        return "Unknown ".$clustId." cluster";
-    }
+    //     if (array_key_exists($clustId, $clustersTable))
+    //         return $clustersTable[$clustId];
+    //     return "Unknown ".$clustId." cluster";
+    // }
 
     /* Returns zigate 8000 cmd status based on given '$status' value.
        Tcharp38: Still unclear how to decode such statutes. */

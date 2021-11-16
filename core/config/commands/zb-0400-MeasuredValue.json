@@ -1,0 +1,10 @@
+{
+    "zb-0400-MeasuredValue": {
+        "comment": "0400/Illuminance measurement cluster, attrib 0000/MeasuredValue type uint16",
+        "name": "MeasuredValue",
+        "subType": "numeric",
+        "configuration": [],
+        "type": "info",
+        "logicalId": "0400-#EP#-0000"
+    }
+}

@@ -8,8 +8,15 @@
     /* Developers debug features & PHP errors */
     require_once __DIR__.'/../../core/config/Abeille.config.php';
     if (file_exists(dbgFile)) {
-        $dbgConfig = json_decode(file_get_contents(dbgFile), true);
         $dbgDeveloperMode = true;
+        $dbgConfig = json_decode(file_get_contents(dbgFile), true);
+        if (isset($dbgConfig["defines"])) {
+            $arr = $dbgConfig["defines"];
+            foreach ($arr as $idx => $value) {
+                if ($value == "Tcharp38")
+                    $dbgTcharp38 = true;
+            }
+        }
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -59,9 +66,10 @@
         'net'       => array( 'bouton'=>'bt_networkAbeille',        'icon'=>'fa-map',           'text'=>'{{Network Graph}}' ),
         'graph'     => array( 'bouton'=>'bt_graph',                 'icon'=>'fa-flask',         'text'=>'{{Graph}}' ),
         'compat'    => array( 'bouton'=>'bt_supportedEqList',       'icon'=>'fa-align-left',    'text'=>'{{Compatibilite}}' ),
-        'inconnu'   => array( 'bouton'=>'bt_Inconnu',               'icon'=>'fa-paperclip',     'text'=>'{{Inconnu}}' ),
         'support'   => array( 'bouton'=>'bt_supportPage',           'icon'=>'fa-medkit',        'text'=>'{{Support}}' ),
-        );
+    );
+    if (isset($dbgTcharp38))
+        $outils['ota'] = array( 'bouton'=>'bt_Ota',                   'icon'=>'fa-paperclip',     'text'=>'{{Mise-à-jours OTA}}' );
 ?>
 
 <!-- For all modals on 'Abeille' page. -->

@@ -2704,8 +2704,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     // Responding to device: image found
                     $imgVers = $fw['fileVersion'];
                     $imgSize = $fw['fileSize'];
-                    parserLog('debug', "  FW version ".$imgVers." available.");
-                    $this->msgToCmd("Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
+                    parserLog('debug', "  FW version ".$imgVers." available. Response handled by Zigate server.");
+                    // $this->msgToCmd("Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
                 } else if ($cmd == "03") { // Image Block Request
                     $fieldControl = substr($msg, 0, 2);
                     $manufCode = AbeilleTools::reverseHex(substr($msg, 2, 4));
@@ -2714,7 +2714,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $fileOffset = AbeilleTools::reverseHex(substr($msg, 18, 8));
                     $maxDataSize = AbeilleTools::reverseHex(substr($msg, 26, 2));
                     parserLog('debug', "  fieldCtrl=".$fieldControl.", manufCode=".$manufCode.", imgType=".$imgType.", fileVers=".$fileVersion.", fileOffset=".$fileOffset.", maxData=".$maxDataSize);
-                    $this->msgToCmd("Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
+                    // $this->msgToCmd("Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
+                    $this->msgToCmd("Cmd".$dest."/".$srcAddr."/otaImageBlockResponse", 'ep='.$srcEp.'&sqn='.$sqn.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
+                } else if ($cmd == "06") { // Upgrade end request
+                    parserLog('debug', "  Handled by decode8503");
                 }
                 return;
             }
@@ -3319,7 +3322,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 if ($i != 0)
                     $inputClusters .= "/";
                 $inputClusters .= $clustId;
-                parserLog('debug', '  InCluster='.$clustId.' => '.zgGetCluster($clustId), "8043");
+                parserLog('debug', '  InCluster='.$clustId.' => '.zbGetZCLClusterName($clustId), "8043");
             }
             parserLog('debug','  OutClusterCount='.substr($payload,24+$i, 2), "8043");
             $outputClusters = "";
@@ -3328,7 +3331,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 if ($i != 0)
                     $outputClusters .= "/";
                 $outputClusters .= $clustId;
-                parserLog('debug', '  OutCluster='.$clustId.' => '.zgGetCluster($clustId), "8043");
+                parserLog('debug', '  OutCluster='.$clustId.' => '.zbGetZCLClusterName($clustId), "8043");
             }
 
             /* If discovering phase => log to 'AbeilleDiscover.log' & attempt to discover attributes */
@@ -3336,7 +3339,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $this->discoverLog('- InClusterCount='.$InClustCount);
                 for ($i = 0; $i < $InClustCount; $i++) {
                     $clustId = $InClustList[$i];
-                    $this->discoverLog('- InCluster='.$clustId.' => '.zgGetCluster($clustId));
+                    $this->discoverLog('- InCluster='.$clustId.' => '.zbGetZCLClusterName($clustId));
                     // parserLog('debug', '  Requesting supported attributs list for EP '.$ep.', clust '.$clustId);
                     // Tcharp38: Some devices may not support discover attribut command and return a "default response" with status 82 (unsupported general command)
                     // Tcharp38: Some devices do not respond at all (ex: Sonoff SNBZ02)
@@ -3345,7 +3348,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $this->discoverLog('- OutClusterCount='.$OutClustCount);
                 for ($i = 0; $i < $OutClustCount; $i++) {
                     $clustId = $OutClustList[$i];
-                    $this->discoverLog('- OutCluster='.$clustId.' => '.zgGetCluster($clustId));
+                    $this->discoverLog('- OutCluster='.$clustId.' => '.zbGetZCLClusterName($clustId));
                 }
             }
 
@@ -3852,10 +3855,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', $dest.', Type='.$decoded);
 
             // Monitor if required
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr)) {
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($decoded); // Send message to monitor
-                monMsgFromZigate("  Groups: ".$groups); // Send message to monitor
-            }
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
@@ -4775,7 +4776,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', $dest.', Type=8101/Default response'
                             .', SQN='.$sqn
                             .', EP='.substr($payload, 2, 2)
-                            .', ClustId='.$clustId.'/'.zgGetCluster($clustId)
+                            .', ClustId='.$clustId.'/'.zbGetZCLClusterName($clustId)
                             .', Cmd='.substr($payload, 8, 2)
                             .', Status='.$status
                             .' => Handled by decode8002');
@@ -4993,8 +4994,67 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         // OTA specific: ZiGate will receive this command when device asks OTA firmware
         function decode8501($dest, $payload, $lqi)
         {
-            $msg = '8501/OTA block request => handled by decode8002';
+            $msg = '8501/OTA image block request => handled by decode8002';
             parserLog('debug', $dest.', Type='.$msg, "8501");
+        }
+
+        // OTA specific: ZiGate will receive this request when device received last part of FW.
+        function decode8503($dest, $payload, $lqi)
+        {
+            // Doc from Doudz/zigate
+            // s = OrderedDict([('sequence', 'B'),
+            // ('endpoint', 'B'),
+            // ('cluster', 'H'),
+            // ('address_mode', 'B'),
+            // ('addr', 'H'),
+            // ('file_version', 'L'),
+            // ('image_type', 'H'),
+            // ('manufacture_code', 'H'),
+            // ('status', 'B')
+
+            $sqn = substr($payload, 0, 2);
+            $ep = substr($payload, 2, 2);
+            $clustId = substr($payload, 4, 4);
+            $addrMode = substr($payload, 8, 2);
+            $addr = substr($payload, 10, 4);
+            $imgVersion = substr($payload, 14, 8);
+            $imgType = substr($payload, 22, 4);
+            $manufCode = substr($payload, 26, 4);
+            $status = substr($payload, 30, 2);
+
+            $decoded = '8503/OTA upgrade end request'
+                .', SQN='.$sqn
+                .', EP='.$ep
+                .', ClustId='.$clustId
+                .', AddrMode='.$addrMode
+                .', Addr='.$addr
+                .', ImgVers='.$imgVersion
+                .', ImgType='.$imgType
+                .', ManuCode='.$manufCode
+                .', Status='.$status;
+            parserLog('debug', $dest.', Type='.$decoded, "8503");
+
+            // Monitor if required
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
+                monMsgFromZigate($decoded); // Send message to monitor
+
+            // $this->msgToCmd("Cmd".$dest."/".$addr."/otaUpgradeEndResponse", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
+            $eqLogic = Abeille::byLogicalId($dest.'/'.$addr, 'Abeille');
+            $eqPath = $eqLogic->getHumanName();
+            switch ($status) {
+            case "00":
+                message::add("Abeille", $eqPath.": Mise-à-jour terminée");
+                break;
+            case "95":
+                message::add("Abeille", $eqPath.": Transfert du firmware annulé par l'équipement");
+                break;
+            case "96":
+                message::add("Abeille", $eqPath.": Transfert du firmware terminé mais invalide");
+                break;
+            case "99":
+                message::add("Abeille", $eqPath.": Transfert du firmware terminé mais d'autres images sont requises pour la mise-à-jour");
+                break;
+            }
         }
 
         /**

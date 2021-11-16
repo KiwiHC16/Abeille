@@ -3682,6 +3682,122 @@
                     return;
                 }
 
+                // ZCL cluster 0019 specific: Inform Zigate that there is a valid OTA image
+                else if ($cmdName == 'otaLoadImage') {
+                    $required = ['manufCode', 'imgType']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $manufCode = $Command['manufCode'];
+                    $imgType = $Command['imgType'];
+                    if (!isset($GLOBALS['ota_fw']) || !isset($GLOBALS['ota_fw'][$manufCode]) || !isset($GLOBALS['ota_fw'][$manufCode][$imgType])) {
+                        $this->deamonlog('debug', "    ERROR: No such FW", $this->debug['processCmd']);
+                        return;
+                    }
+                    $fw = $GLOBALS['ota_fw'][$manufCode][$imgType];
+                    $addr = "0000"; // Target is zigate
+
+                    // addMode.addr.fwHeader
+                    $fwHeader = otaAArrayToHString($fw['header']);
+                    $data = "02"."0000".$fwHeader;
+                    $len = sprintf("%04x", strlen($data) / 2);
+                    $this->addCmdToQueue($priority, $dest, "0500", $len, $data, $addr);
+                    return;
+                }
+
+                // ZCL cluster 0019 specific: Inform device that there is a valid OTA image
+                else if ($cmdName == 'otaImageNotify') {
+                    $required = ['addr', 'ep', 'manufCode', 'imgType']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $manufCode = $Command['manufCode'];
+                    $imgType = $Command['imgType'];
+                    if (!isset($GLOBALS['ota_fw']) || !isset($GLOBALS['ota_fw'][$manufCode]) || !isset($GLOBALS['ota_fw'][$manufCode][$imgType])) {
+                        return;
+                    }
+                    $fw = $GLOBALS['ota_fw'][$manufCode][$imgType];
+
+                    $addrMode = "02";
+                    $addr = $Command['addr'];
+                    $srcEp = "01"; // Zigate is source
+                    $dstEp = $Command['ep'];
+                    $status = "00";
+                    $imgVersion = $fw['fileVersion'];
+                    $queryJitter = "64"; // x64 = 100
+
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$status.$imgVersion.$imgType.$manufCode.$queryJitter;
+                    $len = sprintf("%04x", strlen($data) / 2);
+                    $this->addCmdToQueue($priority, $dest, "0505", $len, $data, $addr);
+                    return;
+                }
+
+                // ZCL cluster 0019 specific: Image block response (called on 8501 request)
+                else if ($cmdName == 'otaImageBlockResponse') {
+                    $required = ['addr', 'ep', 'manufCode', 'imgType', 'imgOffset', 'maxData']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+                    $manufCode = $Command['manufCode'];
+                    $imgType = $Command['imgType'];
+                    $imgOffset = $Command['imgOffset'];
+                    $maxData = $Command['maxData'];
+
+                    $fw = $GLOBALS['ota_fw'][$manufCode][$imgType];
+                    $imgVers = $fw['fileVersion'];
+                    $imgSize = $fw['fileSize'];
+                    if (!isset($fw['fileHandle']))
+                        $fw['fileHandle'] = fopen(__DIR__.'/../../'.otaDir.'/'.$fw['fileName'], 'rb');
+                    $fh = $fw['fileHandle'];
+                    // TODO: If max > remaining ?
+                    $dataSize = $maxData;
+                    // if (hexdec($dataSize) > 48)
+                    //     $dataSize = "30"; // Required ?
+                    $realOffset = $fw['startIdx'] + hexdec($imgOffset);
+                    $this->deamonlog('debug', "    Reading data from real offset ".$realOffset, $this->debug['processCmd']);
+                    fseek($fh, $realOffset, SEEK_SET);
+                    $data = fread($fh, hexdec($dataSize));
+                    $data = strtoupper(bin2hex($data));
+
+                    // Doc from Doudz/zigate
+                    // data = struct.pack('!BHBBBBLLHHB{}B'.format(data_size), request['address_mode'], self.__addr(request['addr']),
+                    //     source_endpoint, request['endpoint'], request['sequence'], ota_status,
+                    //     request['file_offset'], self._ota['image']['header']['image_version'],
+                    //     self._ota['image']['header']['image_type'],
+                    //     self._ota['image']['header']['manufacturer_code'],
+                    //     data_size, *ota_data_to_send)
+                    $addrMode = "02";
+                    $addr = $Command['addr'];
+                    $srcEp = "01";
+                    $dstEp = $Command['ep'];
+                    $sqn = $Command['sqn'] ? $Command['sqn'] : "66";
+                    $status = "00";
+                    // $imgOffset
+                    // $imgVers
+                    // $imgType
+                    // $manufCode
+                    // $dataSize
+                    // $data
+
+                    $data2 = $addrMode.$addr.$srcEp.$dstEp.$sqn.$status;
+                    $data2 .= $imgOffset.$imgVers.$imgType.$manufCode.$dataSize.$data;
+                    $len = sprintf("%04x", strlen($data2) / 2);
+                    $this->addCmdToQueue($priority, $dest, "0502", $len, $data2, $addr);
+
+                    if ($imgOffset == "00000000") {
+                        $eqLogic = Abeille::byLogicalId($dest.'/'.$addr, 'Abeille');
+                        $eqPath = $eqLogic->getHumanName();
+                        message::add("Abeille", $eqPath.": Mise-à-jour du firmware démarrée", "");
+                    }
+                    return;
+                }
+
+                // ZCL cluster 0019 specific: Inform device to apply new image
+                else if ($cmdName == 'otaUpgradeEndResponse') {
+                    // WORK ONGOING: really required ??
+                    $this->deamonlog('debug', "    ERROR: otaUpgradeEndResponse NOT IMPLEMENTED", $this->debug['processCmd']);
+                    return;
+                }
+
                 // ZCL cluster 0019 specific: (received) commands
                 else if ($cmdName == 'cmd-0019') {
                     $required = ['addr', 'ep', 'cmd']; // Mandatory infos
@@ -3720,65 +3836,85 @@
                     $cmdId          = $Command['cmd'];
 
                     $data2 = $fcf.$sqn.$cmdId;
-                    if ($cmdId == "00") { // Image Notify
-                        $required = ['manufCode', 'imgType']; // Mandatory infos
-                        if (!$this->checkRequiredParams($required, $Command))
-                            return;
-                        $plType = "02"; // queryJitter + manufCode + imgType
-                        $queryJitter = "32"; // 0x01 – 0x64
-                        $manufCode = AbeilleTools::reverseHex($Command['manufCode']);
-                        $imageType = AbeilleTools::reverseHex($Command['imgType']);
-                        $data2 .= $plType.$queryJitter.$manufCode.$imageType;
-                    } else if ($cmdId == "02") { // Query Next Image Response
-                        $required = ['status', 'manufCode', 'imgType', 'imgVersion', 'imgSize']; // Mandatory infos
-                        if (!$this->checkRequiredParams($required, $Command))
-                            return;
-                        $status = $Command['status'];
-                        if ($status != '00')
-                            $data2 = $fcf.$sqn.$cmdId.$status;
-                        else {
-                            $manufCode = AbeilleTools::reverseHex($Command['manufCode']);
-                            $imageType = AbeilleTools::reverseHex($Command['imgType']);
-                            $fileVersion = AbeilleTools::reverseHex($Command['imgVersion']);
-                            $imageSize = AbeilleTools::reverseHex($Command['imgSize']);
-                            $data2 .= $status.$manufCode.$imageType.$fileVersion.$imageSize;
-                        }
-                    } else if ($cmdId == "05") { // Image Block Response
-                        // TODO
-                        $required = ['manufCode', 'imgType', 'imgOffset', 'maxData']; // Mandatory infos
-                        if (!$this->checkRequiredParams($required, $Command))
-                            return;
-                        $manufCode = $Command['manufCode'];
-                        $imgType = $Command['imgType'];
-                        $imgOffset = $Command['imgOffset'];
-                        $maxData = $Command['maxData'];
 
-                        $fw = $GLOBALS['ota_fw'][$manufCode][$imgType];
-                        $imgVers = $fw['fileVersion'];
-                        $imgSize = $fw['fileSize'];
-                        if (!isset($fw['fileHandle']))
-                            $fw['fileHandle'] = fopen(otaDir.'/'.$fw['fileName'], 'rb');
-                        $fh = $fw['fileHandle'];
-                        // TODO: If max > remaining ?
-                        $dataSize = $maxData;
-                        // TODO: seek ?
-                        $data = fread($fh, hexdec($dataSize));
-                        $data = strtoupper(bin2hex($data));
+                    // Image notify handled by otaImageNotify (zigate 0500)
+                    // if ($cmdId == "00") { // Image Notify
+                    //     $required = ['manufCode', 'imgType']; // Mandatory infos
+                    //     if (!$this->checkRequiredParams($required, $Command))
+                    //         return;
+                    //     $plType = "02"; // queryJitter + manufCode + imgType
+                    //     $queryJitter = "32"; // 0x01 – 0x64
+                    //     $manufCode = AbeilleTools::reverseHex($Command['manufCode']);
+                    //     $imageType = AbeilleTools::reverseHex($Command['imgType']);
+                    //     $data2 .= $plType.$queryJitter.$manufCode.$imageType;
+                    // } else
 
-                        $manufCode = AbeilleTools::reverseHex($manufCode);
-                        $imgType = AbeilleTools::reverseHex($imgType);
-                        $fileVersion = AbeilleTools::reverseHex($imgVers);
-                        $imgOffset = AbeilleTools::reverseHex($imgOffset);
-                        $data2 .= "00".$manufCode.$imgType.$fileVersion.$imgOffset.$dataSize.$data;
-                    } else {
+                    // Query next image response handled by Zigate server
+                    // if ($cmdId == "02") { // Query Next Image Response
+                    //     $required = ['status', 'manufCode', 'imgType', 'imgVersion', 'imgSize']; // Mandatory infos
+                    //     if (!$this->checkRequiredParams($required, $Command))
+                    //         return;
+                    //     $status = $Command['status'];
+                    //     if ($status != '00')
+                    //         $data2 = $fcf.$sqn.$cmdId.$status;
+                    //     else {
+                    //         $manufCode = AbeilleTools::reverseHex($Command['manufCode']);
+                    //         $imageType = AbeilleTools::reverseHex($Command['imgType']);
+                    //         $fileVersion = AbeilleTools::reverseHex($Command['imgVersion']);
+                    //         $imageSize = AbeilleTools::reverseHex($Command['imgSize']);
+                    //         $data2 .= $status.$manufCode.$imageType.$fileVersion.$imageSize;
+                    //     }
+                    // } else
+
+                    // Image block response handled by 'otaImageBlockResponse' zigate msg "0502"
+                    // if ($cmdId == "05") { // Image Block Response
+                    //     $required = ['manufCode', 'imgType', 'imgOffset', 'maxData']; // Mandatory infos
+                    //     if (!$this->checkRequiredParams($required, $Command))
+                    //         return;
+                    //     $manufCode = $Command['manufCode'];
+                    //     $imgType = $Command['imgType'];
+                    //     $imgOffset = $Command['imgOffset'];
+                    //     $maxData = $Command['maxData'];
+
+                    //     $fw = $GLOBALS['ota_fw'][$manufCode][$imgType];
+                    //     $imgVers = $fw['fileVersion'];
+                    //     $imgSize = $fw['fileSize'];
+                    //     if (!isset($fw['fileHandle']))
+                    //         $fw['fileHandle'] = fopen(__DIR__.'/../../'.otaDir.'/'.$fw['fileName'], 'rb');
+                    //     $fh = $fw['fileHandle'];
+                    //     // TODO: If max > remaining ?
+                    //     $dataSize = $maxData;
+                    //     // if (hexdec($dataSize) > 48)
+                    //     //     $dataSize = "30"; // Required ?
+                    //     $realOffset = $fw['startIdx'] + hexdec($imgOffset);
+                    //     $this->deamonlog('debug', "    Reading data from real offset ".$realOffset, $this->debug['processCmd']);
+                    //     fseek($fh, $realOffset, SEEK_SET);
+                    //     $data = fread($fh, hexdec($dataSize));
+                    //     $data = strtoupper(bin2hex($data));
+
+                    //     $manufCode = AbeilleTools::reverseHex($manufCode);
+                    //     $imgType = AbeilleTools::reverseHex($imgType);
+                    //     $fileVersion = AbeilleTools::reverseHex($imgVers);
+                    //     $imgOffset = AbeilleTools::reverseHex($imgOffset);
+                    //     $data = AbeilleTools::reverseHex($data);
+                    //     $data2 .= "00".$manufCode.$imgType.$fileVersion.$imgOffset.$dataSize.$data;
+
+                    //     if ($imgOffset == "00000000") {
+                    //         $eqLogic = Abeille::byLogicalId($dest.'/'.$addr, 'Abeille');
+                    //         $eqPath = $eqLogic->getHumanName();
+                    //         message::add("Abeille", $eqPath.": Mise-à-jour du firmware démarrée", "");
+                    //     }
+                    // } else
+
+                    {
+                        $this->deamonlog('debug', "    ERROR: Unsupported cmdId ".$cmdId, $this->debug['processCmd']);
                         return;
                     }
-                    $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
 
+                    $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
                     $data1 = $addrMode.$addr.$srcEp.$destEp.$clustId.$profId.$securityMode.$radius.$dataLen2;
                     $data = $data1.$data2;
                     $len = sprintf("%04x", strlen($data) / 2);
-
                     $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
                     return;
                 }

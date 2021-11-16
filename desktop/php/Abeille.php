@@ -89,7 +89,7 @@
         <?php include '020_AbeilleMesAbeillesPart.php'; ?>
 
         <!-- Groups management  -->
-        <?php include '030_AbeilleGroupPart.php'; ?>
+        <?php include 'Abeille-Groups.php'; ?>
 
         <!-- Gestion des ghosts / remplacement d equipements  -->
         <?php include '050_AbeilleRemplacementPart.php'; ?>

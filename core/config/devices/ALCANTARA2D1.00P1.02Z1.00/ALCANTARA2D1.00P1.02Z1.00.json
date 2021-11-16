@@ -15,6 +15,19 @@
             "Local temp": {
                 "use": "zb-0201-LocalTemperature",
                 "isVisible": 1
+            },
+            "Occupancy": {
+                "use": "zb-0201-Occupancy",
+                "isVisible": 1
+            },
+            "System mode": {
+                "use": "zb-0201-SystemMode",
+                "isVisible": 1
+            },
+            "Bind-0201-ToZigate": {
+                "use": "bindToZigate",
+                "params": "clustId=0201",
+                "execAtCreation": "Yes"
             }
         }
     }

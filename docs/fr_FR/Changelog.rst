@@ -9,7 +9,6 @@ ChangeLog
 
 - Acova Alcantara: Ajout support préliminaire (#2180).
 - Interne: Nettoyage AbeilleZigateConst.
-- Mise-à-jour OTA (Over-The-Air): Ajout support préliminaire.
 - Interne: Correction CmdPrepare/WriteAttributeRequestGeneric. Impacte Danfoss Ally (#1881).
 - Ikea bulb E27 White Spectre opal 1055lm: Ajout support (#2187).
 - Moes ZSS-ZK-THL-C: Ajout support (#2191).

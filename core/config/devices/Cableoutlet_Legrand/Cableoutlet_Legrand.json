@@ -17,21 +17,32 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-
             "include25": "Group-Membership",
-
             "include24": "Identify",
-
             "include4": "etatLight",
-            "On": { "use": "zbCmd-0006-On" },
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
             "include9": "Off",
             "include19": "getEtat",
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat",
-
             "include26 2": "BindToZigatePuissanceLegrand",
             "include28 2": "setReportPuissanceLegrand",
-            "include11 2": "PuissanceLegrandPrise"
+            "include11 2": "PuissanceLegrandPrise",
+            "Set Led On": {
+                "use": "setLegrandLEDOn"
+            },
+            "Set Led Off": {
+                "use": "setLegrandLEDOff"
+            },
+            "Set Led On If On": {
+                "use": "setLegrandLEDOn_if_on"
+            },
+            "Set Led Off If On": {
+                "use": "setLegrandLEDOff_if_on"
+            }
         }
     }
 }

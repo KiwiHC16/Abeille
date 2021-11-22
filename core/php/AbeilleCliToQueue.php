@@ -2,7 +2,9 @@
 
     /* This code purpose is perform actions triggered by client:
         - Send a message to a specific queue
-            action=sendMsg&queueId=XXX&...
+            action=sendMsg
+            queueId=XXX
+            msg=YYY
         - Or perform a specific action
             action=reconfigure&eqId=XX
      */

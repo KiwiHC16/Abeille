@@ -44,7 +44,8 @@
        array['<queueName>'] = array("id" => queueId, "max" => maxMsgSize) */
     $abQueues = array();
     $abQueues["serialToParser"] = array( "id" => 0x336, "max" => 2048 );
-    $abQueues["ctrlToParser"] = array( "id" => 0x337, "max" => 2048 ); // Ctrl messages for parser
+    $abQueues["ctrlToParser"] = array( "id" => 0x337, "max" => 2048 ); // Ctrl messages for AbeilleParser
+    $abQueues["ctrlToCmd"] = array( "id" => 0x338, "max" => 2048 ); // Ctrl messages for AbeilleCmd
     $abQueues["parserToLQI"] = array( "id" => 0xE1, "max" => 2048 );
     $abQueues["parserToCli"] = array( "id" => 0x2D4, "max" => 1024 );
     $abQueues["parserToCmd"] = array( "id" => 0x3E6, "max" => 512 );

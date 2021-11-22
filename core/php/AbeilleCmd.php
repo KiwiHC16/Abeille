@@ -32,9 +32,9 @@
     // php AbeilleCmd.php debug
     //check already running
 
-    $parameters = AbeilleTools::getParameters();
+    $config = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
-    $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
+    $daemons = AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons status: '.json_encode($daemons));
     if ($daemons["cmd"] > 1){
         logMessage('error', 'Le démon est déja lancé ! '.json_encode($daemons));
@@ -60,6 +60,9 @@
 
     // Reading available OTA firmwares
     otaReadFirmwares();
+
+    $queueCtrlToCmd = msg_get_queue($abQueues["ctrlToCmd"]["id"]);
+    $queueCtrlToCmdMax = $abQueues["ctrlToCmd"]["max"];
 
     try {
         $AbeilleCmdQueue = new AbeilleCmdQueue($argv[1]);
@@ -106,6 +109,16 @@
             //         }
             //     }
             // }
+            /* Checking if there is any control message for Cmd */
+            if (msg_receive($queueCtrlToCmd, 0, $msgType, $queueCtrlToCmdMax, $jsonMsg, false, MSG_IPC_NOWAIT, $errorCode) == true) {
+                logMessage('debug', "queueCtrlToCmd=".$jsonMsg);
+                $msg = json_decode($jsonMsg, true);
+                if ($msg['type'] == 'readOtaFirmwares') {
+                    otaReadFirmwares(); // Reread available firmwares
+                }
+            } else if ($errorCode != 42) { // 42 = No message
+                logMessage('debug', '  msg_receive(queueCtrlToCmd) ERROR '.$errorCode);
+            }
 
             $AbeilleCmdQueue->collectAllOtherMessages();
 

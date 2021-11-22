@@ -106,6 +106,7 @@
         }
         if (isset($dev[$devName]['commands'])) {
             $commands = $dev[$devName]['commands'];
+            $commands2 = [];
             foreach ($commands as $key => $value) {
                 if (substr($key, 0, 7) == "include") {
                     $cmdFName = $value;
@@ -116,58 +117,61 @@
                     $oldSyntax = false;
                 }
 
-                /* ZCLVersion => zb-0000-ZCLVersion */
-                if ($cmdFName == "ZCLVersion") {
-                    if ($oldSyntax)
-                        $dev[$devName]['commands'][$key] = "zb-0000-ZCLVersion";
-                    else
-                        $dev[$devName]['commands'][$cmdFName]['use'] = "zb-0000-ZCLVersion";
-                    $devUpdated = true;
-                    echo "  Cmd 'ZCLVersion' replaced 'zb-0000-ZCLVersion'.\n";
-                    continue;
-                }
-                /* SW => zb-0000-SWBuildID */
-                if ($cmdFName == "SW") {
-                    $dev[$devName]['commands']['SWBuildID']['use'] = "zb-0000-SWBuildID";
-                    if ($oldSyntax)
-                        unset($dev[$devName]['commands'][$key]);
-                    $devUpdated = true;
-                    echo "  Cmd 'SW' replaced by 'zb-0000-SWBuildID'.\n";
-                    continue;
-                }
-                /* getSWBuild => Get-SWBuildID using zbReadAttribute */
-                if ($cmdFName == "getSWBuild") {
-                    $dev[$devName]['commands']['Get-SWBuildID']['use'] = "zbReadAttribute";
-                    $dev[$devName]['commands']['Get-SWBuildID']['params'] = "clustId=0000&attrId=4000";
-                    if ($oldSyntax)
-                        unset($dev[$devName]['commands'][$key]);
-                    $devUpdated = true;
-                    echo "  Cmd 'getSWBuild' replaced by 'Get-SWBuildID'.\n";
-                    continue;
-                }
                 /* include ToggleEpxx => Toggle use zbCmd-0006-Toggle */
-                if (substr($cmdFName, 0, 8) == "ToggleEp") {
-                    $epId = substr($cmdFName, 8);
-                    $dev[$devName]['commands']['Toggle '.$epId]['use'] = "zbCmd-0006-Toggle";
-                    $dev[$devName]['commands']['Toggle '.$epId]['params'] = "ep=".$epId;
-                    $dev[$devName]['commands']['Toggle '.$epId]['nextLine'] = "after";
-                    if ($oldSyntax)
-                        unset($dev[$devName]['commands'][$key]);
+                // if (substr($cmdFName, 0, 8) == "ToggleEp") {
+                //     $epId = substr($cmdFName, 8);
+                //     $dev[$devName]['commands']['Toggle '.$epId]['use'] = "zbCmd-0006-Toggle";
+                //     $dev[$devName]['commands']['Toggle '.$epId]['params'] = "ep=".$epId;
+                //     $dev[$devName]['commands']['Toggle '.$epId]['nextLine'] = "after";
+                //     if ($oldSyntax)
+                //         unset($dev[$devName]['commands'][$key]);
+                //     $devUpdated = true;
+                //     echo "  Cmd '".$cmdFName."' replaced by 'zbCmd-0006-Toggle'.\n";
+                //     continue;
+                // }
+                // if (($cmdFName == "getManufacturerName") && $oldSyntax) {
+                //     unset($dev[$devName]['commands'][$key]);
+                //     $devUpdated = true;
+                //     echo "  Cmd '".$cmdFName."' REMOVED.\n";
+                // }
+                if (($cmdFName == "temperature") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zb-0402-MeasuredValue",
+                        "isVisible" => 1,
+                        "isHistorized" => 1
+                    );
+                    $commands2["Temperature"] = $cmdArr;
                     $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' replaced by 'zbCmd-0006-Toggle'.\n";
-                    continue;
-                }
-                if (($cmdFName == "getManufacturerName") && $oldSyntax) {
-                    unset($dev[$devName]['commands'][$key]);
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "getEtat") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zbReadAttribute",
+                        "params"=> "clustId=0006&attrId=0000"
+                    );
+                    $commands2["Get-Status"] = $cmdArr;
                     $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' REMOVED.\n";
-                }
-                if (($cmdFName == "getModelIdentifier") && $oldSyntax) {
-                    unset($dev[$devName]['commands'][$key]);
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "Off") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zbCmd-0006-Off",
+                        "isVisible" => 1,
+                    );
+                    $commands2["Off"] = $cmdArr;
                     $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' REMOVED.\n";
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "On") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zbCmd-0006-On",
+                        "isVisible" => 1,
+                    );
+                    $commands2["On"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else {
+                    $commands2[$key] = $value;
                 }
             }
+            $dev[$devName]['commands'] = $commands2;
         }
 
         if (isset($dev[$devName]['Comment'])) {

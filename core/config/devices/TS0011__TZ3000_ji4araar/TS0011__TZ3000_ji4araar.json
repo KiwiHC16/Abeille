@@ -1,0 +1,36 @@
+{
+    "TS0011__TZ3000_ji4araar": {
+        "manufacturer": "Avatto",
+        "model": "Z-N-WSM01",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "Tuya-1chanSwitchModule"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Avatto 1 channel switch module",
+        "commands": {
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            }
+        }
+    }
+}

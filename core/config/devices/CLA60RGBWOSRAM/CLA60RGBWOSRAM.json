@@ -15,8 +15,13 @@
             "include5": "levelLight",
             "include6": "colorX",
             "include7": "colorY",
-            "On": { "use": "zbCmd-0006-On" },
-            "include9": "Off",
+            "On": {
+                "use": "zbCmd-0006-On"
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
             "include11": "setLevel",
             "include12": "Colour",
             "include13": "Blanc",
@@ -25,7 +30,10 @@
             "include16": "Vert",
             "include17": "getColorX",
             "include18": "getColorY",
-            "include19": "getEtat",
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "include20": "getLevel",
             "include24": "Identify",
             "include25": "Group-Membership",

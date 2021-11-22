@@ -12,10 +12,22 @@
         "commands": {
             "include4": "etat",
             "include4 2": "etatCharge1",
-            "On": { "use": "zbCmd-0006-On", "params": "ep=01" },
-            "On1": { "use": "zbCmd-0006-On", "params": "ep=02" },
-            "Off": { "use": "zbCmd-0006-Off", "params": "ep=01" },
-            "Off1": { "use": "zbCmd-0006-Off", "params": "ep=02" },
+            "On": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=01"
+            },
+            "On1": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=02"
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=01"
+            },
+            "Off1": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=02"
+            },
             "Toggle 1": {
                 "use": "zbCmd-0006-Toggle",
                 "params": "ep=01"
@@ -24,7 +36,10 @@
                 "use": "zbCmd-0006-Toggle",
                 "params": "ep=02"
             },
-            "include8": "getEtat",
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "include11": "conso",
             "include12": "Xiaomi-ff01",
             "include13": "puissance1",

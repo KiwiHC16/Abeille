@@ -11,9 +11,18 @@
         "type": "Zemismart 1 boutons",
         "commands": {
             "include4": "etatCharge0",
-            "include5": "On",
-            "include6": "Off",
-            "include8": "getEtat",
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

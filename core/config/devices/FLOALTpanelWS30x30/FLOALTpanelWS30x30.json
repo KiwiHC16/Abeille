@@ -13,14 +13,23 @@
         "commands": {
             "include4": "etatLight",
             "include5": "levelLight",
-            "include8": "On",
-            "include9": "Off",
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
             "include11": "setLevel",
             "include12": "2200K",
             "include13": "2700K",
             "include14": "4000K",
             "include15": "temperatureLight",
-            "include19": "getEtat",
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "include20": "getLevel",
             "include24": "Identify",
             "include25": "Group-Membership",

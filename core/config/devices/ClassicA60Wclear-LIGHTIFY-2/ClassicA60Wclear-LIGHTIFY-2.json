@@ -13,10 +13,18 @@
         "commands": {
             "include4": "etatLight",
             "include5": "levelLight",
-            "On": { "use": "zbCmd-0006-On" },
-            "include9": "Off",
+            "On": {
+                "use": "zbCmd-0006-On"
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
             "include11": "setLevel",
-            "include19": "getEtat",
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "include24": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",

@@ -16,8 +16,14 @@
         "commands": {
             "include4": "etatLight",
             "include5": "levelLight",
-            "include6": "On",
-            "include7": "Off",
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
             "include11 2": "setLevel",
             "include-0300-1": "2200K",
             "include-0300-2": "2700K",
@@ -26,7 +32,10 @@
             "include-0300-5": "setTemperatureLight",
             "include-0300-6": "BindToZigateLightColor",
             "include-0300-7": "setReportLightColorSpectre",
-            "include11": "getEtat",
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "include12": "getLevel",
             "include16": "Identify",
             "include25": "Group-Membership",

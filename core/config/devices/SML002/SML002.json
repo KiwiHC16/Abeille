@@ -15,7 +15,11 @@
         "commands": {
             "include3": "presence",
             "include4": "luminositeHue",
-            "include4 3": "temperature",
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": 1,
+                "isHistorized": 1
+            },
             "include4 3 2": "Batterie-Hue",
             "include4 2": "BindToZigateOccupancy",
             "include4 2 2": "BindToZigateIlluminance",

@@ -35,11 +35,6 @@
                 "params": "clustId=0400",
                 "execAtCreation": "Yes"
             },
-            "SetReporting-Illuminance": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=012C&maxInterval=0000&changeVal=",
-                "execAtCreation": "Yes"
-            },
 
             "Temperature": { "use": "zb-0402-MeasuredValue", "params": "ep=02", "isVisible": 1 },
             "Bind-0402-ToZigate": {
@@ -47,21 +42,11 @@
                 "params": "ep=02&clustId=0402",
                 "execAtCreation": "Yes"
             },
-            "SetReporting-Temp": {
-                "use": "zbConfigureReporting",
-                "params": "ep=02&clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0000&changeVal=",
-                "execAtCreation": "Yes"
-            },
 
             "Humidity": { "use": "zb-0405-MeasuredValue", "params": "ep=02", "isVisible": 1 },
             "Bind-0405-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "ep=02&clustId=0405",
-                "execAtCreation": "Yes"
-            },
-            "SetReporting-Humidity": {
-                "use": "zbConfigureReporting",
-                "params": "ep=02&clustId=0405&attrType=21&attrId=0000&minInterval=012C&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes"
             }
         }

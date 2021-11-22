@@ -39,10 +39,10 @@ Exemple: BASICZBR3.json
       "commands": {
         "Groups": { "use": "Group-Membership" },
 
-        "etat": { "use": "etat", "isVisible": 1 },
+        "Status": { "use": "etat", "isVisible": 1 },
         "On": { "use": "On", "isVisible": 1 },
         "Off": { "use": "Off", "isVisible": 1, "nextLine": "after" },
-        "getEtat": { "use": "getEtat" }
+        "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" }
       }
     }
   }
@@ -102,7 +102,8 @@ Exemple: BASICZBR3.json
     subType: Surcharge du sous-type par defaut.
         Permet de changer le sous-type de la commande choisie.
         Ex: "Get-OPTARIF": { "use": "zbReadAttribute", "params": "clustId=FF66&attrId=0000", "subType": "string" },
-
+    minValue, maxValue:
+        Permet de changer les limites d'une commande action, en particulier de type "slider".
 
   Exemples de nouvelle syntaxe:
     "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },

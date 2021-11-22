@@ -45,7 +45,7 @@
                 "params": "clustId=0400&attrType=21&attrId=0000&minInterval=0258&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes"
             },
-            "include4": "luminositeXiaomi"
+            "Illuminance": { "use": "zb-0400-MeasuredValue", "isVisible": 1 }
         }
     }
 }

@@ -12,8 +12,12 @@
         },
         "type": "Xiaomi Temperature Rond",
         "commands": {
-            "include3": "temperature",
-            "include4": "humidite",
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": 1,
+                "isHistorized": 1
+            },
+            "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 },
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",
             "include7": "Xiaomi-ff01",

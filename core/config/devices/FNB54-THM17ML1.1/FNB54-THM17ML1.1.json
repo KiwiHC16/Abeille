@@ -10,8 +10,12 @@
         },
         "type": "thermom\u00e8tre zigbee ewelink",
         "commands": {
-            "include3 2": "temperature",
-            "include4": "humidite",
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": 1,
+                "isHistorized": 1
+            },
+            "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 },
             "include5": "Batterie-Volt-Konke",
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",

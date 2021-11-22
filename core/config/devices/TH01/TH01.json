@@ -15,7 +15,9 @@
         },
         "type": "Sonoff SNZB-02 temp & humidity",
         "commands": {
-            "Battery-Percent": { "use": "zb-0001-BatteryPercent", "isVisible": 1 },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
@@ -26,8 +28,11 @@
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-
-            "include2 2 2 2 2 3": "temperature",
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": 1,
+                "isHistorized": 1
+            },
             "Bind-0402-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0402",
@@ -35,8 +40,7 @@
                 "execAtCreationDelay": 9
             },
             "include2 2 2 2 2": "setReportTemperature",
-
-            "include2 2 2 2 2 2 2": "humidite",
+            "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 },
             "Bind-0405-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0405",

@@ -1,10 +1,12 @@
 ChangeLog
 =========
 
-211117-BETA-1
--------------
+- Illuminance: Correction cmde JSON 'zb-0400-MeasuredValue.json'.
+- Mise-à-jour OTA: Support préliminaire.
+- zb-0400/0402/0405-MeasuredValue.json: Correction calcul valeur.
 - Philips Hue Wall switch: Ajout support préliminaire (#2185).
 - Equipements inconnus: Generation d'un "discovery.json" pendant l'inclusion. Suppression d'AbeilleDiscover.log.
+- Programmateur Zigate: Correction: Compilation echoue si "tmp" n'existe pas.
 - Orvibo ST30: Ajout support préliminaire (#2193).
 - Acova Alcantara: Mise-à-jour JSON pour 'Set-OccupiedHeatingPoint' (#2180).
 - JSON équipements: Nettoyage commandes obsoletes

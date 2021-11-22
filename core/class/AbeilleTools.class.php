@@ -414,6 +414,10 @@ class AbeilleTools
                             $newCmd[$cmd1]['unite'] = $value;
 // log::add('Abeille', 'debug', 'LA value='.$value.', newCmd='.json_encode($newCmd));
                         }
+                        if (isset($cmd2['minValue']))
+                            $newCmd[$cmd1]['configuration']['minValue'] = $cmd2['minValue'];
+                        if (isset($cmd2['maxValue']))
+                            $newCmd[$cmd1]['configuration']['maxValue'] = $cmd2['maxValue'];
                         // log::add('Abeille', 'debug', 'getDeviceConfig(): newCmd='.json_encode($newCmd));
                         $deviceCmds += $newCmd;
                     }

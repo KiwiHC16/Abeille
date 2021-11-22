@@ -65,4 +65,4 @@ clean:
 	rm -f $(OBJ) $(TARGET)
 
 $(BUILDDIR):
-	mkdir $(BUILDDIR)
+	mkdir -p $(BUILDDIR)

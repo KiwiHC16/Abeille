@@ -3963,7 +3963,7 @@
                         $startIdx = isset($Command['startIdx']) ? $Command['startIdx'] : "00";
                         $data2 = $fcf.$sqn.$cmdId.$startIdx;
                     } else {
-                        $this->deamonlog('debug', "    ERROR: Unsupported command ".$cmdId);
+                        $this->deamonlog('debug', "    ERROR: Unsupported cluster 1000 command ".$cmdId);
                         return;
                     }
                     $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));

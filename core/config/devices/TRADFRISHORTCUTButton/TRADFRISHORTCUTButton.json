@@ -28,7 +28,7 @@
             },
             "include9": "getBattery",
             "Bind-0001-ToZigate": {
-                "use": "bindToZigate",
+                "use": "zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },

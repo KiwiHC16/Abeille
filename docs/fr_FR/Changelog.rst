@@ -3,6 +3,24 @@ ChangeLog
 
 211117-BETA-1
 -------------
+- Philips Hue Wall switch: Ajout support préliminaire (#2185).
+- Equipements inconnus: Generation d'un "discovery.json" pendant l'inclusion. Suppression d'AbeilleDiscover.log.
+- Orvibo ST30: Ajout support préliminaire (#2193).
+- Acova Alcantara: Mise-à-jour JSON pour 'Set-OccupiedHeatingPoint' (#2180).
+- JSON équipements: Nettoyage commandes obsoletes
+
+  - 'temperature' => 'zb-0402-MeasuredValue'
+  - 'bindToZigate' => 'zbBindToZigate'
+  - 'luminositeXiaomi' => 'zb-0400-MeasuredValue'
+  - 'getEtat' => 'zbReadAttribute'
+  - 'humidite' => 'zb-0405-MeasuredValue'
+  - 'on' => 'zbCmd-0006-On'
+  - 'off' => 'zbCmd-0006-Off'
+- JSON équipements: Ajout possibilité de surcharger 'minValue' & 'maxValue' pour widget slider.
+- 1 chan switch module (TS0011, _TZ3000_ji4araar): Ajout JSON sur base TS0011 (#2196).
+
+211121-STABLE-1
+---------------
 
   .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM), donc dispo depuis la version '3.1e'.
 

@@ -1,0 +1,43 @@
+{
+    "898ca74409a740b28d5841661e72268d": {
+        "type": "Orvibo ST30 temperature/humidity sensor",
+        "manufacturer": "Orvibo",
+        "zbManufacturer": "fei",
+        "model": "ST30",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "Orvibo-ST30"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "commands": {
+            "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0001-0021": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "Yes"
+            },
+
+            "Temperature": { "use": "zb-0402-MeasuredValue", "params": "ep=01", "isVisible": 1 },
+            "Bind-0402-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0402",
+                "execAtCreation": "Yes"
+            },
+
+            "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 },
+            "Bind-0405-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0405",
+                "execAtCreation": "Yes"
+            }
+        }
+    }
+}

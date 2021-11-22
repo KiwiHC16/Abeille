@@ -30,7 +30,7 @@
             "Toggle": { "use": "zbCmd-0006-Toggle" },
             "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
             "Bind-0006-ToZigate": {
-                "use": "bindToZigate",
+                "use": "zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },

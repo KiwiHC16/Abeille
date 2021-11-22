@@ -12,8 +12,12 @@
         },
         "type": "Konke Temperature Humidit\u00e9 Rond",
         "commands": {
-            "include3": "temperature",
-            "include4": "humidite",
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": 1,
+                "isHistorized": 1
+            },
+            "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 },
             "include4 2": "Batterie-Volt-Konke",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

@@ -1,9 +1,16 @@
 {
     "zb-0405-MeasuredValue": {
         "comment": "0405/Humidity measurement cluster, attrib 0000/MeasuredValue",
+        "comment2": "TODO: calculValueOffset to be removed and done in parser since frozen by Zigbee spec",
+        "comment3": "Based on obsolete 'humidite.json'",
         "name": "MeasuredValue",
         "subType": "numeric",
-        "configuration": [],
+        "generic_type": "HUMIDITY",
+        "template": "hydro3IMG",
+        "configuration": {
+            "calculValueOffset": "#value#\/100",
+            "historizeRound": "0"
+        },
         "type": "info",
         "logicalId": "0405-#EP#-0000"
     }

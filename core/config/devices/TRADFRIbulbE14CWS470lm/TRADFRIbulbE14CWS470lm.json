@@ -33,7 +33,7 @@
             "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
             "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
             "Bind-0006-ToZigate": {
-                "use": "bindToZigate",
+                "use": "zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },

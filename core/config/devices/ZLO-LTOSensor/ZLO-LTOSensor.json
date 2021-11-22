@@ -12,7 +12,11 @@
         "type": "ZLO-LTOSensor for Dev",
         "commands": {
             "include3 2": "luminosite",
-            "include3 2 2": "temperature",
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": 1,
+                "isHistorized": 1
+            },
             "include3 2 2 2": "presence",
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",

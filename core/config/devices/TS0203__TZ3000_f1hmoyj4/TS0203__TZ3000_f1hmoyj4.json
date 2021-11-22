@@ -19,7 +19,7 @@
                 "isVisible": 1
             },
             "BindToZigate-Power": {
-                "use": "bindToZigate",
+                "use": "zbBindToZigate",
                 "params": "CLUSTID=0001",
                 "execAtCreation": "Yes"
             },

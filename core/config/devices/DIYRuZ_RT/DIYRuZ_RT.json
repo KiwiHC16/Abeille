@@ -11,10 +11,23 @@
         "type": "DIYRuZ_RT",
         "commands": {
             "include4": "etat",
-            "include5": "On",
-            "include6": "Off",
-            "include8": "getEtat",
-            "include10 2": "temperature",
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": 1,
+                "isHistorized": 1
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

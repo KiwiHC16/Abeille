@@ -17,7 +17,10 @@
             "include24 2 2 2 2 2 2": "setLivoloOn2",
             "include24 2 2 2 2 2 2 2": "setLivoloOn",
             "include4": "etatSwitchLivolo",
-            "include8": "getEtat",
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "include8 2": "LivoloSwitchTrick1",
             "include8 2 2": "LivoloSwitchTrick2",
             "include8 2 2 2": "LivoloSwitchTrick3",

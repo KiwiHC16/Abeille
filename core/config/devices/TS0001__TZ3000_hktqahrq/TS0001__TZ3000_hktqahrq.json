@@ -12,16 +12,27 @@
             "icon": "JR-ZDS01"
         },
         "commands": {
-            "include13 2": "group-membership",
+            "Groups": {
+                "use": "Group-Membership"
+            },
 
             "include4": "etat",
-            "include5": "on",
-            "include6": "off",
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
             "Toggle": {
                 "use": "zbCmd-0006-Toggle",
                 "nextLine": "after"
             },
-            "include8": "getetat"
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            }
         },
         "type": "Girier DIY Smart Switch"
     }

@@ -13,10 +13,19 @@
         "commands": {
             "include16": "Identify",
             "include25": "Group-Membership",
-            "include6": "On",
-            "include7": "Off",
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
             "include4": "etatLight",
-            "include11": "getEtat",
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "include26": "BindToZigateEtat",
             "include28": "setReportEtat",
             "include11 2": "setLevel",

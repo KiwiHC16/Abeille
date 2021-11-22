@@ -8,7 +8,7 @@
             "heating": 1
         },
         "configuration": {
-            "icon": "ALCANTARA2D1.00P1.02Z1.00",
+            "icon": "Acova-Alcantara2",
             "mainEP": "01"
         },
         "commands": {
@@ -25,9 +25,15 @@
                 "isVisible": 1
             },
             "Bind-0201-ToZigate": {
-                "use": "bindToZigate",
+                "use": "zbBindToZigate",
                 "params": "clustId=0201",
                 "execAtCreation": "Yes"
+            },
+            "Set-OccupiedHeatingPoint": {
+                "use": "zbWriteAttribute",
+                "params": "clustId=0201&attrId=0012&attrVal=#slider#",
+                "subType": "slider",
+                "isVisible": 1
             }
         }
     }

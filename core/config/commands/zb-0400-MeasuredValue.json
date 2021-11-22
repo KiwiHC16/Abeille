@@ -1,9 +1,14 @@
 {
     "zb-0400-MeasuredValue": {
         "comment": "0400/Illuminance measurement cluster, attrib 0000/MeasuredValue type uint16",
+        "comment2": "TODO: calculValueOffset to be removed and done in parser since frozen by Zigbee spec",
+        "comment3": "Based on obsolete 'luminositeXiaomi.json'",
         "name": "MeasuredValue",
         "subType": "numeric",
-        "configuration": [],
+        "configuration": {
+            "calculValueOffset": "pow(10,#value#\/10000+1\/10000)",
+            "historizeRound": "0"
+        },
         "type": "info",
         "logicalId": "0400-#EP#-0000"
     }

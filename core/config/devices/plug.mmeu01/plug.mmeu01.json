@@ -11,9 +11,18 @@
         "type": "Xiaomi Prise EU",
         "commands": {
             "include4": "etat",
-            "include5": "On",
-            "include6": "Off",
-            "include8": "getEtat",
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "include13": "puissanceEP15",
             "include13 2": "conso",
             "include13 2 2": "VoltagePrise",

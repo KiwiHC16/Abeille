@@ -12,7 +12,11 @@
         "type": "Osram Motion Sensor-A",
         "commands": {
             "include3": "presenceEP2",
-            "include4 3": "temperature",
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": 1,
+                "isHistorized": 1
+            },
             "include4 2": "BindToZigateOccupancy",
             "include2 2 2": "setReportOccupancy",
             "include4 2 2 2": "BindToZigateTemperature",

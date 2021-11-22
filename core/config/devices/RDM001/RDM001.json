@@ -1,0 +1,44 @@
+{
+    "RDM001": {
+        "type": "Hue wall switch module",
+        "zbManufacturer": "SignifyNetherlandsB.V.",
+        "manufacturer": "Philips/Signify",
+        "model": "RDM001",
+        "comment": "https://github.com/Koenkk/zigbee-herdsman-converters/issues/2393",
+        "comment2": "Is write attribute 0000-0043 required ? For what ??",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "PhilipsSignify-RDM001",
+            "batteryType": "?"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "commands": {
+            "Get-SWBuild": { "use": "zbReadAttribute", "params": "clustId=0000&attrId=4000" },
+
+            "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0001-0021": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "Yes"
+            },
+
+            "Identify": { "use": "Identify" },
+
+            "Bind-0006-ToZigate": { "use": "zbBindToZigate", "params": "clustId=0006", "execAtCreation": "Yes" },
+
+            "Change config": {
+                "use": "zbWriteAttribute",
+                "params": "clustId=0000&attrId=0034&attrType=30&attrVal=00",
+                "execAtCreation": "Yes"
+            }
+        }
+    }
+}

@@ -12,9 +12,18 @@
         "type": "Prise Tuya",
         "commands": {
             "include4": "etatLight",
-            "include8": "On",
-            "include9": "Off",
-            "include19": "getEtat",
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "include24": "Identify",
             "include25": "Group-Membership",
             "include26": "BindToZigateEtat",

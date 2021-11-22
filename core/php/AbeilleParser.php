@@ -305,7 +305,7 @@
                 logMessage('debug', '  msg_receive(queueSerialToParser) ERROR '.$errorCode);
             }
 
-            /* Checking if control message for Parser */
+            /* Checking if there is any control message for Parser */
             if (msg_receive($queueCtrlToParser, 0, $msgType, $queueCtrlToParserMax, $jsonMsg, false, MSG_IPC_NOWAIT, $errorCode) == true) {
                 logMessage('debug', "queueCtrlToParser=".$jsonMsg);
                 $msg = json_decode($jsonMsg, true);
@@ -313,6 +313,8 @@
                     $GLOBALS['sendToCli']['net'] = $msg['net'];
                     $GLOBALS['sendToCli']['addr'] = $msg['addr'];
                     $GLOBALS['sendToCli']['ieee'] = $msg['ieee'];
+                } if ($msg['type'] == 'readOtaFirmwares') {
+                    otaReadFirmwares(); // Reread available firmwares
                 }
             } else if ($errorCode != 42) { // 42 = No message
                 logMessage('debug', '  msg_receive(queueCtrlToParser) ERROR '.$errorCode);
@@ -325,7 +327,7 @@
             $AbeilleParser->processWakeUpQueue();
 
             // Sleep not tu use CPU for nothing
-            time_nanosleep(0, 10000000 ); // 1/100s
+            time_nanosleep(0, 10000000); // 1/100s
         }
 
         unset($AbeilleParser);

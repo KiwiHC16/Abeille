@@ -4,6 +4,9 @@
 
     echo '<script>var js_queueKeyXmlToCmd = "'.queueKeyXmlToCmd.'";</script>'; // PHP to JS
     echo '<script>var js_otaDir = "'.otaDir.'";</script>'; // PHP to JS
+    $abQueues = $GLOBALS['abQueues'];
+    echo '<script>var js_queueCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueCtrlToCmd = "'.$abQueues['ctrlToCmd']['id'].'";</script>'; // PHP to JS
 ?>
     <div class="col-sm-8">
         Mise-à-jour des équipements "Over-The-Air".
@@ -239,6 +242,19 @@
                         rawIdx++;
                     }
                 }
+
+                /* Asking parser to refresh its firmwares list */
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueCtrlToParser+"&msg=type:readOtaFirmwares", true);
+                xhr.onload = function () {
+                    /* Asking cmd to refresh its firmwares list */
+                    var xhr = new XMLHttpRequest();
+                    topic = "CmdAbeille1_readOtaFirmwares";
+                    payload = "";
+                    xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueCtrlToCmd+"&msg=type:readOtaFirmwares", true);
+                    xhr.send();
+                };
+                xhr.send();
             }
         });
     }

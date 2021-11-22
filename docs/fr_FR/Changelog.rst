@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211122-BETA-1
+-------------
+
 - Illuminance: Correction cmde JSON 'zb-0400-MeasuredValue.json'.
 - Mise-à-jour OTA: Support préliminaire.
 - zb-0400/0402/0405-MeasuredValue.json: Correction calcul valeur.

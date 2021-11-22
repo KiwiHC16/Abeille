@@ -340,10 +340,10 @@
         "0201" => array(
             "name" => "Thermostat",
             "attributes" => array(
-                "0000" => array( "name" => "LocalTemperature", "access" => "RP" ),
-                "0002" => array( "name" => "Occupancy", "access" => "R" ),
-                "0012" => array( "name" => "OccupiedHeatingSetpoint", "access" => "RW" ),
-                "0014" => array( "name" => "UnoccupiedHeatingSetpoint", "access" => "RW" ),
+                "0000" => array( "name" => "LocalTemperature", "access" => "RP", "dataType" => 0x29 ),
+                "0002" => array( "name" => "Occupancy", "access" => "R", "dataType" => 0x18 ),
+                "0012" => array( "name" => "OccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ),
+                "0014" => array( "name" => "UnoccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ),
             ),
         ),
         "0300" => array(

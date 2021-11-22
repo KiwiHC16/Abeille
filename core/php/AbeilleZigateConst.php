@@ -38,6 +38,7 @@
             "80A2" => "Remove scene response",
             "8110" => "Write attribute response",
             "8140" => "Configure reporting response",
+            "8141" => "Discover attributes extended response",
             "8200" => "Save record request response",
             "8201" => "Load record response",
             "8300" => "Host PDM available response",

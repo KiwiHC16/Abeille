@@ -942,6 +942,10 @@ class AbeilleTools
                     $daemons .= " ";
                 $daemons .= "AbeilleSerialRead".$zgNb;
             }
+            if ($daemons == "") {
+                message::add("Abeille", "Aucune zigate active. Veuillez corriger.");
+                return false;
+            }
             $daemons .= " AbeilleParser AbeilleCmd";
 
             /* Starting 'AbeilleMonitor' daemon too if required */
@@ -957,6 +961,7 @@ class AbeilleTools
             else
                 exec($cmd.' &');
         }
+        return true;
     }
 
     /**

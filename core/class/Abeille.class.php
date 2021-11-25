@@ -926,7 +926,10 @@ if (0) {
         }
 
         /* Starting all required daemons */
-        AbeilleTools::startDaemons($config);
+        if (AbeilleTools::startDaemons($config) == false) {
+            // Probably no active Zigate. Startup cancelled.
+            return;
+        }
 
         /* Waiting for background daemons to be up & running.
            If not, the return of first commands sent to zigate might be lost.

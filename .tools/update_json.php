@@ -167,6 +167,41 @@
                     $commands2["On"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "BindToZigateEtat") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zbBindToZigate",
+                        "params" => "clustId=0006",
+                        "execAtCreation" => "Yes"
+                    );
+                    $commands2["Bind-0006-ToZigate"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "BindToZigateLevel") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zbBindToZigate",
+                        "params" => "clustId=0008",
+                        "execAtCreation" => "Yes",
+                        "execAtCreationDelay" => 9
+                    );
+                    $commands2["Bind-0006-ToZigate"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "levelLight") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zb-0008-CurrentLevel",
+                        "isVisible" => 1,
+                    );
+                    $commands2["CurrentLevel-0008"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "getLevel") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zbReadAttribute",
+                        "params" => "clustId=0008&attrId=0000"
+                    );
+                    $commands2["Get-CurrentLevel"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 } else {
                     $commands2[$key] = $value;
                 }

@@ -18,38 +18,69 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-
-            "Identify": { "use": "Identify" },
-
-            "Groups": { "use": "Group-Membership" },
-
-            "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after", "template": "light" },
-            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
-            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Status": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1,
+                "nextLine": "after",
+                "template": "light"
+            },
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
             "Toggle": {
                 "use": "zbCmd-0006-Toggle",
                 "nextLine": "after"
             },
-            "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
-            "Bind-0006-ToZigate": { "use": "zbBindToZigate", "params": "clustId=0006", "execAtCreation": "Yes" },
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
             "SetReporting-0006-0000": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-
-            "include5": "levelLight",
+            "CurrentLevel-0008": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": 1
+            },
             "include11": "setLevel",
-            "include20": "getLevel",
-            "Bind-0008-ToZigate": { "use": "zbBindToZigate", "params": "clustId=0008", "execAtCreation": "Yes" },
+            "Get-CurrentLevel": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "Bind-0008-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "Yes"
+            },
             "include29": "setReportLevel",
-
             "include12": "2200K",
             "include13": "2700K",
             "include14": "4000K",
             "include15": "temperatureLight",
             "include16": "setTemperatureLight",
-            "Bind-0300-ToZigate": { "use": "zbBindToZigate", "params": "clustId=0300", "execAtCreation": "Yes" },
+            "Bind-0300-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0300",
+                "execAtCreation": "Yes"
+            },
             "include29 2": "setReportLightColorSpectre"
         }
     }

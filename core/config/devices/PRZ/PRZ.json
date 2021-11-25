@@ -26,8 +26,12 @@
             },
             "include24": "Identify",
             "include25": "Group-Membership",
-            "include26": "BindToZigateEtat",
-            "include27": "BindToZigateLevel",
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include28": "setReportEtat",
             "include29": "setReportLevel",
             "SWBuildID": {

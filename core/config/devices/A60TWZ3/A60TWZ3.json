@@ -12,7 +12,10 @@
         "type": "Ampoule Ledvance Classic E27 Tunable White",
         "commands": {
             "include4": "etatLight",
-            "include5": "levelLight",
+            "CurrentLevel-0008": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": 1
+            },
             "include5 2": "getColorTemperature",
             "On": {
                 "use": "zbCmd-0006-On"
@@ -31,11 +34,18 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include20": "getLevel",
+            "Get-CurrentLevel": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
             "include24": "Identify",
             "include25": "Group-Membership",
-            "include26": "BindToZigateEtat",
-            "include27": "BindToZigateLevel",
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include28": "setReportEtat",
             "include29": "setReportLevel",
             "SWBuildID": {

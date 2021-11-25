@@ -22,7 +22,12 @@
             },
             "include4 3 2": "Batterie-Hue",
             "include4 2": "BindToZigateOccupancy",
-            "include4 2 2": "BindToZigateIlluminance",
+            "Bind-0400-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0400",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include4 2 2 2": "BindToZigateTemperature",
             "include4 2 2 2 3": "BindShortToZigateBatterie",
             "include4 2 2 2 2": "setReportOccupancy",

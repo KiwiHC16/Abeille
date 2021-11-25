@@ -14,7 +14,11 @@
             "include5": "dateCode",
             "include24": "Identify",
             "include25": "Group-Membership",
-            "include26": "BindToZigateEtat",
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
             "include28": "setReportEtat",
             "include28 2": "writeAttributeRequestIAS_WD_Flash",
             "include28 2 2": "writeAttributeRequestIAS_WD_Sound",

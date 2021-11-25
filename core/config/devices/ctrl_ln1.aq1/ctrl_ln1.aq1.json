@@ -24,7 +24,10 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include20": "getLevel",
+            "Get-CurrentLevel": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
             "include24": "Identify",
             "include25": "Group-Membership",
             "SWBuildID": {

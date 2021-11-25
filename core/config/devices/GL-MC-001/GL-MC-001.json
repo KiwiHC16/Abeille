@@ -14,7 +14,10 @@
         "type": "GLEDOPTO RGT+CCT LED Controller",
         "commands": {
             "include4": "etatLight",
-            "include5": "levelLight",
+            "CurrentLevel-0008": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": 1
+            },
             "include6 2": "colorX",
             "include7 2": "colorY",
             "On": {
@@ -42,12 +45,19 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include12": "getLevel",
+            "Get-CurrentLevel": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
             "include16": "Identify",
             "include25": "Group-Membership",
             "include25 2": "Scene-Membership",
-            "include26": "BindToZigateEtat",
-            "include27": "BindToZigateLevel",
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include28": "setReportEtat",
             "include29": "setReportLevel",
             "include12 2 2": "ColourRGB",

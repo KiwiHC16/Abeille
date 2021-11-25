@@ -25,11 +25,22 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include20": "BindToZigateLevel",
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include21": "setReportLevel",
-            "include22": "levelLight",
+            "CurrentLevel-0008": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": 1
+            },
             "include23": "setLevel",
-            "include24": "getLevel",
+            "Get-CurrentLevel": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
             "include300-1": "temperatureLight",
             "include300-2": "setTemperatureLight",
             "include300-3": "2200K",

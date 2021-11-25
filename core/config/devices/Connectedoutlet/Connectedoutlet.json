@@ -24,7 +24,11 @@
             },
             "include24": "Identify",
             "include25": "Group-Membership",
-            "include26": "BindToZigateEtat",
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
             "include28": "setReportEtat",
             "include26 2": "BindToZigatePuissanceLegrand",
             "include28 2": "setReportPuissanceLegrand",

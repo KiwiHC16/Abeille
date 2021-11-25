@@ -25,8 +25,12 @@
             "include8 2 2": "LivoloSwitchTrick2",
             "include8 2 2 2": "LivoloSwitchTrick3",
             "include8 2 2 2 3": "LivoloSwitchTrick4",
-            "include8 2 2 2 2": "BindToZigateEtat",
-            "include8 2 2 2 2 2": "BindToZigateLevel",
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include8 2 2 2 2 2 2": "setReportEtat",
             "include8 2 2 2 2 2 2 2": "setReportLevel",
             "SWBuildID": {

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211125-BETA-1
+-------------
+
 - Assistant de découverte: Texte de rappel si batterie.
 - Tuya RH3001 door sensor: Mise-à-jour JSON (#1226).
 - Lidl HG07878A TS0502A: Ajout support préliminaire (#2198).

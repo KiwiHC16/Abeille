@@ -549,9 +549,9 @@
 
         if (zgType == "WIFI") {
             console.log('Type changed to Wifi');
+            $("#idSelSP"+zgId).val('/dev/zigate'+zgId);
             checkSocatInstallation();
 
-            // $("#idSelSP" + zgId).val('/dev/zigate' + zgId);
             // idSelSP.setAttribute('disabled', true);
             // idWifiAddr.removeAttribute('disabled');
             // $("#idUpdFw"+zgId).hide();

@@ -26,7 +26,11 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include0006-1": "BindToZigateEtat",
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
             "include0006-2": "setReportEtat"
         }
     }

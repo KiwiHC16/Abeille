@@ -1,0 +1,91 @@
+{
+    "TS0502A__TZ3000_el5kt5im": {
+        "manufacturer": "LivarnoLux",
+        "model": "HG07878A",
+        "type": "Livarno HG07878A bulb",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "FlexRGBW"
+        },
+        "category": {
+            "light": "1"
+        },
+        "commands": {
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
+            "Status": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "SetReporting-0006-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "include11 2": "setLevel",
+            "CurrentLevel": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": 1
+            },
+            "Get-CurrentLevel": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "include29": "setReportLevel",
+            "Select XY mode": {
+                "use": "zbWriteAttribute",
+                "params": "clustId=0300&attrId=0008&attrType=30&attrVal=01",
+                "execAtCreation": "Yes"
+            },
+            "ColorMode": {
+                "use": "zb-0300-ColorMode",
+                "isVisible": 1
+            },
+            "include6 2": "colorX",
+            "include7 2": "colorY",
+            "include12 2": "Colour",
+            "include13 2": "Blanc",
+            "include14 2": "Bleu",
+            "include15 2": "Rouge",
+            "include16 2": "Vert",
+            "include17 2": "getColorX",
+            "include18 2": "getColorY",
+            "include12 2 2": "ColourRGB",
+            "include30": "setColourRGB",
+            "include30 2": "setRGB",
+            "include31": "colorRouge",
+            "include32": "setRouge",
+            "include33": "colorVert",
+            "include34": "setVert",
+            "include35": "colorBleu",
+            "include36": "setBleu",
+            "include38": "2700K",
+            "include39": "5000K",
+            "include40": "temperatureLight"
+        }
+    }
+}

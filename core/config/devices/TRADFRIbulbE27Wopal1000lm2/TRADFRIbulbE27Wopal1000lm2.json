@@ -12,7 +12,10 @@
         "type": "IKEA Ampoule TRADFRI bulb E27 opal 1000lm2",
         "commands": {
             "include4": "etatLight",
-            "include5": "levelLight",
+            "CurrentLevel-0008": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": 1
+            },
             "include24": "Identify",
             "include11": "setLevel",
             "On": {
@@ -27,7 +30,10 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include20": "getLevel",
+            "Get-CurrentLevel": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

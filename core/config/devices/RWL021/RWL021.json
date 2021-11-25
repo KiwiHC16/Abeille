@@ -27,7 +27,12 @@
             "include6 2 2 2 2 2": "boutonStateRWL021_6",
             "include6 2 2 2 2 2 2": "boutonStateRWL021_7",
             "include6 2 2 2 2 2 2 2": "boutonStateRWL021_8",
-            "include7": "BindToZigateButton",
+            "Bind-FC00-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=02&clustId=FC00",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1

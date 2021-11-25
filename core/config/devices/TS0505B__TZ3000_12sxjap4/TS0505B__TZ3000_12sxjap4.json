@@ -26,12 +26,22 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include26": "BindToZigateEtat",
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include28": "setReportEtat",
             "include11 2": "setLevel",
-            "include5": "levelLight",
-            "include12": "getLevel",
-            "include27": "BindToZigateLevel",
+            "CurrentLevel-0008": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": 1
+            },
+            "Get-CurrentLevel": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
             "include29": "setReportLevel",
             "include6 2": "colorX",
             "include7 2": "colorY",

@@ -18,14 +18,22 @@
             "include5": "dateCode",
             "include24": "Identify",
             "include25": "Group-Membership",
-            "include0008-1": "BindToZigateLevel",
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include0008-2": "setReportLevel",
             "include0008-8": "setLevelVoletDown",
             "include0008-7": "setLevelVoletUp",
             "include0008-6": "levelVoletStop",
             "include0008-3": "Level",
             "include0008-5": "setLevelVolet",
-            "include0008-4": "getLevel",
+            "Get-CurrentLevel": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

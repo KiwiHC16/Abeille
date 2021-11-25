@@ -9,11 +9,30 @@
         "category": {
             "security": "1"
         },
-        "type": "Tuya NEO RH3001",
+        "type": "Tuya NEO RH3001 door sensor",
         "commands": {
-            "include3": "etatDoorAlarme",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
+            },
+
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            },
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0001-0021": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "Yes"
+            },
+
+            "Zone-Status": {
+                "use": "zb-0500-ZoneStatus",
+                "isVisible": 1
             }
         }
     }

@@ -21,7 +21,6 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1
@@ -37,11 +36,14 @@
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-
             "include7": "Up-Down",
             "include7 1": "Click-Middle",
             "include12": "setReportEtat",
-            "include13": "BindToZigateEtat"
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            }
         },
         "comment": "Ref. IKEA E1812"
     }

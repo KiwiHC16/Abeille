@@ -12,7 +12,10 @@
         "type": "OSRAM Classic A60 W clear - LIGHTIFY - 2",
         "commands": {
             "include4": "etatLight",
-            "include5": "levelLight",
+            "CurrentLevel-0008": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": 1
+            },
             "On": {
                 "use": "zbCmd-0006-On"
             },
@@ -27,7 +30,11 @@
             },
             "include24": "Identify",
             "include25": "Group-Membership",
-            "include26": "BindToZigateEtat",
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
             "include28": "setReportEtat",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

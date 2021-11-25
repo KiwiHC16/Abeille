@@ -12,7 +12,10 @@
         "type": "GLEDOPTO",
         "commands": {
             "include4": "etat",
-            "include5": "levelLight",
+            "CurrentLevel-0008": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": 1
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1
@@ -26,7 +29,10 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include12": "getLevel",
+            "Get-CurrentLevel": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
             "include16": "Identify",
             "include26": "setLevel",
             "include27": "Group-Membership",

@@ -86,34 +86,34 @@
                     $abeille->save();
                 }
             }
-            config::save( 'zigateNb', '1', 'Abeille' );
+            config::save('zigateNb', '1', 'Abeille');
 
-            config::save( 'deamonAutoMode', '1', 'Abeille' );
+            config::save('deamonAutoMode', '1', 'Abeille');
 
-            config::save( 'AbeilleActiver1', 'Y', 'Abeille' );
-            config::save( 'AbeilleActiver2', 'N', 'Abeille' );
-            config::save( 'AbeilleActiver3', 'N', 'Abeille' );
-            config::save( 'AbeilleActiver4', 'N', 'Abeille' );
-            config::save( 'AbeilleActiver5', 'N', 'Abeille' );
-            config::save( 'AbeilleActiver6', 'N', 'Abeille' );
-            config::save( 'AbeilleActiver7', 'N', 'Abeille' );
-            config::save( 'AbeilleActiver8', 'N', 'Abeille' );
-            config::save( 'AbeilleActiver9', 'N', 'Abeille' );
-            config::save( 'AbeilleActiver10', 'N', 'Abeille' );
+            config::save('AbeilleActiver1', 'Y', 'Abeille');
+            config::save('AbeilleActiver2', 'N', 'Abeille');
+            config::save('AbeilleActiver3', 'N', 'Abeille');
+            config::save('AbeilleActiver4', 'N', 'Abeille');
+            config::save('AbeilleActiver5', 'N', 'Abeille');
+            config::save('AbeilleActiver6', 'N', 'Abeille');
+            config::save('AbeilleActiver7', 'N', 'Abeille');
+            config::save('AbeilleActiver8', 'N', 'Abeille');
+            config::save('AbeilleActiver9', 'N', 'Abeille');
+            config::save('AbeilleActiver10', 'N', 'Abeille');
 
             $port1 = config::byKey('AbeilleSerialPort', 'Abeille', '');
             $addr1 = config::byKey('IpWifiZigate',      'Abeille', '');
             echo "port1: ".$port1;
             echo "addr1: ".$addr1;
 
-            if ( ($port1 == '/tmp/zigate') || ($port1 == '/dev/zigate') ) {
-                config::save( 'AbeilleSerialPort1', '/dev/zigate1', 'Abeille' );
-                config::save( 'IpWifiZigate1', $addr1, 'Abeille' );
+            if (($port1 == '/tmp/zigate') || ($port1 == '/dev/zigate')) {
+                config::save('AbeilleSerialPort1', '/dev/zigate1', 'Abeille');
+                config::save('IpWifiZigate1', $addr1, 'Abeille');
             }
             else {
-                config::save( 'AbeilleSerialPort1', $port1, 'Abeille' );
+                config::save('AbeilleSerialPort1', $port1, 'Abeille');
             }
-            config::save( 'DbVersion', '20200225', 'Abeille' );
+            config::save('DbVersion', '20200225', 'Abeille');
         }
 
         /* Version 20200510 changes:
@@ -126,11 +126,11 @@
 
                 $sp = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '');
                 if ($sp == "/dev/zigate".$i)
-                    config::save('AbeilleType'.$i, 'WIFI', 'Abeille' );
+                    config::save('AbeilleType'.$i, 'WIFI', 'Abeille');
                 else if ((substr($sp, 0, 9) == "/dev/ttyS") || (substr($sp, 0, 11) == "/dev/ttyAMA"))
-                    config::save('AbeilleType'.$i, 'PI', 'Abeille' );
+                    config::save('AbeilleType'.$i, 'PI', 'Abeille');
                 else
-                    config::save('AbeilleType'.$i, 'USB', 'Abeille' );
+                    config::save('AbeilleType'.$i, 'USB', 'Abeille');
             }
             config::save('DbVersion', '20200510', 'Abeille');
         }
@@ -145,7 +145,7 @@
                     continue; // Undefined
                 $ieee_up = strtoupper($ieee);
                 if ($ieee_up !== $ieee)
-                    config::save('AbeilleIEEE'.$i, $ieee_up, 'Abeille' );
+                    config::save('AbeilleIEEE'.$i, $ieee_up, 'Abeille');
             }
 
             /* Updating addresses for all equipments Jeedom knows */
@@ -197,6 +197,7 @@
            - Removing several zigate cmds now handled directly in equipement advanced page.
            - Eq config: 'modeleJson' => 'ab::jsonId'
            - Removing 'zigateNb' (obsolete) from config DB.
+           - Updating WIFI serial port (/dev/zigateX => constant wifiLink)
          */
         if (intval($dbVersion) < 20201122) {
             if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
@@ -300,10 +301,11 @@
                 $path = __DIR__."/../../../log/".$file;
                 if (!file_exists($path))
                     continue;
+                log::add('Abeille', 'debug', "  Removing obsolete log '".$file."'");
                 unlink($path);
             }
 
-            // Removing obsolete commands from Zigate now handled in equipement advanced page
+            // Removing obsolete commands from existing Zigates (now handled in equipement advanced page)
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
                 $zg = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
                 if (!is_object($zg))
@@ -318,6 +320,17 @@
                     log::add('Abeille', 'debug', '  Zigate '.$zgId.": Removing obsolete cmd '".$cmdJName."'");
                     $cmd->remove();
                 }
+            }
+
+            // Updating WIFI serial port (/dev/zigateX => constant wifiLink)
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                $port = config::byKey('AbeilleSerialPort'.$zgId, 'Abeille', '');
+                if ($port == "")
+                    continue;
+                if (substr($port, 0, 11) != "/dev/zigate")
+                    continue;
+                config::save('AbeilleSerialPort'.$zgId, wifiLink.$zgId, 'Abeille');
+                log::add('Abeille', 'debug', '  Zigate '.$zgId.": Updated 'AbeilleSerialPort".$zgId."'");
             }
 
             //    config::save('DbVersion', '20201122', 'Abeille');

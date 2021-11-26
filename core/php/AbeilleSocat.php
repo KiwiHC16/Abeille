@@ -41,14 +41,14 @@
         $port = "9999";
 
     /* Checking parameters */
-    if (!preg_match("(^/dev/zigate)", $serial)) {
-        logMessage('info', 'ERREUR inattendue: Le port '.$serial.' ne correspond pas à une Zigate WIFI. Je n\'aurais pas du être lancé.');
+    if (!preg_match("(^".wifiLink.")", $serial)) {
+        logMessage('info', 'ERREUR: Le port '.$serial.' ne correspond pas à une Zigate WIFI.');
         exit(2);
     }
 
      /* Now we can extract network number to properly identify log file. */
-    $abeilleNb = (int)substr($serial, 11); // '/dev/zigateX' => Zigate number X (ex: 1)
-    logSetConf("AbeilleSocat".$abeilleNb.".log", true); // Log to file with line nb check
+    $zgId = (int)substr($serial, strlen(wifiLink)); // '/tmp/zigateWifiX' => Zigate number X (ex: 1)
+    logSetConf("AbeilleSocat".$zgId.".log", true); // Log to file with line nb check
 
     //check already running
     $parameters = AbeilleTools::getParameters();
@@ -56,15 +56,15 @@
     $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
     logMessage('debug', 'Daemons: '.json_encode($daemons));
     #Two at least expected,the original and this one
-    if ($daemons["socat".$abeilleNb] > 1){
+    if ($daemons["socat".$zgId] > 1) {
         logMessage('error', 'Le démon est déja lancé ! '.json_encode($daemons));
         exit(3);
     }
 
     $sudo   = "/usr/bin/sudo";
     // $socat  = "/usr/bin/socat";
-    // $parameters = "pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
-    // $parameters = "pty,raw,echo=0,link=".$WifiLink." tcp:".$ip;
+    // $parameters = "pty,rawer,echo=0,link=".wifiLink." tcp:".$ip;
+    // $parameters = "pty,raw,echo=0,link=".wifiLink." tcp:".$ip;
     // $parameters = "pty,raw,echo=0,link=".$serial." tcp:".$ip;
     $parameters = "-d -d pty,raw,echo=0,link=".$serial." tcp:".$ip.":".$port;
     /* TODO: How to check 'raw' option support ?
@@ -76,17 +76,17 @@
     // $cmd = "socat -d -d -x pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
     // $cmd = "socat pty,raw,echo=0,link=/tmp/zigate tcp:192.168.4.8:9999";
     //
-    // $cmd = "socat -d -d -x pty,raw,echo=0,link=".$WifiLink." tcp:192.168.4.8:9999";
-    // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999";
+    // $cmd = "socat -d -d -x pty,raw,echo=0,link=".wifiLink." tcp:192.168.4.8:9999";
+    // $cmd = "socat pty,rawer,echo=0,link=".wifiLink." tcp:".$ip.":9999";
 
-    //$cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23"; // jeedomzwave
-    // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":9999"; // abeille
-    // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip.":23";
+    //$cmd = "socat pty,rawer,echo=0,link=".wifiLink." tcp:".$ip.":23"; // jeedomzwave
+    // $cmd = "socat pty,rawer,echo=0,link=".wifiLink." tcp:".$ip.":9999"; // abeille
+    // $cmd = "socat pty,rawer,echo=0,link=".wifiLink." tcp:".$ip.":23";
 
     /* TODO: socat output might not be UTF8.
         Can we use iconv -f ISO-8859-1 -t UTF-8//TRANSLIT input.file -o out.file ? */
 
-    // $cmd = "socat pty,rawer,echo=0,link=".$WifiLink." tcp:".$ip;
+    // $cmd = "socat pty,rawer,echo=0,link=".wifiLink." tcp:".$ip;
     // $cmd = $sudo." ".$socat." ".$parameters;
     $cmd = $sudo." socat ".$parameters;
     // $cmd = $cmd . ' 2>&1 &';

@@ -693,14 +693,14 @@ class AbeilleTools
                 $running |= daemonMonitor;
             } else if (strstr($line, "AbeilleSerialRead") !== false) {
                 $net = $lineArr[3]; // Ex 'Abeille1'
-                $zgNb = substr($net, 7);
-                $shortName = "SerialRead".$zgNb;
-                $running |= constant("daemonSerialRead".$zgNb);
+                $zgId = substr($net, 7);
+                $shortName = "SerialRead".$zgId;
+                $running |= constant("daemonSerialRead".$zgId);
             } else if (strstr($line, "AbeilleSocat") !== false) {
-                $net = $lineArr[3]; // Ex '/dev/zigateX'
-                $zgNb = substr($net, 11);
-                $shortName = "Socat".$zgNb;
-                $running |= constant("daemonSocat".$zgNb);
+                $net = $lineArr[3]; // Ex '/tmp/zigateWifiX'
+                $zgId = substr($net, strlen(wifiLink));
+                $shortName = "Socat".$zgId;
+                $running |= constant("daemonSocat".$zgId);
             } else
                 $shortName = "Unknown";
             $d = array(
@@ -738,9 +738,10 @@ class AbeilleTools
             if ($parameters['AbeilleActiver'.$n] == "Y") {
                 $activedZigate++;
 
-                // e.g. "AbeilleType2":"WIFI", "AbeilleSerialPort2":"/dev/zigate2"
+                // e.g. "AbeilleType2":"WIFI", "AbeilleSerialPort2":"/tmp/zigateWifi2"
                 // SerialRead + Socat
-                if (stristr($parameters['AbeilleSerialPort'.$n], '/dev/zigate')) {
+                // if (stristr($parameters['AbeilleSerialPort'.$n], '/tmp/zigateWifi')) {
+                if ($parameters['AbeilleType'.$n] == "WIFI") {
                     $nbProcessExpected += 2;
                     $found['serialRead'.$n] = 0;
                     $found['socat'.$n] = 0;
@@ -764,7 +765,7 @@ class AbeilleTools
                 if (stristr($line, "abeilleserialread.php"))
                     $found['serialRead'.$abeille]++;
             }
-            elseif (preg_match('/AbeilleSocat.php \/dev\/zigate([0-9]) /', $line, $match)) {
+            elseif (preg_match('/AbeilleSocat.php \/tmp\/zigateWifi([0-9]) /', $line, $match)) {
                 $abeille = $match[1];
                 if (stristr($line, 'abeillesocat.php')) {
                     $found['socat'.$abeille]++;
@@ -859,10 +860,10 @@ class AbeilleTools
                     $grep .= "\|";
                 $grep .= $daemon;
                 if (substr($daemon, 0, 12) == "AbeilleSocat") {
-                    $zgNb = substr($daemon, 12);
+                    $zgId = substr($daemon, 12);
                     if ($grep2 != "")
                         $grep2 .= "\|";
-                    $grep2 .= "zigate".$zgNb;
+                    $grep2 .= "zigate".$zgId;
                 }
             }
             $cmd1 = "pgrep -a php | grep '".$grep."'";
@@ -876,8 +877,8 @@ class AbeilleTools
             $cmd1 = "pgrep -a php | grep Abeille";
             exec($cmd1, $running); // Get all Abeille daemons
             /* 'pgrep -a socat' example:
-               16343 socat -d -d pty,raw,echo=0,link=/dev/zigate2 tcp:192.168.0.101:80 */
-            $cmd2 = "pgrep -a socat | grep zigate";
+               16343 socat -d -d pty,raw,echo=0,link=/tmp/zigateWifi2 tcp:192.168.0.101:80 */
+            $cmd2 = "pgrep -a socat | grep ".wifiLink;
             exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
             $running = array_merge($running, $running2);
         }
@@ -929,18 +930,18 @@ class AbeilleTools
         if ($daemons == "") {
             /* Note: starting input daemons first to not loose any returned
                value/status as opposed to cmd being started first */
-            for ($zgNb = 1; $zgNb <= maxNbOfZigate; $zgNb++) {
-                if ($config['AbeilleActiver'.$zgNb] != "Y")
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                if ($config['AbeilleActiver'.$zgId] != "Y")
                     continue; // Zigate disabled
 
-                if ($config['AbeilleType'.$zgNb] == "WIFI") {
+                if ($config['AbeilleType'.$zgId] == "WIFI") {
                     if ($daemons != "")
                         $daemons .= " ";
-                    $daemons .= "AbeilleSocat".$zgNb;
+                    $daemons .= "AbeilleSocat".$zgId;
                 }
                 if ($daemons != "")
                     $daemons .= " ";
-                $daemons .= "AbeilleSerialRead".$zgNb;
+                $daemons .= "AbeilleSerialRead".$zgId;
             }
             if ($daemons == "") {
                 message::add("Abeille", "Aucune zigate active. Veuillez corriger.");

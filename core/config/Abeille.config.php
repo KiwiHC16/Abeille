@@ -5,7 +5,7 @@
 
     $in = "/tmp/AbeilleDeamonInput";
     $resourcePath = realpath(__DIR__.'/../../resources');
-    $WifiLink = "/dev/zigate";
+    define('wifiLink', '/tmp/zigateWifi'); // For WIFI: Socat output
     define('otaDir', 'tmp/fw_ota'); // OTA FW location relative to Abeille's root
 
     /* Inter-daemons queues */

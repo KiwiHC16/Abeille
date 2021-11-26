@@ -19,7 +19,7 @@ ChangeLog
 - Interne: Parser: Data type 30/enum8 décodé comme nombre au lieu de string hex.
 - Port interne Zigate Wifi déplacé de /dev/zigateX => /tmp/zigateWifiX pour contourner pb de "read-only file system".
 
-211126-BETA-1
+211125-BETA-1
 -------------
 
 - Assistant de découverte: Texte de rappel si batterie.

@@ -1,6 +1,24 @@
 ChangeLog
 =========
 
+  .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM), donc dispo depuis la version '3.1e'.
+
+    - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+    - Les firmwares avant 3.1e sont forcement 'legacy'.
+    - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+- Interne: Améliorations assistant JSON.
+- JSON équipements: Nettoyage commandes obsoletes
+
+  - 'colorX' => 'zb-0300-CurrentX'
+  - 'colorY' => 'zb-0300-CurrentY'
+  - 'location' => cmde supprimée
+  - 'Get-ColorX' => 'zbReadAttribute' + 'clustId=0300&attdId=0003'
+  - 'Get-ColorY' => 'zbReadAttribute' + 'clustId=0300&attdId=0004'
+  - 'Level' => 'zb-0008-CurrentLevel'
+- Interne: Parser: Data type 30/enum8 décodé comme nombre au lieu de string hex.
+- Port interne Zigate Wifi déplacé de /dev/zigateX => /tmp/zigateWifiX pour contourner pb de "read-only file system".
+
 211126-BETA-1
 -------------
 

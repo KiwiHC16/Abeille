@@ -11,7 +11,6 @@
         },
         "type": "Xiaomi Wall Switch D1 w Neutral 2 Button",
         "commands": {
-            "include3 2": "location",
             "include3 2 2": "etatCharge0",
             "include3 2 2 2": "etatCharge1",
             "include3 2 2 2 2": "etatSW1",

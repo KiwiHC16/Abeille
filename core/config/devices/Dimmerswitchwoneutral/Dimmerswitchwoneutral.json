@@ -18,7 +18,10 @@
                 "params": "clustId=0000&attrId=4000"
             },
             "include4": "etat",
-            "include5": "Level",
+            "CurrentLevel": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": 1
+            },
             "include6": "Onlevel",
             "On": {
                 "use": "zbCmd-0006-On"

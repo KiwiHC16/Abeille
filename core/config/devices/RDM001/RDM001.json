@@ -27,7 +27,8 @@
             "SetReporting-0001-0021": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
-                "execAtCreation": "Yes"
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 2
             },
 
             "Identify": { "use": "Identify" },
@@ -37,7 +38,8 @@
             "Change config": {
                 "use": "zbWriteAttribute",
                 "params": "clustId=0000&attrId=0034&attrType=30&attrVal=00",
-                "execAtCreation": "Yes"
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 4
             }
         }
     }

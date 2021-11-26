@@ -28,7 +28,10 @@
             "include0008-8": "setLevelVoletDown",
             "include0008-7": "setLevelVoletUp",
             "include0008-6": "levelVoletStop",
-            "include0008-3": "Level",
+            "CurrentLevel": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": 1
+            },
             "include0008-5": "setLevelVolet",
             "Get-CurrentLevel": {
                 "use": "zbReadAttribute",

@@ -4,7 +4,7 @@
         "model": "TS0501B ",
         "type": "Tuya Single Color LED Controller",
         "alternateIds": "TS0501B__TZ3210_4whigl8i,TS0501B__TZ3000_4whigl8i",
-        
+        "comment": "At least TS0501B__TZ3210_9q49basr seems to not support color commands",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -67,15 +67,27 @@
                 "use": "zb-0300-ColorMode",
                 "isVisible": 1
             },
-            "include6 2": "colorX",
-            "include7 2": "colorY",
+            "CurrentX": {
+                "use": "zb-0300-CurrentX",
+                "isVisible": 1
+            },
+            "CurrentY": {
+                "use": "zb-0300-CurrentY",
+                "isVisible": 1
+            },
             "include12 2": "Colour",
             "include13 2": "Blanc",
             "include14 2": "Bleu",
             "include15 2": "Rouge",
             "include16 2": "Vert",
-            "include17 2": "getColorX",
-            "include18 2": "getColorY",
+            "Get-ColorX": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0003"
+            },
+            "Get-ColorY": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0004"
+            },
             "include12 2 2": "ColourRGB",
             "include30": "setColourRGB",
             "include30 2": "setRGB",

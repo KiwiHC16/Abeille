@@ -16,8 +16,14 @@
                 "use": "zb-0008-CurrentLevel",
                 "isVisible": 1
             },
-            "include6": "colorX",
-            "include7": "colorY",
+            "CurrentX": {
+                "use": "zb-0300-CurrentX",
+                "isVisible": 1
+            },
+            "CurrentY": {
+                "use": "zb-0300-CurrentY",
+                "isVisible": 1
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1
@@ -32,8 +38,14 @@
             "include14": "Bleu",
             "include15": "Rouge",
             "include16": "Vert",
-            "include17": "getColorX",
-            "include18": "getColorY",
+            "Get-ColorX": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0003"
+            },
+            "Get-ColorY": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0004"
+            },
             "Get-Status": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"

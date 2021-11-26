@@ -10,7 +10,6 @@
         },
         "type": "Xiaomi Wall Switch w\/o Neutral 1",
         "commands": {
-            "include3 2": "location",
             "Get-Status": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"

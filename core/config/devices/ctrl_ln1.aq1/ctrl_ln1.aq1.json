@@ -10,7 +10,6 @@
         },
         "type": "Xiaomi Wall Switch w Neutral 1",
         "commands": {
-            "include3 2": "location",
             "include3 2 2": "etatCharge0",
             "include3 2 2 2 2": "etatSW1",
             "On": {

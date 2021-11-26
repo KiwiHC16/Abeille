@@ -1,17 +1,17 @@
 {
     "Dimmer-Switch-ZB3.0_HZC": {
-        "manufacturer": "?",
-        "model": "?",
-        "type": "?",
+        "manufacturer": "Iolloi",
+        "model": "ID-EU20FWB4L",
+        "type": "Iolloi flush-mounted dimmer switch 5-250 W, trailing edge dimmer",
+        "comment": "https://www.iolloi.shop/products/iolloi-zigbee-dimmer-b4l",
         "timeout": "60",
         "category": {
             "automatism": "1"
         },
         "configuration": {
-            "icon": "?",
+            "icon": "Iolloi-ID-EU20FWB4L",
             "mainEP": "01"
         },
-        "batteryType": "?",
         "commands": {
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

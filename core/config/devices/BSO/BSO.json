@@ -16,7 +16,6 @@
             "include0 2 2 2": "Tilt",
             "include4": "zb-0000-ZCLVersion",
             "include5": "dateCode",
-            "include6": "location",
             "include7": "etatVolet",
             "include8": "levelVolet",
             "include9": "onVolet",

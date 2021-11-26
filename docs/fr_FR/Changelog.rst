@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-211125-BETA-1
+211126-BETA-1
 -------------
 
 - Assistant de découverte: Texte de rappel si batterie.

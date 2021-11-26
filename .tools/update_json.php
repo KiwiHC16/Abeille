@@ -202,6 +202,49 @@
                     $commands2["Get-CurrentLevel"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "colorX") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zb-0300-CurrentX",
+                        "isVisible" => 1,
+                    );
+                    $commands2["CurrentX"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "colorY") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zb-0300-CurrentY",
+                        "isVisible" => 1,
+                    );
+                    $commands2["CurrentY"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "location") && $oldSyntax) {
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' REMOVED.\n";
+                } else if (($cmdFName == "getColorX") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zbReadAttribute",
+                        "params" => "clustId=0300&attrId=0003"
+                    );
+                    $commands2["Get-ColorX"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "getColorY") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zbReadAttribute",
+                        "params" => "clustId=0300&attrId=0004"
+                    );
+                    $commands2["Get-ColorY"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "Level") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zb-0008-CurrentLevel",
+                        "isVisible" => 1,
+                    );
+                    $commands2["CurrentLevel"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 } else {
                     $commands2[$key] = $value;
                 }

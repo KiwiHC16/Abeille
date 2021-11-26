@@ -4812,10 +4812,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $data = unpack("s", pack("s", hexdec(substr($Attribut, 0, 4))))[1];
                 }
 
-                else if ($dataType == "30") {
-                    // $data = hexdec(substr($payload, 24, 4));
-                    $data = substr($payload, 24, 4);
-                }
+                // else if ($dataType == "30") {
+                //     // $data = hexdec(substr($payload, 24, 4));
+                //     $data = substr($payload, 24, 4);
+                // }
 
                 else if ($dataType == "48") { // Array
                     // Tcharp38: Don't know how to handle it.

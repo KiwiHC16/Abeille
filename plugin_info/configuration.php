@@ -1,5 +1,4 @@
 <?php
-
    /* This file is part of Jeedom.
     *
     * Jeedom is free software: you can redistribute it and/or modify
@@ -44,6 +43,8 @@
     $line = fgets($file); // Should be a comment
     $abeilleVersion = trim(fgets($file)); // Should be Abeille's version
     fclose($file);
+
+    echo '<script>var js_wifiLink = "'.wifiLink.'";</script>'; // PHP to JS
 ?>
 
 <style>
@@ -100,7 +101,7 @@
             echo '<div class="col-lg-4">';
                 echo '<select id="idSelSP'.$zgId.'" class="configKey form-control" data-l1key="AbeilleSerialPort'.$zgId.'" title="{{Port série si zigate USB, Pi ou DIN.}}" disabled>';
                     echo '<option value="none" selected>{{Aucun}}</option>';
-                    echo '<option value="/dev/zigate'.$zgId.'" >{{WIFI'.$zgId.'}}</option>';
+                    echo '<option value="'.wifiLink.$zgId.'" >{{WIFI'.$zgId.'}}</option>';
                     echo '<option value="/dev/monitZigate'.$zgId.'" >{{Monit'.$zgId.'}}</option>';
                     foreach (jeedom::getUsbMapping('', false) as $name => $value) {
                         $value2 = substr($value, 5); // Remove '/dev/'
@@ -549,7 +550,7 @@
 
         if (zgType == "WIFI") {
             console.log('Type changed to Wifi');
-            $("#idSelSP"+zgId).val('/dev/zigate'+zgId);
+            $("#idSelSP"+zgId).val(js_wifiLink+zgId);
             checkSocatInstallation();
 
             // idSelSP.setAttribute('disabled', true);
@@ -629,7 +630,7 @@
             // alert("Merci d'entrer une adresse valide au format <addr>:<port>.\nEx: 192.168.1.12:9999");
             // return;
         // }
-        // var ssp = "/dev/zigate" + zgNb; // Socat Serial Port
+        // var ssp = "/tmp/zigateWifi" + zgNb; // Socat Serial Port
         // console.log("wifiAddr=" + wifiAddr + ", ssp=" + ssp);
         // $.ajax({
             // type: 'POST',

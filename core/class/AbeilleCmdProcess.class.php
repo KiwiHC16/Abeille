@@ -2774,7 +2774,7 @@
                 // <colour Y: uint16_t>                 4
                 // <transition time: uint16_t >         4
 
-                $cmd = "00B7";
+                $cmd = "00B7"; // Move to color
                 // 8+16+8+8+16+16+16 = 88 /8 = 11 => 0x0B
                 $length = "000B";
 
@@ -2862,7 +2862,7 @@
                 // <colour temperature: uint16_t>       4
                 // <transition time: uint16_t>          4
 
-                $cmd = "00C0";
+                $cmd = "00C0"; // 00C0=Move to colour temperature
 
                 $addressMode            = $Command['addressMode'];
                 $address                = $Command['address'];

@@ -218,7 +218,7 @@
                     $commands2["CurrentY"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "location") && $oldSyntax) {
+                } else if (($cmdFName == "BasicApplicationVersion") && $oldSyntax) {
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' REMOVED.\n";
                 } else if (($cmdFName == "getColorX") && $oldSyntax) {
@@ -229,20 +229,48 @@
                     $commands2["Get-ColorX"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "getColorY") && $oldSyntax) {
+                // } else if (($cmdFName == "temperatureLight") && $oldSyntax) {
+                //     $cmdArr = Array(
+                //         "use" => "zbCmd-0300-MoveToColorTemp",
+                //         "isVisible" => 1,
+                //     );
+                //     $commands2["Set Temperature"] = $cmdArr;
+                //     $devUpdated = true;
+                //     echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "6000K") && $oldSyntax) {
                     $cmdArr = Array(
-                        "use" => "zbReadAttribute",
-                        "params" => "clustId=0300&attrId=0004"
-                    );
-                    $commands2["Get-ColorY"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "Level") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use" => "zb-0008-CurrentLevel",
+                        "use" => "zbCmd-0300-MoveToColorTemp",
+                        "params" => "slider=6000",
                         "isVisible" => 1,
                     );
-                    $commands2["CurrentLevel"] = $cmdArr;
+                    $commands2["Set 6000K"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "Vert") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zbCmd-0300-MoveToColor",
+                        "params" => "X=147A&Y=D709",
+                        "isVisible" => 1,
+                    );
+                    $commands2["Set Green"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "Blanc") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zbCmd-0300-MoveToColor",
+                        "params" => "X=6000&Y=6000",
+                        "isVisible" => 1,
+                    );
+                    $commands2["Set White"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "Rouge") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zbCmd-0300-MoveToColor",
+                        "params" => "X=AE13&Y=51EB",
+                        "isVisible" => 1,
+                    );
+                    $commands2["Set Red"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 } else {

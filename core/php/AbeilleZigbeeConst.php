@@ -349,6 +349,12 @@
         "0300" => array(
             "name" => "Color control",
             "attributes" => array(
+                "0000" => array( "name" => "CurrentHue", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0001" => array( "name" => "CurrentSaturation", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0003" => array( "name" => "CurrentX", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0004" => array( "name" => "CurrentY", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0007" => array( "name" => "ColorTemperatureMireds", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0008" => array( "name" => "ColorMode", "access" => "R", "dataType" => 0x30 ), // enum8
             ),
             "commands" => array(
                 "00" => array( "name" => "Move To Hue" ),
@@ -392,6 +398,13 @@
                 "0001" => array( "name" => "MinMeasuredValue", "access" => "R" ),
                 "0002" => array( "name" => "MaxMeasuredValue", "access" => "R" ),
                 "0003" => array( "name" => "Tolerance", "access" => "R" ),
+            ),
+        ),
+        "0406" => array(
+            "name" => "Occupancy Sensing",
+            "attributes" => array(
+                "0000" => array( "name" => "Occupancy", "access" => "R", "dataType" => 0x18 ), // map8
+                "0001" => array( "name" => "OccupancySensorType", "access" => "R", "dataType" => 0x30 ), // enum8
             ),
         ),
         "0500" => array(

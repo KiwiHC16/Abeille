@@ -167,42 +167,6 @@
             }
         }
 
-        // Tcharp38: This function is obsolete is smoothly replaced by msgToAbeille2() with new msg format
-        // function msgToAbeilleFct($srcAddr, $fct, $data)
-        // {
-        //     // $srcAddr = dest / shortaddr
-        //     // dest / short addr / Cluster ID - Attr ID -> data
-
-        //     $msgAbeille = new MsgAbeille;
-        //     $msgAbeille->message = array( 'topic' => $srcAddr."/".$fct, 'payload' => $data, );
-
-        //     $errCode = 0;
-        //     if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false, $errCode)) {
-        //         // parserLog("debug","(fct msgToAbeilleFct) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
-        //     }
-        //     else {
-        //         parserLog("debug", "(fct msgToAbeilleFct) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errCode);
-        //     }
-        // }
-
-        // Tcharp38: This function is obsolete is smoothly replaced by msgToAbeille2() with new msg format
-        // function msgToAbeilleCmdFct( $fct, $data)
-        // {
-        //      // Abeille / short addr / Cluster ID - Attr ID -> data
-
-        //     $msgAbeille = new MsgAbeille;
-        //     $msgAbeille->message = array( 'topic' => $fct, 'payload' => $data, );
-
-        //     $errCode = 0;
-        //     if (msg_send( $this->queueKeyParserToAbeille, 1, $msgAbeille, true, false, $errCode)) {
-        //         // parserLog("debug","(fct msgToAbeilleCmdFct) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille));
-        //         // print_r(msg_stat_queue($queue));
-        //     }
-        //     else {
-        //         parserLog("debug","(fct msgToAbeilleCmdFct) could not add message to queue (queueKeyParserToAbeille) with error code : ".$errCode);
-        //     }
-        // }
-
         /* New function to send msg to Abeille.
            Msg format is now flexible and can transport a bunch of infos coming from zigbee event instead of splitting them
            into several messages to Abeille. */
@@ -478,7 +442,10 @@
             $this->msgToCmd("Cmd".$net."/0000/ActiveEndPoint", "address=".$addr);
 
             /* Special trick for NXP based devices.
-            Some of them (ex: old Xiaomi) do not answer to "Active EP request" and do not send modelIdentifier themself. */
+               - Note: 00158D=Jennic Ltd.
+               - Some of them (ex: old Xiaomi) do not answer to "Active EP request" and do not send modelIdentifier themself.
+               - Worse: Sending "Active EP request" may kill the device (ex: lumi.sensor_switch, #2188) which no longer respond.
+            */
             $nxp = (substr($ieee, 0, 9) == "00158D000") ? true : false;
             if ($nxp) {
                 parserLog('debug', '  NXP based device. Requesting modelIdentifier from EP 01');
@@ -4715,13 +4682,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
             } // End cluster 0405
 
-            else if ($clustId == "0406") { // Occupancy Sensing cluster
-                if ($attrId == "0000") { // Occupancy
-                    $Occupancy = substr($Attribut, 0, 2);
-                    // Bit 0 specifies the sensed occupancy as follows: 1 = occupied, 0 = unoccupied.
-                    parserLog('debug', '  Occupancy='.$Occupancy);
-                }
-            } // End cluster 0406
+            // else if ($clustId == "0406") { // Occupancy Sensing cluster
+            //     if ($attrId == "0000") { // Occupancy
+            //         $Occupancy = substr($Attribut, 0, 2);
+            //         // Bit 0 specifies the sensed occupancy as follows: 1 = occupied, 0 = unoccupied.
+            //         parserLog('debug', '  Occupancy='.$Occupancy);
+            //     }
+            // } // End cluster 0406
 
             // Bouton Telecommande Philips Hue RWL021
             else if ($clustId == "FC00") {
@@ -5323,88 +5290,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 .', ExtStatus='.$ExtStatus;
             parserLog('debug', $dest.', Type='.$decoded);
         }
-
-        // ***********************************************************************************************
-        // Gestion des annonces
-        // ***********************************************************************************************
-
-        // /**
-        //  * getNE()
-        //  * This method send all command needed to the NE to get its state.
-        //  *
-        //  * @param $short    Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
-        //  * @return Doesn't return anything as all action are triggered by sending messages in queues
-        //  */
-        // function getNE($logicId)
-        // {
-        //     list($dest, $addr) = explode("/", $logicId);
-        //     $getStates = array('getEtat', 'getLevel', 'getColorX', 'getColorY', 'getManufacturerName', 'getSWBuild', 'get Battery');
-
-        //     $eqLogic = Abeille::byLogicalId($logicId, 'Abeille');
-        //     if ( $eqLogic ) {
-        //         $arr = array(1, 2);
-        //         foreach ($arr as &$value) {
-        //             foreach ($getStates as $getState) {
-        //                 $cmd = $eqLogic->getCmd('action', $getState);
-        //                 if ( $cmd ) {
-        //                     parserLog('debug', 'getNE('.$logicId.'): '.$getState, "getNE");
-        //                     // $cmd->execCmd();
-        //                     logMessage('debug', "  cmdLogicId=".$cmd->getLogicalId());
-        //                     $topic = $cmd->getConfiguration('topic');
-        //                     $topic = AbeilleCmd::updateField($dest, $cmd, $topic);
-        //                     $request = $cmd->getConfiguration('request');
-        //                     $request = AbeilleCmd::updateField($dest, $cmd, $request);
-        //                     logMessage('debug', "  topic=".$topic.", request=".$request);
-        //                     $this->msgToCmd("Cmd".$dest."/".$addr."/".$topic, $request);
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-
-        // /**
-        //  * execAtCreationCmdForOneNE()
-        //  * - Execute all commands with 'execAtCreation' flag set
-        //  *
-        //  * @param logicalId of the device
-        //  * @return none
-        //  */
-        // function execAtCreationCmdForOneNE($logicalId) {
-        //     parserLog('debug', 'execAtCreationCmdForOneNE('.$logicalId.')');
-        //     $eqLogic = Abeille::byLogicalId($logicalId,'Abeille');
-        //     if (!is_object($eqLogic)) {
-        //         logMessage('debug', "  Unkown EQ '".$logicalId."'");
-        //         return;
-        //     }
-        //     list($dest, $addr) = explode("/", $logicalId);
-        //     logMessage('debug', "  dest=".$dest.", addr=".$addr);
-        //     // echo $dest.' - '.$addr."\n";
-        //     $cmds = AbeilleCmd::searchConfigurationEqLogic($eqLogic->getId(), 'execAtCreation', 'action');
-        //     foreach ( $cmds as $key => $cmd ) {
-        //         // $topic = $cmd->getLogicalId();
-        //         logMessage('debug', "  cmdLogicId=".$cmd->getLogicalId());
-        //         $topic = $cmd->getConfiguration('topic');
-        //         $topic = AbeilleCmd::updateField($dest, $cmd, $topic);
-        //         $request = $cmd->getConfiguration('request');
-        //         $request = AbeilleCmd::updateField($dest, $cmd, $request);
-        //         // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInclusion, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$topic."&time=".(time()+$cmd->getConfiguration('execAtCreationDelay')), $request );
-        //         logMessage('debug', "  topic=".$topic.", request=".$request);
-        //         $this->msgToCmd("Cmd".$dest."/".$addr."/".$topic, $request);
-        //     }
-        // }
-
-        // /**
-        //  * configureNE
-        //  * This method send all command needed to the NE to configure it.
-        //  *
-        //  * @param $short    Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
-        //  *
-        //  * @return          Doesn't return anything as all action are triggered by sending messages in queues
-        //  */
-        // function configureNE($eqLogicId) {
-        //     // parserLog('debug', 'configureNE('.$eqLogicId.')');
-        //     self::execAtCreationCmdForOneNE($eqLogicId);
-        // }
 
         /**
          * WHile processing AbeilleParser can schedule action by adding action in the queue like for exemple:

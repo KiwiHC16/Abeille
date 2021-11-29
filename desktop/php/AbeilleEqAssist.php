@@ -183,9 +183,9 @@
                             // else
                                 echo '<input id="idJsonName" type="text" value="'.$jsonName.'">';
                         ?>
-                        <a class="btn btn-default" title="(Re)lire" onclick="readJSON()">(Re)lire</a>
-                        <a class="btn btn-alert" title="Mettre à jour le fichier" onclick="writeJSON()">Ecrire</a>
-                        <a class="btn btn-default" title="Télécharger le JSON" onclick="downloadJson()"><i class="fas fa-file-download"></i> Télécharger</a>
+                        <a class="btn btn-default" title="(Re)lire" onclick="readConfig()">(Re)lire</a>
+                        <a class="btn btn-alert" title="Créer/mettre à jour le fichier de config" onclick="writeConfig()">Ecrire config</a>
+                        <a class="btn btn-default" title="Télécharger la configuration" onclick="downloadConfig()"><i class="fas fa-file-download"></i> Télécharger config</a>
                         <a class="btn btn-default" title="Importer un 'discovery.json'" onclick="importDiscovery()"><i class="fas fa-file-upload"></i> Importer 'discovery'</a>
                     </div>
                 </div>
@@ -293,7 +293,7 @@
 
     /* Read JSON if defined */
     if (js_jsonName != '')
-        readJSON();
+        readConfig();
 
     // /* Attempt to detect main supported attributs */
     // function refreshAttributsList(epIdx, cliClust, clustIdx) {
@@ -616,8 +616,8 @@
 
     /* Read JSON.
        Called from JSON read/reload button. */
-    function readJSON() {
-        console.log("readJSON()");
+    function readConfig() {
+        console.log("readConfig()");
 
         js_jsonName = document.getElementById("idJsonName").value;
 
@@ -636,7 +636,7 @@
             global: false,
             // async: false,
             error: function (request, status, error) {
-                bootbox.alert("ERREUR 'readJSON' !<br>Votre installation semble corrompue.<br>"+error);
+                bootbox.alert("ERREUR 'readConfig' !<br>Votre installation semble corrompue.<br>"+error);
                 status = -1;
             },
             success: function (json_res) {
@@ -899,7 +899,7 @@
             /* Level cluster */
             if (typeof ep.servClusters["0008"] !== "undefined") {
                 attributes = ep.servClusters["0008"]['attributes'];
-                cmds["Current Level"] = newCmd("zb-0008-Current Level");
+                cmds["Current Level"] = newCmd("zb-0008-CurrentLevel");
                 cmds["Current Level"]["isVisible"] = 1;
                 cmds["Get Current Level"] = newCmd("zbReadAttribute", "clustId=0008&attrId=0000");
                 cmds["Set-Level"] = newCmd("setLevel");
@@ -1085,7 +1085,7 @@
             jeq2.timeout = timeout;
         // jeq2.comment = // Optional
 
-        /* 'category' */
+        // 'category'
         var cat = new Object();
         cat.automatism = 1;
         jeq2.category = cat;
@@ -1093,21 +1093,18 @@
         // 'configuration'
         var conf = new Object();
         icon = document.getElementById("idIcon").value;
-        if (icon != "")
-            conf.icon = icon;
-        else
-            conf.icon = "defaultUnknown";
+        conf.icon = icon;
         jeq2.configuration = conf;
 
         batteryType = document.getElementById("idBattery").value;
         if (batteryType != '')
             jeq2.batteryType = batteryType;
 
-        batteryVolt = document.getElementById("idBatteryMax").value;
-        if (batteryVolt != '')
-            jeq2.batteryVolt = batteryVolt;
+        // batteryVolt = document.getElementById("idBatteryMax").value;
+        // if (batteryVolt != '')
+        //     jeq2.batteryVolt = batteryVolt;
 
-        /* 'commands' */
+        // 'commands'
         jeq2.commands = eq.commands;
 
         var jeq = new Object();
@@ -1137,8 +1134,8 @@
 
     /* Update/create JSON file.
        Destination is always "devices_local" */
-    function writeJSON() {
-        console.log("writeJSON()");
+    function writeConfig() {
+        console.log("writeConfig()");
 
         /* Check if mandatory infos are there */
         if (checkMissingInfos() == false)
@@ -1230,8 +1227,8 @@ console.log(jeq);
     }
 
     /* Download JSON */
-    function downloadJson() {
-        console.log("downloadJson()");
+    function downloadConfig() {
+        console.log("downloadConfig()");
 
         js_jsonName = document.getElementById("idJsonName").value;
         // TODO: Search in following order: devices_local then devices

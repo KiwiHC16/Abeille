@@ -25,9 +25,21 @@
                 "isVisible": 1
             },
             "include11": "setLevel",
-            "include38": "2700K",
-            "include39": "4000K",
-            "include39 2": "6000K",
+            "Set 2700K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=2700",
+                "isVisible": 1
+            },
+            "Set 4000K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=4000",
+                "isVisible": 1
+            },
+            "Set 6000K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=6000",
+                "isVisible": 1
+            },
             "include40": "temperatureLightV2",
             "include40 2 2": "setTemperatureLight_2700_6500",
             "Get-Status": {

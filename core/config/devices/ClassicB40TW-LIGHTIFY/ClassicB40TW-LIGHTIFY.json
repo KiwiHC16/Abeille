@@ -44,8 +44,16 @@
             },
             "include28": "setReportEtat",
             "include29": "setReportLevel",
-            "include30": "2000K",
-            "include31": "6500K",
+            "Set 2000K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=2000",
+                "isVisible": 1
+            },
+            "Set 6500K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=6500",
+                "isVisible": 1
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

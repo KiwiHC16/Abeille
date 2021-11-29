@@ -33,10 +33,26 @@
             },
             "include11": "setLevel",
             "include12": "Colour",
-            "include13": "Blanc",
-            "include14": "Bleu",
-            "include15": "Rouge",
-            "include16": "Vert",
+            "Set White": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=6000&Y=6000",
+                "isVisible": 1
+            },
+            "Set Blue": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=228F&Y=228F",
+                "isVisible": 1
+            },
+            "Set Red": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=AE13&Y=51EB",
+                "isVisible": 1
+            },
+            "Set Green": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=147A&Y=D709",
+                "isVisible": 1
+            },
             "Get-ColorX": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0300&attrId=0003"

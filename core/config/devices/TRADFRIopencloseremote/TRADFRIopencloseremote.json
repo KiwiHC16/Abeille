@@ -19,8 +19,6 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "include5": "dateCode",
-
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1
@@ -35,7 +33,6 @@
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-
             "include9 2": "WindowsCoveringUpGroup",
             "include10 2": "WindowsCoveringDownGroup",
             "include10 2 2": "WindowsCoveringStopGroup"

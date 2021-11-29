@@ -10,7 +10,6 @@
         },
         "type": "Vanne Zigbee ",
         "commands": {
-            "include1 2": "BasicApplicationVersion",
             "include4": "etat",
             "On": {
                 "use": "zbCmd-0006-On",

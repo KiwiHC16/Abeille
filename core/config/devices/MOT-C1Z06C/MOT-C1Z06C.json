@@ -3,6 +3,7 @@
         "manufacturer": "Profalux",
         "zbManufacturer": "Profalux",
         "model": "Volets 2nd gen",
+        "alternateIds": "MOT-C1Z10C",
         "timeout": "60",
         "category": {
             "automatism": "1"
@@ -15,7 +16,6 @@
         "type": "Profalux volet gen 2",
         "commands": {
             "include4": "zb-0000-ZCLVersion",
-            "include5": "dateCode",
             "include24": "Identify",
             "include25": "Group-Membership",
             "Bind-0006-ToZigate": {

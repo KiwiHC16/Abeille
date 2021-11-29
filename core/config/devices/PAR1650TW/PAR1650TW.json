@@ -26,16 +26,44 @@
                 "isVisible": 1
             },
             "include11": "setLevel",
-            "include37": "2200K",
-            "include38": "2700K",
-            "include39": "4000K",
+            "Set 2200K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=2200",
+                "isVisible": 1
+            },
+            "Set 2700K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=2700",
+                "isVisible": 1
+            },
+            "Set 4000K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=4000",
+                "isVisible": 1
+            },
             "include40": "temperatureLight",
             "include40 2 2": "setTemperatureLight",
             "include12": "Colour",
-            "include13": "Blanc",
-            "include14": "Bleu",
-            "include15": "Rouge",
-            "include16": "Vert",
+            "Set White": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=6000&Y=6000",
+                "isVisible": 1
+            },
+            "Set Blue": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=228F&Y=228F",
+                "isVisible": 1
+            },
+            "Set Red": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=AE13&Y=51EB",
+                "isVisible": 1
+            },
+            "Set Green": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=147A&Y=D709",
+                "isVisible": 1
+            },
             "Get-Status": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"

@@ -1,0 +1,18 @@
+{
+    "MAI-ZTS_Profalux": {
+        "manufacturer": "Profalux",
+        "model": "MAI-ZTS",
+        "type": "Profalux gen 2 remote control",
+        "comment": "Profalux, gen 2 remote. Can't do anything with it so hidden",
+        "isVisible": 0,
+        "configuration": {
+            "mainEP": "01",
+            "icon": "ProfaluxTelecommande",
+            "batteryType": "2x1.5V AAA"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "commands": []
+    }
+}

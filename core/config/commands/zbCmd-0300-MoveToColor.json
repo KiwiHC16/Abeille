@@ -1,0 +1,13 @@
+{
+    "zbCmd-0300-MoveToColor": {
+        "name": "zbCmd-0300-MoveToColor",
+        "isHistorized": "0",
+        "isVisible": "0",
+        "subType": "other",
+        "configuration": {
+            "topic": "setColour",
+            "request": "EP=#EP#&X=#X#&Y=#Y#"
+        },
+        "type": "action"
+    }
+}

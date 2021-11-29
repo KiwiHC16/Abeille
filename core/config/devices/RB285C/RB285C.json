@@ -43,9 +43,21 @@
             },
             "include300-1": "temperatureLight",
             "include300-2": "setTemperatureLight",
-            "include300-3": "2200K",
-            "include300-4": "2700K",
-            "include300-5": "4000K",
+            "Set 2200K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=2200",
+                "isVisible": 1
+            },
+            "Set 2700K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=2700",
+                "isVisible": 1
+            },
+            "Set 4000K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=4000",
+                "isVisible": 1
+            },
             "Toggle": {
                 "use": "zbCmd-0006-Toggle",
                 "nextLine": "after"

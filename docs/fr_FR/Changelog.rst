@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-211129-BETA-1
+211129-BETA-2
 -------------
 
 - Interne: Zigbee const: Ajout cluster 0406.

@@ -373,8 +373,8 @@ class AbeilleTools
                             $text = json_encode($newCmd);
                             foreach ($params as $p) {
                                 list($pName, $pVal) = explode("=", $p);
-                                $pName = strtoupper($pName);
-                                $text = str_replace('#'.$pName.'#', $pVal, $text);
+                                // Case insensitive #xxx# replacement
+                                $text = str_ireplace('#'.$pName.'#', $pVal, $text);
                             }
                             $newCmd = json_decode($text, true);
                         }

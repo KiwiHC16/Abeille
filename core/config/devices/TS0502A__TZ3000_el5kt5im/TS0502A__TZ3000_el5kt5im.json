@@ -49,6 +49,7 @@
             "include11 2": "setLevel",
             "CurrentLevel": {
                 "use": "zb-0008-CurrentLevel",
+                "nextLine": "after",
                 "isVisible": 1
             },
             "Get-CurrentLevel": {

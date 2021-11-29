@@ -1,6 +1,22 @@
 ChangeLog
 =========
 
+- Interne: Zigbee const: Ajout cluster 0406.
+- Dimmer-Switch-ZB3.0_HZC: Ajout image PNG (#2200).
+- Interne: Zigbee const: Mise à jour attributs cluster 0300.
+- Livarno HG07834C E27 bulb: Ajout support préliminaire (#2203).
+- Profalux MAI-ZTS: Ajout support telecommande gen 2 (#2205).
+- Profalux volets 2nd gen: Meme config pour MOT-C1Z06C & MOT-C1Z10C.
+- JSON équipements: Nettoyage commandes obsolètes
+
+  - 'xxxxK' => 'zbCmd-0300-MoveToColorTemp'
+  - 'dateCode' => cmde supprimée
+  - 'BasicApplicationVersion' => cmde supprimée
+  - 'Rouge' => 'zbCmd-0300-MoveToColor'
+  - 'Blanc' => 'zbCmd-0300-MoveToColor'
+  - 'Bleu' => 'zbCmd-0300-MoveToColor'
+  - 'Vert' => 'zbCmd-0300-MoveToColor'
+
 211126-BETA-2
 -------------
 
@@ -16,8 +32,8 @@ ChangeLog
   - 'colorX' => 'zb-0300-CurrentX'
   - 'colorY' => 'zb-0300-CurrentY'
   - 'location' => cmde supprimée
-  - 'Get-ColorX' => 'zbReadAttribute' + 'clustId=0300&attdId=0003'
-  - 'Get-ColorY' => 'zbReadAttribute' + 'clustId=0300&attdId=0004'
+  - 'Get-ColorX' => 'zbReadAttribute' + 'clustId=0300&attrId=0003'
+  - 'Get-ColorY' => 'zbReadAttribute' + 'clustId=0300&attrId=0004'
   - 'Level' => 'zb-0008-CurrentLevel'
 - Interne: Parser: Data type 30/enum8 décodé comme nombre au lieu de string hex.
 - Port interne Zigate Wifi déplacé de /dev/zigateX => /tmp/zigateWifiX pour contourner pb de "read-only file system".
@@ -35,7 +51,7 @@ ChangeLog
   - 'BindToZigateButton' => 'zbBindToZigate'
   - 'BindToZigateIlluminance' => 'zbBindToZigate'
   - 'levelLight' => 'zb-0008-CurrentLevel'
-  - 'getLevel' => 'zbReadAttribute' + 'clustId=0008&attdId=0000'
+  - 'getLevel' => 'zbReadAttribute' + 'clustId=0008&attrId=0000'
 - Démarrage sans Zigate active: Ajout message + démarrage démons annulé.
 - Page de config: Zigate Wifi: Correction message 'Port série de la zigate X INVALIDE ! Zigate désactivée'.
 - Tuya TS0501B Led controller: Ajout support préliminaire (#2199).

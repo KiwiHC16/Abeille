@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211129-BETA-1
+-------------
+
 - Interne: Zigbee const: Ajout cluster 0406.
 - Dimmer-Switch-ZB3.0_HZC: Ajout image PNG (#2200).
 - Interne: Zigbee const: Mise à jour attributs cluster 0300.

@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-211130-BETA-1
+211130-BETA-2
 -------------
 
 - Dimmer-Switch-ZB3.0_HZC: Mise-à-jour reporting CurrentLevel (#2200).

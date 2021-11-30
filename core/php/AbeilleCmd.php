@@ -64,6 +64,12 @@
     $queueCtrlToCmd = msg_get_queue($abQueues["ctrlToCmd"]["id"]);
     $queueCtrlToCmdMax = $abQueues["ctrlToCmd"]["max"];
 
+    function cmdLog($loglevel = 'NONE', $message = "", $isEnable = 1) {
+        if ($isEnable == 0)
+            return;
+        logMessage($loglevel, $message);
+    }
+
     try {
         $AbeilleCmdQueue = new AbeilleCmdQueue($argv[1]);
 

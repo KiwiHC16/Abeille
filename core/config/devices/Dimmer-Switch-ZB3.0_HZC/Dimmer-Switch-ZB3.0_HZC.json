@@ -62,6 +62,16 @@
             "Set-Level": {
                 "use": "setLevel",
                 "isVisible": "1"
+            },
+            "Bind-0008-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "SetReporting-0008-CurrentLevel": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
             }
         }
     }

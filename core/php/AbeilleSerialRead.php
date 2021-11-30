@@ -3,7 +3,7 @@
     /*
      * AbeilleSerialReadX
      *
-     * - Read Zigate messages from selected port (/dev/ttyXX)
+     * - Read Zigate messages from selected port (ex: /dev/ttyXX)
      * - Transcode data from binary to hex (note: ALL HEX are converted UPPERCASE)
      * - and send message to parser thru queue.
      *
@@ -59,19 +59,19 @@
         exit(2);
     }
 
-    $abeille        = $argv[1]; // Network name (ex: 'Abeille1')
+    $net            = $argv[1]; // Network name (ex: 'Abeille1')
     $serial         = $argv[2]; // Zigate port (ex: '/dev/ttyUSB0')
     $requestedlevel = $argv[3]; // Currently unused
-    $abeilleNb = (int)substr($abeille, -1); // Zigate number (ex: 1)
-    logSetConf("AbeilleSerialRead".$abeilleNb.".log", true); // Log to file with line nb check
+    $zgId = (int)substr($net, 7); // Zigate number (ex: 1)
+    logSetConf("AbeilleSerialRead".$zgId.".log", true); // Log to file with line nb check
 
     // Check if already running
     $config = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons='.json_encode($daemons));
-    if ($daemons["serialRead".$abeilleNb] > 1) {
-        logMessage('error', 'Un démon AbeilleSerialRead'.$abeilleNb.' est déja lancé.');
+    if ($daemons["serialRead".$zgId] > 1) {
+        logMessage('error', 'Un démon AbeilleSerialRead'.$zgId.' est déja lancé.');
         exit(4);
     }
 
@@ -81,17 +81,43 @@
         exec(system::getCmdSudo().'touch '.$serial.' > /dev/null 2>&1');
     }
 
+    // Wait for port to be available and configure it
+    function waitPort($serial) {
+        while (true) {
+            // Wait for port
+            while (true) {
+                if (file_exists($serial))
+                    break;
+                usleep(500000); // Sleep 500ms
+            }
+
+            // Port exists. Let's try to configure
+            exec(system::getCmdSudo().' chmod 666 '.$serial.' >/dev/null 2>&1');
+            exec("stty -F ".$serial." sane >/dev/null 2>&1", $out, $status);
+            if ($status == 0)
+                exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw >/dev/null 2>&1", $out, $status);
+            if ($status == 0)
+                return;
+
+            $err = implode("/", $out);
+            logMessage('debug', 'stty error: '.$err);
+            // Could not configure it properly
+            sleep(1);
+        }
+    }
+
     // TODO Tcharp38: May make sense to wait for port to be ready
     // to cover socat > serialread case if socat starts later.
-    if (!file_exists($serial)) {
-        logMessage('error', 'Le port '.$serial.' n\'existe pas ! Arret du démon');
-        exit(3);
-    }
+    // if (!file_exists($serial)) {
+    //     logMessage('error', 'Le port '.$serial.' n\'existe pas ! Arret du démon');
+    //     exit(3);
+    // }
+    waitPort($serial);
 
     // function shutdown($sig, $sigInfos) {
     //     pcntl_signal($sig, SIG_IGN);
 
-    //     logMessage("info", "<<< Arret d'AbeilleSerialRead".$abeilleNb);
+    //     logMessage("info", "<<< Arret d'AbeilleSerialRead".$zgId);
     //     exit(0);
     // }
 
@@ -112,25 +138,25 @@
     // if ($status != 0) {
     //     logMessage('debug', 'ERR stty -F '.$serial.' speed 115200 cs8 -parenb -cstopb -echo raw');
     // }
-    while (true) {
-        try {
-            exec(system::getCmdSudo().' chmod 666 '.$serial.' >/dev/null 2>&1');
-            exec("stty -F ".$serial." sane >/dev/null 2>&1", $out, $status);
-            if ($status == 0)
-                exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw >/dev/null 2>&1", $out, $status);
-            if ($status == 0)
-                break;
-            $err = implode("/", $out);
-            logMessage('debug', 'stty error: '.$err);
-        } catch ( Exception $e ) {
-            logMessage('debug', 'stty err');
-        }
-        sleep(1);
-    }
+    // while (true) {
+    //     try {
+    //         exec(system::getCmdSudo().' chmod 666 '.$serial.' >/dev/null 2>&1');
+    //         exec("stty -F ".$serial." sane >/dev/null 2>&1", $out, $status);
+    //         if ($status == 0)
+    //             exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw >/dev/null 2>&1", $out, $status);
+    //         if ($status == 0)
+    //             break;
+    //         $err = implode("/", $out);
+    //         logMessage('debug', 'stty error: '.$err);
+    //     } catch ( Exception $e ) {
+    //         logMessage('debug', 'stty err');
+    //     }
+    //     sleep(1);
+    // }
 
     // $f = fopen($serial, "r");
     // if ($f == false) {
-    //     logMessage('error', 'Impossible d\'ouvrir le port '.$serial.' en lecture. Arret du démon AbeilleSerialRead'.$abeilleNb);
+    //     logMessage('error', 'Impossible d\'ouvrir le port '.$serial.' en lecture. Arret du démon AbeilleSerialRead'.$zgId);
     //     exec('sudo lsof -Fcn '.$serial, $out);
     //     logMessage('debug', 'sudo lsof -Fcn '.$serial.' => \''.implode(",", $out).'\'');
     //     exit(4);
@@ -151,7 +177,7 @@
     /* Inform others that i'm ready to process zigate messages */
     $msgToSend = array(
         'src' => 'serialread',
-        'net' => $abeille,
+        'net' => $net,
         'type' => 'status',
         'status' => 'ready',
     );
@@ -181,11 +207,7 @@
            Key for connection with Socat */
         if (!file_exists($serial)) {
             logMessage('error', 'Le port '.$serial.' a disparu !');
-            while (1) {
-                usleep(500000); // Sleep 500ms
-                if (file_exists($serial))
-                    break;
-            }
+            waitPort($serial);
             logMessage('debug', $serial.' port is back');
         }
 
@@ -217,7 +239,7 @@
 
                 $msgToSend = array(
                     'src' => 'serialread',
-                    'net' => $abeille,
+                    'net' => $net,
                     'type' => 'zigatemessage',
                     'msg' => $frame
                 );
@@ -244,5 +266,5 @@
     }
 
     fclose($f);
-    logMessage('info', '<<< Fin du démon AbeilleSerialRead'.$abeilleNb);
+    logMessage('info', '<<< Fin du démon AbeilleSerialRead'.$zgId);
 ?>

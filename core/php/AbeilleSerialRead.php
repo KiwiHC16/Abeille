@@ -81,7 +81,7 @@
         exec(system::getCmdSudo().'touch '.$serial.' > /dev/null 2>&1');
     }
 
-    // Wait for port to be available and configure it
+    // Wait for port to be available, configure it then open it
     function waitPort($serial) {
         while (true) {
             // Wait for port
@@ -96,12 +96,20 @@
             exec("stty -F ".$serial." sane >/dev/null 2>&1", $out, $status);
             if ($status == 0)
                 exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw >/dev/null 2>&1", $out, $status);
-            if ($status == 0)
-                return;
+            if ($status != 0) {
+                // Could not configure it properly
+                $err = implode("/", $out);
+                logMessage('debug', 'stty error: '.$err);
+                continue;
+            }
 
-            $err = implode("/", $out);
-            logMessage('debug', 'stty error: '.$err);
-            // Could not configure it properly
+            // Config done. Opening
+            $f = fopen($serial, "r");
+            if ($f !== false) {
+                logMessage('debug', $serial.' port opened');
+                stream_set_blocking($f, true); // Should be blocking read but is it default ?
+                return $f;
+            }
             sleep(1);
         }
     }
@@ -112,7 +120,7 @@
     //     logMessage('error', 'Le port '.$serial.' n\'existe pas ! Arret du démon');
     //     exit(3);
     // }
-    waitPort($serial);
+    $f = waitPort($serial);
 
     // function shutdown($sig, $sigInfos) {
     //     pcntl_signal($sig, SIG_IGN);
@@ -161,18 +169,18 @@
     //     logMessage('debug', 'sudo lsof -Fcn '.$serial.' => \''.implode(",", $out).'\'');
     //     exit(4);
     // }
-    while (true) {
-        try {
-            $f = fopen($serial, "r");
-            if ($f !== false)
-                break;
-        } catch ( Exception $e ) {
-            logMessage('debug', 'fopen err');
-        }
-        sleep(1);
-    }
-    logMessage('debug', $serial.' port opened');
-    stream_set_blocking($f, true); // Should be blocking read but is it default ?
+    // while (true) {
+    //     try {
+    //         $f = fopen($serial, "r");
+    //         if ($f !== false)
+    //             break;
+    //     } catch ( Exception $e ) {
+    //         logMessage('debug', 'fopen err');
+    //     }
+    //     sleep(1);
+    // }
+    // logMessage('debug', $serial.' port opened');
+    // stream_set_blocking($f, true); // Should be blocking read but is it default ?
 
     /* Inform others that i'm ready to process zigate messages */
     $msgToSend = array(
@@ -206,9 +214,10 @@
         /* Check if port still there.
            Key for connection with Socat */
         if (!file_exists($serial)) {
+            fclose($f);
             logMessage('error', 'Le port '.$serial.' a disparu !');
-            waitPort($serial);
-            logMessage('debug', $serial.' port is back');
+            $f = waitPort($serial);
+            // logMessage('debug', $serial.' port is back');
         }
 
         $byte = fread($f, 01);

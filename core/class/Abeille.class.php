@@ -2665,7 +2665,7 @@ while ($cron->running()) {
         $eqLogic->setConfiguration('topic', $dest."/0000");
         $eqLogic->setConfiguration('type', 'topic');
         $eqLogic->setConfiguration('lastCommunicationTimeOut', '-1');
-        $eqLogic->setIsVisible("1");
+        $eqLogic->setIsVisible("0");
         $eqLogic->setConfiguration('icone', "Ruche");
         // eqReal_id
         $eqLogic->setIsEnable("1");

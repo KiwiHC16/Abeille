@@ -33,6 +33,8 @@
                 "use": "zbWriteAttribute",
                 "params": "clustId=0201&attrId=0012&attrVal=#slider#",
                 "subType": "slider",
+                "minValue": 5,
+                "maxValue": 30,
                 "isVisible": 1
             }
         }

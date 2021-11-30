@@ -67,16 +67,22 @@
 
             if (isset($_options)) {
                 switch ($cmd->getSubType()) {
-                    case 'slider':
+                case 'slider':
+                    $cmdTopic = $cmd->getConfiguration('topic', '');
+                    if ($cmdTopic == "writeAttribute") {
+                        // New way of handling #slider#
+                        $sliderVal = $_options['slider'];
+                        $request2 = str_replace('#slider#', '#slider'.$sliderVal.'#', $request2);
+                    } else
                         $request2 = str_replace('#slider#', $_options['slider'], $request2);
-                        break;
-                    case 'color':
-                        $request2 = str_replace('#color#', $_options['color'], $request2);
-                        break;
-                    case 'message':
-                        $request2 = str_replace('#title#', $_options['title'], $request2);
-                        $request2 = str_replace('#message#', $_options['message'], $request2);
-                        break;
+                    break;
+                case 'color':
+                    $request2 = str_replace('#color#', $_options['color'], $request2);
+                    break;
+                case 'message':
+                    $request2 = str_replace('#title#', $_options['title'], $request2);
+                    $request2 = str_replace('#message#', $_options['message'], $request2);
+                    break;
                 }
             }
             // logMessage('debug', 'request - options: '.$request2);
@@ -126,6 +132,7 @@
                 } else {
                     $topic = "Cmd".$this->getEqLogic()->getLogicalId()."/".$this->getConfiguration('topic');
                 }
+                // Tcharp38: What must be replaced in 'topic' ?
                 $topic = $this->updateField($dest, $this, $topic, $_options);
 
                 // -------------------------------------------------------------------------

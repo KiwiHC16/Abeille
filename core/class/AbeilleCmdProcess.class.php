@@ -22,12 +22,65 @@
             foreach ($required as $idx => $param) {
                 if (isset($Command[$param]))
                     continue;
-                $this->deamonlog('debug', "    ERROR: Missing '".$param."'");
+                cmdLog('debug', "    ERROR: Missing '".$param."'");
                 $missingParam = true;
             }
             if ($missingParam)
                 return false;
             return true;
+        }
+
+        /**
+         * Converts signed decimal to hex (Two's complement)
+         *
+         * @param $value int, signed
+         *
+         * @param $reverseEndianness bool, if true reverses the byte order (see machine dependency)
+         *
+         * @return string, upper case hex value, both bytes padded left with zeros
+         */
+        function signed2hex($value, $size, $reverseEndianness = true)
+        {
+            $packed = pack('i', $value);
+            $hex='';
+            for ($i=0; $i < $size; $i++){
+                $hex .= strtoupper( str_pad( dechex(ord($packed[$i])) , 2, '0', STR_PAD_LEFT) );
+            }
+            $tmp = str_split($hex, 2);
+            $out = implode('', ($reverseEndianness ? array_reverse($tmp) : $tmp));
+            return $out;
+        }
+
+        // Called to convert '#sliderXX#'
+        function sliderToHex($sliderVal, $type) {
+            $decVal = substr($sliderVal, 7, -1); // Extracting decimal value
+            $signed = false;
+            switch ($type) {
+            case '28':
+                $size = 1;
+                $signed = true;
+                break;
+            case '29':
+                $size = 2;
+                $signed = true;
+                break;
+            case '2A':
+                $size = 3;
+                $signed = true;
+                break;
+            case '2B':
+                $size = 4;
+                $signed = true;
+                break;
+            default:
+                cmdLog('debug', "    sliderToHex() ERROR: decVal=".$decVal.", UNSUPPORTED type=".$type);
+                return false;
+            }
+            if ($signed)
+                $hexVal = $this->signed2hex($decVal, $size);
+
+            cmdLog('debug', "    sliderToHex(): decVal=".$decVal." => ".$hexVal);
+            return $hexVal;
         }
 
         // Ne semble pas fonctionner et me fait planté la ZiGate, idem ques etParam()
@@ -140,7 +193,7 @@
          * @return none
          */
         function setParam2( $dest, $address, $clusterId, $attributeId, $destinationEndPoint, $Param, $dataType) {
-            $this->deamonlog('debug', "  command setParam2", $this->debug['processCmd']);
+            cmdLog('debug', "  command setParam2", $this->debug['processCmd']);
 
             $priority = $Command['priority'];
 
@@ -209,7 +262,7 @@
          * @return none
          */
         function setParam3($dest,$Command) {
-            $this->deamonlog('debug', "command setParam3", $this->debug['processCmd']);
+            cmdLog('debug', "command setParam3", $this->debug['processCmd']);
 
             $priority = $Command['priority'];
 
@@ -304,7 +357,7 @@
          */
         function setParam4($dest,$Command) {
 
-            $this->deamonlog('debug', "command setParam4", $this->debug['processCmd']);
+            cmdLog('debug', "command setParam4", $this->debug['processCmd']);
 
             $priority = $Command['priority'];
 
@@ -384,7 +437,7 @@
          */
         function setParamGeneric($dest,$Command) {
 
-            $this->deamonlog('debug', "command setParam4", $this->debug['processCmd']);
+            cmdLog('debug', "command setParam4", $this->debug['processCmd']);
 
             $priority = $Command['priority'];
 
@@ -583,7 +636,7 @@
          * @return none,
          */
         function getParamMulti($Command) {
-            $this->deamonlog('debug', " command getParamMulti", $this->debug['processCmd']);
+            cmdLog('debug', " command getParamMulti", $this->debug['processCmd']);
 
             $cmd = "0530";
 
@@ -648,7 +701,7 @@
 
         // getParamHue: based on getParam for testing purposes. If works then perhaps merge with get param and manage the diff by parameters like destination endpoint
         function getParamHue($priority,$dest,$address,$clusterId,$attributeId) {
-            $this->deamonlog('debug','getParamHue', $this->debug['processCmd']);
+            cmdLog('debug','getParamHue', $this->debug['processCmd']);
 
             $priority = $Command['priority'];
 
@@ -674,7 +727,7 @@
 
         // getParamOSRAM: based on getParam for testing purposes. If works then perhaps merge with get param and manage the diff by parameters like destination endpoint
         function getParamOSRAM($priority,$dest,$address,$clusterId,$attributeId) {
-            $this->deamonlog('debug','getParamOSRAM', $this->debug['processCmd']);
+            cmdLog('debug','getParamOSRAM', $this->debug['processCmd']);
 
             $priority = $Command['priority'];
 
@@ -718,12 +771,12 @@
                                     return $Command['priority'];
                                 }
                                 else {
-                                    $this->deamonlog('debug', "    NE n a pas repondu lors de precedente commande alors je mets la priorite au minimum.");
+                                    cmdLog('debug', "    NE n a pas repondu lors de precedente commande alors je mets la priorite au minimum.");
                                     return priorityLostNE;
                                 }
                             }
                             else {
-                                $this->deamonlog('debug', "    NE en Time Out alors je mets la priorite au minimum.");
+                                cmdLog('debug', "    NE en Time Out alors je mets la priorite au minimum.");
                                 return priorityLostNE;
                             }
                         }
@@ -733,13 +786,13 @@
                             this prevents interrogation of EQ and therefore reinclusion.
                             This check should be done at source not here. At least don't filter
                             requests from parser. */
-                            // $this->deamonlog('debug', "    NE desactive, je n envoie pas de commande.");
+                            // cmdLog('debug', "    NE desactive, je n envoie pas de commande.");
                             // return -1;
                             return $Command['priority'];
                         }
                     }
                     else {
-                        $this->deamonlog('debug', "    NE n existe pas dans Abeille, une annonce/une commande de groupe, je ne touche pas à la priorite.");
+                        cmdLog('debug', "    NE n existe pas dans Abeille, une annonce/une commande de groupe, je ne touche pas à la priorite.");
                         return $Command['priority'];
                     }
                 }
@@ -748,7 +801,7 @@
                 }
             }
             else {
-                $this->deamonlog('debug', "    priority not defined !!!");
+                cmdLog('debug', "    priority not defined !!!");
                 return priorityInterrogation;
             }
         }
@@ -763,22 +816,22 @@
          */
         function processCmd($Command) {
 
-            $this->deamonlog("debug", "    L1 - processCmd(".json_encode($Command).")", $this->debug['processCmd']);
+            cmdLog("debug", "    L1 - processCmd(".json_encode($Command).")", $this->debug['processCmd']);
 
             if (!isset($Command)) {
-                $this->deamonlog('debug', "    L1 - Command not set", $this->debug['processCmd']);
+                cmdLog('debug', "    L1 - Command not set", $this->debug['processCmd']);
                 return;
             }
 
             $priority   = $this->reviewPriority($Command);
             if ($priority==-1) {
-                $this->deamonlog("debug", "    L1 - processCmd - can t define priority, stop here");
+                cmdLog("debug", "    L1 - processCmd - can t define priority, stop here");
                 return;
             }
             if (isset($Command['dest']))
                 $dest       = $Command['dest'];
             else {
-                $this->deamonlog("debug", "    L1 - No dest defined, stop here");
+                cmdLog("debug", "    L1 - No dest defined, stop here");
                 return;
             }
 
@@ -820,7 +873,7 @@
 
             // abeilleList abeilleListAll
             if (isset($Command['abeilleList'])) {
-                $this->deamonlog('debug', "    Get Abeilles List", $this->debug['processCmd']);
+                cmdLog('debug', "    Get Abeilles List", $this->debug['processCmd']);
                 $this->addCmdToQueue($priority,$dest,"0015","0000","");
                 return;
             }
@@ -828,7 +881,7 @@
 
             //----------------------------------------------------------------------
             if (isset($Command['setOnZigateLed'])) {
-                $this->deamonlog('debug', "    setOnZigateLed", $this->debug['processCmd']);
+                cmdLog('debug', "    setOnZigateLed", $this->debug['processCmd']);
                 $cmd = "0018";
                 $data = "01";
 
@@ -838,7 +891,7 @@
             }
 
             if (isset($Command['setOffZigateLed'])) {
-                $this->deamonlog('debug', "    setOffZigateLed", $this->debug['processCmd']);
+                cmdLog('debug', "    setOffZigateLed", $this->debug['processCmd']);
                 $cmd = "0018";
                 $data = "00";
 
@@ -849,7 +902,7 @@
 
             //----------------------------------------------------------------------
             if (isset($Command['setCertificationCE'])) {
-                $this->deamonlog('debug', "    setCertificationCE", $this->debug['processCmd']);
+                cmdLog('debug', "    setCertificationCE", $this->debug['processCmd']);
                 $cmd = "0019";
                 $data = "01";
 
@@ -859,7 +912,7 @@
             }
 
             if (isset($Command['setCertificationFCC'])) {
-                $this->deamonlog('debug', "    setCertificationFCC", $this->debug['processCmd']);
+                cmdLog('debug', "    setCertificationFCC", $this->debug['processCmd']);
                 $cmd = "0019";
                 $data = "02";
 
@@ -874,7 +927,7 @@
             // PHY_PIB_TX_POWER_MIN (minimum - 0)
             // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
             if (isset($Command['TxPower'])  ) {
-                $this->deamonlog('debug', "    TxPower", $this->debug['processCmd']);
+                cmdLog('debug', "    TxPower", $this->debug['processCmd']);
                 $cmd = "0806";
                 $data = $Command['TxPower'];
                 if ($data < 10 ) $data = '0'.$data;
@@ -891,7 +944,7 @@
                 // PHY_PIB_TX_POWER_MIN (minimum - 0)
                 // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
                 if (isset($Command['GetTxPower'])) {
-                    $this->deamonlog('debug', "    GetTxPower", $this->debug['processCmd']);
+                    cmdLog('debug', "    GetTxPower", $this->debug['processCmd']);
                     $cmd = "0807";
                     $data = "";
 
@@ -902,7 +955,7 @@
 
             //----------------------------------------------------------------------
             if (isset($Command['setChannelMask'])) {
-                $this->deamonlog('debug', "    setChannelMask", $this->debug['processCmd']);
+                cmdLog('debug', "    setChannelMask", $this->debug['processCmd']);
                 $cmd = "0021";
                 $data = $Command['setChannelMask'];
 
@@ -913,7 +966,7 @@
 
             //----------------------------------------------------------------------
             if (isset($Command['setExtendedPANID'])) {
-                $this->deamonlog('debug', "    setExtendedPANID", $this->debug['processCmd']);
+                cmdLog('debug', "    setExtendedPANID", $this->debug['processCmd']);
                 $cmd = "0020";
                 $data = $Command['setExtendedPANID'];
 
@@ -968,10 +1021,10 @@
             // Request routing table. To Zigbee router or coordinator.
             if (isset($Command['getRoutingTable'])) {
                 if (!isset($Command['address'])) {
-                    $this->deamonlog('debug', "    ERROR: command getRoutingTable: Missing address");
+                    cmdLog('debug', "    ERROR: command getRoutingTable: Missing address");
                     return;
                 }
-                $this->deamonlog('debug', "    command getRoutingTable", $this->debug['processCmd']);
+                cmdLog('debug', "    command getRoutingTable", $this->debug['processCmd']);
 
                 // Msg Type = 0x0530
                 $cmd = "0530";
@@ -1007,8 +1060,8 @@
                 $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
                 $data1 = $addressMode.$targetShortAddress.$sourceEndpoint.$destinationEndpoint.$clusterID.$profileID.$securityMode.$radius.$dataLength;
 
-                $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength, $this->debug['processCmd'] );
-                $this->deamonlog('debug', "  Data2: ".$SQN."-".$startIndex, $this->debug['processCmd'] );
+                cmdLog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength, $this->debug['processCmd'] );
+                cmdLog('debug', "  Data2: ".$SQN."-".$startIndex, $this->debug['processCmd'] );
 
                 $data = $data1.$data2;
 
@@ -1021,10 +1074,10 @@
             // Get binding table: Mgmt_Bind_req
             if (isset($Command['getBindingTable'])) {
                 if (!isset($Command['address'])) {
-                    $this->deamonlog('debug', "    ERROR: command getBindingTable: Missing address");
+                    cmdLog('debug', "    ERROR: command getBindingTable: Missing address");
                     return;
                 }
-                $this->deamonlog('debug', "    command getBindingTable", $this->debug['processCmd']);
+                cmdLog('debug', "    command getBindingTable", $this->debug['processCmd']);
                 // Msg Type = 0x0530
                 $cmd = "0530";
 
@@ -1066,7 +1119,7 @@
             // message => reportToAddress=00158D0001B22E24&ClusterId=0006
             if (isset($Command['bind'])) // Tcharp38: OBSOLETE !! Use "bind0030" instead
             {
-                $this->deamonlog('debug', "    command bind", $this->debug['processCmd']);
+                cmdLog('debug', "    command bind", $this->debug['processCmd']);
                 // Msg Type = 0x0030
                 $cmd = "0030";
 
@@ -1116,18 +1169,18 @@
             //     foreach ($required as $idx => $param) {
             //         if (isset($Command[$param]))
             //             continue;
-            //         $this->deamonlog('debug', "    command bind0030 ERROR: Missing '".$param."'");
+            //         cmdLog('debug', "    command bind0030 ERROR: Missing '".$param."'");
             //         $missingParam = true;
             //     }
             //     if ($missingParam)
             //         return;
             //     // If 'destAddr' == IEEE then need 'destEp' too.
             //     if ((strlen($Command['destAddr']) == 16) && !isset($Command['destEp'])) {
-            //         $this->deamonlog('debug', "    command bind0030 ERROR: Missing 'destEp'");
+            //         cmdLog('debug', "    command bind0030 ERROR: Missing 'destEp'");
             //         return;
             //     }
 
-            //     $this->deamonlog('debug', "    command bind0030", $this->debug['processCmd']);
+            //     cmdLog('debug', "    command bind0030", $this->debug['processCmd']);
 
             //     $cmd = "0030";
 
@@ -1141,7 +1194,7 @@
             //     // Source
             //     $addr = $Command['addr'];
             //     if (strlen($addr) != 16) {
-            //         $this->deamonlog('debug', "    command bind0030 ERROR: Invalid addr length");
+            //         cmdLog('debug', "    command bind0030 ERROR: Invalid addr length");
             //         return;
             //     }
             //     $ep = $Command['ep'];
@@ -1156,7 +1209,7 @@
             //     else if (strlen($destAddr) == 16)
             //         $destAddrMode = "03";
             //     else {
-            //         $this->deamonlog('debug', "    command bind0030 ERROR: Invalid dest addr length");
+            //         cmdLog('debug', "    command bind0030 ERROR: Invalid dest addr length");
             //         return;
             //     }
             //     $destEp = isset($Command['destEp']) ? $Command['destEp'] : "00"; // destEp ignored if group address
@@ -1172,7 +1225,7 @@
             // Tcharp38: Why the need of a 0530 based function ?
             if (isset($Command['BindToGroup']))
             {
-                $this->deamonlog('debug', "    command BindToGroup", $this->debug['processCmd']);
+                cmdLog('debug', "    command BindToGroup", $this->debug['processCmd']);
 
                 $cmd = "0530";
 
@@ -1221,8 +1274,8 @@
 
                 $data1 = $addressMode.$targetShortAddress.$sourceEndpointBind.$destinationEndpointBind.$clusterIDBind.$profileIDBind.$securityMode.$radius.$dataLength;
 
-                $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2), $this->debug['processCmd'] );
-                $this->deamonlog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$reportToGroup." len: ".(strlen($data2)/2), $this->debug['processCmd'] );
+                cmdLog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2), $this->debug['processCmd'] );
+                cmdLog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$reportToGroup." len: ".(strlen($data2)/2), $this->debug['processCmd'] );
 
                 $data = $data1.$data2;
 
@@ -1238,7 +1291,7 @@
             // Tcharp38: Why the need of a 0530 based function ?
             if (isset($Command['bindShort']))
             {
-                $this->deamonlog('debug', "    command bind short", $this->debug['processCmd']);
+                cmdLog('debug', "    command bind short", $this->debug['processCmd']);
                 // Msg Type = 0x0530
                 $cmd = "0530";
 
@@ -1277,7 +1330,7 @@
                 $dummy = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
 
                 if (strlen($Command['targetExtendedAddress']) < 2 ) {
-                    $this->deamonlog('debug', "  command bind short: param targetExtendedAddress is empty. Can t do. So return", $this->debug['processCmd']);
+                    cmdLog('debug', "  command bind short: param targetExtendedAddress is empty. Can t do. So return", $this->debug['processCmd']);
                     return;
                 }
                 $targetExtendedAddress = AbeilleTools::reverseHex($Command['targetExtendedAddress']);
@@ -1288,7 +1341,7 @@
 
                 $destinationAddressMode = "03";
                 if (strlen($Command['destinationAddress']) < 2 ) {
-                    $this->deamonlog('debug', "  command bind short: param destinationAddress is empty. Can t do. So return", $this->debug['processCmd']);
+                    cmdLog('debug', "  command bind short: param destinationAddress is empty. Can t do. So return", $this->debug['processCmd']);
                     return;
                 }
                 $destinationAddress = AbeilleTools::reverseHex($Command['destinationAddress']);
@@ -1300,8 +1353,8 @@
                 $data1 = $addressMode.$targetShortAddress.$sourceEndpointBind.$destinationEndpointBind.$clusterIDBind.$profileIDBind.$securityMode.$radius.$dataLength;
                 $data2 = $dummy.$targetExtendedAddress.$targetEndpoint.$clusterID .$destinationAddressMode.$destinationAddress.$destinationEndpoint;
 
-                $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2), $this->debug['processCmd'] );
-                $this->deamonlog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$destinationEndpoint." len: ".(strlen($data2)/2), $this->debug['processCmd'] );
+                cmdLog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2), $this->debug['processCmd'] );
+                cmdLog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$destinationEndpoint." len: ".(strlen($data2)/2), $this->debug['processCmd'] );
 
                 $data = $data1.$data2;
 
@@ -1314,7 +1367,7 @@
             // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
             if (isset($Command['setReport'])) // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
             {
-                $this->deamonlog('debug', "    command setReport", $this->debug['processCmd']);
+                cmdLog('debug', "    command setReport", $this->debug['processCmd']);
                 // Configure Reporting request
                 // Msg Type = 0x0120
 
@@ -1355,7 +1408,7 @@
                 if ($AttributeDirection == "00" ) {
                     if (isset($Command['AttributeType'])) {$AttributeType = $Command['AttributeType']; }
                     else {
-                        $this->deamonlog('error', "set Report with an AttributeType not defines for equipment: ". $targetShortAddress." attribut: ".$AttributeId." can t process" , $this->debug['processCmd']);
+                        cmdLog('error', "set Report with an AttributeType not defines for equipment: ". $targetShortAddress." attribut: ".$AttributeId." can t process" , $this->debug['processCmd']);
                         return;
                     }
                     if (isset($Command['MinInterval']))   { $MinInterval  = $Command['MinInterval']; } else { $MinInterval    = "0000"; }
@@ -1371,13 +1424,13 @@
                     if (isset($Command['Timeout']))   { $Timeout      = $Command['Timeout']; }     else { $Timeout        = "0000"; }
                 }
                 else {
-                    $this->deamonlog('error', "set Report with an AttributeDirection (".$AttributeDirection.") not valid for equipment: ". $targetShortAddress." attribut: ".$AttributeId." can t process", $this->debug['processCmd']);
+                    cmdLog('error', "set Report with an AttributeDirection (".$AttributeDirection.") not valid for equipment: ". $targetShortAddress." attribut: ".$AttributeId." can t process", $this->debug['processCmd']);
                     return;
                 }
 
                 $data =  $addressMode.$targetShortAddress.$sourceEndpoint.$targetEndpoint.$ClusterId.$direction.$manufacturerSpecific.$manufacturerId.$numberOfAttributes.$AttributeDirection.$AttributeType.$AttributeId.$MinInterval.$MaxInterval.$Timeout.$Change ;
                 $len = sprintf("%04s",dechex(strlen($data) / 2));
-                $this->deamonlog('debug', "Data: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$targetEndpoint."-".$ClusterId."-".$direction."-".$manufacturerSpecific."-".$manufacturerId."-".$numberOfAttributes."-".$AttributeDirection."-".$AttributeType."-".$AttributeId."-".$MinInterval."-".$MaxInterval."-".$Timeout."-".$Change, $this->debug['processCmd']);
+                cmdLog('debug', "Data: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$targetEndpoint."-".$ClusterId."-".$direction."-".$manufacturerSpecific."-".$manufacturerId."-".$numberOfAttributes."-".$AttributeDirection."-".$AttributeType."-".$AttributeId."-".$MinInterval."-".$MaxInterval."-".$Timeout."-".$Change, $this->debug['processCmd']);
                 $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $targetShortAddress);
                 return;
             }
@@ -1387,7 +1440,7 @@
             // message => address=d45e&ClusterId=0006&AttributeId=0000&AttributeType=10
             // For the time being hard coded to run tests but should replace setReport due to a bug on Timeout of command 0120. See my notes.
             if (isset($Command['setReportRaw'])) { // Tcharp38: OBSOLETE. Use 'configureReporting' instead.
-                $this->deamonlog('debug', "   command setReportRaw", $this->debug['processCmd']);
+                cmdLog('debug', "   command setReportRaw", $this->debug['processCmd']);
 
                 $cmd = "0530";
 
@@ -1439,8 +1492,8 @@
 
                 $data1 = $addressMode.$targetShortAddress.$sourceEndpoint.$destinationEndpoint.$clusterID.$profileID.$securityMode.$radius.$dataLength;
 
-                $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
-                $this->deamonlog('debug', "  Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd']);
+                cmdLog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
+                cmdLog('debug', "  Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd']);
 
                 $data = $data1.$data2;
                 $length = sprintf("%04s", dechex(strlen($data) / 2));
@@ -1452,21 +1505,21 @@
             // Read Reporting Request
             if (isset($Command['readReportingConfig'])) {
                 if (!isset($Command['addr'])) {
-                    $this->deamonlog('debug', "    command readReportingConfig ERROR: Missing 'addr'");
+                    cmdLog('debug', "    command readReportingConfig ERROR: Missing 'addr'");
                     return;
                 }
                 if (!isset($Command['ep']))
                     $Command['ep'] = "01";
                 if (!isset($Command['clustId'])) {
-                    $this->deamonlog('debug', "    command readReportingConfig ERROR: Missing 'clustId'");
+                    cmdLog('debug', "    command readReportingConfig ERROR: Missing 'clustId'");
                     return;
                 }
                 if (!isset($Command['attrId'])) {
-                    $this->deamonlog('debug', "    command readReportingConfig ERROR: Missing 'attrId'");
+                    cmdLog('debug', "    command readReportingConfig ERROR: Missing 'attrId'");
                     return;
                 }
 
-                $this->deamonlog('debug', "    command readReportingConfig", $this->debug['processCmd']);
+                cmdLog('debug', "    command readReportingConfig", $this->debug['processCmd']);
                 $cmd = "0122";
 
                 // <address mode: uint8_t>
@@ -1503,7 +1556,7 @@
             // Commission group for Ikea Telecommande On/Off still interrupteur
             if (isset($Command['commissioningGroupAPS']))
             {
-                $this->deamonlog('debug', "    commissioningGroupAPS", $this->debug['processCmd']);
+                cmdLog('debug', "    commissioningGroupAPS", $this->debug['processCmd']);
 
                 $cmd = "0530";
 
@@ -1562,7 +1615,7 @@
             // Commission group for Legrand Telecommande On/Off still interrupteur Issue #1290
             if (isset($Command['commissioningGroupAPSLegrand']))
             {
-                $this->deamonlog('debug', "    commissioningGroupAPSLegrand", $this->debug['processCmd']);
+                cmdLog('debug', "    commissioningGroupAPSLegrand", $this->debug['processCmd']);
 
                 $cmd = "0530";
 
@@ -1609,8 +1662,8 @@
 
                 $data1 = $addressMode.$targetShortAddress.$sourceEndpoint.$destinationEndpoint.$clusterID.$profileID.$securityMode.$radius.$dataLength;
 
-                $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
-                $this->deamonlog('debug', "  Data2: ".$zclControlField."-".$Manufacturer."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd']);
+                cmdLog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
+                cmdLog('debug', "  Data2: ".$zclControlField."-".$Manufacturer."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd']);
 
                 $data = $data1.$data2;
 
@@ -1876,7 +1929,7 @@
 
             if (isset($Command['sceneLeftIkea']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']))
             {
-                $this->deamonlog('debug', "  Specific Command to simulate Ikea Telecommand < and >");
+                cmdLog('debug', "  Specific Command to simulate Ikea Telecommand < and >");
 
                 // Msg Type = 0x0530
                 $cmd = "0530";
@@ -1902,8 +1955,8 @@
 
                 $data1 = $addressMode.$targetShortAddress.$sourceEndpointBind.$destinationEndpointBind.$clusterIDBind.$profileIDBind.$securityMode.$radius.$dataLength;
 
-                $this->deamonlog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(dechex(strlen($data1)/2)), $this->debug['processCmd'] );
-                $this->deamonlog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$destinationEndpoint." len: ".(dechex(strlen($data2)/2)), $this->debug['processCmd'] );
+                cmdLog('debug', "  Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(dechex(strlen($data1)/2)), $this->debug['processCmd'] );
+                cmdLog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$destinationEndpoint." len: ".(dechex(strlen($data2)/2)), $this->debug['processCmd'] );
 
                 $data = $data1.$data2;
                 $length = sprintf("%04s", dechex(strlen($data) / 2));
@@ -2069,7 +2122,7 @@
                 $data = $address.$IeeeAddress.$requestType.$startIndex ;
                 $length = "000C"; // A verifier
 
-                $this->deamonlog('debug', '    Network_Address_request: '.$data.' - '.$length, $this->debug['processCmd']  );
+                cmdLog('debug', '    Network_Address_request: '.$data.' - '.$length, $this->debug['processCmd']  );
 
                 $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
                 return;
@@ -2093,7 +2146,7 @@
                 $data = $address.$shortAddress.$requestType.$startIndex ;
                 $length = sprintf("%04s", dechex(strlen($data) / 2));
 
-                $this->deamonlog('debug', '    IEEE_Address_request: '.$data.' - '.$length, $this->debug['processCmd']  );
+                cmdLog('debug', '    IEEE_Address_request: '.$data.' - '.$length, $this->debug['processCmd']  );
 
                 $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
                 return;
@@ -2223,7 +2276,7 @@
 
             if (isset($Command['moveToLiftAndTiltBSO']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['destinationEndpoint']) && isset($Command['inclinaison']) && isset($Command['duration']))
             {
-                $this->deamonlog('debug', "    command moveToLiftAndTiltBSO", $this->debug['processCmd']);
+                cmdLog('debug', "    command moveToLiftAndTiltBSO", $this->debug['processCmd']);
 
                 $cmd = "0530";
 
@@ -2272,8 +2325,8 @@
 
                 $data1 = $addressMode.$targetShortAddress.$sourceEndpoint.$destinationEndpoint.$clusterID.$profileID.$securityMode.$radius.$dataLength;
 
-                $this->deamonlog('debug', "    Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
-                $this->deamonlog('debug', "    Data2: ".$zclControlField."-".$ManfufacturerCode."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd']);
+                cmdLog('debug', "    Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpoint."-".$destinationEndpoint."-".$clusterID."-".$profileID."-".$securityMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
+                cmdLog('debug', "    Data2: ".$zclControlField."-".$ManfufacturerCode."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd']);
 
                 $data = $data1.$data2;
 
@@ -2323,7 +2376,7 @@
             if ((isset($Command['WriteAttributeRequestVibration'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']))
             {
                 // Tcharp38: WHere is this code ??? $this->setParamXiaomi($dest, $Command);
-                // $this->deamonlog('debug', "ERROR: WriteAttributeRequestVibration() CAN'T be executed. Missing setParamXiaomi()", $this->debug['processCmd']);
+                // cmdLog('debug', "ERROR: WriteAttributeRequestVibration() CAN'T be executed. Missing setParamXiaomi()", $this->debug['processCmd']);
                 $this->ReportParamXiaomi($dest, $Command);
                 return;
             }
@@ -2386,7 +2439,7 @@
             if (isset($Command['writeAttributeRequestIAS_WD'])) {
                 // Parameters: EP=#EP&mode=Flash&duration=#slider#
 
-                    $this->deamonlog('debug', "    command writeAttributeRequestIAS_WD", $this->debug['processCmd']);
+                    cmdLog('debug', "    command writeAttributeRequestIAS_WD", $this->debug['processCmd']);
                     // Msg Type = 0x0111
 
                     $priority = $Command['priority'];
@@ -2430,7 +2483,7 @@
 
             if (isset($Command['addGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']))
             {
-                $this->deamonlog('debug', "    Add a group to a device", $this->debug['processCmd']);
+                cmdLog('debug', "    Add a group to a device", $this->debug['processCmd']);
                 //echo "Add a group to an IKEA bulb\n";
 
                 // 15:24:36.029 -> 01 02 10 60 02 10 02 19 6D 02 12 83 DF 02 11 02 11 C2 98 02 10 02 10 03
@@ -2463,7 +2516,7 @@
 
             if (isset($Command['addGroupAPS'])  )
             {
-                $this->deamonlog('debug', "    command add group with APS", $this->debug['processCmd']);
+                cmdLog('debug', "    command add group with APS", $this->debug['processCmd']);
                 // Msg Type = 0x0530
                 $cmd = "0530";
 
@@ -2511,11 +2564,11 @@
                 $data1 = $addressMode.$targetShortAddress.$sourceEndpointBind.$destinationEndpointBind.$clusterIDBind.$profileIDBind.$securityMode.$radius.$dataLength;
                 $data2 = $dummy.$dummy1.$cmdAddGroup.$groupId.$length;
 
-                $this->deamonlog('debug', "    Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) , $this->debug['processCmd']);
-                $this->deamonlog('debug', "    Data2: ".$dummy.$dummy1.$cmdAddGroup.$groupId.$length." len: ".(strlen($data2)/2) , $this->debug['processCmd']);
+                cmdLog('debug', "    Data1: ".$addressMode."-".$targetShortAddress."-".$sourceEndpointBind."-".$destinationEndpointBind."-".$clusterIDBind."-".$profileIDBind."-".$securityMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) , $this->debug['processCmd']);
+                cmdLog('debug', "    Data2: ".$dummy.$dummy1.$cmdAddGroup.$groupId.$length." len: ".(strlen($data2)/2) , $this->debug['processCmd']);
 
                 $data = $data1.$data2;
-                // $this->deamonlog('debug', "Data: ".$data." len: ".(strlen($data)/2));
+                // cmdLog('debug', "Data: ".$data." len: ".(strlen($data)/2));
 
                 $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
                 return;
@@ -2523,7 +2576,7 @@
 
             if (isset($Command['removeGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']))
             {
-                $this->deamonlog('debug', "    Remove a group to a device", $this->debug['processCmd']);
+                cmdLog('debug', "    Remove a group to a device", $this->debug['processCmd']);
                 //echo "Remove a group to an IKEA bulb\n";
 
                 // 15:24:36.029 -> 01 02 10 60 02 10 02 19 6D 02 12 83 DF 02 11 02 11 C2 98 02 10 02 10 03
@@ -2553,23 +2606,23 @@
             // Replace Equipement
             if (isset($Command['replaceEquipement']) && isset($Command['old']) && isset($Command['new']))
             {
-                $this->deamonlog('debug', "    Replace an Equipment", $this->debug['processCmd']);
+                cmdLog('debug', "    Replace an Equipment", $this->debug['processCmd']);
 
                 $old = $Command['old'];
                 $new = $Command['new'];
 
-                $this->deamonlog('debug',"    Update eqLogic table for new object", $this->debug['processCmd']);
+                cmdLog('debug',"    Update eqLogic table for new object", $this->debug['processCmd']);
                 $sql =          "UPDATE `eqLogic` SET ";
                 $sql = $sql.  "name = 'Abeille-".$new."-New' , logicalId = '".$new."', configuration = replace(configuration, '".$old."', '".$new."' ) ";
                 $sql = $sql.  "WHERE  eqType_name = 'Abeille' AND logicalId = '".$old."' AND configuration LIKE '%".$old."%'";
-                $this->deamonlog('debug',"sql: ".$sql, $this->debug['processCmd']);
+                cmdLog('debug',"sql: ".$sql, $this->debug['processCmd']);
                 DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
 
-                $this->deamonlog('debug',"    Update cmd table for new object", $this->debug['processCmd']);
+                cmdLog('debug',"    Update cmd table for new object", $this->debug['processCmd']);
                 $sql =          "UPDATE `cmd` SET ";
                 $sql = $sql.  "configuration = replace(configuration, '".$old."', '".$new."' ) ";
                 $sql = $sql.  "WHERE  eqType = 'Abeille' AND configuration LIKE '%".$old."%' ";
-                $this->deamonlog('debug',"    sql: ".$sql, $this->debug['processCmd']);
+                cmdLog('debug',"    sql: ".$sql, $this->debug['processCmd']);
                 DB::Prepare($sql, array(), DB::FETCH_TYPE_ROW);
                 return;
             }
@@ -2577,7 +2630,7 @@
             //
             if (isset($Command['UpGroup']) && isset($Command['address']) && isset($Command['step']))
             {
-                $this->deamonlog('debug','    UpGroup for: '.$Command['address'], $this->debug['processCmd']);
+                cmdLog('debug','    UpGroup for: '.$Command['address'], $this->debug['processCmd']);
                 // <address mode: uint8_t>          -> 2
                 // <target short address: uint16_t> -> 4
                 // <source endpoint: uint8_t>       -> 2
@@ -2606,7 +2659,7 @@
 
             if (isset($Command['DownGroup']) && isset($Command['address']) && isset($Command['step']))
             {
-                $this->deamonlog('debug','    DownGroup for: '.$Command['address'], $this->debug['processCmd']);
+                cmdLog('debug','    DownGroup for: '.$Command['address'], $this->debug['processCmd']);
                 // <address mode: uint8_t>          -> 2
                 // <target short address: uint16_t> -> 4
                 // <source endpoint: uint8_t>       -> 2
@@ -2636,7 +2689,7 @@
             // ON / OFF with no effects
             if (isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']))
             {
-                $this->deamonlog('debug','    OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
+                cmdLog('debug','    OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
                 // <address mode: uint8_t>
                 // <target short address: uint16_t>
                 // <source endpoint: uint8_t>
@@ -2671,7 +2724,7 @@
             // Not used as some eq have a strange behavior if the APS ACK is not set (e.g. Xiaomi Plug / should probably test again / bug from the eq ?)
             if (isset($Command['onoffraw']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']))
             {
-                $this->deamonlog('debug', "    command setParam4", $this->debug['processCmd']);
+                cmdLog('debug', "    command setParam4", $this->debug['processCmd']);
 
                 $dest       = $Command['dest'];
                 $priority   = $Command['priority'];
@@ -2726,7 +2779,7 @@
             // On / Off Timed Send
             if (isset($Command['OnOffTimed']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) && isset($Command['onTime']) && isset($Command['offWaitTime']))
             {
-                $this->deamonlog('debug','    OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'].' - '.$Command['onTime'].' - '.$Command['ffWaitTime'], $this->debug['processCmd']);
+                cmdLog('debug','    OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'].' - '.$Command['onTime'].' - '.$Command['ffWaitTime'], $this->debug['processCmd']);
                 // <address mode: uint8_t>    Status
                 // <target short address: uint16_t>
                 // <source endpoint: uint8_t>
@@ -2844,7 +2897,7 @@
                 $colourY = str_pad( dechex($y), 4, "0", STR_PAD_LEFT);
                 $duration = "0001";
 
-                $this->deamonlog( 'debug', "    colourX: ".$colourX." colourY: ".$colourY, $this->debug['processCmd'] );
+                cmdLog( 'debug', "    colourX: ".$colourX." colourY: ".$colourY, $this->debug['processCmd'] );
 
                 $data = $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$colourX.$colourY.$duration ;
 
@@ -3019,7 +3072,7 @@
             /* Tcharp38: New way of checking commands. */
             if (isset($Command['name'])) {
                 $cmdName = $Command['name'];
-                $this->deamonlog('debug', '    '.$cmdName.' cmd', $this->debug['processCmd']);
+                cmdLog('debug', '    '.$cmdName.' cmd', $this->debug['processCmd']);
 
                 /* Note: commands are described in the following order:
                    - zigate specific commands
@@ -3041,7 +3094,7 @@
                         $modeVal = "02";
                     } else // Normal
                         $modeVal = "00";
-                    $this->deamonlog('debug',"    Setting mode ".$mode."/".$modeVal);
+                    cmdLog('debug',"    Setting mode ".$mode."/".$modeVal);
                     $this->addCmdToQueue($priority, $dest, "0002", "0001", $modeVal);
                     return;
                 }
@@ -3115,7 +3168,7 @@
                 // Zigate specific command
                 else if ($cmdName == 'permitJoin') {
                     //  && $Command['permitJoin']=="Status") {
-                    // $this->deamonlog("debug", "    permitJoin-Status");
+                    // cmdLog("debug", "    permitJoin-Status");
                     // “Permit join” status on the target
                     // Msg Type =  0x0014
 
@@ -3139,7 +3192,7 @@
                         $zgRef = mktime(0, 0, 0, 1, 1, 2000); // 2000-01-01 00:00:00
                         $Command['time'] = time() - $zgRef;
                     }
-                    $this->deamonlog('debug', "    setZgTimeServer, time=".$Command['time'], $this->debug['processCmd']);
+                    cmdLog('debug', "    setZgTimeServer, time=".$Command['time'], $this->debug['processCmd']);
 
                     /* Cmd 0016 reminder
                     payload = <timestamp UTC: uint32_t> from 2000-01-01 00:00:00
@@ -3179,14 +3232,14 @@
                     foreach ($required as $idx => $param) {
                         if (isset($Command[$param]))
                             continue;
-                        $this->deamonlog('debug', "    ERROR: Missing '".$param."'");
+                        cmdLog('debug', "    ERROR: Missing '".$param."'");
                         $missingParam = true;
                     }
                     if ($missingParam)
                         return;
                     // If 'destAddr' == IEEE then need 'destEp' too.
                     if ((strlen($Command['destAddr']) == 16) && !isset($Command['destEp'])) {
-                        $this->deamonlog('debug', "    ERROR: Missing 'destEp'");
+                        cmdLog('debug', "    ERROR: Missing 'destEp'");
                         return;
                     }
 
@@ -3202,7 +3255,7 @@
                     // Source
                     $addr = $Command['addr'];
                     if (strlen($addr) != 16) {
-                        $this->deamonlog('debug', "    ERROR: Invalid addr length");
+                        cmdLog('debug', "    ERROR: Invalid addr length");
                         return;
                     }
                     $ep = $Command['ep'];
@@ -3217,7 +3270,7 @@
                     else if (strlen($destAddr) == 16)
                         $destAddrMode = "03";
                     else {
-                        $this->deamonlog('debug', "    ERROR: Invalid dest addr length");
+                        cmdLog('debug', "    ERROR: Invalid dest addr length");
                         return;
                     }
                     $destEp = isset($Command['destEp']) ? $Command['destEp'] : "00"; // destEp ignored if group address
@@ -3254,11 +3307,19 @@
                         /* Attempting to find attribute type according to its id */
                         $attr = zbGetZCLAttribute($Command['clustId'], $Command['attrId']);
                         if (($attr === false) || !isset($attr['dataType'])) {
-                            $this->deamonlog('debug', "    command writeAttribute ERROR: Missing 'attrType'");
+                            cmdLog('debug', "    command writeAttribute ERROR: Missing 'attrType'");
                             return;
                         }
                         $Command['attrType'] = sprintf("%02X", $attr['dataType']);
-                        $this->deamonlog('debug', "    Using attrType ".$Command['attrType'], $this->debug['processCmd']);
+                        cmdLog('debug', "    Using attrType ".$Command['attrType'], $this->debug['processCmd']);
+                    }
+
+                    // If attrVal is coming from slider, it must be converted to proper data type
+                    $attrVal = $Command['attrVal'];
+                    if (substr($attrVal, 0, 7) == "#slider") {
+                        $attrVal = $this->sliderToHex($attrVal, $Command['attrType']);
+                        if ($attrVal === false)
+                            return;
                     }
 
                     /* Cmd 0110 reminder:
@@ -3290,7 +3351,7 @@
                     $manufSpecific  = "00";
                     $manufId        = "0000";
                     $nbOfAttributes = "01";
-                    $attrList       = $Command['attrId'].$Command['attrType'].$Command['attrVal'];
+                    $attrList       = $Command['attrId'].$Command['attrType'].$attrVal;
 
                     $data = $addrMode.$addr.$srcEp.$destEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttributes.$attrList;
                     $len = sprintf("%04s", dechex(strlen($data) / 2));
@@ -3301,7 +3362,7 @@
 
                 // ZCL global: discoverAttributes command
                 else if ($cmdName == 'discoverAttributes') {
-                    $this->deamonlog('debug','    addr='.$Command['addr']." - ".$Command['startAttrId']." - ".$Command['maxAttrId'], $this->debug['processCmd']);
+                    cmdLog('debug','    addr='.$Command['addr']." - ".$Command['startAttrId']." - ".$Command['maxAttrId'], $this->debug['processCmd']);
                     $cmd = "0140";
 
                     // <address mode: uint8_t>
@@ -3349,7 +3410,7 @@
                     foreach ($required as $idx => $param) {
                         if (isset($Command[$param]))
                             continue;
-                        $this->deamonlog('debug', "    ERROR: Missing '".$param."'");
+                        cmdLog('debug', "    ERROR: Missing '".$param."'");
                         $missingParam = true;
                     }
                     if ($missingParam)
@@ -3410,7 +3471,7 @@
                     foreach ($required as $idx => $param) {
                         if (isset($Command[$param]))
                             continue;
-                        $this->deamonlog('debug', "    ERROR: Missing '".$param."'");
+                        cmdLog('debug', "    ERROR: Missing '".$param."'");
                         $missingParam = true;
                     }
                     if ($missingParam)
@@ -3450,7 +3511,7 @@
                     $data2 = $fcf.$sqn.$cmdId;
 
                     // if (!isset($Command['attrId']) || !isset($Command['status']) || !isset($Command['attrType'])) {}
-                    //     $this->deamonlog('debug', "    ERROR: Missing '".$param."'");
+                    //     cmdLog('debug', "    ERROR: Missing '".$param."'");
                     //     return;
                     // }
                     $attrId = AbeilleTools::reverseHex($Command['attrId']);
@@ -3477,7 +3538,7 @@
                     foreach ($required as $idx => $param) {
                         if (isset($Command[$param]))
                             continue;
-                        $this->deamonlog('debug', "    ERROR: Missing '".$param."'");
+                        cmdLog('debug', "    ERROR: Missing '".$param."'");
                         $missingParam = true;
                     }
                     if ($missingParam)
@@ -3540,7 +3601,7 @@
                     foreach ($required as $idx => $param) {
                         if (isset($Command[$param]))
                             continue;
-                        $this->deamonlog('debug', "    command configureReporting ERROR: Missing '".$param."'");
+                        cmdLog('debug', "    command configureReporting ERROR: Missing '".$param."'");
                         $missingParam = true;
                     }
                     if ($missingParam)
@@ -3549,7 +3610,7 @@
                         /* Attempting to find attribute type according to its id */
                         $attr = zbGetZCLAttribute($Command['clustId'], $Command['attrId']);
                         if (($attr === false) || !isset($attr['dataType'])) {
-                            $this->deamonlog('debug', "    command configureReporting ERROR: Missing 'attrType'");
+                            cmdLog('debug', "    command configureReporting ERROR: Missing 'attrType'");
                             return;
                         }
                         $Command['attrType'] = sprintf("%02X", $attr['dataType']);
@@ -3608,14 +3669,14 @@
 
                         // // Tcharp38: TO BE COMPLETED ! changeVal size depends on attribute type
                         // default:
-                        //     $this->deamonlog('debug', "    ERROR: Unsupported attrType ".$attrType, $this->debug['processCmd']);
+                        //     cmdLog('debug', "    ERROR: Unsupported attrType ".$attrType, $this->debug['processCmd']);
                         //     $changeVal = "01";
                         // }
                     }
                     // $change = AbeilleTools::reverseHex($changeVal); // Reportable change.
                     // $timeout = "0000";
 
-                    $this->deamonlog('debug', "    Using attrType='".$attrType."', min='".$minInterval."', max='".$maxInterval."', changeVal='".$changeVal."'", $this->debug['processCmd']);
+                    cmdLog('debug', "    Using attrType='".$attrType."', min='".$minInterval."', max='".$maxInterval."', changeVal='".$changeVal."'", $this->debug['processCmd']);
                     $minInterval = AbeilleTools::reverseHex($minInterval);
                     $maxInterval = AbeilleTools::reverseHex($maxInterval);
                     $changeVal = AbeilleTools::reverseHex($changeVal);
@@ -3691,7 +3752,7 @@
                     $manufCode = $Command['manufCode'];
                     $imgType = $Command['imgType'];
                     if (!isset($GLOBALS['ota_fw']) || !isset($GLOBALS['ota_fw'][$manufCode]) || !isset($GLOBALS['ota_fw'][$manufCode][$imgType])) {
-                        $this->deamonlog('debug', "    ERROR: No such FW", $this->debug['processCmd']);
+                        cmdLog('debug', "    ERROR: No such FW", $this->debug['processCmd']);
                         return;
                     }
                     $fw = $GLOBALS['ota_fw'][$manufCode][$imgType];
@@ -3753,7 +3814,7 @@
                     // if (hexdec($dataSize) > 48)
                     //     $dataSize = "30"; // Required ?
                     $realOffset = $fw['startIdx'] + hexdec($imgOffset);
-                    $this->deamonlog('debug', "    Reading data from real offset ".$realOffset, $this->debug['processCmd']);
+                    cmdLog('debug', "    Reading data from real offset ".$realOffset, $this->debug['processCmd']);
                     fseek($fh, $realOffset, SEEK_SET);
                     $data = fread($fh, hexdec($dataSize));
                     $data = strtoupper(bin2hex($data));
@@ -3794,7 +3855,7 @@
                 // ZCL cluster 0019 specific: Inform device to apply new image
                 else if ($cmdName == 'otaUpgradeEndResponse') {
                     // WORK ONGOING: really required ??
-                    $this->deamonlog('debug', "    ERROR: otaUpgradeEndResponse NOT IMPLEMENTED", $this->debug['processCmd']);
+                    cmdLog('debug', "    ERROR: otaUpgradeEndResponse NOT IMPLEMENTED", $this->debug['processCmd']);
                     return;
                 }
 
@@ -3887,7 +3948,7 @@
                     //     // if (hexdec($dataSize) > 48)
                     //     //     $dataSize = "30"; // Required ?
                     //     $realOffset = $fw['startIdx'] + hexdec($imgOffset);
-                    //     $this->deamonlog('debug', "    Reading data from real offset ".$realOffset, $this->debug['processCmd']);
+                    //     cmdLog('debug', "    Reading data from real offset ".$realOffset, $this->debug['processCmd']);
                     //     fseek($fh, $realOffset, SEEK_SET);
                     //     $data = fread($fh, hexdec($dataSize));
                     //     $data = strtoupper(bin2hex($data));
@@ -3907,7 +3968,7 @@
                     // } else
 
                     {
-                        $this->deamonlog('debug', "    ERROR: Unsupported cmdId ".$cmdId, $this->debug['processCmd']);
+                        cmdLog('debug', "    ERROR: Unsupported cmdId ".$cmdId, $this->debug['processCmd']);
                         return;
                     }
 
@@ -3963,7 +4024,7 @@
                         $startIdx = isset($Command['startIdx']) ? $Command['startIdx'] : "00";
                         $data2 = $fcf.$sqn.$cmdId.$startIdx;
                     } else {
-                        $this->deamonlog('debug', "    ERROR: Unsupported cluster 1000 command ".$cmdId);
+                        cmdLog('debug', "    ERROR: Unsupported cluster 1000 command ".$cmdId);
                         return;
                     }
                     $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
@@ -3977,12 +4038,12 @@
                 }
 
                 else {
-                    $this->deamonlog('debug', "    ERROR: Unexpected command '".$cmdName."'");
+                    cmdLog('debug', "    ERROR: Unexpected command '".$cmdName."'");
                     return;
                 }
             }
 
-            $this->deamonlog('debug', "    ERROR: Unexpected command '".json_encode($Command)."'");
+            cmdLog('debug', "    ERROR: Unexpected command '".json_encode($Command)."'");
         }
     }
 ?>

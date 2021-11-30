@@ -5,17 +5,20 @@
         "manufacturer": "Philips/Signify",
         "model": "RDM001",
         "comment": "https://github.com/Koenkk/zigbee-herdsman-converters/issues/2393",
-        "comment2": "Is write attribute 0000-0043 required ? For what ??",
+        "comment2": "Device mode configured thru write cluster 0000 attribute 0043",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
             "icon": "PhilipsSignify-RDM001",
-            "batteryType": "?"
+            "batteryType": "1x3V CR2450"
         },
         "category": {
             "automatism": "1"
         },
         "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
             "Get-SWBuild": { "use": "zbReadAttribute", "params": "clustId=0000&attrId=4000" },
 
             "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
@@ -35,11 +38,16 @@
 
             "Bind-0006-ToZigate": { "use": "zbBindToZigate", "params": "clustId=0006", "execAtCreation": "Yes" },
 
-            "Change config": {
+            "Set SingleRocker": {
                 "use": "zbWriteAttribute",
                 "params": "clustId=0000&attrId=0034&attrType=30&attrVal=00",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 4
+            },
+            "Bind-FC00-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=FC00",
+                "execAtCreation": "Yes"
             }
         }
     }

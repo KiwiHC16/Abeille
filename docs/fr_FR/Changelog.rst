@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211130-BETA-1
+-------------
+
 - Dimmer-Switch-ZB3.0_HZC: Mise-à-jour reporting CurrentLevel (#2200).
 - Philips wall switch module/RDM001: Mise-à-jour modèle (#2185).
 - Zigate WIFI: Amélioration serial read pour meilleur support coupures de connexion.

@@ -1,5 +1,6 @@
 <!-- This file displays equipment commands.
      Included by 'AbeilleEq.php' -->
+  
 
 <form class="form-horizontal">
     <fieldset>

@@ -59,7 +59,7 @@ e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 78630bd1d1cc09daf011395c694fb089 *core/class/AbeilleCmdQueue.class.php
 f8d7e3a11eeef6dec94601bad93d2629 *core/class/AbeilleDebug.class.php
 17e48d546034f737716d4532d29a29af *core/class/AbeilleMsg.php
-4dc6c0aca3da5c3d0853d4aa31e34a2b *core/class/AbeilleParser.class.php
+c0d6483cbbbafee5e11028ee5ffe7dc0 *core/class/AbeilleParser.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 2ebb56e1ea41091916d618f74fe15764 *core/class/AbeilleTemplateCommon.class.php
 aea82feb4106a0bcb6ee4f6ab877c416 *core/class/AbeilleTemplateEq.class.php
@@ -945,7 +945,7 @@ b24154bbba3146cb5e7676f8a83da139 *desktop/php/AbeilleEq.php
 b823f9e71718dafa4d5bc1be0a842743 *desktop/php/AbeilleFormAction.php
 f4ad6e68f05d3de67caa70c340868082 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-1041882357a42b66d06ab39bdf19c9df *docs/fr_FR/Changelog.rst
+199a10442b739cfeca0b8b02fd1d6fbd *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png

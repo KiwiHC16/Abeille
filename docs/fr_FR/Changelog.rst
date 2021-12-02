@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211202-BETA-1
+-------------
+
 - Récupération équipements fantomes (toujours sur le réseau mais plus dans Jeedom)... revue en cours.
 - Tuya/Sixwgh TS011F__TZ3000_cphmq0q7: Ajout support (#2211).
 - Page EQ/avancé: Ajout bouton récupération adresse IEEE.

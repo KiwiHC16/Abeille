@@ -3183,6 +3183,12 @@
                     return;
                 }
 
+                // Zigate specific command: reset zigate
+                else if (($cmdName == 'resetZg') || ($cmdName == 'resetZigate')) {
+                    $this->addCmdToQueue($priority, $dest, "0011", "0000", "");
+                    return;
+                }
+
                 // Zigate specific command
                 // Set Time server (v3.0f)
                 else if (($cmdName == 'setZgTimeServer') || ($cmdName == 'setTimeServer')) {

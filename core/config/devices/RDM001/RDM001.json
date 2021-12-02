@@ -25,7 +25,8 @@
             "Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
-                "execAtCreation": "Yes"
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
             },
             "SetReporting-0001-0021": {
                 "use": "zbConfigureReporting",
@@ -36,7 +37,7 @@
 
             "Identify": { "use": "Identify" },
 
-            "Bind-0006-ToZigate": { "use": "zbBindToZigate", "params": "clustId=0006", "execAtCreation": "Yes" },
+            "Bind-0006-ToZigate": { "use": "zbBindToZigate", "params": "clustId=0006", "execAtCreation": "Yes", "execAtCreationDelay": 3 },
 
             "Set SingleRocker": {
                 "use": "zbWriteAttribute",
@@ -47,7 +48,8 @@
             "Bind-FC00-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=FC00",
-                "execAtCreation": "Yes"
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 5
             }
         }
     }

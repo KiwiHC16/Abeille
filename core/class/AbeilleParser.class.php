@@ -357,8 +357,6 @@
 
         /* Called on device announce. */
         function deviceAnnounce($net, $addr, $ieee, $capa, $rejoin) {
-            if (!isset($GLOBALS['eqList']))
-                $GLOBALS['eqList'] = [];
             if (!isset($GLOBALS['eqList'][$net]))
                 $GLOBALS['eqList'][$net] = [];
 
@@ -402,7 +400,7 @@
                     'rejoin' => $rejoin,
                     'status' => '', // identifying, discovering, configuring
                     'time' => '',
-                    'epList' => '',
+                    'epList' =>  null,
                     'epFirst' => '',
                     'manufacturer' => null, // null=undef, false=unsupported, else 'value'
                     'modelIdentifier' => null, // null=undef, false=unsupported, else 'value'
@@ -495,6 +493,9 @@
                 }
             }
 
+            if (($eq['status'] != "unknown_ident") && ($eq['status'] != "identifying"))
+                return false; // Not in any identification phase
+
             /* Identification phase is key but there are unfortunately several cases:
                 - Standard case zigbee compliant:
                     - The device respond to "active endpoints request".
@@ -508,43 +509,51 @@
                     - The device does not support "modelIdentifier" or "manufacturer" attributes but supports "location"
             */
 
-            if (($eq['status'] == "unknown_ident") || ($eq['status'] == "identifying")) {
-                $tryIdent = false; // Assuming not enough identification infos
-                if (!$eq['ieee']) {
-                    $this->msgToCmd("Cmd".$net."/".$addr."/getIeeeAddress", "");
-                } else if (!$eq['epList']) {
-                    $this->msgToCmd("Cmd".$net."/".$addr."/getActiveEndpoints", "");
-                } else if (!$eq['modelIdentifier'] || !$eq['manufacturer']) {
-                    /* Any info missing to identify device ? */
-                    if (!isset($eq['manufacturer'])) {
-                        parserLog('debug', '  Requesting manufacturer from EP '.$eq['epFirst']);
-                        $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
-                    }
-                    if (!isset($eq['modelIdentifier'])) {
-                        parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
-                        $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
-                    }
-                    /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
-                    if (($eq['modelIdentifier'] == null || $eq['modelIdentifier'] === false) && !isset($eq['location'])) {
-                        parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
-                        $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
-                    }
-                } else
-                    $tryIdent = true;
-                if ($tryIdent == false)
-                    return true;
-            } else
-                return false; // Not in any identification phase
+            // TODO: $ret to be revisited vs expected behavior on return
+            if ($eq['status'] == "unknown_ident")
+                $ret = true; // Dev is unknown to Jeedom
+            else
+                $ret = false;
 
-            /* Trying to identify device ?
-                Identification process reminder
+            if (!$eq['ieee']) {
+                parserLog('debug', '  Requesting IEEE');
+                $this->msgToCmd("Cmd".$net."/".$addr."/getIeeeAddress", "");
+                return $ret;
+            }
+
+            // IEEE is available
+            if (!$eq['epList']) {
+                parserLog('debug', '  Requesting active endpoints list');
+                $this->msgToCmd("Cmd".$net."/".$addr."/getActiveEndpoints", "");
+                return $ret;
+            }
+
+            // IEEE & EP list are available. Any missing info to identify device ?
+            if (($eq['modelIdentifier'] === null) || ($eq['manufacturer'] === null) || ($eq['location'] === null)) {
+                // TODO: Better to group attributes in single request
+                if (($eq['modelIdentifier'] !== false) && ($eq['manufacturer'] === null)) {
+                    parserLog('debug', '  Requesting manufacturer from EP '.$eq['epFirst']);
+                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
+                }
+                if ($eq['modelIdentifier'] === null) {
+                    parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
+                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
+                }
+                /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
+                if ((($eq['modelIdentifier'] === null) || ($eq['modelIdentifier'] === false)) && ($eq['location'] === null)) {
+                    parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
+                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
+                }
+            }
+
+            /* Trying to identify device with currently known infos:
                 - if modelId is supported
                     - search for JSON with 'modelId_manuf' then 'modelId'
                 - else (modelId is not supported) if location is supported
                     - search for JSON with 'location'
             */
-            if (!isset($eq['modelIdentifier']))
-                return false; // Need at least false/unsupported or a value
+            if ($eq['modelIdentifier'] === null)
+                return false; // Need at least false (unsupported) or a value
             if ($eq['modelIdentifier'] !== false) {
                 if (!isset($eq['manufacturer'])) {
                     /* Checking if device is supported without manufacturer attribute for those who do not respond to such request
@@ -560,7 +569,7 @@
                     /* Manufacturer & modelId attributes returned */
                     $this->findJsonConfig($eq, 'modelIdentifier');
                 }
-            } else if (!isset($eq['location'])) {
+            } else if ($eq['location'] === null) {
                 return false; // Need value or false (unsupported)
             } else if ($eq['location'] !== false) {
                 /* ModelId UNsupported. Trying with 'location' */

@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Page EQ/avancé: Ajout bouton reset SW zigate (#2176).
+- Appairage équipement: correction regression.
 
 211202-BETA-1
 -------------

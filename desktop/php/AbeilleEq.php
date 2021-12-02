@@ -342,6 +342,10 @@
             topic = 'CmdAbeille'+js_zgId+'/0000/getZgVersion';
             payload = "";
             break;
+        case "resetZigate":
+            topic = 'CmdAbeille'+js_zgId+'/0000/resetZg';
+            payload = "";
+            break;
         default:
             console.log("ERROR: Unsupported action '"+action+"'");
             return; // Nothing to do

@@ -170,7 +170,7 @@
                 <label class="col-sm-3 control-label">Type</label>
                 <div class="col-sm-5">
                     <?php
-                        echo '<input class="form-control" value="'.$zgType.'" title="{{Type de Zigate}}" />';
+                        echo '<input class="form-control" value="'.$zgType.'" title="{{Type de Zigate}}" readonly />';
                     ?>
                 </div>
             </div>
@@ -371,6 +371,13 @@
                     </div>
                 </div>
             <?php } ?>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Reset SW</label>
+                <div class="col-sm-5">
+                    <a class="btn btn-warning" onclick="sendZigate('resetZigate', '')" title="{{Reset SW (Commande 0011)}}"><i class="fas fa-sync"></i> {{Reset}}</a>
+                </div>
+            </div>
             <!-- </fieldset>
         </form> -->
         <hr>

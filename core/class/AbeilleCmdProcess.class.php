@@ -2146,8 +2146,6 @@
                 $data = $address.$shortAddress.$requestType.$startIndex ;
                 $length = sprintf("%04s", dechex(strlen($data) / 2));
 
-                cmdLog('debug', '    IEEE_Address_request: '.$data.' - '.$length, $this->debug['processCmd']  );
-
                 $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
                 return;
             }
@@ -3278,6 +3276,56 @@
                     $data = $addr.$ep.$clustId.$destAddrMode.$destAddr.$destEp;
                     $length = sprintf( "%04x", strlen($data) / 2);
                     $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
+                    return;
+                }
+
+                // IEEE Address request (IEEE_addr_req)
+                else if ($cmdName == 'getIeeeAddress') { // IEEE_addr_req + IEEE_addr_rsp
+                    /* Checking that mandatory infos are there */
+                    $required = ['addr'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $cmd = "0041";
+
+                    // <target short address: uint16_t>
+                    // <short address: uint16_t>
+                    // <request type: uint8_t>: Request Type: 0 = Single 1 = Extended
+                    // <start index: uint8_t>
+
+                    // See https://github.com/fairecasoimeme/ZiGate/issues/386#
+                    // Both address must be the same.
+                    $address        = $Command['addr'];
+                    $shortAddress   = $Command['addr'];
+                    $requestType    = "00"; // 00=single device response
+                    $startIndex     = "00";
+
+                    $data = $address.$shortAddress.$requestType.$startIndex ;
+                    $length = sprintf("%04s", dechex(strlen($data) / 2));
+
+                    $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
+                    return;
+                }
+
+                // Active endpoints request (Active_EP_req)
+                else if ($cmdName == 'getActiveEndpoints') {
+                    /* Checking that mandatory infos are there */
+                    $required = ['addr'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $cmd = "0045";
+
+                    // <target short address: uint16_t>
+
+                    $address = $Command['addr'];
+
+                    //  4 = 4/2 => 2
+                    $length = "0002";
+
+                    $data = $address;
+
+                    $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
                     return;
                 }
 

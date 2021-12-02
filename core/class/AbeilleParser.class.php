@@ -20,7 +20,7 @@
         public $queueParserToCmd = null;
         public $queueParserToCmdMax;
         public $parameters_info;
-        public $actionQueue; // queue of action to be done in Parser like config des NE ou get info des NE
+        // public $actionQueue; // queue of action to be done in Parser like config des NE ou get info des NE
         public $wakeUpQueue; // queue of command to be sent when the device wakes up.
         public $whoTalked;   // store the source of messages to see if any message are waiting for them in wakeUpQueue
 
@@ -455,31 +455,45 @@
 
         /* 2nd step of identification phase.
            Wait for enough info to identify device (manuf, modelId, location) */
-        function deviceUpdate($net, $addr, $ep, $updType, $value) {
-            if (!isset($GLOBALS['eqList']))
-                return; // No dev announce before
+        function deviceUpdate($net, $addr, $ep, $updType = null, $value = null) {
             if (!isset($GLOBALS['eqList'][$net]))
-                return; // No dev announce before
-            if (!isset($GLOBALS['eqList'][$net][$addr]))
-                return; // No dev announce before
+                $GLOBALS['eqList'][$net] = [];
 
-            $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
+            $u = ($updType) ? $updType : '';
             $v = ($value === false) ? 'false' : $value;
-            parserLog('debug', "  deviceUpdate('".$updType."', '".$v."'), status=".$eq['status']);
-
-            /* Updating entry: 'epList', 'manufacturer', 'modelIdentifier' or 'location' */
-            $eq[$updType] = $value;
-            if ($updType == 'epList') { // Active end points response
-                $eqArr = explode('/', $value);
-                $eq['epFirst'] = $eqArr[0];
-            } else if ($eq['epList'] == '') { // Probably got modelIdentifier BEFORE end points list
-                $eq['epList'] = $ep; // There is at least this EP where update is coming from
-                $eq['epFirst'] = $ep; // There is at least this EP where update is coming from
+            if (!isset($GLOBALS['eqList'][$net][$addr])) {
+                $eq = array(
+                    'ieee' => null,
+                    'capa' => '',
+                    'rejoin' => '', // Rejoin info from device announce
+                    'status' => 'unknown_ident', // identifying, configuring, discovering, idle
+                    'time' => time(),
+                    'epList' => null, // List of end points
+                    'epFirst' => '', // First end point (usually 01)
+                    'manufacturer' => null, // null(undef)/false(unsupported)/'xx'
+                    'modelIdentifier' => null, // null(undef)/false(unsupported)/'xx'
+                    'location' => null, // null(undef)/false(unsupported)/'xx'
+                    'jsonId' => '',
+                );
+                $GLOBALS['eqList'][$net][$addr] = $eq;
+                $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
+                parserLog('debug', "  deviceUpdate('".$u."', '".$v."'): Unknown device detected");
+            } else {
+                $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
+                parserLog('debug', "  deviceUpdate('".$u."', '".$v."'): status=".$eq['status']);
             }
 
-            /* If not in 'identifying' phase, no more to do */
-            if ($eq['status'] != 'identifying')
-                return;
+            /* Updating entry: 'epList', 'manufacturer', 'modelIdentifier' or 'location' */
+            if ($updType) {
+                $eq[$updType] = $value;
+                if ($updType == 'epList') { // Active end points response
+                    $eqArr = explode('/', $value);
+                    $eq['epFirst'] = $eqArr[0];
+                } else if ($eq['epList'] == '') { // Probably got modelIdentifier BEFORE end points list
+                    $eq['epList'] = $ep; // There is at least this EP where update is coming from
+                    $eq['epFirst'] = $ep; // There is at least this EP where update is coming from
+                }
+            }
 
             /* Identification phase is key but there are unfortunately several cases:
                 - Standard case zigbee compliant:
@@ -494,20 +508,33 @@
                     - The device does not support "modelIdentifier" or "manufacturer" attributes but supports "location"
             */
 
-            /* Any info missing to identify device ? */
-            if (!isset($eq['manufacturer'])) {
-                parserLog('debug', '  Requesting manufacturer from EP '.$eq['epFirst']);
-                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
-            }
-            if (!isset($eq['modelIdentifier'])) {
-                parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
-                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
-            }
-            /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
-            if (($eq['modelIdentifier'] == null || $eq['modelIdentifier'] === false) && !isset($eq['location'])) {
-                parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
-                $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
-            }
+            if (($eq['status'] == "unknown_ident") || ($eq['status'] == "identifying")) {
+                $tryIdent = false; // Assuming not enough identification infos
+                if (!$eq['ieee']) {
+                    $this->msgToCmd("Cmd".$net."/".$addr."/getIeeeAddress", "");
+                } else if (!$eq['epList']) {
+                    $this->msgToCmd("Cmd".$net."/".$addr."/getActiveEndpoints", "");
+                } else if (!$eq['modelIdentifier'] || !$eq['manufacturer']) {
+                    /* Any info missing to identify device ? */
+                    if (!isset($eq['manufacturer'])) {
+                        parserLog('debug', '  Requesting manufacturer from EP '.$eq['epFirst']);
+                        $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
+                    }
+                    if (!isset($eq['modelIdentifier'])) {
+                        parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
+                        $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
+                    }
+                    /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
+                    if (($eq['modelIdentifier'] == null || $eq['modelIdentifier'] === false) && !isset($eq['location'])) {
+                        parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
+                        $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
+                    }
+                } else
+                    $tryIdent = true;
+                if ($tryIdent == false)
+                    return true;
+            } else
+                return false; // Not in any identification phase
 
             /* Trying to identify device ?
                 Identification process reminder
@@ -517,24 +544,24 @@
                     - search for JSON with 'location'
             */
             if (!isset($eq['modelIdentifier']))
-                return; // Need at least false/unsupported or a value
+                return false; // Need at least false/unsupported or a value
             if ($eq['modelIdentifier'] !== false) {
                 if (!isset($eq['manufacturer'])) {
                     /* Checking if device is supported without manufacturer attribute for those who do not respond to such request
                        but if not, default config is not accepted since manufacturer may not be arrived yet.
                        For Tuya case (model=TSxxxx), manufacturer is MANDATORY. */
                     if ((substr($eq['modelIdentifier'], 0, 2) == "TS") && (strlen($eq['modelIdentifier']) == 6))
-                        return; // Tuya case. Waiting for manufacturer to return.
+                        return false; // Tuya case. Waiting for manufacturer to return.
                     if ($this->findJsonConfig($eq, 'modelIdentifier') === false) {
                         $eq['jsonId'] = ''; // 'defaultUnknown' case not accepted there
-                        return;
+                        return false;
                     }
                 } else {
                     /* Manufacturer & modelId attributes returned */
                     $this->findJsonConfig($eq, 'modelIdentifier');
                 }
             } else if (!isset($eq['location'])) {
-                return; // Need value or false (unsupported)
+                return false; // Need value or false (unsupported)
             } else if ($eq['location'] !== false) {
                 /* ModelId UNsupported. Trying with 'location' */
                 $this->findJsonConfig($eq, 'location');
@@ -543,18 +570,27 @@
                 $eq['jsonId'] = 'defaultUnknown';
                 $eq['jsonLocation'] = "Abeille";
             }
+            if ($eq['jsonId'] == '') {
+                // Still not identified
+                if ($eq['status'] == 'unknown_ident')
+                    return true;
+                return false;
+            }
 
             /* If device is identified, 'jsonId' indicates how to support it. */
             // Tcharp38: If new dev announce of already known device, should we reconfigure it anyway ?
-            if ($eq['jsonId'] != '') {
-                if ($eq['jsonId'] != 'defaultUnknown')
-                    $this->deviceConfigure($net, $addr);
-                else
-                    $this->deviceDiscover($net, $addr);
-            }
+            // TODO: No reconfigure if rejoin = 02
+            if ($eq['jsonId'] == 'defaultUnknown')
+                $this->deviceDiscover($net, $addr);
+            else if ($eq['status'] == 'identifying')
+                $this->deviceConfigure($net, $addr);
+            else // status==unknown_ident
+                $this->deviceCreate($net, $addr);
+            return false;
         } // End deviceUpdate()
 
-        /* Go thru EQ commands and execute all those marked 'execAtCreation' */
+        /* Device has been identified and must be configured.
+           Go thru EQ commands and execute all those marked 'execAtCreation' */
         function deviceConfigure($net, $addr) {
             $eq = &$GLOBALS['eqList'][$net][$addr];
             parserLog('debug', "  deviceConfigure(".$net.", ".$addr.", jsonId=".$eq['jsonId'].")");
@@ -601,6 +637,31 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $this->msgToCmd("TempoCmd".$net."/".$addr."/".$topic.'&time='.$delay, $request);
                 }
             }
+
+            /* Config ongoing. Informing Abeille for EQ creation/update */
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'eqAnnounce',
+                'net' => $net,
+                'addr' => $addr,
+                'ieee' => $eq['ieee'],
+                'ep' => $eq['epFirst'],
+                'jsonId' => $eq['jsonId'],
+                'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
+                'capa' => $eq['capa'],
+                'time' => time()
+            );
+            $this->msgToAbeille2($msg);
+
+            // TODO: Tcharp38: 'idle' state might be too early since execAtCreation commands might not be completed yet
+            $eq['status'] = 'idle';
+        }
+
+        /* Device has been identified and must be created in Jeedom.
+           This is a phantom device. */
+        function deviceCreate($net, $addr) {
+            $eq = &$GLOBALS['eqList'][$net][$addr];
+            parserLog('debug', "  deviceCreate(".$net.", ".$addr.", jsonId=".$eq['jsonId'].")");
 
             /* Config ongoing. Informing Abeille for EQ creation/update */
             $msg = array(
@@ -3267,10 +3328,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             }
         }
 
+        // IEEE Address response
         function decode8041($dest, $payload, $lqi)
         {
-            // IEEE Address response
-
             // <Sequence number: uin8_t>
             // <status: uint8_t>
             // <IEEE address: uint64_t>
@@ -3285,6 +3345,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $nbDevices = substr($payload, 24, 2);
             $startIdx = substr($payload, 26, 2);
 
+            // Log
             $msgDecoded = '8041/IEEE address response'
                             .', SQN='.$sqn
                             .', Status='.$status
@@ -3293,21 +3354,26 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             .', NbOfAssociatedDevices='.$nbDevices
                             .', StartIndex='.$startIdx;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8041");
+            if ($status == "00") {
+                for ($i = 0; $i < (intval($nbDevices) * 4); $i += 4) {
+                    parserLog('debug', '  AssociatedDev='.substr($payload, (28 + $i), 4));
+                }
+            } else
+                parserLog('debug', '  Status='.$status.' => Unknown error');
 
             $this->whoTalked[] = $dest.'/'.$addr;
+
+            // If device is unknown, may have pending messages for him
+            if ($status == "00") // IEEE valid only if status 00
+                $unknown = $this->deviceUpdate($dest, $addr, '', "ieee", $ieee);
+            else
+                $unknown = $this->deviceUpdate($dest, $addr, '');
+            if ($unknown)
+                return;
 
             /* Monitor if required */
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
-
-            if ($status != "00") {
-                parserLog('debug', '  Status='.$status.' => Unknown error');
-                return;
-            }
-
-            for ($i = 0; $i < (intval($nbDevices) * 4); $i += 4) {
-                parserLog('debug', '  AssociatedDev='.substr($payload, (28 + $i), 4));
-            }
 
             $this->msgToAbeille($dest."/".$addr, "IEEE", "Addr", $ieee);
         }
@@ -3479,6 +3545,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', $dest.', Type='.$msgDecoded, "8045");
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
+            /* Update equipement key infos */
+            $unknown = $this->deviceUpdate($dest, $srcAddr, '', 'epList', $endPointList);
+            if ($unknown)
+                return;
 
             /* Monitor is required */
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
@@ -3498,9 +3568,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 parserLog('debug', '  Status != 0 => ignoring');
                 return;
             }
-
-            /* Update equipement key infos */
-            $this->deviceUpdate($dest, $srcAddr, '', 'epList', $endPointList);
 
             // parserLog('debug', '  Asking details for EP '.$EP.' [Modelisation]' );
             // $this->msgToCmd("Cmd".$dest."/0000/getManufacturerName", "address=".$srcAddr.'&destinationEndPoint='.$EP );
@@ -3923,11 +3990,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 .', Status='.$status;
             parserLog('debug', $dest.', Type='.$decoded);
 
+            $this->whoTalked[] = $dest.'/'.$srcAddr;
+            if ($this->deviceUpdate($dest, $srcAddr, ''))
+                return; // Unknown device
+
             // Monitor if required
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($decoded); // Send message to monitor
-
-            $this->whoTalked[] = $dest.'/'.$srcAddr;
 
             /* Forwarding to Abeille */
             // $this->msgToAbeille($dest.'/'.$srcAddr, "Click", "Middle", $status);
@@ -4239,30 +4308,37 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($msg); // Send message to monitor
 
-            $this->whoTalked[] = $dest.'/'.$srcAddr;
-
             if ($clustId == "0005") {
                 parserLog('debug', '  Handled by decode8002');
                 return;
             }
 
-            if ($attrStatus == '86') {
-                parserLog('debug', '  Status 86 => Unsupported attribute type ', $type);
+            $this->whoTalked[] = $dest.'/'.$srcAddr; // Tcharp38: Still useful ?
+
+            if ($attrStatus != '00') {
+                if ($attrStatus == '86')
+                    parserLog('debug', '  Status 86 => Unsupported attribute type ', $type);
+
+                $unknown = false;
                 if ($clustId == "0000") {
                     switch ($attrId) {
                     case "0004":
-                        $this->deviceUpdate($dest, $srcAddr, $ep, 'manufacturer', false);
+                        $unknown = $this->deviceUpdate($dest, $srcAddr, $ep, 'manufacturer', false);
                         break;
                     case "0005":
-                        $this->deviceUpdate($dest, $srcAddr, $ep, 'modelIdentifier', false);
+                        $unknown = $this->deviceUpdate($dest, $srcAddr, $ep, 'modelIdentifier', false);
                         break;
                     case "0010":
-                        $this->deviceUpdate($dest, $srcAddr, $ep, 'location', false);
+                        $unknown = $this->deviceUpdate($dest, $srcAddr, $ep, 'location', false);
                         break;
                     default:
+                        $unknown = $this->deviceUpdate($dest, $srcAddr, $ep);
                         break;
                     }
-                }
+                } else
+                    $unknown = $this->deviceUpdate($dest, $srcAddr, $ep);
+                if ($unknown)
+                    return; // This is an unknown device.
 
                 /* Forwarding unsupported atttribute to Abeille */
                 $msg = array(
@@ -4292,10 +4368,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $this->msgToClient($toCli);
 
                 return;
-            }
-            if ($attrStatus != '00') {
-                parserLog('debug', '  Status != 0 => Ignored', $type);
-                return;
+            } // Status != 00
+
+            // Status == 00
+            if (($clustId != "0000") || (($attrId != "0004") && ($attrId != "0005") && ($attrId != "0010"))) {
+                if ($this->deviceUpdate($dest, $srcAddr, ''))
+                    return;
             }
 
             /* Params: SrcAddr, ClustId, AttrId, Data */
@@ -4312,7 +4390,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             if ($clustId == "0000") { // Basic cluster
                     // 0004: ManufacturerName
                     // 0005: ModelIdentifier
-                    // 0010: Location => Used for Profalux
+                    // 0010: Location => Used for Profalux 1st gen
 
                 if (($attrId=="0004") || ($attrId=="0005") || ($attrId=="0010")) {
                     // Assuming $dataType == "42"
@@ -5291,34 +5369,34 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', $dest.', Type='.$decoded);
         }
 
-        /**
-         * WHile processing AbeilleParser can schedule action by adding action in the queue like for exemple:
-         * $this->actionQueue[] = array( 'when'=>time()+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
-         *
-         * @param $this->actionQueue
-         * @return none
-         */
-        function processActionQueue() {
-            if ( !($this->actionQueue) ) return;
-            if ( count($this->actionQueue) < 1 ) return;
+        // /**
+        //  * WHile processing AbeilleParser can schedule action by adding action in the queue like for exemple:
+        //  * $this->actionQueue[] = array( 'when'=>time()+5, 'what'=>'msgToAbeille', 'parm0'=>$dest."/".$Addr, 'parm1'=>"IEEE",    'parm2'=>"Addr",    'parm3'=>$IEEE );
+        //  *
+        //  * @param $this->actionQueue
+        //  * @return none
+        //  */
+        // function processActionQueue() {
+        //     if ( !($this->actionQueue) ) return;
+        //     if ( count($this->actionQueue) < 1 ) return;
 
-            foreach ( $this->actionQueue as $key=>$action ) {
-                if ( $action['when'] < time()) {
-                    if (!method_exists($this, $action['what'])) {
-                        parserLog('debug', "processActionQueue(): Unknown action '".json_encode($action)."'", 'processActionQueue');
-                        continue;
-                    }
-                    parserLog('debug', "processActionQueue(): action '".json_encode($action)."'", 'processActionQueue');
-                    $fct = $action['what'];
-                    if ( isset($action['parm0'])) {
-                        $this->$fct($action['parm0'], $action['parm1'], $action['parm2'], $action['parm3']);
-                    } else {
-                        $this->$fct($action['addr']);
-                    }
-                    unset($this->actionQueue[$key]);
-                }
-            }
-        }
+        //     foreach ( $this->actionQueue as $key=>$action ) {
+        //         if ( $action['when'] < time()) {
+        //             if (!method_exists($this, $action['what'])) {
+        //                 parserLog('debug', "processActionQueue(): Unknown action '".json_encode($action)."'", 'processActionQueue');
+        //                 continue;
+        //             }
+        //             parserLog('debug', "processActionQueue(): action '".json_encode($action)."'", 'processActionQueue');
+        //             $fct = $action['what'];
+        //             if ( isset($action['parm0'])) {
+        //                 $this->$fct($action['parm0'], $action['parm1'], $action['parm2'], $action['parm3']);
+        //             } else {
+        //                 $this->$fct($action['addr']);
+        //             }
+        //             unset($this->actionQueue[$key]);
+        //         }
+        //     }
+        // }
 
         /**
          * With device on battery we have to wait for them to wake up before sending them command:
@@ -5364,5 +5442,14 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', 'processWakeUpQueue(): <------------------------------');
         }
 
+        /* Called on any receipt from a device meaning it is awake, at least for a very short time */
+        function deviceIsAwake($net, $addr) {
+            if (!isset($this->pendingMsg))
+                return;
+            if (!isset($this->pendingMsg[$net]))
+                return;
+            if (!isset($this->pendingMsg[$net][$addr]))
+                return;
+        }
     } // class AbeilleParser
 ?>

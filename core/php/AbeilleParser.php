@@ -321,7 +321,7 @@
             }
 
             // Check if we have any action scheduled and waiting to be processed
-            $AbeilleParser->processActionQueue();
+            // $AbeilleParser->processActionQueue();
 
             // Check if we have any command waiting for the device to wake up
             $AbeilleParser->processWakeUpQueue();

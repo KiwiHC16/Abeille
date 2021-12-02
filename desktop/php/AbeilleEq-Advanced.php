@@ -567,6 +567,14 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="col-sm-3 control-label" title="getIeeeAddress (IEEE_addr_req)">Adresse IEEE</label>
+            <div class="col-sm-5">
+                <?php
+                    echo '<a class="btn btn-warning" onclick="interrogate(\'getIeeeAddress\', \''.$eqId.'\')">{{Interroger}}</a>';
+                ?>
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-sm-3 control-label" title="Bind cet équipement vers un autre (Bind_req)">Bind to device</label>
             <div class="col-sm-5">
                 <?php

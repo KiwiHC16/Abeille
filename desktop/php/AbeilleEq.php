@@ -465,7 +465,15 @@
             topic = "Cmd"+logicalId+"_getNeighborTable";
             startIdx = document.getElementById("idStartIdx").value;
             payload = "startIndex="+startIdx;
-        } else if (request == "readReportingConfig") {
+        } else if (request == "getActiveEndPoints") {
+            topic = "Cmd"+logicalId+"_ActiveEndPoint";
+            payload = "address="+js_eqAddr;
+        } else if (request == "getIeeeAddress") {
+            topic = "Cmd"+logicalId+"_getIeeeAddress";
+            payload = "";
+        }
+
+        else if (request == "readReportingConfig") {
             topic = "Cmd"+logicalId+"_readReportingConfig";
             ep = document.getElementById("idEp").value;
             clustId = document.getElementById("idClustId").value;
@@ -521,9 +529,6 @@
             clustId = document.getElementById("idClustIdF").value;
             destGroup = document.getElementById("idGroupF").value;
             payload = "addr="+js_eqIeee+"_ep="+ep+"_clustId="+clustId+"_destAddr="+destGroup;
-        } else if (request == "getActiveEndPoints") {
-            topic = "Cmd"+logicalId+"_ActiveEndPoint";
-            payload = "address="+js_eqAddr;
         } else if (request == "configureReporting") {
             topic = "Cmd"+logicalId+"_configureReporting";
             ep = document.getElementById("idEpCR").value;

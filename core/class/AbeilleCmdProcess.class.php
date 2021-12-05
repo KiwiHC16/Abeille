@@ -3299,6 +3299,7 @@
                     // <request type: uint8_t>: Request Type: 0 = Single 1 = Extended
                     // <start index: uint8_t>
 
+                    $priority       = (isset($Command['priority']) ? $Command['priority'] : priorityMin);
                     // See https://github.com/fairecasoimeme/ZiGate/issues/386#
                     // Both address must be the same.
                     $address        = $Command['addr'];
@@ -3324,6 +3325,7 @@
 
                     // <target short address: uint16_t>
 
+                    $priority = (isset($Command['priority']) ? $Command['priority'] : priorityMin);
                     $address = $Command['addr'];
 
                     //  4 = 4/2 => 2

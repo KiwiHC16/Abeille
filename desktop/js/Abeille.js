@@ -138,7 +138,7 @@ function removeBeesJeedom(zgId) {
     console.log("eqList="+eqList);
 
     var msg = "{{Vous êtes sur le point de supprimer de Jeedom les équipements selectionnés.";
-    msg += "<br>Cela n'affecte pas le réseau connu de la zigate.";
+    msg += "<br>Si ils sont toujours dans le réseau, ils deviendront 'fantomes' et devraient être réinclus automatiquement.";
     msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
     bootbox.confirm(msg, function (result) {
         if (result == false)

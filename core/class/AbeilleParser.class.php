@@ -517,14 +517,14 @@
 
             if (!$eq['ieee']) {
                 parserLog('debug', '  Requesting IEEE');
-                $this->msgToCmd("Cmd".$net."/".$addr."/getIeeeAddress", "");
+                $this->msgToCmd("Cmd".$net."/".$addr."/getIeeeAddress", "priority=5");
                 return $ret;
             }
 
             // IEEE is available
             if (!$eq['epList']) {
                 parserLog('debug', '  Requesting active endpoints list');
-                $this->msgToCmd("Cmd".$net."/".$addr."/getActiveEndpoints", "");
+                $this->msgToCmd("Cmd".$net."/".$addr."/getActiveEndpoints", "priority=5");
                 return $ret;
             }
 
@@ -2566,6 +2566,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         return;
                     }
 
+                    $unknown = $this->deviceUpdate($dest, $srcAddr, $srcEp);
+                    if ($unknown)
+                        return; // So far unknown to Jeedom
+
                     /* Monitor if requested */
                     if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr)) {
                         monMsgFromZigate("8002/Report attributes response"); // Send message to monitor
@@ -4380,10 +4384,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             } // Status != 00
 
             // Status == 00
-            if (($clustId != "0000") || (($attrId != "0004") && ($attrId != "0005") && ($attrId != "0010"))) {
-                if ($this->deviceUpdate($dest, $srcAddr, ''))
-                    return;
-            }
 
             /* Params: SrcAddr, ClustId, AttrId, Data */
             $this->msgToAbeille($dest."/".$srcAddr, 'Link', 'Quality', $lqi);
@@ -4887,6 +4887,26 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
             }
 
+            $unknown = false;
+            // Clust 0000, attrib 0004/0005 & 0010 have dedicated deviceUpdate() call.
+            if (($clustId != "0000") || (($attrId != "0004") && ($attrId != "0005") && ($attrId != "0010"))) {
+                $unknown = $this->deviceUpdate($dest, $srcAddr, $ep);
+            }
+
+            // Tcharp38: deviceUpdate or discoveryUpdate ?
+            // If discovering step, recording infos
+            $discovering = $this->discoveringState($dest, $srcAddr);
+            if ($discovering) {
+                $isServer = 1;
+                $attributes = [];
+                $attributes[$attrId] = [];
+                $attributes[$attrId]['value'] = $data;
+                $this->discoverUpdate($dest, $srcAddr, $ep, 'ReadAttributesResponse', $clustId, $isServer, $attributes);
+            }
+
+            if ($unknown)
+                return; // If unknown to Jeedom, nothing to send
+
             // $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId, $data);
             /* Forwarding unsupported atttribute to Abeille */
             $toAbeille = array(
@@ -4915,16 +4935,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'value' => $data
             );
             $this->msgToClient($toCli);
-
-            // If discovering step, recording infos
-            $discovering = $this->discoveringState($dest, $srcAddr);
-            if ($discovering) {
-                $isServer = 1;
-                $attributes = [];
-                $attributes[$attrId] = [];
-                $attributes[$attrId]['value'] = $data;
-                $this->discoverUpdate($dest, $srcAddr, $ep, 'ReadAttributesResponse', $clustId, $isServer, $attributes);
-            }
         }
 
         /* 8100/Read individual Attribute Response */

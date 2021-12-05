@@ -836,7 +836,7 @@
             ep = endPoints[epId];
 
             // Basic cluster
-            if (typeof ep.servClusters["0000"] !== "undefined") {
+            if (isset(ep.servClusters["0000"]) && isset(ep.servClusters["0000"]['attributes'])) {
                 /* Only attribute 4000 is converted to user command.
                    No sense for others */
                 attributes = ep.servClusters["0000"]['attributes'];
@@ -855,7 +855,7 @@
             }
 
             /* Power configuration */
-            if (typeof ep.servClusters['0001'] !== "undefined") {
+            if (isset(ep.servClusters["0001"]) && isset(ep.servClusters["0001"]['attributes'])) {
                 attributes = ep.servClusters['0001']['attributes'];
                 if (isset(attributes['0021'])) {
                     cmds["Battery-Percent"] = newCmd("zb-0001-BatteryPercent");
@@ -878,7 +878,7 @@
             }
 
             /* OnOff cluster */
-            if (typeof ep.servClusters["0006"] !== "undefined") {
+            if (isset(ep.servClusters["0006"]) && isset(ep.servClusters["0006"]['attributes'])) {
                 attributes = ep.servClusters["0006"]['attributes'];
                 if (isset(attributes['0000'])) {
                     cmds["Status"] = newCmd("zb-0006-OnOff");
@@ -897,7 +897,7 @@
             }
 
             /* Level cluster */
-            if (typeof ep.servClusters["0008"] !== "undefined") {
+            if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
                 cmds["Current Level"] = newCmd("zb-0008-CurrentLevel");
                 cmds["Current Level"]["isVisible"] = 1;
@@ -909,7 +909,7 @@
             }
 
             /* Color cluster */
-            if (typeof ep.servClusters["0300"] !== "undefined") {
+            if (isset(ep.servClusters["0300"]) && isset(ep.servClusters["0300"]['attributes'])) {
                 attributes = ep.servClusters["0300"]['attributes'];
                 currentMode = 1; // Default = CurrentX & CurrentY
                 if (isset(attributes['0008']) && isset(attributes['0008']['value']))
@@ -954,7 +954,7 @@
             }
 
             /* Illuminance cluster */
-            if (typeof ep.servClusters["0400"] !== "undefined") {
+            if (isset(ep.servClusters["0400"]) && isset(ep.servClusters["0400"]['attributes'])) {
                 attributes = ep.servClusters["0400"]['attributes'];
                 if (isset(attributes['0000'])) {
                     cmds["Illuminance"] = newCmd("zb-0400-MeasuredValue");
@@ -964,7 +964,7 @@
             }
 
             /* Temperature cluster */
-            if (typeof ep.servClusters["0402"] !== "undefined") {
+            if (isset(ep.servClusters["0402"]) && isset(ep.servClusters["0402"]['attributes'])) {
                 attributes = ep.servClusters["0402"]['attributes'];
                 if (isset(attributes['0000'])) {
                     cmds["Temperature"] = newCmd("zb-0402-MeasuredValue");
@@ -974,7 +974,7 @@
             }
 
             /* Humidity cluster */
-            if (typeof ep.servClusters["0405"] !== "undefined") {
+            if (isset(ep.servClusters["0405"]) && isset(ep.servClusters["0405"]['attributes'])) {
                 attributes = ep.servClusters["0405"]['attributes'];
                 if (isset(attributes['0000'])) {
                     cmds["Humidity"] = newCmd("zb-0405-MeasuredValue");
@@ -984,7 +984,7 @@
             }
 
             /* Metering (Smart Energy) */
-            if (typeof ep.servClusters["0702"] !== "undefined") {
+            if (isset(ep.servClusters["0702"]) && isset(ep.servClusters["0702"]['attributes'])) {
                 attributes = ep.servClusters["0702"]['attributes'];
                 cmdName = "Total power"; // Default cmd name
                 unit = "KWh"; // Default unit
@@ -1002,7 +1002,7 @@
             }
 
             /* Electrical Measurement cluster */
-            if (typeof ep.servClusters["0B04"] !== "undefined") {
+            if (isset(ep.servClusters["0B04"]) && isset(ep.servClusters["0B04"]['attributes'])) {
                 attributes = ep.servClusters["0B04"]['attributes'];
                 if (isset(attributes['0505'])) { // RMS Voltage
                     cmdName = "RMS Voltage"; // Default cmd name

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="211202-BETA-2"
+# VERSION="211205-MASTER_TCHARP38-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -55,11 +55,11 @@ e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 75825d45f99fb2b54b6a3fdf99bda282 *core/class/Abeille.class.php
 98a450e5e0221db179eae5f7ad02db87 *core/class/AbeilleCmd.class.php
 5e6b04dc2f027065482af5a65c8530bc *core/class/AbeilleCmdPrepare.class.php
-75ea0009ef5678d033a7f01de72f0a84 *core/class/AbeilleCmdProcess.class.php
+4cd70e38b6e09713989890ca58308321 *core/class/AbeilleCmdProcess.class.php
 78630bd1d1cc09daf011395c694fb089 *core/class/AbeilleCmdQueue.class.php
 f8d7e3a11eeef6dec94601bad93d2629 *core/class/AbeilleDebug.class.php
 17e48d546034f737716d4532d29a29af *core/class/AbeilleMsg.php
-c0d6483cbbbafee5e11028ee5ffe7dc0 *core/class/AbeilleParser.class.php
+4117d031835c88205ed3ed26d8be851b *core/class/AbeilleParser.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 2ebb56e1ea41091916d618f74fe15764 *core/class/AbeilleTemplateCommon.class.php
 aea82feb4106a0bcb6ee4f6ab877c416 *core/class/AbeilleTemplateEq.class.php
@@ -560,7 +560,7 @@ f0225567873f56a5bcfcb65a170c8a04 *core/config/devices/511.201/511.201.json
 85234dbdecbccdd12ee8547d85c8a5ad *core/config/devices/8-digital-output/8-digital-output.json
 2b86fdae1050fe0c2b2e72aaec25eb15 *core/config/devices/82c167c95ed746cdbd21d6817f72c593_ORVIBO/82c167c95ed746cdbd21d6817f72c593_ORVIBO.json
 56d546d91dc1821bf7435768eceae6e9 *core/config/devices/82c167c95ed746cdbd21d6817f72c593_ORVIBO/notes.txt
-912e7c449cca540b23ca47ebffe31758 *core/config/devices/898ca74409a740b28d5841661e72268d/898ca74409a740b28d5841661e72268d.json
+2c589fc8a441c135f3bdcf95bb677a0e *core/config/devices/898ca74409a740b28d5841661e72268d/898ca74409a740b28d5841661e72268d.json
 221cba681e8e0d57363f3ce788cf5dc4 *core/config/devices/A60TWZ3/A60TWZ3.json
 c889381d2370e7d239210b4f592d71d8 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/ALCANTARA2D1.00P1.02Z1.00.json
 b3de5b2b6933161949c28715effe4536 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/discovery.json
@@ -741,7 +741,7 @@ e4c11916bc278198c6f217c977d33c7a *core/config/devices/TS0111/TS0111.json
 17ce00ac4ee9fb69ca40d92fa0776246 *core/config/devices/TS0115/TS0115.json
 c4465b1ea0d6cd16d39fc04e13f5f0c2 *core/config/devices/TS0115__TYZB01_vkwryfdr/TS0115__TYZB01_vkwryfdr.json
 ab1f4fcf6febcb0e38c3bbc490d627b8 *core/config/devices/TS011F/TS011F.json
-331db1d4523f085d0742319602802ec4 *core/config/devices/TS011F__TZ3000_cphmq0q7/TS011F__TZ3000_cphmq0q7.json
+a59bb092bddf7869dd421a04c2be38d1 *core/config/devices/TS011F__TZ3000_cphmq0q7/TS011F__TZ3000_cphmq0q7.json
 f589fdf1133958004bef164d33aa9587 *core/config/devices/TS011F__TZ3000_cphmq0q7/discovery.json
 0f0bc9fe4dc39b25cc81e1d22561bcce *core/config/devices/TS011F__TZ3000_o005nuxx/TS011F__TZ3000_o005nuxx.json
 c510fe93f37db5567857dca94afd38b0 *core/config/devices/TS011F__TZ3000_o005nuxx/discovery.json
@@ -849,6 +849,8 @@ e0c40e812e974a85de2f8af0e308af48 *core/config/devices/sensor_wleak.aq1/sensor_wl
 b3f92daabf8773ea2bc277baee9e0a33 *core/config/devices/switch.l0agl1/switch.l0agl1.json
 9b7dcf5554757754589539a8fba8e0c7 *core/config/devices/switch.l1aeu1/notes.txt
 4e62262cf0f6359b79f79270d296087e *core/config/devices/switch.l1aeu1/switch.l1aeu1.json
+ed58dd4213726b561bca2329b11e6184 *core/config/devices/switch.l2aeu1/discovery.json
+727bc2b254c707d0f5a39b3d28da0ce0 *core/config/devices/switch.l2aeu1/switch.l2aeu1.json
 6a4c5fc8be522708dd67024c2a096082 *core/config/devices/switch.n3acn3/discovery.json
 5e9a94003d4d38c0cf12c689a4e12159 *core/config/devices/switch.n3acn3/switch.n3acn3.json
 90ad3e45c686c865b2c9771c1f9c2d65 *core/config/devices/vibration.aq1/vibration.aq1.json
@@ -907,7 +909,7 @@ b853ae2c1cf0e48b938ce1abd5698952 *core/scripts/resetPiZigate.sh
 38466f9c424880c1e0b4544930b9f19f *core/scripts/switchBranch.sh
 e64421de79c60f5b69daf6a5b302be8a *core/scripts/updateFirmware.sh
 8152b9a95c1e174c3246ea4176c6325a *core/scripts/updateFirmwareDIN.sh
-e6b5dc4acd3e08d2b234550d37c96682 *desktop/js/Abeille.js
+c4588aced742b27c519e59748fd2e238 *desktop/js/Abeille.js
 f702906f38781759747c1bbcf6aa0715 *desktop/js/health.js
 f6fc2cf32a29787b940390b28b098cc9 *desktop/js/network.js
 d4d2c7db588253b12e13344ac57f3a05 *desktop/modal/Abeille-OTA.modal.php
@@ -941,11 +943,11 @@ c22571d6311b4cd71cea1b27e3cceb62 *desktop/php/050_AbeilleRemplacementPart.php
 bccf74ebd4853506aa6e484cd8eef681 *desktop/php/AbeilleEq-Cmds.php
 24e42d9c8bfd6af08c84b3bae4ebbda9 *desktop/php/AbeilleEq-Main.php
 b24154bbba3146cb5e7676f8a83da139 *desktop/php/AbeilleEq.php
-3fe93edc3aa687ded4b04a6e2cbb01e0 *desktop/php/AbeilleEqAssist.php
+45aff517d3cc8fee2325d946ce9e934f *desktop/php/AbeilleEqAssist.php
 b823f9e71718dafa4d5bc1be0a842743 *desktop/php/AbeilleFormAction.php
 f4ad6e68f05d3de67caa70c340868082 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-2d9e4c10bb447be865d1af7ba95864bb *docs/fr_FR/Changelog.rst
+b48206e9a4573ab09847dbe2f1a0da78 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -964,6 +966,7 @@ f9c5bdad3b63fec85dbcfe13ab0c0866 *images/node_511.201.png
 c5242209258a6a3fe0190fed4e97f623 *images/node_Abeille.png
 52b5fbdaa7f52b84d811ed21bf86727f *images/node_Acova-Alcantara2.png
 17eae48c7584ae5e8b9b44cfd0ed572d *images/node_Aqara-Opple-6buttons.png
+a91b1074182a45befa642331c0f6bd61 *images/node_Aqara-WallSwitchH1-Double.png
 b47b765a6640f32aaddadd58dfb4b1c4 *images/node_BASICZBR3.png
 eee64f1b4a55609fd0a7372082b141bc *images/node_Blitzwolf-BW-SHP13.png
 b4d132e686b13c19f17eaa4d7ab042ae *images/node_CLA60RGBWOSRAM.png
@@ -1042,6 +1045,7 @@ aeb0bb343d75eca731e9d6777ee2153f *images/node_OSRAMClassicA60Wclear-LIGHTIFY-2.p
 c39204c8a53eec337b9a285a30e21573 *images/node_OSRAMClassicA60Wclear-LIGHTIFY.png
 e3d676647cd34ad626b10b2e7a9debde *images/node_OSRAMClassicE27Dimmable.png
 c6e10d6051f4d81b2f3d1ca4ab31f6d9 *images/node_Orvibo-CM10ZW.png
+92a1ee0a09f622c1e755a8e665356577 *images/node_Orvibo-ST30.png
 b5eac13c96d07af900271890339882d8 *images/node_Osram-SwitchMini.png
 66667f6e546c036d411e49ed5c6f243d *images/node_OsramLightify.png
 582b6363039df92297be4ebc2eea3b48 *images/node_OsramLightifyplug01OutDoor.png
@@ -1117,6 +1121,7 @@ d97fc5b541766d3ebcb7e717fe6e2e31 *images/node_TS0505A.png
 f8343706b940a9d48f5a15baf9e0c071 *images/node_Tuya-DoorSensor-ZM-CG205.png
 74da263788e961a846235adeaf35dd61 *images/node_Tuya-QS-Zigbee-C01.png
 50635ac5b6e9ba2b7fc309a3a3de9dfa *images/node_Tuya-Repeater-RP280.png
+931659b93b273278ebaefd213d0e0b6d *images/node_Tuya-TS011F.png
 7a9931bceb04d3fe3ed7eb5257acc56a *images/node_Tuya-TS0501B-LedController.png
 7152f144af7c765ad8bd055ffc3e7339 *images/node_Tuya4ButtonsSceneSwitch.png
 f015a0211c351a2b2bb38d23da37d2a9 *images/node_Tuya4ButtonsSwitch.png
@@ -1187,10 +1192,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-d1bcf11573ed1c8c2117d0922a232d2a *plugin_info/Abeille.version
+e660c9e0ee41dd4ae71ccf5742a62ab2 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 be0ccc5bffff6642d11276df436c9008 *plugin_info/configuration.php
-5db2d327d3fdf83cf067f777252fb98a *plugin_info/info.json
+b1cbc536ad8a6d87aa4b2e28b9d6b60c *plugin_info/info.json
 bf46fc1b81306dfc3184686d82e55a23 *plugin_info/install.php
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 e634b9f544c02b8facd28fefb8771fe0 *resources/AbeilleDeamon/AbeilleInterrogate.php

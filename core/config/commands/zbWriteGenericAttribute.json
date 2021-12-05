@@ -1,0 +1,14 @@
+{
+    "zbWriteGenericAttribute": {
+        "comment": "Command to write any generic attribute",
+        "isVisible": 0,
+        "name": "WriteGenericAttribute",
+        "isHistorized": 0,
+        "subType": "other",
+        "configuration": {
+            "topic": "WriteAttributeRequestGeneric",
+            "request": "ep=#EP#&Proprio=#PROPRIO#&clusterId=#CLUSTID#&attributeId=#ATTRID#&attributeType=#ATTRTYPE#&value=#VALUE#"
+        },
+        "type": "action"
+    }
+}

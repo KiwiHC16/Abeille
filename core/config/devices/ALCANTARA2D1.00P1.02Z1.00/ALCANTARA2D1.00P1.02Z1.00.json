@@ -30,12 +30,12 @@
                 "execAtCreation": "Yes"
             },
             "Set-OccupiedHeatingPoint": {
-                "use": "zbWriteAttribute",
-                "params": "clustId=0201&attrId=0012&attrVal=#slider#",
+                "use": "zbWriteGenericAttribute",
+                "params": "clustId=0201&Proprio=&attrId=0012&attrType=29&value=#slider#",
                 "subType": "slider",
-                "minValue": 5,
-                "maxValue": 30,
-                "isVisible": 1
+                "isVisible": 1,
+                "minValue": 7,
+                "maxValue": 28
             }
         }
     }

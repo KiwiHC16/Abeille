@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-211202-BETA-2
+211205-STABLE-1
 -------------
 
 - Page EQ/avancé: Ajout bouton reset SW zigate (#2176).

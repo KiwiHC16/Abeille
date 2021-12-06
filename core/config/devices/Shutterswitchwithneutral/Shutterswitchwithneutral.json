@@ -17,7 +17,11 @@
             "include20": "getcurrent_position_lift_percentage",
             "include24": "Identify",
             "include25": "Group-Membership",
-            "include27": "BindToZigateCurrent_Position_Lift_Percentage",
+            "Bind-0102-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0102",
+                "execAtCreation": "Yes"
+            },
             "include29": "setReportCurrent_Position_Lift_Percentage",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

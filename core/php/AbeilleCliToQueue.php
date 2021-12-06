@@ -49,7 +49,11 @@
         else
             $queueId = queueKeyXmlToAbeille;
         $queue = msg_get_queue($queueId);
-        // $queueKeyXmlToCmd           = msg_get_queue(queueKeyXmlToCmd);
+        if ($queue === false) {
+            if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: Invalid queue ID ".$queueId);
+            return;
+        }
+    // $queueKeyXmlToCmd           = msg_get_queue(queueKeyXmlToCmd);
 
         if (($queueId == queueKeyXmlToAbeille) || ($queueId == queueKeyXmlToCmd)) {
             $topic =  $_GET['topic'];
@@ -78,8 +82,12 @@
                 echo "debug","(fichier xmlhttpMQQTSend) could not add message to queue";
             }
         } else {
+            if (!isset($_GET['msg'])) {
+                if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: 'msg' is undefined");
+                return;
+            }
             $msgString = $_GET['msg'];
-            if (isset($dbgTcharp38)) logDebug("CliToQueue: ".$msgString);
+            if (isset($dbgTcharp38)) logDebug("CliToQueue: msg=".$msgString);
             $msgArr = explode('_', $msgString);
             $m = array();
             foreach ($msgArr as $idx => $value) {

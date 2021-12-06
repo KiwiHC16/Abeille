@@ -167,23 +167,34 @@
                     $commands2["On"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "BindToZigateEtat") && $oldSyntax) {
+                } else if (($cmdFName == "BindToPowerConfig") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbBindToZigate",
-                        "params" => "clustId=0006",
-                        "execAtCreation" => "Yes"
+                        "params" => "clustId=0001",
+                        "execAtCreation" => "Yes",
+                        "execAtCreationDelay" => 10
                     );
-                    $commands2["Bind-0006-ToZigate"] = $cmdArr;
+                    $commands2["Bind-0001-ToZigate"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "BindToZigateLevel") && $oldSyntax) {
+                } else if (($cmdFName == "BindShortToSmokeHeiman") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbBindToZigate",
-                        "params" => "clustId=0008",
+                        "params" => "clustId=0500",
                         "execAtCreation" => "Yes",
                         "execAtCreationDelay" => 9
                     );
-                    $commands2["Bind-0006-ToZigate"] = $cmdArr;
+                    $commands2["Bind-0500-ToZigate"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "BindShortToZigateBatterie") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zbBindToZigate",
+                        "params" => "clustId=0001",
+                        "execAtCreation" => "Yes",
+                        "execAtCreationDelay" => 9
+                    );
+                    $commands2["Bind-0001-ToZigate"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 } else if (($cmdFName == "levelLight") && $oldSyntax) {

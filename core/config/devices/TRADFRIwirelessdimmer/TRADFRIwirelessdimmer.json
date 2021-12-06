@@ -21,7 +21,12 @@
                 "isVisible": 1
             },
             "include9": "getBattery",
-            "include10": "BindShortToZigateBatterie",
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include11": "setReportBatterie"
         }
     }

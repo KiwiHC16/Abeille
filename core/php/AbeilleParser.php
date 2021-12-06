@@ -315,6 +315,9 @@
                     $GLOBALS['sendToCli']['ieee'] = $msg['ieee'];
                 } if ($msg['type'] == 'readOtaFirmwares') {
                     otaReadFirmwares(); // Reread available firmwares
+                } if ($msg['type'] == 'eqRemoved') {
+                    // Some equipments removed from Jeedom => phantoms if still in network
+                    $eqList = $msg['eqList']; // Eq addr separated by ','
                 }
             } else if ($errorCode != 42) { // 42 = No message
                 logMessage('debug', '  msg_receive(queueCtrlToParser) ERROR '.$errorCode);

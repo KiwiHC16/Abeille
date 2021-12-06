@@ -24,7 +24,6 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-
             "include4": "offGroup",
             "include4 2": "offGroupTimed",
             "include5": "toggleGroup",
@@ -36,10 +35,18 @@
                 "isVisible": 1
             },
             "include9": "getBattery",
-            "include10": "BindShortToZigateBatterie",
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include11": "setReportBatterie",
-
-            "Bind-01-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0006", "execAtCreation": "Yes" },
+            "Bind-01-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "Yes"
+            },
             "Set-OnOffReporting-01": {
                 "use": "zbConfigureReporting",
                 "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",

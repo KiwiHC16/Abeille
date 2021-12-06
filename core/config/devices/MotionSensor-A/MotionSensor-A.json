@@ -17,11 +17,26 @@
                 "isVisible": 1,
                 "isHistorized": 1
             },
-            "include4 2": "BindToZigateOccupancy",
+            "Bind-0406-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0406",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include2 2 2": "setReportOccupancy",
-            "include4 2 2 2": "BindToZigateTemperature",
+            "Bind-0402-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0402",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include2 2": "setReportTemperature",
-            "include4 2 2 2 3": "BindShortToZigateBatterie",
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include4 2 2 2 2 2 2 2": "setReportBatterie",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

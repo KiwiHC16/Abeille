@@ -869,8 +869,6 @@
                 return;
             }
 
-            //----------------------------------------------------------------------
-
             // abeilleList abeilleListAll
             if (isset($Command['abeilleList'])) {
                 cmdLog('debug', "    Get Abeilles List", $this->debug['processCmd']);
@@ -878,8 +876,6 @@
                 return;
             }
 
-
-            //----------------------------------------------------------------------
             if (isset($Command['setOnZigateLed'])) {
                 cmdLog('debug', "    setOnZigateLed", $this->debug['processCmd']);
                 $cmd = "0018";
@@ -900,7 +896,6 @@
                 return;
             }
 
-            //----------------------------------------------------------------------
             if (isset($Command['setCertificationCE'])) {
                 cmdLog('debug', "    setCertificationCE", $this->debug['processCmd']);
                 $cmd = "0019";
@@ -937,23 +932,21 @@
                 return;
             }
 
-            //----------------------------------------------------------------------
-                // https://github.com/fairecasoimeme/ZiGate/issues/145
-                // Added cmd 0807 Get Tx Power #175
-                // PHY_PIB_TX_POWER_DEF (default - 0x80)
-                // PHY_PIB_TX_POWER_MIN (minimum - 0)
-                // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
-                if (isset($Command['GetTxPower'])) {
-                    cmdLog('debug', "    GetTxPower", $this->debug['processCmd']);
-                    $cmd = "0807";
-                    $data = "";
+            // https://github.com/fairecasoimeme/ZiGate/issues/145
+            // Added cmd 0807 Get Tx Power #175
+            // PHY_PIB_TX_POWER_DEF (default - 0x80)
+            // PHY_PIB_TX_POWER_MIN (minimum - 0)
+            // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
+            if (isset($Command['GetTxPower'])) {
+                cmdLog('debug', "    GetTxPower", $this->debug['processCmd']);
+                $cmd = "0807";
+                $data = "";
 
-                    $length = sprintf("%04s", dechex(strlen($data) / 2));
-                    $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                    return;
-                }
+                $length = sprintf("%04s", dechex(strlen($data) / 2));
+                $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
+                return;
+            }
 
-            //----------------------------------------------------------------------
             if (isset($Command['setChannelMask'])) {
                 cmdLog('debug', "    setChannelMask", $this->debug['processCmd']);
                 $cmd = "0021";
@@ -964,7 +957,6 @@
                 return;
             }
 
-            //----------------------------------------------------------------------
             if (isset($Command['setExtendedPANID'])) {
                 cmdLog('debug', "    setExtendedPANID", $this->debug['processCmd']);
                 $cmd = "0020";
@@ -975,13 +967,11 @@
                 return;
             }
 
-            //----------------------------------------------------------------------
             if (isset($Command["getNetworkStatus"])) {
                 $this->addCmdToQueue($priority, $dest, "0009", "0000", "");
                 return;
             }
 
-            //----------------------------------------------------------------------
             // Management Network Update request
             // ZPS_eAplZdpMgmtNwkUpdateRequest - APP_eZdpMgmtNetworkUpdateReq - E_SL_MSG_MANAGEMENT_NETWORK_UPDATE_REQUEST
             if (isset($Command['managementNetworkUpdateRequest']) && isset($Command['address'])) {
@@ -3223,6 +3213,12 @@
                     return;
                 }
 
+                // Zigate specific command: Erase PDM
+                else if (($cmdName == 'eraseZgPDM') || ($cmdName == 'ErasePersistentData')) {
+                    $this->addCmdToQueue($priority, $dest, "0012", "0000", "");
+                    return;
+                }
+
                 /*
                  * Zigbee standard commands
                  */
@@ -3354,6 +3350,8 @@
 
                 // Tcharp38: Generic 'write attribute request' function
                 // ZCL global: writeAttribute command
+                // Mandatory: ep, clustId, attrId & attrVal
+                // Optional : attrType, dir (default=00)
                 else if ($cmdName == 'writeAttribute') {
                     /* Checking that mandatory infos are there */
                     $required = ['ep', 'clustId', 'attrId', 'attrVal'];
@@ -3367,7 +3365,6 @@
                             return;
                         }
                         $Command['attrType'] = sprintf("%02X", $attr['dataType']);
-                        cmdLog('debug', "    Using attrType ".$Command['attrType'], $this->debug['processCmd']);
                     }
 
                     // If attrVal is coming from slider, it must be converted to proper data type
@@ -3403,12 +3400,13 @@
                     $srcEp          = "01";
                     $destEp         = $Command['ep'];
                     $clustId        = $Command['clustId'];
-                    $dir            = "01";
+                    $dir            = (isset($Command['dir']) ? $Command['dir'] : "00"); // 00 = to server side, 01 = to client site
                     $manufSpecific  = "00";
                     $manufId        = "0000";
                     $nbOfAttributes = "01";
                     $attrList       = $Command['attrId'].$Command['attrType'].$attrVal;
 
+                    cmdLog('debug', "    Using dir=".$dir.", attrType=".$Command['attrType'].", attrVal=".$attrVal, $this->debug['processCmd']);
                     $data = $addrMode.$addr.$srcEp.$destEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttributes.$attrList;
                     $len = sprintf("%04s", dechex(strlen($data) / 2));
 
@@ -4035,6 +4033,66 @@
                     $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
                     return;
                 }
+
+                // ZCL cluster 0201 specific: (received) commands
+                // PRELIM: Work ongoing !!! Not tested yet.
+                else if ($cmdName == 'cmd-0201') {
+                    $required = ['addr', 'ep', 'cmd']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $cmd = "0530";
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <profile ID: uint16_t>
+                    // <cluster ID: uint16_t>
+                    // <security mode: uint8_t>
+                    // <radius: uint8_t>
+                    // <data length: uint8_t>
+
+                    //  ZCL Control Field
+                    //  ZCL SQN
+                    //  Command Id
+                    //  ....
+
+                    $addrMode       = "02";
+                    $addr           = $Command['addr'];
+                    $srcEp          = "01";
+                    $destEp         = $Command['ep'];
+                    $profId         = "0104";
+                    $clustId        = '0201';
+                    $securityMode   = "02";
+                    $radius         = "1E";
+
+                    /* ZCL header */
+                    // Tcharp38: Which dir ?
+                    $fcf            = "11"; // Frame Control Field
+                    $sqn            = "23";
+                    $cmdId          = $Command['cmd'];
+
+                    if ($cmdId == "00") { // Setpoint Raise/Lower
+                        // 0x00 Heat (adjust Heat Setpoint)
+                        // 0x01 Cool (adjust Cool Setpoint)
+                        // 0x02 Both (adjust Heat Setpoint and Cool Setpoint)
+                        $mode = isset($Command['mode']) ? $Command['mode'] : "00";
+                        $amount = $Command['amount'];
+                        $data2 = $fcf.$sqn.$cmdId.$mode.$amount;
+                    } else {
+                        cmdLog('debug', "    ERROR: Unsupported cluster 0201 command ".$cmdId);
+                        return;
+                    }
+                    $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
+
+                    $data1 = $addrMode.$addr.$srcEp.$destEp.$clustId.$profId.$securityMode.$radius.$dataLen2;
+                    $data = $data1.$data2;
+                    $len = sprintf("%04x", strlen($data) / 2);
+
+                    $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
+                    return;
+                } // End 'cmd-0201'
 
                 // ZCL cluster 1000 specific: (received) commands
                 else if ($cmdName == 'cmd-1000') {

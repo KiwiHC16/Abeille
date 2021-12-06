@@ -20,9 +20,9 @@
             "AbeilleCmdClass"         => 1, // Mise en place des class
             "sendCmdToZigate"         => 1, // Mise en place des class
             "sendCmdToZigate2"        => 0,
-            "traiteLesAckRecus"       => 0, // Nouvelle Gestion des Ack
-            "processCmdQueueToZigate" => 1,
-            "processCmdQueueToZigate2"=> 0,
+            "processZigateAcks"       => 0, // Nouvelle Gestion des Ack
+            "processZigateCmdQueues" => 1,
+            "processZigateCmdQueues2"=> 0,
         );
 
         function deamonlog($loglevel = 'NONE', $message = "", $isEnable = 1)

@@ -14,8 +14,18 @@
             "include9": "LegrandContactorOff",
             "include10": "LegrandContactorAuto",
             "include11 2": "PuissanceLegrandPrise",
-            "include26 2": "BindToZigatePuissanceLegrand",
-            "include26 2 2": "BindToZigateEtatLegrand",
+            "Bind-0B04-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0B04",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "Bind-FC41-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=FC41",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 10
+            },
             "include28 2": "setReportPuissanceLegrand",
             "include28 2 2": "LegrandContactorMode",
             "include28 2 2 2": "LegrandContactorEtat",

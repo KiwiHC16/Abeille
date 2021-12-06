@@ -13,7 +13,7 @@
         },
         "commands": {
             "include13 2": "Group-Membership",
-            
+
             "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1 },
             "On 1": {
                 "use": "zbCmd-0006-On",

@@ -17,9 +17,19 @@
                 "isVisible": 1
             },
             "include9": "getBattery",
-            "include10": "BindShortToZigateBatterie",
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include11": "setReportBatterie",
-            "include10 2": "BindShortToSmokeHeiman",
+            "Bind-0500-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0500",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include11 2": "setReportSmokeHeiman",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

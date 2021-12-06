@@ -45,7 +45,12 @@
             },
             "include-0300-4": "temperatureLight",
             "include-0300-5": "setTemperatureLight",
-            "include-0300-6": "BindToZigateLightColor",
+            "Bind-0300-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0300",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 10
+            },
             "include-0300-7": "setReportLightColorSpectre",
             "Get-Status": {
                 "use": "zbReadAttribute",

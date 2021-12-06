@@ -21,15 +21,30 @@
                 "isHistorized": 1
             },
             "include4 3 2": "Batterie-Hue",
-            "include4 2": "BindToZigateOccupancy",
+            "Bind-0406-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0406",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "Bind-0400-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0400",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include4 2 2 2": "BindToZigateTemperature",
-            "include4 2 2 2 3": "BindShortToZigateBatterie",
+            "Bind-0402-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0402",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include4 2 2 2 2": "setReportOccupancy",
             "include4 2 2 2 2 2": "setReportIlluminance",
             "include4 2 2 2 2 2 2": "setReportTemperature",

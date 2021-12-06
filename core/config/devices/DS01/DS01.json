@@ -18,7 +18,12 @@
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1
             },
-            "include2 2 2": "BindToPowerConfig",
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 10
+            },
             "include2 2 2 3": "setReportBatterie"
         },
         "comment": "https:\/\/community.jeedom.com\/t\/sonoff-snzb-04-sur-zigate-et-abeille\/39336\/4"

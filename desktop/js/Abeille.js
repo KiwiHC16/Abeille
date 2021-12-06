@@ -137,8 +137,8 @@ function removeBeesJeedom(zgId) {
     var eqList = sel["ids"];
     console.log("eqList="+eqList);
 
-    var msg = "{{Vous êtes sur le point de supprimer de Jeedom les équipements selectionnés.";
-    msg += "<br>Si ils sont toujours dans le réseau, ils deviendront 'fantomes' et devraient être réinclus automatiquement.";
+    var msg = "{{Vous êtes sur le point de supprimer les équipements selectionnés de Jeedom.";
+    msg += "<br><br>Si ils sont toujours dans le réseau, ils deviendront 'fantomes' et devraient être réinclus automatiquement tant qu'on ne les force pas à quitter le réseau.";
     msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
     bootbox.confirm(msg, function (result) {
         if (result == false)
@@ -162,6 +162,11 @@ function removeBeesJeedom(zgId) {
                 if (res.status != 0) {
                     var msg = "ERREUR ! Quelque chose s'est mal passé.\n"+res.errors;
                     alert(msg);
+                } else {
+                    // Informing parser that some equipements have to be considered "phantom"
+                    // var xhr = new XMLHttpRequest();
+                    // xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueCtrlToParser+"&msg=type:eqRemoved_eqList:"+eqList, true);
+                    // xhr.send();
                 }
             }
         });

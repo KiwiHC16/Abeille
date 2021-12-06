@@ -78,13 +78,13 @@
 
         $last = 0;
         while (true) {
-            /* Treat Zigate statuses (0x8000 cmd) coming from parser */
-            $AbeilleCmdQueue->traiteLesAckRecus();
+            // Treat Zigate statuses (0x8000 cmd) coming from parser
+            $AbeilleCmdQueue->processZigateAcks();
 
             $AbeilleCmdQueue->timeOutSurLesAck();
 
-            // Traite toutes les commandes zigate en attente
-            $AbeilleCmdQueue->processCmdQueueToZigate();
+            // Treat pending commands for zigate
+            $AbeilleCmdQueue->processZigateCmdQueues();
 
             /* Performing msg rerouting from 'EQ assistant' */
             // $max_msg_size = 2048;

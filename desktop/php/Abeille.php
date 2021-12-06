@@ -37,6 +37,9 @@
     include '005_AbeilleFunctionPart.php';
 
     sendVarToJS('eqType', 'Abeille');
+    $abQueues = $GLOBALS['abQueues'];
+    echo '<script>var js_queueCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
+
     $eqLogics = eqLogic::byType('Abeille');
     /* Creating a per Zigate list of eq ids.
        For each zigate, the first eq is the zigate.

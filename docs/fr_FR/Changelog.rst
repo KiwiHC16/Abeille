@@ -1,6 +1,26 @@
 ChangeLog
 =========
 
+- Philips wall switch module/RDM001: Mise-à-jour modèle & support cluster FC00 (#2185).
+- JSON équipements: Nettoyage commandes obsolètes
+
+  - 'BindToPowerConfig' => 'zbBindToZigate' + 'clustId=0001'
+  - 'BindToZigateTemperature' => 'zbBindToZigate' + 'clustId=0402'
+  - 'BindToZigateRadiateur' => 'zbBindToZigate' + 'clustId=0201'
+  - 'BindToZigateEtatLegrand' => 'zbBindToZigate' + 'clustId=FC41'
+  - 'BindToZigatePuissanceLegrand' => 'zbBindToZigate' + 'clustId=0B04'
+  - 'BindToZigateLightColor' => 'zbBindToZigate' + 'clustId=0300'
+  - 'BindToZigateOccupancy' => 'zbBindToZigate' + 'clustId=0406'
+  - 'BindToZigateCurrent_Position_Lift_Percentage' => 'zbBindToZigate' + 'clustId=0102'
+  - 'BindShortToSmokeHeiman' => 'zbBindToZigate' + 'clustId=0500'
+  - 'BindShortToZigateBatterie' => 'zbBindToZigate' + 'clustId=0001'
+- Interne: AbeilleCmd: Traitement status 8000 groupé + ...
+- Xiaomi Aqara SSM-U01: Ajout support (#2227).
+- Interne: AbeilleCmd: Ajout support cmd 0201/Thermostat.
+- Interne: AbeilleCmd: writeAttribute(): Correction direction.
+- Interne: Parser: Requetes lecture attributs groupées lors d'une annonce.
+- Effacement PDM: Correction regression interne.
+
 211205-BETA-1
 -------------
 

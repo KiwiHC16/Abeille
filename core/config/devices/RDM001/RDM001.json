@@ -3,9 +3,10 @@
         "type": "Hue wall switch module",
         "zbManufacturer": "SignifyNetherlandsB.V.",
         "manufacturer": "Philips/Signify",
-        "model": "RDM001",
+        "model": "929003017102",
         "comment": "https://github.com/Koenkk/zigbee-herdsman-converters/issues/2393",
         "comment2": "Device mode configured thru write cluster 0000 attribute 0043",
+        "comment3": "singlerocker 0x00, singlepushbutton 0x01, dualrocker 0x02, dualpushbutton 0x03",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -39,9 +40,11 @@
 
             "Bind-0006-ToZigate": { "use": "zbBindToZigate", "params": "clustId=0006", "execAtCreation": "Yes", "execAtCreationDelay": 3 },
 
-            "Set SingleRocker": {
+            "Button event 1": { "use": "zb-CustomInfo", "params": "clustId=FC00&attrId=0001" },
+            "Button event 2": { "use": "zb-CustomInfo", "params": "clustId=FC00&attrId=0002" },
+            "Set DualRocker": {
                 "use": "zbWriteAttribute",
-                "params": "clustId=0000&attrId=0034&attrType=30&attrVal=00",
+                "params": "clustId=0000&attrId=0034&attrType=30&attrVal=02",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 4
             },

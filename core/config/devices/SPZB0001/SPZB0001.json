@@ -30,7 +30,12 @@
             "include25 2 2 3 2 3 2 2": "spiritTrvModeSetManu",
             "include25 2 2 3 2 3 2 2 2": "spiritTrvModeSetValve",
             "include25 2 2 3 2 3 2 2 2 2 2 2": "spiritBatterie-Pourcent",
-            "include25 2 2 3 2 3 2 2 2 2": "BindShortToZigateBatterie",
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include25 2 2 3 2 3 2 2 2 2 2": "spiritSetReportBatterie",
             "include25 2 2 3 2 3 2 2 2 2 2 3": "spiritHostFlags",
             "include25 2 2 3 2 3 2 2 2 2 2 3 2": "spiritErrors",

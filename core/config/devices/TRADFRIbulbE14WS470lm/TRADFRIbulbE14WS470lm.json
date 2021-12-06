@@ -58,7 +58,12 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include27 2": "BindToZigateLightColor",
+            "Bind-0300-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0300",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 10
+            },
             "include28": "setReportEtat",
             "include29": "setReportLevel",
             "include29 2": "setReportLightColorSpectre",

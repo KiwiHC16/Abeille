@@ -1,0 +1,37 @@
+{
+    "switch.n0agl1": {
+        "manufacturer": "Xiaomi",
+        "model": "SSM-U01",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "XiaomiAqara-SSM-U01"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Single Switch Module T1 (With Neutral)",
+        "commands": {
+            "Groups": { "use": "Group-Membership" },
+
+            "Status": { "use": "zb-0006-OnOff", "isVisible": 1 },
+            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
+            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
+            },
+            "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+            "BindToZigate-OnOff": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Set-OnOffReporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

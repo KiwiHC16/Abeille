@@ -530,19 +530,36 @@
 
             // IEEE & EP list are available. Any missing info to identify device ?
             if (($eq['modelIdentifier'] === null) || ($eq['manufacturer'] === null) || ($eq['location'] === null)) {
-                // TODO: Better to group attributes in single request
+                // Note: Grouped requests to improve efficiency
+                $missing = '';
+                $missingTxt = '';
                 if (($eq['modelIdentifier'] !== false) && ($eq['manufacturer'] === null)) {
-                    parserLog('debug', '  Requesting manufacturer from EP '.$eq['epFirst']);
-                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
+                    $missing = '0004';
+                    $missingTxt = 'manufacturer';
+                    // $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
                 }
                 if ($eq['modelIdentifier'] === null) {
-                    parserLog('debug', '  Requesting modelIdentifier from EP '.$eq['epFirst']);
-                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
+                    if ($missing != '') {
+                        $missing .= ',';
+                        $missingTxt .= '/';
+                    }
+                    $missing .= '0005';
+                    $missingTxt .= 'modelId';
+                    // $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
                 }
                 /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
                 if ((($eq['modelIdentifier'] === null) || ($eq['modelIdentifier'] === false)) && ($eq['location'] === null)) {
-                    parserLog('debug', '  Requesting location from EP '.$eq['epFirst']);
-                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
+                    if ($missing != '') {
+                        $missing .= ',';
+                        $missingTxt .= '/';
+                    }
+                    $missing .= '0010';
+                    $missingTxt .= 'location';
+                    // $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
+                }
+                if ($missing != '') {
+                    parserLog('debug', '  Requesting '.$missingTxt.' from EP '.$eq['epFirst']);
+                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=".$missing);
                 }
             }
 
@@ -4777,24 +4794,28 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             //     }
             // } // End cluster 0406
 
-            // Bouton Telecommande Philips Hue RWL021
+            // Philips Hue specific cluster
+            // Used by RWL021, RDM001
+            // Tcharp38: Where is the source of this decoding ?
             else if ($clustId == "FC00") {
-
-                $buttonEventTexte = array (
-                                            '00' => 'appui',
-                                            '01' => 'appui maintenu',
-                                            '02' => 'relâche sur appui court',
-                                            '03' => 'relâche sur appui long',
-                                            );
-                // parserLog("debug","  Champ proprietaire Philips Hue, decodons le et envoyons a Abeille les informations ->".pack('H*', substr($payload, 24+2, (strlen($payload) - 24 - 2)) )."<-" );
+                $buttonEventTxt = array (
+                    '00' => 'Short press',
+                    '01' => 'Long press',
+                    '02' => 'Release short press',
+                    '03' => 'Release long press',
+                );
                 $button = $attrId;
                 $buttonEvent = substr($payload, 24 + 2, 2);
                 $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
-                parserLog("debug", "  Champ proprietaire Philips Hue: Bouton=".$button.", Event=".$buttonEvent.", EventText=".$buttonEventTexte[$buttonEvent]." et duree: ".$buttonDuree);
+                parserLog("debug", "  Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
 
+                // Legacy code
+                // TODO: To be replaced by msgToAbeille2() call
                 $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId."-Event", $buttonEvent);
                 $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId."-Duree", $buttonDuree);
-                return;
+
+                // return;
+                $data = hexdec($buttonEvent);
             }
 
             /* If $data is set it means message already treated before */
@@ -4907,8 +4928,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             if ($unknown)
                 return; // If unknown to Jeedom, nothing to send
 
-            // $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId, $data);
-            /* Forwarding unsupported atttribute to Abeille */
+            /* Forwarding atttribute value to Abeille */
             $toAbeille = array(
                 'src' => 'parser',
                 'type' => 'attributeReport',

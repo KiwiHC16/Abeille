@@ -26,7 +26,12 @@
             "include3 2": "setLevelGroup",
             "include8": "addGroupEP1",
             "include9": "getBattery",
-            "include10": "BindShortToZigateBatterie",
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "include11": "setReportBatterie",
             "include12": "BindToGroupLevelEP03",
             "include13": "BindToGroupLevelEP04",

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211207-BETA-1
+-------------
+
 - Philips wall switch module/RDM001: Mise-à-jour modèle & support cluster FC00 (#2185).
 - JSON équipements: Nettoyage commandes obsolètes
 

@@ -1,6 +1,7 @@
 {
     "zbWriteGenericAttribute": {
-        "comment": "Command to write any generic attribute",
+        "comment": "TEMPORARY command to write any generic attribute",
+        "comment2": "TODO: Use writeAttribute instead but need a way to perform mult * 100 first",
         "isVisible": 0,
         "name": "WriteGenericAttribute",
         "isHistorized": 0,

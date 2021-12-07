@@ -1,14 +1,19 @@
 ChangeLog
 =========
 
+  .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+    - Toute nouvelle installation.
+    - Dès lors qu'un réappairage complet est nécéssaire.
+    - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+    - Les firmwares avant 3.1e sont forcement 'legacy'.
+    - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+- Acova Alcantara: Version temporaire 'Set-OccupiedHeatingPoint' (#2180).
+
 211207-BETA-2
 -------------
 
 - Interne: Amélioration création ruche vs démarrage. Mode forcé en 'hybride' qq soit FW.
-
-211207-BETA-1
--------------
-
 - Philips wall switch module/RDM001: Mise-à-jour modèle & support cluster FC00 (#2185).
 - JSON équipements: Nettoyage commandes obsolètes
 
@@ -31,14 +36,6 @@ ChangeLog
 
 211205-BETA-1
 -------------
-
-  .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
-
-    - Toute nouvelle installation
-    - Dés lors qu'un réappairage complet est nécéssaire
-    - Cette version corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-    - Les firmwares avant 3.1e sont forcement 'legacy'.
-    - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
 
 - Orvibo ST30: Mise-à-jour modèle + icone (#2193).
 - Tuya/Sixwgh TS011F__TZ3000_cphmq0q7: Mise-à-jour modèle + icone (#2211).

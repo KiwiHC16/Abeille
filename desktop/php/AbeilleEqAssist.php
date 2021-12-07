@@ -1528,8 +1528,18 @@ console.log(zEndPoints);
             ep = zigbee.endPoints[sEp];
             if (sDir)
                 clust = ep.servClusters[sClustId];
-            else
-                clust = ep.cliClusters[sClustId];
+            else {
+                 if (typeof ep.cliClusters === "undefined") {
+                     console.log("FIXME: It is a bug ep.cliClusters === undefined for " + sEp);
+                     ep.cliClusters = new Object();
+                 }
+                 if (typeof ep.cliClusters[sClustId] === "undefined") {
+                     console.log("FIXME: It is a bug ep.cliClusters[sClustId] === undefined for " + sEp + "/" + sClustId);
+                     ep.cliClusters[sClustId] = new Object();
+                 }
+                 clust = ep.cliClusters[sClustId];
+            }
+
             if (typeof clust.attributes === "undefined")
                 clust.attributes = new Object();
             attributes = clust.attributes;
@@ -1573,9 +1583,13 @@ console.log(zEndPoints);
                 }
             }
             // Empty row
-            var colCount = row.cells.length;
-            for (var i = colCount - 1; i >= 1; i--) {
-                row.deleteCell(i);
+            if (typeof row !== 'undefined') {
+                var colCount = row.cells.length;
+                for (var i = colCount - 1; i >= 1; i--) {
+                    row.deleteCell(i);
+                }
+            } else {
+            	console.log("FIXME: It is a bug row === undefined for " + sEp + "/" + sClustId);
             }
             // Fills row
             // for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
@@ -1909,7 +1923,7 @@ console.log(zEndPoints);
         };
         reader.readAsText(f);
     }
-    document.getElementById('files').addEventListener('change', handleFileSelect, false);
+    /*document.getElementById('files').addEventListener('change', handleFileSelect, false);*/
 
     function showTab(tabName) {
         console.log("showTab("+tabName+")");

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211207-BETA-3
+-------------
+
   .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
 
     - Toute nouvelle installation.

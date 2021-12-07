@@ -1134,38 +1134,39 @@ while ($cron->running()) {
         // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
         // Tcharp38: Moved from deamon_start()
         $config = AbeilleTools::getParameters();
-        for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-            if (($config['AbeilleSerialPort'.$i] == 'none') or ($config['AbeilleActiver'.$i] != 'Y'))
+        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
+            if (($config['AbeilleSerialPort'.$zgId] == 'none') or ($config['AbeilleActiver'.$zgId] != 'Y'))
                 continue; // Undefined or disabled
 
-            // log::add('Abeille', 'debug', 'deamon(): ***** creation de ruche '.$i.' (Abeille): '.basename($config['AbeilleSerialPort'.$i]));
-            Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$i);
+            // Create beehive equipment on Jeedom side
+            Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$zgId);
 
-            // log::add('Abeille', 'debug', 'deamon(): ***** Demarrage du réseau Zigbee '.$i.' ********');
-            // Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/startNetwork", "StartNetwork");
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/zgStartNetwork", "");
-            // log::add('Abeille', 'debug', 'deamon(): ***** Set Time réseau Zigbee '.$i.' ********');
-            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setZgTimeServer", "");
-            /* Get network state to get Zigate IEEE asap and confirm no port change */
-            // Tcharp38: moved to parser.
-            // Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/getNetworkStatus", "getNetworkStatus");
+            // Configuring zigate: TODO: This should be done on Abeille startup or on new beehive creation.
+            // Note: asking for 'hybrid' mode but supported only since FW 3.1D
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgMode", "mode=hybrid");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$zgId."/0000/zgStartNetwork", "");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgTimeServer", "");
+            Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$zgId."/0000/getZgVersion", "");
 
-            // Set the mode of the zigate, important from 3.1D.
-            $version = "";
-            $ruche = Abeille::byLogicalId('Abeille'.$i.'/0000', 'Abeille');
-            if ($ruche) {
-                $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($ruche->getId(), 'SW-SDK');
-                if ($cmdlogic) {
-                    $version = $cmdlogic->execCmd();
-                }
-            }
-            if (hexdec($version) >= 0x031D) {
-                log::add('Abeille', 'debug', 'deamon(): FW version >= 3.1D => Configuring zigate '.$i.' in hybrid mode');
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setZgMode", "mode=hybrid");
-            } else {
-                log::add('Abeille', 'debug', 'deamon(): Configuring zigate '.$i.' in normal mode');
-                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$i."/0000/setZgMode", "mode=normal");
-            }
+            // Set Zigate in 'hybrid' mode, (possible only since 3.1D).
+            // Note: Need to get current FW version first.
+            // $version = "0000";
+            // $ruche = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+            // if ($ruche) {
+            //     $cmdlogic = AbeilleCmd::byEqLogicIdAndLogicalId($ruche->getId(), 'SW-SDK');
+            //     if ($cmdlogic)
+            //         $version = $cmdlogic->execCmd();
+            //     else
+            //         log::add('Abeille', 'debug', "deamon(): ERROR: Missing 'SW-SDK' cmd for 'Ruche".$zgId."'");
+            // } else
+            //     log::add('Abeille', 'debug', "deamon(): ERROR: Missing 'Ruche".$zgId."'");
+            // if (hexdec($version) >= 0x031D) {
+            //     log::add('Abeille', 'debug', 'deamon(): FW version >= 3.1D => Configuring zigate '.$zgId.' in hybrid mode');
+            //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgMode", "mode=hybrid");
+            // } else {
+            //     log::add('Abeille', 'debug', 'deamon(): Configuring zigate '.$zgId.' in normal mode');
+            //     Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgMode", "mode=normal");
+            // }
         }
 
         // Essaye de recuperer les etats des equipements
@@ -2644,11 +2645,12 @@ while ($cron->running()) {
         $dest = $message->payload;
         $eqLogic = self::byLogicalId($dest."/0000", 'Abeille');
         if (is_object($eqLogic)) {
+            // TODO: If already exist, should we update commands if required ?
             log::add('Abeille', 'debug', 'message: createRuche: objet: '.$eqLogic->getLogicalId().' existe deja');
             return;
         }
         // Creation de la ruche
-        log::add('Abeille', 'info', 'objet ruche : creation par model de '.$dest."/0000");
+        log::add('Abeille', 'info', 'Ruche: Création de '.$dest."/0000");
 
         /*
             $cmdId = end($topicArray);
@@ -2720,12 +2722,7 @@ while ($cron->running()) {
         //Create ruche object and commands
         foreach ($rucheCommandList as $cmd => $cmdValueDefaut) {
             $nomObjet = "Ruche";
-            log::add(
-                'Abeille',
-                'info',
-                // 'Creation de la command: '.$nodeid.'/'.$cmd.' suivant model de l objet: '.$nomObjet
-                'Creation de la command: '.$cmd.' suivant model de l objet: '.$nomObjet
-            );
+            log::add('Abeille', 'debug', "Adding cmd '".$cmd."'");
             $cmdlogic = new AbeilleCmd();
             // id
             $cmdlogic->setEqLogic_id($eqLogic->getId());

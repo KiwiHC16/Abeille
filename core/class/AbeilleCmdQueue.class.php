@@ -71,11 +71,15 @@
                 $this->zigateEnabled[$zgId] = 0;
                 if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
                     continue; // This Zigate is not enabled
-                $zigate = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
-                if (!is_object($zigate))
-                    continue; // Probably deleted on Jeedom side.
-                if (!$zigate->getIsEnable())
-                    continue; // Zigate disabled
+                /* Tcharp38: This leads to problems when creating new beehive.
+                   Currently daemons should be restarted AFTER beehive created in Jeedom.
+                   Since not the case, AbeilleCmd consider new beehive disabled.
+                 */
+                // $zigate = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+                // if (!is_object($zigate))
+                //     continue; // Probably deleted on Jeedom side.
+                // if (!$zigate->getIsEnable())
+                //     continue; // Zigate disabled
 
                 $this->zigateEnabled[$zgId] = 1;
                 $this->zigateAvailable[$zgId] = 1;
@@ -365,14 +369,23 @@
             }
             $this->deamonlog("debug", "Queues status : ".$txt);
 
-            $txt = '';
+            $txtEn = '';
+            $txtAvail = '';
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                if ($txt != "")
-                    $txt .= ", ";
-                $status = $this->zigateEnabled[$zgId] ? "ON" : "off";
-                $txt .= "zg".$zgId."=".$status;
+                if ($txtEn != "") {
+                    $txtEn .= ", ";
+                    $txtAvail .= ", ";
+                }
+                $enabled = $this->zigateEnabled[$zgId] ? "on" : "OFF";
+                $txtEn .= "zg".$zgId."=".$enabled;
+                if ($this->zigateEnabled[$zgId])
+                    $available = $this->zigateAvailable[$zgId] ? "yes" : "NO";
+                else
+                    $available = "NO";
+                $txtAvail .= "zg".$zgId."=".$available;
             }
-            $this->deamonlog("debug", "Zigates status: ".$txt);
+            $this->deamonlog("debug", "Zigates status: ".$txtEn);
+            $this->deamonlog("debug", "Zigates avail : ".$txtAvail);
         }
 
         function processZigateCmdQueues() {

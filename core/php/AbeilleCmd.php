@@ -73,10 +73,13 @@
     try {
         $AbeilleCmdQueue = new AbeilleCmdQueue($argv[1]);
 
+        // Display useful infos before starting
+        $AbeilleCmdQueue->displayStatus();
+        $last = time();
+
         // $fromAssistQueue = msg_get_queue(queueKeyAssistToCmd);
         // $rerouteNet = ""; // Rerouted network if defined (ex: 'Abeille1')
 
-        $last = 0;
         while (true) {
             // Treat Zigate statuses (0x8000 cmd) coming from parser
             $AbeilleCmdQueue->processZigateAcks();

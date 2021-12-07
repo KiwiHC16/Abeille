@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Amélioration création ruche vs démarrage. Mode forcé en 'hybride' qq soit FW.
+
 211207-BETA-1
 -------------
 

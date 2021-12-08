@@ -24,7 +24,12 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include0008-2": "setReportLevel",
+            "SetReporting-0008-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
             "include0008-8": "setLevelVoletDown",
             "include0008-7": "setLevelVoletUp",
             "include0008-6": "levelVoletStop",

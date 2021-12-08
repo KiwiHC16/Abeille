@@ -12,6 +12,7 @@
     $logMaxLines = 2000; // Default max number of lines before Jeedom one is taken
     $logNbOfLines = 0; // Current number of lines
     $hideLevel = FALSE; // Display log level if FALSE (configured thru logSetConf())
+    $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
 
     /* Get Abeille current log level as a number:
        0=none, 1=error/default, 2=warning, 3=info, 4=debug */
@@ -133,7 +134,7 @@
                 $lFileTmp = $tmpDir."/".$tmpLogFile;
                 rename($lFile, $lFileTmp);
 
-                file_put_contents($lFile, $prefix."Max atteint (".$GLOBALS["logMaxLines"]." lignes) Log précédent sauvé sous '".$tmpDir."/".$tmpLogFile."'\n", FILE_APPEND);
+                file_put_contents($lFile, $prefix."Max reached (".$GLOBALS["logMaxLines"]." lignes) Previous log saved as '".$tmpDir."/".$tmpLogFile."'\n", FILE_APPEND);
                 $GLOBALS["logNbOfLines"] = 1;
             }
         }
@@ -143,9 +144,10 @@
        Output message to "AbeilleDebug.log" */
     function logDebug($msg = "")
     {
-        $logDir = __DIR__.'/../../../../log/';
+        global $tmpDir;
+        // $logDir = __DIR__.'/../../../../log/';
         $logFile = "AbeilleDebug.log";
-        file_put_contents($logDir.$logFile, '['.date('Y-m-d H:i:s').'] '.$msg."\n", FILE_APPEND);
+        file_put_contents($tmpDir.'/'.$logFile, '['.date('Y-m-d H:i:s').'] '.$msg."\n", FILE_APPEND);
     }
 
     /* Return proper prefix to use with scripts outputs */

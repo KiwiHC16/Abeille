@@ -175,6 +175,9 @@
             }
             mkdir($logsDir);
 
+            // Create up-to-date key infos log
+            exec('php '.__DIR__.'/../php/AbeilleSupportKeyInfos.php');
+
             /* Copie all logs to 'AbeilleLogs' & remove previous compressed file. */
             $jlogsDir = __DIR__."/../../../../log"; // Jeedom logs dir
             $cmd = "cd ".$jlogsDir."; sudo cp Abeille* ".$logsDir;

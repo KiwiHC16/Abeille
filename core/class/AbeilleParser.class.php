@@ -563,11 +563,11 @@
 
                     // jbromain: we check if EP '01' exists BUT is not the first EP
                     // If so, we will request model and/or manufacturer from both EPs (the first one AND 01)
-                    // Use case: Sonoff smart plug s26R2ZB (several EPs but the first one is not the main and does not implement model nor manufacturer)
+                    // Use case: Sonoff smart plug S26R2ZB (several EPs but the first one does not support model nor manufacturer)
                     // TODO We should maybe query ALL end points ? For now I try to limit requests
                     $epArr = explode('/', $eq['epList']);
                     if ($eq['epFirst'] != '01' && in_array('01', $epArr)) {
-                        parserLog('debug', '  Requesting '.$missingTxt.' from EP 01 too (not the first but exits)');
+                        parserLog('debug', '  Requesting '.$missingTxt.' from EP 01 too (not the first but exists)');
                         $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=01&clustId=0000&attrId=".$missing);
                     }
                 }

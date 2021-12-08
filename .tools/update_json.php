@@ -187,14 +187,14 @@
                     $commands2["Bind-0500-ToZigate"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "BindShortToZigateBatterie") && $oldSyntax) {
+                } else if (($cmdFName == "setReportLevel") && $oldSyntax) {
                     $cmdArr = Array(
-                        "use"=> "zbBindToZigate",
-                        "params" => "clustId=0001",
+                        "use"=> "zbConfigureReporting",
+                        "params" => "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                         "execAtCreation" => "Yes",
-                        "execAtCreationDelay" => 9
+                        "execAtCreationDelay" => 11
                     );
-                    $commands2["Bind-0001-ToZigate"] = $cmdArr;
+                    $commands2["SetReporting-0008-0000"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 } else if (($cmdFName == "levelLight") && $oldSyntax) {

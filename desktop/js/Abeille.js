@@ -109,15 +109,17 @@ function getSelectedEqs(zgId) {
     selected["zgId"] = zgId; // Zigate number
     selected["nb"] = 0; // Number of selected equipments
     selected["ids"] = new Array; // Array of eq IDs
+    selected["addrs"] = new Array; // Array of eq short addresses
     eval('var eqZigate = JSON.parse(js_eqZigate'+zgId+');'); // List of eq IDs for current zigate
     for (var i = 0; i < eqZigate.length; i++) {
-        var eqId = eqZigate[i];
-        var checked = document.getElementById("idBeeChecked"+zgId+"-"+eqId).checked;
+        var eq = eqZigate[i]; // eq.id, eq.addr
+        var checked = document.getElementById("idBeeChecked"+zgId+"-"+eq.id).checked;
         if (checked == false)
             continue;
 
         selected["nb"]++;
-        selected["ids"].push(eqId);
+        selected["ids"].push(eq.id);
+        selected["addrs"].push(eq.addr);
     }
     console.log('selected["nb"]='+selected["nb"]);
     return selected;
@@ -134,22 +136,26 @@ function removeBeesJeedom(zgId) {
         alert("Aucun équipement sélectionné !")
         return;
     }
-    var eqList = sel["ids"];
-    console.log("eqList="+eqList);
+    var eqIdList = sel["ids"];
+    console.log("eqIdList="+eqIdList);
 
     var msg = "{{Vous êtes sur le point de supprimer les équipements selectionnés de Jeedom.";
-    msg += "<br><br>Si ils sont toujours dans le réseau, ils deviendront 'fantomes' et devraient être réinclus automatiquement tant qu'on ne les force pas à quitter le réseau.";
+    msg += "<br><br>Si ils sont toujours dans le réseau, ils deviendront 'fantomes' et devraient être réinclus automatiquement au fur et à mesure de leur reveil et ce, tant qu'on ne les force pas à quitter le réseau.";
     msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
     bootbox.confirm(msg, function (result) {
         if (result == false)
             return
+
+        // Collecting addresses before EQ is removed
+        var eqAddrList = sel["addrs"];
+        console.log("eqAddrList="+eqAddrList);
 
         $.ajax({
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
                 action: 'removeEqJeedom',
-                eqList: eqList
+                eqList: eqIdList
             },
             dataType: 'json',
             global: false,
@@ -164,9 +170,9 @@ function removeBeesJeedom(zgId) {
                     alert(msg);
                 } else {
                     // Informing parser that some equipements have to be considered "phantom"
-                    // var xhr = new XMLHttpRequest();
-                    // xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueCtrlToParser+"&msg=type:eqRemoved_eqList:"+eqList, true);
-                    // xhr.send();
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueCtrlToParser+"&msg=type:eqRemoved_net:Abeille"+zgId+"_eqList:"+eqAddrList, true);
+                    xhr.send();
                 }
             }
         });

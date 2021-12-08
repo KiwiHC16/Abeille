@@ -317,7 +317,22 @@
                     otaReadFirmwares(); // Reread available firmwares
                 } if ($msg['type'] == 'eqRemoved') {
                     // Some equipments removed from Jeedom => phantoms if still in network
-                    $eqList = $msg['eqList']; // Eq addr separated by ','
+                    // $msg['net'] = Abeille network (AbeilleX)
+                    // $msg['eqList'] = Eq addr separated by ','
+                    $net = $msg['net'];
+                    $arr = explode(',', $msg['eqList']);
+                    foreach ($arr as $idx => $addr) {
+                        if (!isset($GLOBALS['eqList'][$net])) {
+                            logMessage('debug', "  ERROR: Unknown network ".$net);
+                            continue;
+                        }
+                        if (!isset($GLOBALS['eqList'][$net][$addr])) {
+                            logMessage('debug', "  ERROR: Unknown device ".$net."/".$addr);
+                            continue;
+                        }
+                        unset($GLOBALS['eqList'][$net][$addr]);
+                        logMessage('debug', "  Device ".$net."/".$addr." marked as phantom");
+                    }
                 }
             } else if ($errorCode != 42) { // 42 = No message
                 logMessage('debug', '  msg_receive(queueCtrlToParser) ERROR '.$errorCode);

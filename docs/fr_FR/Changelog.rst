@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211208-BETA-1
+-------------
+
 - Interne: AbeilleDebug.log déplacé dans répertoire temporaire Jeedom.
 - Support: Generation infos clefs pour support à la création du package.
 - Identification équipement: Interrogation EP01 en plus du premier.

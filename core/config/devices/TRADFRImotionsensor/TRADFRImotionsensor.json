@@ -41,7 +41,12 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include11": "setReportBatterie",
+            "SetReporting-0001-0021": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 7
+            },
             "Bind-01-0006-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "ep=01&clustId=0006",

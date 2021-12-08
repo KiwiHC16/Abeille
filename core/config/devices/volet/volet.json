@@ -33,7 +33,12 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include0008-2": "setReportLevel",
+            "SetReporting-0008-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
             "Get-CurrentLevel": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"

@@ -37,7 +37,12 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include4 2 2 2 2 2 2 2": "setReportBatterie",
+            "SetReporting-0001-0021": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 7
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

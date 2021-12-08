@@ -47,7 +47,12 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 10
             },
-            "include2 2 2 2 2 2": "setReportHumidity"
+            "SetReporting-0405-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0405&attrType=20&attrId=0000&minInterval=0000&maxInterval=0DAC&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 12
+            }
         }
     }
 }

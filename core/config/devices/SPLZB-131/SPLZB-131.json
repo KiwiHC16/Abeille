@@ -2,6 +2,8 @@
     "SPLZB-131": {
         "manufacturer": "Frient",
         "model": "SPLZB-131",
+        "type": "Frient Smart Plug Mini Type F",
+        "comment": "RMSVoltage reporting if change >= 2V",
         "timeout": "60",
         "configuration": {
             "mainEP": "02",
@@ -10,7 +12,6 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Frient Smart Plug Mini Type F",
         "commands": {
             "Groups": { "use": "Group-Membership" },
 
@@ -42,7 +43,7 @@
             },
             "SetReporting-0B04-RMSVoltage": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0B04&attrType=21&attrId=0505&minInterval=0000&maxInterval=0000&changeVal=",
+                "params": "clustId=0B04&attrType=21&attrId=0505&minInterval=0000&maxInterval=0000&changeVal=00C8",
                 "execAtCreation": "yes"
             },
             "SetReporting-0B04-RMSCurrent": {

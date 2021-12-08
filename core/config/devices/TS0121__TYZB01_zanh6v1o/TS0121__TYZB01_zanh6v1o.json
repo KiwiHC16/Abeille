@@ -31,7 +31,12 @@
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
-            "include28": "setReportEtat",
+            "SetReporting-0006-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
             "include3 2 2 2 2 2": "PuissanceVoltagePrise",
             "include3 2 2 2 2": "PuissanceCurrentPrise",
             "include3 2 2 2": "PuissanceLegrandPrise",

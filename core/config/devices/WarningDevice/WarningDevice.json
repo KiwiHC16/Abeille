@@ -18,7 +18,12 @@
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
-            "include28": "setReportEtat",
+            "SetReporting-0006-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
             "include28 2": "writeAttributeRequestIAS_WD_Flash",
             "include28 2 2": "writeAttributeRequestIAS_WD_Sound",
             "include28 2 2 2": "writeAttributeRequestIAS_WD_FlashSound",

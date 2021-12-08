@@ -69,8 +69,18 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include28": "setReportEtat",
-            "include29": "setReportLevel",
+            "SetReporting-0006-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
+            "SetReporting-0008-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
             "Toggle": {
                 "use": "zbCmd-0006-Toggle",
                 "nextLine": "after"

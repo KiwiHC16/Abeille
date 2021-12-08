@@ -36,7 +36,12 @@
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
-            "include0006-6": "setReportEtat",
+            "SetReporting-0006-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
             "Total power": {
                 "use": "zb-0702-CurrentSummationDelivered",
                 "params": "unit=KWh&div=1000",

@@ -38,7 +38,12 @@
             },
             "include7": "Up-Down",
             "include7 1": "Click-Middle",
-            "include12": "setReportEtat",
+            "SetReporting-0006-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
             "Bind-0006-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0006",

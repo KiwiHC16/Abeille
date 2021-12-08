@@ -32,7 +32,12 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include28": "setReportEtat",
+            "SetReporting-0006-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
             "include11 2": "setLevel",
             "CurrentLevel-0008": {
                 "use": "zb-0008-CurrentLevel",
@@ -42,7 +47,12 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
-            "include29": "setReportLevel",
+            "SetReporting-0008-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
             "CurrentX": {
                 "use": "zb-0300-CurrentX",
                 "isVisible": 1

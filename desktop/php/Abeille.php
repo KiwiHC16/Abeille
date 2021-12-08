@@ -33,8 +33,35 @@
         exit();
     }
 
-    /* The following part is executed only if no equipment selected (no id) */
-    include '005_AbeilleFunctionPart.php';
+    /*
+     * The following part is executed only if no equipment selected (no id)
+     */
+
+    /* Display beehive or bee card */
+    function displayBeeCard($eqLogic, $files, $zgId) {
+        // find opacity
+        $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+
+        // Find icone
+        $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
+        if (in_array($test, $files, 0)) {
+            $path = 'node_' . $eqLogic->getConfiguration('icone');
+        } else {
+            $path = 'Abeille_icon';
+        }
+
+        // Affichage
+        $id = $eqLogic->getId();
+        echo '<div>';
+        echo    '<input id="idBeeChecked'.$zgId.'-'.$id.'" type="checkbox" name="eqSelected-'.$id.'" />';
+        echo 	'<br/>';
+        echo 	'<div class="eqLogicDisplayCard cursor'.$opacity.'" style="width: 130px" data-eqLogic_id="' .$id .'">';
+        echo 		'<img src="plugins/Abeille/images/' . $path . '.png"/>';
+        echo 		'<br/>';
+        echo 		'<span class="name">'. $eqLogic->getHumanName(true, true) .'</span>';
+        echo 	'</div>';
+        echo '</div>';
+    }
 
     sendVarToJS('eqType', 'Abeille');
     $abQueues = $GLOBALS['abQueues'];
@@ -43,25 +70,26 @@
     $eqLogics = eqLogic::byType('Abeille');
     /* Creating a per Zigate list of eq ids.
        For each zigate, the first eq is the zigate.
-       $eqPerZigate[zgNb][0] => id for zigate
-       $eqPerZigate[zgNb][1] => id for next eq... */
-    $eqPerZigate = array(); // All equipements id per zigate
+       $eqPerZigate[zgId][0] => id for zigate
+       $eqPerZigate[zgId][1] => id for next eq... */
+    $eqPerZigate = array(); // All equipements id/addr per zigate
     foreach ($eqLogics as $eqLogic) {
         $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/0000'
         list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
-        $zgNb = hexdec(substr($eqNet, 7)); // Extracting zigate number from network
-        $eqId = $eqLogic->getId();
+        $zgId = hexdec(substr($eqNet, 7)); // Extracting zigate number from network
+        $eq = [];
+        $eq['id'] = $eqLogic->getId();
+        $eq['addr'] = $eqAddr;
         if ($eqAddr == "0000") {
-            if (isset($eqPerZigate[$zgNb]))
-                array_unshift($eqPerZigate[$zgNb], $eqId);
+            if (isset($eqPerZigate[$zgId]))
+                array_unshift($eqPerZigate[$zgId], $eq);
             else
-                $eqPerZigate[$zgNb][] = $eqId;
+                $eqPerZigate[$zgId][] = $eq;
         } else
-            $eqPerZigate[$zgNb][] = $eqId;
+            $eqPerZigate[$zgId][] = $eq;
     }
-    // if (isset($dbgConfig))
-    //     logDebug("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
-    $parametersAbeille = AbeilleTools::getParameters();
+    // logDebug("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
+    // $parametersAbeille = AbeilleTools::getParameters();
 
     $outils = array(
         'health'    => array( 'bouton'=>'bt_healthAbeille',         'icon'=>'fa-medkit',        'text'=>'{{Santé}}' ),
@@ -105,11 +133,10 @@
         <legend><i class="fa fa-cogs"></i> {{Visible en MODE DEV UNIQUEMENT}}</legend>
         <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
 
-            <!-- Gestion des groupes et des scenes  -->
             <?php include '025_AbeilleNEPart.php'; ?>
 
-            <!-- Gestion des groupes et des scenes  -->
-            <?php include '040_AbeilleScenePart.php'; ?>
+            <!-- Gestion des scenes  -->
+            <?php include 'Abeille-Scenes.php'; ?>
 
         </div>
         <?php } ?>
@@ -120,4 +147,4 @@
 </div>
 
 <!-- Scripts -->
-<?php include '200_AbeilleScript.php'; ?>
+<?php include 'Abeille-Js.php'; ?>

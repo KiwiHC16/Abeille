@@ -12,7 +12,7 @@
     $logMaxLines = 2000; // Default max number of lines before Jeedom one is taken
     $logNbOfLines = 0; // Current number of lines
     $hideLevel = FALSE; // Display log level if FALSE (configured thru logSetConf())
-    $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
+    $GLOBALS['tmpDir'] = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
 
     /* Get Abeille current log level as a number:
        0=none, 1=error/default, 2=warning, 3=info, 4=debug */

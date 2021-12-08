@@ -41,6 +41,8 @@
     echo '<script>var js_zgId = '.$zgId.';</script>'; // PHP to JS
     echo '<script>var js_queueKeyXmlToCmd = '.queueKeyXmlToCmd.';</script>'; // PHP to JS
     echo '<script>var js_batteryType = "'.$batteryType.'";</script>'; // PHP to JS
+    $abQueues = $GLOBALS['abQueues'];
+    echo '<script>var js_queueCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
 ?>
 
 <!-- For all modals on 'Abeille' page. -->
@@ -190,11 +192,12 @@
         console.log("eqLogicAction[data-action=remove], eqId="+js_eqId);
         eqType = "Abeille";
         // if ($('.eqLogicAttr[data-l1key=id]').value() != undefined) {
-            msg = '{{Vous êtes sur le point de supprimer l\'équipement}} <b>'+$('.eqLogicAttr[data-l1key=name]').value()+'</b> de Jeedom';
-            msg += '{{<br>Si il est toujours dans le réseau Zigbee il le restera et pourrait toujours renvoyer des messages.}}'
-            msg += '{{<br><br>Etes vous sur de vouloir continuer ?}}'
+            var msg = "{{Vous êtes sur le point de supprimer <b>"+$('.eqLogicAttr[data-l1key=name]').value()+"</b> de Jeedom.";
+            msg += "<br><br>Si il est toujours dans le réseau, il deviendra 'fantome' et devrait être réinclu automatiquement au fur et à mesure de son reveil et ce, tant qu'on ne le force pas à quitter le réseau.";
+            msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
             bootbox.confirm(msg, function (result) {
                 if (result) {
+                    eqAddr =
                     jeedom.eqLogic.remove({
                         type: "Abeille", // isset($(this).attr('data-eqLogic_type')) ? $(this).attr('data-eqLogic_type') : eqType,
                         id: js_eqId, // $('.eqLogicAttr[data-l1key=id]').value(),
@@ -213,6 +216,11 @@
                             modifyWithoutSave = false;
                             // url += 'removeSuccessFull=1';
                             loadPage(url);
+
+                            // Informing parser that some equipements have to be considered "phantom"
+                            var xhr = new XMLHttpRequest();
+                            xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueCtrlToParser+"&msg=type:eqRemoved_net:Abeille"+js_zgId+"_eqList:"+js_eqAddr, true);
+                            xhr.send();
                         }
                     });
                 }

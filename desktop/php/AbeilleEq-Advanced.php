@@ -348,9 +348,9 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Mode</label>
                     <div class="col-sm-5">
-                        <a class="btn btn-warning" onclick="sendZigate(\'setMode\', \'Normal\')">Normal</a>
-                        <a class="btn btn-warning" onclick="sendZigate(\'setMode\', \'Raw\')">Raw</a>
-                        <a class="btn btn-warning" onclick="sendZigate(\'setMode\', \'Hybride\')">Hybride</a>
+                        <a class="btn btn-warning" onclick="sendZigate('setMode', 'Normal')">Normal</a>
+                        <a class="btn btn-warning" onclick="sendZigate('setMode', 'Hybride')">Hybride</a>
+                        <a class="btn btn-warning" onclick="sendZigate('setMode', 'Raw')">Raw</a>
                     </div>
                 </div>
             <?php } ?>

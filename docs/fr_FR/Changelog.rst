@@ -1,6 +1,19 @@
 ChangeLog
 =========
 
+- Ruche: page équipement/avancé: Correction regression bouton 'setMode'.
+- SPLZB-131: RMSVoltage, reporting si variation >= 2V (#2109).
+- Xiaomi Aqara SSM-U01: Ajout support 'ActivePower' (#2234).
+- JSON équipements: Nettoyage commandes obsolètes
+
+  - 'setReportBatterie' => 'zbConfigureReporting' + 'clustId=0001&attrType=20&attrId=0021'
+  - 'setReportBatterieVolt' => 'zbConfigureReporting' + 'clustId=0001&attrType=20&attrId=0020'
+  - 'setReportEtat' => 'zbConfigureReporting' + 'clustId=0006&attrType=10&attrId=0000'
+  - 'setReportLevel' => 'zbConfigureReporting' + 'clustId=0008&attrType=10&attrId=0000'
+  - 'setReportCurrent_Position_Lift_Percentage' => 'zbConfigureReporting' + 'clustId=0102&attrType=10&attrId=0008'
+  - 'setReportHumidity' => 'zbConfigureReporting' + 'clustId=0405&attrType=20&attrId=0000'
+- Récupération équipements fantomes (toujours sur le réseau mais plus dans Jeedom): Améliorations.
+
 211208-BETA-1
 -------------
 

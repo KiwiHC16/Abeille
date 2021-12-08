@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+- Interne: AbeilleDebug.log déplacé dans répertoire temporaire Jeedom.
+- Support: Generation infos clefs pour support à la création du package.
+- Identification équipement: Interrogation EP01 en plus du premier.
+- Sonoff S26R2ZB: Ajout support (#2221).
+
 211207-BETA-3
 -------------
 
@@ -11,7 +16,9 @@ ChangeLog
     - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
     - Les firmwares avant 3.1e sont forcement 'legacy'.
     - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
 - Acova Alcantara: Version temporaire 'Set-OccupiedHeatingPoint' (#2180).
+- Tuya/Sixwgh TS011F__TZ3000_cphmq0q7: Cluster 0B04 migré en polling (#2211).
 
 211207-BETA-2
 -------------

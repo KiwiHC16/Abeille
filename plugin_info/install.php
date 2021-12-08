@@ -198,6 +198,7 @@
            - Eq config: 'modeleJson' => 'ab::jsonId'
            - Removing 'zigateNb' (obsolete) from config DB.
            - Updating WIFI serial port (/dev/zigateX => constant wifiLink)
+           - AbeilleDebug.log moved to /tmp/jeedom
          */
         if (intval($dbVersion) < 20201122) {
             if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
@@ -292,7 +293,7 @@
             config::remove('zigateNb', 'Abeille');
 
             // Remove obsolete log files
-            $obsolete = ['AbeilleCmd', 'AbeilleMQTTCmd', 'AbeilleMQTTCmdTimer', 'AbeilleSocat', 'AbeilleSerialRead', 'AbeilleParser'];
+            $obsolete = ['AbeilleCmd', 'AbeilleMQTTCmd', 'AbeilleMQTTCmdTimer', 'AbeilleSocat', 'AbeilleSerialRead', 'AbeilleParser', 'AbeilleDebug.log'];
             for ($z = 1; $z <= 10; $z++) {
                 $obsolete[] = 'AbeilleSocat'.$z;
                 $obsolete[] = 'AbeilleSerialRead'.$z;

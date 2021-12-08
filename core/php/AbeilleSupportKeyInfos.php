@@ -241,7 +241,7 @@
 
     zigateDetails($logFile);
 
-    getFileFilterAndPrint($logFile, __DIR__.'/../../../../log/AbeilleParser.log', "4/ AbeilleParser / Modelisation", "Modelisation", 1, 1);
+    // getFileFilterAndPrint($logFile, __DIR__.'/../../../../log/AbeilleParser.log', "4/ AbeilleParser / Modelisation", "Modelisation", 1, 1);
 
     dataInDdDetails($logFile, $CONFIG);
 ?>

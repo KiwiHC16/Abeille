@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211208-BETA-2
+-------------
+
 - Ruche: page équipement/avancé: Correction regression bouton 'setMode'.
 - SPLZB-131: RMSVoltage, reporting si variation >= 2V (#2109).
 - Xiaomi Aqara SSM-U01: Ajout support 'ActivePower' (#2234).

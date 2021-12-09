@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- Interne: Création/mise-à-jour ruche revue.
+- Interne: Suppression mode 'hybride' forcé.
+- Message si FW plus vieux que 3.1D (nécessaire pour certains équipements).
+
 211208-BETA-2
 -------------
 

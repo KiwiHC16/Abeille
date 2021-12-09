@@ -1306,7 +1306,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             /* To be sure there is no port changes, checking received IEEE vs stored one.
                'AbeilleIEEE_Ok' is set to 0 on daemon start when interrogation is not done yet.
                Should be updated by 8009 or 8024 responses */
-            $commandAcceptedUntilZigateIdentified = array("0208", "0300", "8000", "8009", "8024");
+            $commandAcceptedUntilZigateIdentified = array("0208", "0300", "8000", "8009", "8010", "8024");
             $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
             $confIeeeOkVal = config::byKey($confIeeeOk, 'Abeille', '0');
             if ($confIeeeOkVal == -1) {

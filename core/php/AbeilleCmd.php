@@ -84,10 +84,11 @@
             // Treat Zigate statuses (0x8000 cmd) coming from parser
             $AbeilleCmdQueue->processZigateAcks();
 
-            $AbeilleCmdQueue->timeOutSurLesAck();
-
             // Treat pending commands for zigate
             $AbeilleCmdQueue->processZigateCmdQueues();
+
+            // Check zigate ACK
+            $AbeilleCmdQueue->zigateAckCheck();
 
             /* Performing msg rerouting from 'EQ assistant' */
             // $max_msg_size = 2048;

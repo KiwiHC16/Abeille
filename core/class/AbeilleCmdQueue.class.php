@@ -367,7 +367,7 @@
                     $txt .= ", cmdQueue[".$zgId."]=".count( $this->cmdQueue[$zgId] );
                 }
             }
-            $this->deamonlog("debug", "Queues status : ".$txt);
+            $this->deamonlog("debug", "Queues status: ".$txt);
 
             $txtEn = '';
             $txtAvail = '';
@@ -384,8 +384,8 @@
                     $available = "NO";
                 $txtAvail .= "zg".$zgId."=".$available;
             }
-            $this->deamonlog("debug", "Zigates status: ".$txtEn);
-            $this->deamonlog("debug", "Zigates avail : ".$txtAvail);
+            $this->deamonlog("debug", "   Zg enabled: ".$txtEn);
+            $this->deamonlog("debug", "     Zg avail: ".$txtAvail);
         }
 
         function processZigateCmdQueues() {
@@ -514,7 +514,7 @@
             $this->deamonlog("debug", "  ".count($this->cmdQueue[$zgId])." remaining pending commands", $this->debug['processZigateAcks']);
         }
 
-        function timeOutSurLesAck() {
+        function zigateAckCheck() {
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
                 if ($this->zigateEnabled[$zgId] == 0)
                     continue; // This zigate is disabled/unconfigured
@@ -524,10 +524,11 @@
                     continue; // Zigate already available
                 if ($this->timeLastAck[$zgId] == 0)
                     continue;
+
                 $now = time();
-                $delta = $now-$this->timeLastAck[$zgId];
+                $delta = $now - $this->timeLastAck[$zgId];
                 if ($delta > $this->timeLastAckTimeOut[$zgId]) {
-                    $this->deamonlog("debug", "ackCheck(): Je n'ai pas de Ack (Status) depuis ".$delta." secondes avec now = ".$now." et timeLastAck = ".$this->timeLastAck[$zgId] . " donc je considère la zigate dispo.....", $this->debug['sendCmdAck']);
+                    $this->deamonlog("debug", "zigateAckCheck(): WARNING: NO Zigate".$zgId." ACK since ".$delta." sec. Considering zigate available.");
                     $this->zigateAvailable[$zgId] = 1;
                     $this->timeLastAck[$zgId] = 0;
                 }

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211210-BETA-1
+-------------
+
 - Réseau Abeille/routes: Correction erreur si équipement sans parent.
 - Support: Mise-à-jour infos clefs.
 - JSON équipements

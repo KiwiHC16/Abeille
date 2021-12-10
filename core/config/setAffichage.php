@@ -1,13 +1,13 @@
 <?php
     $debug = 0;
-    
+
     if ( strlen($argv[1]) == 0 ) {
         echo "usage: php setAffichage.php file.json\n";
         echo "set one info in the configuration of each command:\n";
         echo ' - "visibilityCategory":"Network"'."\n";
         echo ' - "visibilityCategory":"toogleAffichageTime"'."\n";
         echo ' - "visibilityCategory":"toogleAffichageAdditionalCommand"'."\n";
-        
+
         echo 'Pour faire tous les fichier: find . -name "[!.]*.json" -print -exec bash -c "eval php setAffichage.php {} > {}.new" \;'."\n";
         echo 'Pour remplacer les anciens par les nouveaux:find . -name "[!.]*.json" -print -exec mv {}.new {} \;'."\n";
         exit;
@@ -16,9 +16,9 @@
     // $NE="LWB010";
     // $NE="LWB006";
     $file=$argv[1];
-    
+
     if ( $debug ) echo "File to process: ".$file."\n";
-    
+
 
 $commands = array(
                   "0000-0000"=>"Network", // ZCL Version
@@ -37,11 +37,11 @@ $commands = array(
                   "0000-0B-0005"=>"Network",    // Model Identifier
                   "0000-0B-4000"=>"Network",
                   "0000-4000"=>"Network",
-                  
+
                   "0000-ff01"=>"additionalCommand", // Proprio Xiaomi
-                  
+
                   "0001-0021"=>"Network", // Batterie % based on Ikea sniff
-                  
+
                   "0006-0000"=>"All",       // On/Off Cluster - OnOff
                   "0006-02-0000"=>"All",    // On/Off Cluster - OnOff
                   "0006-03-0000"=>"All",    // On/Off Cluster - OnOff
@@ -69,7 +69,7 @@ $commands = array(
                   "0405-0000"=>"All",       // Humidite
                   "0406-0000"=>"All",       // Presence
                   "0500-0000"=>"All",       // Smoke
-                  
+
                   "2200K"=>"All",
                   "2700K"=>"All",
                   "4000K"=>"All",
@@ -137,20 +137,20 @@ $commands = array(
                   "Var-RampUpDown"=>"All",
                   "Vert"=>"All",
     );
-    
-    
+
+
     // $string = file_get_contents("./".$NE."/".$NE.".json");
     $string = file_get_contents($file);
     $json = json_decode($string, true);
-    
+
     $fileExploded = explode("/",$file);
     // var_dump( $fileExploded );
     $NE = $fileExploded[1];
     // var_dump( $json[$NE]["Commandes"] );
-    
+
     foreach ( $json as $id=>$equipment ) {
         if ( $debug ) var_dump( $id );
-        foreach ( $equipment["Commandes"] as $key=>$command ) {
+        foreach ( $equipment["commands"] as $key=>$command ) {
             // var_dump($command["configuration"]);
             // var_dump($command["configuration"]["visibilityCategory"]);
             if ( isset( $command["configuration"] ) ) {
@@ -159,17 +159,17 @@ $commands = array(
                 }
                 else {
                     if ( $debug ) echo $key . "\n";
-                    $json[$id]["Commandes"][$key]["configuration"]["visibilityCategory"] = $commands[$key];
+                    $json[$id]["commands"][$key]["configuration"]["visibilityCategory"] = $commands[$key];
                 }
             }
             else {
                 if ( $debug ) echo $key . "\n";
-                $json[$id]["Commandes"][$key]["configuration"] = array( "visibilityCategory" => $commands[$key] );
+                $json[$id]["commands"][$key]["configuration"] = array( "visibilityCategory" => $commands[$key] );
                 // $json[$NE]["Commandes"][$key]["configuration"]["visibilityCategory"] = $commands[$key];
             }
         }
     }
-    
-     
+
+
     if ( $debug==0 )  echo json_encode($json);
 ?>

@@ -4,13 +4,17 @@
      * - Output is a log file (AbeilleKeyInfos.log) in Jeedom TMP dir
      */
 
-    /* Log function for debug purposes */
-    // function logToFile($msg = "")
-    // {
-    //     $logFile = "AbeilleDebug.log";
-    //     $logDir = __DIR__.'/../../../../log/';
-    //     file_put_contents($logDir.$logFile, '['.date('Y-m-d H:i:s').'] '.$msg."\n", FILE_APPEND);
-    // }
+    include_once __DIR__.'/../config/Abeille.config.php';
+
+    /* Developers options */
+    if (file_exists(dbgFile)) {
+        // $dbgConfig = json_decode(file_get_contents(dbgFile), true);
+
+        /* Dev mode: enabling PHP errors logging */
+        error_reporting(E_ALL);
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
+        ini_set('log_errors', 'On');
+    }
 
     require_once __DIR__.'/../../../../core/php/core.inc.php';
 
@@ -19,7 +23,7 @@
         throw new Exception('401 Unauthorized');
     }
     */
-    $eqLogics = Abeille::byType('Abeille');
+    // $eqLogics = Abeille::byType('Abeille');
     $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
     $logFile = $tmpDir.'/AbeilleKeyInfos.log';
 
@@ -34,8 +38,10 @@
      *
      * @return  none
      */
-    function echoAndLog($logFile, $msg, $append=1)
+    function logIt($msg, $append = 1)
     {
+        global $logFile;
+
         // echo $msg;
         if ($append == 1)
             file_put_contents($logFile, $msg, FILE_APPEND);
@@ -63,87 +69,14 @@
             $line .= '=';
 
         // echo $line."\n";
-        echoAndLog($logFile, $title."\n");
-        echoAndLog($logFile, $line."\n");
-    }
-
-    /**
-     * Print a file into the sreen(modal)/logFile with a title before
-     *
-     * @param   logFile     file where to store file
-     * @param   file        file used as input to have data
-     * @param   title       title to print before the file
-     * @param   printModal  Shall we print to the screen (modal)
-     * @param   logFile   Shall we print into the log
-     *
-     * @return  none
-     */
-    function getFileAndPrint($logFile,  $file, $title, $printModal, $printLog) {
-
-        $contents = file_get_contents($file);
-
-        if ( $printModal ) {
-            echoTitle($logFile, $title);
-            echoAndLog($logFile, $contents."\n");
-        }
-        // if ( $printLog ) {
-        //     log::add('AbeilleDbConf', 'info', '');
-        //     log::add('AbeilleDbConf', 'info', '-----------------------');
-        //     log::add('AbeilleDbConf', 'info', $title);
-        //     log::add('AbeilleDbConf', 'info', '-----------------------');
-        //     log::add('AbeilleDbConf', 'info', $contents);
-        //     log::add('AbeilleDbConf', 'info', '');
-        // }
-    }
-
-    /**
-     * Filter and print a file into the sreen(modal)/logFile with a title before
-     *
-     * @param   logFile     file where to store file
-     * @param   file        file used as input to have data
-     * @param   title       title to print before the file
-     * @param   filter      Text which need to be in the line
-     * @param   printModal  Shall we print to the screen (modal)
-     * @param   logFile     Shall we print into the log
-     *
-     * @return  none
-     */
-    function getFileFilterAndPrint($logFile,  $file, $title, $filter, $printModal, $printLog) {
-
-        if ( $printModal ) {
-            echoTitle($logFile, $title);
-            if ($file = fopen($file, "r")) {
-                while(!feof($file)) {
-                    $textperline = fgets($file);
-                    if (strpos($textperline,'Modelisation'))
-                        echoAndLog($logFile, $textperline."\n");
-                }
-                fclose($file);
-            }
-            echoAndLog($logFile, "\n");
-        }
-        // if ( $printLog ) {
-        //     log::add('AbeilleDbConf', 'info', '');
-        //     log::add('AbeilleDbConf', 'info', '-----------------------');
-        //     log::add('AbeilleDbConf', 'info', $title );
-        //     log::add('AbeilleDbConf', 'info', '-----------------------');
-        //     if ($file = fopen($file, "r")) {
-        //         while(!feof($file)) {
-        //             $textperline = fgets($file);
-        //             if (strpos($textperline,'Modelisation'))
-        //                 log::add('AbeilleDbConf', 'info', $textperline );
-        //         }
-        //         fclose($file);
-        //     }
-        //     log::add('AbeilleDbConf', 'info', '' );
-        // }
-
+        logIt($title."\n");
+        logIt($line."\n");
     }
 
     function requestAndPrint($logFile, $link, $sql, $title, $printModal, $printFile) {
         if ( $printModal ) {
             echoTitle($logFile, $title);
-            echoAndLog($logFile, "{");
+            logIt("{");
         }
         // if ( $printFile ) {
         //     log::add( 'AbeilleDbConf', 'info', '');
@@ -158,8 +91,8 @@
         if ($result = mysqli_query($link, $sql)) {
             while ($row = $result->fetch_assoc()) {
                 if ( $printModal ) {
-                    if ($i==0) { echoAndLog($logFile, '"'.$i.'":'.json_encode($row)); }
-                    else { echoAndLog($logFile, ',"'.$i.'":'.json_encode($row)); }
+                    if ($i==0) { logIt('"'.$i.'":'.json_encode($row)); }
+                    else { logIt(',"'.$i.'":'.json_encode($row)); }
                 }
                 // if ($printFile) {
                 //     if ($i==0) {log::add( 'AbeilleDbConf', 'info', '"'.$i.'":'.json_encode($row)); }
@@ -169,55 +102,49 @@
             }
             mysqli_free_result($result);
         }
-        if ( $printModal ) { echoAndLog($logFile, "}\n\n"); }
+        if ( $printModal ) { logIt("}\n\n"); }
         // if ( $printFile ) { log::add( 'AbeilleDbConf', 'info', '}'); }
     }
 
-    function linuxDetails($logFile) {
-        echoTitle($logFile, '2/ Linux');
-        exec('cat /etc/issue', $result1);
-        echoAndLog($logFile, json_encode($result1)."\n", 1);
-        exec('uname -a', $result2);
-        echoAndLog($logFile, json_encode($result2)."\n\n", 1);
-    }
-
-    function zigateDetails($logFile) {
-        $space = '    ';
-        echoTitle($logFile, '3/ Firmware');
-        for ($i = 1; $i <= maxNbOfZigate; $i++) {
-            if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y') {
+    function zigateInfos() {
+        for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+            if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
                 continue; // Zigate disabled
-            }
 
-            if ( is_object(Abeille::byLogicalId( 'Abeille'.$i.'/0000', 'Abeille')) ) {
-                $ruche = Abeille::byLogicalId( 'Abeille'.$i.'/0000', 'Abeille');
-                foreach ( $ruche->getCmd() as $cmd ) {
-                    // if ($cmd->getLogicalId()=='SW-Application')
-                    //     echoAndLog($logFile,$space.'SW-Application: '.$cmd->execCmd()."\n", 1);
-                    if ($cmd->getLogicalId()=='SW-SDK')
-                        echoAndLog($logFile,"Zigate ".$i.": ".$cmd->execCmd()."\n");
-                }
-            }
-            // echoAndLog($logFile,"\n", 1);
+            $eqLogic = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+            if (is_object($eqLogic)) {
+                $beehiveId = $eqLogic->getId();
+
+                $major = '????';
+                $minor = '????';
+                $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'SW-Application');
+                if ($cmdLogic)
+                    $major = $cmdLogic->execCmd();
+                $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'SW-SDK');
+                if ($cmdLogic)
+                    $minor = $cmdLogic->execCmd();
+                logIt("Zigate ".$zgId.": ".$major.'-'.$minor."\n");
+            } else
+                logIt("Zigate ".$zgId.": ERROR. No Jeedom registered device\n");
         }
-        echoAndLog($logFile,"\n", 1);
+        logIt("\n");
     }
 
-    function dataInDdDetails($logFile,$CONFIG) {
+    function jeedomInfos($logFile,$CONFIG) {
         /* Connect to DB */
         $link = mysqli_connect($CONFIG['db']['host'], $CONFIG['db']['username'], $CONFIG['db']['password'], $CONFIG['db']['dbname']);
 
         /* check connection */
         if (mysqli_connect_errno()) {
-            echo("Connect failed: ".json_encode(mysqli_connect_error()));
-            exit();
+            logIt("MySQL connection FAILED: ".json_encode(mysqli_connect_error())."\n");
+            return;
         }
 
-        requestAndPrint($logFile, $link, "SELECT * FROM `update`    WHERE `name` = 'Abeille'",        "5/ {{Version (Jeedom DB)}}",      1, 1);
-        requestAndPrint($logFile, $link, "SELECT * FROM `cron`      WHERE `class` = 'Abeille'",       "6/ {{Liste des cron}}",           1, 1);
-        requestAndPrint($logFile, $link, "SELECT * FROM `config`    WHERE `plugin` = 'Abeille'",      "7/ {{Configuration du plugin}}",  1, 1);
-        requestAndPrint($logFile, $link, "SELECT * FROM `eqLogic`   WHERE `eqType_name` = 'Abeille'", "8/ {{Liste des abeilles}}",       1, 1);
-        requestAndPrint($logFile, $link, "SELECT * FROM `cmd`       WHERE `eqType` = 'Abeille'",      "9/ {{Liste des commandes}}",      0, 1);
+        requestAndPrint($logFile, $link, "SELECT * FROM `update`    WHERE `name` = 'Abeille'",        "Table du plugin",      1, 1);
+        requestAndPrint($logFile, $link, "SELECT * FROM `cron`      WHERE `class` = 'Abeille'",       "Crons",           1, 1);
+        requestAndPrint($logFile, $link, "SELECT * FROM `config`    WHERE `plugin` = 'Abeille'",      "Table de config",  1, 1);
+        requestAndPrint($logFile, $link, "SELECT * FROM `eqLogic`   WHERE `eqType_name` = 'Abeille'", "Equipements",       1, 1);
+        requestAndPrint($logFile, $link, "SELECT * FROM `cmd`       WHERE `eqType` = 'Abeille'",      "Commandes",      1, 1);
 
         mysqli_close($link);
     }
@@ -225,23 +152,24 @@
     //------------------------------------------------------------------------------------------
     // Main
     //------------------------------------------------------------------------------------------
-    echoAndLog($logFile, "Informations clefs nécessaires au support.\n\n", 0);
-    echoAndLog($logFile, 'Quand <a href="https://github.com/KiwiHC16/Abeille/issues/new" target="_blank">vous ouvrez une "issue"</a> dans GitHub merci de copier/coller les 3 premiers chapitres ci dessous '."\n");
-    echoAndLog($logFile, "Pour l'intégration d'un équipement non encore supporté ajoutez le chapitre 4.\n\n");
+    logIt("Informations clefs nécessaires au support.\n\n", 0);
+    logIt('Quand <a href="https://github.com/KiwiHC16/Abeille/issues/new" target="_blank">vous ouvrez une "issue"</a> dans GitHub merci de copier/coller les 3 premiers chapitres ci dessous '."\n");
+    logIt("Pour l'intégration d'un équipement non encore supporté ajoutez le chapitre 4.\n\n");
 
     /* Reading version */
     $file = fopen(__DIR__."/../../plugin_info/Abeille.version", "r");
     $line = fgets($file); // Should be a comment
     $abeilleVersion = trim(fgets($file)); // Should be Abeille's version
     fclose($file);
-    echoTitle($logFile, "1/ Version (Abeille.version)");
-    echoAndLog($logFile, $abeilleVersion."\n\n");
+    logIt("Version Abeille: ".$abeilleVersion."\n\n");
 
-    linuxDetails($logFile);
+    // Linux
+    // exec('cat /etc/issue', $result1);
+    // logIt("Kernel: ".json_encode($result1)."\n");
+    exec('uname -a', $result2);
+    logIt("Kernel: ".json_encode($result2)."\n\n");
 
-    zigateDetails($logFile);
+    zigateInfos();
 
-    // getFileFilterAndPrint($logFile, __DIR__.'/../../../../log/AbeilleParser.log', "4/ AbeilleParser / Modelisation", "Modelisation", 1, 1);
-
-    dataInDdDetails($logFile, $CONFIG);
+    jeedomInfos($logFile, $CONFIG);
 ?>

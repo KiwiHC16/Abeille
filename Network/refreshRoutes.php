@@ -13,12 +13,13 @@
     $eqLogics = Abeille::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
         if ( ($_GET['device'] == $eqLogic->getLogicalId()) || ($_GET['device'] == "All") ) {
-            if ( $eqLogic->getConfiguration('battery_type', 'none') == 'none' ) { // on n interroge pas les equipements sur batterie
-                list($type, $address, $action) = explode('/', $eqLogic->getLogicalId());
-                if ( strlen($address) == 4 ) {
-                    Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "Cmd".$type."/".$address."/Mgmt_Rtg_req", "" );
-                    sleep(5);
-                }
+            if ( $eqLogic->getConfiguration('battery_type', 'none') == 'none' )
+                continue; // on n interroge pas les equipements sur batterie
+
+            list($net, $addr) = explode('/', $eqLogic->getLogicalId());
+            if ( strlen($addr) == 4 ) {
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "Cmd".$net."/".$addr."/Mgmt_Rtg_req", "" );
+                sleep(3);
             }
         }
     }

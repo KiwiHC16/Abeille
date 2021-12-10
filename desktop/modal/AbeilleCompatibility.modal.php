@@ -133,17 +133,16 @@
         );
 
         // Collect all information related to Command used by the products
-        if (isset($content[$zbModelId]['commands']))
+        if (isset($content[$zbModelId]['commands'])) {
             $commands = $content[$zbModelId]['commands'];
-        else if (isset($content[$zbModelId]['Commandes']))
-            $commands = $content[$zbModelId]['Commandes'];
-        foreach ($commands as $include) {
-            $resultRaw[] = array(
-                'zbModelId' => $zbModelId,
-                'name' => $content[$zbModelId]["type"],
-                'fonction' => $include
-            );
-            $result[] = "<tr><td>".$content[$zbModelId]["type"]."</td><td>".$zbModelId."</td><td>".$include."</td></tr>";
+            foreach ($commands as $include) {
+                $resultRaw[] = array(
+                    'zbModelId' => $zbModelId,
+                    'name' => $content[$zbModelId]["type"],
+                    'fonction' => $include
+                );
+                $result[] = "<tr><td>".$content[$zbModelId]["type"]."</td><td>".$zbModelId."</td><td>".$include."</td></tr>";
+            }
         }
     }
 

@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+- Réseau Abeille/routes: Correction erreur si équipement sans parent.
+- Support: Mise-à-jour infos clefs.
+- JSON équipements
+
+  - Fin de support noms obsoletes: nameJeedom/Categorie/icone/battery_type/Commandes.
+  - Support surcharge de parametres optionnels.
+
 211209-BETA-1
 -------------
 

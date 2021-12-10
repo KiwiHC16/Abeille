@@ -107,15 +107,15 @@ class AbeilleTemplateEq {
     }
 
     /**
-     * Will return the Commandes for the device stored in the template
+     * Will return commands for the device stored in the template
      * @param           uniqId identify the json template
      *
-     * @return          Return the Commandes (array) for the device stored in the template
+     * @return          Return the commands (array) for the device stored in the template
      */
     public static function getCommandesFromTemplate( $uniqId ) {
         $jsonArray = AbeilleTemplateCommon::getJsonForUniqId( $uniqId );
         foreach ( $jsonArray as $key=>$data ) {
-            return $jsonArray[$key]["Commandes"];
+            return $jsonArray[$key]["commands"];
         }
     }
 

@@ -358,13 +358,28 @@
                                             $destinationEq  = Abeille::byLogicalId($zigate.'/'.$destination, 'Abeille');
                                             $nextHopEq      = Abeille::byLogicalId($zigate.'/'.$nextHop, 'Abeille');
 
-                                            if (!is_object($sourceEq)) 	continue;
-                                            if (!is_object($destinationEq)) 	continue;
-                                            if (!is_object($nextHopEq)) 	continue;
+                                            if (!is_object($sourceEq)) continue;
+                                            if (!is_object($destinationEq)) continue;
+                                            if (!is_object($nextHopEq)) continue;
 
-                                            echo 'Si ' . $sourceEq->getObject()->getName() . '-' .$sourceEq->getName() . ' ('.$sourceEq->getLogicalId()
-                                                . ') veut joindre '.$destinationEq->getObject()->getName() . '-' .$destinationEq->getName() . ' ('.$destinationEq->getLogicalId()
-                                                . ') passera par '.$nextHopEq->getObject()->getName() . '-' .$nextHopEq->getName() . ' ('.$nextHopEq->getLogicalId()
+                                            $srcParent = $sourceEq->getObject();
+                                            if ($srcParent)
+                                                $srcParentName = $srcParent->getName();
+                                            else
+                                                $srcParentName = '';
+                                            $dstParent = $destinationEq->getObject();
+                                            if ($dstParent)
+                                                $dstParentName = $dstParent->getName();
+                                            else
+                                                $dstParentName = '';
+                                            $nxtHopeParent = $nextHopEq->getObject();
+                                            if ($nxtHopeParent)
+                                                $nxtHopeParentName = $nxtHopeParent->getName();
+                                            else
+                                                $nxtHopeParentName = '';
+                                            echo 'Si '.$srcParentName.'-'.$sourceEq->getName().' ('.$sourceEq->getLogicalId()
+                                                . ') veut joindre '.$dstParentName.'-'.$destinationEq->getName().' ('.$destinationEq->getLogicalId()
+                                                . ') passera par '.$nxtHopeParentName.'-'.$nextHopEq->getName().' ('.$nextHopEq->getLogicalId()
                                                 . ')<br>';
                                             // echo ' ('.$sourceEq->getLogicalId().') veut joindre ('.$destinationEq->getName(); //.') passera par ('.$nextHopEq->getName().')<br />';
                                         }

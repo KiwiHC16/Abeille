@@ -167,6 +167,7 @@
         console.log("idDownloadAllLogs click");
 
         $.showLoading();
+        // TODO: Create AbeilleKeyInfos.log if does not exist
         $.ajax({
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',

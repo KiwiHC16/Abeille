@@ -57,10 +57,10 @@
 	</div>
 
     <ul class="nav nav-tabs" role="tablist">
-        <li role="tab"               ><a href="index.php?v=d&m=Abeille&p=Abeille"><i class="fas fa-arrow-circle-left"></i></a></li>
-        <li role="tab" class="active"><a href="#eqlogictab"><i class="fas fa-home"></i> {{Equipement}}</a></li>
-        <li role="tab"               ><a href="#paramtab"><i class="fas fa-list-alt"></i> {{Avancé}}</a></li>
-        <li role="tab"               ><a href="#commandtab"><i class="fas fa-align-left"></i> {{Commandes}}</a></li>
+        <li role="tab"               ><a href="index.php?v=d&m=Abeille&p=Abeille">  <i class="fas fa-arrow-circle-left"></i>                </a></li>
+        <li role="tab" class="active"><a href="#eqlogictab">                        <i class="fas fa-home">             </i> {{Equipement}} </a></li>
+        <li role="tab"               ><a href="#paramtab">                          <i class="fas fa-list-alt">         </i> {{Avancé}}     </a></li>
+        <li role="tab"               ><a href="#commandtab">                        <i class="fas fa-align-left">       </i> {{Commandes}}  </a></li>
     </ul>
 
     <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">

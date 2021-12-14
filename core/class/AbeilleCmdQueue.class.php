@@ -46,7 +46,7 @@
         public $zigateAvailable = array(); // 1=ready to received new cmd
         public $zigateOngoing = array(); // Cmd for zigate when zigateAvailable == 0
 
-        public $statCmd = array();
+        // public $statCmd = array();
 
         function __construct($debugLevel='debug') {
             cmdLog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
@@ -296,7 +296,7 @@
             }
             else
             {
-                $this->deamonlog("error", "    Port '$port' non accessible. Commande '$cmd' non écrite.");
+                cmdLog("error", "    Port '$port' non accessible. Commande '$cmd' non écrite.");
             }
         }
 
@@ -357,16 +357,18 @@
         /* Display queues & zigate status.
            Called every 30sec. */
         function displayStatus() {
-            $txt = "";
+            cmdLog("debug", "Status");
+            $txt = "  Queues    : ";
             if (isset($this->tempoMessageQueue)) {
-                $txt .= "tempoMessageQueue=".count( $this->tempoMessageQueue );
+                $txt .= "tempo=".count( $this->tempoMessageQueue );
             }
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                if (isset($this->cmdQueue[$zgId])) {
-                    $txt .= ", cmdQueue[".$zgId."]=".count( $this->cmdQueue[$zgId] );
-                }
+                if (isset($this->cmdQueueHigh[$zgId]))
+                    $txt .= ", high[".$zgId."]=".count($this->cmdQueueHigh[$zgId]);
+                if (isset($this->cmdQueue[$zgId]))
+                    $txt .= ", norm[".$zgId."]=".count($this->cmdQueue[$zgId]);
             }
-            $this->deamonlog("debug", "Queues status: ".$txt);
+            cmdLog("debug", $txt);
 
             $txtEn = '';
             $txtAvail = '';
@@ -383,8 +385,8 @@
                     $available = "NO";
                 $txtAvail .= "zg".$zgId."=".$available;
             }
-            $this->deamonlog("debug", "   Zg enabled: ".$txtEn);
-            $this->deamonlog("debug", "     Zg avail: ".$txtAvail);
+            cmdLog("debug", "  Zg enabled: ".$txtEn);
+            cmdLog("debug", "  Zg avail  : ".$txtAvail);
         }
 
         function processZigateCmdQueues() {
@@ -471,25 +473,26 @@
                 }
 
                 $msg = json_decode($msg, true);
-                $zgId = str_replace('Abeille', '', $msg['dest']);
-                $this->deamonlog("debug", "processZigateAcks())", $this->debug['processZigateAcks']);
+                $zgId = substr($msg['dest'], 7);
+                cmdLog("debug", "processZigateAcks(): type=".$msg['type'], $this->debug['processZigateAcks']);
 
-                if ($this->debug['processZigateAcks']) {
-                    if (isset($this->statusText[$msg['status']])) {
-                        $this->deamonlog("debug", "  Message 8000 status recu: ".$msg['status']." -> ".$this->statusText[$msg['status']] . " cmdAck: " . json_encode($msg) . " alors que j ai " . count($this->cmdQueue[$zgId]) . " message(s) en attente: ");
-                    } else {
-                        $this->deamonlog("debug", "  Message 8000 status recu: ".$msg['status']."->Code Inconnu cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue[$zgId])." message(s) en attente: ".json_encode($this->cmdQueue[$i]));
+                if ($msg['type'] == "8000") {
+                    if ($this->debug['processZigateAcks']) {
+                        if (isset($this->statusText[$msg['status']])) {
+                            cmdLog("debug", "  Message 8000 status recu: ".$msg['status']." -> ".$this->statusText[$msg['status']] . " cmdAck: " . json_encode($msg) . " alors que j ai " . count($this->cmdQueue[$zgId]) . " message(s) en attente: ");
+                        } else {
+                            cmdLog("debug", "  Message 8000 status recu: ".$msg['status']."->Code Inconnu cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue[$zgId])." message(s) en attente: ".json_encode($this->cmdQueue[$i]));
+                        }
                     }
-                }
 
-                if (in_array($msg['status'], ['00', '01', '05'])) {
-                    // Je vire la commande si elle est bonne
-                    // ou si elle est incorrecte
-                    // ou si conf alors que stack demarrée
-                    /* TODO: How can we be sure ACK is for last cmd ? <- KiwiHC16: Aucune à ma connaissance, faille depuis le debut de mon point de vue.*/
+                    if (in_array($msg['status'], ['00', '01', '05'])) {
+                        // Je vire la commande si elle est bonne
+                        // ou si elle est incorrecte
+                        // ou si conf alors que stack demarrée
+                        /* TODO: How can we be sure ACK is for last cmd ? <- KiwiHC16: Aucune à ma connaissance, faille depuis le debut de mon point de vue.*/
                     array_shift( $this->cmdQueue[$zgId] ); // Je vire la commande
-                    $this->zigateAvailable[$zgId] = 1;      // Je dis que la Zigate est dispo
-                    $this->timeLastAck[$zgId] = 0;
+                        $this->zigateAvailable[$zgId] = 1;      // Je dis que la Zigate est dispo
+                        $this->timeLastAck[$zgId] = 0;
 
                     // Je tri la queue pour preparer la prochaine commande
                     $this->deamonlog("debug", "  J'ai ".count($this->cmdQueue[$zgId])." commande(s) pour la zigate apres drop commande: ".json_encode($this->cmdQueue[$zgId]), $this->debug['processZigateAcks']);
@@ -504,13 +507,14 @@
                     }
 
                     $this->deamonlog("debug", "  J'ai ".count($this->cmdQueue[$zgId])." commande(s) pour la zigate apres tri : ".json_encode($this->cmdQueue[$zgId]), $this->debug['processZigateAcks']);
-                } else {
-                    $this->zigateAvailable[$zgId] = 0;      // Je dis que la Zigate n est pas dispo
-                    $this->timeLastAck[$zgId] = time();    // Je garde la date de ce mauvais Ack
+                    } else {
+                        $this->zigateAvailable[$zgId] = 0;      // Je dis que la Zigate n est pas dispo
+                        $this->timeLastAck[$zgId] = time();    // Je garde la date de ce mauvais Ack
+                    }
                 }
             }
 
-            $this->deamonlog("debug", "  ".count($this->cmdQueue[$zgId])." remaining pending commands", $this->debug['processZigateAcks']);
+            cmdLog("debug", "  ".count($this->cmdQueue[$zgId])." remaining pending commands", $this->debug['processZigateAcks']);
         }
 
         function zigateAckCheck() {
@@ -527,7 +531,7 @@
                 $now = time();
                 $delta = $now - $this->timeLastAck[$zgId];
                 if ($delta > $this->timeLastAckTimeOut[$zgId]) {
-                    $this->deamonlog("debug", "zigateAckCheck(): WARNING: NO Zigate".$zgId." ACK since ".$delta." sec. Considering zigate available.");
+                    cmdLog("debug", "zigateAckCheck(): WARNING: NO Zigate".$zgId." ACK since ".$delta." sec. Considering zigate available.");
                     $this->zigateAvailable[$zgId] = 1;
                     $this->timeLastAck[$zgId] = 0;
                 }
@@ -552,7 +556,7 @@
                 $msg = NULL;
                 $max_msg_size = 512;
                 if (msg_receive($queue, 0, $msg_priority, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
-                    $this->deamonlog("debug", "Message from ".$this->getQueueName($queue).": ".$msg->message['topic']." -> ".$msg->message['payload'], $this->debug['AbeilleCmdClass']);
+                    cmdLog("debug", "Message from ".$this->getQueueName($queue).": ".$msg->message['topic']." -> ".$msg->message['payload'], $this->debug['AbeilleCmdClass']);
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     $message->priority = $msg_priority;

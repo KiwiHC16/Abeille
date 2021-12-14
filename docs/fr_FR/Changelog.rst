@@ -1,9 +1,7 @@
 ChangeLog
 =========
 
-211214-BETA-1
--------------
-
+- dOOwifi DWF-0205ZB-PN-2: Ajout PNG (#2241).
 - JSON équipements: Nettoyage commandes obsolètes
 
   - 'spiritSetReportBatterie' => 'zbConfigureReporting' + 'clustId=0001&attrType=20&attrId=0021'

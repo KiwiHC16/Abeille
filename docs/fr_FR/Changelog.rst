@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211214-BETA-1
+-------------
+
 - JSON équipements: Nettoyage commandes obsolètes
 
   - 'spiritSetReportBatterie' => 'zbConfigureReporting' + 'clustId=0001&attrType=20&attrId=0021'

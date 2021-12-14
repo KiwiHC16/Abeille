@@ -1,5 +1,6 @@
 {
-    "zb-0008-CurPosLiftPercent": {
+    "zb-0102-CurPosLiftPercent": {
+        "comment": "Cluster 0102, attrib 0008, type uint8",
         "isVisible": 0,
         "name": "Current position",
         "isHistorized": "0",

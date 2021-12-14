@@ -39,7 +39,12 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include2 2 2 2 2": "setReportTemperature",
+            "SetReporting-0402-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0402&attrType=29&attrId=0000&minInterval=0000&maxInterval=0DAC&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 12
+            },
             "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 },
             "Bind-0405-ToZigate": {
                 "use": "zbBindToZigate",

@@ -43,9 +43,24 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include4 2 2 2 2": "setReportOccupancy",
-            "include4 2 2 2 2 2": "setReportIlluminance",
-            "include4 2 2 2 2 2 2": "setReportTemperature",
+            "SetReporting-0406-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0406&attrType=18&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
+            "SetReporting-0400-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
+            "SetReporting-0402-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0402&attrType=29&attrId=0000&minInterval=0000&maxInterval=0DAC&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 12
+            },
             "SetReporting-0001-0021": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",

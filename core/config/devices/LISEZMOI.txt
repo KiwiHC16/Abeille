@@ -39,7 +39,7 @@ Exemple: BASICZBR3.json
       "commands": {
         "Groups": { "use": "Group-Membership" },
 
-        "Status": { "use": "etat", "isVisible": 1 },
+        "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
         "On": { "use": "On", "isVisible": 1 },
         "Off": { "use": "Off", "isVisible": 1, "nextLine": "after" },
         "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" }

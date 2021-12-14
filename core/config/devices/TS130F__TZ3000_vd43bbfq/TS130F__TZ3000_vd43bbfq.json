@@ -15,7 +15,7 @@
         "commands": {
             "Groups": { "use": "Group-Membership" },
 
-            "Position": { "use": "zb-0008-CurPosLiftPercent", "isVisible": 1 },
+            "Position": { "use": "zb-0008-CurrentLevel", "isVisible": 1 },
             "Up": { "use": "zbCmd-0008-UpOpen", "isVisible": 1 },
             "Down": { "use": "zbCmd-0008-DownClose", "isVisible": 1 }
         }

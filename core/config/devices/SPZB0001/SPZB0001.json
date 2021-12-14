@@ -36,7 +36,12 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include25 2 2 3 2 3 2 2 2 2 2": "spiritSetReportBatterie",
+            "SetReporting-0001-0021": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=A85C&maxInterval=A924&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
             "include25 2 2 3 2 3 2 2 2 2 2 3": "spiritHostFlags",
             "include25 2 2 3 2 3 2 2 2 2 2 3 2": "spiritErrors",
             "include25 2 3": "spiritHostFlagsDisplayDownSet",

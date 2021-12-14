@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="211214-BETA-1"
+# VERSION="211214-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -785,7 +785,7 @@ aa8c4d40365a687d368a47e90bfc0fd5 *core/config/devices/TS0505B__TZ3000_qd7hej8u/d
 6717da48df39cc264c515e3a40054d03 *core/config/devices/TS0601__TZE200_hue3yfsn/discovery.json
 0aa5931996e7becd93528347c7f5eda5 *core/config/devices/TS130F__TZ3000_vd43bbfq/TS130F__TZ3000_vd43bbfq.json
 1c00b135fb5cc0d65016d6de133c3c4c *core/config/devices/TS130F__TZ3000_vd43bbfq/discovery.json
-95fb54a77c382308c5f6dfb9fef92a40 *core/config/devices/TS130F__TZ3000_xxgrunjb/TS130F__TZ3000_xxgrunjb.json
+e45413592058c81e0af14bbe1e181271 *core/config/devices/TS130F__TZ3000_xxgrunjb/TS130F__TZ3000_xxgrunjb.json
 464d01c1b1a882bea7f85e837105e053 *core/config/devices/TS130F__TZ3000_xxgrunjb/discovery.json
 3a1d6f8fbd2152ccd760a3d9a144ba07 *core/config/devices/TY0A01/TY0A01.json
 37480e72f33a8d8b95c60e7b479c9c7a *core/config/devices/Teleruptor/Teleruptor.json
@@ -954,7 +954,7 @@ c77d58de87f2cee044ffe59133e73e1f *desktop/php/AbeilleEqAssist.php
 b823f9e71718dafa4d5bc1be0a842743 *desktop/php/AbeilleFormAction.php
 f4ad6e68f05d3de67caa70c340868082 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
-7ad740775580140031bb6f16b85a7e5b *docs/fr_FR/Changelog.rst
+178d4b5b915b46eca8a550adc0669479 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1173,6 +1173,7 @@ ece3df103bb9d9278db499ecaa57fc6a *images/node_bsoProFalux.png
 81433f382343e89bf118abff8f348aaa *images/node_ctrl_ln2.aq1.png
 c80120359be5cf4338fcbff29e8f6211 *images/node_ctrl_neutral1.png
 7997184f218a4772b4b0ae8244eaba80 *images/node_ctrl_neutral2.png
+ef8591fe7d264fb22a0a3f5baa8eeacd *images/node_dOOwifi-DWF-0205ZB-PN.png
 6f8eddb5685f83775415cf5b92a05322 *images/node_defaultUnknown.png
 0d0b62423a2ace4d9421791d88e31b9e *images/node_diy-amp-router.png
 99229bd9fc77d11253e512e24eaad188 *images/node_diy-mains-fault.png
@@ -1201,10 +1202,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-db2b994fa74662e4a6f7229cfe181016 *plugin_info/Abeille.version
+1bf19ffd2cc297d36e9fc026c093d6e4 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 be0ccc5bffff6642d11276df436c9008 *plugin_info/configuration.php
-a104e196c56a60c745140a19de28b478 *plugin_info/info.json
+64cc6df6400efac42aaec7a81a855b78 *plugin_info/info.json
 00818f91cd78f5aee4c649006037f4fe *plugin_info/install.php
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 e634b9f544c02b8facd28fefb8771fe0 *resources/AbeilleDeamon/AbeilleInterrogate.php

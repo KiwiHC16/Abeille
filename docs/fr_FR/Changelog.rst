@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211214-BETA-2
+-------------
+
 - dOOwifi DWF-0205ZB-PN-2: Ajout PNG (#2241).
 - JSON équipements: Nettoyage commandes obsolètes
 

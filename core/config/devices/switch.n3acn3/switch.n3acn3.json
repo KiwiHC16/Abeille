@@ -37,8 +37,23 @@
             "Bind-03-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=03&clustId=0006", "execAtCreation": "Yes" },
 
             "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "mult=1&div=1&unit=Wh", "isVisible": 1 },
+            "Get-Total power": { "use": "zbReadAttribute", "params": "clustId=0702&attrId=0000" },
+            "Bind-0702-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0702",
+                "execAtCreation": "yes"
+            },
 
-            "ActivePower": { "use": "zb-0B04-ActivePower", "params": "mult=1&div=1", "isVisible": 1 }
+            "ActivePower": { "use": "zb-0B04-ActivePower", "params": "mult=1&div=1", "isVisible": 1 },
+            "Get-0B04-ActivePower": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0B04&attrId=050B"
+            },
+            "Bind-0B04-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0B04",
+                "execAtCreation": "Yes"
+            }
         }
     }
 }

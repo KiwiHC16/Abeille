@@ -1,0 +1,16 @@
+{
+    "zbCmd-0102-UpOpen": {
+        "isVisible": 0,
+        "name": "Up",
+        "isHistorized": 0,
+        "subType": "other",
+        "generic_type": "",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "WindowsCovering",
+            "request": "clusterCommand=00"
+        },
+        "type": "action"
+    }
+}

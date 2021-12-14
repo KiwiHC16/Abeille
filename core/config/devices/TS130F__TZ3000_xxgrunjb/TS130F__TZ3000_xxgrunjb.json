@@ -1,0 +1,50 @@
+{
+    "TS130F__TZ3000_xxgrunjb": {
+        "manufacturer": "dOOWifi",
+        "model": "DWF-0205ZB-PN-2",
+        "type": "dOOWifi window module",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "mainEP": "01",
+            "icon": "dOOWifi-DWF-0205ZB-PN-2"
+        },
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Current Level": {
+                "use": "zb-0102-CurPosLiftPercent",
+                "isVisible": "1"
+            },
+            "Get Current Level": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0102&attrId=0008"
+            },
+            "Up": {
+                "use": "zbCmd-0102-UpOpen",
+                "isVisible": "1"
+            },
+            "Stop": {
+                "use": "zbCmd-0102-Stop",
+                "isVisible": "1"
+            },
+            "Down": {
+                "use": "zbCmd-0102-DownClose",
+                "isVisible": "1"
+            },
+            "Bind-0102-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0102",
+                "execAtCreation": "yes"
+            },
+            "SetReporting-0102": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

@@ -8,15 +8,15 @@ Ce répertoire permet de stocker des modèles non encore supportés par Abeille 
 Ce répertoire N'EST PAS néttoyé pendant la mise-à-jour du plugin.
 
 Pendant la phase d'inclusion, Abeille va chercher les modèles dans l'ordre suivant
-- dans le répertoire officiel 'devices'
-- puis dans ce 'devices_local'
+- dans le répertoire 'devices_local' pour les équipements locaux/custom ou en cours de dev
+- puis dans ce répertoire officiel 'devices'
 - et enfin si toujours pas trouvé, le modèle 'defaultUnknown.json' sera utilisé
 
 
 Ce répertoire doit suivre la structure
     <identificateur>/<identificateur>.json
 
-Attention !! Voir 'identificateur' plus bas dans le format du fichier.
+    ATTENTION !! Voir 'identificateur' plus bas dans le format du fichier.
 
 Format de fichier
 =================
@@ -37,25 +37,23 @@ Exemple: BASICZBR3.json
         "mainEP": "01"
       },
       "commands": {
-        "include1": "SW",
-        "include2": "societe",
-        "include3": "nom",
-        "include4": "etat",
-        "include5": "On",
-        "include6": "Off",
-        "include7": "Toggle",
-        "include8": "getEtat",
-        "include9": "getManufacturerName",
-        "include10": "getModelIdentifier",
-        "include13 2": "Group-Membership"
+        "Groups": { "use": "Group-Membership" },
+
+        "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
+        "On": { "use": "On", "isVisible": 1 },
+        "Off": { "use": "Off", "isVisible": 1, "nextLine": "after" },
+        "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" }
       }
     }
   }
 
 * Clef d'entrée/identificateur: OBLIGATOIRE, = nom du fichier sans extension (ex: BASICZBR3)
-  ATTENTION !! Cette partie est tres importante, surtout pour les équipements génériques qu'on peut retrouver sous differentes marques.
+  ATTENTION !! Cette partie est tres importante, surtout pour les équipements génériques qu'on peut retrouver sous différentes marques.
   Mettre "TS0121" par ex donnera probablement lieu à une mauvaise identification de l'équipement.
-  Il est recommandé de combiner l'identifiant zigbee 'modele' avec celui du 'fabricant' => <zbModelId>_<zbManufId>
+  Il est recommandé de combiner l'identifiant zigbee 'modele' avec celui du 'fabricant' => '<zbModelId>_<zbManufId>'
+
+* alternateIds: optionnel
+  Permet de définir un autre identifiant pour le même type d'équipement (ex: TRAFRISignalRepeater & TRAFRIsignalrepeater).
 
 * type: OBLIGATOIRE, courte description du type d'équipement
   Anciennement "nameJeedom".
@@ -64,7 +62,7 @@ Exemple: BASICZBR3.json
 
 * model: OBLIGATOIRE, ref/nom du modèle
 
-* zbManufacturer: identifiant zigbee du fabricant
+* zbManufacturer: optionnel, identifiant zigbee du fabricant
 
 * timeout: délai (en min) au dela duquel l'équipement est considéré "mort" si aucune nouvelle de lui
 
@@ -78,7 +76,7 @@ Exemple: BASICZBR3.json
   - default
 
 * configuration: OBLIGATOIRE
-  - mainEP: OBLIGATOIRE SI au moins une des commandes utilise l'ancienne syntaxe "include"
+  - mainEP: OBLIGATOIRE SI au moins une des commandes utilise "#EP".
     Indique sur quel 'End Point' interroger l'équipement. Chaine hexa 2 caractères.
   - batteryType: Description type de batterie si équipement sur piles/batteries.
     Ex: "1x3V CR2430"
@@ -88,9 +86,31 @@ Exemple: BASICZBR3.json
     "telecommande", "telecommande7groups"
 
 * commands: OBLIGATOIRE, liste des commandes implémentées
+  ATTENTION !! TOUS les nombres sont donnés en HEXA.
+    Ex: minInterval=1800. Si 1800sec alors c'est FAUX => minInterval=0708
+
   Nouvelle syntaxe:
-    "<nom_cmde_Jeedom>": { "use": "<nom_cmde_Abeille>", "params": "<xx=01&xy=0003>" }
-  Ancienne syntaxe obsolete:
+    "<nom_cmde_Jeedom>": { "use": "<nom_fichier_cmde_Abeille>", "params": "<xx=01&xy=0003>", "isVisible": 1, "execAtCreation": "yes" }
+    isVisible: 1, 0, 'yes', 'no'.
+        Par défaut les commandes sont masquées sur la tuile de l'équipement. Mettre 1 pour rendre la commande visible.
+    execAtCreation: 1, 0, 'yes', 'no'.
+        Mettre yes, si cette commande doit etre executée pour configurer l'équipement (inclusion or reconfiguratio).
+    nextLine: 'after' ou 'before'
+        Pour forcer un saut de ligne apres ou avant la commande dans la tuile.
+    template: Surcharge du template par defaut.
+        Permet de définir le widget à utiliser pour destkop & mobile.
+    subType: Surcharge du sous-type par defaut.
+        Permet de changer le sous-type de la commande choisie.
+        Ex: "Get-OPTARIF": { "use": "zbReadAttribute", "params": "clustId=FF66&attrId=0000", "subType": "string" },
+    minValue, maxValue:
+        Permet de changer les limites d'une commande action, en particulier de type "slider".
+
+  Exemples de nouvelle syntaxe:
+    "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },
+    "Status 2": { "use": "zb-0006-OnOff", "params": "ep=02", "isVisible": 1, "nextLine": "after" },
+    "ActivePower": { "use": "zb-0B04-ActivePower", "params": "ep=01", "isVisible": 1 },
+
+  Pour info: Ancienne syntaxe OBSOLETE:
     Chaque include correspond à une commande de base existante dans 'core/config/commands'
     - "include1":"cmd1",
     - ...

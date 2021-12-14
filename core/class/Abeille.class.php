@@ -2440,7 +2440,8 @@ while ($cron->running()) {
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['major']);
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'SW-SDK');
             if ($cmdLogic) {
-                $curVersion = $cmdLogic->getValue();
+                $curVersion = $cmdLogic->execCmd();
+                // $curVersion = $cmdLogic->getValue(); // TODO: THis seems wrong. Why ??
                 log::add('Abeille', 'debug', '  FW cur version: '.$curVersion);
                 if ($curVersion == '----') {
                     $zgId = substr($net, 7);
@@ -2450,8 +2451,9 @@ while ($cron->running()) {
                     } else {
                         log::add('Abeille', 'debug', '  Old FW. Configuring zigate '.$zgId.' in normal mode');
                         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgMode", "mode=normal");
-                        message::add('Abeille', 'Attention: Un vieux FW est détecté pour la zigate '.$zgId.'. Une version >= 3.1D pourrait être requise pour certains équipements.');
                     }
+                    if (hexdec($msg['minor']) < 0x031E)
+                        message::add('Abeille', 'Attention: La zigate '.$zgId.' fonctionne avec Un vieux FW. Une version >= 3.1E est requise pour un fonctionnement optimal d\'Abeille.');
                 }
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['minor']);
             }
@@ -2778,7 +2780,8 @@ while ($cron->running()) {
 
             // Whatever existing or new beehive, it is key to reset the following points
             if ($cmdLogicId == 'SW-SDK')
-                $cmdLogic->setValue('----'); // Indicate FW version is invalid
+                // $cmdLogic->setValue('----'); // Indicate FW version is invalid
+                $cmdLogic->setCache('value', '----'); // Indicate FW version is invalid
 
             $cmdLogic->save();
         }

@@ -262,6 +262,21 @@
                 parserLog("debug", "  msgToClient(): Sent ".json_encode($msg));
         }
 
+        function msgToCmdAck($msg) {
+            $msgJson = json_encode($msg);
+            $size = strlen($msgJson);
+            $max = $this->queueParserToCmdAckMax;
+            if ($size > $max) {
+                parserLog("error", "msgToCmdAck(): Message trop gros ignoré (taille=".$size.", max=".$max.")");
+                return false;
+            }
+            if (msg_send($this->queueParserToCmdAck, 1, $msgJson, false, false)) {
+                // parserLog("debug","(fct msgToAbeille) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille), "8000");
+            } else {
+                parserLog("debug", "  ERROR: Can't send msg to 'queueParserToCmdAck'. msg=".$msgJson, "8000");
+            }
+        }
+
         /* Check if eq is part of supported or user/custom devices names.
            Returns: true is supported, else false */
         function findJsonConfig(&$eq, $by='modelIdentifier') {
@@ -902,10 +917,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             return $modelId;
         }
 
-        function procmsg($topic, $payload)
-        {
-            // AbeilleParser traite les messages venant du port serie mais rien venant de MQTT, pas de besoin.
-        }
+        // function procmsg($topic, $payload)
+        // {
+        //     // AbeilleParser traite les messages venant du port serie mais rien venant de MQTT, pas de besoin.
+        // }
 
         function hex2str($hex)   {
             $str = '';
@@ -1537,46 +1552,36 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         {
             $status     = substr($payload, 0, 2);
             $sqn        = substr($payload, 2, 2);
-            $PacketType = substr($payload, 4, 4);
-
+            $packetType = substr($payload, 4, 4);
             $msgDecoded = '8000/Status'
                 .', Status='.$status.'/'.zgGet8000Status($status)
                 .', SQN='.$sqn
-                .', PacketType='.$PacketType;
+                .', PacketType='.$packetType;
+            if (strlen($payload) == 16) {
+                $nPDU = substr($payload, 12, 2);
+                $aPDU = substr($payload, 14, 2);
+                $msgDecoded .= ', NPDU='.$nPDU.', APDU='.$aPDU;
+            }
+
             parserLog('debug', $dest.', Type='.$msgDecoded, "8000");
 
-            // On envoie un message MQTT vers la ruche pour le processer dans Abeille
-            // $srcAddr    = "Ruche";
-            // $clustId  = "Zigate";
-            // $attrId = "8000";
-            // $data       = $this->displayStatus($status);
-            // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, $data);
-
+            // Sending msg to cmd for flow control
             $msgAbeille = array (
-                'dest'         => $dest,
                 'type'         => "8000",
+                'dest'         => $dest,
                 'status'       => $status,
-                'SQN'          => $sqn,
-                'PacketType'   => $PacketType , // The value of the initiating command request.
+                'sqn'          => $sqn,
+                'packetType'   => $packetType , // The value of the initiating command request.
             );
-
-            // Envoie du message 8000 (Status) pour AbeilleMQTTCmd pour la gestion du flux de commandes vers la zigate
-            $msgJson = json_encode($msgAbeille);
-            $size = strlen($msgJson);
-            $max = $this->queueParserToCmdAckMax;
-            if ($size > $max) {
-                parserLog("error", "decode8000(): Message trop gros ignoré (taille=".$size.", max=".$max.")");
-                return false;
+            if (isset($nPDU)) {
+                $msgAbeille['nPDU'] = $nPDU;
+                $msgAbeille['aPDU'] = $aPDU;
             }
-            if (msg_send($this->queueParserToCmdAck, 1, $msgJson, false, false)) {
-                // parserLog("debug","(fct msgToAbeille) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille), "8000");
-            } else {
-                parserLog("debug", "  Could not add message to 'queueParserToCmdAck' queue: ".$msgJson, "8000");
-            }
+            $this->msgToCmdAck($msgAbeille);
 
-            if ($PacketType == "0002") {
+            if ($packetType == "0002") {
                 if ($status == "00") {
-                    parserLog("debug","  Zigate mode has been properly changed.");
+                    parserLog("debug", "  Zigate mode has been properly changed.");
                 } else {
                     parserLog("debug", "  WARNING: Failed to change Zigate mode.");
                     message::add("Abeille", "Erreur lors du changement de mode de la Zigate.", "");
@@ -1666,7 +1671,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $destEp         = substr($payload,12, 2);
             $srcAddrMode    = substr($payload,14, 2);
             $srcAddr        = substr($payload,16, 4);
-            $destAddrMode   = substr($payload,20, 2);
+            $dstAddrMode   = substr($payload,20, 2);
             $dstAddress     = substr($payload,22, 4);
             $pl = substr($payload, 26); // Keeping remaining payload
 
@@ -1679,7 +1684,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             .", DestEP=".$destEp
                             .", SrcAddrMode=".$srcAddrMode
                             .", SrcAddr=".$srcAddr
-                            .", DestAddrMode=".$destAddrMode
+                            .", DestAddrMode=".$dstAddrMode
                             .", DestAddr=".$dstAddress;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8002");
 
@@ -1784,20 +1789,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         $srcIeee = AbeilleTools::reverseHex(substr($pl, 0, 16));
                         $srcEp  = substr($pl, 16, 2);
                         $clustId = AbeilleTools::reverseHex(substr($pl, 18, 4));
-                        $destAddrMode = substr($pl, 22, 2);
-                        if ($destAddrMode == "01") {
+                        $dstAddrMode = substr($pl, 22, 2);
+                        if ($dstAddrMode == "01") {
                             // 16-bit group address for DstAddr and DstEndpoint not present
-                            $destAddr = AbeilleTools::reverseHex(substr($pl, 24, 4));
-                            parserLog('debug', '  '.$srcIeee.', EP'.$srcEp.', Clust '.$clustId.' => group '.$destAddr);
+                            $dstAddr = AbeilleTools::reverseHex(substr($pl, 24, 4));
+                            parserLog('debug', '  '.$srcIeee.', EP'.$srcEp.', Clust '.$clustId.' => group '.$dstAddr);
                             $pl = substr($pl, 28);
-                        } else if ($destAddrMode == "03") {
+                        } else if ($dstAddrMode == "03") {
                             // 64-bit extended address for DstAddr and DstEndp present
                             $destIeee = AbeilleTools::reverseHex(substr($pl, 24, 16));
                             $destEP  = substr($pl, 40, 2);
                             parserLog('debug', '  '.$srcIeee.', EP'.$srcEp.', Clust '.$clustId.' => device '.$destIeee.', EP'.$destEP);
                             $pl = substr($pl, 42);
                         } else {
-                            parserLog('debug', '  ERROR: Unexpected destAddrMode '.$destAddrMode);
+                            parserLog('debug', '  ERROR: Unexpected destAddrMode '.$dstAddrMode);
                             return;
                         }
                     }
@@ -3060,31 +3065,31 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             <Cluster ID : uint16_t>
             */
             $status         = substr($payload, 0, 2);
-            $DestAddr       = substr($payload, 2, 4);
+            $dstAddr       = substr($payload, 2, 4);
             $destEp   = substr($payload, 6, 2);
             $ClustID        = substr($payload, 8, 4);
 
-            $msgDecoded = '8011/APS data ACK, Status='.$status.', Addr='.$DestAddr.', EP='.$destEp.', ClustId='.$ClustID;
+            $msgDecoded = '8011/APS data ACK, Status='.$status.', Addr='.$dstAddr.', EP='.$destEp.', ClustId='.$ClustID;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8011");
 
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $DestAddr))
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
-            if ($status=="00") {
-                if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' )) {
-                    $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ;
-                    parserLog('debug', '  Found: '.$eq->getHumanName()." set APS_ACK to 1", "8011");
-                    $eq->setStatus('APS_ACK', '1');
-                    // parserLog('debug', '  APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
-                }
-            } else {
-                if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' )) {
-                    $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' ) ;
-                    parserLog('debug', '  ACK failed: '.$eq->getHumanName().". APS_ACK set to 0", "8011");
-                    $eq->setStatus('APS_ACK', '0');
-                    // parserLog('debug', '  APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
-                }
-            }
+            // if ($status=="00") {
+            //     if ( Abeille::byLogicalId( $dest.'/'.$dstAddr, 'Abeille' )) {
+            //         $eq = Abeille::byLogicalId( $dest.'/'.$dstAddr, 'Abeille' ) ;
+            //         parserLog('debug', '  Found: '.$eq->getHumanName()." set APS_ACK to 1", "8011");
+            //         $eq->setStatus('APS_ACK', '1');
+            //         // parserLog('debug', '  APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
+            //     }
+            // } else {
+            //     if ( Abeille::byLogicalId( $dest.'/'.$dstAddr, 'Abeille' )) {
+            //         $eq = Abeille::byLogicalId( $dest.'/'.$dstAddr, 'Abeille' ) ;
+            //         parserLog('debug', '  ACK failed: '.$eq->getHumanName().". APS_ACK set to 0", "8011");
+            //         $eq->setStatus('APS_ACK', '0');
+            //         // parserLog('debug', '  APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
+            //     }
+            // }
         }
 
         /* 8012/
@@ -3092,9 +3097,47 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
            and has made its first hop towards its destination (an acknowledgment has been received from the next hop node) */
         function decode8012($dest, $payload, $lqi)
         {
+            // <Status: uint8_t>
+            // <Src Endpoint: uint8_t>
+            // <Dest Endpoint : uint8_t>
+            // <Dest Addr mode: uint8_t>
+            // <Destination address: uint16_t> OR <Destination IEEE address: uint64_t>
+            // <APS Sequence number: uint8_t>
             // See https://github.com/fairecasoimeme/ZiGate/issues/350
+            $status = substr($payload, 0, 2);
+            $srcEp = substr($payload, 2, 2);
+            $dstEp = substr($payload, 4, 2);
+            $dstMode = substr($payload, 6, 2);
+            // Tcharp38: Lack of infos. Extracted from Domoticz plugin.
+            if (in_array($dstMode, ["01", "02", "07"])) {
+                $dstAddr    = substr($payload, 8, 4);
+                $sqn        = substr($payload,12, 2);
+                $nPDU       = substr($payload,14, 2);
+                $aPDU       = substr($payload,16, 2);
+            } else if ($dstMode == "03") { // IEEE
+                $dstAddr    = substr($payload, 8, 16);
+                $sqn        = substr($payload,24, 2);
+                $nPDU       = substr($payload,26, 2);
+                $aPDU       = substr($payload,28, 2);
+            }
             $msgDecoded = '8012/ZPS_EVENT_APS_DATA_CONFIRM';
+
+            // Log
             parserLog('debug', $dest.', Type='.$msgDecoded, "8012");
+
+            // Sending msg to cmd for flow control
+            $msg = array (
+                'type'         => "8012",
+                'dest'         => $dest,
+                // 'status'       => $status,
+                // 'sqn'          => $sqn,
+                // 'packetType'   => $packetType , // The value of the initiating command request.
+            );
+            if (isset($nPDU)) {
+                $msg['nPDU'] = $nPDU;
+                $msg['aPDU'] = $aPDU;
+            }
+            $this->msgToCmdAck($msg);
         }
 
         /**
@@ -5293,25 +5336,26 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $Addr = substr($payload, 4, 4);
 
             $msg = '8701/Route discovery confirm'
-                   .', MACStatus='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
-                   .', NwkStatus='.$nwkStatus.' ('.$allErrorCode[$nwkStatus][0].'->'.$allErrorCode[$nwkStatus][1].')'
+                //    .', MACStatus='.$status.' ('.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
+                   .', MACStatus='.$status.'/'.$allErrorCode[$status][0]
+                //    .', NwkStatus='.$nwkStatus.' ('.$allErrorCode[$nwkStatus][0].'->'.$allErrorCode[$nwkStatus][1].')'
+                   .', NwkStatus='.$nwkStatus.'/'.$allErrorCode[$nwkStatus][0]
                    .', Addr='.$Addr;
+
             parserLog('debug', $dest.', Type='.$msg, "8701");
+
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $Addr))
                 monMsgFromZigate($msg); // Send message to monitor
         }
 
         /**
          * 8702/APS data confirm fail
-         * This method process ????
-         *  Will first decode it.
-         *  Send the info to Ruche
          *
          * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $lqi
          *
-         * @return          Does return anything as all action are triggered by sending messages in queues
+         * @return Does return anything as all action are triggered by sending messages in queues
          */
         function decode8702($dest, $payload, $lqi)
         {
@@ -5326,20 +5370,52 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $status     = substr($payload, 0, 2);
             $srcEp      = substr($payload, 2, 2);
             $DestEP     = substr($payload, 4, 2);
-            $DestMode   = substr($payload, 6, 2);
-            $DestAddr   = substr($payload, 8, 4);
-            $sqn        = substr($payload,12, 2);
-
+            $dstMode   = substr($payload, 6, 2);
+            // Tcharp38: Lack of infos. Extracted from Domoticz plugin.
+            if (in_array($dstMode, ["01", "02", "07"])) {
+                $dstAddr   = substr($payload, 8, 4);
+                $sqn        = substr($payload,12, 2);
+                $nPDU       = substr($payload,14, 2);
+                $aPDU       = substr($payload,16, 2);
+            } else if ($dstMode == "03") { // IEEE
+                $dstAddr   = substr($payload, 8, 16);
+                $sqn        = substr($payload,24, 2);
+                $nPDU       = substr($payload,26, 2);
+                $aPDU       = substr($payload,28, 2);
+            }
             $msgDecoded = '8702/APS data confirm fail'
-                //.', Status='.$status.'/'.$allErrorCode[$status][0].'->'.$allErrorCode[$status][1].')'
                .', Status='.$status.'/'.$allErrorCode[$status][0]
                .', SrcEP='.$srcEp
                .', DestEP='.$DestEP
-               .', AddrMode='.$DestMode
-               .', Addr='.$DestAddr
-               .', SQN='.$sqn;
+               .', AddrMode='.$dstMode;
+            if (isset($dstAddr))
+               $msgDecoded .= ', Addr='.$dstAddr;
+            if (isset($sqn))
+               $msgDecoded .= ', SQN='.$sqn;
+            if (isset($nPDU))
+               $msgDecoded .= ', NPDU='.$nPDU;
+            if (isset($aPDU))
+               $msgDecoded .= ', APDU='.$aPDU;
+
+            // Log
             parserLog('debug', $dest.', Type='.$msgDecoded, "8702");
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $DestAddr))
+
+            // Sending msg to cmd for flow control
+            $msg = array (
+                'type'         => "8702",
+                'dest'         => $dest,
+                'status'       => $status,
+                'sqn'          => $sqn,
+                // 'packetType'   => $packetType , // The value of the initiating command request.
+            );
+            if (isset($nPDU)) {
+                $msg['nPDU'] = $nPDU;
+                $msg['aPDU'] = $aPDU;
+            }
+            $this->msgToCmdAck($msg);
+
+            // Monitor if requested
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
             // // On envoie un message MQTT vers la ruche pour le processer dans Abeille
@@ -5353,12 +5429,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, $data);
 
-            if ( Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' )) {
-                $eq = Abeille::byLogicalId( $dest.'/'.$DestAddr, 'Abeille' );
-                parserLog('debug', '  NO ACK for '.$eq->getHumanName().". APS_ACK set to 0", "8702");
-                $eq->setStatus('APS_ACK', '0');
-                // parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail status: '.$eq->getStatus('APS_ACK'), "8702");
-            }
+            // if ( Abeille::byLogicalId( $dest.'/'.$dstAddr, 'Abeille' )) {
+            //     $eq = Abeille::byLogicalId( $dest.'/'.$dstAddr, 'Abeille' );
+            //     parserLog('debug', '  NO ACK for '.$eq->getHumanName().". APS_ACK set to 0", "8702");
+            //     $eq->setStatus('APS_ACK', '0');
+            //     // parserLog('debug', $dest.', Type=8702/APS Data Confirm Fail status: '.$eq->getStatus('APS_ACK'), "8702");
+            // }
         }
 
         function decode8806($dest, $payload, $lqi)
@@ -5376,11 +5452,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <Power: uint8_t>
 
             parserLog('debug', $dest.', Type=8806/Set TX power answer'
-                            .', Power='               .$payload
+                            .', Power='.$payload
                              );
-            $data       = substr($payload, 0, 2);
+            $data = substr($payload, 0, 2);
 
-            // On transmettre l info sur la ruche
             $this->msgToAbeille($dest."/0000", "Zigate", "Power", $data);
         }
 
@@ -5491,14 +5566,14 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', 'processWakeUpQueue(): <------------------------------');
         }
 
-        /* Called on any receipt from a device meaning it is awake, at least for a very short time */
-        function deviceIsAwake($net, $addr) {
-            if (!isset($this->pendingMsg))
-                return;
-            if (!isset($this->pendingMsg[$net]))
-                return;
-            if (!isset($this->pendingMsg[$net][$addr]))
-                return;
-        }
+        // /* Called on any receipt from a device meaning it is awake, at least for a very short time */
+        // function deviceIsAwake($net, $addr) {
+        //     if (!isset($this->pendingMsg))
+        //         return;
+        //     if (!isset($this->pendingMsg[$net]))
+        //         return;
+        //     if (!isset($this->pendingMsg[$net][$addr]))
+        //         return;
+        // }
     } // class AbeilleParser
 ?>

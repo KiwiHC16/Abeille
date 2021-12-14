@@ -104,15 +104,15 @@
                     "address" => $address,
                 );
                 break;
-            case "getRoutingTable":
-            case "Mgmt_Rtg_req":
-                $Command = array(
-                    "getRoutingTable" => "1",
-                    "priority" => $priority,
-                    "dest" => $dest,
-                    "address" => $address,
-                );
-                break;
+            // case "getRoutingTable":
+            // case "Mgmt_Rtg_req":
+            //     $Command = array(
+            //         "getRoutingTable" => "1",
+            //         "priority" => $priority,
+            //         "dest" => $dest,
+            //         "address" => $address,
+            //     );
+            //     break;
             case "getBindingTable":
                 $Command = array(
                     "getBindingTable" => "1",
@@ -131,16 +131,16 @@
                     "StartIndex" => $keywords[3],
                 );
                 break;
-            case "getNeighborTable": // Mgmt_Lqi_req
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                    "getNeighborTable" => "1",
-                    "priority" => $priority,
-                    "dest" => $dest,
-                    "addr" => $address,
-                    "startIndex" => $keywords[1]
-                );
-                break;
+            // case "getNeighborTable": // Mgmt_Lqi_req
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     $Command = array(
+            //         "getNeighborTable" => "1",
+            //         "priority" => $priority,
+            //         "dest" => $dest,
+            //         "addr" => $address,
+            //         "startIndex" => $keywords[1]
+            //     );
+            //     break;
             case "IEEE_Address_request":
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
@@ -151,23 +151,6 @@
                     "shortAddress"              => $keywords[1],
                 );
                 break;
-            // case "bind0030":
-            //     $fields = preg_split("/[=&]+/", $msg);
-            //     if (count($fields) > 1) {
-            //         $parameters = $this->proper_parse_str($msg);
-            //     }
-            //     $Command = array(
-            //         "bind0030" => "1",
-            //         "priority" => $priority,
-            //         "dest" => $dest,
-            //         "addr" => $parameters['addr'], // IEEE source addr
-            //         "ep" => $parameters['ep'], // Source EP
-            //         "clustId" => $parameters['clustId'], // Source cluster
-            //         "destAddr" => $parameters['destAddr'], // Dest IEEE addr or group addr
-            //     );
-            //     if (isset($parameters['destEp'])) // Not required if group address
-            //         $Command['destEp'] = $parameters['destEp']; // Dest EP if IEEE addr
-            //     break;
             case "bindShort":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -231,7 +214,7 @@
                     $params = $this->proper_parse_str($msg);
                 }
                 if (!isset($params['ep']) || !isset($params['clustId']) || !isset($params['attrId'])) {
-                    $this->deamonlog('debug', '  readAttributeRequest ERROR: missing minimal infos');
+                    cmdLog('debug', '  readAttributeRequest ERROR: missing minimal infos');
                     return;
                 }
                 $Command = array(
@@ -341,42 +324,6 @@
                 if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                 break;
 
-            // case "configureReporting":
-            //     $fields = preg_split("/[=&]+/", $msg);
-            //     if (count($fields) > 1) {
-            //         $parameters = $this->proper_parse_str($msg);
-            //     }
-
-            //     /* Call example:
-            //         configureReporting&ep=EE&clustId=XXXX&attrType=TT&attrId=YYYY&minInterval=ZZZZ&maxInterval=CCCC
-            //         'minInterval' & 'maxInterval' are supposed to be decimal numbers. */
-
-            //     if (!isset($parameters['ep']) )
-            //         $parameters['ep'] = "01";
-            //     if (!isset($parameters['minInterval']) )
-            //         $parameters['minInterval'] = "0000";
-            //     else
-            //         $parameters['minInterval'] = str_pad(dechex($parameters['minInterval']), 4, 0, STR_PAD_LEFT);
-            //     if (!isset($parameters["maxInterval"]) || ($parameters["maxInterval"] == "#MAXINTERVAL#"))
-            //         $parameters['maxInterval'] = "0000";
-            //     else
-            //         $parameters["maxInterval"] = str_pad(dechex($parameters['maxInterval']), 4, 0, STR_PAD_LEFT);
-
-            //     $Command = array(
-            //         "configureReporting"    => "1",
-            //         "priority"              => $priority,
-            //         "dest"                  => $dest,
-            //         "addr"                  => $address,
-            //         "ep"                    => $parameters['ep'],
-            //         "clustId"               => $parameters['clustId'],
-            //         "attrId"                => $parameters['attrId'],
-            //         "minInterval"           => $parameters['minInterval'],
-            //         "maxInterval"           => $parameters['maxInterval']
-            //     );
-            //     if (isset($parameters['attrType']) )
-            //         $Command["attrType"] = $parameters['attrType']; // Auto-detected if not filled
-            //     break;
-
             case "readReportingConfig":
                 $Command = array(
                     "readReportingConfig"    => "1",
@@ -387,57 +334,6 @@
                     "attrId"                => $parameters['attrId'],
                     );
                 break;
-
-            // case "discoverCommandsReceived":
-            //     $Command = array(
-            //                         "discoverCommandsReceived"    => "1",
-            //                         "priority"              => $priority,
-            //                         "dest"                  => $dest,
-            //                         "addr"                  => $address,
-            //                         "ep"                    => isset($parameters['ep']) ? $parameters['ep']: null,
-            //                         "clustId"               => isset($parameters['clustId']) ? $parameters['clustId']: null,
-            //                         "startId"               => isset($parameters['startId']) ? $parameters['startId']: null,
-            //                         "max"                   => isset($parameters['max']) ? $parameters['max']: null,
-            //                         );
-            //     break;
-
-            // case "discoverAttributes":
-            //     $fields = preg_split("/[=&]+/", $msg);
-            //         if (count($fields) > 1) {
-            //             $parameters = $this->proper_parse_str($msg);
-            //         }
-
-            //     $Command = array(
-            //         "discoverAttributes"    => "1",
-            //         "priority"              => $priority,
-            //         "dest"                  => $dest,
-            //         "addr"                  => $address,
-            //         "ep"                    => $parameters['ep'],
-            //         "clustId"               => $parameters['clustId'],
-            //         "dir"                   => isset($parameters['dir']) ? $parameters['dir'] : "00",
-            //         "startAttrId"           => isset($parameters['startAttrId']) ? $parameters['startAttrId'] : "0000",
-            //         "maxAttrId"             => isset($parameters['maxAttrId']) ? $parameters['maxAttrId'] : "FF",
-            //     );
-            //     break;
-
-            // case "discoverAttributesExt": // Discover Attributes Extended: WORK ONGOING
-            //     $fields = preg_split("/[=&]+/", $msg);
-            //         if (count($fields) > 1) {
-            //             $parameters = $this->proper_parse_str($msg);
-            //         }
-
-            //     $Command = array(
-            //         "discoverAttributesExt"    => "1",
-            //         "priority"              => $priority,
-            //         "dest"                  => $dest,
-            //         "addr"                  => $address,
-            //         "ep"                    => $parameters['ep'],
-            //         "clustId"               => $parameters['clustId'],
-            //         "dir"                   => isset($parameters['dir']) ? $parameters['dir'] : "00",
-            //         "startAttrId"           => isset($parameters['startAttrId']) ? $parameters['startAttrId'] : "0000",
-            //         "maxAttrId"             => isset($parameters['maxAttrId']) ? $parameters['maxAttrId'] : "FF",
-            //     );
-            //     break;
 
             /*
              * Unsorted yet
@@ -811,7 +707,7 @@
                 } else if ($parameters['attributeType'] == '30')  {
                     $valuePrepared = sprintf("%02X", $parameters['value']);
                 } else {
-                    $this->deamonlog('debug', '  WriteAttributeRequestGeneric ERROR: unsupported attribute type '.$parameters['attributeType']);
+                    cmdLog('debug', '  WriteAttributeRequestGeneric ERROR: unsupported attribute type '.$parameters['attributeType']);
                     return;
                 }
                 $Command = array(
@@ -1274,21 +1170,6 @@
                                     "groupAddress"             => $parameters['groupAddress'],
                                     );
                 break;
-            // case "addGroup":
-            //     $fields = preg_split("/[=&]+/", $msg);
-            //     if (count($fields) > 1) {
-            //         $parameters = $this->proper_parse_str($msg);
-            //     }
-            //     if (strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
-            //     $Command = array(
-            //                         "addGroup"                 => "1",
-            //                         "priority"                 => $priority,
-            //                         "dest"                     => $dest,
-            //                         "address"                  => $address,
-            //                         "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-            //                         "groupAddress"             => $parameters['groupAddress'],
-            //                         );
-            //     break;
 
             case "removeGroup":
                 // if ($parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
@@ -1347,7 +1228,7 @@
                 break;
 
             case "sceneGroupRecall":
-                $this->deamonlog('debug', '  sceneGroupRecall msg: ' . $msg );
+                cmdLog('debug', '  sceneGroupRecall msg: ' . $msg );
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -1363,7 +1244,7 @@
                 break;
 
             // case "sceneGroupRecall":
-            //     $this->deamonlog('debug', '  sceneGroupRecall msg: ' . $msg );
+            //     cmdLog('debug', '  sceneGroupRecall msg: ' . $msg );
             //     $fields = preg_split("/[=&]+/", $msg);
             //     if (count($fields) > 1) {
             //         $parameters = $this->proper_parse_str($msg);
@@ -1467,8 +1348,8 @@
                 break;
 
             default:
-                $this->deamonlog("debug", '  No prepare function. Forwarding cmd to AbeilleCmdProcess.');
-                // $this->deamonlog("debug", '  msg='.json_encode($msg));
+                cmdLog("debug", '  No prepare function. Forwarding cmd to AbeilleCmdProcess.');
+                // cmdLog("debug", '  msg='.json_encode($msg));
 
                 /* Tcharp38 notes:
                    This part forward directly message to 'AbeilleCmdProcess'.
@@ -1488,11 +1369,11 @@
                 );
                 // Splitting by '&' then by '='
                 $couples = preg_split("/[&]+/", $msg);
-// $this->deamonlog("debug", '  couples='.json_encode($couples));
+// cmdLog("debug", '  couples='.json_encode($couples));
                 $addrFound = false;
                 for($i = 0; $i < count($couples); $i++) {
                     $keywords = preg_split("/[=]+/", $couples[$i]);
-// $this->deamonlog("debug", '  keywords='.json_encode($keywords));
+// cmdLog("debug", '  keywords='.json_encode($keywords));
                     if (isset($keywords[1]))
                         $Command[$keywords[0]] = $keywords[1];
                     else
@@ -1503,84 +1384,13 @@
                 if ($addrFound == false)
                     $Command['addr'] = $address;
 
-                // if (count($keywords) == 1) {
-                //     $Command = array(
-                //                     $action => $msg,
-                //                     "name" => $action,
-                //                     "priority" => $priority,
-                //                     "dest" => $dest,
-                //                     );
-                // } else if (count($keywords) == 2) { // Si une command type get http param1=value1&param2=value2
-                //     $Command = array(
-                //                     $action => $action,
-                //                     "name" => $action,
-                //                     "priority" => $priority,
-                //                     "dest" => $dest,
-                //                     $keywords[0] => $keywords[1],
-                //                     );
-                // } else if (count($keywords) == 4) {
-                //     $Command = array(
-                //                     $action => $action,
-                //                     "name" => $action,
-                //                     "priority" => $priority,
-                //                     "dest" => $dest,
-                //                     $keywords[0] => $keywords[1],
-                //                     $keywords[2] => $keywords[3],
-                //                     );
-                // } else if (count($keywords) == 6) {
-                //     $Command = array(
-                //                     $action => $action,
-                //                     "name" => $action,
-                //                     "priority" => $priority,
-                //                     "dest" => $dest,
-                //                     $keywords[0] => $keywords[1],
-                //                     $keywords[2] => $keywords[3],
-                //                     $keywords[4] => $keywords[5],
-                //                     );
-                // } else if (count($keywords) == 8) {
-                //     $Command = array(
-                //                     $action => $action,
-                //                     "name" => $action,
-                //                     "priority" => $priority,
-                //                     "dest" => $dest,
-                //                     $keywords[0] => $keywords[1],
-                //                     $keywords[2] => $keywords[3],
-                //                     $keywords[4] => $keywords[5],
-                //                     $keywords[6] => $keywords[7],
-                //                     );
-                // } else if (count($keywords) == 10) {
-                //     $Command = array(
-                //                     $action => $action,
-                //                     "name" => $action,
-                //                     "priority" => $priority,
-                //                     "dest" => $dest,
-                //                     $keywords[0] => $keywords[1],
-                //                     $keywords[2] => $keywords[3],
-                //                     $keywords[4] => $keywords[5],
-                //                     $keywords[6] => $keywords[7],
-                //                     $keywords[8] => $keywords[9],
-                //                     );
-                // } else if (count($keywords) == 12) {
-                //     $Command = array(
-                //                     $action => $action,
-                //                     "name" => $action,
-                //                     "priority" => $priority,
-                //                     "dest" => $dest,
-                //                     $keywords[0] => $keywords[1],
-                //                     $keywords[2] => $keywords[3],
-                //                     $keywords[4] => $keywords[5],
-                //                     $keywords[6] => $keywords[7],
-                //                     $keywords[8] => $keywords[9],
-                //                     $keywords[10] => $keywords[11],
-                //                     );
-                // }
                 break;
             } // switch action
 
             if (!isset($Command)) {
-                $this->deamonlog('debug', '  WARNING: Unknown command ! (topic='.$topic.')');
+                cmdLog('debug', '  ERROR: Unknown command ! (topic='.$topic.')');
             } else {
-                // $this->deamonlog('debug', '  L2 - calling processCmd with Command parameters: '.json_encode($Command), $this->debug['procmsg']);
+                // cmdLog('debug', '  L2 - calling processCmd with Command parameters: '.json_encode($Command), $this->debug['prepareCmd']);
                 $this->processCmd($Command);
             }
 

@@ -22,9 +22,6 @@
             "04" => "Busy (Node is carrying out a lengthy operation and is currently unable to handle the incoming command)",
             "05" => "Stack already started (no new configuration accepted)",
             "15" => "ZPS_EVENT_ERROR Indicates that an error has occurred on the local node. The nature of the error is reported through the structure ZPS_tsAfErrorEvent - see Section 7.2.2.17. JN-UG-3113 v1.5 -> En gros pas de place pour traiter le message",
-            "80" => "Code inconnu",
-            "A6" => "Code inconnu",
-            "C2" => "Code inconnu",
         );
 
         public $queueKeyAbeilleToCmd;
@@ -40,18 +37,20 @@
         public $tempoMessageQueue;
 
         public $cmdQueue;                         // When a cmd is to be sent to the zigate we store it first, then try to send it if the cmdAck is low. Flow Control.
+        public $cmdQueueHigh; // High prority commands
         public $timeLastAck = array();            // When I got the last Ack from Zigate
         public $timeLastAckTimeOut = array();     // x s secondes dans retour de la zigate, je considere qu'elle est ok de nouveau pour ne pas rester bloqué.
         public $maxRetry = maxRetryDefault;       // Abeille will try to send the message max x times
 
-        public $zigateEnabled = array();
+        public $zigateEnabled = array(); // 1=Zigate is enabled
         public $zigateAvailable = array(); // 1=ready to received new cmd
+        public $zigateOngoing = array(); // Cmd for zigate when zigateAvailable == 0
 
         public $statCmd = array();
 
         function __construct($debugLevel='debug') {
-            $this->deamonlog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
-            // $this->deamonlog("debug", "Recuperation des queues de messages", $this->debug["AbeilleCmdClass"]);
+            cmdLog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
+            // cmdLog("debug", "Recuperation des queues de messages", $this->debug["AbeilleCmdClass"]);
 
             $abQueues = $GLOBALS['abQueues'];
             $this->queueKeyAbeilleToCmd     = msg_get_queue(queueKeyAbeilleToCmd);
@@ -87,18 +86,18 @@
                 $this->timeLastAckTimeOut[$zgId] = 0;
             }
 
-            $this->deamonlog("debug", "AbeilleCmdQueue constructor end", $this->debug["AbeilleCmdClass"]);
+            cmdLog("debug", "AbeilleCmdQueue constructor end", $this->debug["AbeilleCmdClass"]);
         }
 
-        public function incStatCmd( $cmd ) {
-            if ( isset($this->statCmd[$cmd]) ) {
-                $this->statCmd[$cmd]++;
-            }
-            else {
-                $this->statCmd[$cmd]=1;
-            }
-            $this->deamonlog('debug', '      incStatCmd(): '.json_encode($this->statCmd) );
-        }
+        // public function incStatCmd( $cmd ) {
+        //     if ( isset($this->statCmd[$cmd]) ) {
+        //         $this->statCmd[$cmd]++;
+        //     }
+        //     else {
+        //         $this->statCmd[$cmd]=1;
+        //     }
+        //     cmdLog('debug', '      incStatCmd(): '.json_encode($this->statCmd) );
+        // }
 
         public function publishMosquitto( $queueKeyId, $priority, $topic, $payload ) {
 
@@ -109,9 +108,9 @@
             $msgAbeille->message['payload'] = $payload;
 
             if (msg_send($queue, $priority, $msgAbeille, true, false)) {
-                $this->deamonlog('debug', '(fct publishMosquitto) mesage: '.json_encode($msgAbeille).' added to queue : '.$queueKeyId, $this->debug['tempo']);
+                cmdLog('debug', '(fct publishMosquitto) mesage: '.json_encode($msgAbeille).' added to queue : '.$queueKeyId, $this->debug['tempo']);
             } else {
-                $this->deamonlog('debug', '(fct publishMosquitto) could not add message '.json_encode($msgAbeille).' to queue : '.$queueKeyId, $this->debug['tempo']);
+                cmdLog('debug', '(fct publishMosquitto) could not add message '.json_encode($msgAbeille).' to queue : '.$queueKeyId, $this->debug['tempo']);
             }
         }
 
@@ -125,9 +124,9 @@
              $msgAbeille->message['payload'] = $payload;
 
              if (msg_send($queue, $msgAbeille, true, false)) {
-                 $this->deamonlog('debug', '(fct publishMosquittoAbeille) mesage: '.json_encode($msgAbeille).' added to queue : '.$queueKeyId, $this->debug['tempo']);
+                 cmdLog('debug', '(fct publishMosquittoAbeille) mesage: '.json_encode($msgAbeille).' added to queue : '.$queueKeyId, $this->debug['tempo']);
              } else {
-                 $this->deamonlog('debug', '(fct publishMosquittoAbeille) could not add message '.json_encode($msgAbeille).' to queue : '.$queueKeyId, $this->debug['tempo']);
+                 cmdLog('debug', '(fct publishMosquittoAbeille) could not add message '.json_encode($msgAbeille).' to queue : '.$queueKeyId, $this->debug['tempo']);
              }
         }
 
@@ -138,9 +137,9 @@
             list($timeTitle, $time) = explode('=', $param);
 
             $this->tempoMessageQueue[] = array( 'time'=>$time, 'priority'=>$priority, 'topic'=>$topic, 'msg'=>$msg );
-            $this->deamonlog('debug', 'addTempoCmdAbeille - tempoMessageQueue: '.json_encode($this->tempoMessageQueue), $this->debug['tempo']);
+            cmdLog('debug', 'addTempoCmdAbeille - tempoMessageQueue: '.json_encode($this->tempoMessageQueue), $this->debug['tempo']);
             if (count($this->tempoMessageQueue) > 50 ) {
-                $this->deamonlog('info', 'Il y a plus de 50 messages dans le queue tempo.' );
+                cmdLog('info', 'Il y a plus de 50 messages dans le queue tempo.' );
             }
         }
 
@@ -155,9 +154,9 @@
                 // deamonlog('debug', 'execTempoCmdAbeille - tempoMessageQueue - 0: '.$mqttMessage[0] );
                 if ($mqttMessage['time']<$now) {
                     $this->publishMosquitto( queueKeyCmdToCmd, $mqttMessage['priority'], $mqttMessage['topic'], $mqttMessage['msg']  );
-                    $this->deamonlog('debug', 'execTempoCmdAbeille - tempoMessageQueue - one less: -> '.json_encode($this->tempoMessageQueue[$key]), $this->debug['tempo']);
+                    cmdLog('debug', 'execTempoCmdAbeille - tempoMessageQueue - one less: -> '.json_encode($this->tempoMessageQueue[$key]), $this->debug['tempo']);
                     unset($this->tempoMessageQueue[$key]);
-                    $this->deamonlog('debug', 'execTempoCmdAbeille - tempoMessageQueue : '.json_encode($this->tempoMessageQueue), $this->debug['tempo']);
+                    cmdLog('debug', 'execTempoCmdAbeille - tempoMessageQueue : '.json_encode($this->tempoMessageQueue), $this->debug['tempo']);
                 }
             }
         }
@@ -173,13 +172,13 @@
                 $temp ^= hexdec($datas[$i].$datas[$i+1]);
             }
 
-            $this->deamonlog('debug',"getChecksum fct - msgtype: " . $msgtype . " length: " . $length . " datas: " . $datas . " strlen data: " . strlen($datas) . " checksum calculated: " . sprintf("%02X",$temp), $this->debug["Checksum"]);
+            cmdLog('debug',"getChecksum fct - msgtype: " . $msgtype . " length: " . $length . " datas: " . $datas . " strlen data: " . strlen($datas) . " checksum calculated: " . sprintf("%02X",$temp), $this->debug["Checksum"]);
 
             return sprintf("%02X",$temp);
         }
 
         function transcode($datas) {
-            $this->deamonlog('debug','transcode fct - transcode data: '.$datas, $this->debug['transcode']);
+            cmdLog('debug','transcode fct - transcode data: '.$datas, $this->debug['transcode']);
             $mess="";
 
             if (strlen($datas)%2 !=0) return -1;

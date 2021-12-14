@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+- JSON équipements: Nettoyage commandes obsolètes
+
+  - 'spiritSetReportBatterie' => 'zbConfigureReporting' + 'clustId=0001&attrType=20&attrId=0021'
+  - 'setReportIlluminance' => 'zbConfigureReporting' + 'clustId=0400&attrType=21&attrId=0000'
+  - 'setReportTemperature' => 'zbConfigureReporting' + 'clustId=0402&attrType=29&attrId=0000'
+  - 'setReportOccupancy' => 'zbConfigureReporting' + 'clustId=0406&attrType=18&attrId=0000'
+- QS-Zigbee-C01: Correction modele pour cmde 'Position'.
+- Ajout support Module volet Roulant dOOwifi DWF-0205ZB-PN-2 (#2241).
+- Firmware: Ajout version 3.21 OPDM+legacy. Suppression versions antérieures à 3.1d.
+- Xiaomi Aqara QBKG26LM: Mise-à-jour modèle (#2174).
+
 211210-BETA-1
 -------------
 

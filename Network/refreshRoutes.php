@@ -18,7 +18,8 @@
 
             list($net, $addr) = explode('/', $eqLogic->getLogicalId());
             if ( strlen($addr) == 4 ) {
-                Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "Cmd".$net."/".$addr."/Mgmt_Rtg_req", "" );
+                // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityUserCmd, "Cmd".$net."/".$addr."/getRoutingTable", "");
+                Abeille::publishMosquitto( queueKeyAbeilleToCmd, PRIO_NORM, "Cmd".$net."/".$addr."/getRoutingTable", "");
                 sleep(3);
             }
         }

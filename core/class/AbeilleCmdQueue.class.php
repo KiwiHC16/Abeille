@@ -220,7 +220,7 @@
                 return;
             }
 
-            $this->incStatCmd($cmd);
+            //$this->incStatCmd($cmd);
 
             $i = str_replace( 'Abeille', '', $dest );
             if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N', 1) == 'N' ) {

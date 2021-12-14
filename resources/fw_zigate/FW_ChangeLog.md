@@ -3,6 +3,12 @@
 Dernieres infos: https://zigate.fr/category/informations/
 Releases: https://github.com/fairecasoimeme/ZiGate/releases
 
+## Version 3.21
+
+* Add raw message when there are errors on write attribute command
+* Fix for Xiaomi and Lumi devices which ask manufacture code (0x115f) whith node descriptor request
+* Fix BindGroup command
+
 ## Version 3.20
 
 * Fix IASZONE to be more flexible

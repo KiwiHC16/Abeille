@@ -8,8 +8,8 @@
 <form class="form-horizontal">
     
     <?php
-        // TODO: Set to 0 for debug purposes.
-        if (0) {
+
+        if (1) {
             require_once __DIR__.'/../../core/php/AbeilleZigbeeConst.php';
             include 'AbeilleEq-Advanced-fct.php';
             include 'AbeilleEq-Advanced-Common.php';

@@ -9,7 +9,7 @@
 <form class="form-horizontal">
     <fieldset>
         <?php
-            if (0) {
+            if (1) {
                 include 'AbeilleEq-Main-Generic.php';
                 include 'AbeilleEq-Main-Icon.php';
                 include 'AbeilleEq-Main-Others.php';

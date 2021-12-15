@@ -1,0 +1,57 @@
+<!-- This file displays advanced equipment/zigbee infos.
+     Included by 'AbeilleEq-Main.php' -->
+
+     <hr>
+
+<?php
+    if ($dbgDeveloperMode) echo __FILE__;
+?>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{Icone}}</label>
+    <div class="col-sm-3">
+        <select id="sel_icon" class="form-control eqLogicAttr" data-l1key="configuration" data-l2key="icone">
+            <option value="Abeille">{{Abeille}}</option>
+            <option value="Ruche">{{Ruche}}</option>
+            <?php
+                require_once __DIR__.'/../../core/class/AbeilleTools.class.php';
+                $items = AbeilleTools::getDeviceNameFromJson('Abeille');
+
+                $selectBox = array();
+                foreach ($items as $item) {
+                    $device = AbeilleTools::getDeviceConfig($item, 'Abeille', 2);
+                    if (!isset($device['configuration']))
+                        continue; // No 'configuration' in this JSON, so no icon defined
+                    if (!isset($device['configuration']['icon']))
+                        continue; // No icon defined
+                    if (!isset($device['type']))
+                        continue; // No type defined
+                    $icon = $device['configuration']['icon'];
+                    $name = $device['type'];
+                    $selectBox[ucwords($name)] = $icon;
+                }
+                ksort($selectBox);
+                foreach ($selectBox as $key => $value) {
+                    echo "<option value=\"".$value."\">{{".$key."}}</option>";
+                }
+            ?>
+        </select>
+    </div>
+</div>
+
+        
+<style>
+.widthSet {
+        max-width: 160px;
+        width:auto;
+    }
+</style>
+
+<div class="form-group">
+    <div class="col-sm-3">
+    </div>
+    <div class="col-sm-3" style="text-align: center">
+        <!-- <img name="icon_visu" src="" width="160" height="200"/> -->
+        <img name="icon_visu" class="widthSet">
+    </div>
+</div>

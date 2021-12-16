@@ -424,6 +424,19 @@
             attrType = document.getElementById("idAttrTypeWA").value;
             if (attrType != '')
                 payload += "_attrType="+attrType;
+        } else if (request == "writeAttribute0530") {
+            topic = "Cmd"+logicalId+"_writeAttribute0530";
+            ep = document.getElementById("idEpWA2").value;
+            clustId = document.getElementById("idClustIdWA2").value;
+            attrId = document.getElementById("idAttrIdWA2").value;
+            value = document.getElementById("idValueWA2").value;
+            payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId+"_attrVal="+value;
+            attrType = document.getElementById("idAttrTypeWA2").value;
+            if (attrType != '')
+                payload += "_attrType="+attrType;
+            dir = document.getElementById("idDirWA2").value;
+            if (dir != '')
+                payload += "_dir="+dir;
         } else if (request == "discoverCommandsReceived") {
             topic = "Cmd"+logicalId+"_discoverCommandsReceived";
             ep = document.getElementById("idEpB").value;

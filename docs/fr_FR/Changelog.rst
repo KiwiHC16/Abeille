@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne + page EQ/avancé: Ajout support writeAttribute via cmd 0530.
+
 211214-BETA-3
 -------------
 

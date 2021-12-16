@@ -2,6 +2,8 @@ ChangeLog
 =========
 
 - Interne + page EQ/avancé: Ajout support writeAttribute via cmd 0530.
+- Page de config: Affichage version connue du firmware.
+- Page EQ/avancé: Affichage version complète FW (ex: 0004-0320).
 
 211214-BETA-3
 -------------

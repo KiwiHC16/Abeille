@@ -6,7 +6,7 @@
 ?>
 
 <form class="form-horizontal">
-    
+
     <?php
 
         if (1) {
@@ -21,11 +21,11 @@
             else {
                 include 'AbeilleEq-Advanced-Device.php';
                 include 'AbeilleEq-Advanced-Specific.php';
-            } 
+            }
 
             include 'AbeilleEq-Advanced-Interrogations.php';
         }
-        
+
     ?>
 
 </form>

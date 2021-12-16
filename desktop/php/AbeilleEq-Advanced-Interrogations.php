@@ -109,6 +109,23 @@
         <input id="idValueWA" title="{{Valeur à écrire. Format hex string}}"  placeholder="{{Data}}" />
     </div>
 </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">ZCL: Ecriture attribut via 0530</label>
+            <div class="col-sm-9">
+                <?php
+                    echo '<a class="btn btn-danger" onclick="interrogate(\'writeAttribute0530\', \''.$eqId.'\')">{{Ecrire}}</a>';
+                    addEpButton("idEpWA2", $mainEP);
+                    addClusterButton("idClustIdWA2");
+                ?>
+                <input id="idDirWA2" title="{{Direction. Format hex string 2 car (00=vers serveur, 01=vers client)}}" placeholder="{{Dir (ex: 00)}}" />
+                <?php
+                    addAttrInput("idAttrIdWA2");
+                ?>
+                <input id="idAttrTypeWA2" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" />
+                <input id="idValueWA2" title="{{Valeur à écrire. Format hex string}}"  placeholder="{{Data}}" />
+            </div>
+        </div>
+
 <div class="form-group">
     <label class="col-sm-3 control-label" title="readReportingConfig">ZCL: Lecture configuration de reporting</label>
     <div class="col-sm-5">

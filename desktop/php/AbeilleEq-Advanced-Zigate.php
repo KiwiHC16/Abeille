@@ -37,11 +37,13 @@
     <label class="col-sm-3 control-label">Firmware</label>
     <div class="col-sm-5">
         <?php
-        echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "SDK").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-            echo '<span id="idFWVersion">'.getCmdValueByName($eqId, 'SDK').'</span>';
+        $fwVersion = getCmdValueByLogicId($eqId, "SW-Application").'-'.getCmdValueByLogicId($eqId, "SW-SDK");
+        // TODO: Currently updated only if SW-SDK change. Better to merge major & minor and have only 1 jeedom info.
+        echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, "SW-SDK").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+        echo '<span id="idFWVersion">'.$fwVersion.'</span>';
         ?>
             <script>
-                <?php echo "jeedom.cmd.update['".getCmdIdByName($eqId, "SDK")."'] = function(_options){"; ?>
+                <?php echo "jeedom.cmd.update['".getCmdIdByLogicId($eqId, "SW-SDK")."'] = function(_options){"; ?>
                     console.log("jeedom.cmd.update[SDK]");
                     // console.log(_options);
                     var element = document.getElementById('idFWVersion');

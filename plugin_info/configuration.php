@@ -45,6 +45,22 @@
     fclose($file);
 
     echo '<script>var js_wifiLink = "'.wifiLink.'";</script>'; // PHP to JS
+
+    /* Returns current cmd value identified by its Jeedom logical ID name */
+    function getCmdValueByLogicId($eqId, $logicId) {
+        $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $logicId);
+        if (!is_object($cmd))
+            return "";
+        return $cmd->execCmd();
+    }
+
+    /* Returns cmd ID identified by its Jeedom logical ID name */
+    function getCmdIdByLogicId($eqId, $logicId) {
+        $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $logicId);
+        if (!is_object($cmd))
+            return "";
+        return $cmd->getId();
+    }
 ?>
 
 <style>
@@ -59,6 +75,10 @@
 
 <?php
     function displayZigate($zgId) {
+        $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+        if ($eqLogic) {
+            $eqId = $eqLogic->getId();
+        }
         echo '<div class="form-group">';
             echo '<div class="col-lg-3">';
                 echo '<h4>';
@@ -133,7 +153,20 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Firmware}} : </label>';
             echo '<div class="col-lg-2">';
-                echo '<input id="idFwVersion'.$zgId.'" type="text" title="{{Version actuelle du firmware}}" disabled>';
+                // echo '<input id="idFwVersion'.$zgId.'" type="text" title="{{Version actuelle du firmware}}" disabled>';
+                if (isset($eqId))
+                    $fwVersion = getCmdValueByLogicId($eqId, "SW-Application").'-'.getCmdValueByLogicId($eqId, "SW-SDK");
+                else
+                    $fwVersion = "";
+                echo '<input id="idFwVersion'.$zgId.'" value="'.$fwVersion.'" type="text" class="cmd" data-type="info" data-subtype="string" data-cmd_id="" title="{{Version actuelle du firmware}}" readonly="readonly">';
+                // echo '<script>';
+                // echo "jeedom.cmd.update['3408'] = function(_options) {";
+                //     echo 'console.log("jeedom.cmd.update[3408], _options", _options);';
+                //     echo 'var element = document.getElementById("idFwVersion'.$zgId.'");';
+                //     echo 'console.log("element", element);';
+                //     echo 'element.value = _options.display_value;';
+                // echo '}';
+                // echo '</script>';
             echo '</div>';
             echo '<div class="col-lg-2">';
                 echo '<a id="idReadFwB'.$zgId.'" class="btn btn-default form-control" onclick="checkSerialPort('.$zgId.')" title="{{Lecture de la version du firmware}}"><i class="fas fa-sync"></i> {{Lire}}</a>';

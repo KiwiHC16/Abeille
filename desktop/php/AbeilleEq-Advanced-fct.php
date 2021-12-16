@@ -4,7 +4,7 @@
 <?php
     function addDocButton($chapter) {
         // $urlUserMan = "https://kiwihc16.github.io/AbeilleDoc"; // Constant defined in Abeille config
-        echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.$urlUserMan.'/'.$chapter.'"><i class="fas fa-book"></i> ?</a>';
+        echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/'.$chapter.'"><i class="fas fa-book"></i> ?</a>';
     }
 
     /* Returns current cmd value identified by its Jeedom name */

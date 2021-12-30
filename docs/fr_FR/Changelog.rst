@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+211230-BETA-1
+-------------
+
 - Tuya TV02: Ajout image (2175).
 - JSON équipements: Correction support params optionnels.
 - TRADFRIbulbE14WScandleopal470lm LED1949C5: Ajout support (2250).

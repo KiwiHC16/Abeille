@@ -396,8 +396,9 @@
                                             }
                                         }
                                         if ($found == false)
-                                            $newCmd[$cmd1]['configuration']['request'] = $request."&".$p;
+                                            $request .= "&".$p; // Adding optional param
                                     }
+                                    $newCmd[$cmd1]['configuration']['request'] = $request;
                                     // log::add('Abeille', 'debug', 'request AFTER='.json_encode($newCmd[$cmd1]['configuration']['request']));
                                 }
 
@@ -568,11 +569,11 @@
         public static function getDeviceNameFromJson($logger = 'Abeille')
         {
             $return = array();
-            $dirCount = 0;
-            $dirExcluded = 0;
-            $fileMissing = 0;
-            $fileIllisible = 0;
-            $fileCount = 0;
+            // $dirCount = 0;
+            // $dirExcluded = 0;
+            // $fileMissing = 0;
+            // $fileIllisible = 0;
+            // $fileCount = 0;
 
             if (file_exists(devicesDir) == false) {
                 log::add('Abeille', 'error', "Problème d'installation. Le chemin '...core/config/devices' n'existe pas.");
@@ -581,20 +582,21 @@
 
             $dh = opendir(devicesDir);
             while (($dirEntry = readdir($dh)) !== false) {
-                $dirCount++;
+                // $dirCount++;
 
                 $fullPath = devicesDir.$dirEntry;
                 if (!is_dir($fullPath))
                     continue;
                 if (in_array($dirEntry, array(".", ".."))) {
-                    $dirExcluded++;
+                    // $dirExcluded++;
                     continue;
                 }
 
                 $fullPath = devicesDir.$dirEntry.DIRECTORY_SEPARATOR.$dirEntry.".json";
                 if (!file_exists($fullPath)) {
-                    log::add('Abeille', 'warning', "Fichier introuvable: ".$fullPath);
-                    $fileMissing++;
+                    // log::add('Abeille', 'warning', "Fichier introuvable: ".$fullPath);
+                    // $fileMissing++;
+                    // Probably an empty directory
                     continue;
                 }
 
@@ -602,23 +604,23 @@
                     $jsonContent = file_get_contents($fullPath);
                 } catch (Exception $e) {
                     log::add('Abeille', 'error', 'Impossible de lire le contenu du fichier '.$fullPath);
-                    $fileIllisible++;
+                    // $fileIllisible++;
                     continue;
                 }
 
                 $jdec = json_decode($jsonContent, true);
                 if ($jdec == null) {
                     log::add('Abeille', 'error', 'Fichier corrompu: '.$fullPath);
-                    $fileIllisible++;
+                    // $fileIllisible++;
                     continue;
                 }
                 $returnOneMore = array_keys($jdec)[0];
 
                 $return[] = $returnOneMore;
-                $fileCount++;
+                // $fileCount++;
             }
 
-            log::add('Abeille', 'debug', "Nb repertoire template parcourus: ".$dirCount." dont ". $dirExcluded." exclus soit ".($dirCount-$dirExcluded).". ".$fileCount." fichiers template ajoutés à la liste, ".$fileMissing++." introuvables et ".$fileIllisible." templates illisibles." );
+            // log::add('Abeille', 'debug', "Nb repertoire template parcourus: ".$dirCount." dont ". $dirExcluded." exclus soit ".($dirCount-$dirExcluded).". ".$fileCount." fichiers template ajoutés à la liste, ".$fileMissing++." introuvables et ".$fileIllisible." templates illisibles." );
             return $return;
         }
 

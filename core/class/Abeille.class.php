@@ -319,19 +319,23 @@ class Abeille extends eqLogic
     }
 
     /**
-     * pollingCmd
-     * Collect all cmd with Polling define and execute it
+     * executePollCmds
+     * Execute commands with "Polling" flag according to given "period".
      *
-     * @param   $period One of the crons: cron, cron15, cronHourly....
+     * @param $period One of the crons: cron, cron15, cronHourly....
      *
-     * @return          Does not return anything as all action are triggered by sending messages in queues
+     * @return Does not return anything as all action are triggered by sending messages in queues
      */
-    public static function pollingCmd($period)
+    public static function executePollCmds($period)
     {
-        foreach (AbeilleCmd::searchConfiguration('Polling', 'Abeille') as $key => $cmd) {
-            if ($cmd->getConfiguration('Polling') == $period) {
-                $cmd->execute();
-            }
+        $cmds = cmd::searchConfiguration('Polling', 'Abeille');
+        foreach ($cmds as $cmd) {
+            if ($cmd->getConfiguration('Polling') != $period)
+                continue;
+            $eqLogic = $cmd->getEqLogic();
+            $eqLogicId = $eqLogic->getHumanName();
+            log::add('Abeille', 'debug', "executePollCmds(".$period."), '".$eqLogicId."', cmdLogicId='".$cmd->getLogicalId()."'");
+            $cmd->execute();
         }
     }
 
@@ -420,7 +424,7 @@ class Abeille extends eqLogic
         }
 
         // Poll Cmd
-        self::pollingCmd("cronDaily");
+        self::executePollCmds("cronDaily");
     }
 
     /**
@@ -468,7 +472,7 @@ if (0) {
     }
         //--------------------------------------------------------
         // Poll Cmd
-        self::pollingCmd("cronHourly");
+        self::executePollCmds("cronHourly");
 
         log::add('Abeille', 'debug', 'Ending cronHourly ------------------------------------------------------------------------------------------------------------------------');
     }
@@ -476,13 +480,13 @@ if (0) {
     /**
      * cron30
      * Called by Jeedom every 30 minutes.
-     * pollingCmd
+     * executePollCmds
      *
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
     public static function cron30() {
         // Poll Cmd
-        self::pollingCmd("cron30");
+        self::executePollCmds("cron30");
     }
 
     /**
@@ -588,7 +592,7 @@ if (0) {
         }
 
         // Execute Action Cmd to refresh Info command
-        // self::pollingCmd("cron15");
+        // self::executePollCmds("cron15");
 
         log::add('Abeille', 'debug', 'cron15:Terminé --------------------------------');
         return;
@@ -597,7 +601,7 @@ if (0) {
     /**
      * cron10
      * Called by Jeedom every 10 minutes.
-     * pollingCmd
+     * executePollCmds
      *
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
@@ -609,13 +613,13 @@ if (0) {
         }
 
         // Poll Cmd
-        self::pollingCmd("cron10");
+        self::executePollCmds("cron10");
     }
 
     /**
      * cron5
      * Called by Jeedom every 5 minutes.
-     * pollingCmd
+     * executePollCmds
      *
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
@@ -627,7 +631,7 @@ if (0) {
         }
 
         // Poll Cmd
-        self::pollingCmd("cron5");
+        self::executePollCmds("cron5");
     }
 
     /**
@@ -697,6 +701,7 @@ if (0) {
             // if ($config['AbeilleType'.$i] != "WIFI")
             //     continue; // Not a WIFI zigate. No polling required
 
+            // TODO: Better to read time to correct it if required, instead of version that rarely changes
             Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/0000/getZgVersion&time=".(time() + 20), "");
             // beille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmdAbeille".$i."/0000/getNetworkStatus&time=".(time() + 24), "getNetworkStatus");
         }
@@ -728,7 +733,7 @@ if (0) {
         }
 
         // Poll Cmd
-        self::pollingCmd("cron");
+        self::executePollCmds("cron");
 
         /**
          * Refresh health information
@@ -1661,6 +1666,11 @@ while ($cron->running()) {
                 return;
             }
 
+            /* Tcharp38 TODO (see #2211)
+               If device is defaultUnknown and there is now a real model for it,
+               it is not detected. Reset is done from defaultUnknown again.
+               Need to store Zigbee modelId + manuf too for that purpose. */
+
             $jsonId = $eqLogic->getConfiguration('ab::jsonId');
             $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
             $ieee = $eqLogic->getConfiguration('IEEE');
@@ -2089,7 +2099,7 @@ while ($cron->running()) {
             // if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {
             // if (preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId) || preg_match("/^0000-[0-9A-F]*-*0010/", $cmdId)) {
             else if ($cmdId == "Time-TimeStamp") {
-                log::add('Abeille', 'debug', "  Updating 'online' status for '".$dest."/".$addr."'");
+                // log::add('Abeille', 'debug', "  Updating 'online' status for '".$dest."/".$addr."'");
                 $cmdLogicOnline = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'online');
                 $eqLogic->checkAndUpdateCmd($cmdLogicOnline, 1);
             }
@@ -2105,40 +2115,42 @@ while ($cron->running()) {
 
             $eqLogic->checkAndUpdateCmd($cmdLogic, $value);
 
-            // Polling to trigger based on this info cmd change: e.g. state moved to On, getPower value.
-            $cmds = AbeilleCmd::searchConfigurationEqLogic($eqLogic->getId(), 'PollingOnCmdChange', 'action');
-            foreach ($cmds as $key => $cmd) {
-                if ($cmd->getConfiguration('PollingOnCmdChange') == $cmdId) {
-                    log::add('Abeille', 'debug', 'Cmd action execution: '.$cmd->getName());
-                    // $cmd->execute(); si j'envoie la demande immediatement le device n a pas le temps de refaire ses mesures et repond avec les valeurs d avant levenement
-                    // Je vais attendre qq secondes aveant de faire la demande
-                    // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
-                    Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getLogicalId()."&time=".(time() + $cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request'));
-                }
-            }
+            Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $value);
 
-            /* 'trig' defined in command allows to trig another command on new value receipt.
-               Syntax: 'trig': 'trig-cmd-logicalId' */
-            $trigLogicId = $cmdLogic->getConfiguration('ab::trig');
-            if ($trigLogicId) {
-                $newValue = $cmdLogic->execCmd(); // Value might be updated with a "calculValueOffset" rule
-                $trigOffset = $cmdLogic->getConfiguration('ab::trigOffset');
-                if ($trigOffset)
-                    $trigValue = jeedom::evaluateExpression(str_replace('#value#', $newValue, $trigOffset));
-                else
-                    $trigValue = $newValue;
+            // // Polling to trigger based on this info cmd change: e.g. state moved to On, getPower value.
+            // $cmds = AbeilleCmd::searchConfigurationEqLogic($eqLogic->getId(), 'PollingOnCmdChange', 'action');
+            // foreach ($cmds as $key => $cmd) {
+            //     if ($cmd->getConfiguration('PollingOnCmdChange') == $cmdId) {
+            //         log::add('Abeille', 'debug', 'Cmd action execution: '.$cmd->getName());
+            //         // $cmd->execute(); si j'envoie la demande immediatement le device n a pas le temps de refaire ses mesures et repond avec les valeurs d avant levenement
+            //         // Je vais attendre qq secondes aveant de faire la demande
+            //         // Abeille::publishMosquitto( queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+2), "EP=".$eqLogic->getConfiguration('mainEP')."&clusterId=0006&attributeId=0000" );
+            //         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getLogicalId()."&time=".(time() + $cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request'));
+            //     }
+            // }
 
-                $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $trigLogicId);
-                if ($trigCmd) {
-                    $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
-                }
+            // /* 'trig' defined in command allows to trig another command on new value receipt.
+            //    Syntax: 'trig': 'trig-cmd-logicalId' */
+            // $trigLogicId = $cmdLogic->getConfiguration('ab::trig');
+            // if ($trigLogicId) {
+            //     $newValue = $cmdLogic->execCmd(); // Value might be updated with a "calculValueOffset" rule
+            //     $trigOffset = $cmdLogic->getConfiguration('ab::trigOffset');
+            //     if ($trigOffset)
+            //         $trigValue = jeedom::evaluateExpression(str_replace('#value#', $newValue, $trigOffset));
+            //     else
+            //         $trigValue = $newValue;
 
-                if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
-                    log::add('Abeille', 'debug', "  Battery % reporting: ".$trigLogicId.", val=".$trigValue);
-                    $eqLogic->setStatus('battery', $trigValue);
-                    $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-                }
-            }
+            //     $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $trigLogicId);
+            //     if ($trigCmd) {
+            //         $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
+            //     }
+
+            //     if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
+            //         log::add('Abeille', 'debug', "  Battery % reporting: ".$trigLogicId.", val=".$trigValue);
+            //         $eqLogic->setStatus('battery', $trigValue);
+            //         $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+            //     }
+            // }
             return;
         }
 
@@ -2169,6 +2181,32 @@ while ($cron->running()) {
             log::add('Abeille', 'debug', "  Battery % reporting: ".$trigLogicId.", val=".$trigValue);
             $eqLogic->setStatus('battery', $trigValue);
             $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+        }
+    }
+
+    /* Called on info cmd update (attribute report or attribute read) to see if any action cmd must be executed */
+    public static function infoCmdUpdate($eqLogic, $cmdLogic, $value) {
+        // Trig another command (ab::trig keyword) ?
+        $trigLogicId = $cmdLogic->getConfiguration('ab::trig');
+        if ($trigLogicId) {
+            $trigOffset = $cmdLogic->getConfiguration('ab::trigOffset');
+            Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
+        }
+
+        // Trig another command (PollingOnCmdChange keyword) ?
+        $cmds = cmd::searchConfigurationEqLogic($eqLogic->getId(), 'PollingOnCmdChange', 'action');
+        $cmdLogicId = $cmdLogic->getLogicalId();
+        foreach ($cmds as $cmd) {
+            if ($cmd->getConfiguration('PollingOnCmdChange', '') != $cmdLogicId)
+                continue;
+            $delay = $cmd->getConfiguration('PollingOnCmdChangeDelay', '');
+            if ($delay != 0) {
+                log::add('Abeille', 'debug', "  Triggering '".$cmd->getName()."' with delay ".$delay);
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
+            } else {
+                log::add('Abeille', 'debug', "  Triggering '".$cmd->getName()."'");
+                Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
+            }
         }
     }
 
@@ -2361,12 +2399,8 @@ while ($cron->running()) {
             }
             $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['value']);
 
-            // Trig another command ?
-            $trigLogicId = $cmdLogic->getConfiguration('ab::trig');
-            if ($trigLogicId) {
-                $trigOffset = $cmdLogic->getConfiguration('ab::trigOffset');
-                Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
-            }
+            // Check if any action cmd must be executed triggered by this update
+            Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $msg['value']);
 
             Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
             return;
@@ -2404,12 +2438,8 @@ while ($cron->running()) {
                 }
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
 
-                // Trig another command ?
-                $trigLogicId = $cmdLogic->getConfiguration('ab::trig');
-                if ($trigLogicId) {
-                    $trigOffset = $cmdLogic->getConfiguration('ab::trigOffset');
-                    Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
-                }
+                // Check if any action cmd must be executed triggered by this update
+                Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
             }
 
             Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
@@ -2441,8 +2471,8 @@ while ($cron->running()) {
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'SW-SDK');
             if ($cmdLogic) {
                 $curVersion = $cmdLogic->execCmd();
-                // $curVersion = $cmdLogic->getValue(); // TODO: THis seems wrong. Why ??
-                log::add('Abeille', 'debug', '  FW cur version: '.$curVersion);
+                if ($curVersion != $msg['minor'])
+                    log::add('Abeille', 'debug', '  FW cur version: '.$curVersion);
                 if ($curVersion == '----') {
                     $zgId = substr($net, 7);
                     if (hexdec($msg['minor']) >= 0x031D) {
@@ -2650,7 +2680,7 @@ while ($cron->running()) {
         $msgAbeille->message['payload'] = $payload;
 
         if (msg_send($queue, $priority, $msgAbeille, true, false, $error_code)) {
-            log::add('Abeille', 'debug', "publishMosquitto(): Envoyé '".json_encode($msgAbeille->message)."' vers queue ".$queueId);
+            log::add('Abeille', 'debug', "  publishMosquitto(): Envoyé '".json_encode($msgAbeille->message)."' vers queue ".$queueId);
             $queueStatus[$queueId] = "ok"; // Status ok
         } else
             log::add('Abeille', 'warning', "publishMosquitto(): Impossible d'envoyer '".json_encode($msgAbeille->message)."' vers queue ".$queueId);

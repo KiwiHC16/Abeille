@@ -2,10 +2,12 @@ ChangeLog
 =========
 
 - Tuya TV02: Ajout image (2175).
+- JSON équipements: Correction support params optionnels.
 - TRADFRIbulbE14WScandleopal470lm LED1949C5: Ajout support (2250).
 - Tuya RH3040 PIR: Ajout support (2252).
 - ZBMini: Ajout polling toutes les 15mins pour vérifier toujours en vie.
 - Sixwgh WH025/TS011F__TZ3000_cphmq0q7: Ajout polling 0006 + 0702 (2211).
+- Interne: Gestion 'PollingOnCmdChange' revue.
 - Interne + page EQ/avancé: Ajout support writeAttribute via cmd 0530.
 - Page de config: Affichage version connue du firmware.
 - Page EQ/avancé: Affichage version complète FW (ex: 0004-0320).

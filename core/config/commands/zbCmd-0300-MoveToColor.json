@@ -1,6 +1,7 @@
 {
     "zbCmd-0300-MoveToColor": {
         "name": "zbCmd-0300-MoveToColor",
+        "comment": "X/Y mode, move to color command (0x07)",
         "isHistorized": "0",
         "isVisible": "0",
         "subType": "other",

@@ -1,0 +1,48 @@
+{
+    "RH3040": {
+        "manufacturer": "Tuya",
+        "model": "RH3040",
+        "zbManufacturer": "TUYATEC-zn9wyqtr",
+        "type": "Tuya RH3040 PIR sensor",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "RH3040",
+            "batteryType": "1x3V CR1632"
+        },
+        "category": {
+            "security": "1"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            },
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0001-0021": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "Yes"
+            },
+
+            "Zone-Status": {
+                "use": "zb-0500-ZoneStatus",
+                "isVisible": 1
+            },
+            "Bind-0500-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0500",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0500-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0500&attrType=30&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes"
+            }
+        }
+    }
+}

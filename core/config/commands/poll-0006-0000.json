@@ -1,0 +1,17 @@
+{
+    "poll-0006-0000": {
+        "isVisible": 0,
+        "name": "poll-0006-0000",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "Comment": "Polling every minutes",
+        "configuration": {
+            "topic": "readAttribute",
+            "request": "ep=#EP#&clustId=0006&attrId=0000",
+            "Polling": "cron"
+        },
+        "type": "action"
+    }
+}

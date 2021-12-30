@@ -2,9 +2,10 @@
     "01MINIZB": {
         "manufacturer": "Sonoff",
         "model": "SBMINI",
-        "timeout": "60",
+        "timeout": "30",
         "configuration": {
             "mainEP": "01",
+            "poll": "15",
             "icon": "01MINIZB"
         },
         "category": {

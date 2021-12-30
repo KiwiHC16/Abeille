@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+- Tuya TV02: Ajout image (2175).
+- TRADFRIbulbE14WScandleopal470lm LED1949C5: Ajout support (2250).
+- Tuya RH3040 PIR: Ajout support (2252).
+- ZBMini: Ajout polling toutes les 15mins pour vérifier toujours en vie.
+- Sixwgh WH025/TS011F__TZ3000_cphmq0q7: Ajout polling 0006 + 0702 (2211).
 - Interne + page EQ/avancé: Ajout support writeAttribute via cmd 0530.
 - Page de config: Affichage version connue du firmware.
 - Page EQ/avancé: Affichage version complète FW (ex: 0004-0320).
@@ -8,7 +13,7 @@ ChangeLog
 211214-BETA-3
 -------------
 
-- dOOwifi DWF-0205ZB-PN-2: Ajout PNG (#2241).
+- dOOwifi DWF-0205ZB-PN-2: Ajout PNG (2241).
 - JSON équipements: Nettoyage commandes obsolètes
 
   - 'spiritSetReportBatterie' => 'zbConfigureReporting' + 'clustId=0001&attrType=20&attrId=0021'
@@ -16,9 +21,9 @@ ChangeLog
   - 'setReportTemperature' => 'zbConfigureReporting' + 'clustId=0402&attrType=29&attrId=0000'
   - 'setReportOccupancy' => 'zbConfigureReporting' + 'clustId=0406&attrType=18&attrId=0000'
 - QS-Zigbee-C01: Correction modele pour cmde 'Position'.
-- Ajout support Module volet Roulant dOOwifi DWF-0205ZB-PN-2 (#2241).
+- Ajout support Module volet Roulant dOOwifi DWF-0205ZB-PN-2 (2241).
 - Firmware: Ajout version 3.21 OPDM+legacy. Suppression versions antérieures à 3.1d.
-- Xiaomi Aqara QBKG26LM: Mise-à-jour modèle (#2174).
+- Xiaomi Aqara QBKG26LM: Mise-à-jour modèle (2174).
 
 211210-BETA-1
 -------------
@@ -41,8 +46,8 @@ ChangeLog
 -------------
 
 - Ruche: page équipement/avancé: Correction regression bouton 'setMode'.
-- SPLZB-131: RMSVoltage, reporting si variation >= 2V (#2109).
-- Xiaomi Aqara SSM-U01: Ajout support 'ActivePower' (#2234).
+- SPLZB-131: RMSVoltage, reporting si variation >= 2V (2109).
+- Xiaomi Aqara SSM-U01: Ajout support 'ActivePower' (2234).
 - JSON équipements: Nettoyage commandes obsolètes
 
   - 'setReportBatterie' => 'zbConfigureReporting' + 'clustId=0001&attrType=20&attrId=0021'
@@ -59,7 +64,7 @@ ChangeLog
 - Interne: AbeilleDebug.log déplacé dans répertoire temporaire Jeedom.
 - Support: Generation infos clefs pour support à la création du package.
 - Identification équipement: Interrogation EP01 en plus du premier.
-- Sonoff S26R2ZB: Ajout support (#2221).
+- Sonoff S26R2ZB: Ajout support (2221).
 
 211207-BETA-3
 -------------
@@ -72,14 +77,14 @@ ChangeLog
     - Les firmwares avant 3.1e sont forcement 'legacy'.
     - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
 
-- Acova Alcantara: Version temporaire 'Set-OccupiedHeatingPoint' (#2180).
-- Tuya/Sixwgh TS011F__TZ3000_cphmq0q7: Cluster 0B04 migré en polling (#2211).
+- Acova Alcantara: Version temporaire 'Set-OccupiedHeatingPoint' (2180).
+- Tuya/Sixwgh TS011F__TZ3000_cphmq0q7: Cluster 0B04 migré en polling (2211).
 
 211207-BETA-2
 -------------
 
 - Interne: Amélioration création ruche vs démarrage. Mode forcé en 'hybride' qq soit FW.
-- Philips wall switch module/RDM001: Mise-à-jour modèle & support cluster FC00 (#2185).
+- Philips wall switch module/RDM001: Mise-à-jour modèle & support cluster FC00 (2185).
 - JSON équipements: Nettoyage commandes obsolètes
 
   - 'BindToPowerConfig' => 'zbBindToZigate' + 'clustId=0001'
@@ -93,7 +98,7 @@ ChangeLog
   - 'BindShortToSmokeHeiman' => 'zbBindToZigate' + 'clustId=0500'
   - 'BindShortToZigateBatterie' => 'zbBindToZigate' + 'clustId=0001'
 - Interne: AbeilleCmd: Traitement status 8000 groupé + ...
-- Xiaomi Aqara SSM-U01: Ajout support (#2227).
+- Xiaomi Aqara SSM-U01: Ajout support (2227).
 - Interne: AbeilleCmd: Ajout support cmd 0201/Thermostat.
 - Interne: AbeilleCmd: writeAttribute(): Correction direction.
 - Interne: Parser: Requetes lecture attributs groupées lors d'une annonce.
@@ -102,30 +107,30 @@ ChangeLog
 211205-BETA-1
 -------------
 
-- Orvibo ST30: Mise-à-jour modèle + icone (#2193).
-- Tuya/Sixwgh TS011F__TZ3000_cphmq0q7: Mise-à-jour modèle + icone (#2211).
+- Orvibo ST30: Mise-à-jour modèle + icone (2193).
+- Tuya/Sixwgh TS011F__TZ3000_cphmq0q7: Mise-à-jour modèle + icone (2211).
 - Récupération équipements fantomes (toujours sur le réseau mais plus dans Jeedom): Mise-à-jour
-- Aqara Smart Wall Switch H1 EU (No Neutral, Double Rocker) (WS-EUK02): Support préliminaire (#2224).
+- Aqara Smart Wall Switch H1 EU (No Neutral, Double Rocker) (WS-EUK02): Support préliminaire (2224).
 
 211205-STABLE-1
 ---------------
 
-- Page EQ/avancé: Ajout bouton reset SW zigate (#2176).
+- Page EQ/avancé: Ajout bouton reset SW zigate (2176).
 - Appairage équipement: correction regression.
 
 211202-BETA-1
 -------------
 
 - Récupération équipements fantomes (toujours sur le réseau mais plus dans Jeedom): Partiel.
-- Tuya/Sixwgh TS011F__TZ3000_cphmq0q7: Ajout support (#2211).
+- Tuya/Sixwgh TS011F__TZ3000_cphmq0q7: Ajout support (2211).
 - Page EQ/avancé: Ajout bouton récupération adresse IEEE.
 - Message si mode debug et moins de 5000 lignes de log.
 
 211130-BETA-2
 -------------
 
-- Dimmer-Switch-ZB3.0_HZC: Mise-à-jour reporting CurrentLevel (#2200).
-- Philips wall switch module/RDM001: Mise-à-jour modèle (#2185).
+- Dimmer-Switch-ZB3.0_HZC: Mise-à-jour reporting CurrentLevel (2200).
+- Philips wall switch module/RDM001: Mise-à-jour modèle (2185).
 - Zigate WIFI: Amélioration serial read pour meilleur support coupures de connexion.
 - Interne: AbeilleCmd: Nouveau support #slider# appliqué à 'writeAttibute'.
 
@@ -133,10 +138,10 @@ ChangeLog
 -------------
 
 - Interne: Zigbee const: Ajout cluster 0406.
-- Dimmer-Switch-ZB3.0_HZC: Ajout image PNG (#2200).
+- Dimmer-Switch-ZB3.0_HZC: Ajout image PNG (2200).
 - Interne: Zigbee const: Mise à jour attributs cluster 0300.
-- Livarno HG07834C E27 bulb: Ajout support préliminaire (#2203).
-- Profalux MAI-ZTS: Ajout support telecommande gen 2 (#2205).
+- Livarno HG07834C E27 bulb: Ajout support préliminaire (2203).
+- Profalux MAI-ZTS: Ajout support telecommande gen 2 (2205).
 - Profalux volets 2nd gen: Meme config pour MOT-C1Z06C & MOT-C1Z10C.
 - JSON équipements: Nettoyage commandes obsolètes
 
@@ -167,8 +172,8 @@ ChangeLog
 -------------
 
 - Assistant de découverte: Texte de rappel si batterie.
-- Tuya RH3001 door sensor: Mise-à-jour JSON (#1226).
-- Lidl HG07878A TS0502A: Ajout support préliminaire (#2198).
+- Tuya RH3001 door sensor: Mise-à-jour JSON (1226).
+- Lidl HG07878A TS0502A: Ajout support préliminaire (2198).
 - JSON équipements: Nettoyage commandes obsoletes
 
   - 'BindToZigateEtat' => 'zbBindToZigate'
@@ -179,8 +184,8 @@ ChangeLog
   - 'getLevel' => 'zbReadAttribute' + 'clustId=0008&attrId=0000'
 - Démarrage sans Zigate active: Ajout message + démarrage démons annulé.
 - Page de config: Zigate Wifi: Correction message 'Port série de la zigate X INVALIDE ! Zigate désactivée'.
-- Tuya TS0501B Led controller: Ajout support préliminaire (#2199).
-- Dimmer-Switch-ZB3.0_HZC: Support préliminaire (#2200).
+- Tuya TS0501B Led controller: Ajout support préliminaire (2199).
+- Dimmer-Switch-ZB3.0_HZC: Support préliminaire (2200).
 
 211122-BETA-1
 -------------
@@ -188,11 +193,11 @@ ChangeLog
 - Illuminance: Correction cmde JSON 'zb-0400-MeasuredValue.json'.
 - Mise-à-jour OTA: Support préliminaire.
 - zb-0400/0402/0405-MeasuredValue.json: Correction calcul valeur.
-- Philips Hue Wall switch: Ajout support préliminaire (#2185).
+- Philips Hue Wall switch: Ajout support préliminaire (2185).
 - Equipements inconnus: Generation d'un "discovery.json" pendant l'inclusion. Suppression d'AbeilleDiscover.log.
 - Programmateur Zigate: Correction: Compilation echoue si "tmp" n'existe pas.
-- Orvibo ST30: Ajout support préliminaire (#2193).
-- Acova Alcantara: Mise-à-jour JSON pour 'Set-OccupiedHeatingPoint' (#2180).
+- Orvibo ST30: Ajout support préliminaire (2193).
+- Acova Alcantara: Mise-à-jour JSON pour 'Set-OccupiedHeatingPoint' (2180).
 - JSON équipements: Nettoyage commandes obsoletes
 
   - 'temperature' => 'zb-0402-MeasuredValue'
@@ -203,21 +208,21 @@ ChangeLog
   - 'on' => 'zbCmd-0006-On'
   - 'off' => 'zbCmd-0006-Off'
 - JSON équipements: Ajout possibilité de surcharger 'minValue' & 'maxValue' pour widget slider.
-- 1 chan switch module (TS0011, _TZ3000_ji4araar): Ajout JSON sur base TS0011 (#2196).
+- 1 chan switch module (TS0011, _TZ3000_ji4araar): Ajout JSON sur base TS0011 (2196).
 
 211121-STABLE-1
 ---------------
 
-- Acova Alcantara: Ajout support préliminaire (#2180).
+- Acova Alcantara: Ajout support préliminaire (2180).
 - Interne: Nettoyage AbeilleZigateConst.
-- Interne: Correction CmdPrepare/WriteAttributeRequestGeneric. Impacte Danfoss Ally (#1881).
-- Ikea bulb E27 White Spectre opal 1055lm: Ajout support (#2187).
-- Moes ZSS-ZK-THL-C: Ajout support (#2191).
+- Interne: Correction CmdPrepare/WriteAttributeRequestGeneric. Impacte Danfoss Ally (1881).
+- Ikea bulb E27 White Spectre opal 1055lm: Ajout support (2187).
+- Moes ZSS-ZK-THL-C: Ajout support (2191).
 
 211115-BETA-2
 -------------
 
-- Moniteur: Suppression message sur équipement inexistant (#2186).
+- Moniteur: Suppression message sur équipement inexistant (2186).
 - Moniteur: Correction lancement démon.
 
 211115-BETA-1
@@ -237,26 +242,26 @@ ChangeLog
 - Sonoff SNZB-02: JSON revu. 'TH01.json' supporte identifiants 'TH01' & '66666'.
 - JSON équipements: Correction valeur minInterval & maxInterval (décimal => hexa).
 - Page EQ/avancé: Support préliminaire cmds 41 & 42, cluster 1000/Commissioning.
-- Silvercrest HG06106C light bulb: Ajout support (#2050).
+- Silvercrest HG06106C light bulb: Ajout support (2050).
 - Legrand 16AX: Mise-à-jour icone.
 
 211030-BETA-1
 -------------
 
-- Tuya ZM-CG205 door sensor: Mise-à-jour JSON. Ajout 'ZoneStatus' (#2165).
+- Tuya ZM-CG205 door sensor: Mise-à-jour JSON. Ajout 'ZoneStatus' (2165).
 - Interne: Parser: Support réponse cluster 000A/Time, attrib 0007 + ...
-- Xiaomi Aqara QBKG26LM: Ajout support (#2174).
+- Xiaomi Aqara QBKG26LM: Ajout support (2174).
 - Interne:
 
   - setTimeServer => setZgTimeServer.
   - getTimeServer => getZgTimeServer.
   - zgSetMode => setZgMode.
-- Prise connectée TS0121 _TZ3000_8nkb7mof: Mise-à-jour JSON (#2167).
+- Prise connectée TS0121 _TZ3000_8nkb7mof: Mise-à-jour JSON (2167).
 - Interne: Parser:
 
   - Msg 0006-FD, msgAbeille() supprimé.
   - Msg 8030/bind response: revu.
-- Tuya QS-Zigbee-C01 volet roulant: Correction image (#2169).
+- Tuya QS-Zigbee-C01 volet roulant: Correction image (2169).
 - Identification modeles Tuya: modifié. Fabricant/vendeur obligatoire pour éviter de prendre mauvais JSON identifié par modèle seul.
 - Silvercrest HG06337-FR: Mise-à-jour JSON pour groups & identify.
 
@@ -271,9 +276,9 @@ ChangeLog
   - Options avancées: Nettoyage autorisé si test d'intégrité ok.
   - Partie mise-à-jour (vérification) caché. Pas assez fiable. A revoir.
   - Partie 'zigates' revue.
-- Tuya ZM-CG205 door sensor: Mise-à-jour JSON (#2165).
+- Tuya ZM-CG205 door sensor: Mise-à-jour JSON (2165).
 - Interne: Suppression entrée 'zigateNb' de la DB config.
-- eWeLink ZB-SW01: Support préliminaire (#2172).
+- eWeLink ZB-SW01: Support préliminaire (2172).
 
 211022-BETA-1
 -------------
@@ -284,15 +289,15 @@ ChangeLog
 - Page config: Affichage version firmware complète (ex: 0004-0320).
 - Commandes JSON: Suppression 'zbWriteAttribute-Temp'.
 - Interne: Parser vers cmd: queues revisitées.
-- Silvercrest HG06337: Mise-à-jour JSON (#2168).
+- Silvercrest HG06337: Mise-à-jour JSON (2168).
 - Assistant de découverte: Améliorations.
-- Tuya QS-Zigbee-C01 volet roulant: Ajout support (#2169).
+- Tuya QS-Zigbee-C01 volet roulant: Ajout support (2169).
 - JSON commandes: Suppression commandes obsoletes 'OnEpXX' & 'OffEpXX'.
 - Prise Tuya TS0121__TZ3000_rdtixbnu: Correction RMS Voltage.
 - Interne: 'configureReporting' revu pour support 'reportableChange'.
 - Page EQ/avancé: Amélioration configureReporting pour support min, max & changeVal.
-- Prise NIKO: JSON revisité pour réduire le nombre de reporting RMSvoltage (#2003).
-- Prise TS0121 _TZ3000_8nkb7mof: Mise-à-jour JSON (#2167).
+- Prise NIKO: JSON revisité pour réduire le nombre de reporting RMSvoltage (2003).
+- Prise TS0121 _TZ3000_8nkb7mof: Mise-à-jour JSON (2167).
 
 211019-BETA-1
 -------------
@@ -300,30 +305,30 @@ ChangeLog
 - JSON commandes: Nettoyage. Suppression commandes obsolètes.
 - Interne: decodeDataType(): ajout support enum8/enum16 + ieee.
 - Interne: Parser: Support read attributes clusters 0015 & 0100.
-- Tuya ZM-CG205 door sensor: Ajout support (#2165).
+- Tuya ZM-CG205 door sensor: Ajout support (2165).
 - Test d'intégrité et nettoyage automatique à la mise-à-jour.
 
 211019-STABLE-1
 ---------------
 
 - Interne: Correction 'writeAttribute' + mise-à-jour reponse 8110.
-- Tuya 4 buttons (TS004F__TZ3000_xabckq1v): Mise-à-jour support (#2155).
+- Tuya 4 buttons (TS004F__TZ3000_xabckq1v): Mise-à-jour support (2155).
 - Commandes JSON: Suppression 'binToZigate-EPXX-0006' => obsolètes.
 - JSON équipements: Ajout support multiple identifiants (ex: 'signalrepeater' & 'SignalRepeater').
-- UseeLink prise SM-SO306: Mise-à-jour (#2160).
+- UseeLink prise SM-SO306: Mise-à-jour (2160).
 - Zigate: plusieurs commandes supprimées => supportées dans page équipement/avancé.
 - Interne: Parser: Améliorations decodeDataType().
-- UseeLink prise SM-SO306: Ajout support (#2160).
+- UseeLink prise SM-SO306: Ajout support (2160).
 - Syntaxe JSON équipement: Ajout possibilité surcharge 'template'.
 - Zlinky TIC: Mise-à-jour JSON + icone.
 - Niko connected socket outlet: Mise-à-jour image.
 - Page EQ/avancé: Ajout possibilité de configurer le reporting.
 - Interne: Parser: Support 'configure reporting response' pour 0B04.
-- TRADFRI bulb GU10 CWS 345lm: Correction icone E14 => GU10 (#2137).
-- Ikea Tradfri LED 470lm E14: Mise-à-jour config JSON (#2111).
-- Tuya 4 boutons: Mise-à-jour (#2155).
+- TRADFRI bulb GU10 CWS 345lm: Correction icone E14 => GU10 (2137).
+- Ikea Tradfri LED 470lm E14: Mise-à-jour config JSON (2111).
+- Tuya 4 boutons: Mise-à-jour (2155).
 - Interne: AbeilleCmd: Correction bin0030 vers groupe.
-- SPLZB-131: Mise-à-jour JSON. Reporting activé. (#2109).
+- SPLZB-131: Mise-à-jour JSON. Reporting activé. (2109).
 - Page EQ/avancé: Ajout possibilité d'écrire un attribut.
 - Interne: AbeilleCmd: Message d'erreur si pb lecture queues.
 - Interne: Commandes JSON 'getEtatEpXX' deviennent obsoletes.
@@ -354,29 +359,29 @@ ChangeLog
 - ZLinky TIC: Support préliminaire.
 - Interne: Parser: Nettoyage.
 - Aqara SSM-U02: Correction icone.
-- Xiaomi Mijia Honeywell Détecteur de Fumée: Tentative correction bouton test (#2143).
-- Ruban LED Lidl: Mise à jour JSON (#1737).
-- TRADFRIbulbGU10CWS345lm: Mise a jour (#2137).
+- Xiaomi Mijia Honeywell Détecteur de Fumée: Tentative correction bouton test (2143).
+- Ruban LED Lidl: Mise à jour JSON (1737).
+- TRADFRIbulbGU10CWS345lm: Mise a jour (2137).
 - Interne: Correction erreur PHP: Undefined index: battery_type in AbeilleLQI_Map.php
 - Interne: Correction crash inclusion dans cas ou "value" pointe sur commande inexistante.
-- Xiaomi smoke detector: bouton test genere crash d'AbeilleCmd (#2143).
-- Aqara TVOC moniteur d'air AAQS-S01: Support préliminaire (#2135).
+- Xiaomi smoke detector: bouton test genere crash d'AbeilleCmd (2143).
+- Aqara TVOC moniteur d'air AAQS-S01: Support préliminaire (2135).
 
 210922-STABLE-1
 ---------------
 
 - Interne: Correction requete "discover attributes extended".
-- Loratap 3 boutons: Correction regression (#2138).
+- Loratap 3 boutons: Correction regression (2138).
 - Interne: Restoration support historique cmd 0006-FD special Tuya.
 - TRADFRIbulbGU10CWS345lm support preliminaire.
 - TRADFRIbulbE14CWS470lm support preliminaire.
 - SPLZB-132: Correction EP.
-- SPLZB-131: Correction RMSVoltage (#2109).
+- SPLZB-131: Correction RMSVoltage (2109).
 - Interne: Tools: check_json amélioré.
 - Interne: Parser: Support prélim data type 41, 42, E0, E1, E2.
 - Suppression des messages de "réannonce" si équipement connu et activé.
    Attention. Si l'équipement quitte (leave) puis revient, le message est toujours présent.
-- Legrand dimmer: Mise à jour JSON (#983).
+- Legrand dimmer: Mise à jour JSON (983).
 - Monitor: Correction bug (Device announce loupé).
 - JSON équipements: Mise-à-jour setReport-EPxx => zbConfigureReporting.
 - JSON équipements: Nettoyage setReport-EPxx => zbConfigureReporting.
@@ -393,21 +398,21 @@ ChangeLog
 ---------------
 
 - JSON commandes: 'trig' revu + 'trigOffset' ajouté.
-- Niko connected socket: ajout support (#2003).
+- Niko connected socket: ajout support (2003).
 - JSON commandes: suppression de qq cmds obsoletes.
 - Interne: Optimisation parser: transfert groupé d'attributs.
 - Interne: Link-Quality mis à jour sur attribut report.
 - JSON équipements: Mise-à-jour commandes pourcentage batterie.
-- Tuya inter 4 buttons: mise-à-jour support 'click' (#2122).
+- Tuya inter 4 buttons: mise-à-jour support 'click' (2122).
 - Interne: Améliorations parser + robustesse.
-- Correction regression: crash pendant l'inclusion (#2125).
-- Zemismart TS0042 2 buttons (#1272).
+- Correction regression: crash pendant l'inclusion (2125).
+- Zemismart TS0042 2 buttons (1272).
 - Interne: Parser: Modificaiton support custom single/double/long click pour Tuya.
-- Tuya 4 buttons scene switch: Mise-à-jour modèle (#2122).
+- Tuya 4 buttons scene switch: Mise-à-jour modèle (2122).
 - Ajout FW 3.1e Optimized PDM + 3.20 legacy + 3.20 Optimized PDM
-- Osram CLA60 TW: Correction end point par défaut (#2117).
-- Tuya contact sensor TS0203: Ajout reporting batterie (#1270).
-- Tuya 4 buttons scene switch: Ajout support (#2122).
+- Osram CLA60 TW: Correction end point par défaut (2117).
+- Tuya contact sensor TS0203: Ajout reporting batterie (1270).
+- Tuya 4 buttons scene switch: Ajout support (2122).
 - Correction mauvais message: "ATTENTION: config locale utilisée ...".
 - Interne: Améliorations parser.
 
@@ -419,7 +424,7 @@ ChangeLog
 - Améliorations assistant EQ.
 - Interne: SerialRead, mise-à-jour pour "permission denied".
 - Frient SPLZB-131: Support préliminaire.
-- Legrand Cable outlet: Ajout support préliminaire (#850). Manque controle fil pilote.
+- Legrand Cable outlet: Ajout support préliminaire (850). Manque controle fil pilote.
 - All JSON: 'configuration:battery_type' => 'configuration:batteryType'.
 - Assistant: Ajout doc préliminaire pour découverte Zigbee.
 - Interne: Séquence de démarrage revisitée pour #2093.
@@ -427,27 +432,27 @@ ChangeLog
 - Assistant de découverte: améliorations.
 - Interne: Collecte LQI: Mise-à-jour mineure.
 - Interne: Parser: Amélioration robustesse.
-- Ajout support Controleur Tuya LED DC5-24V (#2082).
-- Ajout Ampoule YANDHI E27 (#2087)
+- Ajout support Controleur Tuya LED DC5-24V (2082).
+- Ajout Ampoule YANDHI E27 (2087)
 - JSON équipements: tous modifiés
   - SW & getSWBuild => SWBuildID & Get-SWBuildID
 - Interne: Ajout commande générique 'configureReporting'.
 - Page gestion: Bouton 'exclure' pour tous.
 - JSON commandes: suppression de commandes obsolètes.
-- GL-S-003Z: Fichier JSON. Correction end point + divers (#2104).
+- GL-S-003Z: Fichier JSON. Correction end point + divers (2104).
 - Page EQ/avancé: ajout possibilité interroger LQI (Mgmt_Lqi_req).
 
 210824-STABLE-1
 ---------------
 
-- Xiaomi plug EU: JSON revisité (#1578).
+- Xiaomi plug EU: JSON revisité (1578).
 - Interne: SerialRead: Ouverture de port améliorée.
-- Silvercrest HG06337-FR: Ajout prise Lidl (#2053).
+- Silvercrest HG06337-FR: Ajout prise Lidl (2053).
 - JSON équipements: amélioration nouvelle syntaxe (ajout 'isVisible' & 'nextLine').
 - Page EQ/avancé: mise-à-jour de l'assistant de découverte.
 - Page config/options avancées: Support defines.
 - Commande JSON 'temperatureLight': correction EP.
-- Aqara Opple 6 boutons (#2048).
+- Aqara Opple 6 boutons (2048).
 - JSON équipements: tous mis à jour.
   - 'Categorie' remplacé par 'category'.
   - 'nameJeedom' remplacé par 'type'.
@@ -456,11 +461,11 @@ ChangeLog
   - 'uniqId' supprimé.
   - 'Commandes' => 'commands'
 - Profalux: Ajout support nouvelle génération volet (id=MOT-C1Z06C/10C, #2091).
-- Aqara WS-EUK01 H1 wall switch: ajout support préliminaire (#2054).
+- Aqara WS-EUK01 H1 wall switch: ajout support préliminaire (2054).
 - Interne: optimisations AbeilleCmdQueue.
 - Page santé: ajout dernier niveau batterie.
-- Gledopto GL-B-008Z: Correction main EP dans modèle JSON (#2096).
-- Gledopto GL-C-006: Modèle préliminaire (#2092).
+- Gledopto GL-B-008Z: Correction main EP dans modèle JSON (2096).
+- Gledopto GL-C-006: Modèle préliminaire (2092).
 - Interne: Taille queue parser->LQI augmentée à 2048.
 - Interne: Nettoyage: suppression queue obsolete 'queueKeyLQIToAbeille'.
 - Interne: cron15: Lecture ZCLVersion au lieu d'un attribut pas toujours supporté.
@@ -477,7 +482,7 @@ ChangeLog
 
 - ATTENTION: Format JSON des fichiers de commande modifié !
 - Osram classic B40TW: support préliminaire.
-- Xiaomi Luminosite: Ajout pourcentage batterie basé sur retour tension (#1166).
+- Xiaomi Luminosite: Ajout pourcentage batterie basé sur retour tension (1166).
 - Interne: cron15 amélioré. Pas d'interrogation si eq appartient à zigate inactive.
 - Inclusion: support revu pour périph qui quitte puis revient sur le réseau.
 - Moniteur: Disponible pour tous et plus seulement en mode dev.
@@ -493,7 +498,7 @@ ChangeLog
 - Page EQ/avancé: ajout du bouton "reconfigurer".
 - Page gestion: suppression du bouton "Apply Settings to NE".
 - Page EQ/avancé: version préliminaire de l'assistant de découverte.
-- Correction ecrasement widget commande (#2075).
+- Correction ecrasement widget commande (2075).
 - Interne: plusieurs améliorations pour robustesse et support d'erreurs.
 - Page EQ/avancé: Ajout bouton "interroger table routage"
 - Page EQ/avancé: Ajout bouton "interroger table binding"
@@ -526,7 +531,7 @@ ChangeLog
 - Interne: Parser: affichage erreurs msg_receive().
 - Interne: SerialRead: affichage erreur msg_send().
 - Interne: Serial to parser: Messages trop grands ignores pour ne plus bloquer la pile + message d'erreur.
-- Batterie %: Parser renvoi valeur correcte pour 0001-EPX-0021 + Abeille.class + update JSON (#2056).
+- Batterie %: Parser renvoi valeur correcte pour 0001-EPX-0021 + Abeille.class + update JSON (2056).
   Peut nécessiter de recharger JSON.
 - Batterie %: Report dans Jeedom de tous les "end points" et pas seulement 01.
 
@@ -547,7 +552,7 @@ ChangeLog
 - Page équipement: Correction rapport d'aspect image (icone).
 - Interne: Parser: Support msg 9999/extended error.
 - Interne: Parser: Qq améliorations découverte nouvel équipement.
-- Interne: SerialRead: Boucle et attend si port disparait au lieu de quitter (#2040).
+- Interne: SerialRead: Boucle et attend si port disparait au lieu de quitter (2040).
 - Page gestion: Correction regression groupes.
 
 210610-STABLE-3
@@ -558,10 +563,10 @@ ChangeLog
 - Interne: Correction 'zgGetZCLStatus()'
 - Frient SPLZB-132 Smart Plug Mini: Ajout support préliminaire.
 - Interne: Correction eqLogic/configuration. Suppression des champs obsolètes lors de la mise-à-jour de l'équipement.
-- Tuya 4 buttons light switch (ESW-0ZAA-EU): support préliminaire (#1991).
+- Tuya 4 buttons light switch (ESW-0ZAA-EU): support préliminaire (1991).
 - Tuya smart socket: Ajout support modele générique 'TS0121__TZ3000_rdtixbnu'.
-- Telecommande virtuelle: Correction regression. Plusieurs télécommandes par zigate à nouveau possible (#2025).
-- Lancement de dépendances: correction erreur (#2026).
+- Telecommande virtuelle: Correction regression. Plusieurs télécommandes par zigate à nouveau possible (2025).
+- Lancement de dépendances: correction erreur (2026).
 - Exclusion d'un équipement du réseau: En mode dev uniquement. Nouvelle version.
 - Zigate wifi: correction regression.
 
@@ -578,17 +583,17 @@ ChangeLog
 - Firmware: Suppression des FW 3.0f, 3.1a & 3.1b. 3.1d = FW suggéré.
 - JennicModuleProgrammer: Mise-à-jour v0.7 + améliorations. Compilé avant utilisation.
 - Zigate DIN: Ajout support pour mise-à-jour FW.
-- Page equipement: section "avancé", mise à jour des champs en temps réel (#1839).
-- Gestion des groupes: correction regression (#2011).
-- Telecommande virtuelle: correction regression (#2011).
+- Page equipement: section "avancé", mise à jour des champs en temps réel (1839).
+- Gestion des groupes: correction regression (2011).
+- Telecommande virtuelle: correction regression (2011).
 - Interne: Revue decode 8062 (Group membership).
-- JSON: Correction setReportTemp (#1918).
+- JSON: Correction setReportTemp (1918).
 - Innr RB285C: correction modele corrompu.
 - Innr RB165: modele préliminaire.
 - Tuya GU10 ZB-CL01: ajout support.
 - Hue motion sensor: mise-à-jour JSON.
 - Interne: correction message 8120.
-- Page config: correction installation WiringPi (#1979).
+- Page config: correction installation WiringPi (1979).
 - Introduction de "core/config/devices_local" pour les EQ non supportés par Abeille mais locaux/en cours de dev.
 - Zemismart ZW-EC-01 curtain switch: ajout du modèle JSON
 - Nouvelle procédure d'inclusion.
@@ -605,8 +610,8 @@ ChangeLog
 
 - Page compatibilité: revisitée + ajout du tri par colonne
 - Page santé: ajout de l'état des zigate au top
-- Sonoff SNZB-02: support corrigé + support 66666 (ModelIdentifier) (#1911)
-- Xiaomi GZCGQ01LM: ajout support tension batterie + online (#1166)
+- Sonoff SNZB-02: support corrigé + support 66666 (ModelIdentifier) (1911)
+- Xiaomi GZCGQ01LM: ajout support tension batterie + online (1166)
 - Page EQ/params: ajout de l'identifiant zigbee
 - Correction "#1908: AbeilleCmd: Unknown command"
 - Correction "#1951: pb affichage heure "Derniere comm."

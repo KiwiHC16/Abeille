@@ -124,3 +124,15 @@ Exemple de commande 'action'
 
   * trigOffset: optionnel
     Permet, si 'trig' est utilisé, de modifier la valeur reçue avant de l'appliquer à la commande pointée par 'trig'.
+
+  * Polling: optionnel
+    Défini si cette commande 'action' doit etre executée regulierement.
+    Valeurs: 'cron', 'cron5', 'cron10', 'cron15', 'cron30', 'cronHourly', 'cronDaily'
+
+  * PollingOnCmdChange: optionnel
+    Précise que cette commande 'action' doit être exécutée si la cmde donnée change.
+    Ex: "PollingOnCmdChange": "0006-#EP#-0000"
+
+  * PollingOnCmdChangeDelay: optionnel
+    ?
+

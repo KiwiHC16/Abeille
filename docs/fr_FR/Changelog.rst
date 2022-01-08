@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-211230-BETA-1
+220108-STABLE-1
 -------------
 
 - Tuya TV02: Ajout image (2175).

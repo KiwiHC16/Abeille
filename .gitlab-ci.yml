@@ -1,0 +1,25 @@
+Delestage project:
+  image: dockerhub.localdomain:5000/jeedomgitlab:Abeille
+  script:
+    - cd /var/www/html/plugins/
+    - rm -rf Abeille
+    - mv /home/jeedom/Abeille Abeille
+    - cd /var/www/html/plugins/Abeille/core/class
+    - /etc/init.d/mysql start
+    - /etc/init.d/apache2 start
+    - /etc/init.d/cron start
+    - echo "Sleep for 5 min to let Jeedom start"
+    - sleep 300
+    - echo "-----------------------------------------------"
+    - echo "-------------------- TESTS --------------------"
+    - echo "-----------------------------------------------"
+    - phpunit AbeilleTest.class.php
+    - echo "-----------------------------------------------"
+    - sleep 15
+    - /etc/init.d/cron stop
+    - /etc/init.d/apache2 stop
+    - /etc/init.d/mysql stop
+    - cd /
+    - rm -rf /var/www/html/plugins/Abeille
+    - rm -rf /home/jeedom
+

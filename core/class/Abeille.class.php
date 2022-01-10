@@ -1055,10 +1055,10 @@ if (0) {
         else if ($cron->running()) {
             log::add('Abeille', 'debug', 'deamon_stop(): Arret du cron');
             $cron->halt();
-while ($cron->running()) {
-    usleep(500000);
-    log::add('Abeille', 'debug', 'deamon_stop(): cron STILL running');
-}
+            while ($cron->running()) {
+                usleep(500000);
+                log::add('Abeille', 'debug', 'deamon_stop(): cron STILL running');
+            }
         } else
             log::add('Abeille', 'debug', 'deamon_stop(): cron déja arrété');
 

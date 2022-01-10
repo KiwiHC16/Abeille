@@ -1,4 +1,4 @@
-Abeille project:
+Delestage project:
   image: dockerhub.localdomain:5000/jeedomgitlab:Abeille
   script:
     - cd /var/www/html/plugins/
@@ -14,6 +14,10 @@ Abeille project:
     - echo "-------------------- TESTS --------------------"
     - echo "-----------------------------------------------"
     - phpunit AbeilleTest.class.php
+    - echo "-----------------------------------------------"
+    - phpunit AbeilleParserTest.class.php
+    - echo "-----------------------------------------------"
+    - phpunit AbeilleCmdPrepare.class.php
     - echo "-----------------------------------------------"
     - sleep 15
     - /etc/init.d/cron stop

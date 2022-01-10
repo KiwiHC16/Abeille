@@ -48,7 +48,7 @@
          * @return none
          *
          */
-        function procmsg($message) {
+        function procmsg($message,$phpunit=0) {
 
             $this->deamonlog("debug", "  L2 - procmsg(".json_encode($message).")", $this->debug['procmsg']);
 
@@ -428,6 +428,7 @@
                 }
                 break;
             case "OnOff":
+
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -1369,11 +1370,11 @@
                 );
                 // Splitting by '&' then by '='
                 $couples = preg_split("/[&]+/", $msg);
-// cmdLog("debug", '  couples='.json_encode($couples));
+                // cmdLog("debug", '  couples='.json_encode($couples));
                 $addrFound = false;
                 for($i = 0; $i < count($couples); $i++) {
                     $keywords = preg_split("/[=]+/", $couples[$i]);
-// cmdLog("debug", '  keywords='.json_encode($keywords));
+                    // cmdLog("debug", '  keywords='.json_encode($keywords));
                     if (isset($keywords[1]))
                         $Command[$keywords[0]] = $keywords[1];
                     else
@@ -1391,6 +1392,7 @@
                 cmdLog('debug', '  ERROR: Unknown command ! (topic='.$topic.')');
             } else {
                 // cmdLog('debug', '  L2 - calling processCmd with Command parameters: '.json_encode($Command), $this->debug['prepareCmd']);
+                if ($phpunit) return $Command;
                 $this->processCmd($Command);
             }
 

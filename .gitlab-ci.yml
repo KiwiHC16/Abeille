@@ -1,4 +1,4 @@
-Delestage project:
+Abeille project:
   image: dockerhub.localdomain:5000/jeedomgitlab:Abeille
   script:
     - cd /var/www/html/plugins/

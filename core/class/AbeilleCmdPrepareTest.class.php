@@ -22,20 +22,6 @@ class AbeilleCmdPrepareTest extends TestCase {
         $this->assertSame(  $result, json_encode(AbeilleCmdPrepare::proper_parse_str($str)) );
     }
 
-    function test_procmsg() {
-        $message = (object) array( 
-            "topic"      => "CmdAbeille3/3B02/OnOff",
-            "payload"    => "Action=On&EP=01",
-            "priority"   => 3,
-        );
-
-        $cmdPrepare = new AbeilleCmdPrepare;
-        $result = '{"onoff":"1","dest":"Abeille3","priority":3,"addressMode":"02","address":"3B02","destinationEndpoint":"01","action":"01"}';
-        
-        $this->assertSame( $result, json_encode($cmdPrepare->procmsg($message, 1)) );
-    }
-
-
 }
 
 

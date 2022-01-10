@@ -13,11 +13,15 @@ Abeille project:
     - echo "-----------------------------------------------"
     - echo "-------------------- TESTS --------------------"
     - echo "-----------------------------------------------"
-    - phpunit AbeilleTest.class.php
+    - phpunit AbeilleCmdPrepareTest.class.php
+    - echo "-----------------------------------------------"
+    - phpunit AbeilleCmdProcessTest.class.php
+    - echo "-----------------------------------------------"
+    - phpunit AbeilleCmdTest.class.php
     - echo "-----------------------------------------------"
     - phpunit AbeilleParserTest.class.php
     - echo "-----------------------------------------------"
-    - phpunit AbeilleCmdPrepareTest.class.php
+    - phpunit AbeilleTest.class.php
     - echo "-----------------------------------------------"
     - sleep 15
     - /etc/init.d/cron stop

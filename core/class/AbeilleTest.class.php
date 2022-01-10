@@ -38,7 +38,7 @@ class AbeilleTest extends TestCase {
     function test_getIEEE() {
         fwrite(STDOUT, "\n\n" . __METHOD__ );
 
-        $address = "Abeille1/3B02";
+        $address = "Abeille1/81F6";
         $IEEE_Result  = "14B457FFFE79EBA9";
 
         $abeille = new Abeille;

@@ -245,73 +245,74 @@ class Abeille extends eqLogic
      *
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
-    public static function tryToGetIEEE()
-    {
-        log::add('Abeille', 'debug', 'Recherche des adresses IEEE manquantes.');
-        $tryToGetIEEEArray = array();
-        $eqLogics = Abeille::byType('Abeille');
+    // Tcharp38: No longer used
+    // public static function tryToGetIEEE()
+    // {
+    //     log::add('Abeille', 'debug', 'Recherche des adresses IEEE manquantes.');
+    //     $tryToGetIEEEArray = array();
+    //     $eqLogics = Abeille::byType('Abeille');
 
-        foreach ($eqLogics as $key => $eqLogic) {
-            if ($eqLogic->getIsEnable() != 1) {
-                log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' désactivé => ignoré');
-                continue; // Eq disabled => ignored
-            }
-            if ($eqLogic->getTimeout() == 1) {
-                log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' en timeout => ignoré');
-                continue; // Eq in timeout => ignored
-            }
-            if ($eqLogic->getStatus('lastCommunication') == '') {
-                log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' n\'a jamais communiqué => ignoré');
-                continue; // Eq in timeout => ignored
-            }
+    //     foreach ($eqLogics as $key => $eqLogic) {
+    //         if ($eqLogic->getIsEnable() != 1) {
+    //             log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' désactivé => ignoré');
+    //             continue; // Eq disabled => ignored
+    //         }
+    //         if ($eqLogic->getTimeout() == 1) {
+    //             log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' en timeout => ignoré');
+    //             continue; // Eq in timeout => ignored
+    //         }
+    //         if ($eqLogic->getStatus('lastCommunication') == '') {
+    //             log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' n\'a jamais communiqué => ignoré');
+    //             continue; // Eq in timeout => ignored
+    //         }
 
-            if (strlen($eqLogic->getConfiguration('IEEE', 'none')) == 16) {
-                continue; // J'ai une adresse IEEE dans la conf donc je passe mon chemin
-            }
+    //         if (strlen($eqLogic->getConfiguration('IEEE', 'none')) == 16) {
+    //             continue; // J'ai une adresse IEEE dans la conf donc je passe mon chemin
+    //         }
 
-            $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
-            if ($commandIEEE == null) {
-                log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' sans cmd \'IEEE-Addr\' => ignoré');
-                continue; // No cmd to retrieve IEEE address. Normal ?
-            }
+    //         $commandIEEE = $eqLogic->getCmd('info', 'IEEE-Addr');
+    //         if ($commandIEEE == null) {
+    //             log::add('Abeille', 'debug', '  Eq \''.$eqLogic->getLogicalId().'\' sans cmd \'IEEE-Addr\' => ignoré');
+    //             continue; // No cmd to retrieve IEEE address. Normal ?
+    //         }
 
-            if (strlen($commandIEEE->execCmd()) == 16) {
-                $eqLogic->setConfiguration('IEEE', $commandIEEE->execCmd()); // Si je suis a cette ligne c est que je n ai pas IEEE dans conf mais dans cmd alors je mets dans conf.
-                $eqLogic->save();
-                $eqLogic->refresh();
-                continue; // J'ai une adresse IEEE dans la commande donc je passe mon chemin
-            }
+    //         if (strlen($commandIEEE->execCmd()) == 16) {
+    //             $eqLogic->setConfiguration('IEEE', $commandIEEE->execCmd()); // Si je suis a cette ligne c est que je n ai pas IEEE dans conf mais dans cmd alors je mets dans conf.
+    //             $eqLogic->save();
+    //             $eqLogic->refresh();
+    //             continue; // J'ai une adresse IEEE dans la commande donc je passe mon chemin
+    //         }
 
-            $tryToGetIEEEArray[] = $key;
-        }
+    //         $tryToGetIEEEArray[] = $key;
+    //     }
 
-        // Prend x abeilles au hasard dans cette liste d'abeille a interroger.
-        $eqLogicIds = array_rand($tryToGetIEEEArray, 2);
+    //     // Prend x abeilles au hasard dans cette liste d'abeille a interroger.
+    //     $eqLogicIds = array_rand($tryToGetIEEEArray, 2);
 
-        // Pour ces x Abeilles lance l interrogation
-        foreach ($eqLogicIds as $eqLogicId) {
-            echo "Start Loop: ".$eqLogicId."\n";
-            // echo "Start Loop Detail: ";
-            $eqLogicX = $eqLogics[$tryToGetIEEEArray[$eqLogicId]];
-            // var_dump($eqLogic);
-            $commandIEEE_X = $eqLogicX->getCmd('info', 'IEEE-Addr');
-            if ($commandIEEE_X) {
-                $addrIEEE_X = $commandIEEE_X->execCmd();
-                if (strlen($addrIEEE_X) < 2) {
-                    list($dest, $NE) = explode('/', $eqLogicX->getLogicalId());
-                    if (strlen($NE) == 4) {
-                        if ($eqLogicX->getIsEnable()) {
-                            log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for '.$NE);
-                            echo 'Demarrage tryToGetIEEE for '.$NE."\n";
-                            $cmd = "/usr/bin/nohup php ".__DIR__."/../php/AbeilleInterrogate.php ".$dest." ".$NE." >/dev/null 2>&1 &";
-                            // echo "Cmd: ".$cmd."\n";
-                            exec($cmd, $out, $status);
-                        } else echo "Je n essaye pas car Abeille inactive.\n";
-                    } else echo "Je n ai pas recuperé l adresse courte !!!\n";
-                } else echo "IEEE superieure à deux carateres !!! :".$addrIEEE_X."\n";
-            } else echo "commandIEEE n existe pas !!!!\n";
-        }
-    }
+    //     // Pour ces x Abeilles lance l interrogation
+    //     foreach ($eqLogicIds as $eqLogicId) {
+    //         echo "Start Loop: ".$eqLogicId."\n";
+    //         // echo "Start Loop Detail: ";
+    //         $eqLogicX = $eqLogics[$tryToGetIEEEArray[$eqLogicId]];
+    //         // var_dump($eqLogic);
+    //         $commandIEEE_X = $eqLogicX->getCmd('info', 'IEEE-Addr');
+    //         if ($commandIEEE_X) {
+    //             $addrIEEE_X = $commandIEEE_X->execCmd();
+    //             if (strlen($addrIEEE_X) < 2) {
+    //                 list($dest, $NE) = explode('/', $eqLogicX->getLogicalId());
+    //                 if (strlen($NE) == 4) {
+    //                     if ($eqLogicX->getIsEnable()) {
+    //                         log::add('Abeille', 'debug', 'Demarrage tryToGetIEEE for '.$NE);
+    //                         echo 'Demarrage tryToGetIEEE for '.$NE."\n";
+    //                         $cmd = "/usr/bin/nohup php ".__DIR__."/../php/AbeilleInterrogate.php ".$dest." ".$NE." >/dev/null 2>&1 &";
+    //                         // echo "Cmd: ".$cmd."\n";
+    //                         exec($cmd, $out, $status);
+    //                     } else echo "Je n essaye pas car Abeille inactive.\n";
+    //                 } else echo "Je n ai pas recuperé l adresse courte !!!\n";
+    //             } else echo "IEEE superieure à deux carateres !!! :".$addrIEEE_X."\n";
+    //         } else echo "commandIEEE n existe pas !!!!\n";
+    //     }
+    // }
 
     public static function updateConfigAbeille($abeilleIdFilter = false)
     {
@@ -1136,7 +1137,7 @@ if (0) {
         /* Main daemon starting.
            This means that other daemons have started too. Abeille can communicate with them */
 
-        // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
+        // Send a message to Abeille to ask for behive creation/update.
         // Tcharp38: Moved from deamon_start()
         $config = AbeilleTools::getParameters();
         for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
@@ -1636,7 +1637,14 @@ if (0) {
 
             /* Remote control short addr = 'rcXX' */
             $rcAddr = sprintf("rc%02X", $max);
-            Abeille::createDevice("create", $dest, $rcAddr, '', 'remotecontrol', 'Abeille');
+            // Abeille::createDevice("create", $dest, $rcAddr, '', 'remotecontrol', 'Abeille');
+            $dev = array(
+                'net' => $dest,
+                'addr' => $rcAddr,
+                'jsonId' => 'remotecontrol',
+                'jsonLocation' => 'Abeille',
+            );
+            Abeille::createDevice("create", $dev);
 
             return;
         }
@@ -1651,7 +1659,12 @@ if (0) {
                 return;
             }
 
-            Abeille::createDevice("update", $dest, $addr);
+            // Abeille::createDevice("update", $dest, $addr);
+            $dev = array(
+                'net' => $dest,
+                'addr' => $addr,
+            );
+            Abeille::createDevice("update", $dev);
 
             return;
         }
@@ -1671,10 +1684,15 @@ if (0) {
                it is not detected. Reset is done from defaultUnknown again.
                Need to store Zigbee modelId + manuf too for that purpose. */
 
-            $jsonId = $eqLogic->getConfiguration('ab::jsonId');
-            $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
-            $ieee = $eqLogic->getConfiguration('IEEE');
-            Abeille::createDevice("reset", $dest, $addr);
+            $dev = array(
+                'net' => $dest,
+                'addr' => $addr,
+                'jsonId' => $eqLogic->getConfiguration('ab::jsonId'),
+                'jsonLocation' => $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille'),
+                'ieee' => $eqLogic->getConfiguration('IEEE'),
+            );
+            // Abeille::createDevice("reset", $dest, $addr);
+            Abeille::createDevice("reset", $dev);
 
             return;
         }
@@ -2229,6 +2247,8 @@ if (0) {
                     'addr' => $addr,
                     'ieee' => $eq['ieee'],
                     'ep' => $eq['epFirst'],
+                    'modelId' =>
+                    'manufId' =>
                     'jsonId' => $eq['jsonId'], // JSON identifier
                     'jsonLocation' => '', // 'Abeille' or 'local'
                     'capa' => $eq['capa'],
@@ -2272,7 +2292,17 @@ if (0) {
 
             /* Create or update device from JSON.
                Note: ep = first End Point */
-            Abeille::createDevice("create", $net, $addr, $ieee, $jsonId, $jsonLocation);
+            // Abeille::createDevice("create", $net, $addr, $ieee, $jsonId, $jsonLocation);
+            $dev = array(
+                'net' => $net,
+                'addr' => $addr,
+                'ieee' => $ieee,
+                'modelId' => $msg['modelId'],
+                'manufId' => $msg['manufId'],
+                'jsonId' => $jsonId,
+                'jsonLocation' => $jsonLocation,
+            );
+            Abeille::createDevice("create", $dev);
 
             $eqLogic = self::byLogicalId($logicalId, 'Abeille');
 
@@ -2483,7 +2513,7 @@ if (0) {
                         Abeille::publishMosquitto(queueKeyAbeilleToCmd, priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgMode", "mode=normal");
                     }
                     if (hexdec($msg['minor']) < 0x031E)
-                        message::add('Abeille', 'Attention: La zigate '.$zgId.' fonctionne avec Un vieux FW. Une version >= 3.1E est requise pour un fonctionnement optimal d\'Abeille.');
+                        message::add('Abeille', 'Attention: La zigate '.$zgId.' fonctionne avec un vieux FW. Une version >= 3.1E est requise pour un fonctionnement optimal d\'Abeille.');
                 }
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['minor']);
             }
@@ -2713,7 +2743,7 @@ if (0) {
             $eqLogic->setIsEnable("1");
         } else {
             // TODO: If already exist, should we update commands if required ?
-            log::add('Abeille', 'debug', 'message: createRuche: objet: '.$eqLogic->getLogicalId().' existe deja');
+            log::add('Abeille', 'debug', "createRuche(): '".$eqLogic->getLogicalId()."' already exists");
         }
 
         $eqLogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
@@ -2739,11 +2769,34 @@ if (0) {
                         "isHistorized" => "0",
                         "Type" => "action",
                         "subType" => "other",
-                        "configuration" => array("topic" => "CmdCreate/".$objetId."/0000-0005", "request" => $objetId, "visibilityCategory" => "additionalCommand", "visibiltyTemplate" => "0"),
+                        "configuration" => array(
+                            "topic" => "CmdCreate/".$objetId."/0000-0005",
+                            "request" => $objetId,
+                            "visibilityCategory" => "additionalCommand",
+                            "visibiltyTemplate" => "0"
+                        ),
                     );
                 }
             }
             // print_r($rucheCommandList);
+        }
+
+        // Removing obsolete commands by their logical ID (unique)
+        $cmds = Cmd::byEqLogicId($eqLogic->getId());
+        foreach ($cmds as $cmdLogic) {
+            $found = false;
+            $cmdName = $cmdLogic->getName();
+            $cmdLogicId = $cmdLogic->getLogicalId();
+            foreach ($rucheCommandList as $cmdLogicId2 => $cmdValueDefaut) {
+                if ($cmdLogicId == $cmdLogicId2) {
+                    $found = true;
+                    break; // Listed in JSON
+                }
+            }
+            if ($found == false) {
+                log::add('Abeille', 'debug', "  Removing cmd '".$cmdName."' => '".$cmdLogicId."'");
+                $cmdLogic->remove(); // No longer required
+            }
         }
 
         // Creating/updating beehive commands
@@ -2751,15 +2804,17 @@ if (0) {
         foreach ($rucheCommandList as $cmdLogicId => $cmdValueDefaut) {
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $cmdLogicId);
             if (!$cmdLogic) {
-                log::add('Abeille', 'debug', "  Adding cmd '".$cmdLogicId."'");
+                $cmdJName = $cmdValueDefaut["name"]; // Jeedom cmd name
+                log::add('Abeille', 'debug', "  Adding cmd '".$cmdJName."' => '".$cmdLogicId."'");
                 $cmdLogic = new AbeilleCmd();
                 $cmdLogic->setEqLogic_id($eqLogic->getId());
                 $cmdLogic->setEqType('Abeille');
                 $cmdLogic->setLogicalId($cmdLogicId);
-                $cmdLogic->setName($cmdValueDefaut["name"]);
+                $cmdLogic->setName($cmdJName);
                 $newCmd = true;
             } else {
-                log::add('Abeille', 'debug', "  Updating cmd '".$cmdLogicId."'");
+                $cmdJName = $cmdLogic->getName();
+                log::add('Abeille', 'debug', "  Updating cmd '".$cmdJName."' => '".$cmdLogicId."'");
                 $newCmd = false;
             }
 
@@ -2824,11 +2879,13 @@ if (0) {
        - To reload JSON & update commands (EQ page/advanced/reload JSON) => action = 'update'
        - To reset from JSON (identical to new inclusion) => action = 'reset'
      */
-    public static function createDevice($action, $net, $addr, $ieee = '', $jsonId = '', $jsonLocation = '') {
-        log::add('Abeille', 'debug', 'createDevice('.$action.', net='.$net.', addr='.$addr.')');
+    public static function createDevice($action, $dev) {
+        log::add('Abeille', 'debug', 'createDevice('.$action.', dev='.json_encode($dev));
 
-        $logicalId = $net.'/'.$addr;
+        $logicalId = $dev['net'].'/'.$dev['addr'];
 
+        $jsonId = (isset($dev['jsonId']) ? $dev['jsonId']: '');
+        $jsonLocation = (isset($dev['jsonLocation']) ? $dev['jsonLocation']: '');
         if ($jsonId != '' && $jsonLocation != '') {
             $deviceConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation);
             $eqType = $deviceConfig['type'];
@@ -2852,14 +2909,15 @@ if (0) {
 
             $eqLogic = new Abeille();
             $eqLogic->setEqType_name('Abeille');
-            $eqLogic->setName("newDevice-".$addr); // Temp name to have it non empty
+            $eqLogic->setName("newDevice-".$dev['addr']); // Temp name to have it non empty
             $eqLogic->save(); // Save to force Jeedom to assign an ID
 
-            $eqName = $net."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
+            $eqName = $dev['net']."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
             $eqLogic->setName($eqName);
             $eqLogic->setLogicalId($logicalId);
             $abeilleConfig = AbeilleTools::getParameters();
             $eqLogic->setObject_id($abeilleConfig['AbeilleParentId']);
+            $eqLogic->setConfiguration('IEEE', $dev['ieee']);
         } else {
             $newEq = false;
             $eqName = $eqLogic->getName();
@@ -2871,9 +2929,9 @@ if (0) {
                 $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
                 $ieee = $eqLogic->getConfiguration('IEEE');
                 if ($action == "update")
-                    message::add("Abeille", "Mise-à-jour de '".$eqHName."' à partir de son fichier JSON");
+                    message::add("Abeille", "Mise-à-jour de '".$eqHName."' à partir de son modèle JSON");
                 else
-                    message::add("Abeille", "Réinitialisation de '".$eqHName."' à partir de son fichier JSON");
+                    message::add("Abeille", "Réinitialisation de '".$eqHName."' à partir de son modèle JSON");
                 $deviceConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation);
             } else { // action == create
                 $eqCurJsonId = $eqLogic->getConfiguration('ab::jsonId'); // Current JSON ID
@@ -2911,11 +2969,19 @@ if (0) {
         }
         $eqLogic->setConfiguration('mainEP', $mainEP);
 
+        if (isset($dev['modelId'])) {
+            $sig = array(
+                'modelId' => $dev['modelId'],
+                'manufId' => $dev['manufId'],
+            );
+            $eqLogic->setConfiguration('ab::signature', $sig);
+        }
         $eqLogic->setConfiguration('ab::jsonId', $jsonId);
         if ($jsonLocation != "Abeille")
             $eqLogic->setConfiguration('ab::jsonLocation', 'local');
         else
             $eqLogic->setConfiguration('ab::jsonLocation', null);
+
         $eqLogic->setConfiguration('type', 'topic'); // ??, type = topic car pas json. Tcharp38: what for ?
 
         if (($action == 'reset') || $newEq) { // Update icon only if new device
@@ -2928,7 +2994,6 @@ if (0) {
 
         $lastCommTimeout = (array_key_exists("lastCommunicationTimeOut", $objetConfiguration) ? $objetConfiguration["lastCommunicationTimeOut"] : '-1');
         $eqLogic->setConfiguration('lastCommunicationTimeOut', $lastCommTimeout);
-        $eqLogic->setConfiguration('IEEE', $ieee);
 
         if (isset($objetConfiguration['batteryType']))
             $eqLogic->setConfiguration('battery_type', $objetConfiguration['batteryType']);

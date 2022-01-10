@@ -1,8 +1,48 @@
 ChangeLog
 =========
 
-211230-BETA-1
--------------
+  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal.
+  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible.
+
+- Interne: Début refonte/nettoyage AbeilleCmd pour amélioration controle de flux.
+- Interne: Parser: Support nPDU/aPDU sur messages 8000/8012 & 8702 (FW>=3.1e).
+- Interne: Cmd: Ajout support optionnel 'manufId' pour 'writeAttribute'.
+- Page EQ/avancé: Ecriture attribut améliorée. Ajout support 'direction' & 'manufId'.
+- Xiaomi H1 double rocker: Ajout support (2253).
+- JSON équipements: Nettoyage commandes obsolètes
+
+  - 'etat' => 'zb-0006-OnOff'
+  - 'etatCharge0' => 'zb-0006-OnOff' + 'ep=01'
+  - 'etatCharge1' => 'zb-0006-OnOff' + 'ep=02'
+  - 'etatCharge2' => 'zb-0006-OnOff' + 'ep=03'
+  - 'etatCharge6' => 'zb-0006-OnOff' + 'ep=07'
+  - Ajout surcharge de 'genericType'
+  - 'etatInter0' => 'zb-0006-OnOff' + 'ep=01'
+  - 'etatInter1' => 'zb-0006-OnOff' + 'ep=02'
+  - 'etatInter2' => 'zb-0006-OnOff' + 'ep=03'
+  - 'etatDoor' => 'zb-0006-OnOff'
+- TRADFRIbulbE14WScandleopal470lm LED1949C5: Mise-à-jour modèle (2250).
+- Interne: AbeilleCmd: Suppression prepare readReportingConfig() + getBindingTable().
+- Package support: ajout du log 'update'.
+- LivarnoLux applique murale HG06701, TS0505A, _TZ3000_5bsf8vaj: Ajout support preliminaire (2256).
+- Assistant modèle JSON: Améliorations.
+- Interne: Abeille.class: Nettoyage fonctionalités obsolètes.
+- Xiaomi Aqara MCCGQ14LM (magnet.acn001): Ajout support préliminaire (2257).
+- Lidl HG07878A TS0502A: Correction modèle (2198).
+- Interne: Suppression des cmdes Ruche obsolètes au démarrage des démons.
+- QS-zigbee-C01 nouvelle version: ajout support (2260).
+- Xiaomi Aqara wall switch (switch.b1nacn02): Ajout support (2262).
+
+220108-STABLE-1
+---------------
 
 - Tuya TV02: Ajout image (2175).
 - JSON équipements: Correction support params optionnels.
@@ -73,14 +113,6 @@ ChangeLog
 
 211207-BETA-3
 -------------
-
-  .. important:: L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
-
-    - Toute nouvelle installation.
-    - Dès lors qu'un réappairage complet est nécéssaire.
-    - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-    - Les firmwares avant 3.1e sont forcement 'legacy'.
-    - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
 
 - Acova Alcantara: Version temporaire 'Set-OccupiedHeatingPoint' (2180).
 - Tuya/Sixwgh TS011F__TZ3000_cphmq0q7: Cluster 0B04 migré en polling (2211).

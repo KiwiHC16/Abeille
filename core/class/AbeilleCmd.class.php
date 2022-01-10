@@ -153,7 +153,7 @@
                     }
                 } else {
                     $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
-                    if (msg_send($queueKeyAbeilleToCmd, priorityUserCmd, $msgAbeille, true, false)) {
+                    if (msg_send($queueKeyAbeilleToCmd, PRIO_NORM, $msgAbeille, true, false)) {
                         logMessage('debug', '-- execute(): Msg sent: '.json_encode($msgAbeille));
                     } else {
                         logMessage('debug', '-- execute(): Could not send Msg');

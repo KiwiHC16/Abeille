@@ -63,7 +63,7 @@ class AbeilleTest extends TestCase {
 
     function test_checkInclusionStatus() {
         fwrite(STDOUT, "\n\n" . __METHOD__ );
-        $destOk = "Abeille3";
+        $destOk = "Abeille1";
         $detNok = "AbeilleY";
 
         $abeille = new Abeille;

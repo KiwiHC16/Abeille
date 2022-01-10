@@ -493,7 +493,9 @@
                 parserLog('debug', "  deviceUpdate('".$u."', '".$v."'): Unknown device detected");
             } else {
                 $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
-                parserLog('debug', "  deviceUpdate('".$u."', '".$v."'): status=".$eq['status']);
+                // Log only if relevant
+                if ($updType && ($eq['status'] != 'idle'))
+                    parserLog('debug', "  deviceUpdate('".$u."', '".$v."'): status=".$eq['status']);
             }
 
             /* Updating entry: 'epList', 'manufacturer', 'modelIdentifier' or 'location' */
@@ -697,6 +699,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'addr' => $addr,
                 'ieee' => $eq['ieee'],
                 'ep' => $eq['epFirst'],
+                'modelId' => $eq['modelIdentifier'],
+                'manufId' => $eq['manufacturer'],
                 'jsonId' => $eq['jsonId'],
                 'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
                 'capa' => $eq['capa'],
@@ -722,6 +726,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'addr' => $addr,
                 'ieee' => $eq['ieee'],
                 'ep' => $eq['epFirst'],
+                'modelId' => $eq['modelIdentifier'],
+                'manufId' => $eq['manufacturer'],
                 'jsonId' => $eq['jsonId'],
                 'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
                 'capa' => $eq['capa'],
@@ -758,6 +764,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'addr' => $addr,
                 'ieee' => $eq['ieee'],
                 'ep' => $eq['epFirst'],
+                'modelId' => $eq['modelIdentifier'],
+                'manufId' => $eq['manufacturer'],
                 'jsonId' => $eq['jsonId'],
                 'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
                 'capa' => $eq['capa'],
@@ -811,11 +819,26 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $clust = &$zigbee['endPoints'][$ep]['servClusters'][$clustId];
                 else
                     $clust = &$zigbee['endPoints'][$ep]['cliClusters'][$clustId];
+                $missingAttr = ''; // List of attributes whose value is missing.
+                $missingAttrNb = 0;
                 foreach ($val3 as $attrId => $attr) {
                     $clust[$attrId] = [];
-                    if (!isset($clust[$attrId]['value']))
-                        $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$attrId);
+                    if (isset($clust[$attrId]['value']))
+                        continue;
+
+                    if ($missingAttrNb != 0)
+                        $missingAttr .= ",";
+                    $missingAttr .= $attrId;
+                    $missingAttrNb++;
+                    if ($missingAttrNb < 4)
+                        continue;
+
+                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
+                    $missingAttr = '';
+                    $missingAttrNb = 0;
                 }
+                if ($missingAttrNb != 0)
+                    $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
             }
 
             // discoverUpdate($dest, $srcAddr, $srcEp, 'DiscoverAttributesExtResponse', $cluster, $isServer, $attributes);
@@ -1358,7 +1381,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          *  Send information to Abeille to update Jeedom
          *  And start the device identification by requesting EP and IEEE to the device.
          *
-         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $dest     Zigbee network (ex: Abeille1)
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $lqi
          *
@@ -1557,7 +1580,15 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 .', Status='.$status.'/'.zgGet8000Status($status)
                 .', SQN='.$sqn
                 .', PacketType='.$packetType;
-            if (strlen($payload) == 16) {
+            $l = strlen($payload);
+            if ($l >= 12) {
+                // FW >= 3.1d
+                $sent = substr($payload, 8, 2); // 1=Sent to device, 0=zigate only cmd
+                $sqnAps = substr($payload, 10, 2);
+                $msgDecoded .= ', Sent='.$sent.', SQNAPS='.$sqnAps;
+            }
+            if ($l == 16) {
+                // FW >= 3.1e
                 $nPDU = substr($payload, 12, 2);
                 $aPDU = substr($payload, 14, 2);
                 $msgDecoded .= ', NPDU='.$nPDU.', APDU='.$aPDU;
@@ -1566,18 +1597,19 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', $dest.', Type='.$msgDecoded, "8000");
 
             // Sending msg to cmd for flow control
-            $msgAbeille = array (
-                'type'         => "8000",
-                'dest'         => $dest,
-                'status'       => $status,
-                'sqn'          => $sqn,
-                'packetType'   => $packetType , // The value of the initiating command request.
+            $msg = array (
+                'type'          => "8000",
+                'net'           => $dest,
+                'status'        => $status,
+                'sqn'           => $sqn,
+                'sqnAps'        => $sqnAps,
+                'packetType'    => $packetType , // The value of the initiating command request.
             );
             if (isset($nPDU)) {
-                $msgAbeille['nPDU'] = $nPDU;
-                $msgAbeille['aPDU'] = $aPDU;
+                $msg['nPDU'] = $nPDU;
+                $msg['aPDU'] = $aPDU;
             }
-            $this->msgToCmdAck($msgAbeille);
+            $this->msgToCmdAck($msg);
 
             if ($packetType == "0002") {
                 if ($status == "00") {
@@ -1655,7 +1687,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          *  Will first decode it.
          *  Take action base on message contain
          *
-         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $dest     Zigbee network (ex: Abeille1)
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $lqi
          *
@@ -1668,10 +1700,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $profId         = substr($payload, 2, 4);
             $cluster        = substr($payload, 6, 4);
             $srcEp          = substr($payload,10, 2);
-            $destEp         = substr($payload,12, 2);
+            $dstEp          = substr($payload,12, 2);
             $srcAddrMode    = substr($payload,14, 2);
             $srcAddr        = substr($payload,16, 4);
-            $dstAddrMode   = substr($payload,20, 2);
+            $dstAddrMode    = substr($payload,20, 2);
             $dstAddress     = substr($payload,22, 4);
             $pl = substr($payload, 26); // Keeping remaining payload
 
@@ -1681,11 +1713,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             .', ProfId='.$profId
                             .', ClustId='.$cluster
                             .", SrcEP=".$srcEp
-                            .", DestEP=".$destEp
+                            .", DstEP=".$dstEp
                             .", SrcAddrMode=".$srcAddrMode
                             .", SrcAddr=".$srcAddr
-                            .", DestAddrMode=".$dstAddrMode
-                            .", DestAddr=".$dstAddress;
+                            .", DstAddrMode=".$dstAddrMode
+                            .", DstAddr=".$dstAddress;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8002");
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
@@ -1766,7 +1798,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 if ($cluster == "8033") {
 
                     /* Parser exemple
-                    Abeille1, Type=8002/Data indication, Status=00, ProfId=0000, ClustId=8033, SrcEP=00, DestEP=00, SrcAddrMode=02, SrcAddr=9007, DestAddrMode=02, DestAddr=0000
+                    Abeille1, Type=8002/Data indication, Status=00, ProfId=0000, ClustId=8033, SrcEP=00, DstEP=00, SrcAddrMode=02, SrcAddr=9007, DstAddrMode=02, DstAddr=0000
                         Binding table response, SQN=12, Status=00, tableSize=2, index=0, tableCount=2
                         04CF8CDF3C77164B, 01, 0004 => EP01 @00158D0001ED3365
                         04CF8CDF3C77164B, 01, 0100 => EP01 @00158D0001ED3365 */
@@ -1798,11 +1830,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         } else if ($dstAddrMode == "03") {
                             // 64-bit extended address for DstAddr and DstEndp present
                             $destIeee = AbeilleTools::reverseHex(substr($pl, 24, 16));
-                            $destEP  = substr($pl, 40, 2);
-                            parserLog('debug', '  '.$srcIeee.', EP'.$srcEp.', Clust '.$clustId.' => device '.$destIeee.', EP'.$destEP);
+                            $dstEp  = substr($pl, 40, 2);
+                            parserLog('debug', '  '.$srcIeee.', EP'.$srcEp.', Clust '.$clustId.' => device '.$destIeee.', EP'.$dstEp);
                             $pl = substr($pl, 42);
                         } else {
-                            parserLog('debug', '  ERROR: Unexpected destAddrMode '.$dstAddrMode);
+                            parserLog('debug', '  ERROR: Unexpected DstAddrMode '.$dstAddrMode);
                             return;
                         }
                     }
@@ -1810,6 +1842,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
 
                 switch ($cluster) {
+                case "0013": // Device_annce
+                    parserLog('debug', '  Handled by decode004D');
+                    break;
+                case "8004": // Simple_Desc_rsp
+                    parserLog('debug', '  Handled by decode8043');
+                    break;
                 case "8005": // Active_EP_rsp
                     parserLog('debug', '  Handled by decode8045');
                     break;
@@ -1843,7 +1881,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 // Tcharp38: WARNING: There is probably something wrong there.
                 // There are cases where 0005 message is neither supported by this part nor by 8100_8102 decode.
                 // Example:
-                // [2021-08-30 16:44:31] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0005, SrcEP=01, DestEP=01, SrcAddrMode=02, SrcAddr=7C4F, DestAddrMode=02, DestAddr=0000
+                // [2021-08-30 16:44:31] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0005, SrcEP=01, DstEP=01, SrcAddrMode=02, SrcAddr=7C4F, DstAddrMode=02, DstAddr=0000
                 // [2021-08-30 16:44:31]   FCF=08, SQN=7C, cmd=01/Read Attributes Response
                 // [2021-08-30 16:44:31]   Handled by decode8100_8102
                 // [2021-08-30 16:44:31] Abeille1, Type=8100/Read individual attribute response, SQN=7C, Addr=7C4F, EP=01, ClustId=0005, AttrId=0001, AttrStatus=00, AttrDataType=20, AttrSize=0001
@@ -2149,13 +2187,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                                    .', value='.$value
                                     );
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$destEp, $attribute, $value);
+                    $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$dstEp, $attribute, $value);
                     return;
                 }
             }
 
             // Tcharp38: No longer required. This case is handled by decode8102
-            // [2021-09-13 11:42:10] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0702, SrcEP=01, DestEP=01, SrcAddrMode=02, SrcAddr=4E85, DestAddrMode=02, DestAddr=0000
+            // [2021-09-13 11:42:10] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0702, SrcEP=01, DstEP=01, SrcAddrMode=02, SrcAddr=4E85, DstAddrMode=02, DstAddr=0000
             // [2021-09-13 11:42:10]   Remontée puissance prise TS0121 , frameCtrlField=08, SQN=1E, cmd=0A - report attribut, attribute=0000, dataType=25, value=00000000007D - 125
             // [2021-09-13 11:42:10] Abeille1, Type=8102/Attribute report, SQN=1E, Addr=4E85, EP=01, ClustId=0702, AttrId=0000, AttrStatus=00, AttrDataType=25, AttrSize=0006
             // // Remontée puissance prise TS0121 Issue: #1288
@@ -2180,7 +2218,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             //                         "8002"
             //                         );
 
-            //         $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$destEp, $attribute, hexdec($value));
+            //         $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$dstEp, $attribute, hexdec($value));
             //         return;
             //     }
             // }
@@ -2277,7 +2315,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 //            .', value='.$value.' - '.hexdec($value),
                 //             "8002");
 
-                //         $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$destEp, $attribute, hexdec($value));
+                //         $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$dstEp, $attribute, hexdec($value));
                 //         return;
                 //     }
                 // }
@@ -2305,7 +2343,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                                     "8002"
                                     );
 
-                $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$destEp, $attribute, hexdec($value));
+                $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$dstEp, $attribute, hexdec($value));
 
                 // if ($this->debug["8002"]) $this->deamonlog('debug', 'lenght: '.strlen($payload) );
                 if ( strlen($payload)>42 ) {
@@ -2323,7 +2361,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                                     "8002"
                                     );
 
-                    $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$destEp, $attribute, hexdec($value));
+                    $this->msgToAbeille($dest."/".$srcAddr, $cluster.'-'.$dstEp, $attribute, hexdec($value));
                 }
 
                 return;
@@ -3022,17 +3060,22 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         /* Zigate FW version */
         function decode8010($dest, $payload, $lqi)
         {
-            /*
-            <Major version number: uint16_t>
-            <Installer version number: uint16_t>
-            */
+            // <Major version number: uint16_t>
+            // <Installer version number: uint16_t>
             $major = substr($payload, 0, 4);
             $minor = substr($payload, 4, 4);
 
             parserLog('debug', $dest.', Type=8010/Version, Appli='.$major.', SDK='.$minor, "8010");
 
-            // $this->msgToAbeille($dest."/0000", "SW", "Application", $major);
-            // $this->msgToAbeille($dest."/0000", "SW", "SDK", $minor);
+            // FW version required by AbeilleCmd for flow control decision.
+            $msg = array (
+                'type'      => "8010",
+                'net'       => $dest,
+                'major'     => $major,
+                'minor'     => $minor,
+            );
+            $this->msgToCmdAck($msg);
+
             $msg = array(
                 'src' => 'parser',
                 'type' => 'zigateVersion',
@@ -3050,7 +3093,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          * This method process a Zigbeee message coming from a zigate for Ack APS messages
          *  Will first decode it.
          *
-         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $dest     Network (AbeilleX)
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $lqi
          *
@@ -3064,14 +3107,21 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             <Dest Endpoint : uint8_t>
             <Cluster ID : uint16_t>
             */
-            $status         = substr($payload, 0, 2);
-            $dstAddr       = substr($payload, 2, 4);
-            $destEp   = substr($payload, 6, 2);
-            $ClustID        = substr($payload, 8, 4);
+            $status     = substr($payload, 0, 2);
+            $dstAddr    = substr($payload, 2, 4);
+            $dstEp      = substr($payload, 6, 2);
+            $clustId    = substr($payload, 8, 4);
+            if (strlen($payload) > 12)
+                $sqn = substr($payload, 12, 2);
+            else
+                $sqn = '';
 
-            $msgDecoded = '8011/APS data ACK, Status='.$status.', Addr='.$dstAddr.', EP='.$destEp.', ClustId='.$ClustID;
+            $msgDecoded = '8011/APS data ACK, Status='.$status.'/'.zbGetAPSStatus($status).', Addr='.$dstAddr.', EP='.$dstEp.', ClustId='.$clustId;
+            if ($sqn != '')
+                $msgDecoded .= ', SQN='.$sqn;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8011");
 
+            // Monitor if required
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
@@ -3108,7 +3158,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $srcEp = substr($payload, 2, 2);
             $dstEp = substr($payload, 4, 2);
             $dstMode = substr($payload, 6, 2);
-            // Tcharp38: Lack of infos. Extracted from Domoticz plugin.
+            // Tcharp38: Lack of infos from Zigate site. Extracted from Domoticz plugin.
             if (in_array($dstMode, ["01", "02", "07"])) {
                 $dstAddr    = substr($payload, 8, 4);
                 $sqn        = substr($payload,12, 2);
@@ -3120,24 +3170,26 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $nPDU       = substr($payload,26, 2);
                 $aPDU       = substr($payload,28, 2);
             }
-            $msgDecoded = '8012/ZPS_EVENT_APS_DATA_CONFIRM';
+            $msgDecoded = '8012/ZPS_EVENT_APS_DATA_CONFIRM, Status='.$status.', Addr='.$dstAddr.', SQN='.$sqn.', NPDU='.$nPDU.', APDU='.$aPDU;
 
             // Log
             parserLog('debug', $dest.', Type='.$msgDecoded, "8012");
 
             // Sending msg to cmd for flow control
             $msg = array (
-                'type'         => "8012",
-                'dest'         => $dest,
-                // 'status'       => $status,
-                // 'sqn'          => $sqn,
-                // 'packetType'   => $packetType , // The value of the initiating command request.
+                'type'      => "8012",
+                'net'       => $dest,
+                'status'    => $status,
+                'addr'      => $dstAddr,
+                'sqn'       => $sqn,
+                'nPDU'      => $nPDU,
+                'aPDU'      => $aPDU,
             );
-            if (isset($nPDU)) {
-                $msg['nPDU'] = $nPDU;
-                $msg['aPDU'] = $aPDU;
-            }
             $this->msgToCmdAck($msg);
+
+            // Monitor if required
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))
+                monMsgFromZigate($msgDecoded); // Send message to monitor
         }
 
         /**
@@ -3147,7 +3199,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          * Will first decode it.
          * Send the info to Abeille to update ruche command
          *
-         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $dest     Zigbee network (ex: Abeille1)
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $lqi
          *
@@ -3468,7 +3520,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          *  Will first decode it.
          *  And send to Abeille only the Type of Equipement. Could be used if the model don't existe based on the name.
          *
-         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $dest     Zigbee network (ex: Abeille1)
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $lqi
          *
@@ -3597,7 +3649,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          *  Continue device identification by requesting Manufacturer, Name, Location, simpleDescriptor to the device.
          *  Then request the configuration of the device and even more infos.
          *
-         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $dest     Zigbee network (ex: Abeille1)
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $lqi
          *
@@ -3670,7 +3722,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          *  Continue device identification by requesting Manufacturer, Name, Location, simpleDescriptor to the device.
          *  Then request the configuration of the device and even more infos.
          *
-         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $dest     Zigbee network (ex: Abeille1)
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $lqi
          *
@@ -5185,22 +5237,22 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // 01 20   0000 1B53 01 0000
             // Co = complete
 
-            $completed  = substr( $payload, 0, 2);
-            $type       = substr( $payload, 2, 2);
-            $Attr       = substr( $payload, 4, 4);
-            $Addr       = substr( $payload, 8, 4);
-            $EP         = substr( $payload,12, 2);
-            $Cluster    = substr( $payload,14, 4);
+            $completed  = substr($payload, 0, 2);
+            $type       = substr($payload, 2, 2);
+            $Attr       = substr($payload, 4, 4);
+            $Addr       = substr($payload, 8, 4);
+            $EP         = substr($payload,12, 2);
+            $Cluster    = substr($payload,14, 4);
 
             $msgDecoded = '8140/Attribute discovery response'
-               .', Completed='.$completed
+               .', Comp='.$completed
                .', AttrType='.$type
                .', AttrId='.$Attr
                .', EP='.$EP
-               .', ClustId='.$Cluster;
+               .', Addr='.$Addr
+               .', ClustId='.$Cluster
+               .' => Handled by decode8002';
             parserLog('debug', $dest.', Type='.$msgDecoded, "8140");
-            /* Tcharp38: Treated by decode8002() */
-            parserLog('debug', '  Handled by decode8002', "8140");
         }
 
         function decode8141($dest, $payload, $lqi)
@@ -5319,7 +5371,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          * This method process ????
          *  Will first decode it.
          *
-         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $dest     Zigbee network (ex: Abeille1)
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $lqi
          *
@@ -5351,7 +5403,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         /**
          * 8702/APS data confirm fail
          *
-         * @param $dest     Complete address of the device in Abeille. Which is also thee logicalId. Format is AbeilleX/YYYY - X being the Zigate Number - YYYY being zigbee short address.
+         * @param $dest     Zigbee network (ex: Abeille1)
          * @param $payload  Parameter sent by the device in the zigbee message
          * @param $lqi
          *
@@ -5369,16 +5421,16 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <seq number: uint8_t>
             $status     = substr($payload, 0, 2);
             $srcEp      = substr($payload, 2, 2);
-            $DestEP     = substr($payload, 4, 2);
-            $dstMode   = substr($payload, 6, 2);
-            // Tcharp38: Lack of infos. Extracted from Domoticz plugin.
+            $dstEp      = substr($payload, 4, 2);
+            $dstMode    = substr($payload, 6, 2);
+            // Tcharp38: Lack of infos from Zigate site. Extracted from Domoticz plugin.
             if (in_array($dstMode, ["01", "02", "07"])) {
-                $dstAddr   = substr($payload, 8, 4);
+                $dstAddr    = substr($payload, 8, 4);
                 $sqn        = substr($payload,12, 2);
                 $nPDU       = substr($payload,14, 2);
                 $aPDU       = substr($payload,16, 2);
             } else if ($dstMode == "03") { // IEEE
-                $dstAddr   = substr($payload, 8, 16);
+                $dstAddr    = substr($payload, 8, 16);
                 $sqn        = substr($payload,24, 2);
                 $nPDU       = substr($payload,26, 2);
                 $aPDU       = substr($payload,28, 2);
@@ -5386,32 +5438,25 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $msgDecoded = '8702/APS data confirm fail'
                .', Status='.$status.'/'.$allErrorCode[$status][0]
                .', SrcEP='.$srcEp
-               .', DestEP='.$DestEP
-               .', AddrMode='.$dstMode;
-            if (isset($dstAddr))
-               $msgDecoded .= ', Addr='.$dstAddr;
-            if (isset($sqn))
-               $msgDecoded .= ', SQN='.$sqn;
-            if (isset($nPDU))
-               $msgDecoded .= ', NPDU='.$nPDU;
-            if (isset($aPDU))
-               $msgDecoded .= ', APDU='.$aPDU;
+               .', DstEP='.$dstEp
+               .', AddrMode='.$dstMode
+               .', Addr='.$dstAddr
+               .', SQN='.$sqn
+               .', NPDU='.$nPDU.', APDU='.$aPDU;
 
             // Log
             parserLog('debug', $dest.', Type='.$msgDecoded, "8702");
 
             // Sending msg to cmd for flow control
             $msg = array (
-                'type'         => "8702",
-                'dest'         => $dest,
-                'status'       => $status,
-                'sqn'          => $sqn,
-                // 'packetType'   => $packetType , // The value of the initiating command request.
+                'type'      => "8702",
+                'net'       => $dest,
+                'status'    => $status,
+                'addr'      => $dstAddr,
+                'sqn'       => $sqn,
+                'nPDU'      => $nPDU,
+                'aPDU'      => $aPDU,
             );
-            if (isset($nPDU)) {
-                $msg['nPDU'] = $nPDU;
-                $msg['aPDU'] = $aPDU;
-            }
             $this->msgToCmdAck($msg);
 
             // Monitor if requested

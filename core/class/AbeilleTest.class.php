@@ -78,7 +78,7 @@ class AbeilleTest extends TestCase {
 
         $abeille = new Abeille;
 
-        $this->assertSame( "1254", $abeille->byLogicalId("Abeille1/0000","Abeille")->getId() );
+        $this->assertSame( "1303", $abeille->byLogicalId("Abeille1/0000","Abeille")->getId() );
         $this->assertSame( false, $abeille->byLogicalId($dest."/0000","Abeille") );
         $abeille->createRuche($dest);
         $this->assertSame( "Ruche-".$dest, $abeille->byLogicalId($dest."/0000","Abeille")->getName() );

@@ -49,16 +49,21 @@
     $abQueues["parserToLQI"] = array( "id" => 0xE1, "max" => 2048 );
     $abQueues["parserToCli"] = array( "id" => 0x2D4, "max" => 1024 );
     $abQueues["parserToCmd"] = array( "id" => 0x3E6, "max" => 512 );
-    $abQueues["parserToCmdAck"] = array( "id" => 0x3E7, "max" => 512 ); // Parser to cmd for 8000 status
+    $abQueues["parserToCmdAck"] = array( "id" => 0x3E7, "max" => 512 ); // Parser to cmd for 8000/8012/8702 statuses
     $GLOBALS['abQueues'] = $abQueues;
 
-    define('priorityMin',           1);
-    define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
-    define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
-    define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
-    define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
-    define('priorityLostNE',        5); // Si le NE est en TimeOut il n'est pas prioritaire car il est peut etre off.
-    define('priorityMax',           5); // est egale aux max des priorités définies.
+    // define('priorityMin',           1);
+    // define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
+    // define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
+    // define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
+    // define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
+    // define('priorityLostNE',        5); // Si le NE est en TimeOut il n'est pas prioritaire car il est peut etre off.
+    // define('priorityMax',           5); // est egale aux max des priorités définies.
+
+    // New priorities model
+    define('PRIO_NORM', 1); // Normal
+    define('PRIO_HIGH', 2); // High priority (ex: parser to cmd to react on wakeup)
+    define('priorityInterrogation', PRIO_NORM); // TO BE REMOVED
 
     define('maxNbOfZigate', 10); // Number of supported zigates
     $GLOBALS['maxNbOfZigate'] = maxNbOfZigate;

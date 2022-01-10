@@ -1,0 +1,47 @@
+{
+    "switch.b1nacn02": {
+        "manufacturer": "Xiaomi",
+        "model": "?",
+        "timeout": "",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "mainEP": "01",
+            "icon": "XiaomiPrise"
+        },
+        "type": "Aqara H1 smart wall switch",
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
+            "Status": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1
+            },
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
+            "Bind 0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting 0006-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            }
+        }
+    }
+}

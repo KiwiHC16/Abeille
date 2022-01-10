@@ -1,6 +1,10 @@
 <!-- This file displays equipment commands.
      Included by 'AbeilleEq.php' -->
 
+<?php
+    include_file('core', 'plugin.template', 'js');
+    include_file('desktop', 'Abeille', 'js', 'Abeille');
+?>
 
 <script>
     /* AbeilleEq page opened. Let's update display content.
@@ -424,6 +428,12 @@
             attrType = document.getElementById("idAttrTypeWA").value;
             if (attrType != '')
                 payload += "_attrType="+attrType;
+            dir = document.getElementById("idDirWA").value;
+            if (dir != '')
+                payload += "_dir="+dir;
+            manufId = document.getElementById("idManufIdWA").value;
+            if (manufId != '')
+                payload += "_manufId="+manufId;
         } else if (request == "writeAttribute0530") {
             topic = "Cmd"+logicalId+"_writeAttribute0530";
             ep = document.getElementById("idEpWA2").value;

@@ -11,25 +11,39 @@
         },
         "type": "Xiaomi Wall Switch D1 w Neutral 2 Button",
         "commands": {
-            "include3 2 2": "etatCharge0",
-            "include3 2 2 2": "etatCharge1",
+            "etat charge 0": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=01",
+                "genericType": "LIGHT_STATE",
+                "isVisible": 1
+            },
+            "etat charge 1": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=02",
+                "genericType": "LIGHT_STATE",
+                "isVisible": 1
+            },
             "include3 2 2 2 2": "etatSW1",
             "include3 2 2 2 2 2": "etatSW2",
             "On": {
                 "use": "zbCmd-0006-On",
-                "params": "ep=01"
+                "params": "ep=01",
+                "isVisible": 1
             },
             "Off": {
                 "use": "zbCmd-0006-Off",
-                "params": "ep=01"
+                "params": "ep=01",
+                "isVisible": 1
             },
             "On1": {
                 "use": "zbCmd-0006-On",
-                "params": "ep=02"
+                "params": "ep=02",
+                "isVisible": 1
             },
             "Off1": {
                 "use": "zbCmd-0006-Off",
-                "params": "ep=02"
+                "params": "ep=02",
+                "isVisible": 1
             },
             "Toggle 1": {
                 "use": "zbCmd-0006-Toggle",

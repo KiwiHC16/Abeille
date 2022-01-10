@@ -146,10 +146,13 @@
                 }
 
                 if ($newSyntax) {
-                    $supportedKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue'];
+                    $supportedKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType'];
                     foreach ($value as $key2 => $value2) {
-                        if (!in_array($key2, $supportedKeys))
-                            $error = newDevError($devName, "ERROR", "Invalid '".$key2."' key for '".$key."' Jeedom command");
+                        if (in_array($key2, $supportedKeys))
+                            continue;
+                        if (substr($key2, 0, 7) == "comment")
+                            continue;
+                        $error = newDevError($devName, "ERROR", "Invalid '".$key2."' key for '".$key."' Jeedom command");
                     }
                 }
 

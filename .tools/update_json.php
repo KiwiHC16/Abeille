@@ -134,16 +134,61 @@
                 //     $devUpdated = true;
                 //     echo "  Cmd '".$cmdFName."' REMOVED.\n";
                 // }
-                if (($cmdFName == "temperature") && $oldSyntax) {
+                if (($cmdFName == "etat") && $oldSyntax) {
                     $cmdArr = Array(
-                        "use" => "zb-0402-MeasuredValue",
-                        "isVisible" => 1,
-                        "isHistorized" => 1
+                        "use" => "zb-0006-OnOff",
+                        // "params" => "ep=03",
+                        // "subType" => "numeric",
+                        // "template" => "door",
+                        // "genericType" => "OPENING",
+                        "isVisible" => 1
                     );
-                    $commands2["Temperature"] = $cmdArr;
+                    $commands2["etat"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "getEtat") && $oldSyntax) {
+                } else if (($cmdFName == "etatDoor") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zb-0006-OnOff",
+                        // "params" => "ep=03",
+                        // "subType" => "numeric",
+                        "template" => "door",
+                        "genericType" => "OPENING",
+                        "isVisible" => 1
+                    );
+                    $commands2["etat"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ((substr($cmdFName, 0, 10) == "etatCharge") && $oldSyntax) {
+                    $x = hexdec(substr($cmdFName, 10));
+                    $ep = sprintf("%02X", $x + 1);
+                    $cmdArr = Array(
+                        "use" => "zb-0006-OnOff",
+                        "params" => "ep=".$ep,
+                        // "subType" => "numeric",
+                        // "template" => "door",
+                        "genericType" => "LIGHT_STATE",
+                        "isVisible" => 1
+                    );
+                    $commands2["etat charge ".$x] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ((substr($cmdFName, 0, 9) == "etatInter") && $oldSyntax) {
+                    $x = hexdec(substr($cmdFName, 9));
+                    $ep = sprintf("%02X", $x + 1);
+                    $cmdArr = Array(
+                        "use" => "zb-0006-OnOff",
+                        "params" => "ep=".$ep,
+                        "subType" => "numeric",
+                        // "template" => "door",
+                        // "genericType" => "LIGHT_STATE",
+                        "isVisible" => 1
+                    );
+                    $commands2["etat inter ".$x] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                }
+
+                else if (($cmdFName == "getEtat") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbReadAttribute",
                         "params"=> "clustId=0006&attrId=0000"

@@ -52,6 +52,16 @@
         echo '</select>';
     }
 
+    // Add direction input
+    function addDirInput($id) {
+        echo '<input id="'.$id.'" style="width:80px; margin-left: 8px" title="{{Direction. Format hex string 2 car (00=vers serveur, 01=vers client)}}" placeholder="{{Dir (ex: 00)}}" />';
+    }
+
+    // Add manufacturer ID input
+    function addManufIdInput($id) {
+        echo '<input id="'.$id.'" style="width:80px; margin-left: 8px" title="{{Manuf ID. Format hex string 4 car (par défaut=aucun)}}" placeholder="{{Manuf ID (ex: 115F)}}" />';
+    }
+
     function addIeeeListButton($id) {
         echo '<select id="'.$id.'" title="{{Equipements}}" style="width:140px; margin-left: 8px">';
         $eqLogics = eqLogic::byType('Abeille');

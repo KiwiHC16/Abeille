@@ -1,0 +1,148 @@
+{
+    "TS0505A__TZ3000_5bsf8vaj": {
+        "manufacturer": "LivarnoLux",
+        "model": "HG06701B",
+        "type": "LivarnoLux HG06701B applique murale",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "mainEP": "01",
+            "icon": "LivarnoLux-HG06701B"
+        },
+        "commands": {
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": "1"
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": "1"
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle"
+            },
+            "Status": {
+                "use": "zb-0006-OnOff",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting-0006": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Set-Level": {
+                "use": "setLevel",
+                "isVisible": "1"
+            },
+            "Current Level": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Current Level": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "Bind-0008-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "SetReporting-0008": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Color Mode": {
+                "use": "zb-0300-ColorMode",
+                "isVisible": "0",
+                "nextLine": "after"
+            },
+            "Get Color Mode": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0008"
+            },
+            "Current HUE": {
+                "use": "zb-0300-CurrentHue"
+            },
+            "Get Current HUE": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0000"
+            },
+            "Current Saturation": {
+                "use": "zb-0300-CurrentSaturation"
+            },
+            "Get Current Saturation": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0001"
+            },
+            "Current X": {
+                "use": "zb-0300-CurrentX"
+            },
+            "Get Current X": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0003"
+            },
+            "Current Y": {
+                "use": "zb-0300-CurrentY"
+            },
+            "Get Current Y": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0004"
+            },
+            "Set White": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=6000&Y=6000"
+            },
+            "Set Blue": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=228F&Y=228F"
+            },
+            "Set Red": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=AE13&Y=51EB"
+            },
+            "Set Green": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=147A&Y=D709"
+            },
+            "ColorTemperature": {
+                "use": "zb-0300-ColorTemperatureMireds",
+                "isVisible": "1"
+            },
+            "Get ColorTemperature": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0007"
+            },
+            "Set ColorTemperature": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "minValue": "2200",
+                "minValue": "6500",
+                "isVisible": "1"
+            },
+            "Bind-0300-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0300",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

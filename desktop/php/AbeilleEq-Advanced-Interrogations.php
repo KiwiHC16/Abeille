@@ -97,12 +97,14 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label">ZCL: Ecriture attribut</label>
+    <label class="col-sm-3 control-label" title="writeAttribute()">ZCL: Ecriture attribut</label>
     <div class="col-sm-9">
         <?php
             echo '<a class="btn btn-danger" onclick="interrogate(\'writeAttribute\', \''.$eqId.'\')">{{Ecrire}}</a>';
             addEpButton("idEpWA", $mainEP);
             addClusterButton("idClustIdWA");
+            addDirInput("idDirWA");
+            addManufIdInput("idManufIdWA");
             addAttrInput("idAttrIdWA");
         ?>
         <input id="idAttrTypeWA" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" />
@@ -110,15 +112,13 @@
     </div>
 </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">ZCL: Ecriture attribut via 0530</label>
+            <label class="col-sm-3 control-label" title="writeAttribute0530()">ZCL: Ecriture attribut via 0530</label>
             <div class="col-sm-9">
                 <?php
                     echo '<a class="btn btn-danger" onclick="interrogate(\'writeAttribute0530\', \''.$eqId.'\')">{{Ecrire}}</a>';
                     addEpButton("idEpWA2", $mainEP);
                     addClusterButton("idClustIdWA2");
-                ?>
-                <input id="idDirWA2" title="{{Direction. Format hex string 2 car (00=vers serveur, 01=vers client)}}" placeholder="{{Dir (ex: 00)}}" />
-                <?php
+                    addDirInput("idDirWA2");
                     addAttrInput("idAttrIdWA2");
                 ?>
                 <input id="idAttrTypeWA2" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" />

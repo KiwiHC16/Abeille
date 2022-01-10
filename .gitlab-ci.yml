@@ -1,5 +1,5 @@
 Abeille project:
-  image: dockerhub.localdomain:5000/jeedomgitlab:Abeille_20220110
+  image: dockerhub.localdomain:5000/jeedomgitlab:Abeille_20220110_1932
   script:
     - cd /var/www/html/plugins/
     - rm -rf Abeille

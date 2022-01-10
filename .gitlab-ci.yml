@@ -17,7 +17,7 @@ Abeille project:
     - echo "-----------------------------------------------"
     - phpunit AbeilleParserTest.class.php
     - echo "-----------------------------------------------"
-    - phpunit AbeilleCmdPrepare.class.php
+    - phpunit AbeilleCmdPrepareTest.class.php
     - echo "-----------------------------------------------"
     - sleep 15
     - /etc/init.d/cron stop

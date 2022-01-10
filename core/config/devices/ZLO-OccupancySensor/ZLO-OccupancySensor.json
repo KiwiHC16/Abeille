@@ -16,7 +16,10 @@
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",
             "include7": "Xiaomi-ff01",
-            "include8": "etat",
+            "etat": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

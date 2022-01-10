@@ -12,7 +12,12 @@
         },
         "type": "Xiaomi Door Sensor",
         "commands": {
-            "include3": "etatDoor",
+            "etat": {
+                "use": "zb-0006-OnOff",
+                "template": "door",
+                "genericType": "OPENING",
+                "isVisible": 1
+            },
             "include4": "Batterie-Volt",
             "include5": "Batterie-Pourcent",
             "SWBuildID": {

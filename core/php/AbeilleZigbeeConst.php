@@ -1,16 +1,49 @@
 
 <?php
     /*
-     * Zigbee constants from official specs
+     * Zigbee constants from official specs.
      * Mainly Zigbee Cluster Library spec (ZCL).
      */
+
+    /* Returns Zigbee APS status from code. */
+    function zbGetAPSStatus($status)
+    {
+        $status = strtoupper($status);
+
+        /* Zigbee APS statuses */
+        $statusesTable = array (
+            "00" => "Success",
+            "A0" => "ASDU_TOO_LONG",
+            "A1" => "DEFRAG_DEFERRED",
+            "A2" => "DEFRAG_UNSUPPORTED",
+            "A3" => "ILLEGAL_REQUEST",
+            "A4" => "INVALID_BINDING",
+            "A5" => "INVALID_GROUP",
+            "A6" => "INVALID_PARAMETER",
+            "A7" => "NO_ACK",
+            "A8" => "NO_BOUND_DEVICE",
+            "A9" => "NO_SHORT_ADDRESS",
+            "AA" => "NOT_SUPPORTED",
+            "AB" => "SECURED_LINK_KEY",
+            "AC" => "SECURED_NWK_KEY",
+            "AD" => "SECURITY_FAIL",
+            "AE" => "TABLE_FULL",
+            "AF" => "UNSECURED",
+            "B0" => "UNSUPPORTED_ATTRIBUTE",
+        );
+
+        /* ZCL statuses */
+        if (array_key_exists($status, $statusesTable))
+            return $statusesTable[$status];
+        return "Unknown-".$status;
+    }
 
     /* Returns Zigbee ZCL status from code. */
     function zbGetZCLStatus($status)
     {
         $status = strtolower($status);
 
-        /* List of known devices per profile */
+        /* ZCL statuses */
         $statusesTable = array (
             "00" => "Success",
             "01" => "Operation failed",

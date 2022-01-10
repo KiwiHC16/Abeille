@@ -9,7 +9,7 @@ Abeille project:
     - /etc/init.d/apache2 start
     - /etc/init.d/cron start
     - echo "Sleep for 5 min to let Jeedom start"
-    - sleep 300
+    - sleep 60
     - echo "-----------------------------------------------"
     - echo "-------------------- TESTS --------------------"
     - echo "-----------------------------------------------"

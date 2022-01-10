@@ -444,6 +444,11 @@
                                 $newCmd[$cmd1]['configuration']['minValue'] = $cmd2['minValue'];
                             if (isset($cmd2['maxValue']))
                                 $newCmd[$cmd1]['configuration']['maxValue'] = $cmd2['maxValue'];
+                            if (isset($cmd2['genericType'])) {
+                                $value = $cmd2['genericType'];
+                                $newCmd[$cmd1]['generic_type'] = $value;
+    // log::add('Abeille', 'debug', 'LA value='.$value.', newCmd='.json_encode($newCmd));
+                            }
 
                             // log::add('Abeille', 'debug', 'getDeviceConfig(): newCmd='.json_encode($newCmd));
                             $deviceCmds += $newCmd;

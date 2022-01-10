@@ -17,7 +17,10 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "include4": "etat",
+            "etat": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1
+            },
             "CurrentLevel": {
                 "use": "zb-0008-CurrentLevel",
                 "isVisible": 1

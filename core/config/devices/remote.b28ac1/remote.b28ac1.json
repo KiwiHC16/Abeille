@@ -1,0 +1,48 @@
+{
+    "remote.b28ac1": {
+        "manufacturer": "Xiaomi",
+        "zbManufacturer": "Lumi",
+        "model": "WRS-R02",
+        "configuration": {
+            "paramType": "telecommande",
+            "mainEP": "01",
+            "icon": "TODO",
+            "batteryType": "1x3V CR2450"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Xiaomi Aqara Wireless Remote Switch H1 Double Rocker",
+        "commands": {
+            "BatteryVolt2Percent": { "use": "battery-Volt2Percent-3" },
+            "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
+
+            "Bind-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-0001-0020": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "Yes"
+            },
+            "SetMode-Scene": {
+                "use": "zbWriteAttribute",
+                "params": "clustId=FCC0&attrId=0009&attrType=20&attrVal=01&manufId=115F",
+                "execAtCreation": "Yes",
+                "comment": "Xiaomi specific attribute: 1 = event base switching, 2 = zigbee group switching, 3 = xiaomi specific mode"
+            },
+            "SetMode-Multiclic": {
+                "use": "zbWriteAttribute",
+                "params": "clustId=FCC0&attrId=0125&attrType=20&attrVal=02&manufId=115F",
+                "execAtCreation": "Yes",
+                "comment": "Xiaomi specific attribute: 1 = single clic only, 2 = multiclic mode"
+            },
+
+            "Bind-01-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0006", "execAtCreation": "Yes" },
+            "Bind-01-0003-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0003", "execAtCreation": "Yes" },
+            "Bind-03-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=03&clustId=0006", "execAtCreation": "Yes" }
+        }
+    }
+}

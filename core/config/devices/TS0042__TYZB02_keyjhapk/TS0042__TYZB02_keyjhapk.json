@@ -28,9 +28,18 @@
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-
-            "include5 3": "etatInter0",
-            "include5 3 2": "etatInter1"
+            "etat inter 0": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=01",
+                "subType": "numeric",
+                "isVisible": 1
+            },
+            "etat inter 1": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=02",
+                "subType": "numeric",
+                "isVisible": 1
+            }
         },
         "comment": "Zigate in hybrid mode https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1550"
     }

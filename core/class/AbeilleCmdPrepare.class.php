@@ -38,7 +38,7 @@
         }
 
         /**
-         * procmsg()
+         * prepareCmd()
          *
          * process commands received in the queue to be send to zigate
          * Do the mapping (L2: Level 1) with basic command and send it to processCmd() for processing at cmd level (L1: Level 1)
@@ -48,36 +48,37 @@
          * @return none
          *
          */
-        function procmsg($message,$phpunit=0) {
+        function prepareCmd($message, $phpunit=0) {
 
-            $this->deamonlog("debug", "  L2 - procmsg(".json_encode($message).")", $this->debug['procmsg']);
+            cmdLog("debug", "  prepareCmd(".json_encode($message).")", $this->debug['prepareCmd']);
 
             $topic      = $message->topic;
             $msg        = $message->payload;
-            $priority   = $message->priority;
+            // $priority   = $message->priority;
+            $priority   = PRIO_NORM; // TO be removed. Default value
 
             if (sizeof(explode('/', $topic)) != 3) {
-                $this->deamonlog("error", "procmsg(): Mauvais format de message reçu.");
+                cmdLog("error", "  prepareCmd(): Mauvais format de message reçu.");
                 return ;
             }
 
             list ($type, $address, $action) = explode('/', $topic);
 
             if (preg_match("(^TempoCmd)", $type)) {
-                $this->deamonlog("debug", "  Ajoutons le message a queue Tempo.", $this->debug['procmsg2']);
+                cmdLog("debug", "  Ajoutons le message a queue Tempo.", $this->debug['prepareCmd2']);
                 $this->addTempoCmdAbeille($topic, $msg, $priority);
                 return;
             }
 
             if (!preg_match("(^Cmd)", $type)) {
-                $this->deamonlog('warning', '  Msg Received: Type: {'.$type.'} <> Cmdxxxxx donc ce n est pas pour moi, no action.');
+                cmdLog('warning', '  Msg Received: Type: {'.$type.'} <> Cmdxxxxx donc ce n est pas pour moi, no action.');
                 return;
             }
 
             $dest = str_replace('Cmd', '',  $type); // Remove 'Cmd' prefix
 
-            $this->deamonlog("debug", '  Msg Received: Topic: {'.$topic.'} => '.$msg, $this->debug['procmsg3']);
-            $this->deamonlog("debug", '  (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action, $this->debug['procmsg3']);
+            cmdLog("debug", '  Msg Received: Topic: {'.$topic.'} => '.$msg, $this->debug['prepareCmd3']);
+            cmdLog("debug", '  (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action, $this->debug['prepareCmd3']);
 
             $convertOnOff = array(
                 "On"      => "01",
@@ -113,14 +114,14 @@
             //         "address" => $address,
             //     );
             //     break;
-            case "getBindingTable":
-                $Command = array(
-                    "getBindingTable" => "1",
-                    "priority" => $priority,
-                    "dest" => $dest,
-                    "address" => $address,
-                );
-                break;
+            // case "getBindingTable":
+            //     $Command = array(
+            //         "getBindingTable" => "1",
+            //         "priority" => $priority,
+            //         "dest" => $dest,
+            //         "address" => $address,
+            //     );
+            //     break;
             case "Management_LQI_request": // Mgmt_Lqi_req: OBSOLETE: Use 'getNeighborTable' instead
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
@@ -151,7 +152,7 @@
                     "shortAddress"              => $keywords[1],
                 );
                 break;
-            case "bindShort":
+            case "bindShort": // OBSOLETE: Use 'bind0030' instead
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -168,7 +169,7 @@
                                     "destinationEndpoint"      => "01",
                                     );
                 break;
-            case "BindToGroup":
+            case "BindToGroup": // OBSOLETE: Use 'bind0030' instead
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -190,7 +191,7 @@
              * Zigbee ZCL commands
              */
 
-            case "ReadAttributeRequest": // OBSOLETE: Use "readAttribute' instead
+            case "ReadAttributeRequest": // OBSOLETE: Use 'readAttribute' instead
                 $keywords = preg_split("/[=&]+/", $msg);
                 if (count($keywords) > 1) {
                     $parameters = $this->proper_parse_str($msg);
@@ -208,7 +209,7 @@
                                     );
                 break;
 
-            case "readAttributeRequest": // OBSOLETE: Use "readAttribute' instead
+            case "readAttributeRequest": // OBSOLETE: Use 'readAttribute' instead
                     $keywords = preg_split("/[=&]+/", $msg);
                 if (count($keywords) > 1) {
                     $params = $this->proper_parse_str($msg);
@@ -228,7 +229,7 @@
                                 );
                 break;
 
-            case "ReadAttributeRequestHue": // OBSOLETE: Use "readAttribute' instead
+            case "ReadAttributeRequestHue": // OBSOLETE: Use 'readAttribute' instead
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
                                     "ReadAttributeRequestHue" => "1",
@@ -240,7 +241,7 @@
                                     );
                 break;
 
-            case "ReadAttributeRequestOSRAM": // OBSOLETE: Use "readAttribute' instead
+            case "ReadAttributeRequestOSRAM": // OBSOLETE: Use 'readAttribute' instead
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
                                     "ReadAttributeRequestOSRAM" => "1",
@@ -324,16 +325,16 @@
                 if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                 break;
 
-            case "readReportingConfig":
-                $Command = array(
-                    "readReportingConfig"    => "1",
-                    "priority"              => $priority,
-                    "dest"                  => $dest,
-                    "addr"                  => $parameters['addr'],
-                    "clustId"               => $parameters['clustId'],
-                    "attrId"                => $parameters['attrId'],
-                    );
-                break;
+            // case "readReportingConfig":
+            //     $Command = array(
+            //         "readReportingConfig"    => "1",
+            //         "priority"              => $priority,
+            //         "dest"                  => $dest,
+            //         "addr"                  => $parameters['addr'],
+            //         "clustId"               => $parameters['clustId'],
+            //         "attrId"                => $parameters['attrId'],
+            //         );
+            //     break;
 
             /*
              * Unsorted yet
@@ -1363,9 +1364,9 @@
                  */
 
                 $Command = array(
-                    $action => $action, // Tcharp38: Legacy. To be removed at some point.
+                    $action => $action, // Tcharp38: Legacy. Replaced by 'name' field. To be removed at some point.
                     "name" => $action,
-                    "priority" => $priority,
+                    // "priority" => $priority,
                     "dest" => $dest,
                 );
                 // Splitting by '&' then by '='

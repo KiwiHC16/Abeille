@@ -6,23 +6,21 @@
             "cli"                    => 0, // commande line mode or jeedom
             "Checksum"                => 0, // Debug checksum calculation
             "tempo"                   => 0, // Debug tempo queue
-            "procmsg"                 => 1, // Debug fct procmsg
-            "procmsg1"                => 0, // Debug fct procmsg avec un seul msg
-            "procmsg2"                => 0, // Debug fct procmsg avec un seul msg
-            "procmsg3"                => 0, // Debug fct procmsg avec un seul msg
+            "prepareCmd"                 => 1, // Debug fct procmsg
+            "prepareCmd1"                => 0, // Debug fct procmsg avec un seul msg
+            "prepareCmd2"                => 0, // Debug fct procmsg avec un seul msg
+            "prepareCmd3"                => 0, // Debug fct procmsg avec un seul msg
             "processCmd"              => 1, // Debug fct processCmd
             "sendCmd"                 => 1, // Debug fct sendCmd
             "sendCmd2"                => 0, // Debug fct sendCmd
             "cmdQueue"                => 0, // Debug cmdQueue
             "sendCmdAck"              => 1, // Debug fct sendCmdAck
-            "sendCmdAck2"             => 0, // Debug fct sendCmdAck
             "transcode"               => 0, // Debug transcode fct
-            "AbeilleCmdClass"         => 1, // Mise en place des class
-            "sendCmdToZigate"         => 1, // Mise en place des class
-            "sendCmdToZigate2"        => 0,
-            "processZigateAcks"       => 0, // Nouvelle Gestion des Ack
+            "AbeilleCmdClass"         => 1,
+            "sendCmdToZigate"         => 1,
+            "addCmdToQueue2"         => 1,
+            "processZigateAcks"       => 0,
             "processZigateCmdQueues" => 1,
-            "processZigateCmdQueues2"=> 0,
         );
 
         function deamonlog($loglevel = 'NONE', $message = "", $isEnable = 1)

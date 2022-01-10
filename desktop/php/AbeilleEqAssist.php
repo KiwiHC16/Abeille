@@ -97,7 +97,7 @@
 
     <?php if (isset($dbgTcharp38)) { ?>
     <a class="btn btn-default" title="Interrogation zigbee" onclick="showTab('zigbee')">Zigbee</a>
-    <a class="btn btn-default" title="Création/update JSON" onclick="showTab('json')">JSON</a>
+    <a class="btn btn-default" title="Création/update JSON" onclick="showTab('json')">Modèle</a>
     <?php } ?>
 
     <!-- <form> -->
@@ -160,7 +160,7 @@
                 <br>
                 <a class="btn btn-success pull-left" title="Télécharge 'discovery.json'" onclick="downloadDiscovery()"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
                 <?php if (isset($dbgTcharp38)) { ?>
-                <a class="btn btn-success pull-left" title="Genère les commandes Jeedom" onclick="zigbeeToCommands()"><i class="fas fa-cloud-download-alt"></i> Mettre à jour JSON</a>
+                <a class="btn btn-success pull-left" title="Genère le modèle JSON" onclick="zigbeeToModel()"><i class="fas fa-cloud-download-alt"></i> Mettre à jour modèle</a>
                 <input type="file" id="files" name="files[]" multiple />
                 <output id="list"></output>
                 <?php } ?>
@@ -184,8 +184,8 @@
                                 echo '<input id="idJsonName" type="text" value="'.$jsonName.'">';
                         ?>
                         <a class="btn btn-default" title="(Re)lire" onclick="readConfig()">(Re)lire</a>
-                        <a class="btn btn-alert" title="Créer/mettre à jour le fichier de config" onclick="writeConfig()">Ecrire config</a>
-                        <a class="btn btn-default" title="Télécharger la configuration" onclick="downloadConfig()"><i class="fas fa-file-download"></i> Télécharger config</a>
+                        <a class="btn btn-alert" title="Créer/mettre à jour le modèle JSON" onclick="writeModel()">Ecrire modèle</a>
+                        <a class="btn btn-default" title="Télécharger le modèle JSON" onclick="downloadConfig()"><i class="fas fa-file-download"></i> Télécharger modèle</a>
                         <a class="btn btn-default" title="Importer un 'discovery.json'" onclick="importDiscovery()"><i class="fas fa-file-upload"></i> Importer 'discovery'</a>
                     </div>
                 </div>
@@ -233,13 +233,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <label class="col-lg-2 control-label" for="fname">Icone:</label>
+                    <label class="col-lg-2 control-label" for="fname" tile="Format: Fabricant-Modele">Icone:</label>
                     <div class="col-lg-10">
                         <input type="text" value="" id="idIcon">
                     </div>
                 </div>
                 <div class="row">
-                    <label class="col-lg-2 control-label" for="fname">Type batterie:</label>
+                    <label class="col-lg-2 control-label" for="fname" title="ex: 1x3V CR2032">Type batterie:</label>
                     <div class="col-lg-10">
                         <input type="text" value="" id="idBattery">
                     </div>
@@ -722,7 +722,9 @@
         hcmds += '<th>Cmde Jeedom</th>';
         hcmds += '<th>Fichier cmde</th>';
         hcmds += '<th>Params</th>';
-        hcmds += '<th>ExecAtCreation</th>';
+        hcmds += '<th>Init</th>';
+        hcmds += '<th>Visible</th>';
+        hcmds += '<th>Next Line</th>';
         hcmds += '</tr></thead>';
         for (const [key, value] of Object.entries(cmds)) {
             console.log(`${key}: ${value}`);
@@ -741,6 +743,14 @@
                 else
                     hcmds += '<td></td>';
                 if (("execAtCreation" in value) && (value.execAtCreation == "yes"))
+                    hcmds += '<td><input type="checkbox" checked></td>';
+                else
+                    hcmds += '<td><input type="checkbox"></td>';
+                if (("isVisible" in value) && ((value.isVisible == "yes") || (value.isVisible == 1)))
+                    hcmds += '<td><input type="checkbox" checked></td>';
+                else
+                    hcmds += '<td><input type="checkbox"></td>';
+                if (("nextLine" in value) && (value.nextLine == "after"))
                     hcmds += '<td><input type="checkbox" checked></td>';
                 else
                     hcmds += '<td><input type="checkbox"></td>';
@@ -817,9 +827,10 @@
         return cmd;
     }
 
-    /* Generate Jeedom commands using zigbee discovery datas */
-    function zigbeeToCommands() {
-        console.log("zigbeeToCommands()");
+    /* Generate JSON model based on zigbee discovery datas */
+    function zigbeeToModel() {
+        console.log("zigbeeToModel()");
+        console.log("zigbee", zigbee);
 
         /* Jeedom commands naming reminder:
            - for attributes: ['Get-'/'Set-'/''][EP]-<clustId>-<attribute_name>
@@ -830,16 +841,19 @@
         var cmds = new Object();
         var cmdNb = 0;
         endPoints = zigbee.endPoints;
-        console.log(endPoints);
+        mainEp = -1;
         for (var epId in endPoints) {
-            console.log("EP "+epId);
+            // console.log("EP "+epId);
             ep = endPoints[epId];
 
             // Basic cluster
             if (isset(ep.servClusters["0000"]) && isset(ep.servClusters["0000"]['attributes'])) {
+                attributes = ep.servClusters["0000"]['attributes'];
+
+                mainEp = epId;
+
                 /* Only attribute 4000 is converted to user command.
                    No sense for others */
-                attributes = ep.servClusters["0000"]['attributes'];
                 if (isset(attributes['4000'])) {
                     cmds["SWBuildID"] = newCmd("zb-0000-SWBuildID");
                     cmds["Get SWBuildID"] = newCmd("zbReadAttribute", "clustId=0000&attrId=4000");
@@ -859,12 +873,14 @@
                 attributes = ep.servClusters['0001']['attributes'];
                 if (isset(attributes['0021'])) {
                     cmds["Battery-Percent"] = newCmd("zb-0001-BatteryPercent");
-                    cmds["Battery-Percent"]["isVisible"] = 1;
-                    cmds["SetReporting-0001-00021"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
+                    // cmds["Battery-Percent"]["isVisible"] = 1;
+                    cmds["SetReporting 0001-00021"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
                 } else if (isset(attributes['0020'])) {
-                    cmds["SetReporting-0001-00020"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
+                    cmds["Battery-Percent"] = newCmd("zb-0001-BatteryPercent");
+                    cmds["Battery-Volt2Percent"] = newCmd("battery-Volt2Percent-3");
+                    cmds["SetReporting 0001-00020"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
                 }
-                cmds["Bind-0001-ToZigate"] = newCmd("zbBindToZigate", "clustId=0001", "yes");
+                cmds["Bind 0001-ToZigate"] = newCmd("zbBindToZigate", "clustId=0001", "yes");
             }
 
             /* Identify cluster */
@@ -881,29 +897,31 @@
             if (isset(ep.servClusters["0006"]) && isset(ep.servClusters["0006"]['attributes'])) {
                 attributes = ep.servClusters["0006"]['attributes'];
                 if (isset(attributes['0000'])) {
-                    cmds["Status"] = newCmd("zb-0006-OnOff");
-                    cmds["Status"]["isVisible"] = 1;
-                    cmds["Get Status"] = newCmd("zbReadAttribute", "clustId=0006&attrId=0000");
                     // Adding on/off & toggle commands but assuming all supported
                     cmds["On"] = newCmd("zbCmd-0006-On");
                     cmds["On"]["isVisible"] = 1;
                     cmds["Off"] = newCmd("zbCmd-0006-Off");
                     cmds["Off"]["isVisible"] = 1;
                     cmds["Toggle"] = newCmd("zbCmd-0006-Toggle");
+                    cmds["Status"] = newCmd("zb-0006-OnOff");
+                    cmds["Status"]["isVisible"] = 1;
+                    cmds["Status"]["nextLine"] = "after";
+                    cmds["Get Status"] = newCmd("zbReadAttribute", "clustId=0006&attrId=0000");
                     // Adding bind + configureReporting but assuming supported
-                    cmds["Bind-0006-ToZigate"] = newCmd("zbBindToZigate", "clustId=0006", "yes");
-                    cmds["SetReporting-0006"] = newCmd("zbConfigureReporting", "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                    cmds["Bind 0006-ToZigate"] = newCmd("zbBindToZigate", "clustId=0006", "yes");
+                    cmds["SetReporting 0006"] = newCmd("zbConfigureReporting", "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
                 }
             }
 
             /* Level cluster */
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
-                cmds["Current Level"] = newCmd("zb-0008-CurrentLevel");
-                cmds["Current Level"]["isVisible"] = 1;
                 cmds["Get Current Level"] = newCmd("zbReadAttribute", "clustId=0008&attrId=0000");
                 cmds["Set-Level"] = newCmd("setLevel");
                 cmds["Set-Level"]["isVisible"] = 1;
+                cmds["Current Level"] = newCmd("zb-0008-CurrentLevel");
+                cmds["Current Level"]["isVisible"] = 1;
+                cmds["Current Level"]["nextLine"] = "after";
                 cmds["Bind-0008-ToZigate"] = newCmd("zbBindToZigate", "clustId=0008", "yes");
                 cmds["SetReporting-0008"] = newCmd("zbConfigureReporting", "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
             }
@@ -923,8 +941,8 @@
                 cmds["Stop"]["isVisible"] = 1;
                 cmds["Down"] = newCmd("zbCmd-0102-DownClose");
                 cmds["Down"]["isVisible"] = 1;
-                cmds["Bind-0102-ToZigate"] = newCmd("zbBindToZigate", "clustId=0102", "yes");
-                cmds["SetReporting-0102"] = newCmd("zbConfigureReporting", "clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                cmds["Bind 0102-ToZigate"] = newCmd("zbBindToZigate", "clustId=0102", "yes");
+                cmds["SetReporting 0102"] = newCmd("zbConfigureReporting", "clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
             }
 
             /* Color cluster */
@@ -990,20 +1008,20 @@
 
                 // Color temperature
                 if (isset(attributes['0007'])) {
-                    cmds["ColorTemperatureMireds"] = newCmd("zb-0300-ColorTemperatureMireds");
-                    if (currentMode == 2) // ColorTemperatureMireds
-                        cmds["ColorTemperatureMireds"]["isVisible"] = 1;
-                    cmds["Get ColorTemperatureMireds"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0007");
-
                     cmds["Set 2700K"] = newCmd("zbCmd-0300-MoveToColorTemp", "slider=2700");
                     if (currentMode == 2) // ColorTemperatureMireds
                         cmds["Set 2700K"]["isVisible"] = 1;
                     cmds["Set 4000K"] = newCmd("zbCmd-0300-MoveToColorTemp", "slider=4000");
                     if (currentMode == 2) // ColorTemperatureMireds
                         cmds["Set 4000K"]["isVisible"] = 1;
+
+                    cmds["ColorTemperature"] = newCmd("zb-0300-ColorTemperatureMireds");
+                    if (currentMode == 2) // ColorTemperatureMireds
+                        cmds["ColorTemperature"]["isVisible"] = 1;
+                    cmds["Get ColorTemperature"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0007");
                 }
 
-                cmds["Bind-0300-ToZigate"] = newCmd("zbBindToZigate", "clustId=0300", "yes");
+                cmds["Bind 0300-ToZigate"] = newCmd("zbBindToZigate", "clustId=0300", "yes");
             }
 
             /* Illuminance cluster */
@@ -1034,6 +1052,18 @@
                     cmds["Humidity"]["isVisible"] = 1;
                     cmds["Get Humidity"] = newCmd("zbReadAttribute", "clustId=0405&attrId=0000");
                 }
+            }
+
+            /* IAS Zone */
+            if (isset(ep.servClusters["0500"]) && isset(ep.servClusters["0500"]['attributes'])) {
+                attributes = ep.servClusters["0500"]['attributes'];
+                if (isset(attributes['0002'])) {
+                    cmds["Zone Status"] = newCmd("zb-0500-ZoneStatus");
+                    cmds["Zone Status"]["isVisible"] = 1;
+                    cmds["Get Zone Status"] = newCmd("zbReadAttribute", "clustId=0500&attrId=0002");
+                }
+                cmds["Bind 0500-ToZigate"] = newCmd("zbBindToZigate", "clustId=0500", "yes");
+                cmds["SetReporting 0500-0002"] = newCmd("zbConfigureReporting", "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=", "yes");
             }
 
             /* Metering (Smart Energy) */
@@ -1086,6 +1116,7 @@
         }
         console.log(cmds);
         eq.commands = cmds;
+        eq.defaultEp = mainEp;
 
         // Refresh JSON display
         if (typeof zigbee.signature !== "undefined") {
@@ -1097,11 +1128,16 @@
         }
         js_jsonName = zbModel+"_"+zbManuf;
         document.getElementById("idJsonName").value = js_jsonName;
+        document.getElementById("idMainEP").value = eq.defaultEp;
+        if (zigbee.powerSource == "battery")
+            document.getElementById("idBattery").value = "?";
+        document.getElementById("idIcon").value = "?";
         displayCommands();
-    } // End zigbeeToCommands()
+    } // End zigbeeToModel()
 
-    function prepareJson() {
-        console.log("prepareJson()");
+    // Take displayed infos to update internal JSON model
+    function display2model() {
+        console.log("display2model()");
 
         /* Format reminder:
             {
@@ -1115,9 +1151,9 @@
                     },
                     "configuration": {
                         "icon": "BASICZBR3",
+                        "mainEP": "01",
+                        "batteryType": "1x3V CR2032"
                     }
-                    "batteryType": "1x3V CR2032",
-                    "batteryVolt": "3",
                     "commands": {
                         "manufacturer": { "use": "societe" },
                         "modelIdentifier": { "use": "nom" },
@@ -1145,17 +1181,15 @@
 
         // 'configuration'
         var conf = new Object();
-        icon = document.getElementById("idIcon").value;
-        conf.icon = icon;
-        jeq2.configuration = conf;
-
+        conf.icon = document.getElementById("idIcon").value;
+        conf.mainEP = document.getElementById("idMainEP").value;
         batteryType = document.getElementById("idBattery").value;
         if (batteryType != '')
-            jeq2.batteryType = batteryType;
-
+            conf.batteryType = batteryType;
         // batteryVolt = document.getElementById("idBatteryMax").value;
         // if (batteryVolt != '')
-        //     jeq2.batteryVolt = batteryVolt;
+        //     conf.batteryVolt = batteryVolt;
+        jeq2.configuration = conf;
 
         // 'commands'
         jeq2.commands = eq.commands;
@@ -1187,8 +1221,8 @@
 
     /* Update/create JSON file.
        Destination is always "devices_local" */
-    function writeConfig() {
-        console.log("writeConfig()");
+    function writeModel() {
+        console.log("writeModel()");
 
         /* Check if mandatory infos are there */
         if (checkMissingInfos() == false)
@@ -1198,8 +1232,8 @@
         js_jsonPath = 'core/config/devices_local/'+js_jsonName+'/'+js_jsonName+'.json';
         js_jsonLocation = "local";
 
-        jeq = prepareJson();
-console.log(jeq);
+        jeq = display2model();
+        console.log("model", jeq);
 
         $.ajax({
             type: 'POST',
@@ -1709,7 +1743,7 @@ console.log(zEndPoints);
                 attributes[sAttrId] = attr;
                 ep.servClusters[sClustId]['attributes'] = attributes;
 
-                /* Checking Cluster-000/PowerSource */
+                /* Checking Cluster-0000/PowerSource */
                 if ((sClustId == "0000") && (sAttrId == "0007")) {
                     if (sValue == "03")
                         zigbee.powerSource = "battery";
@@ -2022,7 +2056,7 @@ console.log(zEndPoints);
                 document.getElementById("idMainEP").value = "";
 
                 // Generate & refresh commands
-                zigbeeToCommands();
+                zigbeeToModel();
             };
             reader.readAsText(file);
         }

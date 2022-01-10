@@ -10,7 +10,12 @@
         },
         "type": "Yagusmart Tuya ZigBee Smart Switch 1 Bang",
         "commands": {
-            "include4": "etatCharge0",
+            "etat charge 0": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=01",
+                "genericType": "LIGHT_STATE",
+                "isVisible": 1
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1

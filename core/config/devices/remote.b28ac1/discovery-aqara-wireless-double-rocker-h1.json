@@ -1,0 +1,108 @@
+{
+    "endPoints": {
+        "01": {
+            "servClusters": {
+                "0000": {
+                    "0000": {
+                        "value": 3
+                    },
+                    "0001": {
+                        "value": 21
+                    },
+                    "0002": {
+                        "value": 2
+                    },
+                    "0003": {
+                        "value": 1
+                    },
+                    "0004": {
+                        "value": "LUMI"
+                    },
+                    "0005": [],
+                    "0006": [],
+                    "0007": {
+                        "value": 3
+                    },
+                    "0008": {
+                        "value": 255
+                    },
+                    "0009": {
+                        "value": 224
+                    },
+                    "000A": {
+                        "value": "0062776C"
+                    },
+                    "000B": {
+                        "value": "www.aqara.com"
+                    },
+                    "4000": [],
+                    "FFFD": {
+                        "value": 1
+                    }
+                },
+                "0003": {
+                    "FFFD": {
+                        "value": 1
+                    },
+                    "0000": {
+                        "value": 0
+                    }
+                },
+                "0001": {
+                    "0035": {
+                        "value": "01"
+                    },
+                    "0033": {
+                        "value": 1
+                    },
+                    "0020": {
+                        "value": 32
+                    },
+                    "0031": {
+                        "value": 7
+                    },
+                    "0034": {
+                        "value": 30
+                    },
+                    "0036": [],
+                    "003E": {
+                        "value": 0
+                    },
+                    "FFFD": {
+                        "value": 1
+                    }
+                }
+            },
+            "status": "00",
+            "servClustCount": 3,
+            "cliClustCount": 2,
+            "cliClusters": {
+                "0003": {
+                    "FFFD": []
+                },
+                "0006": {
+                    "FFFD": []
+                }
+            }
+        },
+        "02": [],
+        "03": {
+            "status": "00",
+            "servClustCount": 1,
+            "servClusters": {
+                "0003": []
+            },
+            "cliClustCount": 1,
+            "cliClusters": {
+                "0006": []
+            }
+        },
+        "04": [],
+        "05": [],
+        "06": [],
+        "00": {
+            "status": "83",
+            "statusMsg": "EP is NOT active"
+        }
+    }
+}

@@ -10,7 +10,12 @@
         },
         "type": "Zemismart Remote 1 bouton sur pile",
         "commands": {
-            "include5 3": "etatInter0"
+            "etat inter 0": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=01",
+                "subType": "numeric",
+                "isVisible": 1
+            }
         },
         "comment": "Zigate in hybrid mode"
     }

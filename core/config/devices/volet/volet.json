@@ -27,7 +27,7 @@
                 "isVisible": 1
             },
             "include0008-5": "setLevelVolet",
-            "Bind-0006-ToZigate": {
+            "Bind-0008-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0008",
                 "execAtCreation": "Yes",

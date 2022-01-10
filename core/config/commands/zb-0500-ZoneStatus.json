@@ -1,6 +1,6 @@
 {
     "zb-0500-ZoneStatus": {
-        "comment": "0500/IAS Zone cluster, attrib 0002/ZoneStatus, type map16",
+        "comment": "0500/IAS Zone cluster, attrib 0002/ZoneStatus, type map16/0x19",
         "name": "ZoneStatus",
         "subType": "numeric",
         "configuration": [],

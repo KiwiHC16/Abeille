@@ -23,7 +23,10 @@
             "Groups": {
                 "use": "Group-Membership"
             },
-            "include4": "etat",
+            "etat": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "params": "ep=01"

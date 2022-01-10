@@ -8,11 +8,10 @@
 ?>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">Identifiant JSON</label>
+    <label class="col-sm-3 control-label">Identifiant modèle JSON</label>
     <div class="col-sm-5">
         <span class="eqLogicAttr" data-l1key="configuration" data-l2key="ab::jsonId" title="Nom du fichier de config JSON utilisé"></span>
         <?php
-            // echo '<a class="btn btn-warning" onclick="updateFromJSON(\''.$eqNet.'\', \''.$eqAddr.'\')" title="Mets à jour les commandes Jeedom">Recharger</a>';
             $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
             if ($jsonLocation != 'Abeille') {
                 echo '<span style="background-color:red;color:black" title="La configuration vient d\'un fichier local (core/config/devices_local)"> ATTENTION: inclu à partir d\'un fichier local </span>';
@@ -35,6 +34,19 @@
         ?>
     </div>
 </div>
+<div class="form-group">
+    <label class="col-sm-3 control-label">Identifiant Zigbee (modèle, manuf)</label>
+    <div class="col-sm-5">
+        <?php
+            $sig = $eqLogic->getConfiguration('ab::signature');
+            if ($sig) {
+                $model = $sig['modelId'];
+                $manuf = $sig['manufId'];
+                echo '<span>'.$model.', '.$manuf.'</span>';
+            }
+        ?>
+    </div>
+</div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">Assistant de découverte</label>
@@ -45,4 +57,3 @@
     </div>
 </div>
 
- 

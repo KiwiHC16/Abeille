@@ -217,11 +217,7 @@
             "03" => "Command failed",
             "04" => "Busy", // Node is carrying out a lengthy operation and is currently unable to handle the incoming command
             "05" => "Stack already started", // No new configuration accepted
-
-            // APS codes
-            "A4" => "Invalid binding",
-            "A5" => "Invalid group",
-            "A6" => "Invalid parameter",
+            "15" => "ZPS_EVENT_ERROR", // Indicates that an error has occurred on the local node. The nature of the error is reported through the structure ZPS_tsAfErrorEvent - see Section 7.2.2.17. JN-UG-3113 v1.5 -> En gros pas de place pour traiter le message
         );
 
         if (array_key_exists($status, $statusesTable))

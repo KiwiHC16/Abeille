@@ -83,8 +83,5 @@
     </div>
 </div>
 
-<?php include_file('core', 'plugin.template', 'js'); ?>
-<?php include_file('desktop', 'Abeille', 'js', 'Abeille'); ?>
-
-<?php include 'AbeilleEq-Script.php'; ?>
-<?php include 'AbeilleEq-Script-Command.php'; ?>
+<?php include 'AbeilleEq-Js.php'; ?>
+<?php include 'AbeilleEq-Js-Cmds.php'; ?>

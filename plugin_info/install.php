@@ -307,21 +307,22 @@
             }
 
             // Removing obsolete commands from existing Zigates (now handled in equipement advanced page)
-            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                $zg = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
-                if (!is_object($zg))
-                    continue;
+            // Tcharp38: No longer required. Obsolete cmds are removed at daemon startup in 'Abeille.class'.
+            // for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+            //     $zg = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+            //     if (!is_object($zg))
+            //         continue;
 
-                $eqId = $zg->getId();
-                $obsoletes = ['Bind', 'BindShort', 'setReport', 'Get Name', 'Get Location', 'Set Location', 'Write Attribut', 'Get Attribut', 'ActiveEndPoint', 'SimpleDescriptorRequest'];
-                foreach ($obsoletes as $cmdJName) {
-                    $cmd = AbeilleCmd::byEqLogicIdCmdName($eqId, $cmdJName);
-                    if (!is_object($cmd))
-                        continue;
-                    log::add('Abeille', 'debug', '  Zigate '.$zgId.": Removing obsolete cmd '".$cmdJName."'");
-                    $cmd->remove();
-                }
-            }
+            //     $eqId = $zg->getId();
+            //     $obsoletes = ['Bind', 'BindShort', 'setReport', 'Get Name', 'Get Location', 'Set Location', 'Write Attribut', 'Get Attribut', 'ActiveEndPoint', 'SimpleDescriptorRequest'];
+            //     foreach ($obsoletes as $cmdJName) {
+            //         $cmd = AbeilleCmd::byEqLogicIdCmdName($eqId, $cmdJName);
+            //         if (!is_object($cmd))
+            //             continue;
+            //         log::add('Abeille', 'debug', '  Zigate '.$zgId.": Removing obsolete cmd '".$cmdJName."'");
+            //         $cmd->remove();
+            //     }
+            // }
 
             // Updating WIFI serial port (/dev/zigateX => constant wifiLink)
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {

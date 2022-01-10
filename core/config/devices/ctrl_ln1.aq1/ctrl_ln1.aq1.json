@@ -10,10 +10,16 @@
         },
         "type": "Xiaomi Wall Switch w Neutral 1",
         "commands": {
-            "include3 2 2": "etatCharge0",
+            "etat charge 0": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=01",
+                "genericType": "LIGHT_STATE",
+                "isVisible": 1
+            },
             "include3 2 2 2 2": "etatSW1",
             "On": {
-                "use": "zbCmd-0006-On"
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
             },
             "Off": {
                 "use": "zbCmd-0006-Off",

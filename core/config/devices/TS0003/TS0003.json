@@ -10,9 +10,24 @@
         },
         "type": "Zemismart 3 boutons",
         "commands": {
-            "include4": "etatCharge0",
-            "include4 2": "etatCharge1",
-            "include4 2 2": "etatCharge2",
+            "etat charge 0": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=01",
+                "genericType": "LIGHT_STATE",
+                "isVisible": 1
+            },
+            "etat charge 1": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=02",
+                "genericType": "LIGHT_STATE",
+                "isVisible": 1
+            },
+            "etat charge 2": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=03",
+                "genericType": "LIGHT_STATE",
+                "isVisible": 1
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "params": "ep=01"

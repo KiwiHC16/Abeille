@@ -13,7 +13,10 @@
         "type": "Aqara H1 smart wall switch",
         "commands": {
             "include13 2": "Group-Membership",
-            "include4": "etat",
+            "etat": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1

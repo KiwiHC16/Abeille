@@ -25,10 +25,8 @@ Exemple de commande 'info'
 
     {
       "etat": {
-        "isVisible": 1,
         "name": "etat",
         "logicalId": "0006-#EP#-0000",
-        "isHistorized": 0,
         "type": "info",
         "subType": "binary",
         "generic_type": "LIGHT_STATE_BOOL",
@@ -45,7 +43,6 @@ Exemple de commande 'action'
 
     {
       "getEtat": {
-        "isVisible": 0,
         "name": "getEtat",
         "type": "action",
         "subType": "other",
@@ -67,7 +64,7 @@ Exemple de commande 'action'
   Si le fichier est appelé avec la directive "use", alors ce nom est ignoré.
 
 * type: OBLIGATOIRE
-  Type de commande: info ou action
+  Type de commande: 'info' ou 'action'
 
 * subType: OBLIGATOIRE
   Type d'information: 'binary', 'numeric', 'string'
@@ -75,13 +72,15 @@ Exemple de commande 'action'
 * logicalId: OBLIGATOIRE si commande INFO
   Ex: '0400-01-0000' pour définir l'information 'luminosité'.
 
-* isVisible: optionnel.
+* isVisible: EVITER.
   Indique si la commande est visible dans le widget.
   Invisible par défaut ("isVisible":0).
+  Ce parametre est à mettre dans la modele d'équipement pour personnaliser la commande.
 
-* isHistorized: optionnel.
+* isHistorized: EVITER.
   Indique si la commande INFO (pas de sens pour une commande 'action') doit être historisée.
   Non par défaut ("isHistorized":0).
+  Ce parametre est à mettre dans la modele d'équipement pour personnaliser la commande.
 
 * generic_type: ??
 
@@ -104,6 +103,7 @@ Exemple de commande 'action'
     Nombre de digits apres la virgule pour commande 'info' type 'numeric'.
 
   * visibilityCategory: ??
+    Semble être nécessaire au moins pour type "slider" sinon ce dernier ne bouge pas.
 
   * repeatEventManagement: optionnel
     N'est utile que pour une commande info mais du type "evenement" (la valeur remontée est toujours la meme).

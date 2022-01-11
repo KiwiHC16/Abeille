@@ -21,6 +21,8 @@ Abeille project:
     - echo "-----------------------------------------------"
     - phpunit AbeilleParserTest.class.php
     - echo "-----------------------------------------------"
+    - phpunit AbeilleParserTestDB.class.php
+    - echo "-----------------------------------------------"
     - phpunit AbeilleTest.class.php
     - echo "-----------------------------------------------"
     - phpunit AbeilleTestDB.class.php

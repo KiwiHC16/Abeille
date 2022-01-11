@@ -23,6 +23,8 @@ Abeille project:
     - echo "-----------------------------------------------"
     - phpunit AbeilleTest.class.php
     - echo "-----------------------------------------------"
+    - phpunit AbeilleTestDB.class.php
+    - echo "-----------------------------------------------"
     - sleep 15
     - /etc/init.d/cron stop
     - /etc/init.d/apache2 stop

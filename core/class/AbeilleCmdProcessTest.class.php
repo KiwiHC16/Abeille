@@ -59,6 +59,14 @@ class AbeilleCmdProcessTest extends TestCase {
         $Command = array();
 
         // Test commands
+        $Command = array( "dest" => "Abeille1", 'PDM' =>"", 'req' => "E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE");
+        $test->processCmd($Command);
+        $this->assertSame( '[1,"Abeille1","8300","00","",null]', json_encode($test->result) );
+
+        $Command = array( "dest" => "Abeille1", 'PDM' =>"", 'req' => "E_SL_MSG_PDM_EXISTENCE_RESPONSE", 'recordId'=>"" );
+        $test->processCmd($Command);
+        $this->assertSame( '[1,"Abeille1","8208","000000","",null]', json_encode($test->result) );
+
         $Command = array( "dest" => "Abeille1", 'abeilleList' => "");
         $test->processCmd($Command);
         $this->assertSame( '[1,"Abeille1","0015","","",null]', json_encode($test->result) );
@@ -84,7 +92,7 @@ class AbeilleCmdProcessTest extends TestCase {
         $this->assertSame( '[1,"Abeille1","0806","11","",null]', json_encode($test->result) );
 
         // ..... need to continue .....
-        
+
     }
 }
 

@@ -22,25 +22,34 @@ class AbeilleParserTestDB extends TestCase {
     // Test to send an info from AbeilleParser to an Eq. 
     // Send a group to a bulb
     function test_msgToAbeille2() {
+
+        $config = AbeilleTools::getParameters();
+        AbeilleTools::startDaemons($config);
+        sleep(2);
+        cron::byClassAndFunction('Abeille', 'deamon')->run();
+        sleep(2);
         $abeilleParser = new AbeilleParser;
 
+        $group = '4343';
+
         $msg = array(
-            'src' => 'parser',
-            'type' => 'attributeReport',
-            'net' => 'Abeille1',
-            'addr' => '81F6',
-            'ep' => '01',
-            'name' => 'Group-Membership',
-            'value' => '4321',
-            'time' => time(),
-            'lqi' => '00',
+            'src'   => 'parser',
+            'type'  => 'attributeReport',
+            'net'   => 'Abeille1',
+            'addr'  => '81F6',
+            'ep'    => '01',
+            'name'  => 'Group-Membership',
+            'value' => $group,
+            'time'  => time(),
+            'lqi'   => '00',
         );
         
         $abeilleParser->msgToAbeille2($msg);
 
+        sleep(2);
         $cmdInfoGroup = cmd::byId(27303);
 
-        $this->assertSame( "4321", $cmdInfoGroup->execCmd() );
+        $this->assertSame( $group, $cmdInfoGroup->execCmd() );
     }
 
 }

@@ -1,16 +1,16 @@
 {
     "switch.b1nacn02": {
         "manufacturer": "Xiaomi",
-        "model": "?",
+        "model": "CQC17003181848",
+        "type": "Xiaomi Aqara Wall switch D1",
         "timeout": "",
         "category": {
             "automatism": "1"
         },
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiPrise"
+            "icon": "XiaomiButtonSW861"
         },
-        "type": "Aqara H1 smart wall switch",
         "commands": {
             "Groups": {
                 "use": "Group-Membership"
@@ -22,6 +22,10 @@
             "Off": {
                 "use": "zbCmd-0006-Off",
                 "isVisible": 1
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "isVisible": 0
             },
             "Status": {
                 "use": "zb-0006-OnOff",

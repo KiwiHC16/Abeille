@@ -1,6 +1,19 @@
 ChangeLog
 =========
 
+- Interne: Gestion des queues: log & suppression msg trop gros. A completer.
+
+220113-BETA-1
+-------------
+
+- Xiaomi Aqara wall switch D1 (switch.b1nacn02): Mise-à-jour modèle (2262).
+- Profalux Zoe: Identifiant 'TG1' = 'TS' (1066).
+- Réseau/bruit: fonctionalité masquée sauf mode dev.
+- Interne: Parser: 8401/IAS zone status change revisité.
+- RH3040 PIR sensor: Mise-à-jour modèle (2252).
+- Gledopto GL-SD-001 AC dimmer: Ajout support (2258).
+- Tuya télécommande 4 boutons (TS0044): Ajout support (2251).
+
 220110-BETA-1
 -------------
 

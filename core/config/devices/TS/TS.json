@@ -2,6 +2,7 @@
     "TS": {
         "manufacturer": "Profalux",
         "model": "T\u00e9lecommande",
+        "alternateIds": "TG1",
         "comment": "S'annonce mais a ignorer. On ne peut rien faire avec",
         "isVisible": 0,
         "configuration": {

@@ -7,7 +7,7 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "RH3040",
+            "icon": "Tuya-RH3040",
             "batteryType": "1x3V CR1632"
         },
         "category": {
@@ -30,7 +30,7 @@
             },
 
             "Zone-Status": {
-                "use": "zb-0500-ZoneStatus",
+                "use": "zb-0500-ZoneStatus-ChangeNotification",
                 "isVisible": 1
             },
             "Bind-0500-ToZigate": {

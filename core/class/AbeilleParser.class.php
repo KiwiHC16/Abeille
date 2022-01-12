@@ -395,7 +395,7 @@
                     parserLog('debug', '  ERROR: There is a different EQ (ieee='.$eq['ieee'].') for addr '.$addr);
                     return;
                 }
-                parserLog('debug', '  EQ already known: Status='.$eq['status'].', since='.$eq['time'].', time='.time());
+                parserLog('debug', '  EQ already known: Status='.$eq['status']);
 
                 /* Checking if it's not a too fast consecutive device announce.
                    Note: Assuming 4sec max per phase */

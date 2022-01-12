@@ -80,6 +80,7 @@ class AbeilleParserTestDB extends TestCase {
         $addr = "AAAA";
         $abeilleParser->deviceCreate($net, $addr);
 
+        sleep(2);
         $eq = Abeille::byLogicalId($net.'/'.$addr, 'Abeille');
 
         $this->assertSame( true, is_object($eq) );

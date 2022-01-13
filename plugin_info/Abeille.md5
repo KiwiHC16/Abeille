@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="220113-MASTER_TCHARP38-1"
+# VERSION="220113-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -995,7 +995,7 @@ b823f9e71718dafa4d5bc1be0a842743 *desktop/php/AbeilleFormAction.php
 f4ad6e68f05d3de67caa70c340868082 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
 3726b3dfb3cd6913dc922d2e27267626 *desktop/php/Old_Abeille.php
-1853bac9064b0e52f6eb2a8187c50157 *docs/fr_FR/Changelog.rst
+eb95115c544eaa66cc2fb23048093659 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1249,10 +1249,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-bbd5ebbe90d07829c04291f4cbc93abb *plugin_info/Abeille.version
+3eddebf74649450867c0d4b07364f998 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 66129e024ede9a8463bede27238fd798 *plugin_info/configuration.php
-9154c8bd9b6f97b9ec1eac26d68b3b65 *plugin_info/info.json
+bd25b01c0d86b1c132de822cb25912c3 *plugin_info/info.json
 b09a9308acb428e58a3fcd50ab76f50a *plugin_info/install.php
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 e634b9f544c02b8facd28fefb8771fe0 *resources/AbeilleDeamon/AbeilleInterrogate.php

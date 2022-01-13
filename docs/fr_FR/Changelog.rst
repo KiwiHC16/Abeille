@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220113-BETA-1
+-------------
+
 - Xiaomi Aqara wall switch D1 (switch.b1nacn02): Mise-à-jour modèle (2262).
 - Profalux Zoe: Identifiant 'TG1' = 'TS' (1066).
 - Réseau/bruit: fonctionalité masquée sauf mode dev.

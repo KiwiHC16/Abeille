@@ -5271,7 +5271,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', $dest.', Type='.$msgDecoded, "8141");
         }
 
-        // Codé sur la base des messages Xiaomi Inondation
+        // Cluster 0500/IAS zone, Zone Status Change Notification (generated cmd 00)
         function decode8401($dest, $payload, $lqi)
         {
             // <sequence number: uint8_t>
@@ -5284,30 +5284,47 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <zone id : uint8_t>
             // <delay: data each element uint16_t>
 
-            $EP         = substr($payload, 2, 2);
-            $clustId  = substr($payload, 4, 4);
+            $ep         = substr($payload, 2, 2);
+            $clustId    = substr($payload, 4, 4);
             $srcAddr    = substr($payload,10, 4); // Assuming short mode
+            $zoneStatus = substr($payload,14, 4);
 
             $msgDecoded = '8401/IAS zone status change notification'
                .', SQN='.substr($payload, 0, 2)
-               .', EP='.$EP
+               .', EP='.$ep
                .', ClustId='.$clustId
                .', SrcAddrMode='.substr($payload, 8, 2)
                .', SrcAddr='.$srcAddr
-               .', ZoneStatus='.substr($payload,14, 4)
+               .', ZoneStatus='.$zoneStatus
                .', ExtStatus='.substr($payload,18, 2)
                .', ZoneId='.substr($payload,20, 2)
                .', Delay='.substr($payload,22, 4);
+
             parserLog('debug', $dest.', Type='.$msgDecoded);
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($msg); // Send message to monitor
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
-            // On transmettre l info sur Cluster 0500 et Cmd: 0000 (Jusqu'a present on etait sur ClusterId-AttributeId, ici ClusterId-CommandId)
-            $attrId = "0000";
-            $data = substr($payload,14, 4);
-            $this->msgToAbeille($dest."/".$srcAddr, $clustId, $EP.'-'.$attrId, $data);
+            // Legacy: Sending 0500-#EP#-0000 with zoneStatus as value
+            // To be removed at some point
+            // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $ep.'-0000', $zoneStatus);
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'attributeReport',
+                'net' => $dest,
+                'addr' => $srcAddr,
+                'ep' => $ep,
+                'name' => $clustId.'-'.$ep.'-0000',
+                'value' => $zoneStatus,
+                'time' => time(),
+                'lqi' => $lqi
+            );
+            $this->msgToAbeille2($msg);
+
+            // New message format '#EP#-0500-cmd00' with $zoneStatus as value
+            $msg['name'] = $ep.'-0500-cmd00';
+            $this->msgToAbeille2($msg);
         }
 
         // OTA specific: ZiGate will receive this command when device asks OTA firmware

@@ -3101,12 +3101,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          */
         function decode8011($dest, $payload, $lqi)
         {
-            /*
-            <Status: uint8_t>
-            <Destination address: uint16_t>
-            <Dest Endpoint : uint8_t>
-            <Cluster ID : uint16_t>
-            */
+            // <Status: uint8_t>
+            // <Destination address: uint16_t>
+            // <Dest Endpoint : uint8_t>
+            // <Cluster ID : uint16_t>
             $status     = substr($payload, 0, 2);
             $dstAddr    = substr($payload, 2, 4);
             $dstEp      = substr($payload, 6, 2);
@@ -3118,8 +3116,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             $msgDecoded = '8011/APS data ACK, Status='.$status.'/'.zbGetAPSStatus($status).', Addr='.$dstAddr.', EP='.$dstEp.', ClustId='.$clustId;
             if ($sqn != '')
-                $msgDecoded .= ', SQN='.$sqn;
+                $msgDecoded .= ', SQNAPS='.$sqn;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8011");
+
+            // Sending msg to cmd for flow control
+            $msg = array (
+                'type'      => "8011",
+                'net'       => $dest,
+                'status'    => $status,
+                'addr'      => $dstAddr,
+                'sqn'       => $sqn,
+                // 'nPDU'      => $nPDU,
+                // 'aPDU'      => $aPDU,
+            );
+            $this->msgToCmdAck($msg);
 
             // Monitor if required
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))
@@ -3170,7 +3180,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $nPDU       = substr($payload,26, 2);
                 $aPDU       = substr($payload,28, 2);
             }
-            $msgDecoded = '8012/ZPS_EVENT_APS_DATA_CONFIRM, Status='.$status.', Addr='.$dstAddr.', SQN='.$sqn.', NPDU='.$nPDU.', APDU='.$aPDU;
+            $msgDecoded = '8012/APS data confirm, Status='.$status.', Addr='.$dstAddr.', SQNAPS='.$sqn.', NPDU='.$nPDU.', APDU='.$aPDU;
 
             // Log
             parserLog('debug', $dest.', Type='.$msgDecoded, "8012");

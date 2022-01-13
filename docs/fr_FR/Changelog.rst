@@ -1,6 +1,7 @@
 ChangeLog
 =========
 
+- Interne: Parser: 8401/IAS zone status change revisité.
 220110-BETA-1
 -------------
 

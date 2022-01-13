@@ -3,6 +3,7 @@ ChangeLog
 
 - Xiaomi Aqara wall switch D1 (switch.b1nacn02): Mise-à-jour modèle (2262).
 - Profalux Zoe: Identifiant 'TG1' = 'TS' (1066).
+- Réseau/bruit: fonctionalité masquée sauf mode dev.
 - Interne: Parser: 8401/IAS zone status change revisité.
 - RH3040 PIR sensor: Mise-à-jour modèle (2252).
 - Gledopto GL-SD-001 AC dimmer: Ajout support (2258).

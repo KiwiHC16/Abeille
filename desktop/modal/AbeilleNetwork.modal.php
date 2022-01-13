@@ -1,10 +1,12 @@
 <?php
-
     if (!isConnect('admin')) {
         throw new Exception('{{401 - Accès non autorisé}}');
     }
 
-    require_once __DIR__.'/../../core/config/Abeille.config.php'; // URL for docs
+    require_once __DIR__.'/../../core/config/Abeille.config.php';
+    if (file_exists(dbgFile)) {
+        $dbgDeveloperMode = true;
+    }
 
     /* Add network display & refresh buttons for all active zigates */
     function displayButtons($nbOfZigates, $what="linksTable") {
@@ -138,9 +140,11 @@
             <ul id="tabs_network" class="nav nav-tabs" data-tabs="tabs">
                 <li class="active" id="tab_nodes"> <a href="#idLinksTableTab" data-toggle="tab"> <i class="fas fa-table">     </i> {{Table des liens}}    </a></li>
                 <li                id="tab_graph"> <a href="#idLinksGraphTab" data-toggle="tab"> <i class="far fa-image"> </i> {{Graphique des liens}}</a></li>
-                <!-- <li                 id="tab_summary">  <a href="#summary_network" data-toggle="tab"> <i class="fas fa-tachometer-alt">  </i> {{Résumé}}                </a></li> -->
-                <li                id="tab_test1"> <a href="#test1"        data-toggle="tab"> <i class="fas fa-tachometer-alt"></i> {{Bruit}}              </a></li>
                 <li                id="tab_routes"><a href="#idRoutesTab"     data-toggle="tab"> <i class="fas fa-tachometer-alt"></i> {{Routes}}             </a></li>
+                <?php
+                if (isset($dbgDeveloperMode))
+                    echo '<li                id="tab_test1"> <a href="#test1"        data-toggle="tab"> <i class="fas fa-tachometer-alt"></i> {{Bruit}}              </a></li>';
+                ?>
             </ul>
 
             <div id="network-tab-content" class="tab-content">
@@ -253,151 +257,152 @@
                     <!-- <span id="graph-node-name" style="width: 100%;height: 100%"></span> -->
                 </div>
 
-                <!-- tab Bruit -->
-                <div id="test1" class="tab-pane" >
-                                (Ce texte devra etre mis dans la doc)<br />
-                                Cette page a pour objectif d essayer de comprendre le niveau de bruit radio que subit votre reseau zigbee.<br />
-                                En utilisant le bouton refresh, Abeille va demander aux équipments de mesurer le bruit qu ils entendent sur les canaux 11 à 26.<br />
-                                Ceux ci vont répondre avec une valeur pour chaque canal qui represente la puissance mesurée entre 0 et 255.<br />
-                                A ma connaissance la méthode de mesure n est pas définie dans le standard Zigbee et donc chaque fabricant est libre de mesurer comme il le souhaite.<br />
-                                C est une premiere version avant que je ne comprenne mieux les résultats.<br />
-                                Les ampoules Ikea repondent aux demandes. Elles retournent une valeur entre 160 et 180 quand le canal est libre<br />
-                                Par contre quand le canal est aucupé elles remontent des valeurs entre 200 et 210.<br />
-                                Ces valeurs viennent du test suivant:
-                                - libre: reseau en fonctionnement normal lors de mon test.
-                                - occupé: camera wifi sur 2.4GHz Canal Wifi 1, avec un débit de l ordre de 2Mbps, posée sur l ampoule.
-                                Avec ce test on voit clairement que les canaux zigbee 11, 12, 13 sont impactés.<br />
-                                A noter: la mesure se fait sur une courte periode, il faut peut faire plusieures mesures pour avoir une bonne idée de la charge des canaux.<br />
-                                A noter: Apres un appui sur Refresh All, il n y a pas encore d affichage d avancement du processus.<br />
-                                Attendez et rafraichissez la page au bout d un certain temps. Il faut compter 5s par équipement...<br />
-                                Si une mesure a ete faite pour un equipement le graph doit apparaitre.<br />
-                                Attention l heure de mesure n est pas encore dispo. Donc vous pouvez avoir une vieille mesure a l ecran.<br />
-                                <br />
-                                Attention: Apres un "Collecter" ou "Tout Collecter" il faut rafraichir la page pour mettre a jour les graphiques.<br />
-
-<?php
-                                echo '<a class="btn btn-success refreshBruitAll"><i class="fas fa-sync" ></i>{{Tout collecter}}</a><br /><br />';
-
-                                function afficheGraph( $title, $logicalId, $values ) {
-                                // Vertical
-                                $hauteurGraph = 256;
-                                $hauteurLegendX = 30;
-
-                                // Horizontal
-                                $margeLeft = 10;
-                                $largeurGraph = 300;
-                                $margeRight = $margeLeft;
-
-                                $channelMin = 11;
-                                $channelMax = 26;
-
-                                // Objet
-                                $cercleRayon = 5;
-                                $lineBruitY = 256 - 180;
-
-                                // As a result
-                                $largeurCadre = $margeLeft + $largeurGraph + $margeRight;
-                                $hauteurCadre = $hauteurGraph+$hauteurLegendX;
-
-                                $positionVerticalLegendX = $hauteurCadre - $hauteurLegendX/2;
-
-                                    echo $title.'<br /><br />';
-
-                                    echo '<svg width="'.$largeurCadre.'" height="'.$hauteurCadre.'">';
-                                    echo '<rect width="'.$largeurCadre.'" height="'.$hauteurGraph.'" style="fill:rgb(0,0,200);stroke-width:5;stroke:rgb(255,0,0)"/>';
-                                    echo '<line x1 = "1" y1 = "'.$lineBruitY.'" x2 = "'.$largeurCadre.'" y2 = "'.$lineBruitY.'" style = "stroke:yellow; stroke-width:3"/>';
-                                    foreach( $values as $key=>$value ) {
-                                        $x = ($key-11)*($largeurGraph/($channelMax-$channelMin))+10; // Ch 11 a 26 vers X de 0 a 300 plus 10 pour centrer pour une largeur de 320 = 10(Marge)+300
-                                        $y = $hauteurGraph - $value;
-                                        echo '<circle cx= "'.$x.'" cy= "'.$y.'" r="'.$cercleRayon.'" stroke= "red" stroke-width="1" fill="red" />';
-                                        $xText = $x - $cercleRayon;
-                                        echo '<text x="'.$x.'" y="'.$positionVerticalLegendX.'" fill="purple">'.$key.'</text>';
-                                    }
-                                    echo '</svg>';
-                                      if ( $logicalId != "" ) {
-                                            echo '<br /><a data-action="refreshBruit_'.str_replace('/','',$logicalId).'" class="btn btn-success refreshBruit_'.str_replace('/','',$logicalId).'"><i class="fas fa-sync" ></i>{{Collecter}}</a><br /><br />';
-
-                                      }
-                                    echo "<br /><br />";
-
-                                }
-
-                                // Exemple 1: Pas chargé, Exemple 2: Chargé
-                                $localZigbeeChannelPowerExample1 = array( 11=>176, 12=>175, 13=>178, 14=>170, 15=>160, 16=>177, 17=>176, 18=>176, 19=>175, 20=>157, 21=>172, 22=>163, 23=>173, 24=>160, 25=>170, 26=>171 );
-                                $localZigbeeChannelPowerExample2 = array( 11=>206, 12=>209, 13=>200, 14=>171, 15=>180, 16=>174, 17=>177, 18=>170, 19=>176, 20=>159, 21=>171, 22=>162, 23=>173, 24=>161, 25=>156, 26=>172 );
-                                afficheGraph( "Exemple 1", "", $localZigbeeChannelPowerExample1 );
-                                afficheGraph( "Exemple 2", "", $localZigbeeChannelPowerExample2 );
-
-                                // Affichons toutes les Abeilles
-                                $eqLogics = Abeille::byType('Abeille');
-                                foreach ($eqLogics as $eqLogic) {
-                                    if( $eqLogic->getConfiguration('localZigbeeChannelPower') ) {
-                                        // $values = $eqLogic->getConfiguration('localZigbeeChannelPower');
-                                        // var_dump($eqLogic->getConfiguration('localZigbeeChannelPower'));
-                                        afficheGraph( $eqLogic->getName(), $eqLogic->getLogicalId(), $eqLogic->getConfiguration('localZigbeeChannelPower') );
-                                    }
-                                }
-?>
-                </div>
-
                 <!-- tab Route -->
                 <div id="idRoutesTab" class="tab-pane" >
                     <?php
-                                echo '<a class="btn btn-success refreshRoutesAll"><i class="fas fa-sync" ></i>{{Tout collecter}}</a><br /><br />';
-                                echo 'Il faut un firmware zigate au moins en version 3.1d<br /><br />';
+                        echo '<a class="btn btn-success refreshRoutesAll"><i class="fas fa-sync" ></i>{{Tout collecter}}</a><br /><br />';
+                        echo 'Il faut un firmware zigate au moins en version 3.1d<br /><br />';
 
-                                function afficheRouteTable( $routingTable ) {
-                                    foreach ( $routingTable as $addr=>$route ) {
-                                        list( $zigate, $addrShort ) = explode ( '/', $addr );
-                                        // if ( $addrShort == '0000' ) $addrShort = 'Ruche';
-                                        foreach ( $route as $destination=>$nextHop ) {
-                                            // if ( $destination == '0000' ) $destination = 'Ruche';
-                                            // if ( $nextHop == '0000' )     $nextHop = 'Ruche';
+                        function afficheRouteTable( $routingTable ) {
+                            foreach ( $routingTable as $addr=>$route ) {
+                                list( $zigate, $addrShort ) = explode ( '/', $addr );
+                                // if ( $addrShort == '0000' ) $addrShort = 'Ruche';
+                                foreach ( $route as $destination=>$nextHop ) {
+                                    // if ( $destination == '0000' ) $destination = 'Ruche';
+                                    // if ( $nextHop == '0000' )     $nextHop = 'Ruche';
 
-                                            $sourceEq       = Abeille::byLogicalId($zigate.'/'.$addrShort, 'Abeille');
-                                            $destinationEq  = Abeille::byLogicalId($zigate.'/'.$destination, 'Abeille');
-                                            $nextHopEq      = Abeille::byLogicalId($zigate.'/'.$nextHop, 'Abeille');
+                                    $sourceEq       = Abeille::byLogicalId($zigate.'/'.$addrShort, 'Abeille');
+                                    $destinationEq  = Abeille::byLogicalId($zigate.'/'.$destination, 'Abeille');
+                                    $nextHopEq      = Abeille::byLogicalId($zigate.'/'.$nextHop, 'Abeille');
 
-                                            if (!is_object($sourceEq)) continue;
-                                            if (!is_object($destinationEq)) continue;
-                                            if (!is_object($nextHopEq)) continue;
+                                    if (!is_object($sourceEq)) continue;
+                                    if (!is_object($destinationEq)) continue;
+                                    if (!is_object($nextHopEq)) continue;
 
-                                            $srcParent = $sourceEq->getObject();
-                                            if ($srcParent)
-                                                $srcParentName = $srcParent->getName();
-                                            else
-                                                $srcParentName = '';
-                                            $dstParent = $destinationEq->getObject();
-                                            if ($dstParent)
-                                                $dstParentName = $dstParent->getName();
-                                            else
-                                                $dstParentName = '';
-                                            $nxtHopeParent = $nextHopEq->getObject();
-                                            if ($nxtHopeParent)
-                                                $nxtHopeParentName = $nxtHopeParent->getName();
-                                            else
-                                                $nxtHopeParentName = '';
-                                            echo 'Si '.$srcParentName.'-'.$sourceEq->getName().' ('.$sourceEq->getLogicalId()
-                                                . ') veut joindre '.$dstParentName.'-'.$destinationEq->getName().' ('.$destinationEq->getLogicalId()
-                                                . ') passera par '.$nxtHopeParentName.'-'.$nextHopEq->getName().' ('.$nextHopEq->getLogicalId()
-                                                . ')<br>';
-                                            // echo ' ('.$sourceEq->getLogicalId().') veut joindre ('.$destinationEq->getName(); //.') passera par ('.$nextHopEq->getName().')<br />';
-                                        }
+                                    $srcParent = $sourceEq->getObject();
+                                    if ($srcParent)
+                                        $srcParentName = $srcParent->getName();
+                                    else
+                                        $srcParentName = '';
+                                    $dstParent = $destinationEq->getObject();
+                                    if ($dstParent)
+                                        $dstParentName = $dstParent->getName();
+                                    else
+                                        $dstParentName = '';
+                                    $nxtHopeParent = $nextHopEq->getObject();
+                                    if ($nxtHopeParent)
+                                        $nxtHopeParentName = $nxtHopeParent->getName();
+                                    else
+                                        $nxtHopeParentName = '';
+                                    echo 'Si '.$srcParentName.'-'.$sourceEq->getName().' ('.$sourceEq->getLogicalId()
+                                        . ') veut joindre '.$dstParentName.'-'.$destinationEq->getName().' ('.$destinationEq->getLogicalId()
+                                        . ') passera par '.$nxtHopeParentName.'-'.$nextHopEq->getName().' ('.$nextHopEq->getLogicalId()
+                                        . ')<br>';
+                                    // echo ' ('.$sourceEq->getLogicalId().') veut joindre ('.$destinationEq->getName(); //.') passera par ('.$nextHopEq->getName().')<br />';
+                                }
+                            }
+                        }
+
+                        $routingTable = array();
+                        $eqLogics = Abeille::byType('Abeille');
+                        foreach ($eqLogics as $eqLogic) {
+                            $rt = $eqLogic->getConfiguration('routingTable', 'none');
+                            if ($rt == 'none')
+                                continue; // No routing info
+                            $rt2 = json_decode($rt); // JSON to array
+                            if (empty($rt2))
+                                continue; // Empty routing info
+                            $routingTable[$eqLogic->getLogicalId()] = $rt2[0];
+                        }
+				        afficheRouteTable( $routingTable );
+                    ?>
+                </div>
+
+                <!-- tab Bruit -->
+                <div id="test1" class="tab-pane" >
+                    VISIBLE EN MODE DEV UNIQUEMENT !<br><br>
+                    (Ce texte devra etre mis dans la doc)<br />
+                    Cette page a pour objectif d essayer de comprendre le niveau de bruit radio que subit votre reseau zigbee.<br />
+                    En utilisant le bouton refresh, Abeille va demander aux équipments de mesurer le bruit qu ils entendent sur les canaux 11 à 26.<br />
+                    Ceux ci vont répondre avec une valeur pour chaque canal qui represente la puissance mesurée entre 0 et 255.<br />
+                    A ma connaissance la méthode de mesure n est pas définie dans le standard Zigbee et donc chaque fabricant est libre de mesurer comme il le souhaite.<br />
+                    C est une premiere version avant que je ne comprenne mieux les résultats.<br />
+                    Les ampoules Ikea repondent aux demandes. Elles retournent une valeur entre 160 et 180 quand le canal est libre<br />
+                    Par contre quand le canal est aucupé elles remontent des valeurs entre 200 et 210.<br />
+                    Ces valeurs viennent du test suivant:
+                    - libre: reseau en fonctionnement normal lors de mon test.
+                    - occupé: camera wifi sur 2.4GHz Canal Wifi 1, avec un débit de l ordre de 2Mbps, posée sur l ampoule.
+                    Avec ce test on voit clairement que les canaux zigbee 11, 12, 13 sont impactés.<br />
+                    A noter: la mesure se fait sur une courte periode, il faut peut faire plusieures mesures pour avoir une bonne idée de la charge des canaux.<br />
+                    A noter: Apres un appui sur Refresh All, il n y a pas encore d affichage d avancement du processus.<br />
+                    Attendez et rafraichissez la page au bout d un certain temps. Il faut compter 5s par équipement...<br />
+                    Si une mesure a ete faite pour un equipement le graph doit apparaitre.<br />
+                    Attention l heure de mesure n est pas encore dispo. Donc vous pouvez avoir une vieille mesure a l ecran.<br />
+                    <br />
+                    Attention: Apres un "Collecter" ou "Tout Collecter" il faut rafraichir la page pour mettre a jour les graphiques.<br />
+
+                    <?php
+                        echo '<a class="btn btn-success refreshBruitAll"><i class="fas fa-sync" ></i>{{Tout collecter}}</a><br /><br />';
+
+                        function afficheGraph( $title, $logicalId, $values ) {
+                        // Vertical
+                        $hauteurGraph = 256;
+                        $hauteurLegendX = 30;
+
+                        // Horizontal
+                        $margeLeft = 10;
+                        $largeurGraph = 300;
+                        $margeRight = $margeLeft;
+
+                        $channelMin = 11;
+                        $channelMax = 26;
+
+                        // Objet
+                        $cercleRayon = 5;
+                        $lineBruitY = 256 - 180;
+
+                            // As a result
+                            $largeurCadre = $margeLeft + $largeurGraph + $margeRight;
+                            $hauteurCadre = $hauteurGraph+$hauteurLegendX;
+
+                            $positionVerticalLegendX = $hauteurCadre - $hauteurLegendX/2;
+
+                                echo $title.'<br /><br />';
+
+                                echo '<svg width="'.$largeurCadre.'" height="'.$hauteurCadre.'">';
+                                echo '<rect width="'.$largeurCadre.'" height="'.$hauteurGraph.'" style="fill:rgb(0,0,200);stroke-width:5;stroke:rgb(255,0,0)"/>';
+                                echo '<line x1 = "1" y1 = "'.$lineBruitY.'" x2 = "'.$largeurCadre.'" y2 = "'.$lineBruitY.'" style = "stroke:yellow; stroke-width:3"/>';
+                                foreach( $values as $key=>$value ) {
+                                    $x = ($key-11)*($largeurGraph/($channelMax-$channelMin))+10; // Ch 11 a 26 vers X de 0 a 300 plus 10 pour centrer pour une largeur de 320 = 10(Marge)+300
+                                    $y = $hauteurGraph - $value;
+                                    echo '<circle cx= "'.$x.'" cy= "'.$y.'" r="'.$cercleRayon.'" stroke= "red" stroke-width="1" fill="red" />';
+                                    $xText = $x - $cercleRayon;
+                                    echo '<text x="'.$x.'" y="'.$positionVerticalLegendX.'" fill="purple">'.$key.'</text>';
+                                }
+                                echo '</svg>';
+                                    if ( $logicalId != "" ) {
+                                        echo '<br /><a data-action="refreshBruit_'.str_replace('/','',$logicalId).'" class="btn btn-success refreshBruit_'.str_replace('/','',$logicalId).'"><i class="fas fa-sync" ></i>{{Collecter}}</a><br /><br />';
+
                                     }
-                                }
+                                echo "<br /><br />";
 
-                                $routingTable = array();
-                                $eqLogics = Abeille::byType('Abeille');
-                                foreach ($eqLogics as $eqLogic) {
-                                    $rt = $eqLogic->getConfiguration('routingTable', 'none');
-                                    if ($rt == 'none')
-                                        continue; // No routing info
-                                    $rt2 = json_decode($rt); // JSON to array
-                                    if (empty($rt2))
-                                        continue; // Empty routing info
-                                    $routingTable[$eqLogic->getLogicalId()] = $rt2[0];
+                            }
+
+                            // Exemple 1: Pas chargé, Exemple 2: Chargé
+                            $localZigbeeChannelPowerExample1 = array( 11=>176, 12=>175, 13=>178, 14=>170, 15=>160, 16=>177, 17=>176, 18=>176, 19=>175, 20=>157, 21=>172, 22=>163, 23=>173, 24=>160, 25=>170, 26=>171 );
+                            $localZigbeeChannelPowerExample2 = array( 11=>206, 12=>209, 13=>200, 14=>171, 15=>180, 16=>174, 17=>177, 18=>170, 19=>176, 20=>159, 21=>171, 22=>162, 23=>173, 24=>161, 25=>156, 26=>172 );
+                            afficheGraph( "Exemple 1", "", $localZigbeeChannelPowerExample1 );
+                            afficheGraph( "Exemple 2", "", $localZigbeeChannelPowerExample2 );
+
+                            // Affichons toutes les Abeilles
+                            $eqLogics = Abeille::byType('Abeille');
+                            foreach ($eqLogics as $eqLogic) {
+                                if( $eqLogic->getConfiguration('localZigbeeChannelPower') ) {
+                                    // $values = $eqLogic->getConfiguration('localZigbeeChannelPower');
+                                    // var_dump($eqLogic->getConfiguration('localZigbeeChannelPower'));
+                                    afficheGraph( $eqLogic->getName(), $eqLogic->getLogicalId(), $eqLogic->getConfiguration('localZigbeeChannelPower') );
                                 }
-				afficheRouteTable( $routingTable );
+                            }
                     ?>
                 </div>
             </div> <!-- div id="network-tab-content" class="tab-content" -->

@@ -368,8 +368,8 @@
     function reinit(eqId) {
         console.log("reinit("+eqId+")");
 
-        var msg = "{{Vous êtes sur le point de réinitialiser cet équipement (équivalent à nouvelle inclusion).";
-        msg += "<br><br>Tout sera remis à jour à partir du fichier JSON excepté le nom, l'ID Jeedom ainsi que ses adresses.";
+        var msg = "{{Vous êtes sur le point de réinitialiser cet équipement (équivalent à une nouvelle inclusion).";
+        msg += "<br><br>Tout sera remis à jour à partir du modèle JSON excepté le nom, l'ID Jeedom ainsi que ses adresses.";
         if (js_batteryType != '') {
             msg += "<br>Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.";
         }

@@ -1,0 +1,38 @@
+{
+    "TS0044__TZ3000_b7bxojrg": {
+        "manufacturer": "Tuya",
+        "model": "TS0044",
+        "zbManufacturer": "_TZ3000_b7bxojrg",
+        "type": "Tuya 4 buttons Zigbee scene switch",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "batteryType": "1x3V CR2430",
+            "icon": "Tuya-TS0044"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            },
+            "BindToZigate-Power": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes"
+            },
+            "Set-BatteryReporting": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "Yes"
+            },
+
+            "Click 1": { "use": "click", "params": "ep=01", "isVisible": 1 },
+            "Click 2": { "use": "click", "params": "ep=02", "isVisible": 1 },
+            "Click 3": { "use": "click", "params": "ep=03", "isVisible": 1 },
+            "Click 4": { "use": "click", "params": "ep=04", "isVisible": 1 }
+        }
+    }
+}

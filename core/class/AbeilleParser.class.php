@@ -126,7 +126,7 @@
 
             $abQueues = $GLOBALS['abQueues'];
             $this->queueKeyParserToAbeille      = msg_get_queue(queueKeyParserToAbeille);
-            $this->queueKeyParserToAbeille2     = msg_get_queue(queueKeyParserToAbeille2);
+            $this->queueParserToAbeille2        = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
             $this->queueParserToCmd             = msg_get_queue($abQueues["parserToCmd"]["id"]);
             $this->queueParserToCmdMax          = $abQueues["parserToCmd"]["max"];
             $this->queueParserToCmdAck          = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
@@ -172,7 +172,7 @@
            into several messages to Abeille. */
         function msgToAbeille2($msg) {
             $errCode = 0;
-            if (msg_send($this->queueKeyParserToAbeille2, 1, json_encode($msg), false, false, $errCode) == false) {
+            if (msg_send($this->queueParserToAbeille2, 1, json_encode($msg), false, false, $errCode) == false) {
                 parserLog("debug", "msgToAbeille2(): ERROR ".$errCode);
             }
         }
@@ -3101,12 +3101,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          */
         function decode8011($dest, $payload, $lqi)
         {
-            /*
-            <Status: uint8_t>
-            <Destination address: uint16_t>
-            <Dest Endpoint : uint8_t>
-            <Cluster ID : uint16_t>
-            */
+            // <Status: uint8_t>
+            // <Destination address: uint16_t>
+            // <Dest Endpoint : uint8_t>
+            // <Cluster ID : uint16_t>
             $status     = substr($payload, 0, 2);
             $dstAddr    = substr($payload, 2, 4);
             $dstEp      = substr($payload, 6, 2);
@@ -3118,8 +3116,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             $msgDecoded = '8011/APS data ACK, Status='.$status.'/'.zbGetAPSStatus($status).', Addr='.$dstAddr.', EP='.$dstEp.', ClustId='.$clustId;
             if ($sqn != '')
-                $msgDecoded .= ', SQN='.$sqn;
+                $msgDecoded .= ', SQNAPS='.$sqn;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8011");
+
+            // Sending msg to cmd for flow control
+            $msg = array (
+                'type'      => "8011",
+                'net'       => $dest,
+                'status'    => $status,
+                'addr'      => $dstAddr,
+                'sqn'       => $sqn,
+                // 'nPDU'      => $nPDU,
+                // 'aPDU'      => $aPDU,
+            );
+            $this->msgToCmdAck($msg);
 
             // Monitor if required
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))
@@ -3170,7 +3180,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $nPDU       = substr($payload,26, 2);
                 $aPDU       = substr($payload,28, 2);
             }
-            $msgDecoded = '8012/ZPS_EVENT_APS_DATA_CONFIRM, Status='.$status.', Addr='.$dstAddr.', SQN='.$sqn.', NPDU='.$nPDU.', APDU='.$aPDU;
+            $msgDecoded = '8012/APS data confirm, Status='.$status.', Addr='.$dstAddr.', SQNAPS='.$sqn.', NPDU='.$nPDU.', APDU='.$aPDU;
 
             // Log
             parserLog('debug', $dest.', Type='.$msgDecoded, "8012");
@@ -5261,7 +5271,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', $dest.', Type='.$msgDecoded, "8141");
         }
 
-        // Codé sur la base des messages Xiaomi Inondation
+        // Cluster 0500/IAS zone, Zone Status Change Notification (generated cmd 00)
         function decode8401($dest, $payload, $lqi)
         {
             // <sequence number: uint8_t>
@@ -5274,30 +5284,47 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <zone id : uint8_t>
             // <delay: data each element uint16_t>
 
-            $EP         = substr($payload, 2, 2);
-            $clustId  = substr($payload, 4, 4);
+            $ep         = substr($payload, 2, 2);
+            $clustId    = substr($payload, 4, 4);
             $srcAddr    = substr($payload,10, 4); // Assuming short mode
+            $zoneStatus = substr($payload,14, 4);
 
             $msgDecoded = '8401/IAS zone status change notification'
                .', SQN='.substr($payload, 0, 2)
-               .', EP='.$EP
+               .', EP='.$ep
                .', ClustId='.$clustId
                .', SrcAddrMode='.substr($payload, 8, 2)
                .', SrcAddr='.$srcAddr
-               .', ZoneStatus='.substr($payload,14, 4)
+               .', ZoneStatus='.$zoneStatus
                .', ExtStatus='.substr($payload,18, 2)
                .', ZoneId='.substr($payload,20, 2)
                .', Delay='.substr($payload,22, 4);
+
             parserLog('debug', $dest.', Type='.$msgDecoded);
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($msg); // Send message to monitor
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
-            // On transmettre l info sur Cluster 0500 et Cmd: 0000 (Jusqu'a present on etait sur ClusterId-AttributeId, ici ClusterId-CommandId)
-            $attrId = "0000";
-            $data = substr($payload,14, 4);
-            $this->msgToAbeille($dest."/".$srcAddr, $clustId, $EP.'-'.$attrId, $data);
+            // Legacy: Sending 0500-#EP#-0000 with zoneStatus as value
+            // To be removed at some point
+            // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $ep.'-0000', $zoneStatus);
+            $msg = array(
+                'src' => 'parser',
+                'type' => 'attributeReport',
+                'net' => $dest,
+                'addr' => $srcAddr,
+                'ep' => $ep,
+                'name' => $clustId.'-'.$ep.'-0000',
+                'value' => $zoneStatus,
+                'time' => time(),
+                'lqi' => $lqi
+            );
+            $this->msgToAbeille2($msg);
+
+            // New message format '#EP#-0500-cmd00' with $zoneStatus as value
+            $msg['name'] = $ep.'-0500-cmd00';
+            $this->msgToAbeille2($msg);
         }
 
         // OTA specific: ZiGate will receive this command when device asks OTA firmware

@@ -1070,7 +1070,7 @@ if (0) {
         // Tcharp38 note: when all queues in $abQueues, we can delete $allQueues
         $abQueues = $GLOBALS['abQueues'];
         $allQueues = array(
-            queueKeyAbeilleToAbeille, queueKeyAbeilleToCmd, queueKeyParserToAbeille, queueKeyParserToAbeille2, queueKeyCmdToAbeille,
+            queueKeyAbeilleToAbeille, queueKeyAbeilleToCmd, queueKeyParserToAbeille, $abQueues["parserToAbeille2"]["id"], queueKeyCmdToAbeille,
             queueKeyCmdToMon, queueKeyParserToMon, queueKeyMonToCmd,
             queueKeyAssistToParser, queueKeyParserToAssist, queueKeyAssistToCmd,
             $abQueues["parserToLQI"]["id"], queueKeyLQIToCmd,
@@ -1180,13 +1180,15 @@ if (0) {
         self::refreshCmd();
 
         try {
+            $abQueues = $GLOBALS['abQueues'];
             $queueKeyAbeilleToAbeille = msg_get_queue(queueKeyAbeilleToAbeille);
             $queueKeyParserToAbeille = msg_get_queue(queueKeyParserToAbeille);
-            $queueKeyParserToAbeille2 = msg_get_queue(queueKeyParserToAbeille2);
+            $queueParserToAbeille2 = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
+            $queueParserToAbeille2Max = $abQueues["parserToAbeille2"]["max"];
             $queueKeyCmdToAbeille = msg_get_queue(queueKeyCmdToAbeille);
             $queueKeyXmlToAbeille = msg_get_queue(queueKeyXmlToAbeille);
 
-            $msg_type = NULL;
+            $msgType = NULL;
             $msg = NULL;
             $max_msg_size = 512;
             $message = new MsgAbeille;
@@ -1196,56 +1198,50 @@ if (0) {
             // const int ENOMSG = 42; /* No message of desired type */
 
             while (true) {
-                if (msg_receive($queueKeyAbeilleToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
+                if (msg_receive($queueKeyAbeilleToAbeille, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     self::message($message);
-                    $msg_type = NULL;
-                    $msg = NULL;
                 } else { // Error
                     if ($errCode != 42)
                         log::add('Abeille', 'error', 'deamon(): msg_receive queueKeyAbeilleToAbeille error '.$errCode);
                 }
 
                 /* New path parser to Abeille */
-                if (msg_receive($queueKeyParserToAbeille2, 0, $msg_type, $max_msg_size, $msg_json, false, MSG_IPC_NOWAIT, $errCode)) {
-                    self::msgFromParser(json_decode($msg_json, true));
-                    $msg_type = NULL;
-                    $msg = NULL;
+                $msgMax = $queueParserToAbeille2Max;
+                if (msg_receive($queueParserToAbeille2, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
+                    self::msgFromParser(json_decode($msgJson, true));
                 } else { // Error
-                    if ($errCode != 42)
-                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyParserToAbeille2 error '.$errCode);
+                    if ($errCode == 7) {
+                        msg_receive($queueParserToAbeille2, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
+                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueParserToAbeille2 ERROR: msg TOO BIG ignored.');
+                    } else if ($errCode != 42)
+                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueParserToAbeille2 error '.$errCode);
                 }
 
                 /* Legacy path parser to Abeille. To be progressively removed */
-                if (msg_receive($queueKeyParserToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
+                if (msg_receive($queueKeyParserToAbeille, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     self::message($message);
-                    $msg_type = NULL;
-                    $msg = NULL;
                 } else { // Error
                     if ($errCode != 42)
                         log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyParserToAbeille error '.$errCode);
                 }
 
-                if (msg_receive($queueKeyCmdToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
+                if (msg_receive($queueKeyCmdToAbeille, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     self::message($message);
-                    $msg_type = NULL;
-                    $msg = NULL;
                 } else { // Error
                     if ($errCode != 42)
                         log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyCmdToAbeille error '.$errCode);
                 }
 
-                if (msg_receive($queueKeyXmlToAbeille, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
+                if (msg_receive($queueKeyXmlToAbeille, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     self::message($message);
-                    $msg_type = NULL;
-                    $msg = NULL;
                 } else { // Error
                     if ($errCode != 42)
                         log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyXmlToAbeille error '.$errCode);

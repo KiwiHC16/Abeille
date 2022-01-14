@@ -916,31 +916,31 @@
             /* Level cluster */
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
-                cmds["Get Current Level"] = newCmd("zbReadAttribute", "clustId=0008&attrId=0000");
                 cmds["Set-Level"] = newCmd("setLevel");
                 cmds["Set-Level"]["isVisible"] = 1;
                 cmds["Current Level"] = newCmd("zb-0008-CurrentLevel");
                 cmds["Current Level"]["isVisible"] = 1;
                 cmds["Current Level"]["nextLine"] = "after";
-                cmds["Bind-0008-ToZigate"] = newCmd("zbBindToZigate", "clustId=0008", "yes");
-                cmds["SetReporting-0008"] = newCmd("zbConfigureReporting", "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                cmds["Get Current Level"] = newCmd("zbReadAttribute", "clustId=0008&attrId=0000");
+                cmds["Bind 0008-ToZigate"] = newCmd("zbBindToZigate", "clustId=0008", "yes");
+                cmds["SetReporting 0008"] = newCmd("zbConfigureReporting", "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
             }
 
             /* Window covering */
             if (isset(ep.servClusters["0102"]) && isset(ep.servClusters["0102"]['attributes'])) {
                 attributes = ep.servClusters["0102"]['attributes'];
-                if (isset(attributes['0008'])) {
-                    // TODO: Take care if 'Current Level' already used (ex: by cluster 0008)
-                    cmds["Current Level"] = newCmd("zb-0102-CurPosLiftPercent");
-                    cmds["Current Level"]["isVisible"] = 1;
-                    cmds["Get Current Level"] = newCmd("zbReadAttribute", "clustId=0102&attrId=0008");
-                }
                 cmds["Up"] = newCmd("zbCmd-0102-UpOpen");
                 cmds["Up"]["isVisible"] = 1;
                 cmds["Stop"] = newCmd("zbCmd-0102-Stop");
                 cmds["Stop"]["isVisible"] = 1;
                 cmds["Down"] = newCmd("zbCmd-0102-DownClose");
                 cmds["Down"]["isVisible"] = 1;
+                if (isset(attributes['0008'])) {
+                    // TODO: Take care if 'Current Level' already used (ex: by cluster 0008)
+                    cmds["Current Level"] = newCmd("zb-0102-CurPosLiftPercent");
+                    cmds["Current Level"]["isVisible"] = 1;
+                    cmds["Get Current Level"] = newCmd("zbReadAttribute", "clustId=0102&attrId=0008");
+                }
                 cmds["Bind 0102-ToZigate"] = newCmd("zbBindToZigate", "clustId=0102", "yes");
                 cmds["SetReporting 0102"] = newCmd("zbConfigureReporting", "clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
             }

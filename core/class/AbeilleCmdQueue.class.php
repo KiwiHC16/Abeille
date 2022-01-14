@@ -575,8 +575,8 @@
         // function processZigateAcks() {
         //     while (true) {
         //         $msg_type = NULL;
-        //         $max_msg_size = $this->queueParserToCmdAckMax;
-        //         if (msg_receive($this->queueParserToCmdAck, 0, $msg_type, $max_msg_size, $msg, false, MSG_IPC_NOWAIT, $errCode) == false) {
+        //         $msgMax = $this->queueParserToCmdAckMax;
+        //         if (msg_receive($this->queueParserToCmdAck, 0, $msg_type, $msgMax, $msg, false, MSG_IPC_NOWAIT, $errCode) == false) {
         //             if ($errCode != 42) // 42 = No message
         //                 logMessage("debug", "processZigateAcks() ERROR ".$errCode);
         //             return;
@@ -629,8 +629,8 @@
         function processZigateAcks() {
             // cmdLog("debug", "processZigateAcks()");
             while (true) {
-                $max_msg_size = $this->queueParserToCmdAckMax;
-                if (msg_receive($this->queueParserToCmdAck, 0, $msgType, $max_msg_size, $msg, false, MSG_IPC_NOWAIT, $errCode) == false) {
+                $msgMax = $this->queueParserToCmdAckMax;
+                if (msg_receive($this->queueParserToCmdAck, 0, $msgType, $msgMax, $msg, false, MSG_IPC_NOWAIT, $errCode) == false) {
                     if ($errCode != 42) // 42 = No message
                         cmdLog("debug", "processZigateAcks() ERROR ".$errCode);
                     break;
@@ -860,11 +860,14 @@
             foreach ($listQueue as $queue) {
                 $msg = NULL;
                 if ($queue == $this->queueParserToCmd)
-                    $max_msg_size = $this->queueParserToCmdMax;
+                    $msgMax = $this->queueParserToCmdMax;
                 else
-                    $max_msg_size = 512;
-                if (msg_receive($queue, 0, $msg_priority, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode) == false) {
-                    if ($errCode != 42) // 42 = No message
+                    $msgMax = 512;
+                if (msg_receive($queue, 0, $msgType, $msgMax, $msg, true, MSG_IPC_NOWAIT, $errCode) == false) {
+                    if ($errCode == 7) {
+                        msg_receive($queue, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
+                        logMessage('debug', 'collectAllOtherMessages() ERROR: msg TOO BIG ignored.');
+                    } else if ($errCode != 42) // 42 = No message
                         logMessage("error", "collectAllOtherMessages() ERROR ".$errCode." on queue ".$this->getQueueName($queue));
                     continue; // Moving to next queue
                 }

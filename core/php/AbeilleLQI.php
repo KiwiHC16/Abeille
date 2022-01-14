@@ -58,7 +58,7 @@
         global $queueParserToLQI, $queueParserToLQISize;
 
         $msgMaxSize = $queueParserToLQISize;
-        while (msg_receive($queueParserToLQI, 0, $msgType, $msgMaxSize, $msg, true, MSG_IPC_NOWAIT));
+        while (msg_receive($queueParserToLQI, 0, $msgType, $msgMaxSize, $msg, true, MSG_IPC_NOWAIT | MSG_NOERROR));
     }
 
     /* Treat request responses (804E) from parser.
@@ -76,7 +76,7 @@
         for ($t = 0; $t < $timeout; ) {
             // logMessage("", "  Queue stat=".json_encode(msg_stat_queue($queueParserToLQI)));
             $msgMaxSize = $queueParserToLQISize;
-            if (msg_receive($queueParserToLQI, 0, $msgType, $msgMaxSize, $msgJson, false, MSG_IPC_NOWAIT, $errorCode) == true) {
+            if (msg_receive($queueParserToLQI, 0, $msgType, $msgMaxSize, $msgJson, false, MSG_IPC_NOWAIT, $errCode) == true) {
                 /* Message received. Let's check it is the expected one */
                 $msg = json_decode($msgJson);
                 if ($msg->type != "804E") {
@@ -96,14 +96,19 @@
                 break; // Valid message
             }
 
-            if ($errorCode == 42) { // No message
+            if ($errCode == 42) { // No message
                 sleep(1); // Sleep 1s
                 $t += 1;
                 continue;
             }
+            if ($errCode == 7) { // Message too big
+                msg_receive($queueParserToLQI, 0, $msgType, $msgMaxSize, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
+                logMessage("", "  WARNING: TOO BIG msg => ignored");
+                continue;
+            }
 
             /* It's an error */
-            logMessage("", "  msg_receive() ERROR: ".$errorCode."/".posix_strerror($errorCode));
+            logMessage("", "  msg_receive() ERROR: ".$errCode."/".posix_strerror($errCode));
             return -1;
         }
         if ($t >= $timeout) {

@@ -678,7 +678,7 @@ if (0) {
         $abQueues = $GLOBALS['abQueues'];
         if (msg_stat_queue(msg_get_queue(queueKeyAbeilleToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToAbeille');
         if (msg_stat_queue(msg_get_queue(queueKeyAbeilleToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToCmd');
-        if (msg_stat_queue(msg_get_queue(queueKeyParserToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToAbeille');
+        if (msg_stat_queue(msg_get_queue($abQueues["parserToAbeille"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueParserToAbeille');
         if (msg_stat_queue(msg_get_queue($abQueues["parserToCmd"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueParserToCmd');
         if (msg_stat_queue(msg_get_queue($abQueues["parserToLQI"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueParserToLQI');
         if (msg_stat_queue(msg_get_queue(queueKeyCmdToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToAbeille');
@@ -687,8 +687,8 @@ if (0) {
         if (msg_stat_queue(msg_get_queue(queueKeyXmlToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToAbeille');
         if (msg_stat_queue(msg_get_queue(queueKeyXmlToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToCmd');
         if (msg_stat_queue(msg_get_queue(queueKeyFormToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyFormToCmd');
-        if (msg_stat_queue(msg_get_queue($abQueues["serialToParser"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeySerialToParser');
-        if (msg_stat_queue(msg_get_queue($abQueues["parserToCmdAck"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyParserToCmdAck');
+        if (msg_stat_queue(msg_get_queue($abQueues["serialToParser"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueSerialToParser');
+        if (msg_stat_queue(msg_get_queue($abQueues["parserToCmdAck"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueParserToCmdAck');
 
         // https://github.com/jeelabs/esp-link
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
@@ -1070,7 +1070,7 @@ if (0) {
         // Tcharp38 note: when all queues in $abQueues, we can delete $allQueues
         $abQueues = $GLOBALS['abQueues'];
         $allQueues = array(
-            queueKeyAbeilleToAbeille, queueKeyAbeilleToCmd, queueKeyParserToAbeille, $abQueues["parserToAbeille2"]["id"], queueKeyCmdToAbeille,
+            queueKeyAbeilleToAbeille, queueKeyAbeilleToCmd, $abQueues["parserToAbeille"]["id"], $abQueues["parserToAbeille2"]["id"], queueKeyCmdToAbeille,
             queueKeyCmdToMon, queueKeyParserToMon, queueKeyMonToCmd,
             queueKeyAssistToParser, queueKeyParserToAssist, queueKeyAssistToCmd,
             $abQueues["parserToLQI"]["id"], queueKeyLQIToCmd,
@@ -1182,7 +1182,8 @@ if (0) {
         try {
             $abQueues = $GLOBALS['abQueues'];
             $queueKeyAbeilleToAbeille = msg_get_queue(queueKeyAbeilleToAbeille);
-            $queueKeyParserToAbeille = msg_get_queue(queueKeyParserToAbeille);
+            $queueParserToAbeille = msg_get_queue($abQueues["parserToAbeille"]["id"]);
+            $queueParserToAbeilleMax = $abQueues["parserToAbeille"]["max"];
             $queueParserToAbeille2 = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
             $queueParserToAbeille2Max = $abQueues["parserToAbeille2"]["max"];
             $queueKeyCmdToAbeille = msg_get_queue(queueKeyCmdToAbeille);
@@ -1220,13 +1221,17 @@ if (0) {
                 }
 
                 /* Legacy path parser to Abeille. To be progressively removed */
-                if (msg_receive($queueKeyParserToAbeille, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
+                $msgMax = $queueParserToAbeilleMax;
+                if (msg_receive($queueParserToAbeille, 0, $msgType, $msgMax, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
                     $message->topic = $msg->message['topic'];
                     $message->payload = $msg->message['payload'];
                     self::message($message);
                 } else { // Error
-                    if ($errCode != 42)
-                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueKeyParserToAbeille error '.$errCode);
+                    if ($errCode == 7) {
+                        msg_receive($queueParserToAbeille, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
+                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueParserToAbeille ERROR: msg TOO BIG ignored.');
+                    } else if ($errCode != 42)
+                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueParserToAbeille error '.$errCode);
                 }
 
                 if (msg_receive($queueKeyCmdToAbeille, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {

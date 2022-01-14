@@ -1,7 +1,9 @@
 ChangeLog
 =========
 
+- 'Graph' visible seulement en mode dev.
 - Interne: Gestion des queues: log & suppression msg trop gros. A completer.
+- Interne: Gestion des queues en cas de msg trop gros.
 
 220113-BETA-1
 -------------

@@ -126,7 +126,7 @@
 
             $abQueues = $GLOBALS['abQueues'];
             $this->queueKeyParserToAbeille      = msg_get_queue(queueKeyParserToAbeille);
-            $this->queueKeyParserToAbeille2     = msg_get_queue(queueKeyParserToAbeille2);
+            $this->queueParserToAbeille2        = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
             $this->queueParserToCmd             = msg_get_queue($abQueues["parserToCmd"]["id"]);
             $this->queueParserToCmdMax          = $abQueues["parserToCmd"]["max"];
             $this->queueParserToCmdAck          = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
@@ -172,7 +172,7 @@
            into several messages to Abeille. */
         function msgToAbeille2($msg) {
             $errCode = 0;
-            if (msg_send($this->queueKeyParserToAbeille2, 1, json_encode($msg), false, false, $errCode) == false) {
+            if (msg_send($this->queueParserToAbeille2, 1, json_encode($msg), false, false, $errCode) == false) {
                 parserLog("debug", "msgToAbeille2(): ERROR ".$errCode);
             }
         }

@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Gestion des queues: log & suppression msg trop gros. A completer.
+
 220113-BETA-1
 -------------
 

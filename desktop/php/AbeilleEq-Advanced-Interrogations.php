@@ -194,6 +194,16 @@
     </div>
 </div>
 <div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0201, Setpoint Raise/Lower (cmd 00)">ZCL: 0201 - Raise/lower</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-danger" onclick="interrogate(\'0201-SetPoint\', \''.$eqId.'\')">{{Modifier}}</a>';
+            addEpButton("idEpC0201-00", $mainEP);
+        ?>
+        <input id="idAmountC0201-00" title="{{Step: format hex 2 car}}" placeholder="{{Amount}}" style="width:60px" />
+    </div>
+</div>
+<div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 1000, Get group identifiers (cmd 41)">ZCL: 1000 - Groupes</label>
     <div class="col-sm-5">
         <?php

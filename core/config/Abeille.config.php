@@ -14,7 +14,6 @@
     define('queueKeyAbeilleToAbeille',      121);
     define('queueKeyAbeilleToCmd',          123);
     define('queueKeyParserToAbeille',       221); // Obsolete path parser to Abeille.
-    define('queueKeyParserToAbeille2',      222); // New path parser to Abeille
     define('queueKeyCmdToAbeille',          321); // Tcharp38: ??
 
     /* Monitoring queues */
@@ -50,6 +49,7 @@
     $abQueues["parserToCli"] = array( "id" => 0x2D4, "max" => 1024 );
     $abQueues["parserToCmd"] = array( "id" => 0x3E6, "max" => 512 );
     $abQueues["parserToCmdAck"] = array( "id" => 0x3E7, "max" => 512 ); // Parser to cmd for 8000/8012/8702 statuses
+    $abQueues["parserToAbeille2"] = array( "id" => 222, "max" => 512 ); // Parser Abeille, new path
     $GLOBALS['abQueues'] = $abQueues;
 
     // define('priorityMin',           1);

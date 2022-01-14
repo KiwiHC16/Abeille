@@ -18,7 +18,6 @@
         public $queueKeyParserToAbeille = null; // Old communication path to Abeille
         public $queueKeyParserToAbeille2 = null; // New communication path to Abeille
         public $queueParserToCmd = null;
-        public $queueParserToCmdMax;
         public $parameters_info;
         // public $actionQueue; // queue of action to be done in Parser like config des NE ou get info des NE
         public $wakeUpQueue; // queue of command to be sent when the device wakes up.
@@ -125,18 +124,15 @@
             $GLOBALS['requestedlevel'] = $this->requestedlevel ;
 
             $abQueues = $GLOBALS['abQueues'];
-            $this->queueKeyParserToAbeille      = msg_get_queue(queueKeyParserToAbeille);
-            $this->queueParserToAbeille2        = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
-            $this->queueParserToCmd             = msg_get_queue($abQueues["parserToCmd"]["id"]);
-            $this->queueParserToCmdMax          = $abQueues["parserToCmd"]["max"];
-            $this->queueParserToCmdAck          = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
-            $this->queueParserToCmdAckMax       = $abQueues["parserToCmdAck"]["max"];
-            $this->queueParserToLQI             = msg_get_queue($abQueues["parserToLQI"]["id"]);
-            $this->queueParserToLQIMax          = $abQueues["parserToLQI"]["max"];
+            $this->queueParserToAbeille     = msg_get_queue($abQueues["parserToAbeille"]["id"]);
+            $this->queueParserToAbeille2    = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
+            $this->queueParserToCmd         = msg_get_queue($abQueues["parserToCmd"]["id"]);
+            $this->queueParserToCmdAck      = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
+            $this->queueParserToLQI         = msg_get_queue($abQueues["parserToLQI"]["id"]);
         }
 
         // $srcAddr = dest / shortaddr
-        // Tcharp38: This function is obsolete. It is smoothly replaced by msgToAbeille2() with new msg format
+        // Tcharp38: This function is OBSOLETE. It is smoothly replaced by msgToAbeille2() with new msg format
         function msgToAbeille($srcAddr, $clustId, $attrId, $data)
         {
             // dest / short addr / Cluster ID - Attr ID -> data
@@ -149,19 +145,19 @@
                                     'topic' => $srcAddr."/".$clustId."-".$attrId,
                                     'payload' => $data,
                                      );
-            if (msg_send($this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errCode) == false) {
+            if (msg_send($this->queueParserToAbeille, 1, $msgAbeille, true, $blocking, $errCode) == false) {
                 parserLog("error", "msg_send() ERREUR ".$errCode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
                 parserLog("error", "  Message=".json_encode($msgAbeille));
             }
 
             $msgAbeille->message = array('topic' => $srcAddr."/Time-TimeStamp", 'payload' => time());
-            if (msg_send($this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errCode) == false) {
+            if (msg_send($this->queueParserToAbeille, 1, $msgAbeille, true, $blocking, $errCode) == false) {
                 parserLog("error", "msg_send() ERREUR ".$errCode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
                 parserLog("error", "  Message=".json_encode($msgAbeille));
             }
 
             $msgAbeille->message = array('topic' => $srcAddr."/Time-Time", 'payload' => date("Y-m-d H:i:s"));
-            if (msg_send($this->queueKeyParserToAbeille, 1, $msgAbeille, true, $blocking, $errCode) == false) {
+            if (msg_send($this->queueParserToAbeille, 1, $msgAbeille, true, $blocking, $errCode) == false) {
                 parserLog("error", "msg_send() ERREUR ".$errCode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
                 parserLog("error", "  Message=".json_encode($msgAbeille));
             }
@@ -207,12 +203,6 @@
 
             /* Message size control. If too big it would block queue forever */
             $msgJson = json_encode($msg);
-            $size = strlen($msgJson);
-            $max = $this->queueParserToLQIMax;
-            if ($size > $max) {
-                parserLog("error", "msgToLQICollector(): Message trop gros ignoré (taille=".$size.", max=".$max.")");
-                return false;
-            }
             if (msg_send($this->queueParserToLQI, 1, $msgJson, false, false, $errCode) == true)
                 return true;
 
@@ -264,12 +254,6 @@
 
         function msgToCmdAck($msg) {
             $msgJson = json_encode($msg);
-            $size = strlen($msgJson);
-            $max = $this->queueParserToCmdAckMax;
-            if ($size > $max) {
-                parserLog("error", "msgToCmdAck(): Message trop gros ignoré (taille=".$size.", max=".$max.")");
-                return false;
-            }
             if (msg_send($this->queueParserToCmdAck, 1, $msgJson, false, false)) {
                 // parserLog("debug","(fct msgToAbeille) added to queue (queueKeyParserToAbeille): ".json_encode($msgAbeille), "8000");
             } else {

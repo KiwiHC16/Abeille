@@ -1,15 +1,15 @@
 <?php
+    require_once __DIR__.'/../../core/config/Abeille.config.php';
     /* Developers debug features */
-    $dbgFile = __DIR__."/../tmp/debug.json";
-    if (file_exists($dbgFile)) {
+    if (file_exists(dbgFile)) {
         // include_once $dbgFile;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
-        ini_set('error_log', __DIR__.'/../../../log/AbeillePHP.log');
+        ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
         ini_set('log_errors', 'On');
     }
 
-    include_once __DIR__."/../../../core/php/core.inc.php";
+    include_once __DIR__."/../../../../core/php/core.inc.php";
 
     echo '<!DOCTYPE html>';
 
@@ -24,6 +24,8 @@
     echo '</style>';
     echo '</head>';
     echo '<body>';
+
+    echo 'VISIBLE EN MODE DEV UNIQUEMENT<br><br>';
 
     if ( isset( $_GET['zigateId']) )    { $zigateId     = $_GET['zigateId']; }        else { $zigateId  = "1"; }
     if ( isset( $_GET['GraphType']) )   { $GraphType    = $_GET['GraphType']; }       else { $NE        = "Default"; }
@@ -40,7 +42,7 @@
 
     if ( $Cache == "Refresh Cache" ) {
         // Ici on n'utilise pas le cache donc on lance la collecte
-        require_once(__DIR__."/../core/php/AbeilleLQI.php");
+        require_once(__DIR__."/../../core/php/AbeilleLQI.php");
     }
 
     // Maintenant on doit avoir le fichier disponible avec les infos
@@ -56,9 +58,6 @@
         $table[$voisineList[     'NE']]['name']=$voisineList['NE_Name'];
         $table[$voisineList['Voisine']]['name']=$voisineList['Voisine_Name'];
     }
-
-    // -----------------------------------------------------------------------------------------------------------
-    require_once __DIR__.'/../../../core/php/core.inc.php';
 
     $abeilles = Abeille::byType('Abeille');
 
@@ -79,7 +78,15 @@
 
         $shortAddress = $abeille->getLogicalId();
 
-        if ( ($abeille->getConfiguration()["positionX"] == "") || ($abeille->getConfiguration()["positionY"] == "") ) {
+        if (isset($abeille->getConfiguration()["positionX"]))
+            $posX = $abeille->getConfiguration()["positionX"];
+        else
+            $posX = "";
+        if (isset($abeille->getConfiguration()["positionY"]))
+            $posY = $abeille->getConfiguration()["positionY"];
+        else
+            $posY = "";
+        if (($posX == "") || ($posY == "")) {
             $X = $centerX + $rayon * cos($angle/180*3.14);
             $Y = $centerY + $rayon * sin($angle/180*3.14);
             $angle = $angle + $angleIncrement;

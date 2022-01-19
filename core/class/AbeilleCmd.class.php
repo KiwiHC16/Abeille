@@ -104,7 +104,9 @@
         }
 
         /* Cmd execution.
-           Tcharp38: why is it part of AbeilleCmd ? Shouldn't be in Abeille.class.php ? */
+           Tcharp38: why is it part of AbeilleCmd ? Shouldn't be in Abeille.class.php ? 
+           KiwiHC16: It's part of Jeedom Structure. You have a class for Eq and a Class for Cmd. AbeilleCmd is child of Cmd Class, Abeille is child of eqLogic class. 
+        */
         public function execute($_options = null)
         {
             global $abQueues;

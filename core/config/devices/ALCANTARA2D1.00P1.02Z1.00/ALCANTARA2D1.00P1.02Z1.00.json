@@ -12,9 +12,18 @@
             "mainEP": "01"
         },
         "commands": {
+            "Plus": {
+                "use": "zbCmd-0201-Setpoint-Plus05",
+                "isVisible": 1
+            },
+            "Moins": {
+                "use": "zbCmd-0201-Setpoint-Minus05",
+                "isVisible": 1
+            },
             "Local temp": {
                 "use": "zb-0201-LocalTemperature",
-                "isVisible": 1
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "Occupancy": {
                 "use": "zb-0201-Occupancy",
@@ -24,7 +33,7 @@
                 "use": "zb-0201-SystemMode",
                 "isVisible": 1
             },
-            "Bind-0201-ToZigate": {
+            "Bind 0201-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0201",
                 "execAtCreation": "Yes"

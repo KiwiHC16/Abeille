@@ -503,6 +503,13 @@
             topic = "Cmd"+logicalId+"_cmd-0000";
             ep = document.getElementById("idEpG").value;
             payload = "ep="+ep+"_cmd=00";
+        } else if (request == "0201-SetPoint") {
+            topic = "Cmd"+logicalId+"_cmd-0201";
+            ep = document.getElementById("idEpC0201-00").value;
+            payload = "ep="+ep+"_cmd=00";
+            amount = document.getElementById("idAmountC0201-00").value;
+            if (amount != '')
+                payload += "_amount="+amount;
         } else if (request == "1000-GetGroups") {
             topic = "Cmd"+logicalId+"_cmd-1000";
             ep = document.getElementById("idEpC1000-41").value;

@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+220114-BETA-1
+-------------
+
+- Interne: Ajout support cmd 00/Setpoint, cluster 0201/thermostat.
+- Acova Alcantara: Mise à jour modele pour controle temp (2180).
 - 'Graph' visible seulement en mode dev.
 - Interne: Gestion des queues: log & suppression msg trop gros. A completer.
 - Interne: Gestion des queues en cas de msg trop gros.

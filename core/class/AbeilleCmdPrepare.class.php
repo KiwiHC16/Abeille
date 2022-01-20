@@ -58,7 +58,7 @@
 
             // Expecting 3 infos: <type>/<addr>/<action>
             if (sizeof(explode('/', $topic)) != 3) {
-                cmdLog("error", "  prepareCmd(): Mauvais format de message reçu (topic=".$topic.").");
+                cmdLog("debug", "  prepareCmd(): Mauvais format de message reçu (topic=".$topic.").");
                 return ;
             }
             list ($type, $address, $action) = explode('/', $topic);

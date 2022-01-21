@@ -1,9 +1,6 @@
 ChangeLog
 =========
 
-220121-BETA-2
--------------
-
   .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
 
       - Toute nouvelle installation.
@@ -28,6 +25,9 @@ ChangeLog
 - Page EQ/avancé: possibilité de télécharger discovery 'automatique'.
 - Interne: Abeille.class: Vérification de l'état des queues amélioré.
 - Xiaomi H1 double rocker: Mise-à-jour modèle + image (2253).
+- Interne: Abeille.class: Suppression interrogateUnknowNE().
+- Page EQ/avancé: Correction regression bouton "Réinitialiser".
+- Page EQ/avancé: Réinit 'defaultUnknown' si modèle officiel existe.
 
 220114-BETA-1
 -------------

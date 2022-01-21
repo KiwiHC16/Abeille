@@ -601,7 +601,7 @@ if (0) {
 
         log::add('Abeille', 'debug', 'cron15:Terminé --------------------------------');
         return;
-    }
+    } // End cron15()
 
     /**
      * cron10
@@ -619,7 +619,7 @@ if (0) {
 
         // Poll Cmd
         self::executePollCmds("cron10");
-    }
+    } // End cron10()
 
     /**
      * cron5
@@ -637,7 +637,7 @@ if (0) {
 
         // Poll Cmd
         self::executePollCmds("cron5");
-    }
+    } // End cron5()
 
     /**
      * cron1
@@ -675,7 +675,7 @@ if (0) {
                 $daemons .= ", ";
             $daemons .= $daemon['pid'].'/'.$daemon['shortName'];
         }
-        log::add('Abeille', 'debug', 'cron(): '.$daemons);
+        log::add('Abeille', 'debug', 'cron(): Daemons: '.$daemons);
 
         // Checking queues status to log any potential issue.
         // Moved from deamon_info()
@@ -766,7 +766,7 @@ if (0) {
                 $eqLogic->setStatus('state', '-');
                 $eqLogic->setStatus('timeout', 0);
             }
-        }
+        } // End cron()
 
         // Si Inclusion status est à 1 on demande un Refresh de l information
         // Je regarde si j ai deux zigate en inclusion et si oui je genere une alarme.
@@ -1184,6 +1184,7 @@ if (0) {
 
         try {
             $abQueues = $GLOBALS['abQueues'];
+            // Tcharp38: Merge all the followings queues. Would be more efficient & more reactive.
             $queueAbeilleToAbeille = msg_get_queue($abQueues["abeilleToAbeille"]["id"]);
             $queueParserToAbeille = msg_get_queue($abQueues["parserToAbeille"]["id"]);
             $queueParserToAbeilleMax = $abQueues["parserToAbeille"]["max"];
@@ -1448,31 +1449,33 @@ if (0) {
         return;
     }
 
-    public static function interrogateUnknowNE( $dest, $addr ) {
-        if ( config::byKey( 'blocageRecuperationEquipement', 'Abeille', 'Oui', 1 ) == 'Oui' ) {
-            log::add('Abeille', 'debug', "L equipement ".$dest."/".$addr." n existe pas dans Jeedom, je ne cherche pas a le recupérer, param: blocage recuperation equipment.");
-            return;
-        }
+    // Tcharp38: No longer required.
+    // This part is directly handled by parser for better reactivity mandatory for battery powered devices.
+    // public static function interrogateUnknowNE( $dest, $addr ) {
+    //     if ( config::byKey( 'blocageRecuperationEquipement', 'Abeille', 'Oui', 1 ) == 'Oui' ) {
+    //         log::add('Abeille', 'debug', "L equipement ".$dest."/".$addr." n existe pas dans Jeedom, je ne cherche pas a le recupérer, param: blocage recuperation equipment.");
+    //         return;
+    //     }
 
-        if ($addr == "0000") return;
+    //     if ($addr == "0000") return;
 
-        log::add('Abeille', 'debug', "L equipement ".$dest."/".$addr." n existe pas dans Jeedom, j'essaye d interroger l equipement pour le créer.");
+    //     log::add('Abeille', 'debug', "L equipement ".$dest."/".$addr." n existe pas dans Jeedom, j'essaye d interroger l equipement pour le créer.");
 
-        // EP 01
-        self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/AnnonceManufacturer", "01");
-        self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "Default");
-        self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/AnnonceProfalux", "Default");
+    //     // EP 01
+    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/AnnonceManufacturer", "01");
+    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "Default");
+    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/AnnonceProfalux", "Default");
 
-        // EP 0B
-        self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/AnnonceManufacturer", "0B");
-        self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "Hue");
+    //     // EP 0B
+    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/AnnonceManufacturer", "0B");
+    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "Hue");
 
-        // EP 03
-        self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/AnnonceManufacturer", "03");
-        self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "OSRAM");
+    //     // EP 03
+    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/AnnonceManufacturer", "03");
+    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$dest."/".$addr."/Annonce", "OSRAM");
 
-        return;
-    }
+    //     return;
+    // }
 
     public static function message($topic, $payload)
     {
@@ -1978,7 +1981,7 @@ if (0) {
                 Abeille::publishMosquitto($abQueues["abeilleToAbeille"]["id"], priorityInterrogation, $dest."/".$addr."/Short-Addr", $addr);
             } else {
                 log::add('Abeille', 'debug', 'message(), !objet & IEEE: Je n ai pas trouvé d Abeille qui corresponde.');
-                self::interrogateUnknowNE( $dest, $addr );
+                // self::interrogateUnknowNE( $dest, $addr );
             }
             // log::add('Abeille', 'debug', '!objet&IEEE --> fin du traitement');
             return;
@@ -1996,7 +1999,7 @@ if (0) {
                     log::add('Abeille', 'info', 'Des informations remontent pour un equipement inconnu d Abeille avec pour adresse '.$addr.' et pour la commande '.$cmdId );
                 }
 
-                self::interrogateUnknowNE( $dest, $addr );
+                // self::interrogateUnknowNE( $dest, $addr );
             }
 
             return;

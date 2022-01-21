@@ -3,6 +3,7 @@
         "manufacturer": "Xiaomi",
         "model": "MCCGQ14LM",
         "type": "Xiaomi Aqara MCCGQ14LM door sensor",
+        "comment": "This device send ZoneStatus change notif thru cluster 0500 cmd 00",
         "timeout": "60",
         "category": {
             "automatism": "1"
@@ -17,12 +18,12 @@
                 "use": "zb-0001-BatteryPercent"
             },
             "Battery-Volt2Percent": { "use": "battery-Volt2Percent-3" },
-            "SetReporting-0001-00020": {
+            "SetReporting 0001-00020": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "yes"
             },
-            "Bind-0001-ToZigate": {
+            "Bind 0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "yes"
@@ -30,22 +31,17 @@
             "Identify": {
                 "use": "Identify"
             },
-            "Zone Status": {
-                "use": "zb-0500-ZoneStatus",
+            "ZoneStatus": {
+                "use": "zb-0500-ZoneStatus-ChangeNotification",
                 "isVisible": "1"
             },
-            "Get Zone Status": {
+            "Get ZoneStatus": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0500&attrId=0002"
             },
             "Bind 0500-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0500",
-                "execAtCreation": "yes"
-            },
-            "SetReporting 0500-0002": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             }
         }

@@ -813,6 +813,8 @@
          * @return None
          */
         function processCmd($Command) {
+            global $abQueues;
+
             // Initial checks
             if (!isset($Command)) {
                 cmdLog('debug', "    processCmd() ERROR: Command not set", $this->debug['processCmd']);
@@ -875,28 +877,6 @@
                 return;
             }
 
-            if (isset($Command['setOnZigateLed'])) {
-                cmdLog('debug', "    setOnZigateLed", $this->debug['processCmd']);
-                $cmd = "0018";
-                $data = "01";
-
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-                return;
-            }
-
-            if (isset($Command['setOffZigateLed'])) {
-                cmdLog('debug', "    setOffZigateLed", $this->debug['processCmd']);
-                $cmd = "0018";
-                $data = "00";
-
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-                return;
-            }
-
             if (isset($Command['setCertificationCE'])) {
                 cmdLog('debug', "    setCertificationCE", $this->debug['processCmd']);
                 $cmd = "0019";
@@ -929,22 +909,6 @@
                 $cmd = "0806";
                 $data = $Command['TxPower'];
                 if ($data < 10 ) $data = '0'.$data;
-
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-                return;
-            }
-
-            // https://github.com/fairecasoimeme/ZiGate/issues/145
-            // Added cmd 0807 Get Tx Power #175
-            // PHY_PIB_TX_POWER_DEF (default - 0x80)
-            // PHY_PIB_TX_POWER_MIN (minimum - 0)
-            // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
-            if (isset($Command['GetTxPower'])) {
-                cmdLog('debug', "    GetTxPower", $this->debug['processCmd']);
-                $cmd = "0807";
-                $data = "";
 
                 // $length = sprintf("%04s", dechex(strlen($data) / 2));
                 // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
@@ -2155,12 +2119,12 @@
                 // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
                 $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
 
-                if ($addressMode=="02") {
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
+                if ($addressMode == "02") {
+                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
+                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
 
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2+$Command['duration']), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3+$Command['duration']), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
+                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2+$Command['duration']), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
+                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3+$Command['duration']), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
                 }
                 return;
             }
@@ -2611,8 +2575,8 @@
                 $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
 
                 if ($addressMode == "02" ) {
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
+                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
+                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
                 }
                 return;
             }
@@ -2669,7 +2633,7 @@
                 $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
 
                 if ($addressMode == "02" ) {
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$targetShortAddress."/ReadAttributeRequestMulti&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
+                    $this->publishMosquitto( $abQueues["xToCmd"]['id'], priorityInterrogation, "TempoCmd".$dest."/".$targetShortAddress."/ReadAttributeRequestMulti&time=".(time()+2), "EP=".$destinationEndpoint."&clusterId=0006&attributeId=0000" );
                 }
                 return;
             }
@@ -2706,11 +2670,11 @@
                 $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
 
                 if ($addressMode == "02" ) {
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
+                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
+                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
 
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['onTime']), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['onTime']), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
+                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['onTime']), "ep=".$destinationEndpoint."&clustId=0006&attrId=0000" );
+                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+$Command['onTime']), "ep=".$destinationEndpoint."&clustId=0008&attrId=0000" );
                 }
                 return;
             }
@@ -2832,7 +2796,7 @@
                 $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
 
                 if ($addressMode == "02" ) {
-                    $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$destinationEndpoint."&clustId=0300&attrId=0007" );
+                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$destinationEndpoint."&clustId=0300&attrId=0007" );
                 }
                 return;
             }
@@ -3037,7 +3001,7 @@
                         // $CommandAdditionelle['permitJoin'] = "permitJoin";
                         // $CommandAdditionelle['permitJoin'] = "Status";
                         // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
-                        $this->publishMosquitto( queueKeyCmdToCmd, priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status" );
+                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status" );
                     } elseif (isset($Command["InclusionStop"])) {
                         $cmd = "0049";
                         $length = "0004";
@@ -3068,7 +3032,7 @@
                         // $CommandAdditionelle['permitJoin'] = "permitJoin";
                         // $CommandAdditionelle['permitJoin'] = "Status";
                         // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
-                        $this->publishMosquitto(queueKeyCmdToCmd, priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status");
+                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status");
                     }
                     return;
                 }
@@ -3122,8 +3086,18 @@
                     return;
                 }
 
+                // https://github.com/fairecasoimeme/ZiGate/issues/145
+                // Added cmd 0807 Get Tx Power #175
+                // PHY_PIB_TX_POWER_DEF (default - 0x80)
+                // PHY_PIB_TX_POWER_MIN (minimum - 0)
+                // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
+                else if ($cmdName == 'getZgTxPower') {
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "0807");
+                    return;
+                }
+
                 // Zigate specific command
-                else if (($cmdName == 'zgStartNetwork') || ($cmdName == 'startNetwork')) {
+                else if ($cmdName == 'startZgNetwork') {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0024");
                     return;
                 }
@@ -3131,6 +3105,17 @@
                 // Zigate specific command: Erase PDM
                 else if (($cmdName == 'eraseZgPDM') || ($cmdName == 'ErasePersistentData')) {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0012");
+                    return;
+                }
+
+                // Zigate specific command: Set LED, ON/1 or OFF/0
+                else if ($cmdName == 'setZgLed') {
+                    if ($Command['value'] == 1)
+                        $value = "01";
+                    else
+                        $value = "00";
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "0018", $value);
                     return;
                 }
 
@@ -3320,7 +3305,7 @@
                     // <request type: uint8_t>: Request Type: 0 = Single 1 = Extended
                     // <start index: uint8_t>
 
-                    $priority       = (isset($Command['priority']) ? $Command['priority'] : priorityMin);
+                    $priority       = (isset($Command['priority']) ? $Command['priority'] : PRIO_NORM);
                     // See https://github.com/fairecasoimeme/ZiGate/issues/386#
                     // Both address must be the same.
                     $address        = $Command['addr'];

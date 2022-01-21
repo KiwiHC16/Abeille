@@ -55,28 +55,20 @@
         }
     // $queueKeyXmlToCmd           = msg_get_queue(queueKeyXmlToCmd);
 
-        if (($queueId == queueKeyXmlToAbeille) || ($queueId == queueKeyXmlToCmd)) {
+        if (in_array($queueId, [queueKeyXmlToAbeille, $abQueues['xToCmd']['id']])) {
             $topic =  $_GET['topic'];
             $topic = str_replace('_', '/', $topic);
             $payload = $_GET['payload'];
             $payload = str_replace('_', '&', $payload);
             if (isset($dbgTcharp38)) logDebug("CliToQueue: topic=".$topic.", payload=".$payload);
 
-            Class MsgAbeille {
-                public $message = array(
-                                        'topic' => 'Coucou',
-                                        'payload' => 'me voici',
-                                        );
-            }
+            $msg = array(
+                'topic' => $topic,
+                'payload' => $payload,
+            );
 
-            $msgAbeille = new MsgAbeille;
-            $msgAbeille->message = array(
-                                        'topic' => $topic,
-                                        'payload' => $payload,
-                                        );
-
-            if (msg_send($queue, 1, $msgAbeille, true, false)) {
-                echo "(fichier xmlhttpMQQTSend) added to queue: ".json_encode($msgAbeille);
+            if (msg_send($queue, 1, $msg, true, false)) {
+                echo "(fichier xmlhttpMQQTSend) added to queue: ".json_encode($msg);
                 // print_r(msg_stat_queue($queue));
             } else {
                 echo "debug","(fichier xmlhttpMQQTSend) could not add message to queue";
@@ -150,11 +142,10 @@
             $request = str_ireplace('#zigateIeee#', $zgIeee, $request); // Case insensitive
 
             $queue = msg_get_queue(queueKeyXmlToCmd);
-            $msg = new MsgAbeille;
-            $msg->message = array(
-                                'topic' => $topic,
-                                'payload' => $request,
-                                );
+            $msg = array(
+                'topic' => $topic,
+                'payload' => $request,
+            );
 // logDebug("msg=".json_encode($msg));
         if (isset($dbgTcharp38)) logDebug("CliToQueue: msg_send(): ".json_encode($msg));
         if (msg_send($queue, 1, $msg, true, false) == false) {
@@ -164,11 +155,10 @@
 
         if ($action == "reinit") {
             $queue = msg_get_queue(queueKeyXmlToAbeille);
-            $msg = new MsgAbeille;
-            $msg->message = array(
-                                'topic' => "CmdCreate".$eqNet."/".$eqAddr."/resetFromJson",
-                                'payload' => '',
-                                );
+            $msg = array(
+                'topic' => "CmdCreate".$eqNet."/".$eqAddr."/resetFromJson",
+                'payload' => '',
+            );
             if (isset($dbgTcharp38)) logDebug("reinit msg to Abeille: ".json_encode($msg));
             msg_send($queue, 1, $msg, true, false);
         }

@@ -149,17 +149,16 @@
         <?php
         echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "ZiGate-Time").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
         ?>
+            <a class="btn btn-warning" onclick="sendZigate('getTime', '')">Lire</a>
             <span id="idZgTime">- ? -</span>
             <script>
                 <?php echo "jeedom.cmd.update['".getCmdIdByName($eqId, "ZiGate-Time")."'] = function(_options){"; ?>
                     console.log("jeedom.cmd.update[Zigate-Time]");
-                    // console.log(_options);
                     var element = document.getElementById('idZgTime');
                     element.textContent = _options.display_value;
                 }
                 // jeedom.cmd.update['233']({display_value:'#state#'});
             </script>
-            <a class="btn btn-warning" onclick="sendZigate('getTime', '')">Lire</a>
             <a class="btn btn-warning" onclick="sendZigate('setTime', '')">Mettre à l'heure</a>
         </div>
     </div>
@@ -171,8 +170,17 @@
         <!-- <a class="btn btn-primary btn-xs" target="_blank" href="https://kiwihc16.github.io/AbeilleDoc/Radio.html"><i class="fas fa-book"></i> ?</a> -->
     </div>
     <div class="col-sm-5">
-        <input type="text" name="TxPowerValue" placeholder="XX">
-        <a class="btn btn-warning" onclick="sendZigate('setTXPower', '')">Modifier</a>
+        <a class="btn btn-warning" onclick="sendZigate('getTXPower', '')">Lire</a>
+        <span id="idZgPower">- ? -</span>
+        <script>
+            <?php echo "jeedom.cmd.update['".getCmdIdByName($eqId, "ZiGate-Power")."'] = function(_options){"; ?>
+                console.log("jeedom.cmd.update[ZiGate-Power]");
+                var element = document.getElementById('idZgPower');
+                element.textContent = _options.display_value;
+            }
+            // jeedom.cmd.update['233']({display_value:'#state#'});
+        </script>
+        <!-- <a class="btn btn-warning" onclick="sendZigate('setTXPower', '')">Modifier</a> -->
     </div>
 </div>
 
@@ -196,9 +204,9 @@
     <div class="form-group">
         <label class="col-sm-3 control-label">Mode</label>
         <div class="col-sm-5">
-            <a class="btn btn-warning" onclick="sendZigate('setMode', 'Normal')">Normal</a>
+            <a class="btn btn-danger" onclick="sendZigate('setMode', 'Normal')">Normal</a>
             <a class="btn btn-warning" onclick="sendZigate('setMode', 'Hybride')">Hybride</a>
-            <a class="btn btn-warning" onclick="sendZigate('setMode', 'Raw')">Raw</a>
+            <a class="btn btn-danger" onclick="sendZigate('setMode', 'Raw')">Raw</a>
         </div>
     </div>
 <?php } ?>
@@ -206,7 +214,7 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">PDM</label>
     <div class="col-sm-5">
-        <a class="btn btn-warning" onclick="sendZigate('erasePersistantDatas', '')" title="{{Efface la PDM. Tous les équipements devront être réinclus}}">Effacer</a>
+        <a class="btn btn-danger" onclick="sendZigate('erasePersistantDatas', '')" title="{{Efface la PDM. Tous les équipements devront être réinclus}}">Effacer</a>
     </div>
 </div>
 

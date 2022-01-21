@@ -1,21 +1,25 @@
 <?php
     require_once __DIR__.'/../../../../core/php/core.inc.php';
     require_once __DIR__.'/../../core/class/Abeille.class.php';
+    require_once __DIR__.'/../../core/config/Abeille.config.php';
+    require_once __DIR__.'/../../core/php/AbeilleLog.php'; // logDebug()
 
     $zigateIds = array( '1', '2', '3', '4', '5', '6', '7', '8', '9', '10' );
 
-    function sendMessageFromFormToCmd( $topic, $payload ) {
+    function sendMessageFromFormToCmd($topic, $payload) {
+        global $abQueues;
+logDebug("LA=".$json_encode($abQueues));
+        $queueId = $abQueues['xToCmd']['id']; // Previously formToCmd queue
+        $queueKeyFormToCmd = msg_get_queue($queueId);
 
-        $queueKeyFormToCmd   = msg_get_queue(queueKeyFormToCmd);
-        $msgAbeille = new MsgAbeille;
+        $msg = array();
+        $msg['topic']   = $topic;
+        $msg['payload'] = $payload;
 
-        $msgAbeille->message['topic']   = $topic;
-        $msgAbeille->message['payload'] = $payload;
-
-        if (msg_send($queueKeyFormToCmd, 1, $msgAbeille, true, false)) {
-            echo "added to queue (".queueKeyFormToCmd."): ".json_encode($msgAbeille)."<br>\n";
+        if (msg_send($queueKeyFormToCmd, 1, $msg, true, false)) {
+            echo "added to queue ID ".$queueId.": ".json_encode($msg)."<br>\n";
         } else {
-            echo "could not add message to queue id: ".$queueKeyId."<br>\n";
+            echo "could not add message to queue ID ".$queueId."<br>\n";
         }
     }
 
@@ -364,22 +368,6 @@
             }
         }
 
-        // setOnZigateLed
-        foreach ( $zigateIds as $zigateId ) {
-            if ( $_POST['submitButton'] == 'SetLedOn Z'.$zigateId ) {
-                echo "SetTime request processing";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setOnZigateLed', "");
-            }
-        }
-
-        // setOffZigateLed
-        foreach ( $zigateIds as $zigateId ) {
-            if ( $_POST['submitButton'] == 'SetLedOff Z'.$zigateId ) {
-                echo "getTime request processing";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setOffZigateLed', "");
-            }
-        }
-
         // Set Certification CE
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Certification CE Z'.$zigateId ) {
@@ -400,7 +388,7 @@
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Start Network Z'.$zigateId ) {
                 echo "Start Network";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/zgStartNetwork', "");
+                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/startZgNetwork', "");
             }
         }
 

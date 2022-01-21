@@ -73,37 +73,28 @@
         logIt($line."\n");
     }
 
-    function requestAndPrint($logFile, $link, $sql, $title, $printModal, $printFile) {
-        if ( $printModal ) {
-            echoTitle($logFile, $title);
-            logIt("{");
-        }
-        // if ( $printFile ) {
-        //     log::add( 'AbeilleDbConf', 'info', '');
-        //     log::add( 'AbeilleDbConf', 'info', '-----------------------');
-        //     log::add( 'AbeilleDbConf', 'info', $title);
-        //     log::add( 'AbeilleDbConf', 'info', '-----------------------');
-        //     $i=0;
-        //     log::add( 'AbeilleDbConf', 'info', '{');
-        // }
-
-        $i=0;
+    function requestAndPrint($logFile, $link, $sql, $title) {
+        echoTitle($logFile, $title);
+        $i = 0;
+        logIt("{\n");
         if ($result = mysqli_query($link, $sql)) {
             while ($row = $result->fetch_assoc()) {
-                if ( $printModal ) {
-                    if ($i==0) { logIt('"'.$i.'":'.json_encode($row)); }
-                    else { logIt(',"'.$i.'":'.json_encode($row)); }
+                if (isset($row['id'])) {
+                    $id = $row['id'];
+                    unset($row['id']);
+                    logIt('    "'.$id.'": '.json_encode($row).",\n");
+                } else if (isset($row['key'])) {
+                    $key = $row['key'];
+                    unset($row['key']);
+                    logIt('    "'.$key.'": '.json_encode($row).",\n");
+                } else {
+                    logIt('    "'.$i.'": '.json_encode($row).",\n");
+                    $i++;
                 }
-                // if ($printFile) {
-                //     if ($i==0) {log::add( 'AbeilleDbConf', 'info', '"'.$i.'":'.json_encode($row)); }
-                //     else { log::add( 'AbeilleDbConf', 'info', ',"'.$i.'":'.json_encode($row)); }
-                // }
-                $i++;
             }
             mysqli_free_result($result);
         }
-        if ( $printModal ) { logIt("}\n\n"); }
-        // if ( $printFile ) { log::add( 'AbeilleDbConf', 'info', '}'); }
+        logIt("}\n\n");
     }
 
     function zigateInfos() {
@@ -140,11 +131,11 @@
             return;
         }
 
-        requestAndPrint($logFile, $link, "SELECT * FROM `update`    WHERE `name` = 'Abeille'",        "Table du plugin",      1, 1);
-        requestAndPrint($logFile, $link, "SELECT * FROM `cron`      WHERE `class` = 'Abeille'",       "Crons",           1, 1);
-        requestAndPrint($logFile, $link, "SELECT * FROM `config`    WHERE `plugin` = 'Abeille'",      "Table de config",  1, 1);
-        requestAndPrint($logFile, $link, "SELECT * FROM `eqLogic`   WHERE `eqType_name` = 'Abeille'", "Equipements",       1, 1);
-        requestAndPrint($logFile, $link, "SELECT * FROM `cmd`       WHERE `eqType` = 'Abeille'",      "Commandes",      1, 1);
+        requestAndPrint($logFile, $link, "SELECT * FROM `update`    WHERE `name` = 'Abeille'", "Table du plugin");
+        requestAndPrint($logFile, $link, "SELECT * FROM `cron`      WHERE `class` = 'Abeille'", "Table 'cron'");
+        requestAndPrint($logFile, $link, "SELECT * FROM `config`    WHERE `plugin` = 'Abeille'", "Table 'config'");
+        requestAndPrint($logFile, $link, "SELECT * FROM `eqLogic`   WHERE `eqType_name` = 'Abeille'", "Table 'eqLogic'");
+        requestAndPrint($logFile, $link, "SELECT * FROM `cmd`       WHERE `eqType` = 'Abeille'", "Table 'cmd'");
 
         mysqli_close($link);
     }

@@ -48,12 +48,11 @@
          * @return none
          *
          */
-        function prepareCmd($message, $phpunit=0) {
+        function prepareCmd($topic, $payload, $phpunit=0) {
 
-            cmdLog("debug", "  prepareCmd(".json_encode($message).")", $this->debug['prepareCmd']);
+            cmdLog("debug", "  prepareCmd(".$topic.", ".$payload.")", $this->debug['prepareCmd']);
 
-            $topic      = $message->topic;
-            $msg        = $message->payload;
+            $msg        = $payload;
             // $priority   = $message->priority;
             $priority   = PRIO_NORM; // TO be removed. Default value
 
@@ -931,10 +930,10 @@
                 $vert  = hexdec(substr($parameters['color'],2,2));
                 $bleu  = hexdec(substr($parameters['color'],4,2));
 
-                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorRouge', $rouge*100/255      );
-                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorVert',  $vert*100/255       );
-                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorBleu',  $bleu*100/255       );
-                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, 'Abeille/'.$address.'/ColourRGB',  $parameters['color']);
+                $this->msgToAbeille('Abeille/'.$address.'/colorRouge', $rouge*100/255      );
+                $this->msgToAbeille('Abeille/'.$address.'/colorVert',  $vert*100/255       );
+                $this->msgToAbeille('Abeille/'.$address.'/colorBleu',  $bleu*100/255       );
+                $this->msgToAbeille('Abeille/'.$address.'/ColourRGB',  $parameters['color']);
 
                 $Command = array(
                                     "setColourRGB" => "1",
@@ -958,7 +957,7 @@
                 if ($vert=="" )  { $vert = 1;    }
                 if ($bleu=="" )  { $bleu = 1;    }
 
-                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, $dest.'/'.$address.'/colorRouge', $msg );
+                $this->msgToAbeille($dest.'/'.$address.'/colorRouge', $msg );
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -987,7 +986,7 @@
                 if ($vert=="" )  { $vert = 1;    }
                 if ($bleu=="" )  { $bleu = 1;    }
 
-                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, $dest.'/'.$address.'/colorVert', $msg );
+                $this->msgToAbeille($dest.'/'.$address.'/colorVert', $msg );
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -1016,7 +1015,7 @@
                 if ($vert=="" )  { $vert = 1;    }
                 if ($bleu=="" )  { $bleu = 1;    }
 
-                $this->publishMosquittoAbeile(queueKeyCmdToAbeille, $dest.'/'.$address.'/colorBleu', $msg );
+                $this->msgToAbeille($dest.'/'.$address.'/colorBleu', $msg);
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {

@@ -43,19 +43,18 @@
     if (isset($dbgTcharp38)) logDebug("CliToQueue: action=".$action);
 
     if ($action == "sendMsg") {
-        // Default target queue = 'queueKeyXmlToAbeille'
+        // Default target queue = '$abQueues['xmlToAbeille']['id']'
         if (isset($_GET['queueId']))
             $queueId = $_GET['queueId'];
         else
-            $queueId = queueKeyXmlToAbeille;
+            $queueId = $abQueues['xmlToAbeille']['id'];
         $queue = msg_get_queue($queueId);
         if ($queue === false) {
             if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: Invalid queue ID ".$queueId);
             return;
         }
-    // $queueKeyXmlToCmd           = msg_get_queue(queueKeyXmlToCmd);
 
-        if (in_array($queueId, [queueKeyXmlToAbeille, $abQueues['xToCmd']['id']])) {
+        if (in_array($queueId, [$abQueues['xmlToAbeille']['id'], $abQueues['xToCmd']['id']])) {
             $topic =  $_GET['topic'];
             $topic = str_replace('_', '/', $topic);
             $payload = $_GET['payload'];
@@ -102,13 +101,37 @@
         $eqId = $_GET['eqId'];
 // logDebug("reconfigure: eqId=".$eqId);
         $eqLogic = eqLogic::byId($eqId);
-        $jsonName = $eqLogic->getConfiguration('ab::jsonId', '');
-        if ($jsonName == '') {
+        $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
+        if ($jsonId == '') {
             if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: jsonId empty");
             return; // ERROR
         }
+
+        $sig = $eqLogic->getConfiguration('ab::signature');
+        if ($sig) {
+            $modelId = $sig['modelId'];
+            $manufId = $sig['manufId'];
+        } else {
+            $modelId = "";
+            $manufId = "";
+        }
+        if (($jsonId == "defaultUnknown") && ($modelId != "")) {
+            $jsonId2 = "";
+            if (file_exists(__DIR__."/../../core/config/devices/".$modelId."_".$manufId."/".$modelId."_".$manufId.".json")) {
+                $jsonId2 = $modelId."_".$manufId;
+            } else if (file_exists(__DIR__."/../../core/config/devices/".$modelId."/".$modelId.".json")) {
+                $jsonId2 = $modelId;
+            }
+            if ($jsonId2 != "") {
+                if (isset($dbgTcharp38)) logDebug("CliToQueue: New jsonId: ".$jsonId2);
+                $eqLogic->setConfiguration('ab::jsonId', $jsonId2);
+                $eqLogic->save();
+                $jsonId = $jsonId2;
+            }
+        }
+
         $jsonLocation = "Abeille";
-        $eqConfig = AbeilleTools::getDeviceConfig($jsonName, $jsonLocation);
+        $eqConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation);
         if ($eqConfig === false) {
             if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: No device config");
             return; // ERROR
@@ -141,7 +164,7 @@
 
             $request = str_ireplace('#zigateIeee#', $zgIeee, $request); // Case insensitive
 
-            $queue = msg_get_queue(queueKeyXmlToCmd);
+            $queue = msg_get_queue($abQueues['xToCmd']['id']);
             $msg = array(
                 'topic' => $topic,
                 'payload' => $request,
@@ -154,7 +177,7 @@
         }
 
         if ($action == "reinit") {
-            $queue = msg_get_queue(queueKeyXmlToAbeille);
+            $queue = msg_get_queue($abQueues['xmlToAbeille']['id']);
             $msg = array(
                 'topic' => "CmdCreate".$eqNet."/".$eqAddr."/resetFromJson",
                 'payload' => '',

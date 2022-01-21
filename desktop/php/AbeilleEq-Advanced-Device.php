@@ -8,7 +8,7 @@
 ?>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">Identifiant Zigbee (modèle, manuf)</label>
+    <label class="col-sm-3 control-label">Identifiant Zigbee (modelId, manufId)</label>
     <div class="col-sm-5">
         <?php
             $sig = $eqLogic->getConfiguration('ab::signature');
@@ -25,12 +25,20 @@
     <div class="col-sm-5">
         <span class="eqLogicAttr" data-l1key="configuration" data-l2key="ab::jsonId" title="Nom du fichier de config JSON utilisé"></span>
         <?php
-            $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
-            if ($jsonLocation != 'Abeille') {
-                echo '<span style="background-color:red;color:black" title="La configuration vient d\'un fichier local (core/config/devices_local)"> ATTENTION: inclu à partir d\'un fichier local </span>';
-                $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
-                if (file_exists(__DIR__."/../../core/config/devices_local/".$jsonId."/".$jsonId.".json"))
-                    echo '<a class="btn btn-warning" onclick="removeLocalJSON(\''.$jsonId.'\')" title="Supprime la version locale du fichier de config JSON">Supprimer version locale</a>';
+            $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
+            if ($jsonId == "defaultUnknown") {
+                if (file_exists(__DIR__."/../../core/config/devices/".$jsonId."/".$jsonId.".json")) {
+                    echo '<span style="background-color:red;color:black" title=""> INFO: Modèle officiel disponible.</span>';
+                    echo '<a class="btn btn-warning" onclick="reinit(\''.$eqId.'\')" title="Réinitlialisation avec le modèle officiel commme s\'il s\'agissait d\'une nouvelle inclusion">Utiliser</a>';
+                }
+            } else {
+                $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
+                if ($jsonLocation != 'Abeille') {
+                    echo '<span style="background-color:red;color:black" title="La configuration vient d\'un fichier local (core/config/devices_local)"> ATTENTION: Issu d\'un modèle local </span>';
+                    $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
+                    if (file_exists(__DIR__."/../../core/config/devices_local/".$jsonId."/".$jsonId.".json"))
+                        echo '<a class="btn btn-warning" onclick="removeLocalJSON(\''.$jsonId.'\')" title="Supprime la version locale du fichier de config JSON">Supprimer version locale</a>';
+                }
             }
         ?>
     </div>

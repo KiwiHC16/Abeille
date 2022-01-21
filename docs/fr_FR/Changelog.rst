@@ -1,12 +1,6 @@
 ChangeLog
 =========
 
-- Interne: Abeille.class: Vérification de l'état des queues amélioré.
-- Xiaomi H1 double rocker: Mise-à-jour modèle + image (2253).
-
-220121-BETA-1
--------------
-
   .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
 
       - Toute nouvelle installation.
@@ -29,6 +23,8 @@ ChangeLog
 - Interne: Parser: Optimisations & nettoyage.
 - Interne: Queues revues.
 - Page EQ/avancé: possibilité de télécharger discovery 'automatique'.
+- Interne: Abeille.class: Vérification de l'état des queues amélioré.
+- Xiaomi H1 double rocker: Mise-à-jour modèle + image (2253).
 
 220114-BETA-1
 -------------

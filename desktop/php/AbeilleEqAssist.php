@@ -49,7 +49,7 @@
     echo '<script>var js_eqIeee = "'.$eqIeee.'";</script>'; // PHP to JS
     echo '<script>var js_jsonName = "'.$jsonName.'";</script>'; // PHP to JS
     echo '<script>var js_jsonLocation = "'.$jsonLocation.'";</script>'; // PHP to JS
-    echo '<script>var js_queueKeyXmlToCmd = "'.queueKeyXmlToCmd.'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
     echo '<script>var js_queueKeyCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
 
     $pluginDir = __DIR__."/../../"; // Plugin root dir
@@ -1381,7 +1381,7 @@
 
         var xhttp = new XMLHttpRequest();
         var url = "plugins/Abeille/core/php/AbeilleCliToQueue.php";
-        xhttp.open("GET", url+"?action=sendMsg&queueId="+js_queueKeyXmlToCmd+"&topic="+topic+"&payload="+payload, true);
+        xhttp.open("GET", url+"?action=sendMsg&queueId="+js_queueXToCmd+"&topic="+topic+"&payload="+payload, true);
         xhttp.send();
     }
 

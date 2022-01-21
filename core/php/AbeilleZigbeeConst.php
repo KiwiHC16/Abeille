@@ -447,6 +447,12 @@
                 "0001" => array( "name" => "ZoneType", "access" => "R" ),
                 "0002" => array( "name" => "ZoneStatus", "access" => "R" ),
             ),
+            // Commands received
+            // Commands generated
+            "commandsG" => array(
+                "00" => array( "name" => "Zone Status Change Notification" ),
+                "01" => array( "name" => "Zone Enroll Request" ),
+            ),
         ),
         "0501" => array(
             "name" => "IAS ACE",

@@ -47,7 +47,22 @@
         ?>
     </div>
 </div>
-
+<?php
+    if ($sig) {
+        $path = __DIR__.'/../../core/config/devices_local/'.$sig['modelId'].'_'.$sig['manufId'].'/discovery.json';
+        if (file_exists($path)) {
+?>
+<div class="form-group">
+    <label class="col-sm-3 control-label">'Discovery' local</label>
+    <div class="col-sm-5">
+        <?php
+        $model = $sig['modelId'];
+        $manuf = $sig['manufId'];
+        echo '<a class="btn btn-success" title="Télécharge le \'discovery.json\' local" onclick="downloadLocalDiscovery(\''.$model.'\', \''.$manuf.'\')"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>';
+        ?>
+    </div>
+</div>
+<?php } } ?>
 <div class="form-group">
     <label class="col-sm-3 control-label">Assistant de découverte</label>
     <div class="col-sm-5">

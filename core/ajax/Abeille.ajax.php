@@ -309,13 +309,11 @@ try {
 
                 /* Sending msg to 'AbeilleCmd' */
                 $queueKeyFormToCmd = msg_get_queue(queueKeyFormToCmd);
-                $msgAbeille = new MsgAbeille;
-                // $msgAbeille->message['topic']   = 'CmdAbeille'.$zgId.'/Ruche/Remove';
-                // $msgAbeille->message['payload'] = "ParentAddressIEEE=".$parentIEEE."&ChildAddressIEEE=".$eqIEEE;
-                $msgAbeille->message['topic']   = 'CmdAbeille'.$zgId.'/Ruche/LeaveRequest';
-                $msgAbeille->message['payload'] = "IEEE=".$eqIEEE;
-                if (msg_send($queueKeyFormToCmd, 1, $msgAbeille, true, false) == FALSE) {
-                    $errors = "Could not send msg to 'queueKeyFormToCmd': msg=".json_encode($msgAbeille);
+                $msg = array();
+                $msg['topic']   = 'CmdAbeille'.$zgId.'/Ruche/LeaveRequest';
+                $msg['payload'] = "IEEE=".$eqIEEE;
+                if (msg_send($queueKeyFormToCmd, 1, $msg, true, false) == FALSE) {
+                    $errors = "Could not send msg to 'queueKeyFormToCmd': msg=".json_encode($msg);
                     $status = -1;
                 }
             }

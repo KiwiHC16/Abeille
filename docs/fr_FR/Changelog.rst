@@ -1,6 +1,29 @@
 ChangeLog
 =========
 
+  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal.
+  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible.
+
+- Interne: format message queues vers AbeilleCmd modifié.
+- Interne: Fusion de plusieurs queues vers AbeilleCmd.
+- Erreur getLevel/getEtat inattendue: Correction (2239).
+- Xiaomi Aqara MCCGQ14LM (magnet.acn001): Correction modèle (2257).
+- Interne: Parser vers Abeille. Attributs groupés pour optimisation.
+- Interne: Qq améliorations page EQ/avancé/Zigate.
+- Page de config: Amélioration messages mise-à-jour FW.
+- Page support/infos clefs: Affichage revu.
+- Interne: Parser: Optimisations & nettoyage.
+- Interne: Queues revues.
+- Page EQ/avancé: possibilité de télécharger discovery 'automatique'.
+
 220114-BETA-1
 -------------
 
@@ -23,17 +46,6 @@ ChangeLog
 
 220110-BETA-1
 -------------
-
-  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
-
-      - Toute nouvelle installation.
-      - Dès lors qu'un réappairage complet est nécéssaire.
-      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-      - Les firmwares avant 3.1e sont forcement 'legacy'.
-      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
-
-  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal.
-  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible.
 
 - Interne: Début refonte/nettoyage AbeilleCmd pour amélioration controle de flux.
 - Interne: Parser: Support nPDU/aPDU sur messages 8000/8012 & 8702 (FW>=3.1e).

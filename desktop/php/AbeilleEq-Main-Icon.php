@@ -1,7 +1,7 @@
 <!-- This file displays advanced equipment/zigbee infos.
      Included by 'AbeilleEq-Main.php' -->
 
-     <hr>
+<hr>
 
 <?php
     if ($dbgDeveloperMode) echo __FILE__;
@@ -15,17 +15,23 @@
             <option value="Ruche">{{Ruche}}</option>
             <?php
                 require_once __DIR__.'/../../core/class/AbeilleTools.class.php';
-                $items = AbeilleTools::getDeviceNameFromJson('Abeille');
+                $items = AbeilleTools::getDeviceNameFromJson();
 
                 $selectBox = array();
                 foreach ($items as $item) {
                     $device = AbeilleTools::getDeviceConfig($item, 'Abeille', 2);
-                    if (!isset($device['configuration']))
+                    if (!isset($device['configuration'])) {
+                        log::add('Abeille', 'debug', 'WARNING: No configuration section in '.$item);
                         continue; // No 'configuration' in this JSON, so no icon defined
-                    if (!isset($device['configuration']['icon']))
+                    }
+                    if (!isset($device['configuration']['icon'])) {
+                        log::add('Abeille', 'debug', 'WARNING: No icon field in '.$item);
                         continue; // No icon defined
-                    if (!isset($device['type']))
+                    }
+                    if (!isset($device['type'])) {
+                        log::add('Abeille', 'debug', 'WARNING: No type field in '.$item);
                         continue; // No type defined
+                    }
                     $icon = $device['configuration']['icon'];
                     $name = $device['type'];
                     $selectBox[ucwords($name)] = $icon;
@@ -39,9 +45,8 @@
     </div>
 </div>
 
-        
 <style>
-.widthSet {
+    .widthSet {
         max-width: 160px;
         width:auto;
     }

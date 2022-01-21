@@ -280,12 +280,12 @@
         }
 
         /*
-        * Read given device configuration from JSON file and associated commands.
-        * 'deviceName': JSON file name without extension
-        * 'from': JSON file location (default=Abeille, or 'local')
-        * 'mode': 0/default=load commands too, 1=split cmd call & file
-        * Return: device associative array without top level key (jsonId) or false if error.
-        */
+         * Read given device configuration from JSON file and associated commands.
+         * 'deviceName': JSON file name without extension
+         * 'from': JSON file location (default=Abeille, or 'local')
+         * 'mode': 0/default=load commands too, 1=split cmd call & file
+         * Return: device associative array without top level key (jsonId) or false if error.
+         */
         public static function getDeviceConfig($deviceName, $from="Abeille", $mode=0)
         {
             // log::add('Abeille', 'debug', 'getDeviceConfig start');
@@ -1083,7 +1083,7 @@
             $messageToSend = ($message == "") ? "" : "$daemonName: $message";
             // log::add('Abeille', 'debug', "Process Monitoring: " .__CLASS__.':'.__FUNCTION__.':'.__LINE__.' sending '.$messageToSend.' to zigate '.$zigateNbr);
             if ( strlen($messageToSend) > 2 ) {
-            Abeille::publishMosquitto(queueKeyAbeilleToAbeille, priorityInterrogation,
+            Abeille::publishMosquitto($abQueues["abeilleToAbeille"]["id"], PRIO_NORM,
                 "Abeille$zigateNbr/0000/SystemMessage", $messageToSend);
             }
         }

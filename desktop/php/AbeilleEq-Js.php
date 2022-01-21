@@ -186,10 +186,11 @@
         var payload = "";
         switch(action) {
         case "setLED":
+            topic = 'CmdAbeille'+js_zgId+'/0000/setZgLed';
             if (param == "ON")
-                topic = 'CmdAbeille'+js_zgId+'/0000/setOnZigateLed';
+                payload = "value=1";
             else
-                topic = 'CmdAbeille'+js_zgId+'/0000/setOffZigateLed';
+                payload = "value=0";
             break;
         case "setCertif":
             if (param == "CE")
@@ -198,7 +199,7 @@
                 topic = 'CmdAbeille'+js_zgId+'/0000/setCertificationFCC';
             break;
         case "startNetwork": // Not required for end user but for developper.
-            topic = 'CmdAbeille'+js_zgId+'/0000/zgStartNetwork';
+            topic = 'CmdAbeille'+js_zgId+'/0000/startZgNetwork';
             payload = '';
             break;
         case "setMode":
@@ -239,6 +240,10 @@
                 return;
             }
             payload = mask;
+            break;
+        case "getTXPower":
+            topic = 'CmdAbeille'+js_zgId+'/0000/getZgTxPower';
+            payload = "";
             break;
         case "setTXPower":
             topic = 'CmdAbeille'+js_zgId+'/0000/TxPower';
@@ -531,6 +536,15 @@
 
         xhttp.onreadystatechange = function() {
         };
+    }
+
+    /* Download local discovery */
+    function downloadLocalDiscovery(modelId, manufId) {
+        console.log("downloadLocalDiscovery()");
+
+        path = 'core/config/devices_local/'+modelId+'_'+manufId+'/discovery.json';
+
+        window.open('plugins/Abeille/core/php/AbeilleDownload.php?pathfile='+path, "_blank", null);
     }
 
 </script>

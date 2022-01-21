@@ -5,7 +5,6 @@
     if ($dbgDeveloperMode) echo __FILE__;
 ?>
 
-
 <form class="form-horizontal">
     <fieldset>
         <?php

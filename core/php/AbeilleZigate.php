@@ -981,21 +981,21 @@
         );
 
         $status = 0;
-        $parserQueue = msg_get_queue(queueKeyAssistToParser);
-        $cmdQueue = msg_get_queue(queueKeyAssistToCmd);
+        $parserQueue = msg_get_queue($abQueues["assistToParser"]["id"]);
+        $cmdQueue = msg_get_queue($abQueues["assistToCmd"]["id"]);
         if (($parserQueue == FALSE) || ($cmdQueue == FALSE)) {
             logMessage("error", "msg_get_queue() ERROR");
             $status = -1;
         }
         if ($status == 0) {
             if (msg_send($parserQueue, 1, $msg, TRUE, FALSE) == FALSE) {
-                logMessage("error", "Could not send msg to 'queueKeyAssistToParser': msg=".json_encode($msg));
+                logMessage("error", "Could not send msg to 'assistToParser': msg=".json_encode($msg));
                 $status = -1;
             }
         }
         if ($status == 0) {
             if (msg_send($cmdQueue, 1, $msg, TRUE, FALSE) == FALSE) {
-                logMessage("error", "Could not send msg to 'queueKeyAssistToCmd': msg=".json_encode($msg));
+                logMessage("error", "Could not send msg to 'assistToCmd': msg=".json_encode($msg));
                 $status = -1;
             }
         }

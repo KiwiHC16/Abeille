@@ -14,18 +14,6 @@
             "forceReturnLineAfter": "1"
         }
     },
-    "Start Network": {
-        "name": "Start Network",
-        "order": 1,
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "zgStartNetwork",
-            "request": ""
-        }
-    },
     "Get Network Status": {
         "name": "Get Network Status",
         "order": 2,
@@ -597,17 +585,6 @@
         "configuration": {
             "topic": "TxPower",
             "request": "20"
-        }
-    },
-    "Get Power": {
-        "name": "Get Power",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "GetTxPower",
-            "request": ""
         }
     },
     "ZiGate-Power": {

@@ -237,8 +237,8 @@
         $queueSerialToParserMax = $abQueues["serialToParser"]["max"];
 
         $max_msg_size = 2048;
-        $queueParserToCmd = msg_get_queue($abQueues["parserToCmd"]["id"]);
-        $queueParserToCmdMax = $abQueues["parserToCmd"]["max"];
+        // $queueParserToCmd = msg_get_queue($abQueues["parserToCmd"]["id"]);
+        // $queueParserToCmdMax = $abQueues["parserToCmd"]["max"];
 
         $queueCtrlToParser = msg_get_queue($abQueues["ctrlToParser"]["id"]);
         $queueCtrlToParserMax = $abQueues["ctrlToParser"]["max"];

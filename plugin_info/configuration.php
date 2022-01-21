@@ -184,7 +184,7 @@
                             $fwVers = substr($fwVers, 0, -4); // Removing ".dev" suffix
                         }
                         $fwVers = substr($fwVers, 8); // Removing "ZiGate_v" prefix
-                        if ($fwVers == "3.20-OPDM")
+                        if ($fwVers == "3.21-OPDM")
                             echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
                         else
                             echo '<option value='.$fwName.'>'.$fwVers.'</option>';
@@ -573,7 +573,7 @@
         // var idCheckWifi = document.querySelector('#idCheckWifi' + zgId);
 
         // $("#idSocat"+zgId).hide();
-        // $("#idWiringPi"+zgNb).hide();
+        // $("#idWiringPi"+zgId).hide();
         // $("#idCommTest"+zgId).hide();
 
         // Default: Type USBv1 => SelSP allowed, WifiAddr disallowed
@@ -595,7 +595,7 @@
             // $("#idCommTest"+zgId).show();
 
             if ((zgType == "PI") || (zgType == "PIv2")) {
-                // $("#idWiringPi"+zgNb).show();
+                // $("#idWiringPi"+zgId).show();
                 checkWiringPi(); // Force WiringPi check
             }
             //     $("#idUpdFw"+zgId).show();
@@ -650,20 +650,20 @@
     }
 
     /* Called when 'IP:port' test button is pressed (Wifi case) */
-    // function checkWifi(zgNb) {
-        // console.log("checkWifi(zgNb=" + zgNb + ")");
+    // function checkWifi(zgId) {
+        // console.log("checkWifi(zgId=" + zgId + ")");
         // /* Note. Onclick seems still active even if button is disabled (wifi case) */
-        // var idCheckWifi = document.querySelector('#idCheckWifi' + zgNb);
+        // var idCheckWifi = document.querySelector('#idCheckWifi' + zgId);
         // if (idCheckWifi.getAttribute('disabled') != null) {
             // console.log("=> Action ignored (diabled).");
             // return;
         // }
-        // var wifiAddr = document.getElementById("idWifiAddr" + zgNb).value;
+        // var wifiAddr = document.getElementById("idWifiAddr" + zgId).value;
         // if (wifiAddr == "") {
             // alert("Merci d'entrer une adresse valide au format <addr>:<port>.\nEx: 192.168.1.12:9999");
             // return;
         // }
-        // var ssp = "/tmp/zigateWifi" + zgNb; // Socat Serial Port
+        // var ssp = "/tmp/zigateWifi" + zgId; // Socat Serial Port
         // console.log("wifiAddr=" + wifiAddr + ", ssp=" + ssp);
         // $.ajax({
             // type: 'POST',
@@ -682,10 +682,10 @@
                 // $res = JSON.parse(json_res.result);
                 // if ($res.status == 0) {
                     // $fw = $res.fw;
-                    // $('.wifiStatus' + zgNb).empty().append('<span class="label label-success" style="font-size:1em;">OK, FW ' + $fw + '</span>');
-                    // $('.wifiStatus' + zgNb).empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                    // $('.wifiStatus' + zgId).empty().append('<span class="label label-success" style="font-size:1em;">OK, FW ' + $fw + '</span>');
+                    // $('.wifiStatus' + zgId).empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
                 // } else {
-                    // $('.wifiStatus' + zgNb).empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                    // $('.wifiStatus' + zgId).empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
                 // }
             // }
         // });
@@ -845,7 +845,7 @@
     function checkSerialPort(zgId) {
         console.log("checkSerialPort(zgId=" + zgId + ")");
         /* Note. Onclick seems still active even if button is disabled (wifi case) */
-        // var idCheckSP = document.querySelector('#idCheckSP'+zgNb);
+        // var idCheckSP = document.querySelector('#idCheckSP'+zgId);
         // if (idCheckSP.getAttribute('disabled') != null) {
         //     console.log("=> DISABLED");
         //     return;
@@ -882,28 +882,47 @@
     }
 
     /* Called when FW update button is pressed */
-    function updateFW(zgNb) {
-        console.log("updateFW(zgNb=" + zgNb + ")");
+    function updateFW(zgId) {
+        console.log("updateFW(zgId="+zgId+")");
         /* Note. Onclick seems still active even if button is disabled (wifi case) */
-        // var idCheckSP = document.querySelector('#idCheckSP' + zgNb);
+        // var idCheckSP = document.querySelector('#idCheckSP' + zgId);
         // if (idCheckSP.getAttribute('disabled') != null) {
         //     console.log("=> DISABLED");
         //     return;
         // }
-        var zgType = $("#idSelZgType" + zgNb).val();
+        var zgType = $("#idSelZgType"+zgId).val();
         if ((zgType != "PI") && (zgType != "DIN")) {
             console.log("=> Neither PI nor DIN type. UNEXPECTED !");
             return;
         }
-        var zgPort = $("#idSelSP" + zgNb).val();
-        var zgFW = $("#idFW" + zgNb).val();
-        msg = '{{Vous êtes sur le point de mettre à jour la Zigate}}';
+        var zgPort = $("#idSelSP"+zgId).val();
+        var zgFW = $("#idFW"+zgId).val();
+        let curFw = document.getElementById("idFwVersion"+zgId).value;
+        msg = '{{Vous êtes sur le point de mettre à jour le firmware de la Zigate}}';
         msg += '<br> - type: '+zgType+'<br> - port: '+zgPort+'<br> - firmware: '+zgFW+'<br><br>';
-        if (zgFW.indexOf("OPDM") == -1) {
-            msg += '{{Attention !! La version Optimized PDM est FORTEMENT recommandée.}}<br><br>';
+        let curIsLegacy = true;
+        let newIsOpdm = false;
+        if (curFw != '') {
+            // Format XXXX-YYYY: where XXXX=0003, 4 (OPDMv1), ou 5 (OPDMv2)
+            v = curFw.substr(3, 1);
+            if ((v == 4) || (v == 5))
+                curIsLegacy = false; // Already OPDM
         }
-        msg += "{{Si vous passez d'une version 'legacy' à 'OPDM', un effacement de la PDM + réapparairage complet est requis.}}<br><br>";
-        msg += '{{Etes vous sur de vouloir continuer ?}}';
+        if (zgFW.indexOf("OPDM") != -1)
+            newIsOpdm = true;
+        if (curIsLegacy) {
+            if (newIsOpdm) {
+                msg += "{{Vous allez passer d'une version 'legacy' à 'OPDM'. Un effacement de la PDM + réapparairage complet est requis.}}<br><br>";
+                msg += '{{Etes vous sur de vouloir continuer ?}}';
+            } else
+                msg += '{{Attention !! La version Optimized PDM est FORTEMENT recommandée.}}<br><br>';
+        } else {
+            if (newIsOpdm == false) {
+                msg += "{{Passer d'une version 'OPDM' vers une version 'legacy' n'est pas recommandé. Opération interdite.}}<br><br>";
+                bootbox.confirm(msg, function (result) {});
+                return;
+            }
+        }
         bootbox.confirm(msg, function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Mise-à-jour du FW de la Zigate}}"});

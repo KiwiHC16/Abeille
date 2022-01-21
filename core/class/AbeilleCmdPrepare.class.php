@@ -882,23 +882,23 @@
                                     "duration"             => $parameters['duration'],
                                     );
                 break;
-            case "setColour":
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                    $Command = array(
-                                        "setColour"            => "1",
-                                        "addressMode"          => "02",
-                                        "priority" => $priority,
-                                        "dest" => $dest,
-                                        "address"              => $address,
-                                        "X"                    => $parameters['X'],
-                                        "Y"                    => $parameters['Y'],
-                                        "destinationEndPoint"  => $parameters['EP'],
-                                        "duration"             => $parameters['duration'],
-                                        );
-                }
-                break;
+            // case "setColour":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //         $Command = array(
+            //                             "setColour"            => "1",
+            //                             "addressMode"          => "02",
+            //                             "priority" => $priority,
+            //                             "dest" => $dest,
+            //                             "address"              => $address,
+            //                             "X"                    => $parameters['X'],
+            //                             "Y"                    => $parameters['Y'],
+            //                             "destinationEndPoint"  => $parameters['EP'],
+            //                             "duration"             => $parameters['duration'],
+            //                             );
+            //     }
+            //     break;
             case "setColourGroup":
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {

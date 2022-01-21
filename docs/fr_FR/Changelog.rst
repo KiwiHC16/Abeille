@@ -1,9 +1,6 @@
 ChangeLog
 =========
 
-220121-BETA-3
--------------
-
   .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
 
       - Toute nouvelle installation.
@@ -31,6 +28,7 @@ ChangeLog
 - Interne: Abeille.class: Suppression interrogateUnknowNE().
 - Page EQ/avancé: Correction regression bouton "Réinitialiser".
 - Page EQ/avancé: Réinit 'defaultUnknown' si modèle officiel existe.
+- Interne: Commande 'setColor' (cluster 0300) revue.
 
 220114-BETA-1
 -------------

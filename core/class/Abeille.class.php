@@ -657,11 +657,11 @@ if (0) {
     {
         /* If main daemon is not running, cron must do nothing */
         if (AbeilleTools::isAbeilleCronRunning() == false) {
-            log::add('Abeille', 'debug', 'cron1: Main daemon stopped => cron1 canceled');
+            log::add('Abeille', 'debug', 'cron(): Main daemon stopped => cron1 canceled');
             return;
         }
 
-        // log::add( 'Abeille', 'debug', 'cron1: Start ------------------------------------------------------------------------------------------------------------------------' );
+        // log::add( 'Abeille', 'debug', 'cron(): Start ------------------------------------------------------------------------------------------------------------------------' );
         $config = AbeilleTools::getParameters();
 
         $running = AbeilleTools::getRunningDaemons();
@@ -675,25 +675,21 @@ if (0) {
                 $daemons .= ", ";
             $daemons .= $daemon['pid'].'/'.$daemon['shortName'];
         }
-        log::add('Abeille', 'debug', 'cron1: '.$daemons);
+        log::add('Abeille', 'debug', 'cron(): '.$daemons);
 
-        // Check ipcs situation pour detecter des soucis eventuels
+        // Checking queues status to log any potential issue.
         // Moved from deamon_info()
         $abQueues = $GLOBALS['abQueues'];
-        if (msg_stat_queue(msg_get_queue($abQueues["abeilleToAbeille"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: $abQueues["abeilleToAbeille"]["id"]');
-        // if (msg_stat_queue(msg_get_queue(queueKeyAbeilleToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyAbeilleToCmd');
-        if (msg_stat_queue(msg_get_queue($abQueues["parserToAbeille"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueParserToAbeille');
-        // if (msg_stat_queue(msg_get_queue($abQueues["parserToCmd"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueParserToCmd');
-        if (msg_stat_queue(msg_get_queue($abQueues["parserToLQI"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueParserToLQI');
-        // if (msg_stat_queue(msg_get_queue(queueKeyCmdToAbeille))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToAbeille');
-        // if (msg_stat_queue(msg_get_queue(queueKeyCmdToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyCmdToCmd');
-        // if (msg_stat_queue(msg_get_queue($abQueues["LQIToCmd"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueLQIToCmd');
-        if (msg_stat_queue(msg_get_queue($abQueues["xmlToAbeille"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueXmlToAbeille');
-        // if (msg_stat_queue(msg_get_queue(queueKeyXmlToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyXmlToCmd');
-        // if (msg_stat_queue(msg_get_queue(queueKeyFormToCmd))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueKeyFormToCmd');
-        if (msg_stat_queue(msg_get_queue($abQueues["serialToParser"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueSerialToParser');
-        if (msg_stat_queue(msg_get_queue($abQueues["parserToCmdAck"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueParserToCmdAck');
-        if (msg_stat_queue(msg_get_queue($abQueues["xToCmd"]["id"]))["msg_qnum"] > 100) log::add('Abeille', 'info', 'deamon_info(): --------- ipcs queue too full: queueXToCmd');
+        foreach ($abQueues as $queueName => $queueDesc) {
+            $queueId = $queueDesc['id'];
+            $queue = msg_get_queue($queueId);
+            if ($queue === false) {
+                log::add('Abeille', 'info', "cron(): ERREUR: Pb d'accès à la queue '".$queueName."' (id ".$queueId.")");
+                continue;
+            }
+            if (msg_stat_queue($queue)["msg_qnum"] > 100)
+                log::add('Abeille', 'info', "cron(): ERREUR: La queue '".$queueName."' (id ".$queueId.") contient plus de 100 messages.");
+        }
 
         // https://github.com/jeelabs/esp-link
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
@@ -726,7 +722,7 @@ if (0) {
             if (strlen($address) != 4)
                 continue; // Bad address, needed for virtual device
 
-            log::add('Abeille', 'debug', 'cron1: GetEtat/GetLevel, addr='.$address);
+            log::add('Abeille', 'debug', 'cron(): GetEtat/GetLevel, addr='.$address);
             $mainEP = $eqLogic->getConfiguration('mainEP');
             // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0006&attributeId=0000");
             // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/ReadAttributeRequest&time=".(time()+($i*3)), "EP=".$mainEP."&clusterId=0008&attributeId=0000");
@@ -735,7 +731,7 @@ if (0) {
             $i++;
         }
         if (($i * 3) > 60) {
-            message::add("Abeille", "Danger ! Il y a trop de messages à envoyer dans le cron 1 minute.", "Contacter KiwiHC15 sur le forum.");
+            message::add("Abeille", "Danger ! Il y a trop de messages à envoyer dans le cron 1 minute.", "Contacter KiwiHC16 sur le forum.");
         }
 
         // Poll Cmd
@@ -783,7 +779,7 @@ if (0) {
         }
         if (count($count) > 1) message::add("Abeille", "Danger vous avez plusieurs Zigate en mode inclusion: ".json_encode($count).". L equipement peut se joindre a l un ou l autre resau zigbee.", "Vérifier sur quel reseau se joint l equipement.");
 
-        // log::add( 'Abeille', 'debug', 'cron1: Fin ------------------------------------------------------------------------------------------------------------------------' );
+        // log::add( 'Abeille', 'debug', 'cron(): Fin ------------------------------------------------------------------------------------------------------------------------' );
     }
 
     /**

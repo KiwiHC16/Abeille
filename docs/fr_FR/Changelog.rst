@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Interne: Abeille.class: Vérification de l'état des queues amélioré.
+- Xiaomi H1 double rocker: Mise-à-jour modèle + image (2253).
+
 220121-BETA-1
 -------------
 

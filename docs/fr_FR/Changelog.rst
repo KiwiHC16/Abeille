@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220121-BETA-2
+-------------
+
   .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
 
       - Toute nouvelle installation.

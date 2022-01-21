@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="220121-BETA-1"
+# VERSION="220121-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -51,7 +51,7 @@ b01724fc9b23be86f3d465a639ab6c95 *core/ajax/AbeilleEqAssist.ajax.php
 9d55890fcd03c05cad47ec7caa4867d2 *core/ajax/AbeilleFiles.ajax.php
 e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 6efba4fad7fd8fd05a9c0f053c77962b *core/ajax/AbeilleZigate.ajax.php
-6c348c0823e0f6a2354616be34da85b8 *core/class/Abeille.class.php
+38a9ddf58434ab5a8229fa867a86ef38 *core/class/Abeille.class.php
 646d932ce34913c2a8143a2721e860ff *core/class/AbeilleCmd.class.php
 49a19e4480e051d8bcf60c8e81918d14 *core/class/AbeilleCmdPrepare.class.php
 b73a7c21f3b13b5b9b31e8a84ea89868 *core/class/AbeilleCmdPrepareTest.class.php
@@ -855,7 +855,7 @@ f86a156e525e0df1a86d642d873f12b5 *core/config/devices/remote.b186acn02/remote.b1
 5776defcacb825b6dbd6161ef95a7222 *core/config/devices/remote.b286acn01/remote.b286acn01.json
 a184377fb5c821aaf05b9ae27b00a86e *core/config/devices/remote.b286acn02/remote.b286acn02.json
 aacc79d181b326cf39068292012a1c78 *core/config/devices/remote.b28ac1/discovery-aqara-wireless-double-rocker-h1.json
-793c46593a7450c85d391f075f8971c0 *core/config/devices/remote.b28ac1/remote.b28ac1.json
+f9a143564dcfbc29f6eb0b49252a2acb *core/config/devices/remote.b28ac1/remote.b28ac1.json
 969877fa835c3f7624b7e5b984cb865f *core/config/devices/remote.b686opcn01/notes.txt
 b1547d4c580df2950b54e08605590ff3 *core/config/devices/remote.b686opcn01/remote.b686opcn01.json
 22a9bdafe1be7b256e4301f29ff57c67 *core/config/devices/remotecontrol/remotecontrol.json
@@ -996,7 +996,7 @@ e256ecddfee0c6f38ab215803b321e78 *desktop/php/AbeilleGraph.php
 f4ad6e68f05d3de67caa70c340868082 *desktop/php/AbeilleNetworkGraph.php
 6f44fb904599995f0140986bd913a7e0 *desktop/php/AbeilleSupport.php
 3726b3dfb3cd6913dc922d2e27267626 *desktop/php/Old_Abeille.php
-c617224f53203a38ea65113d9cee381a *docs/fr_FR/Changelog.rst
+025fa4040180643cbd66b0cc905a90c4 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 bd385649851d082383912dc25c9deae3 *images/node_.png
@@ -1187,6 +1187,7 @@ f015a0211c351a2b2bb38d23da37d2a9 *images/node_Tuya4ButtonsSwitch.png
 559ee13277ec81ec87c86758928786d7 *images/node_XiaomiAqara-QBKG26LM.png
 3bd1d0b0c755da5f3166a4c8dea29de2 *images/node_XiaomiAqara-SSM-U01.png
 811402dc549dd68a1afc402be5bdf420 *images/node_XiaomiAqara-SSM-U02.png
+8d621a6dbdba88e635d230e4c5e96e1d *images/node_XiaomiAqara-WRS-R02.png
 22a16218547cfb00dd052a6317702bf0 *images/node_XiaomiBouton.png
 8548493b8395f81c79d6b4b584151483 *images/node_XiaomiBouton1.png
 db040e28e0b726a120f9ee31a00f8c34 *images/node_XiaomiBouton3.png
@@ -1250,10 +1251,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-d8b12999b551f63a00f574e53ca71b4f *plugin_info/Abeille.version
+a233f00bb683622db4d689078dc28f3e *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 104798e6aaebb6e0dfa73021b8be9bde *plugin_info/configuration.php
-339097a684d9b381771c16ad6eb200ef *plugin_info/info.json
+a7e25621cb17d20ec1943fe8018758a2 *plugin_info/info.json
 b09a9308acb428e58a3fcd50ab76f50a *plugin_info/install.php
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 e634b9f544c02b8facd28fefb8771fe0 *resources/AbeilleDeamon/AbeilleInterrogate.php

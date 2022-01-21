@@ -142,7 +142,7 @@
         }
 
         public function msgToAbeille($topic, $payload) {
-
+            global $abQueues;
             $queueId = $abQueues['cmdToAbeille']['id'];
             $queue = msg_get_queue($queueId);
 
@@ -150,7 +150,7 @@
             $msg['topic']   = $topic;
             $msg['payload'] = $payload;
 
-            if (msg_send($queue, $msg, true, false)) {
+            if (msg_send($queue, 1, $msg, true, false)) {
                 cmdLog('debug', 'msgToAbeille() mesage: '.json_encode($msg).' added to queue : '.$queueId, $this->debug['tempo']);
             } else {
                 cmdLog('debug', 'msgToAbeille() could not add message '.json_encode($msg).' to queue : '.$queueId, $this->debug['tempo']);

@@ -2679,39 +2679,6 @@
                 return;
             }
 
-            // Move to Colour
-            if (isset($Command['setColour']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['X']) && isset($Command['Y'])  && isset($Command['destinationEndPoint']))
-            {
-                // <address mode: uint8_t>              2
-                // <target short address: uint16_t>     4
-                // <source endpoint: uint8_t>           2
-                // <destination endpoint: uint8_t>      2
-                // <colour X: uint16_t>                 4
-                // <colour Y: uint16_t>                 4
-                // <transition time: uint16_t >         4
-
-                $cmd = "00B7"; // Move to color
-                // 8+16+8+8+16+16+16 = 88 /8 = 11 => 0x0B
-                $length = "000B";
-
-                $addressMode            = $Command['addressMode'];
-                $address                = $Command['address'];
-                $sourceEndpoint         = "01";
-                $destinationEndpoint    = $Command['destinationEndPoint'];
-                $colourX                = $Command['X'];
-                $colourY                = $Command['Y'];
-                if (isset($Command['duration']) && $Command['duration']>0)
-                    $duration = sprintf("%04s",dechex($Command['duration']));
-                else
-                    $duration               = "0001";
-
-                $data = $addressMode.$address.$sourceEndpoint.$destinationEndpoint.$colourX.$colourY.$duration ;
-
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-                return;
-            }
-
             // Take RGB (0-255) convert to X, Y and send the color
             if (isset($Command['setColourRGB']))
             {
@@ -4164,6 +4131,39 @@
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                     return;
                 } // End 'cmd-0201'
+
+                // ZCL cluster 0300/color control
+                // Move to Colour
+                else if ($cmdName == 'setColour') {
+                    $required = ['addr', 'EP', 'X', 'Y']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <colour X: uint16_t>
+                    // <colour Y: uint16_t>
+                    // <transition time: uint16_t >
+
+                    $cmd        = "00B7"; // Move to color
+                    $addrMode   = '02';
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['EP'];
+                    $colourX    = $Command['X'];
+                    $colourY    = $Command['Y'];
+                    if (isset($Command['duration']) && $Command['duration']>0)
+                        $duration = sprintf("%04s", dechex($Command['duration']));
+                    else
+                        $duration = "0001";
+
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$colourX.$colourY.$duration ;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    return;
+                }
 
                 // ZCL cluster 1000 specific: (received) commands
                 else if ($cmdName == 'cmd-1000') {

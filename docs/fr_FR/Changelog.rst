@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220123-BETA-1
+-------------
+
 - Gledopto GU10 buld GL-S-007Z: Ajout support préliminaire (2270).
 - Interne: AbeilleCmd: SimpleDescriptorRequest => getSimpleDescriptor.
 - Page EQ/avancé: Ajout support 'Simple descriptor request'.

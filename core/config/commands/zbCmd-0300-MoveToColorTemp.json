@@ -1,13 +1,11 @@
 {
     "zbCmd-0300-MoveToColorTemp": {
         "comment": "Cluster 0300, move to color temp",
-        "isVisible": 0,
         "name": "MoveToColorTemp",
-        "isHistorized": "0",
         "subType": "slider",
         "generic_type": "LIGHT_SET_COLOR_TEMP",
-        "invertBinary": "0",
         "template": "",
+        "unite": "K",
         "configuration": {
             "topic": "setTemperature",
             "request": "EP=#EP#&slider=#slider#",

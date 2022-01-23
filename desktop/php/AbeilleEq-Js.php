@@ -406,6 +406,10 @@
         } else if (request == "getActiveEndPoints") {
             topic = "Cmd"+logicalId+"_ActiveEndPoint";
             payload = "address="+js_eqAddr;
+        } else if (request == "getSimpleDescriptor") {
+            topic = "Cmd"+logicalId+"_getSimpleDescriptor";
+            ep = document.getElementById("idEpSDR").value;
+            payload = "ep="+ep;
         } else if (request == "getIeeeAddress") {
             topic = "Cmd"+logicalId+"_getIeeeAddress";
             payload = "";

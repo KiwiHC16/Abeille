@@ -731,7 +731,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             foreach ($epArr as $epId) {
                 $eq['zigbee']['endPoints'][$epId] = [];
                 parserLog('debug', '  Requesting simple descriptor for EP '.$epId);
-                $this->msgToCmd("Cmd".$net."/0000/SimpleDescriptorRequest", "address=".$addr.'&endPoint='.$epId);
+                $this->msgToCmd("Cmd".$net."/".$addr."/getSimpleDescriptor", 'ep='.$epId);
             }
 
             /* Discover ongoing. Informing Abeille for EQ creation/update */

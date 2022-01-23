@@ -104,23 +104,6 @@
                     "address" => $address,
                 );
                 break;
-            // case "getRoutingTable":
-            // case "Mgmt_Rtg_req":
-            //     $Command = array(
-            //         "getRoutingTable" => "1",
-            //         "priority" => $priority,
-            //         "dest" => $dest,
-            //         "address" => $address,
-            //     );
-            //     break;
-            // case "getBindingTable":
-            //     $Command = array(
-            //         "getBindingTable" => "1",
-            //         "priority" => $priority,
-            //         "dest" => $dest,
-            //         "address" => $address,
-            //     );
-            //     break;
             case "Management_LQI_request": // Mgmt_Lqi_req: OBSOLETE: Use 'getNeighborTable' instead
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
@@ -131,26 +114,16 @@
                     "StartIndex" => $keywords[3],
                 );
                 break;
-            // case "getNeighborTable": // Mgmt_Lqi_req
+            // case "IEEE_Address_request":
             //     $keywords = preg_split("/[=&]+/", $msg);
             //     $Command = array(
-            //         "getNeighborTable" => "1",
-            //         "priority" => $priority,
-            //         "dest" => $dest,
-            //         "addr" => $address,
-            //         "startIndex" => $keywords[1]
+            //         "IEEE_Address_request"      => "1",
+            //         "priority"                  => $priority,
+            //         "dest"                      => $dest,
+            //         "address"                   => $address,
+            //         "shortAddress"              => $keywords[1],
             //     );
             //     break;
-            case "IEEE_Address_request":
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                    "IEEE_Address_request"      => "1",
-                    "priority"                  => $priority,
-                    "dest"                      => $dest,
-                    "address"                   => $address,
-                    "shortAddress"              => $keywords[1],
-                );
-                break;
             case "bindShort": // OBSOLETE: Use 'bind0030' instead
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -323,17 +296,6 @@
                 if (isset($parameters["Change"]))                  { $Command['Change']                = str_pad(dechex($parameters['Change']),        2,0,STR_PAD_LEFT); }
                 if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                 break;
-
-            // case "readReportingConfig":
-            //     $Command = array(
-            //         "readReportingConfig"    => "1",
-            //         "priority"              => $priority,
-            //         "dest"                  => $dest,
-            //         "addr"                  => $parameters['addr'],
-            //         "clustId"               => $parameters['clustId'],
-            //         "attrId"                => $parameters['attrId'],
-            //         );
-            //     break;
 
             /*
              * Unsorted yet
@@ -741,22 +703,22 @@
                                     );
                 break;
 
-            case "setLevel":
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                    $Command = array(
-                                    "setLevel"             => "1",
-                                    "addressMode"          => "02",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address"              => $address,
-                                    "destinationEndpoint"  => $parameters['EP'],
-                                    "Level"                => intval($parameters['Level'] * 255 / 100),
-                                    "duration"             => $parameters['duration'],
-                                );
-                }
-                break;
+            // case "setLevel":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //         $Command = array(
+            //                         "setLevel"             => "1",
+            //                         "addressMode"          => "02",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address"              => $address,
+            //                         "destinationEndpoint"  => $parameters['EP'],
+            //                         "Level"                => intval($parameters['Level'] * 255 / 100),
+            //                         "duration"             => $parameters['duration'],
+            //                     );
+            //     }
+            //     break;
             case "setLevelRaw":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -1057,26 +1019,26 @@
                                     "destinationEndPoint" => "03",
                                     );
                 break;
-            case "setTemperature":
-                // T°K   Hex sent  Dec eq
-                // 2200	 01C6	   454
-                // 2700	 0172	   370
-                // 4000	 00FA	   250
-                // De ces nombres on calcule l'equation: Y = -0,113333333 * X + 703,3333333
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
-                $Command = array(
-                                    "setTemperature"       => "1",
-                                    "addressMode"          => "02",
-                                    "priority"             => $priority,
-                                    "dest"                 => $dest,
-                                    "address"              => $address,
-                                    "temperature"          => sprintf("%04s", dechex(intval(1000000/$parameters['slider'])) ),
-                                    "destinationEndPoint"  => $parameters['EP'],
-                                    );
-                break;
+            // case "setTemperature":
+            //     // T°K   Hex sent  Dec eq
+            //     // 2200	 01C6	   454
+            //     // 2700	 0172	   370
+            //     // 4000	 00FA	   250
+            //     // De ces nombres on calcule l'equation: Y = -0,113333333 * X + 703,3333333
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //     }
+            //     $Command = array(
+            //                         "setTemperature"       => "1",
+            //                         "addressMode"          => "02",
+            //                         "priority"             => $priority,
+            //                         "dest"                 => $dest,
+            //                         "address"              => $address,
+            //                         "temperature"          => sprintf("%04s", dechex(intval(1000000/$parameters['slider'])) ),
+            //                         "destinationEndPoint"  => $parameters['EP'],
+            //                         );
+            //     break;
             case "setTemperatureGroup":
                 // T°K   Hex sent  Dec eq
                 // 2200     01C6       454

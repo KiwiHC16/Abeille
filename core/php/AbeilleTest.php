@@ -236,8 +236,8 @@
 
         if ($test==125) {
             echo "Test envoie Cmd to Discover IEEE\n";
-            $msg['topic']   = 'CmdAbeille1/'.$argv[2].'/IEEE_Address_request';
-            $msg['payload'] = 'shortAddress='.$argv[2];
+            $msg['topic']   = 'CmdAbeille1/'.$argv[2].'/getIeeeAddress';
+            $msg['payload'] = '';
         }
 
         if ($test==126) {

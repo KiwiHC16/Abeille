@@ -506,39 +506,39 @@ if (0) {
 
         /* If main daemon is not running, cron must do nothing */
         if (AbeilleTools::isAbeilleCronRunning() == false) {
-            log::add('Abeille', 'debug', 'cron15: Main daemon stopped => cron15 canceled');
+            log::add('Abeille', 'debug', 'cron15(): Main daemon stopped => cron15 canceled');
             return;
         }
 
-        log::add('Abeille', 'debug', 'cron15: Starting --------------------------------');
+        log::add('Abeille', 'debug', 'cron15(): Starting --------------------------------');
 
         /* Look every 15 minutes if the kernel driver is not in error */
-        log::add('Abeille', 'debug', 'cron15: Check USB driver potential crash');
+        log::add('Abeille', 'debug', 'cron15(): Check USB driver potential crash');
         $cmd = "egrep 'pl2303' /var/log/syslog | tail -1 | egrep -c 'failed|stopped'";
         $output = array();
         exec(system::getCmdSudo().$cmd, $output);
         $usbZigateStatus = !is_null($output) ? (is_numeric($output[0]) ? $output[0] : '-1') : '-1';
         if ($usbZigateStatus != '0') {
             message::add("Abeille", "ERREUR: le pilote pl2303 semble en erreur, impossible de communiquer avec la zigate.", "Il faut débrancher/rebrancher la zigate et relancer le démon.");
-            // log::add('Abeille', 'debug', 'cron15: Fin --------------------------------');
+            // log::add('Abeille', 'debug', 'cron15(): Fin --------------------------------');
         }
 
-        log::add('Abeille', 'debug', 'cron15: Interrogating devices silent for more than 15mins.');
+        log::add('Abeille', 'debug', 'cron15(): Interrogating devices silent for more than 15mins.');
         $config = AbeilleTools::getParameters();
         $i = 0;
-        for ($zgNb = 1; $zgNb <= $GLOBALS['maxNbOfZigate']; $zgNb++) {
-            $zigate = Abeille::byLogicalId('Abeille'.$zgNb.'/0000', 'Abeille');
+        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
+            $zigate = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
             if (!is_object($zigate))
-                continue; // Probably deleted on Jeedom side.
+                continue; // Does not exist on Jeedom side.
             if (!$zigate->getIsEnable())
                 continue; // Zigate disabled
-            if ($config['AbeilleActiver'.$zgNb] != 'Y')
+            if ($config['AbeilleActiver'.$zgId] != 'Y')
                 continue; // Zigate disabled.
 
             $eqLogics = Abeille::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
                 list($dest, $addr) = explode("/", $eqLogic->getLogicalId());
-                if ($dest != 'Abeille'.$zgNb)
+                if ($dest != 'Abeille'.$zgId)
                     continue; // Not on current network
                 if (!$eqLogic->getIsEnable())
                     continue; // Equipment disabled
@@ -552,7 +552,7 @@ if (0) {
                 /* Checking if received some news in the last 15mins */
                 $cmd = $eqLogic->getCmd('info', 'Time-TimeStamp');
                 if (!is_object($cmd)) { // Cmd not found
-                    log::add('Abeille', 'warning', "cron15: Commande 'Time-TimeStamp' manquante pour ".$eqName);
+                    log::add('Abeille', 'warning', "cron15(): Commande 'Time-TimeStamp' manquante pour ".$eqName);
                     continue; // No sense to interrogate EQ if Time-TimeStamp does not exists
                 }
                 $lastComm = $cmd->execCmd();
@@ -569,7 +569,7 @@ if (0) {
                 /* No news in the last 15mins. Need to interrogate this eq */
                 $mainEP = $eqLogic->getConfiguration("mainEP");
                 if (strlen($mainEP) <= 1) {
-                    log::add('Abeille', 'warning', "cron15: 'End Point' principal manquant pour ".$eqName);
+                    log::add('Abeille', 'warning', "cron15(): 'End Point' principal manquant pour ".$eqName);
                     continue;
                 }
 
@@ -584,10 +584,10 @@ if (0) {
                     $poll += 100;
 
                 if ($poll > 0) {
-                    log::add('Abeille', 'debug', "cron15: Interrogating '".$eqName."' (addr ".$addr.", poll-reason=".$poll.")");
+                    log::add('Abeille', 'debug', "cron15(): Interrogating '".$eqName."' (addr ".$addr.", poll-reason=".$poll.")");
                     // Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/Annonce&time=".(time()+($i*23)), $mainEP);
                     // Reading ZCLVersion attribute which should always be supported
-                    Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+($i*23)), "ep=".$mainEP."&clustId=0000&attrId=0000");
+                    Abeille::publishMosquitto($abQueues['xToCmd']['id'], PRIO_NORM, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+($i*23)), "ep=".$mainEP."&clustId=0000&attrId=0000");
                     $i++;
                 }
             }
@@ -599,7 +599,7 @@ if (0) {
         // Execute Action Cmd to refresh Info command
         // self::executePollCmds("cron15");
 
-        log::add('Abeille', 'debug', 'cron15:Terminé --------------------------------');
+        log::add('Abeille', 'debug', 'cron15():Terminé --------------------------------');
         return;
     } // End cron15()
 
@@ -894,27 +894,27 @@ if (0) {
 
         /* Checking config */
         // TODO Tcharp38: Should be done during deamon_info() and report proper 'launchable'
-        for ($zgNb = 1; $zgNb <= $GLOBALS['maxNbOfZigate']; $zgNb++) {
-            if ($config['AbeilleActiver'.$zgNb] != 'Y')
+        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
+            if ($config['AbeilleActiver'.$zgId] != 'Y')
                 continue; // Disabled
 
             /* This zigate is enabled. Checking other parameters */
             $error = "";
-            $sp = $config['AbeilleSerialPort'.$zgNb];
+            $sp = $config['AbeilleSerialPort'.$zgId];
             if (($sp == 'none') || ($sp == "")) {
-                $error = "Port série de la zigate ".$zgNb." INVALIDE";
+                $error = "Port série de la zigate ".$zgId." INVALIDE";
             }
             if ($error == "") {
-                if ($config['AbeilleType'.$zgNb] == "WIFI") {
-                    $wifiAddr = $config['IpWifiZigate'.$zgNb];
+                if ($config['AbeilleType'.$zgId] == "WIFI") {
+                    $wifiAddr = $config['IpWifiZigate'.$zgId];
                     if (($wifiAddr == 'none') || ($wifiAddr == "")) {
-                        $error = "Adresse Wifi de la zigate ".$zgNb." INVALIDE";
+                        $error = "Adresse Wifi de la zigate ".$zgId." INVALIDE";
                     }
                 }
             }
             if ($error != "") {
-                $config['AbeilleActiver'.$zgNb] = 'N';
-                config::save('AbeilleActiver'.$zgNb, 'N', 'Abeille');
+                $config['AbeilleActiver'.$zgId] = 'N';
+                config::save('AbeilleActiver'.$zgId, 'N', 'Abeille');
                 log::add('Abeille', 'error', $error." ! Zigate désactivée.");
             }
         }
@@ -944,12 +944,12 @@ if (0) {
            This was sometimes the case for 0009 cmd which is key to 'enable' msg receive on parser side. */
         // TODO Tcharp38: Note: This should not longer be required as the parser itself do the request on startup
         $expected = 0; // 1 bit per expected serial read daemon
-        for ($zgNb = 1; $zgNb <= $GLOBALS['maxNbOfZigate']; $zgNb++) {
-            if (($config['AbeilleSerialPort'.$zgNb] == 'none') or ($config['AbeilleActiver'.$zgNb] != 'Y'))
+        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
+            if (($config['AbeilleSerialPort'.$zgId] == 'none') or ($config['AbeilleActiver'.$zgId] != 'Y'))
                 continue; // Undefined or disabled
-            $expected |= constant("daemonSerialRead".$zgNb);
-            if ($config['AbeilleType'.$zgNb] == 'WIFI')
-                $expected |= constant("daemonSocat".$zgNb);
+            $expected |= constant("daemonSerialRead".$zgId);
+            if ($config['AbeilleType'.$zgId] == 'WIFI')
+                $expected |= constant("daemonSocat".$zgId);
         }
         $timeout = 10;
         for ($t = 0; $t < $timeout; $t++) {
@@ -2423,14 +2423,14 @@ if (0) {
             }
 
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $msg['name']);
-            if (!is_object($cmdLogic)) {
+            if (!is_object($cmdLogic))
                 log::add('Abeille', 'debug', "  Unknown Jeedom command '".$msg['name']."'");
-                return; // Unknown command
-            }
-            $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['value']);
+            else {
+                $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['value']);
 
-            // Check if any action cmd must be executed triggered by this update
-            Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $msg['value']);
+                // Check if any action cmd must be executed triggered by this update
+                Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $msg['value']);
+            }
 
             Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
             return;
@@ -2633,11 +2633,14 @@ if (0) {
                 log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
                 return;
             }
-            $ieee = $eqLogic->getConfiguration('IEEE', 'none');
-            if ($ieee != $msg['ieee']) {
-                log::add('Abeille', 'debug', "  ERROR: IEEE mistmatch, got ".$msg['ieee']." while expecting ".$ieee);
-                return;
-            }
+            // $ieee = $eqLogic->getConfiguration('IEEE', '');
+            // if (($ieee != '') && ($ieee != $msg['ieee'])) {
+            //     log::add('Abeille', 'debug', "  ERROR: IEEE mistmatch, got ".$msg['ieee']." while expecting ".$ieee);
+            //     return;
+            // }
+            $eqLogic->setConfiguration('IEEE', $msg['ieee']);
+            $eqLogic->save();
+
             $eqId = $eqLogic->getId();
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'PAN-ID');
             if ($cmdLogic)

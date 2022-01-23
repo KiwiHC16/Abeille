@@ -61,8 +61,8 @@ logDebug("LA=".$json_encode($abQueues));
 
         // Get Name
         sendMessageFromFormToCmd('Cmd'.$dest.'/0000/ActiveEndPoint',           'address='.$address                             );
-        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/SimpleDescriptorRequest',  'address='.$address.'&endPoint='.$EP            );
-        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/IEEE_Address_request',     'address='.$address                             );
+        sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getSimpleDescriptor', 'ep='.$EP);
+        sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getIeeeAddress', '');
         sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getName',                  'address='.$address.'&destinationEndPoint='.$EP );
         sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getLocation',              'address='.$address.'&destinationEndPoint='.$EP );
         sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );

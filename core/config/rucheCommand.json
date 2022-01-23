@@ -443,23 +443,6 @@
         "invertBinary": "0",
         "template": ""
     },
-    "IEEE_Address_request": {
-        "name": "IEEE Address Request",
-        "order": 48,
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "message",
-        "configuration": {
-            "topic": "IEEE_Address_request",
-            "request": "address=#title#&#message#"
-        },
-        "display": {
-            "forceReturnLineAfter": "0",
-            "title_placeholder": "Adresse courte de l equipement",
-            "message_placeholder": "shortAddress=XXXX[&requestType=00&startIndex=00] "
-        }
-    },
     "Network_Address_request": {
         "name": "Network Address Request",
         "order": 49,

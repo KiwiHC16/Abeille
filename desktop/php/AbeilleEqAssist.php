@@ -1360,8 +1360,8 @@
             topic = "Cmd"+logicalId+"_readAttribute";
             payload = "ep="+epId+"_clustId=0000_attrId=0010"; // Location
         } else if (infoType == "clustersList") {
-            topic = "Cmd"+logicalId+"_SimpleDescriptorRequest";
-            payload = "address="+js_eqAddr+"_endPoint="+epId;
+            topic = "Cmd"+logicalId+"_getSimpleDescriptor";
+            payload = "ep="+epId;
         } else if (infoType == "attribList") {
             topic = "Cmd"+logicalId+"_discoverAttributes";
             payload = "ep="+epId+"_clustId="+clustId+"_startAttrId=0000_maxAttrId=FF_dir="+option;

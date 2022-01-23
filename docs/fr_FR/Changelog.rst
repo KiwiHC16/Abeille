@@ -1,6 +1,16 @@
 ChangeLog
 =========
 
+- Gledopto GU10 buld GL-S-007Z: Ajout support préliminaire (2270).
+- Interne: AbeilleCmd: SimpleDescriptorRequest => getSimpleDescriptor.
+- Page EQ/avancé: Ajout support 'Simple descriptor request'.
+- Interne: AbeilleCmd: IEEE_Address_request => getIeeeAddress.
+- Equipement sur secteur en time-out: Correction.
+- Interne: Correction msg debug 'IEEE addr mismatch' au démarrage.
+- Orvibo CM10ZW: Support signature alternative (2275).
+- Interne: AbeilleCmd: Correction pour espace dans valeur slider.
+- Interne: AbeilleCmd: Suppression prepare 'setLevel'.
+
 220122-BETA-1
 -------------
 

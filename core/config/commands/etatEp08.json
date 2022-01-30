@@ -4,13 +4,13 @@
         "name": "etat 8",
         "isHistorized": "1",
         "subType": "binary",
-        "generic_type": "LIGHT_STATE_BOOL",
         "invertBinary": "0",
         "template": "light",
         "configuration": {
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0006-08-0000"
+        "logicalId": "0006-08-0000",
+        "genericType": "LIGHT_STATE_BOOL"
     }
 }

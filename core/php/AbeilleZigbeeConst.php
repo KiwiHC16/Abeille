@@ -250,6 +250,14 @@
                 "0009" => array( "name" => "ValidUntilTime", "access" => "RW" ),
             ),
         ),
+        "000C" => array(
+            "name" => "Analog Input",
+            "attributes" => array(
+                "0051" => array( "name" => "OutOfService", "access" => "RW" ),
+                "0055" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x39 ), // 0x39 = Single precision
+                "006F" => array( "name" => "StatusFlags", "access" => "R" ),
+            ),
+        ),
         "0014" => array(
             "name" => "Multistate Value",
             "attributes" => array(
@@ -310,6 +318,9 @@
             "commands" => array(
                 "00" => array( "name" => "CheckIn" ),
             ),
+        ),
+        "0021" => array(
+            "name" => "Green power proxy",
         ),
         "0100" => array(
             "name" => "Shade Configuration",
@@ -378,6 +389,12 @@
                 "0012" => array( "name" => "OccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ),
                 "0014" => array( "name" => "UnoccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ),
             ),
+        ),
+        "0202" => array(
+            "name" => "Fan control",
+        ),
+        "0204" => array(
+            "name" => "Thermostat user interface",
         ),
         "0300" => array(
             "name" => "Color control",

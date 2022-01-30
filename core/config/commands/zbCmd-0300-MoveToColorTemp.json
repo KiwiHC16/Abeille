@@ -3,14 +3,14 @@
         "comment": "Cluster 0300, move to color temp",
         "name": "MoveToColorTemp",
         "subType": "slider",
-        "generic_type": "LIGHT_SET_COLOR_TEMP",
         "template": "",
-        "unite": "K",
         "configuration": {
             "topic": "setTemperature",
             "request": "EP=#EP#&slider=#slider#",
             "visibilityCategory": "All"
         },
-        "type": "action"
+        "type": "action",
+        "unit": "K",
+        "genericType": "LIGHT_SET_COLOR_TEMP"
     }
 }

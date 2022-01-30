@@ -3,7 +3,6 @@
         "name": "On 1",
         "isHistorized": "0",
         "subType": "other",
-        "generic_type": "LIGHT_ON",
         "invertBinary": "0",
         "template": "",
         "isVisible": 1,
@@ -15,6 +14,7 @@
             "request": "EP=#EP#&Level=108&duration=01",
             "visibilityCategory": "All"
         },
-        "type": "action"
+        "type": "action",
+        "genericType": "LIGHT_ON"
     }
 }

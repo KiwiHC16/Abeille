@@ -1701,251 +1701,6 @@ if (0) {
         }
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        /* Tcharp38: Case hereafter is no longer used.
-           Device creation is now triggered by Parser 'eqAnnounce' msg when device is identified.
-           Treated by 'msgFromParser()' */
-        // Si l objet n existe pas et je recoie son nom => je créé l objet.
-        // if (!is_object($eqLogic)
-        //     && (preg_match("/^0000-[0-9A-Fa-f]*-*0005/", $cmdId)
-        //         || preg_match("/^0000-[0-9A-Fa-f]*-*0010/", $cmdId)
-        //         || preg_match("/^SimpleDesc-[0-9A-Fa-f]*-*DeviceDescription/", $cmdId)
-        //     )
-        // ) {
-        //     $trimmedValue = $value;
-        //     log::add('Abeille', 'debug', 'Recherche objet: '.$value.' dans les objets connus');
-
-        //     /* Remove leading "lumi." from name as all xiaomi devices who start with this prefix. */
-        //     if (!strncasecmp($trimmedValue, "lumi.", 5))
-        //         $trimmedValue = substr($trimmedValue, 5); // Remove leading "lumi." case insensitive
-
-        //     //remove all space in names for easier filename handling
-        //     $trimmedValue = str_replace(' ', '', $trimmedValue);
-
-        //     // On enleve le / comme par exemple le nom des equipements Legrand
-        //     $trimmedValue = str_replace('/', '', $trimmedValue);
-
-        //     // On enleve le * Ampoules GU10 Philips #1778
-        //     $trimmedValue = str_replace('*', '', $trimmedValue);
-
-        //     // On enleve les 0x00 comme par exemple le nom des equipements Legrand
-        //     $trimmedValue = str_replace("\0", '', $trimmedValue);
-
-        //     log::add('Abeille', 'debug', 'value:'.$value.' / trimmed value: ->'.$trimmedValue.'<-');
-        //     $AbeilleObjetDefinition = AbeilleTools::getDeviceConfig($trimmedValue);
-        //     log::add('Abeille', 'debug', 'Template initial: '.json_encode($AbeilleObjetDefinition));
-
-        //     // On recupere le EP
-        //     // $EP = substr($cmdId,5,2);
-        //     $EP = explode('-', $cmdId)[1];
-        //     log::add('Abeille', 'debug', 'EP: '.$EP);
-        //     $AbeilleObjetDefinitionJson = json_encode($AbeilleObjetDefinition);
-        //     $AbeilleObjetDefinitionJson = str_replace('#EP#', $EP, $AbeilleObjetDefinitionJson);
-        //     $AbeilleObjetDefinition = json_decode($AbeilleObjetDefinitionJson, true);
-        //     log::add('Abeille', 'debug', 'Template mis a jour avec EP: '.json_encode($AbeilleObjetDefinition));
-
-        //     if (array_key_exists($trimmedValue, $AbeilleObjetDefinition)) {
-        //         $jsonId = $trimmedValue;
-        //     }
-        //     if (array_key_exists('defaultUnknown', $AbeilleObjetDefinition)) {
-        //         $jsonId = 'defaultUnknown';
-        //     }
-
-        //     /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
-        //     // Creation de l objet Abeille
-        //     // Exemple pour les objets créés par les commandes Ruche.
-        //     if (strlen($addr) != 4) {
-        //         $index = rand(1000, 9999);
-        //         $addr = $addr."-".$index;
-        //         $nodeid = $nodeid."-".$index;
-        //     }
-
-        //     $eqLogic = new Abeille();
-        //     $eqLogic->setEqType_name('Abeille');
-        //     $eqLogic->setName("nouveau-".$addr); // Temp name to have it non empty
-        //     $eqLogic->save(); // Save to force Jeedom to assign an ID
-
-        //     $name = $Filter."-".$eqLogic->getId();
-        //     message::add("Abeille", "Nouvel équipement détecté: ".$name.". Création en cours. Rafraîchissez votre dashboard dans qq secondes.", '');
-        //     $eqLogic->setName($name);
-        //     $eqLogic->setLogicalId($nodeid);
-        //     $eqLogic->setObject_id($config['AbeilleParentId']);
-        //     $objetDefSpecific = $AbeilleObjetDefinition[$jsonId];
-        //     $objetConfiguration = $objetDefSpecific["configuration"];
-        //     log::add('Abeille', 'debug', 'Template configuration: '.json_encode($objetConfiguration));
-        //     $eqLogic->setConfiguration('ab::jsonId', $trimmedValue);
-        //     // $eqLogic->setConfiguration('topic', $nodeid); // not needed as the info is in logicalId.
-        //     $eqLogic->setConfiguration('type', $type);
-        //     $eqLogic->setConfiguration('uniqId', $objetConfiguration["uniqId"]);
-        //     $eqLogic->setConfiguration('icone', $objetConfiguration["icone"]);
-        //     $eqLogic->setConfiguration('mainEP', $objetConfiguration["mainEP"]);
-        //     $lastCommTimeout = (array_key_exists("lastCommunicationTimeOut", $objetConfiguration) ? $objetConfiguration["lastCommunicationTimeOut"] : '-1');
-        //     $eqLogic->setConfiguration('lastCommunicationTimeOut', $lastCommTimeout);
-        //     $eqLogic->setConfiguration('type', $type);
-
-        //     if (isset($objetConfiguration['battery_type'])) {
-        //         $eqLogic->setConfiguration('battery_type', $objetConfiguration['battery_type']);
-        //     }
-        //     if (isset($objetConfiguration['paramType']))
-        //         $eqLogic->setConfiguration('paramType', $objetConfiguration['paramType']);
-        //     if (isset($objetConfiguration['Groupe'])) { // Tcharp38: What for ? Telecommande Innr - KiwiHC16: on doit pouvoir simplifier ce code. Mais comme c etait la premiere version j ai fait detaillé.
-        //         $eqLogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
-        //     }
-        //     if (isset($objetConfiguration['Groupe'])) { // Tcharp38: What for ?
-        //         $eqLogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
-        //     }
-        //     if (isset($objetConfiguration['GroupeEP1'])) { // Tcharp38: What for ?
-        //         $eqLogic->setConfiguration('GroupeEP1', $objetConfiguration['GroupeEP1']);
-        //     }
-        //     if (isset($objetConfiguration['GroupeEP3'])) { // Tcharp38: What for ?
-        //         $eqLogic->setConfiguration('GroupeEP3', $objetConfiguration['GroupeEP3']);
-        //     }
-        //     if (isset($objetConfiguration['GroupeEP4'])) { // Tcharp38: What for ?
-        //         $eqLogic->setConfiguration('GroupeEP4', $objetConfiguration['GroupeEP4']);
-        //     }
-        //     if (isset($objetConfiguration['GroupeEP5'])) { // Tcharp38: What for ?
-        //         $eqLogic->setConfiguration('GroupeEP5', $objetConfiguration['GroupeEP5']);
-        //     }
-        //     if (isset($objetConfiguration['GroupeEP6'])) { // Tcharp38: What for ?
-        //         $eqLogic->setConfiguration('GroupeEP6', $objetConfiguration['GroupeEP6']);
-        //     }
-        //     if (isset($objetConfiguration['GroupeEP7'])) { // Tcharp38: What for ?
-        //         $eqLogic->setConfiguration('GroupeEP7', $objetConfiguration['GroupeEP7']);
-        //     }
-        //     if (isset($objetConfiguration['GroupeEP8'])) { // Tcharp38: What for ?
-        //         $eqLogic->setConfiguration('GroupeEP8', $objetConfiguration['GroupeEP8']);
-        //     }
-        //     if (isset($objetConfiguration['onTime'])) { // Tcharp38: What for ?
-        //         $eqLogic->setConfiguration('onTime', $objetConfiguration['onTime']);
-        //     }
-        //     if (isset($objetConfiguration['Zigate'])) {
-        //         $eqLogic->setConfiguration('Zigate', $objetConfiguration['Zigate']);
-        //     }
-        //     if (isset($objetConfiguration['protocol'])) {
-        //         $eqLogic->setConfiguration('protocol', $objetConfiguration['protocol']);
-        //     }
-        //     if (isset($objetConfiguration['poll'])) {
-        //         $eqLogic->setConfiguration('poll', $objetConfiguration['poll']);
-        //     }
-        // if (isset($objetDefSpecific["isVisible"]))
-        //     $eqLogic->setIsVisible($objetDefSpecific["isVisible"]);
-        // else
-        //     $eqLogic->setIsVisible(1);
-
-        //     // eqReal_id
-        //     $eqLogic->setIsEnable("1");
-        //     // status
-        //     // timeout
-        //     $eqLogic->setTimeout($objetDefSpecific["timeout"]);
-
-        //     $eqLogic->setCategory(array_keys($objetDefSpecific["Categorie"])[0], $objetDefSpecific["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
-        //     // display
-        //     // order
-        //     // comment
-
-        //     //log::add('Abeille', 'info', 'Saving device '.$nodeid);
-        //     //$eqLogic->save();
-        //     $eqLogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
-        //     $eqLogic->save();
-
-        //     // Creation des commandes pour l objet Abeille juste créé.
-        //     if (isset($GLOBALS['debugKIWI']) && $GLOBALS['debugKIWI']) {
-        //         echo "On va creer les commandes.\n";
-        //         print_r($objetDefSpecific['Commandes']);
-        //     }
-
-        //     foreach ($objetDefSpecific['Commandes'] as $cmd => $cmdValueDefaut) {
-        //         log::add('Abeille', 'info', "Eq ".$name.": Ajout de la commande '".$cmdValueDefaut["name"]."' => '".$cmd."'");
-        //         // 'Creation de la commande: '.$nodeid.'/'.$cmd.' suivant model de l objet pour l objet: '.$name
-
-        //         $cmdLogic = new AbeilleCmd();
-        //         // id
-        //         $cmdLogic->setEqLogic_id($eqLogic->getId());
-        //         $cmdLogic->setEqType('Abeille');
-        //         $cmdLogic->setLogicalId($cmd);
-        //         if (isset($cmdValueDefaut["order"]))
-        //             $cmdLogic->setOrder($cmdValueDefaut["order"]);
-        //         $cmdLogic->setName($cmdValueDefaut["name"]);
-        //         // value
-
-        //         if ($cmdValueDefaut["Type"] == "info") {
-        //             // $cmdLogic->setConfiguration('topic', $nodeid.'/'.$cmd);
-        //             $cmdLogic->setConfiguration('topic', $cmd);
-        //         }
-        //         if ($cmdValueDefaut["Type"] == "action") {
-        //             // $cmdLogic->setConfiguration('retain', '0'); // not needed anymore, was used for mosquitto
-
-        //             if (isset($cmdValueDefaut["value"])) {
-        //                 // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
-        //                 log::add('Abeille', 'debug', 'Define cmd info pour cmd action: '.$eqLogic->getHumanName()." - ".$cmdValueDefaut["value"]);
-
-        //                 $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName("Abeille", $eqLogic->getName(), $cmdValueDefaut["value"]);
-        //                 $cmdLogic->setValue($cmdPointeur_Value->getId());
-        //             }
-        //         }
-
-        //         // La boucle est pour info et pour action
-        //         foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
-        //             // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
-        //             // $cmdLogic->setConfiguration($confKey, str_replace('#addr#', $addr, $confValue)); // Ce n'est plus necessaire car l adresse est maintenant dans le logicalId
-        //             $cmdLogic->setConfiguration($confKey, $confValue);
-
-        //             // Ne pas effacer, en cours de dev.
-        //             // $cmdLogic->setConfiguration($confKey, str_replace('#addrIEEE#',     '#addrIEEE#',   $confValue));
-        //             // $cmdLogic->setConfiguration($confKey, str_replace('#ZiGateIEEE#',   '#ZiGateIEEE#', $confValue));
-        //         }
-        //         // On conserve l info du template pour la visibility
-        //         $cmdLogic->setConfiguration("visibiltyTemplate", $cmdValueDefaut["isVisible"]);
-
-        //         // template
-        //         if (isset($cmdValueDefaut["template"])) {
-        //             $cmdLogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
-        //             $cmdLogic->setTemplate('mobile', $cmdValueDefaut["template"]);
-        //         }
-        //         $cmdLogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
-        //         $cmdLogic->setType($cmdValueDefaut["Type"]);
-        //         $cmdLogic->setSubType($cmdValueDefaut["subType"]);
-        //         if (array_key_exists("generic_type", $cmdValueDefaut))
-        //             $cmdLogic->setGeneric_type($cmdValueDefaut["generic_type"]);
-        //         // unite
-        //         if (isset($cmdValueDefaut["unite"])) {
-        //             $cmdLogic->setUnite($cmdValueDefaut["unite"]);
-        //         }
-
-        //         if (isset($cmdValueDefaut["invertBinary"])) {
-        //             $cmdLogic->setDisplay('invertBinary', $cmdValueDefaut["invertBinary"]);
-        //         }
-        //         // La boucle est pour info et pour action
-        //         // isVisible
-        //         $config = AbeilleTools::getParameters();
-        //         $isVisible = $cmdValueDefaut["isVisible"];
-
-        //         if (array_key_exists("display", $cmdValueDefaut))
-        //             foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
-        //                 // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
-        //                 $cmdLogic->setDisplay($confKey, $confValue);
-        //             }
-
-        //         $cmdLogic->setIsVisible($isVisible);
-
-        //         // html
-        //         // alert
-
-        //         $cmdLogic->save();
-
-        //         // $eqLogic->checkAndUpdateCmd( $cmdLogic, $cmdValueDefaut["value"] );
-
-        //         if ($cmdLogic->getName() == "Short-Addr") {
-        //             $eqLogic->checkAndUpdateCmd($cmdLogic, $addr);
-        //         }
-        //     }
-
-        //     // On defini le nom de l objet
-        //     $eqLogic->checkAndUpdateCmd($cmdId, $value);
-
-        //     return;
-        // }
-
-        /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         /* If unknown eq and IEEE received, looking for eq with same IEEE to update logicalName & topic */
         // e.g. Short address change (Si l adresse a changé, on ne peut pas trouver l objet par son nodeId)
         if (!is_object($eqLogic) && ($cmdId == "IEEE-Addr")) {
@@ -2142,29 +1897,6 @@ if (0) {
             //         Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$cmd->getEqLogic()->getLogicalId()."/".$cmd->getLogicalId()."&time=".(time() + $cmd->getConfiguration('PollingOnCmdChangeDelay')), $cmd->getConfiguration('request'));
             //     }
             // }
-
-            // /* 'trig' defined in command allows to trig another command on new value receipt.
-            //    Syntax: 'trig': 'trig-cmd-logicalId' */
-            // $trigLogicId = $cmdLogic->getConfiguration('ab::trig');
-            // if ($trigLogicId) {
-            //     $newValue = $cmdLogic->execCmd(); // Value might be updated with a "calculValueOffset" rule
-            //     $trigOffset = $cmdLogic->getConfiguration('ab::trigOffset');
-            //     if ($trigOffset)
-            //         $trigValue = jeedom::evaluateExpression(str_replace('#value#', $newValue, $trigOffset));
-            //     else
-            //         $trigValue = $newValue;
-
-            //     $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $trigLogicId);
-            //     if ($trigCmd) {
-            //         $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
-            //     }
-
-            //     if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
-            //         log::add('Abeille', 'debug', "  Battery % reporting: ".$trigLogicId.", val=".$trigValue);
-            //         $eqLogic->setStatus('battery', $trigValue);
-            //         $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-            //     }
-            // }
             return;
         }
 
@@ -2202,10 +1934,10 @@ if (0) {
     public static function infoCmdUpdate($eqLogic, $cmdLogic, $value) {
         global $abQueues;
 
-        // Trig another command (ab::trig keyword) ?
-        $trigLogicId = $cmdLogic->getConfiguration('ab::trig');
+        // Trig another command ('ab::trigOut' eqLogic config) ?
+        $trigLogicId = $cmdLogic->getConfiguration('ab::trigOut');
         if ($trigLogicId) {
-            $trigOffset = $cmdLogic->getConfiguration('ab::trigOffset');
+            $trigOffset = $cmdLogic->getConfiguration('ab::trigOutOffset');
             Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
         }
 
@@ -3257,30 +2989,31 @@ if (0) {
                 }
             }
 
-            /* Updating 'configuration' fields of eqLogic from JSON.
+            /* Updating command 'configuration' fields.
                In case of update, some fields may no longer be required ($unusedConfKey).
-               They are removed if not updated from JSON. */
+               They are removed if not defined in JSON model. */
+            // Tcharp38: TODO: For best cleanup all accepted keys should be listed hereafter. Any other should be removed.
             $unusedConfKey = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'uniqId', 'repeatEventManagement', 'topic'];
-            array_push($unusedConfKey, 'ab::trig', 'ab::trigOffset');
+            array_push($unusedConfKey, 'ab::trigOut', 'ab::trigOutOffset', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay');
             if (isset($cmdValueDefaut["configuration"])) {
                 $configuration = $cmdValueDefaut["configuration"];
 
-                if (isset($configuration["trig"]))
-                    $cmdLogic->setConfiguration('ab::trig', $configuration["trig"]);
+                if (isset($configuration["trigOut"]))
+                    $cmdLogic->setConfiguration('ab::trigOut', $configuration["trigOut"]);
                 else
-                    $cmdLogic->setConfiguration('ab::trig', null); // Removing config entry
-                if (isset($configuration["trigOffset"]))
-                    $cmdLogic->setConfiguration('ab::trigOffset', $configuration["trigOffset"]);
+                    $cmdLogic->setConfiguration('ab::trigOut', null); // Removing config entry
+                if (isset($configuration["trigOutOffset"]))
+                    $cmdLogic->setConfiguration('ab::trigOutOffset', $configuration["trigOutOffset"]);
                 else
-                    $cmdLogic->setConfiguration('ab::trigOffset', null); // Removing config entry
+                    $cmdLogic->setConfiguration('ab::trigOutOffset', null); // Removing config entry
 
                 foreach ($configuration as $confKey => $confValue) {
                     // Trick for conversion 'key' => 'ab::key' for Abeille specifics
                     // Note: this is currently not applied to all Abeille specific fields.
-                    if ($confKey == 'trig')
-                        $confKey = "ab::trig";
-                    else if ($confKey == 'trigOffset')
-                        $confKey = "ab::trigOffset";
+                    if ($confKey == 'trigOut')
+                        $confKey = "ab::trigOut";
+                    else if ($confKey == 'trigOutOffset')
+                        $confKey = "ab::trigOutOffset";
 
                     $cmdLogic->setConfiguration($confKey, $confValue);
                     foreach ($unusedConfKey as $uk => $uv) {
@@ -3315,13 +3048,19 @@ if (0) {
                 }
             }
 
-            $cmdLogic->setType($cmdValueDefaut["type"]);
+            $cmdLogic->setType($cmdValueDefaut["type"]); // 'info' or 'action'
             $cmdLogic->setSubType($cmdValueDefaut["subType"]);
-            if (array_key_exists("generic_type", $cmdValueDefaut))
-                $cmdLogic->setGeneric_type($cmdValueDefaut["generic_type"]);
+            if (array_key_exists("genericType", $cmdValueDefaut))
+                $cmdLogic->setGeneric_type($cmdValueDefaut["genericType"]);
+            else if (array_key_exists("generic_type", $cmdValueDefaut)) // Temporary backward compatibility
+                $cmdLogic->setGeneric_type(null); // Clear generic type
 
-            if (isset($cmdValueDefaut["unite"]))
+            if (isset($cmdValueDefaut["unit"]))
+                $cmdLogic->setUnite($cmdValueDefaut["unit"]);
+            else if (isset($cmdValueDefaut["unite"])) // Temporary backward compatibility
                 $cmdLogic->setUnite($cmdValueDefaut["unite"]);
+            else
+                $cmdLogic->setUnite(''); // Clear unit
 
             if (($action == 'reset') || $newCmd) { // Update only if new command
                 if (isset($cmdValueDefaut["isHistorized"]))

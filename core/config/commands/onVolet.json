@@ -4,7 +4,6 @@
         "name": "Monter",
         "isHistorized": "0",
         "subType": "other",
-        "generic_type": "FLAP_UP",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -12,6 +11,7 @@
             "request": "On",
             "visibilityCategory": "All"
         },
-        "type": "action"
+        "type": "action",
+        "genericType": "FLAP_UP"
     }
 }

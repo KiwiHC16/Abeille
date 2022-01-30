@@ -4,10 +4,8 @@
         "name": "BatteriePourcent",
         "isHistorized": 0,
         "subType": "numeric",
-        "generic_type": "BATTERY",
         "invertBinary": "0",
         "template": "vuMeter",
-        "unite": "%",
         "configuration": {
             "minValue": "0",
             "maxValue": "100",
@@ -15,6 +13,8 @@
             "visibilityCategory": "Network"
         },
         "type": "info",
-        "logicalId": "Batterie-Pourcent"
+        "logicalId": "Batterie-Pourcent",
+        "unit": "%",
+        "genericType": "BATTERY"
     }
 }

@@ -4,9 +4,7 @@
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "Courant",
-        "unite": "mA",
         "subType": "numeric",
-        "generic_type": "",
         "template": "badge",
         "configuration": {
             "repeatEventManagement": "always",
@@ -16,6 +14,8 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "tbd---current--"
+        "logicalId": "tbd---current--",
+        "unit": "mA",
+        "genericType": ""
     }
 }

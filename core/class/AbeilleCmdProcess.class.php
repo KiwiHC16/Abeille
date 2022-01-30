@@ -1939,7 +1939,7 @@
 
             /* Expected format:
             net/0000 ActiveEndpointRequest address=<addr>*/
-            if (isset($Command['ActiveEndPoint']))
+            if (isset($Command['ActiveEndPoint'])) // OBSOLETE: Use getActiveEndpoints instead
             {
                 $cmd = "0045";
 
@@ -2007,26 +2007,6 @@
             //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
             //     return;
             // }
-
-            if (isset($Command['Management_LQI_request'])) // Mgmt_Lqi_req. OBSOLETE: Use 'getNeighborTable' instead
-            {
-                $cmd = "004E";
-
-                // <target short address: uint16_t>
-                // <Start Index: uint8_t>
-
-                $address = $Command['address'];     // -> 4
-                $startIndex = $Command['StartIndex']; // -> 2
-
-                //  4 + 2 = 6/2 => 3
-                // $length = "0003";
-
-                $data = $address.$startIndex ;
-
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-                return;
-            }
 
             if (isset($Command['identifySend']) && isset($Command['address']) && isset($Command['duration']) && isset($Command['DestinationEndPoint']))
             {
@@ -3214,7 +3194,7 @@
 
                     // <target short address: uint16_t>
 
-                    $priority = (isset($Command['priority']) ? $Command['priority'] : priorityMin);
+                    $priority = (isset($Command['priority']) ? $Command['priority'] : PRIO_NORM);
                     $address = $Command['addr'];
 
                     //  4 = 4/2 => 2
@@ -3222,7 +3202,7 @@
 
                     $data = $address;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
+                    $this->addCmdToQueue2($priority, $dest, $cmd, $data, $address);
                     return;
                 }
 
@@ -3770,7 +3750,53 @@
                 // ZCL cluster 0008/Level control specific: (received) commands
                 // setLevel on one object
                 // Mandatory params: addr, EP, Level (in dec, %), duration (dec)
+                // Optional params: duration (default=0001)
                 else if ($cmdName == 'setLevel') {
+                    $required = ['addr', 'EP', 'Level']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+                    if (($Command['Level'] < 0) || ($Command['Level'] > 100)) {
+                        cmdLog('debug', '  ERROR: Level outside 0->100 range');
+                        return;
+                    }
+                    $cmd = "0081"; // Move to level with/without on/off
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <onoff : uint8_t>
+                    // <Level: uint8_t >
+                    // <Transition Time: uint16_t>
+
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['EP'];
+                    $onoff      = "01";
+                    $l = intval($Command['Level'] * 255 / 100);
+                    $level      = sprintf("%02X", $l);
+                    $duration   = isset($Command['duration']) ? sprintf("%04X", $Command['duration']) : "0001";
+
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$onoff.$level.$duration;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+
+                    if ($addrMode == "02") {
+                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
+                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000");
+
+                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2+$Command['duration']), "ep=".$dstEp."&clustId=0006&attrId=0000");
+                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3+$Command['duration']), "ep=".$dstEp."&clustId=0008&attrId=0000");
+                    }
+                    return;
+                }
+
+                // ZCL cluster 0008/Level control specific: (received) commands
+                // setLevelRaw = same as setLevel but 'Level' is raw data, not %
+                // Mandatory params: addr, EP, Level (in dec, %), duration (dec)
+                // Optional params: duration (default=0001)
+                else if ($cmdName == 'setLevelRaw') {
                     $required = ['addr', 'EP', 'Level']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
@@ -3790,9 +3816,8 @@
                     $srcEp      = "01";
                     $dstEp      = $Command['EP'];
                     $onoff      = "01";
-                    $l = intval($Command['Level'] * 255 / 100);
-                    $level      = sprintf("%02X", $l);
-                    $duration   = sprintf("%04X", $Command['duration']);
+                    $level      = sprintf("%02X", $Command['Level']);
+                    $duration   = isset($Command['duration']) ? sprintf("%04X", $Command['duration']) : "0001";
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$onoff.$level.$duration;
 

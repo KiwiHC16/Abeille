@@ -15,7 +15,7 @@
         "type": "Tuya 4 buttons scene switch",
         "commands": {
             "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
-            "Bind-0001-ToZigate": {
+            "Bind 0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
@@ -35,7 +35,22 @@
             "Click 1": { "use": "click", "params": "ep=03", "isVisible": 1 },
             "Click 2": { "use": "click", "params": "ep=04", "isVisible": 1 },
             "Click 3": { "use": "click", "params": "ep=02", "isVisible": 1 },
-            "Click 4": { "use": "click", "params": "ep=01", "isVisible": 1 }
-       }
+            "Click 4": { "use": "click", "params": "ep=01", "isVisible": 1 },
+            "Bind 0006-EP02-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006&ep=02",
+                "execAtCreation": "Yes"
+            },
+            "Bind 0006-EP03-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006&ep=03",
+                "execAtCreation": "Yes"
+            },
+            "Bind 0006-EP04-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006&ep=04",
+                "execAtCreation": "Yes"
+            }
+        }
     }
 }

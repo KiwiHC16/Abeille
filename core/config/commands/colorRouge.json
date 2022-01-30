@@ -5,7 +5,6 @@
         "isHistorized": "0",
         "subType": "numeric",
         "template": "badge",
-        "unite": "",
         "display": {
             "forceReturnLineAfter": "1"
         },
@@ -13,6 +12,7 @@
             "visibilityCategory": "additionalCommand"
         },
         "type": "info",
-        "logicalId": "colorRouge"
+        "logicalId": "colorRouge",
+        "unit": ""
     }
 }

@@ -4,7 +4,6 @@
         "name": "online",
         "isHistorized": "1",
         "subType": "binary",
-        "generic_type": "ONLINE",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -13,6 +12,7 @@
             "visibilityCategory": "Network"
         },
         "type": "info",
-        "logicalId": "online"
+        "logicalId": "online",
+        "genericType": "ONLINE"
     }
 }

@@ -104,16 +104,6 @@
                     "address" => $address,
                 );
                 break;
-            case "Management_LQI_request": // Mgmt_Lqi_req: OBSOLETE: Use 'getNeighborTable' instead
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                    "Management_LQI_request" => "1",
-                    "priority" => $priority,
-                    "dest" => $dest,
-                    "address" => $keywords[1],
-                    "StartIndex" => $keywords[3],
-                );
-                break;
             // case "IEEE_Address_request":
             //     $keywords = preg_split("/[=&]+/", $msg);
             //     $Command = array(
@@ -724,27 +714,26 @@
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
                     $Command = array(
-                                        "setLevel"             => "1",
-                                        "addressMode"          => "02",
-                                        "priority" => $priority,
-                                        "dest" => $dest,
-                                        "address"              => $address,
-                                        "destinationEndpoint"  => $parameters['EP'],
-                                        "Level"                => $parameters['Level'],
-                                        "duration"             => $parameters['duration'],
-                                        );
+                        "name"      => "setLevelRaw",
+                        "priority"  => $priority,
+                        "dest"      => $dest,
+                        "addr"      => $address,
+                        "EP"        => $parameters['EP'],
+                        "Level"     => $parameters['Level'],
+                        "duration"  => $parameters['duration'],
+                    );
                 }
                 break;
             case "setLevelOSRAM":
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                                    "setLevel" => "1",
-                                    "addressMode" => "02",
+                                    "name" => "setLevel",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "address" => $address,
-                                    "destinationEndpoint" => "03",
-                                    "Level" => intval($keywords[1] * 255 / 100),
+                                    "addr" => $address,
+                                    "EP" => "03",
+                                    // "Level" => intval($keywords[1] * 255 / 100),
+                                    "Level" => $keywords[1],
                                     "duration" => $keywords[3],
                                     );
                 break;
@@ -764,12 +753,11 @@
                 $level = $levelPourcent * 255;
                 $level = min(max(round($level), 0), 255);
                 $Command = array(
-                    "setLevel" => "1",
-                    "addressMode" => "02",
+                    "name" => "setLevelRaw",
                     "priority" => $priority,
                     "dest" => $dest,
-                    "address" => $address,
-                    "destinationEndpoint" => "01",
+                    "addr" => $address,
+                    "EP" => "01",
                     "Level" => $level,
                     "duration" => $parameters['duration'],
                 );
@@ -818,13 +806,13 @@
             case "setLevelHue":
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                                    "setLevel" => "1",
-                                    "addressMode" => "02",
+                                    "name" => "setLevel",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "address" => $address,
-                                    "destinationEndpoint" => "0B",
-                                    "Level" => intval($keywords[1] * 255 / 100),
+                                    "addr" => $address,
+                                    "EP" => "0B",
+                                    // "Level" => intval($keywords[1] * 255 / 100),
+                                    "Level" => $keywords[1],
                                     "duration" => $keywords[3],
                                     );
                 break;

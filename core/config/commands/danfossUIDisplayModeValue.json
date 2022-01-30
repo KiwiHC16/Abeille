@@ -2,7 +2,6 @@
     "danfossUIDisplayModeValue": {
         "isVisible": 1,
         "name": "Display Mode",
-        "unite": "",
         "isHistorized": "1",
         "subType": "string",
         "invertBinary": "0",
@@ -10,6 +9,7 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0204-01-0000"
+        "logicalId": "0204-01-0000",
+        "unit": ""
     }
 }

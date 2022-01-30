@@ -24,12 +24,30 @@
     <label class="col-sm-3 control-label">Identifiant modèle JSON</label>
     <div class="col-sm-5">
         <span class="eqLogicAttr" data-l1key="configuration" data-l2key="ab::jsonId" title="Nom du fichier de config JSON utilisé"></span>
+        Source:
         <?php
+            $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', '');
+            if (($jsonLocation == '') || ($jsonLocation == "Abeille"))
+                echo '<span title="Le modèle utilisé est celui fourni par Abeille">Officielle</span>';
+            else
+                echo '<span title="Le modèle utilisé est un modèle local/custom">Locale/custom</span>';
+
             $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
             if ($jsonId == "defaultUnknown") {
-                if (file_exists(__DIR__."/../../core/config/devices/".$jsonId."/".$jsonId.".json")) {
-                    echo '<span style="background-color:red;color:black" title=""> INFO: Modèle officiel disponible.</span>';
-                    echo '<a class="btn btn-warning" onclick="reinit(\''.$eqId.'\')" title="Réinitlialisation avec le modèle officiel commme s\'il s\'agissait d\'une nouvelle inclusion">Utiliser</a>';
+                if ($sig) {
+                    $id1 = $sig['modelId'].'_'.$sig['manufId'];
+                    $id2 = $sig['modelId'];
+                    $customP = __DIR__."/../../core/config/devices_local/";
+                    $officialP = __DIR__."/../../core/config/devices/";
+                    if (file_exists($customP.$id1."/".$id1.".json") ||
+                        file_exists($customP.$id2."/".$id2.".json")) {
+                        echo '<span style="background-color:red;color:black" title=""> INFO: Modèle local/custom disponible.</span>';
+                        echo '<a class="btn btn-warning" onclick="reinit(\''.$eqId.'\')" title="Réinitlialisation avec le modèle officiel commme s\'il s\'agissait d\'une nouvelle inclusion">Utiliser</a>';
+                    } else if (file_exists($officialP.$id1."/".$id1.".json") ||
+                        file_exists($officialP.$id2."/".$id2.".json")) {
+                        echo '<span style="background-color:red;color:black" title=""> INFO: Modèle officiel disponible.</span>';
+                        echo '<a class="btn btn-warning" onclick="reinit(\''.$eqId.'\')" title="Réinitlialisation avec le modèle officiel commme s\'il s\'agissait d\'une nouvelle inclusion">Utiliser</a>';
+                    }
                 }
             } else {
                 $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');

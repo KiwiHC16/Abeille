@@ -17,6 +17,7 @@
                 "use": "zb-0006-OnOff",
                 "template": "door",
                 "genericType": "OPENING",
+                "invertBinary": "1",
                 "isVisible": 1
             },
             "include4": "Batterie-Volt",

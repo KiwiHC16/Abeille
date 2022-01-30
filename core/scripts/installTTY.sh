@@ -9,9 +9,9 @@ if [ ! -e /boot/config.txt ]; then
 fi
 echo "= Ok"
 
-echo "Mise a jour du systeme Raspbian"
-sudo apt-get -y update
-sudo apt-get -y upgrade
+# echo "Mise a jour du systeme Raspbian"
+# sudo apt-get -y update
+# sudo apt-get -y upgrade
 
 DATE_WITH_TIME=`date +"%Y%m%d-%H%M%S"`
 

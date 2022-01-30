@@ -4,9 +4,7 @@
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "Puissance Inst",
-        "unite": "W",
         "subType": "numeric",
-        "generic_type": "POWER",
         "template": "badge",
         "configuration": {
             "historizeRound": "0",
@@ -15,6 +13,8 @@
             "visibilityCategory": "additionalCommand"
         },
         "type": "info",
-        "logicalId": "000C-01-0055"
+        "logicalId": "000C-01-0055",
+        "unit": "W",
+        "genericType": "POWER"
     }
 }

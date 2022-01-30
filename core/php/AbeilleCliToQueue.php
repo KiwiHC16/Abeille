@@ -102,6 +102,7 @@
 // logDebug("reconfigure: eqId=".$eqId);
         $eqLogic = eqLogic::byId($eqId);
         $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
+        $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', '');
         if ($jsonId == '') {
             if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: jsonId empty");
             return; // ERROR
@@ -117,20 +118,32 @@
         }
         if (($jsonId == "defaultUnknown") && ($modelId != "")) {
             $jsonId2 = "";
-            if (file_exists(__DIR__."/../../core/config/devices/".$modelId."_".$manufId."/".$modelId."_".$manufId.".json")) {
+            $jsonLoc2 = "";
+            $localP = __DIR__."/../../core/config/devices/";
+            $abeilleP = __DIR__."/../../core/config/devices/";
+            if (file_exists($localP.$modelId."_".$manufId."/".$modelId."_".$manufId.".json")) {
                 $jsonId2 = $modelId."_".$manufId;
-            } else if (file_exists(__DIR__."/../../core/config/devices/".$modelId."/".$modelId.".json")) {
+                $jsonLoc2 = "local";
+            } else if (file_exists($abeilleP.$modelId."_".$manufId."/".$modelId."_".$manufId.".json")) {
+                $jsonId2 = $modelId."_".$manufId;
+                $jsonLoc2 = "Abeille";
+            } else if (file_exists($localP.$modelId."/".$modelId.".json")) {
                 $jsonId2 = $modelId;
+                $jsonLoc2 = "local";
+            } else if (file_exists($abeilleP.$modelId."/".$modelId.".json")) {
+                $jsonId2 = $modelId;
+                $jsonLoc2 = "Abeille";
             }
-            if ($jsonId2 != "") {
-                if (isset($dbgTcharp38)) logDebug("CliToQueue: New jsonId: ".$jsonId2);
+            if (($jsonId2 != $jsonId) || ($jsonLoc2 != $jsonLocation)) {
+                if (isset($dbgTcharp38)) logDebug("CliToQueue: New jsonId: ".$jsonId2."/".$jsonLoc2);
                 $eqLogic->setConfiguration('ab::jsonId', $jsonId2);
+                $eqLogic->setConfiguration('ab::jsonLocation', $jsonLoc2);
                 $eqLogic->save();
                 $jsonId = $jsonId2;
+                $jsonLocation = $jsonLoc2;
             }
         }
 
-        $jsonLocation = "Abeille";
         $eqConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation);
         if ($eqConfig === false) {
             if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: No device config");

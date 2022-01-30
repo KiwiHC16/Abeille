@@ -6,7 +6,6 @@
         "subType": "numeric",
         "invertBinary": "0",
         "template": "vuMeter",
-        "unite": "V",
         "configuration": {
             "calculValueOffset": "#value#\/1000",
             "minValue": "0",
@@ -14,6 +13,7 @@
             "visibilityCategory": "Network"
         },
         "type": "info",
-        "logicalId": "Batterie-Volt"
+        "logicalId": "Batterie-Volt",
+        "unit": "V"
     }
 }

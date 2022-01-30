@@ -6,7 +6,6 @@
         "subType": "numeric",
         "invertBinary": "0",
         "template": "",
-        "unite": "%",
         "configuration": {
             "minValue": "0",
             "maxValue": "100",
@@ -14,6 +13,7 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0102-#EP#-0008"
+        "logicalId": "0102-#EP#-0008",
+        "unit": "%"
     }
 }

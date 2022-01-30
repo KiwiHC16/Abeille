@@ -4,7 +4,6 @@
         "name": "Host Flags",
         "isHistorized": "0",
         "subType": "numeric",
-        "generic_type": "",
         "invertBinary": "0",
         "template": "badge",
         "configuration": {
@@ -12,8 +11,9 @@
             "historizeRound": "1",
             "visibilityCategory": "All"
         },
-        "unite": "",
         "type": "info",
-        "logicalId": "0201-#EP#-4008"
+        "logicalId": "0201-#EP#-4008",
+        "unit": "",
+        "genericType": ""
     }
 }

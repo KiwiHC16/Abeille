@@ -460,23 +460,6 @@
             "message_placeholder": "IEEEAddress=xxxxxxxxxxxxxxxx[&requestType=00&startIndex=00] "
         }
     },
-    "LQI": {
-        "name": "LQI",
-        "order": 50,
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "message",
-        "configuration": {
-            "topic": "Management_LQI_request",
-            "request": "address=#title#&StartIndex=#message#"
-        },
-        "display": {
-            "forceReturnLineAfter": "1",
-            "title_placeholder": "Adresse courte de l equipement",
-            "message_placeholder": "Index - 2 digits"
-        }
-    },
     "Set Time": {
         "name": "Set Zigate-Time",
         "order": 51,

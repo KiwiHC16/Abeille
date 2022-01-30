@@ -5,10 +5,8 @@
         "name": "Pression",
         "isHistorized": "1",
         "subType": "numeric",
-        "generic_type": "PRESSURE",
         "invertBinary": "0",
         "template": "barometre",
-        "unite": "hPa",
         "display": {
             "forceReturnLineAfter": "1"
         },
@@ -18,6 +16,8 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0403-01-0010"
+        "logicalId": "0403-01-0010",
+        "unit": "hPa",
+        "genericType": "PRESSURE"
     }
 }

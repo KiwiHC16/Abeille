@@ -916,8 +916,8 @@
             /* Level cluster */
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
-                cmds["Set-Level"] = newCmd("setLevel");
-                cmds["Set-Level"]["isVisible"] = 1;
+                cmds["Set Level"] = newCmd("setLevel");
+                cmds["Set Level"]["isVisible"] = 1;
                 cmds["Current Level"] = newCmd("zb-0008-CurrentLevel");
                 cmds["Current Level"]["isVisible"] = 1;
                 cmds["Current Level"]["nextLine"] = "after";
@@ -955,35 +955,35 @@
                 // Color mode
                 if (isset(attributes['0008'])) {
                     cmds["Color Mode"] = newCmd("zb-0300-ColorMode");
-                    cmds["Color Mode"]["isVisible"] = 1;
+                    // cmds["Color Mode"]["isVisible"] = 1;
                     cmds["Get Color Mode"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0008");
                 }
 
                 // Hue/saturation mode
                 if (isset(attributes['0000'])) {
                     cmds["Current HUE"] = newCmd("zb-0300-CurrentHue");
-                    if (currentMode == 0) // If HUE + saturation
-                        cmds["Current HUE"]["isVisible"] = 1;
+                    // if (currentMode == 0) // If HUE + saturation
+                    //     cmds["Current HUE"]["isVisible"] = 1;
                     cmds["Get Current HUE"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0000");
                 }
                 if (isset(attributes['0001'])) {
                     cmds["Current Saturation"] = newCmd("zb-0300-CurrentSaturation");
-                    if (currentMode == 0) // If HUE + saturation
-                        cmds["Current Saturation"]["isVisible"] = 1;
+                    // if (currentMode == 0) // If HUE + saturation
+                    //     cmds["Current Saturation"]["isVisible"] = 1;
                     cmds["Get Current Saturation"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0001");
                 }
 
                 // X/Y mode
                 if (isset(attributes['0003'])) {
                     cmds["Current X"] = newCmd("zb-0300-CurrentX");
-                    if (currentMode == 1) // If X + Y
-                        cmds["Current X"]["isVisible"] = 1;
+                    // if (currentMode == 1) // If X + Y
+                    //     cmds["Current X"]["isVisible"] = 1;
                     cmds["Get Current X"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0003");
                 }
                 if (isset(attributes['0004'])) {
                     cmds["Current Y"] = newCmd("zb-0300-CurrentY");
-                    if (currentMode == 1) // If X + Y
-                        cmds["Current Y"]["isVisible"] = 1;
+                    // if (currentMode == 1) // If X + Y
+                    //     cmds["Current Y"]["isVisible"] = 1;
                     cmds["Get Current Y"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0004");
                 }
                 if (isset(attributes['0003']) || isset(attributes['0004'])) {
@@ -992,18 +992,18 @@
                     // Move color (cmd 0x08)
                     // Step color (cmd 0x09)
                     // Stop move step (cmd 0x47)
-                    cmds["Set White"] = newCmd("zbCmd-0300-MoveToColor", "X=6000&Y=6000");
-                    if (currentMode == 1) // If X + Y
-                        cmds["Set White"]["isVisible"] = 1;
-                    cmds["Set Blue"] = newCmd("zbCmd-0300-MoveToColor", "X=228F&Y=228F");
-                    if (currentMode == 1) // If X + Y
-                        cmds["Set Blue"]["isVisible"] = 1;
-                    cmds["Set Red"] = newCmd("zbCmd-0300-MoveToColor", "X=AE13&Y=51EB");
-                    if (currentMode == 1) // If X + Y
-                        cmds["Set Red"]["isVisible"] = 1;
-                    cmds["Set Green"] = newCmd("zbCmd-0300-MoveToColor", "X=147A&Y=D709");
-                    if (currentMode == 1) // If X + Y
-                        cmds["Set Green"]["isVisible"] = 1;
+                    cmds["White"] = newCmd("zbCmd-0300-MoveToColor", "X=6000&Y=6000");
+                    // if (currentMode == 1) // If X + Y
+                        cmds["White"]["isVisible"] = 1;
+                    cmds["Blue"] = newCmd("zbCmd-0300-MoveToColor", "X=228F&Y=228F");
+                    // if (currentMode == 1) // If X + Y
+                        cmds["Blue"]["isVisible"] = 1;
+                    cmds["Red"] = newCmd("zbCmd-0300-MoveToColor", "X=AE13&Y=51EB");
+                    // if (currentMode == 1) // If X + Y
+                        cmds["Red"]["isVisible"] = 1;
+                    cmds["Green"] = newCmd("zbCmd-0300-MoveToColor", "X=147A&Y=D709");
+                    // if (currentMode == 1) // If X + Y
+                        cmds["Green"]["isVisible"] = 1;
                 }
 
                 // Color temperature
@@ -1104,6 +1104,13 @@
                     cmds[cmdName] = newCmd("zb-0B04-ActivePower", "mult=1&div=1");
                     cmds[cmdName]["isVisible"] = 1;
                     cmds["Get "+cmdName] = newCmd("zbReadAttribute", "clustId=0B04&attrId=050B");
+                }
+                cmds["Bind 0B04-ToZigate"] = newCmd("zbBindToZigate", "clustId=0B04", "yes");
+                if (isset(attributes['0508'])) { // RMS Current
+                    cmds["SetReporting 0B04-0508"] = newCmd("zbConfigureReporting", "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                }
+                if (isset(attributes['050B'])) { // Active power
+                    cmds["SetReporting 0B04-050B"] = newCmd("zbConfigureReporting", "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=", "yes");
                 }
             }
 

@@ -4,10 +4,8 @@
         "name": "Level",
         "isHistorized": "1",
         "subType": "numeric",
-        "generic_type": "FLAP_SLIDER",
         "invertBinary": "0",
         "template": "",
-        "unite": "%",
         "configuration": {
             "minValue": "0",
             "maxValue": "100",
@@ -16,6 +14,8 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0008-01-0000"
+        "logicalId": "0008-01-0000",
+        "unit": "%",
+        "genericType": "FLAP_SLIDER"
     }
 }

@@ -1,18 +1,18 @@
 {
     "zb-0402-MeasuredValue": {
-        "comment": "0402/Temperature measurement cluster, attrib 0000/MeasuredValue",
+        "comment": "0402\/Temperature measurement cluster, attrib 0000\/MeasuredValue",
         "comment2": "TODO: calculValueOffset to be removed and done in parser since frozen by Zigbee spec",
         "comment3": "Derived from obsolete 'temperature.json'",
         "name": "MeasuredValue",
         "subType": "numeric",
         "template": "tempIMG",
-        "generic_type": "TEMPERATURE",
-        "unite": "\u00b0C",
         "configuration": {
             "calculValueOffset": "#value#\/100",
             "historizeRound": "1"
         },
         "type": "info",
-        "logicalId": "0402-#EP#-0000"
+        "logicalId": "0402-#EP#-0000",
+        "unit": "\u00b0C",
+        "genericType": "TEMPERATURE"
     }
 }

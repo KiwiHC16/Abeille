@@ -146,7 +146,7 @@
                 }
 
                 if ($newSyntax) {
-                    $supportedKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType'];
+                    $supportedKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'trigOut', 'trigOutOffset', 'logicalId', 'invertBinary'];
                     foreach ($value as $key2 => $value2) {
                         if (in_array($key2, $supportedKeys))
                             continue;
@@ -189,7 +189,7 @@
 
         $c = $cmd[$cmdName];
         if (!isset($c['type'])) {
-            newCmdError($cmdName, "ERROR", "Missing 'type' filed (info or action)");
+            newCmdError($cmdName, "ERROR", "Missing 'type' field (info or action)");
             return;
         }
         $type = $c['type'];

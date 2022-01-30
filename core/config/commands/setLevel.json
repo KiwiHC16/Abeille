@@ -3,17 +3,17 @@
         "name": "setLevel",
         "isHistorized": "0",
         "subType": "slider",
-        "generic_type": "LIGHT_SLIDER",
         "value": "Level",
         "invertBinary": "0",
         "template": "",
         "isVisible": 1,
-        "unite": "%",
         "configuration": {
             "topic": "setLevel",
             "request": "EP=#EP#&Level=#slider#&duration=10",
             "visibilityCategory": "All"
         },
-        "type": "action"
+        "type": "action",
+        "unit": "%",
+        "genericType": "LIGHT_SLIDER"
     }
 }

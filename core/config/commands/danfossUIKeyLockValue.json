@@ -2,7 +2,6 @@
     "danfossUIKeyLockValue": {
         "isVisible": 1,
         "name": "Key Lock",
-        "unite": "",
         "isHistorized": "1",
         "subType": "string",
         "invertBinary": "0",
@@ -10,6 +9,7 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0204-01-0001"
+        "logicalId": "0204-01-0001",
+        "unit": ""
     }
 }

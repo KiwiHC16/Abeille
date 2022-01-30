@@ -8,7 +8,7 @@
             "batteryType": "1x3V CR1632"
         },
         "category": {
-            "security": "1"
+            "opening": "1"
         },
         "type": "Xiaomi Door Sensor",
         "commands": {
@@ -16,6 +16,7 @@
                 "use": "zb-0006-OnOff",
                 "template": "door",
                 "genericType": "OPENING",
+                "invertBinary": "1",
                 "isVisible": 1
             },
             "include4": "Batterie-Volt",

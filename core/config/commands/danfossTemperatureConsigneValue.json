@@ -2,16 +2,16 @@
     "danfossTemperatureConsigneValue": {
         "isVisible": 1,
         "name": "Consigne",
-        "unite": "\u00b0C",
         "isHistorized": "1",
         "subType": "numeric",
         "invertBinary": "0",
-        "generic_type": "TEMPERATURE",
         "configuration": {
             "calculValueOffset": "#value#\/100",
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0201-01-0012"
+        "logicalId": "0201-01-0012",
+        "unit": "\u00b0C",
+        "genericType": "TEMPERATURE"
     }
 }

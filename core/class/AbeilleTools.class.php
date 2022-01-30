@@ -426,29 +426,26 @@
                                 else if ($value === "before")
                                     $newCmd[$cmd1]['display']['forceReturnLineBefore'] = 1;
                             }
-                            if (isset($cmd2['template'])) {
-                                $value = $cmd2['template'];
-                                $newCmd[$cmd1]['template'] = $value;
-                            }
-                            if (isset($cmd2['subType'])) {
-                                $value = $cmd2['subType'];
-                                $newCmd[$cmd1]['subType'] = $value;
-    // log::add('Abeille', 'debug', 'LA value='.$value.', newCmd='.json_encode($newCmd));
-                            }
-                            if (isset($cmd2['unit'])) {
-                                $value = $cmd2['unit'];
-                                $newCmd[$cmd1]['unite'] = $value;
-    // log::add('Abeille', 'debug', 'LA value='.$value.', newCmd='.json_encode($newCmd));
-                            }
+                            if (isset($cmd2['template']))
+                                $newCmd[$cmd1]['template'] = $cmd2['template'];
+                            if (isset($cmd2['subType']))
+                                $newCmd[$cmd1]['subType'] = $cmd2['subType'];
+                            if (isset($cmd2['unit']))
+                                $newCmd[$cmd1]['unit'] = $cmd2['unit'];
                             if (isset($cmd2['minValue']))
                                 $newCmd[$cmd1]['configuration']['minValue'] = $cmd2['minValue'];
                             if (isset($cmd2['maxValue']))
                                 $newCmd[$cmd1]['configuration']['maxValue'] = $cmd2['maxValue'];
-                            if (isset($cmd2['genericType'])) {
-                                $value = $cmd2['genericType'];
-                                $newCmd[$cmd1]['generic_type'] = $value;
-    // log::add('Abeille', 'debug', 'LA value='.$value.', newCmd='.json_encode($newCmd));
-                            }
+                            if (isset($cmd2['genericType']))
+                                $newCmd[$cmd1]['genericType'] = $cmd2['genericType'];
+                            if (isset($cmd2['trigOut']))
+                                $newCmd[$cmd1]['configuration']['trigOut'] = $cmd2['trigOut'];
+                            if (isset($cmd2['trigOutOffset']))
+                                $newCmd[$cmd1]['configuration']['trigOutOffset'] = $cmd2['trigOutOffset'];
+                            if (isset($cmd2['logicalId']))
+                                $newCmd[$cmd1]['logicalId'] = $cmd2['logicalId'];
+                            if (isset($cmd2['invertBinary']))
+                                $newCmd[$cmd1]['invertBinary'] = $cmd2['invertBinary'];
 
                             // log::add('Abeille', 'debug', 'getDeviceConfig(): newCmd='.json_encode($newCmd));
                             $deviceCmds += $newCmd;
@@ -1164,22 +1161,19 @@
         }
 
         /**
-         * Reglages des pin du raspberry
-         *
-         * typiquement c'est a executer une seule fois, lors de l'installation des dépendances.
-         * je l'isole ici en cas de besoin
+         * Checking 'wiringPi' proper installation & configuring GPIOs for PiZigate.
          */
-        public
-        static function checkGpio()
-        {
-            exec("command -v gpio && gpio -v", $out, $ret);
+        public static function checkGpio() {
+            exec("command gpio -v", $out, $ret);
             if ($ret != 0) {
-                log::add('Abeille', 'error', 'WiringPi semble mal installé. PiZigate inutilisable.');
-                log::add('Abeille', 'debug', 'gpio -v => '.implode(', ', $out));
-            } else {
-                log::add('Abeille', 'debug', 'AbeilleTools:checkGpio(): Une PiZigate active trouvée => configuration des GPIOs');
-                exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
+                log::add('Abeille', 'error', 'WiringPi semble mal installé.');
+                // log::add('Abeille', 'debug', 'gpio -v => '.implode(', ', $out));
+                return;
             }
+
+            // Tcharp38: Wrong: GPIO config is done as soon as WiringPi is found but even if there is PI Zigate.
+            log::add('Abeille', 'debug', 'AbeilleTools:checkGpio(): Active PiZigate found => configuring GPIOs');
+            exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
         }
 
         /**

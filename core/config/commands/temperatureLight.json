@@ -4,10 +4,8 @@
         "name": "temperatureLight",
         "isHistorized": "0",
         "subType": "numeric",
-        "generic_type": "LIGHT_COLOR_TEMP",
         "invertBinary": "0",
         "template": "badge",
-        "unite": "K",
         "configuration": {
             "visibilityCategory": "All",
             "minValue": "2000",
@@ -16,6 +14,8 @@
             "calculValueOffset": "intval(1000000\/#value#)"
         },
         "type": "info",
-        "logicalId": "0300-#EP#-0007"
+        "logicalId": "0300-#EP#-0007",
+        "unit": "K",
+        "genericType": "LIGHT_COLOR_TEMP"
     }
 }

@@ -4,10 +4,8 @@
         "name": "BatteriePourcent",
         "isHistorized": "1",
         "subType": "numeric",
-        "generic_type": "BATTERY",
         "invertBinary": "0",
         "template": "vuMeter",
-        "unite": "%",
         "configuration": {
             "minValue": "0",
             "maxValue": "100",
@@ -16,6 +14,8 @@
             "calculValueOffset": "#value#\/2"
         },
         "type": "info",
-        "logicalId": "0001-01-0021"
+        "logicalId": "0001-01-0021",
+        "unit": "%",
+        "genericType": "BATTERY"
     }
 }

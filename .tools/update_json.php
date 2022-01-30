@@ -378,6 +378,18 @@
             $cmdUpdated = true;
             echo "  Renamed 'Type' to 'type'.\n";
         }
+        if (isset($cmd2['unite'])) {
+            $cmd2['unit'] = $cmd2['unite'];
+            unset($cmd2['unite']);
+            $cmdUpdated = true;
+            echo "  Renamed 'unite' to 'unit'.\n";
+        }
+        if (isset($cmd2['generic_type'])) {
+            $cmd2['genericType'] = $cmd2['generic_type'];
+            unset($cmd2['generic_type']);
+            $cmdUpdated = true;
+            echo "  Renamed 'generic_type' to 'genericType'.\n";
+        }
 
         if (!isset($cmd2['configuration'])) {
             newCmdError($fileName, "ERROR", "Missing 'configuration' section");

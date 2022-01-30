@@ -65,11 +65,11 @@
 
 <style>
     .confs1 {
-      width: 300px;
-      margin-right: 4px;
+        width: 300px;
+        margin-right: 4px;
     }
     .ml4px {
-      margin-left: 4px;
+        margin-left: 4px;
     }
 </style>
 
@@ -138,7 +138,7 @@
                     echo '<a class="serialPortStatus'.$zgId.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
                         echo '<span class="label label-success" style="font-size:1em">-?-</span>';
                     echo '</a>';
-                    echo '<a class="btn btn-danger ml4px" onclick="installTTY()" title="{{Tentative d\'activation du port}}"><i class="fas fa-sync"></i> {{Activer}}</a>';
+                    echo '<a class="btn btn-danger ml4px" onclick="installTTY()" title="{{Tentative de libération du port}}"><i class="fas fa-sync"></i> {{Libérer}}</a>';
                 echo '</div>';
             echo '</div>';
         echo '</div>';
@@ -197,7 +197,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Status : }}</label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelZgStatus'.$zgId.'" class="configKey form-control" data-l1key="AbeilleActiver'.$zgId.'" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';
+                echo '<select id="idSelZgStatus'.$zgId.'" class="configKey form-control" data-l1key="AbeilleActiver'.$zgId.'" onchange="statusChange('.$zgId.')" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';
                     echo '<option value="N" selected>{{Désactivée}}</option>';
                     echo '<option value="Y">{{Activée}}</option>';
                 echo '</select>';
@@ -277,7 +277,9 @@
 
         <legend>
             <i class="fa fa-list-alt"></i><strong> {{Zigates}}</strong>
-            <!-- <a id="idZigatesShowHide" class="btn btn-success" >{{Afficher}}</a> -->
+            <?php
+            echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/PageConfig.html"><i class="fas fa-book"></i>{{Documentation}}</a>';
+            ?>
         </legend>
         <div id="idZigates">
             <!-- <div>
@@ -932,12 +934,12 @@
     }
 
     function installTTY() {
-        var msg = '{{Vous êtes sur le point de tenter de libérer et d\'activer le port TTY.';
+        var msg = '{{Vous êtes sur le point de tenter de libérer le port TTY.';
         msg += '<br>Cette procédure pourrait supprimer la console si attachée à ce port.'
         msg += '<br><br>Voulez vous continuer ?}}'
         bootbox.confirm(msg, function (result) {
             if (result) {
-                $('#md_modal2').dialog({title: "{{Activation TTY}}"});
+                $('#md_modal2').dialog({title: "{{Libération TTY}}"});
                 $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installTTY.abeille').dialog('open');
             }
         });
@@ -1248,4 +1250,13 @@
     // function Abeille_postSaveConfiguration() {
     //     console.log("Abeille_postSaveConfiguration()");
     // }
+
+    function statusChange(zgId) {
+        console.log("statusChange("+zgId+")")
+        var enabled = $("#idSelZgStatus"+zgId).val();
+        console.log("enabled", enabled);
+        // document.getElementById('optionID').style.color = '#000';
+        // How to change color to highlight it is DISABLED ?
+    }
+
 </script>

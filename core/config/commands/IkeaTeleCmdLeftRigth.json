@@ -4,15 +4,15 @@
         "name": "LeftRight",
         "isHistorized": "0",
         "subType": "numeric",
-        "generic_type": "",
         "invertBinary": "0",
         "template": "badge",
-        "unite": "",
         "configuration": {
             "minValue": "0",
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0005-01-0000"
+        "logicalId": "0005-01-0000",
+        "unit": "",
+        "genericType": ""
     }
 }

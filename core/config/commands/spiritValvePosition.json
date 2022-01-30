@@ -5,7 +5,6 @@
         "name": "Valve Position",
         "isHistorized": "0",
         "subType": "numeric",
-        "generic_type": "",
         "invertBinary": "0",
         "template": "badge",
         "configuration": {
@@ -13,8 +12,9 @@
             "historizeRound": "1",
             "visibilityCategory": "All"
         },
-        "unite": "%",
         "type": "info",
-        "logicalId": "0201-#EP#-4001"
+        "logicalId": "0201-#EP#-4001",
+        "unit": "%",
+        "genericType": ""
     }
 }

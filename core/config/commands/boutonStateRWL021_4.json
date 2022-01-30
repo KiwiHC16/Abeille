@@ -4,7 +4,6 @@
         "name": "DureeButtonLumPlus",
         "isHistorized": "1",
         "subType": "string",
-        "generic_type": "",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -12,6 +11,7 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "fc00-02-0002-Duree"
+        "logicalId": "fc00-02-0002-Duree",
+        "genericType": ""
     }
 }

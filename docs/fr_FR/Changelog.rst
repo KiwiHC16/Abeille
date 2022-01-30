@@ -1,6 +1,37 @@
 ChangeLog
 =========
 
+- LivarnoLux applique murale HG06701: Correction modèle (2256).
+- Blitzwolf SHP15: Support preliminaire (2277).
+- Assistant EQ/JSON: Update.
+- Interne: AbeilleCmd: Correction priorité getActiveEndpoints.
+- Interne: Parser: Interrogation de tous les EP pour support des eq qui s'identifient via un EP different du premier.
+- Interne: Nettoyage config cmdes 'PollingOnCmdChange' & 'PollingOnCmdChangeDelay' lors mise-à-jour équipement.
+- Interne: AbeilleCmd: Suppression 'Management_LQI_request' obsolete.
+- Tuya 4 buttons (TS004F__TZ3000_xabckq1v): Mise-à-jour modèle (2155).
+- Aqara TVOC moniteur d'air AAQS-S01: Mise-à-jour modèle (2279).
+- Modeles commandes (JSON): modifications syntaxe
+
+  - 'unite' obsolete => 'unit'
+  - 'generic_type' obsolete => 'genericType'
+  - 'trig' obsolete => 'trigOut'
+  - 'trigOffset' obsolete => 'trigOutOffset'
+- Modèles équipements (JSON): améliorations
+
+  - Surcharge possible de 'logicalId'
+  - Surcharge possible de 'trigOut'
+  - Surcharge possible de 'trigOutOffset'
+  - Surcharge possible de 'invertBinary'
+- Interne: DB eqLogic, config, ab::trig ou trigOffset => ab::trigOut ou trigOutOffset.
+- Xiaomi Aqara MCCGQ14LM (magnet.acn001): Correction modèle (2257).
+- Interne: checkGpio() revu pour suppression faux message 'PiZigate inutilisable'.
+- Page de config: Ajout bouton vers doc & doc préliminaire correspondante.
+- Page de config: Bouton 'activer' renommé en 'libérer'. Trompeur. N'active pas la zigate.
+- Xiaomi door: Correction etat inversé (regression 220110-BETA-1).
+- Interne: CmdQueue: erreur si message trop gros dans queue 'ParserToCmdAck'.
+- Interne: AbeilleCmd: Correction regression suite mise-à-jour 'setLevel'.
+- Tuya GU10 color bulb (TS0505B__TZ3210_it1u8ahz): Ajout support (2280).
+
 220123-BETA-1
 -------------
 

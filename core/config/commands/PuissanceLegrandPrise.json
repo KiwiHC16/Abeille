@@ -4,9 +4,7 @@
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "Puissance",
-        "unite": "W",
         "subType": "numeric",
-        "generic_type": "POWER",
         "template": "badge",
         "configuration": {
             "repeatEventManagement": "always",
@@ -16,6 +14,8 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0B04-#EP#-050B"
+        "logicalId": "0B04-#EP#-050B",
+        "unit": "W",
+        "genericType": "POWER"
     }
 }

@@ -366,9 +366,9 @@
             $queue[] = $newCmd;
             $queueSize = count($queue);
             if ($priority == PRIO_HIGH)
-                cmdLog("debug", "      Added cmd to Zigate".$zgId." HIGH priority queue. Nb Cmd: ".$queueSize, $this->debug['addCmdToQueue2']);
+                cmdLog("debug", "      Added cmd to Zigate".$zgId." HIGH priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
             else
-                cmdLog("debug", "      Added cmd to Zigate".$zgId." normal priority queue. Nb Cmd: ".$queueSize, $this->debug['addCmdToQueue2']);
+                cmdLog("debug", "      Added cmd to Zigate".$zgId." normal priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
             if ($queueSize > 50) {
                 cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
             }
@@ -633,7 +633,10 @@
             while (true) {
                 $msgMax = $this->queueParserToCmdAckMax;
                 if (msg_receive($this->queueParserToCmdAck, 0, $msgType, $msgMax, $msg, false, MSG_IPC_NOWAIT, $errCode) == false) {
-                    if ($errCode != 42) // 42 = No message
+                    if ($errCode == 7) {
+                        msg_receive($this->queueParserToCmdAck, 0, $msgType, $msgMax, $msg, false, MSG_IPC_NOWAIT | MSG_NOERROR);
+                        logMessage('debug', 'processZigateAcks() ERROR: msg TOO BIG ignored: '.json_encode($msg));
+                    } else if ($errCode != 42) // 42 = No message
                         cmdLog("debug", "processZigateAcks() ERROR ".$errCode);
                     break;
                 }
@@ -761,10 +764,12 @@
 
                 // Apply
                 if ($removeCmd) {
+cmdLog('debug', 'queue before='.json_encode($zg['cmdQueue']));
                     if ($zg['sentPri'] == PRIO_HIGH)
                         array_shift($zg['cmdQueueHigh']); // Removing cmd
                     else
                         array_shift($zg['cmdQueue']); // Removing cmd
+cmdLog('debug', 'queue after='.json_encode($zg['cmdQueue']));
                 }
                 if ($removeCmd || $zigateIsFree)
                     $zg['available'] = 1; // Zigate is free again

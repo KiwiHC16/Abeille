@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220130-BETA-1
+-------------
+
 - LivarnoLux applique murale HG06701: Correction modèle (2256).
 - Blitzwolf SHP15: Support preliminaire (2277).
 - Assistant EQ/JSON: Update.

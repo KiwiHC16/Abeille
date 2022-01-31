@@ -6,6 +6,8 @@ ChangeLog
 - Aqara TVOC moniteur d'air AAQS-S01: Mise-à-jour modèle (2279).
 - Assistant JSON: mise-à-jour.
 - Modèle commande JSON: 'getPlugVAW' => 'poll-0B04-0505-0508-050B'.
+- Interne: AbeilleCmd: Message debug & améliorations controle de flux envoie.
+- Message d'erreur remonté à l'utilisateur si erreur dans log.
 
 220130-BETA-1
 -------------

@@ -61,7 +61,7 @@
                 "isVisible": 1,
                 "params": "mult=1&div=1"
             },
-            "include0B04-5": "getPlugVAW"
+            "Poll 0B04": { "use": "poll-0B04-0505-0508-050B" }
         }
     }
 }

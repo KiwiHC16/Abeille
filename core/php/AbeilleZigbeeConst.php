@@ -253,9 +253,9 @@
         "000C" => array(
             "name" => "Analog Input",
             "attributes" => array(
-                "0051" => array( "name" => "OutOfService", "access" => "RW" ),
+                "0051" => array( "name" => "OutOfService", "access" => "RW", "dataType" => 0x10 ), // Type bool
                 "0055" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x39 ), // 0x39 = Single precision
-                "006F" => array( "name" => "StatusFlags", "access" => "R" ),
+                "006F" => array( "name" => "StatusFlags", "access" => "R", "dataType" => 0x18 ), // Type map8
             ),
         ),
         "0014" => array(

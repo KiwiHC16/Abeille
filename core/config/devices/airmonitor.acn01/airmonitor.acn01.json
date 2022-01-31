@@ -37,9 +37,23 @@
                 "use": "zb-0001-BatteryPercent"
             },
 
+            "OutOfService": {
+                "use": "zb-000C-OutOfService"
+            },
+            "Get OutOfService": {
+                "use": "zbReadAttribute",
+                "params": "clustId=000C&attrId=0051"
+            },
             "Air quality": {
                 "use": "zb-000C-PresentValue",
                 "isVisible": 1
+            },
+            "StatusFlags": {
+                "use": "zb-000C-StatusFlags"
+            },
+            "Get StatusFlags": {
+                "use": "zbReadAttribute",
+                "params": "clustId=000C&attrId=006F"
             },
             "Bind 000C-ToZigate": {
                 "use": "zbBindToZigate",
@@ -48,8 +62,8 @@
             },
             "SetReporting 000C-PresentValue": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=000C&attrId=0055&attrType=39&minInterval=012C&maxInterval=0E10&changeVal=",
-                "comment": "Reporting set every 5min to 1H",
+                "params": "clustId=000C&attrId=0055&attrType=39&minInterval=012C&maxInterval=0258&changeVal=",
+                "comment": "Reporting set every 5min to 10min",
                 "execAtCreation": "Yes"
             },
 

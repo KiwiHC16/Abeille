@@ -923,7 +923,32 @@
                 cmds["Current Level"]["nextLine"] = "after";
                 cmds["Get Current Level"] = newCmd("zbReadAttribute", "clustId=0008&attrId=0000");
                 cmds["Bind 0008-ToZigate"] = newCmd("zbBindToZigate", "clustId=0008", "yes");
-                cmds["SetReporting 0008"] = newCmd("zbConfigureReporting", "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                cmds["SetReporting 0008-0000"] = newCmd("zbConfigureReporting", "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+            }
+
+            /* Analog Input */
+            if (isset(ep.servClusters["000C"]) && isset(ep.servClusters["000C"]['attributes'])) {
+                attributes = ep.servClusters["000C"]['attributes'];
+                if (isset(attributes['0051'])) {
+                    cmds["OutOfService"] = newCmd("zb-000C-OutOfService");
+                    // cmds["OutOfService"]["isVisible"] = 1;
+                    cmds["Get OutOfService"] = newCmd("zbReadAttribute", "clustId=000C&attrId=0051");
+                }
+                if (isset(attributes['0055'])) {
+                    cmds["PresentValue"] = newCmd("zb-000C-PresentValue");
+                    cmds["PresentValue"]["isVisible"] = 1;
+                    cmds["Get PresentValue"] = newCmd("zbReadAttribute", "clustId=000C&attrId=0055");
+
+                    cmds["SetReporting 000C-PresentValue"] = newCmd("zbConfigureReporting", "clustId=000C&attrId=0055&attrType=39&minInterval=012C&maxInterval=0258&changeVal=", "yes");
+                    cmds["SetReporting 000C-PresentValue"]["comment"] = "Reporting every 5 to 10min";
+                }
+                if (isset(attributes['006F'])) {
+                    cmds["StatusFlags"] = newCmd("zb-000C-StatusFlags");
+                    // cmds["StatusFlags"]["isVisible"] = 1;
+                    cmds["Get StatusFlags"] = newCmd("zbReadAttribute", "clustId=000C&attrId=006F");
+                }
+
+                cmds["Bind 000C-ToZigate"] = newCmd("zbBindToZigate", "clustId=000C", "yes");
             }
 
             /* Window covering */

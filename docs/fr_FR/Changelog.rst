@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+- Page config: Changement mineur. Type 'WIFI' => 'WIFI/ETH'.
+- Page config: Liste des ports réduite au retour Jeedom getUsbMapping() + info 'Orange Pi Zero'.
+- Aqara TVOC moniteur d'air AAQS-S01: Mise-à-jour modèle (2279).
+- Assistant JSON: mise-à-jour.
+- Modèle commande JSON: 'getPlugVAW' => 'poll-0B04-0505-0508-050B'.
+
 220130-BETA-1
 -------------
 

@@ -106,7 +106,7 @@
             echo '<div class="col-lg-4">';
                 echo '<select id="idSelZgType'.$zgId.'" class="configKey form-control" data-l1key="AbeilleType'.$zgId.'" onchange="checkZigateType('.$zgId.')"  title="{{Type de zigate}}">';
                     echo '<option value="USB" selected>{{USB v1}}</option>';
-                    echo '<option value="WIFI">{{WIFI}}</option>';
+                    echo '<option value="WIFI">{{WIFI/Ethernet}}</option>';
                     echo '<option value="PI">{{PI v1}}</option>';
                     echo '<option value="DIN">{{DIN v1}}</option>';
                     echo '<option value="USBv2" selected>{{USB +/v2}}</option>';
@@ -123,13 +123,15 @@
                     echo '<option value="none" selected>{{Aucun}}</option>';
                     echo '<option value="'.wifiLink.$zgId.'" >{{WIFI'.$zgId.'}}</option>';
                     echo '<option value="/dev/monitZigate'.$zgId.'" >{{Monit'.$zgId.'}}</option>';
-                    foreach (jeedom::getUsbMapping('', false) as $name => $value) {
+                    foreach (jeedom::getUsbMapping('', true) as $name => $value) {
                         $value2 = substr($value, 5); // Remove '/dev/'
+                        if ($value2 == "ttyS1")
+                            $name .= ", Orange Pi Zero";
                         echo '<option value="'.$value.'">'.$value2.' ('.$name.')</option>';
                     }
-                    foreach (ls('/dev/', 'tty*') as $value) {
-                        echo '<option value="/dev/'.$value.'">'.$value.'</option>';
-                    }
+                    // foreach (ls('/dev/', 'tty*') as $value) {
+                    //     echo '<option value="/dev/'.$value.'">'.$value.'</option>';
+                    // }
                 echo '</select>';
             echo '</div>';
             echo '<div class="col-lg-5">';
@@ -138,7 +140,7 @@
                     echo '<a class="serialPortStatus'.$zgId.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
                         echo '<span class="label label-success" style="font-size:1em">-?-</span>';
                     echo '</a>';
-                    echo '<a class="btn btn-danger ml4px" onclick="installTTY()" title="{{Tentative de libération du port}}"><i class="fas fa-sync"></i> {{Libérer}}</a>';
+                    echo '<a class="btn btn-danger ml4px" onclick="installTTY()" title="{{Tentative de libération du port qui pourrait être utilisé par la console}}"><i class="fas fa-sync"></i> {{Libérer}}</a>';
                 echo '</div>';
             echo '</div>';
         echo '</div>';

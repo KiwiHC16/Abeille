@@ -588,7 +588,7 @@
             $addrMode = "02";
             // TODO: Check 'addr' size
             $srcEp = "01";
-            // TODO: Check 'destEp' size
+            // TODO: Check 'dstEp' size
             // TODO: Check 'clustId' size
             $dir = "00";
 
@@ -600,22 +600,23 @@
                 // TODO: check manufId size
             }
 
-            /* Supporting multi-attributes (ex: '0505,0508,050B')/
-            Tcharp38 note: This way is not recommended as Zigate team is unable to tell the max number
-                of attributs for the request to be "functional". Seems ok up to 4. */
+            /* Supporting multi-attributes (ex: '0505,0508,050B')
+               Tcharp38 note: This way is not recommended as Zigate team is unable to tell the max number
+                    of attributs for the request to be "functional". Seems ok up to 4. */
             $list = explode(',', $attribId);
             $attribList = "";
             $nbAttr = 0;
             foreach ($list as $attrId) {
-                // TODO: Check 'attrId' size
+                if (strlen($attrId) != 4) {
+                    cmdLog('error', "readAttribute(): Format attribut (".$attrId.") incorrect => ignoré.");
+                    continue;
+                }
                 $attribList .=  $attrId;
                 $nbAttr++;
             }
             $nbOfAttrib = sprintf("%02X", $nbAttr);
-
             $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttrib.$attribList;
-            // $len = sprintf("%04s", dechex(strlen($data) / 2));
-            // $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
+
             $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
         }
 

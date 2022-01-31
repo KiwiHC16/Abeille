@@ -122,8 +122,13 @@
             fflush(STDOUT);
         } else {
             $lFile = $GLOBALS["logDir"]."/".$GLOBALS["logFile"];
-            file_put_contents($lFile, $prefix.$msg."\n", FILE_APPEND);
+            if (strcasecmp($logLevel, "error") == 0)
+                file_put_contents($lFile, $prefix."ERROR: ".$msg."\n", FILE_APPEND);
+            else
+                file_put_contents($lFile, $prefix.$msg."\n", FILE_APPEND);
             $GLOBALS["logNbOfLines"]++;
+            if (strcasecmp($logLevel, "error") == 0)
+                message::add("Abeille", "ERREUR: ".$msg, '');
 
             if ($GLOBALS["logNbOfLines"] > $GLOBALS["logMaxLines"]) {
                 $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory

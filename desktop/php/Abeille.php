@@ -77,17 +77,22 @@
         $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/0000'
         list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
         $zgId = hexdec(substr($eqNet, 7)); // Extracting zigate number from network
+        $eqId = $eqLogic->getId();
         $eq = [];
-        $eq['id'] = $eqLogic->getId();
+        $eq['id'] = $eqId;
         $eq['addr'] = $eqAddr;
+        $eq['mainEp'] = $eqLogic->getConfiguration('mainEP', '');
         if ($eqAddr == "0000") {
-            if (isset($eqPerZigate[$zgId]))
-                array_unshift($eqPerZigate[$zgId], $eq);
+            if (isset($eqPerZigate[$zgId][$eqId]))
+                array_unshift($eqPerZigate[$zgId][$eqId], $eq);
             else
-                $eqPerZigate[$zgId][] = $eq;
+                $eqPerZigate[$zgId][$eqId] = $eq;
         } else
-            $eqPerZigate[$zgId][] = $eq;
+            $eqPerZigate[$zgId][$eqId] = $eq;
     }
+    echo '<script>var js_eqPerZigate = \''.json_encode($eqPerZigate).'\';</script>';
+    echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
+
     // logDebug("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
     // $parametersAbeille = AbeilleTools::getParameters();
 

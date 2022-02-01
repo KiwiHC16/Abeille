@@ -8,6 +8,7 @@ ChangeLog
 - Modèle commande JSON: 'getPlugVAW' => 'poll-0B04-0505-0508-050B'.
 - Interne: AbeilleCmd: Message debug & améliorations controle de flux envoie.
 - Message d'erreur remonté à l'utilisateur si erreur dans log.
+- Page gestion: Controle des groupes revu suite core 2.4.7 (2284).
 
 220130-BETA-1
 -------------

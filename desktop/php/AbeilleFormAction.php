@@ -78,74 +78,74 @@ logDebug("LA=".$json_encode($abQueues));
         switch ($_POST['submitButton']) {
 
             // Group
-            case 'Add Group':
-                foreach ( $_POST as $item=>$Value ) {
-                    if ( strpos("-".$item, "eqSelected") == 1 ) {
-                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-                        list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-                        $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/addGroup', 'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
-                        sleep(1);
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
-                        sleep(1);
-                    }
-                }
-                break;
+            // case 'Add Group': // OBSOLETE
+            //     foreach ( $_POST as $item=>$Value ) {
+            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
+            //             echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+            //             $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+            //             list( $dest, $address ) = explode( "/", $device->getLogicalId() );
+            //             $EP = $device->getConfiguration('mainEP');
+            //             sendMessageFromFormToCmd('Cmd'.$dest.'/0000/addGroup', 'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
+            //             sleep(1);
+            //             sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
+            //             sleep(1);
+            //         }
+            //     }
+            //     break;
 
-            case 'Set Group Remote':
-                foreach ( $_POST as $item=>$Value ) {
-                    if ( strpos("-".$item, "eqSelected") == 1 ) {
-                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-                        list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-                        $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/commissioningGroupAPS', 'address='.$address.'&groupId='.$_POST['group'] );
-                    }
-                }
-                break;
+            // case 'Set Group Remote': // OBSOLETE
+            //     foreach ( $_POST as $item=>$Value ) {
+            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
+            //             echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+            //             $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+            //             list( $dest, $address ) = explode( "/", $device->getLogicalId() );
+            //             $EP = $device->getConfiguration('mainEP');
+            //             sendMessageFromFormToCmd('Cmd'.$dest.'/0000/commissioningGroupAPS', 'address='.$address.'&groupId='.$_POST['group'] );
+            //         }
+            //     }
+            //     break;
 
-            case 'Set Group Remote Legrand':
-                foreach ( $_POST as $item=>$Value ) {
-                    if ( strpos("-".$item, "eqSelected") == 1 ) {
-                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-                        list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-                        $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/commissioningGroupAPSLegrand', 'address='.$address.'&groupId='.$_POST['group'] );
-                    }
-                }
-                break;
+            // case 'Set Group Remote Legrand': // OBSOLETE
+            //     foreach ( $_POST as $item=>$Value ) {
+            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
+            //             echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+            //             $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+            //             list( $dest, $address ) = explode( "/", $device->getLogicalId() );
+            //             $EP = $device->getConfiguration('mainEP');
+            //             sendMessageFromFormToCmd('Cmd'.$dest.'/0000/commissioningGroupAPSLegrand', 'address='.$address.'&groupId='.$_POST['group'] );
+            //         }
+            //     }
+            //     break;
 
-            case 'Remove Group':
-                foreach ( $_POST as $item=>$Value ) {
-                    if ( strpos("-".$item, "eqSelected") == 1 ) {
-                        echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-                        list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-                        $EP = $device->getConfiguration('mainEP');
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/removeGroup',        'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
-                        sleep(1);
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
-                        sleep(1);
-                    }
-                }
-                break;
+            // case 'Remove Group': // OBSOLETE
+            //     foreach ( $_POST as $item=>$Value ) {
+            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
+            //             echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+            //             $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+            //             list( $dest, $address ) = explode( "/", $device->getLogicalId() );
+            //             $EP = $device->getConfiguration('mainEP');
+            //             sendMessageFromFormToCmd('Cmd'.$dest.'/0000/removeGroup',        'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
+            //             sleep(1);
+            //             sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
+            //             sleep(1);
+            //         }
+            //     }
+            //     break;
 
-            case 'Get Group':
-                foreach ( $_POST as $item=>$Value ) {
-                    if ( strpos( $item, "eqSelected") === 0 ) {
-                        echo "Id: ->".substr( $item, strpos($item,"-")+1 )."<-<br>\n";
-                        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-                        list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-                        echo "Dest: ".$dest."<br>";
-                        echo "Address: ".$address."<br>";
-                        $EP = $device->getConfiguration('mainEP');
-                        echo "Id: ".$EP."<br>";
-                        sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
-                    }
-                }
-                break;
+            // case 'Get Group': // OBSOLETE
+            //     foreach ( $_POST as $item=>$Value ) {
+            //         if ( strpos( $item, "eqSelected") === 0 ) {
+            //             echo "Id: ->".substr( $item, strpos($item,"-")+1 )."<-<br>\n";
+            //             $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+            //             list( $dest, $address ) = explode( "/", $device->getLogicalId() );
+            //             echo "Dest: ".$dest."<br>";
+            //             echo "Address: ".$address."<br>";
+            //             $EP = $device->getConfiguration('mainEP');
+            //             echo "Id: ".$EP."<br>";
+            //             sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
+            //         }
+            //     }
+            //     break;
 
             // Scene
             case 'Get Scene Info':

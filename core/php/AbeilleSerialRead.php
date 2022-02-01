@@ -81,8 +81,12 @@
         exec(system::getCmdSudo().'touch '.$serial.' > /dev/null 2>&1');
     }
 
+    $firstFrame = true; // To indicate that first frame might be corrupted
+
     // Wait for port to be available, configure it then open it
     function waitPort($serial) {
+        global $firstFrame;
+
         while (true) {
             // Wait for port
             while (true) {
@@ -108,6 +112,7 @@
             if ($f !== false) {
                 logMessage('debug', $serial.' port opened');
                 stream_set_blocking($f, true); // Should be blocking read but is it default ?
+                $firstFrame = true; // First frame might be corrupted
                 return $f;
             }
             sleep(1);
@@ -231,9 +236,10 @@
                 $frame .= $byte; // Unexpected outside 01..03 markers => error
             } else {
                 /* "01" start found */
-                if ($frame != "")
+                if (($frame != "") && !$firstFrame)
                     logMessage('error', 'Trame en dehors marqueurs: '.json_encode($frame));
                 $frame = "";
+                $firstFrame = false;
                 $step = "WAITEND";
                 $byteIdx = 1; // Next byte is index 1
                 $ccrc = 0;

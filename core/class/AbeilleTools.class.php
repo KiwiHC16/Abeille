@@ -1074,6 +1074,8 @@
         public
         static function sendMessageToRuche($daemon, $message = "")
         {
+            global $abQueues;
+
             $daemonName = (preg_match('/[a-zA-Z]*/', $daemon, $matches) != true ? $daemon : $matches[0]);
             unset($matches);
             $zigateNbr = (preg_match('/[0-9]/', $daemon, $matches) != true ? "1" : $matches[0]);

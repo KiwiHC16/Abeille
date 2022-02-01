@@ -48,6 +48,7 @@
             $queueId = $_GET['queueId'];
         else
             $queueId = $abQueues['xmlToAbeille']['id'];
+        if (isset($dbgTcharp38)) logDebug("CliToQueue: queueId=".$queueId);
         $queue = msg_get_queue($queueId);
         if ($queue === false) {
             if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: Invalid queue ID ".$queueId);

@@ -48,12 +48,11 @@
          * @return none
          *
          */
-        function prepareCmd($message, $phpunit=0) {
+        function prepareCmd($topic, $payload, $phpunit=0) {
 
-            cmdLog("debug", "  prepareCmd(".json_encode($message).")", $this->debug['prepareCmd']);
+            cmdLog("debug", "  prepareCmd(".$topic.", ".$payload.")", $this->debug['prepareCmd']);
 
-            $topic      = $message->topic;
-            $msg        = $message->payload;
+            $msg        = $payload;
             // $priority   = $message->priority;
             $priority   = PRIO_NORM; // TO be removed. Default value
 
@@ -105,53 +104,16 @@
                     "address" => $address,
                 );
                 break;
-            // case "getRoutingTable":
-            // case "Mgmt_Rtg_req":
-            //     $Command = array(
-            //         "getRoutingTable" => "1",
-            //         "priority" => $priority,
-            //         "dest" => $dest,
-            //         "address" => $address,
-            //     );
-            //     break;
-            // case "getBindingTable":
-            //     $Command = array(
-            //         "getBindingTable" => "1",
-            //         "priority" => $priority,
-            //         "dest" => $dest,
-            //         "address" => $address,
-            //     );
-            //     break;
-            case "Management_LQI_request": // Mgmt_Lqi_req: OBSOLETE: Use 'getNeighborTable' instead
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                    "Management_LQI_request" => "1",
-                    "priority" => $priority,
-                    "dest" => $dest,
-                    "address" => $keywords[1],
-                    "StartIndex" => $keywords[3],
-                );
-                break;
-            // case "getNeighborTable": // Mgmt_Lqi_req
+            // case "IEEE_Address_request":
             //     $keywords = preg_split("/[=&]+/", $msg);
             //     $Command = array(
-            //         "getNeighborTable" => "1",
-            //         "priority" => $priority,
-            //         "dest" => $dest,
-            //         "addr" => $address,
-            //         "startIndex" => $keywords[1]
+            //         "IEEE_Address_request"      => "1",
+            //         "priority"                  => $priority,
+            //         "dest"                      => $dest,
+            //         "address"                   => $address,
+            //         "shortAddress"              => $keywords[1],
             //     );
             //     break;
-            case "IEEE_Address_request":
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                    "IEEE_Address_request"      => "1",
-                    "priority"                  => $priority,
-                    "dest"                      => $dest,
-                    "address"                   => $address,
-                    "shortAddress"              => $keywords[1],
-                );
-                break;
             case "bindShort": // OBSOLETE: Use 'bind0030' instead
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -324,17 +286,6 @@
                 if (isset($parameters["Change"]))                  { $Command['Change']                = str_pad(dechex($parameters['Change']),        2,0,STR_PAD_LEFT); }
                 if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                 break;
-
-            // case "readReportingConfig":
-            //     $Command = array(
-            //         "readReportingConfig"    => "1",
-            //         "priority"              => $priority,
-            //         "dest"                  => $dest,
-            //         "addr"                  => $parameters['addr'],
-            //         "clustId"               => $parameters['clustId'],
-            //         "attrId"                => $parameters['attrId'],
-            //         );
-            //     break;
 
             /*
              * Unsorted yet
@@ -742,48 +693,47 @@
                                     );
                 break;
 
-            case "setLevel":
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                    $Command = array(
-                                    "setLevel"             => "1",
-                                    "addressMode"          => "02",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address"              => $address,
-                                    "destinationEndpoint"  => $parameters['EP'],
-                                    "Level"                => intval($parameters['Level'] * 255 / 100),
-                                    "duration"             => $parameters['duration'],
-                                );
-                }
-                break;
+            // case "setLevel":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //         $Command = array(
+            //                         "setLevel"             => "1",
+            //                         "addressMode"          => "02",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address"              => $address,
+            //                         "destinationEndpoint"  => $parameters['EP'],
+            //                         "Level"                => intval($parameters['Level'] * 255 / 100),
+            //                         "duration"             => $parameters['duration'],
+            //                     );
+            //     }
+            //     break;
             case "setLevelRaw":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
                     $parameters = $this->proper_parse_str($msg);
                     $Command = array(
-                                        "setLevel"             => "1",
-                                        "addressMode"          => "02",
-                                        "priority" => $priority,
-                                        "dest" => $dest,
-                                        "address"              => $address,
-                                        "destinationEndpoint"  => $parameters['EP'],
-                                        "Level"                => $parameters['Level'],
-                                        "duration"             => $parameters['duration'],
-                                        );
+                        "name"      => "setLevelRaw",
+                        "priority"  => $priority,
+                        "dest"      => $dest,
+                        "addr"      => $address,
+                        "EP"        => $parameters['EP'],
+                        "Level"     => $parameters['Level'],
+                        "duration"  => $parameters['duration'],
+                    );
                 }
                 break;
             case "setLevelOSRAM":
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                                    "setLevel" => "1",
-                                    "addressMode" => "02",
+                                    "name" => "setLevel",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "address" => $address,
-                                    "destinationEndpoint" => "03",
-                                    "Level" => intval($keywords[1] * 255 / 100),
+                                    "addr" => $address,
+                                    "EP" => "03",
+                                    // "Level" => intval($keywords[1] * 255 / 100),
+                                    "Level" => $keywords[1],
                                     "duration" => $keywords[3],
                                     );
                 break;
@@ -803,12 +753,11 @@
                 $level = $levelPourcent * 255;
                 $level = min(max(round($level), 0), 255);
                 $Command = array(
-                    "setLevel" => "1",
-                    "addressMode" => "02",
+                    "name" => "setLevelRaw",
                     "priority" => $priority,
                     "dest" => $dest,
-                    "address" => $address,
-                    "destinationEndpoint" => "01",
+                    "addr" => $address,
+                    "EP" => "01",
                     "Level" => $level,
                     "duration" => $parameters['duration'],
                 );
@@ -857,13 +806,13 @@
             case "setLevelHue":
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
-                                    "setLevel" => "1",
-                                    "addressMode" => "02",
+                                    "name" => "setLevel",
                                     "priority" => $priority,
                                     "dest" => $dest,
-                                    "address" => $address,
-                                    "destinationEndpoint" => "0B",
-                                    "Level" => intval($keywords[1] * 255 / 100),
+                                    "addr" => $address,
+                                    "EP" => "0B",
+                                    // "Level" => intval($keywords[1] * 255 / 100),
+                                    "Level" => $keywords[1],
                                     "duration" => $keywords[3],
                                     );
                 break;
@@ -883,23 +832,23 @@
                                     "duration"             => $parameters['duration'],
                                     );
                 break;
-            case "setColour":
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                    $Command = array(
-                                        "setColour"            => "1",
-                                        "addressMode"          => "02",
-                                        "priority" => $priority,
-                                        "dest" => $dest,
-                                        "address"              => $address,
-                                        "X"                    => $parameters['X'],
-                                        "Y"                    => $parameters['Y'],
-                                        "destinationEndPoint"  => $parameters['EP'],
-                                        "duration"             => $parameters['duration'],
-                                        );
-                }
-                break;
+            // case "setColour":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //         $Command = array(
+            //                             "setColour"            => "1",
+            //                             "addressMode"          => "02",
+            //                             "priority" => $priority,
+            //                             "dest" => $dest,
+            //                             "address"              => $address,
+            //                             "X"                    => $parameters['X'],
+            //                             "Y"                    => $parameters['Y'],
+            //                             "destinationEndPoint"  => $parameters['EP'],
+            //                             "duration"             => $parameters['duration'],
+            //                             );
+            //     }
+            //     break;
             case "setColourGroup":
                     $fields = preg_split("/[=&]+/", $msg);
                     if (count($fields) > 1) {
@@ -931,10 +880,10 @@
                 $vert  = hexdec(substr($parameters['color'],2,2));
                 $bleu  = hexdec(substr($parameters['color'],4,2));
 
-                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorRouge', $rouge*100/255      );
-                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorVert',  $vert*100/255       );
-                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, 'Abeille/'.$address.'/colorBleu',  $bleu*100/255       );
-                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, 'Abeille/'.$address.'/ColourRGB',  $parameters['color']);
+                $this->msgToAbeille('Abeille/'.$address.'/colorRouge', $rouge*100/255      );
+                $this->msgToAbeille('Abeille/'.$address.'/colorVert',  $vert*100/255       );
+                $this->msgToAbeille('Abeille/'.$address.'/colorBleu',  $bleu*100/255       );
+                $this->msgToAbeille('Abeille/'.$address.'/ColourRGB',  $parameters['color']);
 
                 $Command = array(
                                     "setColourRGB" => "1",
@@ -958,7 +907,7 @@
                 if ($vert=="" )  { $vert = 1;    }
                 if ($bleu=="" )  { $bleu = 1;    }
 
-                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, $dest.'/'.$address.'/colorRouge', $msg );
+                $this->msgToAbeille($dest.'/'.$address.'/colorRouge', $msg );
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -987,7 +936,7 @@
                 if ($vert=="" )  { $vert = 1;    }
                 if ($bleu=="" )  { $bleu = 1;    }
 
-                $this->publishMosquittoAbeille(queueKeyCmdToAbeille, $dest.'/'.$address.'/colorVert', $msg );
+                $this->msgToAbeille($dest.'/'.$address.'/colorVert', $msg );
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -1016,7 +965,7 @@
                 if ($vert=="" )  { $vert = 1;    }
                 if ($bleu=="" )  { $bleu = 1;    }
 
-                $this->publishMosquittoAbeile(queueKeyCmdToAbeille, $dest.'/'.$address.'/colorBleu', $msg );
+                $this->msgToAbeille($dest.'/'.$address.'/colorBleu', $msg);
 
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -1058,26 +1007,26 @@
                                     "destinationEndPoint" => "03",
                                     );
                 break;
-            case "setTemperature":
-                // T°K   Hex sent  Dec eq
-                // 2200	 01C6	   454
-                // 2700	 0172	   370
-                // 4000	 00FA	   250
-                // De ces nombres on calcule l'equation: Y = -0,113333333 * X + 703,3333333
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
-                $Command = array(
-                                    "setTemperature"       => "1",
-                                    "addressMode"          => "02",
-                                    "priority"             => $priority,
-                                    "dest"                 => $dest,
-                                    "address"              => $address,
-                                    "temperature"          => sprintf("%04s", dechex(intval(1000000/$parameters['slider'])) ),
-                                    "destinationEndPoint"  => $parameters['EP'],
-                                    );
-                break;
+            // case "setTemperature":
+            //     // T°K   Hex sent  Dec eq
+            //     // 2200	 01C6	   454
+            //     // 2700	 0172	   370
+            //     // 4000	 00FA	   250
+            //     // De ces nombres on calcule l'equation: Y = -0,113333333 * X + 703,3333333
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //     }
+            //     $Command = array(
+            //                         "setTemperature"       => "1",
+            //                         "addressMode"          => "02",
+            //                         "priority"             => $priority,
+            //                         "dest"                 => $dest,
+            //                         "address"              => $address,
+            //                         "temperature"          => sprintf("%04s", dechex(intval(1000000/$parameters['slider'])) ),
+            //                         "destinationEndPoint"  => $parameters['EP'],
+            //                         );
+            //     break;
             case "setTemperatureGroup":
                 // T°K   Hex sent  Dec eq
                 // 2200     01C6       454

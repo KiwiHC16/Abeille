@@ -48,6 +48,15 @@
     </div>
 </div>
 <div class="form-group">
+    <label class="col-sm-3 control-label" title="getSimpleDescriptor (Simple_Desc_req)">Simple descriptor request</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-warning" onclick="interrogate(\'getSimpleDescriptor\', \''.$eqId.'\')">{{Interroger}}</a>';
+            addEpButton("idEpSDR", $mainEP);
+        ?>
+    </div>
+</div>
+<div class="form-group">
     <label class="col-sm-3 control-label" title="getIeeeAddress (IEEE_addr_req)">Adresse IEEE</label>
     <div class="col-sm-5">
         <?php

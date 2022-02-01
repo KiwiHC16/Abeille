@@ -68,13 +68,14 @@
             if (isset($_options)) {
                 switch ($cmd->getSubType()) {
                 case 'slider':
+                    $sliderVal = $_options['slider'];
+                    $sliderVal = trim($sliderVal); // Remove potential space seen at end of slider value
                     $cmdTopic = $cmd->getConfiguration('topic', '');
                     if ($cmdTopic == "writeAttribute") {
                         // New way of handling #slider#
-                        $sliderVal = $_options['slider'];
                         $request2 = str_replace('#slider#', '#slider'.$sliderVal.'#', $request2);
                     } else
-                        $request2 = str_replace('#slider#', $_options['slider'], $request2);
+                        $request2 = str_replace('#slider#', $sliderVal, $request2);
                     break;
                 case 'color':
                     $request2 = str_replace('#color#', $_options['color'], $request2);
@@ -106,6 +107,8 @@
            Tcharp38: why is it part of AbeilleCmd ? Shouldn't be in Abeille.class.php ? */
         public function execute($_options = null)
         {
+            global $abQueues;
+
             logSetConf("AbeilleCmd.log", true); // Mandatory since called from 'Abeille.class.php'
             logMessage('debug', '-- execute(eqName='.$this->getEqLogic()->getName().' name='.$this->getName().' type='.$this->getType().', options='.json_encode($_options).')');
 
@@ -140,23 +143,24 @@
                 $request = $this->updateField($dest, $this, $this->getConfiguration('request', '1'), $_options);
 
                 // -------------------------------------------------------------------------
-                $msgAbeille = new MsgAbeille;
-                $msgAbeille->message['topic'] = $topic;
-                $msgAbeille->message['payload'] = $request;
+                $msg = array();
+                $msg['topic'] = $topic;
+                $msg['payload'] = $request;
 
                 if (strpos($topic, "CmdCreate") === 0) {
-                    $queueKeyAbeilleToAbeille = msg_get_queue(queueKeyAbeilleToAbeille);
-                    if (msg_send($queueKeyAbeilleToAbeille, 1, $msgAbeille, true, false)) {
-                        logMessage('debug', '-- execute(): CmdCreate: Msg sent: '.json_encode($msgAbeille));
+                    $queueAbeilleToAbeille = msg_get_queue($abQueues["abeilleToAbeille"]["id"]);
+                    if (msg_send($queueAbeilleToAbeille, 1, $msg, true, false)) {
+                        logMessage('debug', '-- execute(): CmdCreate: Msg sent: '.json_encode($msg));
                     } else {
-                        logMessage('debug', '-- execute(): CmdCreate: Could not send Msg');
+                        logMessage('debug', '-- execute(): ERROR: CmdCreate: Could not send Msg');
                     }
                 } else {
-                    $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
-                    if (msg_send($queueKeyAbeilleToCmd, PRIO_NORM, $msgAbeille, true, false)) {
-                        logMessage('debug', '-- execute(): Msg sent: '.json_encode($msgAbeille));
+                    // $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
+                    $queue = msg_get_queue($abQueues['xToCmd']['id']);
+                    if (msg_send($queue, PRIO_NORM, $msg, true, false)) {
+                        logMessage('debug', '-- execute(): Msg sent: '.json_encode($msg));
                     } else {
-                        logMessage('debug', '-- execute(): Could not send Msg');
+                        logMessage('debug', '-- execute(): ERROR: Could not send Msg');
                     }
                 }
 

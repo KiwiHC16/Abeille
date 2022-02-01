@@ -4,9 +4,7 @@
         "comment2": "TODO: calculValueOffset to be moved in parser if part of Zigbee spec",
         "name": "Level",
         "subType": "numeric",
-        "generic_type": "LIGHT_STATE",
         "template": "",
-        "unite": "%",
         "configuration": {
             "minValue": "0",
             "maxValue": "100",
@@ -14,6 +12,8 @@
             "calculValueOffset": "#value#\/255*100"
         },
         "type": "info",
-        "logicalId": "0008-#EP#-0000"
+        "logicalId": "0008-#EP#-0000",
+        "unit": "%",
+        "genericType": "LIGHT_STATE"
     }
 }

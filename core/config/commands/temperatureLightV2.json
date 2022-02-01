@@ -6,7 +6,6 @@
         "subType": "numeric",
         "invertBinary": "0",
         "template": "",
-        "unite": "K",
         "configuration": {
             "historizeRound": "0",
             "visibilityCategory": "All"
@@ -15,6 +14,7 @@
             "forceReturnLineAfter": "1"
         },
         "type": "info",
-        "logicalId": "0300-#EP#-0007"
+        "logicalId": "0300-#EP#-0007",
+        "unit": "K"
     }
 }

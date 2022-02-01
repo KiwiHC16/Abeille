@@ -9,7 +9,7 @@ require_once './AbeilleParser.class.php';
 require_once './AbeilleTools.class.php';
 
 ///////////////////////////////////////////
-// Dummy functions to be able to run others functions 
+// Dummy functions to be able to run others functions
 
 function parserLog($logLevel,$message) {
 }
@@ -19,7 +19,7 @@ function parserLog($logLevel,$message) {
 
 class AbeilleParserTestDB extends TestCase {
 
-    // Test to send an info from AbeilleParser to an Eq. 
+    // Test to send an info from AbeilleParser to an Eq.
     // Send a group to a bulb
     function test_msgToAbeille2() {
 
@@ -43,7 +43,7 @@ class AbeilleParserTestDB extends TestCase {
             'time'  => time(),
             'lqi'   => '00',
         );
-        
+
         $abeilleParser->msgToAbeille2($msg);
 
         sleep(2);
@@ -65,14 +65,14 @@ class AbeilleParserTestDB extends TestCase {
         $GLOBALS['eqList'][$net][$addr] = array();
 
         $eq = &$GLOBALS['eqList'][$net][$addr];
-        
-        $eq['ieee']             = "FFB457FFFE79EBFF";
-        $eq['epFirst']          = "01";
-        $eq['modelIdentifier']  = "";
-        $eq['manufacturer']     = "";
-        $eq['jsonId']           = "";
-        $eq['jsonLocation']     = "";
-        $eq['capa']             = "";
+
+        // $eq['ieee']             = "FFB457FFFE79EBFF";
+        // $eq['epFirst']          = "01";
+        // $eq['modelIdentifier']  = "";
+        // $eq['manufacturer']     = "";
+        // $eq['jsonId']           = "";
+        // $eq['jsonLocation']     = "";
+        // $eq['capa']             = "";
 
         $abeilleParser = new AbeilleParser;
 

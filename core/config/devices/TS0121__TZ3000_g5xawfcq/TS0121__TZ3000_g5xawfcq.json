@@ -41,7 +41,7 @@
             "include3 2 2 2 2": "PuissanceCurrentPrise",
             "include3 2 2 2": "PuissanceLegrandPrise",
             "include3 2 2 2 3": "CurrentSummationDelivered",
-            "include3 2 2 2 4 2 2": "getPlugVAW",
+            "Poll 0B04": { "use": "poll-0B04-0505-0508-050B" },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

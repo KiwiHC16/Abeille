@@ -4,7 +4,6 @@
         "name": "LivoloSwitchTrick2",
         "isHistorized": "0",
         "subType": "other",
-        "generic_type": "LIGHT_ON",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -14,6 +13,7 @@
             "execAtCreation": "Yes",
             "execAtCreationDelay": 10
         },
-        "type": "action"
+        "type": "action",
+        "genericType": "LIGHT_ON"
     }
 }

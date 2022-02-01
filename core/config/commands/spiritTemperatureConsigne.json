@@ -4,7 +4,6 @@
         "name": "Consigne",
         "isHistorized": "1",
         "subType": "numeric",
-        "generic_type": "TEMPERATURE",
         "invertBinary": "0",
         "template": "tempIMG",
         "configuration": {
@@ -12,8 +11,9 @@
             "historizeRound": "1",
             "visibilityCategory": "All"
         },
-        "unite": "\u00b0C",
         "type": "info",
-        "logicalId": "0201-#EP#-4003"
+        "logicalId": "0201-#EP#-4003",
+        "unit": "\u00b0C",
+        "genericType": "TEMPERATURE"
     }
 }

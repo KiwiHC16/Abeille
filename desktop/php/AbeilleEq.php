@@ -39,9 +39,10 @@
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
     echo '<script>var js_eqIeee = "'.$eqIeee.'";</script>'; // PHP to JS
     echo '<script>var js_zgId = '.$zgId.';</script>'; // PHP to JS
-    echo '<script>var js_queueKeyXmlToCmd = '.queueKeyXmlToCmd.';</script>'; // PHP to JS
+    // echo '<script>var js_queueKeyXmlToCmd = '.queueKeyXmlToCmd.';</script>'; // PHP to JS
     echo '<script>var js_batteryType = "'.$batteryType.'";</script>'; // PHP to JS
     $abQueues = $GLOBALS['abQueues'];
+    echo '<script>var js_queueKeyXmlToCmd = '.$abQueues['xToCmd']['id'].';</script>'; // PHP to JS
     echo '<script>var js_queueCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
 ?>
 

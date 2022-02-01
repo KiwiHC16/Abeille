@@ -4,13 +4,13 @@
         "name": "Down",
         "isHistorized": 0,
         "subType": "other",
-        "generic_type": "",
         "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "WindowsCovering",
             "request": "clusterCommand=01"
         },
-        "type": "action"
+        "type": "action",
+        "genericType": ""
     }
 }

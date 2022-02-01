@@ -4,10 +4,8 @@
         "name": "Batterie Volt",
         "isHistorized": "1",
         "subType": "numeric",
-        "generic_type": "BATTERY",
         "invertBinary": "0",
         "template": "vuMeter",
-        "unite": "V",
         "configuration": {
             "calculValueOffset": "#value#\/10",
             "minValue": "0",
@@ -15,6 +13,8 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0001-#EP#-0020"
+        "logicalId": "0001-#EP#-0020",
+        "unit": "V",
+        "genericType": "BATTERY"
     }
 }

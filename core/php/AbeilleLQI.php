@@ -29,7 +29,7 @@
        Check first is not aleady in the list. */
     function newEqToInterrogate($logicId) {
         global $eqToInterrogate;
-        global $eqKnownFromAbeille;
+        global $knownFromJeedom;
 
         /* Checking if not already in the list */
         foreach ($eqToInterrogate as $Eq) {
@@ -38,8 +38,8 @@
         }
         // TODO: What to do if mesg received does not match interrogated eq ?
 
-        if (isset($eqKnownFromAbeille[$logicId]))
-            $eqName = $eqKnownFromAbeille[$logicId];
+        if (isset($knownFromJeedom[$logicId]))
+            $eqName = $knownFromJeedom[$logicId]['name'];
         else
             $eqName = "Inconnu";
         list($netName, $addr) = explode('/', $logicId);
@@ -55,10 +55,9 @@
 
     /* Remove any pending messages from parser */
     function msgFromParserFlush() {
-        global $queueParserToLQI, $queueParserToLQISize;
+        global $queueParserToLQI;
 
-        $msgMaxSize = $queueParserToLQISize;
-        while (msg_receive($queueParserToLQI, 0, $msgType, $msgMaxSize, $msg, true, MSG_IPC_NOWAIT | MSG_NOERROR));
+        while (msg_receive($queueParserToLQI, 0, $msgType, 512, $msg, true, MSG_IPC_NOWAIT | MSG_NOERROR));
     }
 
     /* Treat request responses (804E) from parser.
@@ -67,16 +66,16 @@
         logMessage("", "msgFromParser(eqIndex=".$eqIndex.")");
 
         global $LQI;
-        global $queueParserToLQI, $queueParserToLQISize;
+        global $queueParserToLQI, $queueParserToLQIMax;
         global $eqToInterrogate;
-        global $eqKnownFromAbeille;
-        global $objKnownFromAbeille;
+        global $knownFromJeedom;
+        // global $objKnownFromAbeille;
 
         $timeout = 10; // 10sec (useful when there is unknown eq interrogation during LQI collect)
         for ($t = 0; $t < $timeout; ) {
             // logMessage("", "  Queue stat=".json_encode(msg_stat_queue($queueParserToLQI)));
-            $msgMaxSize = $queueParserToLQISize;
-            if (msg_receive($queueParserToLQI, 0, $msgType, $msgMaxSize, $msgJson, false, MSG_IPC_NOWAIT, $errCode) == true) {
+            $msgMax = $queueParserToLQIMax;
+            if (msg_receive($queueParserToLQI, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode) == true) {
                 /* Message received. Let's check it is the expected one */
                 $msg = json_decode($msgJson);
                 if ($msg->type != "804E") {
@@ -102,7 +101,7 @@
                 continue;
             }
             if ($errCode == 7) { // Message too big
-                msg_receive($queueParserToLQI, 0, $msgType, $msgMaxSize, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
+                msg_receive($queueParserToLQI, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
                 logMessage("", "  WARNING: TOO BIG msg => ignored");
                 continue;
             }
@@ -152,9 +151,10 @@
 
         $parameters = array();
         $parameters['NE'] = $NE; // Logical ID
-        if (isset($eqKnownFromAbeille[$NE])) {
-            $parameters['NE_Name'] = $eqKnownFromAbeille[$NE]; // Name
-            $parameters['NE_Objet'] = $objKnownFromAbeille[$NE]; // Parent object
+        if (isset($knownFromJeedom[$NE])) {
+            $parameters['NE_Name'] = $knownFromJeedom[$NE]['name']; // Name
+            // $parameters['NE_Objet'] = $objKnownFromAbeille[$NE]; // Parent object
+            $parameters['NE_Objet'] = $knownFromJeedom[$NE]['parent']; // Parent object
             $parent = Abeille::byLogicalId($NE, 'Abeille');
             $parentIEEE = $parent->getConfiguration('IEEE', '');
             $parameters['IEEE_Address'] = $parentIEEE;
@@ -174,9 +174,10 @@
             // list( $lqi, $voisineAddr, $i ) = explode("/", $message->topic);
 
             $parameters['Voisine'] = $netName."/".$N->Addr;
-            if (isset($eqKnownFromAbeille[$parameters['Voisine']])) {
-                $parameters['Voisine_Name'] = $eqKnownFromAbeille[$parameters['Voisine']];
-                $parameters['Voisine_Objet'] = $objKnownFromAbeille[$parameters['Voisine']];
+            if (isset($knownFromJeedom[$parameters['Voisine']])) {
+                $parameters['Voisine_Name'] = $knownFromJeedom[$parameters['Voisine']]['name'];
+                // $parameters['Voisine_Objet'] = $objKnownFromAbeille[$parameters['Voisine']];
+                $parameters['Voisine_Objet'] = $knownFromJeedom[$parameters['Voisine']]['parent'];
             } else {
                 $parameters['Voisine_Name'] = $parameters['Voisine'];
                 $parameters['Voisine_Objet'] = "Inconnu";
@@ -243,15 +244,13 @@
     /* Send msg to 'AbeilleCmd'
        Returns: 0=OK, -1=ERROR (fatal since queue issue) */
     function msgToCmd($dest, $addr, $index) {
-        $msgAbeille = new MsgAbeille;
-        // $msgAbeille->message['topic'] = "Cmd".$dest."/0000/Management_LQI_request";
-        // $msgAbeille->message['payload'] = "address=" . $addr . "&StartIndex=" . $index;
-        $msgAbeille->message['topic'] = "Cmd".$dest."/".$addr."/getNeighborTable";
-        $msgAbeille->message['payload'] = "startIndex=".$index;
-        logMessage("", "msgToCmd: ".json_encode($msgAbeille));
+        $msg = array();
+        $msg['topic'] = "Cmd".$dest."/".$addr."/getNeighborTable";
+        $msg['payload'] = "startIndex=".$index;
+        logMessage("", "msgToCmd: ".json_encode($msg));
 
-        global $queueKeyLQIToCmd;
-        if (msg_send($queueKeyLQIToCmd, priorityInterrogation, $msgAbeille, true, false) == false) {
+        global $queueLQIToCmd;
+        if (msg_send($queueLQIToCmd, priorityInterrogation, $msg, true, false) == false) {
             logMessage('error', "msgToCmd: Unable to send message to AbeilleCmd");
             return -1;
         }
@@ -265,12 +264,12 @@
 
         while (true) {
             $eq = $eqToInterrogate[$eqIndex]; // Read eq status
-            msgToCmd($netName, $addr, sprintf("%'.02X", $eq['TableIndex']));
+            msgToCmd($netName, $addr, sprintf("%02X", $eq['TableIndex']));
             usleep(200000); // Delay of 200ms to let response to come back
             $ret = msgFromParser($eqIndex);
             if ($ret == 1) {
                 /* If time-out, cancel interrogation for current eq only */
-                logMessage("", "Time-out => Abandon de l'interrogation de '".$eq['Name']."' (".$eq['Addr'].").");
+                logMessage("", "Time-out => Cancelling interrogation of '".$eq['Name']."' (".$eq['Addr'].").");
                 return 1;
             }
             if ($ret != 0) {
@@ -300,58 +299,60 @@
        URL => use $_GET[]
        Cmd line/shell => use $argv[] */
     if (isset($_GET['zigate'])) { // Zigate nb passed as URL ?
-        $zgNb = $_GET['zigate'];
+        $zgId = $_GET['zigate'];
     } else if (isset($argv[1])) { // Zigate nb passed as args ?
-        $zgNb = $argv[1];
+        $zgId = $argv[1];
     } else
-        $zgNb = -1;
-    if (($zgNb != -1) && (($zgNb < 1) or ($zgNb > 10))) {
+        $zgId = -1;
+    if (($zgId != -1) && (($zgId < 1) or ($zgId > 10))) {
         logMessage("", "  Bad zigate id => aborting.");
         exit;
     }
 
-    if ($zgNb == -1) {
+    if ($zgId == -1) {
         logMessage("", "Request to interrogate all active zigates");
         $zgStart = 1;
         $zgEnd = maxNbOfZigate;
     } else {
-        logMessage("", "Request to interrogate zigate ".$zgNb." only");
-        $zgStart = $zgNb;
-        $zgEnd = $zgNb;
+        logMessage("", "Request to interrogate zigate ".$zgId." only");
+        $zgStart = $zgId;
+        $zgEnd = $zgId;
     }
 
     // Collecting known equipments list
     logMessage("", "Known Jeedom equipments:");
     $eqLogics = eqLogic::byType('Abeille');
-    $eqKnownFromAbeille = array();
-    $objKnownFromAbeille = array();
+    $knownFromJeedom = array();
+    // $objKnownFromAbeille = array();
     foreach ($eqLogics as $eqLogic) {
         $eqLogicId = $eqLogic->getLogicalId();
-        $eqKnownFromAbeille[$eqLogicId] = $eqLogic->getName();
+        $knownFromJeedom[$eqLogicId]['name'] = $eqLogic->getName();
         $eqParent = $eqLogic->getObject();
         if (!is_object($eqParent))
             $objName = "";
         else
             $objName = $eqParent->getName();
-        $objKnownFromAbeille[$eqLogicId] = $objName;
-        logMessage("", "  Eq='".$eqLogicId."', objname='".$objKnownFromAbeille[$eqLogicId]."'");
+        $knownFromJeedom[$eqLogicId]['parent'] = $objName;
+        // $objKnownFromAbeille[$eqLogicId] = $objName;
+        logMessage("", "  Eq='".$eqLogicId."', objname='".$objName."'");
     }
     // logMessage("", "Objets connus de Jeedom: ".json_encode($objKnownFromAbeille));
 
-    $queueKeyLQIToCmd    = msg_get_queue(queueKeyLQIToCmd);
-    // $queueParserToLQI = msg_get_queue(parserToLQI);
+    // $queueLQIToCmd = msg_get_queue($abQueues["LQIToCmd"]["id"]);
+    $queueLQIToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
     $queueParserToLQI = msg_get_queue($abQueues["parserToLQI"]["id"]);
-    $queueParserToLQISize = $abQueues["parserToLQI"]["max"];
+    $queueParserToLQIMax = $abQueues["parserToLQI"]["max"];
     msgFromParserFlush(); // Flush the queue if not empty
 
-    for ($zgNb = $zgStart; $zgNb <= $zgEnd; $zgNb++) {
-        if (config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N') != 'Y') {
-            logMessage("", "Zigate ".$zgNb." disabled => Ignored.");
+    $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
+
+    for ($zgId = $zgStart; $zgId <= $zgEnd; $zgId++) {
+        if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y') {
+            logMessage("", "Zigate ".$zgId." disabled => Ignored.");
             continue;
         }
 
-        $netName = "Abeille".$zgNb; // Abeille network
-        $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
+        $netName = "Abeille".$zgId; // Abeille network
         $dataFile = $tmpDir."/AbeilleLQI_MapData".$netName.".json";
         $lockFile = $dataFile.".lock";
         if (file_exists($lockFile)) {
@@ -379,24 +380,24 @@
 
         $LQI = array(); // Result from interrogations
         $eqToInterrogate = array();
-        newEqToInterrogate("Abeille".$zgNb."/0000");
+        newEqToInterrogate("Abeille".$zgId."/0000");
 
         $done = 0;
         $eqIndex = 0; // Index of eq to interrogate
         $collectStatus = 0;
         while (true) {
             $total = count($eqToInterrogate);
-            logMessage("", "Zigate ".$zgNb." progress: ".$done."/".$total);
+            logMessage("", "Zigate ".$zgId." progress: ".$done."/".$total);
 
             $currentNeAddress = $eqToInterrogate[$eqIndex]['LogicId'];
             list($netName, $addr) = explode('/', $currentNeAddress);
 
             $NE = $currentNeAddress;
 
-            $name = $eqKnownFromAbeille[$currentNeAddress];
-            if (strlen($name) == 0) {
+            if (isset($knownFromJeedom[$currentNeAddress]))
+                $name = $knownFromJeedom[$currentNeAddress]['name'];
+            else
                 $name = "Inconnu-" . $currentNeAddress;
-            }
 
             logMessage("", "Interrogating '".$name."' (".$addr.")");
             $nbwritten = file_put_contents($lockFile, "Analyse du réseau ".$netName.": ".$done."/".$total." => interrogation de '".$name."' (".$addr.")");
@@ -411,7 +412,7 @@
             $done++;
             if ($ret == -1) {
                 $collectStatus = -1; // Collect interrupted due to error
-                logMessage("", "Collecte stopped on zigate ".$zgNb." due to errors.");
+                logMessage("", "Collecte stopped on zigate ".$zgId." due to errors.");
                 break;
             }
             if ($ret == 1) {

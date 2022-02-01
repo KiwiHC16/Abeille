@@ -5,11 +5,11 @@
         "isHistorized": "0",
         "subType": "numeric",
         "template": "badge",
-        "unite": "",
         "configuration": {
             "visibilityCategory": "additionalCommand"
         },
         "type": "info",
-        "logicalId": "0300-#EP#-0001"
+        "logicalId": "0300-#EP#-0001",
+        "unit": ""
     }
 }

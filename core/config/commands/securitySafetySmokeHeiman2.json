@@ -4,13 +4,13 @@
         "name": "Etat",
         "isHistorized": "1",
         "subType": "numeric",
-        "generic_type": "SMOKE",
         "invertBinary": "1",
         "template": "alert",
         "configuration": {
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0500-#EP#-0000"
+        "logicalId": "0500-#EP#-0000",
+        "genericType": "SMOKE"
     }
 }

@@ -4,9 +4,7 @@
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "Voltage",
-        "unite": "V",
         "subType": "numeric",
-        "generic_type": "",
         "template": "badge",
         "configuration": {
             "repeatEventManagement": "always",
@@ -17,6 +15,8 @@
             "calculValueOffset": "#value#\/10"
         },
         "type": "info",
-        "logicalId": "tbd---volt--"
+        "logicalId": "tbd---volt--",
+        "unit": "V",
+        "genericType": ""
     }
 }

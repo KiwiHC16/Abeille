@@ -4,7 +4,6 @@
         "name": "Descendre",
         "isHistorized": "0",
         "subType": "other",
-        "generic_type": "FLAP_DOWN",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -12,6 +11,7 @@
             "request": "Off",
             "visibilityCategory": "All"
         },
-        "type": "action"
+        "type": "action",
+        "genericType": "FLAP_DOWN"
     }
 }

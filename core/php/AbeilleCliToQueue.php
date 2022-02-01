@@ -43,40 +43,31 @@
     if (isset($dbgTcharp38)) logDebug("CliToQueue: action=".$action);
 
     if ($action == "sendMsg") {
-        // Default target queue = 'queueKeyXmlToAbeille'
+        // Default target queue = '$abQueues['xmlToAbeille']['id']'
         if (isset($_GET['queueId']))
             $queueId = $_GET['queueId'];
         else
-            $queueId = queueKeyXmlToAbeille;
+            $queueId = $abQueues['xmlToAbeille']['id'];
         $queue = msg_get_queue($queueId);
         if ($queue === false) {
             if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: Invalid queue ID ".$queueId);
             return;
         }
-    // $queueKeyXmlToCmd           = msg_get_queue(queueKeyXmlToCmd);
 
-        if (($queueId == queueKeyXmlToAbeille) || ($queueId == queueKeyXmlToCmd)) {
+        if (in_array($queueId, [$abQueues['xmlToAbeille']['id'], $abQueues['xToCmd']['id']])) {
             $topic =  $_GET['topic'];
             $topic = str_replace('_', '/', $topic);
             $payload = $_GET['payload'];
             $payload = str_replace('_', '&', $payload);
             if (isset($dbgTcharp38)) logDebug("CliToQueue: topic=".$topic.", payload=".$payload);
 
-            Class MsgAbeille {
-                public $message = array(
-                                        'topic' => 'Coucou',
-                                        'payload' => 'me voici',
-                                        );
-            }
+            $msg = array(
+                'topic' => $topic,
+                'payload' => $payload,
+            );
 
-            $msgAbeille = new MsgAbeille;
-            $msgAbeille->message = array(
-                                        'topic' => $topic,
-                                        'payload' => $payload,
-                                        );
-
-            if (msg_send($queue, 1, $msgAbeille, true, false)) {
-                echo "(fichier xmlhttpMQQTSend) added to queue: ".json_encode($msgAbeille);
+            if (msg_send($queue, 1, $msg, true, false)) {
+                echo "(fichier xmlhttpMQQTSend) added to queue: ".json_encode($msg);
                 // print_r(msg_stat_queue($queue));
             } else {
                 echo "debug","(fichier xmlhttpMQQTSend) could not add message to queue";
@@ -110,13 +101,50 @@
         $eqId = $_GET['eqId'];
 // logDebug("reconfigure: eqId=".$eqId);
         $eqLogic = eqLogic::byId($eqId);
-        $jsonName = $eqLogic->getConfiguration('ab::jsonId', '');
-        if ($jsonName == '') {
+        $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
+        $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', '');
+        if ($jsonId == '') {
             if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: jsonId empty");
             return; // ERROR
         }
-        $jsonLocation = "Abeille";
-        $eqConfig = AbeilleTools::getDeviceConfig($jsonName, $jsonLocation);
+
+        $sig = $eqLogic->getConfiguration('ab::signature');
+        if ($sig) {
+            $modelId = $sig['modelId'];
+            $manufId = $sig['manufId'];
+        } else {
+            $modelId = "";
+            $manufId = "";
+        }
+        if (($jsonId == "defaultUnknown") && ($modelId != "")) {
+            $jsonId2 = "";
+            $jsonLoc2 = "";
+            $localP = __DIR__."/../../core/config/devices/";
+            $abeilleP = __DIR__."/../../core/config/devices/";
+            if (file_exists($localP.$modelId."_".$manufId."/".$modelId."_".$manufId.".json")) {
+                $jsonId2 = $modelId."_".$manufId;
+                $jsonLoc2 = "local";
+            } else if (file_exists($abeilleP.$modelId."_".$manufId."/".$modelId."_".$manufId.".json")) {
+                $jsonId2 = $modelId."_".$manufId;
+                $jsonLoc2 = "Abeille";
+            } else if (file_exists($localP.$modelId."/".$modelId.".json")) {
+                $jsonId2 = $modelId;
+                $jsonLoc2 = "local";
+            } else if (file_exists($abeilleP.$modelId."/".$modelId.".json")) {
+                $jsonId2 = $modelId;
+                $jsonLoc2 = "Abeille";
+            }
+            if (($jsonId2 != $jsonId) || ($jsonLoc2 != $jsonLocation)) {
+                if (isset($dbgTcharp38)) logDebug("CliToQueue: New jsonId: ".$jsonId2."/".$jsonLoc2);
+                $eqLogic->setConfiguration('ab::jsonId', $jsonId2);
+                $eqLogic->setConfiguration('ab::jsonLocation', $jsonLoc2);
+                $eqLogic->save();
+                $jsonId = $jsonId2;
+                $jsonLocation = $jsonLoc2;
+            }
+        }
+
+        $eqConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation);
         if ($eqConfig === false) {
             if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: No device config");
             return; // ERROR
@@ -149,12 +177,11 @@
 
             $request = str_ireplace('#zigateIeee#', $zgIeee, $request); // Case insensitive
 
-            $queue = msg_get_queue(queueKeyXmlToCmd);
-            $msg = new MsgAbeille;
-            $msg->message = array(
-                                'topic' => $topic,
-                                'payload' => $request,
-                                );
+            $queue = msg_get_queue($abQueues['xToCmd']['id']);
+            $msg = array(
+                'topic' => $topic,
+                'payload' => $request,
+            );
 // logDebug("msg=".json_encode($msg));
         if (isset($dbgTcharp38)) logDebug("CliToQueue: msg_send(): ".json_encode($msg));
         if (msg_send($queue, 1, $msg, true, false) == false) {
@@ -163,12 +190,11 @@
         }
 
         if ($action == "reinit") {
-            $queue = msg_get_queue(queueKeyXmlToAbeille);
-            $msg = new MsgAbeille;
-            $msg->message = array(
-                                'topic' => "CmdCreate".$eqNet."/".$eqAddr."/resetFromJson",
-                                'payload' => '',
-                                );
+            $queue = msg_get_queue($abQueues['xmlToAbeille']['id']);
+            $msg = array(
+                'topic' => "CmdCreate".$eqNet."/".$eqAddr."/resetFromJson",
+                'payload' => '',
+            );
             if (isset($dbgTcharp38)) logDebug("reinit msg to Abeille: ".json_encode($msg));
             msg_send($queue, 1, $msg, true, false);
         }

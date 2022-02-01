@@ -4,7 +4,6 @@
         "name": "LivoloSwitchTrick1",
         "isHistorized": "0",
         "subType": "other",
-        "generic_type": "LIGHT_TOGGLE",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -17,6 +16,7 @@
         "display": {
             "forceReturnLineAfter": "0"
         },
-        "type": "action"
+        "type": "action",
+        "genericType": "LIGHT_TOGGLE"
     }
 }

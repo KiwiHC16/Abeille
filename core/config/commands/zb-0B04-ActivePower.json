@@ -1,10 +1,8 @@
 {
     "zb-0B04-ActivePower": {
-        "comment": "val = device specific = (attribute_value / ACPowerDiv) * AcPowerMultiplier",
+        "comment": "val = device specific = (attribute_value \/ ACPowerDiv) * AcPowerMultiplier",
         "name": "Power",
-        "unite": "W",
         "subType": "numeric",
-        "generic_type": "POWER",
         "template": "badge",
         "configuration": {
             "calculValueOffset": "#value#*#MULT#\/#DIV#",
@@ -14,6 +12,8 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0B04-#EP#-050B"
+        "logicalId": "0B04-#EP#-050B",
+        "unit": "W",
+        "genericType": "POWER"
     }
 }

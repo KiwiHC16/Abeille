@@ -1,12 +1,12 @@
 {
     "zb-0B04-RMSCurrent": {
         "name": "Current",
-        "unite": "mA",
         "subType": "numeric",
-        "generic_type": "",
         "template": "badge",
         "configuration": [],
         "type": "info",
-        "logicalId": "0B04-#EP#-0508"
+        "logicalId": "0B04-#EP#-0508",
+        "unit": "mA",
+        "genericType": ""
     }
 }

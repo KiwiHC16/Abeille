@@ -1,0 +1,30 @@
+{
+    "endPoints": {
+        "0B": {
+            "status": "00",
+            "servClustCount": 7,
+            "servClusters": {
+                "0000": [],
+                "0003": [],
+                "0004": [],
+                "0005": [],
+                "0006": [],
+                "0008": [],
+                "0300": []
+            },
+            "cliClustCount": 0,
+            "cliClusters": []
+        },
+        "0D": {
+            "status": "00",
+            "servClustCount": 1,
+            "servClusters": {
+                "1000": []
+            },
+            "cliClustCount": 1,
+            "cliClusters": {
+                "1000": []
+            }
+        }
+    }
+}

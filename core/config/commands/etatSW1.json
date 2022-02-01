@@ -4,13 +4,13 @@
         "name": "etat switch 1",
         "isHistorized": "1",
         "subType": "numeric",
-        "generic_type": "",
         "invertBinary": "1",
         "template": "badge",
         "configuration": {
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0006-04-0000"
+        "logicalId": "0006-04-0000",
+        "genericType": ""
     }
 }

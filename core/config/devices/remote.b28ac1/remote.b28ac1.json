@@ -1,23 +1,34 @@
 {
     "remote.b28ac1": {
         "manufacturer": "Xiaomi",
-        "zbManufacturer": "Lumi",
+        "zbManufacturer": "LUMI",
         "model": "WRS-R02",
         "configuration": {
             "paramType": "telecommande",
             "mainEP": "01",
-            "icon": "TODO",
+            "icon": "XiaomiAqara-WRS-R02",
             "batteryType": "1x3V CR2450"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Xiaomi Aqara Wireless Remote Switch H1 Double Rocker",
+        "type": "Xiaomi Aqara WRS-R02 Wireless Remote Switch H1 Double Rocker",
         "commands": {
             "BatteryVolt2Percent": { "use": "battery-Volt2Percent-3" },
             "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
 
-            "Bind-0001-ToZigate": {
+			"Etat1": {
+				"use": "etatSwitchDoubleb286acn01_1"
+			},
+			"Etat2": {
+				"use": "etatSwitchDoubleb286acn01_2"
+			},
+			"Etat3": {
+				"use": "etatSwitchDoubleb286acn01_3",
+				"comment": "Event from EP3 corresponding to simultanenous push of both buttons"
+			},
+			
+			"Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
@@ -40,9 +51,10 @@
                 "comment": "Xiaomi specific attribute: 1 = single clic only, 2 = multiclic mode"
             },
 
-            "Bind-01-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0006", "execAtCreation": "Yes" },
             "Bind-01-0003-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0003", "execAtCreation": "Yes" },
-            "Bind-03-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=03&clustId=0006", "execAtCreation": "Yes" }
+            "Bind-01-0012-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0012", "execAtCreation": "Yes" },
+            "Bind-02-0012-ToZigate": { "use": "zbBindToZigate", "params": "ep=02&clustId=0012", "execAtCreation": "Yes" },
+            "Bind-03-0012-ToZigate": { "use": "zbBindToZigate", "params": "ep=03&clustId=0012", "execAtCreation": "Yes" }
         }
     }
 }

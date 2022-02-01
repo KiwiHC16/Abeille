@@ -4,10 +4,8 @@
         "name": "Batterie",
         "isHistorized": 0,
         "subType": "numeric",
-        "generic_type": "BATTERY",
         "invertBinary": "0",
         "template": "vuMeter",
-        "unite": "%",
         "configuration": {
             "calculValueOffset": "#value#\/255*100",
             "minValue": "0",
@@ -16,6 +14,8 @@
             "visibilityCategory": "Network"
         },
         "type": "info",
-        "logicalId": "0001-#EP#-0021"
+        "logicalId": "0001-#EP#-0021",
+        "unit": "%",
+        "genericType": "BATTERY"
     }
 }

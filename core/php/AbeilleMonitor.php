@@ -31,32 +31,36 @@
        'logSetConf()' must be called first from parser. */
     function monMsgFromZigate($msgDecoded)
     {
+        global $abQueues;
+
         // logMessage("debug", "monMsgFromZigate('".$addr."', '".$msgDecoded."')");
 
         /* Check queue */
-        if (!msg_queue_exists(queueKeyParserToMon))
+        if (!msg_queue_exists($abQueues['parserToMon']['id']))
             return; // Ignored
 
         /* Compose FIFO message */
         $msg = array('type' => 'x2mon', 'msg' => $msgDecoded);
 
         /* Write to fifo */
-        $queue = msg_get_queue(queueKeyParserToMon);
+        $queue = msg_get_queue($abQueues['parserToMon']['id']);
         msg_send($queue, 1, $msg);
     }
 
     /* Called from AbeilleParser when short address has changed (device announce) */
     function monAddrHasChanged($addr, $ieee)
     {
+        global $abQueues;
+
         /* Check queue */
-        if (!msg_queue_exists(queueKeyParserToMon))
+        if (!msg_queue_exists($abQueues['parserToMon']['id']))
             return; // Ignored
 
         /* Compose FIFO message */
         $msg = array('type' => 'newaddr', 'addr' => $addr, 'ieee' => $ieee);
 
         /* Write to fifo */
-        $queue = msg_get_queue(queueKeyParserToMon);
+        $queue = msg_get_queue($abQueues['parserToMon']['id']);
         msg_send($queue, 1, $msg);
     }
 
@@ -64,6 +68,8 @@
        'logSetConf()' must be called first from 'AbeilleCmd'. */
     function monMsgToZigate($addr, $msgDecoded)
     {
+        global $abQueues;
+
         // logMessage("debug", "monMsgToZigate('".$addr."', '".$msgDecoded."')");
 
         /* $addr currently unused. Filtered at upper level */
@@ -73,28 +79,30 @@
             // return;
 
         /* Check queue */
-        if (!msg_queue_exists(queueKeyCmdToMon))
+        if (!msg_queue_exists($abQueues['cmdToMon']['id']))
             return; // Ignored
 
         /* Compose FIFO message */
         $msg = array('type' => 'x2mon', 'msg' => $msgDecoded);
 
         /* Write to fifo */
-        $queue = msg_get_queue(queueKeyCmdToMon);
+        $queue = msg_get_queue($abQueues['cmdToMon']['id']);
         msg_send($queue, 1, $msg);
     }
 
     /* Called to inform 'AbeilleCmd' to change monitoring address. */
     function monMsgToCmd($addr)  {
+        global $abQueues;
+
         /* Check queue */
-        if (!msg_queue_exists(queueKeyMonToCmd))
+        if (!msg_queue_exists($abQueues['monToCmd']['id']))
             return; // Ignored
 
         /* Compose FIFO message */
         $msg = array('type' => 'newaddr', 'addr' => $addr);
 
         /* Write to fifo */
-        $queue = msg_get_queue(queueKeyMonToCmd);
+        $queue = msg_get_queue($abQueues['monToCmd']['id']);
         msg_send($queue, 1, $msg);
     }
 
@@ -123,6 +131,8 @@
        Address to monitor is currently extracted from developper config file. */
     function monRun()
     {
+        global $abQueues;
+
         /* Configuring 'AbeilleLog' library */
         logSetConf("AbeilleMonitor.log", true);
         logMessage("info", ">>> Démarrage du démon de monitoring");
@@ -153,8 +163,8 @@
            Create queues and check them regularly
          */
         try {
-            $queueCmdToMon = msg_get_queue(queueKeyCmdToMon); // Messages sent to monitored device
-            $queueParserToMon = msg_get_queue(queueKeyParserToMon); // Messages received from monitored device
+            $queueCmdToMon = msg_get_queue($abQueues['cmdToMon']['id']); // Messages sent to monitored device
+            $queueParserToMon = msg_get_queue($abQueues['parserToMon']['id']); // Messages received from monitored device
             if (!is_resource($queueCmdToMon) || !is_resource($queueParserToMon)) {
                 logMessage("error", "ERR: Problème de création des queues. Arret du démon.");
                 return;

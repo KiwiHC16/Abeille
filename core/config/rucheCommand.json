@@ -14,18 +14,6 @@
             "forceReturnLineAfter": "1"
         }
     },
-    "Start Network": {
-        "name": "Start Network",
-        "order": 1,
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "zgStartNetwork",
-            "request": ""
-        }
-    },
     "Get Network Status": {
         "name": "Get Network Status",
         "order": 2,
@@ -455,23 +443,6 @@
         "invertBinary": "0",
         "template": ""
     },
-    "IEEE_Address_request": {
-        "name": "IEEE Address Request",
-        "order": 48,
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "message",
-        "configuration": {
-            "topic": "IEEE_Address_request",
-            "request": "address=#title#&#message#"
-        },
-        "display": {
-            "forceReturnLineAfter": "0",
-            "title_placeholder": "Adresse courte de l equipement",
-            "message_placeholder": "shortAddress=XXXX[&requestType=00&startIndex=00] "
-        }
-    },
     "Network_Address_request": {
         "name": "Network Address Request",
         "order": 49,
@@ -487,23 +458,6 @@
             "forceReturnLineAfter": "0",
             "title_placeholder": "Adresse courte de l equipement",
             "message_placeholder": "IEEEAddress=xxxxxxxxxxxxxxxx[&requestType=00&startIndex=00] "
-        }
-    },
-    "LQI": {
-        "name": "LQI",
-        "order": 50,
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "message",
-        "configuration": {
-            "topic": "Management_LQI_request",
-            "request": "address=#title#&StartIndex=#message#"
-        },
-        "display": {
-            "forceReturnLineAfter": "1",
-            "title_placeholder": "Adresse courte de l equipement",
-            "message_placeholder": "Index - 2 digits"
         }
     },
     "Set Time": {
@@ -597,17 +551,6 @@
         "configuration": {
             "topic": "TxPower",
             "request": "20"
-        }
-    },
-    "Get Power": {
-        "name": "Get Power",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "GetTxPower",
-            "request": ""
         }
     },
     "ZiGate-Power": {

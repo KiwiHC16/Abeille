@@ -48,7 +48,7 @@ class AbeilleCmdProcessTest extends TestCase {
 
     function test_processCmd() {
         $test = new AbeilleCmdProcessKiwi;
-        
+
         // Test initial checks
         $Command = null;
         $this->assertSame( null, $test->processCmd($Command));
@@ -71,11 +71,11 @@ class AbeilleCmdProcessTest extends TestCase {
         $test->processCmd($Command);
         $this->assertSame( '[1,"Abeille1","0015","","",null]', json_encode($test->result) );
 
-        $Command = array( "dest" => "Abeille1", 'setOnZigateLed' => "") ;
+        $Command = array( "dest" => "Abeille1", 'name' => 'setZgLed', 'value' => 1) ;
         $test->processCmd($Command);
         $this->assertSame( '[1,"Abeille1","0018","01","",null]', json_encode($test->result) );
 
-        $Command = array( "dest" => "Abeille1", 'setOffZigateLed' => "") ;
+        $Command = array( "dest" => "Abeille1", 'name' => 'setZgLed', 'value' => 0) ;
         $test->processCmd($Command);
         $this->assertSame( '[1,"Abeille1","0018","00","",null]', json_encode($test->result) );
 

@@ -4,9 +4,7 @@
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "Current",
-        "unite": "mA",
         "subType": "numeric",
-        "generic_type": "",
         "template": "badge",
         "configuration": {
             "repeatEventManagement": "always",
@@ -16,6 +14,8 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0B04-#EP#-0508"
+        "logicalId": "0B04-#EP#-0508",
+        "unit": "mA",
+        "genericType": ""
     }
 }

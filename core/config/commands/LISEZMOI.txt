@@ -24,12 +24,11 @@ Format de fichier
 Exemple de commande 'info'
 
     {
-      "etat": {
-        "name": "etat",
+      "Status": {
         "logicalId": "0006-#EP#-0000",
         "type": "info",
         "subType": "binary",
-        "generic_type": "LIGHT_STATE_BOOL",
+        "genericType": "LIGHT_STATE_BOOL",
         "invertBinary": "0",
         "template": "light",
         "configuration": {
@@ -42,8 +41,7 @@ Exemple de commande 'info'
 Exemple de commande 'action'
 
     {
-      "getEtat": {
-        "name": "getEtat",
+      "getStatus": {
         "type": "action",
         "subType": "other",
         "configuration": {
@@ -72,6 +70,10 @@ Exemple de commande 'action'
 * logicalId: OBLIGATOIRE si commande INFO
   Ex: '0400-01-0000' pour définir l'information 'luminosité'.
 
+* unit: optionnel
+  Permet de préciser l'unité de l'information remontée (cmd 'info').
+  Ex: "unit": "%"
+  
 * isVisible: EVITER.
   Indique si la commande est visible dans le widget.
   Invisible par défaut ("isVisible":0).
@@ -82,7 +84,7 @@ Exemple de commande 'action'
   Non par défaut ("isHistorized":0).
   Ce parametre est à mettre dans la modele d'équipement pour personnaliser la commande.
 
-* generic_type: ??
+* genericType: ??
 
 * invertBinary: optionnel.
   Utile uniquement pour une commande 'info' de subType 'binary'.
@@ -90,6 +92,8 @@ Exemple de commande 'action'
 
 * template: optionnel.
   Permet de définir le widget qui sera utilisé pour l'affichage de la commande.
+
+* value: ??
 
 * configuration:
 
@@ -119,11 +123,12 @@ Exemple de commande 'action'
   * execAtCreationDelay: optionnel
     Delai d'execution en secondes apres l'annonce de la commande ayant le flag 'execAtCreation'.
 
-  * trig: optionnel
+  * trigOut: optionnel
     Permet, pour une commande info, de définir une commande qui sera mise-à-jour avec la valeur de sortie.
+    Le parametre est l'identifiant logique de la commande à déclencher (logicalId).
 
-  * trigOffset: optionnel
-    Permet, si 'trig' est utilisé, de modifier la valeur reçue avant de l'appliquer à la commande pointée par 'trig'.
+  * trigOutOffset: optionnel
+    Permet, si 'trigOut' est utilisé, de modifier la valeur reçue avant de l'appliquer à la commande pointée par 'trigOut'.
 
   * Polling: optionnel
     Défini si cette commande 'action' doit etre executée regulierement.

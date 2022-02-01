@@ -1,9 +1,10 @@
 <?php
     /*
-     * AbeilleCmd daemon
+     * AbeilleCmd daemon (send messages to zigate)
      *
-     * subscribe to Abeille topic and receive message sent by AbeilleParser.
-     *
+     * - collect messages
+     * - format them properly, and send them to Zigate
+     * - check cmd ACK (8000/8012/8702 zigate answers)
      */
 
     include_once __DIR__.'/../config/Abeille.config.php';
@@ -21,7 +22,6 @@
     logMessage('info', '>>> Démarrage d\'AbeilleCmd');
 
     include_once __DIR__.'/../../../../core/php/core.inc.php';
-    include_once __DIR__.'/../class/AbeilleMsg.php';
     include_once __DIR__.'/../class/AbeilleCmdQueue.class.php';
     include_once __DIR__.'/AbeilleOTA.php';
 

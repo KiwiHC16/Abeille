@@ -5,10 +5,8 @@
         "name": "Pression1",
         "isHistorized": "1",
         "subType": "numeric",
-        "generic_type": "",
         "invertBinary": "0",
         "template": "badge",
-        "unite": "hPa",
         "display": {
             "forceReturnLineAfter": "1"
         },
@@ -16,6 +14,8 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0403-01-0000"
+        "logicalId": "0403-01-0000",
+        "unit": "hPa",
+        "genericType": ""
     }
 }

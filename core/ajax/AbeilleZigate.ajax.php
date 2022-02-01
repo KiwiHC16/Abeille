@@ -30,7 +30,6 @@
     try {
         ajax::init();
 
-        require_once __DIR__.'/../class/AbeilleMsg.php';
         require_once __DIR__.'/../config/Abeille.config.php';
 
         /* Send a order to zigate thru 'AbeilleCmd'.
@@ -43,13 +42,13 @@
             $status = 0;
             $error = "";
 
-            $queueKeyFormToCmd = msg_get_queue(queueKeyFormToCmd);
-            $msgAbeille = new MsgAbeille;
-            $msgAbeille->message['topic']   = $topic;
-            $msgAbeille->message['payload'] = $payload;
+            $msg = array();
+            $msg['topic']   = $topic;
+            $msg['payload'] = $payload;
 
-            if (msg_send($queueKeyFormToCmd, 1, $msgAbeille, true, false) == FALSE) {
-                $error = "Could not send msg to 'queueKeyFormToCmd': msg=".json_encode($msgAbeille);
+            $queue = msg_get_queue($abQueues['xToCmd']['id']);
+            if (msg_send($queue, 1, $msg, true, false) == false) {
+                $error = "Could not send msg to 'xToCmd': msg=".json_encode($msg);
                 $status = -1;
             }
 
@@ -67,14 +66,14 @@
             $status = 0;
             $error = "";
 
-            $queue = msg_get_queue(queueKeyAssistToParser);
+            $queue = msg_get_queue($abQueues['assistToParser']['id']);
             $msg = Array(
                 "type" => $type,
                 "network" => $network
             );
 
-            if (msg_send($queue, 1, $msg, TRUE, false) == FALSE) {
-                $error = "Could not send msg to 'queueKeyAssistToParser': msg=".json_encode($msg);
+            if (msg_send($queue, 1, $msg, true, false) == false) {
+                $error = "Could not send msg to 'assistToParser': msg=".json_encode($msg);
                 $status = -1;
             }
 

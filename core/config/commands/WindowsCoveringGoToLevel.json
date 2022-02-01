@@ -4,7 +4,6 @@
         "name": "GoToLevel",
         "isHistorized": "0",
         "subType": "other",
-        "generic_type": "",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -12,6 +11,7 @@
             "request": "clusterCommand=05&liftValue=#slider#",
             "visibilityCategory": "All"
         },
-        "type": "action"
+        "type": "action",
+        "genericType": ""
     }
 }

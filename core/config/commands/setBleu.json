@@ -4,7 +4,6 @@
         "name": "setBleu",
         "isHistorized": "0",
         "subType": "slider",
-        "generic_type": "DONT",
         "value": "colorBleu",
         "invertBinary": "0",
         "template": "",
@@ -16,6 +15,7 @@
         "display": {
             "forceReturnLineAfter": "1"
         },
-        "type": "action"
+        "type": "action",
+        "genericType": "DONT"
     }
 }

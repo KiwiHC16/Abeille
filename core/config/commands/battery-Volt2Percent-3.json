@@ -4,12 +4,12 @@
         "comment": "Computing battery percent from received voltage, max=3V",
         "comment2": "Reported voltage currently 10 x value",
         "subType": "numeric",
-        "unite": "V",
         "configuration": {
-            "trig": "0001-#EP#-0021",
-            "trigOffset": "#value#*100\/30"
+            "trigOut": "0001-#EP#-0021",
+            "trigOutOffset": "#value#*100\/30"
         },
         "type": "info",
-        "logicalId": "0001-#EP#-0020"
+        "logicalId": "0001-#EP#-0020",
+        "unit": "V"
     }
 }

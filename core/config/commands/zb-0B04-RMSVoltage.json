@@ -2,14 +2,14 @@
     "zb-0B04-RMSVoltage": {
         "comment": "RMS Voltage. No need to display country voltage by default",
         "name": "Voltage",
-        "unite": "V",
         "subType": "numeric",
-        "generic_type": "",
         "template": "badge",
         "type": "info",
         "logicalId": "0B04-#EP#-0505",
         "configuration": {
             "calculValueOffset": "#value#*#MULT#\/#DIV#"
-        }
+        },
+        "unit": "V",
+        "genericType": ""
     }
 }

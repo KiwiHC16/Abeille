@@ -4,7 +4,6 @@
         "isVisible": 0,
         "name": "setRGB",
         "isHistorized": "0",
-        "generic_type": "LIGHT_SET_COLOR",
         "subType": "color",
         "configuration": {
             "topic": "setColourRGB",
@@ -15,6 +14,7 @@
             "forceReturnLineAfter": "1",
             "visibilityCategory": "additionalCommand"
         },
-        "type": "action"
+        "type": "action",
+        "genericType": "LIGHT_SET_COLOR"
     }
 }

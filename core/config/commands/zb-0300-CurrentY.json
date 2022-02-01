@@ -5,10 +5,9 @@
         "isHistorized": "0",
         "subType": "numeric",
         "template": "badge",
-        "unite": "",
-        "configuration": {
-        },
+        "configuration": [],
         "type": "info",
-        "logicalId": "0300-#EP#-0004"
+        "logicalId": "0300-#EP#-0004",
+        "unit": ""
     }
 }

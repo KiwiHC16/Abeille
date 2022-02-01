@@ -199,6 +199,8 @@
            - Removing 'zigateNb' (obsolete) from config DB.
            - Updating WIFI serial port (/dev/zigateX => constant wifiLink)
            - AbeilleDebug.log moved to /tmp/jeedom
+           - Cmd DB: 'ab::trig' => 'ab::trigOut'
+           - Cmd DB: 'ab::trigOffset' => 'ab::trigOutOffset'
          */
         if (intval($dbVersion) < 20201122) {
             if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
@@ -271,6 +273,29 @@
                     $eqLogic->setConfiguration('modeleJson', null);
                     log::add('Abeille', 'debug', '  '.$eqName.": 'modeleJson' updated to 'ab::jsonId'");
                     $saveEq = true;
+                }
+
+                $cmds = Cmd::byEqLogicId($eqLogic->getId());
+                $saveCmd = false;
+                foreach ($cmds as $cmdLogic) {
+                    // Updating 'ab::trig' to 'ab::trigOut'
+                    $confVal = $cmdLogic->getConfiguration('ab::trig', '');
+                    if ($confVal != '') {
+                        $cmdLogic->setConfiguration('ab::trigOut', $confVal);
+                        $cmdLogic->setConfiguration('ab::trig', null);
+                        log::add('Abeille', 'debug', '  '.$eqName.": 'ab::trig' updated to 'ab::trigOut'");
+                        $saveCmd = true;
+                    }
+                    // Updating 'ab::trigOffset' to 'ab::trigOutOffset'
+                    $confVal = $cmdLogic->getConfiguration('ab::trigOffset', '');
+                    if ($confVal != '') {
+                        $cmdLogic->setConfiguration('ab::trigOutOffset', $confVal);
+                        $cmdLogic->setConfiguration('ab::trigOffset', null);
+                        log::add('Abeille', 'debug', '  '.$eqName.": 'ab::trigOffset' updated to 'ab::trigOutOffset'");
+                        $saveCmd = true;
+                    }
+                    if ($saveCmd)
+                        $cmdLogic->save();
                 }
 
                 if ($saveEq)

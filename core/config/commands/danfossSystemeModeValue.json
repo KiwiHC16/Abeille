@@ -2,7 +2,6 @@
     "danfossSystemeModeValue": {
         "isVisible": 1,
         "name": "Mode",
-        "unite": "",
         "isHistorized": "1",
         "subType": "string",
         "invertBinary": "0",
@@ -10,6 +9,7 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0201-01-001C"
+        "logicalId": "0201-01-001C",
+        "unit": ""
     }
 }

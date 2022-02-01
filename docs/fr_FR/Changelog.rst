@@ -1,6 +1,93 @@
 ChangeLog
 =========
 
+- Page config: Changement mineur. Type 'WIFI' => 'WIFI/ETH'.
+- Page config: Liste des ports réduite au retour Jeedom getUsbMapping() + info 'Orange Pi Zero'.
+- Aqara TVOC moniteur d'air AAQS-S01: Mise-à-jour modèle (2279).
+- Assistant JSON: mise-à-jour.
+- Modèle commande JSON: 'getPlugVAW' => 'poll-0B04-0505-0508-050B'.
+- Interne: AbeilleCmd: Message debug & améliorations controle de flux envoie.
+- Message d'erreur remonté à l'utilisateur si erreur dans log.
+
+220130-BETA-1
+-------------
+
+- LivarnoLux applique murale HG06701: Correction modèle (2256).
+- Blitzwolf SHP15: Support preliminaire (2277).
+- Assistant EQ/JSON: Update.
+- Interne: AbeilleCmd: Correction priorité getActiveEndpoints.
+- Interne: Parser: Interrogation de tous les EP pour support des eq qui s'identifient via un EP different du premier.
+- Interne: Nettoyage config cmdes 'PollingOnCmdChange' & 'PollingOnCmdChangeDelay' lors mise-à-jour équipement.
+- Interne: AbeilleCmd: Suppression 'Management_LQI_request' obsolete.
+- Tuya 4 buttons (TS004F__TZ3000_xabckq1v): Mise-à-jour modèle (2155).
+- Aqara TVOC moniteur d'air AAQS-S01: Mise-à-jour modèle (2279).
+- Modeles commandes (JSON): modifications syntaxe
+
+  - 'unite' obsolete => 'unit'
+  - 'generic_type' obsolete => 'genericType'
+  - 'trig' obsolete => 'trigOut'
+  - 'trigOffset' obsolete => 'trigOutOffset'
+- Modèles équipements (JSON): améliorations
+
+  - Surcharge possible de 'logicalId'
+  - Surcharge possible de 'trigOut'
+  - Surcharge possible de 'trigOutOffset'
+  - Surcharge possible de 'invertBinary'
+- Interne: DB eqLogic, config, ab::trig ou trigOffset => ab::trigOut ou trigOutOffset.
+- Xiaomi Aqara MCCGQ14LM (magnet.acn001): Correction modèle (2257).
+- Interne: checkGpio() revu pour suppression faux message 'PiZigate inutilisable'.
+- Page de config: Ajout bouton vers doc & doc préliminaire correspondante.
+- Page de config: Bouton 'activer' renommé en 'libérer'. Trompeur. N'active pas la zigate.
+- Xiaomi door: Correction etat inversé (regression 220110-BETA-1).
+- Interne: CmdQueue: erreur si message trop gros dans queue 'ParserToCmdAck'.
+- Interne: AbeilleCmd: Correction regression suite mise-à-jour 'setLevel'.
+- Tuya GU10 color bulb (TS0505B__TZ3210_it1u8ahz): Ajout support (2280).
+
+220123-BETA-1
+-------------
+
+- Gledopto GU10 buld GL-S-007Z: Ajout support préliminaire (2270).
+- Interne: AbeilleCmd: SimpleDescriptorRequest => getSimpleDescriptor.
+- Page EQ/avancé: Ajout support 'Simple descriptor request'.
+- Interne: AbeilleCmd: IEEE_Address_request => getIeeeAddress.
+- Equipement sur secteur en time-out: Correction.
+- Interne: Correction msg debug 'IEEE addr mismatch' au démarrage.
+- Orvibo CM10ZW: Support signature alternative (2275).
+- Interne: AbeilleCmd: Correction pour espace dans valeur slider.
+- Interne: AbeilleCmd: Suppression prepare 'setLevel'.
+
+220122-BETA-1
+-------------
+
+  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal.
+  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible.
+
+- Interne: format message queues vers AbeilleCmd modifié.
+- Interne: Fusion de plusieurs queues vers AbeilleCmd.
+- Erreur getLevel/getEtat inattendue: Correction (2239).
+- Xiaomi Aqara MCCGQ14LM (magnet.acn001): Correction modèle (2257).
+- Interne: Parser vers Abeille. Attributs groupés pour optimisation.
+- Interne: Qq améliorations page EQ/avancé/Zigate.
+- Page de config: Amélioration messages mise-à-jour FW.
+- Page support/infos clefs: Affichage revu.
+- Interne: Parser: Optimisations & nettoyage.
+- Interne: Queues revues.
+- Page EQ/avancé: possibilité de télécharger discovery 'automatique'.
+- Interne: Abeille.class: Vérification de l'état des queues amélioré.
+- Xiaomi H1 double rocker: Mise-à-jour modèle + image (2253).
+- Interne: Abeille.class: Suppression interrogateUnknowNE().
+- Page EQ/avancé: Correction regression bouton "Réinitialiser".
+- Page EQ/avancé: Réinit 'defaultUnknown' si modèle officiel existe.
+- Interne: Commande 'setColor' (cluster 0300) revue.
+
 220114-BETA-1
 -------------
 
@@ -23,17 +110,6 @@ ChangeLog
 
 220110-BETA-1
 -------------
-
-  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
-
-      - Toute nouvelle installation.
-      - Dès lors qu'un réappairage complet est nécéssaire.
-      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-      - Les firmwares avant 3.1e sont forcement 'legacy'.
-      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
-
-  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal.
-  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible.
 
 - Interne: Début refonte/nettoyage AbeilleCmd pour amélioration controle de flux.
 - Interne: Parser: Support nPDU/aPDU sur messages 8000/8012 & 8702 (FW>=3.1e).

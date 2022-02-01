@@ -1,0 +1,11 @@
+{
+    "zbCmd-XXXX-Custom": {
+        "comment": "To be properly configured from device model thru fields overwrite",
+        "type": "info",
+        "subType": "binary",
+        "logicalId": "custom",
+        "configuration": {
+            "repeatEventManagement": "always"
+        }
+    }
+}

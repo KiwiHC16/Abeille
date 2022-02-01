@@ -46,19 +46,19 @@
 for ($i = 1; $i <= 10; $i++) {
   ?>
   $('#bt_include<?php echo $i;?>').on('click', function ()  {
-                                                console.log("bt_include<?php echo $i;?>");
-                                                var xmlhttpMQTTSendInclude = new XMLHttpRequest();
-                                                xmlhttpMQTTSendInclude.onreadystatechange = function()  {
-                                                                                                          if (this.readyState == 4 && this.status == 200) {
-                                                                                                            xmlhttpMQTTSendIncludeResult = this.responseText;
-                                                                                                          }
-                                                                                                        };
-                                                xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille<?php echo $i;?>_0000_SetPermit&payload=Inclusion", true);
-                                                xmlhttpMQTTSendInclude.send();
-                                                $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate <?php echo $i;?> doit se mettre à clignoter pour 4 minutes.}}', level: 'success'});
-                                              }
+      console.log("bt_include<?php echo $i;?>");
+      var xmlhttpMQTTSendInclude = new XMLHttpRequest();
+      xmlhttpMQTTSendInclude.onreadystatechange = function()  {
+            if (this.readyState == 4 && this.status == 200) {
+              xmlhttpMQTTSendIncludeResult = this.responseText;
+            }
+          };
+          xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille<?php echo $i;?>_0000_SetPermit&payload=Inclusion", true);
+          xmlhttpMQTTSendInclude.send();
+          $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate <?php echo $i;?> doit se mettre à clignoter pour 4 minutes.}}', level: 'success'});
+        }
 
-                                      );
+    );
   <?php
 }
 ?>

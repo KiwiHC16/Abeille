@@ -4,12 +4,12 @@
         "name": "Digital Output 4",
         "isHistorized": "1",
         "subType": "binary",
-        "generic_type": "SWITCH_STATE",
         "invertBinary": "0",
         "configuration": {
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0006-04-0000"
+        "logicalId": "0006-04-0000",
+        "genericType": "SWITCH_STATE"
     }
 }

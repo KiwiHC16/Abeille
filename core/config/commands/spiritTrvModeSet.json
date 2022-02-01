@@ -4,7 +4,6 @@
         "name": "Set TRV Mode",
         "isHistorized": "0",
         "subType": "message",
-        "generic_type": "",
         "invertBinary": "0",
         "template": "",
         "configuration": {
@@ -17,6 +16,7 @@
         "display": {
             "forceReturnLineAfter": "1"
         },
-        "type": "action"
+        "type": "action",
+        "genericType": ""
     }
 }

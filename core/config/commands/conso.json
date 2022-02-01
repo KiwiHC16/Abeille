@@ -4,7 +4,6 @@
         "invertBinary": "0",
         "isHistorized": "1",
         "name": "Conso",
-        "unite": "kWh",
         "subType": "numeric",
         "template": "badge",
         "configuration": {
@@ -12,6 +11,7 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "tbd---conso--"
+        "logicalId": "tbd---conso--",
+        "unit": "kWh"
     }
 }

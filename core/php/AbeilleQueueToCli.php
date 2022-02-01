@@ -15,19 +15,23 @@
     logDebug("AbeilleQueueToCli starting");
 
     $queueId = $abQueues["parserToCli"]['id'];
-    $queueMax = $abQueues["parserToCli"]['max'];
+    $msgMax = $abQueues["parserToCli"]['max'];
     $queue = msg_get_queue($queueId);
 
-    // while (msg_receive($queue, 0, $msgType, 256, $jsonMsg, false)) {
-    //     logDebug("msg=".$jsonMsg);
-    //     echo $jsonMsg;
+    // while (msg_receive($queue, 0, $msgType, 256, $msgJson, false)) {
+    //     logDebug("msg=".$msgJson);
+    //     echo $msgJson;
     // };
-    if (msg_receive($queue, 0, $msgType, $queueMax, $jsonMsg, false, 0, $errCode) == false) {
-        logDebug("QueueToCli: ERROR=".$errCode." => ".posix_strerror($errCode));
+    if (msg_receive($queue, 0, $msgType, $msgMax, $msgJson, false, 0, $errCode) == false) {
         // Note: err 7 => message size bigger than given size
+        if ($errCode == 7) {
+            msg_receive($queue, 0, $msgType, $msgMax, $msgJson, false, MSG_NOERROR);
+            logDebug("QueueToCli: ERROR=MSG TOO BIG => IGNORED");
+        } else
+            logDebug("QueueToCli: ERROR=".$errCode." => ".posix_strerror($errCode));
     } else {
-        logDebug("QueueToCli: msg=".$jsonMsg);
-        echo $jsonMsg;
+        logDebug("QueueToCli: msg=".$msgJson);
+        echo $msgJson;
     }
 
     logDebug("AbeilleQueueToCli exiting");

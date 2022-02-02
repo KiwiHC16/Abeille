@@ -1,5 +1,8 @@
 {
     "Contactor": {
+        "manufacturer": "Legrand",
+        "model": "20AX",
+        "type": "Legrand Contactor 20AX",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -8,8 +11,15 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Legrand Contactor 20AX",
         "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+
             "include8": "LegrandContactorOn",
             "include9": "LegrandContactorOff",
             "include10": "LegrandContactorAuto",
@@ -28,14 +38,7 @@
             },
             "include28 2": "setReportPuissanceLegrand",
             "include28 2 2": "LegrandContactorMode",
-            "include28 2 2 2": "LegrandContactorEtat",
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            }
+            "include28 2 2 2": "LegrandContactorEtat"
         }
     }
 }

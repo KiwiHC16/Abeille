@@ -63,7 +63,20 @@
 		</table>
 	</div>
 
-	<div id="rightMargin" style="float: left; width:2%;">.
+	<div style="float: left; width:2%;">.
+	</div>
+	<div style="float: left; width:40%;">
+		<a class="btn btn-warning" onclick="sendToCmd('getGroups')">Get groups</a>
+		<br>
+
+		<input type="text" id="idGroup" style="width:60px" placeholder="{{Groupe}}" title="Numéro de groupe (hexa 4 caracteres)">
+		<a class="btn btn-warning" onclick="sendToCmd('addGroup')">Add group</a>
+		<a class="btn btn-warning" onclick="sendToCmd('removeGroup')">Remove group</a>
+		<a class="btn btn-warning" onclick="sendToCmd('setGroupRemote')">Set group remote</a>
+		<a class="btn btn-warning" onclick="sendToCmd('setGroupRemoteLegrand')">Set group remote Legrand</a>
+	</div>
+
+	<!-- <div id="rightMargin" style="float: left; width:2%;">.
 	</div>
 	<div id="rightThing" style="float: left; width:40%;">
 		<table style="margin: 10px 10px;">
@@ -88,7 +101,7 @@
 				</td>
 			</tr>
 		</table>
-	</div>
+	</div> -->
 </div>
 <br/>
 

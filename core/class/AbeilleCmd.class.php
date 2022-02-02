@@ -104,7 +104,9 @@
         }
 
         /* Cmd execution.
-           Tcharp38: why is it part of AbeilleCmd ? Shouldn't be in Abeille.class.php ? */
+           Tcharp38: why is it part of AbeilleCmd ? Shouldn't be in Abeille.class.php ? 
+           KiwiHC16: It's part of Jeedom Structure. You have a class for Eq and a Class for Cmd. AbeilleCmd is child of Cmd Class, Abeille is child of eqLogic class. 
+        */
         public function execute($_options = null)
         {
             global $abQueues;
@@ -158,9 +160,9 @@
                     // $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
                     $queue = msg_get_queue($abQueues['xToCmd']['id']);
                     if (msg_send($queue, PRIO_NORM, $msg, true, false)) {
-                        logMessage('debug', '-- execute(): Msg sent: '.json_encode($msg));
+                        logMessage('debug', '       \--> execute(): Msg sent: '.json_encode($msg));
                     } else {
-                        logMessage('debug', '-- execute(): ERROR: Could not send Msg');
+                        logMessage('debug', '       \--> execute(): ERROR: Could not send Msg');
                     }
                 }
 

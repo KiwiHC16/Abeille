@@ -8,6 +8,10 @@ ChangeLog
 - Modèle commande JSON: 'getPlugVAW' => 'poll-0B04-0505-0508-050B'.
 - Interne: AbeilleCmd: Message debug & améliorations controle de flux envoie.
 - Message d'erreur remonté à l'utilisateur si erreur dans log.
+- Page gestion: Controle des groupes revu suite core 2.4.7 (2284).
+- Legrand 20AX: Mise-à-jour modèle (2213).
+- Interne: Correction AbeilleTools sendMessageToRuche().
+- Interne: SerialRead: Suppression mess d'err sur première trame corrompue.
 
 220130-BETA-1
 -------------

@@ -617,7 +617,7 @@
             $nbOfAttrib = sprintf("%02X", $nbAttr);
             $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttrib.$attribList;
 
-            $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+            $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
         }
 
         /**
@@ -2477,7 +2477,7 @@
             // ON / OFF with no effects
             if (isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']))
             {
-                cmdLog('debug','    OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
+                // cmdLog('debug','    OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
                 // <address mode: uint8_t>
                 // <target short address: uint16_t>
                 // <source endpoint: uint8_t>

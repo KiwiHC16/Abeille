@@ -129,9 +129,10 @@
                             $name .= ", Orange Pi Zero";
                         echo '<option value="'.$value.'">'.$value2.' ('.$name.')</option>';
                     }
-                    // foreach (ls('/dev/', 'tty*') as $value) {
-                    //     echo '<option value="/dev/'.$value.'">'.$value.'</option>';
-                    // }
+                    // KiwiHC16: 3 lignes suivantes necessaire pour KiwiHC16. Dans mon multi Zigate j ai des liens créés automatiquement pour ne pas les melanger lors d un reboot.
+                    foreach (ls('/dev/', 'tty*') as $value) {
+                         echo '<option value="/dev/'.$value.'">'.$value.'</option>';
+                    }
                 echo '</select>';
             echo '</div>';
             echo '<div class="col-lg-5">';

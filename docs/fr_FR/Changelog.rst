@@ -1,8 +1,22 @@
 ChangeLog
 =========
 
+220202-BETA-1
+-------------
+
+  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal.
+  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible.
+
 - Page config: Changement mineur. Type 'WIFI' => 'WIFI/ETH'.
-- Page config: Liste des ports réduite au retour Jeedom getUsbMapping() + info 'Orange Pi Zero'.
+- Page config: Liste des ports revue + info 'Orange Pi Zero'.
 - Aqara TVOC moniteur d'air AAQS-S01: Mise-à-jour modèle (2279).
 - Assistant JSON: mise-à-jour.
 - Modèle commande JSON: 'getPlugVAW' => 'poll-0B04-0505-0508-050B'.
@@ -12,6 +26,7 @@ ChangeLog
 - Legrand 20AX: Mise-à-jour modèle (2213).
 - Interne: Correction AbeilleTools sendMessageToRuche().
 - Interne: SerialRead: Suppression mess d'err sur première trame corrompue.
+- Mauvaise taille de modale parfois: correction (2177).
 
 220130-BETA-1
 -------------
@@ -62,17 +77,6 @@ ChangeLog
 
 220122-BETA-1
 -------------
-
-  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
-
-      - Toute nouvelle installation.
-      - Dès lors qu'un réappairage complet est nécéssaire.
-      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-      - Les firmwares avant 3.1e sont forcement 'legacy'.
-      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
-
-  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal.
-  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible.
 
 - Interne: format message queues vers AbeilleCmd modifié.
 - Interne: Fusion de plusieurs queues vers AbeilleCmd.

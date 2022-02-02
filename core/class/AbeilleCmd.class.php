@@ -160,9 +160,9 @@
                     // $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
                     $queue = msg_get_queue($abQueues['xToCmd']['id']);
                     if (msg_send($queue, PRIO_NORM, $msg, true, false)) {
-                        logMessage('debug', '       \--> execute(): Msg sent: '.json_encode($msg));
+                        logMessage('debug', '-- execute(): Msg sent: '.json_encode($msg));
                     } else {
-                        logMessage('debug', '       \--> execute(): ERROR: Could not send Msg');
+                        logMessage('debug', '-- execute(): ERROR: Could not send Msg');
                     }
                 }
 

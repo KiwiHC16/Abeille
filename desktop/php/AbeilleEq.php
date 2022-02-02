@@ -58,26 +58,26 @@
 	</div>
 
     <ul class="nav nav-tabs" role="tablist">
-        <li role="tab"               ><a href="index.php?v=d&m=Abeille&p=Abeille">  <i class="fas fa-arrow-circle-left"></i>                </a></li>
-        <li role="tab" class="active"><a href="#eqlogictab">                        <i class="fas fa-home">             </i> {{Equipement}} </a></li>
-        <li role="tab"               ><a href="#paramtab">                          <i class="fas fa-list-alt">         </i> {{Avancé}}     </a></li>
-        <li role="tab"               ><a href="#commandtab">                        <i class="fas fa-align-left">       </i> {{Commandes}}  </a></li>
+        <li role="tab"               ><a href="index.php?v=d&m=Abeille&p=Abeille" class="eqLogicAction"><i class="fas fa-arrow-circle-left"></i>                </a></li>
+        <li role="tab" class="active"><a href="#idMain">                                                <i class="fas fa-home">             </i> {{Equipement}} </a></li>
+        <li role="tab"               ><a href="#idAdvanced">                                            <i class="fas fa-list-alt">         </i> {{Avancé}}     </a></li>
+        <li role="tab"               ><a href="#idCommands">                                            <i class="fas fa-align-left">       </i> {{Commandes}}  </a></li>
     </ul>
 
     <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
 
         <!-- Displays Jeedom specifics  -->
-        <div role="tabpanel" class="tab-pane active" id="eqlogictab">
+        <div role="tabpanel" class="tab-pane active" id="idMain">
             <?php include 'AbeilleEq-Main.php'; ?>
         </div>
 
         <!-- Displays advanced & Zigbee specifics  -->
-        <div role="tabpanel" class="tab-pane" id="paramtab">
+        <div role="tabpanel" class="tab-pane" id="idAdvanced">
             <?php include 'AbeilleEq-Advanced.php'; ?>
         </div>
 
         <!-- Displays Jeedom commands  -->
-        <div role="tabpanel" class="tab-pane" id="commandtab">
+        <div role="tabpanel" class="tab-pane" id="idCommands">
             <?php include 'AbeilleEq-Cmds.php'; ?>
         </div>
 

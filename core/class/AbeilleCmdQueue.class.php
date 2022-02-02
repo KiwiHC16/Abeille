@@ -712,7 +712,7 @@
                     }
                 } else {
                     // 8011, 8012 or 8702
-                    $c = $this->getCmd($msg['sqnAps'], $zg); // Return is array
+                    $c = $this->getCmd($msg['sqnAps'], $this->zigates[$zgId]); // Return is array
                     if ($c['status'] == false)
                         $cmd = null;
                     else

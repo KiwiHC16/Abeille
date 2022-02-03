@@ -392,6 +392,7 @@
                         "address"               => $address,
                         "destinationEndpoint"   => $parameters['EP'],
                         "action"                => $convertOnOff[$parameters['Action']],
+                        "AckAPS"                => 1,
                     );
                 }
                 else {
@@ -403,6 +404,7 @@
                         "address"               => $address,
                         "destinationEndpoint"   => "01",
                         "action"                => $convertOnOff[$msg],
+                        "AckAPS"                => 1,
                     );
                 }
                 break;

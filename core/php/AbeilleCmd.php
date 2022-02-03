@@ -143,6 +143,7 @@
 
             // Libère le CPU
             time_nanosleep(0, 10000000); // 1/100s
+            // sleep(1);
         }
     }
     catch (Exception $e) {

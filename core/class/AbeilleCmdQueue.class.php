@@ -96,6 +96,10 @@
             return $this->zigates[$this->zgId]['cmdQueue'][$priority][0];
         }
 
+        public function zgGetQueue($priority) {
+            return $this->zigates[$this->zgId]['cmdQueue'][$priority];
+        }
+
         public function zgTagSentQueueFirstMessage($priority) {
             $this->zigates[$this->zgId]['cmdQueue'][$priority][0]['status'] = "SENT";
             $this->zigates[$this->zgId]['cmdQueue'][$priority][0]['sentTime'] = time();
@@ -359,8 +363,8 @@
          *
          * @return  none
          */
-        function addCmdToQueue2($priority = PRIO_NORM, $net = '', $cmd = '', $payload = '', $addr = '', $addrMode = null) {
-            cmdLog("debug", "    addCmdToQueue2(pri=".$priority.", net=".$net.", cmd=".$cmd.", payload=".$payload.", addr=".$addr.")");
+        function addCmdToQueue2($priority = PRIO_NORM, $net = '', $cmd = '', $payload = '', $addr = '', $addrMode = null, $AckAPS = null) {
+            cmdLog("debug", "    addCmdToQueue2(pri=".$priority.", net=".$net.", cmd=".$cmd.", payload=".$payload.", addr=".$addr." addrMode=".$addrMode." AckAPS=".$AckAPS.")");
 
             $this->zgId = substr($net, 7);
 
@@ -400,7 +404,8 @@
                 'status'    => '', // '', 'SENT', '8000', '8012' or '8702', '8011'
                 'try'       => $this->maxRetry + 1, // Number of retries if failed
                 'sentTime'  => 0, // For lost cmds timeout
-                'sqnAps'    => ''
+                'sqnAps'    => '',
+                'AckAPS'    => $AckAPS,
             );
             if ($addrMode && ($this->zgGetHw()) && ($this->zgGetFw() >= 0x31e))
                 $newCmd['addrMode'] = $addrMode; // For flow control if v1 & FW >= 3.1e
@@ -699,7 +704,7 @@
 
                 unset($removeCmd); // Unset in case set in previous msg
                 if ($msg['type'] == "8000") {
-                    $m = "              processZigateAcks() - Msg from parser: 8000: ".$msg['net'].", Status=".$msg['status'].", SQN=".$msg['sqn'].", SQNAPS=".$msg['sqnAps'].", PackType=".$msg['packetType'].", NPDU=".$nPDU.", APDU=".$aPDU;
+                    $m = "              processZigateAcks() - Msg from parser: 8000: ".json_encode($msg);
 
                     // Checking sent cmd vs received ack misalignment
                     if ( !$this->checkCmdToSendInTheQueue($this->zgGetSentPri()) ) {
@@ -709,6 +714,8 @@
 
                     $cmd = $this->zgGetQueueFirstMessage($this->zgGetSentPri());
 
+                    if ($cmd['AckAPS']) continue; // On this command I m waiting for APS ACK.
+
                     if ( $msg['packetType'] != $cmd['cmd'] ) {
                         cmdLog("debug", $m." => ignored as packet are different: packetType: ".$msg['packetType']." cmd: ".$cmd['cmd']);
                         continue;
@@ -717,30 +724,85 @@
                     cmdLog("debug", $m);
 
                     if ($msg['status'] == "00") {
+                        $removeCmd = true;
                         // Status is: success
-                        $this->zgChangeStatusSentQueueFirstMessage($this->zgGetSentPri(), '8000');
+                        // $this->zgChangeStatusSentQueueFirstMessage($this->zgGetSentPri(), '8000');
                         // $cmd['status'] = '8000';
-                        if ($sqnAps == '00')
-                            $removeCmd = true; // Cmd not transmitted on air => no ack to expect
-                        else {
-                            $this->zgChangesqnApsSentQueueFirstMessage($this->zgGetSentPri(), $sqnAps);
-                            // $cmd['sqnAps'] = $sqnAps;
-                            $removeCmd = true;
-                        }
-                    } else if (in_array($msg['status'], ['01', '02', '03', '05'])) {
+                        // if ($sqnAps == '00')
+                        //     $removeCmd = true; // Cmd not transmitted on air => no ack to expect
+                        // else {
+                        //     $this->zgChangesqnApsSentQueueFirstMessage($this->zgGetSentPri(), $sqnAps);
+                        //     // $cmd['sqnAps'] = $sqnAps;
+                        //     $removeCmd = true;
+                        // }
+                    } 
+                    else if (in_array($msg['status'], ['01', '02', '03', '05'])) {
                         // Status is: bad param, unhandled, failed (?), stack already started
                         // $cmd['status'] = '8000';
                         $removeCmd = true;
-                    } else {
+                    } 
+                    else {
                         // Something failed
                         if ($cmd['try'] == 0) {
                             cmdLog("debug", "  WARNING: Something failed and too many retries.");
                             $removeCmd = true;
-                        } else {
+                        }
+                        else {
                             cmdLog("debug", "  WARNING: Something failed. Cmd will be retried ".$cmd['try']." time(s) max.");
                         }
                     }
                 } 
+
+                if ($msg['type'] == "8011") {
+                    $m = "              processZigateAcks() - Msg from parser: 8011: ".json_encode($msg);
+
+                    // Checking sent cmd vs received ack misalignment
+                    if ( !$this->checkCmdToSendInTheQueue($this->zgGetSentPri()) ) {
+                        cmdLog("debug", $m." => ignored as queue is empty");
+                        continue;
+                    }
+
+                    $cmd = $this->zgGetQueueFirstMessage($this->zgGetSentPri());
+
+                    if (!$cmd['AckAPS']) continue; // On this command I m not waiting for APS ACK.
+
+                    // In 8011 packetType not available like in 8000
+                    // if ( $msg['packetType'] != $cmd['cmd'] ) {
+                    //     cmdLog("debug", $m." => ignored as packet are different: packetType: ".$msg['packetType']." cmd: ".$cmd['cmd']);
+                    //     continue;
+                    // }
+
+                    cmdLog("debug", $m);
+
+                    if ($msg['status'] == "00") {
+                        $removeCmd = true;
+                        // Status is: success
+                        // $this->zgChangeStatusSentQueueFirstMessage($this->zgGetSentPri(), '8000');
+                        // // $cmd['status'] = '8000';
+                        // if ($sqnAps == '00')
+                        //     $removeCmd = true; // Cmd not transmitted on air => no ack to expect
+                        // else {
+                        //     $this->zgChangesqnApsSentQueueFirstMessage($this->zgGetSentPri(), $sqnAps);
+                        //     // $cmd['sqnAps'] = $sqnAps;
+                        //     $removeCmd = true;
+                    }
+                    else if (in_array($msg['status'], ['01', '02', '03', '05'])) {
+                        // Status is: bad param, unhandled, failed (?), stack already started
+                        // $cmd['status'] = '8000';
+                        $removeCmd = true;
+                    }
+                    else {
+                        // Something failed
+                        if ($cmd['try'] == 0) {
+                            cmdLog("debug", "  WARNING: Something failed and too many retries.");
+                            $removeCmd = true;
+                        }
+                        else {
+                            cmdLog("debug", "  WARNING: Something failed. Cmd will be retried ".$cmd['try']." time(s) max.");
+                        }
+                    }
+                } 
+
                 // else {
                 //     // 8011, 8012 or 8702
                 //     $c = $this->getCmd($msg['sqnAps'], $this->zigates[$zgId]); // Return is array
@@ -807,12 +869,12 @@
                 // Apply
                 if (isset($removeCmd)) {
                     if ($removeCmd) {
-                        // cmdLog('debug', '                 queue before='.json_encode($zg['cmdQueue']));
+                        cmdLog('debug', '                 queue before='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
                         
                         // array_shift($this->zigates[$zgId]['cmdQueueHigh']); // Removing cmd
                         $this->removeFisrtCmdFromQueue($this->zgGetSentPri());
                         
-                        // cmdLog('debug', '                 queue after='.json_encode($zg['cmdQueue']));
+                        cmdLog('debug', '                 queue after='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
                         $this->zgSetAvailable(); // Zigate is free again
                     }
                 }

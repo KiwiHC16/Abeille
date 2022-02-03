@@ -2477,7 +2477,7 @@
             // ON / OFF with no effects
             if (isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']))
             {
-                cmdLog('debug','    OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
+                cmdLog('debug','    OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action']." AckAPS: ".$Command['AckAPS'], $this->debug['processCmd']);
                 // <address mode: uint8_t>
                 // <target short address: uint16_t>
                 // <source endpoint: uint8_t>
@@ -2490,21 +2490,23 @@
 
                 $cmd                    = "0092";
 
-                $addrMode            = $Command['addressMode']; // 01: Group, 02: device
+                $addrMode               = $Command['addressMode']; // 01: Group, 02: device
                 $address                = $Command['address'];
-                $srcEp         = "01";
-                $dstEp    = $Command['destinationEndpoint'];
+                $srcEp                  = "01";
+                $dstEp                  = $Command['destinationEndpoint'];
                 $action                 = $Command['action'];
 
                 $data = $addrMode.$address.$srcEp.$dstEp.$action;
                 $length = sprintf("%04s", dechex(strlen($data) / 2));
 
+                $priority               = $Command['priority'];
+                $AckAPS                 = $Command['AckAPS'];
                 // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
+                $this->addCmdToQueue2($priority, $dest, $cmd, $data, $address, null, $AckAPS);
 
                 if ($addrMode == "02" ) {
-                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000" );
-                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000" );
+                    // $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000" );
+                    // $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000" );
                 }
                 return;
             }

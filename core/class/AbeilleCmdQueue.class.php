@@ -54,7 +54,7 @@
         // public $statCmd = array();
 
         function __construct($debugLevel='debug') {
-            cmdLog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
+            // cmdLog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
             // cmdLog("debug", "Recuperation des queues de messages", $this->debug["AbeilleCmdClass"]);
 
             $abQueues = $GLOBALS['abQueues'];
@@ -468,11 +468,11 @@
         // }
 
         function processZigateCmdQueues() {
-            cmdLog("debug", __FUNCTION__." Begin");
-            cmdLog('debug', '  processZigateCmdQueues() zigates='.json_encode($this->zigates));
+            // cmdLog("debug", __FUNCTION__." Begin");
+            // cmdLog('debug', '  processZigateCmdQueues() zigates='.json_encode($this->zigates));
 
             foreach ($this->zigates as $zgId => $zg) {
-                cmdLog("debug", __FUNCTION__." zgId: ".$zgId);
+                // cmdLog("debug", __FUNCTION__." zgId: ".$zgId);
                 if ($zg['enabled'] == 0) continue; // Disabled
                 if ($zg['available'] == 0) continue;  // Not free
 
@@ -547,8 +547,8 @@
                     monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?
             }
 
-            cmdLog('debug', '  processZigateCmdQueues() zigates='.json_encode($this->zigates));
-            cmdLog("debug", __FUNCTION__." End");
+            // cmdLog('debug', '  processZigateCmdQueues() zigates='.json_encode($this->zigates));
+            // cmdLog("debug", __FUNCTION__." End");
         }
 
         /* Treat Zigate statuses (0x8000 cmd) coming from parser */
@@ -606,9 +606,12 @@
         // }
 
         // Process 8000, 8012 or 8702 messages
+        /**
+         * Loop to read all messages and quit when no more message (break loop)
+         */
         function processZigateAcks() {
 
-            cmdLog("debug", __FUNCTION__." Begin");
+            // cmdLog("debug", __FUNCTION__." Begin");
 
             while (true) {
                 $msgMax = $this->queueParserToCmdAckMax;
@@ -619,7 +622,7 @@
                     } else if ($errCode != 42) // 42 = No message
                         cmdLog("debug", "processZigateAcks() ERROR ".$errCode);
                     
-                    cmdLog("debug", __FUNCTION__." End due to break");
+                    // cmdLog("debug", __FUNCTION__." End due to break");
                     break;
                 }
 
@@ -787,7 +790,7 @@
 
             // cmdLog("debug", "  ".count($this->cmdQueue[$zgId])." remaining pending commands", $this->debug['processZigateAcks']);
             // cmdLog("debug", "  LA23=".json_encode($this->zigates));
-            cmdLog("debug", __FUNCTION__." End");
+            // cmdLog("debug", __FUNCTION__." End");
 
         } // End processZigateAcks()
 

@@ -209,28 +209,10 @@
 
             $this->tempoMessageQueue = array();
 
-            // for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-            //     $this->zigateEnabled[$zgId] = 0;
-            //     if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
-            //         continue; // This Zigate is not enabled
-            //     /* Tcharp38: This leads to problems when creating new beehive.
+            /* Tcharp38: This leads to problems when creating new beehive.
             //        Currently daemons should be restarted AFTER beehive created in Jeedom.
             //        Since not the case, AbeilleCmd consider new beehive disabled.
             //      */
-            //     // $zigate = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
-            //     // if (!is_object($zigate))
-            //     //     continue; // Probably deleted on Jeedom side.
-            //     // if (!$zigate->getIsEnable())
-            //     //     continue; // Zigate disabled
-
-            //     $this->zigateEnabled[$zgId] = 1;
-            //     $this->zigateAvailable[$zgId] = 1;
-            //     // $this->timeLastAck[$zgId] = 0;
-            //     // $this->timeLastAckTimeOut[$zgId] = 0;
-            //     $this->zigateFw[$zgId] = 0;
-            //     $this->zigateHw[$zgId] = 0;
-            // }
-
             // Contains all information about the Zigates to process the messages and the queues.
             $this->zigates = array();
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
@@ -596,18 +578,6 @@
                 if (!$this->zgGetEnable())      continue; // Disabled
                 if (!$this->zgGetAvailable())   continue;  // Not free
 
-                //$zg = &$this->zigates[$zgId];
-                // cmdLog('debug', 'cmdQueue12='.json_encode($zg['cmdQueue']));
-
-                // Anything to send for this zigate ?
-                // if (count($this->zigates[$zgId]['cmdQueueHigh']) > 0) {
-                //     $queue = $this->zigates[$zgId]['cmdQueueHigh'];
-                //     $queuePri = PRIO_HIGH;
-                // } else if (count($zg['cmdQueue']) > 0) {
-                //     $queue = $this->zigates[$zgId]['cmdQueue'];
-                //     $queuePri = PRIO_NORM;
-                // } else
-                //     continue; // Nothing to send. Moving to next zigate.
                 foreach( range( priorityMin, priorityMax) as $priority ) {
                     if ($this->checkCmdToSendInTheQueue($priority)) {
                         $this->zgSetNotAvailable();     // Zigate no longer free
@@ -621,20 +591,6 @@
                             cmdLog('debug', "             processZigateCmdQueues() - cmd=".json_encode($cmd));
         
                         $this->sendCmdToZigate($cmd['dest'], $cmd['cmd'], $cmd['datas']);
-        
-                        // if ($queuePri == PRIO_HIGH) {
-                        //     $this->zigates[$zgId]['cmdQueueHigh'][0]['status'] = "SENT";
-                        //     $this->zigates[$zgId]['cmdQueueHigh'][0]['sentTime'] = time();
-                        //     $this->zigates[$zgId]['cmdQueueHigh'][0]['try']--;    
-                        // }
-                        // else if ($queuePri == PRIO_NORM) {
-                        //     $this->zigates[$zgId]['cmdQueue'][0]['status'] = "SENT";
-                        //     $this->zigates[$zgId]['cmdQueue'][0]['sentTime'] = time();
-                        //     $this->zigates[$zgId]['cmdQueue'][0]['try']--;    
-                        // }
-                        // else {
-                        //     cmdLog('debug', "             processZigateCmdQueues() - WARNING: No queue to use");
-                        // }
 
                         $this->zgTagSentQueueFirstMessage($priority);
 
@@ -718,7 +674,7 @@
                     continue;
                 }
 
-                // TODO: To be revisited. Ex: 8000 then 8010 ignored
+                // TODO: To be revisited. Ex: 8000 then 801x ignored
                 // if (!count($zg['cmdQueue']) && !count($zg['cmdQueueHigh'])) {
                 //     cmdLog("debug", $msg['type']." msg but empty cmd queues => ignored");
                 //     continue;
@@ -744,15 +700,6 @@
                 unset($removeCmd); // Unset in case set in previous msg
                 if ($msg['type'] == "8000") {
                     $m = "              processZigateAcks() - Msg from parser: 8000: ".$msg['net'].", Status=".$msg['status'].", SQN=".$msg['sqn'].", SQNAPS=".$msg['sqnAps'].", PackType=".$msg['packetType'].", NPDU=".$nPDU.", APDU=".$aPDU;
-
-                    // if ($this->zigates[$zgId]['sentPri'] == PRIO_HIGH)
-                    //     $queue = $this->zigates[$zgId]['cmdQueueHigh'];
-                    // else
-                    //     $queue = $this->zigates[$zgId]['cmdQueue'];
-
-                    // $queueSize = count($queue);
-                    // if ($queueSize > 0)
-                    //     $cmd = $queue[0];
 
                     // Checking sent cmd vs received ack misalignment
                     if ( !$this->checkCmdToSendInTheQueue($this->zgGetSentPri()) ) {

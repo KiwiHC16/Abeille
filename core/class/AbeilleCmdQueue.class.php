@@ -250,10 +250,9 @@
             cmdLog("debug", "    addCmdToQueue2(pri=".$priority.", net=".$net.", cmd=".$cmd.", payload=".$payload.", addr=".$addr.")");
 
             $zgId = substr($net, 7);
-            $zg = &$this->zigates[$zgId];
 
             // Checking min parameters
-            if ($zg['enabled'] == 0) {
+            if ($this->zigates[$zgId]['enabled'] == 0) {
                 cmdLog("debug", "      Zigate disabled. Ignoring command.");
                 return;
             }
@@ -290,21 +289,24 @@
                 'sentTime'  => 0, // For lost cmds timeout
                 'sqnAps'    => ''
             );
-            if ($addrMode && ($zg['hw'] == 1) && ($zg['fw'] >= 0x31e))
+            if ($addrMode && ($this->zigates[$zgId]['hw'] == 1) && ($this->zigates[$zgId]['fw'] >= 0x31e))
                 $newCmd['addrMode'] = $addrMode; // For flow control if v1 & FW >= 3.1e
-            if ($priority == PRIO_HIGH)
-                $queue = &$zg['cmdQueueHigh'];
-            else
-                $queue = &$zg['cmdQueue'];
-            $queue[] = $newCmd;
-            $queueSize = count($queue);
-            if ($priority == PRIO_HIGH)
+
+            if ($priority == PRIO_HIGH) {
+                $this->zigates[$zgId]['cmdQueueHigh'][] = $newCmd;
                 cmdLog("debug", "      \->Added cmd to Zigate".$zgId." HIGH priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
-            else
-                cmdLog("debug", "      \->Added cmd to Zigate".$zgId." normal priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
-            if ($queueSize > 50) {
-                cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
+                if (count($this->zigates[$zgId]['cmdQueueHigh']) > 50) {
+                    cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
+                }
             }
+            else {
+                $this->zigates[$zgId]['cmdQueue'][] = $newCmd;
+                cmdLog("debug", "      \->Added cmd to Zigate".$zgId." normal priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
+                if (count($this->zigates[$zgId]['cmdQueue']) > 50) {
+                    cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
+                }
+            }
+
         } // End addCmdToQueue2()
 
         // Find cmd corresponding to SQNAPS

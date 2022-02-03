@@ -53,6 +53,28 @@
         public $zigates = array(); // All enabled zigates
         // public $statCmd = array();
 
+        public function initNewZigateDefault($zgId) {
+            $zg = array();
+            if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') == 'Y') {
+                $zg['enabled'] = 1;
+            }
+            else {
+                $zg['enabled'] = 0;
+            } 
+            $zg['available'] = 1;           // By default we consider the Zigate available to receive commands
+            $zg['hw'] = 0;                  // 1=v1, 2=v2
+            $zg['fw'] = 0;                  // FW minor version (ex 0x321)
+            $zg['nPDU'] = 0;                // Last NDPU
+            $zg['aPDU'] = 0;                // Last APDU
+            $zg['cmdQueue'] = array();      // Array of queues. One queue per priority from priorityMin to priorityMax.
+            foreach ( range( priorityMin, priorityMax) as $prio ) {
+                $zg['cmdQueue'][$prio] = array();
+            }
+            $zg['sentPri'] = 0;
+
+            return $zg;
+        }
+
         function __construct($debugLevel='debug') {
             // cmdLog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
             // cmdLog("debug", "Recuperation des queues de messages", $this->debug["AbeilleCmdClass"]);
@@ -94,27 +116,14 @@
             //     $this->zigateHw[$zgId] = 0;
             // }
 
-            // Tcharp38: Ongoing. New way to define zigates status
+            // Contains all information about the Zigates to process the messages and the queues.
+            $this->zigates = array();
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
-                    continue; // This Zigate is not enabled
-
-                $zg = array();
-                $zg['id'] = $zgId;
-                $zg['enabled'] = 1;
-                $zg['available'] = 1;
-                $zg['hw'] = 0; // 1=v1, 2=v2
-                $zg['fw'] = 0; // FW minor version (ex 0x321)
-                $zg['nPDU'] = 0; // Last NDPU
-                $zg['aPDU'] = 0; // Last APDU
-                $zg['cmdQueue'] = array();
-                $zg['cmdQueueHigh'] = array();
-                $zg['sentPri'] = 0;
-                $this->zigates[$zgId] = $zg;
+                $this->zigates[$zgId] = $this->initNewZigateDefault($zgId);
             }
 
             // cmdLog("debug", "AbeilleCmdQueue constructor, zigates:".json_encode($this->zigates), $this->debug["AbeilleCmdClass"] );
-
+            
             cmdLog("debug", "AbeilleCmdQueue constructor end", $this->debug["AbeilleCmdClass"]);
         }
 

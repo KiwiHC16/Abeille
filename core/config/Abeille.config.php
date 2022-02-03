@@ -37,13 +37,13 @@
     $abQueues["cmdToAbeille"] = array( "id" => 321, "max" => 512 ); // ?
     $GLOBALS['abQueues'] = $abQueues;
 
-    // define('priorityMin',           1);
-    // define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
-    // define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
-    // define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
-    // define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
-    // define('priorityLostNE',        5); // Si le NE est en TimeOut il n'est pas prioritaire car il est peut etre off.
-    // define('priorityMax',           5); // est egale aux max des priorités définies.
+    define('priorityMin',           1);
+    define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
+    define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
+    define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
+    define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
+    define('priorityLostNE',        5); // Si le NE est en TimeOut il n'est pas prioritaire car il est peut etre off.
+    define('priorityMax',           5); // est egale aux max des priorités définies.
 
     // New priorities model
     define('PRIO_NORM', 1); // Normal

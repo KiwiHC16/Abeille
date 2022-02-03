@@ -46,9 +46,9 @@
     define('priorityMax',           5); // est egale aux max des priorités définies.
 
     // New priorities model
-    define('PRIO_NORM', 1); // Normal
-    define('PRIO_HIGH', 2); // High priority (ex: parser to cmd to react on wakeup)
-    define('priorityInterrogation', PRIO_NORM); // TO BE REMOVED
+    define('PRIO_NORM', priorityInterrogation); // Normal
+    define('PRIO_HIGH', priorityUserCmd); // High priority (ex: parser to cmd to react on wakeup)
+
 
     define('maxNbOfZigate', 10); // Number of supported zigates
     $GLOBALS['maxNbOfZigate'] = maxNbOfZigate;

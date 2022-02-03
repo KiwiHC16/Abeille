@@ -2505,8 +2505,8 @@
                 $this->addCmdToQueue2($priority, $dest, $cmd, $data, $address, null, $AckAPS);
 
                 if ($addrMode == "02" ) {
-                    // $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000" );
-                    // $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000" );
+                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000" );
+                    $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000" );
                 }
                 return;
             }

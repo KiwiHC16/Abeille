@@ -708,7 +708,7 @@
 
                     // Checking sent cmd vs received ack misalignment
                     if ( !$this->checkCmdToSendInTheQueue($this->zgGetSentPri()) ) {
-                        cmdLog("debug", $m." => ignored as queue is empty");
+                        // cmdLog("debug", $m." => ignored as queue is empty");
                         continue;
                     }
 
@@ -758,7 +758,7 @@
 
                     // Checking sent cmd vs received ack misalignment
                     if ( !$this->checkCmdToSendInTheQueue($this->zgGetSentPri()) ) {
-                        cmdLog("debug", $m." => ignored as queue is empty");
+                        // cmdLog("debug", $m." => ignored as queue is empty");
                         continue;
                     }
 

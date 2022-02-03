@@ -387,7 +387,7 @@
                     $Command = array(
                         "onoff"                 => "1",
                         "dest"                  => $dest,
-                        "priority"              => $priority,
+                        "priority"              => priorityUserCmd,
                         "addressMode"           => "02",
                         "address"               => $address,
                         "destinationEndpoint"   => $parameters['EP'],

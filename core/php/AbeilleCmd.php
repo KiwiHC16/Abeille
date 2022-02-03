@@ -143,6 +143,7 @@
 
             // Libère le CPU
             time_nanosleep(0, 10000000); // 1/100s
+            // sleep(1); // To slow down the log and be able to read the steps for troubleshooting.
         }
     }
     catch (Exception $e) {

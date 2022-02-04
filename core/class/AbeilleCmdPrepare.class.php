@@ -392,19 +392,19 @@
                         "address"               => $address,
                         "destinationEndpoint"   => $parameters['EP'],
                         "action"                => $convertOnOff[$parameters['Action']],
-                        "AckAPS"                => 1,
+                        "AckAPS"                => AckAPS,
                     );
                 }
                 else {
                     $Command = array(
                         "onoff"                 => "1",
                         "dest"                  => $dest,
-                        "priority"              => $priority,
+                        "priority"              => priorityUserCmd,
                         "addressMode"           => "02",
                         "address"               => $address,
                         "destinationEndpoint"   => "01",
                         "action"                => $convertOnOff[$msg],
-                        "AckAPS"                => 1,
+                        "AckAPS"                => AckAPS,
                     );
                 }
                 break;

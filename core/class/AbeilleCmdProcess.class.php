@@ -583,7 +583,7 @@
                 <attributes list: data list of uint16_t  each>
             */
 
-            $cmd = "0100";
+            $cmd = "0100"; // Cmd 100 request AckAPS based on ZigBee traces.
 
             $addrMode = "02";
             // TODO: Check 'addr' size
@@ -617,7 +617,7 @@
             $nbOfAttrib = sprintf("%02X", $nbAttr);
             $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttrib.$attribList;
 
-            $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+            $this->addCmdToQueue2(priorityInterrogation, $dest, $cmd, $data, $addr, $addrMode, AckAPS );
         }
 
         /**

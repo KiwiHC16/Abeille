@@ -45,7 +45,7 @@
     define('priorityLostNE',        5); // Si le NE est en TimeOut il n'est pas prioritaire car il est peut etre off.
     define('priorityMax',           5); // est egale aux max des priorités définies.
 
-    // New priorities model
+    // New priorities model, will be replaced by old one again after code review (KiwiHC16)
     define('PRIO_NORM', priorityInterrogation); // Normal
     define('PRIO_HIGH', priorityUserCmd); // High priority (ex: parser to cmd to react on wakeup)
 
@@ -86,4 +86,7 @@
     define('daemonSocat9', 1 << 20);
     define('daemonSocat10', 1 << 21);
     define('daemonMonitor', 1 << 22);
+
+
+    define('AckAPS', 1); // Request an APS Ack.
 ?>

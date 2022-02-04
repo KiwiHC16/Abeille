@@ -52,40 +52,40 @@ class AbeilleParserTestDB extends TestCase {
         $this->assertSame( $group, $cmdInfoGroup->execCmd() );
     }
 
-    function test_deviceCreate() {
-        fwrite(STDOUT, "\n\n" . __METHOD__ );
+    // function test_deviceCreate() {
+    //     fwrite(STDOUT, "\n\n" . __METHOD__ );
 
-        global $log;
-        global $msgToCmd;
-        unset($GLOBALS['eqList']);
+    //     global $log;
+    //     global $msgToCmd;
+    //     unset($GLOBALS['eqList']);
 
-        $net = "Abeille1";
-        $addr = "AAAA";
-        $GLOBALS['eqList'][$net] = array();
-        $GLOBALS['eqList'][$net][$addr] = array();
+    //     $net = "Abeille1";
+    //     $addr = "AAAA";
+    //     $GLOBALS['eqList'][$net] = array();
+    //     $GLOBALS['eqList'][$net][$addr] = array();
 
-        $eq = &$GLOBALS['eqList'][$net][$addr];
+    //     $eq = &$GLOBALS['eqList'][$net][$addr];
 
-        // $eq['ieee']             = "FFB457FFFE79EBFF";
-        // $eq['epFirst']          = "01";
-        // $eq['modelIdentifier']  = "";
-        // $eq['manufacturer']     = "";
-        // $eq['jsonId']           = "";
-        // $eq['jsonLocation']     = "";
-        // $eq['capa']             = "";
+    //     // $eq['ieee']             = "FFB457FFFE79EBFF";
+    //     // $eq['epFirst']          = "01";
+    //     // $eq['modelIdentifier']  = "";
+    //     // $eq['manufacturer']     = "";
+    //     // $eq['jsonId']           = "";
+    //     // $eq['jsonLocation']     = "";
+    //     // $eq['capa']             = "";
 
-        $abeilleParser = new AbeilleParser;
+    //     $abeilleParser = new AbeilleParser;
 
-        $net = "Abeille1";
-        $addr = "AAAA";
-        $abeilleParser->deviceCreate($net, $addr);
+    //     $net = "Abeille1";
+    //     $addr = "AAAA";
+    //     $abeilleParser->deviceCreate($net, $addr);
 
-        sleep(2);
-        $eq = Abeille::byLogicalId($net.'/'.$addr, 'Abeille');
+    //     sleep(2);
+    //     $eq = Abeille::byLogicalId($net.'/'.$addr, 'Abeille');
 
-        $this->assertSame( true, is_object($eq) );
+    //     $this->assertSame( true, is_object($eq) );
 
-    }
+    // }
 }
 
 

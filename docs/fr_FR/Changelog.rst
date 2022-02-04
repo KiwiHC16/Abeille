@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Interne: Correction erreur 'prepareCmd(): Mauvais format de message' (2302).
+- Aucun équipement sélectionné: correction (2305).
+
 220202-BETA-1
 -------------
 

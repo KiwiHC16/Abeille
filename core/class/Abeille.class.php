@@ -357,8 +357,8 @@ class Abeille extends eqLogic
             if ($cmd->getConfiguration('RefreshData',0)) {
                 log::add('Abeille', 'debug', 'refreshCmd: '.$cmd->getHumanName().' ('.$cmd->getEqlogic()->getLogicalId().')' );
                 // $cmd->execute(); le process ne sont pas tous demarrer donc on met une tempo.
-                // $topic   = $cmd->getEqlogic()->getLogicalId().'/'.$cmd->getLogicalId();
-                $topic   = $cmd->getConfiguration('topic');
+                // $topic = $cmd->getEqlogic()->getLogicalId().'/'.$cmd->getLogicalId();
+                $topic = $cmd->getEqlogic()->getLogicalId().'/'.$cmd->getConfiguration('topic');
                 $request = $cmd->getConfiguration('request');
                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$topic."&time=".(time()+$i), $request);
                 $i++;

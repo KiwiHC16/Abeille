@@ -4156,7 +4156,7 @@
                     if (isset($Command['addressMode'])) $addrMode = $Command['addressMode']; else $addrMode = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
-                    if (isset($Command['EP'])) $dstEp = $Command['EP']; else $dstEp = "";
+                    if (isset($Command['EP'])) $dstEp = $Command['EP']; else $dstEp = "01";
                     $colourX    = $Command['X'];
                     $colourY    = $Command['Y'];
                     if (isset($Command['duration']) && $Command['duration']>0)

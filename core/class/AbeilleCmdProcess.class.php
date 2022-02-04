@@ -3757,7 +3757,7 @@
                 // Mandatory params: addr, EP, Level (in dec, %), duration (dec)
                 // Optional params: duration (default=0001)
                 else if ($cmdName == 'setLevel') {
-                    $required = ['addr', 'EP', 'Level']; // Mandatory infos
+                    $required = ['addr', 'Level']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
                     if (($Command['Level'] < 0) || ($Command['Level'] > 100)) {
@@ -3774,10 +3774,10 @@
                     // <Level: uint8_t >
                     // <Transition Time: uint16_t>
 
-                    $addrMode   = "02";
+                    if (isset($Command['addressMode'])) $addrMode = $Command['addressMode']; else $addrMode = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['EP'];
+                    $dstEp      = $Command['destinationEndpoint'];;
                     $onoff      = "01";
                     $l = intval($Command['Level'] * 255 / 100);
                     $level      = sprintf("%02X", $l);
@@ -3785,7 +3785,9 @@
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$onoff.$level.$duration;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    if ($addrMode == "02") $AckAPS = AckAPS; else $AckAPS=null;
+                    
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode, $AckAPS);
 
                     if ($addrMode == "02") {
                         $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
@@ -3826,7 +3828,7 @@
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$onoff.$level.$duration;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr);
 
                     if ($addrMode == "02") {
                         $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
@@ -4175,7 +4177,7 @@
                 // Mandatory params: addr, EP, slider (temp in K)
                 // Note: slider=0 is specific value to force tempMireds=0000
                 else if ($cmdName == 'setTemperature') {
-                    $required = ['addr', 'EP', 'slider']; // Mandatory infos
+                    $required = ['addr', 'slider']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
@@ -4187,10 +4189,10 @@
 
                     $cmd = "00C0"; // 00C0=Move to colour temperature
 
-                    $addrMode   = "02";
+                    if (isset($Command['addressMode'])) $addrMode = $Command['addressMode']; else $addrMode = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['EP'];
+                    if (isset($Command['EP'])) $dstEp = $Command['EP']; else $dstEp = "01";
                     // Color temp K = 1,000,000 / ColorTempMireds,
                     // where ColorTempMireds is in the range 1 to 65279 mireds inclusive,
                     // giving a color temp range from 1,000,000 kelvins to 15.32 kelvins.
@@ -4209,9 +4211,11 @@
                     cmdLog('debug', '    TempK='.$tempK.' => Using tempMireds='.$tempMireds.', transition='.$transition);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$tempMireds.$transition;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    if ($addrMode == "02") $AckAPS = AckAPS; else $AckAPS = null;
 
-                    if ($addrMode == "02" ) {
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode, $AckAPS);
+
+                    if ($addrMode == "02") {
                         $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0300&attrId=0007" );
                     }
                     return;

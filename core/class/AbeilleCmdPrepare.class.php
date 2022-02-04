@@ -824,13 +824,13 @@
                     $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
-                                    "setLevel"             => "1",
+                                    "name"                 => "setLevel",
                                     "addressMode"          => "01",
-                                    "priority"             => $priority,
+                                    "priority"             => priorityUserCmd,
                                     "dest"                 => $dest,
-                                    "address"              => $address,
+                                    "addr"                 => $address,
                                     "destinationEndpoint"  => "01",
-                                    "Level"                => intval($parameters['Level'] * 255 / 100),
+                                    "Level"                => intval($parameters['Level']),
                                     "duration"             => $parameters['duration'],
                                     );
                 break;
@@ -858,13 +858,12 @@
                         $Command = array(
                                             "name"                 => "setColour",
                                             "addressMode"          => "01",
-                                            "priority"             => $priority,
+                                            "priority"             => priorityUserCmd,
                                             "dest"                 => $dest,
-                                            "addr"              => $address,
+                                            "addr"                 => $address,
                                             "X"                    => $parameters['X'],
                                             "Y"                    => $parameters['Y'],
                                             "destinationEndPoint"  => "01", // not needed as group
-                                            "priority"             => priorityUserCmd,
                                             );
                     }
                     break;
@@ -1041,13 +1040,13 @@
                     $parameters = $this->proper_parse_str($msg);
                 }
                 $Command = array(
-                                    "setTemperature"       => "1",
+                                    "name"                 => "setTemperature",
                                     "addressMode"          => "01",
                                     "priority"             => $priority,
                                     "dest"                 => $dest,
-                                    "address"              => $address,
-                                    "temperature"          => sprintf("%04s", dechex(intval(1000000/$parameters['slider'])) ),
-                                    "destinationEndPoint"  => $parameters['EP'],
+                                    "addr"                 => $address,
+                                    "slider"               => sprintf("%04s", dechex(intval(1000000/$parameters['slider'])) ),
+                                    "EP"                   => $parameters['EP'],
                                     );
                 break;
 

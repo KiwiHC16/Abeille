@@ -2477,7 +2477,7 @@
             // ON / OFF with no effects
             if (isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']))
             {
-                cmdLog('debug','    OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action']." AckAPS: ".$Command['AckAPS'], $this->debug['processCmd']);
+                cmdLog('debug','    OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
                 // <address mode: uint8_t>
                 // <target short address: uint16_t>
                 // <source endpoint: uint8_t>
@@ -2500,7 +2500,9 @@
                 $length = sprintf("%04s", dechex(strlen($data) / 2));
 
                 $priority               = $Command['priority'];
-                $AckAPS                 = $Command['AckAPS'];
+              
+                if ($addrMode=="01")    $AckAPS = null;     // No AckAPS as we can t wait for all eq from the group to reply, as we don t know who they are. And the command 092 do not ask for APS ACK in Zigbee traces for a group.
+                if ($addrMode=="02")    $AckAPS = AckAPS;   // No AckAPS as we can wait for eq to reply. And the command 092 do ask for APS ACK in Zigbee traces.
                 // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
                 $this->addCmdToQueue2($priority, $dest, $cmd, $data, $address, null, $AckAPS);
 

@@ -4140,7 +4140,7 @@
 
                 // ZCL cluster 0300/color control: Move to Colour
                 else if ($cmdName == 'setColour') {
-                    $required = ['addr', 'EP', 'X', 'Y']; // Mandatory infos
+                    $required = ['addr', 'X', 'Y']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
@@ -4153,10 +4153,10 @@
                     // <transition time: uint16_t >
 
                     $cmd        = "00B7"; // Move to color
-                    $addrMode   = '02';
+                    if (isset($Command['addressMode'])) $addrMode = $Command['addressMode']; else $addrMode = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['EP'];
+                    if (isset($Command['EP'])) $dstEp = $Command['EP']; else $dstEp = "";
                     $colourX    = $Command['X'];
                     $colourY    = $Command['Y'];
                     if (isset($Command['duration']) && $Command['duration']>0)
@@ -4166,7 +4166,8 @@
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$colourX.$colourY.$duration ;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    if ($addrMode == "02") $AckAPS = AckAPS; else $AckAPS=null;
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode, $AckAPS);
                     return;
                 }
 

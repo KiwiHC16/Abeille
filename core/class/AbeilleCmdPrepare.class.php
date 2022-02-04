@@ -856,14 +856,15 @@
                     if (count($fields) > 1) {
                         $parameters = $this->proper_parse_str($msg);
                         $Command = array(
-                                            "setColour"            => "1",
+                                            "name"                 => "setColour",
                                             "addressMode"          => "01",
                                             "priority"             => $priority,
                                             "dest"                 => $dest,
-                                            "address"              => $address,
+                                            "addr"              => $address,
                                             "X"                    => $parameters['X'],
                                             "Y"                    => $parameters['Y'],
                                             "destinationEndPoint"  => "01", // not needed as group
+                                            "priority"             => priorityUserCmd,
                                             );
                     }
                     break;

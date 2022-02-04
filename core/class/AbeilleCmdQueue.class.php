@@ -53,8 +53,149 @@
         public $zigates = array(); // All enabled zigates
         // public $statCmd = array();
 
+        /**
+         * Return number of cmd inthe queue
+         */
+        public function checkCmdToSendInTheQueue($priority) {
+            if (is_array($this->zigates[$this->zgId]['cmdQueue'][$priority]) ) 
+                return count($this->zigates[$this->zgId]['cmdQueue'][$priority]);
+            else
+                return 0;
+        }
+
+        public function addNewCmdToQueue($priority,$newCmd) {
+            // if ($priority == PRIO_HIGH) {
+            //     $this->zigates[$zgId]['cmdQueueHigh'][] = $newCmd;
+            //     cmdLog("debug", "      \->Added cmd to Zigate".$zgId." HIGH priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
+            //     if (count($this->zigates[$zgId]['cmdQueueHigh']) > 50) {
+            //         cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
+            //     }
+            // }
+            // else {
+            //     $this->zigates[$zgId]['cmdQueue'][] = $newCmd;
+            //     cmdLog("debug", "      \->Added cmd to Zigate".$zgId." normal priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
+            //     if (count($this->zigates[$zgId]['cmdQueue']) > 50) {
+            //         cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
+            //     }
+            // }
+
+            $this->zigates[$this->zgId]['cmdQueue'][$priority][] = $newCmd;
+            if (count($this->zigates[$this->zgId]['cmdQueue'][$priority]) > 50) {
+                cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$this->zgId.' cmd queue: '.$priority);
+            }
+        }
+
+        public function removeFisrtCmdFromQueue($priority) {
+            if ($this->checkCmdToSendInTheQueue($priority))
+                array_shift($this->zigates[$this->zgId]['cmdQueue'][$priority]);
+            else
+                cmdLog("debug", __FUNCTION__." Trying to remove a cmd in an empty queue.");
+        }
+
+        public function zgGetQueueFirstMessage($priority) {
+            return $this->zigates[$this->zgId]['cmdQueue'][$priority][0];
+        }
+
+        public function zgGetQueue($priority) {
+            return $this->zigates[$this->zgId]['cmdQueue'][$priority];
+        }
+
+        public function zgTagSentQueueFirstMessage($priority) {
+            $this->zigates[$this->zgId]['cmdQueue'][$priority][0]['status'] = "SENT";
+            $this->zigates[$this->zgId]['cmdQueue'][$priority][0]['sentTime'] = time();
+            $this->zigates[$this->zgId]['cmdQueue'][$priority][0]['try']--;  
+        }
+
+        public function zgChangeStatusSentQueueFirstMessage($priority, $status) {
+            $this->zigates[$this->zgId]['cmdQueue'][$priority][0]['status'] = $status;
+        }
+
+        public function zgChangesqnApsSentQueueFirstMessage($priority, $sqnAps) {
+            $this->zigates[$this->zgId]['cmdQueue'][$priority][0]['sqnAps'] = $sqnAps;
+        }
+
+        public function zgGetEnable() {
+            return $this->zigates[$this->zgId]['enabled'];
+        }
+
+        public function zgGetAvailable() {
+            return $this->zigates[$this->zgId]['available'];
+        }
+
+        public function zgSetNotAvailable() {
+            $this->zigates[$this->zgId]['available'] = 0;
+        }
+
+        public function zgSetAvailable() {
+            $this->zigates[$this->zgId]['available'] = 1;
+        }
+
+        public function zgSetSentPri($queuePri) {
+            $this->zigates[$this->zgId]['sentPri'] = $queuePri;
+        }
+
+        public function zgGetSentPri() {
+            return $this->zigates[$this->zgId]['sentPri'];
+        }
+        
+        public function zgSetHw($hw) {
+            $this->zigates[$this->zgId]['hw'] = $hw;
+        }
+
+        public function zgGetHw() {
+            return $this->zigates[$this->zgId]['hw'];
+        }
+
+        public function zgSetFw($fw) {
+            $this->zigates[$this->zgId]['fw'] = $fw;
+        }
+
+        public function zgGetFw() {
+            return $this->zigates[$this->zgId]['fw'];
+        }
+
+        public function zgSetnPDU($hw) {
+            $this->zigates[$this->zgId]['nPDU'] = $hw;
+        }
+
+        public function zgGetnPDU() {
+            return $this->zigates[$this->zgId]['nPDU'];
+        }
+
+        public function zgSetaPDU($hw) {
+            $this->zigates[$this->zgId]['aPDU'] = $hw;
+        }
+
+        public function zgGetaPDU() {
+            return $this->zigates[$this->zgId]['aPDU'];
+        }
+
+        public function initNewZigateDefault($zgId) {
+            $zg = array();
+            // cmdLog("debug", __FUNCTION__." Enabled: ".config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N'));
+            if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') == 'Y') {
+                $zg['enabled'] = 1;
+            }
+            else {
+                $zg['enabled'] = 0;
+            } 
+            // cmdLog("debug", __FUNCTION__." Enabled: ".$zg['enabled']);
+            $zg['available'] = 1;           // By default we consider the Zigate available to receive commands
+            $zg['hw'] = 0;                  // 1=v1, 2=v2
+            $zg['fw'] = 0;                  // FW minor version (ex 0x321)
+            $zg['nPDU'] = 0;                // Last NDPU
+            $zg['aPDU'] = 0;                // Last APDU
+            $zg['cmdQueue'] = array();      // Array of queues. One queue per priority from priorityMin to priorityMax.
+            foreach ( range( priorityMin, priorityMax) as $prio ) {
+                $zg['cmdQueue'][$prio] = array();
+            }
+            $zg['sentPri'] = 0;             // priorité du dernier message envoyé pour connaitre la queue a verifier.
+
+            return $zg;
+        }
+
         function __construct($debugLevel='debug') {
-            cmdLog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
+            // cmdLog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
             // cmdLog("debug", "Recuperation des queues de messages", $this->debug["AbeilleCmdClass"]);
 
             $abQueues = $GLOBALS['abQueues'];
@@ -72,61 +213,37 @@
 
             $this->tempoMessageQueue = array();
 
-            // for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-            //     $this->zigateEnabled[$zgId] = 0;
-            //     if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
-            //         continue; // This Zigate is not enabled
-            //     /* Tcharp38: This leads to problems when creating new beehive.
+            /* Tcharp38: This leads to problems when creating new beehive.
             //        Currently daemons should be restarted AFTER beehive created in Jeedom.
             //        Since not the case, AbeilleCmd consider new beehive disabled.
             //      */
-            //     // $zigate = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
-            //     // if (!is_object($zigate))
-            //     //     continue; // Probably deleted on Jeedom side.
-            //     // if (!$zigate->getIsEnable())
-            //     //     continue; // Zigate disabled
-
-            //     $this->zigateEnabled[$zgId] = 1;
-            //     $this->zigateAvailable[$zgId] = 1;
-            //     // $this->timeLastAck[$zgId] = 0;
-            //     // $this->timeLastAckTimeOut[$zgId] = 0;
-            //     $this->zigateFw[$zgId] = 0;
-            //     $this->zigateHw[$zgId] = 0;
-            // }
-
-            // Tcharp38: Ongoing. New way to define zigates status
+            // Contains all information about the Zigates to process the messages and the queues.
+            $this->zigates = array();
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
-                    continue; // This Zigate is not enabled
-
-                $zg = array();
-                $zg['id'] = $zgId;
-                $zg['enabled'] = 1;
-                $zg['available'] = 1;
-                $zg['hw'] = 0; // 1=v1, 2=v2
-                $zg['fw'] = 0; // FW minor version (ex 0x321)
-                $zg['nPDU'] = 0; // Last NDPU
-                $zg['aPDU'] = 0; // Last APDU
-                $zg['cmdQueue'] = array();
-                $zg['cmdQueueHigh'] = array();
-                $zg['sentPri'] = 0;
-                $this->zigates[$zgId] = $zg;
+                $this->zigates[$zgId] = $this->initNewZigateDefault($zgId);
+                cmdLog("debug", "AbeilleCmdQueue constructor, zigates:".json_encode($this->zigates[$zgId]), $this->debug["AbeilleCmdClass"] );
             }
 
-            // cmdLog("debug", "AbeilleCmdQueue constructor, zigates:".json_encode($this->zigates), $this->debug["AbeilleCmdClass"] );
+            // Used to know which Zigate we are working on right now. Sort of global variable. Would have been better to have queue objects and not queue array. Perhaps in the futur could improve the code...
+            $this->zgId = 1;
+
+            cmdLog("debug", "AbeilleCmdQueue constructor, zigates:".json_encode($this->zigates), $this->debug["AbeilleCmdClass"] );
+            $this->displayStatus();
 
             cmdLog("debug", "AbeilleCmdQueue constructor end", $this->debug["AbeilleCmdClass"]);
         }
 
-        // public function incStatCmd( $cmd ) {
-        //     if ( isset($this->statCmd[$cmd]) ) {
-        //         $this->statCmd[$cmd]++;
-        //     }
-        //     else {
-        //         $this->statCmd[$cmd]=1;
-        //     }
-        //     cmdLog('debug', '      incStatCmd(): '.json_encode($this->statCmd) );
-        // }
+        /*
+        public function incStatCmd( $cmd ) {
+            if ( isset($this->statCmd[$cmd]) ) {
+                $this->statCmd[$cmd]++;
+            }
+            else {
+                $this->statCmd[$cmd]=1;
+            }
+            cmdLog('debug', '      incStatCmd(): '.json_encode($this->statCmd) );
+        }
+        */
 
         public function publishMosquitto($queueId, $priority, $topic, $payload) {
 
@@ -246,18 +363,17 @@
          *
          * @return  none
          */
-        function addCmdToQueue2($priority = PRIO_NORM, $net = '', $cmd = '', $payload = '', $addr = '', $addrMode = null) {
-            cmdLog("debug", "    addCmdToQueue2(pri=".$priority.", net=".$net.", cmd=".$cmd.", payload=".$payload.", addr=".$addr.")");
+        function addCmdToQueue2($priority = PRIO_NORM, $net = '', $cmd = '', $payload = '', $addr = '', $addrMode = null, $AckAPS = null) {
+            cmdLog("debug", "    addCmdToQueue2(pri=".$priority.", net=".$net.", cmd=".$cmd.", payload=".$payload.", addr=".$addr." addrMode=".$addrMode." AckAPS=".$AckAPS.")");
 
-            $zgId = substr($net, 7);
-            $zg = &$this->zigates[$zgId];
+            $this->zgId = substr($net, 7);
 
             // Checking min parameters
-            if ($zg['enabled'] == 0) {
+            if (!$this->zgGetEnable()) {
                 cmdLog("debug", "      Zigate disabled. Ignoring command.");
                 return;
             }
-            if (config::byKey('AbeilleIEEE_Ok'.$zgId, 'Abeille', '-1', 1) == '-1') {
+            if (config::byKey('AbeilleIEEE_Ok'.$this->zgId, 'Abeille', '-1', 1) == '-1') {
                 cmdLog("debug", "      Zigate on wrong port. Ignoring command.");
                 return;
             }
@@ -288,27 +404,20 @@
                 'status'    => '', // '', 'SENT', '8000', '8012' or '8702', '8011'
                 'try'       => $this->maxRetry + 1, // Number of retries if failed
                 'sentTime'  => 0, // For lost cmds timeout
-                'sqnAps'    => ''
+                'sqnAps'    => '',
+                'AckAPS'    => $AckAPS,
             );
-            if ($addrMode && ($zg['hw'] == 1) && ($zg['fw'] >= 0x31e))
+            if ($addrMode && ($this->zgGetHw()) && ($this->zgGetFw() >= 0x31e))
                 $newCmd['addrMode'] = $addrMode; // For flow control if v1 & FW >= 3.1e
-            if ($priority == PRIO_HIGH)
-                $queue = &$zg['cmdQueueHigh'];
-            else
-                $queue = &$zg['cmdQueue'];
-            $queue[] = $newCmd;
-            $queueSize = count($queue);
-            if ($priority == PRIO_HIGH)
-                cmdLog("debug", "      \->Added cmd to Zigate".$zgId." HIGH priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
-            else
-                cmdLog("debug", "      \->Added cmd to Zigate".$zgId." normal priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
-            if ($queueSize > 50) {
-                cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
-            }
+
+            $this->addNewCmdToQueue($priority,$newCmd);
+
         } // End addCmdToQueue2()
 
-        // Find cmd corresponding to SQNAPS
-        // Returns: array('status'=true/false, 'cmd'=cmd by ref)
+        /**
+         * Find cmd corresponding to SQNAPS
+         * Returns: array('status'=true/false, 'cmd'=cmd by ref)
+         */
         function getCmd($sqnAps, $zg) {
             $cmd = null;
             foreach ($zg['cmdQueueHigh'] as $idx => $cmd2) {
@@ -375,11 +484,12 @@
 
             cmdLog('debug','              sendCmdToZigate(Dest='.$dest.', cmd='.$cmd.', datas='.$datas.")", $this->debug['sendCmdToZigate']);
 
-            $i = substr($dest, 7);
-            $destSerial = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '1', 1);
+            $this->zgId = substr($dest, 7);
+            $destSerial = config::byKey('AbeilleSerialPort'.$this->zgId, 'Abeille', '1', 1);
 
-            if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y') {
-                cmdLog("debug", "  Zigate ".$i." (".$destSerial.") disabled => ignoring cmd ".$cmd.'-'.$datas);
+            // Test should not be needed as we already tested in addCmdToQueue2
+            if (!$this->zgGetEnable()) {
+                cmdLog("debug", "  Zigate ".$this->zgId." (".$destSerial.") disabled => ignoring cmd ".$cmd.'-'.$datas);
                 return;
             }
 
@@ -394,102 +504,107 @@
             fclose($f);
         }
 
-        /* Display queues & zigate status.
-           Called every 30sec. */
+        /**
+         * Display queues & zigate status.
+         * Called every 30sec.
+         */ 
         function displayStatus() {
-            $queuesTxt = "";
+            // cmdLog("debug", __FUNCTION__." AbeilleCmdQueue constructor, zigates:".json_encode($this->zigates), $this->debug["AbeilleCmdClass"] );
             $zgTxt = '';
-            if (isset($this->tempoMessageQueue)) {
-                $queuesTxt .= "tempo=".count( $this->tempoMessageQueue );
-            }
-            // for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-            //     if (isset($this->cmdQueueHigh[$zgId]))
-            //         $queuesTxt .= ", high[".$zgId."]=".count($this->cmdQueueHigh[$zgId]);
-            //     if (isset($this->cmdQueue[$zgId]))
-            //         $queuesTxt .= ", norm[".$zgId."]=".count($this->cmdQueue[$zgId]);
-            // }
             foreach ($this->zigates as $zgId => $zg) {
-                $queuesTxt .= ", high[".$zgId."]=".count($zg['cmdQueueHigh']);
-                $queuesTxt .= ", norm[".$zgId."]=".count($zg['cmdQueue']);
-
-                if ($zgTxt != "")
-                    $zgTxt .= ", ";
-                $zgTxt .= "zg".$zgId."=on";
                 $available = $zg['available'] ? "yes" : "NO";
                 $zgTxt .= "/".$available;
             }
+            cmdLog("debug", "  Zg (avail): ".$zgTxt);
 
-            // for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-            //     if ($zgTxt != "")
-            //         $zgTxt .= ", ";
-            //     $enabled = $this->zigateEnabled[$zgId] ? "on" : "OFF";
-            //     $zgTxt .= "zg".$zgId."=".$enabled;
-            //     if ($this->zigateEnabled[$zgId]) {
-            //         $available = $this->zigateAvailable[$zgId] ? "yes" : "NO";
-            //         $zgTxt .= "/".$available;
-            //     }
-            // }
 
-            cmdLog("debug", "Status, queues : ".$queuesTxt);
-            cmdLog("debug", "  Zg (on/avail): ".$zgTxt);
-        }
-
-        // function processZigateCmdQueues() {
-        //     for ($i = 1; $i <= maxNbOfZigate; $i++) {
-        //         if (!isset($this->cmdQueue[$i])) continue;      // si la queue n existe pas je passe mon chemin
-        //         if (count($this->cmdQueue[$i]) < 1) continue;   // si la queue est vide je passe mon chemin
-        //         if ($this->zigateAvailable[$i] == 0) continue;  // Si la zigate n est pas considéré dispo je passe mon chemin
-
-        //         $pending = count($this->cmdQueue[$i]);
-        //         cmdLog("debug", "processZigateCmdQueues(): zigate ".$i.", pending=".$pending, $this->debug['processZigateCmdQueues']);
-        //         // cmdLog("debug", "  cmd=".json_encode($this->cmdQueue[$i]), $this->debug['processZigateCmdQueues']);
-
-        //         $this->zigateAvailable[$i] = 0; // Je considere la zigate pas dispo car je lui envoie une commande
-        //         $this->timeLastAck[$i] = time();
-
-        //         $cmd = array_shift($this->cmdQueue[$i]);    // Je recupere la premiere commande
-        //         $this->sendCmdToZigate($cmd['dest'], $cmd['cmd'], $cmd['len'], $cmd['datas']);    // J'envoie la premiere commande récupérée
-        //         $cmd['retry']--;                        // Je reduis le nombre de retry restant
-        //         $cmd['priority']++;                     // Je reduis la priorité
-        //         $cmd['time'] = time();                    // Je mets l'heure a jour
-        //         if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
-        //             monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['len'].'-'.$cmd['datas']); // Monitor this addr ?
-
-        //         // Le nombre de retry n'est pas épuisé donc je remet la commande dans la queue
-        //         if ($cmd['retry'] > 0) {
-        //             array_unshift($this->cmdQueue[$i], $cmd);  // Je remets la commande dans la queue avec l heure, prio++ et un retry -1
-        //         } else {
-        //             cmdLog("debug", "  La commande n a plus de retry, on la drop: ".json_encode($cmd), 1);
-        //         }
-
-        //         cmdLog("debug", "  J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres envoie commande: ".json_encode($this->cmdQueue[$i]), $this->debug['processZigateCmdQueues']);
-        //         // cmdLog("debug", "--------------------", $this->debug['sendCmdAck']);
-        //     }
-        // }
-
-        function processZigateCmdQueues() {
-            cmdLog("debug", __FUNCTION__." Begin");
-            cmdLog('debug', '  processZigateCmdQueues() zigates='.json_encode($this->zigates));
+            $queuesTxt = "";
+            if (isset($this->tempoMessageQueue)) {
+                $queuesTxt .= "tempo=".count( $this->tempoMessageQueue );
+            }
 
             foreach ($this->zigates as $zgId => $zg) {
-                cmdLog("debug", __FUNCTION__." zgId: ".$zgId);
-                if ($zg['enabled'] == 0) continue; // Disabled
-                if ($zg['available'] == 0) continue;  // Not free
+                foreach ( range( priorityMin, priorityMax) as $prio ) {
+                    $queuesTxt .= ", Queue[".$zgId."][".$prio."]=".count($zg['cmdQueue'][$prio]);
 
-                //$zg = &$this->zigates[$zgId];
-                // cmdLog('debug', 'cmdQueue12='.json_encode($zg['cmdQueue']));
+                    if ($zgTxt != "")
+                        $zgTxt .= ", ";
+                    $zgTxt .= "zg".$zgId."=on";
+                }
+            }
 
-                // Anything to send for this zigate ?
-                if (count($this->zigates[$zgId]['cmdQueueHigh']) > 0) {
-                    $queue = $this->zigates[$zgId]['cmdQueueHigh'];
-                    $queuePri = PRIO_HIGH;
-                } else if (count($zg['cmdQueue']) > 0) {
-                    $queue = $this->zigates[$zgId]['cmdQueue'];
-                    $queuePri = PRIO_NORM;
-                } else
-                    continue; // Nothing to send. Moving to next zigate.
+            cmdLog("debug", "Status, queues : ".$queuesTxt);
+            
+        }
 
-                cmdLog('debug', "             processZigateCmdQueues() - available: ".$this->zigates[$zgId]['available']);
+        /*
+        function processZigateCmdQueues() {
+            for ($i = 1; $i <= maxNbOfZigate; $i++) {
+                if (!isset($this->cmdQueue[$i])) continue;      // si la queue n existe pas je passe mon chemin
+                if (count($this->cmdQueue[$i]) < 1) continue;   // si la queue est vide je passe mon chemin
+                if ($this->zigateAvailable[$i] == 0) continue;  // Si la zigate n est pas considéré dispo je passe mon chemin
+
+                $pending = count($this->cmdQueue[$i]);
+                cmdLog("debug", "processZigateCmdQueues(): zigate ".$i.", pending=".$pending, $this->debug['processZigateCmdQueues']);
+                // cmdLog("debug", "  cmd=".json_encode($this->cmdQueue[$i]), $this->debug['processZigateCmdQueues']);
+
+                $this->zigateAvailable[$i] = 0; // Je considere la zigate pas dispo car je lui envoie une commande
+                $this->timeLastAck[$i] = time();
+
+                $cmd = array_shift($this->cmdQueue[$i]);    // Je recupere la premiere commande
+                $this->sendCmdToZigate($cmd['dest'], $cmd['cmd'], $cmd['len'], $cmd['datas']);    // J'envoie la premiere commande récupérée
+                $cmd['retry']--;                        // Je reduis le nombre de retry restant
+                $cmd['priority']++;                     // Je reduis la priorité
+                $cmd['time'] = time();                    // Je mets l'heure a jour
+                if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
+                    monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['len'].'-'.$cmd['datas']); // Monitor this addr ?
+
+                // Le nombre de retry n'est pas épuisé donc je remet la commande dans la queue
+                if ($cmd['retry'] > 0) {
+                    array_unshift($this->cmdQueue[$i], $cmd);  // Je remets la commande dans la queue avec l heure, prio++ et un retry -1
+                } else {
+                    cmdLog("debug", "  La commande n a plus de retry, on la drop: ".json_encode($cmd), 1);
+                }
+
+                cmdLog("debug", "  J'ai ".count($this->cmdQueue[$i])." commande(s) pour la zigate apres envoie commande: ".json_encode($this->cmdQueue[$i]), $this->debug['processZigateCmdQueues']);
+                // cmdLog("debug", "--------------------", $this->debug['sendCmdAck']);
+            }
+        }
+        */
+
+        function processZigateCmdQueues() {
+            // cmdLog("debug", __FUNCTION__." Begin");
+            // cmdLog('debug', '  processZigateCmdQueues() zigates='.json_encode($this->zigates));
+
+            foreach ($this->zigates as $zgId => $zg) {
+                // cmdLog("debug", __FUNCTION__." zgId: ".$zgId);
+                $this->zgId = $zgId;
+
+                if (!$this->zgGetEnable())      continue; // Disabled
+                if (!$this->zgGetAvailable())   continue;  // Not free
+
+                foreach( range( priorityMin, priorityMax) as $priority ) {
+                    if ($this->checkCmdToSendInTheQueue($priority)) {
+                        $this->zgSetNotAvailable();     // Zigate no longer free
+                        $this->zgSetSentPri($priority); // Keep the last queue used to send a cmd to this Zigate
+        
+                        $cmd = $this->zgGetQueueFirstMessage($priority); // Takes first cmd
+                        if ($cmd['status'] != '') {
+                            cmdLog('debug', "             processZigateCmdQueues() - WARNING: Unexpected cmd status '".$cmd['status']."'");
+                            cmdLog('debug', "             processZigateCmdQueues() - cmd=".json_encode($cmd));
+                        } else
+                            cmdLog('debug', "             processZigateCmdQueues() - cmd=".json_encode($cmd));
+        
+                        $this->sendCmdToZigate($cmd['dest'], $cmd['cmd'], $cmd['datas']);
+
+                        $this->zgTagSentQueueFirstMessage($priority);
+
+                        if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
+                            monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?
+                    }
+                }
+
+                // cmdLog('debug', "             processZigateCmdQueues() - available: ".$this->zgGetAvailable());
 
                 /* Additional flow control: to avoid zigate internal saturation.
                    If HW v1
@@ -517,115 +632,38 @@
 
                 // $this->zigateAvailable[$zgId] = 0; // Zigate no longer free
                 // $this->zigateSentPri[$zgId] = $queuePri;
-                $this->zigates[$zgId]['available'] = 0; // Zigate no longer free
-                $this->zigates[$zgId]['sentPri'] = $queuePri;
-
-                $cmd = $queue[0]; // Taking first cmd
-                if ($cmd['status'] != '') {
-                    cmdLog('debug', "             processZigateCmdQueues() - WARNING: Unexpected cmd status '".$cmd['status']."'");
-                    cmdLog('debug', "             processZigateCmdQueues() - cmd=".json_encode($cmd));
-                } else
-                    cmdLog('debug', "             processZigateCmdQueues() - cmd=".json_encode($cmd));
-
-                $this->sendCmdToZigate($cmd['dest'], $cmd['cmd'], $cmd['datas']);
-
-                if ($queuePri == PRIO_HIGH) {
-                    $this->zigates[$zgId]['cmdQueueHigh'][0]['status'] = "SENT";
-                    $this->zigates[$zgId]['cmdQueueHigh'][0]['sentTime'] = time();
-                    $this->zigates[$zgId]['cmdQueueHigh'][0]['try']--;    
-                }
-                else if ($queuePri == PRIO_NORM) {
-                    $this->zigates[$zgId]['cmdQueue'][0]['status'] = "SENT";
-                    $this->zigates[$zgId]['cmdQueue'][0]['sentTime'] = time();
-                    $this->zigates[$zgId]['cmdQueue'][0]['try']--;    
-                }
-                else {
-                    cmdLog('debug', "             processZigateCmdQueues() - WARNING: No queue to use");
-                }
                 
-                if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
-                    monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?
             }
 
-            cmdLog('debug', '  processZigateCmdQueues() zigates='.json_encode($this->zigates));
-            cmdLog("debug", __FUNCTION__." End");
+            // cmdLog('debug', '  processZigateCmdQueues() zigates='.json_encode($this->zigates));
+            // cmdLog("debug", __FUNCTION__." End");
         }
 
-        /* Treat Zigate statuses (0x8000 cmd) coming from parser */
-        // function processZigateAcks() {
-        //     while (true) {
-        //         $msg_type = NULL;
-        //         $msgMax = $this->queueParserToCmdAckMax;
-        //         if (msg_receive($this->queueParserToCmdAck, 0, $msg_type, $msgMax, $msg, false, MSG_IPC_NOWAIT, $errCode) == false) {
-        //             if ($errCode != 42) // 42 = No message
-        //                 logMessage("debug", "processZigateAcks() ERROR ".$errCode);
-        //             return;
-        //         }
-
-        //         $msg = json_decode($msg, true);
-        //         $zgId = str_replace('Abeille', '', $msg['dest']);
-        //         cmdLog("debug", "processZigateAcks())", $this->debug['processZigateAcks']);
-
-        //         if ($this->debug['processZigateAcks']) {
-        //             if (isset($this->statusText[$msg['status']])) {
-        //                 cmdLog("debug", "  Message 8000 status recu: ".$msg['status']." -> ".$this->statusText[$msg['status']] . " cmdAck: " . json_encode($msg) . " alors que j ai " . count($this->cmdQueue[$zgId]) . " message(s) en attente: ");
-        //             } else {
-        //                 cmdLog("debug", "  Message 8000 status recu: ".$msg['status']."->Code Inconnu cmdAck: ".json_encode($msg) . " alors que j ai ".count($this->cmdQueue[$zgId])." message(s) en attente: ".json_encode($this->cmdQueue[$i]));
-        //             }
-        //         }
-
-        //         if (in_array($msg['status'], ['00', '01', '05'])) {
-        //             // Je vire la commande si elle est bonne
-        //             // ou si elle est incorrecte
-        //             // ou si conf alors que stack demarrée
-        //             /* TODO: How can we be sure ACK is for last cmd ? <- KiwiHC16: Aucune à ma connaissance, faille depuis le debut de mon point de vue.*/
-        //             array_shift( $this->cmdQueue[$zgId] ); // Je vire la commande
-        //             $this->zigateAvailable[$zgId] = 1;      // Je dis que la Zigate est dispo
-        //             $this->timeLastAck[$zgId] = 0;
-
-        //             // Je tri la queue pour preparer la prochaine commande
-        //             cmdLog("debug", "  J'ai ".count($this->cmdQueue[$zgId])." commande(s) pour la zigate apres drop commande: ".json_encode($this->cmdQueue[$zgId]), $this->debug['processZigateAcks']);
-
-        //             // J'en profite pour ordonner la queue pour traiter les priorités
-        //             // https://www.php.net/manual/en/function.array-multisort.php
-        //             if (count($this->cmdQueue[$zgId]) > 1) {
-        //                 $retry      = array_column( $this->cmdQueue[$zgId],'retry'   );
-        //                 $prio       = array_column($this->cmdQueue[$zgId], 'priority');
-        //                 $received   = array_column( $this->cmdQueue[$zgId],'received');
-        //                 array_multisort($retry, SORT_DESC, $prio, SORT_ASC, $received, SORT_ASC, $this->cmdQueue[$zgId]);
-        //             }
-
-        //             cmdLog("debug", "  J'ai ".count($this->cmdQueue[$zgId])." commande(s) pour la zigate apres tri : ".json_encode($this->cmdQueue[$zgId]), $this->debug['processZigateAcks']);
-        //         } else {
-        //             $this->zigateAvailable[$zgId] = 0;      // Je dis que la Zigate n est pas dispo
-        //             $this->timeLastAck[$zgId] = time();    // Je garde la date de ce mauvais Ack
-        //         }
-        //     }
-
-        //     cmdLog("debug", "  ".count($this->cmdQueue[$zgId])." remaining pending commands", $this->debug['processZigateAcks']);
-        // }
-
         // Process 8000, 8012 or 8702 messages
+        /**
+         * Loop to read all messages and quit when no more message (break loop)
+         */
         function processZigateAcks() {
 
-            cmdLog("debug", __FUNCTION__." Begin");
+            // cmdLog("debug", __FUNCTION__." Begin");
 
             while (true) {
                 $msgMax = $this->queueParserToCmdAckMax;
                 if (msg_receive($this->queueParserToCmdAck, 0, $msgType, $msgMax, $msg, false, MSG_IPC_NOWAIT, $errCode) == false) {
                     if ($errCode == 7) {
                         msg_receive($this->queueParserToCmdAck, 0, $msgType, $msgMax, $msg, false, MSG_IPC_NOWAIT | MSG_NOERROR);
-                        logMessage('debug', '        '.__FUNCTION__.'() ERROR: msg TOO BIG ignored: '.json_encode($msg));
+                        logMessage('debug', 'processZigateAcks() ERROR: msg TOO BIG ignored: '.json_encode($msg));
                     } else if ($errCode != 42) // 42 = No message
-                        cmdLog("debug", '        '.__FUNCTION__."() ERROR ".$errCode);
+                        cmdLog("debug", "processZigateAcks() ERROR ".$errCode);
                     
-                    cmdLog("debug", '     '.__FUNCTION__." End due to break: no more messages for me.");
-                    break;
+                    // cmdLog("debug", __FUNCTION__." End due to return as no more messages in the queue.");
+                    return;
                 }
 
-                cmdLog("debug", '        '.__FUNCTION__." msg: ".$msg);
+                cmdLog("debug", __FUNCTION__." msg: ".$msg);
                 $msg = json_decode($msg, true);
-                $zgId = substr($msg['net'], 7);
+                $this->zgId = substr($msg['net'], 7);
+
                 // cmdLog("debug", "  LA=".json_encode($this->zigates));
                 //$zg = &$this->zigates[$zgId];
                 // cmdLog("debug", "processZigateAcks(): type=".$msg['type'], $this->debug['processZigateAcks']);
@@ -634,14 +672,14 @@
                 if ($msg['type'] == "8010") {
                     cmdLog("debug", "8010 msg: FwVersion=".$msg['major']."-".$msg['minor']);
                     if ($msg['major'] == '0005')
-                        $this->zigates[$zgId]['hw'] = 2;
+                        $this->zgSetHw(2);
                     else
-                        $this->zigates[$zgId]['hw'] = 1;
-                    $this->zigates[$zgId]['fw'] = hexdec($msg['minor']);
+                        $this->zgSetHw(1);
+                    $this->zgSetFw(hexdec($msg['minor']));
                     continue;
                 }
 
-                // TODO: To be revisited. Ex: 8000 then 8010 ignored -> KiwiHC16: as bug #2282 keep only 8000 for the time being, then define what to do with #2297, #2298, #2299
+                // TODO: To be revisited. Ex: 8000 then 801x ignored
                 // if (!count($zg['cmdQueue']) && !count($zg['cmdQueueHigh'])) {
                 //     cmdLog("debug", $msg['type']." msg but empty cmd queues => ignored");
                 //     continue;
@@ -654,32 +692,31 @@
 
                 if (isset($msg['nPDU'])) {
                     $nPDU = $msg['nPDU'];
-                    $this->zigates[$zgId]['nPDU'] = hexdec($nPDU);
+                    $this->zgSetnPDU(hexdec($nPDU));
                 } else
                     $nPDU = "?";
 
                 if (isset($msg['aPDU'])) {
                     $aPDU = $msg['aPDU'];
-                    $this->zigates[$zgId]['aPDU'] = hexdec($aPDU);
+                    $this->zgSetaPDU(hexdec($aPDU));
                 } else
                     $aPDU = "?";
 
-                if ($this->zigates[$zgId]['sentPri'] == PRIO_HIGH)
-                    $cmdQueueX = 'cmdQueueHigh';
-                else
-                    $cmdQueueX = 'cmdQueue';
-
-                // Checking sent cmd vs received ack misalignment
-                if ( count($this->zigates[$zgId][$cmdQueueX]) == 0 ) {
-                    cmdLog("debug", '        '.__FUNCTION__." stop here as queue is empty");
-                    continue;
-                }
-
                 unset($removeCmd); // Unset in case set in previous msg
-                if ($msg['type'] == "8000") {    
-                    $m = "              ".__FUNCTION__."() - Msg from parser: 8000: ".$msg['net'].", Status=".$msg['status'].", SQN=".$msg['sqn'].", SQNAPS=".$msg['sqnAps'].", PackType=".$msg['packetType'].", NPDU=".$nPDU.", APDU=".$aPDU;
+                if ($msg['type'] == "8000") {
+                    $m = "              processZigateAcks() - Msg from parser: 8000: ".json_encode($msg);
 
-                    if ( $msg['packetType'] != $this->zigates[$zgId][$cmdQueueX][0]['cmd'] ) {
+                    // Checking sent cmd vs received ack misalignment
+                    if ( !$this->checkCmdToSendInTheQueue($this->zgGetSentPri()) ) {
+                        // cmdLog("debug", $m." => ignored as queue is empty");
+                        continue;
+                    }
+
+                    $cmd = $this->zgGetQueueFirstMessage($this->zgGetSentPri());
+
+                    if ($cmd['AckAPS']) continue; // On this command I m waiting for APS ACK.
+
+                    if ( $msg['packetType'] != $cmd['cmd'] ) {
                         cmdLog("debug", $m." => ignored as packet are different: packetType: ".$msg['packetType']." cmd: ".$cmd['cmd']);
                         continue;
                     }
@@ -687,37 +724,85 @@
                     cmdLog("debug", $m);
 
                     if ($msg['status'] == "00") {
+                        $removeCmd = true;
                         // Status is: success
-                        $this->zigates[$zgId][$cmdQueueX][0]['status'] = '8000'; // KiwiHC16: Why this code ? Pour dire qu on a un 8000 et qu on attend les 8011 ou 8012
-                        if ($sqnAps == '00') {
-                            $removeCmd = true; // Cmd not transmitted on air => no ack to expect
-                            cmdLog("debug", "                           => Cmd not transmitted on air => no ack to expect so remove");
-                        }
-                        else {
-                            $this->zigates[$zgId][$cmdQueueX][0]['sqnAps'] = $sqnAps;
-                            $removeCmd = true;
-                            cmdLog("debug", "                           => sqnAPS so waiting for 8011 or 8012.");
-                            cmdLog("debug", "                           => as still in dev I m removing the command Todo.");
-                        }
-                            
+                        // $this->zgChangeStatusSentQueueFirstMessage($this->zgGetSentPri(), '8000');
+                        // $cmd['status'] = '8000';
+                        // if ($sqnAps == '00')
+                        //     $removeCmd = true; // Cmd not transmitted on air => no ack to expect
+                        // else {
+                        //     $this->zgChangesqnApsSentQueueFirstMessage($this->zgGetSentPri(), $sqnAps);
+                        //     // $cmd['sqnAps'] = $sqnAps;
+                        //     $removeCmd = true;
+                        // }
                     } 
                     else if (in_array($msg['status'], ['01', '02', '03', '05'])) {
                         // Status is: bad param, unhandled, failed (?), stack already started
                         // $cmd['status'] = '8000';
                         $removeCmd = true;
-                        cmdLog("debug", "                           => Status error so delete cmd from queue.");
                     } 
                     else {
                         // Something failed
-                        if ($this->zigates[$zgId][$cmdQueueX][0]['try'] == 0) {
-                            cmdLog("debug", "                           WARNING: Something failed and too many retries so remove cmd from queue.");
+                        if ($cmd['try'] == 0) {
+                            cmdLog("debug", "  WARNING: Something failed and too many retries.");
                             $removeCmd = true;
-                        } else {
-                            cmdLog("debug", "                           WARNING: Something failed. Cmd will be retried ".$this->zigates[$zgId][$cmdQueueX][0]['try']." time(s) max.");
+                        }
+                        else {
+                            cmdLog("debug", "  WARNING: Something failed. Cmd will be retried ".$cmd['try']." time(s) max.");
                         }
                     }
                 } 
-                // TODO: To be revisited. Ex: 8000 then 8010 ignored -> KiwiHC16: as bug #2282 keep only 8000 for the time being, then define what to do with #2297, #2298, #2299
+
+                if ($msg['type'] == "8011") {
+                    $m = "              processZigateAcks() - Msg from parser: 8011: ".json_encode($msg);
+
+                    // Checking sent cmd vs received ack misalignment
+                    if ( !$this->checkCmdToSendInTheQueue($this->zgGetSentPri()) ) {
+                        // cmdLog("debug", $m." => ignored as queue is empty");
+                        continue;
+                    }
+
+                    $cmd = $this->zgGetQueueFirstMessage($this->zgGetSentPri());
+
+                    if (!$cmd['AckAPS']) continue; // On this command I m not waiting for APS ACK.
+
+                    // In 8011 packetType not available like in 8000
+                    // if ( $msg['packetType'] != $cmd['cmd'] ) {
+                    //     cmdLog("debug", $m." => ignored as packet are different: packetType: ".$msg['packetType']." cmd: ".$cmd['cmd']);
+                    //     continue;
+                    // }
+
+                    cmdLog("debug", $m);
+
+                    if ($msg['status'] == "00") {
+                        $removeCmd = true;
+                        // Status is: success
+                        // $this->zgChangeStatusSentQueueFirstMessage($this->zgGetSentPri(), '8000');
+                        // // $cmd['status'] = '8000';
+                        // if ($sqnAps == '00')
+                        //     $removeCmd = true; // Cmd not transmitted on air => no ack to expect
+                        // else {
+                        //     $this->zgChangesqnApsSentQueueFirstMessage($this->zgGetSentPri(), $sqnAps);
+                        //     // $cmd['sqnAps'] = $sqnAps;
+                        //     $removeCmd = true;
+                    }
+                    else if (in_array($msg['status'], ['01', '02', '03', '05'])) {
+                        // Status is: bad param, unhandled, failed (?), stack already started
+                        // $cmd['status'] = '8000';
+                        $removeCmd = true;
+                    }
+                    else {
+                        // Something failed
+                        if ($cmd['try'] == 0) {
+                            cmdLog("debug", "  WARNING: Something failed and too many retries.");
+                            $removeCmd = true;
+                        }
+                        else {
+                            cmdLog("debug", "  WARNING: Something failed. Cmd will be retried ".$cmd['try']." time(s) max.");
+                        }
+                    }
+                } 
+
                 // else {
                 //     // 8011, 8012 or 8702
                 //     $c = $this->getCmd($msg['sqnAps'], $this->zigates[$zgId]); // Return is array
@@ -762,70 +847,73 @@
                    If cmd without ACK
                     ?
                  */
-                if (!isset($removeCmd)) {
-                    $removeCmd = false;
-                    if (isset($this->zigates[$zgId][$cmdQueueX][0]['addrMode'])) { // FW >= 3.1e
-                        if (($this->zigates[$zgId][$cmdQueueX][0]['addrMode'] == "02") || ($this->zigates[$zgId][$cmdQueueX][0]['addrMode'] == "03")) {
-                            // Wait for 8012 or 8702 after 8000
-                            if (($this->zigates[$zgId][$cmdQueueX][0]['status'] == '8012') || ($this->zigates[$zgId][$cmdQueueX][0]['status'] == '8702')) {
-                                $removeCmd = true;
-                            }
-                        } else if ($this->zigates[$zgId][$cmdQueueX][0]['status'] == '8000') {
-                            $removeCmd = true;
-                        }
-                    } else {
-                        // Default => 8000 = final step
-                        if ($this->zigates[$zgId][$cmdQueueX][0]['status'] == '8000') {
-                            $removeCmd = true;
-                        }
-                    }
-                }
+                // if (!isset($removeCmd)) {
+                //     $removeCmd = false;
+                //     if (isset($cmd['addrMode'])) { // FW >= 3.1e
+                //         if (($cmd['addrMode'] == "02") || ($cmd['addrMode'] == "03")) {
+                //             // Wait for 8012 or 8702 after 8000
+                //             if (($cmd['status'] == '8012') || ($cmd['status'] == '8702')) {
+                //                 $removeCmd = true;
+                //             }
+                //         } else if ($cmd['status'] == '8000') {
+                //             $removeCmd = true;
+                //         }
+                //     } else {
+                //         // Default => 8000 = final step
+                //         if ($cmd['status'] == '8000') {
+                //             $removeCmd = true;
+                //         }
+                //     }
+                // }
 
                 // Apply
-                if ($removeCmd) {
-                    cmdLog("debug", "              ".__FUNCTION__." removeCmd");
-                    // cmdLog('debug', '                 queue before='.json_encode($zg['cmdQueue']));
-                    array_shift($this->zigates[$zgId][$cmdQueueX]); // Removing cmd
-                    cmdLog("debug", "                           => Command removed from queue: ".json_encode($this->zigates[$zgId][$cmdQueueX]));
-                    // cmdLog('debug', '                 queue after='.json_encode($zg['cmdQueue']));
-                    $this->zigates[$zgId]['available'] = 1; // Zigate is free again
+                if (isset($removeCmd)) {
+                    if ($removeCmd) {
+                        cmdLog('debug', '                 queue before='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
+                        
+                        // array_shift($this->zigates[$zgId]['cmdQueueHigh']); // Removing cmd
+                        $this->removeFisrtCmdFromQueue($this->zgGetSentPri());
+                        
+                        cmdLog('debug', '                 queue after='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
+                        $this->zgSetAvailable(); // Zigate is free again
+                    }
                 }
             }
 
             // cmdLog("debug", "  ".count($this->cmdQueue[$zgId])." remaining pending commands", $this->debug['processZigateAcks']);
             // cmdLog("debug", "  LA23=".json_encode($this->zigates));
-            cmdLog("debug", __FUNCTION__." End");
+            // cmdLog("debug", __FUNCTION__." End");
 
         } // End processZigateAcks()
 
         // Check zigate status which may be blocked by unacked sent cmd
         function zigateAckCheck() {
             foreach ($this->zigates as $zgId => $zg) {
-                if ($zg['enabled'] == 0)
+
+                $this->zgId = $zgId;
+
+                if (!$this->zgGetEnable())
                     continue; // This zigate is disabled/unconfigured
-                if ($zg['available'] == 1)
+                if ($this->zgGetAvailable())
                     continue; // Zigate is ON & available => nothing to check
 
                 // $zg = &$this->zigates[$zgId];
-                if ($zg['sentPri'] == PRIO_HIGH) {
-                    $queue = $zg['cmdQueueHigh'];
-                } else {
-                    $queue = $zg['cmdQueue'];
-                }
+                // if ($zg['sentPri'] == PRIO_HIGH) {
+                //     $queue = $zg['cmdQueueHigh'];
+                // } else {
+                //     $queue = $zg['cmdQueue'];
+                // }
 
-                $cmd = $queue[0];
+                $cmd = $this->zgGetQueueFirstMessage($this->zgGetSentPri());
                 if ($cmd['sentTime'] + 2 > time())
                     continue; // 2sec timeout not reached yet
 
                 cmdLog("debug", "zigateAckCheck(): WARNING: Zigate".$zgId." cmd ".$cmd['cmd']." TIMEOUT (SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
-                $this->zigates[$zgId]['available'] = 1;
+                $this->zgSetAvailable();
 
-                if ($zg['sentPri'] == PRIO_HIGH) {
-                    array_shift($this->zigates[$zgId]['cmdQueueHigh']); // Removing blocked cmd
-                } 
-                else {
-                    array_shift($this->zigates[$zgId]['cmdQueue']); // Removing blocked cmd
-                }
+                $this->removeFisrtCmdFromQueue($this->zgGetSentPri()); // Removing blocked cmd
+                // array_shift($this->zigates[$zgId]['cmdQueueHigh']); 
+                
 
                 // if ($this->timeLastAck[$zgId] == 0)
                 //     continue;
@@ -840,44 +928,47 @@
             }
         }
 
-        // function getQueueName($queue){
-        //     /**
-        //      * return queue name from queueId
-        //      *
-        //      * has to be implemented in each classe that use msg_get_queue
-        //      *
-        //      * @param $queueId
-        //      * @return string queue name
-        //      */
-        //     $queueTopic="Not Found";
-        //     switch($queue){
-                // case $this->queueKeyAbeilleToCmd:
-                //     $queueTopic="queueKeyAbeilleToCmd";
-                //     break;
-                // case $this->queueParserToCmd:
-                //     $queueTopic="queueParserToCmd";
-                //     break;
-                // case $this->$abQueues["xToCmd"]:
-                //     $queueTopic="$abQueues["xToCmd"]";
-                //     break;
-                // case $this->queueKeyCmdToAbeille:
-                //     $queueTopic="queueKeyCmdToAbeille";
-                //     break;
-                // case $this->queueKeyLQIToCmd:
-                //     $queueTopic="queueKeyLQIToCmd";
-                //     break;
-                // case $this->queueKeyXmlToCmd:
-                //     $queueTopic="queueKeyXmlToCmd";
-                //     break;
-                // case $this->queueKeyFormToCmd:
-                //     $queueTopic="queueKeyFormToCmd";
-                //     break;
-        //         case $this->queueParserToCmdAck:
-        //             $queueTopic="queueParserToCmdAck";
-        //             break;
-        //     }
-        //     return $queueTopic;
-        // }
+        /**
+             * return queue name from queueId
+             *
+             * has to be implemented in each classe that use msg_get_queue
+             *
+             * @param $queueId
+             * @return string queue name
+             */
+        /*
+        function getQueueName($queue){
+           
+            $queueTopic="Not Found";
+            switch($queue){
+                case $this->queueKeyAbeilleToCmd:
+                    $queueTopic="queueKeyAbeilleToCmd";
+                    break;
+                case $this->queueParserToCmd:
+                    $queueTopic="queueParserToCmd";
+                    break;
+                case $this->$abQueues["xToCmd"]:
+                    $queueTopic="$abQueues["xToCmd"]";
+                    break;
+                case $this->queueKeyCmdToAbeille:
+                    $queueTopic="queueKeyCmdToAbeille";
+                    break;
+                case $this->queueKeyLQIToCmd:
+                    $queueTopic="queueKeyLQIToCmd";
+                    break;
+                case $this->queueKeyXmlToCmd:
+                    $queueTopic="queueKeyXmlToCmd";
+                    break;
+                case $this->queueKeyFormToCmd:
+                    $queueTopic="queueKeyFormToCmd";
+                    break;
+                case $this->queueParserToCmdAck:
+                    $queueTopic="queueParserToCmdAck";
+                    break;
+            }
+            return $queueTopic;
+        }
+        */
 
         /* Collect & treat other messages for AbeilleCmd */
         function collectAllOtherMessages() {

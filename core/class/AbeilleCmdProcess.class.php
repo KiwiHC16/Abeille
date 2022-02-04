@@ -583,7 +583,7 @@
                 <attributes list: data list of uint16_t  each>
             */
 
-            $cmd = "0100";
+            $cmd = "0100"; // Cmd 100 request AckAPS based on ZigBee traces.
 
             $addrMode = "02";
             // TODO: Check 'addr' size
@@ -617,7 +617,7 @@
             $nbOfAttrib = sprintf("%02X", $nbAttr);
             $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttrib.$attribList;
 
-            $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+            $this->addCmdToQueue2(priorityInterrogation, $dest, $cmd, $data, $addr, $addrMode, AckAPS );
         }
 
         /**
@@ -2490,17 +2490,21 @@
 
                 $cmd                    = "0092";
 
-                $addrMode            = $Command['addressMode']; // 01: Group, 02: device
+                $addrMode               = $Command['addressMode']; // 01: Group, 02: device
                 $address                = $Command['address'];
-                $srcEp         = "01";
-                $dstEp    = $Command['destinationEndpoint'];
+                $srcEp                  = "01";
+                $dstEp                  = $Command['destinationEndpoint'];
                 $action                 = $Command['action'];
 
                 $data = $addrMode.$address.$srcEp.$dstEp.$action;
                 $length = sprintf("%04s", dechex(strlen($data) / 2));
 
+                $priority               = $Command['priority'];
+              
+                if ($addrMode=="01")    $AckAPS = null;     // No AckAPS as we can t wait for all eq from the group to reply, as we don t know who they are. And the command 092 do not ask for APS ACK in Zigbee traces for a group.
+                if ($addrMode=="02")    $AckAPS = AckAPS;   // No AckAPS as we can wait for eq to reply. And the command 092 do ask for APS ACK in Zigbee traces.
                 // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
+                $this->addCmdToQueue2($priority, $dest, $cmd, $data, $address, null, $AckAPS);
 
                 if ($addrMode == "02" ) {
                     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000" );
@@ -4136,7 +4140,7 @@
 
                 // ZCL cluster 0300/color control: Move to Colour
                 else if ($cmdName == 'setColour') {
-                    $required = ['addr', 'EP', 'X', 'Y']; // Mandatory infos
+                    $required = ['addr', 'X', 'Y']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
@@ -4149,10 +4153,10 @@
                     // <transition time: uint16_t >
 
                     $cmd        = "00B7"; // Move to color
-                    $addrMode   = '02';
+                    if (isset($Command['addressMode'])) $addrMode = $Command['addressMode']; else $addrMode = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['EP'];
+                    if (isset($Command['EP'])) $dstEp = $Command['EP']; else $dstEp = "";
                     $colourX    = $Command['X'];
                     $colourY    = $Command['Y'];
                     if (isset($Command['duration']) && $Command['duration']>0)
@@ -4162,7 +4166,8 @@
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$colourX.$colourY.$duration ;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    if ($addrMode == "02") $AckAPS = AckAPS; else $AckAPS=null;
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode, $AckAPS);
                     return;
                 }
 

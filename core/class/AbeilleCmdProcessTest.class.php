@@ -61,35 +61,35 @@ class AbeilleCmdProcessTest extends TestCase {
         // Test commands
         $Command = array( "dest" => "Abeille1", 'PDM' =>"", 'req' => "E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE");
         $test->processCmd($Command);
-        $this->assertSame( '[1,"Abeille1","8300","00","",null]', json_encode($test->result) );
+        $this->assertSame( '[4,"Abeille1","8300","00","",null]', json_encode($test->result) );
 
         $Command = array( "dest" => "Abeille1", 'PDM' =>"", 'req' => "E_SL_MSG_PDM_EXISTENCE_RESPONSE", 'recordId'=>"" );
         $test->processCmd($Command);
-        $this->assertSame( '[1,"Abeille1","8208","000000","",null]', json_encode($test->result) );
+        $this->assertSame( '[4,"Abeille1","8208","000000","",null]', json_encode($test->result) );
 
         $Command = array( "dest" => "Abeille1", 'abeilleList' => "");
         $test->processCmd($Command);
-        $this->assertSame( '[1,"Abeille1","0015","","",null]', json_encode($test->result) );
+        $this->assertSame( '[4,"Abeille1","0015","","",null]', json_encode($test->result) );
 
         $Command = array( "dest" => "Abeille1", 'name' => 'setZgLed', 'value' => 1) ;
         $test->processCmd($Command);
-        $this->assertSame( '[1,"Abeille1","0018","01","",null]', json_encode($test->result) );
+        $this->assertSame( '[4,"Abeille1","0018","01","",null]', json_encode($test->result) );
 
         $Command = array( "dest" => "Abeille1", 'name' => 'setZgLed', 'value' => 0) ;
         $test->processCmd($Command);
-        $this->assertSame( '[1,"Abeille1","0018","00","",null]', json_encode($test->result) );
+        $this->assertSame( '[4,"Abeille1","0018","00","",null]', json_encode($test->result) );
 
         $Command = array( "dest" => "Abeille1", 'setCertificationCE' => "") ;
         $test->processCmd($Command);
-        $this->assertSame( '[1,"Abeille1","0019","01","",null]', json_encode($test->result) );
+        $this->assertSame( '[4,"Abeille1","0019","01","",null]', json_encode($test->result) );
 
         $Command = array( "dest" => "Abeille1", 'setCertificationFCC' => "") ;
         $test->processCmd($Command);
-        $this->assertSame( '[1,"Abeille1","0019","02","",null]', json_encode($test->result) );
+        $this->assertSame( '[4,"Abeille1","0019","02","",null]', json_encode($test->result) );
 
         $Command = array( "dest" => "Abeille1", 'TxPower' => "11") ;
         $test->processCmd($Command);
-        $this->assertSame( '[1,"Abeille1","0806","11","",null]', json_encode($test->result) );
+        $this->assertSame( '[4,"Abeille1","0806","11","",null]', json_encode($test->result) );
 
         // ..... need to continue .....
 

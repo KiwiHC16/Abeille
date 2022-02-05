@@ -4279,6 +4279,62 @@
                     return;
                 }
 
+                // ZCL cluster EF00 specific: e.g. Curtains motor Tuya https://github.com/KiwiHC16/Abeille/issues/2304
+                else if ($cmdName == 'cmd-EF00') {
+                    $required = ['addr', 'ep', 'cmd']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $cmd = "0530";
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <profile ID: uint16_t>
+                    // <cluster ID: uint16_t>
+                    // <security mode: uint8_t>
+                    // <radius: uint8_t>
+                    // <data length: uint8_t>
+
+                    //  ZCL Control Field
+                    //  ZCL SQN
+                    //  Command Id
+                    //  ....
+
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['ep'];
+                    $profId     = "0104";
+                    $clustId    = 'EF00';
+                    $secMode    = "02";
+                    $radius     = "1E";
+        
+                    /* ZCL header */
+                    $fcf        = "11"; // Frame Control Field
+                    $sqn        = "23";
+                    $cmdId      = "00";
+        
+                    $field1         = "00";
+                    $counterTuya    = "01"; // Set to 1, in traces increasse all the time. Not sure if mandatory to increase.
+                    $field3         = "01";
+                    $field4         = "04";
+                    $field5         = "00";
+                    $field6         = "01";
+                    $cmdIdTuya      = $Command['cmd'];  // Up=00, Stop: 01, Down: 02 
+        
+                    $data2 = $fcf.$sqn.$cmdId.$field1.$counterTuya.$field3.$field4.$field5.$field6.$cmdIdTuya;
+                    $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
+        
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
+                    $data = $data1.$data2;
+        
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    return;
+                }
+
+
                 else {
                     cmdLog('debug', "    ERROR: Unexpected command '".$cmdName."'");
                     return;

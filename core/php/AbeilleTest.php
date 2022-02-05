@@ -14,6 +14,11 @@
     $test = $argv[1];
     echo "Running test: ".$test."\n";
 
+    // Dummy function to avoid to find the right one which is not needed for those tests
+    function cmdLog($loglevel = 'NONE', $message = "", $isEnable = 1) {
+        echo $message."\n";
+    }
+
     // "Send a command in binary format directly to AbeilleCMd to be written on serie port\n"
     if ( (000<=$test) && ($test<100) ) {
         echo "To execute this test Abeille Daemon has to be stopped.\n";
@@ -108,6 +113,63 @@
             $lenth = sprintf("%04s",dechex(strlen( $data )/2));
 
             $cmdQueue->sendCmdToZigate( 'Abeille1', '0530', $lenth, $data );
+
+        }
+
+        if ($test==5) {
+            echo "Curtain test Up\n";
+
+            $Command['addr']="727C";
+            $Command['ep']="01";
+
+            $cmd = "0530";
+
+            // <address mode: uint8_t>
+            // <target short address: uint16_t>
+            // <source endpoint: uint8_t>
+            // <destination endpoint: uint8_t>
+            // <profile ID: uint16_t>
+            // <cluster ID: uint16_t>
+            // <security mode: uint8_t>
+            // <radius: uint8_t>
+            // <data length: uint8_t>
+
+            //  ZCL Control Field
+            //  ZCL SQN
+            //  Command Id
+            //  ....
+
+            $addrMode   = "02";
+            $addr       = $Command['addr'];
+            $srcEp      = "01";
+            $dstEp      = $Command['ep'];
+            $profId     = "0104";
+            $clustId    = 'EF00';
+            $secMode    = "02";
+            $radius     = "1E";
+
+            /* ZCL header */
+            $fcf        = "11"; // Frame Control Field
+            $sqn        = "23";
+            $cmdId      = "00";
+
+            $field1         = "00";
+            $counterTuya    = "01"; // Set to 1, in traces increasse all the time. Not sure if mandatory to increase.
+            $field3         = "01";
+            $field4         = "04";
+            $field5         = "00";
+            $field6         = "01";
+            $cmdIdTuya      = "01"; // $Command['cmd'];
+
+            $data2 = $fcf.$sqn.$cmdId.$field1.$counterTuya.$field3.$field4.$field5.$field6.$cmdIdTuya;
+            $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
+
+            $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
+            $data = $data1.$data2;
+            // $lenth = sprintf("%04x", strlen($data) / 2);
+
+            echo $data."\n";
+            $cmdQueue->sendCmdToZigate( 'Abeille1', $cmd, $data );
 
         }
     }

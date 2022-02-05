@@ -1,0 +1,33 @@
+{
+  "TS0601__TZE200_nueqqe6k": {
+    "manufacturer": "Tuya",
+    "model": "M515EGZT",
+    "timeout": "",
+    "comment": "https://github.com/KiwiHC16/Abeille/issues/2304",
+    "configuration": {
+      "mainEP": "01",
+      "icon": "TS0601__TZE200_nueqqe6k"
+    },
+    "category": {
+      "automatism": "1"
+    },
+    "type": "ZigBee Smart Curtains Motor M515EGZT",
+    "commands": {
+      "Up": {
+        "use": "zbCmd-0006-On",
+        "params": "ep=01",
+        "isVisible": 1
+      },
+      "Stop": {
+        "use": "zbCmd-0006-On",
+        "params": "ep=02",
+        "isVisible": 1
+      },
+      "Down": {
+        "use": "zbCmd-0006-On",
+        "params": "ep=03",
+        "isVisible": 1
+      }
+    }
+  }
+}

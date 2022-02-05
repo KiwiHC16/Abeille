@@ -1,0 +1,106 @@
+{
+    "endPoints": {
+        "01": {
+            "servClusters": {
+                "0000": {
+                    "0005": {
+                        "value": "TS0601"
+                    },
+                    "0000": {
+                        "value": 3
+                    },
+                    "0001": {
+                        "value": 66
+                    },
+                    "0002": {
+                        "value": 0
+                    },
+                    "0003": {
+                        "value": 1
+                    },
+                    "0004": {
+                        "value": "_TZE200_nueqqe6k"
+                    },
+                    "0006": {
+                        "value": ""
+                    },
+                    "0007": {
+                        "value": 1
+                    },
+                    "FFDE": {
+                        "value": 11
+                    },
+                    "FFFD": {
+                        "value": 2
+                    },
+                    "FFFE": {
+                        "value": 0
+                    },
+                    "FFE0": {
+                        "value": "00"
+                    },
+                    "FFE1": {
+                        "value": "00"
+                    },
+                    "FFE2": {
+                        "value": 31
+                    },
+                    "FFE3": [],
+                    "FFE4": {
+                        "value": 0
+                    }
+                },
+                "0004": {
+                    "0000": [],
+                    "FFFD": []
+                },
+                "0005": {
+                    "0000": {
+                        "dataType": "20",
+                        "value": 0
+                    },
+                    "0001": {
+                        "dataType": "20",
+                        "value": 0
+                    },
+                    "0002": {
+                        "dataType": "21",
+                        "value": 0
+                    },
+                    "0003": {
+                        "dataType": "10",
+                        "value": 0
+                    },
+                    "0004": {
+                        "dataType": "18",
+                        "value": 0
+                    },
+                    "FFFD": {
+                        "dataType": "21",
+                        "value": 2
+                    }
+                },
+                "EF00": {
+                    "0000": {
+                        "dataType": "20",
+                        "value": 0
+                    }
+                }
+            },
+            "status": "00",
+            "servClustCount": 4,
+            "cliClustCount": 2,
+            "cliClusters": {
+                "0019": {
+                    "0000": [],
+                    "0001": [],
+                    "0006": [],
+                    "FFFD": []
+                },
+                "000A": {
+                    "FFFD": []
+                }
+            }
+        }
+    }
+}

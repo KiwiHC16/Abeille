@@ -27,6 +27,21 @@
         "use": "zbCmd-EF00-Down",
         "params": "ep=01",
         "isVisible": 1
+      },
+      "Forward": {
+        "use": "zbCmd-EF00-Forward",
+        "params": "ep=01",
+        "isVisible": 0
+      },
+      "Backward": {
+        "use": "zbCmd-EF00-Backward",
+        "params": "ep=01",
+        "isVisible": 0
+      },
+      "GotoLevel": {
+        "use": "zbCmd-EF00-GotoLevel",
+        "params": "ep=01",
+        "isVisible": 1
       }
     }
   }

@@ -1,14 +1,14 @@
 {
-    "zbCmd-EF00-Down": {
+    "zbCmd-EF00-GotoLevel": {
         "isVisible": 1,
-        "name": "Down",
+        "name": "GotoLevel",
         "isHistorized": 0,
-        "subType": "other",
+        "subType": "slider",
         "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "cmd-EF00",
-            "request": "cmd=01&param=02"
+            "request": "cmd=02&param=#slider#"
         },
         "type": "action",
         "genericType": ""

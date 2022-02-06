@@ -4281,7 +4281,7 @@
 
                 // ZCL cluster EF00 specific: e.g. Curtains motor Tuya https://github.com/KiwiHC16/Abeille/issues/2304
                 else if ($cmdName == 'cmd-EF00') {
-                    $required = ['addr', 'ep', 'cmd']; // Mandatory infos
+                    $required = ['addr', 'ep', 'cmd', 'param']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
@@ -4302,6 +4302,15 @@
                     //  Command Id
                     //  ....
 
+                    // Data Point
+                    define('OpenCloseStop',   "01");
+                    define('GotoLevel',       "02");
+                    define('ForwardBackward', "05");
+
+                    // Data Type
+                    define('DataType_VALUE',  "02");
+                    define('DataType_ENUM',   "04");
+
                     $addrMode   = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
@@ -4316,21 +4325,21 @@
                     $sqn        = "23";
                     $cmdId      = "00";
         
-                    $field1         = "00";
-                    $counterTuya    = "01"; // Set to 1, in traces increasse all the time. Not sure if mandatory to increase.
-                    $field3         = "01";
-                    $field4         = "04";
-                    $field5         = "00";
-                    $field6         = "01";
-                    $cmdIdTuya      = $Command['cmd'];  // Up=00, Stop: 01, Down: 02 
+                    $status         = "00";
+                    $counterTuya    = "33"; // Set to 1, in traces increasse all the time. Not sure if mandatory to increase.
+                    $cmdTuya        = $Command['cmd'];
+                    if ($cmdTuya==GotoLevel) $type = DataType_VALUE; else $type = DataType_ENUM;
+                    $function         = "00";
+                    if ($type==DataType_VALUE) $len = "04"; else $len="01";
+                    if ($type==DataType_VALUE) $param = sprintf("%08s", dechex($Command['param'])); else $param = $Command['param'];  // Up=00, Stop: 01, Down: 02 
         
-                    $data2 = $fcf.$sqn.$cmdId.$field1.$counterTuya.$field3.$field4.$field5.$field6.$cmdIdTuya;
+                    $data2 = $fcf.$sqn.$cmdId.$status.$counterTuya.$cmdTuya.$type.$function.$len.$param;
                     $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
         
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
         
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode, AckAPS);
                     return;
                 }
 

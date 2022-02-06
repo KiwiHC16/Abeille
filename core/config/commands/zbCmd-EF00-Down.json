@@ -8,7 +8,7 @@
         "template": "",
         "configuration": {
             "topic": "cmd-EF00",
-            "request": "cmd=02"
+            "request": "cmd=01&param=02"
         },
         "type": "action",
         "genericType": ""

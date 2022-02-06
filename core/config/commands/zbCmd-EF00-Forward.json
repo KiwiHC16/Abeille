@@ -1,0 +1,16 @@
+{
+    "zbCmd-EF00-Forward": {
+        "isVisible": 1,
+        "name": "Forward",
+        "isHistorized": 0,
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "cmd-EF00",
+            "request": "cmd=05&param=00"
+        },
+        "type": "action",
+        "genericType": ""
+    }
+}

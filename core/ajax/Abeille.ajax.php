@@ -310,7 +310,7 @@ try {
                 /* Sending msg to 'AbeilleCmd' */
                 $queueKeyFormToCmd = msg_get_queue(queueKeyFormToCmd);
                 $msg = array();
-                $msg['topic']   = 'CmdAbeille'.$zgId.'/Ruche/LeaveRequest';
+                $msg['topic']   = 'CmdAbeille'.$zgId.'/0000/LeaveRequest';
                 $msg['payload'] = "IEEE=".$eqIEEE;
                 if (msg_send($queueKeyFormToCmd, 1, $msg, true, false) == FALSE) {
                     $errors = "Could not send msg to 'queueKeyFormToCmd': msg=".json_encode($msg);

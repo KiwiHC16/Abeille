@@ -1,8 +1,8 @@
 <?php
     /* Abeille plugin has splitted code for
-       - list of equipements
-       - equipement detail (main/advanced/commands)
-       For this reason redirection is required to 'AbeilleEQ' is equipment detail is requested */
+       - list of equipements (Abeille.php)
+       - equipement detail (main/advanced/commands => AbeilleEQ)
+       For this reason redirection is required to 'AbeilleEQ' if equipment detail is requested */
     if (isset($_GET['id']) && is_numeric($_GET['id'])) { // If 'id' is set to number, let's redirect to 'AbeilleEq' page
         $uri = parse_url($_SERVER['REQUEST_URI']);
         // Replace "p=Abeille" by "p=AbeilleEq"

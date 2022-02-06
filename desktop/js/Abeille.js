@@ -112,8 +112,7 @@ function getSelectedEqs(zgId) {
     selected["ids"] = new Array; // Array of eq IDs
     selected["addrs"] = new Array; // Array of eq short addresses
     eval('var eqZigate = JSON.parse(js_eqZigate'+zgId+');'); // List of eq IDs for current zigate
-    for (var i = 0; i < eqZigate.length; i++) {
-        var eq = eqZigate[i]; // eq.id, eq.addr
+    for (const [eqId, eq] of Object.entries(eqZigate)) {
         var checked = document.getElementById("idBeeChecked"+zgId+"-"+eq.id).checked;
         if (checked == false)
             continue;

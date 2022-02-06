@@ -3,6 +3,7 @@ ChangeLog
 
 - Erreur sur 'exclusion' d'équipement: Correction (2305)
 - Interne: AbeilleSerialRead: msg erreurs masqués (2306).
+- Regression controle de 'level' (setLevel): Corrrection (1994).
 
 220204-BETA-1
 -------------

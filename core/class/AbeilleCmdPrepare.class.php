@@ -829,7 +829,7 @@
                                     "priority"             => priorityUserCmd,
                                     "dest"                 => $dest,
                                     "addr"                 => $address,
-                                    "destinationEndpoint"  => "01",
+                                    "EP"                   => "01",
                                     "Level"                => intval($parameters['Level']),
                                     "duration"             => $parameters['duration'],
                                     );

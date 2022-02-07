@@ -32,15 +32,9 @@
     function msgToParser($msgToSend) {
         global $queueSerialToParser, $queueMax;
         $jsonMsg = json_encode($msgToSend);
-        $size = strlen($jsonMsg);
-        if ($size > $queueMax) {
-            logMessage('error', 'msg_send(queueSerialToParser): Message trop grand (max='.$queueMax.', size='.$size.') => ignoré !');
-            logMessage('error', '  msg='.$jsonMsg);
-            return false;
-        }
         if (msg_send($queueSerialToParser, 1, $jsonMsg, false, false, $errorCode) == false) {
-            logMessage('error', 'msg_send(queueSerialToParser): ERREUR '.$errorCode);
-            logMessage('error', '  msg='.json_encode($msgToSend));
+            logMessage('debug', 'msg_send(queueSerialToParser): ERROR '.$errorCode);
+            logMessage('debug', '  msg='.json_encode($msgToSend));
             return false;
         }
         return true;
@@ -220,7 +214,7 @@
            Key for connection with Socat */
         if (!file_exists($serial)) {
             fclose($f);
-            logMessage('error', 'Le port '.$serial.' a disparu !');
+            logMessage('debug', 'ERROR: Serial port '.$serial.' disappeared !');
             $f = waitPort($serial);
             // logMessage('debug', $serial.' port is back');
         }
@@ -237,7 +231,7 @@
             } else {
                 /* "01" start found */
                 if (($frame != "") && !$firstFrame)
-                    logMessage('error', 'Trame en dehors marqueurs: '.json_encode($frame));
+                    logMessage('debug', 'ERROR: Frame outside 01/02 markers: '.json_encode($frame));
                 $frame = "";
                 $firstFrame = false;
                 $step = "WAITEND";
@@ -250,7 +244,7 @@
                 logMessage('debug', 'Got '.json_encode($frame));
 
                 if ($ccrc != $ecrc)
-                    logMessage('error', 'ERREUR CRC: calc=0x'.dechex($ccrc).', att=0x'.dechex($ecrc).', mess='.substr($frame, 0, 12).'...'.substr($frame, -2, 2));
+                    logMessage('debug', 'ERROR: CRC: calc=0x'.dechex($ccrc).', att=0x'.dechex($ecrc).', mess='.substr($frame, 0, 12).'...'.substr($frame, -2, 2));
 
                 $msgToSend = array(
                     'src' => 'serialread',

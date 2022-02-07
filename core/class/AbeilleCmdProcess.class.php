@@ -2500,7 +2500,7 @@
                 $length = sprintf("%04s", dechex(strlen($data) / 2));
 
                 $priority               = $Command['priority'];
-              
+
                 if ($addrMode=="01")    $AckAPS = null;     // No AckAPS as we can t wait for all eq from the group to reply, as we don t know who they are. And the command 092 do not ask for APS ACK in Zigbee traces for a group.
                 if ($addrMode=="02")    $AckAPS = AckAPS;   // No AckAPS as we can wait for eq to reply. And the command 092 do ask for APS ACK in Zigbee traces.
                 // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
@@ -3753,7 +3753,6 @@
                 }
 
                 // ZCL cluster 0008/Level control specific: (received) commands
-                // setLevel on one object
                 // Mandatory params: addr, EP, Level (in dec, %), duration (dec)
                 // Optional params: duration (default=0001)
                 else if ($cmdName == 'setLevel') {
@@ -3777,7 +3776,7 @@
                     if (isset($Command['addressMode'])) $addrMode = $Command['addressMode']; else $addrMode = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
-                    $dstEp      = $Command['destinationEndpoint'];;
+                    $dstEp      = $Command['EP'];
                     $onoff      = "01";
                     $l = intval($Command['Level'] * 255 / 100);
                     $level      = sprintf("%02X", $l);
@@ -3786,7 +3785,7 @@
                     $data = $addrMode.$addr.$srcEp.$dstEp.$onoff.$level.$duration;
 
                     if ($addrMode == "02") $AckAPS = AckAPS; else $AckAPS=null;
-                    
+
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode, $AckAPS);
 
                     if ($addrMode == "02") {
@@ -4319,26 +4318,26 @@
                     $clustId    = 'EF00';
                     $secMode    = "02";
                     $radius     = "1E";
-        
+
                     /* ZCL header */
                     $fcf        = "11"; // Frame Control Field
                     $sqn        = "23";
                     $cmdId      = "00";
-        
+
                     $status         = "00";
                     $counterTuya    = "33"; // Set to 1, in traces increasse all the time. Not sure if mandatory to increase.
                     $cmdTuya        = $Command['cmd'];
                     if ($cmdTuya==GotoLevel) $type = DataType_VALUE; else $type = DataType_ENUM;
                     $function         = "00";
                     if ($type==DataType_VALUE) $len = "04"; else $len="01";
-                    if ($type==DataType_VALUE) $param = sprintf("%08s", dechex($Command['param'])); else $param = $Command['param'];  // Up=00, Stop: 01, Down: 02 
-        
+                    if ($type==DataType_VALUE) $param = sprintf("%08s", dechex($Command['param'])); else $param = $Command['param'];  // Up=00, Stop: 01, Down: 02
+
                     $data2 = $fcf.$sqn.$cmdId.$status.$counterTuya.$cmdTuya.$type.$function.$len.$param;
                     $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
-        
+
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
-        
+
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode, AckAPS);
                     return;
                 }

@@ -128,6 +128,7 @@
                 file_put_contents($lFile, $prefix.$msg."\n", FILE_APPEND);
             $GLOBALS["logNbOfLines"]++;
             if (strcasecmp($logLevel, "error") == 0)
+                // Tcharp38: Trim may be required to remove spaces before (log indent)
                 message::add("Abeille", "ERREUR: ".$msg, '');
 
             if ($GLOBALS["logNbOfLines"] > $GLOBALS["logMaxLines"]) {

@@ -470,8 +470,8 @@
             }
         }
 
-        /* 2nd step of identification phase.
-           Wait for enough info to identify device (manuf, modelId, location) */
+        /* Still in identification phase: successive calls until there are enough infos
+           to identify device (manufId + modelId, or location) */
         function deviceUpdate($net, $addr, $ep, $updType = null, $value = null) {
             if (!isset($GLOBALS['eqList'][$net]))
                 $GLOBALS['eqList'][$net] = [];
@@ -504,7 +504,7 @@
                     parserLog('debug', "  deviceUpdate('".$u."', '".$v."'): status=".$eq['status']);
             }
 
-            /* Updating entry: 'epList', 'manufId', 'modelId' or 'location' */
+            /* Updating entry: 'epList', 'manufId', 'modelId' or 'location', 'ieee', 'bindingTableSize' */
             if ($updType) {
                 // $eq[$updType] = $value;
                 // if ($updType == 'epList') { // Active end points response
@@ -543,7 +543,7 @@
                         $eq['endPoints'][$ep]['location'] = $value;
                     if (($eq['location'] === null) || ($eq['location'] === false))
                         $eq['location'] = $value;
-                } else // IEEE
+                } else // 'ieee' or 'bindingTableSize'
                     $eq[$updType] = $value;
                 parserLog('debug', '  eq='.json_encode($eq));
             }

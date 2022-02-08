@@ -13,55 +13,16 @@
         },
         "type": "Philips Hue motion sensor",
         "commands": {
-            "include3": "presence",
-            "include4": "luminositeHue",
-            "Temperature": {
-                "use": "zb-0402-MeasuredValue",
-                "isVisible": 1,
-                "isHistorized": 1
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
             },
+
             "include4 3 2": "Batterie-Hue",
-            "Bind-0406-ToZigate": {
-                "use": "zbBindToZigate",
-                "params": "clustId=0406",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 9
-            },
-            "Bind-0400-ToZigate": {
-                "use": "zbBindToZigate",
-                "params": "clustId=0400",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 9
-            },
-            "Bind-0402-ToZigate": {
-                "use": "zbBindToZigate",
-                "params": "clustId=0402",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 9
-            },
             "Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
-            },
-            "SetReporting-0406-0000": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0406&attrType=18&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 11
-            },
-            "SetReporting-0400-0000": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 11
-            },
-            "SetReporting-0402-0000": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0402&attrType=29&attrId=0000&minInterval=0000&maxInterval=0DAC&changeVal=",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 12
             },
             "SetReporting-0001-0021": {
                 "use": "zbConfigureReporting",
@@ -69,8 +30,51 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+
+            "include4": "luminositeHue",
+            "Bind-0400-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0400",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "SetReporting-0400-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
+
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": 1,
+                "isHistorized": 1
+            },
+            "Bind-0402-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0402",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "SetReporting-0402-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0402&attrType=29&attrId=0000&minInterval=0000&maxInterval=0DAC&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 12
+            },
+
+            "include3": "presence",
+            "Bind-0406-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0406",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+             "SetReporting-0406-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0406&attrType=18&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
             }
         }
     }

@@ -10,8 +10,10 @@
             $paramError = false;
             foreach ($required as $idx => $param) {
                 if (isset($Command[$param])) {
+                    if (gettype($Command[$param]) != "string")
+                        continue; // No other check on non string types
                     if ($Command[$param] != '')
-                        continue;
+                        continue; // String not empty => ok
                     cmdLog('debug', "    ERROR: Empty '".$param."'");
                 } else {
                     cmdLog('debug', "    ERROR: Missing '".$param."'");
@@ -3067,7 +3069,8 @@
                 }
 
                 // Zigbee command: Get binding table (Mgmt_Bind_req)
-                // Mandatory params: address
+                // Mandatory params: 'address'
+                // Optional params: none
                 else if ($cmdName == 'getBindingTable') {
                     $required = ['address'];
                     if (!$this->checkRequiredParams($required, $Command))
@@ -3085,26 +3088,24 @@
                     // <security mode: uint8_t>
                     // <radius: uint8_t>
 
-                    $addrMode            = "02"; // Short addr mode
-                    $targetShortAddress     = $Command['address'];
-                    $srcEp         = "00";
-                    $dstEp    = "00";
-                    $profileID              = "0000";
-                    $clusterID              = "0033"; // Mgmt_Bind_req
-                    $secMode           = "28";
-                    $radius                 = "30";
+                    $addrMode   = "02"; // Short addr mode
+                    $addr       = $Command['address'];
+                    $srcEp      = "00";
+                    $dstEp      = "00";
+                    $profId     = "0000";
+                    $clustId    = "0033"; // Mgmt_Bind_req
+                    $secMode    = "28";
+                    $radius     = "30";
 
-                    $SQN = "12";
+                    $sqn        = "12";
                     $startIndex = "00";
 
-                    $data2 = $SQN.$startIndex;
-                    $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
-                    $data1 = $addrMode.$targetShortAddress.$srcEp.$dstEp.$clusterID.$profileID.$secMode.$radius.$dataLength;
-
+                    $data2 = $sqn.$startIndex;
+                    $dataLength = sprintf("%02X", strlen($data2) / 2);
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
                     $data = $data1.$data2;
-                    // $len = sprintf("%04s", dechex(strlen($data) / 2));
-                    // $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $targetShortAddress);
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                     return;
                 }
 

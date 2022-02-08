@@ -928,48 +928,6 @@
             }
         }
 
-        /**
-             * return queue name from queueId
-             *
-             * has to be implemented in each classe that use msg_get_queue
-             *
-             * @param $queueId
-             * @return string queue name
-             */
-        /*
-        function getQueueName($queue){
-           
-            $queueTopic="Not Found";
-            switch($queue){
-                case $this->queueKeyAbeilleToCmd:
-                    $queueTopic="queueKeyAbeilleToCmd";
-                    break;
-                case $this->queueParserToCmd:
-                    $queueTopic="queueParserToCmd";
-                    break;
-                case $this->$abQueues["xToCmd"]:
-                    $queueTopic="$abQueues["xToCmd"]";
-                    break;
-                case $this->queueKeyCmdToAbeille:
-                    $queueTopic="queueKeyCmdToAbeille";
-                    break;
-                case $this->queueKeyLQIToCmd:
-                    $queueTopic="queueKeyLQIToCmd";
-                    break;
-                case $this->queueKeyXmlToCmd:
-                    $queueTopic="queueKeyXmlToCmd";
-                    break;
-                case $this->queueKeyFormToCmd:
-                    $queueTopic="queueKeyFormToCmd";
-                    break;
-                case $this->queueParserToCmdAck:
-                    $queueTopic="queueParserToCmdAck";
-                    break;
-            }
-            return $queueTopic;
-        }
-        */
-
         /* Collect & treat other messages for AbeilleCmd */
         function collectAllOtherMessages() {
             $listQueue = array(

@@ -32,8 +32,8 @@
     function msgToParser($msgToSend) {
         global $queueSerialToParser, $queueMax;
         $jsonMsg = json_encode($msgToSend);
-        if (msg_send($queueSerialToParser, 1, $jsonMsg, false, false, $errorCode) == false) {
-            logMessage('debug', 'msg_send(queueSerialToParser): ERROR '.$errorCode);
+        if (msg_send($queueSerialToParser, 1, $jsonMsg, false, false, $errCode) == false) {
+            logMessage('debug', 'msg_send(queueSerialToParser): ERROR '.$errCode);
             logMessage('debug', '  msg='.json_encode($msgToSend));
             return false;
         }
@@ -75,11 +75,11 @@
         exec(system::getCmdSudo().'touch '.$serial.' > /dev/null 2>&1');
     }
 
-    $firstFrame = true; // To indicate that first frame might be corrupted
+    // $firstFrame = true; // To indicate that first frame might be corrupted
 
     // Wait for port to be available, configure it then open it
     function waitPort($serial) {
-        global $firstFrame;
+        // global $firstFrame;
 
         while (true) {
             // Wait for port
@@ -106,7 +106,7 @@
             if ($f !== false) {
                 logMessage('debug', $serial.' port opened');
                 stream_set_blocking($f, true); // Should be blocking read but is it default ?
-                $firstFrame = true; // First frame might be corrupted
+                // $firstFrame = true; // First frame might be corrupted
                 return $f;
             }
             sleep(1);
@@ -135,51 +135,6 @@
     // $queueSerialToParser = msg_get_queue(queueSerialToParser);
     $queueSerialToParser = msg_get_queue($abQueues["serialToParser"]["id"]);
     $queueMax = $abQueues["serialToParser"]["max"];
-
-    // exec(system::getCmdSudo().' chmod 777 '.$serial.' >/dev/null 2>&1');
-    // exec("stty -F ".$serial." sane", $out, $status);
-    // if ($status != 0) {
-    //     logMessage('debug', 'ERR stty -F '.$serial.' sane');
-    // }
-    // exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw", $out, $status);
-    // if ($status != 0) {
-    //     logMessage('debug', 'ERR stty -F '.$serial.' speed 115200 cs8 -parenb -cstopb -echo raw');
-    // }
-    // while (true) {
-    //     try {
-    //         exec(system::getCmdSudo().' chmod 666 '.$serial.' >/dev/null 2>&1');
-    //         exec("stty -F ".$serial." sane >/dev/null 2>&1", $out, $status);
-    //         if ($status == 0)
-    //             exec("stty -F ".$serial." speed 115200 cs8 -parenb -cstopb -echo raw >/dev/null 2>&1", $out, $status);
-    //         if ($status == 0)
-    //             break;
-    //         $err = implode("/", $out);
-    //         logMessage('debug', 'stty error: '.$err);
-    //     } catch ( Exception $e ) {
-    //         logMessage('debug', 'stty err');
-    //     }
-    //     sleep(1);
-    // }
-
-    // $f = fopen($serial, "r");
-    // if ($f == false) {
-    //     logMessage('error', 'Impossible d\'ouvrir le port '.$serial.' en lecture. Arret du démon AbeilleSerialRead'.$zgId);
-    //     exec('sudo lsof -Fcn '.$serial, $out);
-    //     logMessage('debug', 'sudo lsof -Fcn '.$serial.' => \''.implode(",", $out).'\'');
-    //     exit(4);
-    // }
-    // while (true) {
-    //     try {
-    //         $f = fopen($serial, "r");
-    //         if ($f !== false)
-    //             break;
-    //     } catch ( Exception $e ) {
-    //         logMessage('debug', 'fopen err');
-    //     }
-    //     sleep(1);
-    // }
-    // logMessage('debug', $serial.' port opened');
-    // stream_set_blocking($f, true); // Should be blocking read but is it default ?
 
     /* Inform others that i'm ready to process zigate messages */
     $msgToSend = array(
@@ -227,33 +182,36 @@
             /* Waiting for "01" start byte.
                Bytes outside 01..03 markers are unexpected. */
             if ($byte != "01") {
-                $frame .= $byte; // Unexpected outside 01..03 markers => error
-            } else {
-                /* "01" start found */
-                if (($frame != "") && !$firstFrame)
-                    logMessage('debug', 'ERROR: Frame outside 01/02 markers: '.json_encode($frame));
-                $frame = "";
-                $firstFrame = false;
-                $step = "WAITEND";
-                $byteIdx = 1; // Next byte is index 1
-                $ccrc = 0;
+                // $frame .= $byte; // Unexpected outside 01..03 markers => error
+                continue; // Everything till '01' is ignored
             }
-        } else {
+
+            /* "01" start found */
+            // if (($frame != "") && !$firstFrame)
+            //     logMessage('debug', 'ERROR: Frame outside 01/02 markers: '.json_encode($frame));
+            $frame = "";
+            // $firstFrame = false;
+            $step = "WAITEND";
+            $byteIdx = 1; // Next byte is index 1
+            $ccrc = 0;
+        } else { // Step = WAITEND
             /* Waiting for "03" end byte */
             if ($byte == "03") {
                 logMessage('debug', 'Got '.json_encode($frame));
 
-                if ($ccrc != $ecrc)
-                    logMessage('debug', 'ERROR: CRC: calc=0x'.dechex($ccrc).', att=0x'.dechex($ecrc).', mess='.substr($frame, 0, 12).'...'.substr($frame, -2, 2));
-
-                $msgToSend = array(
-                    'src' => 'serialread',
-                    'net' => $net,
-                    'type' => 'zigatemessage',
-                    'msg' => $frame
-                );
-                msgToParser($msgToSend);
-                $frame = ""; // Already transmitted or displayed
+                if ($ccrc != $ecrc) {
+                    // CRC ERROR => no longer transmitted to Parser
+                    logMessage('debug', 'ERROR: CRC: got=0x'.dechex($ccrc).', exp=0x'.dechex($ecrc).', msg='.substr($frame, 0, 12).'...'.substr($frame, -2, 2));
+                } else {
+                    $msgToSend = array(
+                        'src' => 'serialread',
+                        'net' => $net,
+                        'type' => 'zigatemessage',
+                        'msg' => $frame
+                    );
+                    msgToParser($msgToSend);
+                }
+                // $frame = "";
                 $step = "WAITSTART";
             } else {
                 if ($byte == "02") {

@@ -713,15 +713,15 @@
                 // Special case: Profalux v2: waiting for non empty binding table before binding zigate.
                 //   If not, zigate binding would kill 'remote to curtain' binding.
                 $profalux = (substr($eq['ieee'], 0, 6) == "20918A") ? true : false;
-                if ($profalux && ($eq['modelId'] !== false)) {
+                if ($profalux && ($eq['modelId'] !== false) && ($eq['modelId'] !== 'MAI-ZTS')) {
                     if (!isset($eq['bindingTableSize'])) {
                         parserLog('debug', '  Profalux v2: Requesting binding table size.');
-                        $this->msgToCmd("Cmd".$net."/".$addr."/getBindingTable");
+                        $this->msgToCmd("Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
                         return false; // Remote still not binded with curtain
                     }
                     if ($eq['bindingTableSize'] == 0) {
                         parserLog('debug', '  Profalux v2: Waiting remote to be binded.');
-                        $this->msgToCmd("Cmd".$net."/".$addr."/getBindingTable");
+                        $this->msgToCmd("Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
                         return false; // Remote still not binded with curtain
                     }
                     parserLog('debug', '  Profalux v2: Remote binded. Let\'s configure.');

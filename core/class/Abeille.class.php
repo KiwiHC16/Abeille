@@ -830,9 +830,10 @@ if (0) {
     {
         // log::add('Abeille', 'debug', 'deamon_start_cleanup(): Démarrage');
 
+        // Remove Abeille's user messages
         message::removeAll('Abeille');
 
-        // Remove temporary files
+        // Remove any remaining temporary files
         for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
             $lockFile = jeedom::getTmpFolder('Abeille').'/AbeilleLQI_MapDataAbeille'.$i.'.json.lock';
             if (file_exists($lockFile)) {
@@ -849,15 +850,16 @@ if (0) {
             config::save("AbeilleIEEE_Ok".$zgId, 0, 'Abeille');
         }
 
-        /* Checking configuration DB version.
-               If standard user, this should be done by installation process (install.php).
-               If user based on GIT, this is a work-around */
+        /* Check & update configuration DB if required. */
         $dbVersion = config::byKey('DbVersion', 'Abeille', '');
         $dbVersionLast = 20201122;
         if (($dbVersion == '') || (intval($dbVersion) < $dbVersionLast)) {
-            log::add('Abeille', 'debug', 'deamon_start_cleanup(): DB config v'.$dbVersion.' < v'.$dbVersionLast.' => Mise-à-jour');
+            log::add('Abeille', 'debug', 'deamon_start_cleanup(): DB config v'.$dbVersion.' < v'.$dbVersionLast.' => Update required.');
             updateConfigDB();
         }
+
+        // Removing empty dir in "devices_local"
+        AbeilleTools::cleanDevices();
 
         // log::add('Abeille', 'debug', 'deamon_start_cleanup(): Terminé');
         return;

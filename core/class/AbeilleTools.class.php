@@ -82,7 +82,7 @@
         }
 
         /* Get list of supported devices ($from="Abeille"), or user/custom ones ($from="local")
-        Returns: Associative array; $devicesList[$identifier] = array(), or false if error */
+           Returns: Associative array; $devicesList[$identifier] = array(), or false if error */
         public static function getDevicesList($from = "Abeille") {
             $devicesList = [];
 
@@ -97,7 +97,7 @@
 
             $dh = opendir($rootDir);
             if ($dh === false) {
-                log::add('Abeille', 'error', 'getDevicesList(): opendir('.$rootDir.') error');
+                log::add('Abeille', 'error', 'getDevicesList(): opendir('.$rootDir.')');
                 return false;
             }
             while (($dirEntry = readdir($dh)) !== false) {
@@ -109,10 +109,8 @@
                     continue;
 
                 $fullPath = $rootDir.$dirEntry.'/'.$dirEntry.".json";
-                if (!file_exists($fullPath)) {
-                    log::add('Abeille', 'debug', 'getDevicesList(): does not exist '.$fullPath);
-                    continue;
-                }
+                if (!file_exists($fullPath))
+                    continue; // No local JSON model. Maybe just an auto-discovery ?
 
                 $dev = array(
                     'jsonId' => $dirEntry,
@@ -140,6 +138,45 @@
 
             return $devicesList;
         }
+
+        /* Clean 'devices_local'.
+           Returns: true=ok, false=error */
+        public static function cleanDevices() {
+            $rootDir = devicesLocalDir;
+            $dh = opendir($rootDir);
+            if ($dh === false) {
+                log::add('Abeille', 'error', 'cleanDevices(): opendir('.$rootDir.')');
+                return false;
+            }
+            while (($dirEntry = readdir($dh)) !== false) {
+                /* Ignoring some entries */
+                if (in_array($dirEntry, array(".", "..")))
+                    continue;
+                $fullPath = $rootDir.$dirEntry;
+                if (!is_dir($fullPath))
+                    continue;
+
+                // Any files in directory ?
+                $empty = true; // Assuming empty
+                $dh2 = opendir($fullPath);
+                while (($dirEntry2 = readdir($dh2)) !== false) {
+                    if (in_array($dirEntry2, array(".", "..")))
+                        continue;
+                    $empty = false;
+                    break;
+                }
+                closedir($dh2);
+
+                if ($empty) {
+                    log::add('Abeille', 'debug', "cleanDevices(): Removing empty '".$dirEntry."'");
+                    rmdir($fullPath);
+                }
+
+            }
+            closedir($dh);
+
+            return true;
+        } // cleanDevices()
 
         /* Get list of supported commands (found in core/config/commands).
         Returns: Indexed array; $commandsList[] = $fileName, or false if error */
@@ -198,52 +235,6 @@
             log::add('Abeille', 'debug', 'getDevicePath('.$device.') => NOT found');
             return false; // Not found
         }
-
-        // /*
-        //  * Read JSON config for given 'device'
-        //  * Returns: array() or false
-        //  */
-        // public static function getJSonConfig($device, $from="Abeille")
-        // {
-        //     // log::add('Abeille', 'debug', 'getJSonConfig start');
-
-        //     if ($from == 'Abeille')
-        //         $deviceFilename = devicesDir.$device.'/'.$device.'.json';
-        //     else
-        //         $deviceFilename = devicesLocalDir.$device.'/'.$device.'.json';
-
-        //     if (!is_file($deviceFilename)) {
-        //         log::add('Abeille', 'error', 'getJSonConfig('.$device.'): file not found '.$deviceFilename);
-        //         return false;
-        //         // log::add('Abeille', 'error', 'Nouvel équipement \''.$device.'\' inconnu. Utilisation de la config par défaut. [Modelisation]');
-        //         // $device = 'defaultUnknown';
-        //         // $deviceFilename = self::devicesDir.$device.'/'.$device.'.json';
-        //     }
-
-        //     $content = file_get_contents($deviceFilename);
-        //     $deviceTemplate = json_decode($content, true);
-        //     if (json_last_error() != JSON_ERROR_NONE) {
-        //         log::add('Abeille', 'error', 'L\'équipement \''.$device.'\' a un mauvais fichier JSON.');
-        //         log::add('Abeille', 'debug', 'getJSonConfig(): content='.$content);
-        //         return;
-        //     }
-
-        //     // Basic Commands
-        //     $deviceCmds = array();
-
-        //     // Recupere les templates Cmd instanciées
-        //     foreach ($deviceTemplate[$device]['Commandes'] as $cmd => $file) {
-        //         if (substr($cmd, 0, 7) == "include") {
-        //             $deviceCmds += self::getCommandConfig($file);
-        //         }
-        //     }
-
-        //     // Ajoute les commandes au master
-        //     $deviceTemplate[$device]['Commandes'] = $deviceCmds;
-
-        //     // log::add('Abeille', 'debug', 'getJSonConfig end');
-        //     return $deviceTemplate;
-        // }
 
         /**
          * Read given command JSON file.
@@ -311,40 +302,6 @@
             $device = $device[$deviceName]; // Removing top key
             $device['jsonId'] = $deviceName;
             $device['jsonLocation'] = $from; // Official device or local one ?
-
-            /* Old names support */
-            // if (!isset($device['type'])) {
-            //     if (isset($device['nameJeedom'])) {
-            //         $device['type'] = $device['nameJeedom'];
-            //         unset($device['nameJeedom']);
-            //     }
-            // }
-            // if (!isset($device['category'])) {
-            //     if (isset($device['Categorie'])) {
-            //         $device['type'] = $device['Categorie'];
-            //         unset($device['Categorie']);
-            //     }
-            // }
-            // if (isset($device['configuration'])) {
-                // if (!isset($device['configuration']['icon'])) {
-                //     if (isset($device['configuration']['icone'])) {
-                //         $device['configuration']['icon'] = $device['configuration']['icone'];
-                //         unset($device['configuration']['icone']);
-                //     }
-                // }
-                // if (!isset($device['configuration']['batteryType'])) {
-                //     if (isset($device['configuration']['battery_type'])) {
-                //         $device['configuration']['batteryType'] = $device['configuration']['battery_type'];
-                //         unset($device['configuration']['battery_type']);
-                //     }
-                // }
-            // }
-            // if (!isset($device['commands'])) {
-            //     if (isset($device['Commandes'])) { // Old naming support
-            //         $device['commands'] = $device['Commandes'];
-            //         unset($device['Commandes']);
-            //     }
-            // }
 
             if (isset($device['commands'])) {
                 if ($mode == 0) {

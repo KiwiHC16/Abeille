@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+- Profalux v2: Amélioration support.
+- Auto-découverte équipement inconnu: Correction format json & améliorations.
+- Lexman E27 RGB bulb: Ajout support préliminaire (2295).
+- Heiman COSensor EF-3.0: Ajout support (2312).
+- Suppression des repertoires vides au démarrage dans 'devices_local'.
+- Erreur sur 'exclusion' d'équipement: Nouvelle correction (2305)
+
 220206-BETA-1
 -------------
 

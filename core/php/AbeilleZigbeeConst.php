@@ -258,6 +258,12 @@
                 "006F" => array( "name" => "StatusFlags", "access" => "R", "dataType" => 0x18 ), // Type map8
             ),
         ),
+        "0012" => array(
+            "name" => "Multistate Input",
+            "attributes" => array(
+                "PresentValue" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x21 ), // uint16
+            ),
+        ),
         "0014" => array(
             "name" => "Multistate Value",
             "attributes" => array(

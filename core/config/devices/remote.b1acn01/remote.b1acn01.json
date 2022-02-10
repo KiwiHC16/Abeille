@@ -1,5 +1,7 @@
 {
     "remote.b1acn01": {
+        "manufacturer": "Xiaomi Aqara",
+        "model": "WXKG11LM",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",

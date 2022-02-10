@@ -2074,10 +2074,9 @@ console.log(zEndPoints);
             var reader = new FileReader();
             reader.onload = function(e) {
                 var contents = e.target.result;
-                console.log(zigbee);
-                console.log("contents="+contents);
+                // console.log("contents="+contents);
                 zigbee = JSON.parse(contents);
-                console.log(zigbee);
+                console.log("zigbee=", zigbee);
 
                 // Reset general values
                 document.getElementById("idManuf").value = "";

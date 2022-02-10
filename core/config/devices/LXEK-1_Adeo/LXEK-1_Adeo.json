@@ -1,0 +1,105 @@
+{
+    "LXEK-1_Adeo": {
+        "manufacturer": "Lexman",
+        "model": "LXEK-1",
+        "type": "Lexman E27 RGB bulb",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "BulbE27",
+            "mainEP": "01"
+        },
+        "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Color Mode": {
+                "use": "zb-0300-ColorMode"
+            },
+            "Get Color Mode": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0008"
+            },
+            "Current HUE": {
+                "use": "zb-0300-CurrentHue"
+            },
+            "Get Current HUE": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0000"
+            },
+            "Current Saturation": {
+                "use": "zb-0300-CurrentSaturation"
+            },
+            "Get Current Saturation": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0001"
+            },
+            "Current X": {
+                "use": "zb-0300-CurrentX"
+            },
+            "Get Current X": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0003"
+            },
+            "Current Y": {
+                "use": "zb-0300-CurrentY"
+            },
+            "Get Current Y": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0004"
+            },
+            "White": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=6000&Y=6000",
+                "isVisible": "1"
+            },
+            "Blue": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=228F&Y=228F",
+                "isVisible": "1"
+            },
+            "Red": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=AE13&Y=51EB",
+                "isVisible": "1"
+            },
+            "Green": {
+                "use": "zbCmd-0300-MoveToColor",
+                "params": "X=147A&Y=D709",
+                "isVisible": "1"
+            },
+            "Set 2700K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=2700"
+            },
+            "Set 4000K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=4000"
+            },
+            "ColorTemperature": {
+                "use": "zb-0300-ColorTemperatureMireds"
+            },
+            "Get ColorTemperature": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0007"
+            },
+            "Bind 0300-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0300",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

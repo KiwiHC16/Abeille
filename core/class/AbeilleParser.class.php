@@ -170,7 +170,7 @@
         }
 
         /* Send message to 'AbeilleCmd' thru 'queueKeyParserToCmd' */
-        function msgToCmd($topic, $payload) {
+        function msgToCmd($topic, $payload = '') {
             $msg = array( 'topic' => $topic, 'payload' => $payload );
 
             $errCode = 0;
@@ -456,7 +456,7 @@
             /* Default identification: need EP list.
                Tcharp38 note: Some devices may not answer to active endpoints request at all. */
             parserLog('debug', '  Requesting active end points list');
-            $this->msgToCmd("Cmd".$net."/".$addr."/getActiveEndpoints", "");
+            $this->msgToCmd("Cmd".$net."/".$addr."/getActiveEndpoints");
 
             /* Special trick for NXP based devices.
                - Note: 00158D=Jennic Ltd.
@@ -709,9 +709,26 @@
             // TODO: No reconfigure if rejoin = 02
             if ($eq['jsonId'] == 'defaultUnknown')
                 $this->deviceDiscover($net, $addr);
-            else if ($eq['status'] == 'identifying')
+            else if ($eq['status'] == 'identifying') {
+                // Special case: Profalux v2: waiting for non empty binding table before binding zigate.
+                //   If not, zigate binding would kill 'remote to curtain' binding.
+                $profalux = (substr($eq['ieee'], 0, 6) == "20918A") ? true : false;
+                if ($profalux && ($eq['modelId'] !== false)) {
+                    if (!isset($eq['bindingTableSize'])) {
+                        parserLog('debug', '  Profalux v2: Requesting binding table size.');
+                        $this->msgToCmd("Cmd".$net."/".$addr."/getBindingTable");
+                        return false; // Remote still not binded with curtain
+                    }
+                    if ($eq['bindingTableSize'] == 0) {
+                        parserLog('debug', '  Profalux v2: Waiting remote to be binded.');
+                        $this->msgToCmd("Cmd".$net."/".$addr."/getBindingTable");
+                        return false; // Remote still not binded with curtain
+                    }
+                    parserLog('debug', '  Profalux v2: Remote binded. Let\'s configure.');
+                }
+
                 $this->deviceConfigure($net, $addr);
-            else // status==unknown_ident
+            } else // status==unknown_ident
                 $this->deviceCreate($net, $addr);
             return false;
         } // End deviceUpdate()
@@ -880,10 +897,16 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 if ($val1 != "00")
                     $discovery['endPoints'][$ep]['statusMsg'] = $val2;
                 else {
-                    $discovery['endPoints'][$ep]['servClustCount'] = $val2['servClustCount'];
-                    $discovery['endPoints'][$ep]['servClusters'] = $val2['servClusters'];
-                    $discovery['endPoints'][$ep]['cliClustCount'] = $val2['cliClustCount'];
-                    $discovery['endPoints'][$ep]['cliClusters'] = $val2['cliClusters'];
+                    foreach($val2['servClusters'] as $clustId => $clust) {
+                        if (isset($discovery['endPoints'][$ep]['servClusters'][$clustId]['attributes']))
+                            continue;
+                        $discovery['endPoints'][$ep]['servClusters'][$clustId]['attributes'] = $clust;
+                    }
+                    foreach($val2['cliClusters'] as $clustId => $clust) {
+                        if (isset($discovery['endPoints'][$ep]['cliClusters'][$clustId]['attributes']))
+                            continue;
+                        $discovery['endPoints'][$ep]['cliClusters'][$clustId]['attributes'] = $clust;
+                    }
 
                     /* Requesting list of supported attributes */
                     foreach ($val2['servClusters'] as $clustId => $clust) {
@@ -903,11 +926,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $clust = &$discovery['endPoints'][$ep]['servClusters'][$clustId];
                 else
                     $clust = &$discovery['endPoints'][$ep]['cliClusters'][$clustId];
+                if (!isset($clust['attributes']))
+                    $clust['attributes'] = [];
                 $missingAttr = ''; // List of attributes whose value is missing.
                 $missingAttrNb = 0;
                 foreach ($val3 as $attrId => $attr) {
-                    $clust[$attrId] = [];
-                    if (isset($clust[$attrId]['value']))
+                    $clust['attributes'][$attrId] = [];
+                    if (isset($clust['attributes'][$attrId]['value']))
                         continue;
 
                     if ($missingAttrNb != 0)
@@ -933,13 +958,15 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $clust = &$discovery['endPoints'][$ep]['servClusters'][$clustId];
                 else
                     $clust = &$discovery['endPoints'][$ep]['cliClusters'][$clustId];
+                if (!isset($clust['attributes']))
+                    $clust['attributes'] = [];
                 foreach ($val3 as $attrId => $attr) {
-                    $clust[$attrId] = [];
+                    $clust['attributes'][$attrId] = [];
                     if (isset($attr['dataType']))
-                        $clust[$attrId]['dataType'] = $attr['dataType'];
+                        $clust['attributes'][$attrId]['dataType'] = $attr['dataType'];
                     if (isset($attr['access']))
-                        $clust[$attrId]['access'] = $attr['access'];
-                    if (!isset($clust[$attrId]['value']))
+                        $clust['attributes'][$attrId]['access'] = $attr['access'];
+                    if (!isset($clust['attributes'][$attrId]['value']))
                         $this->msgToCmd("Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$attrId);
                 }
             }
@@ -954,11 +981,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     $clust = &$discovery['endPoints'][$ep]['cliClusters'][$clustId];
                 parserLog('debug', "    attributes=".json_encode($val3));
                 foreach ($val3 as $attrId => $attr) {
-                    if (!isset($clust[$attrId]))
-                        $clust[$attrId] = [];
+                    if (!isset($clust['attributes'][$attrId]))
+                        $clust['attributes'][$attrId] = [];
                     if (isset($attr['dataType']))
-                        $clust[$attrId]['dataType'] = $attr['dataType'];
-                    $clust[$attrId]['value'] = $attr['value'];
+                        $clust['attributes'][$attrId]['dataType'] = $attr['dataType'];
+                    $clust['attributes'][$attrId]['value'] = $attr['value'];
                 }
             }
 
@@ -1880,6 +1907,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             return;
                         }
                     }
+
+                    $this->deviceUpdate($dest, $srcAddr, $srcEp, 'bindingTableSize', $tableSize);
                     return;
                 }
 

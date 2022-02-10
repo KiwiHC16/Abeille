@@ -21,7 +21,7 @@
      */
 
     /* Developers debug features */
-    require_once __DIR__.'/../config/Abeille.config.php'; // dbgFile constant
+    require_once __DIR__.'/../config/Abeille.config.php'; // dbgFile constant + queues
     if (file_exists(dbgFile)) {
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -230,7 +230,7 @@ try {
         /* Creating temp dir */
         $tmp = __DIR__.'/../../tmp';
         $doneFile = $tmp.'/switchBranch.done';
-        if (file_exists($tmp) == FALSE)
+        if (file_exists($tmp) == false)
             mkdir($tmp);
         else if (file_exists($doneFile))
             unlink($doneFile); // Removing 'switchBranch.done' file
@@ -280,7 +280,7 @@ try {
 
             $status = 0;
             $errors = ""; // Error messages
-            $missingParentIEEE = FALSE;
+            $missingParentIEEE = false;
             foreach ($eqIdList as $eqId) {
                 /* Collecting required infos (zgId, parentIEEE & deviceIEEE) */
                 $eqLogic = eqLogic::byId($eqId);
@@ -308,12 +308,13 @@ try {
                 }
 
                 /* Sending msg to 'AbeilleCmd' */
-                $queueKeyFormToCmd = msg_get_queue(queueKeyFormToCmd);
+                $queueId = $abQueues["xToCmd"]['id'];
+                $queue = msg_get_queue($queueId);
                 $msg = array();
                 $msg['topic']   = 'CmdAbeille'.$zgId.'/0000/LeaveRequest';
                 $msg['payload'] = "IEEE=".$eqIEEE;
-                if (msg_send($queueKeyFormToCmd, 1, $msg, true, false) == FALSE) {
-                    $errors = "Could not send msg to 'queueKeyFormToCmd': msg=".json_encode($msg);
+                if (msg_send($queue, 1, $msg, true, false) == false) {
+                    $errors = "Could not send msg to 'xToCmd': msg=".json_encode($msg);
                     $status = -1;
                 }
             }

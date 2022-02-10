@@ -2736,38 +2736,6 @@
                 return;
             }
 
-            if (isset($Command['LeaveRequest']) && isset($Command['IEEE']))
-            {
-                $cmd = "004C";
-
-                // <extended address: uint64_t>
-                // <Rejoin: uint8_t>
-                // <Remove Children: uint8_t>
-                //  Rejoin,
-                //      0 = Do not rejoin
-                //      1 = Rejoin
-                //  Remove Children
-                //      0 = Leave, removing children
-                //      1 = Leave, do not remove children
-
-                $IEEE = $Command['IEEE'];
-                if (isset($Command['Rejoin']))
-                    $Rejoin = $Command['Rejoin'];
-                else
-                    $Rejoin = "00";
-                if (isset($Command['RemoveChildren']))
-                    $RemoveChildren = $Command['RemoveChildren'];
-                else
-                    $RemoveChildren = "01";
-
-                $data = $IEEE.$Rejoin.$RemoveChildren;
-                $length = sprintf("%04s", dechex(strlen($data) / 2));
-
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-                return;
-            }
-
             // if (isset($Command['Remove']) && isset($Command['address']) && isset($Command['IEEE']))
             // https://github.com/KiwiHC16/Abeille/issues/332
             if (isset($Command['Remove']) && isset($Command['ParentAddressIEEE']) && isset($Command['ChildAddressIEEE']))
@@ -2808,7 +2776,8 @@
                 return;
             }
 
-            /* Tcharp38: New way of checking commands. */
+            /* Tcharp38: New way of checking commands.
+               'name' field contains command name. */
             if (isset($Command['name'])) {
                 $cmdName = $Command['name'];
                 cmdLog('debug', '    '.$cmdName.' cmd', $this->debug['processCmd']);
@@ -3228,6 +3197,41 @@
                     $data = $addr.$ep;
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    return;
+                }
+
+                // Zigbee command: Leave request
+                else if ($cmdName == 'LeaveRequest') {
+                    $required = ['IEEE'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $cmd = "004C";
+
+                    // <extended address: uint64_t>
+                    // <Rejoin: uint8_t>
+                    // <Remove Children: uint8_t>
+                    //  Rejoin,
+                    //      0 = Do not rejoin
+                    //      1 = Rejoin
+                    //  Remove Children
+                    //      0 = Leave, removing children
+                    //      1 = Leave, do not remove children
+
+                    $ieee = $Command['IEEE'];
+                    if (isset($Command['Rejoin']))
+                        $rejoin = $Command['Rejoin'];
+                    else
+                        $rejoin = "00";
+                    if (isset($Command['RemoveChildren']))
+                        $RemoveChildren = $Command['RemoveChildren'];
+                    else
+                        $RemoveChildren = "01";
+
+                    $data = $ieee.$rejoin.$RemoveChildren;
+                    $length = sprintf("%04X", strlen($data) / 2);
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
                     return;
                 }
 

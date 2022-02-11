@@ -316,10 +316,10 @@ logDebug("LA=".$json_encode($abQueues));
                 Abeille::replaceGhost($_POST['ghost'], $_POST['real']);
                 break;
 
-            case "ReHome":
-                log::add('Abeille', 'debug', 'ReHome: '.$_POST['beeId'] . ' - ' . $_POST['zigateY']);
-                Abeille::migrateBetweenZigates($_POST['beeId'], $_POST['zigateY']);
-                break;
+            // case "ReHome":
+            //     log::add('Abeille', 'debug', 'ReHome: '.$_POST['beeId'] . ' - ' . $_POST['zigateY']);
+            //     Abeille::migrateBetweenZigates($_POST['beeId'], $_POST['zigateY']);
+            //     break;
 
             case "ReplaceZigate":
                 log::add('Abeille', 'debug', 'Removing all data of previous zigate: '.$_POST['zigateZ']);

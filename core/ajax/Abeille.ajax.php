@@ -374,6 +374,69 @@ try {
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        /* Migrate device to another one. */
+        // * https://github.com/KiwiHC16/Abeille/issues/1771
+        // *
+        // * 1/ Changement logical Id
+        // * 2/ Remove zigbee reseau 1 zigbee
+        // * 3/ inclusion normale sur le reseau 2 zigbee
+        // *
+        // * Faire un bouton qui fait les etapes 1/ et 2 puis demander à l'utilisateur de faire l'étape 3
+        if (init('action') == 'migrate') {
+            $eqId = init('eqId');
+            $dstZgId = init('dstZgId');
+
+            $status = 0;
+            $error = "";
+
+            $eqLogic = Abeille::byId($eqId);
+            if (!is_object($eqLogic)) {
+                $status = -1;
+                $error = "Unknown eqId ".$eqId;
+            } else {
+                $ieee = $eqLogic->getConfiguration('IEEE', 'none');
+                if ($ieee == 'none') {
+                    $status = -1;
+                    $error = "Device ".$eqId." DOES NOT have IEEE address";
+                } else {
+                    list($net, $addr) = explode('/', $eqLogic->getLogicalId());
+                    $zgId = substr($net, 7); // AbeilleX => X
+
+                    $newNet = "Abeille".$dstZgId;
+
+                    // Moving eq to new network
+                    $eqLogic->setLogicalId($newNet.'/'.$addr);
+                    $eqLogic->save();
+
+                    // Excluding device from current network
+                    // self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$newDestBee."/0000/Remove", "ParentAddressIEEE=".$IEEE."&ChildAddressIEEE=".$IEEE );
+                    /* Sending msg to 'AbeilleCmd' */
+                    $queueId = $abQueues["xToCmd"]['id'];
+                    $queue = msg_get_queue($queueId);
+                    $msg = array();
+                    $msg['topic']   = 'CmdAbeille'.$dstZgId.'/0000/SetPermit';
+                    $msg['payload'] = "Inclusion=1";
+                    if (msg_send($queue, 1, $msg, true, false) == false) {
+                        $errors = "Could not send msg to 'xToCmd': msg=".json_encode($msg);
+                        $status = -1;
+                    }
+                    if ($status == 0) {
+                        $msg['topic']   = 'CmdAbeille'.$zgId.'/0000/LeaveRequest';
+                        $msg['payload'] = "IEEE=".$ieee."&Rejoin=01";
+                        if (msg_send($queue, 1, $msg, true, false) == false) {
+                            $errors = "Could not send msg to 'xToCmd': msg=".json_encode($msg);
+                            $status = -1;
+                        }
+                    }
+
+                    // 3/ inclusion normale sur le reseau 2 zigbee
+                    // message::add("Abeille", "Je viens de préparer la migration de ".$eqLogic->getHumanName(). ". Veuillez faire maintenant son inclusion dans la zigate ".$dstZgId);
+                }
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.
             Instead 'success' callback is used. This means that
             - take care of error code returned

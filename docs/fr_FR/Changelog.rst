@@ -7,6 +7,8 @@ ChangeLog
 - Heiman COSensor EF-3.0: Ajout support (2312).
 - Suppression des repertoires vides au démarrage dans 'devices_local'.
 - Erreur sur 'exclusion' d'équipement: Nouvelle correction (2305)
+- Interne: SerialRead: Message corrompu (err CRC) n'est plus transmis au parser.
+- Page équipements/migration: Revu & corrigé pour Jeedom 4.2.x (2322).
 
 220206-BETA-1
 -------------

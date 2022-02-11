@@ -3201,6 +3201,8 @@
                 }
 
                 // Zigbee command: Leave request
+                // Mandatory params: 'IEEE'
+                // Optional params: 'Rejoin' & 'RemoveChildren'
                 else if ($cmdName == 'LeaveRequest') {
                     $required = ['IEEE'];
                     if (!$this->checkRequiredParams($required, $Command))

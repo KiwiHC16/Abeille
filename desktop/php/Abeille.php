@@ -129,7 +129,7 @@
         <?php include '050_AbeilleRemplacementPart.php'; ?>
 
         <!-- Gestion des ReHome / migration d equipements  -->
-        <?php include '060_AbeilleReHomePart.php'; ?>
+        <?php include 'Abeille-MigrateEq.php'; ?>
 
         <?php include '070_AbeilleReplaceZigatePart.php'; ?>
 

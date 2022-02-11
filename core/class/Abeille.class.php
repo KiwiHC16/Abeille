@@ -51,38 +51,38 @@ class Abeille extends eqLogic
      * Faire un bouton qui fait les etapes 1/ et 2 puis demander à l'utilisateur de faire l'étape 3
      *
      */
-    public static function migrateBetweenZigates($beeId, $zigateY)
-    {
-        $bee = Abeille::byId($beeId);
-        if (!is_object($bee)) {
-            log::add('Abeille', 'debug', 'Erreur je ne trouve pas l abeille, je ne peux faire l operation.');
-            return;
-        }
+    // public static function migrateBetweenZigates($beeId, $zigateY)
+    // {
+    //     $bee = Abeille::byId($beeId);
+    //     if (!is_object($bee)) {
+    //         log::add('Abeille', 'debug', 'Erreur je ne trouve pas l abeille, je ne peux faire l operation.');
+    //         return;
+    //     }
 
-        $IEEE = $bee->getConfiguration('IEEE', 'none');
-        if ( $IEEE=='none' ) {
-            log::add('Abeille', 'debug', 'L Abeille na pas d adresse IEEE connue, je ne peux faire l operation.');
-        }
+    //     $IEEE = $bee->getConfiguration('IEEE', 'none');
+    //     if ( $IEEE=='none' ) {
+    //         log::add('Abeille', 'debug', 'L Abeille na pas d adresse IEEE connue, je ne peux faire l operation.');
+    //     }
 
-        if ($zigateY > $GLOBALS['maxNbOfZigate']) {
-            log::add('Abeille', 'debug', 'Cette Zigate n existe pas: '.$zigateY.', je ne peux faire l operation.');
-            return;
-        }
+    //     if ($zigateY > $GLOBALS['maxNbOfZigate']) {
+    //         log::add('Abeille', 'debug', 'Cette Zigate n existe pas: '.$zigateY.', je ne peux faire l operation.');
+    //         return;
+    //     }
 
-        list($destBee, $shortBee) = explode('/', $bee->getLogicalId());
+    //     list($destBee, $shortBee) = explode('/', $bee->getLogicalId());
 
-        $newDestBee = "Abeille".$zigateY;
+    //     $newDestBee = "Abeille".$zigateY;
 
-        // 1/ Changement logical Id
-        $bee->setLogicalId($newDestBee.'/'.$shortBee);
-        $bee->save();
+    //     // 1/ Changement logical Id
+    //     $bee->setLogicalId($newDestBee.'/'.$shortBee);
+    //     $bee->save();
 
-        // 2/ Remove zigbee reseau 1 zigbee
-        self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$newDestBee."/0000/Remove", "ParentAddressIEEE=".$IEEE."&ChildAddressIEEE=".$IEEE );
+    //     // 2/ Remove zigbee reseau 1 zigbee
+    //     self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$newDestBee."/0000/Remove", "ParentAddressIEEE=".$IEEE."&ChildAddressIEEE=".$IEEE );
 
-        // 3/ inclusion normale sur le reseau 2 zigbee
-        message::add("Abeille", "Je viens de préparer la migration de ".$bee->getHumanName(). ". Veuillez faire maintenant son inclusion dans la zigate: ".$zigateY);
-    }
+    //     // 3/ inclusion normale sur le reseau 2 zigbee
+    //     message::add("Abeille", "Je viens de préparer la migration de ".$bee->getHumanName(). ". Veuillez faire maintenant son inclusion dans la zigate: ".$zigateY);
+    // }
 
     /**
      * replaceGhost()

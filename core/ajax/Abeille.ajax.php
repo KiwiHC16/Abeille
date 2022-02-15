@@ -44,234 +44,262 @@
         file_put_contents($logDir.$logFile, $pref.$msg."\n", FILE_APPEND);
     }
 
-try {
+    /* Format then send msg to AbeilleCmd.
+       Returns: true=ok, false=error */
+    function sendToCmd($topic, $payload = '') {
+        global $abQueues;
 
-    require_once __DIR__.'/../../../../core/php/core.inc.php';
-    require_once __DIR__.'/../class/Abeille.class.php';
-    require_once __DIR__.'/../php/AbeilleZigate.php';
-    include_once __DIR__.'/../class/AbeilleTools.class.php'; // deamonlogFilter()
-    require_once __DIR__.'/../php/AbeilleInstall.php'; // checkIntegrity()
-    include_once __DIR__.'/../php/AbeilleLog.php'; // logDebug()
+        $queueId = $abQueues["xToCmd"]['id'];
+        $queue = msg_get_queue($queueId);
 
-    include_file('core', 'authentification', 'php');
-    if (!isConnect('admin')) {
-        throw new Exception('401 Unauthorized');
+        $msg = array();
+        $msg['topic']   = $topic;
+        $msg['payload'] = $payload;
+
+        if (msg_send($queue, 1, $msg, true, false) == false) {
+            return false;
+        }
+        return true;
     }
 
-    ajax::init();
+    try {
 
-    // logDebug('Abeille.ajax.php: action='.init('action'));
+        require_once __DIR__.'/../../../../core/php/core.inc.php';
+        require_once __DIR__.'/../class/Abeille.class.php';
+        require_once __DIR__.'/../php/AbeilleZigate.php';
+        include_once __DIR__.'/../class/AbeilleTools.class.php'; // deamonlogFilter()
+        require_once __DIR__.'/../php/AbeilleInstall.php'; // checkIntegrity()
+        include_once __DIR__.'/../php/AbeilleLog.php'; // logDebug()
 
-    /* For Wifi Zigate
-       - check 'Addr:Port' via ping
-       - check socat installation
-     */
-    if (init('action') == 'checkWifi') {
-        $zgPort = init('zgport'); // Addr:Port
-        $zgSSP = init('ssp'); // Socat serial port
-
-        /* TODO: Log old issue. Why the following message never gets out ? */
-        logToFile('AbeilleConfig.log', 'debug', 'Arret des démons');
-        abeille::deamon_stop(); // Stopping daemons
-
-        /* Checks addr is responding to ping and socat is installed. */
-        $cmdToExec = "checkWifi.sh ".$zgPort;
-        $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
-        exec($cmd, $out, $status);
-        // $status = 0;
-
-        /* TODO */
-        /* Need 'AbeilleSocat' daemon to interrogate Wifi zigate */
-        // $nohup = "/usr/bin/nohup";
-        // $php = "/usr/bin/php";
-        // $dir = __DIR__."/../class/";
-        // log::add('AbeilleConfig.log', 'debug', 'Démarrage d\'un démon socat temporaire');
-        // $params = $zgSSP.' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$zgPort;
-        // $log = " >>".log::getPathToLog('AbeilleConfig.log')." 2>&1";
-        // $cmd = $nohup." ".$php." ".$dir."AbeilleSocat.php"." ".$params.$log;
-        // exec("echo ".$cmd." >>".log::getPathToLog('AbeilleTOTO'));
-        // log::add('AbeilleConfig.log', 'debug', '  cmd='.$cmd);
-        // exec($cmd.' &');
-
-        /* Read Zigate FW version */
-        // $version = 0; // FW version
-        // if ($status == 0) {
-            // zg_SetLog("AbeilleConfig");
-            // $status = zgGetVersion($zgSSP, $version);
-        // }
-
-        logToFile('AbeilleConfig.log', 'debug', 'Redémarrage des démons');
-        abeille::deamon_start(); // Restarting daemons
-
-        ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
-    }
-
-    if (init('action') == 'checkSocat') {
-        $prefix = logGetPrefix(""); // Get log prefix
-        $cmd = '/bin/bash '.__DIR__."/../scripts/checkSocat.sh | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
-        exec($cmd, $out, $status);
-        ajax::success(json_encode($status));
-    }
-
-    if (init('action') == 'installSocat') {
-        $cmd = '/bin/bash '.__DIR__.'/../scripts/installSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
-        exec($cmd, $out, $status);
-        ajax::success(json_encode($status));
-    }
-
-    if (init('action') == 'checkWiringPi') {
-        $prefix = logGetPrefix(""); // Get log prefix
-        $cmd = '/bin/bash '.__DIR__."/../scripts/checkWiringPi.sh | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
-        exec($cmd, $out, $status);
-        ajax::success(json_encode($status));
-    }
-
-    if (init('action') == 'installWiringPi') {
-        $cmd = '/bin/bash '.__DIR__.'/../scripts/installWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
-        exec($cmd, $out, $status);
-        ajax::success();
-    }
-
-    if (init('action') == 'checkTTY') {
-        $zgPort = init('zgport');
-        $zgType = init('zgtype');
-
-        logSetConf('AbeilleConfig.log', true);
-        logMessage('info', 'Test de communication avec la Zigate; type='.$zgType.', port='.$zgPort);
-
-        logMessage('debug', 'Arret des démons');
-        abeille::deamon_stop(); // Stopping daemon
-
-        /* Checks port exists and is not already used */
-        $prefix = logGetPrefix(""); // Get log prefix
-        $cmdToExec = "checkTTY.sh ".$zgPort." ".$zgType.' "'.$prefix.'"';
-        $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
-        exec($cmd, $out, $status);
-
-        /* Read Zigate FW version */
-        $version = 0; // FW version
-        if ($status == 0) {
-            $status = zgGetVersion($zgPort, $version);
+        include_file('core', 'authentification', 'php');
+        if (!isConnect('admin')) {
+            throw new Exception('401 Unauthorized');
         }
 
-        logMessage('debug', 'Redémarrage des démons');
-        abeille::deamon_start(); // Restarting daemon
+        ajax::init();
 
-        ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
-    }
+        // logDebug('Abeille.ajax.php: action='.init('action'));
 
-    if (init('action') == 'installTTY') {
-        $cmd = '/bin/bash '.__DIR__.'/../scripts/installTTY.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
-        exec($cmd, $out, $status);
-        ajax::success();
-    }
+        /* For Wifi Zigate
+        - check 'Addr:Port' via ping
+        - check socat installation
+        */
+        if (init('action') == 'checkWifi') {
+            $zgPort = init('zgport'); // Addr:Port
+            $zgSSP = init('ssp'); // Socat serial port
 
-    /* Update FW but check parameters first, prior to shutdown daemon */
-    if (init('action') == 'updateFirmware') {
-        $zgType = init('zgtype'); // "PI" or "DIN"
-        $zgPort = init('zgport');
-        $zgFwFile = init('fwfile');
+            /* TODO: Log old issue. Why the following message never gets out ? */
+            logToFile('AbeilleConfig.log', 'debug', 'Arret des démons');
+            abeille::deamon_stop(); // Stopping daemons
 
-        logSetConf('AbeilleConfig.log', true);
-        logMessage('debug', 'Démarrage updateFirmware('.$zgType.', '.$zgFwFile.', '.$zgPort.')');
+            /* Checks addr is responding to ping and socat is installed. */
+            $cmdToExec = "checkWifi.sh ".$zgPort;
+            $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            exec($cmd, $out, $status);
+            // $status = 0;
 
-        if ($zgType == "PI")
-            $script = "updateFirmware.sh";
-        else
-            $script = "updateFirmwareDIN.sh";
+            /* TODO */
+            /* Need 'AbeilleSocat' daemon to interrogate Wifi zigate */
+            // $nohup = "/usr/bin/nohup";
+            // $php = "/usr/bin/php";
+            // $dir = __DIR__."/../class/";
+            // log::add('AbeilleConfig.log', 'debug', 'Démarrage d\'un démon socat temporaire');
+            // $params = $zgSSP.' '.log::convertLogLevel(log::getLogLevel('Abeille')).' '.$zgPort;
+            // $log = " >>".log::getPathToLog('AbeilleConfig.log')." 2>&1";
+            // $cmd = $nohup." ".$php." ".$dir."AbeilleSocat.php"." ".$params.$log;
+            // exec("echo ".$cmd." >>".log::getPathToLog('AbeilleTOTO'));
+            // log::add('AbeilleConfig.log', 'debug', '  cmd='.$cmd);
+            // exec($cmd.' &');
 
-        logMessage('debug', 'Vérification des paramètres');
-        $cmdToExec = $script." check ".$zgPort;
-        $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
-        exec($cmd, $out, $status);
+            /* Read Zigate FW version */
+            // $version = 0; // FW version
+            // if ($status == 0) {
+                // zg_SetLog("AbeilleConfig");
+                // $status = zgGetVersion($zgSSP, $version);
+            // }
 
-        $version = 0; // FW version
-        if ($status == 0) {
-            logMessage('info', 'Arret des démons');
+            logToFile('AbeilleConfig.log', 'debug', 'Redémarrage des démons');
+            abeille::deamon_start(); // Restarting daemons
+
+            ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
+        }
+
+        if (init('action') == 'checkSocat') {
+            $prefix = logGetPrefix(""); // Get log prefix
+            $cmd = '/bin/bash '.__DIR__."/../scripts/checkSocat.sh | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            exec($cmd, $out, $status);
+            ajax::success(json_encode($status));
+        }
+
+        if (init('action') == 'installSocat') {
+            $cmd = '/bin/bash '.__DIR__.'/../scripts/installSocat.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            exec($cmd, $out, $status);
+            ajax::success(json_encode($status));
+        }
+
+        if (init('action') == 'checkWiringPi') {
+            $prefix = logGetPrefix(""); // Get log prefix
+            $cmd = '/bin/bash '.__DIR__."/../scripts/checkWiringPi.sh | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            exec($cmd, $out, $status);
+            ajax::success(json_encode($status));
+        }
+
+        if (init('action') == 'installWiringPi') {
+            $cmd = '/bin/bash '.__DIR__.'/../scripts/installWiringPi.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            exec($cmd, $out, $status);
+            ajax::success();
+        }
+
+        if (init('action') == 'checkTTY') {
+            $zgPort = init('zgport');
+            $zgType = init('zgtype');
+
+            logSetConf('AbeilleConfig.log', true);
+            logMessage('info', 'Test de communication avec la Zigate; type='.$zgType.', port='.$zgPort);
+
+            logMessage('debug', 'Arret des démons');
             abeille::deamon_stop(); // Stopping daemon
 
-            /* Updating FW and reset Zigate */
-            $cmdToExec = $script." flash ".$zgPort." ".$zgFwFile;
+            /* Checks port exists and is not already used */
+            $prefix = logGetPrefix(""); // Get log prefix
+            $cmdToExec = "checkTTY.sh ".$zgPort." ".$zgType.' "'.$prefix.'"';
+            $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            exec($cmd, $out, $status);
+
+            /* Read Zigate FW version */
+            $version = 0; // FW version
+            if ($status == 0) {
+                $status = zgGetVersion($zgPort, $version);
+            }
+
+            logMessage('debug', 'Redémarrage des démons');
+            abeille::deamon_start(); // Restarting daemon
+
+            ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
+        }
+
+        if (init('action') == 'installTTY') {
+            $cmd = '/bin/bash '.__DIR__.'/../scripts/installTTY.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            exec($cmd, $out, $status);
+            ajax::success();
+        }
+
+        /* Update FW but check parameters first, prior to shutdown daemon */
+        if (init('action') == 'updateFirmware') {
+            $zgType = init('zgtype'); // "PI" or "DIN"
+            $zgPort = init('zgport');
+            $zgFwFile = init('fwfile');
+            $erasePdm = init('erasePdm');
+            $zgId = init('zgId');
+
+            logSetConf('AbeilleConfig.log', true);
+            logMessage('debug', 'Démarrage updateFirmware('.$zgType.', '.$zgFwFile.', '.$zgPort.')');
+
+            if ($zgType == "PI")
+                $script = "updateFirmware.sh";
+            else
+                $script = "updateFirmwareDIN.sh";
+
+            logMessage('debug', 'Vérification des paramètres');
+            $cmdToExec = $script." check ".$zgPort;
             $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
 
-            /* Reading FW version */
-            // Tcharp38 note: removed this
-            // When restarting Zigate, several messages exchanges before being able to ask for version
-            // To be revisited
-            // if ($status == 0) {
-            //     $status = zgGetVersion($zgPort, $version);
-            // }
+            $version = 0; // FW version
+            if ($status == 0) {
+                logMessage('info', 'Arret des démons');
+                abeille::deamon_stop(); // Stopping daemon
 
-            logMessage('info', 'Redémarrage des démons');
-            abeille::deamon_start(); // Restarting daemon
-        }
+                /* Updating FW and reset Zigate */
+                $cmdToExec = $script." flash ".$zgPort." ".$zgFwFile;
+                $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+                exec($cmd, $out, $status);
 
-        ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
-    }
+                /* Reading FW version */
+                // Tcharp38 note: removed this
+                // When restarting Zigate, several messages exchanges before being able to ask for version
+                // To be revisited
+                // if ($status == 0) {
+                //     $status = zgGetVersion($zgPort, $version);
+                // }
 
-    if (init('action') == 'resetPiZigate') {
-        $prefix = logGetPrefix(""); // Get log prefix
-        $cmd = "/bin/bash ".__DIR__."/../scripts/resetPiZigate.sh | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log')." 2>&1";
-        exec($cmd, $out, $status);
-        ajax::success();
-    }
+                logMessage('info', 'Redémarrage des démons');
+                abeille::deamon_start(); // Restarting daemon
 
-   /* Devloper mode: Switch GIT branch */
-    if (init('action') == 'switchBranch') {
-        $branch = init('branch');
-        $updateOnly = init('updateOnly'); // TODO: No longer required
-
-        logSetConf('AbeilleConfig.log', true);
-
-        $status = 0;
-        $prefix = logGetPrefix(""); // Get log prefix
-
-        /* Creating temp dir */
-        $tmp = __DIR__.'/../../tmp';
-        $doneFile = $tmp.'/switchBranch.done';
-        if (file_exists($tmp) == false)
-            mkdir($tmp);
-        else if (file_exists($doneFile))
-            unlink($doneFile); // Removing 'switchBranch.done' file
-
-        /* Creating a copy of 'switchBranch.sh' in 'tmp' */
-        $cmd = 'cd '.__DIR__.'/../scripts/; sudo cp -p switchBranch.sh ../../tmp/switchBranch.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
-        exec($cmd);
-
-        logMessage('debug', 'Arret des démons');
-        abeille::deamon_stop(); // Stopping daemon
-
-        $cmdToExec = "switchBranch.sh ".$branch.' "'.$prefix.'"';
-        $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
-        exec($cmd);
-
-        /* Note: Returning immediately but switch not completed yet. Anyway server side code
-           might be completely different after switch */
-        ajax::success(json_encode(array('status' => $status)));
-    }
-
-    /* Developer feature: Remove equipment(s) listed by id in 'eqList', from Jeedom DB.
-       Zigate is untouched.
-       Returns: status=0/-1, errors=<error message(s)> */
-    if (init('action') == 'removeEqJeedom') {
-        $eqList = init('eqList');
-
-        $status = 0;
-        $errors = ""; // Error messages
-        foreach ($eqList as $eqId) {
-            /* Collecting required infos */
-            $eqLogic = eqLogic::byId($eqId);
-            if (!is_object($eqLogic)) {
-                throw new Exception(__('EqLogic inconnu. Vérifiez l\'ID', __FILE__).' '.$eqId);
+                if ($erasePdm) {
+                    logMessage('info', 'Effacement de la PDM');
+                    if (sendToCmd('TempoCmdAbeille'.$zgId.'/0000/ErasePersistentData&time='.(time()+2), 'ErasePersistentData') == false) {
+                        $status = -1;
+                        $error = "Can't send erase PDM request";
+                    }
+                }
             }
 
-            /* Removing device from Jeedom DB */
-            $eqLogic->remove();
+            ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
         }
 
-        ajax::success(json_encode(array('status' => $status, 'errors' => $errors)));
-    }
+        if (init('action') == 'resetPiZigate') {
+            $prefix = logGetPrefix(""); // Get log prefix
+            $cmd = "/bin/bash ".__DIR__."/../scripts/resetPiZigate.sh | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log')." 2>&1";
+            exec($cmd, $out, $status);
+            ajax::success();
+        }
+
+    /* Devloper mode: Switch GIT branch */
+        if (init('action') == 'switchBranch') {
+            $branch = init('branch');
+            $updateOnly = init('updateOnly'); // TODO: No longer required
+
+            logSetConf('AbeilleConfig.log', true);
+
+            $status = 0;
+            $prefix = logGetPrefix(""); // Get log prefix
+
+            /* Creating temp dir */
+            $tmp = __DIR__.'/../../tmp';
+            $doneFile = $tmp.'/switchBranch.done';
+            if (file_exists($tmp) == false)
+                mkdir($tmp);
+            else if (file_exists($doneFile))
+                unlink($doneFile); // Removing 'switchBranch.done' file
+
+            /* Creating a copy of 'switchBranch.sh' in 'tmp' */
+            $cmd = 'cd '.__DIR__.'/../scripts/; sudo cp -p switchBranch.sh ../../tmp/switchBranch.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            exec($cmd);
+
+            logMessage('debug', 'Arret des démons');
+            abeille::deamon_stop(); // Stopping daemon
+
+            $cmdToExec = "switchBranch.sh ".$branch.' "'.$prefix.'"';
+            $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
+            exec($cmd);
+
+            /* Note: Returning immediately but switch not completed yet. Anyway server side code
+            might be completely different after switch */
+            ajax::success(json_encode(array('status' => $status)));
+        }
+
+        /* Developer feature: Remove equipment(s) listed by id in 'eqList', from Jeedom DB.
+        Zigate is untouched.
+        Returns: status=0/-1, errors=<error message(s)> */
+        if (init('action') == 'removeEqJeedom') {
+            $eqList = init('eqList');
+
+            $status = 0;
+            $errors = ""; // Error messages
+            foreach ($eqList as $eqId) {
+                /* Collecting required infos */
+                $eqLogic = eqLogic::byId($eqId);
+                if (!is_object($eqLogic)) {
+                    throw new Exception(__('EqLogic inconnu. Vérifiez l\'ID', __FILE__).' '.$eqId);
+                }
+
+                /* Removing device from Jeedom DB */
+                $eqLogic->remove();
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'errors' => $errors)));
+        }
 
         /* Remove equipment(s) from zigbee listed by id in 'eqIdList'.
            Returns: status=0/-1, errors=<error message(s)> */
@@ -308,14 +336,9 @@ try {
                 }
 
                 /* Sending msg to 'AbeilleCmd' */
-                $queueId = $abQueues["xToCmd"]['id'];
-                $queue = msg_get_queue($queueId);
-                $msg = array();
-                $msg['topic']   = 'CmdAbeille'.$zgId.'/0000/LeaveRequest';
-                $msg['payload'] = "IEEE=".$eqIEEE;
-                if (msg_send($queue, 1, $msg, true, false) == false) {
-                    $errors = "Could not send msg to 'xToCmd': msg=".json_encode($msg);
+                if (sendToCmd('CmdAbeille'.$zgId.'/0000/LeaveRequest', "IEEE=".$eqIEEE) == false) {
                     $status = -1;
+                    $errors = "Impossible d'envoyer la demande de quitter le réseau";
                 }
             }
 
@@ -402,29 +425,26 @@ try {
                     list($net, $addr) = explode('/', $eqLogic->getLogicalId());
                     $zgId = substr($net, 7); // AbeilleX => X
 
-                    $newNet = "Abeille".$dstZgId;
+                    // $newNet = "Abeille".$dstZgId;
 
                     // Moving eq to new network
-                    $eqLogic->setLogicalId($newNet.'/'.$addr);
-                    $eqLogic->save();
+                    // $eqLogic->setLogicalId($newNet.'/'.$addr);
+                    // $eqLogic->save();
 
                     // Excluding device from current network
                     // self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$newDestBee."/0000/Remove", "ParentAddressIEEE=".$IEEE."&ChildAddressIEEE=".$IEEE );
                     /* Sending msg to 'AbeilleCmd' */
-                    $queueId = $abQueues["xToCmd"]['id'];
-                    $queue = msg_get_queue($queueId);
-                    $msg = array();
-                    $msg['topic']   = 'CmdAbeille'.$dstZgId.'/0000/SetPermit';
-                    $msg['payload'] = "Inclusion=1";
-                    if (msg_send($queue, 1, $msg, true, false) == false) {
-                        $errors = "Could not send msg to 'xToCmd': msg=".json_encode($msg);
+                    $topic   = 'CmdAbeille'.$dstZgId.'/0000/SetPermit';
+                    $payload = "Inclusion=1";
+                    if (sendToCmd($topic, $payload) == false) {
+                        $errors = "Could not send msg to 'xToCmd': topic=".$topic;
                         $status = -1;
                     }
                     if ($status == 0) {
-                        $msg['topic']   = 'CmdAbeille'.$zgId.'/0000/LeaveRequest';
-                        $msg['payload'] = "IEEE=".$ieee."&Rejoin=01";
-                        if (msg_send($queue, 1, $msg, true, false) == false) {
-                            $errors = "Could not send msg to 'xToCmd': msg=".json_encode($msg);
+                        $topic   = 'CmdAbeille'.$zgId.'/0000/LeaveRequest';
+                        $payload = "IEEE=".$ieee."&Rejoin=01";
+                        if (sendToCmd($topic, $payload) == false) {
+                            $errors = "Could not send msg to 'xToCmd': topic=".$topic;
                             $status = -1;
                         }
                     }
@@ -433,6 +453,19 @@ try {
                     // message::add("Abeille", "Je viens de préparer la migration de ".$eqLogic->getHumanName(). ". Veuillez faire maintenant son inclusion dans la zigate ".$dstZgId);
                 }
             }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
+        /*  */
+        if (init('action') == 'acceptNewZigate') {
+            $zgId = init('zgId');
+
+            $status = 0;
+            $error = "";
+
+            config::remove("AbeilleIEEE_Ok".$zgId, 'Abeille');
+            config::remove("AbeilleIEEE".$zgId, 'Abeille');
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }

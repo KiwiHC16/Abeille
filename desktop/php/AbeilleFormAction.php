@@ -321,11 +321,11 @@ logDebug("LA=".$json_encode($abQueues));
             //     Abeille::migrateBetweenZigates($_POST['beeId'], $_POST['zigateY']);
             //     break;
 
-            case "ReplaceZigate":
-                log::add('Abeille', 'debug', 'Removing all data of previous zigate: '.$_POST['zigateZ']);
-                config::remove( "AbeilleIEEE_Ok".$_POST['zigateZ'], 'Abeille');
-                config::remove( "AbeilleIEEE".$_POST['zigateZ'], 'Abeille');
-                break;
+            // case "ReplaceZigate":
+            //     log::add('Abeille', 'debug', 'Removing all data of previous zigate: '.$_POST['zigateZ']);
+            //     config::remove( "AbeilleIEEE_Ok".$_POST['zigateZ'], 'Abeille');
+            //     config::remove( "AbeilleIEEE".$_POST['zigateZ'], 'Abeille');
+            //     break;
         }
 
         // TX Power
@@ -337,12 +337,12 @@ logDebug("LA=".$json_encode($abQueues));
         }
 
         // Set Channel Mask
-        foreach ( $zigateIds as $zigateId ) {
-            if ( $_POST['submitButton'] == 'Set Channel Mask Z'.$zigateId ) {
-                echo "Set Channel Mask processing: Zigate Id: ".$zigateId." Channel mask: ".$_POST['channelMask'];
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setChannelMask', $_POST['channelMask'] );
-            }
-        }
+        // foreach ( $zigateIds as $zigateId ) {
+        //     if ( $_POST['submitButton'] == 'Set Channel Mask Z'.$zigateId ) {
+        //         echo "Set Channel Mask processing: Zigate Id: ".$zigateId." Channel mask: ".$_POST['channelMask'];
+        //         sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setChannelMask', $_POST['channelMask'] );
+        //     }
+        // }
 
         // Set Extended PANID
         foreach ( $zigateIds as $zigateId ) {

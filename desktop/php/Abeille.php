@@ -131,7 +131,7 @@
         <!-- Gestion des ReHome / migration d equipements  -->
         <?php include 'Abeille-MigrateEq.php'; ?>
 
-        <?php include '070_AbeilleReplaceZigatePart.php'; ?>
+        <?php include 'Abeille-NewZigate.php'; ?>
 
         <?php if (isset($dbgDeveloperMode)) { ?>
         <legend><i class="fa fa-cogs"></i> {{Visible en MODE DEV UNIQUEMENT}}</legend>

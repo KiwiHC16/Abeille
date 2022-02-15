@@ -251,6 +251,71 @@
             }
         }
 
+        /* Check if device already known to parser.
+        If not, add entry with given net/addr/ieee.
+        Returns: device entry by reference */
+        function &getDevice($net, $addr, $ieee = null) {
+            if (!isset($GLOBALS['eqList'][$net]))
+                $GLOBALS['eqList'][$net] = [];
+            if (isset($GLOBALS['eqList'][$net][$addr]))
+                return $GLOBALS['eqList'][$net][$addr];
+
+            // If IEEE is defined let's check if exists
+            if ($ieee) {
+                foreach ($GLOBALS['eqList'][$net] as $oldAddr => $eq) {
+                    if ($eq['ieee'] !== $ieee)
+                        continue;
+
+                    $GLOBALS['eqList'][$net][$addr] = $eq;
+                    unset($GLOBALS['eqList'][$net][$oldAddr]);
+                    parserLog('debug', '  EQ already known: Addr updated from '.$oldAddr.' to '.$addr);
+                    return $GLOBALS['eqList'][$net][$addr];
+                }
+                // Not found. Checking if was in a different network.
+                foreach ($GLOBALS['eqList'] as $oldNet => $oldAddr) {
+                    if ($oldNet == $net)
+                        continue; // This network has already been checked
+                    foreach ($GLOBALS['eqList'][$oldNet] as $oldAddr => $eq) {
+                        if ($eq['ieee'] !== $ieee)
+                            continue;
+
+                        $GLOBALS['eqList'][$net][$addr] = $eq; // net & addr update
+                        unset($GLOBALS['eqList'][$oldNet][$oldAddr]);
+                        parserLog('debug', '  EQ already known on network '.$oldNet.' with addr '.$oldAddr.' => migrated');
+
+                        // Informing Abeille to migrate Jeedom part to proper network.
+                        $msg = array(
+                            'type' => 'eqMigrated',
+                            'net' => $net,
+                            'addr' => $addr,
+                            'srcNet' => $oldNet,
+                            'srcAddr' => $oldAddr,
+                        );
+                        $this->msgToAbeille2($msg);
+
+                        return $GLOBALS['eqList'][$net][$addr];
+                    }
+                }
+            }
+
+            // This is a new device
+            $GLOBALS['eqList'][$net][$addr] = array(
+                'ieee' => $ieee,
+                'capa' => '',
+                'rejoin' => '', // Rejoin info from device announce
+                'status' => 'idle', // identifying, configuring, discovering, idle
+                'time' => time(),
+                'endPoints' => null,
+                'mainEp' => '',
+                'manufId' => null, // null(undef)/false(unsupported)/'xx'
+                'modelId' => null, // null(undef)/false(unsupported)/'xx'
+                'location' => null, // null(undef)/false(unsupported)/'xx'
+                'jsonId' => '',
+                'jsonLocation' => ''
+            );
+            return $GLOBALS['eqList'][$net][$addr];
+        }
+
         /* Check if eq is part of supported or user/custom devices names.
            Returns: true is supported, else false */
         function findJsonConfig(&$eq, $by='modelId') {
@@ -348,7 +413,7 @@
 
         /* Called on device announce. */
         function deviceAnnounce($net, $addr, $ieee, $capa, $rejoin) {
-            $eq = &getDevice($net, $addr, $ieee); // By ref
+            $eq = &$this->getDevice($net, $addr, $ieee); // By ref
             parserLog('debug', '  eq='.json_encode($eq));
 
             $eq['capa'] = $capa;
@@ -838,7 +903,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', "  deviceDiscover()");
 
             // $eq = &$GLOBALS['eqList'][$net][$addr];
-            $eq = &getDevice($net, $addr); // Get device by ref
+            $eq = &$this->getDevice($net, $addr); // Get device by ref
             $eq['status'] = 'discovering';
 
             parserLog('debug', '  eq='.json_encode($eq));
@@ -1455,19 +1520,28 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             /* To be sure there is no port changes, checking received IEEE vs stored one.
                'AbeilleIEEE_Ok' is set to 0 on daemon start when interrogation is not done yet.
                Should be updated by 8009 or 8024 responses */
-            $commandAcceptedUntilZigateIdentified = array("0208", "0300", "8000", "8009", "8010", "8024");
-            $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
-            $confIeeeOkVal = config::byKey($confIeeeOk, 'Abeille', '0');
-            if ($confIeeeOkVal == -1) {
-                parserLog('debug', $dest.', AbeilleIEEE_Ok=='.$confIeeeOkVal.' => msg '.$type." ignored. Port switch ??");
-                return 0;
-            } else if ($confIeeeOkVal == 0) {
+            if ($type != '8000') {
                 $zgId = substr($dest, 7); // AbeilleX => X
-                $this->msgToCmd("CmdAbeille".$zgId."/0000/getNetworkStatus", "getNetworkStatus");
-
-                if (!in_array($type, $commandAcceptedUntilZigateIdentified)) {
-                    parserLog('debug', $dest.', AbeilleIEEE_Ok=='.$confIeeeOkVal.' => msg '.$type." ignored. Waiting 8009 or 8024.");
+                $ieeeStatus = $GLOBALS['zigate'.$zgId]['ieeeStatus'];
+                if ($ieeeStatus == -1) {
+                    parserLog('debug', $dest.', unexpected IEEE => msg '.$type." ignored. Port switch ??");
                     return 0;
+                }
+
+                if ($ieeeStatus == 0) { // Still in interrogation
+                    $keyIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
+                    $ieeeStatus = config::byKey($keyIeeeOk, 'Abeille', '0', true);
+                    $GLOBALS['zigate'.$zgId]['ieeeStatus'] = $ieeeStatus; // Updating local status
+
+                    if ($ieeeStatus == 0) {
+                        $this->msgToCmd("CmdAbeille".$zgId."/0000/getNetworkStatus", "getNetworkStatus");
+
+                        $acceptedBeforeZigateIdentified = array("0208", "0300", "8009", "8010", "8024");
+                        if (!in_array($type, $acceptedBeforeZigateIdentified)) {
+                            parserLog('debug', $dest.', AbeilleIEEE_Ok==0 => msg '.$type." ignored. Waiting 8009 or 8024.");
+                            return 0;
+                        }
+                    }
                 }
             }
 
@@ -2942,27 +3016,28 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $GLOBALS['zigate'.$zgId]['ieee'] = $extAddr;
 
             /* If still required, checking USB port unexpected switch */
-            $confIeee = str_replace('Abeille', 'AbeilleIEEE', $dest); // AbeilleX => AbeilleIEEEX
-            $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
-            if (config::byKey($confIeeeOk, 'Abeille', 0) == 0) {
-                if (config::byKey($confIeee, 'Abeille', 'none', 1) == "none") {
-                    config::save($confIeee, $extAddr, 'Abeille');
-                    config::save($confIeeeOk, 1, 'Abeille');
-                } else if (config::byKey($confIeee, 'Abeille', 'none', 1) == $extAddr) {
-                    config::save($confIeeeOk, 1, 'Abeille');
-                } else {
-                    config::save($confIeeeOk, -1, 'Abeille');
-                    message::add("Abeille", "Mauvais port détecté pour zigate ".$zgId.". Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
-                    return;
-                }
-            }
+            // Tcharp38: Handled by Abeille.class
+            // $confIeee = str_replace('Abeille', 'AbeilleIEEE', $dest); // AbeilleX => AbeilleIEEEX
+            // $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
+            // if (config::byKey($confIeeeOk, 'Abeille', 0) == 0) {
+            //     if (config::byKey($confIeee, 'Abeille', 'none', 1) == "none") {
+            //         config::save($confIeee, $extAddr, 'Abeille');
+            //         config::save($confIeeeOk, 1, 'Abeille');
+            //     } else if (config::byKey($confIeee, 'Abeille', 'none', 1) == $extAddr) {
+            //         config::save($confIeeeOk, 1, 'Abeille');
+            //     } else {
+            //         config::save($confIeeeOk, -1, 'Abeille');
+            //         message::add("Abeille", "Mauvais port détecté pour zigate ".$zgId.". Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
+            //         return;
+            //     }
+            // }
             // Tcharp38: Zigate IEEE stored in 2 many locations. Need to optimize
-            $eqLogic = Abeille::byLogicalId($dest.'/'.$addr, 'Abeille');
-            $ieee2 = $eqLogic->getConfiguration('IEEE', '');
-            if ($ieee2 == "") {
-                $eqLogic->setConfiguration('IEEE', $extAddr);
-                $eqLogic->save();
-            }
+            // $eqLogic = Abeille::byLogicalId($dest.'/'.$addr, 'Abeille');
+            // $ieee2 = $eqLogic->getConfiguration('IEEE', '');
+            // if ($ieee2 == "") {
+            //     $eqLogic->setConfiguration('IEEE', $extAddr);
+            //     $eqLogic->save();
+            // }
 
             $msg = array(
                 // 'src' => 'parser',
@@ -3271,21 +3346,22 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $GLOBALS['zigate'.$zgId]['ieee'] = $dataIEEE;
 
             /* If still required, checking USB port unexpected switch */
-            $confIeee = str_replace('Abeille', 'AbeilleIEEE', $dest); // AbeilleX => AbeilleIEEEX
-            $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
-            if (config::byKey($confIeeeOk, 'Abeille', 0) == 0) {
-                if (config::byKey($confIeee, 'Abeille', 'none', 1) == "none") {
-                    config::save($confIeee, $dataIEEE, 'Abeille');
-                    config::save($confIeeeOk, 1, 'Abeille');
-                } else if (config::byKey($confIeee, 'Abeille', 'none', 1) == $dataIEEE) {
-                    config::save($confIeeeOk, 1, 'Abeille');
-                } else {
-                    config::save($confIeeeOk, -1, 'Abeille');
-                    $zgId = substr($dest, 7); // AbeilleX => X
-                    message::add("Abeille", "Mauvais port détecté pour zigate ".$zgId.". Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
-                    return;
-                }
-            }
+            // Tcharp38: Handled by Abeille.class
+            // $confIeee = str_replace('Abeille', 'AbeilleIEEE', $dest); // AbeilleX => AbeilleIEEEX
+            // $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
+            // if (config::byKey($confIeeeOk, 'Abeille', 0) == 0) {
+            //     if (config::byKey($confIeee, 'Abeille', 'none', 1) == "none") {
+            //         config::save($confIeee, $dataIEEE, 'Abeille');
+            //         config::save($confIeeeOk, 1, 'Abeille');
+            //     } else if (config::byKey($confIeee, 'Abeille', 'none', 1) == $dataIEEE) {
+            //         config::save($confIeeeOk, 1, 'Abeille');
+            //     } else {
+            //         config::save($confIeeeOk, -1, 'Abeille');
+            //         $zgId = substr($dest, 7); // AbeilleX => X
+            //         message::add("Abeille", "Mauvais port détecté pour zigate ".$zgId.". Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
+            //         return;
+            //     }
+            // }
 
             // Envoi Status
             // $this->msgToAbeille($dest."/0000", "Network", "Status", $data);

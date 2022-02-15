@@ -907,6 +907,7 @@
         msg += '<br> - type: '+zgType+'<br> - port: '+zgPort+'<br> - firmware: '+zgFW+'<br><br>';
         let curIsLegacy = true;
         let newIsOpdm = false;
+        erasePdm = false;
         if (curFw != '') {
             // Format XXXX-YYYY: where XXXX=0003, 4 (OPDMv1), ou 5 (OPDMv2)
             v = curFw.substr(3, 1);
@@ -919,6 +920,7 @@
             if (newIsOpdm) {
                 msg += "{{Vous allez passer d'une version 'legacy' à 'OPDM'. Un effacement de la PDM + réapparairage complet est requis.}}<br><br>";
                 msg += '{{Etes vous sur de vouloir continuer ?}}';
+                erasePdm = true;
             } else
                 msg += '{{Attention !! La version Optimized PDM est FORTEMENT recommandée.}}<br><br>';
         } else {
@@ -931,7 +933,10 @@
         bootbox.confirm(msg, function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Mise-à-jour du FW de la Zigate}}"});
-                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateFW&zgtype=\"'+zgType+'\"&zgport=\"'+zgPort+'\"&fwfile=\"'+zgFW+'\"').dialog('open');
+                url = 'index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateFW&zgtype=\"'+zgType+'\"&zgport=\"'+zgPort+'\"&fwfile=\"'+zgFW+'\"';
+                if (erasePdm)
+                    url += '&erasePdm=true&zgId='+zgId;
+                $('#md_modal2').load(url).dialog('open');
             }
         });
     }

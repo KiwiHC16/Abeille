@@ -967,42 +967,6 @@ if (0) {
         cron::byClassAndFunction('Abeille', 'deamon')->run();
 
         // Tcharp38: Moved to main daemon (deamon())
-        // // Send a message to Abeille to ask for Abeille Object creation: inclusion, ...
-        // for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-        //     if (($config['AbeilleSerialPort'.$i] == 'none') or ($config['AbeilleActiver'.$i] != 'Y'))
-        //         continue; // Undefined or disabled
-
-        //     // log::add('Abeille', 'debug', 'deamon_start(): ***** creation de ruche '.$i.' (Abeille): '.basename($config['AbeilleSerialPort'.$i]));
-        //     Abeille::publishMosquitto($abQueues["abeilleToAbeille"]["id"], priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$i);
-
-        //     // log::add('Abeille', 'debug', 'deamon_start(): ***** Demarrage du réseau Zigbee '.$i.' ********');
-        //     Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$i."/0000/startNetwork", "StartNetwork");
-        //     // log::add('Abeille', 'debug', 'deamon_start(): ***** Set Time réseau Zigbee '.$i.' ********');
-        //     Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$i."/0000/setZgTimeServer", "");
-        //     /* Get network state to get Zigate IEEE asap and confirm no port change */
-        //     Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$i."/0000/getNetworkStatus", "getNetworkStatus");
-
-        //     // Set the mode of the zigate, important from 3.1D.
-        //     $version = "";
-        //     $ruche = Abeille::byLogicalId('Abeille'.$i.'/Ruche', 'Abeille');
-        //     if ($ruche) {
-        //         $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($ruche->getId(), 'SW-SDK');
-        //         if ($cmdLogic) {
-        //             $version = $cmdLogic->execCmd();
-        //         }
-        //     }
-        //     if ($version == '031D') {
-        //         log::add('Abeille', 'debug', 'deamon_start(): Configuring zigate '. $i.' in hybrid mode');
-        //         // message::add("Abeille", "Demande de fonctionnement de la zigate en mode hybride (firmware >= 3.1D).");
-        //         Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$i."/0000/setZgMode", "mode=hybrid");
-        //     } else {
-        //         log::add('Abeille', 'debug', 'deamon_start(): Configuring zigate '.$i.' in normal mode');
-        //         // message::add("Abeille", "Demande de fonctionnement de la zigate en mode normal (firmware < 3.1D).");
-        //         Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$i."/0000/setZgMode", "mode=normal");
-        //     }
-        // }
-
-        // Tcharp38: Moved to main daemon (deamon())
         // Essaye de recuperer les etats des equipements
         // self::refreshCmd();
 
@@ -1016,36 +980,6 @@ if (0) {
         log::add('Abeille', 'debug', 'deamon_start(): Terminé');
         return true;
     }
-
-    // /**
-    //  * Not used ?
-    //  *
-    //  * @param $Abeille
-    //  * @return string
-    //  */
-    // public static function mapAbeillePort($Abeille)
-    // {
-    //     $config = AbeilleTools::getParameters();
-
-    //     for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-    //         if ($Abeille == "Abeille".$i) return basename($config['AbeilleSerialPort'.$i]);
-    //     }
-    // }
-
-    // /**
-    //  * Not used ?
-    //  *
-    //  * @param $port
-    //  * @return string
-    //  */
-    // public static function mapPortAbeille($port)
-    // {
-    //     $config = AbeilleTools::getParameters();
-
-    //     for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-    //         if ($port == $config['AbeilleSerialPort'.$i]) return "Abeille".$i;
-    //     }
-    // }
 
     /* Stopping all daemons and removing queues */
     public static function deamon_stop()
@@ -1960,6 +1894,24 @@ if (0) {
         }
     }
 
+    public static function checkZgIeee($net, $ieee) {
+        $zgId = substr($net, 7);
+        $keyIeee = str_replace('Abeille', 'AbeilleIEEE', $net); // AbeilleX => AbeilleIEEEX
+        $keyIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $net); // AbeilleX => AbeilleIEEE_OkX
+        if (config::byKey($keyIeeeOk, 'Abeille', 0) == 0) {
+            $ieeeConf = config::byKey($keyIeee, 'Abeille', '');
+            if ($ieeeConf == "") {
+                config::save($keyIeee, $ieee, 'Abeille');
+                config::save($keyIeeeOk, 1, 'Abeille');
+            } else if ($ieeeConf == $ieee) {
+                config::save($keyIeeeOk, 1, 'Abeille');
+            } else {
+                config::save($keyIeeeOk, -1, 'Abeille');
+                message::add("Abeille", "Attention: La zigate ".$zgId." semble nouvelle ou il y a eu échange de ports. Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
+            }
+        }
+    }
+
     /* Deal with messages coming from parser.
        Note: this is the new way to handle messages from parser, replacing progressively 'message()' */
     public static function msgFromParser($msg) {
@@ -2072,6 +2024,32 @@ if (0) {
             return;
         } // End 'eqAnnounce'
 
+        /* Parser has found that a device has changed network. */
+        if ($msg['type'] == "eqMigrated") {
+            // Msg reminder:
+            // 'type' => 'eqMigrated',
+            // 'net' => $net,
+            // 'addr' => $addr,
+            // 'srcNet' => $oldNet,
+            // 'srcAddr' => $oldAddr,
+
+            $oldLogicId = $msg['srcNet'].'/'.$msg['srcAddr'];
+            log::add('Abeille', 'debug', "msgFromParser(): Device migration from ".$oldLogicId." to ".$net."/".$addr);
+
+            $eqLogic = eqLogic::byLogicalId($oldLogicId, 'Abeille');
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'debug', "  ERROR: ".$oldLogicId." is unknown");
+                return;
+            }
+
+            // Moving eq to new network
+            $eqLogic->setLogicalId($net.'/'.$addr);
+            $eqLogic->setIsEnable(1);
+            $eqLogic->save();
+
+            return;
+        } // End 'eqMigrated'
+
         /* Parser has received a "leave indication" */
         if ($msg['type'] == "leaveIndication") {
             /* $msg reminder
@@ -2085,7 +2063,7 @@ if (0) {
             */
 
             $ieee = $msg['ieee'];
-            log::add('Abeille', 'debug', "msgFromParser(): Leave indication for IEEE ".$ieee.", rejoin=".$msg['rejoin']);
+            log::add('Abeille', 'debug', "msgFromParser(): Leave indication for ".$net."/".$ieee.", rejoin=".$msg['rejoin']);
 
             /* Look for corresponding equipment (identified via its IEEE addr) */
             $all = self::byType('Abeille');
@@ -2362,6 +2340,9 @@ if (0) {
             ); */
 
             log::add('Abeille', 'debug', "msgFromParser(): ".$net.", network state, ieee=".$msg['ieee'].", chan=".$msg['chan']);
+
+            Abeille::checkZgIeee($net, $msg['ieee']);
+
             $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
                 log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
@@ -2407,6 +2388,9 @@ if (0) {
             ); */
 
             log::add('Abeille', 'debug', "msgFromParser(): ".$net.", network started, ieee=".$msg['ieee'].", chan=".$msg['chan']);
+
+            Abeille::checkZgIeee($net, $msg['ieee']);
+
             $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
                 log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);

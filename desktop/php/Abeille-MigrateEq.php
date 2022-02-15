@@ -2,8 +2,8 @@
 <legend><i class="fas fa-cogs"></i> {{Migration d'équipements}}</legend>
 <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
 
-	<br/>
-	<label style="margin-right : 20px">Migration d'équipements</label>
+	<!-- <br/>
+	<label style="margin-right : 20px">Migration d'équipements</label> -->
 	<?php
 	// TODO: Full URL to point on eq replacement chapter
 	// echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'"><i class="fas fa-book"></i>{{Documentation}}</a>';
@@ -15,8 +15,11 @@
 		<select id="idEq" style="width : 40%">
 		<?php
 			foreach (Abeille::byType('Abeille', 1) as $eqLogic) {
+				list($net, $addr) = explode("/", $eqLogic->getLogicalId());
+				if ($addr == '0000')
+					continue; // Excluding zigate
+
 				$eqId = $eqLogic->getId();
-				list($net, $addr) = explode( "/", $eqLogic->getLogicalId());
 				$zgId = substr($net, 7); // AbeilleX => X
 				echo '<option value="'.$eqId.'">Zigate '.$zgId.': '.$eqLogic->getHumanName().'</option>';
 			}

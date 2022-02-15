@@ -919,17 +919,6 @@
                 return;
             }
 
-            if (isset($Command['setChannelMask'])) {
-                cmdLog('debug', "    setChannelMask", $this->debug['processCmd']);
-                $cmd = "0021";
-                $data = $Command['setChannelMask'];
-
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-                return;
-            }
-
             if (isset($Command['setExtendedPANID'])) {
                 cmdLog('debug', "    setExtendedPANID", $this->debug['processCmd']);
                 $cmd = "0020";
@@ -2955,6 +2944,26 @@
                         $value = "00";
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0018", $value);
+                    return;
+                }
+
+                // Zigate specific command: Set channel mask
+                // Mandatory params: 'mask' (hexa string)
+                else if ($cmdName == 'setZgChannelMask') {
+                    $required = ['mask'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $mask = $Command['mask'];
+                    if (!ctype_xdigit($mask)) {
+                        cmdLog('error', '    Invalid mask. Not hexa ! ('.$mask.')');
+                        return;
+                    }
+                    $mask = str_pad($mask, 8, '0', STR_PAD_LEFT); // Add any missing zeros
+
+                    $cmd = "0021";
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $mask);
                     return;
                 }
 

@@ -216,15 +216,18 @@
             payload = "";
             break;
         case "setChannelMask":
-            topic = 'CmdAbeille'+js_zgId+'/0000/setChannelMask';
             mask = document.getElementById("idChannelMask").value;
             console.log("mask="+mask);
             if (mask == "") {
                 alert("Masque vide.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).");
                 return; // Empty
             }
-            function isHex(str) {
-                return /^[A-F0-9]+$/i.test(str)
+            if (mask.length > 1)
+                mask = mask.replace(/^0+/, ''); // Remove leading zeros
+            function isHex(h) {
+                // return /^[A-F0-9]+$/i.test(h)
+                var a = parseInt(h,16);
+                return (a.toString(16) ===h.toLowerCase())
             }
             if (!isHex(mask)) {
                 alert("Le masque doit être une valeur hexa");
@@ -239,7 +242,9 @@
                 alert("Les canaux inférieurs à 11 et supérieurs à 26 sont invalides.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).")
                 return;
             }
-            payload = mask;
+            mask = mask.toString(16);
+            topic = 'CmdAbeille'+js_zgId+'/0000/setZgChannelMask';
+            payload = 'mask='+mask;
             break;
         case "getTXPower":
             topic = 'CmdAbeille'+js_zgId+'/0000/getZgTxPower';

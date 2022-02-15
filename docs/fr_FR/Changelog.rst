@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220215-BETA-1
+-------------
+
 - Interne: Amélioration msg debug.
 - Interne: Changement gestion cas nouvelle zigate/échange de port.
 - Interne: Lecture version zigate (bouton tester) améliorée.

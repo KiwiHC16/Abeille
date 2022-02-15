@@ -35,6 +35,14 @@ Lancement des operations.
             echo 'var fwfile = '.$_GET['fwfile'].';';
         else
             echo 'var fwfile = "";';
+        if (isset($_GET['erasePdm']))
+            echo 'var erasePdm = '.$_GET['erasePdm'].';';
+        else
+            echo 'var erasePdm = "";';
+        if (isset($_GET['zgId']))
+            echo 'var zgId = '.$_GET['zgId'].';';
+        else
+            echo 'var zgId = "";';
     ?>
 
     $.ajax({
@@ -45,6 +53,8 @@ Lancement des operations.
                 zgtype: zgtype,
                 zgport: zgport,
                 fwfile: fwfile,
+                erasePdm: erasePdm,
+                zgId: zgId,
             },
             dataType: 'json',
             global: false,

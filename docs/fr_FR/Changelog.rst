@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+- Interne: Amélioration msg debug.
+- Interne: Changement gestion cas nouvelle zigate/échange de port.
+- Interne: Lecture version zigate (bouton tester) améliorée.
+- Mise-à-jour FW zigate: Effacement automatique PDM si passage 'legacy' vers 'OPDM'.
+- Page gestion: Mise-à-jour remplacement de zigate suite Jeedom 2.4.X.
+- Page zigate/avancé: Selection du canal/masque revue (1683).
+- Interne: AbeilleCmd: setChannelMask => setZgChannelMask + améliorations.
+
 220211-BETA-1
 -------------
 

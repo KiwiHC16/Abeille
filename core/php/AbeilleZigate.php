@@ -68,22 +68,28 @@
         }
         $decode = false;
         $zgMsg = "";
+        $step = "WAITSTART";
         while (true) {
             $c = fread($zgF, 01);
             $c = strtoupper(bin2hex($c));
 
-            if ($c == "01") { // Start of frame ?
+            if ($step == "WAITSTART") {
+                if ($c !== "01") // Start of frame ?
+                    continue;
                 $zgMsg = "";
-            } else if ($c == "03") { // End of frame ?
-                break;
-            } else if ($c == "02") {
-                $decode = true; // Next char must be decoded
-            } else {
-                if ($decode) {
-                    $zgMsg .= sprintf("%02X", (hexdec($c) ^ 0x10));
-                    $decode = false;
+                $step = "WAITEND";
+            } else { // WAITEND
+                if ($c == "03") // End of frame ?
+                    break;
+                if ($c == "02") {
+                    $decode = true; // Next char must be decoded
                 } else {
-                    $zgMsg .= $c;
+                    if ($decode) {
+                        $zgMsg .= sprintf("%02X", (hexdec($c) ^ 0x10));
+                        $decode = false;
+                    } else {
+                        $zgMsg .= $c;
+                    }
                 }
             }
         }

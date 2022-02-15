@@ -299,15 +299,16 @@ function migrateEq() {
     }
 
     msg += "<br><br>La procédure est la suivante:";
-    msg += "<br>- Changement de réseau au niveau Jeedom.";
     msg += "<br>- Activation du mode inclusion pour la zigate " + dstZgId + ".";
     msg +=
-        "<br>- Demande de sortie du réseau actuel pour rejoindre celui de la zigate " +
+        "<br>- Demande de sortie du réseau à l'équipement pour rejoindre celui de la zigate " +
         dstZgId +
         ".";
     msg +=
         "<br><br>Si l'équipement est alimenté par pile, vous devez le reveiller immédiatement apres la requète mais cela n'est pas toujours possible.";
-    msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
+    msg +=
+        "<br><br>Certains équipements ne rejoignent pas automatiquement un réseau même si on en fait la demande. Dans ce cas une réinclusion sera nécéssaire.";
+    msg += "<br><br>On tente l'experience ?}}";
     bootbox.confirm(msg, function (result) {
         if (result == false) return;
 
@@ -335,6 +336,36 @@ function migrateEq() {
                 }
             },
         });
+    });
+}
+
+/* Confirm unknown zigate must be accepted. */
+function acceptNewZigate() {
+    console.log("acceptNewZigate()");
+
+    var zgId = $("#idNewZigate").val();
+    $.ajax({
+        type: "POST",
+        url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+        data: {
+            action: "acceptNewZigate",
+            zgId: zgId,
+        },
+        dataType: "json",
+        global: false,
+        error: function (request, status, error) {
+            bootbox.alert("ERREUR 'acceptNewZigate' !");
+        },
+        success: function (json_res) {
+            window.location.reload();
+            res = JSON.parse(json_res.result);
+            if (res.status != 0) {
+                var msg =
+                    "ERREUR ! Quelque chose s'est mal passé (acceptNewZigate).\n" +
+                    res.errors;
+                alert(msg);
+            }
+        },
     });
 }
 

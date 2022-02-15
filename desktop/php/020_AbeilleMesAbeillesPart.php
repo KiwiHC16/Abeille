@@ -31,22 +31,30 @@
         echo '<a onclick="monitorIt('.$zgId.', \''.$port.'\')" class="btn btn-warning btn-xs" style="margin-top:-10px; margin-left:8px" title="Surveillance des messages vers/de l\'équipement sélectionné. Sortie dans \'AbeilleMonitor\'.">{{Surveiller}}</a>';
 
         if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == TRUE)) {
-            echo '<br>';
+            // echo '<br>';
 
             /* Set timeout on selected equipements */
-            echo '<a onclick="setBeesTimeout('.$zgId.')" class="btn btn-primary btn-xs" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
+            echo '<a onclick="setBeesTimeout('.$zgId.')" class="btn btn-primary btn-xs" style="margin-top:-10px; margin-left:8px" title="Permet de modifier le timeout pour les équipement(s) sélectionné(s).">{{Timeout}}</a>';
         }
 
 		echo '<div class="eqLogicThumbnailContainer">';
         $dir = dirname(__FILE__) . '/../../images/';
         $files = scandir($dir);
+        // Display beehive first
 		foreach ($eqPerZigate[$zgId] as $eq) {
+            if ($eq['addr'] != '0000')
+                continue; // It's not a zigate
             $eqId = $eq['id'];
             $eqLogic = eqLogic::byId($eqId);
             displayBeeCard($eqLogic, $files, $zgId);
-            // $eq = array();
-            // $eq['id'] = $eqLogic->getId();
-            // $eqIdList[] = $eq;
+        }
+        // Display attached equipments
+		foreach ($eqPerZigate[$zgId] as $eq) {
+            if ($eq['addr'] == '0000')
+                continue; // It's a zigate
+            $eqId = $eq['id'];
+            $eqLogic = eqLogic::byId($eqId);
+            displayBeeCard($eqLogic, $files, $zgId);
         }
         echo '<script>var js_eqZigate'.$zgId.' = \''.json_encode($eqPerZigate[$zgId]).'\';</script>';
         echo ' </div>';

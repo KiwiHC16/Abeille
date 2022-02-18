@@ -90,6 +90,18 @@
         <input id="idGroupF" title="{{Adresse du groupe de destination (ex: 0001)}}" />
     </div>
 </div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Leave request">Leave request</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-danger" onclick="interrogate(\'leaveRequest\', \''.$eqId.'\')">{{Leave}}</a>';
+            // addIeeeListButton("idIeeeLR");
+            // addClusterButton("idClustIdF");
+            // echo ' TO';
+        ?>
+        <!-- <input id="idGroupF" title="{{Adresse du groupe de destination (ex: 0001)}}" /> -->
+    </div>
+</div>
 
 <!-- ZCL commands -->
 <br>

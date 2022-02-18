@@ -66,6 +66,10 @@
         echo '<select id="'.$id.'" title="{{Equipements}}" style="width:140px; margin-left: 8px">';
         $eqLogics = eqLogic::byType('Abeille');
         foreach ($eqLogics as $eqLogic) {
+            list($net, $addr) = explode( "/", $eqLogic->getLogicalId());
+            if ($addr == '0000')
+                continue; // Excluding zigates
+
             $ieee = $eqLogic->getConfiguration('IEEE', '');
             if ($ieee == '')
                 continue;

@@ -1,6 +1,25 @@
 ChangeLog
 =========
 
+  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal.
+  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible.
+
+- Page EQ/avancé: Ajout bouton 'leave request'.
+- JSON commandes: Remplacement 'ReadAttributeRequest' => 'readAttribute'.
+- Interne: AbeilleCmd/readAttribute(): Ajout support 'manufId'.
+- Tuya capteur rond temp & humidité (TS0201__TZ3000_dowj6gyi): Ajout support.
+- Ikea E27 bulb (TRADFRIbulbE27CWS806lm): Ajout support (2328).
+- Migration d'équipements: Mise-à-jour séquence + ajout doc.
+- Réseau/routes: Correction regression fonctionnement.
+
 220215-BETA-1
 -------------
 
@@ -14,17 +33,6 @@ ChangeLog
 
 220211-BETA-1
 -------------
-
-  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
-
-      - Toute nouvelle installation.
-      - Dès lors qu'un réappairage complet est nécéssaire.
-      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-      - Les firmwares avant 3.1e sont forcement 'legacy'.
-      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
-
-  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal.
-  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible.
 
 - Profalux v2: Amélioration support.
 - Auto-découverte équipement inconnu: Correction format json & améliorations.

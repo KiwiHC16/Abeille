@@ -1126,7 +1126,7 @@
             exec("command gpio -v", $out, $ret);
             if ($ret != 0) {
                 log::add('Abeille', 'error', 'WiringPi semble mal installé.');
-                // log::add('Abeille', 'debug', 'gpio -v => '.implode(', ', $out));
+                log::add('Abeille', 'debug', 'checkGpio(): command gpio -v => '.json_encode($out));
                 return;
             }
 

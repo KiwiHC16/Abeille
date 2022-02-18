@@ -8,8 +8,8 @@
         "template": "",
         "Comment": "Declenchement sur changement etat et polling toutes les 15 minutes pour realigner.",
         "configuration": {
-            "topic": "ReadAttributeRequest",
-            "request": "EP=#EP#&clusterId=0B04&attributeId=050B",
+            "topic": "readAttribute",
+            "request": "ep=#EP#&clustId=0B04&attrId=050B",
             "execAtCreation": "Yes",
             "execAtCreationDelay": 10,
             "Polling": "cron",

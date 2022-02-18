@@ -1,7 +1,7 @@
 
 <legend><i class="fa fa-cogs"></i> {{Groupes}}
 	<?php
-	echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/Groups.html"><i class="fas fa-book"></i>{{Documentation}}</a>';
+	echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'Groups.html"><i class="fas fa-book"></i>{{Documentation}}</a>';
 	?>
 </legend>
 <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">

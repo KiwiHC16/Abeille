@@ -301,13 +301,13 @@ function migrateEq() {
     msg += "<br><br>La procédure est la suivante:";
     msg += "<br>- Activation du mode inclusion pour la zigate " + dstZgId + ".";
     msg +=
-        "<br>- Demande de sortie du réseau à l'équipement pour rejoindre celui de la zigate " +
+        "<br>- Demande de sortie du réseau à l'équipement. Il devrait alors rechercher un nouveau réseau avec qui s'associer et donc rejoindre celui de la zigate " +
         dstZgId +
         ".";
     msg +=
         "<br><br>Si l'équipement est alimenté par pile, vous devez le reveiller immédiatement apres la requète mais cela n'est pas toujours possible.";
     msg +=
-        "<br><br>Certains équipements ne rejoignent pas automatiquement un réseau même si on en fait la demande. Dans ce cas une réinclusion sera nécéssaire.";
+        "<br><br>Certains équipements ne quittent pas ou rejoignent pas automatiquement un réseau même si on en fait la demande. Dans ce cas une réinclusion sera nécéssaire.";
     msg += "<br><br>On tente l'experience ?}}";
     bootbox.confirm(msg, function (result) {
         if (result == false) return;

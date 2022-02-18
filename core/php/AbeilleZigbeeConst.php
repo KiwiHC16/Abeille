@@ -211,6 +211,7 @@
                 "0012" => array( "name" => "OnTransitionTime", "access" => "RW" ),
                 "0013" => array( "name" => "OffTransitionTime", "access" => "RW" ),
                 "0014" => array( "name" => "DefaultMoveRate", "access" => "RW" ),
+                "4000" => array( "name" => "StartUpCurrentLevel", "access" => "RW" ), // uint8
             ),
             "commands" => array(
                 "00" => array( "name" => "Move To Level" ),
@@ -411,6 +412,12 @@
                 "0004" => array( "name" => "CurrentY", "access" => "R", "dataType" => 0x21 ), // uint16
                 "0007" => array( "name" => "ColorTemperatureMireds", "access" => "R", "dataType" => 0x21 ), // uint16
                 "0008" => array( "name" => "ColorMode", "access" => "R", "dataType" => 0x30 ), // enum8
+                "0010" => array( "name" => "NumberOfPrimaries", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0011" => array( "name" => "Primary1X", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0013" => array( "name" => "Primary1Intensity", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0015" => array( "name" => "Primary2X", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0019" => array( "name" => "Primary3X", "access" => "R", "dataType" => 0x21 ), // uint16
+                "001B" => array( "name" => "Primary3Intensity", "access" => "R", "dataType" => 0x20 ), // uint8
             ),
             "commands" => array(
                 "00" => array( "name" => "Move To Hue" ),
@@ -534,6 +541,9 @@
             //     // "cmd3" => array( "name" => "MirrorRemoved" ),
             //     // "cmd4" => array( "name" => "RequestFastPollMode" ),
             // ),
+        ),
+        "0B05" => array(
+            "name" => "Diagnostics",
         ),
         "1000" => array(
             "name" => "Touchlink",

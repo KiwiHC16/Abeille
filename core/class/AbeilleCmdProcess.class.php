@@ -3251,13 +3251,18 @@
                  */
 
                 // ZCL global: readAttribute command
+                // Optional params: 'manufId'
                 else if ($cmdName == 'readAttribute') {
                     /* Checking that mandatory infos are there */
                     $required = ['addr', 'ep', 'clustId', 'attrId'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $this->readAttribute(PRIO_NORM, $dest, $Command['addr'], $Command['ep'], $Command['clustId'], $Command['attrId']);
+                    if (isset($Command['manufId']))
+                        $manufId = $Command('manufId');
+                    else
+                        $manufId = '';
+                    $this->readAttribute(PRIO_NORM, $dest, $Command['addr'], $Command['ep'], $Command['clustId'], $Command['attrId'], $manufId);
                     return;
                 }
 

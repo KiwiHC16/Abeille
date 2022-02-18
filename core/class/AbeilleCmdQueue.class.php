@@ -494,7 +494,8 @@
 
             // Note: Using file_exists() to avoid PHP warning when port issue.
             if (!file_exists($destSerial) || (($f = fopen($destSerial, "w")) == false)) {
-                cmdLog("error", "  Port '$destSerial' non accessible. Commande '$cmd' non écrite.");
+                // cmdLog("error", "  Port '$destSerial' non accessible. Commande '$cmd' non écrite.");
+                cmdLog("debug", "  '$destSerial' port not accessible => '$cmd' cmd ignored.");
                 return;
             }
 

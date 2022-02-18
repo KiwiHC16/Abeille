@@ -295,9 +295,7 @@
             <!-- Display dependancies -->
             <div class="form-group">
                 <div class="col-lg-3">
-                    <h4>
-                        Dépendances
-                    </h4>
+                    <h4>Dépendances optionnelles</h4>
                 </div>
                 <div class="col-lg-9">
                 </div>
@@ -306,7 +304,7 @@
             <div class="form-group">
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label class="col-lg-3 control-label" data-toggle="tooltip" title="Wiring PI est nécéssaire pour les Zigate PI">{{Wiring Pi}} : </label>
+                        <label class="col-lg-3 control-label" data-toggle="tooltip" title="Wiring PI est nécéssaire pour les Zigates de type PI">{{Wiring Pi}} : </label>
                         <div id="idWiringPi" class="col-lg-4">
                             <input id="idWiringPiStatus" type="text" class="form-control" title="{{Status d'installation du package Wiring PI}}" disabled>
                             <!-- <a class="WiringPiStatus" title="">
@@ -321,7 +319,7 @@
 
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label class="col-lg-3 control-label" data-toggle="tooltip">{{Socat}} : </label>
+                        <label class="col-lg-3 control-label" data-toggle="tooltip" title="Socat est nécéssaire pour les Zigates de type Wifi/Eth">{{Socat}} : </label>
                         <div class="col-lg-4">
                             <input id="idSocatStatus" type="text" class="form-control" title="{{Status d'installation du package socat}}" disabled>
                         </div>

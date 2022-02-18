@@ -331,8 +331,7 @@
                     continue; // Cmd does not exist.
                 $cmdJName = $cmd1;
                 $newCmdText = json_encode($newCmd);
-
-                if (isset($cmd2['params'])) {
+                if (isset($cmd2['params']) && (trim($cmd2['params']) != '')) {
                     // Overwritting default settings with 'params' content
                     $params = explode('&', $cmd2['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
                     foreach ($params as $p) {

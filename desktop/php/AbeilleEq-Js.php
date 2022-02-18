@@ -418,6 +418,9 @@
         } else if (request == "getIeeeAddress") {
             topic = "Cmd"+logicalId+"_getIeeeAddress";
             payload = "";
+        } else if (request == "leaveRequest") {
+            topic = "Cmd"+logicalId+"_LeaveRequest";
+            payload = "IEEE="+js_eqIeee;
         }
 
         else if (request == "readReportingConfig") {

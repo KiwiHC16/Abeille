@@ -442,7 +442,7 @@
                     }
                     if ($status == 0) {
                         $topic   = 'CmdAbeille'.$zgId.'/0000/LeaveRequest';
-                        $payload = "IEEE=".$ieee."&Rejoin=01";
+                        $payload = "IEEE=".$ieee."&Rejoin=00";
                         if (sendToCmd($topic, $payload) == false) {
                             $errors = "Could not send msg to 'xToCmd': topic=".$topic;
                             $status = -1;

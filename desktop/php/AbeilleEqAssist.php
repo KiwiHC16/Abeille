@@ -1029,20 +1029,23 @@
                     cmds["Green"] = newCmd("zbCmd-0300-MoveToColor", "X=147A&Y=D709");
                     // if (currentMode == 1) // If X + Y
                         cmds["Green"]["isVisible"] = 1;
+                    cmds["RGB"] = newCmd("setRGB");
+                    cmds["RGB"]["isVisible"] = 1;
+                    cmds["RGB"]["nextLine"] = "after";
                 }
 
                 // Color temperature
                 if (isset(attributes['0007'])) {
-                    cmds["Set 2700K"] = newCmd("zbCmd-0300-MoveToColorTemp", "slider=2700");
-                    if (currentMode == 2) // ColorTemperatureMireds
-                        cmds["Set 2700K"]["isVisible"] = 1;
-                    cmds["Set 4000K"] = newCmd("zbCmd-0300-MoveToColorTemp", "slider=4000");
-                    if (currentMode == 2) // ColorTemperatureMireds
-                        cmds["Set 4000K"]["isVisible"] = 1;
+                    // cmds["Set 2700K"] = newCmd("zbCmd-0300-MoveToColorTemp", "slider=2700");
+                    // if (currentMode == 2) // ColorTemperatureMireds
+                    //     cmds["Set 2700K"]["isVisible"] = 1;
+                    // cmds["Set 4000K"] = newCmd("zbCmd-0300-MoveToColorTemp", "slider=4000");
+                    // if (currentMode == 2) // ColorTemperatureMireds
+                    //     cmds["Set 4000K"]["isVisible"] = 1;
 
                     cmds["ColorTemperature"] = newCmd("zb-0300-ColorTemperatureMireds");
-                    if (currentMode == 2) // ColorTemperatureMireds
-                        cmds["ColorTemperature"]["isVisible"] = 1;
+                    // if (currentMode == 2) // ColorTemperatureMireds
+                    //     cmds["ColorTemperature"]["isVisible"] = 1;
                     cmds["Get ColorTemperature"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0007");
                 }
 

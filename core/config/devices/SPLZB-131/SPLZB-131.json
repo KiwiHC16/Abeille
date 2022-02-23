@@ -30,7 +30,7 @@
                 "execAtCreation": "yes"
             },
 
-            "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "unit=KWh&div=1000", "isVisible": 1 },
+            "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "div=1000", "unit": "KWh", "isVisible": 1 },
             "Get-Total power": { "use": "zbReadAttribute", "params": "clustId=0702&attrId=0000" },
 
             "RMSVoltage": { "use": "zb-0B04-RMSVoltage", "isVisible": 0, "params": "mult=1&div=100" },

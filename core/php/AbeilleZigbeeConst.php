@@ -457,10 +457,10 @@
             "name" => "Relative Humidity",
             "attributes" => array(
                 // Relative Humidity Measurement Information
-                "0000" => array( "name" => "MeasuredValue", "access" => "R" ),
-                "0001" => array( "name" => "MinMeasuredValue", "access" => "R" ),
-                "0002" => array( "name" => "MaxMeasuredValue", "access" => "R" ),
-                "0003" => array( "name" => "Tolerance", "access" => "R" ),
+                "0000" => array( "name" => "MeasuredValue", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0001" => array( "name" => "MinMeasuredValue", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0002" => array( "name" => "MaxMeasuredValue", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x21 ), // uint16
             ),
         ),
         "0406" => array(

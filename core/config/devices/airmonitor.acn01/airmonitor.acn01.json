@@ -95,7 +95,7 @@
             },
             "SetReporting 0405-0000": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0405&attrType=29&attrId=0000&minInterval=012C&maxInterval=0E10&changeVal=",
+                "params": "clustId=0405&attrType=21&attrId=0000&minInterval=012C&maxInterval=0E10&changeVal=0064",
                 "execAtCreation": "Yes"
             }
         }

@@ -1,8 +1,19 @@
 ChangeLog
 =========
 
-220218-BETA-1
--------------
+- Interne: Parser: Correction erreur PHP decode8043().
+- Moes 4 boutons, scene switch, TS004F__TZ3000_xabckq1v: Mise-à-jour modèle (2278).
+- Mini smart socket (TS011F__TZ3000_5f43h46b): Ajout support préliminaire (2334).
+- JSON équipements: Suppression cmdes obsoletes
+
+  - 'etatSW1', 'etatSW2', 'etatSW3'
+  - 'etatSwitch'
+  - 'etatSwitchKonke'
+- JSON équipements: Mise-à-jour 'zb-0702-CurrentSummationDelivered'.
+- Aqara TVOC moniteur d'air AAQS-S01 (airmonitor.acn01): Mise-à-jour modele (2279).
+
+220223-STABLE-1
+---------------
 
   .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
 

@@ -2005,6 +2005,9 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 case "8031": // Mgmt_Lqi_rsp
                     parserLog('debug', '  Handled by decode804E');
                     break;
+                case "8038":
+                    parserLog('debug', '  Handled by decode804A');
+                    break;
                 default:
                     parserLog('debug', '  Unsupported/ignored profile 0000, cluster '.$clustId.' message');
                 }
@@ -2502,7 +2505,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 else if ($cmd == "01") { // Read Attributes Response
                     // Some clusters are directly handled by 8100/8102 decode
                     // Tcharp38 note: At some point do the opposite => what's handled by 8100
-                    $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0100', '0B01', '0B04', '1000', 'EF00', 'FF66']; // Clusters handled here
+                    $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0100', '0B01', '0B04', '1000', 'E001', 'EF00', 'FF66']; // Clusters handled here
                     if (!in_array($clustId, $acceptedCmd01)) {
                         parserLog('debug', "  Handled by decode8100_8102");
                         return;
@@ -3588,9 +3591,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             .', DevId='       .$deviceId.'/'.zgGetDevice($profId, $deviceId)
                             .', BitField='    .substr($payload,20, 2);
             parserLog('debug', $dest.', Type='.$msgDecoded, "8043");
+            $inputClusters = "";
+            $outputClusters = "";
             if ($status == "00") {
                 parserLog('debug','  ServClustCount='.$servClustCount, "8043");
-                $inputClusters = "";
                 foreach ($servClusters as $clustId => $clust) {
                     if ($inputClusters != "")
                         $inputClusters .= "/";
@@ -3598,7 +3602,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     parserLog('debug', '  ServCluster='.$clustId.' => '.zbGetZCLClusterName($clustId), "8043");
                 }
                 parserLog('debug','  CliClustCount='.$cliClustCount, "8043");
-                $outputClusters = "";
                 foreach ($cliClusters as $clustId => $clust) {
                     if ($outputClusters != "")
                         $outputClusters .= "/";
@@ -3645,12 +3648,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'outClustList' => $outputClusters // Format: 'xxxx/yyyy/zzzz'
             );
             $this->msgToClient($toCli);
-
-            // Tcharp38: Send to Abeille. What for ?
-            // $data = 'zigbee'.zgGetDevice($profId, $deviceId);
-            // if ( strlen( $data) > 1 ) {
-            //     $this->msgToAbeille($dest."/".$srcAddr, "SimpleDesc-".$ep, "DeviceDescription", $data);
-            // }
         }
 
         /**
@@ -5198,7 +5195,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $decoded = '8110/Write attribute response'
                 .', SrcAddr='.$srcAddr
                 .', EP='.$ep
-                .', ClustID='.$clustId
+                .', ClustId='.$clustId
                 .', AttrId='.$attrId
                 .', Status='.$status;
 

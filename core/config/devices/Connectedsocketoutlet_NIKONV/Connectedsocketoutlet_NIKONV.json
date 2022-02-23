@@ -38,7 +38,8 @@
 
             "Total power": {
                 "use": "zb-0702-CurrentSummationDelivered",
-                "params": "unit=KWh&div=10000",
+                "params": "div=10000",
+                "unit": "KWh",
                 "isVisible": 1
             },
             "Get-Total power": { "use": "zbReadAttribute", "params": "clustId=0702&attrId=0000" },

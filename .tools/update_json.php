@@ -158,6 +158,71 @@
                     $commands2["etat"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "etatSW1") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zb-0006-OnOff",
+                        "params" => "ep=04",
+                        "subType" => "binary",
+                        "template" => "badge",
+                        "invertBinary" => 1,
+                        "genericType" => "OPENING",
+                        "isVisible" => 1
+                    );
+                    $commands2["etat switch 1"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "etatSW2") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zb-0006-OnOff",
+                        "params" => "ep=05",
+                        "subType" => "binary",
+                        "template" => "badge",
+                        "invertBinary" => 1,
+                        "genericType" => "OPENING",
+                        "isVisible" => 1
+                    );
+                    $commands2["etat switch 2"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "etatSW3") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zb-0006-OnOff",
+                        "params" => "ep=06",
+                        "subType" => "binary",
+                        "template" => "badge",
+                        "invertBinary" => 1,
+                        "genericType" => "OPENING",
+                        "isVisible" => 1
+                    );
+                    $commands2["etat switch 3"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "etatSwitch") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zb-0006-OnOff",
+                        // "params" => "ep=06",
+                        "subType" => "binary",
+                        "template" => "badge",
+                        "invertBinary" => 1,
+                        "genericType" => "SWITCH_STATE",
+                        "isVisible" => 1
+                    );
+                    $commands2["etat"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "etatSwitchKonke") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zb-0006-OnOff",
+                        // "params" => "ep=06",
+                        "subType" => "binary",
+                        "template" => "badge",
+                        // "invertBinary" => 1,
+                        "genericType" => "SWITCH_STATE",
+                        "isVisible" => 1
+                    );
+                    $commands2["etat"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 } else if ((substr($cmdFName, 0, 10) == "etatCharge") && $oldSyntax) {
                     $x = hexdec(substr($cmdFName, 10));
                     $ep = sprintf("%02X", $x + 1);

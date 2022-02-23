@@ -13,7 +13,13 @@
         },
         "type": "Konke Multi-function Button",
         "commands": {
-            "include2 2": "etatSwitchKonke",
+            "etat": {
+                "use": "zb-0006-OnOff",
+                "subType": "binary",
+                "template": "badge",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
             "include4 2": "Batterie-Volt-Konke",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

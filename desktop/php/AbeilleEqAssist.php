@@ -1100,13 +1100,32 @@
                 cmdName = "Total power"; // Default cmd name
                 unit = "KWh"; // Default unit
                 div = 1; // Default div
+                // TO BE COMPLETED if required
+                // if (isset(attributes['0300'])) { // UnitofMeasure
+                //     switch (attributes['0303']['value']) {
+                //     case 0x00: "KWh"; break; // Pure binary format
+                //     case 0x80: "KWh"; break; // BCD format
+                //     }
+                // }
+                // Note: Summation = Summation received * Multiplier / Divisor (formatted using SummationFormatting)
+                if (isset(attributes['0301'])) { // Multiplier
+                    val = attributes['0301']['value'];
+                }
+                if (isset(attributes['0302'])) { // Divisor
+                    val = attributes['0302']['value'];
+                    if (val != 0)
+                        div = val;
+                }
                 if (isset(attributes['0303'])) { // SummationFormatting
                     val = attributes['0303']['value'];
-                    val = val & 7; // Keep bits 2:0 only => right digits
-                    div = Math.pow(10, val);
+                    if (val != 0) {
+                        val = val & 7; // Keep bits 2:0 only => right digits
+                        div = Math.pow(10, val);
+                    }
                 }
                 if (isset(attributes['0000'])) {
-                    cmds[cmdName] = newCmd("zb-0702-CurrentSummationDelivered", "unit="+unit+"&div="+div);
+                    cmds[cmdName] = newCmd("zb-0702-CurrentSummationDelivered", "div="+div);
+                    cmds[cmdName]["unit"] = unit;
                     cmds[cmdName]["isVisible"] = 1;
                     cmds["Get "+cmdName] = newCmd("zbReadAttribute", "clustId=0702&attrId=0000");
                 }

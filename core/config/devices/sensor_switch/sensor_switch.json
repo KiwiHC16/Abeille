@@ -12,7 +12,14 @@
         },
         "type": "Xiaomi Interrupteur simple",
         "commands": {
-            "include3": "etatSwitch",
+            "etat": {
+                "use": "zb-0006-OnOff",
+                "subType": "binary",
+                "template": "badge",
+                "invertBinary": 1,
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
             "include4": "multi",
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",

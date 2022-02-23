@@ -44,7 +44,8 @@
             },
             "Total power": {
                 "use": "zb-0702-CurrentSummationDelivered",
-                "params": "unit=KWh&div=1000",
+                "params": "div=1000",
+                "unit": "KWh",
                 "isVisible": 1
             },
             "RMSVoltage": {

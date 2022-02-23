@@ -73,7 +73,7 @@
             addClusterButton("idClustIdE");
             // <input id="idIeeeE" title="{{Adresse IEEE de destination (ex: 5C0272FFFE2857A3)}}" />
             echo ' TO';
-            addIeeeListButton("idIeeeE");
+            addIeeeListButton("idIeeeE", true);
         ?>
         <?php addEpButton("idEpE2", $mainEP); ?>
     </div>

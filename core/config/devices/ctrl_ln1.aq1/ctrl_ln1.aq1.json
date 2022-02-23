@@ -16,7 +16,15 @@
                 "genericType": "LIGHT_STATE",
                 "isVisible": 1
             },
-            "include3 2 2 2 2": "etatSW1",
+            "etat switch 1": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=04",
+                "subType": "binary",
+                "template": "badge",
+                "invertBinary": 1,
+                "genericType": "OPENING",
+                "isVisible": 1
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1

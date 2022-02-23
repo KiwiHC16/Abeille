@@ -33,7 +33,8 @@
             
             "Total power": {
                 "use": "zb-0702-CurrentSummationDelivered",
-                "params": "ep=01&unit=KWh&div=10",
+                "params": "ep=01&div=10",
+                "unit": "KWh",
                 "isVisible": 1
             },
             "UnitOfMeasure": {

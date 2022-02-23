@@ -38,7 +38,8 @@
 
             "Total power": {
                 "use": "zb-0702-CurrentSummationDelivered",
-                "params": "mult=1&div=1&unit=KWh",
+                "params": "mult=1&div=1",
+                "unit": "KWh",
                 "isVisible": 1
             },
             "Bind-0702-ToZigate": {

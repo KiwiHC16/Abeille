@@ -62,12 +62,13 @@
         echo '<input id="'.$id.'" style="width:80px; margin-left: 8px" title="{{Manuf ID. Format hex string 4 car (par défaut=aucun)}}" placeholder="{{Manuf ID (ex: 115F)}}" />';
     }
 
-    function addIeeeListButton($id) {
+    // Create drop down list of IEEE addresses, excluding zigate by default
+    function addIeeeListButton($id, $withZigate = false) {
         echo '<select id="'.$id.'" title="{{Equipements}}" style="width:140px; margin-left: 8px">';
         $eqLogics = eqLogic::byType('Abeille');
         foreach ($eqLogics as $eqLogic) {
             list($net, $addr) = explode( "/", $eqLogic->getLogicalId());
-            if ($addr == '0000')
+            if (($addr == '0000') && !$withZigate)
                 continue; // Excluding zigates
 
             $ieee = $eqLogic->getConfiguration('IEEE', '');

@@ -50,7 +50,8 @@
             },
             "Total power": {
                 "use": "zb-0702-CurrentSummationDelivered",
-                "params": "unit=KWh&div=1",
+                "params": "div=1",
+                "unit": "KWh",
                 "isVisible": "1"
             },
             "Get Total power": {

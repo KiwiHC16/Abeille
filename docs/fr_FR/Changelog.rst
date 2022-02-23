@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220223-BETA-1
+-------------
+
 - Interne: Parser: Correction erreur PHP decode8043().
 - Moes 4 boutons, scene switch, TS004F__TZ3000_xabckq1v: Mise-à-jour modèle (2278).
 - Mini smart socket (TS011F__TZ3000_5f43h46b): Ajout support préliminaire (2334).

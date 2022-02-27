@@ -270,116 +270,9 @@ function removeBees(zgId) {
     });
 }
 
-/* Migrate an equipment to another zigate. */
-function migrateEq() {
-    console.log("migrateEq()");
-
-    const selectedEq = document.querySelector("#idEq");
-    index = selectedEq.selectedIndex;
-    var eqId = $("#idEq").val();
-    let selectedOption = selectedEq.options[index];
-    const selectedText = selectedOption.text;
-    txtArr = selectedText.split(":");
-    srcZgId = txtArr[0].substr(7);
-    eqHName = txtArr[1];
-
-    var dstZgId = $("#idDstZg").val();
-
-    var msg =
-        "{{Vous souhaitez migrer '" +
-        eqHName +
-        "' vers la zigate " +
-        dstZgId +
-        ".";
-
-    if (dstZgId == srcZgId) {
-        msg += "\n\nMais.. ca ne fait aucun sens.";
-        msg += "\nCet équipement est déja sur la bonne zigate.";
-        return alert(msg);
-    }
-
-    msg += "<br><br>La procédure est la suivante:";
-    msg += "<br>- Activation du mode inclusion pour la zigate " + dstZgId + ".";
-    msg +=
-        "<br>- Demande de sortie du réseau à l'équipement. Il devrait alors rechercher un nouveau réseau avec qui s'associer et donc rejoindre celui de la zigate " +
-        dstZgId +
-        ".";
-    msg +=
-        "<br><br>Si l'équipement est alimenté par pile, vous devez le reveiller immédiatement apres la requète mais cela n'est pas toujours possible.";
-    msg +=
-        "<br><br>Certains équipements ne quittent pas ou rejoignent pas automatiquement un réseau même si on en fait la demande. Dans ce cas une réinclusion sera nécéssaire.";
-    msg += "<br><br>On tente l'experience ?}}";
-    bootbox.confirm(msg, function (result) {
-        if (result == false) return;
-
-        $.ajax({
-            type: "POST",
-            url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
-            data: {
-                action: "migrate",
-                eqId: eqId,
-                dstZgId: dstZgId,
-            },
-            dataType: "json",
-            global: false,
-            error: function (request, status, error) {
-                bootbox.alert("ERREUR 'migrateEq' !");
-            },
-            success: function (json_res) {
-                window.location.reload();
-                res = JSON.parse(json_res.result);
-                if (res.status != 0) {
-                    var msg =
-                        "ERREUR ! Quelque chose s'est mal passé (migrateEq).\n" +
-                        res.errors;
-                    alert(msg);
-                }
-            },
-        });
-    });
-}
-
-/* Confirm unknown zigate must be accepted. */
-function acceptNewZigate() {
-    console.log("acceptNewZigate()");
-
-    var zgId = $("#idNewZigate").val();
-    $.ajax({
-        type: "POST",
-        url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
-        data: {
-            action: "acceptNewZigate",
-            zgId: zgId,
-        },
-        dataType: "json",
-        global: false,
-        error: function (request, status, error) {
-            bootbox.alert("ERREUR 'acceptNewZigate' !");
-        },
-        success: function (json_res) {
-            window.location.reload();
-            res = JSON.parse(json_res.result);
-            if (res.status != 0) {
-                var msg =
-                    "ERREUR ! Quelque chose s'est mal passé (acceptNewZigate).\n" +
-                    res.errors;
-                alert(msg);
-            }
-        },
-    });
-}
-
-// /* Called when clean button is pressed */
-// function cleanBees(zgId, zgPort) {
-//     console.log("cleanBees(zgId="+zgId+", zpPort="+zgPort+")");
-
-//     $('#md_modal').dialog({title: "{{Nettoyage du réseau}} 'Abeille"+zgId+"'"});
-//     $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=cleanBees&zgPort='+zgPort+'&zgId='+zgId).dialog('open');
-// }
-
 /* Called when 'setTimeout' button is pressed
    Allows to modify timeout of selected equipements. */
-function setBeesTimeout(zgId) {
+   function setBeesTimeout(zgId) {
     console.log("setBeesTimeout(zgId=" + zgId + ")");
 
     var sel = getSelectedEqs(zgId);
@@ -450,3 +343,181 @@ function monitorIt(zgId, zgPort) {
         },
     });
 }
+
+//
+function replaceEq() {
+    console.log("replaceEq()");
+
+    var deadId = $("#idDeadEq").val();
+    const selectedDeadEq = document.querySelector("#idDeadEq");
+    deadIdx = selectedDeadEq.selectedIndex;
+    let selectedOption = selectedDeadEq.options[deadIdx];
+    deadHName = selectedOption.text;
+
+    var newId = $("#idNewEq").val();
+    const selectedNewEq = document.querySelector("#idNewEq");
+    newIdx = selectedNewEq.selectedIndex;
+    let newSelectedOption = selectedNewEq.options[newIdx];
+    newHName = newSelectedOption.text;
+
+    if (newId == deadId) {
+        alert("Un équipement ne peut être remplacé par lui même.\nCa n'a aucun sens.")
+        return;
+    }
+    // TODO: Ensure same jsonId
+
+    var msg =
+        "{{Vous souhaitez remplacer '" +
+        deadHName +
+        "' par " +
+        newHName +
+        ".";
+
+    // if (dstZgId == srcZgId) {
+    //     msg += "\n\nMais.. ca ne fait aucun sens.";
+    //     msg += "\nCet équipement est déja sur la bonne zigate.";
+    //     return alert(msg);
+    // }
+
+    msg += "<br><br>L'équipement mort va recevoir les adresses du nouvel équipement.";
+    msg += "<br>Tout l'historique de l'équipement mort sera ainsi préservé.";
+    msg += "<br><br>On y va ?}}";
+    bootbox.confirm(msg, function (result) {
+        if (result == false) return;
+
+        $.ajax({
+            type: "POST",
+            url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+            data: {
+                action: "replaceEq",
+                deadEqId: deadId,
+                newEqId: newId,
+            },
+            dataType: "json",
+            global: false,
+            error: function (request, status, error) {
+                bootbox.alert("ERREUR 'replaceEq' !");
+            },
+            success: function (json_res) {
+                window.location.reload();
+                res = JSON.parse(json_res.result);
+                if (res.status != 0) {
+                    var msg =
+                        "ERREUR ! Quelque chose s'est mal passé (replaceEq).\n" +
+                        res.errors;
+                    alert(msg);
+                }
+            },
+        });
+    });
+}
+
+/* Migrate an equipment to another zigate. */
+function migrateEq() {
+    console.log("migrateEq()");
+
+    const selectedEq = document.querySelector("#idEq");
+    index = selectedEq.selectedIndex;
+    var eqId = $("#idEq").val();
+    let selectedOption = selectedEq.options[index];
+    const selectedText = selectedOption.text;
+    txtArr = selectedText.split(":");
+    srcZgId = txtArr[0].substr(7);
+    eqHName = txtArr[1];
+
+    var dstZgId = $("#idDstZg").val();
+
+    var msg =
+        "{{Vous souhaitez migrer '" +
+        eqHName +
+        "' vers la zigate " +
+        dstZgId +
+        ".";
+
+    if (dstZgId == srcZgId) {
+        msg += "\n\nMais.. ca ne fait aucun sens.";
+        msg += "\nCet équipement est déja sur la bonne zigate.";
+        return alert(msg);
+    }
+
+    msg += "<br><br>La procédure est la suivante:";
+    msg += "<br>- Activation du mode inclusion pour la zigate " + dstZgId + ".";
+    msg +=
+        "<br>- Demande de sortie du réseau à l'équipement. Il devrait alors rechercher un nouveau réseau avec qui s'associer et donc rejoindre celui de la zigate " +
+        dstZgId +
+        ".";
+    msg +=
+        "<br><br>Si l'équipement est alimenté par pile, vous devez le reveiller immédiatement apres la requète mais cela n'est pas toujours possible.";
+    msg +=
+        "<br><br>Certains équipements ne quittent pas ou rejoignent pas automatiquement un réseau même si on en fait la demande. Dans ce cas une réinclusion sera nécéssaire.";
+    msg += "<br><br>On tente l'experience ?}}";
+    bootbox.confirm(msg, function (result) {
+        if (result == false) return;
+
+        $.ajax({
+            type: "POST",
+            url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+            data: {
+                action: "migrate",
+                eqId: eqId,
+                dstZgId: dstZgId,
+            },
+            dataType: "json",
+            global: false,
+            error: function (request, status, error) {
+                bootbox.alert("ERREUR 'migrateEq' !");
+            },
+            success: function (json_res) {
+                window.location.reload();
+                res = JSON.parse(json_res.result);
+                if (res.status != 0) {
+                    var msg =
+                        "ERREUR ! Quelque chose s'est mal passé (migrateEq).\n" +
+                        res.errors;
+                    alert(msg);
+                }
+            },
+        });
+    });
+}
+
+/* Attempt to detect devices on network but unknown to Jeedom. */
+function recoverDevices() {
+    console.log("recoverDevices()");
+
+    $("#md_modal").dialog({ title: "{{Récupération d'équipements fantômes}}" });
+    $("#md_modal")
+        .load("index.php?v=d&plugin=Abeille&modal=AbeilleRecovery.modal")
+        .dialog("open");
+}
+
+/* Confirm unknown zigate must be accepted. */
+function acceptNewZigate() {
+    console.log("acceptNewZigate()");
+
+    var zgId = $("#idNewZigate").val();
+    $.ajax({
+        type: "POST",
+        url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+        data: {
+            action: "acceptNewZigate",
+            zgId: zgId,
+        },
+        dataType: "json",
+        global: false,
+        error: function (request, status, error) {
+            bootbox.alert("ERREUR 'acceptNewZigate' !");
+        },
+        success: function (json_res) {
+            window.location.reload();
+            res = JSON.parse(json_res.result);
+            if (res.status != 0) {
+                var msg =
+                    "ERREUR ! Quelque chose s'est mal passé (acceptNewZigate).\n" +
+                    res.errors;
+                alert(msg);
+            }
+        },
+    });
+}
+

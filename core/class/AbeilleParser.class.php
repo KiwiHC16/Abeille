@@ -181,14 +181,14 @@
 
         /* Send message to 'AbeilleLQI'.
            Returns: true=ok, false=ERROR */
-        function msgToLQICollector($srcAddr, $NTableEntries, $NTableListCount, $StartIndex, $NList) {
+        function msgToLQICollector($srcAddr, $nTableEntries, $nTableListCount, $startIdx, $nList) {
             $msg = array(
                 'type' => '804E',
                 'srcAddr' => $srcAddr,
-                'tableEntries' => $NTableEntries,
-                'tableListCount' => $NTableListCount,
-                'startIndex' => $StartIndex,
-                'list' => $NList
+                'tableEntries' => $nTableEntries,
+                'tableListCount' => $nTableListCount,
+                'startIdx' => $startIdx,
+                'nList' => $nList
             );
 
             /* Message size control. If too big it would block queue forever */
@@ -314,6 +314,34 @@
                 'jsonLocation' => ''
             );
             return $GLOBALS['eqList'][$net][$addr];
+        }
+
+        /* Check if message is a duplication of another one using SQN.
+           This allows to filter-out messages duplication (Zigate FW issue that generate several messages for the same SQN).
+           Returns: true if duplicate, else false */
+        function isDuplicated($net, $addr, $sqn) {
+            if (!isset($GLOBALS['eqList'][$net]))
+                $GLOBALS['eqList'][$net] = [];
+            if (!isset($GLOBALS['eqList'][$net][$addr]))
+                $GLOBALS['eqList'][$net][$addr] = [];
+
+            $eq = &$GLOBALS['eqList'][$net][$addr];
+            if (!isset($eq['sqnList']))
+                $eq['sqnList'] = [];
+
+            // parserLog('debug', '  sqnList='.json_encode($eq['sqnList']));
+
+            /* The idea is to store SQN & recept time and ignore any matching SQN during the following 10sec */
+            if (isset($eq['sqnList'][$sqn])) {
+                if ($eq['sqnList'][$sqn] + 10 > time()) {
+                    parserLog('debug', '  Duplicated message for SQN '.$sqn.' => ignoring');
+                    return true; // Consider duplicated msg
+                }
+            }
+
+            // Create or update SQN entry
+            $eq['sqnList'][$sqn] = time();
+            return false;
         }
 
         /* Check if eq is part of supported or user/custom devices names.
@@ -1609,7 +1637,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             if ($rejoin != "") $msgDecoded .= ', Rejoin='.$rejoin;
             parserLog('debug', $dest.', Type='.$msgDecoded);
 
-            /* Monitor if requested */
+            // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddrExt"]) && !strcasecmp($GLOBALS["dbgMonitorAddrExt"], $ieee)) {
                 monMsgFromZigate($msgDecoded); // Send message to monitor
                 monAddrHasChanged($addr, $ieee); // Short address has changed
@@ -1676,7 +1704,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $msgDecoded = "0100/?";
             parserLog('debug', $dest.', Type='.$msgDecoded);
 
-            /* Monitor if requested */
+            // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
@@ -1850,7 +1878,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $dstAddress     = substr($payload,22, 4);
             $pl = substr($payload, 26); // Keeping remaining payload
 
-            /* Log */
+            // Log
             $msgDecoded = '8002/Data indication'
                             .', Status='.$status
                             .', ProfId='.$profId
@@ -1865,12 +1893,26 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
-            /* Monitor if requested */
+            // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
             /* Profile 0000 */
             if ($profId == "0000") {
+                // Management LQI Response (Mgmt_Lqi_rsp)
+                // Handled by decode804E(). Just to try to understand unexpected responses.
+                if ($clustId == "8031") {
+                    $sqn = substr($pl, 0, 2);
+                    $status = substr($pl, 2, 2);
+                    $nTableEntries = substr($pl, 4, 2); // NeighborTableEntries
+                    $startIdx = substr($pl, 6, 2);
+                    $nTableListCount = substr($pl, 8, 2); // NeighborTableListCount
+                    parserLog('debug', '  SQN='.$sqn.', Status='.$status.', NTableEntries='.$nTableEntries.', startIdx='.$startIdx.', nTableListCount='.$nTableListCount);
+
+                    parserLog('debug', '  Handled by decode804E');
+                    return;
+                }
+
                 // Routing Table Response (Mgmt_Rtg_rsp)
                 if ($clustId == "8032") {
 
@@ -2451,14 +2493,16 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 $cmd = substr($payload, 30, 2); // Command
                 $msg = substr($payload, 32);
             }
+            if ($frameType == 0) // General command
+                parserLog('debug', "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLGlobalCmdName($cmd));
+            else // Cluster specific command
+                parserLog('debug', "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLClusterCmdName($clustId, $cmd));
 
             /*
              * General ZCL command
              */
 
             if ($frameType == 0) { // General command
-                parserLog('debug', "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLGlobalCmdName($cmd));
-
                 /* General 'Cmd' reminder
                     0x00 Read Attributes
                     0x01 Read Attributes Response
@@ -2473,7 +2517,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     0x16 Discover Attributes Extended Response
                 */
                 if ($cmd == "00") { // Read Attributes
-                    /* Monitor if requested */
+                    // Duplicated message ?
+                    if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                        return;
+
+                    // Monitor if requested
                     if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                         monMsgFromZigate("8002/Read attributes"); // Send message to monitor
 
@@ -2511,7 +2559,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         return;
                     }
 
-                    /* Monitor if requested */
+                    // Duplicated message ?
+                    if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                        return;
+
+                    // Monitor if requested
                     if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                         monMsgFromZigate("8002/Read attributes response"); // Send message to monitor
 
@@ -2615,6 +2667,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         return;
                     }
 
+                    // Duplicated message ?
+                    if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                        return;
+
                     $l = strlen($msg);
                     $status = substr($msg, 0, 2);
                     if ($l > 2)
@@ -2658,11 +2714,15 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         return;
                     }
 
+                    // Duplicated message ?
+                    if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                        return;
+
                     $unknown = $this->deviceUpdate($dest, $srcAddr, $srcEp);
                     if ($unknown)
                         return; // So far unknown to Jeedom
 
-                    /* Monitor if requested */
+                    // Monitor if requested
                     if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr)) {
                         monMsgFromZigate("8002/Report attributes response"); // Send message to monitor
                         $monitor = true;
@@ -2709,6 +2769,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
 
                 else if ($cmd == "0B") { // Default Response
+                    // Duplicated message ?
+                    if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                        return;
+
                     // Tcharp38 note: Decoded here because 8101 message does not contain source address
                     $cmdId = substr($msg, 0, 2);
                     $status = substr($msg, 2, 2);
@@ -2732,6 +2796,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
 
                 else if ($cmd == "0D") { // Discover Attributes Response
+                    // Duplicated message ?
+                    // if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                    //     return;
+                    // Tcharp38: Need to check how to deal with 'completed' flag
+
                     $completed = substr($msg, 2);
                     $msg = substr($msg, 2); // Skipping 'completed' status
 
@@ -2780,6 +2849,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
 
                 else if ($cmd == "12") { // Discover Commands Received Response
+                    // Duplicated message ?
+                    // if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                    //     return;
+                    // Tcharp38: Need to check how to deal with 'completed' flag
+
                     $completed = substr($msg, 2);
                     $msg = substr($msg, 2); // Skipping 'completed' status
                     $commands = [];
@@ -2805,6 +2879,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
 
                 else if ($cmd == "16") { // Discover Attributes Extended Response
+                    // Duplicated message ?
+                    // if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                    //     return;
+                    // Tcharp38: Need to check how to deal with 'completed' flag
+
                     $completed = substr($msg, 2);
                     $msg = substr($msg, 2); // Skipping 'completed' status
 
@@ -2865,52 +2944,50 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
              * Cluster specific command
              */
 
-            parserLog('debug', "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLClusterCmdName($clustId, $cmd));
+            if ($clustId == "0006") {
+                // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs
+                // Tuya 1,2,3,4 buttons switch
+                if ($cmd == "FD") {
+                    $value = substr($payload, 32, 2);
+                    if ($value == "00")
+                        $click = 'single';
+                    else if ($value == "01")
+                        $click = 'double';
+                    else if ($value == "02")
+                        $click = 'long';
+                    else {
+                        parserLog('debug',  '  Tuya 0006-FD specific command'
+                            .', value='.$value.' => UNSUPPORTED', "8002");
+                        return;
+                    }
 
-            // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs
-            // Tuya 1,2,3,4 buttons switch
-            if (($clustId == "0006") && ($cmd == "FD")) {
-
-                $value = substr($payload, 32, 2);
-                if ($value == "00")
-                    $click = 'single';
-                else if ($value == "01")
-                    $click = 'double';
-                else if ($value == "02")
-                    $click = 'long';
-                else {
                     parserLog('debug',  '  Tuya 0006-FD specific command'
-                        .', value='.$value.' => UNSUPPORTED', "8002");
+                                    .', value='.$value.' => click='.$click, "8002");
+
+                    // Generating an event on 'EP-click' Jeedom cmd (ex: '01-click' = 'single')
+                    // $this->msgToAbeille($dest."/".$srcAddr, $srcEp, "click", $click);
+                    $msg = array(
+                        // 'src' => 'parser',
+                        'type' => 'attributeReport',
+                        'net' => $dest,
+                        'addr' => $srcAddr,
+                        'ep' => $srcEp,
+                        'name' => $srcEp.'-click',
+                        'value' => $click,
+                        'time' => time(),
+                        'lqi' => $lqi
+                    );
+                    $this->msgToAbeille2($msg);
+
+                    // Legacy code to be removed at some point
+                    // TODO: Replace commands '0006-EP-0000' to 'EP-click' in JSON
+                    // $this->msgToAbeille($dest."/".$srcAddr, $clustId.'-'.$srcEp, '0000', $value);
+                    $msg['name'] =$clustId.'-'.$srcEp.'-0000';
+                    $msg['value'] = $value;
+                    $this->msgToAbeille2($msg);
                     return;
                 }
 
-                parserLog('debug',  '  Tuya 0006-FD specific command'
-                                .', value='.$value.' => click='.$click, "8002");
-
-                // Generating an event on 'EP-click' Jeedom cmd (ex: '01-click' = 'single')
-                // $this->msgToAbeille($dest."/".$srcAddr, $srcEp, "click", $click);
-                $msg = array(
-                    // 'src' => 'parser',
-                    'type' => 'attributeReport',
-                    'net' => $dest,
-                    'addr' => $srcAddr,
-                    'ep' => $srcEp,
-                    'name' => $srcEp.'-click',
-                    'value' => $click,
-                    'time' => time(),
-                    'lqi' => $lqi
-                );
-                $this->msgToAbeille2($msg);
-
-                // Legacy code to be removed at some point
-                // TODO: Replace commands '0006-EP-0000' to 'EP-click' in JSON
-                // $this->msgToAbeille($dest."/".$srcAddr, $clustId.'-'.$srcEp, '0000', $value);
-                $msg['name'] =$clustId.'-'.$srcEp.'-0000';
-                $msg['value'] = $value;
-                $this->msgToAbeille2($msg);
-                return;
-            }
-            if ($clustId == "0006") {
                 if (($cmd == "00") || ($cmd == "01")) {
                     parserLog('debug', "  Handled by decode8095");
                     return;
@@ -3010,13 +3087,14 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             $this->whoTalked[] = $dest.'/'.$addr;
 
-            /* Monitor if requested */
+            // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
             // Zigate IEEE local storage
             $zgId = substr($dest, 7);
             $GLOBALS['zigate'.$zgId]['ieee'] = $extAddr;
+            $GLOBALS['zigate'.$zgId]['extPanId'] = $extPanId;
 
             /* If still required, checking USB port unexpected switch */
             // Tcharp38: Handled by Abeille.class
@@ -3742,7 +3820,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $msgDecoded = '8048/Leave indication, ExtAddr='.$ieee.', RejoinStatus='.$rejoinStatus;
             parserLog('debug', $dest.', Type='.$msgDecoded, "8048");
 
-            /* Monitor if requested */
+            // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddrExt"]) && !strcasecmp($GLOBALS["dbgMonitorAddrExt"], $ieee))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
 
@@ -3855,63 +3933,81 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             $sqn = substr($payload, 0, 2);
             $status = substr($payload, 2, 2);
-            $NTableEntries = substr($payload, 4, 2);
-            $NTableListCount = substr($payload, 6, 2);
-            $StartIndex = substr($payload, 8, 2);
-            $srcAddr = substr($payload, 10 + (hexdec($NTableListCount) * 42), 4); // 21 bytes per neighbour entry
+            $nTableEntries = substr($payload, 4, 2);
+            $nTableListCount = substr($payload, 6, 2);
+            $startIdx = substr($payload, 8, 2);
+            $srcAddr = substr($payload, 10 + (hexdec($nTableListCount) * 42), 4); // 21 bytes per neighbour entry
+            $nList = []; // List of neighbours
+            $j = 10; // Neighbours list starts at char 10
+            $zgId = substr($dest, 7); // 'AbeilleX' => 'X'
+            for ($i = 0; $i < hexdec($nTableListCount); $j += 42, $i++) {
+                $extPanId = substr($payload, $j + 4, 16);
+                // Filtering-out devices from other networks
+                if (isset($GLOBALS['zigate'.$zgId]['extPanId'])) {
+                    if ($extPanId != $GLOBALS['zigate'.$zgId]['extPanId']) {
+                        parserLog('debug', '  Alternate network (extPanId='.$extPanId.') ignored');
+                        continue;
+                    }
+                }
+                $N = array(
+                    "addr"     => substr($payload, $j + 0, 4),
+                    "extPANId" => $extPanId,
+                    "extAddr"  => substr($payload, $j + 20, 16),
+                    "depth"    => substr($payload, $j + 36, 2),
+                    "lqi"      => substr($payload, $j + 38, 2),
+                    "bitMap"   => substr($payload, $j + 40, 2)
+                );
+                $nList[] = $N; // Add to neighbours list
+            }
 
+            // Log
             $decoded = '804E/Management LQI response'
                 .', SQN='               .$sqn
                 .', Status='            .$status
-                .', NTableEntries='     .$NTableEntries
-                .', NTableListCount='   .$NTableListCount
-                .', StartIndex='        .$StartIndex
+                .', NTableEntries='     .$nTableEntries
+                .', NTableListCount='   .$nTableListCount
+                .', StartIndex='        .$startIdx
                 .', SrcAddr='           .$srcAddr;
             parserLog('debug', $dest.', Type='.$decoded);
+            // Filtering-out stupid & unconsistent msg from zigate (see: https://github.com/fairecasoimeme/ZiGate/issues/370#)
+            if ($nTableListCount > $nTableEntries) {
+                parserLog('debug', '  WARNING: Corrupted/inconsistent message => ignoring');
+                return;
+            }
+            foreach ($nList as $N) {
+                parserLog('debug', '  NAddr='.$N['addr']
+                    .', NExtPANId='.$N['extPANId']
+                    .', NExtAddr='.$N['extAddr']
+                    .', NDepth='.$N['depth']
+                    .', NLQI='.$N['lqi']
+                    .', NBitMap='.$N['bitMap'].' => '.zgGet804EBitMap($N['bitMap']));
+            }
 
-            /* Monitor if requested */
+            // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($decoded); // Send message to monitor
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
             if ($status != "00") {
-                parserLog('debug', "  Status != 00 => abandon du decode");
+                parserLog('debug', "  Status != 00 => Decode canceled");
                 return;
             }
 
-            $j = 10; // Neighbours list starts at char 10
-            $NList = []; // List of neighbours
-            for ($i = 0; $i < hexdec($NTableListCount); $j += 42, $i++) {
-                $N = array(
-                    "Addr"     => substr($payload, $j + 0, 4),
-                    "ExtPANId" => substr($payload, $j + 4, 16),
-                    "ExtAddr"  => substr($payload, $j + 20, 16),
-                    "Depth"    => substr($payload, $j + 36, 2),
-                    "LQI"      => substr($payload, $j + 38, 2),
-                    "BitMap"   => substr($payload, $j + 40, 2)
-                );
-                $NList[] = $N; // Add to neighbours list
-                parserLog('debug', '  NAddr='.$N['Addr']
-                    .', NExtPANId='.$N['ExtPANId']
-                    .', NExtAddr='.$N['ExtAddr']
-                    .', NDepth='.$N['Depth']
-                    .', NLQI='.$N['LQI']
-                    .', NBitMap='.$N['BitMap'].' => '.zgGet804EBitMap($N['BitMap']));
-
+            foreach ($nList as $N) {
                 /* If equipment is unknown, may try to interrogate it.
                    Note: this is blocked by default. Unknown equipement should join only during inclusion phase.
                    Note: this could not work for battery powered eq since they will not listen & reply.
                    Cmdxxxx/Ruche/getName address=bbf5&destinationEndPoint=0B */
-                if (($N['Addr'] != "0000") && !Abeille::byLogicalId($dest.'/'.$N['Addr'], 'Abeille')) {
+                if (($N['addr'] != "0000") && !Abeille::byLogicalId($dest.'/'.$N['addr'], 'Abeille')) {
                     if (config::byKey('blocageRecuperationEquipement', 'Abeille', 'Oui', 1) == "Oui") {
-                        parserLog('debug', '  Eq addr '.$N['Addr']." is unknown.");
+                        parserLog('debug', '  Eq addr '.$N['addr']." is unknown.");
                     } else {
-                        parserLog('debug', '  Eq addr '.$N['Addr']." is unknown. Trying to interrogate.");
+                        parserLog('debug', '  Eq addr '.$N['addr']." is unknown. Trying to interrogate.");
 
-                        $this->msgToCmd("Cmd".$dest."/0000/getName", "address=".$N['Addr']."&destinationEndPoint=01");
-                        $this->msgToCmd("Cmd".$dest."/0000/getName", "address=".$N['Addr']."&destinationEndPoint=03");
-                        $this->msgToCmd("Cmd".$dest."/0000/getName", "address=".$N['Addr']."&destinationEndPoint=0B");
+                        $this->msgToCmd("Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=01");
+                        $this->msgToCmd("Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=03");
+                        $this->msgToCmd("Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=0B");
                     }
                 }
 
@@ -3921,7 +4017,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 // $this->msgToAbeilleCmdFct($dest."/".$N['Addr']."/IEEE-Addr", $N['ExtAddr']);
             }
 
-            $this->msgToLQICollector($srcAddr, $NTableEntries, $NTableListCount, $StartIndex, $NList);
+            $this->msgToLQICollector($srcAddr, $nTableEntries, $nTableListCount, $startIdx, $nList);
             // Tcharp38 TODO: lastComm can be updated for $srcAddr only
         }
 
@@ -4108,6 +4204,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // <address_mode: uint8_t>
             // <SrcAddr: uint16_t>
             // <status: uint8>
+            $sqn = substr($payload, 0, 2);
             $ep = substr($payload, 2, 2);
             $clustId = substr($payload, 4, 4);
             $addrMode = substr($payload, 8, 2);
@@ -4116,13 +4213,17 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             // Log
             $decoded = '8095/OnOff update'
-                .', SQN='.substr($payload, 0, 2)
+                .', SQN='.$sqn
                 .', EP='.$ep
                 .', ClustId='.$clustId
                 .', AddrMode='.$addrMode
                 .', Addr='.$srcAddr
                 .', Status='.$status;
             parserLog('debug', $dest.', Type='.$decoded);
+
+            // Duplicated message ?
+            if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                return;
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
             if ($this->deviceUpdate($dest, $srcAddr, ''))
@@ -4438,6 +4539,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     .', AttrDataType='  .$dataType
                     .', AttrSize='      .$attrSize;
             parserLog('debug', $dest.', Type='.$msg, $type);
+
+            // Duplicated message ?
+            // if ($this->isDuplicated($dest, $srcAddr, $sqn))
+            //     return;
+            // Tcharp38: To be revisited. We can receive several 8100/8102 for the same SQN (diff attributes)
 
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($msg); // Send message to monitor
@@ -5683,41 +5789,42 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          * @param $this->wakeUpQueue
          * @return none
          */
-        function processWakeUpQueue() {
-            if ( !($this->wakeUpQueue)) {
-                unset($this->whoTalked);
-                return;
-            }
-            if ( count($this->wakeUpQueue)<1 ) {
-                unset($this->whoTalked);
-                return;
-            }
-            if ( !($this->whoTalked) ) return;
-            if ( count($this->whoTalked) < 1 ) return;
+        // Tcharp38: No longer in use right now.
+        // function processWakeUpQueue() {
+        //     if ( !($this->wakeUpQueue)) {
+        //         unset($this->whoTalked);
+        //         return;
+        //     }
+        //     if ( count($this->wakeUpQueue)<1 ) {
+        //         unset($this->whoTalked);
+        //         return;
+        //     }
+        //     if ( !($this->whoTalked) ) return;
+        //     if ( count($this->whoTalked) < 1 ) return;
 
-            parserLog('debug', 'processWakeUpQueue(): ------------------------------>');
+        //     parserLog('debug', 'processWakeUpQueue(): ------------------------------>');
 
-            foreach( $this->whoTalked as $keyWho=>$who ) {
-                parserLog('debug', 'processWakeUpQueue(): '.$who.' talked');
-                foreach ( $this->wakeUpQueue as $keyWakeUp=>$action ) {
-                    if ( $action['which'] == $who ) {
-                        if ( method_exists($this, $action['what'])) {
-                            parserLog('debug', 'processWakeUpQueue(): action: '.json_encode($action), 'processWakeUpQueue');
-                            $fct = $action['what'];
-                            if ( isset($action['parm0'])) {
-                                $this->$fct($action['parm0'],$action['parm1'],$action['parm2'],$action['parm3']);
-                            } else {
-                                $this->$fct($action['addr']);
-                            }
-                            unset($this->wakeUpQueue[$keyWakeUp]);
-                        }
-                    }
-                    unset($this->whoTalked[$keyWho]);
-                }
-            }
+        //     foreach( $this->whoTalked as $keyWho=>$who ) {
+        //         parserLog('debug', 'processWakeUpQueue(): '.$who.' talked');
+        //         foreach ( $this->wakeUpQueue as $keyWakeUp=>$action ) {
+        //             if ( $action['which'] == $who ) {
+        //                 if ( method_exists($this, $action['what'])) {
+        //                     parserLog('debug', 'processWakeUpQueue(): action: '.json_encode($action), 'processWakeUpQueue');
+        //                     $fct = $action['what'];
+        //                     if ( isset($action['parm0'])) {
+        //                         $this->$fct($action['parm0'],$action['parm1'],$action['parm2'],$action['parm3']);
+        //                     } else {
+        //                         $this->$fct($action['addr']);
+        //                     }
+        //                     unset($this->wakeUpQueue[$keyWakeUp]);
+        //                 }
+        //             }
+        //             unset($this->whoTalked[$keyWho]);
+        //         }
+        //     }
 
-            parserLog('debug', 'processWakeUpQueue(): <------------------------------');
-        }
+        //     parserLog('debug', 'processWakeUpQueue(): <------------------------------');
+        // }
 
         // /* Called on any receipt from a device meaning it is awake, at least for a very short time */
         // function deviceIsAwake($net, $addr) {

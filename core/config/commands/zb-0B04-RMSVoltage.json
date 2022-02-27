@@ -1,6 +1,7 @@
 {
     "zb-0B04-RMSVoltage": {
         "comment": "RMS Voltage. No need to display country voltage by default",
+        "comment2": "Attrib 0505, uint16",
         "name": "Voltage",
         "subType": "numeric",
         "template": "badge",

@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+- Interne: Parser: Certains messages dupliqués sont ignorés.
+- Récupération des fantômes: Amélioration.
+- Interne: Migration codes obsoletes vers 'archives': LqiStorage.x, RouteRecord.x, Jennic binary.
+- Mini smart socket (TS011F__TZ3000_5f43h46b): Mise-à-jour modèle (2334).
+- Interne: Amélioration analyse réseau (collecte LQI).
+- Remplacement d'équipements: Correction fonctionalité (2337).
+
 220223-BETA-1
 -------------
 

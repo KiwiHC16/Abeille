@@ -343,7 +343,7 @@
             // $AbeilleParser->processActionQueue();
 
             // Check if we have any command waiting for the device to wake up
-            $AbeilleParser->processWakeUpQueue();
+            // $AbeilleParser->processWakeUpQueue();
 
             // Sleep not tu use CPU for nothing
             time_nanosleep(0, 10000000); // 1/100s

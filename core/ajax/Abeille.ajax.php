@@ -470,6 +470,56 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        /**
+         * replaceEq()
+         *
+         * @param deadEqId: Id of the bee to be removed
+         * @param newEqId: Id of the bee which will replace the ghost and receive all informations
+         *
+         * https://github.com/KiwiHC16/Abeille/issues/1055
+         */
+        if (init('action') == 'replaceEq') {
+            $deadEqId = init('deadEqId');
+            $newEqId = init('newEqId');
+
+            $status = 0;
+            $error = "";
+
+            $deadEq = Abeille::byId($deadEqId);
+            if (!is_object($deadEq)) {
+                $error = "Equipement HS inconnu (id ".$deadId.")";
+                $status = -1;
+            }
+            if ($status == 0) {
+                $newEq = Abeille::byId($newEqId);
+                if (!is_object($newEq)) {
+                    $error = "Nouvel equipement inconnu (id ".$newId.")";
+                    $status = -1;
+                }
+            }
+
+            if ($status == 0) {
+                list($deadNet, $deadAddr) = explode('/', $deadEq->getLogicalId());
+                list($newNet, $newAddr) = explode('/', $newEq->getLogicalId());
+
+                $oldIeee = $deadEq->getConfiguration('IEEE', '');
+                if ($oldIeee != '') {
+                    log::add('Abeille', 'debug', 'Je retire '.$deadEq->getName().' de la zigate.');
+                    sendToCmd("Cmd".$deadNet."/0000/Remove", "ParentAddressIEEE=".$oldIeee."&ChildAddressIEEE=".$oldIeee);
+                }
+
+                // Collecting ieee & short addr from new device to assign them to old one
+                $newIeee = $newEq->getConfiguration('IEEE', '');
+                $deadEq->setConfiguration('IEEE', $newIeee);
+                $deadEq->setLogicalId($newEq->getLogicalId());
+
+                $newEq->remove();
+                $deadEq->save();
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.
             Instead 'success' callback is used. This means that
             - take care of error code returned

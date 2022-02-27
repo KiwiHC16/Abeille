@@ -64,6 +64,7 @@
     sendVarToJS('eqType', 'Abeille');
     $abQueues = $GLOBALS['abQueues'];
     echo '<script>var js_queueCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
 
     $eqLogics = eqLogic::byType('Abeille');
     /* Creating a per Zigate list of eq ids.
@@ -89,7 +90,6 @@
             $eqPerZigate[$zgId][$eqId] = $eq;
     }
     echo '<script>var js_eqPerZigate = \''.json_encode($eqPerZigate).'\';</script>';
-    echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
 
     // logDebug("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
     // $parametersAbeille = AbeilleTools::getParameters();
@@ -125,19 +125,21 @@
         <!-- Groups management  -->
         <?php include 'Abeille-Groups.php'; ?>
 
-        <!-- Gestion des ghosts / remplacement d equipements  -->
-        <?php include '050_AbeilleRemplacementPart.php'; ?>
+        <!-- Replace equipment on Jeedom side -->
+        <?php include 'Abeille-ReplaceEq.php'; ?>
 
         <!-- Gestion des ReHome / migration d equipements  -->
         <?php include 'Abeille-MigrateEq.php'; ?>
+
+        <?php if (isset($dbgTcharp38)) { ?>
+        <?php include 'Abeille-Recovery.php'; ?>
+        <?php } ?>
 
         <?php include 'Abeille-NewZigate.php'; ?>
 
         <?php if (isset($dbgDeveloperMode)) { ?>
         <legend><i class="fa fa-cogs"></i> {{Visible en MODE DEV UNIQUEMENT}}</legend>
         <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
-
-            <?php include '025_AbeilleNEPart.php'; ?>
 
             <!-- Gestion des scenes  -->
             <?php include 'Abeille-Scenes.php'; ?>

@@ -33,7 +33,7 @@
 
         /* Checking if not already in the list */
         foreach ($eqToInterrogate as $Eq) {
-            if ($Eq['LogicId'] == $logicId)
+            if ($Eq['logicId'] == $logicId)
                 return; // Already there
         }
         // TODO: What to do if mesg received does not match interrogated eq ?
@@ -44,11 +44,11 @@
             $eqName = "Inconnu";
         list($netName, $addr) = explode('/', $logicId);
         $eqToInterrogate[] = array(
-            "LogicId" => $logicId,
-            "Name" => $eqName,
-            "Addr" => $addr,
-            "TableEntries" => 0,    // Nb of entries in its table
-            "TableIndex" => 0,      // Index to interrogate
+            "logicId" => $logicId,
+            "name" => $eqName,
+            "addr" => $addr,
+            "tableEntries" => 0,    // Nb of entries in its table
+            "tableIndex" => 0,      // Index to interrogate
         );
         logMessage("", "New device to interrogate: '".$eqName."' (".$logicId.")");
     }
@@ -57,13 +57,13 @@
     function msgFromParserFlush() {
         global $queueParserToLQI;
 
-        while (msg_receive($queueParserToLQI, 0, $msgType, 512, $msg, true, MSG_IPC_NOWAIT | MSG_NOERROR));
+        while (msg_receive($queueParserToLQI, 0, $msgType, 2048, $msg, true, MSG_IPC_NOWAIT | MSG_NOERROR));
     }
 
     /* Treat request responses (804E) from parser.
        Returns: 0=OK, -1=fatal error, 1=timeout */
-    function msgFromParser($eqIndex) {
-        logMessage("", "msgFromParser(eqIndex=".$eqIndex.")");
+    function msgFromParser($eqIdx) {
+        logMessage("", "msgFromParser(eqIndex=".$eqIdx.")");
 
         global $LQI;
         global $queueParserToLQI, $queueParserToLQIMax;
@@ -82,13 +82,13 @@
                     logMessage("", "  WARNING: Unsupported message type (".$msg->type.") => Ignored.");
                     continue;
                 }
-                if (hexdec($msg->startIndex) != $eqToInterrogate[$eqIndex]['TableIndex']) {
+                if (hexdec($msg->startIdx) != $eqToInterrogate[$eqIdx]['tableIndex']) {
                     /* Note: this case is due to too many identical 004E messages sent to eq
                        leading to several identical 804E answers */
-                    logMessage("", "  WARNING: Unexpected start index (".$msg->startIndex.") => Ignored.");
+                    logMessage("", "  WARNING: Unexpected start index (".$msg->startIdx.") => Ignored.");
                     continue;
                 }
-                if ($msg->srcAddr != $eqToInterrogate[$eqIndex]['Addr']) {
+                if ($msg->srcAddr != $eqToInterrogate[$eqIdx]['addr']) {
                     logMessage("", "  WARNING: Unexpected source addr (".$msg->srcAddr.") => Ignored.");
                     continue;
                 }
@@ -121,33 +121,33 @@
         /* Message format reminder
             $msg = array(
                 'type' => '804E',
-                'srcAddr' => $SrcAddr,
-                'tableEntries' => $NTableEntries,
-                'tableListCount' => $NTableListCount,
-                'startIndex' => $StartIndex,
-                'list' => $NList
+                'srcAddr' => $srcAddr,
+                'tableEntries' => $nTableEntries,
+                'tableListCount' => $nTableListCount,
+                'startIdx' => $startIdx,
+                'nList' => $nList
                     $N = array(
-                        "Addr"     => substr($payload, $j + 0, 4),
-                        "ExtPANId" => substr($payload, $j + 4, 16),
-                        "ExtAddr"  => substr($payload, $j + 20, 16),
-                        "Depth"    => substr($payload, $j + 36, 2),
-                        "LQI"      => substr($payload, $j + 38, 2),
-                        "BitMap"   => substr($payload, $j + 40, 2)
+                        "addr"     => substr($payload, $j + 0, 4),
+                        "extPANId" => substr($payload, $j + 4, 16),
+                        "extAddr"  => substr($payload, $j + 20, 16),
+                        "depth"    => substr($payload, $j + 36, 2),
+                        "lqi"      => substr($payload, $j + 38, 2),
+                        "bitMap"   => substr($payload, $j + 40, 2)
                 )
             ); */
 
+        logMessage("", "msg=".json_encode($msg));
         $tableEntries = $msg->tableEntries; // Total entries on interrogated eq
-        $tableListCount = $msg->tableListCount; // Number of neighbours liste in msg
-        $startIndex = $msg->startIndex;
-        $NList = $msg->list; // List of neighbours
-        // logMessage("", "NList=".json_encode($NList));
-        logMessage("", "  tableEntries=".$tableEntries.", tableListCount=".$tableListCount.", startIndex=".$startIndex);
+        $tableListCount = $msg->tableListCount; // Number of neighbours listed in msg
+        $startIdx = $msg->startIdx;
+        $nList = $msg->nList; // List of neighbours
+        logMessage("", "  TableEntries=".$tableEntries.", TableListCount=".$tableListCount.", StartIdx=".$startIdx);
 
         /* Updating collect infos for this coordinator/router */
-        $eqToInterrogate[$eqIndex]['TableEntries'] = hexdec($tableEntries);
-        $eqToInterrogate[$eqIndex]['TableIndex'] = hexdec($startIndex) + hexdec($tableListCount);
+        $eqToInterrogate[$eqIdx]['tableEntries'] = hexdec($tableEntries);
+        $eqToInterrogate[$eqIdx]['tableIndex'] = hexdec($startIdx) + hexdec($tableListCount);
 
-        $NE = $eqToInterrogate[$eqIndex]["LogicId"]; // Ex: 'Abeille1/A3B4'
+        $NE = $eqToInterrogate[$eqIdx]["logicId"]; // Ex: 'Abeille1/A3B4'
 
         $parameters = array();
         $parameters['NE'] = $NE; // Logical ID
@@ -167,13 +167,13 @@
         list($netName, $addr) = explode('/', $NE);
 
         /* Going thru neighbours list */
-        for ($nIndex = 0; $nIndex < hexdec($tableListCount); $nIndex++ ) {
-            $N = $NList[$nIndex];
+        for ($nIdx = 0; $nIdx < hexdec($tableListCount); $nIdx++ ) {
+            $N = $nList[$nIdx];
             logMessage("", "  N=".json_encode($N));
 
             // list( $lqi, $voisineAddr, $i ) = explode("/", $message->topic);
 
-            $parameters['Voisine'] = $netName."/".$N->Addr;
+            $parameters['Voisine'] = $netName."/".$N->addr;
             if (isset($knownFromJeedom[$parameters['Voisine']])) {
                 $parameters['Voisine_Name'] = $knownFromJeedom[$parameters['Voisine']]['name'];
                 // $parameters['Voisine_Objet'] = $objKnownFromAbeille[$parameters['Voisine']];
@@ -183,8 +183,8 @@
                 $parameters['Voisine_Objet'] = "Inconnu";
             }
 
-            $parameters['Depth'] = $N->Depth;
-            $parameters['LinkQualityDec'] = hexdec($N->LQI);
+            $parameters['Depth'] = $N->depth;
+            $parameters['LinkQualityDec'] = hexdec($N->lqi);
 
             // Decode Bitmap Attribut
             // Bit map of attributes Described below: uint8_t
@@ -192,7 +192,7 @@
             // bit 2-3 Permit Join status (1- On 0-Off)                     => Skip no need for the time being
             // bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)            => Process
             // bit 6-7 Rx On When Idle status (1-On 0-Off)                  => Process
-            $Attr = hexdec($N->BitMap);
+            $Attr = hexdec($N->bitMap);
             $AttrType = $Attr & 0b00000011;
             if ($AttrType == 0) {
                 $parameters['Type'] = "Coordinator";
@@ -214,12 +214,12 @@
                 // Required by remove from zigbee feature (#1770)
                 // Tcharp38: It appears that in several cases we don't have any parent IEEE
                 //   might not be required if remove is using 004C cmd instead of 0026
-                $kid = Abeille::byLogicalId($netName.'/'.$N->Addr, 'Abeille');
+                $kid = Abeille::byLogicalId($netName.'/'.$N->addr, 'Abeille');
                 if ($kid) { // Saving parent IEEE address
                     $kid->setConfiguration('parentIEEE', $parentIEEE);
                     $kid->save();
                 } else
-                    logMessage("", "  WARNING: Unkown device '".$netName."/".$N->Addr."'");
+                    logMessage("", "  WARNING: Unkown device '".$netName."/".$N->addr."'");
             } else if ($AttrRel == 2) {
                 $parameters['Relationship'] = "Sibling";
             } else { // if ($AttrRel == 3)
@@ -259,17 +259,17 @@
 
     /* Send 1 to several table requests thru AbeilleCmd to collect neighbour table entries.
        Returns: 0=OK, -1=ERROR (stops collect for current zigate), 1=timeout */
-    function interrogateEq($netName, $addr, $eqIndex) {
+    function interrogateEq($netName, $addr, $eqIdx) {
         global $eqToInterrogate;
 
         while (true) {
-            $eq = $eqToInterrogate[$eqIndex]; // Read eq status
-            msgToCmd($netName, $addr, sprintf("%02X", $eq['TableIndex']));
+            $eq = $eqToInterrogate[$eqIdx]; // Read eq status
+            msgToCmd($netName, $addr, sprintf("%02X", $eq['tableIndex']));
             usleep(200000); // Delay of 200ms to let response to come back
-            $ret = msgFromParser($eqIndex);
+            $ret = msgFromParser($eqIdx);
             if ($ret == 1) {
                 /* If time-out, cancel interrogation for current eq only */
-                logMessage("", "Time-out => Cancelling interrogation of '".$eq['Name']."' (".$eq['Addr'].").");
+                logMessage("", "Time-out => Cancelling interrogation of '".$eq['name']."' (".$eq['addr'].").");
                 return 1;
             }
             if ($ret != 0) {
@@ -278,8 +278,8 @@
                 return -1;
             }
 
-            $eq = $eqToInterrogate[$eqIndex]; // Read eq status
-            if ($eq['TableIndex'] >= $eq['TableEntries'])
+            $eq = $eqToInterrogate[$eqIdx]; // Read eq status
+            if ($eq['tableIndex'] >= $eq['tableEntries'])
                 break; // Exiting interrogation loop
         }
 
@@ -334,11 +334,9 @@
             $objName = $eqParent->getName();
         $knownFromJeedom[$eqLogicId]['parent'] = $objName;
         // $objKnownFromAbeille[$eqLogicId] = $objName;
-        logMessage("", "  Eq='".$eqLogicId."', objname='".$objName."'");
+        logMessage("", "  Eq='".$eqLogicId."', parent='".$objName."'");
     }
-    // logMessage("", "Objets connus de Jeedom: ".json_encode($objKnownFromAbeille));
 
-    // $queueLQIToCmd = msg_get_queue($abQueues["LQIToCmd"]["id"]);
     $queueLQIToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
     $queueParserToLQI = msg_get_queue($abQueues["parserToLQI"]["id"]);
     $queueParserToLQIMax = $abQueues["parserToLQI"]["max"];
@@ -383,13 +381,13 @@
         newEqToInterrogate("Abeille".$zgId."/0000");
 
         $done = 0;
-        $eqIndex = 0; // Index of eq to interrogate
+        $eqIdx = 0; // Index of eq to interrogate
         $collectStatus = 0;
         while (true) {
             $total = count($eqToInterrogate);
             logMessage("", "Zigate ".$zgId." progress: ".$done."/".$total);
 
-            $currentNeAddress = $eqToInterrogate[$eqIndex]['LogicId'];
+            $currentNeAddress = $eqToInterrogate[$eqIdx]['logicId'];
             list($netName, $addr) = explode('/', $currentNeAddress);
 
             $NE = $currentNeAddress;
@@ -408,7 +406,7 @@
                 exit;
             }
 
-            $ret = interrogateEq($netName, $addr, $eqIndex);
+            $ret = interrogateEq($netName, $addr, $eqIdx);
             $done++;
             if ($ret == -1) {
                 $collectStatus = -1; // Collect interrupted due to error
@@ -420,9 +418,9 @@
             }
 
             /* End of list ? */
-            if (($eqIndex + 1) == count($eqToInterrogate))
+            if (($eqIdx + 1) == count($eqToInterrogate))
                 break;
-            $eqIndex++;
+            $eqIdx++;
         }
 
         /* Write JSON cache only if collect completed successfully or on timeout */

@@ -311,10 +311,10 @@ logDebug("LA=".$json_encode($abQueues));
                 }
                 break;
 
-            case "Remplace":
-                log::add('Abeille', 'debug', 'Replace: '.$_POST['ghost'] . ' - ' . $_POST['real']);
-                Abeille::replaceGhost($_POST['ghost'], $_POST['real']);
-                break;
+            // case "Remplace":
+            //     log::add('Abeille', 'debug', 'Replace: '.$_POST['ghost'] . ' - ' . $_POST['real']);
+            //     Abeille::replaceGhost($_POST['ghost'], $_POST['real']);
+            //     break;
 
             // case "ReHome":
             //     log::add('Abeille', 'debug', 'ReHome: '.$_POST['beeId'] . ' - ' . $_POST['zigateY']);

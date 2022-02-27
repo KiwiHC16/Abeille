@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220228-BETA-1
+-------------
+
 - Interne: Parser: Certains messages dupliqués sont ignorés.
 - Récupération des fantômes: Amélioration.
 - Interne: Migration codes obsoletes vers 'archives': LqiStorage.x, RouteRecord.x, Jennic binary.

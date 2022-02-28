@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Remplacement d'équipements: Nouvelle mise-à-jour + doc (2337).
+
 220228-BETA-1
 -------------
 

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220307-BETA-1
+-------------
+
 - Interne: AbeilleCmd: Mises-à-jour, corrections, améliorations (dont vitesse) & nettoyage.
 - Interne: AbeilleCmd: Gestion mode ACK etendu aux commandes internes suivantes:
 

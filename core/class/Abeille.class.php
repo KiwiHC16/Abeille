@@ -1772,38 +1772,29 @@ if (0) {
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si equipement et cmd existe alors on met la valeur a jour
         if (is_object($eqLogic) && is_object($cmdLogic)) {
-            /* Traitement particulier pour les batteries */
-            if ($cmdId == "Batterie-Volt") {
-                /* Volt en milli V. Max a 3,1V Min a 2,7V, stockage en % batterie */
-                // Tcharp38: To be removed. Should not be systematic. Device may report percent too */
-                $eqLogic->setStatus('battery', self::volt2pourcent($value));
-                $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-            }
-            else if (($cmdId == "Battery-Percent") || ($cmdId == "Batterie-Pourcent")) {
-                log::add('Abeille', 'debug', "  Battery % reporting: ".$cmdId.", val=".$value);
-                $eqLogic->setStatus('battery', $value);
-                $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-            }
-            // Tcharp38: Correct % value directly reported by parser according to zigbee spec (raw value / 2)
-            // if ($cmdId == "0001-01-0021") {
-            //     /* en % batterie example Ikea Remote */
-            //     // 10.10.2.1   BatteryPercentageRemaining Attribute Specifies the remaining battery life as a half integer percentage of the full battery capacity (e.g.
-            //     // 34.5%, 45%, 68.5%, 90%) with a range between zero and 100%, with 0x00 = 0%, 0x64 = 50%, and 0xC8 = 100%. This is particularly suited for devices with
-            //     // rechargeable batteries. The value 0xff indicates an invalid or unknown reading. This attribute SHALL be configurable for attribute reporting.
-            //     // C8 is 200, so value/200*100
-            //     $eqLogic->setStatus('battery', $value / 2);
+            // /* Traitement particulier pour les batteries */
+            // if ($cmdId == "Batterie-Volt") {
+            //     /* Volt en milli V. Max a 3,1V Min a 2,7V, stockage en % batterie */
+            //     // Tcharp38: To be removed. Should not be systematic. Device may report percent too */
+            //     $eqLogic->setStatus('battery', self::volt2pourcent($value));
             //     $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
             // }
-            else if (preg_match("/^0001-[0-9A-F]*-0021/", $cmdId)) {
-                log::add('Abeille', 'debug', "  Battery % reporting: ".$cmdId.", val=".$value);
-                $eqLogic->setStatus('battery', $value);
-                $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-            }
+            // else if (($cmdId == "Battery-Percent") || ($cmdId == "Batterie-Pourcent")) {
+            //     log::add('Abeille', 'debug', "  Battery % reporting: ".$cmdId.", val=".$value);
+            //     $eqLogic->setStatus('battery', $value);
+            //     $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+            // }
+            // else if (preg_match("/^0001-[0-9A-F]*-0021/", $cmdId)) {
+            //     log::add('Abeille', 'debug', "  Battery % reporting: ".$cmdId.", val=".$value);
+            //     $eqLogic->setStatus('battery', $value);
+            //     $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+            // }
 
             /* Traitement particulier pour la remontée de nom qui est utilisé pour les ping des routeurs */
             // if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {
             // if (preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId) || preg_match("/^0000-[0-9A-F]*-*0010/", $cmdId)) {
-            else if ($cmdId == "Time-TimeStamp") {
+            // else
+            if ($cmdId == "Time-TimeStamp") {
                 // log::add('Abeille', 'debug', "  Updating 'online' status for '".$dest."/".$addr."'");
                 $cmdLogicOnline = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'online');
                 $eqLogic->checkAndUpdateCmd($cmdLogicOnline, 1);
@@ -1909,6 +1900,24 @@ if (0) {
                 config::save($keyIeeeOk, -1, 'Abeille');
                 message::add("Abeille", "Attention: La zigate ".$zgId." semble nouvelle ou il y a eu échange de ports. Tous ses messages sont ignorés par mesure de sécurité. Assurez vous que les zigates restent sur le meme port, même après reboot.", 'Abeille/Demon');
             }
+        }
+    }
+
+    // Check if received attribute is a battery information
+    public static function checkIfBatteryInfo($eqLogic, $attrName, $attrVal) {
+        if ($attrName == "Batterie-Volt") {
+            /* Volt en milli V. Max a 3,1V Min a 2,7V, stockage en % batterie */
+            // Tcharp38: To be removed. Should not be systematic. Device may report percent too */
+            $eqLogic->setStatus('battery', self::volt2pourcent($attrVal));
+            $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+        } else if (($attrName == "Battery-Percent") || ($attrName == "Batterie-Pourcent")) {
+            log::add('Abeille', 'debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
+            $eqLogic->setStatus('battery', $attrVal);
+            $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+        }  else if (preg_match("/^0001-[0-9A-F]*-0021/", $attrName)) {
+            log::add('Abeille', 'debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
+            $eqLogic->setStatus('battery', $attrVal);
+            $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
         }
     }
 
@@ -2113,57 +2122,67 @@ if (0) {
             return;
         } // End 'leaveIndication'
 
-        /* Attribute report (8100 & 8102 responses) */
-        if ($msg['type'] == "attributeReport") {
+        // Tcharp38: 'attributeReport' replaced by 'attributesReportN' in parser.
+        // /* Attribute report (8100 & 8102 responses) */
+        // if ($msg['type'] == "attributeReport") {
+        //     /* $msg reminder
+        //         'src' => 'parser',
+        //         'type' => 'attributeReport',
+        //         'net' => $net,
+        //         'addr' => $addr,
+        //         'ep' => 'xx', // End point hex string
+        //         'name' => 'xxx', // Attribut name = cmd logical ID
+        //         'value' => false, // False = unsupported
+        //         'time' => time(),
+        //         'lqi' => $lqi
+        //     */
+
+        //     log::add('Abeille', 'debug', "msgFromParser(): Attribute report from '".$net."/".$addr."/".$ep."': Attr='".$msg['name']."', Val='".$msg['value']."'");
+        //     $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
+        //     if (!is_object($eqLogic)) {
+        //         log::add('Abeille', 'debug', "  Unknown device '".$net."/".$addr."'");
+        //         return; // Unknown device
+        //     }
+
+        //     $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $msg['name']);
+        //     if (!is_object($cmdLogic))
+        //         log::add('Abeille', 'debug', "  Unknown Jeedom command '".$msg['name']."'");
+        //     else {
+        //         $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['value']);
+
+        //         // Check if any action cmd must be executed triggered by this update
+        //         Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $msg['value']);
+
+        //         // Checking if battery info, only if registered command
+        //         Abeille::checkIfBatteryInfo($eqLogic, $msg['name'], $msg['value']);
+        //     }
+
+        //     Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
+        //     return;
+        // } // End 'attributeReport'
+
+        // Grouped attributes reporting (by Jeedom logical name)
+        // Grouped read attribute responses (by Jeedom logical name)
+        if (($msg['type'] == "attributesReportN") || ($msg['type'] == "readAttributesResponseN")) {
             /* $msg reminder
                 'src' => 'parser',
-                'type' => 'attributeReport',
+                'type' => 'attributesReportN'/'readAttributesResponseN',
                 'net' => $net,
                 'addr' => $addr,
                 'ep' => 'xx', // End point hex string
-                'name' => 'xxx', // Attribut name = cmd logical ID
-                'value' => false, // False = unsupported
-                'time' => time(),
-                'lqi' => $lqi
-            */
-
-            log::add('Abeille', 'debug', "msgFromParser(): Attribute report from '".$net."/".$addr."/".$ep."': Attr='".$msg['name']."', Val='".$msg['value']."'");
-            $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
-            if (!is_object($eqLogic)) {
-                log::add('Abeille', 'debug', "  Unknown device '".$net."/".$addr."'");
-                return; // Unknown device
-            }
-
-            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $msg['name']);
-            if (!is_object($cmdLogic))
-                log::add('Abeille', 'debug', "  Unknown Jeedom command '".$msg['name']."'");
-            else {
-                $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['value']);
-
-                // Check if any action cmd must be executed triggered by this update
-                Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $msg['value']);
-            }
-
-            Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
-            return;
-        } // End 'attributeReport'
-
-        // Grouped attributes (Jeedom logical name) reporting
-        if ($msg['type'] == "attributesReportN") {
-            /* $msg reminder
-                'src' => 'parser',
-                'type' => 'attributesReportN',
-                'net' => $net,
-                'addr' => $addr,
-                'ep' => 'xx', // End point hex string
+                'clustId' => $clustId,
                 'attributes' => [],
-                    'name' => 'xxx', // Attribut name = cmd logical ID
-                    'value' => false, // False = unsupported
+                    'name' => 'xxx', // Attribut name = cmd logical ID (ex: 'clustId-ep-attrId')
+                    'value' => false/xx, // False = unsupported
                 'time' => time(),
                 'lqi' => $lqi
             */
 
-            log::add('Abeille', 'debug', "msgFromParser(): Attributes report by name from '".$net."/".$addr."/".$ep);
+            if ($msg['type'] == "attributesReportN")
+                log::add('Abeille', 'debug', "msgFromParser(): Attributes report by name from '".$net."/".$addr."/".$ep);
+            else
+                log::add('Abeille', 'debug', "msgFromParser(): Read attributes response by name from '".$net."/".$addr."/".$ep);
+
             $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
                 log::add('Abeille', 'debug', "  Unknown device '".$net."/".$addr."'");
@@ -2174,58 +2193,68 @@ if (0) {
                 $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $attr['name']);
                 if (!is_object($cmdLogic)) {
                     log::add('Abeille', 'debug', "  Unknown Jeedom command '".$attr['name']."'");
-                    return; // Unknown command
-                }
-                log::add('Abeille', 'debug', "  ".$attr['name']." => ".$attr['value']);
-                $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
+                } else {
+                    log::add('Abeille', 'debug', "  ".$attr['name']." => ".$attr['value']);
+                    $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
 
-                // Check if any action cmd must be executed triggered by this update
-                Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
+                    // Check if any action cmd must be executed triggered by this update
+                    Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
+
+                    // Checking if battery info, only if registered command
+                    Abeille::checkIfBatteryInfo($eqLogic, $attr['name'], $attr['value']);
+                }
             }
 
             Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
             return;
-        } // End 'attributesReportN'
+        } // End 'attributesReportN' or 'readAttributesResponseN'
 
         /* Grouped attributes read or report (8002 response, cmds 01 or 0A) */
-        if (($msg['type'] == "reportAttributes") || ($msg['type'] == "readAttributesResponse")) {
-            /* $msg reminder
-                'src' => 'parser',
-                'type' => 'reportAttributes', // or 'readAttributesResponse'
-                'net' => $dest,
-                'addr' => $srcAddr,
-                'ep' => $srcEp,
-                'clustId' => $cluster,
-                'attributes' => $attributes,
-                'time' => time(),
-                'lqi' => $lqi,
-            */
+        // if (($msg['type'] == "reportAttributes") || ($msg['type'] == "readAttributesResponse")) {
+        // Tcharp38: 'reportAttributes' replaced by 'attributesReportN' in parser.
+        // Tcharp38: 'readAttributesResponse' replaced by 'readAttributesResponseN' in parser.
+        //         /* $msg reminder
+        //         'src' => 'parser',
+        //         'type' => 'reportAttributes', // or 'readAttributesResponse'
+        //         'net' => $dest,
+        //         'addr' => $srcAddr,
+        //         'ep' => $srcEp,
+        //         'clustId' => $cluster,
+        //         'attributes' => $attributes,
+        //         'time' => time(),
+        //         'lqi' => $lqi,
+        //     */
 
-            log::add('Abeille', 'debug', "msgFromParser(): Attributes report from '".$net."/".$addr."/".$ep);
-            $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
-            if (!is_object($eqLogic)) {
-                log::add('Abeille', 'debug', "  Unknown device ".$net.'/'.$addr);
-                return; // Unknown device
-            }
-            $clustId = $msg['clustId'];
-            foreach ($msg['attributes'] as $attrId => $attr) {
-                log::add('Abeille', 'debug', "  ClustId=".$clustId.", AttrId='".$attrId."', Val='".$attr['value']."'");
+        //     log::add('Abeille', 'debug', "msgFromParser(): Attributes report from '".$net."/".$addr."/".$ep);
+        //     $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
+        //     if (!is_object($eqLogic)) {
+        //         log::add('Abeille', 'debug', "  Unknown device ".$net.'/'.$addr);
+        //         return; // Unknown device
+        //     }
 
-                $cmdName = $clustId.'-'.$ep.'-'.$attrId;
-                $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $cmdName);
-                if (!is_object($cmdLogic)) {
-                    log::add('Abeille', 'debug', "  Unknown command logicalid ".$cmdName);
-                    return; // Unknown command
-                }
-                $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
+        //     $clustId = $msg['clustId'];
+        //     foreach ($msg['attributes'] as $attrId => $attr) {
+        //         log::add('Abeille', 'debug', "  ClustId=".$clustId.", AttrId='".$attrId."', Val='".$attr['value']."'");
 
-                // Check if any action cmd must be executed triggered by this update
-                Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
-            }
+        //         $cmdName = $clustId.'-'.$ep.'-'.$attrId;
+        //         $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $cmdName);
+        //         if (!is_object($cmdLogic)) {
+        //             log::add('Abeille', 'debug', "  Unknown command logicalid ".$cmdName);
+        //             return; // Unknown command
+        //         }
+        //         $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
 
-            Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
-            return;
-        } // End 'reportAttributes' or 'readAttributesResponse'
+        //         // Check if any action cmd must be executed triggered by this update
+        //         Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
+
+        //         // Checking if battery info, only if registered command
+        //         $attrName = $msg['clustId'].'-'.$msg['ep'].'-'.$attrId;
+        //         Abeille::checkIfBatteryInfo($eqLogic, $attrName, $attr['value']);
+        //     }
+
+        //     Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
+        //     return;
+        // } // End 'reportAttributes' or 'readAttributesResponse'
 
         /* Zigate version (8010 response) */
         if ($msg['type'] == "zigateVersion") {

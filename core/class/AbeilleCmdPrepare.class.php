@@ -153,85 +153,85 @@
              * Zigbee ZCL commands
              */
 
-            case "ReadAttributeRequest": // OBSOLETE: Use 'readAttribute' instead
-                $keywords = preg_split("/[=&]+/", $msg);
-                if (count($keywords) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
-                if (!isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
-                $Command = array(
-                                    "ReadAttributeRequest"     => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $address,
-                                    "clusterId"                => $parameters['clusterId'],   // Don't change the speeling here but in the template
-                                    "attributeId"              => $parameters['attributeId'],
-                                    "EP"                       => $parameters['EP'],
-                                    "Proprio"                  => $parameters['Proprio'],
-                                    );
-                break;
+            // case "ReadAttributeRequest": // OBSOLETE: Use 'readAttribute' instead
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     if (count($keywords) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //     }
+            //     if (!isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
+            //     $Command = array(
+            //                         "ReadAttributeRequest"     => "1",
+            //                         "priority"                 => $priority,
+            //                         "dest"                     => $dest,
+            //                         "address"                  => $address,
+            //                         "clusterId"                => $parameters['clusterId'],   // Don't change the speeling here but in the template
+            //                         "attributeId"              => $parameters['attributeId'],
+            //                         "EP"                       => $parameters['EP'],
+            //                         "Proprio"                  => $parameters['Proprio'],
+            //                         );
+            //     break;
 
-            case "readAttributeRequest": // OBSOLETE: Use 'readAttribute' instead
-                    $keywords = preg_split("/[=&]+/", $msg);
-                if (count($keywords) > 1) {
-                    $params = $this->proper_parse_str($msg);
-                }
-                if (!isset($params['ep']) || !isset($params['clustId']) || !isset($params['attrId'])) {
-                    cmdLog('debug', '  readAttributeRequest ERROR: missing minimal infos');
-                    return;
-                }
-                $Command = array(
-                                "readAttributeRequest"      => "1",
-                                "priority"                  => $priority,
-                                "dest"                      => $dest,
-                                "addr"                      => $address,
-                                "ep"                        => $params['ep'],
-                                "clustId"                   => $params['clustId'],
-                                "attrId"                    => $params['attrId']
-                                );
-                break;
+            // case "readAttributeRequest": // OBSOLETE: Use 'readAttribute' instead
+            //         $keywords = preg_split("/[=&]+/", $msg);
+            //     if (count($keywords) > 1) {
+            //         $params = $this->proper_parse_str($msg);
+            //     }
+            //     if (!isset($params['ep']) || !isset($params['clustId']) || !isset($params['attrId'])) {
+            //         cmdLog('debug', '  readAttributeRequest ERROR: missing minimal infos');
+            //         return;
+            //     }
+            //     $Command = array(
+            //                     "readAttributeRequest"      => "1",
+            //                     "priority"                  => $priority,
+            //                     "dest"                      => $dest,
+            //                     "addr"                      => $address,
+            //                     "ep"                        => $params['ep'],
+            //                     "clustId"                   => $params['clustId'],
+            //                     "attrId"                    => $params['attrId']
+            //                     );
+            //     break;
 
-            case "ReadAttributeRequestHue": // OBSOLETE: Use 'readAttribute' instead
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                                    "ReadAttributeRequestHue" => "1",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address" => $address,
-                                    "clusterId" => $keywords[1],
-                                    "attributeId" => $keywords[3],
-                                    );
-                break;
+            // case "ReadAttributeRequestHue": // OBSOLETE: Use 'readAttribute' instead
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     $Command = array(
+            //                         "ReadAttributeRequestHue" => "1",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address" => $address,
+            //                         "clusterId" => $keywords[1],
+            //                         "attributeId" => $keywords[3],
+            //                         );
+            //     break;
 
-            case "ReadAttributeRequestOSRAM": // OBSOLETE: Use 'readAttribute' instead
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                                    "ReadAttributeRequestOSRAM" => "1",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address" => $address,
-                                    "clusterId" => $keywords[1],
-                                    "attributeId" => $keywords[3],
-                                    );
-                break;
+            // case "ReadAttributeRequestOSRAM": // OBSOLETE: Use 'readAttribute' instead
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     $Command = array(
+            //                         "ReadAttributeRequestOSRAM" => "1",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address" => $address,
+            //                         "clusterId" => $keywords[1],
+            //                         "attributeId" => $keywords[3],
+            //                         );
+            //     break;
 
-            case "ReadAttributeRequestMulti":
-                $keywords = preg_split("/[=&]+/", $msg);
-                if (count($keywords) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
-                if (!isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
-                $Command = array(
-                                    "ReadAttributeRequestMulti"     => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $address,
-                                    "EP"                       => $parameters['EP'],
-                                    "clusterId"                => $parameters['clusterId'],   // Don't change the speeling here but in the template
-                                    "Proprio"                  => $parameters['Proprio'],
-                                    "attributeId"              => $parameters['attributeId'],
-                                    );
-                break;
+            // case "ReadAttributeRequestMulti":
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     if (count($keywords) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //     }
+            //     if (!isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
+            //     $Command = array(
+            //                         "ReadAttributeRequestMulti"     => "1",
+            //                         "priority"                 => $priority,
+            //                         "dest"                     => $dest,
+            //                         "address"                  => $address,
+            //                         "EP"                       => $parameters['EP'],
+            //                         "clusterId"                => $parameters['clusterId'],   // Don't change the speeling here but in the template
+            //                         "Proprio"                  => $parameters['Proprio'],
+            //                         "attributeId"              => $parameters['attributeId'],
+            //                         );
+            //     break;
 
             case "setReportSpirit": // OBSOLETE: Use 'configureReporting' instead
             case "setReport": // OBSOLETE: Use 'configureReporting' instead

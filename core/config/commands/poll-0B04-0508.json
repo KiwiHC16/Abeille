@@ -1,0 +1,19 @@
+{
+    "poll-0B04-0508": {
+        "isVisible": 0,
+        "name": "poll-0B04-0508",
+        "isHistorized": "0",
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "Comment": "Triggered by 0006-#EP#-0000 & every minutes",
+        "configuration": {
+            "topic": "readAttribute",
+            "request": "ep=#EP#&clustId=0B04&attrId=0508",
+            "Polling": "cron",
+            "PollingOnCmdChange": "0006-#EP#-0000",
+            "PollingOnCmdChangeDelay": "3"
+        },
+        "type": "action"
+    }
+}

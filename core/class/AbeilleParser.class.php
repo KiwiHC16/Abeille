@@ -1751,6 +1751,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 .', Status='.$status.'/'.zgGet8000Status($status)
                 .', SQN='.$sqn
                 .', PacketType='.$packetType;
+            $sqnAps = '';
             $l = strlen($payload);
             if ($l >= 12) {
                 // FW >= 3.1d
@@ -2456,6 +2457,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'net' => $dest,
                     'addr' => $srcAddr,
                     'ep' => $srcEp,
+                    'clustId' => $clustId,
                     'attributes' => $attributesReportN,
                     'time' => time(),
                     'lqi' => $lqi
@@ -2580,6 +2582,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                     $l = strlen($msg);
                     $attributes = [];
+                    $attributesN = []; // Attributes by Jeedom logical name
                     for ($i = 0; $i < $l;) {
                         $size = 0;
                         $attr = $this->decode8002_ReadAttrStatusRecord(substr($msg, $i), $size);
@@ -2593,9 +2596,17 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             .', Value='.$attr['valueHex'].' => '.$attr['value'],
                             "8002"
                         );
+
                         $attrId = $attr['id'];
                         unset($attr['id']); // Remove 'id' from object for optimization
                         $attributes[$attrId] = $attr;
+
+                        $attrN = array(
+                            'name' => $clustId.'-'.$srcEp.'-'.$attrId,
+                            'value' => $attr['value'],
+                        );
+                        $attributesN[] = $attrN;
+
                         $i += $size;
                     }
                     if (sizeof($attributes) == 0)
@@ -2611,6 +2622,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     // Reporting grouped attributes to Abeille
                     $msgTo = array(
                         // 'src' => 'parser',
+                        'type' => 'readAttributesResponseN',
+                        'net' => $dest,
+                        'addr' => $srcAddr,
+                        'ep' => $srcEp,
+                        'clustId' => $clustId,
+                        'attributes' => $attributesN,
+                        'time' => time(),
+                        'lqi' => $lqi
+                    );
+                    $this->msgToAbeille2($msgTo);
+
+                    /* Send to client page if required (ex: EQ page opened) */
+                    $msgTo = array(
+                        // 'src' => 'parser',
                         'type' => 'readAttributesResponse',
                         'net' => $dest,
                         'addr' => $srcAddr,
@@ -2620,9 +2645,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         'time' => time(),
                         'lqi' => $lqi
                     );
-                    $this->msgToAbeille2($msgTo);
-
-                    /* Send to client page if required (ex: EQ page opened) */
                     $this->msgToClient($msgTo);
 
                     /* Tcharp38: Cluster 0005 specific case.
@@ -2735,26 +2757,34 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         if ($attr === false)
                             break;
 
+                        // Decode attribute
                         $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
+
+                        // Log
                         $m = '  AttrId='.$attr['id'].'/'.$attrName
                             .', AttrType='.$attr['dataType']
                             .', Value='.$attr['value'];
                         parserLog('debug', $m, "8002");
+
+                        // Monitor if requested
                         if (isset($monitor))
                             monMsgFromZigate($m); // Send message to monitor
 
-                        $attrId = $attr['id'];
-                        unset($attr['id']); // Remove 'id' from object for optimization
-                        $attributes[$attrId] = $attr;
+                        $attr2 = array(
+                            'name' => $clustId.'-'.$srcEp.'-'.$attr['id'],
+                            'value' => $attr['value'],
+                        );
+                        $attributes[] = $attr2;
+
                         $i += $size;
                     }
                     if (sizeof($attributes) == 0)
                         return;
 
-                    // Reporting grouped attributes to Abeille
+                    // Reporting grouped attributes to Abeille (by Jeedom logical name)
                     $toAbeille = array(
                         // 'src' => 'parser',
-                        'type' => 'reportAttributes',
+                        'type' => 'attributesReportN',
                         'net' => $dest,
                         'addr' => $srcAddr,
                         'ep' => $srcEp,
@@ -2964,26 +2994,34 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     parserLog('debug',  '  Tuya 0006-FD specific command'
                                     .', value='.$value.' => click='.$click, "8002");
 
+                    $attributes = [];
                     // Generating an event on 'EP-click' Jeedom cmd (ex: '01-click' = 'single')
                     // $this->msgToAbeille($dest."/".$srcAddr, $srcEp, "click", $click);
+                    $attr = array(
+                        'name' => $srcEp.'-click',
+                        'value' => $click,
+                    );
+                    $attributes[] = $attr;
+
+                    // Legacy code to be removed at some point
+                    // TODO: Replace commands '0006-#EP#-0000' to '#EP#-click' in JSON
+                    $attr = array(
+                        'name' => $clustId.'-'.$srcEp.'-0000',
+                        'value' => $value,
+                    );
+                    $attributes[] = $attr;
+
                     $msg = array(
                         // 'src' => 'parser',
-                        'type' => 'attributeReport',
+                        'type' => 'attributesReportN',
                         'net' => $dest,
                         'addr' => $srcAddr,
                         'ep' => $srcEp,
-                        'name' => $srcEp.'-click',
-                        'value' => $click,
+                        'clustId' => $clustId,
+                        'attributes' => $attributes,
                         'time' => time(),
                         'lqi' => $lqi
                     );
-                    $this->msgToAbeille2($msg);
-
-                    // Legacy code to be removed at some point
-                    // TODO: Replace commands '0006-EP-0000' to 'EP-click' in JSON
-                    // $this->msgToAbeille($dest."/".$srcAddr, $clustId.'-'.$srcEp, '0000', $value);
-                    $msg['name'] =$clustId.'-'.$srcEp.'-0000';
-                    $msg['value'] = $value;
                     $this->msgToAbeille2($msg);
                     return;
                 }
@@ -3050,14 +3088,19 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             if ($clustId == "0300") {
                 // Tcharp38: Covering all 0300 commands
                 parserLog("debug", "  msg=".$msg, "8002");
+                $attributes = [];
+                $attributes[] = array(
+                    'name' => $srcEp.'-0300-cmd'.$cmd,
+                    'value' => $msg, // Rest of command data to be decoded if required
+                );
                 $msg = array(
                     // 'src' => 'parser',
-                    'type' => 'attributeReport',
+                    'type' => 'attributesReportN',
                     'net' => $dest,
                     'addr' => $srcAddr,
                     'ep' => $srcEp,
-                    'name' => $srcEp.'-0300-cmd'.$cmd,
-                    'value' => $msg, // Rest of command data to be decoded if required
+                    'clustId' => $clustId,
+                    'attributes' => $attributes,
                     'time' => time(),
                     'lqi' => $lqi
                 );
@@ -4087,15 +4130,19 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 monMsgFromZigate("  Groups: ".$groups); // Send message to monitor
             }
 
-            // $this->msgToAbeille($dest."/".$srcAddr, "Group", "Membership", $groups);
+            $attributes = [];
+            $attributes[] = array(
+                'name' => 'Group-Membership',
+                'value' => $groups,
+            );
             $msg = array(
                 // 'src' => 'parser',
-                'type' => 'attributeReport',
+                'type' => 'attributesReportN',
                 'net' => $dest,
                 'addr' => $srcAddr,
                 'ep' => $ep,
-                'name' => 'Group-Membership',
-                'value' => $groups,
+                'clustId' => $clustId,
+                'attributes' => $attributes,
                 'time' => time(),
                 'lqi' => $lqi
             );
@@ -4174,24 +4221,31 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
-            // $this->msgToAbeille($dest.'/'.$srcAddr, "Up", "Down", $cmd);
+            // Legacy code support. To be removed at some point.
+            $attributes = [];
+            $attributes[] = array(
+                'name' => 'Up-Down', // OBSOLETE: Do not use !!
+                'value' => $cmd,
+            );
+
+            // Tcharp38: New way of handling this event (Level cluster cmd coming from a device)
+            $attributes[] = array(
+                'name' => $ep.'-0008-cmd'.$cmd,
+                'value' => 1, // Equivalent to a click. No special value
+            );
+            // Tcharp38: Where is the data associated to cmd ? May need to decode that with 8002 instead.
+
             $msg = array(
                 // 'src' => 'parser',
-                'type' => 'attributeReport',
+                'type' => 'attributesReportN',
                 'net' => $dest,
                 'addr' => $srcAddr,
                 'ep' => $ep,
-                'name' => 'Up-Down', // OBSOLETE: Do not use !!
-                'value' => $cmd,
+                'clustId' => $clustId,
+                'attributes' => $attributes,
                 'time' => time(),
                 'lqi' => $lqi
             );
-            $this->msgToAbeille2($msg);
-
-            // Tcharp38: New way of handling this event (Level cluster cmd coming from a device)
-            $msg['name'] = $ep.'-0008-cmd'.$cmd;
-            $msg['value'] = 1; // Equivalent to a click. No special value
-            // Tcharp38: Where is the data associated to cmd ? May need to decode that with 8002 instead.
             $this->msgToAbeille2($msg);
         }
 
@@ -4234,27 +4288,36 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 monMsgFromZigate($decoded); // Send message to monitor
 
             /* Forwarding to Abeille */
+            $attributes = array();
             // $this->msgToAbeille($dest.'/'.$srcAddr, "Click", "Middle", $status);
             // Tcharp38: The 'Click-Middle' must be avoided. Can't define EP so the source of this "click".
             //           Moreover no sense since there may have no link with "middle". It's is just a OnOff cmd FROM a device to Zigate.
+            $attr = array(
+                'name' => 'Click-Middle', // OBSOLETE: Do not use !!
+                'value' => $status,
+            );
+            $attributes[] = $attr;
+
+            // Tcharp38: New way of handling this event (OnOff cmd coming from a device)
+            $attr = array(
+                'name' => $ep.'-0006-cmd'.$status,
+                'value' => 1, // Currently fake value. Not required for Off-00/On-01/Toggle-02 cmds
+            );
+            $attributes[] = $attr;
+            // Tcharp38: TODO: Value should return payload when there is (cmds 40/41/42) but must be decoded by 8002 instead to get it.
+            // Tcharp38: Note: Cmd FD (seen as Tuya specific cluster 0006 cmd) may be returned too with recent FW.
+
             $msg = array(
                 // 'src' => 'parser',
-                'type' => 'attributeReport',
+                'type' => 'attributesReportN',
                 'net' => $dest,
                 'addr' => $srcAddr,
                 'ep' => $ep,
-                'name' => 'Click-Middle', // OBSOLETE: Do not use !!
-                'value' => $status,
+                'clustId' => $clustId,
+                'attributes' => $attributes,
                 'time' => time(),
                 'lqi' => $lqi
             );
-            $this->msgToAbeille2($msg);
-
-            // Tcharp38: New way of handling this event (OnOff cmd coming from a device)
-            $msg['name'] = $ep.'-0006-cmd'.$status;
-            $msg['value'] = 1; // Currently fake value. Not required for Off-00/On-01/Toggle-02 cmds
-            // Tcharp38: TODO: Value should return payload when there is (cmds 40/41/42) but must be decoded by 8002 instead to get it.
-            // Tcharp38: Note: Cmd FD (seen as Tuya specific cluster 0006 cmd) may be returned too with recent FW.
             $this->msgToAbeille2($msg);
         }
 
@@ -4581,14 +4644,20 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     return; // This is an unknown device.
 
                 /* Forwarding unsupported atttribute to Abeille */
+                $attr = array(
+                    'name' => $clustId.'-'.$ep.'-'.$attrId,
+                    'value' => false, // False = unsupported
+                );
+                $attributes = [];
+                $attributes[] = $attr;
                 $msg = array(
                     // 'src' => 'parser',
-                    'type' => 'attributeReport',
+                    'type' => 'attributesReportN',
                     'net' => $dest,
                     'addr' => $srcAddr,
                     'ep' => $ep,
-                    'name' => $clustId.'-'.$ep.'-'.$attrId,
-                    'value' => false, // False = unsupported
+                    'clustId' => $clustId,
+                    'attributes' => $attributes,
                     'time' => time(),
                     'lqi' => $lqi
                 );
@@ -5214,20 +5283,26 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'net' => $dest,
                     'addr' => $srcAddr,
                     'ep' => $ep,
+                    'clustId' => $clustId,
                     'attributes' => $attributesReportN,
                     'time' => time(),
                     'lqi' => $lqi
                 );
                 $this->msgToAbeille2($toAbeille);
             } else if (isset($data)) {
+                $attributes = [];
+                $attributes[] = array(
+                    'name' => $clustId.'-'.$ep.'-'.$attrId,
+                    'value' => $data,
+                );
                 $toAbeille = array(
                     // 'src' => 'parser',
-                    'type' => 'attributeReport',
+                    'type' => 'attributesReportN',
                     'net' => $dest,
                     'addr' => $srcAddr,
                     'ep' => $ep,
-                    'name' => $clustId.'-'.$ep.'-'.$attrId,
-                    'value' => $data,
+                    'clustId' => $clustId,
+                    'attributes' => $attributes,
                     'time' => time(),
                     'lqi' => $lqi
                 );
@@ -5483,24 +5558,33 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
+            $attributes = [];
             // Legacy: Sending 0500-#EP#-0000 with zoneStatus as value
             // To be removed at some point
-            // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $ep.'-0000', $zoneStatus);
+            $attr = array(
+                'name' => $clustId.'-'.$ep.'-0000',
+                'value' => $zoneStatus,
+            );
+            $attributes[] = $attr;
+
+            // New message format '#EP#-0500-cmd00' with $zoneStatus as value
+            $attr = array(
+                'name' => $ep.'-0500-cmd00',
+                'value' => $zoneStatus,
+            );
+            $attributes[] = $attr;
+
             $msg = array(
                 // 'src' => 'parser',
-                'type' => 'attributeReport',
+                'type' => 'attributesReportN',
                 'net' => $dest,
                 'addr' => $srcAddr,
                 'ep' => $ep,
-                'name' => $clustId.'-'.$ep.'-0000',
-                'value' => $zoneStatus,
+                'clustId' => $clustId,
+                'attributes' => $attributes,
                 'time' => time(),
                 'lqi' => $lqi
             );
-            $this->msgToAbeille2($msg);
-
-            // New message format '#EP#-0500-cmd00' with $zoneStatus as value
-            $msg['name'] = $ep.'-0500-cmd00';
             $this->msgToAbeille2($msg);
         }
 

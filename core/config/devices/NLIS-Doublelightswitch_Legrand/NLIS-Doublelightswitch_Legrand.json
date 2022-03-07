@@ -1,0 +1,99 @@
+{
+    "NLIS-Doublelightswitch_Legrand": {
+        "manufacturer": "Legrand",
+        "model": "067772",
+        "type": "Legrand Celiane 067772 double switch",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Legrand-Celiane-Double-Gray",
+            "mainEP": "01"
+        },
+        "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "On 1": {
+                "use": "zbCmd-0006-On",
+                "isVisible": "1"
+            },
+            "Off 1": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": "1"
+            },
+            "Toggle 1": {
+                "use": "zbCmd-0006-Toggle"
+            },
+            "Status 1": {
+                "use": "zb-0006-OnOff",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status 1": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
+            "Bind 01-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0006": {
+                "use": "zbConfigureReporting",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            
+            "On 2": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=02",
+                "isVisible": "1"
+            },
+            "Off 2": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=02",
+                "isVisible": "1"
+            },
+            "Toggle 2": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=02"
+            },
+            "Status 2": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=02",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status 2": {
+                "use": "zbReadAttribute",
+                "params": "ep=02&clustId=0006&attrId=0000"
+            },
+            "Bind 02-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=02&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 02-0006": {
+                "use": "zbConfigureReporting",
+                "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "include30": "setLegrandLEDOn",
+            "include31": "setLegrandLEDOff",
+            "include32": "setLegrandLEDOn_if_on",
+            "include33": "setLegrandLEDOff_if_on"
+        }
+    }
+}

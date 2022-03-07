@@ -117,24 +117,37 @@
                     $oldSyntax = false;
                 }
 
-                /* include ToggleEpxx => Toggle use zbCmd-0006-Toggle */
-                // if (substr($cmdFName, 0, 8) == "ToggleEp") {
-                //     $epId = substr($cmdFName, 8);
-                //     $dev[$devName]['commands']['Toggle '.$epId]['use'] = "zbCmd-0006-Toggle";
-                //     $dev[$devName]['commands']['Toggle '.$epId]['params'] = "ep=".$epId;
-                //     $dev[$devName]['commands']['Toggle '.$epId]['nextLine'] = "after";
-                //     if ($oldSyntax)
-                //         unset($dev[$devName]['commands'][$key]);
-                //     $devUpdated = true;
-                //     echo "  Cmd '".$cmdFName."' replaced by 'zbCmd-0006-Toggle'.\n";
-                //     continue;
-                // }
-                // if (($cmdFName == "getManufacturerName") && $oldSyntax) {
-                //     unset($dev[$devName]['commands'][$key]);
-                //     $devUpdated = true;
-                //     echo "  Cmd '".$cmdFName."' REMOVED.\n";
-                // }
-                if (($cmdFName == "etat") && $oldSyntax) {
+                // Cluster 0001 updates
+                if (($cmdFName == "BindToPowerConfig") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zbBindToZigate",
+                        "params" => "clustId=0001",
+                        "execAtCreation" => "Yes",
+                        "execAtCreationDelay" => 10
+                    );
+                    $commands2["Bind-0001-ToZigate"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "getBatteryVolt") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zbReadAttribute",
+                        "params" => "clustId=0001&attrId=0020",
+                    );
+                    $commands2["Get Battery-Volt"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "getBattery") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zbReadAttribute",
+                        "params" => "clustId=0001&attrId=0021",
+                    );
+                    $commands2["Get Battery-Percent"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                }
+
+                // Cluster 0006 updates
+                else if (($cmdFName == "etat") && $oldSyntax) {
                     $cmdArr = Array(
                         "use" => "zb-0006-OnOff",
                         // "params" => "ep=03",
@@ -252,7 +265,6 @@
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
-
                 else if (($cmdFName == "getEtat") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbReadAttribute",
@@ -277,27 +289,10 @@
                     $commands2["On"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "BindToPowerConfig") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use"=> "zbBindToZigate",
-                        "params" => "clustId=0001",
-                        "execAtCreation" => "Yes",
-                        "execAtCreationDelay" => 10
-                    );
-                    $commands2["Bind-0001-ToZigate"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "BindShortToSmokeHeiman") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use"=> "zbBindToZigate",
-                        "params" => "clustId=0500",
-                        "execAtCreation" => "Yes",
-                        "execAtCreationDelay" => 9
-                    );
-                    $commands2["Bind-0500-ToZigate"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "setReportLevel") && $oldSyntax) {
+                }
+
+                // Cluster 0008 updates
+                else if (($cmdFName == "setReportLevel") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbConfigureReporting",
                         "params" => "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
@@ -323,7 +318,9 @@
                     $commands2["Get-CurrentLevel"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "colorX") && $oldSyntax) {
+                }
+
+                else if (($cmdFName == "colorX") && $oldSyntax) {
                     $cmdArr = Array(
                         "use" => "zb-0300-CurrentX",
                         "isVisible" => 1,
@@ -394,7 +391,46 @@
                     $commands2["Set Red"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else {
+                }
+
+                // Cluster 0500 updates
+                else if (($cmdFName == "BindShortToSmokeHeiman") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zbBindToZigate",
+                        "params" => "clustId=0500",
+                        "execAtCreation" => "Yes",
+                        "execAtCreationDelay" => 9
+                    );
+                    $commands2["Bind-0500-ToZigate"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                }
+
+                // Cluster 0B04 updates
+                else if (($cmdFName == "getPlugA") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "poll-0B04-0508",
+                    );
+                    $commands2["Poll 0B04-0508"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "getPlugPower") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "poll-0B04-050B",
+                    );
+                    $commands2["Poll 0B04-050B"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "getPlugV") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "poll-0B04-0505",
+                    );
+                    $commands2["Poll 0B04-0505"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                }
+
+                else {
                     $commands2[$key] = $value;
                 }
             }

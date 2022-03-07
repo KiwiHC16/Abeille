@@ -11,6 +11,6 @@
             "request": "clusterCommand=00"
         },
         "type": "action",
-        "genericType": ""
+        "genericType": "FLAP_UP"
     }
 }

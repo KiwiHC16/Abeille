@@ -104,15 +104,15 @@
         }
 
         /* Cmd execution.
-           Tcharp38: why is it part of AbeilleCmd ? Shouldn't be in Abeille.class.php ? 
-           KiwiHC16: It's part of Jeedom Structure. You have a class for Eq and a Class for Cmd. AbeilleCmd is child of Cmd Class, Abeille is child of eqLogic class. 
+           Tcharp38: why is it part of AbeilleCmd ? Shouldn't be in Abeille.class.php ?
+           KiwiHC16: It's part of Jeedom Structure. You have a class for Eq and a Class for Cmd. AbeilleCmd is child of Cmd Class, Abeille is child of eqLogic class.
         */
         public function execute($_options = null)
         {
             global $abQueues;
 
             logSetConf("AbeilleCmd.log", true); // Mandatory since called from 'Abeille.class.php'
-            logMessage('debug', '-- execute(eqName='.$this->getEqLogic()->getName().' name='.$this->getName().' type='.$this->getType().', options='.json_encode($_options).')');
+            logMessage('debug', "-- execute(eqName='".$this->getEqLogic()->getName()."' name='".$this->getName()."' type=".$this->getType().', options='.json_encode($_options).')');
 
             // TODO: A revoir, je ne sais plus ce qu'est ce truc.
             // cmdId : 12676 est le level d une ampoule

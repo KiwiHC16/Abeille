@@ -11,6 +11,6 @@
             "request": "clusterCommand=02"
         },
         "type": "action",
-        "genericType": ""
+        "genericType": "FLAP_STOP"
     }
 }

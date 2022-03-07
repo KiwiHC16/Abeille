@@ -20,9 +20,15 @@
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1
             },
-            "include2 2 - Ok": "getBattery",
+            "Get Battery-Percent": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0001&attrId=0021"
+            },
             "include3 1 - Ok": "Batterie-Volt-Konke",
-            "include3 2 - Ok": "getBatteryVolt",
+            "Get Battery-Volt": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0001&attrId=0020"
+            },
             "include4 1 - Ok": "spiritTemperature",
             "include4 2 - Ok": "spiritTemperatureGet",
             "include5 1 - Ok": "danfossSystemeModeValue",

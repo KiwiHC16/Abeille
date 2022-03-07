@@ -1,5 +1,6 @@
 {
     "relay.c2acn01": {
+        "manufacturer": "Xiaomi/Aqara",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",

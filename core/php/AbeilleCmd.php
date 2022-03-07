@@ -82,10 +82,10 @@
 
         while (true) {
             // Treat Zigate statuses (0x8000 cmd) coming from parser
-            $AbeilleCmdQueue->processZigateAcks();
+            $AbeilleCmdQueue->processAcks();
 
             // Treat pending commands for zigate
-            $AbeilleCmdQueue->processZigateCmdQueues();
+            $AbeilleCmdQueue->processCmdQueues();
 
             // Check zigate ACK
             $AbeilleCmdQueue->zigateAckCheck();

@@ -11,6 +11,6 @@
             "request": "clusterCommand=01"
         },
         "type": "action",
-        "genericType": ""
+        "genericType": "FLAP_DOWN"
     }
 }

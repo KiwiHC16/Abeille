@@ -116,12 +116,17 @@
                     'jsonId' => $dirEntry,
                     'location' => $from
                 );
-                $devicesList[$dirEntry] = $dev;
 
                 /* Check if config is compliant with other device identification */
                 $content = file_get_contents($fullPath);
                 $devConf = json_decode($content, true);
                 $devConf = $devConf[$dirEntry]; // Removing top key
+                $dev['manufacturer'] = isset($devConf['manufacturer']) ? $devConf['manufacturer'] : '';
+                $dev['model'] = isset($devConf['model']) ? $devConf['model']: '';
+                $dev['type'] = $devConf['type'];
+                $dev['icon'] = $devConf['configuration']['icon'];
+                $devicesList[$dirEntry] = $dev;
+
                 if (isset($devConf['alternateIds'])) {
                     $idList = explode(',', $devConf['alternateIds']);
                     foreach ($idList as $id) {

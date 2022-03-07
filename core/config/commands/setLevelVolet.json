@@ -7,6 +7,7 @@
         "value": "Level",
         "invertBinary": "0",
         "template": "",
+        "genericType": "FLAP_SLIDER",
         "configuration": {
             "topic": "setLevelVolet",
             "request": "Level=#slider#&duration=01",

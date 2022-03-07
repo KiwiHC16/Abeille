@@ -25,7 +25,10 @@
             "include3": "onGroup",
             "include3 2": "setLevelGroup",
             "include8": "addGroupEP1",
-            "include9": "getBattery",
+            "Get Battery-Percent": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0001&attrId=0021"
+            },
             "Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",

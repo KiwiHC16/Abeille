@@ -7,6 +7,7 @@
         "subType": "other",
         "invertBinary": "0",
         "template": "",
+        "genericType": "FLAP_UP",
         "configuration": {
             "topic": "setLevel",
             "request": "Level=100&duration=0000&EP=#EP#",

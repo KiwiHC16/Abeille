@@ -1,14 +1,41 @@
 ChangeLog
 =========
 
+- Interne: AbeilleCmd: Mises-à-jour, corrections, améliorations (dont vitesse) & nettoyage.
+- Interne: AbeilleCmd: Gestion mode ACK etendu aux commandes internes suivantes:
+
+  - bind0030
+  - configureReporting
+  - getActiveEnpoints
+  - writeAttibute
+  - writeAttribute0530
+  - sendReadAttributesResponse
+  - readReportingConfig
+- Legrand double switch (NLIS-Doublelightswitch_Legrand): Ajout support (2343).
+- Interne: AbeilleCmd: Suppression cmds obsoletes 'ReadAttributeRequestXX'.
+- JSON équipements: Suppression cmdes obsoletes
+
+  - 'getBattery' => 'readAttribute' + 'attrId=0021'
+  - 'getBatteryVolt' => 'readAttribute' + 'attrId=0020'
+  - 'getPlugA' => 'poll-0B04-0508'
+  - 'getPlugPower' => 'poll-0B04-050B'
+  - 'getPlugV' => 'poll-0B04-0505'
+- Interne: AbeilleCmd: Correction génération SQN pour cmds 0530.
+- Liste compatibilité: Correction pour suppression affichage 'discovery'.
+- Mise à jour OTA: Correction queue.
+- Hue outdoor motion sensor SML002: Mise-à-jour modèle (2309).
+- Volets Profalux: Correction types génériques pour appli mobiles.
+- Analyse équipements/niveau batterie: Correction regression (2345).
+- Interne: Parser->Abeille: optimisation msg
+
+  - attributeReport => attributesReportN.
+  - reportAttributes => attributesReportN.
+  - readAttributesResponse => readAttributesResponseN.
+
 220228-BETA-2
 -------------
 
 - Remplacement d'équipements: Nouvelle mise-à-jour + doc (2337).
-
-220228-BETA-1
--------------
-
 - Interne: Parser: Certains messages dupliqués sont ignorés.
 - Récupération des fantômes: Amélioration.
 - Interne: Migration codes obsoletes vers 'archives': LqiStorage.x, RouteRecord.x, Jennic binary.

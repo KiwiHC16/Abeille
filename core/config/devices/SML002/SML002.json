@@ -40,7 +40,8 @@
             },
             "SetReporting-0400-0000": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=",
+                "comment": "Reporting every 5 to 10mins",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
@@ -58,7 +59,8 @@
             },
             "SetReporting-0402-0000": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0402&attrType=29&attrId=0000&minInterval=0000&maxInterval=0DAC&changeVal=",
+                "params": "clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=",
+                "comment": "Reporting every 5 to 10mins",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 12
             },

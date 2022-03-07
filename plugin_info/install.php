@@ -201,6 +201,7 @@
            - AbeilleDebug.log moved to /tmp/jeedom
            - Cmd DB: 'ab::trig' => 'ab::trigOut'
            - Cmd DB: 'ab::trigOffset' => 'ab::trigOutOffset'
+           - Cmd DB: 'ReadAttributeRequest' => 'readAttribute'
          */
         if (intval($dbVersion) < 20201122) {
             if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
@@ -292,6 +293,19 @@
                         $cmdLogic->setConfiguration('ab::trigOutOffset', $confVal);
                         $cmdLogic->setConfiguration('ab::trigOffset', null);
                         log::add('Abeille', 'debug', '  '.$eqName.": 'ab::trigOffset' updated to 'ab::trigOutOffset'");
+                        $saveCmd = true;
+                    }
+                    $topic = $cmdLogic->getConfiguration('topic', '');
+                    $request = $cmdLogic->getConfiguration('request', '');
+                    // Updating ReadAttributeRequest to readAttribute
+                    if ($topic == "ReadAttributeRequest") {
+                        $cmdLogic->setConfiguration('topic', 'readAttribute');
+                        $request = str_replace("clusterId=", "clustId=", $request);
+                        $request = str_replace("attributeId=", "attrId=", $request);
+                        $request = str_replace("EP=", "ep=", $request);
+                        $request = str_replace("Proprio=", "manufId=", $request);
+                        $cmdLogic->setConfiguration('request', $request);
+                        log::add('Abeille', 'debug', '  '.$eqName.": 'ReadAttributeRequest' updated to 'readAttribute'");
                         $saveCmd = true;
                     }
                     if ($saveCmd)

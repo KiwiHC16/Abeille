@@ -2,9 +2,9 @@
     require_once __DIR__.'/../../core/config/Abeille.config.php';
     include_once __DIR__.'/../../core/php/AbeilleOTA.php';
 
-    echo '<script>var js_queueKeyXmlToCmd = "'.queueKeyXmlToCmd.'";</script>'; // PHP to JS
     echo '<script>var js_otaDir = "'.otaDir.'";</script>'; // PHP to JS
     $abQueues = $GLOBALS['abQueues'];
+    echo '<script>var js_queueKeyXmlToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
     echo '<script>var js_queueCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
     echo '<script>var js_queueCtrlToCmd = "'.$abQueues['ctrlToCmd']['id'].'";</script>'; // PHP to JS
 ?>

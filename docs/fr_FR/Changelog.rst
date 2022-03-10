@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220310-BETA-2
+-------------
+
 - Interne: SerialRead: Suppression warning fopen().
 - JSON équipements: Suppression cmdes obsoletes
 

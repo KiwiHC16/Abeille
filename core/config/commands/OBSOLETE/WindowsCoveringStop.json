@@ -1,0 +1,17 @@
+{
+    "WindowsCoveringStop": {
+        "isVisible": 1,
+        "name": "Stop",
+        "isHistorized": 0,
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "WindowsCovering",
+            "request": "clusterCommand=02",
+            "visibilityCategory": "All"
+        },
+        "type": "action",
+        "genericType": ""
+    }
+}

@@ -10,7 +10,10 @@
         },
         "type": "Legrand Micro Module Encastrable 220V avec Neutre et un bouton poussoir",
         "commands": {
-            "include4": "etatLight",
+            "etat": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1

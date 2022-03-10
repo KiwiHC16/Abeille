@@ -102,7 +102,8 @@
             }
 
             // Config done. Opening
-            $f = fopen($serial, "r");
+            // Note: '@' to suppress PHP warning message.
+            $f = @fopen($serial, "r");
             if ($f !== false) {
                 logMessage('debug', $serial.' port opened');
                 stream_set_blocking($f, true); // Should be blocking read but is it default ?

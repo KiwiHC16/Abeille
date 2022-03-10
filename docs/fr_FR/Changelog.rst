@@ -1,6 +1,21 @@
 ChangeLog
 =========
 
+- Interne: SerialRead: Suppression warning fopen().
+- JSON équipements: Suppression cmdes obsoletes
+
+  - 'etatLight' => 'zb-0006-OnOff'
+  - 'WindowsCoveringUp' => 'zbCmd-0102-UpOpen'
+  - 'WindowsCoveringDown' => 'zbCmd-0102-DownClose'
+  - 'WindowsCoveringStop' => 'zbCmd-0102-Stop'
+- Philips RWL021: Mise-à-jour modèle (1243).
+- Evology 4 buttons (3450-Geu_CentraLite): Ajout support (2318).
+- Interne: Parser: Clust 0007 supporté par decode8002().
+- Tradfri GU10 340lm White, LED2005R5: Ajout support (2344).
+- Ampoule Lexman Gu10 460lm (ZBEK-4, Adeo): Ajout support (2348).
+- Interne: AbeilleCmd: Corrections & améliorations.
+- Page EQ/avancé: Configurer le reporting: Ajout type attribut.
+
 220307-BETA-1
 -------------
 

@@ -42,27 +42,27 @@
                 return 0;
         }
 
-        public function addNewCmdToQueue($priority, $newCmd) {
-            // if ($priority == PRIO_HIGH) {
-            //     $this->zigates[$zgId]['cmdQueueHigh'][] = $newCmd;
-            //     cmdLog("debug", "      \->Added cmd to Zigate".$zgId." HIGH priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
-            //     if (count($this->zigates[$zgId]['cmdQueueHigh']) > 50) {
-            //         cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
-            //     }
-            // }
-            // else {
-            //     $this->zigates[$zgId]['cmdQueue'][] = $newCmd;
-            //     cmdLog("debug", "      \->Added cmd to Zigate".$zgId." normal priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
-            //     if (count($this->zigates[$zgId]['cmdQueue']) > 50) {
-            //         cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
-            //     }
-            // }
+        // public function addNewCmdToQueue($priority, $newCmd) {
+        //     // if ($priority == PRIO_HIGH) {
+        //     //     $this->zigates[$zgId]['cmdQueueHigh'][] = $newCmd;
+        //     //     cmdLog("debug", "      \->Added cmd to Zigate".$zgId." HIGH priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
+        //     //     if (count($this->zigates[$zgId]['cmdQueueHigh']) > 50) {
+        //     //         cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
+        //     //     }
+        //     // }
+        //     // else {
+        //     //     $this->zigates[$zgId]['cmdQueue'][] = $newCmd;
+        //     //     cmdLog("debug", "      \->Added cmd to Zigate".$zgId." normal priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
+        //     //     if (count($this->zigates[$zgId]['cmdQueue']) > 50) {
+        //     //         cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
+        //     //     }
+        //     // }
 
-            $this->zigates[$this->zgId]['cmdQueue'][$priority][] = $newCmd;
-            if (count($this->zigates[$this->zgId]['cmdQueue'][$priority]) > 50) {
-                cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$this->zgId.' cmd queue: '.$priority);
-            }
-        }
+        //     $this->zigates[$this->zgId]['cmdQueue'][$priority][] = $newCmd;
+        //     if (count($this->zigates[$this->zgId]['cmdQueue'][$priority]) > 50) {
+        //         cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$this->zgId.' cmd queue: '.$priority);
+        //     }
+        // }
 
         public function removeFirstCmdFromQueue($priority) {
             if ($this->checkCmdToSendInTheQueue($priority))
@@ -167,7 +167,7 @@
             $zg['nPDU'] = 0;                // Last NDPU
             $zg['aPDU'] = 0;                // Last APDU
             $zg['cmdQueue'] = array();      // Array of queues. One queue per priority from priorityMin to priorityMax.
-            foreach ( range( priorityMin, priorityMax) as $prio ) {
+            foreach(range(priorityMin, priorityMax) as $prio) {
                 $zg['cmdQueue'][$prio] = array();
             }
             $zg['sentPri'] = 0;             // Priority for last sent cmd for following 8000 ack
@@ -334,7 +334,7 @@
          * @return  none
          */
         function addCmdToQueue2($priority = PRIO_NORM, $net = '', $cmd = '', $payload = '', $addr = '', $addrMode = null) {
-            cmdLog("debug", "    addCmdToQueue2(Pri=".$priority.", Net=".$net.", Cmd=".$cmd.", Payload=".$payload.", Addr=".$addr." AddrMode=".$addrMode.")");
+            cmdLog("debug", "    addCmdToQueue2(Pri=".$priority.", Net=".$net.", Cmd=".$cmd.", Payload=".$payload.", Addr=".$addr.", AddrMode=".$addrMode.")");
 
             $zgId = substr($net, 7);
             $this->zgId = $zgId;
@@ -365,6 +365,19 @@
                 return;
             }
 
+            // Overflow optimisation
+            // Ignoring if same cmd/payload already in the pipe
+            // TODO: May need to take care about 'toggle' case.
+            $pendingCmds = $this->zigates[$zgId]['cmdQueue'][$priority];
+            foreach($pendingCmds as $pendCmd) {
+                if ($pendCmd['cmd'] != $cmd)
+                    continue;
+                if ($pendCmd['datas'] == $payload) {
+                    cmdLog('debug', '      Same cmd already pending => ignoring');
+                    return;
+                }
+            }
+
             // $this->incStatCmd($cmd);
 
             if (($addrMode == "02") || ($addrMode == "03"))
@@ -380,7 +393,7 @@
                 'status'    => '', // '', 'SENT', '8000', '8012' or '8702', '8011'
                 'try'       => $this->maxRetry + 1, // Number of retries if failed
                 'sentTime'  => 0, // For lost cmds timeout
-                'sqn'    => '', // Internal SQN
+                'sqn'       => '', // Internal SQN
                 'sqnAps'    => '', // Network SQN
                 'ackAps'    => $ackAps, // 1 if ACK, 0 else
             );
@@ -388,7 +401,12 @@
             // if ($addrMode && ($this->zgGetHw()) && ($this->zgGetFw() >= 0x31e))
             //     $newCmd['addrMode'] = $addrMode; // For flow control if v1 & FW >= 3.1e
 
-            $this->addNewCmdToQueue($priority,$newCmd);
+            // Adding new cmd to FIFO
+            // $this->addNewCmdToQueue($priority, $newCmd);
+            $this->zigates[$zgId]['cmdQueue'][$priority][] = $newCmd;
+            if (count($this->zigates[$zgId]['cmdQueue'][$priority]) > 50) {
+                cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$this->zgId.' cmd queue: '.$priority);
+            }
         } // End addCmdToQueue2()
 
         /**
@@ -399,7 +417,7 @@
         function getCmd($zgId, $sqnAps, &$lastSent = false) {
             $zg = $this->zigates[$zgId];
 
-            foreach (range(priorityMin, priorityMax) as $prio) {
+            foreach (range(priorityMax, priorityMin) as $prio) {
                 foreach ($zg['cmdQueue'][$prio] as $cmdIdx => $cmd) {
                     if ($cmd['sqnAps'] == $sqnAps) {
                         // Is it the last sent cmd ?
@@ -498,7 +516,7 @@
             }
 
             foreach ($this->zigates as $zgId => $zg) {
-                foreach ( range( priorityMin, priorityMax) as $prio ) {
+                foreach (range(priorityMin, priorityMax) as $prio) {
                     $queuesTxt .= ", Queue[".$zgId."][".$prio."]=".count($zg['cmdQueue'][$prio]);
 
                     if ($zgTxt != "")
@@ -522,9 +540,9 @@
                 if (!$this->zgGetEnable())      continue; // Disabled
                 if (!$this->zgGetAvailable())   continue;  // Not free
 
-                foreach( range( priorityMin, priorityMax) as $priority ) {
+                foreach(range(priorityMax, priorityMin) as $priority) {
                     if ($this->checkCmdToSendInTheQueue($priority)) {
-                        cmdLog('debug', "processCmdQueues()");
+                        cmdLog('debug', "processCmdQueues(): zigate ".$zgId);
 
                         $this->zgSetNotAvailable();     // Zigate no longer free
                         $this->zgSetSentPri($priority); // Keep the last queue used to send a cmd to this Zigate
@@ -541,6 +559,8 @@
 
                         if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
                             monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?
+
+                        break; // This zigate is no longer idle so do not check other priorities now.
                     }
                 }
 
@@ -738,7 +758,6 @@
                     if ($removeCmd) {
                         // cmdLog('debug', '                 queue before='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
 
-                        // array_shift($this->zigates[$zgId]['cmdQueueHigh']); // Removing cmd
                         cmdLog('debug', '  Removing cmd from queue');
                         $this->removeFirstCmdFromQueue($this->zgGetSentPri());
 
@@ -765,34 +784,15 @@
                 if ($this->zgGetAvailable())
                     continue; // Zigate is ON & available => nothing to check
 
-                // $zg = &$this->zigates[$zgId];
-                // if ($zg['sentPri'] == PRIO_HIGH) {
-                //     $queue = $zg['cmdQueueHigh'];
-                // } else {
-                //     $queue = $zg['cmdQueue'];
-                // }
-
                 $cmd = $this->zgGetQueueFirstMessage($this->zgGetSentPri());
+                if ($cmd['status'] == '')
+                    continue; // Not sent yet
                 if ($cmd['sentTime'] + 2 > time())
                     continue; // 2sec timeout not reached yet
 
                 cmdLog("debug", "zigateAckCheck(): WARNING: Zigate".$zgId." cmd ".$cmd['cmd']." TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
-                $this->zgSetAvailable();
-
                 $this->removeFirstCmdFromQueue($this->zgGetSentPri()); // Removing blocked cmd
-                // array_shift($this->zigates[$zgId]['cmdQueueHigh']);
-
-
-                // if ($this->timeLastAck[$zgId] == 0)
-                //     continue;
-
-                // $now = time();
-                // $delta = $now - $this->timeLastAck[$zgId];
-                // if ($delta > $this->timeLastAckTimeOut[$zgId]) {
-                //     cmdLog("debug", "zigateAckCheck(): WARNING: NO Zigate".$zgId." ACK since ".$delta." sec. Considering zigate available.");
-                //     $this->zigateAvailable[$zgId] = 1;
-                //     $this->timeLastAck[$zgId] = 0;
-                // }
+                $this->zgSetAvailable();
             }
         }
 
@@ -810,11 +810,11 @@
                 return;
             }
 
-            cmdLog("debug", "Msg from 'xToCmd': ".$msg['topic']." => ".$msg['payload'], $this->debug['AbeilleCmdClass']);
+            $prio = isset($msg['priority']) ? $msg['priority']: PRIO_NORM;
             $topic = $msg['topic'];
             $payload = $msg['payload'];
-            // $message->priority = $msg_priority;
-            $this->prepareCmd($topic, $payload);
+            cmdLog("debug", "Msg from 'xToCmd': Pri=".$prio.", ".$topic." => ".$payload, $this->debug['AbeilleCmdClass']);
+            $this->prepareCmd($prio, $topic, $payload);
         }
     }
 ?>

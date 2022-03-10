@@ -250,6 +250,18 @@
                     $commands2["etat charge ".$x] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "etatLight") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "zb-0006-OnOff",
+                        // "params" => "ep=".$ep,
+                        // "subType" => "numeric",
+                        // "template" => "door",
+                        // "genericType" => "LIGHT_STATE",
+                        "isVisible" => 1
+                    );
+                    $commands2["etat"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 } else if ((substr($cmdFName, 0, 9) == "etatInter") && $oldSyntax) {
                     $x = hexdec(substr($cmdFName, 9));
                     $ep = sprintf("%02X", $x + 1);
@@ -320,6 +332,40 @@
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
 
+                // Cluster 0102 updates
+                else if (($cmdFName == "WindowsCoveringStop") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zbCmd-0102-Stop",
+                        // "params" => "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                        // "execAtCreation" => "Yes",
+                        // "execAtCreationDelay" => 11
+                    );
+                    $commands2["Stop"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "WindowsCoveringDown") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zbCmd-0102-DownClose",
+                        // "params" => "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                        // "execAtCreation" => "Yes",
+                        // "execAtCreationDelay" => 11
+                    );
+                    $commands2["Down"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "WindowsCoveringUp") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use"=> "zbCmd-0102-UpOpen",
+                        // "params" => "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                        // "execAtCreation" => "Yes",
+                        // "execAtCreationDelay" => 11
+                    );
+                    $commands2["Up"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                }
+
+                // Cluster 0300 updates
                 else if (($cmdFName == "colorX") && $oldSyntax) {
                     $cmdArr = Array(
                         "use" => "zb-0300-CurrentX",

@@ -11,9 +11,15 @@
         "type": "SM-SW101-CZ",
         "commands": {
             "include4": "zb-0000-ZCLVersion",
-            "include9": "WindowsCoveringUp",
-            "include10": "WindowsCoveringDown",
-            "include10 2": "WindowsCoveringStop",
+            "Up": {
+                "use": "zbCmd-0102-UpOpen"
+            },
+            "Down": {
+                "use": "zbCmd-0102-DownClose"
+            },
+            "Stop": {
+                "use": "zbCmd-0102-Stop"
+            },
             "include25": "Group-Membership",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

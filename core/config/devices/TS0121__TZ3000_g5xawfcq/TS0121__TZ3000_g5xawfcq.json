@@ -11,7 +11,10 @@
         },
         "type": "Blitzwolf-BW-SHP13",
         "commands": {
-            "include4": "etatLight",
+            "etat": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1
@@ -41,7 +44,9 @@
             "include3 2 2 2 2": "PuissanceCurrentPrise",
             "include3 2 2 2": "PuissanceLegrandPrise",
             "include3 2 2 2 3": "CurrentSummationDelivered",
-            "Poll 0B04": { "use": "poll-0B04-0505-0508-050B" },
+            "Poll 0B04": {
+                "use": "poll-0B04-0505-0508-050B"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

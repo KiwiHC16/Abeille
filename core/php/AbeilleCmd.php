@@ -136,7 +136,7 @@
             $AbeilleCmdQueue->execTempoCmdAbeille();
 
             /* Display queues status every 30sec */
-            if ((time() - $last) > 30 ) {
+            if ((time() - $last) > 30) {
                 $AbeilleCmdQueue->displayStatus();
                 $last = time();
             }

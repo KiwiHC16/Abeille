@@ -48,36 +48,34 @@
          * @return none
          *
          */
-        function prepareCmd($topic, $payload, $phpunit=0) {
+        function prepareCmd($priority, $topic, $payload, $phpunit=0) {
 
-            cmdLog("debug", "  prepareCmd(".$topic.", ".$payload.")", $this->debug['prepareCmd']);
+            cmdLog("debug", "  prepareCmd(".$priority.", ".$topic.", ".$payload.")", $this->debug['prepareCmd']);
 
             $msg        = $payload;
-            // $priority   = $message->priority;
-            $priority   = PRIO_NORM; // TO be removed. Default value
 
             // Expecting 3 infos: <type>/<addr>/<action>
             if (sizeof(explode('/', $topic)) != 3) {
-                cmdLog("debug", "  prepareCmd(): Mauvais format de message reçu (topic=".$topic.").");
+                cmdLog("debug", "    WARNING: Bad topic format (".$topic.").");
                 return ;
             }
             list ($type, $address, $action) = explode('/', $topic);
 
             if (preg_match("(^TempoCmd)", $type)) {
-                cmdLog("debug", "  Ajoutons le message a queue Tempo.", $this->debug['prepareCmd2']);
+                cmdLog("debug", "    Ajoutons le message a queue Tempo.", $this->debug['prepareCmd2']);
                 $this->addTempoCmdAbeille($topic, $msg, $priority);
                 return;
             }
 
             if (!preg_match("(^Cmd)", $type)) {
-                cmdLog('warning', '  Msg Received: Type: {'.$type.'} <> Cmdxxxxx donc ce n est pas pour moi, no action.');
+                cmdLog('warning', '    Msg Received: Type: {'.$type.'} <> Cmdxxxxx donc ce n est pas pour moi, no action.');
                 return;
             }
 
             $dest = str_replace('Cmd', '',  $type); // Remove 'Cmd' prefix
 
-            cmdLog("debug", '  Msg Received: Topic: {'.$topic.'} => '.$msg, $this->debug['prepareCmd3']);
-            cmdLog("debug", '  (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action, $this->debug['prepareCmd3']);
+            cmdLog("debug", '    Msg Received: Topic: {'.$topic.'} => '.$msg, $this->debug['prepareCmd3']);
+            cmdLog("debug", '    (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action, $this->debug['prepareCmd3']);
 
             $convertOnOff = array(
                 "On"      => "01",
@@ -391,8 +389,7 @@
                         "addressMode"           => "02",
                         "address"               => $address,
                         "destinationEndpoint"   => $parameters['EP'],
-                        "action"                => $convertOnOff[$parameters['Action']],
-                        "AckAPS"                => AckAPS,
+                        "action"                => $convertOnOff[$parameters['Action']]
                     );
                 }
                 else {
@@ -403,8 +400,7 @@
                         "addressMode"           => "02",
                         "address"               => $address,
                         "destinationEndpoint"   => "01",
-                        "action"                => $convertOnOff[$msg],
-                        "AckAPS"                => AckAPS,
+                        "action"                => $convertOnOff[$msg]
                     );
                 }
                 break;
@@ -1317,7 +1313,7 @@
                 $Command = array(
                     $action => $action, // Tcharp38: Legacy. Replaced by 'name' field. To be removed at some point.
                     "name" => $action,
-                    // "priority" => $priority,
+                    "priority" => $priority,
                     "dest" => $dest,
                 );
                 // Splitting by '&' then by '='

@@ -121,9 +121,9 @@
         "0001" => array(
             "name" => "Power configuration",
             "attributes" => array(
-                "0000" => array( "name" => "MainsVoltage", "access" => "R" ),
-                "0020" => array( "name" => "BatteryVoltage", "access" => "R" ),
-                "0021" => array( "name" => "BatteryPercentageRemaining", "access" => "R" ),
+                "0000" => array( "name" => "MainsVoltage", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0020" => array( "name" => "BatteryVoltage", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0021" => array( "name" => "BatteryPercentageRemaining", "access" => "R", "dataType" => 0x20 ), // uint8
             ),
         ),
         "0002" => array(

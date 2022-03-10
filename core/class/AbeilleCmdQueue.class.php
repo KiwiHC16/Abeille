@@ -404,6 +404,15 @@
             // Adding new cmd to FIFO
             // $this->addNewCmdToQueue($priority, $newCmd);
             $this->zigates[$zgId]['cmdQueue'][$priority][] = $newCmd;
+
+            $queuesTxt = '';
+            foreach (range(priorityMax, priorityMin) as $prio) {
+                if ($queuesTxt != '')
+                    $queuesTxt .= ', ';
+                $queuesTxt .= "[".$prio."]=".count($this->zigates[$zgId]['cmdQueue'][$prio]);
+            }
+            cmdLog('debug', '      Zg '.$zgId.' queues: '.$queuesTxt);
+
             if (count($this->zigates[$zgId]['cmdQueue'][$priority]) > 50) {
                 cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$this->zgId.' cmd queue: '.$priority);
             }
@@ -526,7 +535,6 @@
             }
 
             cmdLog("debug", "Status, queues : ".$queuesTxt);
-
         }
 
         function processCmdQueues() {
@@ -634,9 +642,10 @@
                 if ($msg['type'] == "8010") {
                     cmdLog("debug", "  8010 msg: FwVersion=".$msg['major']."-".$msg['minor']);
                     if ($msg['major'] == '0005')
-                        $this->setFwVersion($zgId, 2);
+                        $hw = 2; // Zigate v2
                     else
-                        $this->setFwVersion($zgId, 1, hexdec($msg['minor']));
+                        $hw = 1;
+                    $this->setFwVersion($zgId, $hw, hexdec($msg['minor']));
                     continue;
                 }
 

@@ -1,0 +1,12 @@
+{
+    "zbCmdR-0006-On": {
+        "name": "0006-cmd01",
+        "comment": "Cluster 0006/ON cmd, received from device",
+        "subType": "binary",
+        "type": "info",
+        "logicalId": "#EP#-0006-cmd01",
+        "configuration": {
+            "repeatEventManagement": "always"
+        }
+    }
+}

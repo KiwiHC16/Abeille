@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Evology 4 buttons (3450-Geu_CentraLite): Mise-à-jour modèle (2318).
+
 220310-BETA-1
 -------------
 

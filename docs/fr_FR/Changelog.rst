@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-220310-BETA-2
+220310-BETA-3
 -------------
 
 - Interne: SerialRead: Suppression warning fopen().

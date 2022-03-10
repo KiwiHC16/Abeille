@@ -1,5 +1,8 @@
 {
     "Shutterswitchwithneutral": {
+        "manufacturer": "Legrand",
+        "model": "067726",
+        "type": "C\u00e9liane Wired Roller Shutter Switch",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -8,31 +11,36 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Shutter switch with neutral",
         "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
             "include5": "current_position_lift_percentage",
-            "include9": "WindowsCoveringUp",
-            "include10": "WindowsCoveringDown",
-            "include10 2": "WindowsCoveringStop",
+            "Up": {
+                "use": "zbCmd-0102-UpOpen"
+            },
+            "Down": {
+                "use": "zbCmd-0102-DownClose"
+            },
+            "Stop": {
+                "use": "zbCmd-0102-Stop"
+            },
             "include20": "getcurrent_position_lift_percentage",
             "include24": "Identify",
             "include25": "Group-Membership",
-            "Bind-0102-ToZigate": {
+            "Bind 0102-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0102",
                 "execAtCreation": "Yes"
             },
-            "SetReporting-0102-0008": {
+            "SetReporting 0102-0008": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0102&attrType=10&attrId=0008&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
-            },
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
             }
         }
     }

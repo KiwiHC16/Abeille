@@ -1,0 +1,17 @@
+{
+    "WindowsCoveringUp": {
+        "isVisible": 1,
+        "name": "Up",
+        "isHistorized": 0,
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "WindowsCovering",
+            "request": "clusterCommand=00",
+            "visibilityCategory": "All"
+        },
+        "type": "action",
+        "genericType": ""
+    }
+}

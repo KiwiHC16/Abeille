@@ -28,9 +28,9 @@
         <?php
             $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', '');
             if (($jsonLocation == '') || ($jsonLocation == "Abeille"))
-                echo '<span title="Le modèle utilisé est celui fourni par Abeille">Officielle</span>';
+                echo '<span title="Le modèle utilisé est celui fourni par Abeille">Abeille</span>';
             else
-                echo '<span title="Le modèle utilisé est un modèle local/custom">Locale/custom</span>';
+                echo '<span title="Le modèle utilisé est un modèle local/custom">Modèle local</span>';
 
             $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
             if ($jsonId == "defaultUnknown") {

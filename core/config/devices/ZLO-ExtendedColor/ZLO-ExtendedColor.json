@@ -10,7 +10,10 @@
         },
         "type": "ZLO-ExtendedColor Test for Dev",
         "commands": {
-            "include4": "etatLight",
+            "etat": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1
+            },
             "CurrentLevel-0008": {
                 "use": "zb-0008-CurrentLevel",
                 "isVisible": 1

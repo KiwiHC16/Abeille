@@ -18,9 +18,15 @@
                 "use": "zb-0006-OnOff",
                 "isVisible": 1
             },
-            "include0102-1": "WindowsCoveringUp",
-            "include0102-2": "WindowsCoveringDown",
-            "include0102-3": "WindowsCoveringStop"
+            "Up": {
+                "use": "zbCmd-0102-UpOpen"
+            },
+            "Down": {
+                "use": "zbCmd-0102-DownClose"
+            },
+            "Stop": {
+                "use": "zbCmd-0102-Stop"
+            }
         }
     }
 }

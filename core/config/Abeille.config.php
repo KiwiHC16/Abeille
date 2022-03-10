@@ -20,12 +20,7 @@
     $abQueues["parserToCmdAck"] = array( "id" => 0x3E7, "max" => 512 ); // Parser to cmd for 8000/8012/8702 statuses
     $abQueues["parserToAbeille"] = array( "id" => 221, "max" => 512 ); // Parser Abeille, old path
     $abQueues["parserToAbeille2"] = array( "id" => 222, "max" => 512 ); // Parser Abeille, new path
-    // $abQueues["LQIToCmd"] = array( "id" => 523, "max" => 512 ); // Parser Abeille, new path
     $abQueues["xToCmd"] = array( "id" => 1212, "max" => 512 ); // AbeilleCmd inputs
-    // $abQueues["cmdToCmd"] = array( "id" => 323, "max" => 512 );
-    // $abQueues["xmlToCmd"] = array( "id" => 623, "max" => 512 );
-    // $abQueues["formToCmd"] = array( "id" => 723, "max" => 512 );
-    // $abQueues["abeilleToCmd"] = array( "id" => 123, "max" => 512 );
     $abQueues["cmdToMon"] = array( "id" => 130, "max" => 512 ); // Messages to zigate (cmd to monitor)
     $abQueues["parserToMon"] = array( "id" => 131, "max" => 512 ); // Messages from zigate (parser to monitor)
     $abQueues["monToCmd"] = array( "id" => 132, "max" => 512 ); // Messages to cmd (addr update)
@@ -37,18 +32,18 @@
     $abQueues["cmdToAbeille"] = array( "id" => 321, "max" => 512 ); // ?
     $GLOBALS['abQueues'] = $abQueues;
 
-    define('priorityMin',           1);
+    // Tcharp38 note: WARNING: TOP PRIORITY is 1, not 5
+    define('priorityMax',           1);
     define('priorityUserCmd',       1); // Action utiliateur qui doit avoir une sensation de temps réel
     define('priorityNeWokeUp',      2); // Action si un NE est detecté reveillé et qu'on veut essayer de lui parler
     define('priorityInclusion',     3); // Message important car le temps est compté pour identifier certains équipements
     define('priorityInterrogation', 4); // Message pour recuperer des etats, valeurs
     define('priorityLostNE',        5); // Si le NE est en TimeOut il n'est pas prioritaire car il est peut etre off.
-    define('priorityMax',           5); // est egale aux max des priorités définies.
+    define('priorityMin',           5); // est egale aux max des priorités définies.
 
     // New priorities model, will be replaced by old one again after code review (KiwiHC16)
     define('PRIO_NORM', priorityInterrogation); // Normal
-    define('PRIO_HIGH', priorityUserCmd); // High priority (ex: parser to cmd to react on wakeup)
-
+    define('PRIO_HIGH', priorityMax); // High priority (ex: parser to cmd to react on wakeup)
 
     define('maxNbOfZigate', 10); // Number of supported zigates
     $GLOBALS['maxNbOfZigate'] = maxNbOfZigate;
@@ -86,7 +81,4 @@
     define('daemonSocat9', 1 << 20);
     define('daemonSocat10', 1 << 21);
     define('daemonMonitor', 1 << 22);
-
-
-    define('AckAPS', 1); // Request an APS Ack.
 ?>

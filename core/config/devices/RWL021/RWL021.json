@@ -2,18 +2,40 @@
     "RWL021": {
         "manufacturer": "Philips",
         "model": "RWL021",
+        "type": "Hue Dimmer Switch RWL021",
         "timeout": "60",
         "configuration": {
             "lastCommunicationTimeOut": "-1",
-            "mainEP": "01",
+            "mainEP": "02",
             "icon": "RWL021",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "light": "1"
         },
-        "type": "Hue Dimmer Switch RWL021",
         "commands": {
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Get Battery-Percent": {
+                "use": "zbReadAttribute",
+                "params": "ep=02&clustId=0001&attrId=0021"
+            },
+            "Bind 02-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=02&clustId=0001",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "SetReporting 02-0001-0021": {
+                "use": "zbConfigureReporting",
+                "params": "ep=02&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 7
+            },
+
             "include1": "offGroup",
             "include2": "toggleGroup",
             "include3": "onGroup",
@@ -32,26 +54,6 @@
                 "params": "ep=02&clustId=FC00",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
-            },
-            "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
-                "isVisible": 1
-            },
-            "Get Battery-Percent": {
-                "use": "zbReadAttribute",
-                "params": "clustId=0001&attrId=0021"
-            },
-            "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
-                "params": "clustId=0001",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 9
-            },
-            "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 7
             }
         }
     }

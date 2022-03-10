@@ -631,7 +631,7 @@
             $nbOfAttrib = sprintf("%02X", $nbAttr);
             $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttrib.$attribList;
 
-            $this->addCmdToQueue2(priorityInterrogation, $dest, $cmd, $data, $addr, $addrMode);
+            $this->addCmdToQueue2($priority, $dest, $cmd, $data, $addr, $addrMode);
         }
 
         /**
@@ -945,8 +945,8 @@
             }
 
             if (isset($Command["getNetworkStatus"])) {
-                // $this->addCmdToQueue($priority, $dest, "0009", "0000", "");
-                $this->addCmdToQueue2(PRIO_NORM, $dest, "0009");
+                $priority = isset($Command['priority']) ? $Command['priority']: PRIO_NORM;
+                $this->addCmdToQueue2($priority, $dest, "0009");
                 return;
             }
 
@@ -3399,10 +3399,10 @@
                     $addrMode       = "02";
                     $addr           = $Command['addr'];
                     $srcEp          = "01";
-                    $dstEp         = $Command['ep'];
+                    $dstEp          = $Command['ep'];
                     $profId         = "0104";
                     $clustId        = $Command['clustId'];
-                    $secMode   = "02";
+                    $secMode        = "02";
                     $radius         = "1E";
 
                     /* ZCL header */
@@ -3459,10 +3459,10 @@
                     $addrMode       = "02";
                     $addr           = $Command['addr'];
                     $srcEp          = "01";
-                    $dstEp         = $Command['ep'];
+                    $dstEp          = $Command['ep'];
                     $profId         = "0104";
                     $clustId        = $Command['clustId'];
-                    $secMode   = "02";
+                    $secMode        = "02";
                     $radius         = "1E";
 
                     /* ZCL header */
@@ -3523,10 +3523,10 @@
                     $addrMode       = "02";
                     $addr           = $Command['addr'];
                     $srcEp          = "01";
-                    $dstEp         = $Command['ep'];
+                    $dstEp          = $Command['ep'];
                     $profId         = "0104";
                     $clustId        = $Command['clustId'];
-                    $secMode   = "02";
+                    $secMode        = "02";
                     $radius         = "1E";
 
                     /* ZCL header */

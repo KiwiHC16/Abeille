@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220316-BETA-1
+-------------
+
 - Interne: AbeilleCmdPrepare: nettoyage code obsolete.
 - Interne: AbeilleCmdQueue: Timeout étendu à 3sec.
 - Philips RWL021: Mise-à-jour modèle pour report battery (1243).

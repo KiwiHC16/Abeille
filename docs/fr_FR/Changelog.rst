@@ -1,6 +1,20 @@
 ChangeLog
 =========
 
+- Interne: AbeilleCmdPrepare: nettoyage code obsolete.
+- Interne: AbeilleCmdQueue: Timeout étendu à 3sec.
+- Philips RWL021: Mise-à-jour modèle pour report battery (1243).
+- Evology 4 buttons (3450-Geu_CentraLite): Mise-à-jour modèle (2318).
+- Tuya Smart Air Box: Ajout support préliminaire (2329).
+- Interne: Parser: Suppression car '/' pour identifiant fabricant (ex 'frient A/S', 2242).
+- Correction DB pour erreur getPlugVAW, mauvaise taille d'attribut (508 au lieu de 0508).
+- Interne: Ajout support cluster EF00/cmd 02 pour Smart Air Box.
+- Frient smoke alarm (SMSZB-120, frientAS): Ajout support (2242).
+- JSON équipements: Suppression mots clef obsoletes: 'lastCommunicationTimeOut' & 'type'
+- Interne: AbeilleCmd: Akout support cmd 00 pour cluster 0502/IAS WD.
+- Interne: Code specifique Tuya isolé.
+- Interne: Qq fixes.
+
 220310-BETA-3
 -------------
 

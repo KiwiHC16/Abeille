@@ -2,7 +2,6 @@
     "TRADFRIopencloseremote": {
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "icon": "TRADFRIopencloseremote",
             "batteryType": "1x3V CR2032"

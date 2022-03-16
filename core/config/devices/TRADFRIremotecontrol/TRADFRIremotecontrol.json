@@ -2,7 +2,6 @@
     "TRADFRIremotecontrol": {
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "paramType": "telecommande",
             "icon": "IkeaTradfri5BtnRond",

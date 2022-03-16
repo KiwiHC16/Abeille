@@ -2,7 +2,6 @@
     "RC110": {
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "paramType": "telecommande7groups",
             "GroupeEP1": "1001",

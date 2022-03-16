@@ -2,7 +2,6 @@
     "3AFE140103020000": {
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "icon": "3AFE140103020000",
             "batteryType": "1x3V CR2450"
@@ -17,7 +16,10 @@
                 "isVisible": 1,
                 "isHistorized": 1
             },
-            "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 },
+            "Humidity": {
+                "use": "zb-0405-MeasuredValue",
+                "isVisible": 1
+            },
             "include4 2": "Batterie-Volt-Konke",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

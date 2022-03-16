@@ -1,0 +1,48 @@
+{
+    "TS0601__TZE200_yvx5lh6k": {
+        "manufacturer": "Tuya",
+        "model": "RSH-AirBox01",
+        "type": "Tuya Smart Air Box",
+        "alternateIds": "TS0601__TZE200_8ygsuhe1,TS0601__TZE200_ryfmq5rl",
+        "comment": "Alternate IDs from https://zigbee.blakadder.com/Tuya_RSH-AirBox01.html",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-RSH-AirBox01",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": 1
+            },
+            "Humidity": {
+                "use": "zb-0405-MeasuredValue",
+                "isVisible": 1
+            },
+            "CO2": {
+                "use": "zb-CustomInfo",
+                "logicalId": "01-CO2_ppm",
+                "unit": "ppm",
+                "isVisible": 1
+            },
+            "VOC": {
+                "use": "zb-CustomInfo",
+                "logicalId": "01-VOC_ppm",
+                "unit": "ppm",
+                "isVisible": 1
+            },
+            "CH20": {
+                "use": "zb-CustomInfo",
+                "logicalId": "01-CH20_ppm",
+                "unit": "ppm",
+                "isVisible": 1
+            }
+        }
+    }
+}

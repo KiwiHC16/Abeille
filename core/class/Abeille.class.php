@@ -1619,7 +1619,7 @@ if (0) {
             $dev = array(
                 'net' => $dest,
                 'addr' => $addr,
-                'jsonId' => $eqLogic->getConfiguration('ab::jsonId'),
+                'jsonId' => $eqLogic->getConfiguration('ab::jsonId', ''),
                 'jsonLocation' => $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille'),
                 'ieee' => $eqLogic->getConfiguration('IEEE'),
             );
@@ -2579,7 +2579,7 @@ if (0) {
             $eqLogic->setEqType_name('Abeille');
             $eqLogic->setConfiguration('topic', $dest."/0000");
             // $eqLogic->setConfiguration('type', 'topic'); // Tcharp38: What for ?
-            $eqLogic->setConfiguration('lastCommunicationTimeOut', '-1');
+            // $eqLogic->setConfiguration('lastCommunicationTimeOut', '-1');
             $eqLogic->setIsVisible("0");
             $eqLogic->setConfiguration('icone', "Ruche");
             $eqLogic->setTimeout(5); // timeout en minutes
@@ -2730,8 +2730,8 @@ if (0) {
         $jsonId = (isset($dev['jsonId']) ? $dev['jsonId']: '');
         $jsonLocation = (isset($dev['jsonLocation']) ? $dev['jsonLocation']: '');
         if ($jsonId != '' && $jsonLocation != '') {
-            $deviceConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation);
-            $eqType = $deviceConfig['type'];
+            $modelEq = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
+            $eqType = $modelEq['type'];
         }
 
         $eqLogic = self::byLogicalId($logicalId, 'Abeille');
@@ -2775,7 +2775,7 @@ if (0) {
                     message::add("Abeille", "Mise-à-jour de '".$eqHName."' à partir de son modèle JSON");
                 else
                     message::add("Abeille", "Réinitialisation de '".$eqHName."' à partir de son modèle JSON");
-                $deviceConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation);
+                $modelEq = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
             } else { // action == create
                 $eqCurJsonId = $eqLogic->getConfiguration('ab::jsonId'); // Current JSON ID
                 if (($eqCurJsonId == 'defaultUnknown') && ($jsonId != 'defaultUnknown'))
@@ -2787,8 +2787,8 @@ if (0) {
                     */
                     if ($eqLogic->getIsEnable() == 1) {
                         log::add('Abeille', 'debug', '  Device is already enabled. Doing nothing.');
-                        return; // Doing nothing on re-announce
-                    }
+                        // return; // Doing nothing on re-announce
+                    } else
                     message::add("Abeille", "'".$eqHName."' s'est réannoncé. Mise-à-jour en cours.", '');
                 }
             }
@@ -2800,12 +2800,12 @@ if (0) {
         }
 
         /* Whatever creation or update, common steps follows */
-        $objetConfiguration = $deviceConfig["configuration"];
-        log::add('Abeille', 'debug', '  config='.json_encode($objetConfiguration));
+        $modelEqConf = $modelEq["configuration"];
+        log::add('Abeille', 'debug', '  modelConfig='.json_encode($modelEqConf));
 
         /* mainEP: Used to define default end point to target, when undefined in command itself (use of '#EP#'). */
-        if (isset($objetConfiguration['mainEP'])) {
-            $mainEP = $objetConfiguration['mainEP'];
+        if (isset($modelEqConf['mainEP'])) {
+            $mainEP = $modelEqConf['mainEP'];
         } else {
             log::add('Abeille', 'debug', '  WARNING: Undefined mainEP => defaulting to 01');
             $mainEP = "01";
@@ -2828,73 +2828,71 @@ if (0) {
         // $eqLogic->setConfiguration('type', 'topic'); // ??, type = topic car pas json. Tcharp38: what for ?
 
         if (($action == 'reset') || $newEq) { // Update icon only if new device
-            if (isset($objetConfiguration["icon"]))
-                $icon = $objetConfiguration["icon"];
+            if (isset($modelEqConf["icon"]))
+                $icon = $modelEqConf["icon"];
             else
                 $icon = '';
             $eqLogic->setConfiguration('icone', $icon);
         }
 
-        $lastCommTimeout = (array_key_exists("lastCommunicationTimeOut", $objetConfiguration) ? $objetConfiguration["lastCommunicationTimeOut"] : '-1');
-        $eqLogic->setConfiguration('lastCommunicationTimeOut', $lastCommTimeout);
+        // Tcharp38: Seems no longer used
+        // $lastCommTimeout = (array_key_exists("lastCommunicationTimeOut", $modelEqConf) ? $modelEqConf["lastCommunicationTimeOut"] : '-1');
+        // $eqLogic->setConfiguration('lastCommunicationTimeOut', $lastCommTimeout);
 
-        if (isset($objetConfiguration['batteryType']))
-            $eqLogic->setConfiguration('battery_type', $objetConfiguration['batteryType']);
+        if (isset($modelEqConf['batteryType']))
+            $eqLogic->setConfiguration('battery_type', $modelEqConf['batteryType']);
         else
             $eqLogic->setConfiguration('battery_type', null);
 
-        if (isset($objetConfiguration['paramType']))
-            $eqLogic->setConfiguration('paramType', $objetConfiguration['paramType']);
-        if (isset($objetConfiguration['Groupe'])) { // Tcharp38: What for ? Telecommande Innr - KiwiHC16: on doit pouvoir simplifier ce code. Mais comme c etait la premiere version j ai fait detaillé.
-            $eqLogic->setConfiguration('Groupe', $objetConfiguration['Groupe']);
+        if (isset($modelEqConf['paramType']))
+            $eqLogic->setConfiguration('paramType', $modelEqConf['paramType']);
+        if (isset($modelEqConf['Groupe'])) { // Tcharp38: What for ? Telecommande Innr - KiwiHC16: on doit pouvoir simplifier ce code. Mais comme c etait la premiere version j ai fait detaillé.
+            $eqLogic->setConfiguration('Groupe', $modelEqConf['Groupe']);
         }
-        if (isset($objetConfiguration['GroupeEP1'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP1', $objetConfiguration['GroupeEP1']);
+        if (isset($modelEqConf['GroupeEP1'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP1', $modelEqConf['GroupeEP1']);
         }
-        if (isset($objetConfiguration['GroupeEP3'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP3', $objetConfiguration['GroupeEP3']);
+        if (isset($modelEqConf['GroupeEP3'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP3', $modelEqConf['GroupeEP3']);
         }
-        if (isset($objetConfiguration['GroupeEP4'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP4', $objetConfiguration['GroupeEP4']);
+        if (isset($modelEqConf['GroupeEP4'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP4', $modelEqConf['GroupeEP4']);
         }
-        if (isset($objetConfiguration['GroupeEP5'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP5', $objetConfiguration['GroupeEP5']);
+        if (isset($modelEqConf['GroupeEP5'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP5', $modelEqConf['GroupeEP5']);
         }
-        if (isset($objetConfiguration['GroupeEP6'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP6', $objetConfiguration['GroupeEP6']);
+        if (isset($modelEqConf['GroupeEP6'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP6', $modelEqConf['GroupeEP6']);
         }
-        if (isset($objetConfiguration['GroupeEP7'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP7', $objetConfiguration['GroupeEP7']);
+        if (isset($modelEqConf['GroupeEP7'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP7', $modelEqConf['GroupeEP7']);
         }
-        if (isset($objetConfiguration['GroupeEP8'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP8', $objetConfiguration['GroupeEP8']);
+        if (isset($modelEqConf['GroupeEP8'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP8', $modelEqConf['GroupeEP8']);
         }
-        if (isset($objetConfiguration['onTime'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('onTime', $objetConfiguration['onTime']);
+        if (isset($modelEqConf['onTime'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('onTime', $modelEqConf['onTime']);
         }
-        // if (isset($objetConfiguration['Zigate'])) { // Tcharp38: Seems to be unused
-        //     $eqLogic->setConfiguration('Zigate', $objetConfiguration['Zigate']);
-        // }
-        // if (isset($objetConfiguration['protocol'])) { // Tcharp38: Seems to be unused
-        //     $eqLogic->setConfiguration('protocol', $objetConfiguration['protocol']);
-        // }
-        if (isset($objetConfiguration['poll'])) {
-            $eqLogic->setConfiguration('poll', $objetConfiguration['poll']);
-        }
+        if (isset($modelEqConf['poll']))
+            $eqLogic->setConfiguration('poll', $modelEqConf['poll']);
+        else
+            $eqLogic->setConfiguration('poll', null);
 
         if (($action == 'reset') || $newEq) { // Update visibility only if new device
-            if (isset($deviceConfig["isVisible"]))
-                $eqLogic->setIsVisible($deviceConfig["isVisible"]);
+            if (isset($modelEq["isVisible"]))
+                $eqLogic->setIsVisible($modelEq["isVisible"]);
             else
                 $eqLogic->setIsVisible(1);
         }
         $eqLogic->setIsEnable(1);
-        if (isset($deviceConfig["timeout"]))
-            $eqLogic->setTimeout($deviceConfig["timeout"]);
+        if (isset($modelEq["timeout"]))
+            $eqLogic->setTimeout($modelEq["timeout"]);
+        else
+            $eqLogic->setTimeout(null);
 
-        if (($action == 'reset') || ($newEq && isset($deviceConfig["category"]))) { // Update category only if new device
-            $categories = $deviceConfig["category"];
-            // $eqLogic->setCategory(array_keys($deviceConfig["Categorie"])[0], $deviceConfig["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
+        if (($action == 'reset') || ($newEq && isset($modelEq["category"]))) { // Update category only if new device
+            $categories = $modelEq["category"];
+            // $eqLogic->setCategory(array_keys($modelEq["Categorie"])[0], $modelEq["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
             $allCat = ["heating", "security", "energy", "light", "opening", "automatism", "multimedia", "default"];
             foreach ($allCat as $cat) { // Clear all
                 $eqLogic->setCategory($cat, "0");
@@ -2909,21 +2907,27 @@ if (0) {
 
         /* During commands creation #EP# must be replaced by proper endpoint.
            If not already done, using default (mainEP) value */
-        if (isset($deviceConfig['commands'])) {
-            $jsonCmds = $deviceConfig['commands'];
-            $jsonCmds2 = json_encode($jsonCmds);
-            if (strstr($jsonCmds2, '#EP#') !== false) {
+        if (isset($modelEq['commands'])) {
+            $modelCmds = $modelEq['commands'];
+            $modelCmds2 = json_encode($modelCmds);
+            if (strstr($modelCmds2, '#EP#') !== false) {
                 if ($mainEP == "") {
                     message::add("Abeille", "'mainEP' est requis mais n'est pas défini dans '".$jsonId.".json'", '');
                     $mainEP = "01";
                 }
 
                 log::add('Abeille', 'debug', '  mainEP='.$mainEP);
-                $jsonCmds2 = str_ireplace('#EP#', $mainEP, $jsonCmds2);
-                $jsonCmds = json_decode($jsonCmds2, true);
-                log::add('Abeille', 'debug', '  Updated commands='.json_encode($jsonCmds));
+                $modelCmds2 = str_ireplace('#EP#', $mainEP, $modelCmds2);
+                $modelCmds = json_decode($modelCmds2, true);
+                log::add('Abeille', 'debug', '  Updated commands='.json_encode($modelCmds));
             }
         }
+
+        /* Tcharp38: TO BE REVISITED
+        - Remove obsolete cmds using logicalID and NOT cmd name
+        - If cmd info & logicalId still valid, update cmd, name & and devices using it
+        - If cmd action.. currently no uniq logicalId. Something more to do
+        */
 
         /* Removing obsolete commands, not listed in JSON.
            Might be needed for ex if device was previously 'defaultUnknown'. */
@@ -2931,7 +2935,7 @@ if (0) {
         foreach ($cmds as $cmdLogic) {
             $found = false;
             $cmdName = $cmdLogic->getName();
-            foreach ($jsonCmds as $cmdKey => $cmdValueDefaut) {
+            foreach ($modelCmds as $cmdKey => $cmdValueDefaut) {
                 $cmdJName = $cmdKey; // Jeedom command name
                 if ($cmdName == $cmdJName) {
                     $found = true;
@@ -2946,7 +2950,7 @@ if (0) {
 
         /* Creating or updating commands. */
         $order = 0;
-        foreach ($jsonCmds as $cmdKey => $cmdValueDefaut) {
+        foreach ($modelCmds as $cmdKey => $cmdValueDefaut) {
             $cmdJName = $cmdKey; // Jeedom command name
             if ($cmdValueDefaut["type"] == "info")
                 $type = "info";

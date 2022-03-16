@@ -456,7 +456,6 @@
         "0405" => array(
             "name" => "Relative Humidity",
             "attributes" => array(
-                // Relative Humidity Measurement Information
                 "0000" => array( "name" => "MeasuredValue", "access" => "R", "dataType" => 0x21 ), // uint16
                 "0001" => array( "name" => "MinMeasuredValue", "access" => "R", "dataType" => 0x21 ), // uint16
                 "0002" => array( "name" => "MaxMeasuredValue", "access" => "R", "dataType" => 0x21 ), // uint16
@@ -468,6 +467,24 @@
             "attributes" => array(
                 "0000" => array( "name" => "Occupancy", "access" => "R", "dataType" => 0x18 ), // map8
                 "0001" => array( "name" => "OccupancySensorType", "access" => "R", "dataType" => 0x30 ), // enum8
+            ),
+        ),
+        "0407" => array(
+            "name" => "Leaf Wetness",
+            "attributes" => array(
+                "0000" => array( "name" => "MeasuredValue", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0001" => array( "name" => "MinMeasuredValue", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0002" => array( "name" => "MaxMeasuredValue", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x21 ), // uint16
+            ),
+        ),
+        "0408" => array(
+            "name" => "Soil Moisture",
+            "attributes" => array(
+                "0000" => array( "name" => "MeasuredValue", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0001" => array( "name" => "MinMeasuredValue", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0002" => array( "name" => "MaxMeasuredValue", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x21 ), // uint16
             ),
         ),
         "0500" => array(
@@ -487,7 +504,7 @@
         "0501" => array(
             "name" => "IAS ACE",
         ),
-        "0502" => array(
+        "0502" => array( // IAS Warning Device
             "name" => "IAS WD",
         ),
         "0702" => array(

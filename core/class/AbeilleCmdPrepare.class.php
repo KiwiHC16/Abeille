@@ -289,79 +289,82 @@
              * Unsorted yet
              */
 
-            case "AnnonceManufacturer":
-                if (strlen($msg) == 2) {
-                    $Command = array(
-                        "ReadAttributeRequest" => "1",
-                        "priority" => $priority,
-                        "dest" => $dest,
-                        "address" => $address,
-                        "clusterId" => "0000",
-                        "attributeId" => "0004",
-                        "EP" => $msg,
-                    );
-                }
-                break;
-            case "Annonce":
-                if (strlen($msg) == 2) {
-                    $Command = array(
-                        "ReadAttributeRequest" => "1",
-                        "priority" => $priority,
-                        "dest" => $dest,
-                        "address" => $address,
-                        "clusterId" => "0000",
-                        "attributeId" => "0005",
-                        "EP" => $msg,
-                    );
-                } else {
-                    if ($msg == "Default") {
-                        $Command = array(
-                            "ReadAttributeRequest" => "1",
-                            "priority" => $priority,
-                            "dest" => $dest,
-                            "address" => $address,
-                            "clusterId" => "0000",
-                            "attributeId" => "0005",
-                            "EP" => "01",
-                        );
-                    }
-                    if ($msg == "Hue") {
-                        $Command = array(
-                            "ReadAttributeRequestHue" => "1",
-                            "priority" => $priority,
-                            "dest" => $dest,
-                            "address" => $address,
-                            "clusterId" => "0000",
-                            "attributeId" => "0005",
-                            "EP" => "0B",
-                        );
-                    }
-                    if ($msg == "OSRAM") {
-                        $Command = array(
-                            "ReadAttributeRequestOSRAM" => "1",
-                            "priority" => $priority,
-                            "dest" => $dest,
-                            "address" => $address,
-                            "clusterId" => "0000",
-                            "attributeId" => "0005",
-                            "EP" => "03",
-                        );
-                    }
-                }
-                break;
-            case "AnnonceProfalux":
-                if ($msg == "Default") {
-                    $Command = array(
-                        "ReadAttributeRequest" => "1",
-                        "priority" => $priority,
-                        "dest" => $dest,
-                        "address" => $address,
-                        "clusterId" => "0000",
-                        "attributeId" => "0010",
-                        "EP" => "03",
-                    );
-                }
-                break;
+            // Tcharp38: Should no longer be required
+            // case "AnnonceManufacturer":
+            //     if (strlen($msg) == 2) {
+            //         $Command = array(
+            //             "ReadAttributeRequest" => "1",
+            //             "priority" => $priority,
+            //             "dest" => $dest,
+            //             "address" => $address,
+            //             "clusterId" => "0000",
+            //             "attributeId" => "0004",
+            //             "EP" => $msg,
+            //         );
+            //     }
+            //     break;
+            // Tcharp38: Should no longer required
+            // case "Annonce":
+            //     if (strlen($msg) == 2) {
+            //         $Command = array(
+            //             "ReadAttributeRequest" => "1",
+            //             "priority" => $priority,
+            //             "dest" => $dest,
+            //             "address" => $address,
+            //             "clusterId" => "0000",
+            //             "attributeId" => "0005",
+            //             "EP" => $msg,
+            //         );
+            //     } else {
+            //         if ($msg == "Default") {
+            //             $Command = array(
+            //                 "ReadAttributeRequest" => "1",
+            //                 "priority" => $priority,
+            //                 "dest" => $dest,
+            //                 "address" => $address,
+            //                 "clusterId" => "0000",
+            //                 "attributeId" => "0005",
+            //                 "EP" => "01",
+            //             );
+            //         }
+            //         if ($msg == "Hue") {
+            //             $Command = array(
+            //                 "ReadAttributeRequestHue" => "1",
+            //                 "priority" => $priority,
+            //                 "dest" => $dest,
+            //                 "address" => $address,
+            //                 "clusterId" => "0000",
+            //                 "attributeId" => "0005",
+            //                 "EP" => "0B",
+            //             );
+            //         }
+            //         if ($msg == "OSRAM") {
+            //             $Command = array(
+            //                 "ReadAttributeRequestOSRAM" => "1",
+            //                 "priority" => $priority,
+            //                 "dest" => $dest,
+            //                 "address" => $address,
+            //                 "clusterId" => "0000",
+            //                 "attributeId" => "0005",
+            //                 "EP" => "03",
+            //             );
+            //         }
+            //     }
+            //     break;
+            // Tcharp38: No longer required
+            // case "AnnonceProfalux":
+            //     if ($msg == "Default") {
+            //         $Command = array(
+            //             "ReadAttributeRequest" => "1",
+            //             "priority" => $priority,
+            //             "dest" => $dest,
+            //             "address" => $address,
+            //             "clusterId" => "0000",
+            //             "attributeId" => "0010",
+            //             "EP" => "03",
+            //         );
+            //     }
+            //     break;
             case "OnOffRaw":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {

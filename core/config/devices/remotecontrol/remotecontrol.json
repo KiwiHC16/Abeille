@@ -2,7 +2,6 @@
     "remotecontrol": {
         "timeout": "",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "paramType": "telecommande",
             "icon": "remotecontrol",

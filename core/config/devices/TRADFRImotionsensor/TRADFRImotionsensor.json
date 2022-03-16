@@ -6,7 +6,6 @@
         "comment": "Ref. IKEA E1525 \/ E1745",
         "comment2": "Set a remote control for group control",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "paramType": "telecommande",
             "mainEP": "01",
             "icon": "TRADFRImotionsensorE1745",

@@ -837,7 +837,7 @@
             parserLog('debug', "  deviceConfigure(".$net.", ".$addr.", jsonId=".$eq['jsonId'].")");
 
             // Read JSON to get list of commands to execute
-            $eqConfig = AbeilleTools::getDeviceConfig($eq['jsonId'], $eq['jsonLocation']);
+            $eqConfig = AbeilleTools::getDeviceModel($eq['jsonId'], $eq['jsonLocation']);
             if ($eqConfig === false)
                 return;
 
@@ -1147,10 +1147,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             return $modelId;
         }
 
-        // function procmsg($topic, $payload)
-        // {
-        //     // AbeilleParser traite les messages venant du port serie mais rien venant de MQTT, pas de besoin.
-        // }
+        /* Clean manufacturer ID, removing some unwanted chars */
+        function cleanManufId($manufId) {
+            $manufId = str_replace(' ', '', $manufId); // Remove spaces
+            $manufId = str_replace('/', '', $manufId); // Remove '/'
+            $manufId = str_replace("\0", '', $manufId);
+            return $manufId;
+        }
 
         function hex2str($hex)   {
             $str = '';
@@ -1856,11 +1859,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         }
 
         /**
-         * Data indication
-         *
-         * This method process a Zigbeee message coming from a device which is unknown from zigate, so Abeille as to deal with it.
-         *  Will first decode it.
-         *  Take action base on message contain
+         * 8002/Data indication decode function
          *
          * @param $dest     Zigbee network (ex: Abeille1)
          * @param $payload  Parameter sent by the device in the zigbee message
@@ -2978,53 +2977,24 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
              */
 
             if ($clustId == "0006") {
-                // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs
-                // Tuya 1,2,3,4 buttons switch
                 if ($cmd == "FD") {
-                    $value = substr($payload, 32, 2);
-                    if ($value == "00")
-                        $click = 'single';
-                    else if ($value == "01")
-                        $click = 'double';
-                    else if ($value == "02")
-                        $click = 'long';
-                    else {
-                        parserLog('debug',  '  Tuya 0006-FD specific command'
-                            .', value='.$value.' => UNSUPPORTED', "8002");
-                        return;
+                    parserLog("debug", "  Tuya 0006 specific cmd FD", "8002");
+                    $attributesN = tuyaDecode0006CmdFD($srcEp, $msg);
+
+                    if (count($attributesN) > 0) {
+                        $msg = array(
+                            // 'src' => 'parser',
+                            'type' => 'attributesReportN',
+                            'net' => $dest,
+                            'addr' => $srcAddr,
+                            'ep' => $srcEp,
+                            'clustId' => $clustId,
+                            'attributes' => $attributesN,
+                            'time' => time(),
+                            'lqi' => $lqi
+                        );
+                        $this->msgToAbeille2($msg);
                     }
-
-                    parserLog('debug',  '  Tuya 0006-FD specific command'
-                                    .', value='.$value.' => click='.$click, "8002");
-
-                    $attributes = [];
-                    // Generating an event thru '#EP#-click' Jeedom cmd (ex: '01-click' = 'single')
-                    $attr = array(
-                        'name' => $srcEp.'-click',
-                        'value' => $click,
-                    );
-                    $attributes[] = $attr;
-
-                    // Legacy code to be removed at some point
-                    // TODO: Replace commands '0006-#EP#-0000' to '#EP#-click' in JSON
-                    $attr = array(
-                        'name' => $clustId.'-'.$srcEp.'-0000',
-                        'value' => $value,
-                    );
-                    $attributes[] = $attr;
-
-                    $msg = array(
-                        // 'src' => 'parser',
-                        'type' => 'attributesReportN',
-                        'net' => $dest,
-                        'addr' => $srcAddr,
-                        'ep' => $srcEp,
-                        'clustId' => $clustId,
-                        'attributes' => $attributes,
-                        'time' => time(),
-                        'lqi' => $lqi
-                    );
-                    $this->msgToAbeille2($msg);
                     return;
                 }
 
@@ -3034,6 +3004,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 }
             }
 
+            // Level control cluster specific
             if ($clustId == "0008") {
                 if ($cmd == "04") {
                     parserLog('debug', "  Handled by decode8085");
@@ -3087,6 +3058,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 return;
             }
 
+            // Color control cluster specific
             if ($clustId == "0300") {
                 // Tcharp38: Covering all 0300 commands
                 parserLog("debug", "  msg=".$msg, "8002");
@@ -3107,6 +3079,35 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'lqi' => $lqi
                 );
                 $this->msgToAbeille2($msg);
+                return;
+            }
+
+            // Cluster EF00 is used by Tuya.
+            if ($clustId == "EF00") {
+                if ($cmd == "02") {
+                    // Duplicated message ?
+                    if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                        return;
+
+                    parserLog("debug", "  Tuya EF00 specific cmd 02", "8002");
+                    $attributesN = tuyaDecodeEF00Cmd02($srcEp, $msg);
+                } else {
+                    parserLog("debug", "  Unsupported Tuya cmd ".$cmd." => ignored", "8002");
+                }
+                if (isset($attributesN) && (count($attributesN) > 0)) {
+                    $msg = array(
+                        // 'src' => 'parser',
+                        'type' => 'attributesReportN',
+                        'net' => $dest,
+                        'addr' => $srcAddr,
+                        'ep' => $srcEp,
+                        'clustId' => $clustId,
+                        'attributes' => $attributesN,
+                        'time' => time(),
+                        'lqi' => $lqi
+                    );
+                    $this->msgToAbeille2($msg);
+                }
                 return;
             }
 
@@ -3254,22 +3255,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // Monitor if required
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))
                 monMsgFromZigate($msgDecoded); // Send message to monitor
-
-            // if ($status=="00") {
-            //     if ( Abeille::byLogicalId( $dest.'/'.$dstAddr, 'Abeille' )) {
-            //         $eq = Abeille::byLogicalId( $dest.'/'.$dstAddr, 'Abeille' ) ;
-            //         parserLog('debug', '  Found: '.$eq->getHumanName()." set APS_ACK to 1", "8011");
-            //         $eq->setStatus('APS_ACK', '1');
-            //         // parserLog('debug', '  APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
-            //     }
-            // } else {
-            //     if ( Abeille::byLogicalId( $dest.'/'.$dstAddr, 'Abeille' )) {
-            //         $eq = Abeille::byLogicalId( $dest.'/'.$dstAddr, 'Abeille' ) ;
-            //         parserLog('debug', '  ACK failed: '.$eq->getHumanName().". APS_ACK set to 0", "8011");
-            //         $eq->setStatus('APS_ACK', '0');
-            //         // parserLog('debug', '  APS_ACK: '.$eq->getStatus('APS_ACK'), "8011");
-            //     }
-            // }
         }
 
         /* 8012/
@@ -3323,11 +3308,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
         }
 
         /**
-         * “Permit join” status
-         *
-         * This method process a Zigbeee message coming from a zigate findicating the Join Permit Status
-         * Will first decode it.
-         * Send the info to Abeille to update ruche command
+         * 8014/“Permit join” status decode function
          *
          * @param $dest     Zigbee network (ex: Abeille1)
          * @param $payload  Parameter sent by the device in the zigbee message
@@ -4698,18 +4679,17 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             */
             $data = null; // Data to push to Abeille
             if ($clustId == "0000") { // Basic cluster
-                    // 0004: ManufacturerName
-                    // 0005: ModelIdentifier
-                    // 0010: Location => Used for Profalux 1st gen
-
-                if (($attrId=="0004") || ($attrId=="0005") || ($attrId=="0010")) {
+                // 0004: ManufacturerName
+                // 0005: ModelIdentifier
+                // 0010: Location => Used for Profalux 1st gen
+                if (($attrId == "0004") || ($attrId == "0005") || ($attrId == "0010")) {
                     // Assuming $dataType == "42"
 
                     $trimmedValue = pack('H*', $Attribut);
-                    $trimmedValue = str_replace(' ', '', $trimmedValue); //remove all space in names for easier filename handling
-                    $trimmedValue = str_replace("\0", '', $trimmedValue); // On enleve les 0x00 comme par exemple le nom des equipements Legrand
 
                     if ($attrId == "0004") { // 0x0004 ManufacturerName string
+                        $trimmedValue = $this->cleanManufId($trimmedValue);
+
                         parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."'");
                         $data = $trimmedValue;
 
@@ -4722,6 +4702,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                         $this->deviceUpdate($dest, $srcAddr, $ep, 'modelId', $trimmedValue);
                     } else if ($attrId == "0010") { // Location
+                        $trimmedValue = $this->cleanModelId($trimmedValue);
+
                         parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."'");
                         $data = $trimmedValue;
 
@@ -5168,7 +5150,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     array( "name" => $clustId."-".$ep."-".$attrId."-Event", "value" => $buttonEvent ),
                     array( "name" => $clustId."-".$ep."-".$attrId."-Duree", "value" => $buttonDuree ),
                 ];
-    }
+            }
 
             /* If $data is set it means message already treated before */
             // if (isset($data)) {
@@ -5431,10 +5413,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', $dest.', Type='.$msg);
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
                 monMsgFromZigate($msg); // Send message to monitor
-
-            // Tcharp38: what for ? $attrId does not exist in all cases so what to report ?
-            // $data = date("Y-m-d H:i:s")." Attribut: ".$attrId." Status (00: Ok, <>0: Error): ".$status;
-            // $this->msgToAbeille($dest."/0000", "Network", "Report", $data);
         }
 
         // 8122/Read Reporting Configuration
@@ -5524,7 +5502,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
         function decode8141($dest, $payload, $lqi)
         {
-            $msgDecoded = '8141/Attribute attributes extended response => Handled by decode8002';
+            $msgDecoded = '8141/Attributes extended response => Handled by decode8002';
             parserLog('debug', $dest.', Type='.$msgDecoded, "8141");
         }
 
@@ -5661,8 +5639,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
         /**
          * 0x8701/Router Discovery Confirm -  Warning: potential swap between statuses.
-         * This method process ????
-         *  Will first decode it.
          *
          * @param $dest     Zigbee network (ex: Abeille1)
          * @param $payload  Parameter sent by the device in the zigbee message
@@ -5670,6 +5646,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
          *
          * @return          Does return anything as all action are triggered by sending messages in queues
          */
+        // Tcharp38: What it is useful for ?
         function decode8701($dest, $payload, $lqi)
         {
             // NWK Code Table Chap 10.2.3 from JN-UG-3113

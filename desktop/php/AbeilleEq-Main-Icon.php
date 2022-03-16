@@ -19,7 +19,7 @@
 
                 $selectBox = array();
                 foreach ($items as $item) {
-                    $device = AbeilleTools::getDeviceConfig($item, 'Abeille', 2);
+                    $device = AbeilleTools::getDeviceModel($item, 'Abeille', 2);
                     if (!isset($device['configuration'])) {
                         log::add('Abeille', 'debug', 'WARNING: No configuration section in '.$item);
                         continue; // No 'configuration' in this JSON, so no icon defined

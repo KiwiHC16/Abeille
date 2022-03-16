@@ -316,7 +316,7 @@
                 $status = -1;
                 $error = "Le fichier '".$jsonId."' n'existe pas dans '".$jsonLocation."'";
             } else {
-                $devConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation, $mode);
+                $devConfig = AbeilleTools::getDeviceModel($jsonId, $jsonLocation, $mode);
                 $content = json_encode($devConfig);
             }
 

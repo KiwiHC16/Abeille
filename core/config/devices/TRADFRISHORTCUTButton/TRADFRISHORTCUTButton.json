@@ -4,7 +4,6 @@
         "model": "Shortcut button E1812",
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "icon": "TRADFRISHORTCUTButton",
             "batteryType": "1x3V CR2032"

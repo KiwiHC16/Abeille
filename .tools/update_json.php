@@ -94,7 +94,13 @@
                 $devUpdated = true;
                 echo "  Removed 'uniqId'.\n";
             }
-        }
+
+            if (isset($config['lastCommunicationTimeOut'])) {
+                unset($dev[$devName]['configuration']['lastCommunicationTimeOut']);
+                $devUpdated = true;
+                echo "  Removed 'lastCommunicationTimeOut'.\n";
+            }
+        } // End 'configuration'
 
         if (!isset($dev[$devName]['commands'])) {
             if (isset($dev[$devName]['Commandes'])) {

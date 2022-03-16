@@ -102,10 +102,14 @@
         $eqId = $_GET['eqId'];
 // logDebug("reconfigure: eqId=".$eqId);
         $eqLogic = eqLogic::byId($eqId);
+        if (!is_object($eqLogic)) {
+            logDebug("CliToQueue: ERROR: Unkown device with ID ".$eqId);
+            return; // ERROR
+        }
         $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
-        $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', '');
+        $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
         if ($jsonId == '') {
-            if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: jsonId empty");
+            logDebug("CliToQueue: ERROR: jsonId empty");
             return; // ERROR
         }
 
@@ -145,7 +149,7 @@
             }
         }
 
-        $eqConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation);
+        $eqConfig = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
         if ($eqConfig === false) {
             if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: No device config");
             return; // ERROR

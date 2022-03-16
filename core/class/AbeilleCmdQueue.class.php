@@ -796,8 +796,8 @@
                 $cmd = $this->zgGetQueueFirstMessage($this->zgGetSentPri());
                 if ($cmd['status'] == '')
                     continue; // Not sent yet
-                if ($cmd['sentTime'] + 2 > time())
-                    continue; // 2sec timeout not reached yet
+                if ($cmd['sentTime'] + 3 > time())
+                    continue; // 3sec timeout not reached yet
 
                 cmdLog("debug", "zigateAckCheck(): WARNING: Zigate".$zgId." cmd ".$cmd['cmd']." TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
                 $this->removeFirstCmdFromQueue($this->zgGetSentPri()); // Removing blocked cmd

@@ -5,7 +5,6 @@
         "type": "Hue Dimmer Switch RWL021",
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "02",
             "icon": "RWL021",
             "batteryType": "1x3V CR2032"
@@ -14,6 +13,13 @@
             "light": "1"
         },
         "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",
                 "params": "ep=02",
@@ -31,11 +37,12 @@
             },
             "SetReporting 02-0001-0021": {
                 "use": "zbConfigureReporting",
-                "params": "ep=02&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "params": "ep=02&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=00",
+                "comment": "Reporting every 30 to 60mins",
+                "comment2": "changeVal=00 seems MANDATORY",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },
-
             "include1": "offGroup",
             "include2": "toggleGroup",
             "include3": "onGroup",

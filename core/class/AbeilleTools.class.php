@@ -224,17 +224,17 @@
             */
 
             /* Is that a supported device ? */
-            $deviceFilename = devicesDir.$device.'/'.$device.'.json';
-            if (file_exists($deviceFilename)) {
-                log::add('Abeille', 'debug', 'getDevicePath('.$device.') => '.$deviceFilename);
-                return $deviceFilename;
+            $modelPath = devicesDir.$device.'/'.$device.'.json';
+            if (file_exists($modelPath)) {
+                log::add('Abeille', 'debug', 'getDevicePath('.$device.') => '.$modelPath);
+                return $modelPath;
             }
 
             /* Is that an unsupported or user device ? */
-            $deviceFilename = devicesLocalDir.$device.'/'.$device.'.json';
-            if (file_exists($deviceFilename)) {
-                log::add('Abeille', 'debug', 'getDevicePath('.$device.') => '.$deviceFilename);
-                return $deviceFilename;
+            $modelPath = devicesLocalDir.$device.'/'.$device.'.json';
+            if (file_exists($modelPath)) {
+                log::add('Abeille', 'debug', 'getDevicePath('.$device.') => '.$modelPath);
+                return $modelPath;
             }
 
             log::add('Abeille', 'debug', 'getDevicePath('.$device.') => NOT found');
@@ -282,25 +282,26 @@
          * 'mode': 0/default=load commands too, 1=split cmd call & file
          * Return: device associative array without top level key (jsonId) or false if error.
          */
-        public static function getDeviceConfig($deviceName, $from="Abeille", $mode=0)
+        public static function getDeviceModel($deviceName, $from="Abeille", $mode=0)
         {
-            // log::add('Abeille', 'debug', 'getDeviceConfig start');
+            // log::add('Abeille', 'debug', 'getDeviceModel start, deviceName='.$deviceName.", from=".$from);
 
             if ($from == 'Abeille')
-                $deviceFilename = devicesDir.$deviceName.'/'.$deviceName.'.json';
+                $modelPath = devicesDir.$deviceName.'/'.$deviceName.'.json';
             else
-                $deviceFilename = devicesLocalDir.$deviceName.'/'.$deviceName.'.json';
-            if (!is_file($deviceFilename)) {
-                log::add('Abeille', 'error', 'Equipement \''.$deviceName.'\' inconnu. Utilisation de la config par défaut.');
+                $modelPath = devicesLocalDir.$deviceName.'/'.$deviceName.'.json';
+            log::add('Abeille', 'debug', 'modelPath='.$modelPath);
+            if (!is_file($modelPath)) {
+                log::add('Abeille', 'error', 'Modèle \''.$deviceName.'\' inconnu. Utilisation du modèle par défaut.');
                 $deviceName = 'defaultUnknown';
-                $deviceFilename = devicesDir.$deviceName.'/'.$deviceName.'.json';
+                $modelPath = devicesDir.$deviceName.'/'.$deviceName.'.json';
             }
 
-            $jsonContent = file_get_contents($deviceFilename);
+            $jsonContent = file_get_contents($modelPath);
             $device = json_decode($jsonContent, true);
             if (json_last_error() != JSON_ERROR_NONE) {
-                log::add('Abeille', 'error', 'L\'équipement \''.$deviceName.'\' a un mauvais fichier JSON.');
-                log::add('Abeille', 'debug', 'getDeviceConfig(): content='.$jsonContent);
+                log::add('Abeille', 'error', 'Le modèle JSON \''.$deviceName.'\' est corrompu.');
+                log::add('Abeille', 'debug', 'getDeviceModel(): content='.$jsonContent);
                 return false;
             }
 
@@ -409,7 +410,7 @@
                             if (isset($cmd2['invertBinary']))
                                 $newCmd[$cmd1]['invertBinary'] = $cmd2['invertBinary'];
 
-                            // log::add('Abeille', 'debug', 'getDeviceConfig(): newCmd='.json_encode($newCmd));
+                            // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
                             $deviceCmds += $newCmd;
                         }
                     }
@@ -446,7 +447,7 @@
                 }
             } // End isset($device['commands'])
 
-            // log::add('Abeille', 'debug', 'getDeviceConfig end');
+            // log::add('Abeille', 'debug', 'getDeviceModel end');
             return $device;
         }
 
@@ -491,14 +492,14 @@
          */
         public static function getJSonConfigFilebyDevices($device = 'none', $logger = 'Abeille')
         {
-            $deviceFilename = AbeilleTools::getDevicePath($device);
-            // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: devicefilename'.$deviceFilename);
-            if ($deviceFilename === false) {
-                // log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: file not found devicefilename'.$deviceFilename);
+            $modelPath = AbeilleTools::getDevicePath($device);
+            // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: devicefilename'.$modelPath);
+            if ($modelPath === false) {
+                // log::add('Abeille', 'error', 'getJSonConfigFilebyDevices: file not found devicefilename'.$modelPath);
                 return;
             }
 
-            $content = file_get_contents($deviceFilename);
+            $content = file_get_contents($modelPath);
 
             $deviceJson = json_decode($content, true);
             if (json_last_error() != JSON_ERROR_NONE) {

@@ -13,10 +13,6 @@
         },
         "type": "Silvercrest power strip USB SPSZ 3 A1",
         "commands": {
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            },
-
             "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1 },
             "Status 2": { "use": "zb-0006-OnOff", "params": "ep=02", "isVisible": 1 },
             "Status 3": { "use": "zb-0006-OnOff", "params": "ep=03", "isVisible": 1, "nextLine": "after" },

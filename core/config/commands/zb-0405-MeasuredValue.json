@@ -12,6 +12,7 @@
         },
         "type": "info",
         "logicalId": "0405-#EP#-0000",
+        "unit": "%",
         "genericType": "HUMIDITY"
     }
 }

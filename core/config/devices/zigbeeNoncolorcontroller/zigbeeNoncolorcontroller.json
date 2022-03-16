@@ -2,7 +2,6 @@
     "zigbeeNoncolorcontroller": {
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "icon": "zigbeeNoncolorcontroller"
         },

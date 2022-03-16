@@ -26,7 +26,7 @@
         <span class="eqLogicAttr" data-l1key="configuration" data-l2key="ab::jsonId" title="Nom du fichier de config JSON utilisé"></span>
         Source:
         <?php
-            $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', '');
+            $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
             if (($jsonLocation == '') || ($jsonLocation == "Abeille"))
                 echo '<span title="Le modèle utilisé est celui fourni par Abeille">Abeille</span>';
             else

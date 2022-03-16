@@ -1,0 +1,79 @@
+{
+    "SMSZB-120_frientAS": {
+        "manufacturer": "Frient",
+        "model": "SMSZB-120",
+        "type": "Frient smoke alarm",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Frient-SMSZB-120",
+            "mainEP": "23",
+            "batteryType": "?"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "params": "ep=23"
+            },
+            "Battery-Volt2Percent": {
+                "use": "battery-Volt2Percent-3",
+                "params": "ep=23"
+            },
+            "SetReporting 23-0001-00020": {
+                "use": "zbConfigureReporting",
+                "params": "ep=23&clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 23-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=23&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Identify": {
+                "use": "Identify"
+            },
+            "Alarm 1": {
+                "use": "zbCmd-XXXX-Custom",
+                "logicalId": "0500-Status",
+                "isVisible": "1"
+            },
+            "ZoneStatusChange": {
+                "use": "zb-0500-ZoneStatus-ChangeNotification",
+                "comment": "On receive we trig 0500-Status with extracted boolean value",
+                "trigOut": "0500-Status",
+                "trigOutOffset": "#value#&1"
+            },
+            "Bind 0500-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0500",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0500-0002": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "params": "ep=26",
+                "isVisible": "1"
+            },
+            "Get Temperature": {
+                "use": "zbReadAttribute",
+                "params": "ep=26&clustId=0402&attrId=0000"
+            },
+            "Bind 26-0402-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=26&clustId=0402",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 26-0402-0000": {
+                "use": "zbConfigureReporting",
+                "params": "ep=26&clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0E10&changeVal=",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

@@ -5,7 +5,6 @@
         "model": "E1743",
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "paramType": "telecommande",
             "mainEP": "01",
             "icon": "TRADFRIonoffswitch",
@@ -16,13 +15,18 @@
         },
         "type": "TRADFRI on\/off switch",
         "commands": {
-            "SWBuild": { "use": "zb-0000-SWBuildID" },
-            "Get-SWBuild": { "use": "zbReadAttribute", "params": "clustId=0000&attrId=4000" },
-
+            "SWBuild": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuild": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
             "include4": "offGroup",
             "include6": "onGroup",
-
-            "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
@@ -33,7 +37,6 @@
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-
             "include7": "Up-Down",
             "include12": "Click-Middle"
         },

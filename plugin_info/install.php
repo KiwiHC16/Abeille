@@ -187,21 +187,23 @@
         }
 
         /* Version 20201122 changes:
-           - blocageTraitementAnnonce defaulted to "Non"
-           - agressifTraitementAnnonce defaulted to 4
+           - Config DB: blocageTraitementAnnonce defaulted to "Non"
+           - Config DB: agressifTraitementAnnonce defaulted to 4
            - Rename all eq names that use short addr to use Jeedom ID instead.
-           - LogicalId 'AbeilleX/Ruche' updated to 'AbeilleX/0000'
-           - Topic 'AbeilleX/Ruche' updated to 'AbeilleX/0000'
-           - Removing obsolete entries in config table.
+           - Eq DB: LogicalId 'AbeilleX/Ruche' updated to 'AbeilleX/0000'
+           - Eq DB: Topic 'AbeilleX/Ruche' updated to 'AbeilleX/0000'
+           - Config DB: Removing obsolete entries.
            - 'mainEP' fix: '#EP#' => '01'
            - Removing several zigate cmds now handled directly in equipement advanced page.
-           - Eq config: 'modeleJson' => 'ab::jsonId'
-           - Removing 'zigateNb' (obsolete) from config DB.
+           - Eq DB: 'modeleJson' => 'ab::jsonId'
+           - Config DB: Removing 'zigateNb' (obsolete) from config DB.
            - Updating WIFI serial port (/dev/zigateX => constant wifiLink)
            - AbeilleDebug.log moved to /tmp/jeedom
            - Cmd DB: 'ab::trig' => 'ab::trigOut'
            - Cmd DB: 'ab::trigOffset' => 'ab::trigOutOffset'
            - Cmd DB: 'ReadAttributeRequest' => 'readAttribute'
+           - Cmd DB: Correcting wrong attribute size for 'getPlugVAW' (attrId=0505,508,050B)
+           - Eq DB: Removing obsolete 'lastCommunicationTimeOut', 'type'.
          */
         if (intval($dbVersion) < 20201122) {
             if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
@@ -276,6 +278,20 @@
                     $saveEq = true;
                 }
 
+                // Removing obsolete 'lastCommunicationTimeOut' & 'type'
+                $obsolete = $eqLogic->getConfiguration('lastCommunicationTimeOut', '');
+                if ($obsolete != '') {
+                    $eqLogic->setConfiguration('lastCommunicationTimeOut', null);
+                    log::add('Abeille', 'debug', '  '.$eqName.": 'lastCommunicationTimeOut' removed");
+                    $saveEq = true;
+                }
+                $obsolete = $eqLogic->getConfiguration('type', '');
+                if ($obsolete != '') {
+                    $eqLogic->setConfiguration('type', null);
+                    log::add('Abeille', 'debug', '  '.$eqName.": 'type' removed");
+                    $saveEq = true;
+                }
+
                 $cmds = Cmd::byEqLogicId($eqLogic->getId());
                 $saveCmd = false;
                 foreach ($cmds as $cmdLogic) {
@@ -306,6 +322,14 @@
                         $request = str_replace("Proprio=", "manufId=", $request);
                         $cmdLogic->setConfiguration('request', $request);
                         log::add('Abeille', 'debug', '  '.$eqName.": 'ReadAttributeRequest' updated to 'readAttribute'");
+                        $saveCmd = true;
+                    }
+                    // Correcting wrong attribute size for 'getPlugVAW' (attrId=0505,508,050B)
+                    $cmdLogicalId = $cmdLogic->getLogicalId();
+                    if (($cmdLogicalId == "getPlugVAW") && (strpos($request, "attrId=0505,508,050B") !== false)) {
+                        $request = str_replace("attrId=0505,508,050B", "attrId=0505,0508,050B", $request);
+                        $cmdLogic->setConfiguration('request', $request);
+                        log::add('Abeille', 'debug', '  '.$eqName.": 'getPlugVAW' updated for wrong attr 508 size");
                         $saveCmd = true;
                     }
                     if ($saveCmd)

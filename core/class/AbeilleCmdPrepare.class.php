@@ -102,16 +102,6 @@
                     "address" => $address,
                 );
                 break;
-            // case "IEEE_Address_request":
-            //     $keywords = preg_split("/[=&]+/", $msg);
-            //     $Command = array(
-            //         "IEEE_Address_request"      => "1",
-            //         "priority"                  => $priority,
-            //         "dest"                      => $dest,
-            //         "address"                   => $address,
-            //         "shortAddress"              => $keywords[1],
-            //     );
-            //     break;
             case "bindShort": // OBSOLETE: Use 'bind0030' instead
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {

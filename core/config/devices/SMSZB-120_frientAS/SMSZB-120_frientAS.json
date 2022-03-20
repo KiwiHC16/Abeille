@@ -73,6 +73,16 @@
                 "use": "zbConfigureReporting",
                 "params": "ep=26&clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0E10&changeVal=",
                 "execAtCreation": "yes"
+            },
+            "Start alarm": {
+                "use": "zbCmd-0502-StartWarning",
+                "params": "ep=23",
+                "isVisible": "1"
+            },
+            "Stop alarm": {
+                "use": "zbCmd-0502-StartWarning",
+                "params": "ep=23&mode=0",
+                "isVisible": "1"
             }
         }
     }

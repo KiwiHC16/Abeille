@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220320-BETA-1
+-------------
+
 - Interne: Mise-à-jour script de generation de la liste des eq supportés.
 - Interne: Mise-à-jour support Tuya EF00 cmd 01.
 - Lidl ampoule livarno lux led gu10 HG08131A: Ajout support (2356).

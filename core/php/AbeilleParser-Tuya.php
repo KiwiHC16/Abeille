@@ -43,9 +43,33 @@
         return $attributesN;
     }
 
+    // Cluster EF00
+    // See https://github.com/zigbeefordomoticz/wiki/blob/master/en-eng/Technical/Tuya-0xEF00.md
+    // See: https://www.zigbee2mqtt.io/advanced/support-new-devices/02_support_new_tuya_devices.html#_2-adding-your-device
+
+    // Decode cluster EF00 received cmd 01
+    function tuyaDecodeEF00Cmd01($srcEp, $msg) {
+        $attributesN = [];
+
+        parserLog("debug", "  msg=".$msg, "8002");
+        $tStatus = substr($msg, 0, 2); // uint8
+        $tTId = substr($msg, 2, 2); // uint8
+        $l = strlen($msg);
+        for ($i = 4; $i < $l;) {
+            $tDataPoint = substr($msg, $i, 2);
+            $tDataType = substr($msg, $i + 2, 2);
+            $tFunc = substr($msg, $i + 4, 2);
+            $tLen = substr($msg, $i + 6, 2);
+            parserLog("debug", "  Dp=".$tDataPoint.", DpType=".$tDataType.", Func=".$tFunc.", DpLen=".$tLen, "8002");
+
+            $i += 8 + (hexdec($tLen) * 2);
+        }
+
+        return $attributesN;
+    } // End tuyaDecodeEF00Cmd01()
+
     // Decode cluster EF00 received cmd 02
     /* Memo
-        See: https://www.zigbee2mqtt.io/advanced/support-new-devices/02_support_new_tuya_devices.html#_2-adding-your-device
         Format:
         sqn/uint16, dpList
             dpList = dataPoint/uint8, dataType/uint8, func/uint8, dataLen/uint8, data
@@ -111,6 +135,9 @@
                     'name' => $srcEp.'-CH20_ppm',
                     'value' => $val,
                 );
+                break;
+            default:
+                parserLog('debug', '  Unsupported DP '.$tDataPoint);
                 break;
             }
             $i += 8 + (hexdec($tLen) * 2);

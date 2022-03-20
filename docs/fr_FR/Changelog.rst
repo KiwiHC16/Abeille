@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+- Interne: Mise-à-jour script de generation de la liste des eq supportés.
+- Interne: Mise-à-jour support Tuya EF00 cmd 01.
+- Lidl ampoule livarno lux led gu10 HG08131A: Ajout support (2356).
+- Interne: Ajout support cmde 00 cluster 0502/IAS WD pour controle sirene.
+- Frient smoke alarm (SMSZB-120, frientAS): Mise-à-jour modele (2242).
+
 220316-BETA-1
 -------------
 

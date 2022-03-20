@@ -1,11 +1,5 @@
 <?php
-    /* To update AbeilleDoc's compatibility list:
-       - php desktop/modal/AbeilleCompatibility.modal.php rst
-       - then copy 'CompatibilityList.rst' to AbeilleDoc GIT repo
-       - copy/update images/node_xx to AbeilleDoc source/devices/images
-       - renegerate doc with './gen_docs.sh'
-       - and finally create your Pull Request on GitHub
-     */
+    // Supported devices list generation is now done by '.tools/gen_devices_list.php'
 
     function genHtml($eqList, $resultRaw, $result) {
 
@@ -79,33 +73,33 @@
             file_put_contents($fileName, $text);
     }
 
-    /* Generate list in "Restructured" format for AbeilleDoc update */
-    function genRst($eqList) {
+    // /* Generate list in "Restructured" format for AbeilleDoc update */
+    // function genRst($eqList) {
 
-        define('rstFile', 'CompatibilityList.rst');
+    //     define('rstFile', 'CompatibilityList.rst');
 
-        echo "***\n";
-        echo "*** Generating equipments list to '".rstFile."'\n";
-        echo "***\n\n";
+    //     echo "***\n";
+    //     echo "*** Generating equipments list to '".rstFile."'\n";
+    //     echo "***\n\n";
 
-        addToFile(rstFile, "Liste des équipements compatibles\n", false);
-        addToFile(rstFile, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-        addToFile(rstFile, "\n");
-        addToFile(rstFile, "Dernière mise-à-jour le ".date('Y-m-d')."\n\n");
+    //     addToFile(rstFile, "Liste des équipements compatibles\n", false);
+    //     addToFile(rstFile, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+    //     addToFile(rstFile, "\n");
+    //     addToFile(rstFile, "Dernière mise-à-jour le ".date('Y-m-d')."\n\n");
 
-        foreach ( $eqList as $eq ) {
-            echo "- ".$eq['jsonId']."\n";
-            if (isset($eq['manufacturer']))
-                echo "  manuf : ".$eq['manufacturer']."\n";
-            if (isset($eq['model']))
-                echo "  model : ".$eq['model']."\n";
-            echo "  name  : ".$eq['type']."\n";
+    //     foreach ( $eqList as $eq ) {
+    //         echo "- ".$eq['jsonId']."\n";
+    //         if (isset($eq['manufacturer']))
+    //             echo "  manuf : ".$eq['manufacturer']."\n";
+    //         if (isset($eq['model']))
+    //             echo "  model : ".$eq['model']."\n";
+    //         echo "  name  : ".$eq['type']."\n";
 
-            addToFile(rstFile, $eq['manufacturer'].", ".$eq['model'].", ".$eq['type']."\n\n");
-            addToFile(rstFile, ".. image:: images/node_".$eq['icon'].".png\n");
-            addToFile(rstFile, "   :width: 200px\n\n");
-        }
-    }
+    //         addToFile(rstFile, $eq['manufacturer'].", ".$eq['model'].", ".$eq['type']."\n\n");
+    //         addToFile(rstFile, ".. image:: images/node_".$eq['icon'].".png\n");
+    //         addToFile(rstFile, "   :width: 200px\n\n");
+    //     }
+    // }
 
     //----------------------------------------------------------------------------------------------------
     // Main
@@ -148,9 +142,9 @@
         if ( $argv[1] == "adoc" ) {
             equipementAdoc($eqList, $resultRaw, $result);
         }
-        if ( $argv[1] == "rst" ) {
-            genRst($eqList);
-        }
+        // if ( $argv[1] == "rst" ) {
+        //     genRst($eqList);
+        // }
     } else {
         genHtml($eqList, $resultRaw, $result);
     }

@@ -2077,6 +2077,9 @@
             //     return;
             // }
 
+            // Tcharp38 note: This is badly named. It is not a write attribute but
+            // most probably a cluster 0502 cmd 00
+            // OBSOLETE => Use 'cmd-0502' with 'cmd=00' instead
             if (isset($Command['writeAttributeRequestIAS_WD'])) {
                 // Parameters: EP=#EP&mode=Flash&duration=#slider#
 
@@ -4130,59 +4133,69 @@
 
                 // ZCL cluster 0502/IAS Warning Device commands
                 // Mantatory params: 'addr', 'ep', 'cmd' (00 or 01)
-                // Optional params for cmd 00: 'duration' (number, in sec)
+                // Optional params for cmd 00: 'duration' (number, in sec, default=10sec)
+                // Optional params for cmd 00: 'mode' (number, in sec, default=3=emergency) 0 to STOP
                 else if ($cmdName == 'cmd-0502') {
                     $required = ['addr', 'ep', 'cmd']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                        // <address mode: uint8_t>
-                        // <target short address: uint16_t>
-                        // <source endpoint: uint8_t>
-                        // <destination endpoint: uint8_t>
-                        // <profile ID: uint16_t>
-                        // <cluster ID: uint16_t>
-                        // <security mode: uint8_t>
-                        // <radius: uint8_t>
-                        // <data length: uint8_t>
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <profile ID: uint16_t>
+                    // <cluster ID: uint16_t>
+                    // <security mode: uint8_t>
+                    // <radius: uint8_t>
+                    // <data length: uint8_t>
 
-                        //  ZCL Control Field
-                        //  ZCL SQN
-                        //  Command Id
-                        //  ....
+                    //  ZCL Control Field
+                    //  ZCL SQN
+                    //  Command Id
+                    //  ....
 
-                        $cmd        = "0530";
-                        $addrMode   = "02";
-                        $addr       = $Command['addr'];
-                        $srcEp      = "01";
-                        $dstEp      = $Command['ep'];
-                        $profId     = "0104";
-                        $clustId    = '0502'; // IAS WD
-                        $secMode    = "02";
-                        $radius     = "1E";
+                    $cmd        = "0530";
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['ep'];
+                    $profId     = "0104";
+                    $clustId    = '0502'; // IAS WD
+                    $secMode    = "02";
+                    $radius     = "1E";
 
-                        /* ZCL header */
-                        $fcf        = "11"; // Frame Control Field
-                        $sqn        = $this->genSqn();
-                        $cmdId      = $Command['cmd'];
+                    /* ZCL header */
+                    $fcf        = "11"; // Frame Control Field
+                    $sqn        = $this->genSqn();
 
-                        // WORK ONGOING for #2242
-                        if ($cmdId == "00") { // Start warning
-                            $map8 = "00";
-                            $duration = isset($Command['duration']) ? $Command['duration'] : 10;
-                            $duration = sprintf("%04X", $duration); // Convert to hex string
-                            $data2 = $fcf.$sqn.$cmdId.$map8.$duration;
-                        } else {
-                            cmdLog('debug', "    ERROR: Unsupported cluster 0502 command ".$cmdId);
-                            return;
-                        }
-                        $dataLen2 = sprintf("%02X", strlen($data2) / 2);
-                        $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
-                        $data = $data1.$data2;
+                    // Use case = #2242
+                    $cmdId      = $Command['cmd'];
+                    if ($cmdId == "00") { // Start warning
+                        $mode = isset($Command['mode']) ? $Command['mode'] : 3; // Warning mode: Emergency
+                        if ($mode == 0) // Warning mode == stop
+                            $strobe = 0; // Srobe OFF
+                        else
+                            $strobe = 1; // Srobe ON
+                        $sl = 3; // Siren level = max
+                        $duration = isset($Command['duration']) ? $Command['duration'] : 10;
 
-                        $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                        cmdLog('debug', "    Using mode=".$mode.", strobe=".$strobe.", slevel=".$sl.", duration=".$duration);
+                        $map8 = ($mode << 4) | ($strobe < 2) | $sl;
+                        $map8 = sprintf("%02X", $map8);
+                        $duration = sprintf("%04X", $duration); // Convert to hex string
+                        $data2 = $fcf.$sqn.$cmdId.$map8.$duration."00"."03";
+                    } else {
+                        cmdLog('debug', "    ERROR: Unsupported cluster 0502 command ".$cmdId);
                         return;
                     }
+                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
+                    $data = $data1.$data2;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    return;
+                }
 
                 // ZCL cluster 1000 specific: (received) commands
                 else if ($cmdName == 'cmd-1000') {

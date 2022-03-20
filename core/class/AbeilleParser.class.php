@@ -3084,7 +3084,14 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             // Cluster EF00 is used by Tuya.
             if ($clustId == "EF00") {
-                if ($cmd == "02") {
+                if ($cmd == "01") {
+                    // Duplicated message ?
+                    if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                        return;
+
+                    parserLog("debug", "  Tuya EF00 specific cmd 01", "8002");
+                    $attributesN = tuyaDecodeEF00Cmd01($srcEp, $msg);
+                } else if ($cmd == "02") {
                     // Duplicated message ?
                     if ($this->isDuplicated($dest, $srcAddr, $sqn))
                         return;

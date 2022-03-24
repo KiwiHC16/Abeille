@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220324-BETA-1
+-------------
+
 - Network graph: Corrections diverses (1820).
 - Page de gestion: Suppression du 'Changement de zigate' en double.
 - Interne: Cmd 00 cluster 0502/IAS-WD: corrections.

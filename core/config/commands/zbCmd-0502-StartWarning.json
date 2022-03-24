@@ -4,7 +4,7 @@
         "comment": "clust 0502, start warning cmd (00)",
         "comment2": "Mantatory params: 'addr', 'ep'",
         "comment3": "Optional params: 'duration' (number, in sec, default=10sec)",
-        "comment4": "Optional params: 'mode' (number, in sec, default=3=emergency) 0 to STOP",
+        "comment4": "Optional params: 'mode' (string, 'stop'/'burglar'/'fire'/'emergency'/'policepanic'/'firepanic'/'emergencypanic')",
 
         "isHistorized": "0",
         "isVisible": "0",

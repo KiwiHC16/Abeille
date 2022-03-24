@@ -138,12 +138,6 @@
 
         <?php include 'Abeille-NewZigate.php'; ?>
 
-        <?php if (isset($dbgTcharp38)) { ?>
-        <?php include 'Abeille-Recovery.php'; ?>
-        <?php } ?>
-
-        <?php include 'Abeille-NewZigate.php'; ?>
-
         <?php if (isset($dbgDeveloperMode)) { ?>
         <legend><i class="fa fa-cogs"></i> {{Visible en MODE DEV UNIQUEMENT}}</legend>
         <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">

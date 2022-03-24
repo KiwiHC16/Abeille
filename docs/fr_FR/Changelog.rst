@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+- Network graph: Corrections diverses (1820).
+- Page de gestion: Suppression du 'Changement de zigate' en double.
+- Interne: Cmd 00 cluster 0502/IAS-WD: corrections.
+- Frient smoke alarm (SMSZB-120, frientAS): Mise-à-jour modèle (2242).
+- Interne: Mise-à-jour à partir du modèle revu pour éviter de créer des cmdes orphelines.
+- Interne: Collecte LQI génère nouveau format (AbeilleLQI-AbeilleX.json).
+- Réseau/graph des liens: Revu et utilise nouveau format interne + ajout icone équipement.
+- Interne: Parser: Amélioration filtrage mauvais paquets LQI/804E.
+- Page support: Affiche tout fichier JSON du repertoire temporaire.
+- Interne: network.js => AbeilleNetwork.js
+
 220320-BETA-1
 -------------
 

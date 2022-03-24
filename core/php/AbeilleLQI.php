@@ -50,7 +50,7 @@
             "tableEntries" => 0,    // Nb of entries in its table
             "tableIndex" => 0,      // Index to interrogate
         );
-        logMessage("", "New device to interrogate: '".$eqName."' (".$logicId.")");
+        logMessage("", "  New router to interrogate: '".$eqName."' (".$logicId.")");
     }
 
     /* Remove any pending messages from parser */
@@ -65,7 +65,6 @@
     function msgFromParser($eqIdx) {
         logMessage("", "msgFromParser(eqIndex=".$eqIdx.")");
 
-        global $LQI;
         global $queueParserToLQI, $queueParserToLQIMax;
         global $eqToInterrogate;
         global $knownFromJeedom;
@@ -148,7 +147,120 @@
         $eqToInterrogate[$eqIdx]['tableIndex'] = hexdec($startIdx) + hexdec($tableListCount);
 
         $NE = $eqToInterrogate[$eqIdx]["logicId"]; // Ex: 'Abeille1/A3B4'
+        list($netName, $addr) = explode('/', $NE);
 
+        //
+        // New format (AbeilleLQI-AbeilleX.json)
+        //
+        if (isset($knownFromJeedom[$NE])) {
+            $routerName = $knownFromJeedom[$NE]['name'];
+            $routerPName = $knownFromJeedom[$NE]['parent'];
+            $routerIeee = $knownFromJeedom[$NE]['ieee'];
+            $routerIcon = $knownFromJeedom[$NE]['icon'];
+        } else {
+            $routerIeee = '';
+            $routerName = '?';
+            $routerPName = '?';
+            $routerIcon = 'defaultUnknown';
+        }
+        global $lqiTable;
+        if (isset($lqiTable['routers'][$NE])) {
+            $router = $lqiTable['routers'][$NE];
+        } else {
+            $router = array(
+                'addr' => $msg->srcAddr,
+                'ieee' => $routerIeee,
+                'name' => $routerName,
+                'parentName' => $routerPName,
+                'type' => ($addr == "0000") ? 'Coordinator' : 'Router',
+                'neighbors' => array(),
+                'icon' => $routerIcon,
+            );
+        }
+        $neighbors = $router['neighbors'];
+        /* Going thru neighbours list */
+        for ($nIdx = 0; $nIdx < hexdec($tableListCount); $nIdx++) {
+            $N = $nList[$nIdx];
+
+            $nLogicId = $netName."/".$N->addr;
+            if (isset($knownFromJeedom[$nLogicId])) {
+                $nName = $knownFromJeedom[$nLogicId]['name'];
+                $nParentName = $knownFromJeedom[$nLogicId]['parent'];
+                $nIcon = $knownFromJeedom[$nLogicId]['icon'];
+            } else {
+                $nName = "?";
+                $nParentName = "?";
+                $nIcon = 'defaultUnknown';
+            }
+
+            $newNeighbor = array(
+                'addr' => $N->addr,
+                'ieee' => $N->extAddr,
+                'name' => $nName,
+                'parentName' => $nParentName,
+                'depth' => $N->depth,
+                'lqi' => hexdec($N->lqi),
+                'icon' => $nIcon,
+            );
+
+            // Decode Bitmap Attribut
+            // Bit map of attributes Described below: uint8_t
+            // bit 0-1 Device Type (0-Coordinator 1-Router 2-End Device)    => Process
+            // bit 2-3 Permit Join status (1- On 0-Off)                     => Skip no need for the time being
+            // bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)            => Process
+            // bit 6-7 Rx On When Idle status (1-On 0-Off)                  => Process
+            $attr = hexdec($N->bitMap);
+            $attrType = $attr & 0b00000011;
+            if ($attrType == 0) {
+                $newNeighbor['type'] = "Coordinator";
+            } else if ($attrType == 1) {
+                $newNeighbor['type'] = "Router";
+                newEqToInterrogate($nLogicId);
+            } else if ($attrType== 2) {
+                $newNeighbor['type'] = "End Device";
+            } else { // $attrType== 3
+                $newNeighbor['type'] = "Unknown";
+            }
+
+            $attrRel = ($attr & 0b00110000) >> 4;
+            if ($attrRel == 0) {
+                $newNeighbor['relationship'] = "Parent";
+            } else if ($attrRel == 1) {
+                $newNeighbor['relationship'] = "Child";
+
+                // Required by remove from zigbee feature (#1770)
+                // Tcharp38: It appears that in several cases we don't have any parent IEEE
+                //   might not be required if remove is using 004C cmd instead of 0026
+                $kid = Abeille::byLogicalId($netName.'/'.$N->addr, 'Abeille');
+                if ($kid) { // Saving parent IEEE address
+                    $kid->setConfiguration('parentIEEE', $routerIeee);
+                    $kid->save();
+                } else
+                    logMessage("", "  WARNING: Unkown device '".$netName."/".$N->addr."'");
+            } else if ($attrRel == 2) {
+                $newNeighbor['relationship'] = "Sibling";
+            } else { // if ($attrRel == 3)
+                $newNeighbor['relationship'] = "Unknown";
+            }
+
+            $attrRx = ($attr & 0b11000000) >> 6;
+            if ($attrRx == 0) {
+                $newNeighbor['rx'] = "Rx-Off";
+            } else if ($attrRx == 1) {
+                $newNeighbor['rx'] = "Rx-On";
+            } else { // 2 or 3
+                $newNeighbor['rx'] = "Rx-Unknown";
+            }
+
+            $neighbors[$nLogicId] = $newNeighbor;
+        }
+        $router['neighbors'] = $neighbors;
+        $lqiTable['routers'][$NE] = $router;
+
+        //
+        // Old format support
+        // TO BE REMOVED when AbeilleLQI_MapDataAbeilleX.json is no longer used.
+        //
         $parameters = array();
         $parameters['NE'] = $NE; // Logical ID
         if (isset($knownFromJeedom[$NE])) {
@@ -164,7 +276,6 @@
             $parameters['NE_Objet'] = "";
             $parentIEEE = "";
         }
-        list($netName, $addr) = explode('/', $NE);
 
         /* Going thru neighbours list */
         for ($nIdx = 0; $nIdx < hexdec($tableListCount); $nIdx++ ) {
@@ -192,23 +303,23 @@
             // bit 2-3 Permit Join status (1- On 0-Off)                     => Skip no need for the time being
             // bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)            => Process
             // bit 6-7 Rx On When Idle status (1-On 0-Off)                  => Process
-            $Attr = hexdec($N->bitMap);
-            $AttrType = $Attr & 0b00000011;
-            if ($AttrType == 0) {
+            $attr = hexdec($N->bitMap);
+            $attrType = $attr & 0b00000011;
+            if ($attrType == 0) {
                 $parameters['Type'] = "Coordinator";
-            } else if ($AttrType == 1) {
+            } else if ($attrType == 1) {
                 $parameters['Type'] = "Router";
                 newEqToInterrogate($parameters['Voisine']);
-            } else if ($AttrType== 2) {
+            } else if ($attrType== 2) {
                 $parameters['Type'] = "End Device";
-            } else { // $AttrType== 3
+            } else { // $attrType== 3
                 $parameters['Type'] = "Unknown";
             }
 
-            $AttrRel = ($Attr & 0b00110000) >> 4;
-            if ($AttrRel == 0) {
+            $attrRel = ($attr & 0b00110000) >> 4;
+            if ($attrRel == 0) {
                 $parameters['Relationship'] = "Parent";
-            } else if ($AttrRel == 1) {
+            } else if ($attrRel == 1) {
                 $parameters['Relationship'] = "Child";
 
                 // Required by remove from zigbee feature (#1770)
@@ -220,21 +331,22 @@
                     $kid->save();
                 } else
                     logMessage("", "  WARNING: Unkown device '".$netName."/".$N->addr."'");
-            } else if ($AttrRel == 2) {
+            } else if ($attrRel == 2) {
                 $parameters['Relationship'] = "Sibling";
-            } else { // if ($AttrRel == 3)
+            } else { // if ($attrRel == 3)
                 $parameters['Relationship'] = "Unknown";
             }
 
-            $AttrRx = ($Attr & 0b11000000) >> 6;
-            if ($AttrRx == 0) {
+            $attrRx = ($attr & 0b11000000) >> 6;
+            if ($attrRx == 0) {
                 $parameters['Rx'] = "Rx-Off";
-            } else if ($AttrRx == 1) {
+            } else if ($attrRx == 1) {
                 $parameters['Rx'] = "Rx-On";
             } else { // 2 or 3
                 $parameters['Rx'] = "Rx-Unknown";
             }
 
+            global $LQI;
             $LQI[] = $parameters;
         }
 
@@ -305,7 +417,7 @@
     } else
         $zgId = -1;
     if (($zgId != -1) && (($zgId < 1) or ($zgId > 10))) {
-        logMessage("", "  Bad zigate id => aborting.");
+        logMessage("", "ERROR: Bad zigate id => aborting.");
         exit;
     }
 
@@ -333,6 +445,8 @@
         else
             $objName = $eqParent->getName();
         $knownFromJeedom[$eqLogicId]['parent'] = $objName;
+        $knownFromJeedom[$eqLogicId]['ieee'] = $eqLogic->getConfiguration('IEEE', '');
+        $knownFromJeedom[$eqLogicId]['icon'] = $eqLogic->getConfiguration('icone', 'defaultUnknown');
         // $objKnownFromAbeille[$eqLogicId] = $objName;
         logMessage("", "  Eq='".$eqLogicId."', parent='".$objName."'");
     }
@@ -352,6 +466,7 @@
 
         $netName = "Abeille".$zgId; // Abeille network
         $dataFile = $tmpDir."/AbeilleLQI_MapData".$netName.".json";
+        $newDataFile = $tmpDir."/AbeilleLQI-".$netName.".json"; // New format, replacing 'AbeilleLQI_MapDataAbeilleX.json'
         $lockFile = $dataFile.".lock";
         if (file_exists($lockFile)) {
             $content = file_get_contents($lockFile);
@@ -376,7 +491,13 @@
             exit;
         }
 
-        $LQI = array(); // Result from interrogations
+        $LQI = array(); // Result from interrogations (old format)
+        $lqiTable = array(
+            'signature' => 'lqiTable',
+            'net' => "Abeille".$zgId,
+            'collectTime' => time(), // Time here is start of collect
+            'routers' => array()
+        ); // Result from interrogations (new format)
         $eqToInterrogate = array();
         newEqToInterrogate("Abeille".$zgId."/0000");
 
@@ -431,6 +552,10 @@
             // Write json to file
             if (file_put_contents($dataFile, $json)) {
                 echo "Ok: ".$netName." collect ended successfully";
+
+                // Storing also new output format
+                $json = json_encode($lqiTable);
+                file_put_contents($newDataFile, $json);
             } else {
                 unlink($dataFile);
                 echo "ERROR: Data file write pb.";

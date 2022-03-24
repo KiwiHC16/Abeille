@@ -2924,26 +2924,42 @@ if (0) {
         }
 
         /* Tcharp38: TO BE REVISITED
-        - Remove obsolete cmds using logicalID and NOT cmd name
-        - If cmd info & logicalId still valid, update cmd, name & and devices using it
         - If cmd action.. currently no uniq logicalId. Something more to do
         */
 
-        /* Removing obsolete commands, not listed in JSON.
-           Might be needed for ex if device was previously 'defaultUnknown'. */
+        /* Removing obsolete commands, not/no longer listed in model.
+           Might be needed for ex if device was previously 'defaultUnknown'.
+           If 'info', using logicalId to identify command
+           If 'action', still using cmd name to identify command (to be revisited)
+         */
         $cmds = Cmd::byEqLogicId($eqLogic->getId());
         foreach ($cmds as $cmdLogic) {
+            $jType = $cmdLogic->getType(); // 'info' or 'action'
+            $jName = $cmdLogic->getName();
             $found = false;
-            $cmdName = $cmdLogic->getName();
-            foreach ($modelCmds as $cmdKey => $cmdValueDefaut) {
-                $cmdJName = $cmdKey; // Jeedom command name
-                if ($cmdName == $cmdJName) {
-                    $found = true;
-                    break; // Listed in JSON
+            if ($jType == "info") {
+                // Using logicalId for info cmds
+                $jLogicId = $cmdLogic->getLogicalId();
+                foreach ($modelCmds as $mKey => $mCmd) {
+                    if ($mCmd['type'] != $jType)
+                        continue; // Wrong type
+                    $mLogicId = $mCmd['logicalId'];
+                    if ($mLogicId == $jLogicId) {
+                        $found = true;
+                        break; // Listed in model
+                    }
+                }
+            } else { // action
+                foreach ($modelCmds as $mKey => $mCmd) {
+                    $mName = $mKey; // Jeedom command name
+                    if ($mName == $jName) {
+                        $found = true;
+                        break; // Listed in model
+                    }
                 }
             }
             if ($found == false) {
-                log::add('Abeille', 'debug', "  Removing cmd '".$cmdName."'");
+                log::add('Abeille', 'debug', "  Removing obsolete cmd '".$jName."', type=".$jType.", logicId='".$jLogicId."'");
                 $cmdLogic->remove(); // No longer required
             }
         }
@@ -2952,14 +2968,11 @@ if (0) {
         $order = 0;
         foreach ($modelCmds as $cmdKey => $cmdValueDefaut) {
             $cmdJName = $cmdKey; // Jeedom command name
-            if ($cmdValueDefaut["type"] == "info")
-                $type = "info";
-            else if ($cmdValueDefaut["type"] == "action")
-                $type = "action";
-            else {
+            if (!isset($cmdValueDefaut["type"])) {
                 log::add('Abeille', 'error', "La commande '".$cmdJName."' (fichier ".$cmdKey.".json) n'a pas de type défini => ignorée");
                 break;
             }
+            $type = $cmdValueDefaut["type"];
 
             // $cmdJName = $cmdValueDefaut["name"]; // Jeedom command name
             if ($type == "info")
@@ -2975,19 +2988,15 @@ if (0) {
             $cmdLogic = AbeilleCmd::byEqLogicIdCmdName($eqLogic->getId(), $cmdJName);
             if (!is_object($cmdLogic)) {
                 $newCmd = true;
-                log::add('Abeille', 'debug', "  Adding cmd '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
+                log::add('Abeille', 'debug', "  Adding ".$type." '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
                 $cmdLogic = new AbeilleCmd();
             } else {
                 $newCmd = false;
-                log::add('Abeille', 'debug', "  Updating cmd '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
+                log::add('Abeille', 'debug', "  Updating ".$type." '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
             }
 
             $cmdLogic->setEqLogic_id($eqLogic->getId());
             $cmdLogic->setEqType('Abeille');
-            // Tcharp38: Cmds now created in order of declarations in device JSON.
-            // Does not make sense to be defined in cmd itself since can be reused by different device.
-            // if (isset($cmdValueDefaut["order"]))
-            //     $cmdLogic->setOrder($cmdValueDefaut["order"]);
             $cmdLogic->setOrder($order++);
             $cmdLogic->setName($cmdJName);
 

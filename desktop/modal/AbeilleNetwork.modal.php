@@ -19,7 +19,7 @@
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksTable('.$i.')">Abeille'.$i.'</a>';
             else // "linksGraph"
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksGraph('.$i.')">Abeille'.$i.'</a>';
-            echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLQICache('.$i.')"><i class="fas fa-sync"></i></a>';
+            echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLQICache('.$i.', \''.$what.'\')"><i class="fas fa-sync"></i></a>';
             echo '&nbsp;&nbsp;';
         }
     }
@@ -239,12 +239,12 @@
                             <td>{{Coordinateur}}</td>
                         </tr>
                         <tr>
-                            <td class="typeEndDevice-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
-                            <td>{{Bout de chaine}}</td>
-                        </tr>
-                        <tr>
                             <td class="typeRouter-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
                             <td>{{Routeur}}</td>
+                        </tr>
+                        <tr>
+                            <td class="typeEndDevice-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
+                            <td>{{Bout de chaine}}</td>
                         </tr>
                         <tr>
                             <td class="typeUndefined-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
@@ -435,4 +435,4 @@
     ?>
 </script>
 
-<?php include_file('desktop', 'network', 'js', 'Abeille'); ?>
+<?php include_file('desktop', 'AbeilleNetwork', 'js', 'Abeille'); ?>

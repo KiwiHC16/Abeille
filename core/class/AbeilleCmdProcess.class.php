@@ -4134,7 +4134,7 @@
                 // ZCL cluster 0502/IAS Warning Device commands
                 // Mantatory params: 'addr', 'ep', 'cmd' (00 or 01)
                 // Optional params for cmd 00: 'duration' (number, in sec, default=10sec)
-                // Optional params for cmd 00: 'mode' (number, in sec, default=3=emergency) 0 to STOP
+                // Optional params for cmd 00: 'mode' (string, 'stop'/'burglar'/'fire'/'emergency'/'policepanic'/'firepanic'/'emergencypanic')
                 else if ($cmdName == 'cmd-0502') {
                     $required = ['addr', 'ep', 'cmd']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
@@ -4172,18 +4172,37 @@
                     // Use case = #2242
                     $cmdId      = $Command['cmd'];
                     if ($cmdId == "00") { // Start warning
-                        $mode = isset($Command['mode']) ? $Command['mode'] : 3; // Warning mode: Emergency
+                        $mode = isset($Command['mode']) ? $Command['mode'] : 'emergency'; // Warning mode: Emergency
+                        $mode = strtolower($mode);
+                        switch ($mode) {
+                        case 'stop':
+                            $mode = 0; break;
+                        case 'burglar':
+                            $mode = 1; break;
+                        case 'fire':
+                            $mode = 2; break;
+                        case 'policepanic':
+                            $mode = 4; break;
+                        case 'firepanic':
+                            $mode = 5; break;
+                        case 'emergencypanic':
+                            $mode = 6; break;
+                        case 'emergency':
+                        default:
+                            $mode = 3; break;
+                        }
                         if ($mode == 0) // Warning mode == stop
                             $strobe = 0; // Srobe OFF
                         else
                             $strobe = 1; // Srobe ON
                         $sl = 3; // Siren level = max
-                        $duration = isset($Command['duration']) ? $Command['duration'] : 10;
+                        $duration = isset($Command['duration']) ? $Command['duration'] : 10; // Default=10sec
 
                         cmdLog('debug', "    Using mode=".$mode.", strobe=".$strobe.", slevel=".$sl.", duration=".$duration);
-                        $map8 = ($mode << 4) | ($strobe < 2) | $sl;
+                        $map8 = ($mode << 4) | ($strobe << 2) | $sl;
                         $map8 = sprintf("%02X", $map8);
                         $duration = sprintf("%04X", $duration); // Convert to hex string
+                        $duration = AbeilleTools::reverseHex($duration);
                         $data2 = $fcf.$sqn.$cmdId.$map8.$duration."00"."03";
                     } else {
                         cmdLog('debug', "    ERROR: Unsupported cluster 0502 command ".$cmdId);

@@ -88,13 +88,13 @@
             $tDataType = substr($msg, $i + 2, 2);
             $tFunc = substr($msg, $i + 4, 2);
             $tLen = substr($msg, $i + 6, 2);
-            parserLog("debug", "  Dp=".$tDataPoint.", DpType=".$tDataType.", Func=".$tFunc.", DpLen=".$tLen, "8002");
+            $m = "Dp=".$tDataPoint.", DpType=".$tDataType.", Func=".$tFunc.", DpLen=".$tLen;
             $tData = substr($msg, $i + 8, hexdec($tLen) * 2);
             // Tcharp38: WARNING: The following decode seems to be specific to Smart Air sensor. To be revisited
             switch($tDataPoint) {
             case "02":
                 $val = hexdec($tData);
-                parserLog("debug", "  CO2=".$val." ppm", "8002");
+                parserLog("debug", "  ".$m." => CO2=".$val." ppm", "8002");
                 $attributesN[] = array(
                     'name' => $srcEp.'-CO2_ppm',
                     'value' => $val,
@@ -104,7 +104,7 @@
                 $val = hexdec($tData);
                 $vReport = $val * 10; // Divided by 100 due to model
                 $val = $val / 10;
-                parserLog("debug", "  Temp=".$val." C", "8002");
+                parserLog("debug", "  ".$m." => Temp=".$val." C", "8002");
                 $attributesN[] = array(
                     'name' => '0402-'.$srcEp.'-0000',
                     'value' => $vReport,
@@ -114,7 +114,7 @@
                 $val = hexdec($tData);
                 $vReport = $val * 10; // Divided by 100 due to model
                 $val = $val / 10;
-                parserLog("debug", "  Humidity=".$val." %", "8002");
+                parserLog("debug", "  ".$m." => Humidity=".$val." %", "8002");
                 $attributesN[] = array(
                     'name' => '0405-'.$srcEp.'-0000',
                     'value' => $vReport,
@@ -122,7 +122,7 @@
                 break;
             case "15": // VOC
                 $val = hexdec($tData) / 10;
-                parserLog("debug", "  VOC=".$val." ppm", "8002");
+                parserLog("debug", "  ".$m." => VOC=".$val." ppm", "8002");
                 $attributesN[] = array(
                     'name' => $srcEp.'-VOC_ppm',
                     'value' => $val,
@@ -130,14 +130,14 @@
                 break;
             case "16": // Formaldéhyde µg/m3 (Méthanal / CH2O_ppm)
                 $val = hexdec($tData);
-                parserLog("debug", "  VOC=".$val." ppm", "8002");
+                parserLog("debug", "  ".$m." => CH2O=".$val." ppm", "8002");
                 $attributesN[] = array(
                     'name' => $srcEp.'-CH20_ppm',
                     'value' => $val,
                 );
                 break;
             default:
-                parserLog('debug', '  Unsupported DP '.$tDataPoint);
+                parserLog('debug', "  ".$m." => Unsupported DP ".$tDataPoint);
                 break;
             }
             $i += 8 + (hexdec($tLen) * 2);

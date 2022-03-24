@@ -603,16 +603,6 @@
 
             /* Updating entry: 'epList', 'manufId', 'modelId' or 'location', 'ieee', 'bindingTableSize' */
             if ($updType) {
-                // $eq[$updType] = $value;
-                // if ($updType == 'epList') { // Active end points response
-                //     $eqArr = explode('/', $value);
-                //     $eq['epFirst'] = $eqArr[0];
-                // } else if ($eq['epList'] == '') { // Probably got modelId BEFORE end points list
-                //     $eq['epList'] = $ep; // There is at least this EP where update is coming from
-                //     $eq['epFirst'] = $ep; // There is at least this EP where update is coming from
-                // }
-
-                // Tcharp38: WORK ONGOING.
                 if ($updType == 'epList') { // Active end points response
                     $epArr = explode('/', $value);
                     foreach ($epArr as $epId2) {
@@ -3963,28 +3953,36 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             $nTableEntries = substr($payload, 4, 2);
             $nTableListCount = substr($payload, 6, 2);
             $startIdx = substr($payload, 8, 2);
-            $srcAddr = substr($payload, 10 + (hexdec($nTableListCount) * 42), 4); // 21 bytes per neighbour entry
-            $nList = []; // List of neighbours
+            $srcAddr = substr($payload, 10 + (hexdec($nTableListCount) * 42), 4); // 21 bytes per neighbor entry
+            $nList = []; // List of neighbors
             $j = 10; // Neighbours list starts at char 10
             $zgId = substr($dest, 7); // 'AbeilleX' => 'X'
-            for ($i = 0; $i < hexdec($nTableListCount); $j += 42, $i++) {
-                $extPanId = substr($payload, $j + 4, 16);
-                // Filtering-out devices from other networks
-                if (isset($GLOBALS['zigate'.$zgId]['extPanId'])) {
-                    if ($extPanId != $GLOBALS['zigate'.$zgId]['extPanId']) {
-                        parserLog('debug', '  Alternate network (extPanId='.$extPanId.') ignored');
-                        continue;
+            // Filtering-out stupid & unconsistent msg from zigate (see: https://github.com/fairecasoimeme/ZiGate/issues/370#)
+            $corrupted = false;
+            if (hexdec($nTableListCount) > hexdec($nTableEntries))
+                $corrupted = true;
+            if ((hexdec($startIdx) + hexdec($nTableListCount)) > hexdec($nTableEntries))
+                $corrupted = true;
+            if ($corrupted == false) {
+                for ($i = 0; $i < hexdec($nTableListCount); $j += 42, $i++) {
+                    $extPanId = substr($payload, $j + 4, 16);
+                    // Filtering-out devices from other networks
+                    if (isset($GLOBALS['zigate'.$zgId]['extPanId'])) {
+                        if ($extPanId != $GLOBALS['zigate'.$zgId]['extPanId']) {
+                            // parserLog('debug', '  Alternate network (extPanId='.$extPanId.') ignored');
+                            continue;
+                        }
                     }
+                    $N = array(
+                        "addr"     => substr($payload, $j + 0, 4),
+                        "extPANId" => $extPanId,
+                        "extAddr"  => substr($payload, $j + 20, 16),
+                        "depth"    => substr($payload, $j + 36, 2),
+                        "lqi"      => substr($payload, $j + 38, 2),
+                        "bitMap"   => substr($payload, $j + 40, 2)
+                    );
+                    $nList[] = $N; // Add to neighbors list
                 }
-                $N = array(
-                    "addr"     => substr($payload, $j + 0, 4),
-                    "extPANId" => $extPanId,
-                    "extAddr"  => substr($payload, $j + 20, 16),
-                    "depth"    => substr($payload, $j + 36, 2),
-                    "lqi"      => substr($payload, $j + 38, 2),
-                    "bitMap"   => substr($payload, $j + 40, 2)
-                );
-                $nList[] = $N; // Add to neighbours list
             }
 
             // Log
@@ -3996,9 +3994,8 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 .', StartIndex='        .$startIdx
                 .', SrcAddr='           .$srcAddr;
             parserLog('debug', $dest.', Type='.$decoded);
-            // Filtering-out stupid & unconsistent msg from zigate (see: https://github.com/fairecasoimeme/ZiGate/issues/370#)
-            if ($nTableListCount > $nTableEntries) {
-                parserLog('debug', '  WARNING: Corrupted/inconsistent message => ignoring');
+            if ($corrupted) {
+                parserLog('debug', '  WARNING: Corrupted/inconsistent message => ignored');
                 return;
             }
             foreach ($nList as $N) {
@@ -4020,6 +4017,12 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 parserLog('debug', "  Status != 00 => Decode canceled");
                 return;
             }
+
+            $this->msgToLQICollector($srcAddr, $nTableEntries, $nTableListCount, $startIdx, $nList);
+            // Tcharp38 TODO: lastComm can be updated for $srcAddr only
+
+            // TODO: Update devices table in case this router is unknown to Jeedom
+            // $this->deviceUpdate($dest, $srcAddr, "00");
 
             foreach ($nList as $N) {
                 /* If equipment is unknown, may try to interrogate it.
@@ -4043,9 +4046,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                    2/ such code is just there to work-around a missed short addr change. */
                 // $this->msgToAbeilleCmdFct($dest."/".$N['Addr']."/IEEE-Addr", $N['ExtAddr']);
             }
-
-            $this->msgToLQICollector($srcAddr, $nTableEntries, $nTableListCount, $startIdx, $nList);
-            // Tcharp38 TODO: lastComm can be updated for $srcAddr only
         }
 
         //----------------------------------------------------------------------------------------------------------------

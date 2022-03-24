@@ -1,5 +1,6 @@
 {
     "MS01": {
+        "alternateIds": "MSO1",
         "manufacturer": "Sonoff",
         "model": "SNZB-03",
         "timeout": "140",

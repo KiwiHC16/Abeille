@@ -76,12 +76,12 @@
             },
             "Start alarm": {
                 "use": "zbCmd-0502-StartWarning",
-                "params": "ep=23",
+                "params": "ep=23&mode=burglar",
                 "isVisible": "1"
             },
             "Stop alarm": {
                 "use": "zbCmd-0502-StartWarning",
-                "params": "ep=23&mode=0",
+                "params": "ep=23&mode=stop",
                 "isVisible": "1"
             }
         }

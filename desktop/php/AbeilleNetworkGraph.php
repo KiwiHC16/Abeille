@@ -1,7 +1,8 @@
 <?php
-    /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.json";
-    if (file_exists($dbgFile)) {
+    require_once __DIR__.'/../../core/config/Abeille.config.php';
+
+    // $dbgFile = __DIR__."/../../tmp/debug.json";
+    if (file_exists(dbgFile)) {
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
         ini_set('error_log', __DIR__.'/../../../../log/AbeillePHP.log');
@@ -9,13 +10,10 @@
     }
 
     require_once __DIR__.'/../../../../core/php/core.inc.php';
-    require_once __DIR__.'/../../core/config/Abeille.config.php';
 ?>
 
 <script type="text/javascript">
     // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
-
-    console.log("Begin --------------");
 
     //-----------------------------------------------------------------------
     // Global Variables
@@ -51,7 +49,7 @@
     //-----------------------------------------------------------------------
 
     function getVoisinesJSON() {
-        console.log("getVoisinesJSON()");
+        console.log("getVoisinesJSON("+Ruche+")");
 
         // var xmlhttp = new XMLHttpRequest();
         // xmlhttp.onreadystatechange = function() {
@@ -147,7 +145,7 @@
                 console.log("refreshNetworkInformation(): " + networkInformation);
             }
         };
-        xmlhttpRefreshNetworkInformation.open("GET", "/plugins/Abeille/core/php/AbeilleLQI.php?zigate="+ZigateX, true);
+        xmlhttpRefreshNetworkInformation.open("GET", "/plugins/Abeille/core/php/AbeilleLQI.php?zigate="+zgId, true);
         xmlhttpRefreshNetworkInformation.send();
 
         /* Start refresh status every 1sec */
@@ -155,7 +153,7 @@
     }
 
     function refreshNetworkInformationProgress() {
-        console.log("refreshNetworkInformationProgress()");
+        console.log("refreshNetworkInformationProgress("+Ruche+")");
 
         // var d = new Date();
         // var xmlhttpRefreshNetworkInformationProgress = new XMLHttpRequest();
@@ -169,7 +167,8 @@
         // xmlhttpRefreshNetworkInformationProgress.send();
 
         $.ajax({
-            type: 'GET',
+            // type: 'GET',
+            type: 'POST',
             url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
             data: {
                 action: 'getTmpFile',
@@ -179,7 +178,7 @@
             global: false,
             cache: false,
             error: function (request, status, error) {
-                console.log("ERROR: Call to getTomFile failed");
+                console.log("ERROR: Call to getTmpFile failed");
                 // $('#div_networkZigbeeAlert').showAlert({
                 //     message: "ERREUR ! Problème du lecture du fichier de lock.",
                 //     level: 'danger'
@@ -188,7 +187,7 @@
                 // setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);
             },
             success: function (json_res) {
-console.log("res="+json_res);
+console.log("json_res=", json_res);
                 res = JSON.parse(json_res.result); // res.status, res.error, res.content
                 if (res.status != 0) {
                     // var msg = "ERREUR ! Quelque chose s'est mal passé ("+res.error+")";
@@ -329,6 +328,13 @@ console.log("res="+json_res);
     }
 
     function dessineLesTextes(offsetX, includeGroup) {
+        console.log("dessineLesTextes()");
+
+        if (typeof myVoisinesOrg === "undefined") {
+            console.log("=> myVoisinesOrg is UNDEFINED")
+            return;
+        }
+
         var lesTextes = "";
         var info = "";
 
@@ -376,7 +382,14 @@ console.log("res="+json_res);
         return lesTextes;
     }
 
-    function dessineLesVoisinesV2(offsetX,includeGroup) {
+    function dessineLesVoisinesV2(offsetX, includeGroup) {
+        console.log("dessineLesVoisinesV2()");
+
+        if (typeof myVoisinesOrg === "undefined") {
+            console.log("=> myVoisinesOrg is UNDEFINED")
+            return;
+        }
+
         var lesVoisines = "";
 
         if ( includeGroup=="Yes" ) { lesVoisines = lesVoisines + '<g id="lesVoisines">'; }
@@ -488,6 +501,7 @@ console.log("res="+json_res);
     /* Refresh status of ongoing network scan */
     function refreshNetworkCollectionProgress() {
         refreshNetworkInformationProgress();
+
         console.log("refreshNetworkCollectionProgress(): " + networkInformationProgress);
         // document.getElementById("refreshInformation").innerHTML = networkInformationProgress;
         document.getElementById("refreshInformation").value = networkInformationProgress;
@@ -529,6 +543,11 @@ console.log("res="+json_res);
 
     function myJSON_AddMissing() {
         console.log("myJSON_AddMissing()");
+
+        if (typeof myVoisinesOrg === "undefined") {
+            console.log("=> myVoisinesOrg is UNDEFINED")
+            return;
+        }
 
         var color = "";
 
@@ -611,8 +630,10 @@ console.log("res="+json_res);
     }
 
     function rucheCentered() {
-        myObjNew[Ruche+"/Ruche"].x = center.X;
-        myObjNew[Ruche+"/Ruche"].y = center.Y;
+        console.log("rucheCentered("+Ruche+", X="+center.X+", Y="+center.Y+")");
+
+        myObjNew[Ruche+"/0000"].x = center.X;
+        myObjNew[Ruche+"/0000"].y = center.Y;
         refreshAll();
     }
 
@@ -633,10 +654,10 @@ console.log("res="+json_res);
         refreshAll();
     }
 
-    function selectRuche(form) {
-        Ruche = form.list.value;
-        refreshAll("All");
-    }
+    // function selectRuche(form) {
+    //     Ruche = form.list.value;
+    //     refreshAll("All");
+    // }
 
     function selectSource(form) {
         Source = form.list.value;
@@ -758,10 +779,10 @@ console.log("res="+json_res);
     console.log("URL params=" + queryString);
     const urlParams = new URLSearchParams(queryString);
     if (urlParams.has('zigate')) {
-        ZigateX = urlParams.get('zigate');
-        Ruche = "Abeille" + ZigateX;
+        zgId = urlParams.get('zigate');
+        Ruche = "Abeille" + zgId;
     } else {
-        ZigateX = 1;
+        zgId = 1;
         Ruche = "Abeille1";
     }
     // res = queryString.substr(1);
@@ -791,10 +812,10 @@ console.log("res="+json_res);
     <?php
     // Reading URL parameter: "...?zigate=X", where X is zigate number
     if (isset($_GET['zigate']))
-        $ZigateX = $_GET['zigate'];
+        $zgId = $_GET['zigate'];
     else
-        $ZigateX = 1; // Default = zigate1
-    echo "<script>console.log(\"ZigateX=" . $ZigateX . "\")</script>";
+        $zgId = 1; // Default = zigate1
+    echo "<script>console.log(\"zgId=" . $zgId . "\")</script>";
     ?>
     <style>
     td {
@@ -810,12 +831,13 @@ console.log("res="+json_res);
                 <!-- Select 1st Zigate if none passed as argument (zigate=X) -->
                 <?php
                 for ($i=1; $i<=maxNbOfZigate; $i++) {
-                    if ( config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y' )
+                    if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
                         continue;
-                    if ($i == $ZigateX)
-                        echo "<input id=\"btntest\" type=\"button\" checked value=\"Zigate " . $i . "\" onclick=\"window.location.href = '/plugins/Abeille/Network/TestSVG/NetworkGraph.php?zigate=" . $i . "'\" />";
+
+                    if ($i == $zgId)
+                        echo "<input id=\"btntest\" type=\"button\" checked value=\"Zigate " . $i . "\" onclick=\"refreshNetwork(".$i.")\" />";
                     else
-                        echo "<input id=\"btntest\" type=\"button\" value=\"Zigate " . $i . "\" onclick=\"window.location.href = '/plugins/Abeille/Network/TestSVG/NetworkGraph.php?zigate=" . $i . "'\" />";
+                        echo "<input id=\"btntest\" type=\"button\" value=\"Zigate " . $i . "\" onclick=\"refreshNetwork(".$i.")\" />";
                 }
                 ?>
             </td>
@@ -903,5 +925,21 @@ console.log("res="+json_res);
     // console.log("Name list: "+JSON.stringify(topo));
     // console.log("Name 1: " + JSON.stringify(topo["0000"]));
 
-    console.log("End --------------");
+    function refreshNetwork(newZgId) {
+        // window.open("index.php?v=d&m=Abeille&p=AbeilleSupport");
+        // window.open("plugins/Abeille/desktop/php/AbeilleNetworkGraph.php?zigate="+zgId);
+
+        var url = window.location.href;
+        console.log("url="+url);
+        idx = url.indexOf('zigate='+zgId);
+        if (idx === -1) {
+            url += '&zigate='+newZgId
+        } else {
+            console.log("idx="+idx);
+            url = url.replace('zigate='+zgId, 'zigate='+newZgId);
+            // url += '?param=1'
+        }
+        // location.reload(true);
+        window.location.href = url;
+    };
 </script>

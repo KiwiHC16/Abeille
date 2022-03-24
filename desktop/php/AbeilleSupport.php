@@ -70,8 +70,8 @@
         <ul class="nav nav-list bs-sidenav list-group">
             JSON
             <?php
-                /* Listing log files from Jeedom tmp */
-                foreach (glob($tmpDir."/AbeilleLQI_MapData*.json") as $path) {
+                /* Listing json files from Jeedom tmp */
+                foreach (glob($tmpDir."/Abeille*.json") as $path) {
                     $fileName = basename($path);
                     echo '<li class="cursor list-group-item list-group-item-success"><a class="btnDisplayLog" location="JEEDOM-TMP">'.$fileName.'</a></li>';
                 }

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220329-BETA-1
+-------------
+
 - Legrand switch 067723: Mise-à-jour modèle (2361).
 - Page EQ/avancé: Amélioration mineure affichage ID Zigbee.
 - Interne: Amélioration récupération équipements fantomes.

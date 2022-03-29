@@ -2530,21 +2530,21 @@
             if (isset($Command['getManufacturerName']) && isset($Command['address']))
             {
                 if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-                $this->readAttribute($priority, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0004");
+                $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0004");
                 return;
             }
 
             if (isset($Command['getName']) && isset($Command['address']))
             {
                 if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-                $this->readAttribute($priority, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0005");
+                $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0005");
                 return;
             }
 
             if (isset($Command['getLocation']) && isset($Command['address']))
             {
                 if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-                $this->readAttribute($priority, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0010");
+                $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0010");
                 return;
             }
 

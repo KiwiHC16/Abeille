@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+- Legrand switch 067723: Mise-à-jour modèle (2361).
+- Page EQ/avancé: Amélioration mineure affichage ID Zigbee.
+- Interne: Amélioration récupération équipements fantomes.
+- Interne: Timeout n'est plus écrasé si réannonce de l'équipement.
+- Package de logs: Masquage de la clef 'api' de la table 'config'.
+- Package de logs: Masquage des URL.
+
 220324-BETA-1
 -------------
 

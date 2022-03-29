@@ -15,9 +15,14 @@
             if ($sig) {
                 $model = $sig['modelId'];
                 $manuf = $sig['manufId'];
-                echo '<span>'.$model.', '.$manuf.'</span>';
+                // echo '<span>'.$model.', '.$manuf.'</span>';
+            } else {
+                $model = '';
+                $manuf = '';
             }
-        ?>
+            echo '<input readonly title="{{Identifiant Zigbee du modèle}}" value="'.$model.'" />';
+            echo '<input readonly style="margin-left: 8px" title="{{Identifiant Zigbee du fabricant}}" value="'.$manuf.'" />';
+    ?>
     </div>
 </div>
 <div class="form-group">

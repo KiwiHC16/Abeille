@@ -2,6 +2,39 @@
 <input class="form-control" placeholder="{{Rechercher}}" id="in_searchEqlogic"/>
 
 <?php
+    /* Display beehive or bee card */
+    function displayBeeCard($eqLogic, $files, $zgId) {
+        // find opacity
+        $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+
+        // Find icon
+        $icon = $eqLogic->getConfiguration('icone', '');
+        if ($icon == '')
+            $icon = 'defaultUnknown';
+        $icon = 'node_'.$icon.'.png';
+        $iconPath = __DIR__.'/../../images/'.$icon;
+        if (!file_exists($iconPath))
+            $iconPath = __DIR__.'/../../images/node_defaultUnknown.png';
+        // $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
+        // if (in_array($test, $files, 0)) {
+        //     $path = 'node_' . $eqLogic->getConfiguration('icone');
+        // } else {
+        //     $path = 'Abeille_icon';
+        // }
+
+        // Affichage
+        $id = $eqLogic->getId();
+        echo '<div>';
+        echo    '<input id="idBeeChecked'.$zgId.'-'.$id.'" type="checkbox" name="eqSelected-'.$id.'" />';
+        echo 	'<br/>';
+        echo 	'<div class="eqLogicDisplayCard cursor'.$opacity.'" style="width: 130px" data-eqLogic_id="' .$id .'">';
+        echo 		'<img src="plugins/Abeille/images/'.$icon.'" />';
+        echo 		'<br/>';
+        echo 		'<span class="name">'. $eqLogic->getHumanName(true, true) .'</span>';
+        echo 	'</div>';
+        echo '</div>';
+    }
+
     $NbOfZigatesON = 0; // Number of enabled zigates
     // $eqAll = array(); // All equipments, sorted per zigate
     for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {

@@ -740,33 +740,41 @@ if (0) {
         /**
          * Refresh health information
          */
-        // log::add('Abeille', 'debug', '----------- Refresh health information');
-        //$eqLogics = self::byType('Abeille');
-
         foreach ($eqLogics as $eqLogic) {
-            if ($eqLogic->getTimeout() > 0) {
-                if (strtotime($eqLogic->getStatus('lastCommunication')) > 0) {
-                    $last = strtotime($eqLogic->getStatus('lastCommunication'));
-                } else {
-                    $last = 0;
-                }
-                // Alerte sur TimeOut Defini
-                if (($last + (60 * $eqLogic->getTimeout())) > time()) {
+            $timeout = $eqLogic->getTimeout(0);
+            $timeoutS = $eqLogic->getStatus('timeout', 0);
+            if ($timeout == 0) {
+                $newTimeoutS = 0;
+                $newState = '-';
+            } else {
+                // Tcharp38: If no comm, should we take Abeille start time ? Something else ?
+                $lastComm = $eqLogic->getStatus('lastCommunication', '');
+                if ($lastComm == '')
+                    $lastComm = 0;
+                else
+                    $lastComm = strtotime($lastComm);
+
+                // Checking timeout
+                if (($lastComm + (60 * $timeout)) > time()) {
                     // Ok
-                    $eqLogic->setStatus('state', 'ok');
-                    $eqLogic->setStatus('timeout', 0);
+                    $newTimeoutS = 0;
+                    $newState = 'ok';
                 } else {
                     // NOK
-                    $eqLogic->setStatus('state', 'Time Out Last Communication');
-                    $eqLogic->setStatus('timeout', 1);
+                    $newTimeoutS = 1;
+                    $newState = 'Time Out Last Communication';
                 }
-                // ===============================================================================================================================
-                // log::add( 'Abeille', 'debug', 'Name: '.$eqLogic->getName().' lastCommunication: '.$eqLogic->getStatus( "lastCommunication" ).' timeout value: '.$eqLogic->getTimeout().' timeout status: '.$eqLogic->getStatus( 'timeout' ).' state: '.$eqLogic->getStatus('state'));
-            } else {
-                $eqLogic->setStatus('state', '-');
-                $eqLogic->setStatus('timeout', 0);
             }
-        } // End cron()
+
+            if ($newTimeoutS != $timeoutS) {
+                log::add('Abeille', 'debug', 'cron(): '.$eqLogic->getName().': timeout status changed to '.$newTimeoutS);
+                $newStatus = array(
+                    'timeout' => $newTimeoutS,
+                    'state' => $newState, // Tcharp38: Only used by Abeille. Really required ?
+                );
+                $eqLogic->setStatus($newStatus);
+            }
+        }
 
         // Si Inclusion status est à 1 on demande un Refresh de l information
         // Je regarde si j ai deux zigate en inclusion et si oui je genere une alarme.
@@ -780,7 +788,7 @@ if (0) {
         if (count($count) > 1) message::add("Abeille", "Danger vous avez plusieurs Zigate en mode inclusion: ".json_encode($count).". L equipement peut se joindre a l un ou l autre resau zigbee.", "Vérifier sur quel reseau se joint l equipement.");
 
         // log::add( 'Abeille', 'debug', 'cron(): Fin ------------------------------------------------------------------------------------------------------------------------' );
-    }
+    } // End cron()
 
     /**
      * Jeedom required function: report plugin & config status
@@ -1932,6 +1940,45 @@ if (0) {
         if (isset($msg['ep']))
             $ep = $msg['ep'];
 
+        /* Parser has found a new device. Basic Jeedom entry to be created. */
+        if ($msg['type'] == "newDevice") {
+            $ieee = $msg['ieee'];
+            log::add('Abeille', 'debug', "msgFromParser(): New device: ".$net.'/'.$addr.", ieee='".$ieee."'");
+
+            Abeille::newJeedomDevice($net, $addr, $ieee);
+            return;
+        } // End 'newDevice'
+
+        /* Parser has found device infos to update. */
+        if ($msg['type'] == "updateDevice") {
+            log::add('Abeille', 'debug', "msgFromParser(): Device update: ".json_encode($msg));
+
+            foreach ($msg['updates'] as $updKey => $updVal) {
+                if ($updKey == 'ieee') {
+                    $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
+                    if (!is_object($eqLogic)) {
+                        $all = self::byType('Abeille');
+                        foreach ($all as $eqLogic) {
+                            $ieee2 = $eqLogic->getConfiguration('IEEE', '');
+                            if ($ieee2 != $updVal)
+                                continue;
+                            $eqLogic->setLogicalId($net.'/'.$addr);
+                            $eqLogic->save();
+                            log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'addr' updated to ".$addr);
+                        }
+                    }
+                } else if ($updKey == 'rxOnWhenIdle') {
+                    $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
+                    if (is_object($eqLogic)) {
+                        $eqLogic->setConfiguration('RxOnWhenIdle', $updVal);
+                        $eqLogic->save();
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'RxOnWhenIdle' updated to ".$updVal);
+                    }
+                }
+           }
+            return;
+        } // End 'updateDevice'
+
         /* Parser has received a "device announce" and has identified (or not) the device. */
         if ($msg['type'] == "eqAnnounce") {
             /* Msg reminder
@@ -2001,11 +2048,11 @@ if (0) {
 
             $eqLogic = self::byLogicalId($logicalId, 'Abeille');
 
-            /* MAC capa */
+            /* MAC capa from 004D/Device announce message */
             $mc = hexdec($msg['capa']);
+            $eqLogic->setConfiguration('MACCapa', $msg['capa']);
             $rxOnWhenIdle = ($mc >> 3) & 0b1;
             $mainsPowered = ($mc >> 2) & 0b1;
-            $eqLogic->setConfiguration('MACCapa', $msg['capa']);
             if ($mainsPowered) // 1=mains-powererd
                 $eqLogic->setConfiguration('AC_Power', 1);
             else
@@ -2122,45 +2169,6 @@ if (0) {
             return;
         } // End 'leaveIndication'
 
-        // Tcharp38: 'attributeReport' replaced by 'attributesReportN' in parser.
-        // /* Attribute report (8100 & 8102 responses) */
-        // if ($msg['type'] == "attributeReport") {
-        //     /* $msg reminder
-        //         'src' => 'parser',
-        //         'type' => 'attributeReport',
-        //         'net' => $net,
-        //         'addr' => $addr,
-        //         'ep' => 'xx', // End point hex string
-        //         'name' => 'xxx', // Attribut name = cmd logical ID
-        //         'value' => false, // False = unsupported
-        //         'time' => time(),
-        //         'lqi' => $lqi
-        //     */
-
-        //     log::add('Abeille', 'debug', "msgFromParser(): Attribute report from '".$net."/".$addr."/".$ep."': Attr='".$msg['name']."', Val='".$msg['value']."'");
-        //     $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
-        //     if (!is_object($eqLogic)) {
-        //         log::add('Abeille', 'debug', "  Unknown device '".$net."/".$addr."'");
-        //         return; // Unknown device
-        //     }
-
-        //     $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $msg['name']);
-        //     if (!is_object($cmdLogic))
-        //         log::add('Abeille', 'debug', "  Unknown Jeedom command '".$msg['name']."'");
-        //     else {
-        //         $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['value']);
-
-        //         // Check if any action cmd must be executed triggered by this update
-        //         Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $msg['value']);
-
-        //         // Checking if battery info, only if registered command
-        //         Abeille::checkIfBatteryInfo($eqLogic, $msg['name'], $msg['value']);
-        //     }
-
-        //     Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
-        //     return;
-        // } // End 'attributeReport'
-
         // Grouped attributes reporting (by Jeedom logical name)
         // Grouped read attribute responses (by Jeedom logical name)
         if (($msg['type'] == "attributesReportN") || ($msg['type'] == "readAttributesResponseN")) {
@@ -2208,53 +2216,6 @@ if (0) {
             Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
             return;
         } // End 'attributesReportN' or 'readAttributesResponseN'
-
-        /* Grouped attributes read or report (8002 response, cmds 01 or 0A) */
-        // if (($msg['type'] == "reportAttributes") || ($msg['type'] == "readAttributesResponse")) {
-        // Tcharp38: 'reportAttributes' replaced by 'attributesReportN' in parser.
-        // Tcharp38: 'readAttributesResponse' replaced by 'readAttributesResponseN' in parser.
-        //         /* $msg reminder
-        //         'src' => 'parser',
-        //         'type' => 'reportAttributes', // or 'readAttributesResponse'
-        //         'net' => $dest,
-        //         'addr' => $srcAddr,
-        //         'ep' => $srcEp,
-        //         'clustId' => $cluster,
-        //         'attributes' => $attributes,
-        //         'time' => time(),
-        //         'lqi' => $lqi,
-        //     */
-
-        //     log::add('Abeille', 'debug', "msgFromParser(): Attributes report from '".$net."/".$addr."/".$ep);
-        //     $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
-        //     if (!is_object($eqLogic)) {
-        //         log::add('Abeille', 'debug', "  Unknown device ".$net.'/'.$addr);
-        //         return; // Unknown device
-        //     }
-
-        //     $clustId = $msg['clustId'];
-        //     foreach ($msg['attributes'] as $attrId => $attr) {
-        //         log::add('Abeille', 'debug', "  ClustId=".$clustId.", AttrId='".$attrId."', Val='".$attr['value']."'");
-
-        //         $cmdName = $clustId.'-'.$ep.'-'.$attrId;
-        //         $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $cmdName);
-        //         if (!is_object($cmdLogic)) {
-        //             log::add('Abeille', 'debug', "  Unknown command logicalid ".$cmdName);
-        //             return; // Unknown command
-        //         }
-        //         $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
-
-        //         // Check if any action cmd must be executed triggered by this update
-        //         Abeille::infoCmdUpdate($eqLogic, $cmdLogic, $attr['value']);
-
-        //         // Checking if battery info, only if registered command
-        //         $attrName = $msg['clustId'].'-'.$msg['ep'].'-'.$attrId;
-        //         Abeille::checkIfBatteryInfo($eqLogic, $attrName, $attr['value']);
-        //     }
-
-        //     Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
-        //     return;
-        // } // End 'reportAttributes' or 'readAttributesResponse'
 
         /* Zigate version (8010 response) */
         if ($msg['type'] == "zigateVersion") {
@@ -2515,7 +2476,7 @@ if (0) {
             return;
         } // End 'ieeeAddrResponse'
 
-        log::add('Abeille', 'debug', "msgFromParser(): Ignored msg type '".$msg['type']."'");
+        log::add('Abeille', 'debug', "msgFromParser(): Ignored msg ".json_encode($msg));
     } // End msgFromParser()
 
     public static function publishMosquitto($queueId, $priority, $topic, $payload)
@@ -2715,6 +2676,27 @@ if (0) {
         }
     } // End createRuche()
 
+    // Create a basic Jeedom device
+    public static function newJeedomDevice($net, $addr, $ieee) {
+        log::add('Abeille', 'debug', 'newJeedomDevice('.$net.', addr='.$addr);
+
+        $logicalId = $net.'/'.$addr;
+        $eqLogic = new Abeille();
+        $eqLogic->setEqType_name('Abeille');
+        $eqLogic->setName("newDevice-".$addr); // Temp name to have it non empty
+        $eqLogic->save(); // Save to force Jeedom to assign an ID
+
+        $eqName = $net."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
+        $eqLogic->setName($eqName);
+        $eqLogic->setLogicalId($logicalId);
+        $abeilleConfig = AbeilleTools::getParameters();
+        $eqLogic->setObject_id($abeilleConfig['AbeilleParentId']);
+        $eqLogic->setConfiguration('IEEE', $ieee);
+        $eqLogic->setIsVisible(0); // Hidden by default
+        $eqLogic->setIsEnable(1);
+        $eqLogic->save();
+    } // End newJeedomDevice()
+
     /* Create or update Jeedom device based on its JSON config.
        Called in the following cases
        - On 'eqAnnounce' message from parser (device announce) => action = 'create'
@@ -2827,12 +2809,44 @@ if (0) {
 
         // $eqLogic->setConfiguration('type', 'topic'); // ??, type = topic car pas json. Tcharp38: what for ?
 
-        if (($action == 'reset') || $newEq) { // Update icon only if new device
+        // Update only if new device (missing info) or reinit
+        $curIcon = $eqLogic->getConfiguration('icone', '');
+        if (($action == 'reset') || ($curIcon == '')) {
             if (isset($modelEqConf["icon"]))
                 $icon = $modelEqConf["icon"];
             else
                 $icon = '';
             $eqLogic->setConfiguration('icone', $icon);
+        }
+        $curTimeout = $eqLogic->getTimeout(null);
+        if (($action == 'reset') || ($curTimeout === null)) {
+            if (isset($modelEq["timeout"]))
+                $eqLogic->setTimeout($modelEq["timeout"]);
+            else
+                $eqLogic->setTimeout(null);
+        }
+        $curCats = $eqLogic->getCategory();
+        if (($action == 'reset') || (count($curCats) == 0)) {
+            if (isset($modelEq["category"])) {
+                $categories = $modelEq["category"];
+                // $eqLogic->setCategory(array_keys($modelEq["Categorie"])[0], $modelEq["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
+                $allCat = ["heating", "security", "energy", "light", "opening", "automatism", "multimedia", "default"];
+                foreach ($allCat as $cat) { // Clear all
+                    $eqLogic->setCategory($cat, "0");
+                }
+                foreach ($categories as $key => $value) {
+                    $eqLogic->setCategory($key, $value);
+                }
+            }
+            // TODO: If no category defined, default value to be set
+        }
+
+        // Update only if new device or reinit
+        if (($action == 'reset') || $newEq) {
+            if (isset($modelEq["isVisible"]))
+                $eqLogic->setIsVisible($modelEq["isVisible"]);
+            else
+                $eqLogic->setIsVisible(1);
         }
 
         // Tcharp38: Seems no longer used
@@ -2878,29 +2892,7 @@ if (0) {
         else
             $eqLogic->setConfiguration('poll', null);
 
-        if (($action == 'reset') || $newEq) { // Update visibility only if new device
-            if (isset($modelEq["isVisible"]))
-                $eqLogic->setIsVisible($modelEq["isVisible"]);
-            else
-                $eqLogic->setIsVisible(1);
-        }
         $eqLogic->setIsEnable(1);
-        if (isset($modelEq["timeout"]))
-            $eqLogic->setTimeout($modelEq["timeout"]);
-        else
-            $eqLogic->setTimeout(null);
-
-        if (($action == 'reset') || ($newEq && isset($modelEq["category"]))) { // Update category only if new device
-            $categories = $modelEq["category"];
-            // $eqLogic->setCategory(array_keys($modelEq["Categorie"])[0], $modelEq["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
-            $allCat = ["heating", "security", "energy", "light", "opening", "automatism", "multimedia", "default"];
-            foreach ($allCat as $cat) { // Clear all
-                $eqLogic->setCategory($cat, "0");
-            }
-            foreach ($categories as $key => $value) {
-                $eqLogic->setCategory($key, $value);
-            }
-        }
 
         // $eqLogic->setStatus('lastCommunication', date('Y-m-d H:i:s')); // Tcharp38: Done by updateTimestamp()
         $eqLogic->save();

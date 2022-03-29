@@ -182,10 +182,29 @@
             $jlogsDir = __DIR__."/../../../../log"; // Jeedom logs dir
             $cmd = "cd ".$jlogsDir."; sudo cp Abeille* ".$logsDir;
             $cmd .= "; sudo cp http.error ".$logsDir;
-            $cmd .= "; sudo cp update ".$logsDir;
+            // $cmd .= "; sudo cp update ".$logsDir;
             $cmd .= "; sudo cp ".$tmpDir."/*.log ".$logsDir;
             // $cmd .= "; sudo rm -f tmp/AbeilleLogs.*";
             exec($cmd, $out, $status);
+
+            // Special case for 'update': filtering out 'http://' or 'https://'
+            if ($fileIn = fopen($jlogsDir."/update", "r")) {
+                $fileOut = fopen($logsDir.'/update', 'w');
+                while(!feof($fileIn)) {
+                    $line = fgets($fileIn);
+                    $pos = strpos($line, "http");
+                    if ($pos !== false) {
+                        if (substr($line, $pos, 8) == "https://")
+                            $pos += 8;
+                        else
+                            $pos += 7;
+                        $start = substr($line, 0, $pos);
+                        fwrite($fileOut, $start." FILTERED\n");
+                    } else
+                        fwrite($fileOut, $line);
+                }
+                fclose($fileIn);
+            }
 
             /* Searching for available compression tool */
             // TODO: Tcharp38. Select tool according to what's available.

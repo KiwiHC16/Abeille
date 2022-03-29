@@ -255,16 +255,17 @@
             }
         }
 
-        /* Check if device already known to parser.
-        If not, add entry with given net/addr/ieee.
-        Returns: device entry by reference */
-        function &getDevice($net, $addr, $ieee = null) {
+        /* Check if device is already known to parser.
+           If not, add entry with given net/addr/ieee.
+           Returns: device entry by reference */
+        function &getDevice($net, $addr, $ieee = null, &$new = false) {
             if (!isset($GLOBALS['eqList'][$net]))
                 $GLOBALS['eqList'][$net] = [];
+
             if (isset($GLOBALS['eqList'][$net][$addr]))
                 return $GLOBALS['eqList'][$net][$addr];
 
-            // If IEEE is defined let's check if exists
+            // Not found. If IEEE is given let's check if short addr has changed.
             if ($ieee) {
                 foreach ($GLOBALS['eqList'][$net] as $oldAddr => $eq) {
                     if ($eq['ieee'] !== $ieee)
@@ -273,9 +274,22 @@
                     $GLOBALS['eqList'][$net][$addr] = $eq;
                     unset($GLOBALS['eqList'][$net][$oldAddr]);
                     parserLog('debug', '  EQ already known: Addr updated from '.$oldAddr.' to '.$addr);
+
+                    // Informing Abeille about short addr change
+                    $msg = array(
+                        'type' => 'updateDevice',
+                        'net' => $net,
+                        'addr' => $addr,
+                        'updates' => array(
+                            'ieee' => $ieee
+                        ),
+                    );
+                    $this->msgToAbeille2($msg);
+
                     return $GLOBALS['eqList'][$net][$addr];
                 }
-                // Not found. Checking if was in a different network.
+
+                // Still not found. Checking if was in a different network.
                 foreach ($GLOBALS['eqList'] as $oldNet => $oldAddr) {
                     if ($oldNet == $net)
                         continue; // This network has already been checked
@@ -306,8 +320,9 @@
             $GLOBALS['eqList'][$net][$addr] = array(
                 'ieee' => $ieee,
                 'capa' => '',
+                'rxOnWhenIdle' => null,
                 'rejoin' => '', // Rejoin info from device announce
-                'status' => 'idle', // identifying, configuring, discovering, idle
+                'status' => 'identifying', // identifying, configuring, discovering, idle
                 'time' => time(),
                 'endPoints' => null,
                 'mainEp' => '',
@@ -317,6 +332,19 @@
                 'jsonId' => '',
                 'jsonLocation' => ''
             );
+            $new = true; // This is a new device
+
+            // Informing Abeille to create a new (but empty) device.
+            if ($ieee) {
+                $msg = array(
+                    'type' => 'newDevice',
+                    'net' => $net,
+                    'addr' => $addr,
+                    'ieee' => $ieee,
+                );
+                $this->msgToAbeille2($msg);
+            }
+
             return $GLOBALS['eqList'][$net][$addr];
         }
 
@@ -348,13 +376,13 @@
             return false;
         }
 
-        /* Check if eq is part of supported or user/custom devices names.
-           Returns: true is supported, else false */
-        function findJsonConfig(&$eq, $by='modelId') {
+        /* Look for a model in official or user/custom devices directories.
+           Returns: true if supported, else false */
+        function findModel(&$eq, $by='modelId') {
             $ma = ($eq['manufId'] === false) ? 'false' : $eq['manufId'];
             $mo = ($eq['modelId'] === false) ? 'false' : $eq['modelId'];
             $lo = ($eq['location'] === false) ? 'false' : $eq['location'];
-            parserLog('debug', "  findJsonConfig(), manufId='".$ma."', modelId='".$mo."', loc='".$lo."'");
+            parserLog('debug', "  findModel(), manufId='".$ma."', modelId='".$mo."', loc='".$lo."'");
 
             /* Looking for corresponding JSON if supported device.
                - Look with '<modelId>_<manufacturer>' identifier
@@ -422,6 +450,7 @@
             $GLOBALS['eqList'][<network>][<addr>] = array(
                 'ieee' => $ieee,
                 'capa' => '', // MAC capa from device announce
+                'rxOnWhenIdle' => null/0/1, // If 1 then can always receive
                 'rejoin' => '', // Rejoin info from device announce
                 'status' => 'identifying', // identifying, configuring, discovering, idle
                 'time' => time(),
@@ -449,6 +478,7 @@
             parserLog('debug', '  eq='.json_encode($eq));
 
             $eq['capa'] = $capa;
+            $eq['rxOnWhenIdle'] = (hexdec($capa) >> 3) & 0b1;
             $eq['rejoin'] = $rejoin;
 
             // if (!isset($GLOBALS['eqList'][$net]))
@@ -567,35 +597,74 @@
             }
         }
 
-        /* Still in identification phase: successive calls until there are enough infos
-           to identify device (manufId + modelId, or location) */
-        function deviceUpdate($net, $addr, $ep, $updType = null, $value = null) {
-            if (!isset($GLOBALS['eqList'][$net]))
-                $GLOBALS['eqList'][$net] = [];
+        /* Update device infos.
+           As opposed to 'deviceUpdate()', info is NOT coming from the device himself. */
+        function updateDevice($net, $addr, $updates) {
+            parserLog('debug', '  updateDevice('.$net.', '.$addr.', '.json_encode($updates).')');
+            if (isset($updates['ieee']))
+                $ieee = $updates['ieee'];
+            else
+                $ieee = null;
+            $eq = &$this->getDevice($net, $addr, $ieee, $newDev); // By ref
+            $confirmed = array();
+            foreach ($updates as $updKey => $updVal) {
+                if ($updKey == 'ieee')
+                    continue; // This is already covered
+                if (!isset($eq[$updKey]) || ($eq[$updKey] != $updVal)) {
+                    $eq[$updKey] = $updVal;
+                    $confirmed[$updKey] = $updVal;
+                }
+            }
 
+            // Any change to report to Abeille ?
+            if (count($confirmed) > 0) {
+                $msg = array(
+                    'type' => 'updateDevice',
+                    'net' => $net,
+                    'addr' => $addr,
+                    'updates' => $confirmed,
+                );
+                $this->msgToAbeille2($msg);
+            }
+        }
+
+        /* There is a device info update (manufId + modelId, or location).
+           Note: As opposed to 'updateDevice()', info is coming from device itself. */
+        function deviceUpdate($net, $addr, $ep, $updType = null, $value = null) {
             $u = ($updType) ? $updType : '';
             $v = ($value === false) ? 'false' : $value;
-            if (!isset($GLOBALS['eqList'][$net][$addr])) {
-                $eq = array(
-                    'ieee' => null,
-                    'capa' => '',
-                    'rejoin' => '', // Rejoin info from device announce
-                    'status' => 'unknown_ident', // identifying, configuring, discovering, idle
-                    'time' => time(),
-                    // 'epList' => null, // List of end points
-                    // 'epFirst' => '', // First end point (usually 01)
-                    'endPoints' => null, // End points ("endPoints": { "modelId": "xx", "manufId": "yy" })
-                    'mainEp' => '', // EP responding to signature (usually 01)
-                    'manufId' => null, // null(undef)/false(unsupported)/'xx'
-                    'modelId' => null, // null(undef)/false(unsupported)/'xx'
-                    'location' => null, // null(undef)/false(unsupported)/'xx'
-                    'jsonId' => '',
-                );
-                $GLOBALS['eqList'][$net][$addr] = $eq;
-                $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
+
+            // if (!isset($GLOBALS['eqList'][$net]))
+            //     $GLOBALS['eqList'][$net] = [];
+            if ($updType == 'ieee')
+                $ieee = $value;
+            else
+                $ieee = null;
+            $eq = &$this->getDevice($net, $addr, $ieee, $newDev); // By ref
+            // if (!isset($GLOBALS['eqList'][$net][$addr])) {
+            if ($newDev === true) {
+                // $eq = array(
+                //     'ieee' => null,
+                //     'capa' => '',
+                //     'rejoin' => '', // Rejoin info from device announce
+                //     'status' => 'unknown_ident', // identifying, configuring, discovering, idle
+                //     'time' => time(),
+                //     // 'epList' => null, // List of end points
+                //     // 'epFirst' => '', // First end point (usually 01)
+                //     'endPoints' => null, // End points ("endPoints": { "modelId": "xx", "manufId": "yy" })
+                //     'mainEp' => '', // EP responding to signature (usually 01)
+                //     'manufId' => null, // null(undef)/false(unsupported)/'xx'
+                //     'modelId' => null, // null(undef)/false(unsupported)/'xx'
+                //     'location' => null, // null(undef)/false(unsupported)/'xx'
+                //     'jsonId' => '',
+                // );
+                // $GLOBALS['eqList'][$net][$addr] = $eq;
+                // $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
+                $eq['status'] = 'unknown_ident';
+                $eq['time'] = time();
                 parserLog('debug', "  deviceUpdate('".$u."', '".$v."'): Unknown device detected");
             } else {
-                $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
+                // $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
                 // Log only if relevant
                 if ($updType && ($eq['status'] != 'idle'))
                     parserLog('debug', "  deviceUpdate('".$u."', '".$v."'): status=".$eq['status']);
@@ -766,19 +835,19 @@
                        For Tuya case (model=TSxxxx), manufacturer is MANDATORY. */
                     if ((substr($eq['modelId'], 0, 2) == "TS") && (strlen($eq['modelId']) == 6))
                         return false; // Tuya case. Waiting for manufacturer to return.
-                    if ($this->findJsonConfig($eq, 'modelId') === false) {
+                    if ($this->findModel($eq, 'modelId') === false) {
                         $eq['jsonId'] = ''; // 'defaultUnknown' case not accepted there
                         return false;
                     }
                 } else {
                     /* Manufacturer & modelId attributes returned */
-                    $this->findJsonConfig($eq, 'modelId');
+                    $this->findModel($eq, 'modelId');
                 }
             } else if ($eq['location'] === null) {
                 return false; // Need value or false (unsupported)
             } else if ($eq['location'] !== false) {
                 /* ModelId UNsupported. Trying with 'location' */
-                $this->findJsonConfig($eq, 'location');
+                $this->findModel($eq, 'location');
             } else { // Neither modelId nor location supported ?! Ouahhh...
                 parserLog('debug', "  WARNING: Neither modelId nor location supported => using default config.");
                 $eq['jsonId'] = 'defaultUnknown';
@@ -4025,21 +4094,33 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             // $this->deviceUpdate($dest, $srcAddr, "00");
 
             foreach ($nList as $N) {
+                if ($N['addr'] == "0000")
+                    continue; // It's a zigate
+
+                // Foreach neighbor, let's ensure that useful infos are stored
+                $bitMap = hexdec($N['bitMap']);
+                $rxOn = ($bitMap >> 6) & 0x3; // 1 = RX ON when idle
+                $update = array(
+                    'ieee' => $N['extAddr'],
+                    'rxOnWhenIdle' => $rxOn,
+                );
+                $this->updateDevice($dest, $N['addr'], $update);
+
                 /* If equipment is unknown, may try to interrogate it.
                    Note: this is blocked by default. Unknown equipement should join only during inclusion phase.
                    Note: this could not work for battery powered eq since they will not listen & reply.
                    Cmdxxxx/Ruche/getName address=bbf5&destinationEndPoint=0B */
-                if (($N['addr'] != "0000") && !Abeille::byLogicalId($dest.'/'.$N['addr'], 'Abeille')) {
-                    if (config::byKey('blocageRecuperationEquipement', 'Abeille', 'Oui', 1) == "Oui") {
-                        parserLog('debug', '  Eq addr '.$N['addr']." is unknown.");
-                    } else {
-                        parserLog('debug', '  Eq addr '.$N['addr']." is unknown. Trying to interrogate.");
+                // if (($N['addr'] != "0000") && !Abeille::byLogicalId($dest.'/'.$N['addr'], 'Abeille')) {
+                //     if (config::byKey('blocageRecuperationEquipement', 'Abeille', 'Oui', 1) == "Oui") {
+                //         parserLog('debug', '  Eq addr '.$N['addr']." is unknown.");
+                //     } else {
+                //         parserLog('debug', '  Eq addr '.$N['addr']." is unknown. Trying to interrogate.");
 
-                        $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=01");
-                        $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=03");
-                        $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=0B");
-                    }
-                }
+                //         $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=01");
+                //         $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=03");
+                //         $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=0B");
+                //     }
+                // }
 
                 /* Tcharp38: Commented for 2 reasons
                    1/ this leads to 'lastCommunication' updated for $N['Addr'] while NO message received from him, so just wrong.
@@ -4606,8 +4687,6 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             //     return;
             // Tcharp38: To be revisited. We can receive several 8100/8102 for the same SQN (diff attributes)
 
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
-                monMsgFromZigate($msg); // Send message to monitor
 
             $this->whoTalked[] = $dest.'/'.$srcAddr; // Tcharp38: Still useful ?
 
@@ -4637,12 +4716,11 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     return; // This is an unknown device.
 
                 /* Forwarding unsupported atttribute to Abeille */
-                $attr = array(
+                $attributes = [];
+                $attributes[] = array(
                     'name' => $clustId.'-'.$ep.'-'.$attrId,
                     'value' => false, // False = unsupported
                 );
-                $attributes = [];
-                $attributes[] = $attr;
                 $msg = array(
                     // 'src' => 'parser',
                     'type' => 'attributesReportN',
@@ -4668,6 +4746,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'status' => "86"
                 );
                 $this->msgToClient($toCli);
+
+                // Monitor if requested
+                if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
+                    monMsgFromZigate($msg); // Send message to monitor
 
                 return;
             } // Status != 00
@@ -5316,6 +5398,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'value' => $data
             );
             $this->msgToClient($toCli);
+
+            // Monitor if requested
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
+                monMsgFromZigate($msg); // Send message to monitor
         }
 
         /* 8100/Read individual Attribute Response */

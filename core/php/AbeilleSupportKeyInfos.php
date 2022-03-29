@@ -73,8 +73,16 @@
         logIt($line."\n");
     }
 
-    function requestAndPrint($logFile, $link, $sql, $title) {
+    function requestAndPrint($logFile, $link, $table, $title) {
         echoTitle($logFile, $title);
+
+        switch ($table) {
+        case "update": $sql = "SELECT * FROM `update` WHERE `name` = 'Abeille'"; break;
+        case "cron": $sql = "SELECT * FROM `cron` WHERE `class` = 'Abeille'"; break;
+        case "config": $sql = "SELECT * FROM `config` WHERE `plugin` = 'Abeille'"; break;
+        case "eqLogic": $sql = "SELECT * FROM `eqLogic` WHERE `eqType_name` = 'Abeille'"; break;
+        case "cmd": $sql = "SELECT * FROM `cmd` WHERE `eqType` = 'Abeille'"; break;
+        }
         $i = 0;
         logIt("{\n");
         if ($result = mysqli_query($link, $sql)) {
@@ -86,7 +94,10 @@
                 } else if (isset($row['key'])) {
                     $key = $row['key'];
                     unset($row['key']);
-                    logIt('    "'.$key.'": '.json_encode($row).",\n");
+                    if (($table == 'config') && ($key == 'api'))
+                        logIt('    "'.$key."\": FILTERED,\n");
+                    else
+                        logIt('    "'.$key.'": '.json_encode($row).",\n");
                 } else {
                     logIt('    "'.$i.'": '.json_encode($row).",\n");
                     $i++;
@@ -131,11 +142,11 @@
             return;
         }
 
-        requestAndPrint($logFile, $link, "SELECT * FROM `update`    WHERE `name` = 'Abeille'", "Table du plugin");
-        requestAndPrint($logFile, $link, "SELECT * FROM `cron`      WHERE `class` = 'Abeille'", "Table 'cron'");
-        requestAndPrint($logFile, $link, "SELECT * FROM `config`    WHERE `plugin` = 'Abeille'", "Table 'config'");
-        requestAndPrint($logFile, $link, "SELECT * FROM `eqLogic`   WHERE `eqType_name` = 'Abeille'", "Table 'eqLogic'");
-        requestAndPrint($logFile, $link, "SELECT * FROM `cmd`       WHERE `eqType` = 'Abeille'", "Table 'cmd'");
+        requestAndPrint($logFile, $link, 'update', "Table 'update'");
+        requestAndPrint($logFile, $link, 'cron', "Table 'cron'");
+        requestAndPrint($logFile, $link, 'config', "Table 'config'");
+        requestAndPrint($logFile, $link, 'eqLogic', "Table 'eqLogic'");
+        requestAndPrint($logFile, $link, 'cmd', "Table 'cmd'");
 
         mysqli_close($link);
     }

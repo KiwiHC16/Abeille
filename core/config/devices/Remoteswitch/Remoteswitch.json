@@ -1,5 +1,7 @@
 {
     "Remoteswitch": {
+        "manufacturer": "Legrand",
+        "model": "067723",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -11,6 +13,23 @@
         },
         "type": "Legrand T\u00e9l\u00e9commande Depart Arriv\u00e9e",
         "commands": {
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
+            "Battery-Volt2Percent": {
+                "use": "battery-Volt2Percent-3"
+            },
+            "SetReporting 0001-00020": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "yes"
+            },
+
             "include1": "offGroup",
             "include2": "toggleGroup",
             "include3": "onGroup",
@@ -21,26 +40,6 @@
             "include7": "sceneGroupRecall1",
             "include7 2": "sceneGroupRecall2",
             "include7 2 2": "sceneGroupRecall3",
-            "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
-                "isVisible": 1
-            },
-            "Get Battery-Percent": {
-                "use": "zbReadAttribute",
-                "params": "clustId=0001&attrId=0021"
-            },
-            "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
-                "params": "clustId=0001",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 9
-            },
-            "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 7
-            },
             "include11 2": "Up-Down",
             "include11 2 2": "Click-Middle",
             "include11 2 2 2": "Left-Right-Cmd",

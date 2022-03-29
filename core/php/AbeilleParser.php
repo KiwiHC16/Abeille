@@ -257,18 +257,24 @@
             $eqLogicId = $eqLogic->getLogicalId();
             list($net, $addr) = explode("/", $eqLogicId);
 
+            $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
+            if ($jsonId != '')
+                $status = 'idle';
+            else
+                $status = 'identifying';
             $eq = array(
                 'ieee' => $eqLogic->getConfiguration('IEEE', null),
                 'capa' => $eqLogic->getConfiguration('MACCapa', ''),
+                'rxOnWhenIdle' => $eqLogic->getConfiguration('RxOnWhenIdle', null),
                 'rejoin' => '', // Rejoin info from device announce
-                'status' => 'idle', // identifying, configuring, discovering, idle
+                'status' => $status, // identifying, configuring, discovering, idle
                 'time' => time(),
                 'endPoints' => null, // null(undef)
                 'mainEp' => '',
                 'manufId' => null, // null(undef)/false(unsupported)/'xx'
                 'modelId' => null, // null(undef)/false(unsupported)/'xx'
                 'location' => null, // null(undef)/false(unsupported)/'xx'
-                'jsonId' => $eqLogic->getConfiguration('ab::jsonId', ''),
+                'jsonId' => $jsonId,
                 'jsonLocation' => ''
             );
             $GLOBALS['eqList'][$net][$addr] = $eq;

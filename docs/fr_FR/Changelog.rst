@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-220329-BETA-1
+220329-BETA-2
 -------------
 
 - Legrand switch 067723: Mise-à-jour modèle (2361).

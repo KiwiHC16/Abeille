@@ -2591,7 +2591,7 @@ if (0) {
             $found = false;
             $cmdName = $cmdLogic->getName();
             $cmdLogicId = $cmdLogic->getLogicalId();
-            foreach ($rucheCommandList as $cmdLogicId2 => $cmdValueDefaut) {
+            foreach ($rucheCommandList as $cmdLogicId2 => $mCmd) {
                 if ($cmdLogicId == $cmdLogicId2) {
                     $found = true;
                     break; // Listed in JSON
@@ -2605,10 +2605,10 @@ if (0) {
 
         // Creating/updating beehive commands
         $order = 0;
-        foreach ($rucheCommandList as $cmdLogicId => $cmdValueDefaut) {
+        foreach ($rucheCommandList as $cmdLogicId => $mCmd) {
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $cmdLogicId);
             if (!$cmdLogic) {
-                $cmdJName = $cmdValueDefaut["name"]; // Jeedom cmd name
+                $cmdJName = $mCmd["name"]; // Jeedom cmd name
                 log::add('Abeille', 'debug', "  Adding cmd '".$cmdJName."' => '".$cmdLogicId."'");
                 $cmdLogic = new AbeilleCmd();
                 $cmdLogic->setEqLogic_id($eqLogic->getId());
@@ -2624,43 +2624,43 @@ if (0) {
 
             $cmdLogic->setOrder($order++); // New or update
 
-            if ($cmdValueDefaut["Type"] == "action") {
+            if ($mCmd["Type"] == "action") {
                 // $cmdLogic->setConfiguration('topic', 'Cmd'.$nodeid.'/'.$cmd);
                 $cmdLogic->setConfiguration('topic', $cmdLogicId);
 
                 // Tcharp38: work in progress. Adding support for linked commands
                 // Note: Error if info cmd is not registered BEFORE action cmd.
-                // if (isset($cmdValueDefaut["value"])) {
+                // if (isset($mCmd["value"])) {
                 //     // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
-                //     log::add('Abeille', 'debug', 'Define cmd info pour cmd action: '.$eqLogic->getHumanName()." - ".$cmdValueDefaut["value"]);
+                //     log::add('Abeille', 'debug', 'Define cmd info pour cmd action: '.$eqLogic->getHumanName()." - ".$mCmd["value"]);
 
-                //     $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName("Abeille", $eqLogic->getName(), $cmdValueDefaut["value"]);
+                //     $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName("Abeille", $eqLogic->getName(), $mCmd["value"]);
                 //     $cmdLogic->setValue($cmdPointeur_Value->getId());
                 // }
             } else {
                 // $cmdLogic->setConfiguration('topic', $nodeid.'/'.$cmd);
                 $cmdLogic->setConfiguration('topic', $cmdLogicId);
             }
-            // if ($cmdValueDefaut["Type"] == "action") {  // not needed as mosquitto is not used anymore
+            // if ($mCmd["Type"] == "action") {  // not needed as mosquitto is not used anymore
             //    $cmdLogic->setConfiguration('retain', '0');
             // }
-            if (isset($cmdValueDefaut["configuration"])) {
-                foreach ($cmdValueDefaut["configuration"] as $confKey => $confValue) {
+            if (isset($mCmd["configuration"])) {
+                foreach ($mCmd["configuration"] as $confKey => $confValue) {
                     $cmdLogic->setConfiguration($confKey, $confValue);
                 }
             }
-            $cmdLogic->setType($cmdValueDefaut["Type"]);
-            $cmdLogic->setSubType($cmdValueDefaut["subType"]);
+            $cmdLogic->setType($mCmd["Type"]);
+            $cmdLogic->setSubType($mCmd["subType"]);
 
             // Todo only if new command
             if ($newCmd) {
-                if (isset($cmdValueDefaut["isHistorized"])) $cmdLogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
-                if (isset($cmdValueDefaut["template"])) $cmdLogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
-                if (isset($cmdValueDefaut["template"])) $cmdLogic->setTemplate('mobile', $cmdValueDefaut["template"]);
-                if (isset($cmdValueDefaut["invertBinary"])) $cmdLogic->setDisplay('invertBinary', '0');
-                if (isset($cmdValueDefaut["isVisible"])) $cmdLogic->setIsVisible($cmdValueDefaut["isVisible"]);
-                if (isset($cmdValueDefaut["display"])) {
-                    foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
+                if (isset($mCmd["isHistorized"])) $cmdLogic->setIsHistorized($mCmd["isHistorized"]);
+                if (isset($mCmd["template"])) $cmdLogic->setTemplate('dashboard', $mCmd["template"]);
+                if (isset($mCmd["template"])) $cmdLogic->setTemplate('mobile', $mCmd["template"]);
+                if (isset($mCmd["invertBinary"])) $cmdLogic->setDisplay('invertBinary', '0');
+                if (isset($mCmd["isVisible"])) $cmdLogic->setIsVisible($mCmd["isVisible"]);
+                if (isset($mCmd["display"])) {
+                    foreach ($mCmd["display"] as $confKey => $confValue) {
                         // Pour certaine Action on doit remplacer le #addr# par la vrai valeur
                         $cmdLogic->setDisplay($confKey, $confValue);
                     }
@@ -2915,95 +2915,158 @@ if (0) {
             }
         }
 
-        /* Tcharp38: TO BE REVISITED
-        - If cmd action.. currently no uniq logicalId. Something more to do
-        */
-
-        /* Removing obsolete commands, not/no longer listed in model.
-           Might be needed for ex if device was previously 'defaultUnknown'.
-           If 'info', using logicalId to identify command
-           If 'action', still using cmd name to identify command (to be revisited)
-         */
-        $cmds = Cmd::byEqLogicId($eqLogic->getId());
-        foreach ($cmds as $cmdLogic) {
-            $jType = $cmdLogic->getType(); // 'info' or 'action'
-            $jName = $cmdLogic->getName();
-            $found = false;
-            if ($jType == "info") {
-                // Using logicalId for info cmds
-                $jLogicId = $cmdLogic->getLogicalId();
-                foreach ($modelCmds as $mKey => $mCmd) {
-                    if ($mCmd['type'] != $jType)
-                        continue; // Wrong type
-                    $mLogicId = $mCmd['logicalId'];
-                    if ($mLogicId == $jLogicId) {
-                        $found = true;
-                        break; // Listed in model
-                    }
-                }
-            } else { // action
-                foreach ($modelCmds as $mKey => $mCmd) {
-                    $mName = $mKey; // Jeedom command name
-                    if ($mName == $jName) {
-                        $found = true;
-                        break; // Listed in model
-                    }
-                }
-            }
-            if ($found == false) {
-                log::add('Abeille', 'debug', "  Removing obsolete cmd '".$jName."', type=".$jType.", logicId='".$jLogicId."'");
-                $cmdLogic->remove(); // No longer required
-            }
+        /* Creating list of current Jeedom commands.
+           jeedomCmds[jCmdId] = array(
+                'name' =>
+                'type' =>
+                'cmdLogic' =>
+                'updated' =>
+           ) */
+        $jCmds = Cmd::byEqLogicId($eqLogic->getId());
+        foreach ($jCmds as $cmdLogic) {
+            $c = array(
+                'name' => $cmdLogic->getName(),
+                'type' => $cmdLogic->getType(), // 'info' or 'action'
+                'logicalId' => $cmdLogic->getLogicalId(''),
+                'cmdLogic' => $cmdLogic,
+                'updated' => 0
+            );
+            $jeedomCmds[$cmdLogic->getId()] = $c;
         }
 
-        /* Creating or updating commands. */
+        // Creating or updating commands based on model content.
         $order = 0;
-        foreach ($modelCmds as $cmdKey => $cmdValueDefaut) {
-            $cmdJName = $cmdKey; // Jeedom command name
-            if (!isset($cmdValueDefaut["type"])) {
-                log::add('Abeille', 'error', "La commande '".$cmdJName."' (fichier ".$cmdKey.".json) n'a pas de type défini => ignorée");
-                break;
+        foreach ($modelCmds as $mCmdName => $mCmd) {
+            // Initial checks
+            if (!isset($mCmd["type"])) {
+                log::add('Abeille', 'error', "La commande '".$mCmdName."' n'a pas de 'type' défini => ignorée");
+                continue;
             }
-            $type = $cmdValueDefaut["type"];
+            $mCmdType = $mCmd["type"];
+            if ($mCmdType == 'info') {
+                if (!isset($mCmd["logicalId"]) || ($mCmd["logicalId"] == '')) {
+                    log::add('Abeille', 'error', "La commande '".$mCmdName."' n'a pas de 'logicalId' défini => ignorée");
+                    continue;
+                }
+            } else if ($mCmdType == 'action') {
+                // Any checks ?
+            } else {
+                log::add('Abeille', 'error', "La commande '".$mCmdName."' a un type invalide (".$mCmdType.") => ignorée");
+                continue;
+            }
 
-            // $cmdJName = $cmdValueDefaut["name"]; // Jeedom command name
-            if ($type == "info")
-                $cmdAName = $cmdValueDefaut["logicalId"]; // Abeille command name
-            else
-                $cmdAName = $cmdValueDefaut["configuration"]['topic']; // Abeille command name
-            if (isset($cmdValueDefaut["configuration"]['request']))
-                $cmdAParams = $cmdValueDefaut["configuration"]['request']; // Abeille command params
+            if ($mCmdType == "info") {
+                $cmdAName = $mCmd["logicalId"]; // Abeille command name
+            } else {
+                $cmdAName = $mCmd["configuration"]['topic']; // Abeille command name
+            }
+            $mCmdLogicalId = isset($mCmd["logicalId"]) ? $mCmd["logicalId"] : '';
+            if (isset($mCmd["configuration"]['request']))
+                $cmdAParams = $mCmd["configuration"]['request']; // Abeille command params
             else
                 $cmdAParams = '';
 
-            /* New or existing cmd ? */
-            $cmdLogic = AbeilleCmd::byEqLogicIdCmdName($eqLogic->getId(), $cmdJName);
+            /* Looking for corresponding cmd in Jeedom.
+               New or existing cmd ?
+               Note that 'info' cmds are uniq thanks to their logicalId. Not the case so far for 'action' which may lead
+               to cmd deleted and recreated if cmd name has changed, and therefore lead to orpheline cmd if deleted one
+               was used somewhere in Jeedom.
+             */
+            $cmdLogic = null;
+            if ($mCmdType == 'info') {
+                // $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $mCmdLogicalId);
+                foreach ($jeedomCmds as $jCmdId => $jCmd) {
+                    if ($jCmd['type'] != 'info')
+                        continue;
+                    if ($jCmd['logicalId'] != $mCmdLogicalId)
+                        continue;
+                    // TODO if ($jCmd['updated'] == 1)
+                    //     continue; // ERROR: Possible ?
+                    $cmdLogic = $jCmd['cmdLogic'];
+                    break;
+                }
+            } else {
+                // $cmdLogic = AbeilleCmd::byEqLogicIdCmdName($eqLogic->getId(), $mCmdName);
+                foreach ($jeedomCmds as $jCmdId => $jCmd) {
+                    if ($jCmd['type'] != 'action')
+                        continue;
+                    // if ($jCmd['logicalId'] != $mCmdLogicalId)
+                    //     continue;
+                    if ($jCmd['name'] != $mCmdName)
+                        continue;
+                    $cmdLogic = $jCmd['cmdLogic'];
+                    break;
+                }
+            }
             if (!is_object($cmdLogic)) {
                 $newCmd = true;
-                log::add('Abeille', 'debug', "  Adding ".$type." '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
+                if ($mCmdType == 'info')
+                    log::add('Abeille', 'debug', "  Adding ".$mCmdType." '".$mCmdName."' (".$mCmdLogicalId.")");
+                else
+                    log::add('Abeille', 'debug', "  Adding ".$mCmdType." '".$mCmdName."' (".$mCmdLogicalId.") => '".$cmdAName."', '".$cmdAParams."'");
                 $cmdLogic = new AbeilleCmd();
             } else {
                 $newCmd = false;
-                log::add('Abeille', 'debug', "  Updating ".$type." '".$cmdJName."' => '".$cmdAName."', '".$cmdAParams."'");
+                if ($mCmdType == 'info')
+                    log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$mCmdName."' (".$mCmdLogicalId.")");
+                else
+                    log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$mCmdName."' (".$mCmdLogicalId.") => '".$cmdAName."', '".$cmdAParams."'");
             }
 
             $cmdLogic->setEqLogic_id($eqLogic->getId());
             $cmdLogic->setEqType('Abeille');
             $cmdLogic->setOrder($order++);
-            $cmdLogic->setName($cmdJName);
-
-            if (isset($cmdValueDefaut["logicalId"])) // Mandatory for info cmds
-                $cmdLogic->setLogicalId($cmdValueDefaut["logicalId"]);
+            $cmdLogic->setLogicalId($mCmdLogicalId);
+            $cmdLogic->setType($mCmdType); // 'info' or 'action'
+            if (isset($mCmd["unit"]))
+                $cmdLogic->setUnite($mCmd["unit"]);
             else
-                $cmdLogic->setLogicalId($cmdKey);
+                $cmdLogic->setUnite(''); // Clear unit
 
-            if ($type == "info") { // info cmd
+            // Updates only if new command or reinit because could be changed by user
+            if ($newCmd || ($action == 'reset')) {
+                $cmdLogic->setName($cmdJName);
+                $cmdLogic->setSubType($mCmd["subType"]);
+                if (isset($mCmd["isHistorized"]))
+                    $cmdLogic->setIsHistorized($mCmd["isHistorized"]);
+                else
+                    $cmdLogic->setIsHistorized(0);
+                if (isset($mCmd["isVisible"]))
+                    $cmdLogic->setIsVisible($mCmd["isVisible"]);
+                else
+                    $cmdLogic->setIsVisible(0);
+            }
+
+            // Updates only if new command or reinit or missing entry
+            $curGenericType = $cmdLogic->getGeneric_type();
+            if ($curGenericType === null)
+                $curGenericType = '';
+            if ($newCmd || ($action == 'reset') || ($curGenericType == '')) {
+                if (isset($mCmd["genericType"]))
+                    $cmdLogic->setGeneric_type($mCmd["genericType"]);
+                else
+                    $cmdLogic->setGeneric_type(null); // Clear generic type
+            }
+            $curDashbTemplate = $cmdLogic->getTemplate('dashboard', '');
+            if (($action == 'reset') || $newCmd || ($curDashbTemplate == '')) {
+                if (isset($mCmd["template"]) && ($mCmd["template"] != "")) {
+                    $cmdLogic->setTemplate('dashboard', $mCmd["template"]);
+                }
+            }
+            $curMobTemplate = $cmdLogic->getTemplate('mobile', '');
+            if (($action == 'reset') || $newCmd || ($curMobTemplate == '')) {
+                if (isset($mCmd["template"]) && ($mCmd["template"] != "")) {
+                    $cmdLogic->setTemplate('mobile', $mCmd["template"]);
+                }
+            }
+
+            if ($mCmdType == "info") { // info cmd
             } else { // action cmd
-                if (isset($cmdValueDefaut["value"])) {
+                if (isset($mCmd["value"])) {
                     // value: pour les commandes action, contient la commande info qui est la valeur actuel de la variable controlée.
-                    log::add('Abeille', 'debug', '  Define cmd info pour cmd action: '.$eqLogic->getHumanName()." - ".$cmdValueDefaut["value"]);
+                    log::add('Abeille', 'debug', '  Define cmd info pour cmd action: '.$eqLogic->getHumanName()." - ".$mCmd["value"]);
 
-                    $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName("Abeille", $eqLogic->getName(), $cmdValueDefaut["value"]);
+                    $cmdPointeur_Value = cmd::byTypeEqLogicNameCmdName("Abeille", $eqLogic->getName(), $mCmd["value"]);
                     if ($cmdPointeur_Value)
                         $cmdLogic->setValue($cmdPointeur_Value->getId());
                 }
@@ -3015,8 +3078,8 @@ if (0) {
             // Tcharp38: TODO: For best cleanup all accepted keys should be listed hereafter. Any other should be removed.
             $unusedConfKey = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'uniqId', 'repeatEventManagement', 'topic'];
             array_push($unusedConfKey, 'ab::trigOut', 'ab::trigOutOffset', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay');
-            if (isset($cmdValueDefaut["configuration"])) {
-                $configuration = $cmdValueDefaut["configuration"];
+            if (isset($mCmd["configuration"])) {
+                $configuration = $mCmd["configuration"];
 
                 if (isset($configuration["trigOut"]))
                     $cmdLogic->setConfiguration('ab::trigOut', $configuration["trigOut"]);
@@ -3055,62 +3118,33 @@ if (0) {
 
             // On conserve l info du template pour la visibility
             // Tcharp38: What for ? Not found where it is used
-            if (isset($cmdValueDefaut["isVisible"]))
-                $cmdLogic->setConfiguration("visibiltyTemplate", $cmdValueDefaut["isVisible"]);
-
-            /* Command widget: can be defaulted with 'template'
-               Updating only if new command to not overwrite user changes (see issue #2075) */
-            if (($action == 'reset') || $newCmd) {
-                // Don't touch anything if defined empty in JSON
-                if (isset($cmdValueDefaut["template"]) && ($cmdValueDefaut["template"] != "")) {
-                    $cmdLogic->setTemplate('dashboard', $cmdValueDefaut["template"]);
-                    $cmdLogic->setTemplate('mobile', $cmdValueDefaut["template"]);
-                }
-            }
-
-            $cmdLogic->setType($cmdValueDefaut["type"]); // 'info' or 'action'
-            $cmdLogic->setSubType($cmdValueDefaut["subType"]);
-            if (array_key_exists("genericType", $cmdValueDefaut))
-                $cmdLogic->setGeneric_type($cmdValueDefaut["genericType"]);
-            else if (array_key_exists("generic_type", $cmdValueDefaut)) // Temporary backward compatibility
-                $cmdLogic->setGeneric_type(null); // Clear generic type
-
-            if (isset($cmdValueDefaut["unit"]))
-                $cmdLogic->setUnite($cmdValueDefaut["unit"]);
-            else if (isset($cmdValueDefaut["unite"])) // Temporary backward compatibility
-                $cmdLogic->setUnite($cmdValueDefaut["unite"]);
-            else
-                $cmdLogic->setUnite(''); // Clear unit
-
-            if (($action == 'reset') || $newCmd) { // Update only if new command
-                if (isset($cmdValueDefaut["isHistorized"]))
-                    $cmdLogic->setIsHistorized($cmdValueDefaut["isHistorized"]);
-                else
-                    $cmdLogic->setIsHistorized(0);
-            }
-
-            // Display stuff is updated only if new eq or new cmd to not overwrite user changes
-            if (($action == 'reset') || $newCmd) { // Update only if new command
-                if (isset($cmdValueDefaut["isVisible"]))
-                    $cmdLogic->setIsVisible($cmdValueDefaut["isVisible"]);
-                else
-                    $cmdLogic->setIsVisible(0);
-            }
+            if (isset($mCmd["isVisible"]))
+                $cmdLogic->setConfiguration("visibiltyTemplate", $mCmd["isVisible"]);
 
             // Display stuff is updated only if new eq or new cmd to not overwrite user changes
             if (($action == 'reset') || $newCmd) {
                 // TODO: Update all JSON to move "invertBinary" into "display" section
-                if (isset($cmdValueDefaut["invertBinary"])) {
-                    $cmdLogic->setDisplay('invertBinary', $cmdValueDefaut["invertBinary"]);
+                if (isset($mCmd["invertBinary"])) {
+                    $cmdLogic->setDisplay('invertBinary', $mCmd["invertBinary"]);
                 }
-                if (array_key_exists("display", $cmdValueDefaut))
-                    foreach ($cmdValueDefaut["display"] as $confKey => $confValue) {
+                if (array_key_exists("display", $mCmd))
+                    foreach ($mCmd["display"] as $confKey => $confValue) {
                         $cmdLogic->setDisplay($confKey, $confValue);
                     }
                 // TODO: Missing a way to remove obsolete entries
             }
 
             $cmdLogic->save();
+            $jeedomCmds[$jCmdId]['updated'] = 1;
+        }
+
+        // Removing cmd not updated (obsolete)
+        foreach ($jeedomCmds as $jCmdId => $jCmd) {
+            if ($jCmd['updated'] == 1)
+                continue;
+            log::add('Abeille', 'debug', "  Removing ".$jCmd['type']." '".$jCmd['name']."' (".$jCmd['logicalId'].")");
+            $cmdLogic = $jCmd['cmdLogic'];
+            $cmdLogic->remove();
         }
     } // End createDevice()
 

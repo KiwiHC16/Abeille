@@ -2957,8 +2957,10 @@
 
                 // Zigbee command: Bind to device or bind to group.
                 // Bind, thru command 0030 => generates 'Bind_req' / cluster 0021
+                // Mandatory params: addr, clustId, attrType, attrId
+                // Optional params: destEp required if destAddr = device ieee addr
                 else if ($cmdName == 'bind0030') {
-                    /* Mandatory infos: addr, clustId, attrType, attrId */
+
                     $required = ['addr', 'ep', 'clustId', 'destAddr'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
@@ -2987,21 +2989,21 @@
                     $clustId = $Command['clustId'];
 
                     // Dest
-                    // $destAddr: 01=16bit group addr, destEp ignored
-                    // $destAddr: 03=64bit ext addr, destEp required
-                    $destAddr = $Command['destAddr'];
-                    if (strlen($destAddr) == 4)
-                        $destAddrMode = "01";
-                    else if (strlen($destAddr) == 16)
-                        $destAddrMode = "03";
+                    // $dstAddr: 01=16bit group addr, destEp ignored
+                    // $dstAddr: 03=64bit ext addr, destEp required
+                    $dstAddr = $Command['destAddr'];
+                    if (strlen($dstAddr) == 4)
+                        $dstAddrMode = "01";
+                    else if (strlen($dstAddr) == 16)
+                        $dstAddrMode = "03";
                     else {
                         cmdLog('debug', "    ERROR: Invalid dest addr length");
                         return;
                     }
                     $dstEp = isset($Command['destEp']) ? $Command['destEp'] : "00"; // destEp ignored if group address
-                    $data = $addr.$ep.$clustId.$destAddrMode.$destAddr.$dstEp;
+                    $data = $addr.$ep.$clustId.$dstAddrMode.$dstAddr.$dstEp;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $destAddrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $dstAddrMode);
                     return;
                 }
 
@@ -3173,14 +3175,14 @@
                             Attribute Data : byte[32]
                     */
 
-                    $priority       = isset($Command['priority']) ? $Command['priority'] : PRIO_NORM;
+                    $priority   = isset($Command['priority']) ? $Command['priority'] : PRIO_NORM;
 
-                    $addrMode       = "02";
-                    $addr           = $Command['addr'];
-                    $srcEp          = "01";
-                    $dstEp         = $Command['ep'];
-                    $clustId        = $Command['clustId'];
-                    $dir            = (isset($Command['dir']) ? $Command['dir'] : "00"); // 00 = to server side, 01 = to client site
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['ep'];
+                    $clustId    = $Command['clustId'];
+                    $dir        = (isset($Command['dir']) ? $Command['dir'] : "00"); // 00 = to server side, 01 = to client site
                     if (isset($Command['manufId']) && ($Command['manufId'] != "0000")) {
                         $manufSpecific  = "01";
                         $manufId        = $Command['manufId'];
@@ -3194,7 +3196,7 @@
                     cmdLog('debug', "    Using dir=".$dir.", manufId=".$manufId.", attrType=".$Command['attrType'].", attrVal=".$attrVal, $this->debug['processCmd']);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttributes.$attrList;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, "0110", $data, $addr, $addrMode);
+                    $this->addCmdToQueue2($priority, $dest, "0110", $data, $addr, $addrMode);
                     return;
                 }
 

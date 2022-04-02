@@ -313,7 +313,7 @@
                 else if (($cmdFName == "setReportLevel") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbConfigureReporting",
-                        "params" => "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                        "params" => "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                         "execAtCreation" => "Yes",
                         "execAtCreationDelay" => 11
                     );
@@ -342,7 +342,7 @@
                 else if (($cmdFName == "WindowsCoveringStop") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbCmd-0102-Stop",
-                        // "params" => "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                        // "params" => "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                         // "execAtCreation" => "Yes",
                         // "execAtCreationDelay" => 11
                     );
@@ -352,7 +352,7 @@
                 } else if (($cmdFName == "WindowsCoveringDown") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbCmd-0102-DownClose",
-                        // "params" => "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                        // "params" => "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                         // "execAtCreation" => "Yes",
                         // "execAtCreationDelay" => 11
                     );
@@ -362,7 +362,7 @@
                 } else if (($cmdFName == "WindowsCoveringUp") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbCmd-0102-UpOpen",
-                        // "params" => "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                        // "params" => "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                         // "execAtCreation" => "Yes",
                         // "execAtCreationDelay" => 11
                     );

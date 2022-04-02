@@ -14,7 +14,7 @@
         $icon = 'node_'.$icon.'.png';
         $iconPath = __DIR__.'/../../images/'.$icon;
         if (!file_exists($iconPath))
-            $iconPath = __DIR__.'/../../images/node_defaultUnknown.png';
+            $icon = 'node_defaultUnknown.png';
         // $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
         // if (in_array($test, $files, 0)) {
         //     $path = 'node_' . $eqLogic->getConfiguration('icone');

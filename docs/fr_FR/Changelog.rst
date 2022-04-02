@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220402-BETA-1
+-------------
+
 - Moes MS105Z: Ajout support préliminaire (2363).
 - Legrand switch 067723: Mise-à-jour modèle (2361).
 - Lidl ampoule livarno lux led gu10 HG08131A: Mise-à-jour modèle (2356).

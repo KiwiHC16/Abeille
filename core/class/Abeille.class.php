@@ -3025,7 +3025,7 @@ if (0) {
 
             // Updates only if new command or reinit because could be changed by user
             if ($newCmd || ($action == 'reset')) {
-                $cmdLogic->setName($cmdJName);
+                $cmdLogic->setName($mCmdName);
                 $cmdLogic->setSubType($mCmd["subType"]);
                 if (isset($mCmd["isHistorized"]))
                     $cmdLogic->setIsHistorized($mCmd["isHistorized"]);

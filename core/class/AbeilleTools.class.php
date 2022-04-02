@@ -6,6 +6,7 @@
     define('devicesDir', __DIR__.'/../config/devices/'); // Abeille's supported devices
     define('devicesLocalDir', __DIR__.'/../config/devices_local/'); // Unsupported/user devices
     define('cmdsDir', __DIR__.'/../config/commands/'); // Abeille's supported commands
+    define('imagesDir', __DIR__.'/../../images/'); // Abeille's supported icons
 
     class AbeilleTools
     {
@@ -213,6 +214,42 @@
             sort($commandsList);
 
             return $commandsList;
+        }
+
+        /* Get list of icons (images/node_xxx.png).
+        Returns: Array of icon names ('node_' & '.png' removed), or false if error */
+        public static function getImagesList() {
+            $imagesList = [];
+
+            $rootDir = imagesDir;
+            $dh = opendir($rootDir);
+            if ($dh === false) {
+                log::add('Abeille', 'error', 'getImagesList(): opendir('.$rootDir.') error');
+                return false;
+            }
+            while (($entry = readdir($dh)) !== false) {
+                /* Ignoring non json files */
+                if (in_array($entry, array(".", "..")))
+                    continue;
+                if (pathinfo($entry, PATHINFO_EXTENSION) != "png")
+                    continue;
+                if (substr($entry, 0, 5) != "node_")
+                    continue;
+
+                $fullPath = $rootDir.$entry;
+                if (!file_exists($fullPath)) {
+                    log::add('Abeille', 'debug', 'getCommandsList(): path access error '.$fullPath);
+                    continue;
+                }
+
+                $image = substr($entry, 0, -4); // Removing ".png"
+                $image = substr($image, 5); // Removing 'node_'
+                $imagesList[] = $image;
+            }
+            closedir($dh);
+            sort($imagesList);
+
+            return $imagesList;
         }
 
         /* Returns path for device JSON config file for given 'device'.

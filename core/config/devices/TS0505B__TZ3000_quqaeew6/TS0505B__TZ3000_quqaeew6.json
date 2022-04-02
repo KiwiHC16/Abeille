@@ -5,7 +5,7 @@
         "type": "LavarnoLux led gu10 HG08131A",
         "timeout": "60",
         "category": {
-            "automatism": "1"
+            "light": "1"
         },
         "configuration": {
             "icon": "Generic-GU10",
@@ -68,7 +68,7 @@
             },
             "SetReporting 0008-0000": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
             "Color Mode": {
@@ -130,6 +130,18 @@
                 "use": "setRGB",
                 "isVisible": "1",
                 "nextLine": "after"
+            },
+            "Cool white": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=0",
+                "subType": "other",
+                "isVisible": 1
+            },
+            "Warm white": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=200",
+                "subType": "other",
+                "isVisible": 1
             },
             "ColorTemperature": {
                 "use": "zb-0300-ColorTemperatureMireds"

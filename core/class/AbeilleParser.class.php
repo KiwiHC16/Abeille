@@ -481,23 +481,6 @@
             $eq['rxOnWhenIdle'] = (hexdec($capa) >> 3) & 0b1;
             $eq['rejoin'] = $rejoin;
 
-            // if (!isset($GLOBALS['eqList'][$net]))
-            //     $GLOBALS['eqList'][$net] = [];
-
-            // /* If no device with 'addr', may be due to short addr change */
-            // if (!isset($GLOBALS['eqList'][$net][$addr])) {
-            //     /* Looking for eq by its ieee to update addr which may have changed */
-            //     foreach ($GLOBALS['eqList'][$net] as $oldaddr => $eq) {
-            //         if ($eq['ieee'] != $ieee)
-            //             continue;
-
-            //         $GLOBALS['eqList'][$net][$addr] = $eq;
-            //         unset($GLOBALS['eqList'][$net][$oldaddr]);
-            //         parserLog('debug', '  EQ already known: Addr updated from '.$oldaddr.' to '.$addr);
-            //         break;
-            //     }
-            // }
-
             /* Checking if it's not a too fast consecutive device announce.
                 Note: Assuming 4sec max per phase */
             if (($eq['status'] != 'idle') && ($eq['time'] + 4) > time()) {
@@ -507,48 +490,6 @@
                     parserLog('debug', '  Device discovering already ongoing');
                 return; // Last step is not older than 4sec
             }
-            // if (isset($GLOBALS['eqList'][$net][$addr])) {
-            //     $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
-            //     if (($eq['ieee'] !== null) && ($eq['ieee'] != $ieee)) {
-            //         parserLog('debug', '  ERROR: There is a different EQ (ieee='.$eq['ieee'].') for addr '.$addr);
-            //         return;
-            //     }
-            //     parserLog('debug', '  EQ already known: Status='.$eq['status']);
-
-            //     /* Checking if it's not a too fast consecutive device announce.
-            //        Note: Assuming 4sec max per phase */
-            //     if (($eq['time'] + 4) > time()) {
-            //         if ($eq['status'] == 'identifying')
-            //             parserLog('debug', '  Device identification already ongoing');
-            //         else if ($eq['status'] == 'discovering')
-            //             parserLog('debug', '  Device discovering already ongoing');
-            //         return; // Last step is not older than 4sec
-            //     }
-            // } else {
-            //     /* It's an unknown eq */
-            //     parserLog('debug', '  EQ new to parser');
-            //     // $GLOBALS['eqList'][$net][$addr] = array(
-            //     //     'ieee' => $ieee,
-            //     //     'capa' => $capa,
-            //     //     'rejoin' => $rejoin,
-            //     //     'status' => '', // identifying, discovering, configuring
-            //     //     'time' => '',
-            //     //     // 'epList' => null,
-            //     //     // 'epFirst' => '',
-            //     //     'endPoints' => null,
-            //     //     'mainEp' => '',
-            //     //     'manufId' => null, // null=undef, false=unsupported, else 'value'
-            //     //     'modelId' => null, // null=undef, false=unsupported, else 'value'
-            //     //     'location' => null, // null=undef, false=unsupported, else 'value'
-            //     //     'jsonId' => '',
-            //     //     'jsonLocation' => ''
-            //     // );
-            //     // $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
-            //     $eq = &getDevice($net, $addr); // By ref
-            //     $eq['ieee'] = $ieee;
-            //     $eq['capa'] = $capa;
-            //     $eq['rejoin'] = $rejoin;
-            // }
 
             /* Starting identification phase */
             $eq['status'] = 'identifying';
@@ -631,43 +572,18 @@
         /* There is a device info update (manufId + modelId, or location).
            Note: As opposed to 'updateDevice()', info is coming from device itself. */
         function deviceUpdate($net, $addr, $ep, $updType = null, $value = null) {
-            $u = ($updType) ? $updType : '';
-            $v = ($value === false) ? 'false' : $value;
-
-            // if (!isset($GLOBALS['eqList'][$net]))
-            //     $GLOBALS['eqList'][$net] = [];
             if ($updType == 'ieee')
                 $ieee = $value;
             else
                 $ieee = null;
             $eq = &$this->getDevice($net, $addr, $ieee, $newDev); // By ref
-            // if (!isset($GLOBALS['eqList'][$net][$addr])) {
-            if ($newDev === true) {
-                // $eq = array(
-                //     'ieee' => null,
-                //     'capa' => '',
-                //     'rejoin' => '', // Rejoin info from device announce
-                //     'status' => 'unknown_ident', // identifying, configuring, discovering, idle
-                //     'time' => time(),
-                //     // 'epList' => null, // List of end points
-                //     // 'epFirst' => '', // First end point (usually 01)
-                //     'endPoints' => null, // End points ("endPoints": { "modelId": "xx", "manufId": "yy" })
-                //     'mainEp' => '', // EP responding to signature (usually 01)
-                //     'manufId' => null, // null(undef)/false(unsupported)/'xx'
-                //     'modelId' => null, // null(undef)/false(unsupported)/'xx'
-                //     'location' => null, // null(undef)/false(unsupported)/'xx'
-                //     'jsonId' => '',
-                // );
-                // $GLOBALS['eqList'][$net][$addr] = $eq;
-                // $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
-                $eq['status'] = 'unknown_ident';
-                $eq['time'] = time();
-                parserLog('debug', "  deviceUpdate('".$u."', '".$v."'): Unknown device detected");
-            } else {
-                // $eq = &$GLOBALS['eqList'][$net][$addr]; // By ref
-                // Log only if relevant
-                if ($updType && ($eq['status'] != 'idle'))
-                    parserLog('debug', "  deviceUpdate('".$u."', '".$v."'): status=".$eq['status']);
+            // 'status' set to 'identifying' if new device
+
+            // Log only if relevant
+            if ($updType && ($eq['status'] != 'idle')) {
+                $u = ($updType) ? $updType : '';
+                $v = ($value === false) ? 'false' : $value;
+                parserLog('debug', "  deviceUpdate('".$u."', '".$v."'): Status=".$eq['status']);
             }
 
             /* Updating entry: 'epList', 'manufId', 'modelId' or 'location', 'ieee', 'bindingTableSize' */
@@ -733,7 +649,6 @@
             }
 
             // IEEE is available
-            // if (!$eq['epList']) {
             if (!$eq['endPoints']) {
                 parserLog('debug', '  Requesting active endpoints list');
                 $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
@@ -2063,6 +1978,10 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             .', index='.$index
                             .', tableCount='.$tableCount, "8002");
 
+                    // Duplicated message ?
+                    if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                        return;
+
                     $pl = substr($pl, 10);
                     for ($i = 0; $i < $tableCount; $i++) {
                         $srcIeee = AbeilleTools::reverseHex(substr($pl, 0, 16));
@@ -2764,7 +2683,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         $attrId = substr($msg, 6, 2).substr($msg, 4, 2);
                     else
                         $attrId = "?";
-                    parserLog('debug', "  Status=".$status.", dir=".$dir.", attrId=".$attrId);
+                    parserLog('debug', "  Status=".$status.'/'.zbGetZCLStatus($status).", dir=".$dir.", attrId=".$attrId);
                     return;
                 }
 
@@ -5493,7 +5412,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                .', Addr='.$addr
                .', EP='.$ep
                .', ClustId='.$clustId
-               .', Status='.$status;
+               .', Status='.$status.'/'.zbGetZCLStatus($status);
             } else {
                 $msg = '8120/Individual configure reporting response'
                .', SQN='.$sqn
@@ -5501,7 +5420,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                .', EP='.$ep
                .', ClustId='.$clustId
                .', AttrId='.$attrId
-               .', Status='.$status;
+               .', Status='.$status.'/'.zbGetZCLStatus($status);
             }
             parserLog('debug', $dest.', Type='.$msg);
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))

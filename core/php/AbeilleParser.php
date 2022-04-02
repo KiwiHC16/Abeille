@@ -257,6 +257,7 @@
             $eqLogicId = $eqLogic->getLogicalId();
             list($net, $addr) = explode("/", $eqLogicId);
 
+            // $sig = $eqLogic->getConfiguration('ab::signature', '');
             $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
             if ($jsonId != '')
                 $status = 'idle';

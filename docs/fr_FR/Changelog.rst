@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+- Moes MS105Z: Ajout support préliminaire (2363).
+- Legrand switch 067723: Mise-à-jour modèle (2361).
+- Lidl ampoule livarno lux led gu10 HG08131A: Mise-à-jour modèle (2356).
+- Tuya TS011F__TZ3000_cphmq0q7: Mise-à-jour modèle pour support autres signatures.
+- Page des équipements: Changement icone si non définie.
+- Interne: Mise-à-jour des commandes suite reinclusion/reinit revue.
+- Page équipement: Choix icone revu. Affichage du nom du PNG selectionné et non plus une interprétation de ce que c'est.
+- Interne: Grosse mise-à-jour des commandes, et suppression des 'info' en doublon.
+- Tuya IH-K009: Ajout image.
+- Modèles équipement: Correction regression config reporting 0008-0000 (mauvais type).
+
 220329-BETA-2
 -------------
 

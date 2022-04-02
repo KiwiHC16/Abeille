@@ -2,13 +2,13 @@
     "Doublegangsremoteswitch_Legrand": {
         "manufacturer": "Legrand",
         "model": "067774",
-        "type": "Legrand double switch",
+        "type": "Legrand double gang remote switch",
         "timeout": "60",
         "category": {
             "automatism": "1"
         },
         "configuration": {
-            "icon": "?",
+            "icon": "Legrand-Celiane-Double-Gray",
             "mainEP": "01"
         },
         "commands": {

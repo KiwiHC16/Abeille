@@ -1,0 +1,20 @@
+{
+    "TS0601__TZE200_la2c2uo9": {
+        "manufacturer": "Moes",
+        "model": "MS-105Z",
+        "type": "Moes MS-105Z smart dimmer",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Moes-MS-105Z",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            }
+        }
+    }
+}

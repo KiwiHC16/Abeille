@@ -63,17 +63,11 @@
 
         $error = false;
         if (!isset($dev[$devName]['type'])) {
-            if (isset($dev[$devName]['nameJeedom']))
-                $error = newDevError($devName, "ERROR", "'nameJeedom' is obsolete. Use 'type' instead");
-            else
-                $error = newDevError($devName, "ERROR", "No equipment 'type' defined");
+            $error = newDevError($devName, "ERROR", "No equipment 'type' defined");
         }
 
         if (!isset($dev[$devName]['category'])) {
-            if (isset($dev[$devName]['Categorie']))
-                $error = newDevError($devName, "ERROR", "'Categorie' is obsolete. Use 'category' instead");
-            else
-                $error = newDevError($devName, "ERROR", "No 'category' defined");
+            $error = newDevError($devName, "ERROR", "No 'category' defined");
         } else {
             $allCats = $dev[$devName]['category'];
             $allowed = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'other'];
@@ -122,13 +116,10 @@
 
         $unusedCmds = &$GLOBALS['unusedCmds'];
 
-        if (isset($dev[$devName]['commands']))
-            $commands = $dev[$devName]['commands'];
-        else if (isset($dev[$devName]['Commandes']))
-            $commands = $dev[$devName]['Commandes'];
-        if (!isset($commands)) {
+        if (!isset($dev[$devName]['commands'])) {
             $error = newDevError($devName, "WARNING", "No commands defined");
         } else {
+            $commands = $dev[$devName]['commands'];
             // echo "commands=".json_encode($commands)."\n";
             foreach ($commands as $key => $value) {
                 if (substr($key, 0, 7) == "include") {
@@ -324,7 +315,11 @@
                 $cmdJName = $cmd2;
                 $newCmdText = json_encode($newCmd);
             } else {
-                /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
+                /* New command JSON format:
+                   "jeedom_cmd_name": {
+                       "use": "json_cmd_name",
+                       "params": "xxx"...
+                    } */
                 $cmdFName = $cmd2['use']; // File name without '.json'
                 $newCmd = getCommandConfig($cmdFName, $cmd1);
                 if ($newCmd === false)

@@ -204,14 +204,14 @@
         "0008" => array(
             "name" => "Level control",
             "attributes" => array(
-                "0000" => array( "name" => "CurrentLevel", "access" => "R" ),
+                "0000" => array( "name" => "CurrentLevel", "access" => "R", "dataType" => 0x20 ), // uint8
                 "0001" => array( "name" => "RemainingTime", "access" => "R" ),
                 "0010" => array( "name" => "OnOffTransitionTime", "access" => "RW" ),
-                "0011" => array( "name" => "OnLevel", "access" => "RW" ),
+                "0011" => array( "name" => "OnLevel", "access" => "RW", "dataType" => 0x20 ), // uint8
                 "0012" => array( "name" => "OnTransitionTime", "access" => "RW" ),
                 "0013" => array( "name" => "OffTransitionTime", "access" => "RW" ),
                 "0014" => array( "name" => "DefaultMoveRate", "access" => "RW" ),
-                "4000" => array( "name" => "StartUpCurrentLevel", "access" => "RW" ), // uint8
+                "4000" => array( "name" => "StartUpCurrentLevel", "access" => "RW", "dataType" => 0x20 ), // uint8
             ),
             "commands" => array(
                 "00" => array( "name" => "Move To Level" ),

@@ -4,6 +4,17 @@ ChangeLog
 220402-BETA-2
 -------------
 
+  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal.
+  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible.
+
 - Moes MS105Z: Ajout support préliminaire (2363).
 - Legrand switch 067723: Mise-à-jour modèle (2361).
 - Lidl ampoule livarno lux led gu10 HG08131A: Mise-à-jour modèle (2356).
@@ -144,17 +155,6 @@ ChangeLog
 
 220223-STABLE-1
 ---------------
-
-  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
-
-      - Toute nouvelle installation.
-      - Dès lors qu'un réappairage complet est nécéssaire.
-      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-      - Les firmwares avant 3.1e sont forcement 'legacy'.
-      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
-
-  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal.
-  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible.
 
 - Page EQ/avancé: Ajout bouton 'leave request'.
 - JSON commandes: Remplacement 'ReadAttributeRequest' => 'readAttribute'.

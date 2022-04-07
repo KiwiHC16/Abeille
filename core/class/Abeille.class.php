@@ -2200,9 +2200,10 @@ if (0) {
             foreach ($msg['attributes'] as $attr) {
                 $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $attr['name']);
                 if (!is_object($cmdLogic)) {
-                    log::add('Abeille', 'debug', "  Unknown Jeedom command '".$attr['name']."'");
+                    log::add('Abeille', 'debug', "  Unknown Jeedom command logicId='".$attr['name']."'");
                 } else {
-                    log::add('Abeille', 'debug', "  ".$attr['name']." => ".$attr['value']);
+                    $cmdName = $cmdLogic->getName();
+                    log::add('Abeille', 'debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']);
                     $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
 
                     // Check if any action cmd must be executed triggered by this update
@@ -2768,7 +2769,8 @@ if (0) {
                         Other reasons to generate message ?
                     */
                     if ($eqLogic->getIsEnable() == 1) {
-                        log::add('Abeille', 'debug', '  Device is already enabled. Doing nothing.');
+                        // log::add('Abeille', 'debug', '  Device is already enabled. Doing nothing.');
+                        log::add('Abeille', 'debug', '  Device is already enabled.');
                         // return; // Doing nothing on re-announce
                     } else
                     message::add("Abeille", "'".$eqHName."' s'est réannoncé. Mise-à-jour en cours.", '');

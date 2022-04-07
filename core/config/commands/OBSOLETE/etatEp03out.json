@@ -1,0 +1,15 @@
+{
+    "etatEp03out": {
+        "isVisible": 1,
+        "name": "Digital Output 3",
+        "isHistorized": "1",
+        "subType": "binary",
+        "invertBinary": "0",
+        "configuration": {
+            "visibilityCategory": "All"
+        },
+        "type": "info",
+        "logicalId": "0006-03-0000",
+        "genericType": "SWITCH_STATE"
+    }
+}

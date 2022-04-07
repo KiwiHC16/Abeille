@@ -2119,8 +2119,6 @@
 
                     $data = $addrMode.$targetShortAddress.$srcEp.$dstEp.$direction.$manufacturerSpecific.$manufacturerId.$warningMode.$warningDuration; //.$strobeDutyCycle.$strobeLevel;
 
-                    // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                    // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
                     return;
                 }
@@ -4135,8 +4133,10 @@
 
                 // ZCL cluster 0502/IAS Warning Device commands
                 // Mantatory params: 'addr', 'ep', 'cmd' (00 or 01)
-                // Optional params for cmd 00: 'duration' (number, in sec, default=10sec)
-                // Optional params for cmd 00: 'mode' (string, 'stop'/'burglar'/'fire'/'emergency'/'policepanic'/'firepanic'/'emergencypanic')
+                // Optional params for cmd 00:
+                //      'mode' (string, 'stop'/'burglar'/'fire'/'emergency'/'policepanic'/'firepanic'/'emergencypanic')
+                //      'strobe' (string, 'on'/'off', default=depends on 'mode')
+                //      'duration' (number, in sec, default=10sec)
                 else if ($cmdName == 'cmd-0502') {
                     $required = ['addr', 'ep', 'cmd']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
@@ -4193,19 +4193,23 @@
                         default:
                             $mode = 3; break;
                         }
-                        if ($mode == 0) // Warning mode == stop
-                            $strobe = 0; // Srobe OFF
-                        else
-                            $strobe = 1; // Srobe ON
+                        if (isset($Command['strobe']))
+                            $strobe = ($Command['strobe'] == 'on') ? 1 : 0;
+                        else {
+                            if ($mode == 0) // Warning mode == stop
+                                $strobe = 0; // Strobe OFF
+                            else
+                                $strobe = 1; // Strobe ON
+                        }
                         $sl = 3; // Siren level = max
                         $duration = isset($Command['duration']) ? $Command['duration'] : 10; // Default=10sec
 
                         cmdLog('debug', "    Using mode=".$mode.", strobe=".$strobe.", slevel=".$sl.", duration=".$duration);
                         $map8 = ($mode << 4) | ($strobe << 2) | $sl;
-                        $map8 = sprintf("%02X", $map8);
+                        $map8 = sprintf("%02X", $map8); // Convert to hex string
                         $duration = sprintf("%04X", $duration); // Convert to hex string
                         $duration = AbeilleTools::reverseHex($duration);
-                        $data2 = $fcf.$sqn.$cmdId.$map8.$duration."00"."03";
+                        $data2 = $fcf.$sqn.$cmdId.$map8.$duration."05"."03";
                     } else {
                         cmdLog('debug', "    ERROR: Unsupported cluster 0502 command ".$cmdId);
                         return;
@@ -4269,9 +4273,7 @@
 
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
-                    // $len = sprintf("%04x", strlen($data) / 2);
 
-                    // $this->addCmdToQueue($priority, $dest, $cmd, $len, $data, $addr);
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                     return;
                 }
@@ -4339,7 +4341,6 @@
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
                     return;
                 }
-
 
                 else {
                     cmdLog('debug', "    ERROR: Unexpected command '".$cmdName."'");

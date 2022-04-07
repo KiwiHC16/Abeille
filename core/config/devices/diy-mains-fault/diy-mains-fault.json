@@ -10,8 +10,17 @@
         },
         "type": "diy-mains-fault",
         "commands": {
-            "include2": "etatEp02in",
-            "Get-Etat 2": { "use": "zbReadAttribute", "params": "ep=02&clustId=0006&attrId=0000" }
+            "Digital Input 2": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=2",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
+            "Get-Etat 2": {
+                "use": "zbReadAttribute",
+                "params": "ep=02&clustId=0006&attrId=0000"
+            }
         }
     }
 }

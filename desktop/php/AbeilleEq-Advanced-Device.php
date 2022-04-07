@@ -26,18 +26,21 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label">Identifiant modèle JSON</label>
+    <label class="col-sm-3 control-label">Identifiant du modèle</label>
     <div class="col-sm-5">
-        <span class="eqLogicAttr" data-l1key="configuration" data-l2key="ab::jsonId" title="Nom du fichier de config JSON utilisé"></span>
-        Source:
+        <!-- <span class="eqLogicAttr" data-l1key="configuration" data-l2key="ab::jsonId" title="Nom du fichier de config JSON utilisé"></span> -->
         <?php
+            $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
+            echo '<input readonly style="width: 200px" title="{{Nom du modèle utilisé}}" value="'.$jsonId.'" />';
+            echo '    Source:';
             $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
             if (($jsonLocation == '') || ($jsonLocation == "Abeille"))
-                echo '<span title="Le modèle utilisé est celui fourni par Abeille">Abeille</span>';
+                $title = "Le modèle utilisé est celui fourni par Abeille";
             else
-                echo '<span title="Le modèle utilisé est un modèle local/custom">Modèle local</span>';
+                $title = "Le modèle utilisé est un modèle local/custom";
+            echo '<input readonly style="width:86px" title="{{'.$title.'}}" value="'.$jsonLocation.'" />';
 
-            $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
+            // $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
             if ($jsonId == "defaultUnknown") {
                 if ($sig) {
                     $id1 = $sig['modelId'].'_'.$sig['manufId'];

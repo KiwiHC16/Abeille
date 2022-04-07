@@ -1,0 +1,15 @@
+{
+    "etatEp07out": {
+        "isVisible": 1,
+        "name": "Digital Output 7",
+        "isHistorized": "1",
+        "subType": "binary",
+        "invertBinary": "0",
+        "configuration": {
+            "visibilityCategory": "All"
+        },
+        "type": "info",
+        "logicalId": "0006-07-0000",
+        "genericType": "SWITCH_STATE"
+    }
+}

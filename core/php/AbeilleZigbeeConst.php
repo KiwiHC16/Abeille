@@ -391,10 +391,10 @@
         "0201" => array(
             "name" => "Thermostat",
             "attributes" => array(
-                "0000" => array( "name" => "LocalTemperature", "access" => "RP", "dataType" => 0x29 ),
+                "0000" => array( "name" => "LocalTemperature", "access" => "RP", "dataType" => 0x29 ), // int16
                 "0002" => array( "name" => "Occupancy", "access" => "R", "dataType" => 0x18 ),
-                "0012" => array( "name" => "OccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ),
-                "0014" => array( "name" => "UnoccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ),
+                "0012" => array( "name" => "OccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ), // int16
+                "0014" => array( "name" => "UnoccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ), // int16
             ),
         ),
         "0202" => array(
@@ -452,6 +452,15 @@
         ),
         "0401" => array(
             "name" => "Illuminance Level Sensing",
+        ),
+        "0402" => array(
+            "name" => "Temperature Measurement",
+            "attributes" => array(
+                "0000" => array( "name" => "MeasuredValue", "access" => "R", "dataType" => 0x29 ), // int16
+                "0001" => array( "name" => "MinMeasuredValue", "access" => "R", "dataType" => 0x29 ), // int16
+                "0002" => array( "name" => "MaxMeasuredValue", "access" => "R", "dataType" => 0x29 ), // int16
+                "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x29 ), // int16
+            ),
         ),
         "0405" => array(
             "name" => "Relative Humidity",
@@ -545,7 +554,7 @@
 
                 "0505" => array( "name" => "RMS Voltage", "access" => "R", "dataType" => 0x21 ),
                 "0508" => array( "name" => "RMS Current", "access" => "R", "dataType" => 0x21 ),
-                "050B" => array( "name" => "Active Power", "access" => "R", "dataType" => 0x29 ),
+                "050B" => array( "name" => "Active Power", "access" => "R", "dataType" => 0x29 ), // int16
 
                 "0602" => array( "name" => "AC Current Multiplier", "access" => "R" ),
                 "0603" => array( "name" => "AC Current Divisor", "access" => "R" ),

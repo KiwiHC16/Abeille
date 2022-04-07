@@ -8,7 +8,7 @@
         "template": "hydro3IMG",
         "configuration": {
             "calculValueOffset": "#value#\/100",
-            "historizeRound": "1"
+            "historizeRound": "0"
         },
         "type": "info",
         "logicalId": "0405-#EP#-0000",

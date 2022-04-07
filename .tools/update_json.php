@@ -282,8 +282,37 @@
                     $commands2["etat inter ".$x] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                }
-                else if (($cmdFName == "getEtat") && $oldSyntax) {
+                } else if ((($cmdFName == "etatEp01out") || ($cmdFName == "etatEp02out") || ($cmdFName == "etatEp03out") || ($cmdFName == "etatEp04out")
+                || ($cmdFName == "etatEp05out") || ($cmdFName == "etatEp06out") || ($cmdFName == "etatEp07out") || ($cmdFName == "etatEp08out"))
+                        && $oldSyntax) {
+                    $ep = hexdec(substr($cmdFName, 6, 2));
+                    $cmdArr = Array(
+                        "use" => "zb-0006-OnOff",
+                        "params" => "ep=".$ep,
+                        "subType" => "binary",
+                        // "template" => "door",
+                        "genericType" => "SWITCH_STATE",
+                        "isVisible" => 1
+                    );
+                    $commands2["Digital Output ".$ep] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ((($cmdFName == "etatEp01in") || ($cmdFName == "etatEp02in") || ($cmdFName == "etatEp03in") || ($cmdFName == "etatEp04in")
+                || ($cmdFName == "etatEp05in") || ($cmdFName == "etatEp06in") || ($cmdFName == "etatEp07in") || ($cmdFName == "etatEp08in"))
+                        && $oldSyntax) {
+                    $ep = hexdec(substr($cmdFName, 6, 2));
+                    $cmdArr = Array(
+                        "use" => "zb-0006-OnOff",
+                        "params" => "ep=".$ep,
+                        "subType" => "binary",
+                        // "template" => "door",
+                        "genericType" => "SWITCH_STATE",
+                        "isVisible" => 1
+                    );
+                    $commands2["Digital Input ".$ep] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "getEtat") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbReadAttribute",
                         "params"=> "clustId=0006&attrId=0000"

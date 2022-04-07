@@ -10,38 +10,174 @@
         },
         "type": "8-digital-output",
         "commands": {
-            "On 1": { "use": "zbCmd-0006-On", "params": "ep=01", "isVisible": 1 },
-            "Off 1": { "use": "zbCmd-0006-Off", "params": "ep=01", "isVisible": 1 },
-            "Get-Etat 1": { "use": "zbReadAttribute", "params": "ep=01&clustId=0006&attrId=0000" },
-            "include1 1 1 1 1": "etatEp01out",
-            "On 2": { "use": "zbCmd-0006-On", "params": "ep=02", "isVisible": 1 },
-            "Off 2": { "use": "zbCmd-0006-Off", "params": "ep=02", "isVisible": 1 },
-            "Get-Etat 2": { "use": "zbReadAttribute", "params": "ep=02&clustId=0006&attrId=0000" },
-            "include2 1 1 1 1": "etatEp02out",
-            "On 3": { "use": "zbCmd-0006-On", "params": "ep=03", "isVisible": 1 },
-            "Off 3": { "use": "zbCmd-0006-Off", "params": "ep=03", "isVisible": 1 },
-            "Get-Etat 3": { "use": "zbReadAttribute", "params": "ep=03&clustId=0006&attrId=0000" },
-            "include3 1 1 1 1": "etatEp03out",
-            "On 4": { "use": "zbCmd-0006-On", "params": "ep=04", "isVisible": 1 },
-            "Off 4": { "use": "zbCmd-0006-Off", "params": "ep=04", "isVisible": 1 },
-            "Get-Etat 4": { "use": "zbReadAttribute", "params": "ep=04&clustId=0006&attrId=0000" },
-            "include4 1 1 1 1": "etatEp04out",
-            "On 5": { "use": "zbCmd-0006-On", "params": "ep=05", "isVisible": 1 },
-            "Off 5": { "use": "zbCmd-0006-Off", "params": "ep=05", "isVisible": 1 },
-            "Get-Etat 5": { "use": "zbReadAttribute", "params": "ep=05&clustId=0006&attrId=0000" },
-            "include5 1 1 1 1": "etatEp05out",
-            "On 6": { "use": "zbCmd-0006-On", "params": "ep=06", "isVisible": 1 },
-            "Off 6": { "use": "zbCmd-0006-Off", "params": "ep=06", "isVisible": 1 },
-            "Get-Etat 6": { "use": "zbReadAttribute", "params": "ep=06&clustId=0006&attrId=0000" },
-            "include6 1 1 1 1": "etatEp06out",
-            "On 7": { "use": "zbCmd-0006-On", "params": "ep=07", "isVisible": 1 },
-            "Off 7": { "use": "zbCmd-0006-Off", "params": "ep=07", "isVisible": 1 },
-            "Get-Etat 7": { "use": "zbReadAttribute", "params": "ep=07&clustId=0006&attrId=0000" },
-            "include7 1 1 1 1": "etatEp07out",
-            "On 8": { "use": "zbCmd-0006-On", "params": "ep=08", "isVisible": 1 },
-            "Off 8": { "use": "zbCmd-0006-Off", "params": "ep=08", "isVisible": 1 },
-            "Get-Etat 8": { "use": "zbReadAttribute", "params": "ep=08&clustId=0006&attrId=0000" },
-            "include8 1 1 1 1": "etatEp08out",
+            "On 1": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Off 1": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Get-Etat 1": {
+                "use": "zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
+            "Digital Output 1": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=1",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
+            "On 2": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Off 2": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Get-Etat 2": {
+                "use": "zbReadAttribute",
+                "params": "ep=02&clustId=0006&attrId=0000"
+            },
+            "Digital Output 2": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=2",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
+            "On 3": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=03",
+                "isVisible": 1
+            },
+            "Off 3": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=03",
+                "isVisible": 1
+            },
+            "Get-Etat 3": {
+                "use": "zbReadAttribute",
+                "params": "ep=03&clustId=0006&attrId=0000"
+            },
+            "Digital Output 3": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=3",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
+            "On 4": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=04",
+                "isVisible": 1
+            },
+            "Off 4": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=04",
+                "isVisible": 1
+            },
+            "Get-Etat 4": {
+                "use": "zbReadAttribute",
+                "params": "ep=04&clustId=0006&attrId=0000"
+            },
+            "Digital Output 4": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=4",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
+            "On 5": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=05",
+                "isVisible": 1
+            },
+            "Off 5": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=05",
+                "isVisible": 1
+            },
+            "Get-Etat 5": {
+                "use": "zbReadAttribute",
+                "params": "ep=05&clustId=0006&attrId=0000"
+            },
+            "Digital Output 5": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=5",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
+            "On 6": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=06",
+                "isVisible": 1
+            },
+            "Off 6": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=06",
+                "isVisible": 1
+            },
+            "Get-Etat 6": {
+                "use": "zbReadAttribute",
+                "params": "ep=06&clustId=0006&attrId=0000"
+            },
+            "Digital Output 6": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=6",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
+            "On 7": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=07",
+                "isVisible": 1
+            },
+            "Off 7": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=07",
+                "isVisible": 1
+            },
+            "Get-Etat 7": {
+                "use": "zbReadAttribute",
+                "params": "ep=07&clustId=0006&attrId=0000"
+            },
+            "Digital Output 7": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=7",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
+            "On 8": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=08",
+                "isVisible": 1
+            },
+            "Off 8": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=08",
+                "isVisible": 1
+            },
+            "Get-Etat 8": {
+                "use": "zbReadAttribute",
+                "params": "ep=08&clustId=0006&attrId=0000"
+            },
+            "Digital Output 8": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=8",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
             "Toggle 01": {
                 "use": "zbCmd-0006-Toggle",
                 "params": "ep=01",

@@ -1898,48 +1898,53 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
                     $statusDecode = array(
                         0x00 => "Active",
-                        0x01 => "Dicovery_Underway",
+                        0x01 => "Discovery_Underway",
                         0x02 => "Discovery_Failed",
                         0x03 => "Inactive",
                         0x04 => "Validation_Underway", // Got that if interrogate the Zigate
                         0x05 => "Reserved",
                         0x06 => "Reserved",
                         0x07 => "Reserved",
-                        0x10 => " + Many To One", // 0x10 -> 1 0 000 bin -> Active + no constrain + Many To One + no route required
                         );
 
-                    $sqn                    = substr($payload,26, 2);
-                    $status                 = substr($payload,28, 2);
-                    $tableSize              = hexdec(substr($payload,30, 2));
-                    $index                  = hexdec(substr($payload,32, 2));
-                    $tableCount             = hexdec(substr($payload,34, 2));
+                    $sqn            = substr($pl, 0, 2);
+                    $status         = substr($pl, 2, 2);
+                    $tableEntries   = hexdec(substr($pl, 4, 2));
+                    $index          = hexdec(substr($pl, 6, 2));
+                    $tableCount     = hexdec(substr($pl, 8, 2));
 
                     parserLog('debug', '  Routing table response'
                             .', SQN='.$sqn
                             .', Status='.$status
-                            .', tableSize='.$tableSize
-                            .', index='.$index
-                            .', tableCount='.$tableCount,
-                                "8002"
-                                );
+                            .', TableEntries='.$tableEntries
+                            .', Index='.$index
+                            .', TableCount='.$tableCount,
+                                "8002");
 
+                    // Duplicated message ?
+                    if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                        return;
+
+                    $pl = substr($pl, 10);
                     $routingTable = array();
+                    for ($i = 0; $i < $tableCount; $i++) {
 
-                    for ($i = $index; $i < $index+$tableSize; $i++) {
+                        $addressDest = substr($pl, 0, 4);
+                        $flags = substr($pl, 4, 2);
+                        $flags = hexdec($flags);
+                        $statusRouting = $flags >> 5;
+                        $manyToOne = ($flags >> 3) & 1;
+                        $statusDecoded = $statusDecode[$statusRouting];
+                        if ($manyToOne)
+                            $status .= " + Many To One";
+                        $nextHop = substr($pl, 6, 4);
 
-                        $addressDest=substr($payload,36+($i*10), 4);
+                        parserLog('debug', '  Addr='.$addressDest.', Status='.$statusRouting.'/'.$statusDecoded.', NextHop='.$nextHop, "8002");
 
-                        $statusRouting = substr($payload,36+($i*10)+4,2);
-                        $statusDecoded = $statusDecode[ base_convert( $statusRouting, 16, 2) &  7 ];
-                        if (base_convert($statusRouting, 16, 10)>=0x10) $statusDecoded .= $statusDecode[ base_convert($statusRouting, 16, 2) & 0x10 ];
-
-                        $nextHop=substr($payload,36+($i*10)+4+2,4);
-
-                        parserLog('debug', '  Addr='.$addressDest.', Status='.$statusRouting.'/'.$statusDecoded.', Next Hop='.$nextHop, "8002");
-
-                        if ((base_convert( $statusRouting, 16, 2) &  7) == "00" ) {
+                        if ($statusRouting == 0) {
                             $routingTable[] = array( $addressDest => $nextHop );
                         }
+                        $pl = substr($pl, 10);
                     }
 
                     // if ( $srcAddr == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
@@ -1948,8 +1953,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     if ( $abeille ) {
                         $abeille->setConfiguration('routingTable', json_encode($routingTable) );
                         $abeille->save();
-                    }
-                    else {
+                    }  else {
                         parserLog('debug', '  abeille not found !!!', "8002");
                     }
 

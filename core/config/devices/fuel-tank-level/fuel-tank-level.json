@@ -10,14 +10,50 @@
         },
         "type": "fuel-tank-level",
         "commands": {
-            "include2": "etatEp02in",
-            "Get-Etat 2": { "use": "zbReadAttribute", "params": "ep=02&clustId=0006&attrId=0000" },
-            "include3": "etatEp03in",
-            "Get-Etat 3": { "use": "zbReadAttribute", "params": "ep=03&clustId=0006&attrId=0000" },
-            "include4": "etatEp04in",
-            "Get-Etat 4": { "use": "zbReadAttribute", "params": "ep=04&clustId=0006&attrId=0000" },
-            "include5": "etatEp05in",
-            "Get-Etat 5": { "use": "zbReadAttribute", "params": "ep=05&clustId=0006&attrId=0000" }
+            "Digital Input 2": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=2",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
+            "Get-Etat 2": {
+                "use": "zbReadAttribute",
+                "params": "ep=02&clustId=0006&attrId=0000"
+            },
+            "Digital Input 3": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=3",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
+            "Get-Etat 3": {
+                "use": "zbReadAttribute",
+                "params": "ep=03&clustId=0006&attrId=0000"
+            },
+            "Digital Input 4": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=4",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
+            "Get-Etat 4": {
+                "use": "zbReadAttribute",
+                "params": "ep=04&clustId=0006&attrId=0000"
+            },
+            "Digital Input 5": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=5",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
+            "Get-Etat 5": {
+                "use": "zbReadAttribute",
+                "params": "ep=05&clustId=0006&attrId=0000"
+            }
         }
     }
 }

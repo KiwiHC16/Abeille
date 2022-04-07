@@ -10,37 +10,79 @@
         },
         "type": "7-digital-input",
         "commands": {
-            "include2": "etatEp02in",
+            "Digital Input 2": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=2",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
             "Get-OnOffStatus 2": {
                 "use": "zbReadAttribute",
                 "params": "ep=02&clustId=0006&attrId=0000"
             },
-            "include3": "etatEp03in",
+            "Digital Input 3": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=3",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
             "Get-OnOffStatus 3": {
                 "use": "zbReadAttribute",
                 "params": "ep=03&clustId=0006&attrId=0000"
             },
-            "include4": "etatEp04in",
+            "Digital Input 4": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=4",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
             "Get-OnOffStatus 4": {
                 "use": "zbReadAttribute",
                 "params": "ep=04&clustId=0006&attrId=0000"
             },
-            "include5": "etatEp05in",
+            "Digital Input 5": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=5",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
             "Get-OnOffStatus 5": {
                 "use": "zbReadAttribute",
                 "params": "ep=05&clustId=0006&attrId=0000"
             },
-            "include6": "etatEp06in",
+            "Digital Input 6": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=6",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
             "Get-OnOffStatus 6": {
                 "use": "zbReadAttribute",
                 "params": "ep=06&clustId=0006&attrId=0000"
             },
-            "include7": "etatEp07in",
+            "Digital Input 7": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=7",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
             "Get-OnOffStatus 7": {
                 "use": "zbReadAttribute",
                 "params": "ep=07&clustId=0006&attrId=0000"
             },
-            "include8": "etatEp08in",
+            "Digital Input 8": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=8",
+                "subType": "binary",
+                "genericType": "SWITCH_STATE",
+                "isVisible": 1
+            },
             "Get-OnOffStatus 8": {
                 "use": "zbReadAttribute",
                 "params": "ep=08&clustId=0006&attrId=0000"

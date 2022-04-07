@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220407-BETA-1
+-------------
+
 - Parser: Amélioration decode routing table.
 - WarningDevice-EL-3.0: Mise-à-jour modèle + merge 'WarningDevice'.
 - SML002: Mise-à-jour modèle (2309).

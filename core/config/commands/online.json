@@ -1,8 +1,8 @@
 {
     "online": {
         "isVisible": 0,
-        "name": "online",
-        "isHistorized": "1",
+        "name": "Online",
+        "isHistorized": "0",
         "subType": "binary",
         "invertBinary": "0",
         "template": "",

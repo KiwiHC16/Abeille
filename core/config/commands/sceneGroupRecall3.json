@@ -11,9 +11,7 @@
             "request": "groupID=#addrGroup#&sceneID=03",
             "visibilityCategory": "All"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
-        "type": "action"
+        "type": "action",
+        "nextLine": "after"
     }
 }

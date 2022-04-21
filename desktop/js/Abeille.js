@@ -202,7 +202,7 @@ function removeBeesJeedom(zgId) {
                     xhr.open(
                         "GET",
                         "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
-                            js_queueCtrlToParser +
+                            js_queueXToParser +
                             "&msg=type:eqRemoved_net:Abeille" +
                             zgId +
                             "_eqList:" +

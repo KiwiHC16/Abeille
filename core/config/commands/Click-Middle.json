@@ -10,10 +10,8 @@
             "repeatEventManagement": "always",
             "visibilityCategory": "All"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
         "type": "info",
-        "logicalId": "Click-Middle"
+        "logicalId": "Click-Middle",
+        "nextLine": "after"
     }
 }

@@ -1,0 +1,12 @@
+{
+    "cmdG-TuyaEF00-Set-OnOff": {
+        "subType": "other",
+        "template": "",
+        "configuration": {
+            "topic": "cmd-tuyaEF00",
+            "request": "ep=#EP#&cmd=setOnOff&data=#ONOFF#"
+        },
+        "type": "action",
+        "genericType": "GENERIC_ACTION"
+    }
+}

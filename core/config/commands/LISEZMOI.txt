@@ -11,11 +11,16 @@ Attention !! Toute modification de ce répertoire sera écrasée lors des mises-
 Nom des commandes
 =================
 En dehors des commandes "historiques" en passe d'être normalisées, les noms de fichiers doivent suivre les regles suivantes:
-- Toute commande specifique Zigbee (issu de la spec) commence par "zb"
+- Toute commande specifique Zigbee (issu du standard Zigbee) commence par "zb"
 - Le nom des commandes commence par une minuscule (ex: click.json)
-- zbCmd-<cluster>-<cmdName>.json : une commande du 'cluster' (ex: zbCmd-0006-On). Donc forcement commande Jeedom ACTION.
+- zbCmd-<cluster>-<cmdName>.json : une commande du 'cluster', générée par la Zigate (ex: zbCmd-0006-On).
+  Peut donc être déclenchée d'une commande Jeedom du type ACTION.
+  TODO: A renommer en 'zbCmdG-<clustId>-<cmdName>'
+- zbCmdR-<cluster>-<cmdName>.json
+  Une commande "reçue" par la Zigate. Peut donc alimenter une commande Jeedom du type INFO.
 - zb-<cluster>-<attribName>.json: un attribut du 'cluster' (ex: zb-0001-BatteryPercent) = Command Jeedom du type INFO.
   Ces commandes Jeedom sont mises à jour par un "attribute report" ou "read attribute response".
+  TODO: A renommer en 'zbAttr-<clustId>-<attrName>'
 - zbConfigureReporting, zbReadAttribute... actions du standard Zigbee.
 
 Format de fichier
@@ -94,6 +99,9 @@ Exemple de commande 'action'
   Permet de définir le widget qui sera utilisé pour l'affichage de la commande.
 
 * value: ??
+
+* nextLine: after/before
+  Impacte l'affichage du widget. Permet de forcer un saut de ligne apres ou avant le widget de la commande.
 
 * configuration:
 

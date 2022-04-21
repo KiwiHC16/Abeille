@@ -1,6 +1,25 @@
 ChangeLog
 =========
 
+- Interne: Version DB, date = 20220407.
+- Analyse/santé: Correction affichage ports utilisés.
+- Interne: Nettoyage fonctions obsolètes.
+- Interne: Suppression de plusieurs commandes obsolètes (dispos sur page avancée) 'Ruche':
+
+  - 'replaceEquipement'
+  - 'Get Time'
+  - 'SystemMessage' (provoque mise à jour erronnée date de communication Zigate)
+- Interne: Page EQ/avancé. Qq optimisations.
+- Interne: Mise-à-jour controle/redémarrage des démons.
+- Zigate v2/apparition équipements inconnus: Ajout verrue (2368).
+- Interne: Plus qu'une seule queue d'entrée au parser.
+- Interne: Tuya: Support préliminaire TV02.
+- Interne: Grosse mise-à-jour pour meilleur support des équipements Tuya.
+- Philips LOM007 smart plug: Ajout support (2374).
+- JSON commandes: 'forceReturnLineAfter/Before' is obsolete. Replaced by 'nextLine' = 'after/before'.
+- Interne: Sauvegarde des infos du modele dans la DB eqLogic => 'ab::eqModel'.
+- Page EQ: Ajout affichage type d'équipement.
+
 220407-BETA-1
 -------------
 

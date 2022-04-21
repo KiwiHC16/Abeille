@@ -5,7 +5,7 @@
         "comment3": "Based on obsolete 'humidite.json'",
         "name": "MeasuredValue",
         "subType": "numeric",
-        "template": "hydro3IMG",
+        "template": "badge",
         "configuration": {
             "calculValueOffset": "#value#\/100",
             "historizeRound": "0"

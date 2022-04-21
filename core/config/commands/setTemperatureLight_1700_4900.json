@@ -14,9 +14,7 @@
             "maxValue": "4900",
             "visibilityCategory": "All"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
-        "genericType": "LIGHT_SET_COLOR_TEMP"
+        "genericType": "LIGHT_SET_COLOR_TEMP",
+        "nextLine": "after"
     }
 }

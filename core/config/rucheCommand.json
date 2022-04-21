@@ -1,7 +1,33 @@
 {
+    "online": {
+        "name": "Online",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+    },
+    "SW-Application": {
+        "name": "SW",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+    },
+    "SW-SDK": {
+        "name": "SDK",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+    },
     "Get FW version": {
         "name": "Get FW version",
-        "order": 0,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -9,14 +35,40 @@
         "configuration": {
             "topic": "getZgVersion",
             "request": ""
-        },
+        }
+    },
+    "Time-Time": {
+        "name": "Last",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+    },
+    "Time-TimeStamp": {
+        "name": "Last Stamps",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+    },
+    "ZiGate-Time": {
+        "name": "ZiGate-Time",
+        "isHistorized": "0",
+        "isVisible": "0",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "",
         "display": {
             "forceReturnLineAfter": "1"
         }
     },
     "Get Network Status": {
         "name": "Get Network Status",
-        "order": 2,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -24,14 +76,46 @@
         "configuration": {
             "topic": "getNetworkStatus",
             "request": "getNetworkStatus"
-        },
-        "display": {
-            "forceReturnLineAfter": "1"
         }
+    },
+    "Short-Addr": {
+        "name": "Short Addr",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+    },
+    "IEEE-Addr": {
+        "name": "IEEE Addr",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+    },
+    "PAN-ID": {
+        "name": "PAN ID",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
+    },
+    "Ext_PAN-ID": {
+        "name": "Ext PAN ID",
+        "isHistorized": "0",
+        "isVisible": "1",
+        "Type": "info",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": ""
     },
     "Inclusion": {
         "name": "Inclusion",
-        "order": 3,
         "isHistorized": "0",
         "isVisible": "1",
         "Type": "action",
@@ -43,7 +127,6 @@
     },
     "Get Inclusion Status": {
         "name": "Get Inclusion Status",
-        "order": 4,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -58,7 +141,6 @@
     },
     "permitJoin-Status": {
         "name": "Inclusion Status",
-        "order": 5,
         "isHistorized": "0",
         "isVisible": "1",
         "Type": "info",
@@ -71,7 +153,6 @@
     },
     "addGroup": {
         "name": "Add Group",
-        "order": 8,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -87,7 +168,6 @@
     },
     "removeGroup": {
         "name": "Remove Group",
-        "order": 9,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -104,7 +184,6 @@
     },
     "getGroupMemberShip": {
         "name": "getGroupMemberShip",
-        "order": 10,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -121,7 +200,6 @@
     },
     "storeScene": {
         "name": "storeScene",
-        "order": 11,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -138,7 +216,6 @@
     },
     "recallScene": {
         "name": "recallScene",
-        "order": 12,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -155,7 +232,6 @@
     },
     "sceneGroupRecall": {
         "name": "sceneGroupRecall",
-        "order": 13,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -172,7 +248,6 @@
     },
     "addScene": {
         "name": "Add Scene",
-        "order": 14,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -188,7 +263,6 @@
     },
     "removeScene": {
         "name": "Remove Scene",
-        "order": 15,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -205,7 +279,6 @@
     },
     "removeSceneAll": {
         "name": "Remove Scene All",
-        "order": 16,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -222,7 +295,6 @@
     },
     "viewScene": {
         "name": "viewScene",
-        "order": 17,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -239,7 +311,6 @@
     },
     "getSceneMemberShip": {
         "name": "getSceneMemberShip",
-        "order": 18,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -254,89 +325,8 @@
             "message_placeholder": "DestinationEndPoint=XX&groupID=YYYY"
         }
     },
-    "Time-Time": {
-        "name": "Last",
-        "order": 28,
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Time-TimeStamp": {
-        "name": "Last Stamps",
-        "order": 29,
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "SW-Application": {
-        "name": "SW",
-        "order": 30,
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "SW-SDK": {
-        "name": "SDK",
-        "order": 31,
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
     "Network-Status": {
         "name": "Network Status",
-        "order": 32,
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Short-Addr": {
-        "name": "Short Addr",
-        "order": 33,
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "PAN-ID": {
-        "name": "PAN ID",
-        "order": 34,
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "Ext_PAN-ID": {
-        "name": "Ext PAN ID",
-        "order": 35,
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "IEEE-Addr": {
-        "name": "IEEE Addr",
-        "order": 36,
         "isHistorized": "0",
         "isVisible": "1",
         "Type": "info",
@@ -346,7 +336,6 @@
     },
     "Network-Channel": {
         "name": "Network Channel",
-        "order": 37,
         "isHistorized": "0",
         "isVisible": "1",
         "Type": "info",
@@ -356,7 +345,6 @@
     },
     "Network Status Request": {
         "name": "Network Status Request (Not implemented)",
-        "order": 38,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -368,7 +356,6 @@
     },
     "joinLeave-IEEE": {
         "name": "joinLeave",
-        "order": 39,
         "isHistorized": "1",
         "isVisible": "0",
         "Type": "info",
@@ -376,24 +363,8 @@
         "invertBinary": "0",
         "template": ""
     },
-    "Reset": {
-        "name": "Reset",
-        "order": 42,
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "reset",
-            "request": "reset"
-        },
-        "display": {
-            "forceReturnLineAfter": "1"
-        }
-    },
     "Factory New Reset": {
         "name": "Factory New Reset",
-        "order": 44,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -406,26 +377,8 @@
             "forceReturnLineAfter": "1"
         }
     },
-    "replaceEquipement": {
-        "name": "Replace Equipement",
-        "order": 45,
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "message",
-        "configuration": {
-            "topic": "replaceEquipement",
-            "request": "old=#title#&new=#message#"
-        },
-        "display": {
-            "forceReturnLineAfter": "0",
-            "title_placeholder": "Adresse courte de l ancien equipement",
-            "message_placeholder": "Adresse courte du nouvel equipement"
-        }
-    },
     "Network-Bind": {
         "name": "Last Bind",
-        "order": 46,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "info",
@@ -435,7 +388,6 @@
     },
     "Network-Report": {
         "name": "Last Report",
-        "order": 47,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "info",
@@ -445,7 +397,6 @@
     },
     "Network_Address_request": {
         "name": "Network Address Request",
-        "order": 49,
         "isHistorized": "0",
         "isVisible": "0",
         "Type": "action",
@@ -458,42 +409,6 @@
             "forceReturnLineAfter": "0",
             "title_placeholder": "Adresse courte de l equipement",
             "message_placeholder": "IEEEAddress=xxxxxxxxxxxxxxxx[&requestType=00&startIndex=00] "
-        }
-    },
-    "Set Time": {
-        "name": "Set Zigate-Time",
-        "order": 51,
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "setZgTimeServer",
-            "request": ""
-        }
-    },
-    "ZiGate-Time": {
-        "name": "ZiGate-Time",
-        "order": 53,
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": "",
-        "display": {
-            "forceReturnLineAfter": "1"
-        }
-    },
-    "Get Time": {
-        "name": "Get Zigate-Time",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "getZgTimeServer",
-            "request": ""
         }
     },
     "Group-Membership": {
@@ -564,23 +479,5 @@
         "display": {
             "forceReturnLineAfter": "1"
         }
-    },
-    "SystemMessage": {
-        "name": "SystemMessage",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "online": {
-        "name": "online",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
     }
 }

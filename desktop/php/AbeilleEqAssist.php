@@ -50,7 +50,7 @@
     echo '<script>var js_jsonName = "'.$jsonName.'";</script>'; // PHP to JS
     echo '<script>var js_jsonLocation = "'.$jsonLocation.'";</script>'; // PHP to JS
     echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
-    echo '<script>var js_queueKeyCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
 
     $pluginDir = __DIR__."/../../"; // Plugin root dir
     echo '<script>let js_pluginDir = "'.$pluginDir.'";</script>';
@@ -845,6 +845,9 @@
         for (var epId in endPoints) {
             // console.log("EP "+epId);
             ep = endPoints[epId];
+
+            if (!isset(ep.servClusters))
+                continue;
 
             // Basic cluster
             if (isset(ep.servClusters["0000"]) && isset(ep.servClusters["0000"]['attributes'])) {
@@ -2033,7 +2036,7 @@ console.log(zEndPoints);
         openReturnChannel();
 
         var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?queueId="+js_queueKeyCtrlToParser+"&msg=type:sendToCli_net:Abeille"+js_zgNb+"_addr:"+js_eqAddr+"_ieee:"+js_eqIeee, true);
+        xhttp.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?queueId="+js_queueXToParser+"&msg=type:sendToCli_net:Abeille"+js_zgNb+"_addr:"+js_eqAddr+"_ieee:"+js_eqIeee, true);
         xhttp.send();
 
         requestInfos('epList');

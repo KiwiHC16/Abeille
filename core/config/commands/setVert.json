@@ -12,10 +12,8 @@
             "request": "EP=#EP#&color=#slider#",
             "visibilityCategory": "additionalCommand"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
         "type": "action",
-        "genericType": "DONT"
+        "genericType": "DONT",
+        "nextLine": "after"
     }
 }

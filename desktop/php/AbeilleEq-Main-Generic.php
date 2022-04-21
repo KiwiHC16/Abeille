@@ -15,6 +15,20 @@
 </div>
 
 <div class="form-group">
+    <label class="col-sm-3 control-label">{{Type}}</label>
+    <div class="col-sm-3">
+        <?php
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', '');
+            if ($eqModel != '')
+                $type = $eqModel['type'];
+            else
+                $type = '';
+            echo '<input type="text" readonly style="width:100%" title="{{Type d\'équipement}}" value="'.$type.'" />';
+        ?>
+    </div>
+</div>
+
+<div class="form-group">
     <label class="col-sm-3 control-label">{{Objet parent}}</label>
     <div class="col-sm-3">
         <select class="eqLogicAttr form-control" data-l1key="object_id">

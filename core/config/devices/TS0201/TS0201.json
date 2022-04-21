@@ -1,5 +1,8 @@
 {
     "TS0201": {
+        "manufacturer": "Blitzwolf",
+        "model": "BW-IS4",
+        "type": "Blitzwolf Temperature and Humidity sensor & display",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -8,23 +11,23 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Wireless Temperature and Humidity",
         "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+
+            "include5": "Batterie-Volt-Konke",
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
+
             "Temperature": {
                 "use": "zb-0402-MeasuredValue",
                 "isVisible": 1,
                 "isHistorized": 1
             },
-            "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 },
-            "include5": "Batterie-Volt-Konke",
-            "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
-                "isVisible": 1
-            },
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            }
-        },
-        "comment": ""
+
+            "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 }
+        }
     }
 }

@@ -11,8 +11,7 @@
     /* Inter-daemons queues:
        array['<queueName>'] = array("id" => queueId, "max" => maxMsgSize) */
     $abQueues = array();
-    $abQueues["serialToParser"] = array( "id" => 0x336, "max" => 2048 );
-    $abQueues["ctrlToParser"] = array( "id" => 0x337, "max" => 2048 ); // Ctrl messages for AbeilleParser
+    $abQueues["xToParser"] = array( "id" => 0x336, "max" => 2048 );
     $abQueues["ctrlToCmd"] = array( "id" => 0x338, "max" => 2048 ); // Ctrl messages for AbeilleCmd
     $abQueues["parserToLQI"] = array( "id" => 0xE1, "max" => 2048 );
     $abQueues["parserToCli"] = array( "id" => 0x2D4, "max" => 1024 );
@@ -24,7 +23,6 @@
     $abQueues["cmdToMon"] = array( "id" => 130, "max" => 512 ); // Messages to zigate (cmd to monitor)
     $abQueues["parserToMon"] = array( "id" => 131, "max" => 512 ); // Messages from zigate (parser to monitor)
     $abQueues["monToCmd"] = array( "id" => 132, "max" => 512 ); // Messages to cmd (addr update)
-    $abQueues["assistToParser"] = array( "id" => 140, "max" => 512 ); // Assistant to parser
     $abQueues["parserToAssist"] = array( "id" => 141, "max" => 512 ); // Parser to EQ assistant
     $abQueues["assistToCmd"] = array( "id" => 142, "max" => 512 ); // Assistant to cmd
     $abQueues["abeilleToAbeille"] = array( "id" => 121, "max" => 512 ); // ?

@@ -2,19 +2,78 @@
     "TS0601__TZE200_hue3yfsn": {
         "manufacturer": "Tuya",
         "model": "TV02",
-        "comment": "Empty model. Need to understand how to use cluster EF00",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
             "icon": "Tuya-TV02",
-            "batteryType": "To be defined"
+            "batteryType": "2x1.5V AA"
         },
         "category": {
             "heating": "1"
         },
         "type": "Tuya TV02",
         "commands": {
-            "Groups": { "use": "Group-Membership" }
+            "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
+            "Groups": { "use": "Group-Membership" },
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": 1
+            },
+            "Window-Detection": {
+                "use": "attr-Door-Status",
+                "logicalId": "01-windowDetectionStatus",
+                "nextLine": "after",
+                "isVisible": 1
+            },
+            "Set Setpoint": {
+                "use": "cmdG-TuyaEF00-Set-Setpoint",
+                "isVisible": 1
+            },
+            "Setpoint": {
+                "use": "attr-Thermostat-Setpoint",
+                "isVisible": 1
+            },
+            "Manual": {
+                "use": "cmdG-TuyaEF00-Set-ThermostatMode",
+                "params": "mode=01",
+                "isVisible": 1
+            },
+            "Auto": {
+                "use": "cmdG-TuyaEF00-Set-ThermostatMode",
+                "params": "mode=00",
+                "isVisible": 1
+            },
+            "Mode": {
+                "use": "attr-Thermostat-Mode",
+                "nextLine": "after",
+                "isVisible": 1
+            },
+            "Check ON": {
+                "use": "cmdG-TuyaEF00-Set-OnOff",
+                "params": "onOff=01",
+                "comment": "Purpose not clear",
+                "isVisible": 1
+            },
+            "Check OFF": {
+                "use": "cmdG-TuyaEF00-Set-OnOff",
+                "params": "onOff=00",
+                "comment": "Purpose not clear",
+                "isVisible": 1
+            },
+            "Status": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1
+            }
+       },
+        "tuyaEF00": {
+            "fromDevice": {
+                "02": "rcvThermostat-Mode",
+                "08": "rcvThermostat-WindowDetectionStatus",
+                "10": "rcvThermostat-Setpoint",
+                "18": "rcvThermostat-LocalTemp",
+                "23": "rcvBattery-Percent",
+                "73": "rcvOnline-Status"
+            }
         }
     }
 }

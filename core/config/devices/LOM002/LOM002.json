@@ -11,6 +11,19 @@
         },
         "type": "Philips Hue Smart Plug",
         "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
             "etat": {
                 "use": "zb-0006-OnOff",
                 "isVisible": 1
@@ -23,15 +36,17 @@
                 "use": "zbCmd-0006-Off",
                 "isVisible": 1
             },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
+            },
             "Get-Status": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include24": "Identify",
-            "include25": "Group-Membership",
             "Bind-0006-ToZigate": {
                 "use": "zbBindToZigate",
-                "params": "clustId=0008",
+                "params": "clustId=0006",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
@@ -46,17 +61,6 @@
                 "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
-            "Toggle": {
-                "use": "zbCmd-0006-Toggle",
-                "nextLine": "after"
             }
         }
     }

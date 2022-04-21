@@ -10,10 +10,8 @@
             "topic": "writeAttributeRequestIAS_WD",
             "request": "mode=FlashSound&duration=#slider#"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
         "type": "action",
-        "genericType": "DONT"
+        "genericType": "DONT",
+        "nextLine": "after"
     }
 }

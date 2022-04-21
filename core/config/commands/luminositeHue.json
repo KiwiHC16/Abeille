@@ -11,12 +11,10 @@
             "calculValueOffset": "pow(10,#value#\/10000+1\/10000)",
             "historizeRound": "0"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
         "type": "info",
         "logicalId": "0400-#EP#-0000",
         "unit": "Lux",
-        "genericType": "BRIGHTNESS"
+        "genericType": "BRIGHTNESS",
+        "nextLine": "after"
     }
 }

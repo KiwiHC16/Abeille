@@ -23,25 +23,39 @@
             },
             "Humidity": {
                 "use": "zb-0405-MeasuredValue",
+                "nextLine": "after",
                 "isVisible": 1
             },
             "CO2": {
                 "use": "zb-CustomInfo",
                 "logicalId": "01-CO2_ppm",
                 "unit": "ppm",
+                "template": "badge",
                 "isVisible": 1
             },
             "VOC": {
                 "use": "zb-CustomInfo",
                 "logicalId": "01-VOC_ppm",
                 "unit": "ppm",
+                "template": "badge",
+                "nextLine": "after",
                 "isVisible": 1
             },
             "CH20": {
                 "use": "zb-CustomInfo",
                 "logicalId": "01-CH20_ppm",
                 "unit": "ppm",
+                "template": "badge",
                 "isVisible": 1
+            }
+        },
+        "tuyaEF00": {
+            "fromDevice": {
+                "02": "rcvSmartAir-CO2",
+                "12": "rcvSmartAir-Temperature",
+                "13": "rcvSmartAir-Humidity",
+                "15": "rcvSmartAir-VOC",
+                "16": "rcvSmartAir-CH20"
             }
         }
     }

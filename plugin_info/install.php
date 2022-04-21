@@ -186,7 +186,7 @@
             config::save('DbVersion', '20201025', 'Abeille');
         }
 
-        /* Version 20201122 changes:
+        /* Version 20220407 changes:
            - Config DB: blocageTraitementAnnonce defaulted to "Non"
            - Config DB: agressifTraitementAnnonce defaulted to 4
            - Rename all eq names that use short addr to use Jeedom ID instead.
@@ -205,7 +205,7 @@
            - Cmd DB: Correcting wrong attribute size for 'getPlugVAW' (attrId=0505,508,050B)
            - Eq DB: Removing obsolete 'lastCommunicationTimeOut', 'type'.
          */
-        if (intval($dbVersion) < 20201122) {
+        if (intval($dbVersion) < 20220407) {
             if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
                 config::save('blocageTraitementAnnonce', 'Non', 'Abeille');
             }
@@ -398,7 +398,7 @@
                 log::add('Abeille', 'debug', '  Zigate '.$zgId.": Updated 'AbeilleSerialPort".$zgId."'");
             }
 
-            //    config::save('DbVersion', '20201122', 'Abeille');
+               config::save('DbVersion', '20220407', 'Abeille');
         }
     }
 

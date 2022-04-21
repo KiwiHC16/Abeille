@@ -37,7 +37,7 @@
 
     sendVarToJS('eqType', 'Abeille');
     $abQueues = $GLOBALS['abQueues'];
-    echo '<script>var js_queueCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
     echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
 
     $eqLogics = eqLogic::byType('Abeille');

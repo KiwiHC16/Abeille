@@ -1,0 +1,12 @@
+{
+    "cmdG-TuyaEF00-Set-ThermostatMode": {
+        "subType": "other",
+        "template": "",
+        "configuration": {
+            "topic": "cmd-tuyaEF00",
+            "request": "ep=#EP#&cmd=setThermostat-Mode&data=#MODE#"
+        },
+        "type": "action",
+        "genericType": "GENERIC_ACTION"
+    }
+}

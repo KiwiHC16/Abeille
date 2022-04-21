@@ -516,7 +516,7 @@
                 }
             }
             $dev[$devName]['commands'] = $commands2;
-        }
+        } // End 'commands'
 
         if (isset($dev[$devName]['Comment'])) {
             $dev[$devName]['comment'] = $dev[$devName]['Comment'];
@@ -575,33 +575,50 @@
 
         if (!isset($cmd2['configuration'])) {
             newCmdError($fileName, "ERROR", "Missing 'configuration' section");
-            return;
+            // return;
+        } else {
+            /* For info cmds, logicalId added = previous configuration:topic */
+            if (($type == "info") && !isset($cmd2['logicalId'])) {
+                if (!isset($cmd2['configuration']['topic'])) {
+                    newCmdError($fileName, "ERROR", "Missing 'logicalId' field for info cmd");
+                    return;
+                }
+                $cmd2['logicalId'] = $cmd2['configuration']['topic'];
+                unset($cmd2['configuration']['topic']);
+                $cmdUpdated = true;
+                echo "  Moved 'configuration:topic' to 'logicalId'.\n";
+            }
+        if (($type == "action") && !isset($cmd2['configuration']['topic'])) {
+                newCmdError($fileName, "ERROR", "Missing 'configuration:topic' field for action cmd");
+            }
+            if (isset($cmd2['configuration']['uniqId'])) {
+                unset($cmd2['configuration']['uniqId']);
+                $cmdUpdated = true;
+                echo "  Removed 'configuration:uniqId'.\n";
+            }
+            if (isset($cmd2['configuration']['execAtCreationDelay'])) {
+                if (gettype($cmd2['configuration']['execAtCreationDelay']) == "string") {
+                    $cmd2['configuration']['execAtCreationDelay'] = (int)$cmd2['configuration']['execAtCreationDelay'];
+                    $cmdUpdated = true;
+                    echo "  'execAtCreationDelay' type changed from string to integer.\n";
+                }
+            }
         }
 
-        /* For info cmds, logicalId added = previous configuration:topic */
-        if (($type == "info") && !isset($cmd2['logicalId'])) {
-            if (!isset($cmd2['configuration']['topic'])) {
-                newCmdError($fileName, "ERROR", "Missing 'logicalId' field for info cmd");
-                return;
+        if (isset($cmd2['display'])) {
+            if (isset($cmd2['display']['forceReturnLineAfter'])) {
+                $val = $cmd2['display']['forceReturnLineAfter'];
+                if ($val == 1 || $val == "1") {
+                    $cmd2['nextLine'] = 'after';
+                    unset($cmd2['display']['forceReturnLineAfter']);
+                    $cmdUpdated = true;
+                    echo "  'forceReturnLineAfter' replaced by 'nextLine'.\n";
+                }
             }
-            $cmd2['logicalId'] = $cmd2['configuration']['topic'];
-            unset($cmd2['configuration']['topic']);
-            $cmdUpdated = true;
-            echo "  Moved 'configuration:topic' to 'logicalId'.\n";
-        }
-       if (($type == "action") && !isset($cmd2['configuration']['topic'])) {
-            newCmdError($fileName, "ERROR", "Missing 'configuration:topic' field for action cmd");
-        }
-        if (isset($cmd2['configuration']['uniqId'])) {
-            unset($cmd2['configuration']['uniqId']);
-            $cmdUpdated = true;
-            echo "  Removed 'configuration:uniqId'.\n";
-        }
-        if (isset($cmd2['configuration']['execAtCreationDelay'])) {
-            if (gettype($cmd2['configuration']['execAtCreationDelay']) == "string") {
-                $cmd2['configuration']['execAtCreationDelay'] = (int)$cmd2['configuration']['execAtCreationDelay'];
+            if (isset($cmd2['display']) && (count($cmd2['display']) == 0)) {
+                unset($cmd2['display']);
                 $cmdUpdated = true;
-                echo "  'execAtCreationDelay' type changed from string to integer.\n";
+                echo "  Empty 'display' section removed.\n";
             }
         }
 

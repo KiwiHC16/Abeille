@@ -5,15 +5,13 @@
         "isHistorized": "0",
         "subType": "string",
         "template": "badge",
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
         "configuration": {
             "visibilityCategory": "additionalCommand"
         },
         "type": "info",
         "logicalId": "ColourRGB",
         "unit": "",
-        "genericType": "LIGHT_COLOR"
+        "genericType": "LIGHT_COLOR",
+        "nextLine": "after"
     }
 }

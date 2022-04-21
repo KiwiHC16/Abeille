@@ -13,9 +13,7 @@
             "execAtCreation": "Yes",
             "execAtCreationDelay": 7
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
-        "type": "action"
+        "type": "action",
+        "nextLine": "after"
     }
 }

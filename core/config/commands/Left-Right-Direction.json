@@ -10,10 +10,8 @@
             "repeatEventManagement": "always",
             "visibilityCategory": "All"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
         "type": "info",
-        "logicalId": "80A7-Direction"
+        "logicalId": "80A7-Direction",
+        "nextLine": "after"
     }
 }

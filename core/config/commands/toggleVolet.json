@@ -11,9 +11,7 @@
             "request": "Toggle",
             "visibilityCategory": "All"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
-        "type": "action"
+        "type": "action",
+        "nextLine": "after"
     }
 }

@@ -39,11 +39,10 @@
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
     echo '<script>var js_eqIeee = "'.$eqIeee.'";</script>'; // PHP to JS
     echo '<script>var js_zgId = '.$zgId.';</script>'; // PHP to JS
-    // echo '<script>var js_queueKeyXmlToCmd = '.queueKeyXmlToCmd.';</script>'; // PHP to JS
     echo '<script>var js_batteryType = "'.$batteryType.'";</script>'; // PHP to JS
     $abQueues = $GLOBALS['abQueues'];
-    echo '<script>var js_queueKeyXmlToCmd = '.$abQueues['xToCmd']['id'].';</script>'; // PHP to JS
-    echo '<script>var js_queueCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToCmd = '.$abQueues['xToCmd']['id'].';</script>'; // PHP to JS
+    echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
 ?>
 
 <!-- For all modals on 'Abeille' page. -->
@@ -68,7 +67,13 @@
 
         <!-- Displays Jeedom specifics  -->
         <div role="tabpanel" class="tab-pane active" id="idMain">
-            <?php include 'AbeilleEq-Main.php'; ?>
+            <form class="form-horizontal">
+                <?php
+                    include 'AbeilleEq-Main-Generic.php';
+                    include 'AbeilleEq-Main-Icon.php';
+                    include 'AbeilleEq-Main-Others.php';
+                ?>
+            </form>
         </div>
 
         <!-- Displays advanced & Zigbee specifics  -->

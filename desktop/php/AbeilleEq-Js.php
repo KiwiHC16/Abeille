@@ -140,7 +140,7 @@
 
                             // Informing parser that some equipements have to be considered "phantom"
                             var xhr = new XMLHttpRequest();
-                            xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueCtrlToParser+"&msg=type:eqRemoved_net:Abeille"+js_zgId+"_eqList:"+js_eqAddr, true);
+                            xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueXToParser+"&msg=type:eqRemoved_net:Abeille"+js_zgId+"_eqList:"+js_eqAddr, true);
                             xhr.send();
                         }
                     });
@@ -546,7 +546,7 @@
         }
 
         var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueKeyXmlToCmd+"&topic="+topic+"&payload="+payload, false);
+        xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueXToCmd+"&topic="+topic+"&payload="+payload, false);
         xhttp.send();
 
         xhttp.onreadystatechange = function() {

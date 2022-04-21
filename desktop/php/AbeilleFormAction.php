@@ -8,7 +8,6 @@
 
     function sendMessageFromFormToCmd($topic, $payload) {
         global $abQueues;
-logDebug("LA=".$json_encode($abQueues));
         $queueId = $abQueues['xToCmd']['id']; // Previously formToCmd queue
         $queueKeyFormToCmd = msg_get_queue($queueId);
 
@@ -23,51 +22,51 @@ logDebug("LA=".$json_encode($abQueues));
         }
     }
 
-    function ApplySettingsToNE($item, $value) {
-        $deviceId = substr( $item, strpos($item,"-")+1 );
-        log::add('Abeille', 'debug', "deviceId: ".substr( $item, strpos($item,"-")+1 ) );
-        $device = Abeille::byId(substr( $item, strpos($item,"-")+1 ));
-        list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-        log::add('Abeille', 'debug', "NE: ".$device->getName()." - dest: ".$dest." - address: ".$address );
-        // $EP = $device->getConfiguration('mainEP');
-        // log::add('Abeille', 'debug', 'EP: '.$EP );
+    // function ApplySettingsToNE($item, $value) {
+    //     $deviceId = substr( $item, strpos($item,"-")+1 );
+    //     log::add('Abeille', 'debug', "deviceId: ".substr( $item, strpos($item,"-")+1 ) );
+    //     $device = Abeille::byId(substr( $item, strpos($item,"-")+1 ));
+    //     list( $dest, $address ) = explode( "/", $device->getLogicalId() );
+    //     log::add('Abeille', 'debug', "NE: ".$device->getName()." - dest: ".$dest." - address: ".$address );
+    //     // $EP = $device->getConfiguration('mainEP');
+    //     // log::add('Abeille', 'debug', 'EP: '.$EP );
 
-        foreach ( $device->searchCmdByConfiguration('execAtCreation','action') as $cmd ) {
-            log::add('Abeille', 'debug', 'Cmd: '.$cmd->getName() );
-            if ($cmd->getConfiguration('execAtCreation','')=='Yes') {
-                if ($cmd->getConfiguration('execAtCreationDelay','0')>0) {
-                    log::add('Abeille', 'debug', '     Send Cmd: '.$cmd->getName() . ' - ' . $cmd->getConfiguration('topic','') . ' - ' . $cmd->getConfiguration('request','') );
-                    $topic = 'Tempo'.'Cmd'.$device->getLogicalId().'/'.$cmd->getConfiguration('topic','').'&time='.(time()+$cmd->getConfiguration('execAtCreationDelay','0'));
-                    $topic = AbeilleCmd::updateField($dest, $cmd, $topic);
-                    log::add('Abeille', 'debug', '     Send Cmd: topic: '.$topic );
-                    $request = $cmd->getConfiguration('request','');
-                    $request = AbeilleCmd::updateField($dest, $cmd, $request);
-                    log::add('Abeille', 'debug', '     Send Cmd: request: '.$request );
-                    sendMessageFromFormToCmd( $topic, $request );
-                    // $cmd->execute();
-                }
-            }
-        }
-    }
+    //     foreach ( $device->searchCmdByConfiguration('execAtCreation','action') as $cmd ) {
+    //         log::add('Abeille', 'debug', 'Cmd: '.$cmd->getName() );
+    //         if ($cmd->getConfiguration('execAtCreation','')=='Yes') {
+    //             if ($cmd->getConfiguration('execAtCreationDelay','0')>0) {
+    //                 log::add('Abeille', 'debug', '     Send Cmd: '.$cmd->getName() . ' - ' . $cmd->getConfiguration('topic','') . ' - ' . $cmd->getConfiguration('request','') );
+    //                 $topic = 'Tempo'.'Cmd'.$device->getLogicalId().'/'.$cmd->getConfiguration('topic','').'&time='.(time()+$cmd->getConfiguration('execAtCreationDelay','0'));
+    //                 $topic = AbeilleCmd::updateField($dest, $cmd, $topic);
+    //                 log::add('Abeille', 'debug', '     Send Cmd: topic: '.$topic );
+    //                 $request = $cmd->getConfiguration('request','');
+    //                 $request = AbeilleCmd::updateField($dest, $cmd, $request);
+    //                 log::add('Abeille', 'debug', '     Send Cmd: request: '.$request );
+    //                 sendMessageFromFormToCmd( $topic, $request );
+    //                 // $cmd->execute();
+    //             }
+    //         }
+    //     }
+    // }
 
-    function getInfosFromNe($item, $value) {
-        $deviceId = substr( $item, strpos($item,"-")+1 );
-        log::add('Abeille', 'debug', "deviceId: ".substr( $item, strpos($item,"-")+1 ) );
-        $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-        list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-        log::add('Abeille', 'debug', "dest: ".$dest." address: ".$address);
-        $EP = $device->getConfiguration('mainEP');
-        log::add('Abeille', 'debug', "mainEP: ".$EP);
+    // function getInfosFromNe($item, $value) {
+    //     $deviceId = substr( $item, strpos($item,"-")+1 );
+    //     log::add('Abeille', 'debug', "deviceId: ".substr( $item, strpos($item,"-")+1 ) );
+    //     $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+    //     list( $dest, $address ) = explode( "/", $device->getLogicalId() );
+    //     log::add('Abeille', 'debug', "dest: ".$dest." address: ".$address);
+    //     $EP = $device->getConfiguration('mainEP');
+    //     log::add('Abeille', 'debug', "mainEP: ".$EP);
 
-        // Get Name
-        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/ActiveEndPoint',           'address='.$address                             );
-        sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getSimpleDescriptor', 'ep='.$EP);
-        sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getIeeeAddress', '');
-        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getName',                  'address='.$address.'&destinationEndPoint='.$EP );
-        sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getLocation',              'address='.$address.'&destinationEndPoint='.$EP );
-        sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
-        // sendMessageFromFormToCmd('CmdAbeille/0000/getSceneMembership',   'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$grouID, 0);
-    }
+    //     // Get Name
+    //     sendMessageFromFormToCmd('Cmd'.$dest.'/0000/ActiveEndPoint',           'address='.$address                             );
+    //     sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getSimpleDescriptor', 'ep='.$EP);
+    //     sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getIeeeAddress', '');
+    //     sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getName',                  'address='.$address.'&destinationEndPoint='.$EP );
+    //     sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getLocation',              'address='.$address.'&destinationEndPoint='.$EP );
+    //     sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
+    //     // sendMessageFromFormToCmd('CmdAbeille/0000/getSceneMembership',   'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$grouID, 0);
+    // }
 
     try {
 
@@ -266,50 +265,50 @@ logDebug("LA=".$json_encode($abQueues));
                 break;
 
             // Template
-            case 'Apply Template':
-                foreach ( $_POST as $item=>$Value ) {
-                    if ( strpos("-".$item, "eqSelected") == 1 ) {
-                        $deviceId = substr( $item, strpos($item,"-")+1 );
-                        // echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-                        // $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-                        // $address = substr($device->getLogicalId(),8);
-                        // $EP = $device->getConfiguration('mainEP');
-                        // sendMessageFromFormToCmd('CmdAbeille/0000/addGroup', 'address='.(substr( $item, strpos($item,"-")+1 )).'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
-                        abeille::updateConfigAbeille( $deviceId );
-                        // abeille::updateConfigAbeille( );
-                    }
-                }
-                break;
+            // case 'Apply Template':
+            //     foreach ( $_POST as $item=>$Value ) {
+            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
+            //             $deviceId = substr( $item, strpos($item,"-")+1 );
+            //             // echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+            //             // $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+            //             // $address = substr($device->getLogicalId(),8);
+            //             // $EP = $device->getConfiguration('mainEP');
+            //             // sendMessageFromFormToCmd('CmdAbeille/0000/addGroup', 'address='.(substr( $item, strpos($item,"-")+1 )).'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
+            //             abeille::updateConfigAbeille( $deviceId );
+            //             // abeille::updateConfigAbeille( );
+            //         }
+            //     }
+            //     break;
 
-            case 'Get Infos from NE':
-                foreach ( $_POST as $item=>$Value ) {
-                    if ( strpos("-".$item, "eqSelected") == 1 ) {
-                        // $deviceId = substr( $item, strpos($item,"-")+1 );
-                        // echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-                        // $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-                        // $address = substr($device->getLogicalId(),8);
-                        // $EP = $device->getConfiguration('mainEP');
-                        // sendMessageFromFormToCmd('CmdAbeille/0000/addGroup', 'address='.(substr( $item, strpos($item,"-")+1 )).'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
-                        getInfosFromNe($item, $Value);
-                        // abeille::updateConfigAbeille( );
-                    }
-                }
-                break;
+            // case 'Get Infos from NE':
+            //     foreach ( $_POST as $item=>$Value ) {
+            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
+            //             // $deviceId = substr( $item, strpos($item,"-")+1 );
+            //             // echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+            //             // $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+            //             // $address = substr($device->getLogicalId(),8);
+            //             // $EP = $device->getConfiguration('mainEP');
+            //             // sendMessageFromFormToCmd('CmdAbeille/0000/addGroup', 'address='.(substr( $item, strpos($item,"-")+1 )).'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
+            //             getInfosFromNe($item, $Value);
+            //             // abeille::updateConfigAbeille( );
+            //         }
+            //     }
+            //     break;
 
-            case 'Apply Settings to NE':
-                foreach ( $_POST as $item=>$Value ) {
-                    if ( strpos("-".$item, "eqSelected") == 1 ) {
-                        // $deviceId = substr( $item, strpos($item,"-")+1 );
-                        // echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-                        // $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-                        // $address = substr($device->getLogicalId(),8);
-                        // $EP = $device->getConfiguration('mainEP');
-                        // sendMessageFromFormToCmd('CmdAbeille/0000/addGroup', 'address='.(substr( $item, strpos($item,"-")+1 )).'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
-                        ApplySettingsToNE($item, $Value);
-                        // abeille::updateConfigAbeille( );
-                    }
-                }
-                break;
+            // case 'Apply Settings to NE':
+            //     foreach ( $_POST as $item=>$Value ) {
+            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
+            //             // $deviceId = substr( $item, strpos($item,"-")+1 );
+            //             // echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
+            //             // $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
+            //             // $address = substr($device->getLogicalId(),8);
+            //             // $EP = $device->getConfiguration('mainEP');
+            //             // sendMessageFromFormToCmd('CmdAbeille/0000/addGroup', 'address='.(substr( $item, strpos($item,"-")+1 )).'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
+            //             ApplySettingsToNE($item, $Value);
+            //             // abeille::updateConfigAbeille( );
+            //         }
+            //     }
+            //     break;
 
             // case "Remplace":
             //     log::add('Abeille', 'debug', 'Replace: '.$_POST['ghost'] . ' - ' . $_POST['real']);

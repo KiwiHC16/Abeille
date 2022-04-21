@@ -27,17 +27,8 @@
     <?php
     echo '<div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Last").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
         echo '<span id="idLastComm">'.getCmdValueByLogicId($eqId, "Time-Time").'</span>';
+        addJsUpdateFunction($eqId, 'Time-Time', 'idLastComm');
     ?>
-        <script>
-            <?php
-                $cmdId = getCmdIdByLogicId($eqId, "Time-Time");
-                echo "jeedom.cmd.update['".$cmdId."'] = function(_options){";
-                echo 'console.log("jeedom.cmd.update['.$cmdId.']");';
-            ?>
-                var element = document.getElementById('idLastComm');
-                element.textContent = _options.display_value;
-            }
-        </script>
     </div>
 </div>
 

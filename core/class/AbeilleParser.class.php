@@ -122,8 +122,7 @@
 
             $abQueues = $GLOBALS['abQueues'];
             $this->queueParserToAbeille     = msg_get_queue($abQueues["parserToAbeille"]["id"]);
-            $this->queueParserToAbeille2    = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
-            // $this->queueParserToCmd         = msg_get_queue($abQueues["parserToCmd"]["id"]);
+            // $this->queueParserToAbeille2    = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
             $this->queueParserToCmd         = msg_get_queue($abQueues["xToCmd"]["id"]);
             $this->queueParserToCmdAck      = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
             $this->queueParserToLQI         = msg_get_queue($abQueues["parserToLQI"]["id"]);
@@ -156,16 +155,6 @@
             if (msg_send($this->queueParserToAbeille, 1, $msg, true, $blocking, $errCode) == false) {
                 parserLog("error", "msg_send() ERREUR ".$errCode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
                 parserLog("error", "  Message=".json_encode($msg));
-            }
-        }
-
-        /* New function to send msg to Abeille.
-           Msg format is now flexible and can transport a bunch of infos coming from zigbee event instead of splitting them
-           into several messages to Abeille. */
-        function msgToAbeille2($msg) {
-            $errCode = 0;
-            if (msg_send($this->queueParserToAbeille2, 1, json_encode($msg), false, false, $errCode) == false) {
-                parserLog("debug", "msgToAbeille2(): ERROR ".$errCode);
             }
         }
 
@@ -253,99 +242,6 @@
             } else {
                 parserLog("debug", "  ERROR: Can't send msg to 'queueParserToCmdAck'. msg=".$msgJson, "8000");
             }
-        }
-
-        /* Check if device is already known to parser.
-           If not, add entry with given net/addr/ieee.
-           Returns: device entry by reference */
-        function &getDevice($net, $addr, $ieee = null, &$new = false) {
-            if (!isset($GLOBALS['eqList'][$net]))
-                $GLOBALS['eqList'][$net] = [];
-
-            if (isset($GLOBALS['eqList'][$net][$addr]))
-                return $GLOBALS['eqList'][$net][$addr];
-
-            // Not found. If IEEE is given let's check if short addr has changed.
-            if ($ieee) {
-                foreach ($GLOBALS['eqList'][$net] as $oldAddr => $eq) {
-                    if ($eq['ieee'] !== $ieee)
-                        continue;
-
-                    $GLOBALS['eqList'][$net][$addr] = $eq;
-                    unset($GLOBALS['eqList'][$net][$oldAddr]);
-                    parserLog('debug', '  EQ already known: Addr updated from '.$oldAddr.' to '.$addr);
-
-                    // Informing Abeille about short addr change
-                    $msg = array(
-                        'type' => 'updateDevice',
-                        'net' => $net,
-                        'addr' => $addr,
-                        'updates' => array(
-                            'ieee' => $ieee
-                        ),
-                    );
-                    $this->msgToAbeille2($msg);
-
-                    return $GLOBALS['eqList'][$net][$addr];
-                }
-
-                // Still not found. Checking if was in a different network.
-                foreach ($GLOBALS['eqList'] as $oldNet => $oldAddr) {
-                    if ($oldNet == $net)
-                        continue; // This network has already been checked
-                    foreach ($GLOBALS['eqList'][$oldNet] as $oldAddr => $eq) {
-                        if ($eq['ieee'] !== $ieee)
-                            continue;
-
-                        $GLOBALS['eqList'][$net][$addr] = $eq; // net & addr update
-                        unset($GLOBALS['eqList'][$oldNet][$oldAddr]);
-                        parserLog('debug', '  EQ already known on network '.$oldNet.' with addr '.$oldAddr.' => migrated');
-
-                        // Informing Abeille to migrate Jeedom part to proper network.
-                        $msg = array(
-                            'type' => 'eqMigrated',
-                            'net' => $net,
-                            'addr' => $addr,
-                            'srcNet' => $oldNet,
-                            'srcAddr' => $oldAddr,
-                        );
-                        $this->msgToAbeille2($msg);
-
-                        return $GLOBALS['eqList'][$net][$addr];
-                    }
-                }
-            }
-
-            // This is a new device
-            $GLOBALS['eqList'][$net][$addr] = array(
-                'ieee' => $ieee,
-                'capa' => '',
-                'rxOnWhenIdle' => null,
-                'rejoin' => '', // Rejoin info from device announce
-                'status' => 'identifying', // identifying, configuring, discovering, idle
-                'time' => time(),
-                'endPoints' => null,
-                'mainEp' => '',
-                'manufId' => null, // null(undef)/false(unsupported)/'xx'
-                'modelId' => null, // null(undef)/false(unsupported)/'xx'
-                'location' => null, // null(undef)/false(unsupported)/'xx'
-                'jsonId' => '',
-                'jsonLocation' => ''
-            );
-            $new = true; // This is a new device
-
-            // Informing Abeille to create a new (but empty) device.
-            if ($ieee) {
-                $msg = array(
-                    'type' => 'newDevice',
-                    'net' => $net,
-                    'addr' => $addr,
-                    'ieee' => $ieee,
-                );
-                $this->msgToAbeille2($msg);
-            }
-
-            return $GLOBALS['eqList'][$net][$addr];
         }
 
         /* Check if message is a duplication of another one using SQN.
@@ -465,7 +361,8 @@
                 'jsonId' => '', // JSON identifier
                 'jsonLocation' => '', // JSON location ("Abeille"=default, or "local")
             );
-            'status':
+            'status': Tcharp38/TODO: TO BE REVISITED. NOT clear enough
+
                 identifying: req EP list + manufacturer + modelId with special cases support.
                 configuring: execute cmds with 'execAtCreation' flag
                 discovering: for unknown EQ
@@ -474,7 +371,8 @@
 
         /* Called on device announce. */
         function deviceAnnounce($net, $addr, $ieee, $capa, $rejoin) {
-            $eq = &$this->getDevice($net, $addr, $ieee); // By ref
+            $eq = &getDevice($net, $addr, $ieee); // By ref
+            // 'status' set to 'identifying' if new device
             parserLog('debug', '  eq='.json_encode($eq));
 
             $eq['capa'] = $capa;
@@ -483,13 +381,13 @@
 
             /* Checking if it's not a too fast consecutive device announce.
                 Note: Assuming 4sec max per phase */
-            if (($eq['status'] != 'idle') && ($eq['time'] + 4) > time()) {
-                if ($eq['status'] == 'identifying')
-                    parserLog('debug', '  Device identification already ongoing');
-                else if ($eq['status'] == 'discovering')
-                    parserLog('debug', '  Device discovering already ongoing');
-                return; // Last step is not older than 4sec
-            }
+            // if (($eq['status'] != 'idle') && ($eq['time'] + 4) > time()) {
+            //     if ($eq['status'] == 'identifying')
+            //         parserLog('debug', '  Device identification already ongoing');
+            //     else if ($eq['status'] == 'discovering')
+            //         parserLog('debug', '  Device discovering already ongoing');
+            //     return; // Last step is not older than 4sec
+            // }
 
             /* Starting identification phase */
             $eq['status'] = 'identifying';
@@ -546,7 +444,7 @@
                 $ieee = $updates['ieee'];
             else
                 $ieee = null;
-            $eq = &$this->getDevice($net, $addr, $ieee, $newDev); // By ref
+            $eq = &getDevice($net, $addr, $ieee, $newDev); // By ref
             $confirmed = array();
             foreach ($updates as $updKey => $updVal) {
                 if ($updKey == 'ieee')
@@ -565,7 +463,7 @@
                     'addr' => $addr,
                     'updates' => $confirmed,
                 );
-                $this->msgToAbeille2($msg);
+                msgToAbeille2($msg);
             }
         }
 
@@ -576,7 +474,7 @@
                 $ieee = $value;
             else
                 $ieee = null;
-            $eq = &$this->getDevice($net, $addr, $ieee, $newDev); // By ref
+            $eq = &getDevice($net, $addr, $ieee, $newDev); // By ref
             // 'status' set to 'identifying' if new device
 
             // Log only if relevant
@@ -869,7 +767,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'capa' => $eq['capa'],
                 'time' => time()
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
 
             // TODO: Tcharp38: 'idle' state might be too early since execAtCreation commands might not be completed yet
             $eq['status'] = 'idle';
@@ -897,7 +795,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'capa' => $eq['capa'],
                 'time' => time()
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
 
             // TODO: Tcharp38: 'idle' state might be too early since execAtCreation commands might not be completed yet
             $eq['status'] = 'idle';
@@ -908,7 +806,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', "  deviceDiscover()");
 
             // $eq = &$GLOBALS['eqList'][$net][$addr];
-            $eq = &$this->getDevice($net, $addr); // Get device by ref
+            $eq = &getDevice($net, $addr); // Get device by ref
             $eq['status'] = 'discovering';
 
             parserLog('debug', '  eq='.json_encode($eq));
@@ -942,7 +840,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'capa' => $eq['capa'],
                 'time' => time()
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         /* Update received during discovering process */
@@ -1617,6 +1515,16 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             if ($rejoin != "") $msgDecoded .= ', Rejoin='.$rejoin;
             parserLog('debug', $dest.', Type='.$msgDecoded);
 
+            // Work-around for https://github.com/fairecasoimeme/ZiGatev2/issues/36#
+            // Note: if no 8002 before (dev announce just after restart), better to ignore instead of accept a wrong dev announce.
+            global $last8002DevAnnounce;
+            if ($addr != $last8002DevAnnounce) {
+                parserLog('debug', '  WARNING: Corrupted message => ignoring');
+                return;
+            }
+
+            $this->deviceAnnounce($dest, $addr, $ieee, $macCapa, $rejoin);
+
             // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddrExt"]) && !strcasecmp($GLOBALS["dbgMonitorAddrExt"], $ieee)) {
                 monMsgFromZigate($msgDecoded); // Send message to monitor
@@ -1636,14 +1544,13 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             );
             $this->msgToClient($toCli);
 
-            $zgId = substr($dest, 7);
-            if (!isset($GLOBALS['zigate'.$zgId]['permitJoin']) || ($GLOBALS['zigate'.$zgId]['permitJoin'] != "01")) {
-                if (!isset($GLOBALS['eqList'][$dest]) || !isset($GLOBALS['eqList'][$dest][$addr]))
-                    parserLog('debug', '  Not in inclusion mode but trying to identify unknown device anyway.');
-                else
-                    parserLog('debug', '  Not in inclusion mode and got a device announce for already known device.');
-            }
-            $this->deviceAnnounce($dest, $addr, $ieee, $macCapa, $rejoin);
+            // $zgId = substr($dest, 7);
+            // if (!isset($GLOBALS['zigate'.$zgId]['permitJoin']) || ($GLOBALS['zigate'.$zgId]['permitJoin'] != "01")) {
+            //     if (!isset($GLOBALS['eqList'][$dest]) || !isset($GLOBALS['eqList'][$dest][$addr]))
+            //         parserLog('debug', '  Not in inclusion mode but trying to identify unknown device anyway.');
+            //     else
+            //         parserLog('debug', '  Not in inclusion mode and got a device announce for already known device.');
+            // }
         }
 
         /* Fonction specifique pour le retour d'etat de l interrupteur Livolo. */
@@ -1876,6 +1783,23 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
             /* Profile 0000 */
             if ($profId == "0000") {
+                // Device Announce (Device_annce)
+                // Handled by decode004D(). Developped to follow https://github.com/fairecasoimeme/ZiGatev2/issues/36#
+                if ($clustId == "0013") {
+                    $sqn = substr($pl, 0, 2);
+                    $addr = AbeilleTools::reverseHex(substr($pl, 2, 4));
+                    $ieee = AbeilleTools::reverseHex(substr($pl, 6, 16));
+                    $cap = substr($pl, 22, 2);
+                    parserLog('debug', '  Device Announce: SQN='.$sqn.', Addr='.$addr.', IEEE='.$ieee.', Cap='.$cap);
+
+                    // Store addr for https://github.com/fairecasoimeme/ZiGatev2/issues/36# work around
+                    global $last8002DevAnnounce;
+                    $last8002DevAnnounce = $addr;
+
+                    parserLog('debug', '  Handled by decode004D');
+                    return;
+                }
+
                 // Management LQI Response (Mgmt_Lqi_rsp)
                 // Handled by decode804E(). Just to try to understand unexpected responses.
                 if ($clustId == "8031") {
@@ -2446,7 +2370,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'time' => time(),
                     'lqi' => $lqi
                 );
-                $this->msgToAbeille2($toAbeille);
+                msgToAbeille2($toAbeille);
                 return;
             }
 
@@ -2615,7 +2539,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         'time' => time(),
                         'lqi' => $lqi
                     );
-                    $this->msgToAbeille2($msgTo);
+                    msgToAbeille2($msgTo);
 
                     /* Send to client page if required (ex: EQ page opened) */
                     $msgTo = array(
@@ -2714,7 +2638,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
 
                 else if ($cmd == "0A") { // Report attributes
                     // Some clusters are directly handled by 8100/8102 decode
-                    $acceptedCmd0A = ['0300', '050B', '0B04']; // Clusters handled here
+                    $acceptedCmd0A = ['0005', '0007', '0300', '050B', '0B04', 'EF00']; // Clusters handled here
                     if (!in_array($clustId, $acceptedCmd0A)) {
                         parserLog('debug', "  Handled by decode8100_8102");
                         return;
@@ -2777,7 +2701,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         'time' => time(),
                         'lqi' => $lqi,
                     );
-                    $this->msgToAbeille2($toAbeille);
+                    msgToAbeille2($toAbeille);
 
                     return;
                 }
@@ -2975,7 +2899,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                             'time' => time(),
                             'lqi' => $lqi
                         );
-                        $this->msgToAbeille2($msg);
+                        msgToAbeille2($msg);
                     }
                     return;
                 }
@@ -3060,29 +2984,17 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'time' => time(),
                     'lqi' => $lqi
                 );
-                $this->msgToAbeille2($msg);
+                msgToAbeille2($msg);
                 return;
             }
 
             // Cluster EF00 is used by Tuya.
             if ($clustId == "EF00") {
-                if ($cmd == "01") {
-                    // Duplicated message ?
-                    if ($this->isDuplicated($dest, $srcAddr, $sqn))
-                        return;
+                // Duplicated message ?
+                if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                    return;
 
-                    parserLog("debug", "  Tuya EF00 specific cmd 01", "8002");
-                    $attributesN = tuyaDecodeEF00Cmd01($srcEp, $msg);
-                } else if ($cmd == "02") {
-                    // Duplicated message ?
-                    if ($this->isDuplicated($dest, $srcAddr, $sqn))
-                        return;
-
-                    parserLog("debug", "  Tuya EF00 specific cmd 02", "8002");
-                    $attributesN = tuyaDecodeEF00Cmd02($srcEp, $msg);
-                } else {
-                    parserLog("debug", "  Unsupported Tuya cmd ".$cmd." => ignored", "8002");
-                }
+                $attributesN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $msg);
                 if (isset($attributesN) && (count($attributesN) > 0)) {
                     $msg = array(
                         // 'src' => 'parser',
@@ -3095,7 +3007,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                         'time' => time(),
                         'lqi' => $lqi
                     );
-                    $this->msgToAbeille2($msg);
+                    msgToAbeille2($msg);
                 }
                 return;
             }
@@ -3166,7 +3078,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'chan' => $chan,
                 'time' => time()
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         /* Zigate FW version */
@@ -3196,7 +3108,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'minor' => $minor,
                 'time' => time()
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         /**
@@ -3332,7 +3244,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'status' => $status,
                 'time' => time()
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         /* Get devices list response */
@@ -3404,7 +3316,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'timeServer' => $data,
                 'time' => time()
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         /* Network joined/formed */
@@ -3469,7 +3381,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'chan' => $dataNetwork,
                 'time' => time()
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         // 8030/Bind response
@@ -3505,7 +3417,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'time' => time(),
                 'lqi' => $lqi,
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         /* 8035/PDM event code. Since FW 3.1b */
@@ -3612,7 +3524,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'time' => time(),
                 'lqi' => $lqi,
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         /**
@@ -3843,7 +3755,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'time' => time(),
                 'lqi' => $lqi
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         /* 804A = Management Network Update Response */
@@ -4134,7 +4046,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'time' => time(),
                 'lqi' => $lqi
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         function decode8063($dest, $payload, $lqi)
@@ -4234,7 +4146,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'time' => time(),
                 'lqi' => $lqi
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         /* OnOff cluster command coming from a device (broadcast or unicast to Zigate) */
@@ -4306,7 +4218,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'time' => time(),
                 'lqi' => $lqi
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         //----------------------------------------------------------------------------------------------------------------
@@ -4595,14 +4507,18 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
             parserLog('debug', $dest.', Type='.$msg, $type);
 
             // Checking if decode is handled by 8002 or still there
-            if ($cmdId == '01') { // Read attribute response
-                $refusedCmd01 = ['0005', '0007'];
+            if ($cmdId == '01') { // 01/Read attribute response
+                $refusedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E001', 'EF00', 'FF66'];
                 if (in_array($clustId, $refusedCmd01)) {
                     parserLog('debug', "  Handled by decode8002");
                     return;
                 }
-            } else { // Report attribute
-
+            } else { // 0A/Report attribute
+                $refusedCmd0A = ['0005', '0007', '0300', '050B', '0B04', 'EF00'];
+                if (in_array($clustId, $refusedCmd0A)) {
+                    parserLog('debug', "  Handled by decode8002");
+                    return;
+                }
             }
 
             // Duplicated message ?
@@ -4655,7 +4571,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'time' => time(),
                     'lqi' => $lqi
                 );
-                $this->msgToAbeille2($msg);
+                msgToAbeille2($msg);
 
                 /* Send to client if connection opened */
                 $toCli = array(
@@ -5287,7 +5203,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'time' => time(),
                     'lqi' => $lqi
                 );
-                $this->msgToAbeille2($toAbeille);
+                msgToAbeille2($toAbeille);
             } else if (isset($data)) {
                 $attributes = [];
                 $attributes[] = array(
@@ -5305,7 +5221,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                     'time' => time(),
                     'lqi' => $lqi
                 );
-                $this->msgToAbeille2($toAbeille);
+                msgToAbeille2($toAbeille);
             }
 
             /* Send to client if connection opened */
@@ -5584,7 +5500,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'time' => time(),
                 'lqi' => $lqi
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         // OTA specific: ZiGate will receive this command when device asks OTA firmware
@@ -5774,7 +5690,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'power' => $power,
                 'time' => time(),
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         function decode8807($dest, $payload, $lqi)
@@ -5801,7 +5717,7 @@ parserLog('debug', '      topic='.$topic.', request='.$request);
                 'power' => $power,
                 'time' => time(),
             );
-            $this->msgToAbeille2($msg);
+            msgToAbeille2($msg);
         }
 
         /* Extended error */

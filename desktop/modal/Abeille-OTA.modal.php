@@ -4,8 +4,8 @@
 
     echo '<script>var js_otaDir = "'.otaDir.'";</script>'; // PHP to JS
     $abQueues = $GLOBALS['abQueues'];
-    echo '<script>var js_queueKeyXmlToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
-    echo '<script>var js_queueCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
     echo '<script>var js_queueCtrlToCmd = "'.$abQueues['ctrlToCmd']['id'].'";</script>'; // PHP to JS
 ?>
     <div class="col-sm-8">
@@ -108,7 +108,7 @@
         payload = "manufCode="+manufCode+"_imgType="+imgType;
         // topic = "Cmd"+eqLogicId+"_cmd-0019";
         // payload = "ep="+ep+"_cmd=00_manufCode="+manufCode+"_imgType="+imgType;
-        xhr.open("GET", url+"?action=sendMsg&queueId="+js_queueKeyXmlToCmd+"&topic="+topic+"&payload="+payload, true);
+        xhr.open("GET", url+"?action=sendMsg&queueId="+js_queueXToCmd+"&topic="+topic+"&payload="+payload, true);
         xhr.send();
         xhr.onreadystatechange = function() { //Appelle une fonction au changement d'état.
           if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
@@ -116,7 +116,7 @@
             topic = "Cmd"+eqLogicId+"_otaImageNotify";
             payload = "ep="+ep+"_manufCode="+manufCode+"_imgType="+imgType;
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", url+"?action=sendMsg&queueId="+js_queueKeyXmlToCmd+"&topic="+topic+"&payload="+payload, true);
+            xhr.open("GET", url+"?action=sendMsg&queueId="+js_queueXToCmd+"&topic="+topic+"&payload="+payload, true);
             xhr.send();
           }
         }
@@ -245,7 +245,7 @@
 
                 /* Asking parser to refresh its firmwares list */
                 var xhr = new XMLHttpRequest();
-                xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueCtrlToParser+"&msg=type:readOtaFirmwares", true);
+                xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueXToParser+"&msg=type:readOtaFirmwares", true);
                 xhr.onload = function () {
                     /* Asking cmd to refresh its firmwares list */
                     var xhr = new XMLHttpRequest();

@@ -115,7 +115,6 @@
         }
 
         $unusedCmds = &$GLOBALS['unusedCmds'];
-
         if (!isset($dev[$devName]['commands'])) {
             $error = newDevError($devName, "WARNING", "No commands defined");
         } else {
@@ -160,7 +159,7 @@
         }
 
         /* Checking supported keywords */
-        $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds'];
+        $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'tuyaEF00'];
         foreach ($dev[$devName] as $key => $value) {
             if (in_array($key, $supportedKeys))
                 continue;

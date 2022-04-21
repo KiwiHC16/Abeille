@@ -1,0 +1,12 @@
+{
+    "attr-Generic": {
+        "comment": "Generic attribute",
+        "comment2": "To be overloaded from device model",
+        "type": "info",
+        "subType": "other",
+        "template": "badge",
+        "logicalId": "toBeFilledByDevice",
+        "unit": "",
+        "genericType": ""
+    }
+}

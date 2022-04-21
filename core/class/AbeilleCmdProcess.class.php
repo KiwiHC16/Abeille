@@ -4342,6 +4342,58 @@
                     return;
                 }
 
+                // Tuya private cluster EF00
+                // Mandatory params: 'addr', 'ep', 'cmd', and 'data'
+                // Optional params: 'dpId'
+                else if ($cmdName == 'cmd-tuyaEF00') {
+                    $required = ['addr', 'ep', 'cmd', 'data']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $cmd        = "0530";
+
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['ep'];
+                    $profId     = "0104";
+                    $clustId    = 'EF00';
+                    $secMode    = "02";
+                    $radius     = "1E";
+
+                    // ZCL header
+                    $fcf        = "11"; // Frame Control Field
+                    $sqn        = $this->genSqn();
+                    $cmdId      = "00";
+
+                    // Tuya fields
+                    // Command sent to device and its format fully depends on device himself.
+                    $dp = tuyaCmd2Dp($Command);
+                    if ($dp === false) {
+                        cmdLog('debug', "    ERROR: Unsupported Tuya cmd '".$Command['cmd']."'");
+                        return;
+                    }
+
+                    $transId = "23"; // Transaction ID ?
+                    $dpId = $dp['id'];
+                    $dpType = $dp['type'];
+                    $dpData = $dp['data'];
+                    cmdLog('debug', '    Using transId='.$transId.', dpId='.$dpId.', dpType='.$dpType.', dpData='.$dpData);
+                    $len = sprintf("%02X", strlen($dpData) / 2);
+                    if (($dpType == "02") && ($len != 4)) {
+                        cmdLog('debug', '    ERROR: Wrong dpData size');
+                        return;
+                    }
+                    $data2 = $fcf.$sqn.$cmdId."00".$transId.$dpId.$dpType."00".$len.$dpData;
+                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
+
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
+                    $data = $data1.$data2;
+
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
+                    return;
+                } // End $cmdName == 'cmd-tuyaEF00'
+
                 else {
                     cmdLog('debug', "    ERROR: Unexpected command '".$cmdName."'");
                     return;

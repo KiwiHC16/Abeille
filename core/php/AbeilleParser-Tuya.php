@@ -6,7 +6,7 @@
     // Decode cluster 0006 received cmd FD
     // Interrupteur sur pile TS0043 3 boutons sensitifs/capacitifs
     // Tuya 1,2,3,4 buttons switch
-    function tuyaDecode0006CmdFD($srcEp, $msg) {
+    function tuyaDecode0006CmdFD($ep, $msg) {
         $attributesN = [];
 
         $value = substr($msg, 0, 2);
@@ -27,7 +27,7 @@
 
         // Generating an event thru '#EP#-click' Jeedom cmd (ex: '01-click' = 'single')
         $attr = array(
-            'name' => $srcEp.'-click',
+            'name' => $ep.'-click',
             'value' => $click,
         );
         $attributesN[] = $attr;
@@ -35,7 +35,7 @@
         // Legacy code to be removed at some point
         // TODO: Replace commands '0006-#EP#-0000' to '#EP#-click' in JSON
         $attr = array(
-            'name' => '0006-'.$srcEp.'-0000',
+            'name' => '0006-'.$ep.'-0000',
             'value' => $value,
         );
         $attributesN[] = $attr;
@@ -44,106 +44,295 @@
     }
 
     // Cluster EF00
-    // See https://github.com/zigbeefordomoticz/wiki/blob/master/en-eng/Technical/Tuya-0xEF00.md
+    // See: https://github.com/zigbeefordomoticz/wiki/blob/master/en-eng/Technical/Tuya-0xEF00.md
     // See: https://www.zigbee2mqtt.io/advanced/support-new-devices/02_support_new_tuya_devices.html#_2-adding-your-device
+    // See: https://developer.tuya.com/en/docs/iot-device-dev/tuya-zigbee-universal-docking-access-standard?id=K9ik6zvofpzql
+
+    function tuyaGetDp($msg) {
+        $tDpId = substr($msg, 0, 2);
+        $tDataType = substr($msg, 2, 2);
+        $tFunc = substr($msg, 4, 2); // What for ?
+        $tLen = substr($msg, 6, 2);
+        $tData = substr($msg, 8, hexdec($tLen) * 2);
+        $m = "Dp=".$tDpId.", DpType=".$tDataType.", Func=".$tFunc.", DpLen=".$tLen;
+
+        $dp = array(
+            'id' => $tDpId,
+            'type' => $tDataType,
+            'dataLen' => $tLen,
+            'data' => $tData,
+            'm' => $m
+        );
+        return $dp;
+    }
+
+    // Receive a datapoint, map it to a specific function an decode it.
+    // Mapping is defined "per device" directly in its model (tuyaEF00/fromDevice).
+    function tuyaDecodeDp($ep, $dp, $mapping) {
+        $dpId = $dp['id'];
+        if (!isset($mapping[$dpId])) {
+            parserLog("debug", "  ".$dp['m'].": Unrecognized DP (data=".$dp['data'].")", "8002");
+            return false;
+        }
+
+        $func = $mapping[$dpId];
+        // TV02 thermostat (TS0601, _TZE200_hue3yfsn) $mapping exemple: array(
+        //     "02" => "rcvThermostat-Mode",
+        //     "08" => "rcvThermostat-WindowDetectionStatus",
+        //     "10" => "rcvThermostat-Setpoint",
+        //     "18" => "rcvThermostat-LocalTemp",
+        //     "23" => "rcvBattery-Percent"
+        // );
+        switch ($func) {
+        case "rcvThermostat-Mode": // Mode (Checked on TV02)
+            // 00=Auto, 01=Manual, 03=Holliday
+            $mode = $dp['data'];
+            if ($mode == "00")
+                $mode = "auto";
+            else if ($mode == "01")
+                $mode = "manual";
+            else if ($mode == "03")
+                $mode = "holliday";
+            else
+                $mode = "?";
+            parserLog("debug", "  ".$dp['m']." => Mode = ".$dp['data']."/".$mode, "8002");
+            $attributeN = array(
+                'name' => $ep.'-mode',
+                'value' => $mode,
+            );
+            break;
+        case "rcvThermostat-WindowDetectionStatus": // Window detection status (Checked on TV02)
+            parserLog("debug", "  ".$dp['m']." => Window detection status = ".$dp['data'], "8002");
+            $attributeN = array(
+                'name' => $ep.'-windowDetectionStatus',
+                'value' => hexdec($dp['data']),
+            );
+            break;
+        case "rcvThermostat-Setpoint": // Set point (Checked on TV02)
+            $setPoint = hexdec($dp['data']) / 10;
+            parserLog("debug", "  ".$dp['m']." => Set point = ".$setPoint." C", "8002");
+            $attributeN = array(
+                'name' => $ep.'-setpoint',
+                'value' => $setPoint,
+            );
+            break;
+        case "rcvThermostat-LocalTemp": // Received local temp (Checked on TV02)
+            $temp = hexdec($dp['data']) / 10;
+            $tempReport = $temp * 100; // Divided by 100 due to model
+            parserLog("debug", "  ".$dp['m']." => Temp = ".$temp." C", "8002");
+            $attributeN = array(
+                'name' => '0402-'.$ep.'-0000',
+                'value' => $tempReport,
+            );
+            break;
+        case "rcvBattery-Percent": // Received battery percent (Checked on TV02)
+            $val = hexdec($dp['data']);
+            parserLog("debug", "  ".$dp['m']." => Battery-percent = ".$val." %", "8002");
+            $attributeN = array(
+                'name' => '0001-'.$ep.'-0021',
+                'value' => $val,
+            );
+            break;
+        case "rcvOnline-Status": // WORK ONGOING !!! Received ON/OFF status (Checked on TV02)
+            $val = hexdec($dp['data']);
+            $st = ($val == 1) ? "ON" : "OFF";
+            parserLog("debug", "  ".$dp['m']." => On/Off=".$val."/".$st, "8002");
+            $attributeN = array(
+                'name' => '0006-'.$ep.'-0000',
+                'value' => $val,
+            );
+            break;
+        // Smart Air Box (TS0601, _TZE200_yvx5lh6k) $mapping exemple: array(
+        //     "02" => "rcvSmartAir-CO2",
+        //     "12" => "rcvSmartAir-Temperature",
+        //     "13" => "rcvSmartAir-Humidity",
+        //     "15" => "rcvSmartAir-VOC",
+        //     "16" => "rcvSmartAir-CH20",
+        // );
+        case "rcvSmartAir-CO2": // CO2 (verified on Smart Air sensor)
+            $val = hexdec($dp['data']);
+            parserLog("debug", "  ".$dp['m']." => CO2=".$val." ppm", "8002");
+            $attributeN = array(
+                'name' => $ep.'-CO2_ppm',
+                'value' => $val,
+            );
+            break;
+        case "rcvSmartAir-Temperature": // Temp (verified on Smart Air sensor)
+            $val = hexdec($dp['data']);
+            $vReport = $val * 10; // Divided by 100 due to model
+            $val = $val / 10;
+            parserLog("debug", "  ".$dp['m']." => Temp=".$val." C", "8002");
+            $attributeN = array(
+                'name' => '0402-'.$ep.'-0000',
+                'value' => $vReport,
+            );
+            break;
+        case "rcvSmartAir-Humidity": // Humidity (verified on Smart Air sensor)
+            $val = hexdec($dp['data']);
+            $vReport = $val * 10; // Divided by 100 due to model
+            $val = $val / 10;
+            parserLog("debug", "  ".$dp['m']." => Humidity=".$val." %", "8002");
+            $attributeN = array(
+                'name' => '0405-'.$ep.'-0000',
+                'value' => $vReport,
+            );
+            break;
+        case "rcvSmartAir-VOC": // VOC (verified on Smart Air sensor)
+            $val = hexdec($dp['data']) / 10;
+            parserLog("debug", "  ".$dp['m']." => VOC=".$val." ppm", "8002");
+            $attributeN = array(
+                'name' => $ep.'-VOC_ppm',
+                'value' => $val,
+            );
+            break;
+        case "rcvSmartAir-CH20": // Formaldéhyde µg/m3 (Méthanal / CH2O_ppm) (verified on Smart Air sensor)
+            $val = hexdec($dp['data']);
+            parserLog("debug", "  ".$dp['m']." => CH2O=".$val." ppm", "8002");
+            $attributeN = array(
+                'name' => $ep.'-CH20_ppm',
+                'value' => $val,
+            );
+            break;
+        default:
+            parserLog("error", "  Unknown Tuya function '".$func."' for dpId=".$dId);
+            $attributeN = false;
+            break;
+        }
+
+        return $attributeN;
+    }
 
     // Decode cluster EF00 received cmd 01
-    function tuyaDecodeEF00Cmd01($srcEp, $msg) {
-        $attributesN = [];
+    // function tuyaDecodeEF00Cmd01($ep, $msg, $mapping) {
+    //     $tSqn = substr($msg, 0, 4); // uint16
+    //     $msg = substr($msg, 4); // Skip tSqn
+    //     parserLog("debug", "  Tuya EF00 specific cmd 01 (tSQN=".$tSqn.")", "8002");
+    //     $attributesN = [];
+    //     while (strlen($msg) != 0) {
+    //         $dp = tuyaGetDp($msg);
 
-        parserLog("debug", "  msg=".$msg, "8002");
-        $tStatus = substr($msg, 0, 2); // uint8
-        $tTId = substr($msg, 2, 2); // uint8
-        $l = strlen($msg);
-        for ($i = 4; $i < $l;) {
-            $tDataPoint = substr($msg, $i, 2);
-            $tDataType = substr($msg, $i + 2, 2);
-            $tFunc = substr($msg, $i + 4, 2);
-            $tLen = substr($msg, $i + 6, 2);
-            parserLog("debug", "  Dp=".$tDataPoint.", DpType=".$tDataType.", Func=".$tFunc.", DpLen=".$tLen, "8002");
+    //         $a = tuyaDecodeDp($ep, $dp, $mapping);
+    //         if ($a !== false)
+    //             $attributesN[] = $a;
 
-            $i += 8 + (hexdec($tLen) * 2);
-        }
+    //         // Move to next DP
+    //         $s = 8 + (hexdec($dp['dataLen']) * 2);
+    //         $msg = substr($msg, $s);
+    //     }
 
-        return $attributesN;
-    } // End tuyaDecodeEF00Cmd01()
+    //     return $attributesN;
+    // } // End tuyaDecodeEF00Cmd01()
 
     // Decode cluster EF00 received cmd 02
-    /* Memo
-        Format:
-        sqn/uint16, dpList
-            dpList = dataPoint/uint8, dataType/uint8, func/uint8, dataLen/uint8, data
-        Opened points:
-        - Is a 'dataPoint' valid for all Tuya devices ? (ex: dp 12 is always temp reporting ?)
-        - What is the purpose of 'function' ?
-        */
-    function tuyaDecodeEF00Cmd02($srcEp, $msg) {
-        $attributesN = [];
+    // function tuyaDecodeEF00Cmd02($ep, $msg, $mapping) {
+    //     $tSqn = substr($msg, 0, 4); // uint16
+    //     $msg = substr($msg, 4); // Skip tSqn
+    //     parserLog("debug", "  Tuya EF00 specific cmd 02 (tSQN=".$tSqn.")", "8002");
+    //     $attributesN = [];
+    //     while (strlen($msg) != 0) {
+    //         $dp = tuyaGetDp($msg);
 
-        parserLog("debug", "  msg=".$msg, "8002");
-        $tSqn = substr($msg, 0, 4); // uint16
-        $l = strlen($msg);
-        for ($i = 4; $i < $l;) {
-            $tDataPoint = substr($msg, $i, 2);
-            $tDataType = substr($msg, $i + 2, 2);
-            $tFunc = substr($msg, $i + 4, 2);
-            $tLen = substr($msg, $i + 6, 2);
-            $m = "Dp=".$tDataPoint.", DpType=".$tDataType.", Func=".$tFunc.", DpLen=".$tLen;
-            $tData = substr($msg, $i + 8, hexdec($tLen) * 2);
-            // Tcharp38: WARNING: The following decode seems to be specific to Smart Air sensor. To be revisited
-            switch($tDataPoint) {
-            case "02":
-                $val = hexdec($tData);
-                parserLog("debug", "  ".$m." => CO2=".$val." ppm", "8002");
-                $attributesN[] = array(
-                    'name' => $srcEp.'-CO2_ppm',
-                    'value' => $val,
-                );
-                break;
-            case "12": // Temp
-                $val = hexdec($tData);
-                $vReport = $val * 10; // Divided by 100 due to model
-                $val = $val / 10;
-                parserLog("debug", "  ".$m." => Temp=".$val." C", "8002");
-                $attributesN[] = array(
-                    'name' => '0402-'.$srcEp.'-0000',
-                    'value' => $vReport,
-                );
-                break;
-            case "13": // Humidity
-                $val = hexdec($tData);
-                $vReport = $val * 10; // Divided by 100 due to model
-                $val = $val / 10;
-                parserLog("debug", "  ".$m." => Humidity=".$val." %", "8002");
-                $attributesN[] = array(
-                    'name' => '0405-'.$srcEp.'-0000',
-                    'value' => $vReport,
-                );
-                break;
-            case "15": // VOC
-                $val = hexdec($tData) / 10;
-                parserLog("debug", "  ".$m." => VOC=".$val." ppm", "8002");
-                $attributesN[] = array(
-                    'name' => $srcEp.'-VOC_ppm',
-                    'value' => $val,
-                );
-                break;
-            case "16": // Formaldéhyde µg/m3 (Méthanal / CH2O_ppm)
-                $val = hexdec($tData);
-                parserLog("debug", "  ".$m." => CH2O=".$val." ppm", "8002");
-                $attributesN[] = array(
-                    'name' => $srcEp.'-CH20_ppm',
-                    'value' => $val,
-                );
-                break;
-            default:
-                parserLog('debug', "  ".$m." => Unsupported DP ".$tDataPoint);
-                break;
-            }
-            $i += 8 + (hexdec($tLen) * 2);
+    //         $a = tuyaDecodeDp($ep, $dp, $mapping);
+    //         if ($a !== false)
+    //             $attributesN[] = $a;
+
+    //         // Move to next DP
+    //         $s = 8 + (hexdec($dp['dataLen']) * 2);
+    //         $msg = substr($msg, $s);
+    //     }
+
+    //     return $attributesN;
+    // } // End tuyaDecodeEF00Cmd02()
+
+    // Decode cluster EF00 received cmd 24 => Time synchronization
+    function tuyaDecodeEF00Cmd24($ep, $msg) {
+        // def send_timesynchronisation(self, NwkId, srcEp, ClusterID, dstNWKID, dstEP, serial_number):
+
+        //     # Request: cmd: 0x24  Data: 0x0008
+        //     # 0008 600d8029 600d8e39
+        //     # Request: cmd: 0x24 Data: 0x0053
+        //     # 0053 60e9ba1f  60e9d63f
+        //     if NwkId not in self.ListOfDevices:
+        //         return
+        //     sqn = get_and_inc_SQN(self, NwkId)
+
+        //     field1 = "0d"
+        //     field2 = "80"
+        //     field3 = "29"
+
+        //     EPOCTime = datetime(1970, 1, 1)
+        //     now = datetime.utcnow()
+        //     UTCTime_in_sec = int((now - EPOCTime).total_seconds())
+        //     LOCALtime_in_sec = int((utc_to_local(now) - EPOCTime).total_seconds())
+
+        //     utctime = "%08x" % UTCTime_in_sec
+        //     localtime = "%08x" % LOCALtime_in_sec
+        //     self.log.logging(
+        //         "Tuya",
+        //         "Debug",
+        //         "send_timesynchronisation - %s/%s UTC: %s Local: %s" % (NwkId, srcEp, UTCTime_in_sec, LOCALtime_in_sec),
+        //     )
+
+        //     payload = "11" + sqn + "24" + serial_number + utctime + localtime
+        //     raw_APS_request(self, NwkId, srcEp, "ef00", "0104", payload, zigate_ep=ZIGATE_EP, ackIsDisabled=False)
+        //     self.log.logging("Tuya", "Debug", "send_timesynchronisation - %s/%s " % (NwkId, srcEp))
+    }
+
+    function tuyaDecodeEF00Cmd($net, $addr, $ep, $cmdId, $msg) {
+        $tCmds = array(
+            "00" => array("name" => "TY_DATA_REQUEST", "desc" => "Gateway-side data request"),
+            "01" => array("name" => "TY_DATA_RESPONE", "desc" => "Reply to MCU-side data request"),
+            "02" => array("name" => "TY_DATA_REPORT", "desc" => "MCU-side data active upload (bidirectional)"),
+            "03" => array("name" => "TY_DATA_QUERY", "desc" => "GW send, trigger MCU side to report all current information, no zcl payload"),
+            "10" => array("name" => "TUYA_MCU_VERSION_REQ", "desc" => "Gw->Zigbee gateway query MCU version"),
+            "11" => array("name" => "TUYA_MCU_VERSION_RSP", "desc" => "Zigbee->Gw MCU return version or actively report version"),
+            "12" => array("name" => "TUYA_MCU_OTA_NOTIFY", "desc" => "Gw->Zigbee gateway notifies MCU of upgrade"),
+            "13" => array("name" => "TUYA_OTA_BLOCK_DATA_REQ", "desc" => "Zigbee->Gw requests an upgrade package for the MCU"),
+            "14" => array("name" => "TUYA_OTA_BLOCK_DATA_RSP", "desc" => "Gw->Zigbee gateway returns the requested upgrade package"),
+            "15" => array("name" => "TUYA_MCU_OTA_RESULT", "desc" => "Zigbee->Gw returns the upgrade result for the mcu"),
+            "24" => array("name" => "TUYA_MCU_SYNC_TIME", "desc" => "Time synchronization (bidirectional)"),
+        );
+        if (($cmdId != "01") && ($cmdId != "02")) {
+            if (isset($tCmds[$cmdId]))
+                $cmdName = $tCmds[$cmdId]['name'];
+            else
+                $cmdName = $cmdId."/?";
+            parserLog("debug", "  Unsupported Tuya cmd ".$cmdName." => ignored", "8002");
+            return [];
         }
+
+        $eq = &getDevice($net, $addr); // By ref
+        // parserLog('debug', 'eq='.json_encode($eq));
+        if (!isset($eq['tuyaEF00']) || !isset($eq['tuyaEF00']['fromDevice'])) {
+            parserLog('debug', "  Undefined Tuya mapping => ignoring");
+            return [];
+        }
+        $mapping = $eq['tuyaEF00']['fromDevice'];
+        parserLog('debug', '  Tuya mapping='.json_encode($mapping));
+
+        $attributesN = [];
+        if (($cmdId == "01") || ($cmdId == "02")) {
+            $tSqn = substr($msg, 0, 4); // uint16
+            $msg = substr($msg, 4); // Skip tSqn
+            parserLog("debug", "  Tuya EF00 specific cmd ".$cmdId." (tSQN=".$tSqn.")", "8002");
+            while (strlen($msg) != 0) {
+                $dp = tuyaGetDp($msg);
+
+                $a = tuyaDecodeDp($ep, $dp, $mapping);
+                if ($a !== false)
+                    $attributesN[] = $a;
+                else { // Unknown DP
+                    if (!isset($eq['tuyaEF00']['unknown']) || !isset($eq['tuyaEF00'][$dp['id']]))
+                        $eq['tuyaEF00']['unknown'][$dp['id']] = $dp;
+                }
+
+                // Move to next DP
+                $s = 8 + (hexdec($dp['dataLen']) * 2);
+                $msg = substr($msg, $s);
+            }
+        }
+// TODO: How to store unknown DP in discovery.json ?
 
         return $attributesN;
     }
-
 ?>

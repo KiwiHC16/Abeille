@@ -419,13 +419,15 @@
                                 $newCmd[$cmd1]['isVisible'] = $value;
     // log::add('Abeille', 'debug', 'LA value='.$value.', newCmd='.json_encode($newCmd));
                             }
-                            if (isset($cmd2['nextLine'])) {
-                                $value = $cmd2['nextLine'];
-                                if ($value === "after")
-                                    $newCmd[$cmd1]['display']['forceReturnLineAfter'] = 1;
-                                else if ($value === "before")
-                                    $newCmd[$cmd1]['display']['forceReturnLineBefore'] = 1;
-                            }
+                            if (isset($cmd2['nextLine']))
+                                $newCmd[$cmd1]['nextLine'] = $cmd2['nextLine'];
+                            // {
+                            //     $value = $cmd2['nextLine'];
+                            //     if ($value === "after")
+                            //         $newCmd[$cmd1]['display']['forceReturnLineAfter'] = 1;
+                            //     else if ($value === "before")
+                            //         $newCmd[$cmd1]['display']['forceReturnLineBefore'] = 1;
+                            // }
                             if (isset($cmd2['template']))
                                 $newCmd[$cmd1]['template'] = $cmd2['template'];
                             if (isset($cmd2['subType']))
@@ -652,39 +654,142 @@
         }
 
         /**
+         * return missing daemon comparing active zigate and running daemons
+         *
+         * @param array $parameters
+         * @param $running
+         *
+         * @return string of comma separated missing daemon
+         */
+        public
+        static function getMissingDaemons(array $parameters, $running): string
+        {
+            $found = self::diffExpectedRunningDaemons($parameters, $running);
+            $missing = "";
+            foreach ($found as $daemon => $value) {
+                if ($value == 0) {
+                    if ($missing != "")
+                        $missing .= ", ";
+                    $missing .= $daemon;
+                    // AbeilleTools::sendMessageToRuche($daemon, "processus manquant: $daemon");
+                }
+            }
+            if (strlen($missing) > 0) {
+                log::add('Abeille', 'debug', '  '.__CLASS__.':'.__FUNCTION__."(): Missing=".$missing);
+                return $missing;
+            } else {
+                return "";
+            }
+        }
+
+        /**
          * Check if any missing daemon and restart missing ones.
          *
          * @param $parameters
          * @param $running
          * @return mixed
          */
-        public static function checkAllDaemons($parameters, $running)
+        // public static function checkAllDaemons($parameters, $running)
+        // {
+        //     //remove all message before each check
+        //     AbeilleTools::clearSystemMessage($parameters,'all');
+
+        //     $status['state'] = "ok";
+        //     if (AbeilleTools::isMissingDaemons($parameters, $running) == true) {
+        //         $status['state'] = "nok";
+        //         AbeilleTools::restartMissingDaemons($parameters, $running);
+
+        //         //After restart daemons, if still are missing, then no hope.
+        //         if (AbeilleTools::isMissingDaemons($parameters, $running) == false) {
+        //             $status['state'] = "ok"; // Finally missing ones restarted properly
+        //         } else {
+        //             /* There are still some missing daemons */
+        //             $daemons = AbeilleTools::getMissingDaemons($parameters, $running);
+        //             if (strlen($daemons) == 0) {
+        //                 /* Ouahhh.. not normal */
+        //                 AbeilleTools::clearSystemMessage($parameters, 'all');
+        //                 $status['state'] = "ok";
+        //             } else {
+        //                 log::add('Abeille', 'debug', '  '.__CLASS__.':'.__FUNCTION__.'(): Missing daemons '.$daemons);
+        //                 // AbeilleTools::sendMessageToRuche($daemons, 'Démons manquants: '.$daemons);
+        //             }
+        //         }
+        //     }
+
+        //     log::add('Abeille', 'debug', "checkAllDaemons() => ".$status['state']);
+        //     return $status;
+        // }
+
+        /**
+         * Check if any missing daemon and restart missing ones.
+         *
+         * @param $config
+         * @return array
+         */
+        public static function checkAllDaemons2($config)
         {
+            log::add('Abeille', 'debug', __FUNCTION__.'()');
+
             //remove all message before each check
-            AbeilleTools::clearSystemMessage($parameters,'all');
+            // AbeilleTools::clearSystemMessage($config,'all');
 
-            $status['state'] = "ok";
-            if (AbeilleTools::isMissingDaemons($parameters, $running) == true) {
-                $status['state'] = "nok";
-                AbeilleTools::restartMissingDaemons($parameters, $running);
+            /* status = array(
+                'state' = 'ok'
+                'running' = [],
+                    running[daemonShortName] = array (
+                        'pid'
+                        'cmd'
+                    )
+             */
+            $status = array(
+                'state' => "ok",
+                'running' => [],
+            );
 
-                //After restart daemons, if still are missing, then no hope.
-                if (AbeilleTools::isMissingDaemons($parameters, $running) == false) {
-                    $status['state'] = "ok"; // Finally missing ones restarted properly
-                } else {
-                    /* There are still some missing daemons */
-                    $daemons = AbeilleTools::getMissingDaemons($parameters, $running);
-                    if (strlen($daemons) == 0) {
-                        /* Ouahhh.. not normal */
-                        AbeilleTools::clearSystemMessage($parameters, 'all');
-                        $status['state'] = "ok";
-                    } else {
-                        log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.': missing daemons '.$daemons);
-                        AbeilleTools::sendMessageToRuche($daemons, 'Démons manquants: '.$daemons);
-                    }
+            // Expected daemons
+            $nbZigates = 0;
+            $expected = [];
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                if ($config['AbeilleActiver'.$zgId] == "N")
+                    continue;
+
+                $nbZigates++;
+                $expected[] = 'SerialRead'.$zgId;
+
+                // If type 'WIFI', socat daemon required too
+                if ($config['AbeilleType'.$zgId] == "WIFI") {
+                    $expected[] = 'Socat'.$zgId;
                 }
             }
+            if ($nbZigates == 0) {
+                log::add('Abeille', 'debug', '  NO active zigate');
+                return $status;
+            }
 
+            $expected[] = 'Parser';
+            $expected[] = 'Cmd';
+log::add('Abeille', 'debug', '  expected='.json_encode($expected));
+
+            // Running daemons
+            $running = AbeilleTools::getRunningDaemons2();
+log::add('Abeille', 'debug', '  running='.json_encode($running));
+
+            // Restart missing ones
+            $restart = '';
+            foreach ($expected as $daemonName) {
+                if (isset($running['daemons'][$daemonName])) {
+                    // This daemon is running
+                } else {
+                    if ($restart != '')
+                        $restart .= ' ';
+                    $restart .= $daemonName;
+                }
+            }
+            if ($restart != '')
+                AbeilleTools::restartDaemons($config, $restart);
+
+            $status['running'] = $running;
+    // log::add('Abeille', 'debug', '  status='.json_encode($status));
             log::add('Abeille', 'debug', "checkAllDaemons() => ".$status['state']);
             return $status;
         }
@@ -696,7 +801,7 @@
          */
         public static function getRunningDaemons(): array
         {
-            exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat|Interrogate).php /'", $running);
+            exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat).php /'", $running);
             return $running;
         }
 
@@ -707,41 +812,40 @@
          */
         public static function getRunningDaemons2(): array
         {
-            exec("pgrep -a php | grep Abeille", $processes);
             $daemons = [];
-            $running = 0;
+            $runBits = 0;
+            exec("pgrep -a php | grep Abeille", $processes);
             foreach ($processes as $line) {
                 $lineArr = explode(" ", $line);
                 if (strstr($line, "AbeilleCmd") != false) {
                     $shortName = "Cmd";
-                    $running |= daemonCmd;
+                    $runBits |= daemonCmd;
                 } else if (strstr($line, "AbeilleParser") !== false) {
                     $shortName = "Parser";
-                    $running |= daemonParser;
+                    $runBits |= daemonParser;
                 } else if (strstr($line, "AbeilleMonitor") !== false) {
                     $shortName = "Monitor";
-                    $running |= daemonMonitor;
+                    $runBits |= daemonMonitor;
                 } else if (strstr($line, "AbeilleSerialRead") !== false) {
                     $net = $lineArr[3]; // Ex 'Abeille1'
                     $zgId = substr($net, 7);
                     $shortName = "SerialRead".$zgId;
-                    $running |= constant("daemonSerialRead".$zgId);
+                    $runBits |= constant("daemonSerialRead".$zgId);
                 } else if (strstr($line, "AbeilleSocat") !== false) {
                     $net = $lineArr[3]; // Ex '/tmp/zigateWifiX'
                     $zgId = substr($net, strlen(wifiLink));
                     $shortName = "Socat".$zgId;
-                    $running |= constant("daemonSocat".$zgId);
+                    $runBits |= constant("daemonSocat".$zgId);
                 } else
                     $shortName = "Unknown";
                 $d = array(
                     'pid' => $lineArr[0],
                     'cmd' => substr($line, strpos($line, " ")),
-                    'shortName' => $shortName
                 );
-                $daemons[] = $d;
+                $daemons[$shortName] = $d;
             }
             $return = array(
-                'running' => $running, // 1 bit per running daemon
+                'runBits' => $runBits, // 1 bit per running daemon
                 'daemons' => $daemons, // Detail on each daemon
             );
             return $return;
@@ -821,57 +925,58 @@
          * @param $running
          * return true if any missing daemons
          */
-        public
-        static function isMissingDaemons($parameters, $running): bool
-        {
-            //no cron, no start requested
-            // if (AbeilleTools::isAbeilleCronRunning() == false) {
-            //     return false;
-            // }
+        // public
+        // static function isMissingDaemons($parameters, $running): bool
+        // {
+        //     //no cron, no start requested
+        //     // if (AbeilleTools::isAbeilleCronRunning() == false) {
+        //     //     return false;
+        //     // }
 
-            $found = self::diffExpectedRunningDaemons($parameters, $running);
-            $nbProcessExpected = $found['expected'];
-            array_pop($found);
-            $result = $nbProcessExpected - array_sum($found);
-            // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.'::'.__FUNCTION__.':'.__LINE__.': '.($result == 0 ? 'false' : 'true').',   found: '.json_encode($found));
-            //log::add('Abeille', 'Info', 'Tools:isMissingDaemons:'.($result==1?"Yes":"No"));
-            if ($result > 1) {
-                log::add('Abeille', 'Warning', 'Abeille: il manque au moins un processus pour gérer la zigate');
-                // message::add("Abeille", "Danger,  il manque au moins un processus pour gérer la zigate");
-            }
+        //     $found = self::diffExpectedRunningDaemons($parameters, $running);
+        //     $nbProcessExpected = $found['expected'];
+        //     array_pop($found);
+        //     $result = $nbProcessExpected - array_sum($found);
+        //     // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.'::'.__FUNCTION__.':'.__LINE__.': '.($result == 0 ? 'false' : 'true').',   found: '.json_encode($found));
+        //     //log::add('Abeille', 'Info', 'Tools:isMissingDaemons:'.($result==1?"Yes":"No"));
+        //     if ($result > 1) {
+        //         log::add('Abeille', 'Warning', 'Abeille: il manque au moins un processus pour gérer la zigate');
+        //         // message::add("Abeille", "Danger,  il manque au moins un processus pour gérer la zigate");
+        //     }
 
-            return $result > 0;
-        }
+        //     return $result > 0;
+        // }
 
         /**
          * @param array $parameters
          * @param $running
          */
-        public
-        static function restartMissingDaemons(array $parameters, $running)
-        {
-            $lastLaunch = config::byKey('lastDeamonLaunchTime', 'Abeille', '');
-            $found = self::diffExpectedRunningDaemons($parameters, $running);
-            array_splice($found, -1, 1);
-            //get socat first
-            arsort($found);
-            $found = array_reverse($found);
-            // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' : lastLaunch: '.$lastLaunch.', found:'.json_encode($found));
+        // public
+        // static function restartMissingDaemons(array $parameters, $running)
+        // {
+        //     $lastLaunch = config::byKey('lastDeamonLaunchTime', 'Abeille', '');
+        //     $found = self::diffExpectedRunningDaemons($parameters, $running);
+        //     array_splice($found, -1, 1);
+        //     //get socat first
+        //     arsort($found);
+        //     $found = array_reverse($found);
+        //     // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.' : lastLaunch: '.$lastLaunch.', found:'.json_encode($found));
 
-            $missing = "";
-            foreach ($found as $daemon => $value) {
-                if ($value == 0) {
-                    AbeilleTools::sendMessageToRuche($daemon,'relance de '.$daemon);
-                    $missing .= ", $daemon";
-                    $cmd = self::getStartCommand($parameters, $daemon);
-                    // log::add('Abeille', 'info', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.': restarting Abeille'.$daemon. '/'. $value);
-                    // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__ .': restarting  XXXXX  Abeille XXXXX'.$daemon.': '.$cmd);
-                    exec($cmd.' &');
-                }
+        //     // $missing = "";
+        //     foreach ($found as $daemon => $value) {
+        //         if ($value == 0) {
+        //             // AbeilleTools::sendMessageToRuche($daemon,'relance de '.$daemon);
+        //             log::add('Abeille', 'debug', "Restarting ".$daemon);
+        //             // $missing .= ", $daemon";
+        //             $cmd = self::getStartCommand($parameters, $daemon);
+        //             // log::add('Abeille', 'info', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.': restarting Abeille'.$daemon. '/'. $value);
+        //             // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__ .': restarting  XXXXX  Abeille XXXXX'.$daemon.': '.$cmd);
+        //             exec($cmd.' &');
+        //         }
 
-            }
-            // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.': missing daemons:'.$missing);
-        }
+        //     }
+        //     // log::add('Abeille', 'debug', "Process Monitoring: ".__CLASS__.':'.__FUNCTION__.':'.__LINE__.': missing daemons:'.$missing);
+        // }
 
         /**
          * Stop given daemons list or all daemons.
@@ -879,7 +984,7 @@
          * @param string $daemons Deamons list to stop, space separated. Empty string = ALL
          */
         public static function stopDaemons($daemons = "") {
-            log::add('Abeille', 'debug', "stopDaemons($daemons)");
+            log::add('Abeille', 'debug', "  stopDaemons($daemons)");
             $cmd1 = $cmd2 = "";
             if ($daemons != "") {
                 $daemonsArr = explode(" ", $daemons);
@@ -915,7 +1020,7 @@
 
             $nbOfDaemons = sizeof($running);
             if ($nbOfDaemons != 0) {
-                log::add('Abeille', 'debug', 'stopDaemons(): Stopping '.$nbOfDaemons.' daemons');
+                log::add('Abeille', 'debug', '  stopDaemons(): Stopping '.$nbOfDaemons.' daemons');
                 for ($i = 0; $i < $nbOfDaemons; $i++) {
     // log::add('Abeille', 'debug', 'deamon_stopDaemonsstop(): running[i]='.$running[$i]);
                     $arr = explode(" ", $running[$i]);
@@ -937,8 +1042,8 @@
     // log::add('Abeille', 'debug', 'stopDaemons(): LA'.$nbOfDaemons."=".json_encode($running));
                 }
                 if ($nbOfDaemons != 0) {
-                    log::add('Abeille', 'debug', 'stopDaemons(): '.$nbOfDaemons.' daemons still active after '.stopTimeout.' ms');
-                    log::add('Abeille', 'debug', 'stopDaemons(): '.json_encode($running));
+                    log::add('Abeille', 'debug', '  stopDaemons(): '.$nbOfDaemons.' daemons still active after '.stopTimeout.' ms');
+                    log::add('Abeille', 'debug', '  stopDaemons(): '.json_encode($running));
                     for ($i = 0; $i < $nbOfDaemons; $i++) {
                         $arr = explode(" ", $running[$i]);
                         $pid = $arr[0];
@@ -946,7 +1051,7 @@
                     }
                 }
             } else
-                log::add('Abeille', 'debug', 'stopDaemons(): No active daemon');
+                log::add('Abeille', 'debug', '  stopDaemons(): No active daemon');
 
             return true;
         }
@@ -983,12 +1088,12 @@
                 if ($config['monitor'] !== false)
                     $daemons .= " AbeilleMonitor";
             }
-            log::add('Abeille', 'debug', "startDaemons(): ".$daemons);
+            log::add('Abeille', 'debug', "  startDaemons(): ".$daemons);
             $daemonsArr = explode(" ", $daemons);
             foreach ($daemonsArr as $daemon) {
                 $cmd = self::getStartCommand($config, $daemon);
                 if ($cmd == "")
-                    log::add('Abeille', 'debug', "startDaemons(): ERROR, empty cmd for '".$daemon."'");
+                    log::add('Abeille', 'debug', "  startDaemons(): ERROR, empty cmd for '".$daemon."'");
                 else
                     exec($cmd.' &');
             }
@@ -1000,11 +1105,11 @@
          * Ex: $daemons = "AbeilleMonitor AbeilleCmd AbeilleParser"
          * @param string $daemons Deamons list to restart, space separated
          */
-        public static function restartDaemons($parameters, $daemons = "") {
+        public static function restartDaemons($config, $daemons = "") {
             if (AbeilleTools::stopDaemons($daemons) == false)
                 return false; // Error
 
-            AbeilleTools::startDaemons($parameters, $daemons);
+            AbeilleTools::startDaemons($config, $daemons);
 
             return true; // ok
         }
@@ -1015,7 +1120,7 @@
          * @param $daemonFile (ex: 'cmd', 'parser', serialread1'...)
          * @return String
          */
-        public static function getStartCommand($param, $daemonFile): string
+        public static function getStartCommand($config, $daemonFile): string
         {
             $nohup = "/usr/bin/nohup";
             $php = "/usr/bin/php";
@@ -1042,15 +1147,15 @@
             case 'serialread':
             case 'abeilleserialread':
                 $daemonPhp = "AbeilleSerialRead.php";
-                $daemonParams = 'Abeille'.$nb.' '.$param['AbeilleSerialPort'.$nb].' ';
+                $daemonParams = 'Abeille'.$nb.' '.$config['AbeilleSerialPort'.$nb].' ';
                 $daemonLog = $logLevel." >>".$logDir."AbeilleSerialRead".$nb.".log 2>&1";
-                exec(system::getCmdSudo().'chmod 777 '.$param['AbeilleSerialPort'.$nb].' > /dev/null 2>&1');
+                exec(system::getCmdSudo().'chmod 777 '.$config['AbeilleSerialPort'.$nb].' > /dev/null 2>&1');
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
                 break;
             case 'socat':
             case 'abeillesocat':
                 $daemonPhp = "AbeilleSocat.php";
-                $daemonParams = $param['AbeilleSerialPort'.$nb].' '.$logLevel.' '.$param['IpWifiZigate'.$nb];
+                $daemonParams = $config['AbeilleSerialPort'.$nb].' '.$logLevel.' '.$config['IpWifiZigate'.$nb];
                 $daemonLog = " >>".$logDir."AbeilleSocat".$nb.'.log 2>&1';
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
                 break;
@@ -1132,33 +1237,6 @@
 
             } else {
                 log::add('Abeille', 'debug', __CLASS__.'::'.__FUNCTION__.' L:'.__LINE__.'Zigate Wifi active trouvée, socat trouvé');
-            }
-        }
-
-        /**
-         * return missing daemon comparing active zigate and running daemons
-         *
-         * @param array $parameters
-         * @param $running
-         *
-         * @return string of comma separated missing daemon
-         */
-        public
-        static function getMissingDaemons(array $parameters, $running): string
-        {
-            $found = self::diffExpectedRunningDaemons($parameters, $running);
-            $missing = "";
-            foreach ($found as $daemon => $value) {
-                if ($value == 0) {
-                    $missing .= ", $daemon";
-                    AbeilleTools::sendMessageToRuche($daemon, "processus manquant: $daemon");
-                    log::add('Abeille', 'debug', __CLASS__.':'.__FUNCTION__.':'.__LINE__.': messageToRuche: '.$daemon.' manquant');
-                }
-            }
-            if (strlen($missing) > 1) {
-                return substr($missing, 2);
-            } else {
-                return "";
             }
         }
 

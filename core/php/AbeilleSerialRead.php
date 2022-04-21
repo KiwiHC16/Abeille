@@ -30,10 +30,11 @@
     /* Tcharp38: Ouahhh. How can it handle multi-zigate ? Who is
        dealing with concurrent msg_send() on the same queue ? */
     function msgToParser($msgToSend) {
-        global $queueSerialToParser, $queueMax;
+        global $queueXToParser;
         $jsonMsg = json_encode($msgToSend);
-        if (msg_send($queueSerialToParser, 1, $jsonMsg, false, false, $errCode) == false) {
-            logMessage('debug', 'msg_send(queueSerialToParser): ERROR '.$errCode);
+        // Note: '@' to suppress PHP warning message.
+        if (@msg_send($queueXToParser, 1, $jsonMsg, false, false, $errCode) == false) {
+            logMessage('debug', 'msg_send(queueXToParser): ERROR '.$errCode);
             logMessage('debug', '  msg='.json_encode($msgToSend));
             return false;
         }
@@ -133,18 +134,17 @@
     // if (pcntl_signal(SIGTERM, "shutdown", false) != true)
     //     logMessage("error", "Erreur pcntl_signal()");
 
-    // $queueSerialToParser = msg_get_queue(queueSerialToParser);
-    $queueSerialToParser = msg_get_queue($abQueues["serialToParser"]["id"]);
-    $queueMax = $abQueues["serialToParser"]["max"];
+    $queueXToParser = msg_get_queue($abQueues["xToParser"]["id"]);
+    $queueMax = $abQueues["xToParser"]["max"];
 
     /* Inform others that i'm ready to process zigate messages */
-    $msgToSend = array(
-        'src' => 'serialread',
-        'net' => $net,
-        'type' => 'status',
-        'status' => 'ready',
-    );
-    msgToParser($msgToSend);
+    // $msgToSend = array(
+    //     'src' => 'serialRead',
+    //     'net' => $net,
+    //     'type' => 'status',
+    //     'status' => 'ready',
+    // );
+    // msgToParser($msgToSend);
 
     $transcode = false;
     $frame = ""; // Transcoded message from Zigate
@@ -205,9 +205,8 @@
                     logMessage('debug', 'ERROR: CRC: got=0x'.dechex($ccrc).', exp=0x'.dechex($ecrc).', msg='.substr($frame, 0, 12).'...'.substr($frame, -2, 2));
                 } else {
                     $msgToSend = array(
-                        'src' => 'serialread',
+                        'type' => 'serialRead',
                         'net' => $net,
-                        'type' => 'zigatemessage',
                         'msg' => $frame
                     );
                     msgToParser($msgToSend);

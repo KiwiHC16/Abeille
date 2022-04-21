@@ -5,7 +5,7 @@
         "comment3": "Derived from obsolete 'temperature.json'",
         "name": "MeasuredValue",
         "subType": "numeric",
-        "template": "tempIMG",
+        "template": "badge",
         "configuration": {
             "calculValueOffset": "#value#\/100",
             "historizeRound": "1"

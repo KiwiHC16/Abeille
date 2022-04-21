@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220421-BETA-1
+-------------
+
 - Interne: Version DB, date = 20220407.
 - Analyse/santé: Correction affichage ports utilisés.
 - Interne: Nettoyage fonctions obsolètes.

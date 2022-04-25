@@ -202,7 +202,7 @@
         // Not found. If IEEE is given let's check if short addr has changed.
         if ($ieee) {
             foreach ($GLOBALS['eqList'][$net] as $oldAddr => $eq) {
-                if ($eq['ieee'] !== $ieee)
+                if (!isset($eq['ieee']) || ($eq['ieee'] !== $ieee))
                     continue;
 
                 $GLOBALS['eqList'][$net][$addr] = $eq;
@@ -358,15 +358,17 @@
             list($net, $addr) = explode("/", $eqLogicId);
 
             // $sig = $eqLogic->getConfiguration('ab::signature', '');
-            $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
+            $jsonId = $eqModel ? $eqModel['id'] : '';
             if ($jsonId != '')
                 $status = 'idle';
             else
                 $status = 'identifying';
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', null);
             $eq = array(
                 'ieee' => $eqLogic->getConfiguration('IEEE', null),
-                'capa' => $eqLogic->getConfiguration('MACCapa', ''),
-                'rxOnWhenIdle' => $eqLogic->getConfiguration('RxOnWhenIdle', null),
+                'capa' => $zigbee ? $zigbee['macCapa'] : '',
+                'rxOnWhenIdle' => $zigbee ? $zigbee['rxOnWhenIdle'] : null,
                 'rejoin' => '', // Rejoin info from device announce
                 'status' => $status, // identifying, configuring, discovering, idle
                 'time' => time(),

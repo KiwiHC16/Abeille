@@ -18,8 +18,7 @@
     <label class="col-sm-3 control-label">{{Type}}</label>
     <div class="col-sm-3">
         <?php
-            $eqModel = $eqLogic->getConfiguration('ab::eqModel', '');
-            if ($eqModel != '')
+            if (isset($eqModel['type']) && ($eqModel['type'] != ''))
                 $type = $eqModel['type'];
             else
                 $type = '';

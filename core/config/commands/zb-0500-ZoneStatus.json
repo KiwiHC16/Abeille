@@ -1,10 +1,11 @@
 {
     "zb-0500-ZoneStatus": {
         "comment": "0500/IAS Zone cluster, attrib 0002/ZoneStatus, type map16/0x19",
-        "name": "ZoneStatus",
         "subType": "numeric",
         "configuration": [],
         "type": "info",
-        "logicalId": "0500-#EP#-0002"
+        "logicalId": "0500-#EP#-0002",
+        "trigOut": "#EP#-0500-0002-alarm1",
+        "trigOutOffset": "#value#&1"
     }
 }

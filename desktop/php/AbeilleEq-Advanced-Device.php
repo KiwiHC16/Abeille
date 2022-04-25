@@ -28,19 +28,24 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">Identifiant du modèle</label>
     <div class="col-sm-5">
-        <!-- <span class="eqLogicAttr" data-l1key="configuration" data-l2key="ab::jsonId" title="Nom du fichier de config JSON utilisé"></span> -->
         <?php
-            $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
+            if (isset($eqModel['id']))
+                $jsonId = $eqModel['id'];
+            else
+                $jsonId = '';
+            if (isset($eqModel['id']) && ($eqModel['location'] != ''))
+                $jsonLocation = $eqModel['location'];
+            else
+                $jsonLocation = 'Abeille';
+
             echo '<input readonly style="width: 200px" title="{{Nom du modèle utilisé}}" value="'.$jsonId.'" />';
             echo '    Source:';
-            $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
             if (($jsonLocation == '') || ($jsonLocation == "Abeille"))
                 $title = "Le modèle utilisé est celui fourni par Abeille";
             else
                 $title = "Le modèle utilisé est un modèle local/custom";
             echo '<input readonly style="width:86px" title="{{'.$title.'}}" value="'.$jsonLocation.'" />';
 
-            // $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
             if ($jsonId == "defaultUnknown") {
                 if ($sig) {
                     $id1 = $sig['modelId'].'_'.$sig['manufId'];
@@ -58,10 +63,8 @@
                     }
                 }
             } else {
-                $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
                 if ($jsonLocation != 'Abeille') {
                     echo '<span style="background-color:red;color:black" title="La configuration vient d\'un fichier local (core/config/devices_local)"> ATTENTION: Issu d\'un modèle local </span>';
-                    $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
                     if (file_exists(__DIR__."/../../core/config/devices_local/".$jsonId."/".$jsonId.".json"))
                         echo '<a class="btn btn-warning" onclick="removeLocalJSON(\''.$jsonId.'\')" title="Supprime la version locale du fichier de config JSON">Supprimer version locale</a>';
                 }

@@ -106,8 +106,15 @@
             logDebug("CliToQueue: ERROR: Unkown device with ID ".$eqId);
             return; // ERROR
         }
-        $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
-        $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
+        $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+        if (isset($eqModel['id']) && ($eqModel['id'] != ''))
+            $jsonId = $eqModel['id'];
+        else
+            $jsonId = '';
+        if (isset($eqModel['location']) && ($eqModel['location'] != '') && ($eqModel['location'] != null))
+            $jsonLocation = $eqModel['location'];
+        else
+            $jsonLocation = 'Abeille';
         if ($jsonId == '') {
             logDebug("CliToQueue: ERROR: jsonId empty");
             return; // ERROR
@@ -141,8 +148,10 @@
             }
             if (($jsonId2 != $jsonId) || ($jsonLoc2 != $jsonLocation)) {
                 if (isset($dbgTcharp38)) logDebug("CliToQueue: New jsonId: ".$jsonId2."/".$jsonLoc2);
-                $eqLogic->setConfiguration('ab::jsonId', $jsonId2);
-                $eqLogic->setConfiguration('ab::jsonLocation', $jsonLoc2);
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                $eqModel['id'] = $jsonId2;
+                $eqModel['location'] = $jsonLoc2;
+                $eqLogic->setConfiguration('ab::eqModel', $eqModel);
                 $eqLogic->save();
                 $jsonId = $jsonId2;
                 $jsonLocation = $jsonLoc2;

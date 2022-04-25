@@ -55,7 +55,8 @@
         $eq['id'] = $eqId;
         $eq['addr'] = $eqAddr;
         $eq['mainEp'] = $eqLogic->getConfiguration('mainEP', '');
-        $eq['jsonId'] = $eqLogic->getConfiguration('ab::jsonId', '');
+        $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
+        $eq['jsonId'] = $eqModel ? $eqModel['id'] : '';
         if ($eqAddr == "0000") {
             if (isset($eqPerZigate[$zgId][$eqId]))
                 array_unshift($eqPerZigate[$zgId][$eqId], $eq);

@@ -1,0 +1,9 @@
+{
+    "zb-0500-ZoneStatus-Alarm1": {
+        "comment": "0500/IAS Zone cluster, attrib 0002/ZoneStatus, type map16/0x19, bit 0",
+        "subType": "binary",
+        "configuration": [],
+        "type": "info",
+        "logicalId": "#EP#-0500-0002-alarm1"
+    }
+}

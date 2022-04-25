@@ -35,6 +35,8 @@
     $batteryType = $eqLogic->getConfiguration('battery_type', '');
     $eqName = $eqLogic->getName();
 
+    $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
     echo '<script>var js_eqIeee = "'.$eqIeee.'";</script>'; // PHP to JS

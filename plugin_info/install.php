@@ -398,7 +398,70 @@
                 log::add('Abeille', 'debug', '  Zigate '.$zgId.": Updated 'AbeilleSerialPort".$zgId."'");
             }
 
-               config::save('DbVersion', '20220407', 'Abeille');
+            config::save('DbVersion', '20220407', 'Abeille');
+        } // End 'intval($dbVersion) < 20220407'
+
+        /* Version 20220421 changes:
+           - eqLogic DB: 'ab::jsonId' + 'ab::jsonLocation' => 'ab::eqModel['id'/'location]'
+           - eqLogic DB: 'MACCapa' => 'ab::zigbee['macCapa']'
+           - eqLogic DB: 'RxOnWhenIdle' => 'ab::zigbee['rxOnWhenIdle']'
+           - eqLogic DB: 'AC_Power' => 'ab::zigbee['mainsPowered']'
+         */
+        if (intval($dbVersion) < 20220421) {
+            $eqLogics = eqLogic::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                $saveEq = false; // true if EQ has been updated and therefore must be saved
+                $eqHName = $eqLogic->getHumanName();
+                $toRemove = []; // Configration keys to remove
+
+                // Updating 'ab::eqModel'
+                // 'ab::jsonId' + 'ab::jsonLocation' => 'ab::eqModel['id'/'location]'
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                $newEqModel = $eqModel;
+                if (!isset($eqModel['id']))
+                    $newEqModel['id'] = $eqLogic->getConfiguration('ab::jsonId', '');
+                if (!isset($eqModel['location']))
+                    $newEqModel['location'] = $eqLogic->getConfiguration('ab::jsonLocation', '');
+                if ($newEqModel != $eqModel) {
+                    $eqLogic->setConfiguration('ab::eqModel', $newEqModel);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": Updated configuration key 'ab::eqModel'");
+                    $saveEq = true;
+                }
+                array_push($toRemove, 'ab::jsonId', 'ab::jsonLocation');
+
+                // Updating 'ab::zigbee'
+                // - 'MACCapa' => 'ab::zigbee['macCapa']'
+                // - 'RxOnWhenIdle' => 'ab::zigbee['rxOnWhenIdle']'
+                // - 'AC_Power' => 'ab::zigbee['mainsPowered']'
+                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                $newZigbee = $zigbee;
+                if (!isset($zigbee['macCapa']))
+                    $newZigbee['macCapa'] = $eqLogic->getConfiguration('MACCapa', '');
+                if (!isset($zigbee['rxOnWhenIdle']))
+                    $newZigbee['rxOnWhenIdle'] = $eqLogic->getConfiguration('RxOnWhenIdle', '');
+                if (!isset($zigbee['mainsPowered']))
+                    $newZigbee['mainsPowered'] = $eqLogic->getConfiguration('AC_Power', '');
+                if ($newZigbee != $zigbee) {
+                    $eqLogic->setConfiguration('ab::zigbee', $newZigbee);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": Updated configuration key 'ab::zigbee'");
+                    $saveEq = true;
+                }
+                array_push($toRemove, 'MACCapa', 'RxOnWhenIdle', 'AC_Power');
+
+                // Removing obsolete keys
+                foreach ($toRemove as $key) {
+                    if ($eqLogic->getConfiguration($key, null) === null)
+                        continue;
+                    $eqLogic->setConfiguration($key, null);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": Removed configuration key '".$key."'");
+                    $saveEq = true;
+                }
+
+                if ($saveEq)
+                    $eqLogic->save();
+            }
+
+            // config::save('DbVersion', '20220421', 'Abeille'); // NOT FROZEN YET
         }
     }
 

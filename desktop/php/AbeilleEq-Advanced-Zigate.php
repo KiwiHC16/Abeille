@@ -38,7 +38,7 @@
                 echo "var element = document.getElementById('".$spanId."');";
                 echo "minor = element.textContent.substr(5, 4);";
                 echo "element.textContent = _options.display_value+minor;";
-            echo "}";
+            echo "};";
             $cmdLogicId = 'SW-SDK';
             echo "jeedom.cmd.update['".getCmdIdByLogicId($eqId, $cmdLogicId)."'] = function(_options) {";
                 echo "console.log('jeedom.cmd.update[".$cmdLogicId."]');";
@@ -46,7 +46,7 @@
                 echo "var element = document.getElementById('".$spanId."');";
                 echo "major = element.textContent.substr(0, 5);";
                 echo "element.textContent = major+_options.display_value;";
-            echo "}";
+            echo "};";
             echo "</script>";
         echo '</div>';
         ?>

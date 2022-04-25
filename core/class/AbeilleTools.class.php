@@ -263,18 +263,18 @@
             /* Is that a supported device ? */
             $modelPath = devicesDir.$device.'/'.$device.'.json';
             if (file_exists($modelPath)) {
-                log::add('Abeille', 'debug', 'getDevicePath('.$device.') => '.$modelPath);
+                log::add('Abeille', 'debug', '  getDevicePath('.$device.') => '.$modelPath);
                 return $modelPath;
             }
 
             /* Is that an unsupported or user device ? */
             $modelPath = devicesLocalDir.$device.'/'.$device.'.json';
             if (file_exists($modelPath)) {
-                log::add('Abeille', 'debug', 'getDevicePath('.$device.') => '.$modelPath);
+                log::add('Abeille', 'debug', '  getDevicePath('.$device.') => '.$modelPath);
                 return $modelPath;
             }
 
-            log::add('Abeille', 'debug', 'getDevicePath('.$device.') => NOT found');
+            log::add('Abeille', 'debug', '  getDevicePath('.$device.') => NOT found');
             return false; // Not found
         }
 
@@ -323,11 +323,11 @@
         {
             // log::add('Abeille', 'debug', 'getDeviceModel start, deviceName='.$deviceName.", from=".$from);
 
-            if ($from == 'Abeille')
+            if (($from == 'Abeille') || ($from == ''))
                 $modelPath = devicesDir.$deviceName.'/'.$deviceName.'.json';
             else
                 $modelPath = devicesLocalDir.$deviceName.'/'.$deviceName.'.json';
-            log::add('Abeille', 'debug', 'modelPath='.$modelPath);
+            log::add('Abeille', 'debug', '  modelPath='.$modelPath);
             if (!is_file($modelPath)) {
                 log::add('Abeille', 'error', 'Modèle \''.$deviceName.'\' inconnu. Utilisation du modèle par défaut.');
                 $deviceName = 'defaultUnknown';

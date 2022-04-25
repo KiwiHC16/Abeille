@@ -48,20 +48,14 @@
     </div>
 </div>
 
-<!-- <div class="form-group">
-    <label class="col-sm-3 control-label">{{Fichier JSON}}</label>
-    <div class="col-sm-5">
-        <span class="eqLogicAttr" data-l1key="configuration" data-l2key="ab::jsonId"></span>
-    </div>
-</div> -->
-
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Documentation}}</label>
     <div class="col-sm-5">
         <?php
-            $model = $eqLogic->getConfiguration('ab::jsonId', '');
-            if ($model != '') {
-                echo '<a href="'.urlProducts.'/'.$model.'" target="_blank">Voir ici si présente</a>';
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
+            $jsonId = $eqModel ? $eqModel['id'] : '';
+            if ($jsonId != '') {
+                echo '<a href="'.urlProducts.'/'.$jsonId.'" target="_blank">Voir ici si présente</a>';
             }
         ?>
     </div>

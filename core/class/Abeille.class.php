@@ -315,7 +315,9 @@ if (0) {
                     continue; // Equipment disabled
 
                 /* Special case: should ignore virtual remote */
-                if ($eqLogic->getConfiguration("ab::jsonId") == "remotecontrol")
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
+                $jsonId = $eqModel ? $eqModel['id'] : '';
+                if ($jsonId == "remotecontrol")
                     continue; // Abeille virtual remote
 
                 $eqName = $eqLogic->getname();
@@ -631,7 +633,7 @@ if (0) {
 
         /* Check & update configuration DB if required. */
         $dbVersion = config::byKey('DbVersion', 'Abeille', '');
-        $dbVersionLast = 20220407;
+        $dbVersionLast = 20220421;
         if (($dbVersion == '') || (intval($dbVersion) < $dbVersionLast)) {
             log::add('Abeille', 'debug', 'deamon_start_cleanup(): DB config v'.$dbVersion.' < v'.$dbVersionLast.' => Update required.');
             updateConfigDB();
@@ -1273,7 +1275,8 @@ if (0) {
                 list($net2, $addr2) = explode("/", $eqLogic->getLogicalId());
                 if ($net2 != $net)
                     continue; // Wrong network
-                $jsonId2 = $eqLogic->getConfiguration('ab::jsonId');
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
+                $jsonId2 = $eqModel ? $eqModel['id'] : '';
                 if ($jsonId2 != "remotecontrol")
                     continue; // Not a remote
                 if ($addr2 == '')
@@ -1332,11 +1335,14 @@ if (0) {
                it is not detected. Reset is done from defaultUnknown again.
                Need to store Zigbee modelId + manuf too for that purpose. */
 
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', '');
+            $jsonId = $eqModel ? $eqModel['id'] : '';
+            $jsonLocation = $eqModel ? $eqModel['location'] : 'Abeille';
             $dev = array(
                 'net' => $dest,
                 'addr' => $addr,
-                'jsonId' => $eqLogic->getConfiguration('ab::jsonId', ''),
-                'jsonLocation' => $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille'),
+                'jsonId' => $jsonId,
+                'jsonLocation' => $jsonLocation,
                 'ieee' => $eqLogic->getConfiguration('IEEE'),
             );
             // Abeille::createDevice("reset", $dest, $addr);
@@ -1731,17 +1737,19 @@ if (0) {
 
             /* MAC capa from 004D/Device announce message */
             $mc = hexdec($msg['capa']);
-            $eqLogic->setConfiguration('MACCapa', $msg['capa']);
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            $zigbee['macCapa'] = $msg['capa'];
             $rxOnWhenIdle = ($mc >> 3) & 0b1;
             $mainsPowered = ($mc >> 2) & 0b1;
             if ($mainsPowered) // 1=mains-powererd
-                $eqLogic->setConfiguration('AC_Power', 1);
+                $zigbee['mainsPowered'] = 1;
             else
-                $eqLogic->setConfiguration('AC_Power', 0);
+                $zigbee['mainsPowered'] = 0;
             if ($rxOnWhenIdle) // 1=Receiver enabled when idle
-                $eqLogic->setConfiguration('RxOnWhenIdle', 1);
+                $zigbee['rxOnWhenIdle'] = 1;
             else
-                $eqLogic->setConfiguration('RxOnWhenIdle', 0);
+                $zigbee['rxOnWhenIdle'] = 0;
+            $eqLogic->setConfiguration('ab::zigbee', $zigbee);
             $eqLogic->save();
 
             Abeille::updateTimestamp($eqLogic, $msg['time']);
@@ -2432,18 +2440,22 @@ if (0) {
             log::add('Abeille', 'debug', '  Already existing device '.$logicalId.' => '.$eqHName);
 
             if (($action == 'update') || ($action == 'reset')) { // Update or reset from JSON
-                $jsonId = $eqLogic->getConfiguration('ab::jsonId');
-                $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', '');
+                $jsonId = $eqModel ? $eqModel['id'] : '';
+                $jsonLocation = $eqModel ? $eqModel['location'] : 'Abeille';
+
                 $ieee = $eqLogic->getConfiguration('IEEE');
                 if ($action == "update")
-                    message::add("Abeille", "Mise-à-jour de '".$eqHName."' à partir de son modèle JSON");
+                    message::add("Abeille", $eqHName.": Mise-à-jour à partir de son modèle JSON");
                 else
-                    message::add("Abeille", "Réinitialisation de '".$eqHName."' à partir de son modèle JSON");
+                    message::add("Abeille", $eqHName.": Réinitialisation à partir de son modèle JSON");
                 $modelEq = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
             } else { // action == create
-                $eqCurJsonId = $eqLogic->getConfiguration('ab::jsonId'); // Current JSON ID
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', '');
+                $eqCurJsonId = $eqModel ? $eqModel['id'] : ''; // Current JSON ID
+
                 if (($eqCurJsonId == 'defaultUnknown') && ($jsonId != 'defaultUnknown'))
-                    message::add("Abeille", "'".$eqHName."' s'est réannoncé. Mise-à-jour de la config par défaut vers '".$eqType."'", '');
+                    message::add("Abeille", "'".$eqHName."' s'est réannoncé. Mise-à-jour du modèle par défaut vers '".$eqType."'", '');
                 else {
                     /* Tcharp38: Following https://github.com/KiwiHC16/Abeille/issues/2132#, device re-announce is just ignored here
                         to not generate plenty messages, unless device was disabled.
@@ -2458,10 +2470,10 @@ if (0) {
                 }
             }
         }
-        if ($jsonLocation != "Abeille") {
+        if ($jsonLocation == "local") {
             $fullPath = __DIR__."/../config/devices/".$jsonId."/".$jsonId.".json";
             if (file_exists($fullPath))
-                message::add("Abeille", "ATTENTION: Config locale (devices_local) utilisée alors qu'une config officielle existe.", '');
+                message::add("Abeille", $eqHName.": Attention ! Modèle local (devices_local) utilisée alors qu'un modèle officiel existe.", '');
         }
 
         /* Whatever creation or update, common steps follows */
@@ -2484,13 +2496,6 @@ if (0) {
             );
             $eqLogic->setConfiguration('ab::signature', $sig);
         }
-        $eqLogic->setConfiguration('ab::jsonId', $jsonId);
-        if ($jsonLocation != "Abeille")
-            $eqLogic->setConfiguration('ab::jsonLocation', 'local');
-        else
-            $eqLogic->setConfiguration('ab::jsonLocation', null);
-
-        // $eqLogic->setConfiguration('type', 'topic'); // ??, type = topic car pas json. Tcharp38: what for ?
 
         // Update only if new device (missing info) or reinit
         $curIcon = $eqLogic->getConfiguration('icone', '');
@@ -2512,7 +2517,6 @@ if (0) {
         if (($action == 'reset') || (count($curCats) == 0)) {
             if (isset($modelEq["category"])) {
                 $categories = $modelEq["category"];
-                // $eqLogic->setCategory(array_keys($modelEq["Categorie"])[0], $modelEq["Categorie"][array_keys($objetDefSpecific["Categorie"])[0]]);
                 $allCat = ["heating", "security", "energy", "light", "opening", "automatism", "multimedia", "default"];
                 foreach ($allCat as $cat) { // Clear all
                     $eqLogic->setCategory($cat, "0");
@@ -2526,11 +2530,13 @@ if (0) {
 
         // Update only if new device or reinit
         if (($action == 'reset') || $newEq) {
-            if (isset($modelEq["isVisible"]))
-                $eqLogic->setIsVisible($modelEq["isVisible"]);
-            else
-                $eqLogic->setIsVisible(1);
         }
+
+        // isVisible: Reseted when leaving network (ex: reset). Must be set when rejoin unless defined in model.
+        if (isset($modelEq["isVisible"]))
+            $eqLogic->setIsVisible($modelEq["isVisible"]);
+        else
+            $eqLogic->setIsVisible(1);
 
         // Tcharp38: Seems no longer used
         // $lastCommTimeout = (array_key_exists("lastCommunicationTimeOut", $modelEqConf) ? $modelEqConf["lastCommunicationTimeOut"] : '-1');
@@ -2583,13 +2589,12 @@ if (0) {
 
         // JSON model infos
         $eqModelInfos = array(
-            'id' => $jsonId, // Note: To replace 'ab::jsonId'
-            'location' => $jsonLocation, // Note: To replace 'ab::jsonLocation'
+            'id' => $jsonId, // Equipment model id
+            'location' => $jsonLocation, // Equipment model location
             'type' => $modelEq['type'],
         );
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
 
-        // $eqLogic->setStatus('lastCommunication', date('Y-m-d H:i:s')); // Tcharp38: Done by updateTimestamp()
         $eqLogic->setIsEnable(1);
         $eqLogic->save();
 
@@ -2619,6 +2624,7 @@ if (0) {
                 'updated' =>
            ) */
         $jCmds = Cmd::byEqLogicId($eqLogic->getId());
+        $jeedomCmds = [];
         foreach ($jCmds as $cmdLogic) {
             $c = array(
                 'name' => $cmdLogic->getName(),
@@ -2838,7 +2844,8 @@ if (0) {
             }
 
             $cmdLogic->save();
-            $jeedomCmds[$jCmdId]['updated'] = 1;
+            if (isset($jCmdId) && isset($jeedomCmds[$jCmdId])) // Mark updated if cmd was already existing
+                $jeedomCmds[$jCmdId]['updated'] = 1;
         }
 
         // Removing cmd not updated (obsolete)

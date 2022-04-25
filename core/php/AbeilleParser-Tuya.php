@@ -332,6 +332,7 @@
             }
         }
 // TODO: How to store unknown DP in discovery.json ?
+// Should not store "on the fly" as file accesses are time consuming
 
         return $attributesN;
     }

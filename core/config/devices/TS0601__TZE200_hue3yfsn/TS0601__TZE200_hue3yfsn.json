@@ -2,7 +2,10 @@
     "TS0601__TZE200_hue3yfsn": {
         "manufacturer": "Tuya",
         "model": "TV02",
-        "timeout": "60",
+        "alternateIds": "TS0601__TZE200_e9ba97vf,TS0601__TZE200_husqqvux,TS0601__TZE200_lllliz3p",
+        "comment": "Alternate Ids from https://github.com/Koenkk/zigbee-herdsman-converters/blob/master/devices/tuya.js",
+        "comment2": "No timeout so far. Can't tell how frequent is done reporting, nor how to change its freq",
+        "timeout": "",
         "configuration": {
             "mainEP": "01",
             "icon": "Tuya-TV02",

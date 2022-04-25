@@ -38,8 +38,9 @@
     $eqLogicId = $eqLogic->getLogicalid();
     list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
     $zgNb = substr($eqNet, 7); // Extracting zigate number from network
-    $jsonName = $eqLogic->getConfiguration('ab::jsonId', ''); // TODO: rename to 'ab::jsonId'
-    $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
+    $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
+    $jsonName = $eqModel ? $eqModel['id'] : '';
+    $jsonLocation = $eqModel ? $eqModel['location'] : 'Abeille';
     $eqIeee = $eqLogic->getConfiguration('IEEE', '');
 
     $abQueues = $GLOBALS['abQueues'];
@@ -842,6 +843,7 @@
         var cmdNb = 0;
         endPoints = zigbee.endPoints;
         mainEp = -1;
+        minTimeout = 60; // Min timeout = 60min
         for (var epId in endPoints) {
             // console.log("EP "+epId);
             ep = endPoints[epId];
@@ -1072,6 +1074,11 @@
                     cmds["Temperature"] = newCmd("zb-0402-MeasuredValue");
                     cmds["Temperature"]["isVisible"] = 1;
                     cmds["Get Temperature"] = newCmd("zbReadAttribute", "clustId=0402&attrId=0000");
+                    cmds["SetReporting 0402-0000"] = newCmd("zbConfigureReporting", "clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=", "yes");
+                    cmds["SetReporting 0402-0000"]["comment"] = "Reporting every 5 to 10mins";
+                    cmds["Bind 0402-ToZigate"] = newCmd("zbBindToZigate", "clustId=0402", "yes");
+                    if (minTimeout > 10)
+                        minTimeout = 10;
                 }
             }
 
@@ -1082,6 +1089,11 @@
                     cmds["Humidity"] = newCmd("zb-0405-MeasuredValue");
                     cmds["Humidity"]["isVisible"] = 1;
                     cmds["Get Humidity"] = newCmd("zbReadAttribute", "clustId=0405&attrId=0000");
+                    cmds["SetReporting 0405-0000"] = newCmd("zbConfigureReporting", "clustId=0405&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=", "yes");
+                    cmds["SetReporting 0405-0000"]["comment"] = "Reporting every 5 to 10mins";
+                    cmds["Bind 0405-ToZigate"] = newCmd("zbBindToZigate", "clustId=0405", "yes");
+                    if (minTimeout > 10)
+                        minTimeout = 10;
                 }
             }
 
@@ -1090,11 +1102,14 @@
                 attributes = ep.servClusters["0500"]['attributes'];
                 if (isset(attributes['0002'])) {
                     cmds["Zone Status"] = newCmd("zb-0500-ZoneStatus");
-                    cmds["Zone Status"]["isVisible"] = 1;
+                    // cmds["Zone Status"]["isVisible"] = 1;
+                    cmds["Zone Status"]["comment"] = "This should trig 'Zone Alarm1'";
                     cmds["Get Zone Status"] = newCmd("zbReadAttribute", "clustId=0500&attrId=0002");
+                    cmds["Zone Alarm1"] = newCmd("zb-0500-ZoneStatus-Alarm1");
+                    cmds["Zone Alarm1"]["isVisible"] = 1;
+                    cmds["SetReporting 0500-0002"] = newCmd("zbConfigureReporting", "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=", "yes");
                 }
                 cmds["Bind 0500-ToZigate"] = newCmd("zbBindToZigate", "clustId=0500", "yes");
-                cmds["SetReporting 0500-0002"] = newCmd("zbConfigureReporting", "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=", "yes");
             }
 
             /* Metering (Smart Energy) */
@@ -1174,6 +1189,7 @@
         console.log(cmds);
         eq.commands = cmds;
         eq.defaultEp = mainEp;
+        eq.timeout = minTimeout;
 
         // Refresh JSON display
         if (typeof zigbee.signature !== "undefined") {
@@ -2045,7 +2061,7 @@ console.log(zEndPoints);
     /* Update Jeedom infos based on current JSON part */
     function updateJeedom() {
         /* TODO: To be updated
-            - configuration:ab::jsonId
+            - configuration:ab::eqModel
             - reload JSON to update commands
          */
     }

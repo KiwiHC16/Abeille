@@ -1,6 +1,19 @@
 ChangeLog
 =========
 
+- Interne: Mise-à-jour DB eqLogic
+
+  - 'ab::jsonId' + 'ab::jsonLocation' => 'ab::eqModel['id'/'location]'
+  - 'MACCapa' => 'ab::zigbee['macCapa']'
+  - 'RxOnWhenIdle' => 'ab::zigbee['rxOnWhenIdle']'
+  - 'AC_Power' => 'ab::zigbee['mainsPowered']'
+- Interne: Parser: decode8002() monitoring migré en fin de fonction.
+- Interne: Parser: Suppression fonction obsolete msgToAbeille().
+- Page EQ/avancé: Correction regressions.
+- Aeotec Multi purpose sensor: Ajout support préliminaire (2376).
+- Page EQ/avancé: Corrections 'Réinitialiser'.
+- Assistant EQ/modèle: Améliorations pour clusters 0402, 0405 & 0500.
+
 220421-BETA-1
 -------------
 

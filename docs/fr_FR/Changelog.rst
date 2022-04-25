@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220425-BETA-1
+-------------
+
 - Interne: Mise-à-jour DB eqLogic
 
   - 'ab::jsonId' + 'ab::jsonLocation' => 'ab::eqModel['id'/'location]'

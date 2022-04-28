@@ -308,7 +308,7 @@
             return [];
         }
         $mapping = $eq['tuyaEF00']['fromDevice'];
-        parserLog('debug', '  Tuya mapping='.json_encode($mapping));
+        // parserLog('debug', '  Tuya mapping='.json_encode($mapping));
 
         $attributesN = [];
         if (($cmdId == "01") || ($cmdId == "02")) {

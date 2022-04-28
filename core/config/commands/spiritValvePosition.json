@@ -1,6 +1,5 @@
 {
     "spiritValvePosition": {
-        "Comment": "Cette info ne remonte pas car elle est dans PiHeating, set invisible",
         "isVisible": 0,
         "name": "Valve Position",
         "isHistorized": "0",
@@ -15,6 +14,7 @@
         "type": "info",
         "logicalId": "0201-#EP#-4001",
         "unit": "%",
-        "genericType": ""
+        "genericType": "",
+        "comment": "Cette info ne remonte pas car elle est dans PiHeating, set invisible"
     }
 }

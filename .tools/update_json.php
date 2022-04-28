@@ -572,6 +572,12 @@
             $cmdUpdated = true;
             echo "  Renamed 'generic_type' to 'genericType'.\n";
         }
+        if (isset($cmd2['Comment'])) {
+            $cmd2['comment'] = $cmd2['Comment'];
+            unset($cmd2['Comment']);
+            $cmdUpdated = true;
+            echo "  Renamed 'Comment' to 'comment'.\n";
+        }
 
         if (!isset($cmd2['configuration'])) {
             newCmdError($fileName, "ERROR", "Missing 'configuration' section");

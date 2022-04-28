@@ -1,0 +1,79 @@
+{
+    "endPoints": {
+        "03": {
+            "servClusters": {
+                "0000": {
+                    "attributes": {
+                        "0005": {
+                            "value": "THS317-ET"
+                        },
+                        "0000": {
+                            "value": 3
+                        },
+                        "0001": {
+                            "value": 21
+                        },
+                        "0002": {
+                            "value": 0
+                        },
+                        "0003": {
+                            "value": 0
+                        },
+                        "0004": {
+                            "value": "OWON"
+                        },
+                        "0006": {
+                            "value": "20211101"
+                        },
+                        "0007": {
+                            "value": 3
+                        },
+                        "4000": {
+                            "value": "V1.0.7  "
+                        },
+                        "FFFD": {
+                            "value": 1
+                        }
+                    }
+                },
+                "0001": {
+                    "attributes": []
+                },
+                "0003": {
+                    "attributes": {
+                        "0000": {
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "value": 1
+                        }
+                    }
+                },
+                "0402": {
+                    "attributes": {
+                        "0000": {
+                            "value": 2530
+                        },
+                        "0001": {
+                            "value": 0
+                        },
+                        "0002": {
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "value": 1
+                        }
+                    }
+                }
+            },
+            "status": "00",
+            "cliClusters": {
+                "0003": {
+                    "attributes": {
+                        "FFFD": []
+                    }
+                }
+            }
+        }
+    }
+}

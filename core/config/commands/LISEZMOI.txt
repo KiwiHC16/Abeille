@@ -82,14 +82,15 @@ Exemple de commande 'action'
 * isVisible: EVITER.
   Indique si la commande est visible dans le widget.
   Invisible par défaut ("isVisible":0).
-  Ce parametre est à mettre dans la modele d'équipement pour personnaliser la commande.
+  Ce parametre est à mettre dans le modele d'équipement pour personnaliser la commande.
 
 * isHistorized: EVITER.
   Indique si la commande INFO (pas de sens pour une commande 'action') doit être historisée.
   Non par défaut ("isHistorized":0).
-  Ce parametre est à mettre dans la modele d'équipement pour personnaliser la commande.
+  Ce parametre est à mettre dans le modele d'équipement pour personnaliser la commande.
 
 * genericType: ??
+  A priori surtout nécessaire pour toute appli 'mobile' pour associer un widget représentatif.
 
 * invertBinary: optionnel.
   Utile uniquement pour une commande 'info' de subType 'binary'.

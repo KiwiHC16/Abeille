@@ -13,21 +13,16 @@
         },
         "type": "Xiaomi temp\/humidity\/pressure square sensor",
         "commands": {
+            "include5": "Batterie-Volt",
+            "include6": "Batterie-Pourcent",
             "Temperature": {
                 "use": "zb-0402-MeasuredValue",
                 "isVisible": 1,
                 "isHistorized": 1
             },
             "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 },
-            "include5": "Batterie-Volt",
-            "include6": "Batterie-Pourcent",
-            "include7": "Xiaomi-ff01",
-            "include8": "pression1",
-            "include9": "pression",
-            "include10": "pressionScale",
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            }
+            "Pressure": { "use": "zb-0403-MeasuredValue", "isVisible": 1 },
+            "include7": "Xiaomi-ff01"
         }
     }
 }

@@ -2,7 +2,6 @@
     "vibrationType": {
         "isVisible": 1,
         "name": "Evenement",
-        "Comment": "1: Vibration, 2: rotation, 3: chute",
         "isHistorized": "1",
         "subType": "numeric",
         "configuration": {
@@ -10,6 +9,7 @@
             "visibilityCategory": "All"
         },
         "type": "info",
-        "logicalId": "0101-#EP#-0055"
+        "logicalId": "0101-#EP#-0055",
+        "comment": "1: Vibration, 2: rotation, 3: chute"
     }
 }

@@ -1,6 +1,5 @@
 {
     "BindToGroupLevelEP05": {
-        "Comment": "Used to bind the device to a group",
         "isVisible": 0,
         "name": "BindToGroupButtonEP5",
         "isHistorized": "0",
@@ -14,6 +13,7 @@
             "execAtCreation": "Yes",
             "execAtCreationDelay": 19
         },
-        "type": "action"
+        "type": "action",
+        "comment": "Used to bind the device to a group"
     }
 }

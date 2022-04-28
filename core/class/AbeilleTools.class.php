@@ -629,28 +629,30 @@
         }
 
         /**
-         * Return an array with zigate configuration, used by daemon info and daemons
+         * Read 'config' DB for plugin 'Abeille' and returns an array.
          *
          * @return array
          */
         public static function getParameters()
         {
-            $return = array();
-            $return['parametersCheck'] = 'ok'; // Ces deux variables permettent d'indiquer la validité des données.
-            $return['parametersCheck_message'] = "";
+            $config = array();
 
-            //Most Fields are defined with default values
-            $return['AbeilleParentId'] = config::byKey('AbeilleParentId', 'Abeille', '1', 1);
+            // Tcharp38: Should not be there
+            $config['parametersCheck'] = 'ok'; // Ces deux variables permettent d'indiquer la validité des données.
+            $config['parametersCheck_message'] = "";
 
-            for ($i = 1; $i <= maxNbOfZigate; $i++) {
-                $return['AbeilleType'.$i] = config::byKey('AbeilleType'.$i, 'Abeille', 'none', 1);
-                $return['AbeilleSerialPort'.$i] = config::byKey('AbeilleSerialPort'.$i, 'Abeille', 'none', 1);
-                $return['IpWifiZigate'.$i] = config::byKey('IpWifiZigate'.$i, 'Abeille', '', 1);
-                $return['AbeilleActiver'.$i] = config::byKey('AbeilleActiver'.$i, 'Abeille', 'N', 1);
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                $config['AbeilleType'.$zgId] = config::byKey('AbeilleType'.$zgId, 'Abeille', '', 1);
+                $config['AbeilleSerialPort'.$zgId] = config::byKey('AbeilleSerialPort'.$zgId, 'Abeille', '', 1);
+                $config['IpWifiZigate'.$zgId] = config::byKey('IpWifiZigate'.$zgId, 'Abeille', '', 1);
+                $config['AbeilleActiver'.$zgId] = config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N', 1);
+                $config['AbeilleIEEE_Ok'.$zgId] = config::byKey('AbeilleIEEE_Ok'.$zgId, 'Abeille', 0);
+                $config['AbeilleIEEE'.$zgId] = config::byKey('AbeilleIEEE'.$zgId, 'Abeille', '');
             }
+            $config['monitor'] = config::byKey('monitor', 'Abeille', false);
+            $config['AbeilleParentId'] = config::byKey('AbeilleParentId', 'Abeille', '1', 1);
 
-            $return['monitor'] = config::byKey('monitor', 'Abeille', false);
-            return $return;
+            return $config;
         }
 
         /**

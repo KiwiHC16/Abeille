@@ -344,7 +344,6 @@
                 cmdLog("debug", "      Zigate disabled. Ignoring command.");
                 return;
             }
-            // if (config::byKey('AbeilleIEEE_Ok'.$this->zgId, 'Abeille', '-1', 1) == '-1') {
             if ($this->zigates[$zgId]['ieeeOk'] == '-1') {
                 cmdLog("debug", "      Zigate on wrong port. Ignoring command.");
                 return;
@@ -484,7 +483,6 @@
 
             $zgId = substr($dest, 7);
             $this->zgId = $zgId;
-            // $destSerial = config::byKey('AbeilleSerialPort'.$this->zgId, 'Abeille', '1', 1);
             $destSerial = $this->zigates[$zgId]['port'];
 
             // Test should not be needed as we already tested in addCmdToQueue2

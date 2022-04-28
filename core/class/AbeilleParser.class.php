@@ -13,10 +13,10 @@
      *
      */
     class AbeilleParser  {
-        public $queueKeyParserToAbeille = null; // Old communication path to Abeille
+        // public $queueKeyParserToAbeille = null; // Old communication path to Abeille
         public $queueKeyParserToAbeille2 = null; // New communication path to Abeille
         public $queueXToCmd = null;
-        public $parameters_info;
+        // public $parameters_info;
         // public $actionQueue; // queue of action to be done in Parser like config des NE ou get info des NE
         public $wakeUpQueue; // queue of command to be sent when the device wakes up.
         public $whoTalked;   // store the source of messages to see if any message are waiting for them in wakeUpQueue
@@ -114,7 +114,7 @@
             logSetConf("AbeilleParser.log", true);
 
             parserLog("debug", "AbeilleParser constructor", "AbeilleParserClass");
-            $this->parameters_info = AbeilleTools::getParameters();
+            // $this->parameters_info = AbeilleTools::getParameters();
 
             $this->requestedlevel = '' ? 'none' : $argv[1];
             $GLOBALS['requestedlevel'] = $this->requestedlevel ;
@@ -2000,10 +2000,9 @@
             }
 
             //  Profile 0104, cluster 0005 Scene (exemple: Boutons lateraux de la telecommande -)
-            // Tcharp38: TODO: Move to ZCL global or cluster specific part
-            else if ($clustId == "0005") {
-                $frameCtrlField = substr($payload, 26, 2);
-                parserLog("debug", '  Cluster 0005: FCF='.$frameCtrlField);
+            // else if ($clustId == "0005") {
+            //     $frameCtrlField = substr($payload, 26, 2);
+            //     parserLog("debug", '  Cluster 0005: FCF='.$frameCtrlField);
 
                 // Tcharp38: WARNING: There is probably something wrong there.
                 // There are cases where 0005 message is neither supported by this part nor by 8100_8102 decode.
@@ -2014,37 +2013,37 @@
                 // [2021-08-30 16:44:31] Abeille1, Type=8100/Read individual attribute response, SQN=7C, Addr=7C4F, EP=01, ClustId=0005, AttrId=0001, AttrStatus=00, AttrDataType=20, AttrSize=0001
                 // [2021-08-30 16:44:31]   Processed in 8002 => dropped
 
-                $abeille = Abeille::byLogicalId($dest."/".$srcAddr,'Abeille');
-                $sceneStored = json_decode( $abeille->getConfiguration('sceneJson','{}') , True );
+                // $abeille = Abeille::byLogicalId($dest."/".$srcAddr,'Abeille');
+                // $sceneStored = json_decode( $abeille->getConfiguration('sceneJson','{}') , True );
 
-                if ( $frameCtrlField=='05' ) {
-                    $Manufacturer   = substr($payload,30, 2).substr($payload,28, 2);
-                    if ( $Manufacturer=='117C' ) {
+                // if ( $frameCtrlField=='05' ) {
+                //     $Manufacturer   = substr($payload,30, 2).substr($payload,28, 2);
+                //     if ( $Manufacturer=='117C' ) {
 
-                        $sqn                    = substr($payload,32, 2);
-                        $cmd                    = substr($payload,34, 2);
-                        if ( $cmd != "07" ) {
-                            parserLog("debug", '  Message can t be decoded. Looks like Telecommande Ikea Ronde but not completely.');
-                            return;
-                        }
-                        $remainingData          = substr($payload,36, 8);
-                        $value                  = substr($payload,36, 2);
+                //         $sqn                    = substr($payload,32, 2);
+                //         $cmd                    = substr($payload,34, 2);
+                //         if ( $cmd != "07" ) {
+                //             parserLog("debug", '  Message can t be decoded. Looks like Telecommande Ikea Ronde but not completely.');
+                //             return;
+                //         }
+                //         $remainingData          = substr($payload,36, 8);
+                //         $value                  = substr($payload,36, 2);
 
-                        parserLog("debug", '  Telecommande Ikea Ronde'
-                                       .', frameCtrlField='.$frameCtrlField
-                                       .', Manufacturer='.$Manufacturer
-                                       .', SQN='.$sqn
-                                       .', cmd='.$cmd
-                                       .', value='.$value
-                                        );
+                //         parserLog("debug", '  Telecommande Ikea Ronde'
+                //                        .', frameCtrlField='.$frameCtrlField
+                //                        .', Manufacturer='.$Manufacturer
+                //                        .', SQN='.$sqn
+                //                        .', cmd='.$cmd
+                //                        .', value='.$value
+                //                         );
 
-                        // $this->msgToAbeille($dest."/".$srcAddr, $clustId.'-'.$srcEp, '0000', $value);
-                        $attributesReportN = [
-                            array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
-                        ];
-                        // return;
-                    }
-                }
+                //         // $this->msgToAbeille($dest."/".$srcAddr, $clustId.'-'.$srcEp, '0000', $value);
+                //         $attributesReportN = [
+                //             array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
+                //         ];
+                //         // return;
+                //     }
+                // }
 
                 // Tcharp38: Moved this part in ZCL global commands decode with questions.
                 // if ( $frameCtrlField=='18' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 00
@@ -2111,143 +2110,144 @@
                     // }
                 // }
 
-                else if ( $frameCtrlField=='19' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 01
-                    $sqn                    = substr($payload,28, 2);
-                    $cmd                    = substr($payload,30, 2);
+                // Tcharp38: Moved to cluster specific ZCL decode
+                // else if ( $frameCtrlField=='19' ) { // Default Resp: 1 / Direction: 1 / Manu Specific: 0 / Cluster Specific: 01
+                //     $sqn                    = substr($payload,28, 2);
+                //     $cmd                    = substr($payload,30, 2);
 
-                    // Add Scene Response
-                    if ( $cmd == "00" ) {
-                        $sceneStatus            = substr($payload,32, 2);
+                //     // Add Scene Response
+                //     if ( $cmd == "00" ) {
+                //         $sceneStatus            = substr($payload,32, 2);
 
-                        if ( $sceneStatus != "00" ) {
-                            parserLog("debug", '  Status error dd Scene Response.');
-                            return;
-                        }
+                //         if ( $sceneStatus != "00" ) {
+                //             parserLog("debug", '  Status error dd Scene Response.');
+                //             return;
+                //         }
 
-                        $groupID          = substr($payload,34, 4);
-                        $sceneId          = substr($payload,36, 2);
+                //         $groupID          = substr($payload,34, 4);
+                //         $sceneId          = substr($payload,36, 2);
 
-                        parserLog("debug", '  Add Scene Response confirmation (decoded but not processed) Please refresh with a -Get Scene Membership- : group: '.$groupID.' - scene id:'.$sceneId );
-                        return;
-                    }
+                //         parserLog("debug", '  Add Scene Response confirmation (decoded but not processed) Please refresh with a -Get Scene Membership- : group: '.$groupID.' - scene id:'.$sceneId );
+                //         return;
+                //     }
 
-                    // View Scene Response
-                    elseif ( $cmd == "01" ) {
-                        $sceneStatus            = substr($payload,32, 2);
-                        if ( $sceneStatus != "00" ) {
-                            parserLog("debug", '  Status error on scene info.');
-                            return;
-                        }
-                        $groupID            = substr($payload,34, 4);
-                        $sceneId            = substr($payload,38, 2);
-                        $transitionTime     = substr($payload,40, 4);
-                        $Length             = substr($payload,44, 2);
-                        $statusRouting      = "";
-                        $extensionSet       = ""; // 06:00:01:01:08:00:01:fe:00:03:04:13:ae:eb:51 <- to be investigated
+                //     // View Scene Response
+                //     else if ( $cmd == "01" ) {
+                //         $sceneStatus            = substr($payload,32, 2);
+                //         if ( $sceneStatus != "00" ) {
+                //             parserLog("debug", '  Status error on scene info.');
+                //             return;
+                //         }
+                //         $groupID            = substr($payload,34, 4);
+                //         $sceneId            = substr($payload,38, 2);
+                //         $transitionTime     = substr($payload,40, 4);
+                //         $Length             = substr($payload,44, 2);
+                //         $statusRouting      = "";
+                //         $extensionSet       = ""; // 06:00:01:01:08:00:01:fe:00:03:04:13:ae:eb:51 <- to be investigated
 
-                        parserLog("debug", '  View Scene Response: '.$groupID.' - '.$sceneId.' ...');
-                        return;
-                    }
+                //         parserLog("debug", '  View Scene Response: '.$groupID.' - '.$sceneId.' ...');
+                //         return;
+                //     }
 
-                    // Remove scene response
-                    elseif ( $cmd == "02" ) {
-                        $sceneStatus            = substr($payload,32, 2);
-                        if ( $sceneStatus != "00" ) {
-                            parserLog("debug", '  Status error on scene info.');
-                            return;
-                        }
-                        $groupID            = substr($payload,34, 4);
-                        $sceneId            = substr($payload,38, 2);
+                //     // Remove scene response
+                //     else if ( $cmd == "02" ) {
+                //         $sceneStatus            = substr($payload,32, 2);
+                //         if ( $sceneStatus != "00" ) {
+                //             parserLog("debug", '  Status error on scene info.');
+                //             return;
+                //         }
+                //         $groupID            = substr($payload,34, 4);
+                //         $sceneId            = substr($payload,38, 2);
 
-                        parserLog("debug", '  Scene: '.$sceneId.' du groupe: '.$groupID.' a ete supprime.');
-                        return;
-                    }
+                //         parserLog("debug", '  Scene: '.$sceneId.' du groupe: '.$groupID.' a ete supprime.');
+                //         return;
+                //     }
 
-                    // Remove All Scene Response
-                    elseif ( $cmd == "03" ) {
-                        $sceneStatus            = substr($payload,32, 2);
-                        if ( $sceneStatus != "00" ) {
-                            parserLog("debug", '  Status error Remove All Scene Response.');
-                            return;
-                        }
-                        $groupID                = substr($payload,36, 2).substr($payload,34, 2);
+                //     // Remove All Scene Response
+                //     else if ( $cmd == "03" ) {
+                //         $sceneStatus            = substr($payload,32, 2);
+                //         if ( $sceneStatus != "00" ) {
+                //             parserLog("debug", '  Status error Remove All Scene Response.');
+                //             return;
+                //         }
+                //         $groupID                = substr($payload,36, 2).substr($payload,34, 2);
 
-                        unset($sceneStored["sceneRemainingCapacity"]);
-                        unset($sceneStored["sceneCount"]);
-                        unset($sceneStored["GroupeScene"][$groupID]);
-                        $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
-                        $abeille->save();
-                    }
+                //         unset($sceneStored["sceneRemainingCapacity"]);
+                //         unset($sceneStored["sceneCount"]);
+                //         unset($sceneStored["GroupeScene"][$groupID]);
+                //         $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                //         $abeille->save();
+                //     }
 
-                    // Store Scene Response
-                    elseif ( $cmd == "04" ) {
-                        $sceneStatus            = substr($payload,32, 2);
+                //     // Store Scene Response
+                //     else if ( $cmd == "04" ) {
+                //         $sceneStatus            = substr($payload,32, 2);
 
-                        if ( $sceneStatus != "00" ) {
-                            parserLog("debug", '  Status error Store Scene Response.');
-                            return;
-                        }
+                //         if ( $sceneStatus != "00" ) {
+                //             parserLog("debug", '  Status error Store Scene Response.');
+                //             return;
+                //         }
 
-                        $groupID          = substr($payload,34, 4);
-                        $sceneId          = substr($payload,36, 2);
+                //         $groupID          = substr($payload,34, 4);
+                //         $sceneId          = substr($payload,36, 2);
 
-                        parserLog("debug", '  store scene response confirmation (decoded but not processed) Please refresh with a -Get Scene Membership- : group: '.$groupID.' - scene id:'.$sceneId );
-                        return;
-                    }
+                //         parserLog("debug", '  store scene response confirmation (decoded but not processed) Please refresh with a -Get Scene Membership- : group: '.$groupID.' - scene id:'.$sceneId );
+                //         return;
+                //     }
 
-                    // Get Scene Membership Response
-                    elseif ( $cmd == "06" ) {
-                        $sceneStatus            = substr($payload,32, 2);
-                        if ( $sceneStatus == "85" ) {  // Invalid Field
-                            $sceneRemainingCapacity = substr($payload,34, 2);
-                            $groupID                = substr($payload,36, 4);
+                //     // Get Scene Membership Response
+                //     else if ( $cmd == "06" ) {
+                //         $sceneStatus            = substr($payload,32, 2);
+                //         if ( $sceneStatus == "85" ) {  // Invalid Field
+                //             $sceneRemainingCapacity = substr($payload,34, 2);
+                //             $groupID                = substr($payload,36, 4);
 
-                            parserLog("debug", "  scene: scene capa:".$sceneRemainingCapacity.' - group: '.$groupID );
+                //             parserLog("debug", "  scene: scene capa:".$sceneRemainingCapacity.' - group: '.$groupID );
 
-                            $sceneStored["sceneRemainingCapacity"]        = $sceneRemainingCapacity;
-                            unset( $sceneStored["GroupeScene"][$groupID] );
+                //             $sceneStored["sceneRemainingCapacity"]        = $sceneRemainingCapacity;
+                //             unset( $sceneStored["GroupeScene"][$groupID] );
 
-                            $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
-                            $abeille->save();
+                //             $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                //             $abeille->save();
 
-                            parserLog("debug", '  '.json_encode($sceneStored) );
+                //             parserLog("debug", '  '.json_encode($sceneStored) );
 
-                            // $sceneStored = json_decode( Abeille::byLogicalId($dest."/".$srcAddr,'Abeille')->getConfiguration('sceneJson','{}') , True );
-                            // parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
-                            return;
-                        }
-                        if ( $sceneStatus != "00" ) {
-                            parserLog("debug", '  Status error on scene info.');
-                            return;
-                        }
+                //             // $sceneStored = json_decode( Abeille::byLogicalId($dest."/".$srcAddr,'Abeille')->getConfiguration('sceneJson','{}') , True );
+                //             // parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+                //             return;
+                //         }
+                //         if ( $sceneStatus != "00" ) {
+                //             parserLog("debug", '  Status error on scene info.');
+                //             return;
+                //         }
 
-                        $sceneRemainingCapacity = substr($payload,34, 2);
-                        $groupID                = substr($payload,38, 2).substr($payload,36, 2);
-                        $sceneCount             = substr($payload,40, 2);
-                        $sceneId = "";
-                        for ($i = 0; $i < hexdec($sceneCount); $i++) {
-                            $sceneId .= '-'.substr($payload,42+$i*2, 2);
-                        }
+                //         $sceneRemainingCapacity = substr($payload,34, 2);
+                //         $groupID                = substr($payload,38, 2).substr($payload,36, 2);
+                //         $sceneCount             = substr($payload,40, 2);
+                //         $sceneId = "";
+                //         for ($i = 0; $i < hexdec($sceneCount); $i++) {
+                //             $sceneId .= '-'.substr($payload,42+$i*2, 2);
+                //         }
 
-                        parserLog("debug", "  scene capa:".$sceneRemainingCapacity.' - group: '.$groupID.' - scene count:'.$sceneCount.' - scene id:'.$sceneId );
+                //         parserLog("debug", "  scene capa:".$sceneRemainingCapacity.' - group: '.$groupID.' - scene count:'.$sceneCount.' - scene id:'.$sceneId );
 
-                        $sceneStored["sceneRemainingCapacity"]        = $sceneRemainingCapacity;
-                        $sceneStored["sceneCount"]                    = $sceneCount;
-                        $sceneStored["GroupeScene"][$groupID]["sceneId"]             = $sceneId;
-                        $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
-                        $abeille->save();
+                //         $sceneStored["sceneRemainingCapacity"]        = $sceneRemainingCapacity;
+                //         $sceneStored["sceneCount"]                    = $sceneCount;
+                //         $sceneStored["GroupeScene"][$groupID]["sceneId"]             = $sceneId;
+                //         $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                //         $abeille->save();
 
-                        parserLog("debug",  '  '.json_encode($sceneStored) );
+                //         parserLog("debug",  '  '.json_encode($sceneStored) );
 
-                        return;
-                    }
+                //         return;
+                //     }
 
-                    else {
-                        parserLog("debug",  '  Message can t be decoded. Cmd unknown.');
-                        return;
-                    }
-                }
-            }
+                //     else {
+                //         parserLog("debug",  '  Message can t be decoded. Cmd unknown.');
+                //         return;
+                //     }
+                // }
+            // }
 
             // $cmd = substr($payload, 30, 2);
 
@@ -2468,23 +2468,30 @@
                             if ($i != 0)
                                 $attributes .= "/";
                             $attributes .= $attrId;
-                        }
-                        parserLog('debug', "  Attributes: ".$attributes);
 
-                        if ($clustId == "000A") { // Time cluster
-                            if ($attrId == "0007") { // LocalTime
-                                // Reminder: Zigbee uses 00:00:00 @1st of jan 2000 as ref
-                                //           PHP uses 00:00:00 @1st of jan 1970 (Linux ref)
-                                // Attr 0007, type uint32/0x23
-                                $lt = localtime(null, true);
-                                $localTime = mktime($lt['tm_hour'], $lt['tm_min'], $lt['tm_sec'], $lt['tm_mon'], $lt['tm_mday'], $lt['tm_year']);
-                                $localTime -= mktime(0, 0, 0, 1, 1, 2000); // PHP to Zigbee shift
-                                $localTime = sprintf("%04X", $localTime);
-                                $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/sendReadAttributesResponse", 'ep='.$srcEp.'&clustId='.$clustId.'&attrId='.$attrId.'&status=00&attrType=23&attrVal='.$localTime);
+                            if ($clustId == "000A") { // Time cluster
+                                if ($attrId == "0000") {
+                                    parserLog('debug', "  Attribute 0000 handled by Zigate");
+                                } else if ($attrId == "0007") { // LocalTime
+                                    // Reminder: Zigbee uses 00:00:00 @1st of jan 2000 as ref
+                                    //           PHP uses 00:00:00 @1st of jan 1970 (Linux ref)
+                                    // Attr 0007, type uint32/0x23
+                                    $lt = localtime(null, true);
+                                    $localTime = mktime($lt['tm_hour'], $lt['tm_min'], $lt['tm_sec'], $lt['tm_mon'], $lt['tm_mday'], $lt['tm_year']);
+                                    $localTime -= mktime(0, 0, 0, 1, 1, 2000); // PHP to Zigbee shift
+                                    $localTime = sprintf("%04X", $localTime);
+                                    $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/sendReadAttributesResponse", 'ep='.$srcEp.'&clustId='.$clustId.'&attrId='.$attrId.'&status=00&attrType=23&attrVal='.$localTime);
+                                    parserLog('debug', "  Attribute 0007/LocalTime: Answering to device");
+                                } else {
+                                    parserLog('debug', "  WARNING: Unsupported time cluster attribute ".$attrId);
+                                }
                             }
-                            // return;
                         }
-                    }
+
+                        if ($clustId != '000A') {
+                            parserLog('debug', "  Attributes: ".$attributes);
+                        }
+                    } // End 'Read Attributes' (cmd 00)
 
                     else if ($cmd == "01") { // Read Attributes Response
                         // Some clusters are directly handled by 8100/8102 decode
@@ -2512,9 +2519,9 @@
                             Attr data type = 1B
                             Attr = <according to data type> */
 
-                        $l = strlen($msg);
                         $attributes = [];
                         $readAttributesResponseN = []; // Attributes by Jeedom logical name
+                        $l = strlen($msg);
                         for ($i = 0; $i < $l;) {
                             $size = 0;
                             $attr = $this->decode8002_ReadAttrStatusRecord(substr($msg, $i), $size);
@@ -2549,20 +2556,6 @@
                                 $this->discoverUpdate($dest, $srcAddr, $srcEp, 'ReadAttributesResponse', $clustId, $isServer, $attributes);
                             }
 
-                            // Reporting grouped attributes to Abeille
-                            // $toAbeille = array(
-                            //     // 'src' => 'parser',
-                            //     'type' => 'readAttributesResponseN',
-                            //     'net' => $dest,
-                            //     'addr' => $srcAddr,
-                            //     'ep' => $srcEp,
-                            //     'clustId' => $clustId,
-                            //     'attributes' => $attributesN,
-                            //     'time' => time(),
-                            //     'lqi' => $lqi
-                            // );
-                            // msgToAbeille2($msgTo);
-
                             /* Send to client page if required (ex: EQ page opened) */
                             $toCli = array(
                                 // 'src' => 'parser',
@@ -2575,7 +2568,6 @@
                                 'time' => time(),
                                 'lqi' => $lqi
                             );
-                            // $this->msgToClient($msgTo);
                         }
 
                         /* Tcharp38: Cluster 0005 specific case.
@@ -2604,8 +2596,6 @@
                             parserLog("debug", '  TODO: '.json_encode($sceneStored));
                             // return;
                         }
-
-                        return;
                     } // End '$cmd == "01"'
 
                     else if ($cmd == "04") { // Write Attributes Response
@@ -2899,37 +2889,186 @@
                             'dir' => (hexdec($fcf) >> 3) & 1,
                             'attributes' => $attributes
                         );
-                        // $this->msgToClient($toCli);
-                        // return;
-                    }
+                    } // Discover Attributes Extended Response
 
-                    parserLog("debug", "  Ignored general command", "8002");
-                    return;
+                    else {
+                        parserLog("debug", "  Ignored general command", "8002");
+                        return;
+                    }
                 } else {
                     /*
                     * Cluster specific command
                     */
 
-                    if ($clustId == "0006") {
+                    // Scenes cluster specific
+                    if ($clustId == "0005") {
+                        // $sqn = substr($payload,28, 2);
+                        // $cmd = substr($payload,30, 2);
+
+                        // Add Scene Response
+                        // if ( $cmd == "00" ) {
+                        //     $sceneStatus = substr($payload,32, 2);
+
+                        //     if ( $sceneStatus != "00" ) {
+                        //         parserLog("debug", '  Status error dd Scene Response.');
+                        //         return;
+                        //     }
+
+                        //     $groupID = substr($payload,34, 4);
+                        //     $sceneId = substr($payload,36, 2);
+
+                        //     parserLog("debug", '  Add Scene Response confirmation (decoded but not processed) Please refresh with a -Get Scene Membership- : group: '.$groupID.' - scene id:'.$sceneId );
+                        //     return;
+                        // }
+
+                        // View Scene Response
+                        // else if ( $cmd == "01" ) {
+                        //     $sceneStatus            = substr($payload,32, 2);
+                        //     if ( $sceneStatus != "00" ) {
+                        //         parserLog("debug", '  Status error on scene info.');
+                        //         return;
+                        //     }
+                        //     $groupID            = substr($payload,34, 4);
+                        //     $sceneId            = substr($payload,38, 2);
+                        //     $transitionTime     = substr($payload,40, 4);
+                        //     $Length             = substr($payload,44, 2);
+                        //     $statusRouting      = "";
+                        //     $extensionSet       = ""; // 06:00:01:01:08:00:01:fe:00:03:04:13:ae:eb:51 <- to be investigated
+
+                        //     parserLog("debug", '  View Scene Response: '.$groupID.' - '.$sceneId.' ...');
+                        //     return;
+                        // }
+
+                        // Remove scene response
+                        // else if ( $cmd == "02" ) {
+                        //     $sceneStatus            = substr($payload,32, 2);
+                        //     if ( $sceneStatus != "00" ) {
+                        //         parserLog("debug", '  Status error on scene info.');
+                        //         return;
+                        //     }
+                        //     $groupID            = substr($payload,34, 4);
+                        //     $sceneId            = substr($payload,38, 2);
+
+                        //     parserLog("debug", '  Scene: '.$sceneId.' du groupe: '.$groupID.' a ete supprime.');
+                        //     return;
+                        // }
+
+                        // Remove All Scene Response
+                        // else if ( $cmd == "03" ) {
+                        if ( $cmd == "03" ) {
+                            $sceneStatus            = substr($payload,32, 2);
+                            if ( $sceneStatus != "00" ) {
+                                parserLog("debug", '  Status error Remove All Scene Response.');
+                                return;
+                            }
+                            $groupID                = substr($payload,36, 2).substr($payload,34, 2);
+
+                            $abeille = Abeille::byLogicalId($dest."/".$srcAddr,'Abeille');
+                            $sceneStored = json_decode( $abeille->getConfiguration('sceneJson','{}') , True );
+                            unset($sceneStored["sceneRemainingCapacity"]);
+                            unset($sceneStored["sceneCount"]);
+                            unset($sceneStored["GroupeScene"][$groupID]);
+                            $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                            $abeille->save();
+                        }
+
+                        // Store Scene Response
+                        // else if ( $cmd == "04" ) {
+                        //     $sceneStatus            = substr($payload,32, 2);
+
+                        //     if ( $sceneStatus != "00" ) {
+                        //         parserLog("debug", '  Status error Store Scene Response.');
+                        //         return;
+                        //     }
+
+                        //     $groupID          = substr($payload,34, 4);
+                        //     $sceneId          = substr($payload,36, 2);
+
+                        //     parserLog("debug", '  store scene response confirmation (decoded but not processed) Please refresh with a -Get Scene Membership- : group: '.$groupID.' - scene id:'.$sceneId );
+                        //     return;
+                        // }
+
+                        // Get Scene Membership Response
+                        else if ( $cmd == "06" ) {
+                            $sceneStatus            = substr($payload,32, 2);
+                            if ( $sceneStatus == "85" ) {  // Invalid Field
+                                $sceneRemainingCapacity = substr($payload,34, 2);
+                                $groupID                = substr($payload,36, 4);
+
+                                parserLog("debug", "  scene: scene capa:".$sceneRemainingCapacity.' - group: '.$groupID );
+
+                                $abeille = Abeille::byLogicalId($dest."/".$srcAddr,'Abeille');
+                                $sceneStored = json_decode( $abeille->getConfiguration('sceneJson','{}') , True );
+                                $sceneStored["sceneRemainingCapacity"]        = $sceneRemainingCapacity;
+                                unset( $sceneStored["GroupeScene"][$groupID] );
+
+                                $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                                $abeille->save();
+
+                                parserLog("debug", '  '.json_encode($sceneStored) );
+
+                                // $sceneStored = json_decode( Abeille::byLogicalId($dest."/".$srcAddr,'Abeille')->getConfiguration('sceneJson','{}') , True );
+                                // parserLog("debug", $dest.', Type=8002/Data indication ---------------------> '.json_encode($sceneStored) );
+                                return;
+                            }
+                            if ( $sceneStatus != "00" ) {
+                                parserLog("debug", '  Status error on scene info.');
+                                return;
+                            }
+
+                            $sceneRemainingCapacity = substr($payload,34, 2);
+                            $groupID                = substr($payload,38, 2).substr($payload,36, 2);
+                            $sceneCount             = substr($payload,40, 2);
+                            $sceneId = "";
+                            for ($i = 0; $i < hexdec($sceneCount); $i++) {
+                                $sceneId .= '-'.substr($payload,42+$i*2, 2);
+                            }
+
+                            parserLog("debug", "  scene capa:".$sceneRemainingCapacity.' - group: '.$groupID.' - scene count:'.$sceneCount.' - scene id:'.$sceneId );
+
+                            $sceneStored["sceneRemainingCapacity"]        = $sceneRemainingCapacity;
+                            $sceneStored["sceneCount"]                    = $sceneCount;
+                            $sceneStored["GroupeScene"][$groupID]["sceneId"]             = $sceneId;
+                            $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
+                            $abeille->save();
+
+                            parserLog("debug",  '  '.json_encode($sceneStored) );
+                        }
+
+                        // Ikea specific ?
+                        else if ($cmd == "07") {
+                            $Manufacturer = substr($payload,30, 2).substr($payload,28, 2);
+                            if ( $Manufacturer=='117C' ) {
+                                // $sqn                    = substr($payload,32, 2);
+                                // $cmd                    = substr($payload,34, 2);
+                                // if ( $cmd != "07" ) {
+                                //     parserLog("debug", '  Message can t be decoded. Looks like Telecommande Ikea Ronde but not completely.');
+                                //     return;
+                                // }
+                                $remainingData = substr($payload,36, 8);
+                                $value = substr($payload,36, 2);
+
+                                parserLog("debug", '  Telecommande Ikea Ronde'
+                                               .', frameCtrlField='.$frameCtrlField
+                                               .', Manufacturer='.$Manufacturer
+                                               .', SQN='.$sqn
+                                               .', cmd='.$cmd
+                                               .', value='.$value
+                                                );
+
+                                $attributesReportN = [
+                                    array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
+                                ];
+                                // return;
+                            }
+                        }
+                    }
+
+                    //  On/Off cluster specific
+                    else if ($clustId == "0006") {
                         if ($cmd == "FD") {
                             parserLog("debug", "  Tuya 0006 specific cmd FD", "8002");
                             $attributesReportN = tuyaDecode0006CmdFD($srcEp, $msg);
-
-                            // if (count($attributesN) > 0) {
-                            //     $toAbeille = array(
-                            //         // 'src' => 'parser',
-                            //         'type' => 'attributesReportN',
-                            //         'net' => $dest,
-                            //         'addr' => $srcAddr,
-                            //         'ep' => $srcEp,
-                            //         'clustId' => $clustId,
-                            //         'attributes' => $attributesN,
-                            //         'time' => time(),
-                            //         'lqi' => $lqi
-                            //     );
-                                // msgToAbeille2($toAbeille);
-                            // }
-                            // return;
                         }
 
                         if (($cmd == "00") || ($cmd == "01")) {
@@ -3016,6 +3155,19 @@
                         // msgToAbeille2($msg);
                         // return;
                     }
+
+                    // IAS cluster specific
+                    else if ($clustId == "0500") {
+                        // Duplicated message ?
+                        if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                            return;
+
+                        if ($cmd == "00") {
+                            parserLog('debug', '  Zone status change notification');
+                        } else if ($cmd == "01") {
+                            parserLog('debug', '  Zone enroll request');
+                        }
+                    } // End '$clustId == "0500"'
 
                     // Cluster EF00 is used by Tuya.
                     else if ($clustId == "EF00") {
@@ -3222,14 +3374,14 @@
             parserLog('debug', $dest.', Type='.$msgDecoded, "8011");
 
             // Sending msg to cmd for flow control
-            $msg = array (
+            $toAbeille = array (
                 'type'      => "8011",
                 'net'       => $dest,
                 'status'    => $status,
                 'addr'      => $dstAddr,
                 'sqnAps'    => $sqnAps,
             );
-            $this->msgToCmdAck($msg);
+            $this->msgToCmdAck($toAbeille);
 
             // Monitor if required
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))
@@ -4601,13 +4753,13 @@
             $Attribut   = substr($payload, 24, hexdec($attrSize) * 2);
 
             if ($type == "8100") {
-                $msg = '8100/Read individual attribute response';
+                $msgDecoded = '8100/Read individual attribute response';
                 $cmdId = '01';
             } else {
-                $msg = '8102/Attribute report';
+                $msgDecoded = '8102/Attribute report';
                 $cmdId = '0A';
             }
-            $msg .= ', SQN='            .$sqn
+            $msgDecoded .= ', SQN='            .$sqn
                     .', Addr='          .$srcAddr
                     .', EP='            .$ep
                     .', ClustId='       .$clustId
@@ -4615,7 +4767,9 @@
                     .', AttrStatus='    .$attrStatus
                     .', AttrDataType='  .$dataType
                     .', AttrSize='      .$attrSize;
-            parserLog('debug', $dest.', Type='.$msg, $type);
+            parserLog('debug', $dest.', Type='.$msgDecoded, $type);
+            $toMon = [];
+            $toMon[] = $msgDecoded;
 
             // Checking if decode is handled by 8002 or still there
             if ($cmdId == '01') { // 01/Read attribute response
@@ -4671,7 +4825,7 @@
                     'name' => $clustId.'-'.$ep.'-'.$attrId,
                     'value' => false, // False = unsupported
                 );
-                $msg = array(
+                $toAbeille = array(
                     // 'src' => 'parser',
                     'type' => 'attributesReportN',
                     'net' => $dest,
@@ -4682,7 +4836,7 @@
                     'time' => time(),
                     'lqi' => $lqi
                 );
-                msgToAbeille2($msg);
+                msgToAbeille2($toAbeille);
 
                 /* Send to client if connection opened */
                 $toCli = array(
@@ -4699,7 +4853,7 @@
 
                 // Monitor if requested
                 if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
-                    monMsgFromZigate($msg); // Send message to monitor
+                    monMsgFromZigate($msgDecoded); // Send message to monitor
 
                 return;
             } // Status != 00
@@ -4751,7 +4905,7 @@
                 }
 
                 // Xiaomi Bouton V2 Carré
-                elseif (($attrId == "FF01") && ($attrSize == "001A")) {
+                else if (($attrId == "FF01") && ($attrSize == "001A")) {
                     // Assuming $dataType == "42"
                     parserLog("debug", "  Xiaomi proprietary (Square button)" );
 
@@ -4769,7 +4923,7 @@
                 }
 
                 // Xiaomi lumi.sensor_86sw1 (Wall 1 Switch sur batterie)
-                elseif (($attrId == "FF01") && ($attrSize == "001B")) {
+                else if (($attrId == "FF01") && ($attrSize == "001B")) {
                     parserLog("debug","  Xiaomi proprietary (Wall 1 Switch, Gaz Sensor)" );
                     // Dans le cas du Gaz Sensor, il n'y a pas de batterie alors le decodage est probablement faux.
 
@@ -4790,7 +4944,7 @@
                 }
 
                 // Xiaomi door sensor V2
-                elseif (($attrId == "FF01") && ($attrSize == "001D")) {
+                else if (($attrId == "FF01") && ($attrSize == "001D")) {
                     // Assuming $dataType == "42"
 
                     // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -4812,7 +4966,7 @@
                 }
 
                 // Xiaomi capteur temperature rond V1 / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
-                elseif (($attrId == "FF01") && ($attrSize == "001F")) {
+                else if (($attrId == "FF01") && ($attrSize == "001F")) {
                     parserLog("debug","  Xiaomi proprietary (Capteur Temperature Rond/Wall 2 Switch)");
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -4847,7 +5001,7 @@
                 // 0A 21 0000 - Param 0xA 10dec - uint16 - 0x0 0dec /68
                 // 64 10 00 - parm 0x64 100dec - Boolean - 0      (Presence ?)  /76
                 // 0B 21 2900 - Param 0xB 11dec - uint16 - 0x0029 (41dec Lux ?) /82
-                elseif (($attrId == 'FF01') && ($attrSize == "0021")) {
+                else if (($attrId == 'FF01') && ($attrSize == "0021")) {
                     // Assuming $dataType == "42"
                     parserLog('debug', '  Xiaomi proprietary (Capteur Presence V2)');
 
@@ -4868,7 +5022,7 @@
                 }
 
                 // Xiaomi capteur Inondation
-                elseif (($attrId == 'FF01') && ($attrSize == "0022")) {
+                else if (($attrId == 'FF01') && ($attrSize == "0022")) {
                     // Assuming DataType=42
                     parserLog('debug', '  Xiaomi proprietary (Capteur d\'inondation)');
 
@@ -4887,7 +5041,7 @@
                 }
 
                 // Xiaomi temp/humidity/pressure square sensor
-                elseif (($attrId == 'FF01') && ($attrSize == "0025")) {
+                else if (($attrId == 'FF01') && ($attrSize == "0025")) {
                     // Assuming $dataType == "42"
 
                     parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
@@ -4914,7 +5068,7 @@
                 }
 
                 // Xiaomi bouton Aqara Wireless Switch V3 #712 (https://github.com/KiwiHC16/Abeille/issues/712)
-                elseif (($attrId == 'FF01') && ($attrSize == "0026")) {
+                else if (($attrId == 'FF01') && ($attrSize == "0026")) {
                     // Assuming $dataType == "42"
                     parserLog('debug', '  Xiaomi proprietary (Aqara Wireless Switch V3)');
 
@@ -4932,7 +5086,7 @@
                 }
 
                 // Xiaomi Smoke Sensor
-                elseif (($attrId == 'FF01') && ($attrSize == "0028")) {
+                else if (($attrId == 'FF01') && ($attrSize == "0028")) {
                     parserLog('debug', '  Xiaomi proprietary (Smoke Sensor)');
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -4950,7 +5104,7 @@
 
                 // Xiaomi Cube
                 // Xiaomi capteur Inondation
-                elseif (($attrId == 'FF01') && ($attrSize == "002A")) {
+                else if (($attrId == 'FF01') && ($attrSize == "002A")) {
                     parserLog('debug', '  Xiaomi proprietary (Cube)');
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -4967,7 +5121,7 @@
                 }
 
                 // Xiaomi Vibration
-                elseif (($attrId == 'FF01') && ($attrSize == "002E")) {
+                else if (($attrId == 'FF01') && ($attrSize == "002E")) {
                     // Assuming $dataType == "42"
                     parserLog('debug', '   Xiaomi proprietary (Vibration)');
 
@@ -4985,7 +5139,7 @@
                 }
 
                 // Xiaomi Wall Plug (Kiwi: ZNCZ02LM, rvitch: )
-                elseif (($attrId == "FF01") && (($attrSize == "0031") || ($attrSize == "002B"))) {
+                else if (($attrId == "FF01") && (($attrSize == "0031") || ($attrSize == "002B"))) {
                     parserLog('debug', "  Xiaomi proprietary (Wall Plug)");
 
                     $onOff = hexdec(substr($payload, 24 + 2 * 2, 2));
@@ -5009,7 +5163,7 @@
                 }
 
                 // Xiaomi Double Relay (ref ?)
-                elseif (($attrId == "FF01") && ($attrSize == "0044")) {
+                else if (($attrId == "FF01") && ($attrSize == "0044")) {
                     $FF01 = $this->decodeFF01(substr($payload, 24, strlen($payload) - 24 - 2));
                     parserLog('debug', "  Xiaomi proprietary (Double relay)");
                     parserLog('debug', "  ".json_encode($FF01));
@@ -5027,7 +5181,7 @@
                 }
 
                 // Xiaomi Presence Infrarouge IR V1 / Bouton V1 Rond
-                elseif (($attrId == "FF02")) {
+                else if (($attrId == "FF02")) {
                     // Assuming $dataType == "42"
                     parserLog("debug","  Xiaomi proprietary (IR/button/door V1)" );
 
@@ -5047,7 +5201,7 @@
                 // Xiaomi Capteur Presence
                 // Je ne vois pas ce message pour ce cateur et sur appui lateral il n envoie rien
                 // Je mets un Attribut Size a XX en attendant. Le code et la il reste juste a trouver la taille de l attribut si il est envoyé.
-                // elseif (($attrId == "FF01") && ($attrSize == "00XX")) {
+                // else if (($attrId == "FF01") && ($attrSize == "00XX")) {
                 //     parserLog("debug","  Champ proprietaire Xiaomi (Bouton Carre)" );
 
                 //     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -5191,27 +5345,6 @@
                 ];
             }
 
-            /* If $data is set it means message already treated before */
-            // if (isset($data)) {
-            //     /* Send to Abeille */
-            //     $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId, $data);
-
-            //     /* Send to client page if connection opened */
-            //     $toCli = array(
-            //         // 'src' => 'parser',
-            //         'type' => 'attributeReport', // 8100 or 8102
-            //         'net' => $dest,
-            //         'addr' => $srcAddr,
-            //         'ep' => $ep,
-            //         'clustId' => $clustId,
-            //         'attrId' => $attrId,
-            //         'status' => "00",
-            //         'value' => $data
-            //     );
-            //     $this->msgToClient($toCli);
-            //     return;
-            // }
-
             if (!isset($attributesReportN) && !isset($data)) {
                 /* Core hereafter is performing default conversion according to data type */
 
@@ -5350,8 +5483,9 @@
             $this->msgToClient($toCli);
 
             // Monitor if requested
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
-                monMsgFromZigate($msg); // Send message to monitor
+            if (isset($toMon) && isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
+                foreach ($toMon as $monMsg)
+                    monMsgFromZigate($monMsg); // Send message to monitor
         }
 
         /* 8100/Read individual Attribute Response */

@@ -1,6 +1,18 @@
 ChangeLog
 =========
 
+- Interne: check_json: Améliorations.
+- Aeotec Multi purpose sensor: Mise-à-jour modèle (2376) & correction cmde 'zb-0500-ZoneStatus'.
+- Modèles de commandes JSON: Mise-à-jour cosmetique.
+- Interne: Ajout date derniere mise-à-jour à partir du modèle (ab::eqModel['lastUpdate']).
+- Interne: Parser: Optimisation lecture DB 'config'.
+- Interne: Parser: Mise-à-jour support cluster 0005/scenes (peut etre cassé).
+- Interne: Parser: Corrections regressions.
+- Owon multi-sensor THS317-ET: Ajout support.
+- Xiaomi sqare sensor: Mise-à-jour modèle pour ne garder qu'une info 'Pressure' = '0403-01-0000' (2370).
+- Moes smart dimmer MS105Z: Mise-à-jour modèle (2363).
+- Interne: Parser: Correction 'read attribute' pour 'Time cluster'.
+
 220425-BETA-1
 -------------
 

@@ -1,0 +1,13 @@
+{
+    "zb-0403-MeasuredValue": {
+        "comment": "0403/Pressure cluster, attrib 0000/MeasuredValue",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": {
+        },
+        "type": "info",
+        "logicalId": "0403-#EP#-0000",
+        "unit": "kPa",
+        "genericType": "PRESSURE"
+    }
+}

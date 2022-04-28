@@ -206,6 +206,27 @@
             if (isset($conf['execAtCreationDelay']) && (gettype($conf['execAtCreationDelay']) == "string")) {
                 newCmdError($cmdName, "ERROR", "'execAtCreationDelay' must be number and NOT string");
             }
+
+            /* Checking supported 'configuration' keywords */
+            $supportedConfKeys = ['topic', 'request', 'historizeRound', 'execAtCreation', 'execAtCreationDelay', 'trigOut', 'trigOutOffset', 'repeatEventManagement', 'visibilityCategory'];
+            array_push($supportedConfKeys, 'minValue', 'maxValue', 'calculValueOffset', 'AbeilleRejectValue', 'returnStateValue', 'returnStateTime', 'Polling', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'visibiltyTemplate');
+            foreach ($conf as $key => $value) {
+                if (in_array($key, $supportedConfKeys))
+                    continue;
+                if (substr($key, 0, 7) == "comment")
+                    continue;
+                    newCmdError($cmdName, "ERROR", "Invalid configuration key '".$key."'");
+            }
+        }
+
+        /* Checking supported top level keywords */
+        $supportedKeys = ['type', 'subType', 'logicalId', 'configuration', 'name', 'genericType', 'template', 'isVisible', 'isHistorized', 'invertBinary', 'unit', 'display', 'nextLine', 'value'];
+        foreach ($cmd[$cmdName] as $key => $value) {
+            if (in_array($key, $supportedKeys))
+                continue;
+            if (substr($key, 0, 7) == "comment")
+                continue;
+                newCmdError($cmdName, "ERROR", "Invalid key '".$key."'");
         }
     }
 

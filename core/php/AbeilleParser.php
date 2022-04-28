@@ -305,7 +305,8 @@
 
     /* Any device to monitor ?
        It is indicated by 'monitor' key in Jeedom 'config' table. */
-    $monId = config::byKey('monitor', 'Abeille', false);
+    // $monId = config::byKey('monitor', 'Abeille', false);
+    $monId = $config['monitor'];
     if ($monId !== false) {
         $eqLogic = eqLogic::byId($monId);
         if (!is_object($eqLogic)) {
@@ -322,11 +323,14 @@
 
     // In case parser only is restarted, let's get zigates IEEE if known */
     for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-        if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
+        // if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
+        if ($config['AbeilleActiver'.$zgId] != 'Y')
             continue; // This Zigate is not enabled
-        $ieeeOk = config::byKey('AbeilleIEEE_Ok'.$zgId, 'Abeille', 0);
+        // $ieeeOk = config::byKey('AbeilleIEEE_Ok'.$zgId, 'Abeille', 0);
+        $ieeeOk = $config['AbeilleIEEE_Ok'.$zgId];
         if ($ieeeOk == 1) { // IEEE addr already verified & valid
-            $extAddr = config::byKey('AbeilleIEEE'.$zgId, 'Abeille', "1212121212121212");
+            // $extAddr = config::byKey('AbeilleIEEE'.$zgId, 'Abeille', "1212121212121212");
+            $extAddr = $config['AbeilleIEEE'.$zgId];
             $GLOBALS['zigate'.$zgId]['ieee'] = $extAddr;
             logMessage("debug", "Zigate ".$zgId." already verified IEEE: ".$extAddr);
         }
@@ -384,13 +388,12 @@
             $GLOBALS['eqList'][$net][$addr] = $eq;
         }
 
-        $msgType = null;
         while (true) {
 
             // Wait (block) for any input messages
             // - Those coming from AbeilleSerialRead
             // - Other control infos
-            while (msg_receive($queueXToParser, 0, $msgType, $queueXToParserMax, $msgJson, false, 0, $errCode)) {
+            while (msg_receive($queueXToParser, 0, $msgType, $queueXToParserMax, $msgJson, false, 0, $errCode)) { // Blocking read
                 $msg = json_decode($msgJson, true);
                 if ($msg === null) {
                     logMessage('debug', '  ERROR: json_decode(): msgJson='.$msgJson);
@@ -430,8 +433,8 @@
                     }
                 }
             }
-            if ($errCode == 7) {
-                msg_receive($queueXToParser, 0, $msgType, $queueXToParserMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
+            if ($errCode == 7) { // Too big
+                msg_receive($queueXToParser, 0, $msgType, $queueXToParserMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR); // Purge
                 logMessage('debug', '  msg_receive(queueXToParser) ERROR: msg TOO BIG ignored.');
             } else if ($errCode != 42) { // 42 = No message
                 logMessage('debug', '  msg_receive(queueXToParser) ERROR '.$errCode);

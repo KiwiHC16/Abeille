@@ -2,9 +2,10 @@
     "TS0601__TZE200_yvx5lh6k": {
         "manufacturer": "Tuya",
         "model": "RSH-AirBox01",
-        "type": "Tuya Smart Air Box",
+        "type": "Tuya Smart Air Box 01",
         "alternateIds": "TS0601__TZE200_8ygsuhe1,TS0601__TZE200_ryfmq5rl",
         "comment": "Alternate IDs from https://zigbee.blakadder.com/Tuya_RSH-AirBox01.html",
+        "comment2": "This device is generating many messages that may saturate network & zigate",
         "timeout": "60",
         "category": {
             "automatism": "1"

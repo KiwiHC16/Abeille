@@ -4,6 +4,8 @@
         "subType": "binary",
         "configuration": [],
         "type": "info",
-        "logicalId": "#EP#-0500-0002-alarm1"
+        "logicalId": "#EP#-0500-0002-alarm1",
+        "template": "alert",
+        "genericType": "ALARM_STATE"
     }
 }

@@ -33,9 +33,9 @@
     // php AbeilleCmd.php debug
     //check already running
 
-    $config = AbeilleTools::getParameters();
+    $abeilleConfig = AbeilleTools::getParameters();
     $running = AbeilleTools::getRunningDaemons();
-    $daemons = AbeilleTools::diffExpectedRunningDaemons($config, $running);
+    $daemons = AbeilleTools::diffExpectedRunningDaemons($abeilleConfig, $running);
     logMessage('debug', 'Daemons status: '.json_encode($daemons));
     if ($daemons["cmd"] > 1){
         logMessage('error', 'Le démon est déja lancé ! '.json_encode($daemons));
@@ -44,7 +44,8 @@
 
     /* Any device to monitor ?
        It is indicated by 'monitor' key in Jeedom 'config' table. */
-    $monId = config::byKey('monitor', 'Abeille', false);
+    // $monId = config::byKey('monitor', 'Abeille', false);
+    $monId = $abeilleConfig['monitor'];
     if ($monId !== false) {
         $eqLogic = eqLogic::byId($monId);
         if (!is_object($eqLogic)) {

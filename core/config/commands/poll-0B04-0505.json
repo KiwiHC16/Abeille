@@ -6,7 +6,6 @@
         "subType": "other",
         "invertBinary": "0",
         "template": "",
-        "Comment": "Triggered by 0006-#EP#-0000 & every minutes",
         "configuration": {
             "topic": "readAttribute",
             "request": "ep=#EP#&clustId=0B04&attrId=0505",
@@ -14,6 +13,7 @@
             "PollingOnCmdChange": "0006-#EP#-0000",
             "PollingOnCmdChangeDelay": "5"
         },
-        "type": "action"
+        "type": "action",
+        "comment": "Triggered by 0006-#EP#-0000 & every minutes"
     }
 }

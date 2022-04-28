@@ -1,6 +1,5 @@
 {
     "pression": {
-        "Comment": "Type Generique = PRESSURE et pas WEATHER_PRESSURE sinon homebridge pas content.",
         "isVisible": 1,
         "name": "Pression",
         "isHistorized": "1",
@@ -16,6 +15,7 @@
         "logicalId": "0403-01-0010",
         "unit": "hPa",
         "genericType": "PRESSURE",
-        "nextLine": "after"
+        "nextLine": "after",
+        "comment": "Type Generique = PRESSURE et pas WEATHER_PRESSURE sinon homebridge pas content."
     }
 }

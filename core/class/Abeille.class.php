@@ -2448,15 +2448,16 @@ if (0) {
                 if ($action == "update")
                     message::add("Abeille", $eqHName.": Mise-à-jour à partir de son modèle JSON");
                 else
-                    message::add("Abeille", $eqHName.": Réinitialisation à partir de son modèle JSON");
+                    message::add("Abeille", $eqHName.": Réinitialisation à partir de son modèle JSON (source=".$jsonLocation.")");
                 $modelEq = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
             } else { // action == create
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', '');
                 $eqCurJsonId = $eqModel ? $eqModel['id'] : ''; // Current JSON ID
 
-                if (($eqCurJsonId == 'defaultUnknown') && ($jsonId != 'defaultUnknown'))
-                    message::add("Abeille", "'".$eqHName."' s'est réannoncé. Mise-à-jour du modèle par défaut vers '".$eqType."'", '');
-                else {
+                if (($eqCurJsonId == 'defaultUnknown') && ($jsonId != 'defaultUnknown')) {
+                    message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour du modèle par défaut vers '".$eqType."'", '');
+                    $action = 'reset'; // Update from defaultUnknown = reset to new model
+                } else {
                     /* Tcharp38: Following https://github.com/KiwiHC16/Abeille/issues/2132#, device re-announce is just ignored here
                         to not generate plenty messages, unless device was disabled.
                         Other reasons to generate message ?
@@ -2466,14 +2467,14 @@ if (0) {
                         log::add('Abeille', 'debug', '  Device is already enabled.');
                         // return; // Doing nothing on re-announce
                     } else
-                    message::add("Abeille", "'".$eqHName."' s'est réannoncé. Mise-à-jour en cours.", '');
+                    message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour en cours.", '');
                 }
             }
         }
         if ($jsonLocation == "local") {
             $fullPath = __DIR__."/../config/devices/".$jsonId."/".$jsonId.".json";
             if (file_exists($fullPath))
-                message::add("Abeille", $eqHName.": Attention ! Modèle local (devices_local) utilisée alors qu'un modèle officiel existe.", '');
+                message::add("Abeille", $eqHName.": Attention ! Modèle local (devices_local) utilisé alors qu'un modèle officiel existe.", '');
         }
 
         /* Whatever creation or update, common steps follows */
@@ -2592,6 +2593,7 @@ if (0) {
             'id' => $jsonId, // Equipment model id
             'location' => $jsonLocation, // Equipment model location
             'type' => $modelEq['type'],
+            'lastUpdate' => time() // Store last update from model
         );
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
 
@@ -2637,6 +2639,8 @@ if (0) {
         }
 
         // Creating or updating commands based on model content.
+        // Tcharp38: WARNING: Faced an issue with a command whose logicalId changed (SWBuildID, logicId=0000-01-4000 newLogicId=0000-03-4000)
+        // How to handle such case ?
         $order = 0;
         foreach ($modelCmds as $mCmdName => $mCmd) {
             // Initial checks

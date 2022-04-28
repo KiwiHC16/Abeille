@@ -1,6 +1,5 @@
 {
     "pression1": {
-        "Comment": "Deuxieme commande de pression pour le capteur xiaomi carre V2. Pas de Type Generique pour ne pas etre dans Hombreige car il y a deja une commande pression.",
         "isVisible": 0,
         "name": "Pression1",
         "isHistorized": "1",
@@ -14,6 +13,7 @@
         "logicalId": "0403-01-0000",
         "unit": "hPa",
         "genericType": "",
-        "nextLine": "after"
+        "nextLine": "after",
+        "comment": "Deuxieme commande de pression pour le capteur xiaomi carre V2. Pas de Type Generique pour ne pas etre dans Hombreige car il y a deja une commande pression."
     }
 }

@@ -14,6 +14,20 @@
         "commands": {
             "Groups": {
                 "use": "Group-Membership"
+            },
+            "On": {
+                "use": "cmdG-TuyaEF00-Set-OnOff",
+                "params": "onOff=01&dpId=01",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "cmdG-TuyaEF00-Set-OnOff",
+                "params": "onOff=00&dpId=01",
+                "isVisible": 1
+            },
+            "Status": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1
             }
         }
     }

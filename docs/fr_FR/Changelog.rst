@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220428-BETA-1
+-------------
+
 - Interne: check_json: Améliorations.
 - Aeotec Multi purpose sensor: Mise-à-jour modèle (2376) & correction cmde 'zb-0500-ZoneStatus'.
 - Modèles de commandes JSON: Mise-à-jour cosmetique.

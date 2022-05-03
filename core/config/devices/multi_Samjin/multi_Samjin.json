@@ -60,6 +60,12 @@
                 "invertBinary": 1,
                 "isVisible": "1"
             },
+            "Vibration": {
+                "use": "zbCmdR-0500-ZoneStatus-ZoneEnrollRequest",
+                "template": "door",
+                "invertBinary": 1,
+                "isVisible": "1"
+            },
             "Bind 0500-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0500",

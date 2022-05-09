@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220509-BETA-1
+-------------
+
 - Tuya smoke detector: Support préliminaire (2380).
 - Heiman COSensor EF-3.0: Mise-à-jour modèle (2312).
 - Interne: Parser: Support cmd 01 générée par cluster 0500 (#EP#-0500-cmd01).

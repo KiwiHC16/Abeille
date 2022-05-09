@@ -101,7 +101,7 @@ function refreshLQICache(zgId, page) {
 function refreshBruit(Device) {
     console.log("refreshBruit start");
     $.ajax({
-        url: "/plugins/Abeille/Network/refreshBruit.php?device=" + Device,
+        url: "/plugins/Abeille/core/php/refreshBruit.php?device=" + Device,
     });
     console.log("refreshBruit end");
 }

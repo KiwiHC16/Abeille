@@ -123,6 +123,9 @@ Exemple de commande 'action'
     Exemple:
         Certains équipements remontent l'info "click" et non pas "bouton appuyé, bouton relaché".
         Dans ce cas 'repeatEventManagement' doit être mis sur 'always'.
+        "configuration": {
+            "repeatEventManagement": "always"
+        },
 
   * execAtCreation: optionnel
     Précise que cette commande doit être exécutée lors de l'appairage de l'équipement.

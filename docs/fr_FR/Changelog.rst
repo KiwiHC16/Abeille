@@ -1,6 +1,21 @@
 ChangeLog
 =========
 
+- Tuya smoke detector: Support préliminaire (2380).
+- Heiman COSensor EF-3.0: Mise-à-jour modèle (2312).
+- Interne: Parser: Support cmd 01 générée par cluster 0500 (#EP#-0500-cmd01).
+- Aeotec Multi purpose sensor: Mise-à-jour modèle pour vibration (2376).
+- Nettoyage cmdes JSON obsolètes:
+
+  - 'etatSwitchLivolo' => 'zb-0006-OnOff'
+  - 'etatVolet' => 'zb-0006-OnOff'
+- Interne: Nettoyage partiel du répertoire 'Network'.
+- Interne: Nettoyage 'Abeille.class'.
+- Reseau/bruit: Corrections.
+- Interne: Optimisation AbeilleCmd autour de 'managementNetworkUpdateRequest'.
+- Interne: Parser: Support type 'array'.
+- Interne: Parser: Decode 'write attribute response' pour cluster 'private'.
+
 220428-BETA-1
 -------------
 

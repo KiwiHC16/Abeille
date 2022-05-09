@@ -1029,59 +1029,60 @@ if (0) {
         // log::add('Abeille', 'debug', 'deamon_postSave: OUT');
     }
 
-    public static function fetchShortFromIEEE($IEEE, $checkShort)
-    {
-        // Return:
-        // 0 : Short Address is aligned with the one received
-        // Short : Short Address is NOT aligned with the one received
-        // -1 : Error Nothing found
+    // Tcharp38: Seems useless now.
+    // public static function fetchShortFromIEEE($IEEE, $checkShort)
+    // {
+    //     // Return:
+    //     // 0 : Short Address is aligned with the one received
+    //     // Short : Short Address is NOT aligned with the one received
+    //     // -1 : Error Nothing found
 
-        // $lookForIEEE = "000B57fffe490C2a";
-        // $checkShort = "2006";
-        // log::add('Abeille', 'debug', 'KIWI: start function fetchShortFromIEEE');
-        $abeilles = Abeille::byType('Abeille');
+    //     // $lookForIEEE = "000B57fffe490C2a";
+    //     // $checkShort = "2006";
+    //     // log::add('Abeille', 'debug', 'KIWI: start function fetchShortFromIEEE');
+    //     $abeilles = Abeille::byType('Abeille');
 
-        foreach ($abeilles as $abeille) {
+    //     foreach ($abeilles as $abeille) {
 
-            if (strlen($abeille->getConfiguration('IEEE', 'none')) == 16) {
-                $IEEE_abeille = $abeille->getConfiguration('IEEE', 'none');
-            } else {
-                $cmdIEEE = $abeille->getCmd('Info', 'IEEE-Addr');
-                if (is_object($cmdIEEE)) {
-                    $IEEE_abeille = $cmdIEEE->execCmd();
-                    if (strlen($IEEE_abeille) == 16) {
-                        $abeille->setConfiguration('IEEE', $IEEE_abeille); // si j ai l IEEE dans la cmd et pas dans le conf, je transfer, retro compatibility
-                        $abeille->save();
-                        $abeille->refresh();
-                    }
-                }
-            }
+    //         if (strlen($abeille->getConfiguration('IEEE', 'none')) == 16) {
+    //             $IEEE_abeille = $abeille->getConfiguration('IEEE', 'none');
+    //         } else {
+    //             $cmdIEEE = $abeille->getCmd('Info', 'IEEE-Addr');
+    //             if (is_object($cmdIEEE)) {
+    //                 $IEEE_abeille = $cmdIEEE->execCmd();
+    //                 if (strlen($IEEE_abeille) == 16) {
+    //                     $abeille->setConfiguration('IEEE', $IEEE_abeille); // si j ai l IEEE dans la cmd et pas dans le conf, je transfer, retro compatibility
+    //                     $abeille->save();
+    //                     $abeille->refresh();
+    //                 }
+    //             }
+    //         }
 
-            if ($IEEE_abeille == $IEEE) {
+    //         if ($IEEE_abeille == $IEEE) {
 
-                $cmdShort = $abeille->getCmd('Info', 'Short-Addr');
-                if ($cmdShort) {
-                    if ($cmdShort->execCmd() == $checkShort) {
-                        // echo "Success ";
-                        // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return 0');
-                        return 0;
-                    } else {
-                        // echo "Pas success du tout ";
-                        // La cmd short n est pas forcement à jour alors on va essayer avec le nodeId.
-                        // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return Short: '.$cmdShort->execCmd() );
-                        // return $cmdShort->execCmd();
-                        // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return Short: '.substr($abeille->getlogicalId(),-4) );
-                        return substr($abeille->getlogicalId(), -4);
-                    }
+    //             $cmdShort = $abeille->getCmd('Info', 'Short-Addr');
+    //             if ($cmdShort) {
+    //                 if ($cmdShort->execCmd() == $checkShort) {
+    //                     // echo "Success ";
+    //                     // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return 0');
+    //                     return 0;
+    //                 } else {
+    //                     // echo "Pas success du tout ";
+    //                     // La cmd short n est pas forcement à jour alors on va essayer avec le nodeId.
+    //                     // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return Short: '.$cmdShort->execCmd() );
+    //                     // return $cmdShort->execCmd();
+    //                     // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return Short: '.substr($abeille->getlogicalId(),-4) );
+    //                     return substr($abeille->getlogicalId(), -4);
+    //                 }
 
-                    return $return;
-                }
-            }
-        }
+    //                 return $return;
+    //             }
+    //         }
+    //     }
 
-        // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return -1');
-        return -1;
-    }
+    //     // log::add('Abeille', 'debug', 'KIWI: function fetchShortFromIEEE return -1');
+    //     return -1;
+    // }
 
     /* Returns inclusion status: 1=include mode, 0=normal, -1=ERROR */
     public static function checkInclusionStatus($dest)

@@ -1202,9 +1202,10 @@
                     $raw = false; // Seems no reordering required.
                 } // else $dataSize provided from caller
                 break;
-            default:
-                parserLog('debug', "  decodeDataType() ERROR: Unsupported type ".$dataType);
-                return false;
+            default: // All other types, copy input to output as hex string.
+                // parserLog('debug', "  decodeDataType() WARNING: Unsupported type ".$dataType);
+                $dataSize = strlen($iHs) / 2;
+                break;
             }
 
             // Checking size
@@ -1279,9 +1280,10 @@
                 if (json_encode($value) == "")
                     $value = "?";
                 break;
-            default:
-                parserLog('debug', "  decodeDataType() ERROR: Unsupported type ".$dataType);
-                return false;
+            default: // All other types, copy input to output as hex string.
+                // parserLog('debug', "  decodeDataType() WARNING: Unsupported type ".$dataType);
+                $value = $hs; // No conversion.
+                break;
             }
 
             $oHs = $hs;
@@ -2599,8 +2601,23 @@
                     } // End '$cmd == "01"'
 
                     else if ($cmd == "04") { // Write Attributes Response
-                        parserLog('debug', "  Handled by decode8110");
-                        return;
+                        // Duplicated message ?
+                        if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                            return;
+
+                        $toMon[] = "8002/Write Attributes Response"; // For monitor
+
+                        $l = strlen($msg);
+                        for ($i = 0; $i < $l; ) {
+                            $status = substr($msg, $i + 0, 2);
+                            $attrId = AbeilleTools::reverseHex(substr($msg, $i + 2, 4));
+
+                            $m = "  Attr=".$attrId.", Status=".$status.'/'.zbGetZCLStatus($status);
+                            parserLog('debug', $m);
+                            $toMon[] = $m; // For monitor
+
+                            $i += 6;
+                        }
                     } // End '$cmd == "04"'
 
                     else if ($cmd == "07") { // Configure Reporting Response
@@ -2698,23 +2715,6 @@
 
                             $i += $size;
                         }
-                        // if (sizeof($attributes) == 0)
-                        //     return;
-
-                        // Reporting grouped attributes to Abeille (by Jeedom logical name)
-                        // $toAbeille = array(
-                        //     // 'src' => 'parser',
-                        //     'type' => 'attributesReportN',
-                        //     'net' => $dest,
-                        //     'addr' => $srcAddr,
-                        //     'ep' => $srcEp,
-                        //     'clustId' => $clustId,
-                        //     'attributes' => $attributes,
-                        //     'time' => time(),
-                        //     'lqi' => $lqi,
-                        // );
-                        // msgToAbeille2($toAbeille);
-                        // return;
                     }
 
                     else if ($cmd == "0B") { // Default Response
@@ -2742,8 +2742,6 @@
                             'cmd' => $cmdId,
                             'status' => $status
                         );
-                        // $this->msgToClient($toCli);
-                        // return;
                     }
 
                     else if ($cmd == "0D") { // Discover Attributes Response
@@ -3129,31 +3127,16 @@
                             parserLog('debug', "  Handled by decode8503");
                             return;
                         }
-                        // return;
                     }
 
                     // Color control cluster specific
                     else if ($clustId == "0300") {
                         // Tcharp38: Covering all 0300 commands
                         parserLog("debug", "  msg=".$msg, "8002");
-                        $attributes = [];
                         $attributesReportN[] = array(
                             'name' => $srcEp.'-0300-cmd'.$cmd,
                             'value' => $msg, // Rest of command data to be decoded if required
                         );
-                        // $toAbeille = array(
-                        //     // 'src' => 'parser',
-                        //     'type' => 'attributesReportN',
-                        //     'net' => $dest,
-                        //     'addr' => $srcAddr,
-                        //     'ep' => $srcEp,
-                        //     'clustId' => $clustId,
-                        //     'attributes' => $attributes,
-                        //     'time' => time(),
-                        //     'lqi' => $lqi
-                        // );
-                        // msgToAbeille2($msg);
-                        // return;
                     }
 
                     // IAS cluster specific
@@ -3164,8 +3147,15 @@
 
                         if ($cmd == "00") {
                             parserLog('debug', '  Zone status change notification');
+                            // Not handled here
                         } else if ($cmd == "01") {
-                            parserLog('debug', '  Zone enroll request');
+                            $zoneType = AbeilleTools::reverseHex(substr($msg, 0, 4));
+                            $manufCode = AbeilleTools::reverseHex(substr($msg, 4, 4));
+                            parserLog('debug', '  Zone enroll request: ZoneType='.$zoneType.', ManufCode='.$manufCode);
+                            $attributesReportN[] = array(
+                                'name' => $srcEp.'-0500-cmd01',
+                                'value' => $zoneType.'-'.$manufCode,
+                            );
                         }
                     } // End '$clustId == "0500"'
 
@@ -3176,21 +3166,6 @@
                             return;
 
                         $attributesReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $msg);
-                        // if (isset($attributesN) && (count($attributesN) > 0)) {
-                        //     $toAbeille = array(
-                        //         // 'src' => 'parser',
-                        //         'type' => 'attributesReportN',
-                        //         'net' => $dest,
-                        //         'addr' => $srcAddr,
-                        //         'ep' => $srcEp,
-                        //         'clustId' => $clustId,
-                        //         'attributes' => $attributesN,
-                        //         'time' => time(),
-                        //         'lqi' => $lqi
-                        //     );
-                            // msgToAbeille2($msg);
-                        // }
-                        // return;
                     }
 
                     else {
@@ -5398,11 +5373,11 @@
                 //     $data = substr($payload, 24, 4);
                 // }
 
-                else if ($dataType == "48") { // Array
-                    // Tcharp38: Don't know how to handle it.
-                    parserLog('debug', "  WARNING: Don't know how to decode 'array' data type.");
-                    $data = "00"; // Fake value
-                }
+                // else if ($dataType == "48") { // Array
+                //     // Tcharp38: Don't know how to handle it.
+                //     parserLog('debug', "  WARNING: Don't know how to decode 'array' data type.");
+                //     $data = "00"; // Fake value
+                // }
 
                 /* Note: If $data is not set, then nothing to send to Abeille. This might be because data type is unsupported */
                 else {
@@ -5545,9 +5520,9 @@
                 .', Status='.$status;
 
             // Log
-            parserLog('debug', $dest.', Type='.$decoded);
+            parserLog('debug', $dest.', Type='.$decoded.' => Handled by decode8002()');
 
-            // Monitor
+            // Fully handled in decode8002() allowing to display status from private clusters too.
         }
 
         function decode8120($dest, $payload, $lqi)
@@ -5712,27 +5687,19 @@
                .', ZoneId='.substr($payload,20, 2)
                .', Delay='.substr($payload,22, 4);
 
-            parserLog('debug', $dest.', Type='.$msgDecoded);
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
-                monMsgFromZigate($msg); // Send message to monitor
-
-            $this->whoTalked[] = $dest.'/'.$srcAddr;
-
-            $attributes = [];
+            $attributesReportN = [];
             // Legacy: Sending 0500-#EP#-0000 with zoneStatus as value
             // To be removed at some point
-            $attr = array(
+            $attributesReportN[] = array(
                 'name' => $clustId.'-'.$ep.'-0000',
                 'value' => $zoneStatus,
             );
-            $attributes[] = $attr;
 
             // New message format '#EP#-0500-cmd00' with $zoneStatus as value
-            $attr = array(
+            $attributesReportN[] = array(
                 'name' => $ep.'-0500-cmd00',
                 'value' => $zoneStatus,
             );
-            $attributes[] = $attr;
 
             $msg = array(
                 // 'src' => 'parser',
@@ -5741,11 +5708,17 @@
                 'addr' => $srcAddr,
                 'ep' => $ep,
                 'clustId' => $clustId,
-                'attributes' => $attributes,
+                'attributes' => $attributesReportN,
                 'time' => time(),
                 'lqi' => $lqi
             );
             msgToAbeille2($msg);
+
+            parserLog('debug', $dest.', Type='.$msgDecoded);
+            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
+                monMsgFromZigate($msg); // Send message to monitor
+
+            $this->whoTalked[] = $dest.'/'.$srcAddr;
         }
 
         // OTA specific: ZiGate will receive this command when device asks OTA firmware

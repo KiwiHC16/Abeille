@@ -15,7 +15,10 @@
             "include24 2 2 2 2 2 3": "setLivoloOff",
             "include24 2 2 2 2 2 2": "setLivoloOn2",
             "include24 2 2 2 2 2 2 2": "setLivoloOn",
-            "include4": "etatSwitchLivolo",
+            "etat": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1
+            },
             "Get-Status": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"

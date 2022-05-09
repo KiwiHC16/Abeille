@@ -1,0 +1,21 @@
+{
+    "TS0601__TZE200_ntcy3xu1": {
+        "manufacturer": "Tuya",
+        "model": "?",
+        "type": "Tuya smoke detector",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "?",
+            "mainEP": "01",
+            "batteryType": "?"
+        },
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            }
+        }
+    }
+}

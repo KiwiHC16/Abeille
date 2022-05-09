@@ -304,7 +304,7 @@
         $eq = &getDevice($net, $addr); // By ref
         // parserLog('debug', 'eq='.json_encode($eq));
         if (!isset($eq['tuyaEF00']) || !isset($eq['tuyaEF00']['fromDevice'])) {
-            parserLog('debug', "  Undefined Tuya mapping => ignoring");
+            parserLog('debug', "  No defined Tuya mapping => ignoring (msg=".$msg.")");
             return [];
         }
         $mapping = $eq['tuyaEF00']['fromDevice'];

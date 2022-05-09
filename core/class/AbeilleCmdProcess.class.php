@@ -950,38 +950,6 @@
                 return;
             }
 
-            // Management Network Update request
-            // ZPS_eAplZdpMgmtNwkUpdateRequest - APP_eZdpMgmtNetworkUpdateReq - E_SL_MSG_MANAGEMENT_NETWORK_UPDATE_REQUEST
-            if (isset($Command['managementNetworkUpdateRequest']) && isset($Command['address'])) {
-                // Msg Type =  0x004A
-
-                // <target short address: uint16_t>
-                // <channel mask: uint32_t>
-                // <scan duration: uint8_t>
-                // <scan count: uint8_t> -> Si valeur a 5 alors l ampoule envoit 5 messages avec les mesures
-                // <network update ID: uint8_t>
-                // <network manager short address: uint16_t>
-                //
-                // Channel Mask: Mask of channels to scan
-                // Scan Duration: 0 – 0xFF Multiple of superframe duration.
-                // Scan count: Scan repeats 0 – 5
-                // Network Update ID: 0 – 0xFF Transaction ID for scan
-
-                $cmd = "004A";
-
-                $shortAddress               = $Command['address'];
-                $channelMask                = "07FFF800";
-                $scanDuration               = "01";
-                $scanCount                  = "01";
-                $networkUpdateId            = "01";
-                $networkManagerShortAddress = "0000";
-
-                $data = $shortAddress.$channelMask.$scanDuration.$scanCount.$networkUpdateId .$networkManagerShortAddress;
-
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $shortAddress);
-                return;
-            }
-
             //----------------------------------------------------------------------
             // Bind
             // Title => 000B57fffe3025ad (IEEE de l ampoule)
@@ -3107,6 +3075,43 @@
                     $data = $ieee.$rejoin.$RemoveChildren;
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
+                    return;
+                }
+
+                // Zigbee command: Management Network Update request
+                // Mandatory params: 'addr'
+                // Optional params:
+                else if ($cmdName == 'managementNetworkUpdateRequest') {
+                    $required = ['addr'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // Msg Type =  0x004A
+
+                    // <target short address: uint16_t>
+                    // <channel mask: uint32_t>
+                    // <scan duration: uint8_t>
+                    // <scan count: uint8_t> -> Si valeur a 5 alors l ampoule envoit 5 messages avec les mesures
+                    // <network update ID: uint8_t>
+                    // <network manager short address: uint16_t>
+                    //
+                    // Channel Mask: Mask of channels to scan
+                    // Scan Duration: 0 – 0xFF Multiple of superframe duration.
+                    // Scan count: Scan repeats 0 – 5
+                    // Network Update ID: 0 – 0xFF Transaction ID for scan
+
+                    $cmd = "004A";
+
+                    $shortAddress               = $Command['addr'];
+                    $channelMask                = "07FFF800";
+                    $scanDuration               = "01";
+                    $scanCount                  = "01";
+                    $networkUpdateId            = "01";
+                    $networkManagerShortAddress = "0000";
+
+                    $data = $shortAddress.$channelMask.$scanDuration.$scanCount.$networkUpdateId.$networkManagerShortAddress;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $shortAddress);
                     return;
                 }
 

@@ -15,7 +15,11 @@
             "include0 2 2": "Lift",
             "include0 2 2 2": "Tilt",
             "include4": "zb-0000-ZCLVersion",
-            "include7": "etatVolet",
+            "etat": {
+                "use": "zb-0006-OnOff",
+                "genericType": "FLAP_STATE",
+                "isVisible": 1
+            },
             "include8": "levelVolet",
             "include9": "onVolet",
             "include10": "offVolet",

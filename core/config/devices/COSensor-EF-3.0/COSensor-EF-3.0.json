@@ -31,7 +31,12 @@
                 "use": "Identify"
             },
             "Zone Status": {
-                "use": "zb-0500-ZoneStatus",
+                "use": "zb-0500-ZoneStatus"
+            },
+            "Door Status": {
+                "use": "zb-0500-ZoneStatus-Alarm1",
+                "template": "door",
+                "invertBinary": 1,
                 "isVisible": "1"
             },
             "Get Zone Status": {

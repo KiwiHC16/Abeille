@@ -94,14 +94,14 @@
              * Zigbee ZDO commands
              */
 
-            case "managementNetworkUpdateRequest":
-                $Command = array(
-                    "managementNetworkUpdateRequest" => "1",
-                    "priority" => $priority,
-                    "dest" => $dest,
-                    "address" => $address,
-                );
-                break;
+            // case "managementNetworkUpdateRequest":
+            //     $Command = array(
+            //         "managementNetworkUpdateRequest" => "1",
+            //         "priority" => $priority,
+            //         "dest" => $dest,
+            //         "address" => $address,
+            //     );
+            //     break;
             case "bindShort": // OBSOLETE: Use 'bind0030' instead
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {

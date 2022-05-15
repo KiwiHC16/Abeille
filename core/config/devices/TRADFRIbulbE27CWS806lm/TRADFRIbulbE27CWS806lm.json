@@ -2,13 +2,13 @@
     "TRADFRIbulbE27CWS806lm": {
         "manufacturer": "Ikea",
         "model": "LED1924G9",
-        "type": "Ikea E27 806lm bulb",
+        "type": "Ikea E27 bulb",
         "timeout": "60",
         "category": {
             "automatism": "1"
         },
         "configuration": {
-            "icon": "Ikea-E27",
+            "icon": "Ikea-BulbE27",
             "mainEP": "01"
         },
         "commands": {

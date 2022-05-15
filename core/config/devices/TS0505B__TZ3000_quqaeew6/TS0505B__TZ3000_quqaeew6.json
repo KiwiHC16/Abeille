@@ -2,13 +2,13 @@
     "TS0505B__TZ3000_quqaeew6": {
         "manufacturer": "LavarnoLux",
         "model": "HG08131A",
-        "type": "LavarnoLux led gu10 HG08131A",
+        "type": "LavarnoLux led gu10",
         "timeout": "60",
         "category": {
             "light": "1"
         },
         "configuration": {
-            "icon": "Generic-GU10",
+            "icon": "Generic-BulbGU10",
             "mainEP": "01"
         },
         "commands": {

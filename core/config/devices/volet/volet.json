@@ -6,12 +6,12 @@
         "configuration": {
             "mainEP": "01",
             "paramType": "paramABC",
-            "icon": "voletProFalux"
+            "icon": "Profalux-Shutter"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Profalux volet",
+        "type": "Profalux shutter",
         "commands": {
             "Identify": {
                 "use": "Identify"

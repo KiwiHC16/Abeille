@@ -6,13 +6,13 @@
         "timeout": "140",
         "configuration": {
             "mainEP": "01",
-            "icon": "SNZB-03",
+            "icon": "Sonoff-SNZB-03",
             "batteryType": "1x3V CR2450"
         },
         "category": {
             "security": "1"
         },
-        "type": "Sonoff SNZB-03 motion sensor",
+        "type": "Sonoff motion sensor",
         "commands": {
             "include1": "etatSonOffIR",
             "Battery-Percent": {

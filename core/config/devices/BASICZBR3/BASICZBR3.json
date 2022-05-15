@@ -5,12 +5,12 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "BASICZBR3"
+            "icon": "Sonoff-BASICZBR3"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Sonoff BASICZBR3 DIY smart switch",
+        "type": "Sonoff DIY smart switch",
         "commands": {
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

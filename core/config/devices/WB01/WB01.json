@@ -5,13 +5,13 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "SNZB-01",
+            "icon": "Sonoff-SNZB-01",
             "batteryType": "1x3V CR2450"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Sonoff SNZB-01 wireless button",
+        "type": "Sonoff wireless button",
         "commands": {
             "include2 3": "Click-Middle",
             "Bind-0006-ToZigate": {

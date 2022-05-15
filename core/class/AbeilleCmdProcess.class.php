@@ -231,11 +231,11 @@
         //     // => 34 -> 0x22
 
         //     $addrMode            = "02";
-        //     $targetShortAddress     = $address;
+        //     $addr     = $address;
         //     $srcEp         = "01";
         //     $dstEp    = $dstEp;
-        //     $profileID              = "0104";
-        //     $clusterID              = $clusterId;
+        //     $profId              = "0104";
+        //     $clustId              = $clusterId;
         //     $secMode           = "02"; // ???
         //     $radius                 = "30";
         //     // $dataLength <- calculated later
@@ -253,13 +253,13 @@
 
         //     $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
-        //     $data1 = $addrMode.$targetShortAddress.$srcEp.$dstEp.$clusterID.$profileID.$secMode.$radius.$dataLength;
+        //     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
 
         //     $data = $data1.$data2;
 
         //     // $length = sprintf("%04s", dechex(strlen($data) / 2));
-        //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
-        //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+        //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
+        //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
         // }
 
         /**
@@ -301,7 +301,7 @@
             // => 34 -> 0x22
 
             $addrMode                = "02";
-            $targetShortAddress         = $Command['address'];
+            $addr         = $Command['address'];
             $srcEp             = "01";
 
             if (isset($Command['destinationEndpoint'])) {
@@ -316,8 +316,8 @@
                 $dstEp = "01";
             }
 
-            $profileID                  = "0104";
-            $clusterID                  = $Command['clusterId'];
+            $profId                  = "0104";
+            $clustId                  = $Command['clusterId'];
 
             $secMode               = "02"; // ???
             $radius                     = "30";
@@ -347,13 +347,13 @@
 
             $dataLength                 = sprintf("%02s",dechex(strlen( $data2 )/2));
 
-            $data1                      = $addrMode.$targetShortAddress.$srcEp.$dstEp.$clusterID.$profileID.$secMode.$radius.$dataLength;
+            $data1                      = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
 
             $data                       = $data1.$data2;
 
             // $length                      = sprintf("%04s",dechex(strlen($data) / 2));
-            // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
-            $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+            // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
+            $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
         }
 
         /**
@@ -396,12 +396,12 @@
             // => 34 -> 0x22
 
             $addrMode                = "02";
-            $targetShortAddress = $Command['address'];
+            $addr = $Command['address'];
             $srcEp             = "01";
             if ($Command['destinationEndpoint']>1 ) { $dstEp = $Command['destinationEndpoint']; } else { $dstEp = "01"; } // $dstEp; // "01";
 
-            $profileID                  = "0104";
-            $clusterID                  = $Command['clusterId'];
+            $profId                  = "0104";
+            $clustId                  = $Command['clusterId'];
 
             $secMode               = "02"; // ???
             $radius                     = "30";
@@ -425,13 +425,13 @@
 
             $dataLength                 = sprintf("%02s",dechex(strlen( $data2 )/2));
 
-            $data1                      = $addrMode.$targetShortAddress.$srcEp.$dstEp.$clusterID.$profileID.$secMode.$radius.$dataLength;
+            $data1                      = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
 
             $data                       = $data1.$data2;
 
             // $length                      = sprintf("%04s",dechex(strlen($data) / 2));
-            // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
-            $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+            // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
+            $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
         }
 
         /**
@@ -476,12 +476,12 @@
             // => 34 -> 0x22
 
             $addrMode        = "02";
-            $targetShortAddress = $Command['address'];
+            $addr = $Command['address'];
             $srcEp     = "01";
             if ($Command['destinationEndpoint']>1 ) { $dstEp = $Command['destinationEndpoint']; } else { $dstEp = "01"; } // $dstEp; // "01";
 
-            $profileID          = "0104";
-            $clusterID          = $Command['clusterId'];
+            $profId          = "0104";
+            $clustId          = $Command['clusterId'];
 
             $secMode       = "02"; // ???
             $radius             = "30";
@@ -511,71 +511,13 @@
 
             $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
-            $data1 = $addrMode.$targetShortAddress.$srcEp.$dstEp.$clusterID.$profileID.$secMode.$radius.$dataLength;
+            $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
 
             $data = $data1.$data2;
 
             // $length = sprintf("%04s", dechex(strlen($data) / 2));
-            // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
-            $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
-        }
-
-        // Needed for fc41 of Legrand Contacteur
-        function commandLegrand($dest,$Command) {
-
-            $priority = $Command['priority'];
-
-            $cmd = "0530";
-
-            // <address mode: uint8_t>              -> 1
-            // <target short address: uint16_t>     -> 2
-            // <source endpoint: uint8_t>           -> 1
-            // <destination endpoint: uint8_t>      -> 1
-
-            // <profile ID: uint16_t>               -> 2
-            // <cluster ID: uint16_t>               -> 2
-
-            // <security mode: uint8_t>             -> 1
-            // <radius: uint8_t>                    -> 1
-            // <data length: uint8_t>               -> 1  (22 -> 0x16)
-
-            // <data: auint8_t>
-
-
-            $addrMode = "02";
-            $targetShortAddress = $Command['address'];
-            $srcEp = "01";
-            if ($Command['destinationEndpoint']>1 ) { $dstEp = $Command['destinationEndpoint']; } else { $dstEp = "01"; } // $dstEp; // "01";
-
-            $profileID = "0104";
-            $clusterID = "FC41";
-
-            $secMode = "02"; // ???
-            $radius = "30";
-            // $dataLength = define later
-
-            // ---------------------------
-
-            $frameControlAPS = "15";   // APS Control Field, see doc for details
-
-            $manufacturerCode = "2110";
-            $transqactionSequenceNumber = "1A"; // to be reviewed
-            $command = "00";
-
-            // $data = "00"; // 00 = Off, 02 = Auto, 03 = On.
-            $data = $Command['Mode'];
-
-            $data2 = $frameControlAPS.$manufacturerCode.$transqactionSequenceNumber.$command.$data;
-
-            $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
-
-            $data1 = $addrMode.$targetShortAddress.$srcEp.$dstEp.$clusterID.$profileID.$secMode.$radius.$dataLength;
-
-            $data = $data1.$data2;
-
-            // $length = sprintf("%04s", dechex(strlen($data) / 2));
-            // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
-            $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+            // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
+            $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
         }
 
         // Generate a 'Read attribute request'
@@ -673,11 +615,11 @@
         //     $dest                   = $Command['dest'];
 
         //     $addrMode            = "02";
-        //     $targetShortAddress     = $Command['address'];
+        //     $addr     = $Command['address'];
         //     $srcEp         = "01";
         //     $dstEp    = $Command['EP'];
-        //     $clusterID              = $Command['clusterId'];
-        //     $profileID              = "0104";
+        //     $clustId              = $Command['clusterId'];
+        //     $profId              = "0104";
         //     $secMode           = "02";
         //     $radius                 = "1E";
 
@@ -700,14 +642,14 @@
         //     $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2));
 
         //     $sep = "";
-        //     $data1 = $addrMode.$sep.$targetShortAddress.$sep.$srcEp.$sep.$dstEp.$sep.$clusterID.$sep.$profileID.$sep.$secMode.$sep.$radius.$sep.$dataLength;
+        //     $data1 = $addrMode.$sep.$addr.$sep.$srcEp.$sep.$dstEp.$sep.$clustId.$sep.$profId.$sep.$secMode.$sep.$radius.$sep.$dataLength;
         //     $sep = "-";
-        //     $data1Txt = $addrMode.$sep.$targetShortAddress.$sep.$srcEp.$sep.$dstEp.$sep.$clusterID.$sep.$profileID.$sep.$secMode.$sep.$radius.$sep.$dataLength;
+        //     $data1Txt = $addrMode.$sep.$addr.$sep.$srcEp.$sep.$dstEp.$sep.$clustId.$sep.$profId.$sep.$secMode.$sep.$radius.$sep.$dataLength;
 
         //     $data = $data1.$data2;
         //     // $length = sprintf("%04s", dechex(strlen($data) / 2));
-        //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
-        //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+        //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
+        //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
         // }
 
         // Tcharp38: Seems no longer used
@@ -977,8 +919,8 @@
                     $targetEndpoint         = "01";
                 }
 
-                // $clusterID              = "0006";
-                $clusterID              = $Command['ClusterId'];
+                // $clustId              = "0006";
+                $clustId              = $Command['ClusterId'];
                 // $destinationAddressMode = "02";
                 $destinationAddressMode = "03";
 
@@ -988,7 +930,7 @@
 
                 $dstEp    = "01";
 
-                $data = $targetExtendedAddress.$targetEndpoint.$clusterID.$destinationAddressMode.$destinationAddress.$dstEp;
+                $data = $targetExtendedAddress.$targetEndpoint.$clustId.$destinationAddressMode.$destinationAddress.$dstEp;
                 $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
                 return;
             }
@@ -1025,11 +967,11 @@
                 // => 34 -> 0x22
 
                 $addrMode                = "02";
-                $targetShortAddress         = $Command['address'];
+                $addr         = $Command['address'];
                 $srcEpBind         = "00";
                 $dstEpBind    = "00";
-                $profileIDBind              = "0000";
-                $clusterIDBind              = "0021";
+                $profIdBind              = "0000";
+                $clustIdBind              = "0021";
                 $secMode               = "02";
                 $radius                     = "30";
                 // $dataLength                 = "16";
@@ -1038,21 +980,21 @@
 
                 $targetExtendedAddress      = AbeilleTools::reverseHex($Command['targetExtendedAddress']);
                 $targetEndpoint             = $Command['targetEndpoint'];
-                $clusterID                  = AbeilleTools::reverseHex($Command['clusterID']);
+                $clustId                  = AbeilleTools::reverseHex($Command['clusterID']);
                 $destinationAddressMode     = "01";
                 $reportToGroup              = AbeilleTools::reverseHex($Command['reportToGroup']);
 
-                $data2 = $dummy.$targetExtendedAddress.$targetEndpoint.$clusterID .$destinationAddressMode.$reportToGroup;
+                $data2 = $dummy.$targetExtendedAddress.$targetEndpoint.$clustId .$destinationAddressMode.$reportToGroup;
                 $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2));
 
-                $data1 = $addrMode.$targetShortAddress.$srcEpBind.$dstEpBind.$clusterIDBind.$profileIDBind.$secMode.$radius.$dataLength;
+                $data1 = $addrMode.$addr.$srcEpBind.$dstEpBind.$clustIdBind.$profIdBind.$secMode.$radius.$dataLength;
 
-                cmdLog('debug', "  Data1: ".$addrMode."-".$targetShortAddress."-".$srcEpBind."-".$dstEpBind."-".$clusterIDBind."-".$profileIDBind."-".$secMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2), $this->debug['processCmd'] );
-                cmdLog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$reportToGroup." len: ".(strlen($data2)/2), $this->debug['processCmd'] );
+                cmdLog('debug', "  Data1: ".$addrMode."-".$addr."-".$srcEpBind."-".$dstEpBind."-".$clustIdBind."-".$profIdBind."-".$secMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2), $this->debug['processCmd'] );
+                cmdLog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clustId."-".$destinationAddressMode."-".$reportToGroup." len: ".(strlen($data2)/2), $this->debug['processCmd'] );
 
                 $data = $data1.$data2;
 
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                 return;
             }
 
@@ -1089,11 +1031,11 @@
                 // => 34 -> 0x22
 
                 $addrMode                = "02";
-                $targetShortAddress         = $Command['address'];
+                $addr         = $Command['address'];
                 $srcEpBind         = "00";
                 $dstEpBind    = "00";
-                $profileIDBind              = "0000";
-                $clusterIDBind              = "0021";
+                $profIdBind              = "0000";
+                $clustIdBind              = "0021";
                 $secMode               = "02";
                 $radius                     = "30";
                 $dataLength                 = "16";
@@ -1108,7 +1050,7 @@
 
                 $targetEndpoint = $Command['targetEndpoint'];
 
-                $clusterID = AbeilleTools::reverseHex($Command['clusterID']);
+                $clustId = AbeilleTools::reverseHex($Command['clusterID']);
 
                 $destinationAddressMode = "03";
                 if (strlen($Command['destinationAddress']) < 2 ) {
@@ -1121,15 +1063,15 @@
 
                 $length = "0022";
 
-                $data1 = $addrMode.$targetShortAddress.$srcEpBind.$dstEpBind.$clusterIDBind.$profileIDBind.$secMode.$radius.$dataLength;
-                $data2 = $dummy.$targetExtendedAddress.$targetEndpoint.$clusterID .$destinationAddressMode.$destinationAddress.$dstEp;
+                $data1 = $addrMode.$addr.$srcEpBind.$dstEpBind.$clustIdBind.$profIdBind.$secMode.$radius.$dataLength;
+                $data2 = $dummy.$targetExtendedAddress.$targetEndpoint.$clustId .$destinationAddressMode.$destinationAddress.$dstEp;
 
-                cmdLog('debug', "  Data1: ".$addrMode."-".$targetShortAddress."-".$srcEpBind."-".$dstEpBind."-".$clusterIDBind."-".$profileIDBind."-".$secMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2), $this->debug['processCmd'] );
-                cmdLog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$dstEp." len: ".(strlen($data2)/2), $this->debug['processCmd'] );
+                cmdLog('debug', "  Data1: ".$addrMode."-".$addr."-".$srcEpBind."-".$dstEpBind."-".$clustIdBind."-".$profIdBind."-".$secMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2), $this->debug['processCmd'] );
+                cmdLog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clustId."-".$destinationAddressMode."-".$destinationAddress."-".$dstEp." len: ".(strlen($data2)/2), $this->debug['processCmd'] );
 
                 $data = $data1.$data2;
 
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                 return;
             }
 
@@ -1163,7 +1105,7 @@
                 //      Change : uint8_t                -> 2
 
                 $addrMode            = "02";
-                $targetShortAddress     = $Command['address'];
+                $addr     = $Command['address'];
                 if (isset( $Command['sourceEndpoint'] )) { $srcEp = $Command['sourceEndpoint']; } else { $srcEp = "01"; }
                 if (isset( $Command['targetEndpoint'] )) { $targetEndpoint = $Command['targetEndpoint']; } else { $targetEndpoint = "01"; }
                 $ClusterId              = $Command['ClusterId'];
@@ -1179,7 +1121,7 @@
                 if ($AttributeDirection == "00" ) {
                     if (isset($Command['AttributeType'])) {$AttributeType = $Command['AttributeType']; }
                     else {
-                        cmdLog('error', "set Report with an AttributeType not defines for equipment: ". $targetShortAddress." attribut: ".$AttributeId." can t process" , $this->debug['processCmd']);
+                        cmdLog('error', "set Report with an AttributeType not defines for equipment: ". $addr." attribut: ".$AttributeId." can t process" , $this->debug['processCmd']);
                         return;
                     }
                     if (isset($Command['MinInterval']))   { $MinInterval  = $Command['MinInterval']; } else { $MinInterval    = "0000"; }
@@ -1195,13 +1137,13 @@
                     if (isset($Command['Timeout']))   { $Timeout      = $Command['Timeout']; }     else { $Timeout        = "0000"; }
                 }
                 else {
-                    cmdLog('error', "set Report with an AttributeDirection (".$AttributeDirection.") not valid for equipment: ". $targetShortAddress." attribut: ".$AttributeId." can t process", $this->debug['processCmd']);
+                    cmdLog('error', "set Report with an AttributeDirection (".$AttributeDirection.") not valid for equipment: ". $addr." attribut: ".$AttributeId." can t process", $this->debug['processCmd']);
                     return;
                 }
 
-                $data =  $addrMode.$targetShortAddress.$srcEp.$targetEndpoint.$ClusterId.$direction.$manufacturerSpecific.$manufacturerId.$numberOfAttributes.$AttributeDirection.$AttributeType.$AttributeId.$MinInterval.$MaxInterval.$Timeout.$Change ;
+                $data =  $addrMode.$addr.$srcEp.$targetEndpoint.$ClusterId.$direction.$manufacturerSpecific.$manufacturerId.$numberOfAttributes.$AttributeDirection.$AttributeType.$AttributeId.$MinInterval.$MaxInterval.$Timeout.$Change ;
 
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                 return;
             }
 
@@ -1233,11 +1175,11 @@
                 // ....
 
                 $addrMode            = "02";
-                $targetShortAddress     = $Command['address'];
+                $addr     = $Command['address'];
                 $srcEp         = "01";
                 $dstEp    = "01";
-                $profileID              = "0104";
-                $clusterID              = "0B04";
+                $profId              = "0104";
+                $clustId              = "0B04";
                 $secMode           = "02";
                 $radius                 = "1E";
 
@@ -1260,14 +1202,14 @@
 
                 $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2));
 
-                $data1 = $addrMode.$targetShortAddress.$srcEp.$dstEp.$clusterID.$profileID.$secMode.$radius.$dataLength;
+                $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
 
-                cmdLog('debug', "  Data1: ".$addrMode."-".$targetShortAddress."-".$srcEp."-".$dstEp."-".$clusterID."-".$profileID."-".$secMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
+                cmdLog('debug', "  Data1: ".$addrMode."-".$addr."-".$srcEp."-".$dstEp."-".$clustId."-".$profId."-".$secMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
                 cmdLog('debug', "  Data2: ".$zclControlField."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd']);
 
                 $data = $data1.$data2;
 
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                 return;
             }
 
@@ -1302,11 +1244,11 @@
                 // 001B Group Id
 
                 $addrMode            = "02";
-                $targetShortAddress     = $Command['address'];
+                $addr     = $Command['address'];
                 $srcEp         = "01";
                 $dstEp    = "01";
-                $profileID              = "0104";
-                $clusterID              = "1000";
+                $profId              = "0104";
+                $clustId              = "1000";
                 $secMode           = "02";
                 $radius                 = "1E";
 
@@ -1322,12 +1264,12 @@
 
                 $data2 = $zclControlField.$transactionSequence.$cmdId.$total.$startIndex.$count.$groupId.$groupType;
                 $dataLength = sprintf( "%02s", dechex(strlen($data2) / 2));
-                $data1 = $addrMode.$targetShortAddress.$srcEp.$dstEp.$clusterID.$profileID.$secMode.$radius.$dataLength;
+                $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
                 $data = $data1.$data2;
 
                 // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
+                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                 return;
             }
 
@@ -1362,11 +1304,11 @@
                 // 001B Group Id
 
                 $addrMode            = "02";
-                $targetShortAddress     = $Command['address'];
+                $addr     = $Command['address'];
                 $srcEp         = "01";
                 $dstEp    = "01";
-                $profileID              = "0104";
-                $clusterID              = "FC01";
+                $profId              = "0104";
+                $clustId              = "FC01";
                 $secMode           = "02";
                 $radius                 = "14";
 
@@ -1380,9 +1322,9 @@
 
                 $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2));
 
-                $data1 = $addrMode.$targetShortAddress.$srcEp.$dstEp.$clusterID.$profileID.$secMode.$radius.$dataLength;
+                $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
 
-                cmdLog('debug', "  Data1: ".$addrMode."-".$targetShortAddress."-".$srcEp."-".$dstEp."-".$clusterID."-".$profileID."-".$secMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
+                cmdLog('debug', "  Data1: ".$addrMode."-".$addr."-".$srcEp."-".$dstEp."-".$clustId."-".$profId."-".$secMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
                 cmdLog('debug', "  Data2: ".$zclControlField."-".$Manufacturer."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd']);
 
                 $data = $data1.$data2;
@@ -1656,11 +1598,11 @@
                 $cmd = "0530";
 
                 $addrMode = "01"; // 01 pour groupe
-                $targetShortAddress = $Command['address'];
+                $addr = $Command['address'];
                 $srcEpBind = "01";
                 $dstEpBind = "01";
-                $profileIDBind = "0104";
-                $clusterIDBind = "0005";
+                $profIdBind = "0104";
+                $clustIdBind = "0005";
                 $secMode = "02";
                 $radius = "30";
                 // $dataLength = "16";
@@ -1674,15 +1616,15 @@
                 $data2 = $FrameControlField.$manu.$SQN.$cmdIkea.$cmdIkeaParams;
                 $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
-                $data1 = $addrMode.$targetShortAddress.$srcEpBind.$dstEpBind.$clusterIDBind.$profileIDBind.$secMode.$radius.$dataLength;
+                $data1 = $addrMode.$addr.$srcEpBind.$dstEpBind.$clustIdBind.$profIdBind.$secMode.$radius.$dataLength;
 
-                cmdLog('debug', "  Data1: ".$addrMode."-".$targetShortAddress."-".$srcEpBind."-".$dstEpBind."-".$clusterIDBind."-".$profileIDBind."-".$secMode."-".$radius."-".$dataLength." len: ".(dechex(strlen($data1)/2)), $this->debug['processCmd'] );
-                cmdLog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clusterID."-".$destinationAddressMode."-".$destinationAddress."-".$dstEp." len: ".(dechex(strlen($data2)/2)), $this->debug['processCmd'] );
+                cmdLog('debug', "  Data1: ".$addrMode."-".$addr."-".$srcEpBind."-".$dstEpBind."-".$clustIdBind."-".$profIdBind."-".$secMode."-".$radius."-".$dataLength." len: ".(dechex(strlen($data1)/2)), $this->debug['processCmd'] );
+                cmdLog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clustId."-".$destinationAddressMode."-".$destinationAddress."-".$dstEp." len: ".(dechex(strlen($data2)/2)), $this->debug['processCmd'] );
 
                 $data = $data1.$data2;
                 // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
+                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                 return;
             }
 
@@ -1727,7 +1669,7 @@
                 $cmd = '0530';
 
                 $addrMode            = "02";                // 01 pour groupe, 02 pour NE
-                $targetShortAddress     = $Command['address'];
+                $addr     = $Command['address'];
                 $srcEp         = "01";
                 $dstEp    = "01";
                 $profile                = "0104";
@@ -1744,12 +1686,12 @@
                 $data2 = $FrameControlField.$SQN.$cmdLift.$liftValue.$liftValue;
                 $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
 
-                $data1 = $addrMode.$targetShortAddress.$srcEp.$dstEp.$cluster.$profile.$secMode.$radius.$dataLength;
+                $data1 = $addrMode.$addr.$srcEp.$dstEp.$cluster.$profile.$secMode.$radius.$dataLength;
 
                 $data = $data1.$data2;
                 // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
+                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                 return;
             }
 
@@ -1908,11 +1850,11 @@
                 // etc
 
                 $addrMode            = $Command['addressMode'];
-                $targetShortAddress     = $Command['address'];
+                $addr     = $Command['address'];
                 $srcEp         = "01";
                 $dstEp    = "01";
-                $profileID              = "0104";
-                $clusterID              = "0008";
+                $profId              = "0104";
+                $clustId              = "0008";
                 $secMode           = "02";
                 $radius                 = "1E";
 
@@ -1932,16 +1874,16 @@
 
                 $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2));
 
-                $data1 = $addrMode.$targetShortAddress.$srcEp.$dstEp.$clusterID.$profileID.$secMode.$radius.$dataLength;
+                $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
 
-                cmdLog('debug', "    Data1: ".$addrMode."-".$targetShortAddress."-".$srcEp."-".$dstEp."-".$clusterID."-".$profileID."-".$secMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
+                cmdLog('debug', "    Data1: ".$addrMode."-".$addr."-".$srcEp."-".$dstEp."-".$clustId."-".$profId."-".$secMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
                 cmdLog('debug', "    Data2: ".$zclControlField."-".$ManfufacturerCode."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd']);
 
                 $data = $data1.$data2;
 
                 // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
+                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                 return;
             }
 
@@ -2070,7 +2012,7 @@
                     // <Strobe level : uint8_t>
 
                     $addrMode = "02";
-                    $targetShortAddress = $Command['address'];
+                    $addr = $Command['address'];
                     $srcEp = "01";
                     $dstEp = "01";
                     $direction = "01";
@@ -2085,9 +2027,9 @@
                     // $strobeDutyCycle = "01";
                     // $strobeLevel = "F0";
 
-                    $data = $addrMode.$targetShortAddress.$srcEp.$dstEp.$direction.$manufacturerSpecific.$manufacturerId.$warningMode.$warningDuration; //.$strobeDutyCycle.$strobeLevel;
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$direction.$manufacturerSpecific.$manufacturerId.$warningMode.$warningDuration; //.$strobeDutyCycle.$strobeLevel;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                     return;
                 }
 
@@ -2152,11 +2094,11 @@
                 // => 16 -> 0x10
 
                 $addrMode = "02";
-                $targetShortAddress = $Command['address'];
+                $addr = $Command['address'];
                 $srcEpBind = "01";
                 $dstEpBind = "01";
-                $profileIDBind = "0104";
-                $clusterIDBind = "0004";
+                $profIdBind = "0104";
+                $clustIdBind = "0004";
                 $secMode = "02";
                 $radius = "30";
                 $dataLength = "06";
@@ -2170,19 +2112,19 @@
 
                 $length = "0011";
 
-                // $data =  $targetExtendedAddress.$targetEndpoint.$clusterID.$destinationAddressMode.$destinationAddress.$dstEp;
-                // $data1 = $addrMode.$targetShortAddress.$srcEpBind.$dstEpBind.$profileIDBind.$clusterIDBind.$secMode.$radius.$dataLength;
-                $data1 = $addrMode.$targetShortAddress.$srcEpBind.$dstEpBind.$clusterIDBind.$profileIDBind.$secMode.$radius.$dataLength;
+                // $data =  $targetExtendedAddress.$targetEndpoint.$clustId.$destinationAddressMode.$destinationAddress.$dstEp;
+                // $data1 = $addrMode.$addr.$srcEpBind.$dstEpBind.$profIdBind.$clustIdBind.$secMode.$radius.$dataLength;
+                $data1 = $addrMode.$addr.$srcEpBind.$dstEpBind.$clustIdBind.$profIdBind.$secMode.$radius.$dataLength;
                 $data2 = $dummy.$dummy1.$cmdAddGroup.$groupId.$length;
 
-                cmdLog('debug', "    Data1: ".$addrMode."-".$targetShortAddress."-".$srcEpBind."-".$dstEpBind."-".$clusterIDBind."-".$profileIDBind."-".$secMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) , $this->debug['processCmd']);
+                cmdLog('debug', "    Data1: ".$addrMode."-".$addr."-".$srcEpBind."-".$dstEpBind."-".$clustIdBind."-".$profIdBind."-".$secMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2) , $this->debug['processCmd']);
                 cmdLog('debug', "    Data2: ".$dummy.$dummy1.$cmdAddGroup.$groupId.$length." len: ".(strlen($data2)/2) , $this->debug['processCmd']);
 
                 $data = $data1.$data2;
                 // cmdLog('debug', "Data: ".$data." len: ".(strlen($data)/2));
 
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
+                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                 return;
             }
 
@@ -2363,12 +2305,12 @@
                 // <data: auint8_t> APS Part <= data
 
                 $addrMode        = $Command['addressMode'];
-                $targetShortAddress = $Command['address'];
+                $addr = $Command['address'];
                 $srcEp     = "01";
                 if ($Command['destinationEndpoint']>1 ) { $dstEp = $Command['destinationEndpoint']; } else { $dstEp = "01"; } // $dstEp; // "01";
 
-                $profileID          = "0104";
-                $clusterID          = "0006"; // $Command['clusterId'];
+                $profId          = "0104";
+                $clustId          = "0006"; // $Command['clusterId'];
 
                 $secMode       = "02"; // ???
                 $radius             = "30";
@@ -2380,16 +2322,16 @@
 
                 $data2 = $frameControl.$transqactionSequenceNumber.$commandWriteAttribute;
                 $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
-                $data1 = $addrMode.$targetShortAddress.$srcEp.$dstEp.$clusterID.$profileID.$secMode.$radius.$dataLength;
+                $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
                 $data = $data1.$data2;
 
                 $length = sprintf("%04s", dechex(strlen($data) / 2));
 
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
+                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
 
                 if ($addrMode == "02" ) {
-                    $this->publishMosquitto( $abQueues["xToCmd"]['id'], priorityInterrogation, "TempoCmd".$dest."/".$targetShortAddress."/ReadAttributeRequestMulti&time=".(time()+2), "EP=".$dstEp."&clusterId=0006&attributeId=0000" );
+                    $this->publishMosquitto( $abQueues["xToCmd"]['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/ReadAttributeRequestMulti&time=".(time()+2), "EP=".$dstEp."&clusterId=0006&attributeId=0000" );
                 }
                 return;
             }
@@ -2590,12 +2532,6 @@
                 // $length = sprintf("%04s", dechex(strlen($data) / 2));
                 // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data);
                 $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data);
-                return;
-            }
-
-            if (isset($Command['commandLegrand']))
-            {
-                $this->commandLegrand($dest,$Command);
                 return;
             }
 
@@ -2856,11 +2792,11 @@
                     // APS Part <= data
 
                     $addrMode            = "02";
-                    $targetShortAddress     = $Command['addr'];
+                    $addr     = $Command['addr'];
                     $srcEp         = "00";
                     $dstEp    = "00";
-                    $profileID              = "0000";
-                    $clusterID              = "0032";
+                    $profId              = "0000";
+                    $clustId              = "0032";
                     $secMode           = "28";
                     $radius                 = "30";
                     // $dataLength             = "16";
@@ -2870,13 +2806,13 @@
 
                     $data2 = $SQN.$startIndex;
                     $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
-                    $data1 = $addrMode.$targetShortAddress.$srcEp.$dstEp.$clusterID.$profileID.$secMode.$radius.$dataLength;
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
 
                     $data = $data1.$data2;
 
                     // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                    // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $targetShortAddress);
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $targetShortAddress);
+                    // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                     return;
                 }
 
@@ -3128,7 +3064,7 @@
                         return;
 
                     if (isset($Command['manufId']))
-                        $manufId = $Command('manufId');
+                        $manufId = $Command['manufId'];
                     else
                         $manufId = '';
                     $this->readAttribute(PRIO_NORM, $dest, $Command['addr'], $Command['ep'], $Command['clustId'], $Command['attrId'], $manufId);
@@ -3493,7 +3429,7 @@
 
                 // ZCL global: Configure reporting command
                 // Mandatory parameters: addr, clustId, attrId
-                // Optional parameters: attrType, minInterval, maxInterval, changeVal
+                // Optional parameters: attrType, minInterval, maxInterval, changeVal, manufId
                 // Tcharp38: Why don't we use 0120 zigate command instead of 0530 ??
                 else if ($cmdName == 'configureReporting') {
                     /* Mandatory infos: addr, clustId, attrId. 'attrType' can be auto-detected */
@@ -3538,7 +3474,13 @@
                     $radius         = "1E";
 
                     /* ZCL header */
-                    $fcf            = "10"; // Frame Control Field
+                    if (isset($Command['manufId'])) {
+                        $manufId = $Command['manufId'];
+                        $fcf = "14"; // Frame Control Field
+                    } else {
+                        $manufId = '';
+                        $fcf = "10"; // Frame Control Field
+                    }
                     $sqn            = $this->genSqn();
                     $cmdId          = "06";
 
@@ -3570,12 +3512,13 @@
                     // $change = AbeilleTools::reverseHex($changeVal); // Reportable change.
                     // $timeout = "0000";
 
-                    cmdLog('debug', "    Using attrType='".$attrType."', min='".$minInterval."', max='".$maxInterval."', changeVal='".$changeVal."'", $this->debug['processCmd']);
+                    cmdLog('debug', "    Using manufId=".$manufId.", attrType='".$attrType."', min='".$minInterval."', max='".$maxInterval."', changeVal='".$changeVal."'", $this->debug['processCmd']);
+                    $manufId = AbeilleTools::reverseHex($manufId);
                     $minInterval = AbeilleTools::reverseHex($minInterval);
                     $maxInterval = AbeilleTools::reverseHex($maxInterval);
                     $changeVal = AbeilleTools::reverseHex($changeVal);
-                    $data2 = $fcf.$sqn.$cmdId.$dir.$attrId.$attrType.$minInterval.$maxInterval.$changeVal;
-                    $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
+                    $data2 = $fcf.$manufId.$sqn.$cmdId.$dir.$attrId.$attrType.$minInterval.$maxInterval.$changeVal;
+                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
 
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
@@ -4398,6 +4341,53 @@
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
                     return;
                 } // End $cmdName == 'cmd-tuyaEF00'
+
+                // Legrand private cluster FC41.
+                // Mandatory params: 'addr', 'Mode'
+                // Optional params: 'priority', 'EP'
+                else if ($cmdName == 'commandLegrand') {
+                    $required = ['addr', 'Mode']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // Memo message 0530
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <cluster ID: uint16_t>
+                    // <profile ID: uint16_t>
+                    // <security mode: uint8_t>
+                    // <radius: uint8_t>
+                    // <data length: uint8_t>
+                    // <data: auint8_t>
+
+                    // $priority = $Command['priority'];
+                    $cmd        = "0530";
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    if ($Command['EP']>1 ) { $dstEp = $Command['EP']; } else { $dstEp = "01"; } // $dstEp; // "01";
+                    $profId     = "0104";
+                    $clustId    = "FC41";
+                    $secMode    = "02"; // ???
+                    $radius     = "30";
+
+                    $fcf        = "15";   // APS Control Field, see doc for details
+                    $manufId    = "2110"; // Reversed 1021
+                    $sqn        = $this->genSqn();
+                    $command    = "00";
+
+                    // $data = "00"; // 00 = Off, 02 = Auto, 03 = On.
+                    $data = $Command['Mode'];
+                    $data2 = $fcf.$manufId.$sqn.$command.$data;
+                    $dataLength = sprintf("%02X", strlen($data2) / 2);
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
+                    $data = $data1.$data2;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    return;
+                } // End 'commandLegrand'
 
                 else {
                     cmdLog('debug', "    ERROR: Unexpected command '".$cmdName."'");

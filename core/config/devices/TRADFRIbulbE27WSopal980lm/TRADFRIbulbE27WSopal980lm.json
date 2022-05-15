@@ -1,15 +1,16 @@
 {
     "TRADFRIbulbE27WSopal980lm": {
         "manufacturer": "Ikea",
+        "model": "E27 white spectre opal",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "IkeaTRADFRIbulbE27WSopal980lm"
+            "icon": "Ikea-BulbE27"
         },
         "category": {
             "light": "1"
         },
-        "type": "IKEA Ampoule TRADFRI bulb E27 White Spectre opal 980 lm",
+        "type": "IKEA bulb E27 White Spectre opal",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

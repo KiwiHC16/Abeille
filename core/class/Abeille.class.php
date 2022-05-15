@@ -347,7 +347,8 @@ if (0) {
                 }
 
                 $poll = 0;
-                if ($eqLogic->getConfiguration("RxOnWhenIdle", 'none') == 1)
+                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                if (isset($zigbee['rxOnWhenIdle']) && ($zigbee['rxOnWhenIdle'] == 1))
                     $poll = 1;
 
                 if (strlen($eqLogic->getConfiguration("battery_type", '')) == 0)
@@ -1631,7 +1632,7 @@ if (0) {
         /* Parser has found a new device. Basic Jeedom entry to be created. */
         if ($msg['type'] == "newDevice") {
             $ieee = $msg['ieee'];
-            log::add('Abeille', 'debug', "msgFromParser(): New device: ".$net.'/'.$addr.", ieee='".$ieee."'");
+            log::add('Abeille', 'debug', "msgFromParser(): New device: ".$net.'/'.$addr.", ieee=".$ieee);
 
             Abeille::newJeedomDevice($net, $addr, $ieee);
             return;
@@ -1641,9 +1642,10 @@ if (0) {
         if ($msg['type'] == "updateDevice") {
             log::add('Abeille', 'debug', "msgFromParser(): Device update: ".json_encode($msg));
 
+            $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
+            $eqChanged = false;
             foreach ($msg['updates'] as $updKey => $updVal) {
                 if ($updKey == 'ieee') {
-                    $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
                     if (!is_object($eqLogic)) {
                         $all = self::byType('Abeille');
                         foreach ($all as $eqLogic) {
@@ -1651,19 +1653,22 @@ if (0) {
                             if ($ieee2 != $updVal)
                                 continue;
                             $eqLogic->setLogicalId($net.'/'.$addr);
-                            $eqLogic->save();
                             log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'addr' updated to ".$addr);
+                            $eqChanged = true;
                         }
                     }
                 } else if ($updKey == 'rxOnWhenIdle') {
-                    $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
                     if (is_object($eqLogic)) {
-                        $eqLogic->setConfiguration('RxOnWhenIdle', $updVal);
-                        $eqLogic->save();
-                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'RxOnWhenIdle' updated to ".$updVal);
+                        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                        $zigbee['rxOnWhenIdle'] = $updVal;
+                        $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[rxOnWhenIdle]' updated to ".$updVal);
+                        $eqChanged = true;
                     }
                 }
-           }
+            }
+            if ($eqChanged)
+                $eqLogic->save();
             return;
         } // End 'updateDevice'
 
@@ -2034,8 +2039,11 @@ if (0) {
             //     log::add('Abeille', 'debug', "  ERROR: IEEE mistmatch, got ".$msg['ieee']." while expecting ".$ieee);
             //     return;
             // }
-            $eqLogic->setConfiguration('IEEE', $msg['ieee']);
-            $eqLogic->save();
+            $curIeee = $eqLogic->getConfiguration('IEEE', '');
+            if ($curIeee != $msg['ieee']) {
+                $eqLogic->setConfiguration('IEEE', $msg['ieee']);
+                $eqLogic->save();
+            }
 
             $eqId = $eqLogic->getId();
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'PAN-ID');
@@ -2369,14 +2377,13 @@ if (0) {
 
     // Create a basic Jeedom device
     public static function newJeedomDevice($net, $addr, $ieee) {
-        log::add('Abeille', 'debug', 'newJeedomDevice('.$net.', addr='.$addr);
+        log::add('Abeille', 'debug', '  newJeedomDevice('.$net.', addr='.$addr.')');
 
         $logicalId = $net.'/'.$addr;
         $eqLogic = new Abeille();
         $eqLogic->setEqType_name('Abeille');
         $eqLogic->setName("newDevice-".$addr); // Temp name to have it non empty
         $eqLogic->save(); // Save to force Jeedom to assign an ID
-
         $eqName = $net."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
         $eqLogic->setName($eqName);
         $eqLogic->setLogicalId($logicalId);
@@ -2398,20 +2405,21 @@ if (0) {
     public static function createDevice($action, $dev) {
         log::add('Abeille', 'debug', 'createDevice('.$action.', dev='.json_encode($dev));
 
-        $logicalId = $dev['net'].'/'.$dev['addr'];
-
         $jsonId = (isset($dev['jsonId']) ? $dev['jsonId']: '');
         $jsonLocation = (isset($dev['jsonLocation']) ? $dev['jsonLocation']: '');
+        if ($jsonLocation == '')
+            $jsonLocation = 'Abeille';
         if ($jsonId != '' && $jsonLocation != '') {
-            $modelEq = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
-            $eqType = $modelEq['type'];
+            $model = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
+            $modelType = $model['type'];
         }
 
+        $logicalId = $dev['net'].'/'.$dev['addr'];
         $eqLogic = self::byLogicalId($logicalId, 'Abeille');
         if (!is_object($eqLogic)) {
             $newEq = true;
 
-            if (($action == 'update') || ($action == 'reset')) { // Update or reset from JSON
+            if ($action != 'create') {
                 log::add('Abeille', 'debug', '  ERROR: Action='.$action.' but device '.$logicalId.' does not exist');
                 return;
             }
@@ -2419,59 +2427,74 @@ if (0) {
             // $action == 'create'
             log::add('Abeille', 'debug', '  New device '.$logicalId);
             if ($jsonId != "defaultUnknown")
-                message::add("Abeille", "Nouvel équipement identifié (".$eqType."). Création en cours. Rafraîchissez votre dashboard dans qq secondes.", '');
+                message::add("Abeille", "Nouvel équipement identifié (".$modelType."). Création en cours. Rafraîchissez votre dashboard dans qq secondes.", '');
             else
                 message::add("Abeille", "Nouvel équipement détecté mais non supporté. Création en cours avec la config par défaut (".$jsonId."). Rafraîchissez votre dashboard dans qq secondes.", '');
 
             $eqLogic = new Abeille();
             $eqLogic->setEqType_name('Abeille');
-            $eqLogic->setName("newDevice-".$dev['addr']); // Temp name to have it non empty
-            $eqLogic->save(); // Save to force Jeedom to assign an ID
-
-            $eqName = $dev['net']."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
-            $eqLogic->setName($eqName);
+            // $eqLogic->setName("newDevice-".$dev['addr']); // Temp name to have it non empty
+            // $eqLogic->save(); // Save to force Jeedom to assign an ID
+            // $eqName = $dev['net']."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
+            // $eqLogic->setName($eqName);
+            $eqLogic->setName($modelType); // Default name = short desc from model ('type')
             $eqLogic->setLogicalId($logicalId);
             $abeilleConfig = AbeilleTools::getParameters();
             $eqLogic->setObject_id($abeilleConfig['AbeilleParentId']);
             $eqLogic->setConfiguration('IEEE', $dev['ieee']);
         } else {
             $newEq = false;
-            $eqName = $eqLogic->getName();
+
             $eqHName = $eqLogic->getHumanName(); // Jeedom hierarchical name
             log::add('Abeille', 'debug', '  Already existing device '.$logicalId.' => '.$eqHName);
 
-            if (($action == 'update') || ($action == 'reset')) { // Update or reset from JSON
-                $eqModel = $eqLogic->getConfiguration('ab::eqModel', '');
-                $jsonId = $eqModel ? $eqModel['id'] : '';
-                $jsonLocation = $eqModel ? $eqModel['location'] : 'Abeille';
+            $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
+            $curEqModel = isset($jEqModel['id']) ? $jEqModel['id'] : ''; // Current JSON model
+            $ieee = $eqLogic->getConfiguration('IEEE'); // IEEE from Jeedom DB
 
-                $ieee = $eqLogic->getConfiguration('IEEE');
-                if ($action == "update")
-                    message::add("Abeille", $eqHName.": Mise-à-jour à partir de son modèle JSON");
-                else
-                    message::add("Abeille", $eqHName.": Réinitialisation à partir de son modèle JSON (source=".$jsonLocation.")");
-                $modelEq = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
-            } else { // action == create
-                $eqModel = $eqLogic->getConfiguration('ab::eqModel', '');
-                $eqCurJsonId = $eqModel ? $eqModel['id'] : ''; // Current JSON ID
-
-                if (($eqCurJsonId == 'defaultUnknown') && ($jsonId != 'defaultUnknown')) {
-                    message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour du modèle par défaut vers '".$eqType."'", '');
-                    $action = 'reset'; // Update from defaultUnknown = reset to new model
-                } else {
-                    /* Tcharp38: Following https://github.com/KiwiHC16/Abeille/issues/2132#, device re-announce is just ignored here
-                        to not generate plenty messages, unless device was disabled.
-                        Other reasons to generate message ?
-                    */
-                    if ($eqLogic->getIsEnable() == 1) {
-                        // log::add('Abeille', 'debug', '  Device is already enabled. Doing nothing.');
-                        log::add('Abeille', 'debug', '  Device is already enabled.');
-                        // return; // Doing nothing on re-announce
-                    } else
-                    message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour en cours.", '');
-                }
+            if ($curEqModel == '') { // Jeedom eq exists but init not completed
+                $eqLogic->setName($modelType); // Default name = short desc from model ('type')
+                $eqHName = $eqLogic->getHumanName(); // Jeedom hierarchical name
+                message::add("Abeille", $eqHName.": Nouvel équipement identifié.", '');
+                $action = 'reset';
+            } else if (($curEqModel == 'defaultUnknown') && ($jsonId != 'defaultUnknown')) {
+                message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour du modèle par défaut vers '".$modelType."'", '');
+                $action = 'reset'; // Update from defaultUnknown = reset to new model
+            } else if ($action == "update")
+                message::add("Abeille", $eqHName.": Mise-à-jour à partir de son modèle (source=".$jsonLocation.")");
+            else if ($action == "reset")
+                message::add("Abeille", $eqHName.": Réinitialisation à partir de son modèle (source=".$jsonLocation.")");
+            else { // action = create
+                /* Tcharp38: Following https://github.com/KiwiHC16/Abeille/issues/2132#, device re-announce is just ignored here
+                    to not generate plenty messages, unless device was disabled.
+                    Other reasons to generate message ?
+                */
+                if ($eqLogic->getIsEnable() != 1)
+                    message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour à partir de son modèle (source=".$jsonLocation.")");
             }
+
+            // $eqModel = $eqLogic->getConfiguration('ab::eqModel', '');
+            // $jsonId = $eqModel ? $eqModel['id'] : '';
+            // $jsonLocation = $eqModel ? $eqModel['location'] : 'Abeille';
+            // $model = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
+
+            // if (($action == 'update') || ($action == 'reset')) { // Update or reset from JSON
+            // } else { // action == create
+
+            //     if (($curEqModel == 'defaultUnknown') && ($jsonId != 'defaultUnknown')) {
+            //         message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour du modèle par défaut vers '".$modelType."'", '');
+            //         $action = 'reset'; // Update from defaultUnknown = reset to new model
+            //     } else {
+            //         if ($eqLogic->getIsEnable() == 1) {
+            //             // log::add('Abeille', 'debug', '  Device is already enabled. Doing nothing.');
+            //             log::add('Abeille', 'debug', '  Device is already enabled.');
+            //             // return; // Doing nothing on re-announce
+            //         } else
+            //         message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour en cours.", '');
+            //     }
+            // }
         }
+
         if ($jsonLocation == "local") {
             $fullPath = __DIR__."/../config/devices/".$jsonId."/".$jsonId.".json";
             if (file_exists($fullPath))
@@ -2479,12 +2502,12 @@ if (0) {
         }
 
         /* Whatever creation or update, common steps follows */
-        $modelEqConf = $modelEq["configuration"];
-        log::add('Abeille', 'debug', '  modelConfig='.json_encode($modelEqConf));
+        $modelConf = $model["configuration"];
+        log::add('Abeille', 'debug', '  modelConfig='.json_encode($modelConf));
 
         /* mainEP: Used to define default end point to target, when undefined in command itself (use of '#EP#'). */
-        if (isset($modelEqConf['mainEP'])) {
-            $mainEP = $modelEqConf['mainEP'];
+        if (isset($modelConf['mainEP'])) {
+            $mainEP = $modelConf['mainEP'];
         } else {
             log::add('Abeille', 'debug', '  WARNING: Undefined mainEP => defaulting to 01');
             $mainEP = "01";
@@ -2502,23 +2525,23 @@ if (0) {
         // Update only if new device (missing info) or reinit
         $curIcon = $eqLogic->getConfiguration('icone', '');
         if (($action == 'reset') || ($curIcon == '')) {
-            if (isset($modelEqConf["icon"]))
-                $icon = $modelEqConf["icon"];
+            if (isset($modelConf["icon"]))
+                $icon = $modelConf["icon"];
             else
                 $icon = '';
             $eqLogic->setConfiguration('icone', $icon);
         }
         $curTimeout = $eqLogic->getTimeout(null);
         if (($action == 'reset') || ($curTimeout === null)) {
-            if (isset($modelEq["timeout"]))
-                $eqLogic->setTimeout($modelEq["timeout"]);
+            if (isset($model["timeout"]))
+                $eqLogic->setTimeout($model["timeout"]);
             else
                 $eqLogic->setTimeout(null);
         }
         $curCats = $eqLogic->getCategory();
         if (($action == 'reset') || (count($curCats) == 0)) {
-            if (isset($modelEq["category"])) {
-                $categories = $modelEq["category"];
+            if (isset($model["category"])) {
+                $categories = $model["category"];
                 $allCat = ["heating", "security", "energy", "light", "opening", "automatism", "multimedia", "default"];
                 foreach ($allCat as $cat) { // Clear all
                     $eqLogic->setCategory($cat, "0");
@@ -2535,57 +2558,57 @@ if (0) {
         }
 
         // isVisible: Reseted when leaving network (ex: reset). Must be set when rejoin unless defined in model.
-        if (isset($modelEq["isVisible"]))
-            $eqLogic->setIsVisible($modelEq["isVisible"]);
+        if (isset($model["isVisible"]))
+            $eqLogic->setIsVisible($model["isVisible"]);
         else
             $eqLogic->setIsVisible(1);
 
         // Tcharp38: Seems no longer used
-        // $lastCommTimeout = (array_key_exists("lastCommunicationTimeOut", $modelEqConf) ? $modelEqConf["lastCommunicationTimeOut"] : '-1');
+        // $lastCommTimeout = (array_key_exists("lastCommunicationTimeOut", $modelConf) ? $modelConf["lastCommunicationTimeOut"] : '-1');
         // $eqLogic->setConfiguration('lastCommunicationTimeOut', $lastCommTimeout);
 
-        if (isset($modelEqConf['batteryType']))
-            $eqLogic->setConfiguration('battery_type', $modelEqConf['batteryType']);
+        if (isset($modelConf['batteryType']))
+            $eqLogic->setConfiguration('battery_type', $modelConf['batteryType']);
         else
             $eqLogic->setConfiguration('battery_type', null);
 
-        if (isset($modelEqConf['paramType']))
-            $eqLogic->setConfiguration('paramType', $modelEqConf['paramType']);
-        if (isset($modelEqConf['Groupe'])) { // Tcharp38: What for ? Telecommande Innr - KiwiHC16: on doit pouvoir simplifier ce code. Mais comme c etait la premiere version j ai fait detaillé.
-            $eqLogic->setConfiguration('Groupe', $modelEqConf['Groupe']);
+        if (isset($modelConf['paramType']))
+            $eqLogic->setConfiguration('paramType', $modelConf['paramType']);
+        if (isset($modelConf['Groupe'])) { // Tcharp38: What for ? Telecommande Innr - KiwiHC16: on doit pouvoir simplifier ce code. Mais comme c etait la premiere version j ai fait detaillé.
+            $eqLogic->setConfiguration('Groupe', $modelConf['Groupe']);
         }
-        if (isset($modelEqConf['GroupeEP1'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP1', $modelEqConf['GroupeEP1']);
+        if (isset($modelConf['GroupeEP1'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP1', $modelConf['GroupeEP1']);
         }
-        if (isset($modelEqConf['GroupeEP3'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP3', $modelEqConf['GroupeEP3']);
+        if (isset($modelConf['GroupeEP3'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP3', $modelConf['GroupeEP3']);
         }
-        if (isset($modelEqConf['GroupeEP4'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP4', $modelEqConf['GroupeEP4']);
+        if (isset($modelConf['GroupeEP4'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP4', $modelConf['GroupeEP4']);
         }
-        if (isset($modelEqConf['GroupeEP5'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP5', $modelEqConf['GroupeEP5']);
+        if (isset($modelConf['GroupeEP5'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP5', $modelConf['GroupeEP5']);
         }
-        if (isset($modelEqConf['GroupeEP6'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP6', $modelEqConf['GroupeEP6']);
+        if (isset($modelConf['GroupeEP6'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP6', $modelConf['GroupeEP6']);
         }
-        if (isset($modelEqConf['GroupeEP7'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP7', $modelEqConf['GroupeEP7']);
+        if (isset($modelConf['GroupeEP7'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP7', $modelConf['GroupeEP7']);
         }
-        if (isset($modelEqConf['GroupeEP8'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP8', $modelEqConf['GroupeEP8']);
+        if (isset($modelConf['GroupeEP8'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('GroupeEP8', $modelConf['GroupeEP8']);
         }
-        if (isset($modelEqConf['onTime'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('onTime', $modelEqConf['onTime']);
+        if (isset($modelConf['onTime'])) { // Tcharp38: What for ?
+            $eqLogic->setConfiguration('onTime', $modelConf['onTime']);
         }
-        if (isset($modelEqConf['poll']))
-            $eqLogic->setConfiguration('poll', $modelEqConf['poll']);
+        if (isset($modelConf['poll']))
+            $eqLogic->setConfiguration('poll', $modelConf['poll']);
         else
             $eqLogic->setConfiguration('poll', null);
 
         // Tuya specific infos
-        if (isset($modelEq['tuyaEF00']))
-            $eqLogic->setConfiguration('ab::tuyaEF00', $modelEq['tuyaEF00']);
+        if (isset($model['tuyaEF00']))
+            $eqLogic->setConfiguration('ab::tuyaEF00', $model['tuyaEF00']);
         else
             $eqLogic->setConfiguration('ab::tuyaEF00', null);
 
@@ -2593,7 +2616,7 @@ if (0) {
         $eqModelInfos = array(
             'id' => $jsonId, // Equipment model id
             'location' => $jsonLocation, // Equipment model location
-            'type' => $modelEq['type'],
+            'type' => $model['type'],
             'lastUpdate' => time() // Store last update from model
         );
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
@@ -2603,8 +2626,8 @@ if (0) {
 
         /* During commands creation #EP# must be replaced by proper endpoint.
            If not already done, using default (mainEP) value */
-        if (isset($modelEq['commands'])) {
-            $modelCmds = $modelEq['commands'];
+        if (isset($model['commands'])) {
+            $modelCmds = $model['commands'];
             $modelCmds2 = json_encode($modelCmds);
             if (strstr($modelCmds2, '#EP#') !== false) {
                 if ($mainEP == "") {

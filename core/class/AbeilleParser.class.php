@@ -2498,7 +2498,7 @@
                     else if ($cmd == "01") { // Read Attributes Response
                         // Some clusters are directly handled by 8100/8102 decode
                         // Tcharp38 note: At some point do the opposite => what's handled by 8100
-                        $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E001', 'EF00', 'FF66']; // Clusters handled here
+                        $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E001', 'EF00', 'FC01', 'FC02', 'FF66']; // Clusters handled here
                         if (!in_array($clustId, $acceptedCmd01)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
@@ -2621,13 +2621,6 @@
                     } // End '$cmd == "04"'
 
                     else if ($cmd == "07") { // Configure Reporting Response
-                        // Some clusters are directly handled by 8120 decode
-                        $acceptedCmd07 = ['0B04']; // Clusters handled here
-                        if (!in_array($clustId, $acceptedCmd07)) {
-                            parserLog('debug', "  Handled by decode8120");
-                            return;
-                        }
-
                         // Duplicated message ?
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
@@ -2635,18 +2628,18 @@
                         $toMon[] = "8002/Configure Reporting Response"; // For monitor
 
                         $l = strlen($msg);
-                        $status = substr($msg, 0, 2);
-                        if ($l > 2)
-                            $dir = substr($msg, 2, 2);
-                        else
-                            $dir = "?";
-                        if ($l > 4)
-                            $attrId = substr($msg, 6, 2).substr($msg, 4, 2);
-                        else
-                            $attrId = "?";
-                        parserLog('debug', "  Status=".$status.'/'.zbGetZCLStatus($status).", dir=".$dir.", attrId=".$attrId);
-                        // return;
-                    }
+                        for ($i = 0; $i < $l; ) {
+                            $status = substr($msg, $i + 0, 2);
+                            $dir = substr($msg, $i + 2, 2);
+                            $attrId = AbeilleTools::reverseHex(substr($msg, $i + 4, 4));
+
+                            $m = "  Attr=".$attrId.", Dir=".$dir.", Status=".$status.'/'.zbGetZCLStatus($status);
+                            parserLog('debug', $m);
+                            $toMon[] = $m; // For monitor
+
+                            $i += 8;
+                        }
+                    } // End '$cmd == "07"'
 
                     else if ($cmd == "09") { // Read Reporting Configuration Response
                         $toMon[] = "8002/Read Reporting Configuration Response"; // For monitor
@@ -2673,7 +2666,7 @@
 
                     else if ($cmd == "0A") { // Report attributes
                         // Some clusters are directly handled by 8100/8102 decode
-                        $acceptedCmd0A = ['0005', '0007', '0300', '050B', '0B04', 'EF00']; // Clusters handled here
+                        $acceptedCmd0A = ['0005', '0007', '0300', '050B', '0B04', 'EF00', 'FC01', 'FC02']; // Clusters handled here
                         if (!in_array($clustId, $acceptedCmd0A)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
@@ -4748,13 +4741,13 @@
 
             // Checking if decode is handled by 8002 or still there
             if ($cmdId == '01') { // 01/Read attribute response
-                $refusedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E001', 'EF00', 'FF66'];
+                $refusedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E001', 'EF00', 'FC01', 'FC02', 'FF66'];
                 if (in_array($clustId, $refusedCmd01)) {
                     parserLog('debug', "  Handled by decode8002");
                     return;
                 }
             } else { // 0A/Report attribute
-                $refusedCmd0A = ['0005', '0007', '0300', '050B', '0B04', 'EF00'];
+                $refusedCmd0A = ['0005', '0007', '0300', '050B', '0B04', 'EF00', 'FC01', 'FC02'];
                 if (in_array($clustId, $refusedCmd0A)) {
                     parserLog('debug', "  Handled by decode8002");
                     return;
@@ -5525,6 +5518,7 @@
             // Fully handled in decode8002() allowing to display status from private clusters too.
         }
 
+        // For info only. Useless since supported by decode8002 to catch all clusters
         function decode8120($dest, $payload, $lqi)
         {
             // <Sequence number: uint8_t>
@@ -5562,9 +5556,10 @@
                .', AttrId='.$attrId
                .', Status='.$status.'/'.zbGetZCLStatus($status);
             }
-            parserLog('debug', $dest.', Type='.$msg);
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
-                monMsgFromZigate($msg); // Send message to monitor
+            parserLog('debug', $dest.', Type='.$msg.' => Handled by decode8002()');
+
+            // if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
+            //     monMsgFromZigate($msg); // Send message to monitor
         }
 
         // 8122/Read Reporting Configuration

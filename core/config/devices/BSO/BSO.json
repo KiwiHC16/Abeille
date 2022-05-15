@@ -5,12 +5,12 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "bsoProFalux"
+            "icon": "Profalux-BSO"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Profalux BSO (brise-soleil orientable)",
+        "type": "Profalux BSO",
         "commands": {
             "include0 2 2": "Lift",
             "include0 2 2 2": "Tilt",
@@ -63,7 +63,6 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        },
-        "comment": "Copy of Profalux Volet for BSO Profalux"
+        }
     }
 }

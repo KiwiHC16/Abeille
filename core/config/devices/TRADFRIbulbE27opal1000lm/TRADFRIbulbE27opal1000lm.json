@@ -4,12 +4,12 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "IkeaTradfriBulbE27Opal1000lm"
+            "icon": "Ikea-BulbE27"
         },
         "category": {
             "light": "1"
         },
-        "type": "IKEA Ampoule TRADFRI bulb E27 opal 1000lm",
+        "type": "IKEA bulb E27 opal",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

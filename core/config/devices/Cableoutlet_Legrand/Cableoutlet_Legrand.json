@@ -65,6 +65,44 @@
             },
             "Set Led Off If On": {
                 "use": "setLegrandLEDOff_if_on"
+            },
+            "Fil pilote ON": {
+                "use": "zbWriteAttribute",
+                "params": "clustId=FC01&attrId=0000&attrType=09&attrVal=0200"
+            },
+            "Fil pilote OFF": {
+                "use": "zbWriteAttribute",
+                "params": "clustId=FC01&attrId=0000&attrType=09&attrVal=0100"
+            },
+            "Comfort": {
+                "use": "cmdG-LegrandFC41",
+                "params": "Mode=00",
+                "isVisible": 1
+            },
+            "Comfort-1": {
+                "use": "cmdG-LegrandFC41",
+                "params": "Mode=01",
+                "isVisible": 1
+            },
+            "Comfort-2": {
+                "use": "cmdG-LegrandFC41",
+                "params": "Mode=02",
+                "isVisible": 1
+            },
+            "Eco": {
+                "use": "cmdG-LegrandFC41",
+                "params": "Mode=03",
+                "isVisible": 1
+            },
+            "Frost protection": {
+                "use": "cmdG-LegrandFC41",
+                "params": "Mode=04",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "cmdG-LegrandFC41",
+                "params": "Mode=05",
+                "isVisible": 1
             }
         }
     }

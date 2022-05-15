@@ -6,12 +6,12 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "IkeaTradfriBulbGU10W400lm"
+            "icon": "Ikea-BulbGU10"
         },
         "category": {
             "light": "1"
         },
-        "type": "TRADFRI bulb GU10 CWS 345lm",
+        "type": "bulb GU10 CWS 345lm",
         "commands": {
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

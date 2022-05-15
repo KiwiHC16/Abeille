@@ -2,7 +2,7 @@
     "TS0601__TZE200_la2c2uo9": {
         "manufacturer": "Moes",
         "model": "MS-105Z",
-        "type": "Moes MS-105Z smart dimmer",
+        "type": "Moes smart dimmer",
         "timeout": "60",
         "category": {
             "automatism": "1"
@@ -28,6 +28,16 @@
             "Status": {
                 "use": "zb-0006-OnOff",
                 "isVisible": 1
+            },
+            "Level": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": 1
+            }
+        },
+        "tuyaEF00": {
+            "fromDevice": {
+                "01": "rcvOnOff",
+                "02": "rcvLevel"
             }
         }
     }

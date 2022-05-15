@@ -5,13 +5,13 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "LegrandRemoteSwitch",
+            "icon": "Legrand-RemoteSwitch",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "light": "1"
         },
-        "type": "Legrand T\u00e9l\u00e9commande Depart Arriv\u00e9e",
+        "type": "Legrand remote switch",
         "commands": {
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

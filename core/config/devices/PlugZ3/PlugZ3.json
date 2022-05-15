@@ -5,12 +5,12 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "PlugZ3"
+            "icon": "Ledvance-PlugZ3"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Ledvance Plug Z3 on\/off plug unit",
+        "type": "Ledvance on\/off plug",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

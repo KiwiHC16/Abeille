@@ -435,6 +435,9 @@
             clustId = document.getElementById("idClustIdA").value;
             attrId = document.getElementById("idAttrIdA").value;
             payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId;
+            manufId = document.getElementById("idManufIdRA").value;
+            if (manufId != '')
+                payload += "_manufId="+manufId;
         } else if (request == "writeAttribute") {
             topic = "Cmd"+logicalId+"_writeAttribute";
             ep = document.getElementById("idEpWA").value;
@@ -503,6 +506,7 @@
             ep = document.getElementById("idEpCR").value;
             clustId = document.getElementById("idClustIdCR").value;
             attrId = document.getElementById("idAttrIdCR").value;
+            manufId = document.getElementById("idManufIdCR").value;
             attrType = document.getElementById("idAttrTypeCR").value;
             min = document.getElementById("idMinCR").value;
             max = document.getElementById("idMaxCR").value;
@@ -516,6 +520,8 @@
                 payload += "_changeVal="+change;
             if (attrType != '')
                 payload += "_attrType="+attrType;
+            if (manufId != '')
+                payload += "_manufId="+manufId;
         }
 
         /* Cluster specific commands */

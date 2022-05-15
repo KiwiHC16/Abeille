@@ -7,7 +7,7 @@
         "comment2": "Moes, Wirelesss Scene Switch 21/41",
         "configuration": {
             "mainEP": "01",
-            "icon": "Tuya4ButtonsSwitch",
+            "icon": "Tuya-4ButtonsSwitch-White",
             "batteryType": "1x3V CR2430"
         },
         "category": {

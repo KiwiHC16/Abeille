@@ -1,19 +1,19 @@
 {
     "TH01": {
         "alternateIds": "66666",
+        "comment": "Zigbee ModelIdentifier can be 66666 or TH01",
         "manufacturer": "Sonoff",
         "model": "SNZB-02",
-        "comment": "Zigbee ModelIdentifier can be 66666 or TH01",
         "timeout": "140",
         "configuration": {
             "mainEP": "01",
-            "icon": "SNZB-02",
+            "icon": "Sonoff-SNZB-02",
             "batteryType": "1x3V CR2450"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Sonoff SNZB-02 temp & humidity",
+        "type": "Sonoff temp & humidity sensor",
         "commands": {
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent"

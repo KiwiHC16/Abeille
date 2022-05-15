@@ -1,6 +1,25 @@
 ChangeLog
 =========
 
+- Legrand Cable outlet: Mise-à-jour du modèle (850).
+- Interne: Cmd: Revue 'commandLegrand'.
+- Moes smart dimmer MS105Z: Mise-à-jour modèle (2363).
+- Nom d'un nouvel équipement = type issu du modèle (ex: 'Tuya smoke sensor') plutot que 'AbeilleX-Y'.
+- Interne: Corrections utilisation obsolete de 'RxOnWhenIdle'.
+- E27 RGB Eglo/Awox (id = TLSR82xx, AwoX): Ajout support préliminaire (2384).
+- Lidl Dimmable HG07878C: Ajout support préliminaire (2383).
+- Interne: Parser: Support revu pour 8002/'configure reporting response'. 8120 n'est plus utilisé.
+- Interne: Constantes zigbee. Ajout clusters privés EF00, FC01 & FC40.
+- Images: Nettoyage & standardisation des noms (ex: node_Generic-BulbXXX.png).
+- Interne: Abeille.class: Optimisation.
+- Interne: AbeilleCmd: Ajout support 'manufId' pour 'configureReporting'.
+- Page EQ/avancé: 'Configure reporting': Ajout support code fabricant (manufId).
+- Page EQ/avancé: Affichage des groupes Zigbee auxquels l'équipement appartient (1713).
+- Woox controleur d'arrosage: Ajout support préliminaire (2385).
+- Interne: Parser: FC01/FC02 supporté par decode8002.
+- Interne: AbeilleCmd: Correction readAttribute() pour 'manufId' renseigné.
+- Page EQ/avancé: 'Read attribute': Ajout support code fabricant (manufId).
+
 220509-BETA-1
 -------------
 

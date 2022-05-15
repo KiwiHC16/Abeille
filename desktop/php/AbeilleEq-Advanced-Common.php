@@ -60,3 +60,17 @@
         ?>
     </div>
 </div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="{{Groupes Zigbee auquels l'équipement appartient}}">{{Groupes}}</label>
+    <div class="col-sm-5">
+        <?php
+            $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Group-Membership');
+            if (is_object($cmd))
+                $groups = $cmd->execCmd();
+            else
+                $groups = "";
+            echo '<span>'.$groups.'</span>';
+        ?>
+    </div>
+</div>

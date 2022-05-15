@@ -5,13 +5,13 @@
         "timeout": "140",
         "configuration": {
             "mainEP": "01",
-            "icon": "SNZB-04",
+            "icon": "Sonoff-SNZB-04",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "security": "1"
         },
-        "type": "Sonoff SNZB-04 Wireless Door\/Window Sensor",
+        "type": "Sonoff Door\/Window Sensor",
         "commands": {
             "include1": "etatSonoff",
             "Battery-Percent": {

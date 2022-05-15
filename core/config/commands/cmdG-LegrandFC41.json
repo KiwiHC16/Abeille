@@ -1,0 +1,13 @@
+{
+    "cmdG-LegrandFC41": {
+        "subType": "other",
+        "template": "",
+        "configuration": {
+            "topic": "commandLegrand",
+            "request": "EP=#EP#&Mode=#MODE#",
+            "visibilityCategory": "All"
+        },
+        "type": "action",
+        "genericType": ""
+    }
+}

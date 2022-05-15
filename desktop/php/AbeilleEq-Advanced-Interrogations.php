@@ -114,6 +114,7 @@
             addEpButton("idEpA", $mainEP);
             addClusterButton("idClustIdA");
             addAttrInput("idAttrIdA");
+            addManufIdInput("idManufIdRA"); // Optional
         ?>
     </div>
 </div>
@@ -197,6 +198,7 @@
             addClusterButton("idClustIdCR");
             addAttrInput("idAttrIdCR");
         ?>
+        <input id="idManufIdCR" title="{{Code fabricant. Format hex string 4 car (ex: 1241)}}" placeholder="{{Manuf code (ex: 1241)}}" />
         <input id="idAttrTypeCR" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" />
         <input id="idMinCR" title="{{Interval min. Format hex string 4 car}}" placeholder="{{Min}}" style="width:60px" />
         <input id="idMaxCR" title="{{Interval max. Format hex string 4 car}}" placeholder="{{Max}}" style="width:60px" />

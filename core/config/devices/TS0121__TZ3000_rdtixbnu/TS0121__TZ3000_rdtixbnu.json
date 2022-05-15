@@ -7,7 +7,7 @@
         "configuration": {
             "mainEP": "01",
             "poll": "1",
-            "icon": "TuyaSmartSocket"
+            "icon": "Tuya-SmartSocket"
         },
         "category": {
             "automatism": "1",

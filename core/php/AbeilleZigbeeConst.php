@@ -586,6 +586,21 @@
                 "42" => array( "name" => "Get EP List Req" ),
             ),
         ),
+
+        // Private clusters
+        // No details can be added since nothing "standard" & stable.
+        "EF00" => array(
+            "name" => "Tuya private ?",
+        ),
+        "FC01" => array(
+            "name" => "Legrand private ?",
+        ),
+        "FC02" => array(
+            "name" => "Private", // Used by multi_Samjin
+        ),
+        "FC40" => array(
+            "name" => "Legrand private ?",
+        ),
     );
 
     /* Returns cluster name from its ID */

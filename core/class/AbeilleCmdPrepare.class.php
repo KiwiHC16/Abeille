@@ -442,22 +442,22 @@
                     "action"                => $convertOnOff[$msg],
                 );
                 break;
-            case "commandLegrand":
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
+            // case "commandLegrand":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //     }
 
-                $Command = array(
-                    "commandLegrand" => "1",
-                    "addressMode" => "02",
-                    "priority" => $priority,
-                    "dest" => $dest,
-                    "address" => $address,
-                    "destinationEndpoint" => $parameters['EP'],
-                    "Mode" => $parameters['Mode'],
-                );
-                break;
+            //     $Command = array(
+            //         "commandLegrand" => "1",
+            //         "addressMode" => "02",
+            //         "priority" => $priority,
+            //         "dest" => $dest,
+            //         "address" => $address,
+            //         "destinationEndpoint" => $parameters['EP'],
+            //         "Mode" => $parameters['Mode'],
+            //     );
+            //     break;
             case "UpGroup":
                 $Command = array(
                     "UpGroup" => "1",

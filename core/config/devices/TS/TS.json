@@ -7,7 +7,7 @@
         "isVisible": 0,
         "configuration": {
             "mainEP": "01",
-            "icon": "ProfaluxTelecommande",
+            "icon": "Profalux-Remote",
             "batteryType": "2x1.5V AAA"
         },
         "category": {

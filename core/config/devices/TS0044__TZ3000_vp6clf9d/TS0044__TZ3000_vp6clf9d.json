@@ -2,12 +2,12 @@
     "TS0044__TZ3000_vp6clf9d": {
         "manufacturer": "Tuya",
         "zbManufacturer": "_TZ3000_vp6clf9d",
-        "type": "Tuya 4 buttons Zigbee scene switch",
+        "type": "Tuya 4 buttons scene switch",
         "timeout": "",
         "configuration": {
             "mainEP": "01",
             "batteryType": "1x3V CR2430",
-            "icon": "Tuya4ButtonsSceneSwitch"
+            "icon": "Tuya-4ButtonsSwitch-Gray"
         },
         "category": {
             "light": "1"

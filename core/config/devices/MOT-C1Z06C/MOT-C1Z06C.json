@@ -11,7 +11,7 @@
         "configuration": {
             "mainEP": "01",
             "paramType": "paramABC",
-            "icon": "voletProFalux"
+            "icon": "Profalux-Shutter"
         },
         "type": "Profalux volet gen 2",
         "commands": {

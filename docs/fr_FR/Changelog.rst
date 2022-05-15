@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220515-BETA-1
+-------------
+
 - Legrand Cable outlet: Mise-à-jour du modèle (850).
 - Interne: Cmd: Revue 'commandLegrand'.
 - Moes smart dimmer MS105Z: Mise-à-jour modèle (2363).

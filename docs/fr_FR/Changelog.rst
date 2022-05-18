@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220518-BETA-1
+-------------
+
 - E27 RGB Eglo/Awox (id = TLSR82xx, AwoX): Mise-à-jour du modèle (2384).
 - Images: Nettoyage & standardisation des noms (ex: node_Generic-BulbXXX.png).
 - Page EQ/avancé: Ajout possibilité de changer la couleur (cluster 0300, move to color).

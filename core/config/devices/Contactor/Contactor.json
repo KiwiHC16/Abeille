@@ -2,11 +2,11 @@
     "Contactor": {
         "manufacturer": "Legrand",
         "model": "20AX",
-        "type": "Legrand Contactor 20AX",
+        "type": "Legrand Contactor",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "Contactor"
+            "icon": "Legrand-Contactor"
         },
         "category": {
             "automatism": "1"

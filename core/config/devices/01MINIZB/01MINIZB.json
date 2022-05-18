@@ -6,12 +6,12 @@
         "configuration": {
             "mainEP": "01",
             "poll": "15",
-            "icon": "01MINIZB"
+            "icon": "Sonoff-01MINIZB"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Sonoff ZBMINI smart switch",
+        "type": "Sonoff smart switch",
         "commands": {
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

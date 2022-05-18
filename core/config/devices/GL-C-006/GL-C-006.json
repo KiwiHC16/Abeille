@@ -8,7 +8,7 @@
         "configuration": {
             "mainEP": "0B",
             "poll": "1",
-            "icon": "GL-C-008"
+            "icon": "Gledopto-RGBCCTLedController"
         },
         "category": {
             "light": "1"

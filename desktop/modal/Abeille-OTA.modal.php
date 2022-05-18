@@ -5,7 +5,7 @@
     echo '<script>var js_otaDir = "'.otaDir.'";</script>'; // PHP to JS
     $abQueues = $GLOBALS['abQueues'];
     echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
-    echo '<script>var js_queueXToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
     echo '<script>var js_queueCtrlToCmd = "'.$abQueues['ctrlToCmd']['id'].'";</script>'; // PHP to JS
 ?>
     <div class="col-sm-8">

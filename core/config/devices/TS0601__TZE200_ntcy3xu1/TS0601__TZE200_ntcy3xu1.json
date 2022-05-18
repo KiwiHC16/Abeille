@@ -8,13 +8,27 @@
             "automatism": "1"
         },
         "configuration": {
-            "icon": "?",
+            "icon": "Tuya-SmokeDetector",
             "mainEP": "01",
             "batteryType": "?"
         },
         "commands": {
             "Groups": {
                 "use": "Group-Membership"
+            },
+            "Smoke alarm": {
+                "use": "attr-Smoke-Alarm",
+                "isVisible": 1
+            },
+            "Battery-Percent": {
+                 "use": "zb-0001-BatteryPercent",
+                "isVisible": 1
+            }
+        },
+        "tuyaEF00": {
+            "fromDevice": {
+                "01": "rcvSmokeAlarm",
+                "0F": "rcvBattery-Percent"
             }
         }
     }

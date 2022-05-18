@@ -1,0 +1,13 @@
+{
+    "attr-Smoke-Alarm": {
+        "comment": "A generic attribut to display a SMOKE ALARM",
+        "comment3": "Tcharp38: Can we map on a Zigbee standard attribute ?",
+        "subType": "binary",
+        "template": "",
+        "type": "info",
+        "logicalId": "#EP#-smokeAlarm",
+        "unit": "",
+        "invertBinary": 1,
+        "genericType": "ALARM_STATE"
+    }
+}

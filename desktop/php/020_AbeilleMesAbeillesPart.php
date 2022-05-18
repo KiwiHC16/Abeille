@@ -1,6 +1,28 @@
 <legend><i class="fas fa-table"></i> {{Mes Abeilles}}</legend>
 <input class="form-control" placeholder="{{Rechercher}}" id="in_searchEqlogic"/>
 
+<style>
+    .iconRatio {
+        max-width: 130px;
+        width:auto;
+    }
+    .iconZ1
+    {
+      position:relative;
+      top: 0px;
+      /* left: 10px; */
+      z-index: 1;
+    }
+    .iconZ2
+    {
+        position:relative;
+        /* align: top; */
+      top: -99px; /* Why 99 ? */
+      left: 0px;
+      z-index: 2;
+    }
+</style>
+
 <?php
     /* Display beehive or bee card */
     function displayBeeCard($eqLogic, $files, $zgId) {
@@ -27,10 +49,16 @@
         echo '<div>';
         echo    '<input id="idBeeChecked'.$zgId.'-'.$id.'" type="checkbox" name="eqSelected-'.$id.'" />';
         echo 	'<br/>';
-        echo 	'<div class="eqLogicDisplayCard cursor'.$opacity.'" style="width: 130px" data-eqLogic_id="' .$id .'">';
+        echo 	'<div class="eqLogicDisplayCard cursor '.$opacity.'" style="width: 130px" data-eqLogic_id="'.$id.'">';
         echo 		'<img src="plugins/Abeille/images/'.$icon.'" />';
+        // echo 		'<img src="plugins/Abeille/images/'.$icon.'" class="iconRatio iconZ1" />';
+        // echo 		'<img src="plugins/Abeille/images/disabled.png" align=top class="iconZ2" />';
         echo 		'<br/>';
-        echo 		'<span class="name">'. $eqLogic->getHumanName(true, true) .'</span>';
+        // echo 		'<span class="name">'. $eqLogic->getHumanName(true, true) .'</span>';
+        echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+        echo '<span class="hiddenAsCard displayTableRight hidden">';
+        echo ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
+        echo '</span>';
         echo 	'</div>';
         echo '</div>';
     }

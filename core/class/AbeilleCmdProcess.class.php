@@ -4027,7 +4027,7 @@
                     else
                         $duration = "0001";
 
-                    $data = $addrMode.$addr.$srcEp.$dstEp.$colourX.$colourY.$duration ;
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$colourX.$colourY.$duration;
 
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
                     return;

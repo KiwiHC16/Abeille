@@ -8,7 +8,7 @@
             "automatism": "1"
         },
         "configuration": {
-            "icon": "Blitzwolf-BW-SHP13",
+            "icon": "Blitzwolf-SmartPlug",
             "mainEP": "01"
         },
         "commands": {

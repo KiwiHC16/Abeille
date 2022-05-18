@@ -36,8 +36,8 @@
         },
         "tuyaEF00": {
             "fromDevice": {
-                "01": "rcvOnOff",
-                "02": "rcvLevel"
+                "01": { "function": "rcvValue", "info": "0006-01-0000" },
+                "02": { "function": "rcvValue", "info": "0008-01-0000" }
             }
         }
     }

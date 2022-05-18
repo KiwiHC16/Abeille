@@ -66,6 +66,15 @@
         return $dp;
     }
 
+    // Types reminder
+    // Type	    TypeId  LengthInBytes	Description
+    // raw	    0x00	N	            Corresponds to raw datapoint (module pass-through)
+    // bool	    0x01	1	            value range: 0x00/0x01
+    // value	0x02	4	            corresponds to int type, big end representation
+    // string	0x03	N	            corresponds to a specific string
+    // enum	    0x04	1	            Enumeration type, range 0-255
+    // bitmap	0x05	1/2/4	        Large end representation for lengths greater than 1 byte
+
     // Receive a datapoint, map it to a specific function an decode it.
     // Mapping is defined "per device" directly in its model (tuyaEF00/fromDevice).
     function tuyaDecodeDp($ep, $dp, $mapping) {
@@ -75,7 +84,34 @@
             return false;
         }
 
-        $func = $mapping[$dpId];
+        /* New syntax
+            "tuyaEF00": {
+                "fromDevice": {
+                    "01": { "function": "rcvValue", "info": "0006-01-0000", "div": 1 },
+                    "02": { "function": "rcvValue", "info": "0008-01-0000" },
+                }
+            }
+           Old syntax
+            "tuyaEF00": {
+                "fromDevice": {
+                    "01": "rcvOnOff",
+                    "02": "rcvLevel"
+                }
+            }
+         */
+
+
+        $info = "undefined-info";
+        $div = 1; // For optional value division
+        if (isset($mapping[$dpId]['function'])) {
+            $func = $mapping[$dpId]['function'];
+            if (isset($mapping[$dpId]['info']))
+                $info = $mapping[$dpId]['info'];
+            if (isset($mapping[$dpId]['div']))
+                $div = $mapping[$dpId]['div'];
+        } else
+            $func = $mapping[$dpId];
+
         // TV02 thermostat (TS0601, _TZE200_hue3yfsn) $mapping exemple: array(
         //     "02" => "rcvThermostat-Mode",
         //     "08" => "rcvThermostat-WindowDetectionStatus",
@@ -193,56 +229,46 @@
                 'value' => $val,
             );
             break;
+        case "rcvSmokeAlarm": // Smoke status: value to bool
+            $val = hexdec($dp['data']);
+            if ($val == 0)
+                $val = 1;
+            else
+                $val = 0;
+            parserLog("debug", "  ".$dp['m']." => Smoke alarm=".$val, "8002");
+            $attributeN = array(
+                'name' => $ep.'-smokeAlarm',
+                'value' => $val,
+            );
+            break;
+
+        // Generic functions
+        case "rcvValue": // Value (type x02) to info
+            $val = hexdec($dp['data']);
+            parserLog("debug", "  ".$dp['m']." => Info=".$info.", Val=".$val, "8002");
+            $attributeN = array(
+                'name' => $info,
+                'value' => $val,
+            );
+            break;
+        case "rcvValueDiv": // Value (type x02) divded to info
+            $val = hexdec($dp['data']);
+            $val = $val / $div;
+            parserLog("debug", "  ".$dp['m']." => Info=".$info.", Val=".$val, "8002");
+            $attributeN = array(
+                'name' => $info,
+                'value' => $val,
+            );
+            break;
+
         default:
-            parserLog("error", "  Unknown Tuya function '".$func."' for dpId=".$dId);
+            parserLog("error", "  Unknown Tuya function '".$func."' for dpId=".$dpId);
             $attributeN = false;
             break;
         }
 
         return $attributeN;
     }
-
-    // Decode cluster EF00 received cmd 01
-    // function tuyaDecodeEF00Cmd01($ep, $msg, $mapping) {
-    //     $tSqn = substr($msg, 0, 4); // uint16
-    //     $msg = substr($msg, 4); // Skip tSqn
-    //     parserLog("debug", "  Tuya EF00 specific cmd 01 (tSQN=".$tSqn.")", "8002");
-    //     $attributesN = [];
-    //     while (strlen($msg) != 0) {
-    //         $dp = tuyaGetDp($msg);
-
-    //         $a = tuyaDecodeDp($ep, $dp, $mapping);
-    //         if ($a !== false)
-    //             $attributesN[] = $a;
-
-    //         // Move to next DP
-    //         $s = 8 + (hexdec($dp['dataLen']) * 2);
-    //         $msg = substr($msg, $s);
-    //     }
-
-    //     return $attributesN;
-    // } // End tuyaDecodeEF00Cmd01()
-
-    // Decode cluster EF00 received cmd 02
-    // function tuyaDecodeEF00Cmd02($ep, $msg, $mapping) {
-    //     $tSqn = substr($msg, 0, 4); // uint16
-    //     $msg = substr($msg, 4); // Skip tSqn
-    //     parserLog("debug", "  Tuya EF00 specific cmd 02 (tSQN=".$tSqn.")", "8002");
-    //     $attributesN = [];
-    //     while (strlen($msg) != 0) {
-    //         $dp = tuyaGetDp($msg);
-
-    //         $a = tuyaDecodeDp($ep, $dp, $mapping);
-    //         if ($a !== false)
-    //             $attributesN[] = $a;
-
-    //         // Move to next DP
-    //         $s = 8 + (hexdec($dp['dataLen']) * 2);
-    //         $msg = substr($msg, $s);
-    //     }
-
-    //     return $attributesN;
-    // } // End tuyaDecodeEF00Cmd02()
 
     // Decode cluster EF00 received cmd 24 => Time synchronization
     function tuyaDecodeEF00Cmd24($ep, $msg) {

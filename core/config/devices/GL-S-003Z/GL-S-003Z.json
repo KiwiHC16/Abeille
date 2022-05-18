@@ -6,12 +6,12 @@
         "configuration": {
             "mainEP": "0B",
             "poll": "1",
-            "icon": "GL-S-003Z"
+            "icon": "Gledopto-BulbGU10-Color"
         },
         "category": {
             "light": "1"
         },
-        "type": "Gledopto RGBW GU10 5W 300lm",
+        "type": "Gledopto RGBW GU10",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

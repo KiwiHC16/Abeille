@@ -459,6 +459,7 @@
 
                 // Renaming icons if required
                 $iList = array(
+                    "Blitzwolf-BW-SHP13" => "Blitzwolf-SmartPlug",
                     "BulbE27" => "Generic-BulbE27",
                     "Generic-E14" => "Generic-BulbE14",
                     "Generic-E27-Color" => "Generic-BulbE27-Color",
@@ -472,16 +473,24 @@
                     "SNZB-02" => "Sonoff-SNZB-02",
                     "SNZB-03" => "Sonoff-SNZB-03",
                     "SNZB-04" => "Sonoff-SNZB-04",
+                    "01MINIZB" => "Sonoff-01MINIZB",
                     "TuyaSmartSocket" => "Tuya-SmartSocket",
                     "Tuya4ButtonsSceneSwitch" => "Tuya-4ButtonsSwitch-Gray",
                     "Tuya4ButtonsSwitch" => "Tuya-4ButtonsSwitch-White",
                     "PlugZ3" => "Ledvance-PlugZ3",
                     "LegrandRemoteSwitch" => "Legrand-RemoteSwitch",
+                    "Contactor" => "Legrand-Contactor",
                     "Ikea-GU10" => "Ikea-BulbGU10",
                     "Ikea-E27" => "Ikea-BulbE27",
                     "IkeaTradfriBulbE27Opal1000lm" => "Ikea-BulbE27",
                     "IkeaTradfriBulbE27WOpal1000lm2" => "Ikea-BulbE27",
                     "IkeaTRADFRIbulbE27WSopal980lm" => "Ikea-BulbE27",
+                    "JR-ZDS01" => "Girier-JR-ZDS01",
+                    "GL-C-008" => "Gledopto-RGBCCTLedController",
+                    "GL-S-003Z" => "Gledopto-BulbGU10-Color",
+                    "GL-S-004Z" => "Gledopto-BulbGU10",
+                    "GLEDOPTO" => "Gledopto-BulbGU10",
+                    "plug.maeu01" => "Xiaomi-SmartPlug",
                 );
                 $curIcon = $eqLogic->getConfiguration('icone', '');
                 if (($curIcon != '') && isset($iList[$curIcon])) {

@@ -1,6 +1,16 @@
 ChangeLog
 =========
 
+- E27 RGB Eglo/Awox (id = TLSR82xx, AwoX): Mise-à-jour du modèle (2384).
+- Images: Nettoyage & standardisation des noms (ex: node_Generic-BulbXXX.png).
+- Page EQ/avancé: Ajout possibilité de changer la couleur (cluster 0300, move to color).
+- Interne: Support Tuya amélioré pour plus de flexibilité.
+- Moes smart dimmer MS105Z: Mise-à-jour modèle (2363).
+- Aeotec Multi purpose sensor: Mise-à-jour du modèle (2376).
+- Page des équipements: Affichage grisé si équipement désactivé.
+- Support OTA: Correction regression.
+- Page EQ/commandes: Amélioration mineure (2178).
+
 220515-BETA-1
 -------------
 

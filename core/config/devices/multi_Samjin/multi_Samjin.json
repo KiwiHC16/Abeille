@@ -77,26 +77,22 @@
             },
             "SetReporting FC02-0010": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=FC02&attrId=0010&attrType=19&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
-                "comment": "what is attrType ? Is manufId correct ?",
+                "params": "clustId=FC02&attrId=0010&attrType=18&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
                 "execAtCreation": "yes"
             },
             "SetReporting FC02-0012": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=FC02&attrId=0012&attrType=19&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
-                "comment": "what is attrType ? Is manufId correct ?",
+                "params": "clustId=FC02&attrId=0012&attrType=29&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
                 "execAtCreation": "yes"
             },
             "SetReporting FC02-0013": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=FC02&attrId=0013&attrType=19&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
-                "comment": "what is attrType ? Is manufId correct ?",
+                "params": "clustId=FC02&attrId=0013&attrType=29&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
                 "execAtCreation": "yes"
             },
             "SetReporting FC02-0014": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=FC02&attrId=0014&attrType=19&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
-                "comment": "what is attrType ? Is manufId correct ?",
+                "params": "clustId=FC02&attrId=0014&attrType=29&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
                 "execAtCreation": "yes"
             }
         }

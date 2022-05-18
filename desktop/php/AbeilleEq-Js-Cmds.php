@@ -33,19 +33,20 @@
 
         var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
 
-        tr += '<td>'; // Col 1 = Id
+        tr += '<td class="hidden-xs">'; // Col 1 = Id
         tr += '     <span class="cmdAttr" data-l1key="id"></span>';
         tr += '</td>';
 
         tr += '<td>'; // Col 2 = Jeedom cmd name
-        tr += '     <input class="cmdAttr form-control input-sm" data-l1key="name" style="width : 140px;" placeholder="{{Cmde Jeedom}}" title="Nom de la commande vue par Jeedom">';
+        // tr += '     <input class="cmdAttr form-control input-sm roundedLeft" data-l1key="name" style="width:180px;" placeholder="{{Cmde Jeedom}}" title="Nom de la commande vue par Jeedom">';
+        tr += '     <input class="cmdAttr form-control input-sm roundedLeft" data-l1key="name" placeholder="{{Cmde Jeedom}}" title="Nom de la commande vue par Jeedom">';
         tr += '</td>';
 
         tr += '<td>'; // Col 3 = Type & sub-type
         if (init(_cmd.type) == 'info') {
-            tr += '     <span class="cmdAttr form-control type input-sm" data-l1key="type" value="info" style="margin-bottom : 5px;" /></span>';
+            tr += '     <span class="cmdAttr form-control type input-sm" data-l1key="type" value="info" style="margin-bottom:5px;" /></span>';
         } else if (init(_cmd.type) == 'action') {
-            tr += '     <span class="cmdAttr form-control type input-sm" data-l1key="type" value="action" style="margin-bottom : 5px;" /></span>';
+            tr += '     <span class="cmdAttr form-control type input-sm" data-l1key="type" value="action" style="margin-bottom:5px;" /></span>';
         } else { // New command
             tr += '<span class="type" type="' + init(_cmd.type) + '">' + jeedom.cmd.availableType() + '</span>';
         }
@@ -54,7 +55,7 @@
 
         <?php if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == true)) { ?>
             tr += '<td>'; // Col 4 = Abeille command name
-            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="{{logicalId}}">';
+            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="{{logicalId}}" style="width:100%;">';
             tr += '</td>';
 
             // Tcharp38: logicalId seems not really used so displaying 'topic' too

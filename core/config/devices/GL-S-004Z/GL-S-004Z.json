@@ -6,12 +6,12 @@
         "configuration": {
             "mainEP": "0B",
             "poll": "1",
-            "icon": "GL-S-004Z"
+            "icon": "Gledopto-BulbGU10"
         },
         "category": {
             "light": "1"
         },
-        "type": "GLEDOPTO Spectre Blanc ref: GL-S-004Z",
+        "type": "Gledopto Spectre Blanc",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

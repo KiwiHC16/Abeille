@@ -13,8 +13,9 @@
     },
     "type": "Saswell SAS980SWT",
     "commands": {
-      "Battery-Percent": {
-        "use": "zb-0001-BatteryPercent"
+      "Battery": {
+        "use": "zb-0001-BatteryPercent",
+        "isVisible": 1
       },
       "Groups": {
         "use": "Group-Membership"
@@ -31,13 +32,30 @@
       },
       "Status": {
         "use": "zb-0006-OnOff",
+        "isVisible": 1,
+        "isHistorized": 1
+      },
+      "Last open duration": {
+        "use": "attr-Valve-LastOpenDuration",
         "isVisible": 1
+      },
+      "Time left": {
+        "use": "attr-Valve-TimeLeft",
+        "isVisible": 1
+      },
+      "Measured value": {
+        "use": "attr-Valve-MeasuredValue",
+        "isVisible": 1,
+        "isHistorized": 1
       }
     },
     "tuyaEF00": {
       "fromDevice": {
+        "05": "rcvValve-MeasuredValue",
         "07": "rcvBattery-Percent",
-        "0C": "rcvValve-Status"
+        "0B": "rcvValve-TimeLeft",
+        "0C": "rcvValve-Status",
+        "0F": "rcvValve-LastOpenDuration"
       }
     }
   }

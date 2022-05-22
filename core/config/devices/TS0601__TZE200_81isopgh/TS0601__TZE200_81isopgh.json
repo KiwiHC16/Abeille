@@ -36,8 +36,8 @@
     },
     "tuyaEF00": {
       "fromDevice": {
-        "0C": "rcvValve-Status",
-        "23": "rcvBattery-Percent"
+        "07": "rcvBattery-Percent",
+        "0C": "rcvValve-Status"
       }
     }
   }

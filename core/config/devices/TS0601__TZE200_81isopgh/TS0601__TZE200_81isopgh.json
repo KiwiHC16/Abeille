@@ -1,0 +1,44 @@
+{
+  "TS0601__TZE200_81isopgh": {
+    "manufacturer": "Saswell",
+    "model": "SAS980SWT-7-Z01(EU)",
+    "timeout": "",
+    "configuration": {
+      "mainEP": "01",
+      "icon": "Saswell-SAS980SWT",
+      "batteryType": "2x1.5V AA"
+    },
+    "category": {
+      "automatism": "1"
+    },
+    "type": "Saswell SAS980SWT",
+    "commands": {
+      "Battery-Percent": {
+        "use": "zb-0001-BatteryPercent"
+      },
+      "Groups": {
+        "use": "Group-Membership"
+      },
+      "Open": {
+        "use": "cmdG-TuyaEF00-Set-OpenClose",
+        "params": "openClose=1",
+        "isVisible": 1
+      },
+      "Close": {
+        "use": "cmdG-TuyaEF00-Set-OpenClose",
+        "params": "openClose=0",
+        "isVisible": 1
+      },
+      "Status": {
+        "use": "zb-0006-OnOff",
+        "isVisible": 1
+      }
+    },
+    "tuyaEF00": {
+      "fromDevice": {
+        "0C": "rcvValve-Status",
+        "23": "rcvBattery-Percent"
+      }
+    }
+  }
+}

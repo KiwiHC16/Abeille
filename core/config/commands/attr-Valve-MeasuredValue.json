@@ -1,0 +1,11 @@
+{
+    "attr-Valve-MeasuredValue": {
+        "comment": "Received Measured Value from valve",
+        "subType": "numeric",
+        "template": "badge",
+        "type": "info",
+        "logicalId": "#EP#-measuredValue",
+        "unit": "l",
+        "genericType": "VALVE_MEASUREDVALUE"
+    }
+}

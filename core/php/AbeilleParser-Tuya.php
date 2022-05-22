@@ -241,6 +241,41 @@
                 'value' => $val,
             );
             break;
+            
+        // Solenoid valve Saswell SAS980SWT 
+        case "rcvValve-Status":
+            $val = hexdec($dp['data']) % 2;
+            $st = ($val == 1) ? "ON" : "OFF";
+            parserLog("debug", "  ".$dp['m']." => On/Off=".$val."/".$st, "8002");
+            $attributeN = array(
+                'name' => '0006-'.$ep.'-0000',
+                'value' => $val,
+            );
+            break;
+        case "rcvValve-TimeLeft":
+            $val = hexdec($dp['data']);
+            parserLog("debug", "  ".$dp['m']." => Time left=".$val, "8002");
+            $attributeN = array(
+                'name' => $ep."-timeLeft",
+                'value' => $val,
+            );
+            break;
+        case "rcvValve-LastOpenDuration":
+            $val = hexdec($dp['data']);
+            parserLog("debug", "  ".$dp['m']." => Last open duration=".$val, "8002");
+            $attributeN = array(
+                'name' => $ep."-lastOpenDuration",
+                'value' => $val,
+            );
+            break;
+        case "rcvValve-MeasuredValue":
+            $val = hexdec($dp['data']);
+            parserLog("debug", "  ".$dp['m']." => Measured value=".$val, "8002");
+            $attributeN = array(
+                'name' => $ep."-measuredValue",
+                'value' => $val,
+            );
+            break;
 
         // Generic functions
         case "rcvValue": // Value (type x02) to info
@@ -257,16 +292,6 @@
             parserLog("debug", "  ".$dp['m']." => Info=".$info.", Val=".$val, "8002");
             $attributeN = array(
                 'name' => $info,
-                'value' => $val,
-            );
-            break;
-            
-        case "rcvValve-Status":
-            $val = hexdec($dp['data']) % 2;
-            $st = ($val == 1) ? "ON" : "OFF";
-            parserLog("debug", "  ".$dp['m']." => On/Off=".$val."/".$st, "8002");
-            $attributeN = array(
-                'name' => '0006-'.$ep.'-0000',
                 'value' => $val,
             );
             break;

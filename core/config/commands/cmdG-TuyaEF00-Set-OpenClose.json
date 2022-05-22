@@ -1,0 +1,12 @@
+{
+    "cmdG-TuyaEF00-Set-OpenClose": {
+        "subType": "other",
+        "template": "",
+        "configuration": {
+            "topic": "cmd-tuyaEF00",
+            "request": "ep=#EP#&cmd=setOpenClose&data=#OPENCLOSE#"
+        },
+        "type": "action",
+        "genericType": "GENERIC_ACTION"
+    }
+}

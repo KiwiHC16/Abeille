@@ -260,6 +260,16 @@
                 'value' => $val,
             );
             break;
+            
+        case "rcvValve-Status":
+            $val = hexdec($dp['data']) % 2;
+            $st = ($val == 1) ? "ON" : "OFF";
+            parserLog("debug", "  ".$dp['m']." => On/Off=".$val."/".$st, "8002");
+            $attributeN = array(
+                'name' => '0006-'.$ep.'-0000',
+                'value' => $val,
+            );
+            break;
 
         default:
             parserLog("error", "  Unknown Tuya function '".$func."' for dpId=".$dpId);

@@ -24,6 +24,12 @@
             $dpType = "01"; // 1B, Bool
             $dpData = sprintf("%02X", $data);
             break;
+        // for Saswell
+        case "setOpenClose":
+            $dpId = (isset($abCmd['dpId']) ? $abCmd['dpId']: "01");
+            $dpType = "01";
+            $dpData = sprintf("%02X", $data);
+            break;
         default:
             return false;
         }

@@ -37,31 +37,32 @@ Démons:
     $oneMissing = false;
     displayDaemonStatus($diff, "Cmd", $oneMissing);
     displayDaemonStatus($diff, "Parser", $oneMissing);
-    for ($zgNb = 1; $zgNb <= maxNbOfZigate; $zgNb++) {
-        if ($config['AbeilleActiver'.$zgNb] != "Y")
+    for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+        if ($config['AbeilleActiver'.$zgId] != "Y")
             continue; // Zigate disabled
-        displayDaemonStatus($diff, "SerialRead".$zgNb, $oneMissing);
-        if ($config['AbeilleType'.$zgNb] == "WIFI")
-            displayDaemonStatus($diff, "Socat".$zgNb, $oneMissing);
+        displayDaemonStatus($diff, "SerialRead".$zgId, $oneMissing);
+        if ($config['AbeilleType'.$zgId] == "WIFI")
+            displayDaemonStatus($diff, "Socat".$zgId, $oneMissing);
     }
     if ($oneMissing)
         echo " Attention: Un ou plusieurs démons ne tournent pas !";
 
     /* Checking if active Zigates are not in timeout */
     echo "  Zigates: ";
-    for ($zgNb = 1; $zgNb <= maxNbOfZigate; $zgNb++) {
-        if ($config['AbeilleActiver'.$zgNb] != "Y")
+    for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+        if ($config['AbeilleActiver'.$zgId] != "Y")
             continue; // Zigate disabled
 
-        $eqLogic = Abeille::byLogicalId('Abeille'.$zgNb.'/0000', 'Abeille');
+        $eqLogic = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
         if (!is_object($eqLogic))
             continue; // Abnormal
         if ((strtotime($eqLogic->getStatus('lastCommunication')) + (60 * $eqLogic->getTimeout())) > time()) {
-            echo '<span class="label label-success" style="font-size:1em; margin-left:4px">Zigate'.$zgNb.'</span>';
+            echo '<span class="label label-success" style="font-size:1em; margin-left:4px">Zigate'.$zgId.'</span>';
         } else {
-            echo '<span class="label label-danger" style="font-size:1em; margin-left:4px">Zigate '.$zgNb.'</span>';
+            echo '<span class="label label-danger" style="font-size:1em; margin-left:4px">Zigate '.$zgId.'</span>';
         }
     }
+    echo '<br><br>';
 
     // TODO Tcharp38: Display a popup for few sec as soon as ther is
     // an issue with daemons or zigate
@@ -77,9 +78,9 @@ Démons:
 <table class="table table-condensed tablesorter" id="table_healthAbeille">
     <thead>
         <tr>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Ruche}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Equipement}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Type}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Ruche}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Adresse}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{IEEE}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Status}}</th>
@@ -99,9 +100,15 @@ Démons:
         $IEEE_Table = array();
 
         foreach ($eqLogics as $eqLogic) {
+            list($net, $addr) = explode("/", $eqLogic->getLogicalId());
+
+            echo "\n\n\n<tr>";
+
+            // Ruche
+            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$net.'</span></td>';
 
             // Module
-            echo "\n\n\n\n<tr>".'<td><a href="'.$eqLogic->getLinkToConfiguration().'" style="text-decoration: none;">'.$eqLogic->getHumanName(true).'</a></td>';
+            echo '<td><a href="'.$eqLogic->getLinkToConfiguration().'" style="text-decoration: none;">'.$eqLogic->getHumanName(true).'</a></td>';
 
             // Module type
             // TODO: Put real device type instead of icon
@@ -110,10 +117,6 @@ Démons:
             // ID
             // echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getId().'</span></td>';
 
-            list($net, $addr) = explode("/", $eqLogic->getLogicalId());
-
-            // Ruche
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$net.'</span></td>';
 
             // Short Address
             echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$addr.'</span></td>';

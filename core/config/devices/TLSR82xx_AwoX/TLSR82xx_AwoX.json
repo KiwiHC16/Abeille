@@ -78,7 +78,7 @@
                 "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-              "Color Mode": {
+            "Color Mode": {
                 "use": "zb-0300-ColorMode"
             },
             "Get Color Mode": {
@@ -149,7 +149,7 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0300&attrId=0007"
             },
-          	"Bind 0300-ToZigate": {
+            "Bind 0300-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0300",
                 "execAtCreation": "yes"

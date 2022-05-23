@@ -24,7 +24,7 @@
             $dpType = "01"; // 1B, Bool
             $dpData = sprintf("%02X", $data);
             break;
-        // for Saswell
+        // for Saswell irrigation valve
         case "setOpenClose":
             $dpId = (isset($abCmd['dpId']) ? $abCmd['dpId']: "01");
             $dpType = "01";

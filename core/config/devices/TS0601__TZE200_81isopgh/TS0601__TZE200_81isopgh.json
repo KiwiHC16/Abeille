@@ -11,7 +11,7 @@
     "category": {
       "automatism": "1"
     },
-    "type": "Saswell SAS980SWT",
+    "type": "Saswell irrigation Valve",
     "commands": {
       "Battery": {
         "use": "zb-0001-BatteryPercent",
@@ -51,11 +51,11 @@
     },
     "tuyaEF00": {
       "fromDevice": {
-        "05": "rcvValve-MeasuredValue",
+        "05": { "function": "rcvValue", "info": "01-measuredValue" },
         "07": "rcvBattery-Percent",
-        "0B": "rcvValve-TimeLeft",
+        "0B": { "function": "rcvValue", "info": "01-timeLeft" },
         "0C": "rcvValve-Status",
-        "0F": "rcvValve-LastOpenDuration"
+        "0F": { "function": "rcvValue", "info": "01-lastOpenDuration" },
       }
     }
   }

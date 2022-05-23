@@ -129,7 +129,7 @@
 
         var input = document.createElement('input');
         input.type = 'file';
-        input.accept = '.ota, .ota.signed';
+        input.accept = '.zigbee, .ota, .ota.signed';
         input.onchange = e => {
 
             var file = e.target.files[0];

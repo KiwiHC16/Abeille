@@ -43,27 +43,35 @@
                 // if ((substr($dirEntry, -4) != ".ota") && (substr($dirEntry, -11) != ".ota.signed"))
                 //     continue;
 
+                logMessage('debug', 'OTA FW: '.$dirEntry);
                 $fullPath = $otaDir."/".$dirEntry;
                 $fh = fopen($fullPath, "rb");
                 $fc = fread($fh, 69); // fc = File content
-                // fclose($fh);
 
-                logMessage('debug', 'OTA FW: '.$dirEntry);
                 if (substr($fc, 0, 4) == "NGIS") {
                     logMessage('debug', '  Ikea style SIGNED image');
                     $arr = unpack('VstartOfHeader', substr($fc, 0x10));
                     // logMessage('debug', '  arr='.json_encode($arr));
-                    $startOfHeader = $arr['startOfHeader'];
-                    logMessage('debug', '  startOfHeader='.$startOfHeader);
-                    fseek($fh, $startOfHeader, SEEK_SET);
-                    $fc = fread($fh, 69); // fc = File content
-                    fclose($fh);
-                    $startIdx = $startOfHeader;
+                    $startIdx = $arr['startOfHeader'];
                 } else {
                     // logMessage('debug', '  UNsigned image');
-                    fclose($fh);
-                    $startIdx = 0;
+                    // Looking for header 0x0BEEF11E signature
+                    for($i = 0; $i < (69 - 4); $i++) {
+                        $format = 'VotaUpgradeFileId'; // Expecting 0x0BEEF11E
+                        $header = unpack($format, substr($fc, $i));
+                        if ($header['otaUpgradeFileId'] == 0x0BEEF11E) {
+                            $startIdx = $i;
+                            break;
+                        }
+                    }
                 }
+
+                logMessage('debug', '  startIdx='.$startIdx);
+                if ($startIdx != 0) {
+                    fseek($fh, $startIdx, SEEK_SET);
+                    $fc = fread($fh, 69); // fc = File content
+                }
+                fclose($fh);
 
                 // otaHeaderString: replacing 00 by space
                 for ($i = 20; $i < 52; $i++)
@@ -82,7 +90,7 @@
                     .'/VtotalSize';
                 $header = unpack($format, $fc);
                 if ($header['otaUpgradeFileId'] != 0x0BEEF11E) {
-                    logMessage('debug', 'ERROR: Invalid OTA file: '.$dirEntry);
+                    logMessage('error', 'Fichier OTA invalide: '.$dirEntry);
                     continue;
                 }
                 $header['otaUpgradeFileId'] = sprintf("%08X", $header['otaUpgradeFileId']);

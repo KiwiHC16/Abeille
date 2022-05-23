@@ -87,7 +87,7 @@
         /* New syntax
             "tuyaEF00": {
                 "fromDevice": {
-                    "01": { "function": "rcvValue", "info": "0006-01-0000", "div": 1 },
+                    "01": { "function": "rcvValueDiv", "info": "0006-01-0000", "div": 1 },
                     "02": { "function": "rcvValue", "info": "0008-01-0000" },
                 }
             }
@@ -241,8 +241,8 @@
                 'value' => $val,
             );
             break;
-            
-        // Solenoid valve Saswell SAS980SWT 
+
+        // Solenoid valve Saswell SAS980SWT
         case "rcvValve-Status":
             $val = hexdec($dp['data']) % 2;
             $st = ($val == 1) ? "ON" : "OFF";
@@ -252,33 +252,33 @@
                 'value' => $val,
             );
             break;
-        case "rcvValve-TimeLeft":
-            $val = hexdec($dp['data']);
-            parserLog("debug", "  ".$dp['m']." => Time left=".$val, "8002");
-            $attributeN = array(
-                'name' => $ep."-timeLeft",
-                'value' => $val,
-            );
-            break;
-        case "rcvValve-LastOpenDuration":
-            $val = hexdec($dp['data']);
-            parserLog("debug", "  ".$dp['m']." => Last open duration=".$val, "8002");
-            $attributeN = array(
-                'name' => $ep."-lastOpenDuration",
-                'value' => $val,
-            );
-            break;
-        case "rcvValve-MeasuredValue":
-            $val = hexdec($dp['data']);
-            parserLog("debug", "  ".$dp['m']." => Measured value=".$val, "8002");
-            $attributeN = array(
-                'name' => $ep."-measuredValue",
-                'value' => $val,
-            );
-            break;
+        // case "rcvValve-TimeLeft":
+        //     $val = hexdec($dp['data']);
+        //     parserLog("debug", "  ".$dp['m']." => Time left=".$val, "8002");
+        //     $attributeN = array(
+        //         'name' => $ep."-timeLeft",
+        //         'value' => $val,
+        //     );
+        //     break;
+        // case "rcvValve-LastOpenDuration":
+        //     $val = hexdec($dp['data']);
+        //     parserLog("debug", "  ".$dp['m']." => Last open duration=".$val, "8002");
+        //     $attributeN = array(
+        //         'name' => $ep."-lastOpenDuration",
+        //         'value' => $val,
+        //     );
+        //     break;
+        // case "rcvValve-MeasuredValue":
+        //     $val = hexdec($dp['data']);
+        //     parserLog("debug", "  ".$dp['m']." => Measured value=".$val, "8002");
+        //     $attributeN = array(
+        //         'name' => $ep."-measuredValue",
+        //         'value' => $val,
+        //     );
+        //     break;
 
         // Generic functions
-        case "rcvValue": // Value (type x02) to info
+        case "rcvValue": // Value (type x02) sent as Jeedom info
             $val = hexdec($dp['data']);
             parserLog("debug", "  ".$dp['m']." => Info=".$info.", Val=".$val, "8002");
             $attributeN = array(
@@ -286,7 +286,7 @@
                 'value' => $val,
             );
             break;
-        case "rcvValueDiv": // Value (type x02) divded to info
+        case "rcvValueDiv": // Value (type x02) divided & sent as Jeedom info
             $val = hexdec($dp['data']);
             $val = $val / $div;
             parserLog("debug", "  ".$dp['m']." => Info=".$info.", Val=".$val, "8002");

@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+- Interne: Suppression code obsolete (xmlhttpConfChange).
+- Page santé: Amélioration mineure.
+- Mise-à-jour OTA: Amélioration mineure.
+- Electrovanne Saswell SAS980SWT: Support préliminaire (2388).
+
 220518-BETA-1
 -------------
 

@@ -1102,71 +1102,72 @@ if (0) {
         return -1;
     }
 
-    public static function CmdAffichage($affichageType, $Visibility = "na")
-    {
-        // $affichageType could be:
-        //  affichageNetwork
-        //  affichageTime
-        //  affichageCmdAdd
-        // $Visibilty command could be
-        // Y
-        // N
-        // toggle
-        // na
+    // Tcharp38: Seems no longer used
+    // public static function CmdAffichage($affichageType, $Visibility = "na")
+    // {
+    //     // $affichageType could be:
+    //     //  affichageNetwork
+    //     //  affichageTime
+    //     //  affichageCmdAdd
+    //     // $Visibilty command could be
+    //     // Y
+    //     // N
+    //     // toggle
+    //     // na
 
-        if ($Visibility == "na") {
-            return;
-        }
+    //     if ($Visibility == "na") {
+    //         return;
+    //     }
 
-        $config = AbeilleTools::getParameters();
+    //     $config = AbeilleTools::getParameters();
 
-        $convert = array(
-            "affichageNetwork" => "Network",
-            "affichageTime" => "Time",
-            "affichageCmdAdd" => "additionalCommand"
-        );
+    //     $convert = array(
+    //         "affichageNetwork" => "Network",
+    //         "affichageTime" => "Time",
+    //         "affichageCmdAdd" => "additionalCommand"
+    //     );
 
-        log::add('Abeille', 'debug', 'Entering CmdAffichage with affichageType: '.$affichageType.' - Visibility: '.$Visibility);
-        echo 'Entering CmdAffichage with affichageType: '.$affichageType.' - Visibility: '.$Visibility;
+    //     log::add('Abeille', 'debug', 'Entering CmdAffichage with affichageType: '.$affichageType.' - Visibility: '.$Visibility);
+    //     echo 'Entering CmdAffichage with affichageType: '.$affichageType.' - Visibility: '.$Visibility;
 
-        switch ($Visibility) {
-            case 'Y':
-                break;
-            case 'N':
-                break;
-            case 'toggle':
-                if ($config[$affichageType] == 'Y') {
-                    $Visibility = 'N';
-                } else {
-                    $Visibility = 'Y';
-                }
-                break;
-        }
-        config::save($affichageType, $Visibility, 'Abeille');
+    //     switch ($Visibility) {
+    //         case 'Y':
+    //             break;
+    //         case 'N':
+    //             break;
+    //         case 'toggle':
+    //             if ($config[$affichageType] == 'Y') {
+    //                 $Visibility = 'N';
+    //             } else {
+    //                 $Visibility = 'Y';
+    //             }
+    //             break;
+    //     }
+    //     config::save($affichageType, $Visibility, 'Abeille');
 
-        $abeilles = self::byType('Abeille');
-        foreach ($abeilles as $key => $abeille) {
-            $cmds = $abeille->getCmd();
-            foreach ($cmds as $keyCmd => $cmd) {
-                if ($cmd->getConfiguration("visibilityCategory") == $convert[$affichageType]) {
-                    switch ($Visibility) {
-                        case 'Y':
-                            $cmd->setIsVisible(1);
-                            break;
-                        case 'N':
-                            $cmd->setIsVisible(0);
-                            break;
-                    }
-                }
-                $cmd->save();
-            }
-            $abeille->save();
-            $abeille->refresh();
-        }
+    //     $abeilles = self::byType('Abeille');
+    //     foreach ($abeilles as $key => $abeille) {
+    //         $cmds = $abeille->getCmd();
+    //         foreach ($cmds as $keyCmd => $cmd) {
+    //             if ($cmd->getConfiguration("visibilityCategory") == $convert[$affichageType]) {
+    //                 switch ($Visibility) {
+    //                     case 'Y':
+    //                         $cmd->setIsVisible(1);
+    //                         break;
+    //                     case 'N':
+    //                         $cmd->setIsVisible(0);
+    //                         break;
+    //                 }
+    //             }
+    //             $cmd->save();
+    //         }
+    //         $abeille->save();
+    //         $abeille->refresh();
+    //     }
 
-        log::add('Abeille', 'debug', 'Leaving CmdAffichage');
-        return;
-    }
+    //     log::add('Abeille', 'debug', 'Leaving CmdAffichage');
+    //     return;
+    // }
 
     // Tcharp38: No longer required.
     // This part is directly handled by parser for better reactivity mandatory for battery powered devices.

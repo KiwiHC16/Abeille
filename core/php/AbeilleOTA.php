@@ -40,8 +40,8 @@
             while (($dirEntry = readdir($dh)) !== false) {
                 if (in_array($dirEntry, array(".", "..")))
                     continue;
-                if ((substr($dirEntry, -4) != ".ota") && (substr($dirEntry, -11) != ".ota.signed"))
-                    continue;
+                // if ((substr($dirEntry, -4) != ".ota") && (substr($dirEntry, -11) != ".ota.signed"))
+                //     continue;
 
                 $fullPath = $otaDir."/".$dirEntry;
                 $fh = fopen($fullPath, "rb");
@@ -82,7 +82,7 @@
                     .'/VtotalSize';
                 $header = unpack($format, $fc);
                 if ($header['otaUpgradeFileId'] != 0x0BEEF11E) {
-                    parserLog('debug', 'ERROR: Invalid OTA file: '.$dirEntry);
+                    logMessage('debug', 'ERROR: Invalid OTA file: '.$dirEntry);
                     continue;
                 }
                 $header['otaUpgradeFileId'] = sprintf("%08X", $header['otaUpgradeFileId']);
@@ -113,7 +113,7 @@
     //     // JSON file associated to signed OTA file
     //     $fc = json_decode(file_get_contents($fullPath), true);
     //     if ($fc === false) {
-    //         parserLog('debug', 'ERROR: Corrupted JSON file: '.$dirEntry);
+    //         logMessage('debug', 'ERROR: Corrupted JSON file: '.$dirEntry);
     //         continue;
     //     }
     //     // Expecting the following fields
@@ -126,14 +126,14 @@
     //         $missingParam = true;
     //     }
     //     if ($missingParam) {
-    //         parserLog('debug', 'ERROR: Invalid JSON file (missing fields): '.$dirEntry);
+    //         logMessage('debug', 'ERROR: Invalid JSON file (missing fields): '.$dirEntry);
     //         continue;
     //     }
 
     //     $fileName = $fc['fw_binary_url'];
     //     $fileName = basename($fileName);
     //     if (!file_exists(otaDir.'/'.$fileName)) {
-    //         parserLog('debug', 'ERROR: No binary file associated: '.$dirEntry);
+    //         logMessage('debug', 'ERROR: No binary file associated: '.$dirEntry);
     //         continue;
     //     }
     //     $manufCode = sprintf("%04X", $fc['fw_manufacturer_id']);

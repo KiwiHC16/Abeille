@@ -11,7 +11,7 @@
     $logFile = ''; // Log file name (ex: 'AbeilleSerialRead1', configured thru logSetConf())
     $logMaxLines = 2000; // Default max number of lines before Jeedom one is taken
     $logNbOfLines = 0; // Current number of lines
-    $hideLevel = FALSE; // Display log level if FALSE (configured thru logSetConf())
+    $hideLevel = false; // Display log level if false (configured thru logSetConf())
     $GLOBALS['tmpDir'] = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
 
     /* Get Abeille current log level as a number:
@@ -58,7 +58,7 @@
          If not absolut path, log dir = Jeedom default (/var/www/html/log)
          If absolut path, this is the taken destination.
        'hideLevel' = Allows to disable display of log level if TRUE. */
-    function logSetConf($lFile = '', $hideLevel = FALSE)
+    function logSetConf($lFile = '', $hideLevel = false)
     {
         $GLOBALS["curLogLevelNb"] = logGetPluginLevel();
         $GLOBALS["logDir"] = "";
@@ -82,7 +82,7 @@
 
         /* What is number of lines in current log ? */
         $logPath = $GLOBALS["logDir"]."/".$GLOBALS["logFile"];
-        if (file_exists($logPath) == FALSE)
+        if (file_exists($logPath) == false)
             return;
         $cmd = "wc -l ".$logPath." | awk '{print $1}'";
         exec($cmd, $out, $status);

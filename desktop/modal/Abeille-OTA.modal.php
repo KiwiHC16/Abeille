@@ -8,17 +8,18 @@
     echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
     echo '<script>var js_queueCtrlToCmd = "'.$abQueues['ctrlToCmd']['id'].'";</script>'; // PHP to JS
 ?>
-    <div class="col-sm-8">
-        Mise-à-jour des équipements "Over-The-Air".
-        <?php
-        echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/OTA.html"><i class="fas fa-book"></i> {{Documentation}}</a>';
-        ?>
-        <br>
-        <h3>Firmwares disponibles</h3>
-        <button type="button" onclick="uploadOta()" class="btn btn-secondary" title="Ajouter un fichier OTA local"><i class="fas fa-plus"></i> Ajouter</button>
+<div class="col-sm-8">
+    Mise-à-jour des équipements "Over-The-Air".
+    <?php
+    echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/OTA.html"><i class="fas fa-book"></i> {{Documentation}}</a>';
+    ?>
+    <br>
+    <h3>Firmwares disponibles</h3>
+    <button type="button" onclick="uploadOta()" class="btn btn-secondary" title="Ajouter un fichier OTA local"><i class="fas fa-plus"></i> Ajouter</button>
 
-        <?php
+    <?php
         // Reading available OTA firmwares
+        logSetConf('Abeille');
         otaReadFirmwares();
         echo '<table id="idFwTable">';
         echo '<tbody>';

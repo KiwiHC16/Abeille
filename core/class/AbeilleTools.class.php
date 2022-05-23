@@ -792,7 +792,7 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
 
             $status['running'] = $running;
     // log::add('Abeille', 'debug', '  status='.json_encode($status));
-            log::add('Abeille', 'debug', "checkAllDaemons() => ".$status['state']);
+            log::add('Abeille', 'debug', "checkAllDaemons2() => ".$status['state']);
             return $status;
         }
 

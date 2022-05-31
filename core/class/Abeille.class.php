@@ -2434,11 +2434,12 @@ if (0) {
 
             $eqLogic = new Abeille();
             $eqLogic->setEqType_name('Abeille');
-            // $eqLogic->setName("newDevice-".$dev['addr']); // Temp name to have it non empty
-            // $eqLogic->save(); // Save to force Jeedom to assign an ID
+            $eqLogic->setName("newDevice-".$dev['addr']); // Temp name to have it non empty
+            $eqLogic->save(); // Save to force Jeedom to assign an ID
             // $eqName = $dev['net']."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
-            // $eqLogic->setName($eqName);
-            $eqLogic->setName($modelType); // Default name = short desc from model ('type')
+            $eqName = $modelType." - ".$eqLogic->getId(); // Default name (ex: '<modeltype> - 12')
+            $eqLogic->setName($eqName);
+            // $eqLogic->setName($modelType); // Default name = short desc from model ('type')
             $eqLogic->setLogicalId($logicalId);
             $abeilleConfig = AbeilleTools::getParameters();
             $eqLogic->setObject_id($abeilleConfig['AbeilleParentId']);

@@ -5,6 +5,8 @@ ChangeLog
 - Page santé: Amélioration mineure.
 - Mise-à-jour OTA: Amélioration mineure & correction pour support FW Legrand.
 - Electrovanne Saswell SAS980SWT: Support préliminaire (2388).
+- Ikea Tredanson rideau occultant: Ajout support préliminaire (2392).
+- Nom d'un nouvel équipement = type issu du modèle + Jeedom ID (ex: 'Tuya smoke sensor - 12') (2393).
 
 220518-BETA-1
 -------------

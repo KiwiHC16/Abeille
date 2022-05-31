@@ -229,18 +229,19 @@
                 'value' => $val,
             );
             break;
-        case "rcvSmokeAlarm": // Smoke status: value to bool
-            $val = hexdec($dp['data']);
-            if ($val == 0)
-                $val = 1;
-            else
-                $val = 0;
-            parserLog("debug", "  ".$dp['m']." => Smoke alarm=".$val, "8002");
-            $attributeN = array(
-                'name' => $ep.'-smokeAlarm',
-                'value' => $val,
-            );
-            break;
+        // Obsolete. Replaced by generic function 'rcvValue0Is1'
+        // case "rcvSmokeAlarm": // Smoke status: value to bool
+        //     $val = hexdec($dp['data']);
+        //     if ($val == 0)
+        //         $val = 1;
+        //     else
+        //         $val = 0;
+        //     parserLog("debug", "  ".$dp['m']." => Smoke alarm=".$val, "8002");
+        //     $attributeN = array(
+        //         'name' => $ep.'-smokeAlarm',
+        //         'value' => $val,
+        //     );
+        //     break;
 
         // Solenoid valve Saswell SAS980SWT
         case "rcvValve-Status":
@@ -278,7 +279,9 @@
         //     break;
 
         // Generic functions
-        case "rcvValue": // Value (type x02) sent as Jeedom info
+
+        // Use exemple:  "02": { "function": "rcvValue", "info": "0008-01-0000" },
+        case "rcvValue": // Value sent as Jeedom info
             $val = hexdec($dp['data']);
             parserLog("debug", "  ".$dp['m']." => Info=".$info.", Val=".$val, "8002");
             $attributeN = array(
@@ -286,9 +289,21 @@
                 'value' => $val,
             );
             break;
-        case "rcvValueDiv": // Value (type x02) divided & sent as Jeedom info
+        case "rcvValueDiv": // Divided value sent as Jeedom info
             $val = hexdec($dp['data']);
             $val = $val / $div;
+            parserLog("debug", "  ".$dp['m']." => Info=".$info.", Val=".$val, "8002");
+            $attributeN = array(
+                'name' => $info,
+                'value' => $val,
+            );
+            break;
+        case "rcvValue0Is1": // val==0 => 1, then sent as Jeedom info
+            $val = hexdec($dp['data']);
+            if ($val == 0)
+                $val = 1;
+            else
+                $val = 0;
             parserLog("debug", "  ".$dp['m']." => Info=".$info.", Val=".$val, "8002");
             $attributeN = array(
                 'name' => $info,

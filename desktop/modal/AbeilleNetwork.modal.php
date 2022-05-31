@@ -183,13 +183,13 @@
                                     <th class="header" data-toggle="tooltip" colspan=3>{{Relation}}</th>
                                 </tr>
                                 <tr>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Nom}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Objet}}</th>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{ID}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Nom}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Adresse}}</th>
 
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Nom}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Objet}}</th>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{ID}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Nom}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Adresse}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Type}}</th>
 
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Relation}}</th>

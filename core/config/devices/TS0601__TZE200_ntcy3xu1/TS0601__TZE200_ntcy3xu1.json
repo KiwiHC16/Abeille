@@ -20,15 +20,21 @@
                 "use": "attr-Smoke-Alarm",
                 "isVisible": 1
             },
+            "Battery-Low": {
+                 "use": "attr-Battery-Low",
+                "isVisible": 1
+            },
             "Battery-Percent": {
                  "use": "zb-0001-BatteryPercent",
+                 "comment": "Battery percent seems not reported by this device",
                 "isVisible": 1
             }
         },
         "tuyaEF00": {
             "fromDevice": {
-                "01": "rcvSmokeAlarm",
-                "0F": "rcvBattery-Percent"
+                "01": { "function": "rcvValue0Is1", "info": "01-smokeAlarm" },
+                "0E": { "function": "rcvValue0Is1", "info": "01-batteryLow" },
+                "0F": { "function": "rcvBattery-Percent" }
             }
         }
     }

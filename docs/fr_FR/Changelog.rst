@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220531-BETA-1
+-------------
+
 - Interne: Suppression code obsolete (xmlhttpConfChange).
 - Page santé: Amélioration mineure.
 - Mise-à-jour OTA: Amélioration mineure & correction pour support FW Legrand.

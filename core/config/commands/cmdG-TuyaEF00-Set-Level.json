@@ -1,0 +1,16 @@
+{
+    "cmdG-TuyaEF00-Set-Level": {
+        "isVisible": 0,
+        "subType": "slider",
+        "template": "",
+        "configuration": {
+            "topic": "cmd-tuyaEF00",
+            "request": "ep=#EP#&cmd=setPercent1000&data=#slider#",
+            "comment": "dpId must be added as params",
+            "minValue": 0,
+            "maxValue": 100
+        },
+        "type": "action",
+        "genericType": "LIGHT_SLIDER"
+    }
+}

@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+- Interne: Parser: Amélioration mineure.
+- Nom d'un nouvel équipement = type issu du modèle + Jeedom ID (ex: 'Tuya smoke sensor - 12') (2393).
+- Interne: Support Tuya amélioré.
+- Moes smart dimmer MS105Z: Mise-à-jour modèle pour partie dimmer (2363).
+- Interne: Ajout support préliminaire 'usbreset'.
+- Blitzwolf SHP13: Ajout support signature TS011F _TZ3000_amdymr7l (2396).
+
 220531-BETA-1
 -------------
 

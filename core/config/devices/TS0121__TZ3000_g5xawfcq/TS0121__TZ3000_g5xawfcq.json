@@ -9,7 +9,7 @@
         "category": {
             "light": "1"
         },
-        "type": "Blitzwolf-BW-SHP13",
+        "type": "Blitzwolf smart plug",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

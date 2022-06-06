@@ -352,7 +352,7 @@
         /* Init list of supported & user/custom devices */
         $GLOBALS['supportedEqList'] = AbeilleTools::getDevicesList("Abeille");
         $GLOBALS['customEqList'] = AbeilleTools::getDevicesList("local");
-        parserLog('debug', 'customEqList='.json_encode( $GLOBALS['customEqList']));
+        logMessage('debug', 'customEqList='.json_encode( $GLOBALS['customEqList']));
 
         /* Init known devices list */
         $eqLogics = eqLogic::byType('Abeille');
@@ -388,6 +388,7 @@
             $GLOBALS['eqList'][$net][$addr] = $eq;
         }
 
+        logMessage('debug', 'Reading queue');
         while (true) {
 
             // Wait (block) for any input messages
@@ -410,9 +411,9 @@
                         $GLOBALS['sendToCli']['net'] = $msg['net'];
                         $GLOBALS['sendToCli']['addr'] = $msg['addr'];
                         $GLOBALS['sendToCli']['ieee'] = $msg['ieee'];
-                    } if ($msg['type'] == 'readOtaFirmwares') {
+                    } else if ($msg['type'] == 'readOtaFirmwares') {
                         otaReadFirmwares(); // Reread available firmwares
-                    } if ($msg['type'] == 'eqRemoved') {
+                    } else if ($msg['type'] == 'eqRemoved') {
                         // Some equipments removed from Jeedom => phantoms if still in network
                         // $msg['net'] = Abeille network (AbeilleX)
                         // $msg['eqList'] = Eq addr separated by ','
@@ -430,7 +431,8 @@
                             unset($GLOBALS['eqList'][$net][$addr]);
                             logMessage('debug', "  Device ".$net."/".$addr." marked as phantom");
                         }
-                    }
+                    } else
+                        logMessage('debug', '  WARNING: Unexpected msg: '.json_encode($msg));
                 }
             }
             if ($errCode == 7) { // Too big

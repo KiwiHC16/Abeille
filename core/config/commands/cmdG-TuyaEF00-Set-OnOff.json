@@ -4,7 +4,7 @@
         "template": "",
         "configuration": {
             "topic": "cmd-tuyaEF00",
-            "request": "ep=#EP#&cmd=setOnOff&data=#ONOFF#"
+            "request": "ep=#EP#&cmd=setBool&data=#ONOFF#"
         },
         "type": "action",
         "genericType": "GENERIC_ACTION"

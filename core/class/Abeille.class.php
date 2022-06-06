@@ -2455,8 +2455,8 @@ if (0) {
             $ieee = $eqLogic->getConfiguration('IEEE'); // IEEE from Jeedom DB
 
             if ($curEqModel == '') { // Jeedom eq exists but init not completed
-                $eqLogic->setName($modelType); // Default name = short desc from model ('type')
-                $eqHName = $eqLogic->getHumanName(); // Jeedom hierarchical name
+                $eqName = $modelType." - ".$eqLogic->getId(); // Default name (ex: '<modeltype> - 12')
+                $eqLogic->setName($eqName);
                 message::add("Abeille", $eqHName.": Nouvel équipement identifié.", '');
                 $action = 'reset';
             } else if (($curEqModel == 'defaultUnknown') && ($jsonId != 'defaultUnknown')) {

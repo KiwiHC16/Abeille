@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220606-BETA-1
+-------------
+
 - Interne: Parser: Amélioration mineure.
 - Nom d'un nouvel équipement = type issu du modèle + Jeedom ID (ex: 'Tuya smoke sensor - 12') (2393).
 - Interne: Support Tuya amélioré.

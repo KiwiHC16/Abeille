@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="220531-BETA-1"
+# VERSION="220606-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -38,11 +38,11 @@ b01724fc9b23be86f3d465a639ab6c95 *core/ajax/AbeilleEqAssist.ajax.php
 e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 61bf99720e324129d300f737bd7d3eb6 *core/ajax/AbeilleRoutes.ajax.php
 6efba4fad7fd8fd05a9c0f053c77962b *core/ajax/AbeilleZigate.ajax.php
-aec13eede7fe355fd9bb8cf7e44ef26f *core/class/Abeille.class.php
+6ce4444fb38c4402b097b0465f374a88 *core/class/Abeille.class.php
 eaf0e696c9bd3fc8165707ac6fa651b2 *core/class/AbeilleCmd.class.php
 de953c4966ffddb340281f11d7c4bfdc *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
-0b7721a4e2713258e700bf013ba90179 *core/class/AbeilleCmdProcess.class.php
+fc132fb6d78564270d6b18897ed31bf3 *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
 1a35a9e03163902158026cf7088e6d96 *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
@@ -339,7 +339,8 @@ b716ef8aba6a906bbac0341da4a17e45 *core/config/commands/boutonStateRWL021_7.json
 00d23429dded9deaed42a8c680323d07 *core/config/commands/boutonStateRWL021_8.json
 0ac85041257b3b7d554599e2de769e1e *core/config/commands/click.json
 2233e43c4276fb5a276d5d9250c1c8a1 *core/config/commands/cmdG-LegrandFC41.json
-24fd63b7d739d937cf7a11fcf6579d64 *core/config/commands/cmdG-TuyaEF00-Set-OnOff.json
+058cf53a58ec7b4fa899abe73cbba6d7 *core/config/commands/cmdG-TuyaEF00-Set-Level.json
+42c953f735575006532245438b27077d *core/config/commands/cmdG-TuyaEF00-Set-OnOff.json
 73e30bfe40c9ef7ddcb40947421a732b *core/config/commands/cmdG-TuyaEF00-Set-OpenClose.json
 5f457299cdb754cab22a33c3bf84ed0d *core/config/commands/cmdG-TuyaEF00-Set-Setpoint.json
 05751b33217cd4a5c15287ecdb602970 *core/config/commands/cmdG-TuyaEF00-Set-ThermostatMode.json
@@ -819,6 +820,8 @@ bf19af3ca24209a9fcf05a8ee3d19917 *core/config/devices/TS0115__TYZB01_vkwryfdr/TS
 08a014e02fc64033740041b250dbf984 *core/config/devices/TS011F/TS011F.json
 c32d40fd42269462604719b1759a989f *core/config/devices/TS011F__TZ3000_5f43h46b/TS011F__TZ3000_5f43h46b.json
 38ef12890aaaea68b1e8718678e64420 *core/config/devices/TS011F__TZ3000_5f43h46b/discovery.json
+021d297c19115d59da5140658d9f496e *core/config/devices/TS011F__TZ3000_amdymr7l/TS011F__TZ3000_amdymr7l.json
+f41e19b4602ad714462205c1f8beda1d *core/config/devices/TS011F__TZ3000_amdymr7l/discovery.json
 0cec11f75d1c6e7591a4143a0727dc87 *core/config/devices/TS011F__TZ3000_cphmq0q7/TS011F__TZ3000_cphmq0q7.json
 f589fdf1133958004bef164d33aa9587 *core/config/devices/TS011F__TZ3000_cphmq0q7/discovery.json
 0f0bc9fe4dc39b25cc81e1d22561bcce *core/config/devices/TS011F__TZ3000_o005nuxx/TS011F__TZ3000_o005nuxx.json
@@ -833,7 +836,7 @@ f5c342a524a6e5baa89f9e6d0535185f *core/config/devices/TS011F__TZ3000_wamqdr3f/TS
 532a552f433840505df4ccd91a22e152 *core/config/devices/TS0121__TYZB01_zanh6v1o/TS0121__TYZB01_zanh6v1o.json
 625362b613fca10570147e0cf8c6a278 *core/config/devices/TS0121__TZ3000_8nkb7mof/TS0121__TZ3000_8nkb7mof.json
 d9e4133d1a2bc4ac11ae0e492b334d06 *core/config/devices/TS0121__TZ3000_8nkb7mof/discovery.json
-280caca90f24a9c504638ace72389d41 *core/config/devices/TS0121__TZ3000_g5xawfcq/TS0121__TZ3000_g5xawfcq.json
+a7b30fd831c7040ee5c5115fc30962e4 *core/config/devices/TS0121__TZ3000_g5xawfcq/TS0121__TZ3000_g5xawfcq.json
 8941cbf2139ab5643798e4a4b163ec69 *core/config/devices/TS0121__TZ3000_rdtixbnu/TS0121__TZ3000_rdtixbnu.json
 22ada92edf3ca20ca923a06bb6e347b7 *core/config/devices/TS0121__TZ3000_rdtixbnu/discovery.json
 111fe57157a974f62ced2c99bb4bda9a *core/config/devices/TS0201/TS0201.json
@@ -870,9 +873,9 @@ b95145e347daad56482a8c75d509f60d *core/config/devices/TS0601__TZE200_81isopgh/TS
 0ac923c17cd3a6db4456c971f803b04f *core/config/devices/TS0601__TZE200_81isopgh/discovery.json
 b9d4f2c94fd959684e15740ca5dbc959 *core/config/devices/TS0601__TZE200_hue3yfsn/TS0601__TZE200_hue3yfsn.json
 6717da48df39cc264c515e3a40054d03 *core/config/devices/TS0601__TZE200_hue3yfsn/discovery.json
-26fb9dbfa180aba8749b7c39e41ce56a *core/config/devices/TS0601__TZE200_la2c2uo9/TS0601__TZE200_la2c2uo9.json
+174e3b157caf9de6cff5e45b8c6c0b57 *core/config/devices/TS0601__TZE200_la2c2uo9/TS0601__TZE200_la2c2uo9.json
 e84c9a65b59a5922a2e3f0d971dcf3d3 *core/config/devices/TS0601__TZE200_la2c2uo9/discovery.json
-1328574aff081dc1bbcecf8c6fc2c233 *core/config/devices/TS0601__TZE200_ntcy3xu1/TS0601__TZE200_ntcy3xu1.json
+7680a8f9fe2d6682ffc35cc70cf7d8bf *core/config/devices/TS0601__TZE200_ntcy3xu1/TS0601__TZE200_ntcy3xu1.json
 f687d878a421112aa6cabfe6792abaa4 *core/config/devices/TS0601__TZE200_ntcy3xu1/discovery.json
 a94c4cb51820e109282785a4915313c0 *core/config/devices/TS0601__TZE200_nueqqe6k/TS0601__TZE200_nueqqe6k.json
 943b2f691bfb45326e10c2bc39ae309e *core/config/devices/TS0601__TZE200_nueqqe6k/discovery.json
@@ -993,7 +996,7 @@ bae2dd0e8f01fe8b019010f5c69f9bb4 *core/config/sortCommand.php
 d6c238244f9c013900173241106e8b95 *core/i18n/en_US.json
 fe99369b88ceb7cae45f3453c63f485b *core/i18n/fr_FR.json
 c8ec6eaf6d0a8a408bb457784b42c97e *core/php/AbeilleCliToQueue.php
-6de9bf431fc9ed6545437bb5808187b0 *core/php/AbeilleCmd-Tuya.php
+0b9c559f4261cd00eb7830db7be4df9d *core/php/AbeilleCmd-Tuya.php
 f1c7e7fcc7a791dfaeba27f8c80541f5 *core/php/AbeilleCmd.php
 3a8347a9ea19d1ee67793bc7080ab672 *core/php/AbeilleDownload.php
 da1a4650f0ab63376c629a59366052fc *core/php/AbeilleGit.php
@@ -1003,7 +1006,7 @@ fcb726a0b9c8719200b919e33d8e90b7 *core/php/AbeilleLog.php
 119b4c33c514feb5e659d51a023da03e *core/php/AbeilleMonitor.php
 657c2f8ee31e9267a1b575dc188209a4 *core/php/AbeilleOTA.php
 bf6bfb413c71dccc97a56dee254a0989 *core/php/AbeilleParser-Tuya.php
-d02e57c70b1237c1a61f7e1d29b69af7 *core/php/AbeilleParser.php
+828a74a9e3baf61acddee2585728b6fe *core/php/AbeilleParser.php
 1b6bd54dc6c30b652f73038235050885 *core/php/AbeilleQueueToCli.php
 d16e6de03d8914021d3b35118e2c30a3 *core/php/AbeilleSerialRead.php
 4248d134eef07e173183af90cb770da8 *core/php/AbeilleSocat.php
@@ -1074,9 +1077,10 @@ ea2021ee1f4f7ca1835003c08e281bb6 *desktop/php/AbeilleEq.php
 001f8bdecdc1ea87ab2e306476325c99 *desktop/php/AbeilleEqAssist.php
 09ead651d377c7b40be2d436ce39c3df *desktop/php/AbeilleFormAction.php
 e256ecddfee0c6f38ab215803b321e78 *desktop/php/AbeilleGraph.php
+edf3453caf485b3ade87dc00e8ae648a *desktop/php/AbeilleMaintenance.php
 81553e24c6d73b8508a4c22b43ac74bf *desktop/php/AbeilleNetworkGraph.php
 6cf7a2e6a2bc5372fd0371dd7bd897ed *desktop/php/AbeilleSupport.php
-4c402a5ebc0a1486679d70067074b9d6 *docs/fr_FR/Changelog.rst
+ba1f7b175b3d65cbee548263cb7f5b07 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1347,10 +1351,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-b6f05149b05c9a80212dc469e983754b *plugin_info/Abeille.version
+6829b356753b3b3e3c6571333e652be9 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 375a63dd38dfb31ee442d817c8840f4d *plugin_info/configuration.php
-104773ae6daf077146f2955b0299b984 *plugin_info/info.json
+2bb51c15080e4a1df1bf52c7a15cf0bc *plugin_info/info.json
 f05da9a1e9ef19ed488cb698afc97eb1 *plugin_info/install.php
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 33ec19ebdb900ee787fc2be90cf4657f *resources/AbeilleDeamon/CheckAlive.php
@@ -1398,3 +1402,6 @@ c886e65239e481cedb4f97fe4ddcc54f *resources/prog_jennic-0.7/source/common.h
 e72d69d66617ad16d85cd52f725c0d67 *resources/prog_jennic-0.7/source/main.c
 ca03d69e0031eda1c9e619373fd23c5c *resources/prog_jennic-0.7/source/uart.c
 8a8ae26d16916b55cf64b203ae86a9ab *resources/prog_jennic-0.7/source/uart.h
+36c5a44331c15555d95dbbafd5c33760 *resources/usbreset/README.txt
+ba2917a3bfb2d5e90cb6df2b077b40db *resources/usbreset/makefile
+fb9a9619d46a1cc1caf0c0c57c31333e *resources/usbreset/usbreset.c

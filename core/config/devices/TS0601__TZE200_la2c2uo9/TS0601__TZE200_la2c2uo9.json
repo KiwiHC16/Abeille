@@ -29,6 +29,11 @@
                 "use": "zb-0006-OnOff",
                 "isVisible": 1
             },
+            "Set Level": {
+                "use": "cmdG-TuyaEF00-Set-Level",
+                "params": "dpId=02",
+                "isVisible": 1
+            },
             "Level": {
                 "use": "zb-0008-CurrentLevel",
                 "isVisible": 1

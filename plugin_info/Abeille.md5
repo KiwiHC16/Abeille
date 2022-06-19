@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="220606-BETA-1"
+# VERSION="220619-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -601,6 +601,8 @@ e601a105e6f25ad2751e1b5178f50686 *core/config/devices/82c167c95ed746cdbd21d6817f
 257d54483c4ccd9bfa5799df862a1234 *core/config/devices/82c167c95ed746cdbd21d6817f72c593_ORVIBO/discovery_396483ce8b3f4e0d8e9d79079a35a420.json
 56d546d91dc1821bf7435768eceae6e9 *core/config/devices/82c167c95ed746cdbd21d6817f72c593_ORVIBO/notes.txt
 2c589fc8a441c135f3bdcf95bb677a0e *core/config/devices/898ca74409a740b28d5841661e72268d/898ca74409a740b28d5841661e72268d.json
+edfdca6e7a03ae409c7c80ded6b3b978 *core/config/devices/A60STW_LEDVANCE/A60STW_LEDVANCE.json
+90a2b5362434ca8e7f55b1fd3bf107e7 *core/config/devices/A60STW_LEDVANCE/ledvance.discovery.json
 78937ab3fa939308a3b7225b9cb22fc2 *core/config/devices/A60TWZ3/A60TWZ3.json
 91601de01d3070f973c53dfa033983f3 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/ALCANTARA2D1.00P1.02Z1.00.json
 b3de5b2b6933161949c28715effe4536 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/discovery.json
@@ -871,7 +873,7 @@ f76c2979866fa66441b22f88ac1c3739 *core/config/devices/TS0505B__TZ3210_it1u8ahz/T
 7f6a432d25bfd2e653f3fb96350bf933 *core/config/devices/TS0505B__TZ3210_it1u8ahz/discovery.json
 b95145e347daad56482a8c75d509f60d *core/config/devices/TS0601__TZE200_81isopgh/TS0601__TZE200_81isopgh.json
 0ac923c17cd3a6db4456c971f803b04f *core/config/devices/TS0601__TZE200_81isopgh/discovery.json
-b9d4f2c94fd959684e15740ca5dbc959 *core/config/devices/TS0601__TZE200_hue3yfsn/TS0601__TZE200_hue3yfsn.json
+f5576e50076eef8103ffae0f20fdf8af *core/config/devices/TS0601__TZE200_hue3yfsn/TS0601__TZE200_hue3yfsn.json
 6717da48df39cc264c515e3a40054d03 *core/config/devices/TS0601__TZE200_hue3yfsn/discovery.json
 174e3b157caf9de6cff5e45b8c6c0b57 *core/config/devices/TS0601__TZE200_la2c2uo9/TS0601__TZE200_la2c2uo9.json
 e84c9a65b59a5922a2e3f0d971dcf3d3 *core/config/devices/TS0601__TZE200_la2c2uo9/discovery.json
@@ -879,7 +881,7 @@ e84c9a65b59a5922a2e3f0d971dcf3d3 *core/config/devices/TS0601__TZE200_la2c2uo9/di
 f687d878a421112aa6cabfe6792abaa4 *core/config/devices/TS0601__TZE200_ntcy3xu1/discovery.json
 a94c4cb51820e109282785a4915313c0 *core/config/devices/TS0601__TZE200_nueqqe6k/TS0601__TZE200_nueqqe6k.json
 943b2f691bfb45326e10c2bc39ae309e *core/config/devices/TS0601__TZE200_nueqqe6k/discovery.json
-d5976de49ab2887c9f1c99b5c38a4245 *core/config/devices/TS0601__TZE200_yvx5lh6k/TS0601__TZE200_yvx5lh6k.json
+6a090904df82b36fad20c4d7215abe98 *core/config/devices/TS0601__TZE200_yvx5lh6k/TS0601__TZE200_yvx5lh6k.json
 2e2b38d6541adeb526744ae215b5409b *core/config/devices/TS0601__TZE200_yvx5lh6k/discovery.json
 4957eacd183f368fe03a813e71bdf52a *core/config/devices/TS130F__TZ3000_fccpjz5z/TS130F__TZ3000_fccpjz5z.json
 cf6bea379380812d8a44a8e21119f7c3 *core/config/devices/TS130F__TZ3000_fccpjz5z/discovery.json
@@ -995,7 +997,7 @@ fba4cb6e86039c6c21aa23209b98c4be *core/config/devices_local/LISEZMOI.txt
 bae2dd0e8f01fe8b019010f5c69f9bb4 *core/config/sortCommand.php
 d6c238244f9c013900173241106e8b95 *core/i18n/en_US.json
 fe99369b88ceb7cae45f3453c63f485b *core/i18n/fr_FR.json
-c8ec6eaf6d0a8a408bb457784b42c97e *core/php/AbeilleCliToQueue.php
+dc7b80a24a006f16710bc7029b61c30c *core/php/AbeilleCliToQueue.php
 0b9c559f4261cd00eb7830db7be4df9d *core/php/AbeilleCmd-Tuya.php
 f1c7e7fcc7a791dfaeba27f8c80541f5 *core/php/AbeilleCmd.php
 3a8347a9ea19d1ee67793bc7080ab672 *core/php/AbeilleDownload.php
@@ -1005,8 +1007,8 @@ cb875015a0263940b7d8e7e3d77728c6 *core/php/AbeilleLQI.php
 fcb726a0b9c8719200b919e33d8e90b7 *core/php/AbeilleLog.php
 119b4c33c514feb5e659d51a023da03e *core/php/AbeilleMonitor.php
 657c2f8ee31e9267a1b575dc188209a4 *core/php/AbeilleOTA.php
-bf6bfb413c71dccc97a56dee254a0989 *core/php/AbeilleParser-Tuya.php
-828a74a9e3baf61acddee2585728b6fe *core/php/AbeilleParser.php
+61a84c4395d01e245f87fa8c8f139b37 *core/php/AbeilleParser-Tuya.php
+d35a727f6a4a44636a04de9510631ee2 *core/php/AbeilleParser.php
 1b6bd54dc6c30b652f73038235050885 *core/php/AbeilleQueueToCli.php
 d16e6de03d8914021d3b35118e2c30a3 *core/php/AbeilleSerialRead.php
 4248d134eef07e173183af90cb770da8 *core/php/AbeilleSocat.php
@@ -1060,7 +1062,7 @@ aa085904d9e993ca29d82981d83d36f9 *desktop/php/020_AbeilleMesAbeillesPart.php
 6a738c201f387c91b3a051053888c08b *desktop/php/Abeille-Scenes.php
 8296d88f704e40e89b3a4b8d0d173cac *desktop/php/Abeille.php
 a5dc972b5d967212bffaf61762e662fb *desktop/php/AbeilleEq-Advanced-Common.php
-9be4ffbf5f553716c5c0f26426c78e08 *desktop/php/AbeilleEq-Advanced-Device.php
+71a03be8be7f4ea2563b133eddc4486c *desktop/php/AbeilleEq-Advanced-Device.php
 cbb5e68f5336ecabe844496f5622af05 *desktop/php/AbeilleEq-Advanced-Interrogations.php
 968f08c9d0ced8e56e96167915f27eeb *desktop/php/AbeilleEq-Advanced-Specific.php
 414d8c31766c8ed40430a083fb6103fe *desktop/php/AbeilleEq-Advanced-Zigate.php
@@ -1068,7 +1070,7 @@ aec4683d94ac4e92c26b1533c6924b09 *desktop/php/AbeilleEq-Advanced-fct.php
 74c65cf5e3a6c72d755f8c7daa109ad8 *desktop/php/AbeilleEq-Advanced.php
 8dc92490f695f59506096c0511990a9a *desktop/php/AbeilleEq-Cmds.php
 8dbc7e80bad991cd368c0357a0ffd468 *desktop/php/AbeilleEq-Js-Cmds.php
-a6126bea724b813048612a61bbfe79d1 *desktop/php/AbeilleEq-Js.php
+62568944ee6065d0785a30a101c3a65e *desktop/php/AbeilleEq-Js.php
 5a37eb7e2d9dc85e50cfb54142cae934 *desktop/php/AbeilleEq-Main-Generic.php
 cf607a098f735b19c2a8dcb29eddc0ff *desktop/php/AbeilleEq-Main-Icon.php
 9ca5467cb79885ed50e32e13bbcf8234 *desktop/php/AbeilleEq-Main-Others.php
@@ -1080,7 +1082,7 @@ e256ecddfee0c6f38ab215803b321e78 *desktop/php/AbeilleGraph.php
 edf3453caf485b3ade87dc00e8ae648a *desktop/php/AbeilleMaintenance.php
 81553e24c6d73b8508a4c22b43ac74bf *desktop/php/AbeilleNetworkGraph.php
 6cf7a2e6a2bc5372fd0371dd7bd897ed *desktop/php/AbeilleSupport.php
-ba1f7b175b3d65cbee548263cb7f5b07 *docs/fr_FR/Changelog.rst
+4079b268bd0096bcdbe78a0f7ad7b9ef *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1168,6 +1170,7 @@ ba5d7e89e000b0cfadb3e2d5470746a6 *images/node_LTW013.png
 a6570ef735600c0148a7aad57eb01064 *images/node_LWO001.png
 ccb34d97ffa00e0f4f038193d9a7bb1e *images/node_LXX60-CS27LX1.0.png
 e855c47cef73a6e579bb8ad8dbb94b93 *images/node_Lamp_01.png
+0eb695975ef6314f7aeba9da2c64ad30 *images/node_Ledvance-BulbE27-Color.png
 794e4c73a539bf4700830b747d68f36a *images/node_Ledvance-PlugZ3.png
 c09f2a421b5e19cf32bc7d55e3f2a83c *images/node_Legrand-Cableoutlet.png
 99556c9075bbe43b9ffa7d052497e5cb *images/node_Legrand-Celiane-Double-Gray.png
@@ -1351,10 +1354,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-6829b356753b3b3e3c6571333e652be9 *plugin_info/Abeille.version
+9beb09317456bd740d698899d20e38a3 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 375a63dd38dfb31ee442d817c8840f4d *plugin_info/configuration.php
-2bb51c15080e4a1df1bf52c7a15cf0bc *plugin_info/info.json
+f1e0a3789aa186634a03f1267355134d *plugin_info/info.json
 f05da9a1e9ef19ed488cb698afc97eb1 *plugin_info/install.php
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 33ec19ebdb900ee787fc2be90cf4657f *resources/AbeilleDeamon/CheckAlive.php

@@ -103,12 +103,15 @@
 
         $info = "undefined-info";
         $div = 1; // For optional value division
+        $mult = 1; // For optional value multiplication
         if (isset($mapping[$dpId]['function'])) {
             $func = $mapping[$dpId]['function'];
             if (isset($mapping[$dpId]['info']))
                 $info = $mapping[$dpId]['info'];
             if (isset($mapping[$dpId]['div']))
                 $div = $mapping[$dpId]['div'];
+            if (isset($mapping[$dpId]['mult']))
+                $mult = $mapping[$dpId]['mult'];
         } else
             $func = $mapping[$dpId];
 
@@ -137,47 +140,57 @@
                 'value' => $mode,
             );
             break;
-        case "rcvThermostat-WindowDetectionStatus": // Window detection status (Checked on TV02)
-            parserLog("debug", "  ".$dp['m']." => Window detection status = ".$dp['data'], "8002");
-            $attributeN = array(
-                'name' => $ep.'-windowDetectionStatus',
-                'value' => hexdec($dp['data']),
-            );
-            break;
-        case "rcvThermostat-Setpoint": // Set point (Checked on TV02)
-            $setPoint = hexdec($dp['data']) / 10;
-            parserLog("debug", "  ".$dp['m']." => Set point = ".$setPoint." C", "8002");
-            $attributeN = array(
-                'name' => $ep.'-setpoint',
-                'value' => $setPoint,
-            );
-            break;
-        case "rcvThermostat-LocalTemp": // Received local temp (Checked on TV02)
-            $temp = hexdec($dp['data']) / 10;
-            $tempReport = $temp * 100; // Divided by 100 due to model
-            parserLog("debug", "  ".$dp['m']." => Temp = ".$temp." C", "8002");
-            $attributeN = array(
-                'name' => '0402-'.$ep.'-0000',
-                'value' => $tempReport,
-            );
-            break;
-        case "rcvBattery-Percent": // Received battery percent (Checked on TV02)
-            $val = hexdec($dp['data']);
-            parserLog("debug", "  ".$dp['m']." => Battery-percent = ".$val." %", "8002");
-            $attributeN = array(
-                'name' => '0001-'.$ep.'-0021',
-                'value' => $val,
-            );
-            break;
-        case "rcvOnline-Status": // WORK ONGOING !!! Received ON/OFF status (Checked on TV02)
-            $val = hexdec($dp['data']);
-            $st = ($val == 1) ? "ON" : "OFF";
-            parserLog("debug", "  ".$dp['m']." => On/Off=".$val."/".$st, "8002");
-            $attributeN = array(
-                'name' => '0006-'.$ep.'-0000',
-                'value' => $val,
-            );
-            break;
+        // Obsolete. Use generic function instead
+        // "02": { "function": "rcvValue", "info": "01-windowDetectionStatus" }
+        // case "rcvThermostat-WindowDetectionStatus": // Window detection status (Checked on TV02)
+        //     parserLog("debug", "  ".$dp['m']." => Window detection status = ".$dp['data'], "8002");
+        //     $attributeN = array(
+        //         'name' => $ep.'-windowDetectionStatus',
+        //         'value' => hexdec($dp['data']),
+        //     );
+        //     break;
+        // Obsolete. Use generic function instead
+        // "02": { "function": "rcvValueDiv", "info": "01-setPoint", "div": 10 }
+        // case "rcvThermostat-Setpoint": // Set point (Checked on TV02)
+        //     $setPoint = hexdec($dp['data']) / 10;
+        //     parserLog("debug", "  ".$dp['m']." => Set point = ".$setPoint." C", "8002");
+        //     $attributeN = array(
+        //         'name' => $ep.'-setpoint',
+        //         'value' => $setPoint,
+        //     );
+        //     break;
+        // Obsolete. Use generic function instead
+        // "02": { "function": "rcvValueMult", "info": "0402-01-0000", "mult": 10 }
+        // case "rcvThermostat-LocalTemp": // Received local temp (Checked on TV02)
+        //     $temp = hexdec($dp['data']) / 10;
+        //     $tempReport = $temp * 100; // Divided by 100 due to model
+        //     parserLog("debug", "  ".$dp['m']." => Temp = ".$temp." C", "8002");
+        //     $attributeN = array(
+        //         'name' => '0402-'.$ep.'-0000',
+        //         'value' => $tempReport,
+        //     );
+        //     break;
+        // Obsolete. Use generic function instead
+        // "02": { "function": "rcvValue", "info": "0001-01-0021" }
+        // case "rcvBattery-Percent": // Received battery percent (Checked on TV02)
+        //     $val = hexdec($dp['data']);
+        //     parserLog("debug", "  ".$dp['m']." => Battery-percent = ".$val." %", "8002");
+        //     $attributeN = array(
+        //         'name' => '0001-'.$ep.'-0021',
+        //         'value' => $val,
+        //     );
+        //     break;
+        // Obsolete. Use generic function instead
+        // "02": { "function": "rcvValue", "info": "0006-01-0000" }
+        // case "rcvOnline-Status": // WORK ONGOING !!! Received ON/OFF status (Checked on TV02)
+        //     $val = hexdec($dp['data']);
+        //     $st = ($val == 1) ? "ON" : "OFF";
+        //     parserLog("debug", "  ".$dp['m']." => On/Off=".$val."/".$st, "8002");
+        //     $attributeN = array(
+        //         'name' => '0006-'.$ep.'-0000',
+        //         'value' => $val,
+        //     );
+        //     break;
         // Smart Air Box (TS0601, _TZE200_yvx5lh6k) $mapping exemple: array(
         //     "02" => "rcvSmartAir-CO2",
         //     "12" => "rcvSmartAir-Temperature",
@@ -185,50 +198,60 @@
         //     "15" => "rcvSmartAir-VOC",
         //     "16" => "rcvSmartAir-CH20",
         // );
-        case "rcvSmartAir-CO2": // CO2 (verified on Smart Air sensor)
-            $val = hexdec($dp['data']);
-            parserLog("debug", "  ".$dp['m']." => CO2=".$val." ppm", "8002");
-            $attributeN = array(
-                'name' => $ep.'-CO2_ppm',
-                'value' => $val,
-            );
-            break;
-        case "rcvSmartAir-Temperature": // Temp (verified on Smart Air sensor)
-            $val = hexdec($dp['data']);
-            $vReport = $val * 10; // Divided by 100 due to model
-            $val = $val / 10;
-            parserLog("debug", "  ".$dp['m']." => Temp=".$val." C", "8002");
-            $attributeN = array(
-                'name' => '0402-'.$ep.'-0000',
-                'value' => $vReport,
-            );
-            break;
-        case "rcvSmartAir-Humidity": // Humidity (verified on Smart Air sensor)
-            $val = hexdec($dp['data']);
-            $vReport = $val * 10; // Divided by 100 due to model
-            $val = $val / 10;
-            parserLog("debug", "  ".$dp['m']." => Humidity=".$val." %", "8002");
-            $attributeN = array(
-                'name' => '0405-'.$ep.'-0000',
-                'value' => $vReport,
-            );
-            break;
-        case "rcvSmartAir-VOC": // VOC (verified on Smart Air sensor)
-            $val = hexdec($dp['data']) / 10;
-            parserLog("debug", "  ".$dp['m']." => VOC=".$val." ppm", "8002");
-            $attributeN = array(
-                'name' => $ep.'-VOC_ppm',
-                'value' => $val,
-            );
-            break;
-        case "rcvSmartAir-CH20": // Formaldéhyde µg/m3 (Méthanal / CH2O_ppm) (verified on Smart Air sensor)
-            $val = hexdec($dp['data']);
-            parserLog("debug", "  ".$dp['m']." => CH2O=".$val." ppm", "8002");
-            $attributeN = array(
-                'name' => $ep.'-CH20_ppm',
-                'value' => $val,
-            );
-            break;
+        // Obsolete. Use generic function instead
+        // "02": { "function": "rcvValue", "info": "01-CO2_ppm" }
+        // case "rcvSmartAir-CO2": // CO2 (verified on Smart Air sensor)
+        //     $val = hexdec($dp['data']);
+        //     parserLog("debug", "  ".$dp['m']." => CO2=".$val." ppm", "8002");
+        //     $attributeN = array(
+        //         'name' => $ep.'-CO2_ppm',
+        //         'value' => $val,
+        //     );
+        //     break;
+        // Obsolete. Use generic function instead
+        // "02": { "function": "rcvValueMult", "info": "0402-01-0000", "mult": 10 }
+        // case "rcvSmartAir-Temperature": // Temp (verified on Smart Air sensor)
+        //     $val = hexdec($dp['data']);
+        //     $vReport = $val * 10; // Divided by 100 due to model
+        //     $val = $val / 10;
+        //     parserLog("debug", "  ".$dp['m']." => Temp=".$val." C", "8002");
+        //     $attributeN = array(
+        //         'name' => '0402-'.$ep.'-0000',
+        //         'value' => $vReport,
+        //     );
+        //     break;
+        // Obsolete. Use generic function instead
+        // "02": { "function": "rcvValueMult", "info": "0405-01-0000", "mult": 10 }
+        // case "rcvSmartAir-Humidity": // Humidity (verified on Smart Air sensor)
+        //     $val = hexdec($dp['data']);
+        //     $vReport = $val * 10; // Divided by 100 due to model
+        //     $val = $val / 10;
+        //     parserLog("debug", "  ".$dp['m']." => Humidity=".$val." %", "8002");
+        //     $attributeN = array(
+        //         'name' => '0405-'.$ep.'-0000',
+        //         'value' => $vReport,
+        //     );
+        //     break;
+        // Obsolete. Use generic function instead
+        // "02": { "function": "rcvValueDiv", "info": "01-VOC_ppm", "div": 10 }
+        // case "rcvSmartAir-VOC": // VOC (verified on Smart Air sensor)
+        //     $val = hexdec($dp['data']) / 10;
+        //     parserLog("debug", "  ".$dp['m']." => VOC=".$val." ppm", "8002");
+        //     $attributeN = array(
+        //         'name' => $ep.'-VOC_ppm',
+        //         'value' => $val,
+        //     );
+        //     break;
+        // Obsolete. Use generic function instead
+        // "02": { "function": "rcvValue", "info": "01-CH20_ppm" }
+        // case "rcvSmartAir-CH20": // Formaldéhyde µg/m3 (Méthanal / CH2O_ppm) (verified on Smart Air sensor)
+        //     $val = hexdec($dp['data']);
+        //     parserLog("debug", "  ".$dp['m']." => CH2O=".$val." ppm", "8002");
+        //     $attributeN = array(
+        //         'name' => $ep.'-CH20_ppm',
+        //         'value' => $val,
+        //     );
+        //     break;
         // Obsolete. Replaced by generic function 'rcvValue0Is1'
         // case "rcvSmokeAlarm": // Smoke status: value to bool
         //     $val = hexdec($dp['data']);
@@ -289,10 +312,21 @@
                 'value' => $val,
             );
             break;
+        // Use exemple:  "02": { "function": "rcvValueDiv", "info": "01-setPoint", "dic": 10 },
         case "rcvValueDiv": // Divided value sent as Jeedom info
             $val = hexdec($dp['data']);
             $val = $val / $div;
-            parserLog("debug", "  ".$dp['m']." => Info=".$info.", Val=".$val, "8002");
+            parserLog("debug", "  ".$dp['m']." => Info=".$info.", Div=".$div." => Val=".$val, "8002");
+            $attributeN = array(
+                'name' => $info,
+                'value' => $val,
+            );
+            break;
+        // "02": { "function": "rcvValueMult", "info": "0402-01-0000", "mult": 10 }
+        case "rcvValueMult": // Multiplied value sent as Jeedom info
+            $val = hexdec($dp['data']);
+            $val = $val * $mult;
+            parserLog("debug", "  ".$dp['m']." => Info=".$info.", Mult=".$mult." => Val=".$val, "8002");
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,

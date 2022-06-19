@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+- Interne: Support Tuya amélioré (ajout 'rcvValueMult').
+- Tuya TV02: Mise-à-jour du modèle.
+- Page EQ: Suppression des boutons 'Recharger' & 'Reconfigurer' pour ne garder que 'Reinitialiser'.
+- Ampoule E27 Ledvance couleur: Ajout support préliminaire (2400).
+- Smart Air Box: Modèle revu pour utilisation commandes internes génériques (2329).
+
 220606-BETA-1
 -------------
 

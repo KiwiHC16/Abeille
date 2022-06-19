@@ -314,18 +314,6 @@
         $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=resetPiZigate').dialog('open');
     }
 
-    /* Update device from JSON (reload JSON) */
-    function updateFromJSON(eqNet, eqAddr) {
-        console.log("updateFromJSON("+eqNet+","+eqAddr+")");
-
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&topic=CmdCreate"+eqNet+"_"+eqAddr+"_updateFromJson", false);
-        xhttp.send();
-
-        xhttp.onreadystatechange = function() {
-        };
-    }
-
     /* Remove given local JSON file */
     function removeLocalJSON(jsonId) {
         console.log("removeLocalJSON("+jsonId+")");
@@ -350,29 +338,6 @@
         });
     }
 
-    /* Reconfigure device by sending 'execAtCreation' commands.
-       WARNING: If battery powered, device must be wake up. */
-    function reconfigure(eqId) {
-        console.log("reconfigure("+eqId+")");
-
-        if (js_batteryType != '') {
-            var msg = "{{Vous êtes sur le point de reconfigurer cet équipement.";
-            msg += "<br>Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.";
-            msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
-            bootbox.confirm(msg, function (result) {
-                if (result == false)
-                    return
-                var xhttp = new XMLHttpRequest();
-                xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reconfigure&eqId="+eqId, false);
-                xhttp.send();
-            });
-        } else {
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reconfigure&eqId="+eqId, false);
-            xhttp.send();
-        }
-    }
-
     /* Reinit Jeedom device & reconfigure.
        WARNING: If battery powered, device must be wake up. */
     function reinit(eqId) {
@@ -393,6 +358,41 @@
             xhttp.send();
         });
     }
+
+    /* Update device from JSON (reload JSON) */
+    // function updateFromJSON(eqNet, eqAddr) {
+    //     console.log("updateFromJSON("+eqNet+","+eqAddr+")");
+
+    //     var xhttp = new XMLHttpRequest();
+    //     xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&topic=CmdCreate"+eqNet+"_"+eqAddr+"_updateFromJson", false);
+    //     xhttp.send();
+
+    //     xhttp.onreadystatechange = function() {
+    //     };
+    // }
+
+    /* Reconfigure device by sending 'execAtCreation' commands.
+       WARNING: If battery powered, device must be wake up. */
+    // function reconfigure(eqId) {
+    //     console.log("reconfigure("+eqId+")");
+
+    //     if (js_batteryType != '') {
+    //         var msg = "{{Vous êtes sur le point de reconfigurer cet équipement.";
+    //         msg += "<br>Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.";
+    //         msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
+    //         bootbox.confirm(msg, function (result) {
+    //             if (result == false)
+    //                 return
+    //             var xhttp = new XMLHttpRequest();
+    //             xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reconfigure&eqId="+eqId, false);
+    //             xhttp.send();
+    //         });
+    //     } else {
+    //         var xhttp = new XMLHttpRequest();
+    //         xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reconfigure&eqId="+eqId, false);
+    //         xhttp.send();
+    //     }
+    // }
 
     function interrogate(request) {
         console.log("interrogate("+request+")");

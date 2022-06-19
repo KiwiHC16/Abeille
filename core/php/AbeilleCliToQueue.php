@@ -40,9 +40,9 @@
     else
         $action = "sendMsg";
 
-    if (isset($dbgTcharp38)) logDebug("CliToQueue: action=".$action);
-
     if ($action == "sendMsg") {
+        if (isset($dbgTcharp38)) logDebug("CliToQueue: action=".$action);
+
         // Default target queue = '$abQueues['xmlToAbeille']['id']'
         if (isset($_GET['queueId']))
             $queueId = $_GET['queueId'];
@@ -98,9 +98,11 @@
        This is done by executing action cmds with 'execAtCreation' flag set. */
     /* Tcharp38: TODO: Better to put 'reconfigure' functionality inside AbeilleCmd and remove it
        from here & parser too. */
-    if (($action == "reconfigure") || ($action == "reinit")) {
+    // if (($action == "reconfigure") || ($action == "reinit")) {
+    if ($action == "reinit") {
+        if (isset($dbgTcharp38)) logDebug("CliToQueue: action=".$action);
+
         $eqId = $_GET['eqId'];
-// logDebug("reconfigure: eqId=".$eqId);
         $eqLogic = eqLogic::byId($eqId);
         if (!is_object($eqLogic)) {
             logDebug("CliToQueue: ERROR: Unkown device with ID ".$eqId);
@@ -196,7 +198,6 @@
                 'topic' => $topic,
                 'payload' => $request,
             );
-// logDebug("msg=".json_encode($msg));
         if (isset($dbgTcharp38)) logDebug("CliToQueue: msg_send(): ".json_encode($msg));
         if (msg_send($queue, 1, $msg, true, false) == false) {
                 if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: msg_send()");
@@ -212,5 +213,18 @@
             if (isset($dbgTcharp38)) logDebug("reinit msg to Abeille: ".json_encode($msg));
             msg_send($queue, 1, $msg, true, false);
         }
+
+        // Inform parser that EQ config has changed
+        $queue = msg_get_queue($abQueues['xToParser']['id']);
+        $msg = array(
+            'type' => "eqUpdated",
+            'id' => $eqId,
+        );
+        if (isset($dbgTcharp38)) logDebug("eqUpdated msg to Parser: ".json_encode($msg));
+        msg_send($queue, 1, json_encode($msg), false, false);
+
+        return;
     } // End $action == "reconfigure"
+
+    if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: Unknown action=".$action);
 ?>

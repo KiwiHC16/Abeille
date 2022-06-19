@@ -282,6 +282,16 @@
         return $GLOBALS['eqList'][$net][$addr];
     }
 
+    // Reread Jeedom useful infos on DB update
+    function updateDeviceFromDB($eqId) {
+        $eqLogic = eqLogic::byId($eqId);
+        $eqLogicId = $eqLogic->getLogicalId();
+        list($net, $addr) = explode("/", $eqLogicId);
+
+        $GLOBALS['eqList'][$net][$addr]['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null);
+        // TO BE COMPLETED if any other key info
+    }
+
     // ***********************************************************************************************
     // MAIN
     // ***********************************************************************************************
@@ -397,7 +407,7 @@
             while (msg_receive($queueXToParser, 0, $msgType, $queueXToParserMax, $msgJson, false, 0, $errCode)) { // Blocking read
                 $msg = json_decode($msgJson, true);
                 if ($msg === null) {
-                    logMessage('debug', '  ERROR: json_decode(): msgJson='.$msgJson);
+                    logMessage('debug', 'ERROR: json_decode(): msgJson='.$msgJson);
                     time_nanosleep(0, 10000000); // 1/100s
                     continue;
                 }
@@ -414,6 +424,7 @@
                     } else if ($msg['type'] == 'readOtaFirmwares') {
                         otaReadFirmwares(); // Reread available firmwares
                     } else if ($msg['type'] == 'eqRemoved') {
+                        logMessage('debug', 'EQ id '.$eqId.' removed from Jeedom');
                         // Some equipments removed from Jeedom => phantoms if still in network
                         // $msg['net'] = Abeille network (AbeilleX)
                         // $msg['eqList'] = Eq addr separated by ','
@@ -431,8 +442,13 @@
                             unset($GLOBALS['eqList'][$net][$addr]);
                             logMessage('debug', "  Device ".$net."/".$addr." marked as phantom");
                         }
+                    } else if ($msg['type'] == 'eqUpdated') {
+                        // Note: On model reload/reset, changes may impact parsing (ex: Tuya).
+                        $eqId = $msg['id'];
+                        logMessage('debug', 'EQ id '.$eqId.' updated. Need to read Jeedom DB.');
+                        updateDeviceFromDB($eqId);
                     } else
-                        logMessage('debug', '  WARNING: Unexpected msg: '.json_encode($msg));
+                        logMessage('error', 'ERROR: Unexpected msg: '.json_encode($msg));
                 }
             }
             if ($errCode == 7) { // Too big

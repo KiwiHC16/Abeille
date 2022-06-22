@@ -1522,10 +1522,17 @@
 
             // Work-around for https://github.com/fairecasoimeme/ZiGatev2/issues/36#
             // Note: if no 8002 before (dev announce just after restart), better to ignore instead of accept a wrong dev announce.
-            global $last8002DevAnnounce;
-            if ($addr != $last8002DevAnnounce) {
-                parserLog('debug', '  WARNING: Corrupted message => ignoring');
+            $zgId = substr($dest, 7);
+            if (!isset($GLOBALS['zigate'.$zgId]['fwVersionMaj'])) {
+                parserLog('debug', '  WARNING: FW major currently unknown => ignoring');
                 return;
+            }
+            if ($GLOBALS['zigate'.$zgId]['fwVersionMaj'] == "0005") { // Zigate v2 ?
+                global $last8002DevAnnounce;
+                if ($addr != $last8002DevAnnounce) {
+                    parserLog('debug', '  WARNING: Corrupted message => ignoring');
+                    return;
+                }
             }
 
             $this->deviceAnnounce($dest, $addr, $ieee, $macCapa, $rejoin);
@@ -3288,6 +3295,10 @@
             $minor = substr($payload, 4, 4);
 
             parserLog('debug', $dest.', Type=8010/Version, Appli='.$major.', SDK='.$minor, "8010");
+
+            $zgId = substr($dest, 7);
+            $GLOBALS['zigate'.$zgId]['fwVersionMaj'] = $major;
+            $GLOBALS['zigate'.$zgId]['fwVersionMin'] = $minor;
 
             // FW version required by AbeilleCmd for flow control decision.
             $msg = array (

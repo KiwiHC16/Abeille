@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: 'Device Announce' filtré pour Zigate v2 seulement (2404).
+
 220619-BETA-1
 -------------
 

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220625-BETA-1
+-------------
+
 - Interne: Parser: Fix mineur msg debug.
 - Modèles d'équipements: Possibilité de surcharger 'historizeRound'.
 - Interne: Parser: Ajout support msg '8001/Log message'.

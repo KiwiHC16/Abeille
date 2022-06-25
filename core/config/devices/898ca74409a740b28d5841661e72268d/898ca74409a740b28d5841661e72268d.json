@@ -41,7 +41,12 @@
                 "execAtCreation": "Yes"
             },
 
-            "Humidity": { "use": "zb-0405-MeasuredValue", "params": "ep=02", "isVisible": 1 },
+            "Humidity": {
+                "use": "zb-0405-MeasuredValue",
+                "params": "ep=01",
+                "historizeRound": 1,
+                "isVisible": 1
+            },
             "Bind-0405-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "ep=02&clustId=0405",

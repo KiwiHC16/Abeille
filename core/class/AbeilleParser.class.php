@@ -1707,6 +1707,18 @@
             }
         }
 
+        // 8001/Log message
+        function decode8001($dest, $payload, $lqi) {
+            $level  = substr($payload, 0, 2);
+            $msg    = substr($payload, 2);
+            $msg    = pack("H*", $msg);
+
+            $msgDecoded = '8001/Log message'
+                .', Level='.$level
+                .', Msg='.$msg;
+            parserLog('debug', $dest.', Type='.$msgDecoded, "8001");
+        }
+
         /* Called from decode8002() to decode a "Read Attribute Status Record"
            Returns: false if error */
         function decode8002_ReadAttrStatusRecord($hexString, &$size) {

@@ -424,7 +424,7 @@
                     } else if ($msg['type'] == 'readOtaFirmwares') {
                         otaReadFirmwares(); // Reread available firmwares
                     } else if ($msg['type'] == 'eqRemoved') {
-                        logMessage('debug', 'EQ id '.$eqId.' removed from Jeedom');
+                        logMessage('debug', 'Some equipments removed from Jeedom');
                         // Some equipments removed from Jeedom => phantoms if still in network
                         // $msg['net'] = Abeille network (AbeilleX)
                         // $msg['eqList'] = Eq addr separated by ','

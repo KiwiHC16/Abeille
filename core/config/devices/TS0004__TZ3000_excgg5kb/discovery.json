@@ -1,0 +1,539 @@
+{
+    "endPoints": {
+        "01": {
+            "servClusters": {
+                "0000": {
+                    "attributes": {
+                        "0005": {
+                            "dataType": "42",
+                            "access": "05",
+                            "value": "TS0004"
+                        },
+                        "0000": {
+                            "dataType": "20",
+                            "access": "05",
+                            "value": 3
+                        },
+                        "0001": {
+                            "dataType": "20",
+                            "access": "05",
+                            "value": 80
+                        },
+                        "0002": {
+                            "dataType": "20",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "0003": {
+                            "dataType": "20",
+                            "access": "05",
+                            "value": 1
+                        },
+                        "0004": {
+                            "dataType": "42",
+                            "access": "05",
+                            "value": "_TZ3000_excgg5kb"
+                        },
+                        "0006": {
+                            "dataType": "42",
+                            "access": "05",
+                            "value": ""
+                        },
+                        "0007": {
+                            "dataType": "30",
+                            "access": "05",
+                            "value": 1
+                        },
+                        "FFDE": {
+                            "dataType": "20",
+                            "access": "07",
+                            "value": 13
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 2
+                        },
+                        "FFFE": {
+                            "dataType": "30",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "FFE2": {
+                            "dataType": "20",
+                            "access": "05",
+                            "value": 48
+                        },
+                        "FFE3": {
+                            "dataType": "48",
+                            "access": "05",
+                            "value": ""
+                        }
+                    }
+                },
+                "0003": {
+                    "attributes": []
+                },
+                "0004": {
+                    "attributes": {
+                        "0000": {
+                            "value": "00"
+                        },
+                        "FFFD": {
+                            "value": 2
+                        }
+                    }
+                },
+                "0005": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "20",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "0001": {
+                            "dataType": "20",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "0002": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "0003": {
+                            "dataType": "10",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "0004": {
+                            "dataType": "18",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 2
+                        }
+                    }
+                },
+                "0006": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "10",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 2
+                        },
+                        "4001": {
+                            "dataType": "21",
+                            "access": "07",
+                            "value": 0
+                        },
+                        "4002": {
+                            "dataType": "21",
+                            "access": "07",
+                            "value": 0
+                        },
+                        "8001": {
+                            "dataType": "30",
+                            "access": "07",
+                            "value": 1
+                        },
+                        "8002": {
+                            "dataType": "30",
+                            "access": "07",
+                            "value": 0
+                        },
+                        "5000": {
+                            "dataType": "30",
+                            "access": "07",
+                            "value": 1
+                        },
+                        "8000": {
+                            "value": 0
+                        }
+                    }
+                },
+                "E000": {
+                    "attributes": {
+                        "D001": {
+                            "dataType": "48",
+                            "access": "07"
+                        },
+                        "D002": {
+                            "dataType": "48",
+                            "access": "07"
+                        },
+                        "D003": {
+                            "dataType": "42",
+                            "access": "07"
+                        },
+                        "D004": {
+                            "dataType": "21",
+                            "access": "07"
+                        },
+                        "D005": {
+                            "dataType": "21",
+                            "access": "07"
+                        }
+                    }
+                },
+                "E001": {
+                    "attributes": {
+                        "D010": {
+                            "dataType": "30",
+                            "access": "07",
+                            "value": 0
+                        },
+                        "D020": {
+                            "dataType": "30",
+                            "access": "07",
+                            "value": 0
+                        },
+                        "D030": {
+                            "dataType": "30",
+                            "access": "07",
+                            "value": 0
+                        }
+                    }
+                },
+                "0019": {
+                    "attributes": {
+                        "0000": {
+                            "value": "FFFFFFFFFFFFFFFF"
+                        },
+                        "0001": {
+                            "value": 4294967295
+                        },
+                        "0002": {
+                            "value": 80
+                        },
+                        "0003": {
+                            "value": 2
+                        },
+                        "0004": {
+                            "value": 4294967295
+                        },
+                        "0005": {
+                            "value": 65535
+                        },
+                        "0006": {
+                            "value": 0
+                        },
+                        "0007": {
+                            "value": 4417
+                        },
+                        "0008": {
+                            "value": 65535
+                        },
+                        "0009": {
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "value": 1
+                        }
+                    }
+                },
+                "000A": {
+                    "attributes": {
+                        "FFFD": {
+                            "value": 1
+                        }
+                    }
+                }
+            },
+            "status": "00",
+            "cliClusters": {
+                "0019": {
+                    "attributes": {
+                        "0000": [],
+                        "0001": [],
+                        "0002": [],
+                        "0003": [],
+                        "0004": [],
+                        "0005": [],
+                        "0006": [],
+                        "0007": [],
+                        "0008": [],
+                        "0009": [],
+                        "FFFD": []
+                    }
+                },
+                "000A": {
+                    "attributes": {
+                        "FFFD": []
+                    }
+                }
+            }
+        },
+        "02": {
+            "status": "00",
+            "servClusters": {
+                "0004": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "0D",
+                            "access": "00"
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 15608
+                        }
+                    }
+                },
+                "0005": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "20",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "000A": {
+                            "dataType": "",
+                            "access": "00",
+                            "value": null
+                        },
+                        "0002": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "0003": {
+                            "dataType": "10",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "0004": {
+                            "dataType": "18",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 2
+                        }
+                    }
+                },
+                "0006": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "10",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 2
+                        },
+                        "4001": {
+                            "dataType": "21",
+                            "access": "07",
+                            "value": 0
+                        },
+                        "4002": {
+                            "dataType": "21",
+                            "access": "07",
+                            "value": 0
+                        }
+                    }
+                },
+                "E001": {
+                    "attributes": {
+                        "D010": {
+                            "dataType": "30",
+                            "access": "07",
+                            "value": 0
+                        }
+                    }
+                }
+            }
+        },
+        "03": {
+            "status": "00",
+            "servClusters": {
+                "0004": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "0D",
+                            "access": "00"
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 16824
+                        }
+                    }
+                },
+                "0005": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "20",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "000A": {
+                            "dataType": "",
+                            "access": "00",
+                            "value": null
+                        },
+                        "0002": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "0003": {
+                            "dataType": "10",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "0004": {
+                            "dataType": "18",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 2
+                        }
+                    }
+                },
+                "0006": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "10",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "4001": {
+                            "dataType": "21",
+                            "access": "07",
+                            "value": 0
+                        },
+                        "4002": {
+                            "dataType": "21",
+                            "access": "07",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 2
+                        }
+                    }
+                },
+                "E001": {
+                    "attributes": {
+                        "D010": {
+                            "dataType": "30",
+                            "access": "07",
+                            "value": 0
+                        }
+                    }
+                }
+            }
+        },
+        "04": {
+            "status": "00",
+            "servClusters": {
+                "0004": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "0D",
+                            "access": "00"
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 18040
+                        }
+                    }
+                },
+                "0005": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "20",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "000A": {
+                            "dataType": "",
+                            "access": "00",
+                            "value": null
+                        },
+                        "0002": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "0003": {
+                            "dataType": "10",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "0004": {
+                            "dataType": "18",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 2
+                        }
+                    }
+                },
+                "0006": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "10",
+                            "access": "05",
+                            "value": 0
+                        },
+                        "4001": {
+                            "dataType": "21",
+                            "access": "07",
+                            "value": 0
+                        },
+                        "4002": {
+                            "dataType": "21",
+                            "access": "07",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "access": "05",
+                            "value": 2
+                        }
+                    }
+                },
+                "E001": {
+                    "attributes": {
+                        "D010": {
+                            "dataType": "30",
+                            "access": "07",
+                            "value": 0
+                        }
+                    }
+                }
+            }
+        },
+        "F2": {
+            "status": "00",
+            "cliClusters": {
+                "0021": {
+                    "attributes": []
+                }
+            }
+        }
+    }
+}

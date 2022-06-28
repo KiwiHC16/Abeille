@@ -1,15 +1,15 @@
 {
-    "A60STW_LEDVANCE": {
-        "manufacturer": "Ledvance",
-        "model": "AC33907",
-        "type": "Ledvance color E27 bulb",
+    "GL-C-008P_GLEDOPTO": {
+        "manufacturer": "Gledopto",
+        "model": "GL-C-008P",
+        "type": "Gledopto RGBW strip controller",
         "timeout": "60",
         "category": {
             "automatism": "1"
         },
         "configuration": {
-            "icon": "Ledvance-BulbE27-Color",
-            "mainEP": "01"
+            "icon": "Gledopto-GL-C-008P",
+            "mainEP": "0B"
         },
         "commands": {
             "SWBuildID": {
@@ -84,6 +84,20 @@
             "Get Color Mode": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0300&attrId=0008"
+            },
+            "Current HUE": {
+                "use": "zb-0300-CurrentHue"
+            },
+            "Get Current HUE": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0000"
+            },
+            "Current Saturation": {
+                "use": "zb-0300-CurrentSaturation"
+            },
+            "Get Current Saturation": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0001"
             },
             "Current X": {
                 "use": "zb-0300-CurrentX"

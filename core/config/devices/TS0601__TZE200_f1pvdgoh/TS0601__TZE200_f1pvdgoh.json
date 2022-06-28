@@ -1,0 +1,36 @@
+{
+    "TS0601__TZE200_f1pvdgoh": {
+        "manufacturer": "Tuya",
+        "model": "PIR+illuminance",
+        "type": "Tuya PIR + illuminance sensor",
+        "timeout": "60",
+        "category": {
+            "security": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-PIR-Illuminance",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Occupancy": {
+                "use": "attr-Presence-Detection",
+                "isVisible": 1
+            },
+            "Illuminance": {
+                "use": "zb-0400-MeasuredValue",
+                "nextLine": "after",
+                "isVisible": 1
+            }
+        },
+        "tuyaEF00": {
+            "fromDevice": {
+                "01": { "function": "rcvValue0Is1", "info": "01-presence" },
+                "04": { "function": "rcvValue", "info": "0400-01-0000" },
+                "65": { "function": "rcvValue", "info": "0001-01-0021" }
+            }
+        }
+    }
+}

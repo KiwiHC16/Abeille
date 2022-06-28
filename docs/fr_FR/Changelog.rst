@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220628-BETA-1
+-------------
+
 - Mhcozy ZG-0005-RF: Ajout support préliminaire (2408).
 - Gledopto GL-C-008P: Ajout support préliminaire (2402).
 - Tuya PIR+illuminance: Ajout support préliminaire (2409).

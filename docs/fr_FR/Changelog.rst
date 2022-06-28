@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- Mhcozy ZG-0005-RF: Ajout support préliminaire (2408).
+- Gledopto GL-C-008P: Ajout support préliminaire (2402).
+- Tuya PIR+illuminance: Ajout support préliminaire (2409).
+
 220625-BETA-1
 -------------
 
@@ -13,8 +17,8 @@ ChangeLog
 
 - Interne: 'Device Announce' filtré pour Zigate v2 seulement (2404).
 
-220619-BETA-1
--------------
+220619-STABLE-1
+---------------
 
   .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
 

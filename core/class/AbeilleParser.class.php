@@ -3177,7 +3177,7 @@
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
 
-                        $attributesReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $msg);
+                        $attributesReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $msg, $toMon);
                     }
 
                     else {

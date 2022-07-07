@@ -77,7 +77,7 @@
 
     // Receive a datapoint, map it to a specific function an decode it.
     // Mapping is defined "per device" directly in its model (tuyaEF00/fromDevice).
-    function tuyaDecodeDp($ep, $dp, $mapping) {
+    function tuyaDecodeDp($ep, $dp, $mapping, &$toMon) {
         $dpId = $dp['id'];
         if (!isset($mapping[$dpId])) {
             parserLog("debug", "  ".$dp['m'].": Unrecognized DP (data=".$dp['data'].")", "8002");
@@ -134,7 +134,9 @@
                 $mode = "holliday";
             else
                 $mode = "?";
-            parserLog("debug", "  ".$dp['m']." => Mode = ".$dp['data']."/".$mode, "8002");
+            $logMsg = "  ".$dp['m']." => Mode = ".$dp['data']."/".$mode;
+            parserLog("debug", $logMsg, "8002");
+            $toMon[] = $logMsg; // For monitor
             $attributeN = array(
                 'name' => $ep.'-mode',
                 'value' => $mode,
@@ -306,7 +308,7 @@
         // Use exemple:  "02": { "function": "rcvValue", "info": "0008-01-0000" },
         case "rcvValue": // Value sent as Jeedom info
             $val = hexdec($dp['data']);
-            parserLog("debug", "  ".$dp['m']." => Info=".$info.", Val=".$val, "8002");
+            $logMsg = "  ".$dp['m']." => Info=".$info.", Val=".$val;
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,
@@ -316,7 +318,7 @@
         case "rcvValueDiv": // Divided value sent as Jeedom info
             $val = hexdec($dp['data']);
             $val = $val / $div;
-            parserLog("debug", "  ".$dp['m']." => Info=".$info.", Div=".$div." => Val=".$val, "8002");
+            $logMsg = "  ".$dp['m']." => Info=".$info.", Div=".$div." => Val=".$val;
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,
@@ -326,7 +328,7 @@
         case "rcvValueMult": // Multiplied value sent as Jeedom info
             $val = hexdec($dp['data']);
             $val = $val * $mult;
-            parserLog("debug", "  ".$dp['m']." => Info=".$info.", Mult=".$mult." => Val=".$val, "8002");
+            $logMsg = "  ".$dp['m']." => Info=".$info.", Mult=".$mult." => Val=".$val;
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,
@@ -338,7 +340,7 @@
                 $val = 1;
             else
                 $val = 0;
-            parserLog("debug", "  ".$dp['m']." => Info=".$info.", Val=".$val, "8002");
+            $logMsg = "  ".$dp['m']." => Info=".$info.", Val=".$val;
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,
@@ -351,6 +353,10 @@
             break;
         }
 
+        if (isset($logMsg)) {
+            parserLog("debug", $logMsg, "8002");
+            $toMon[] = $logMsg;
+        }
         return $attributeN;
     }
 
@@ -388,7 +394,7 @@
         //     self.log.logging("Tuya", "Debug", "send_timesynchronisation - %s/%s " % (NwkId, srcEp))
     }
 
-    function tuyaDecodeEF00Cmd($net, $addr, $ep, $cmdId, $msg) {
+    function tuyaDecodeEF00Cmd($net, $addr, $ep, $cmdId, $msg, &$toMon) {
         $tCmds = array(
             "00" => array("name" => "TY_DATA_REQUEST", "desc" => "Gateway-side data request"),
             "01" => array("name" => "TY_DATA_RESPONE", "desc" => "Reply to MCU-side data request"),
@@ -428,7 +434,7 @@
             while (strlen($msg) != 0) {
                 $dp = tuyaGetDp($msg);
 
-                $a = tuyaDecodeDp($ep, $dp, $mapping);
+                $a = tuyaDecodeDp($ep, $dp, $mapping, $toMon);
                 if ($a !== false)
                     $attributesN[] = $a;
                 else { // Unknown DP

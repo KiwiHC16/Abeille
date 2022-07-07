@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Interne: Parser: Amélioration msg monitor si équipement Tuya.
+- Ampoule E27 Ledvance white: Mise-à-jour modèle (2400).
+
 220628-BETA-1
 -------------
 

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220713-BETA-1
+-------------
+
 - Profalux: Ajout support volet MOT-C1Z06F (2411).
 - Interne: Exclusion de 'resources/archives' des signatures MD5 (2413).
 

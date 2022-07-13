@@ -37,6 +37,10 @@ do
         echo "xxxxxxxxx-md5-skipped-xxxxxxxxxx *${F}" >> ${OUT}
         continue
     fi
+    if [[ "${F}" = "resources/archives"* ]]; then
+        echo "xxxxxxxxx-md5-skipped-xxxxxxxxxx *${F}" >> ${OUT}
+        continue
+    fi
     # 'core/config/devices_local' fully excluded except the following files
     if [[ "${F}" = "core/config/devices_local/"* ]]; then
         if [[ "${F}" != *"LISEZMOI.txt" ]] && [[ "${F}" != *"README.txt" ]]; then

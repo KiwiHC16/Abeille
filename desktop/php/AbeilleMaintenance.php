@@ -18,17 +18,18 @@
     $eqLogics = eqLogic::byType('Abeille');
 ?>
 
-<div class="col-xs-12 eqLogic" style="padding-top: 5px">
+<div style="padding-top: 5px">
     <ul class="nav nav-tabs" role="tablist">
-        <!-- <li role="tab"               ><a href="index.php?v=d&m=Abeille&p=Abeille" class="eqLogicAction"><i class="fas fa-arrow-circle-left"></i>                </a></li> -->
         <li role="tab" class="active"><a href="#idLogs"> {{Logs}} </a></li>
         <li role="tab"               ><a href="#idModeles"> {{Modèles}} </a></li>
-        <!-- <li role="tab"               ><a href="#idCommands"> {{Commandes}}  </a></li> -->
     </ul>
 
     <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
 
-        <div role="tabpanel" class="tab-pane" id="idLogs">
+        <div role="tabpanel" class="tab-pane active" id="idLogs">
+            <?php
+            include_once "AbeilleMaintenance-Logs.php";
+            ?>
         </div>
 
         <div role="tabpanel" class="tab-pane" id="idModeles">

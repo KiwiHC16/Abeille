@@ -18,7 +18,7 @@
     <label class="col-sm-3 control-label">{{Id Jeedom}}</label>
     <div class="col-sm-5">
         <!-- 'eqLogicAttr' with data-l1key="id" must not be declared twice in same page -->
-        <span><?php echo $eqId; ?></span>
+        <?php echo '<input type="text" value="'.$eqId.'" readonly>'; ?>
     </div>
 </div>
 
@@ -26,7 +26,7 @@
     <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
     <?php
     echo '<div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Last").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-        echo '<span id="idLastComm">'.getCmdValueByLogicId($eqId, "Time-Time").'</span>';
+        echo '<input type="text" id="idLastComm" value="'.getCmdValueByLogicId($eqId, "Time-Time").'" readonly>';
         addJsUpdateFunction($eqId, 'Time-Time', 'idLastComm');
     ?>
     </div>

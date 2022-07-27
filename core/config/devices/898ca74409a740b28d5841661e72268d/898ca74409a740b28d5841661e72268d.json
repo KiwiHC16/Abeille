@@ -43,7 +43,7 @@
 
             "Humidity": {
                 "use": "zb-0405-MeasuredValue",
-                "params": "ep=01",
+                "params": "ep=02",
                 "historizeRound": 1,
                 "isVisible": 1
             },

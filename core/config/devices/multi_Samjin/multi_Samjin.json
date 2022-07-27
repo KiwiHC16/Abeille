@@ -70,6 +70,13 @@
                 "params": "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
+            "Vibration": {
+                "use": "attr-Generic",
+                "subType": "binary",
+                "logicalId": "'FC02-01-0010",
+                "genericType": "ALARM_STATE",
+                "isVisible": "1"
+            },
             "Bind FC02-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=FC02",

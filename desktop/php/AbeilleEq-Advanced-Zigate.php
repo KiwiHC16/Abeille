@@ -16,7 +16,7 @@
     <label class="col-sm-3 control-label">Type</label>
     <div class="col-sm-5">
         <?php
-            echo '<input class="form-control" value="'.$zgType.'" title="{{Type de Zigate}}" readonly />';
+            echo '<input type="text" value="'.$zgType.'" title="{{Type de Zigate}}" readonly />';
         ?>
     </div>
 </div>
@@ -28,7 +28,7 @@
         $fwVersion = getCmdValueByLogicId($eqId, "SW-Application").'-'.getCmdValueByLogicId($eqId, "SW-SDK");
         // TODO: Currently updated only if SW-SDK change. Better to merge major & minor and have only 1 jeedom info.
         echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, "SW-SDK").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-            echo '<span id="idFWVersion">'.$fwVersion.'</span>';
+            echo '<input type="text" id="idFWVersion" value="'.$fwVersion.'" readonly>';
             echo "<script>";
             $spanId = 'idFWVersion';
             $cmdLogicId = 'SW-Application';
@@ -58,9 +58,9 @@
     <div class="col-sm-5">
         <?php
             $res = getCmdValueByName($eqId, 'Network Status');
-            echo '<span>'.$res.'</span>';
+            echo '<input type="text" value="'.$res.'" readonly>';
             if (isset($dbgDeveloperMode))
-                echo '<a class="btn btn-warning" onclick="sendZigate(\'startNetwork\', \'\')">Démarrer</a>';
+                echo '<a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate(\'startNetwork\', \'\')">Démarrer</a>';
         ?>
     </div>
 </div>
@@ -75,11 +75,19 @@
     <div class="col-sm-5">
         <?php
         echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Network Channel").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-            echo '<span id="idChannel" title="{{Canal actuel}}">'.getCmdValueByName($eqId, 'Network Channel').'</span>';
+            echo '<input type="text" id="idChannel" title="{{Canal actuel}}" value="'.getCmdValueByName($eqId, 'Network Channel').'" readonly>';
             addJsUpdateFunction($eqId, 'Network-Channel', 'idChannel');
         ?>
-            <input type="text" id="idChannelMask" placeholder="ex: 07FFF800" title="{{Masque des canaux autorisés (en hexa, 1 bit par canal, 800=canal 11, 07FFF800=tous les canaux de 11 à 26)}}" style="margin-left:10px; width:100px">
-            <a class="btn btn-warning" onclick="sendZigate('setChannelMask', '')">Modifier</a>
+            <!-- <input type="text" id="idChannelMask" placeholder="ex: 07FFF800" title="{{Masque des canaux autorisés (en hexa, 1 bit par canal, 800=canal 11, 07FFF800=tous les canaux de 11 à 26)}}" style="margin-left:10px; width:100px">
+            <a class="btn btn-warning" onclick="sendZigate('setChannelMask', '')">Modifier</a> -->
+            <select id="idZgChan" style="width:80px; margin-left:4px" title="{{Canal Zigbee choisi}}" onchange="sendZigate('setChannel', '')">
+                <option value=0>{{Auto}}</option>
+                <?php
+                for ($i = 11; $i < 27; $i++) {
+                    echo '<option value='.$i.'>'.$i.'</option>';
+                }
+                ?>
+            </select>
         </div>
     </div>
 </div>
@@ -91,7 +99,7 @@
     <div class="col-sm-5">
         <?php
         echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Inclusion Status").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-            echo '<span id="idInclusionMode">'.getCmdValueByName($eqId, 'Inclusion Status').'</span>';
+            echo '<input type="text" id="idInclusionMode" value="'.getCmdValueByName($eqId, 'Inclusion Status').'" readonly>';
             addJsUpdateFunction($eqId, 'permitJoin-Status', 'idInclusionMode');
             ?>
         </div>
@@ -107,11 +115,11 @@
         <?php
         echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "ZiGate-Time").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
         ?>
-            <a class="btn btn-warning" onclick="sendZigate('getTime', '')">Lire</a>
-            <span id="idZgTime">- ? -</span>
             <?php
-            addJsUpdateFunction($eqId, 'ZiGate-Time', 'idZgTime');
+            echo '<input type="text" id="idZgTime" value="" readonly>';
+            addJsUpdateFunction($eqId, 'ZiGate-Time', 'idZgTime', true);
             ?>
+            <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('getTime', '')">Lire</a>
             <a class="btn btn-warning" onclick="sendZigate('setTime', '')">Mettre à l'heure</a>
         </div>
     </div>
@@ -122,7 +130,7 @@
     <div class="col-sm-5">
         <?php
         echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "PAN ID").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-            echo '<span id="idPanId">'.getCmdValueByName($eqId, 'PAN ID').'</span>';
+            echo '<input type="text" id="idPanId" value="'.getCmdValueByName($eqId, 'PAN ID').'" readonly>';
             addJsUpdateFunction($eqId, 'PAN-ID', 'idPanId');
         echo '</div>';
         ?>
@@ -137,7 +145,7 @@
     <div class="col-sm-5">
         <?php
         echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Ext PAN ID").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-            echo '<span id="idExtPanId">'.getCmdValueByName($eqId, 'Ext PAN ID').'</span>';
+            echo '<input type="text" id="idExtPanId" value="'.getCmdValueByName($eqId, 'Ext PAN ID').'" readonly>';
             addJsUpdateFunction($eqId, 'Ext_PAN-ID', 'idExtPanId');
         ?>
         </div>

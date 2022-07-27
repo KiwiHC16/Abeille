@@ -61,19 +61,7 @@
             return "";
         return $cmd->getId();
     }
-?>
 
-<style>
-    .confs1 {
-        width: 300px;
-        margin-right: 4px;
-    }
-    .ml4px {
-        margin-left: 4px;
-    }
-</style>
-
-<?php
     function displayZigate($zgId) {
         $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
         if ($eqLogic) {
@@ -97,7 +85,7 @@
                 } else {
                     $zgName = "";
                 }
-                echo '<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="'.$zgName.'" disabled title="{{Nom de la zigate; N\'est modifiable que via la page de gestion d\'Abeille après sauvegarde.}}">';
+                echo '<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="'.$zgName.'" readonly title="{{Nom de la zigate; N\'est modifiable que via la page de gestion d\'Abeille après sauvegarde.}}">';
             echo '</div>';
         echo '</div>';
 
@@ -109,7 +97,7 @@
                     echo '<option value="WIFI">{{WIFI/Ethernet}}</option>';
                     echo '<option value="PI">{{PI v1}}</option>';
                     echo '<option value="DIN">{{DIN v1}}</option>';
-                    echo '<option value="USBv2" selected>{{USB +/v2}}</option>';
+                    echo '<option value="USBv2">{{USB +/v2}}</option>';
                     echo '<option value="PIv2">{{PI +/v2}}</option>';
                     echo '<option value="DINv2">{{DIN +/v2}}</option>';
                 echo '</select>';
@@ -209,72 +197,101 @@
     }
 ?>
 
+<style>
+    .confs1 {
+        width: 300px;
+        margin-right: 4px;
+    }
+    .ml4px {
+        margin-left: 4px;
+    }
+</style>
+
 <form class="form-horizontal">
     <fieldset>
         <legend><i class="fa fa-list-alt"></i><strong> {{Général}}</strong></legend>
         <div>
             <p><i> Suivez toutes les dernieres informations <a href="https://community.jeedom.com/t/news-de-la-ruche-par-abeille-plugin-abeille/26524"><strong>sur ce forum</strong> </a>.</i></p>
             <p><i> Les discussions et questions se feront via <a href="https://community.jeedom.com/tags/plugin-abeille"><strong>ce forum</strong> </a>. Pensez à mettre le flag "plugin-abeille" dans tous vos posts.</i></p>
-            <p><i> Note: si vous souhaitez de l aide, ne passez pas par les fonctions integrées de jeedom car je recois les requetes sans pouvoir contacter les personnes en retour. Passez par le forum.</i></p>
+            <p><i> Note: si vous souhaitez de l'aide, ne passez pas par les fonctions integrées de jeedom car je recois les requetes sans pouvoir contacter les personnes en retour. Passez par le forum.</i></p>
             <p><i> Note: Jeedom propose une fonction de Heartbeat dans la tuile "Logs et surveillance". Cette fonction n'est pas implémentée dans Abeille. Ne pas l'activer pour l'instant.</i></p>
         </div>
         <div class="form-group">
-            <label class="col-lg-4 control-label" data-toggle="tooltip">{{Version Abeille : }}</label>
-            <div class="col-lg-4 confs1" title="{{Version du plugin Abeille.}}">
-                <?php echo $abeilleVersion; ?>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="col-lg-3 control-label" data-toggle="tooltip" title="{{Version interne du plugin Abeille}}">{{Version interne : }}</label>
+                    <div class="col-lg-4">
+                        <?php
+                        echo '<input type="text" class="form-control" title="{{Version interne du plugin Abeille}}" value="'.$abeilleVersion.'" readonly>';
+                        ?>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-4">
-                <?php
-                    /* Developers only: display current branch & allows to switch to another one */
-                    if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == true)) {
-                        /* TODO: Check if GIT repo & GIT present */
-                        if (gitIsRepo() == FALSE) {
-                            echo "Pas sous GIT";
-                        } else {
-                            $localChanges = gitHasLocalChanges();
-                            if ($localChanges == true)
-                                echo '<div title="Branche courante. Contient des MODIFICATIONS LOCALES !!" class="label label-danger" style="font-size:1em">';
-                            else
-                                echo '<div title="Branche courante" class="label label-success" style="font-size:1em">';
-                            $localBranch = gitGetCurrentBranch();
-                            echo '<script>var js_curBranch = "'.$localBranch.'";</script>'; // PHP to JS
-                            echo $localBranch;
-                            echo '</div>';
-                            /* List branches */
-                            gitFetchAll(1);
-                            $Branches = gitGetAllBranches();
-                            echo '<select id="idBranch" class="ml4px" style="width:140px" title="{{Branches dispos}}">';
-                            foreach ($Branches as $b) {
-                                if ($b == '')
-                                    continue;
-                                $b = substr($b, 2);
-                                if (substr($b, 0, 8) == "remotes/")
-                                    $b2 = substr($b, 8); // Remove 'remotes/'
+            <div class="col-lg-6">
+                <div class="form-group">
+                <!-- <div class="col-lg-5"> -->
+                    <?php
+                        /* Developers only: display current branch & allows to switch to another one */
+                        if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == true)) {
+                            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{GIT : }}</label>';
+                            /* TODO: Check if GIT repo & GIT present */
+                            if (gitIsRepo() == FALSE) {
+                                echo "Pas sous GIT";
+                            } else {
+                                $localChanges = gitHasLocalChanges();
+                                if ($localChanges == true)
+                                    echo '<div title="Branche courante. Contient des MODIFICATIONS LOCALES !!" class="label label-danger" style="font-size:1em">';
                                 else
-                                    $b2 = $b;
-                                echo '<script>console.log("branch='.$b.'")</script>';
-                                if ($b == $localBranch)
-                                    echo '<option value="'.$b.'" selected>'.$b2.'</option>';
-                                else
-                                    echo '<option value="'.$b.'">'.$b2.'</option>';
+                                    echo '<div title="Branche courante" class="label label-success" style="font-size:1em">';
+                                $localBranch = gitGetCurrentBranch();
+                                echo '<script>var js_curBranch = "'.$localBranch.'";</script>'; // PHP to JS
+                                echo $localBranch;
+                                echo '</div>';
+                                /* List branches */
+                                gitFetchAll(1);
+                                $Branches = gitGetAllBranches();
+                                echo '<select id="idBranch" class="ml4px" style="width:140px" title="{{Branches dispos}}">';
+                                foreach ($Branches as $b) {
+                                    if ($b == '')
+                                        continue;
+                                    $b = substr($b, 2);
+                                    if (substr($b, 0, 8) == "remotes/")
+                                        $b2 = substr($b, 8); // Remove 'remotes/'
+                                    else
+                                        $b2 = $b;
+                                    echo '<script>console.log("branch='.$b.'")</script>';
+                                    if ($b == $localBranch)
+                                        echo '<option value="'.$b.'" selected>'.$b2.'</option>';
+                                    else
+                                        echo '<option value="'.$b.'">'.$b2.'</option>';
+                                }
+                                echo '</select>';
+                                echo '<a id="idSwitchBranch" class="btn btn-warning ml4px" title="{{Suppression des modifs locales, basculement sur la branche selectionnée, et redémarrage.}}">{{Mettre-à-jour}}</a>';
                             }
-                            echo '</select>';
-                            echo '<a id="idSwitchBranch" class="btn btn-warning ml4px" title="{{Suppression des modifs locales, basculement sur la branche selectionnée, et redémarrage.}}">{{Mettre-à-jour}}</a>';
                         }
-                    }
-                ?>
+                    ?>
+                <!-- </div> -->
+                </div>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-lg-4 control-label" data-toggle="tooltip" >{{Objet Parent : }}</label>
-            <div class="col-lg-4 confs1" title="{{Objet parent (ex: une pièce de la maison) par défaut pour toute nouvelle zigate. Peut être changé plus tard via la page de gestion d'Abeille en cliquant sur la ruche correspondante}}.">
-                <select class="configKey form-control" data-l1key="AbeilleParentId">
-                    <?php
-                        foreach (jeeObject::all() as $object) {
-                            echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
-                        }
-                    ?>
-                </select>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Objet Parent : }}</label>
+                    <div class="col-lg-4" title="{{Objet parent (ex: une pièce de la maison) par défaut pour toute nouvelle zigate. Peut être changé plus tard via la page de gestion d'Abeille en cliquant sur la ruche correspondante}}.">
+                        <select class="configKey form-control" data-l1key="AbeilleParentId">
+                            <?php
+                                foreach (jeeObject::all() as $object) {
+                                    echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-lg-5">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
             </div>
         </div>
 
@@ -285,13 +302,6 @@
             ?>
         </legend>
         <div id="idZigates">
-            <!-- <div>
-                <p><i>{{Ce plugin supporte 4 types de Zigates: USB, Wifi, "PI" ou DIN}}</i></p>
-                <p><i>{{- Si USB, Pi ou DIN, le champ 'Port série' doit indiquer le port correspondant (ex: ttyUSB0 ou ttyS1)}}</i></p>
-                <p><i>{{- Si Wifi, le champ 'Adresse IP' doit indiquer l'adresse de la Zigate et son port (ex: 192.168.4.1:9999)}}</i></p>
-                <p><i>{{Les zigates non utilisées doivent être désactivées.}}</i></p>
-            </div> -->
-
             <!-- Display dependancies -->
             <div class="form-group">
                 <div class="col-lg-3">
@@ -306,7 +316,7 @@
                     <div class="form-group">
                         <label class="col-lg-3 control-label" data-toggle="tooltip" title="Wiring PI est nécéssaire pour les Zigates de type PI">{{Wiring Pi}} : </label>
                         <div id="idWiringPi" class="col-lg-4">
-                            <input id="idWiringPiStatus" type="text" class="form-control" title="{{Status d'installation du package Wiring PI}}" disabled>
+                            <input id="idWiringPiStatus" type="text" class="form-control" title="{{Status d'installation du package Wiring PI}}" readonly>
                             <!-- <a class="WiringPiStatus" title="">
                                 <span class="label label-success" style="font-size:1em;">-?-</span>
                             </a> -->
@@ -321,7 +331,7 @@
                     <div class="form-group">
                         <label class="col-lg-3 control-label" data-toggle="tooltip" title="Socat est nécéssaire pour les Zigates de type Wifi/Eth">{{Socat}} : </label>
                         <div class="col-lg-4">
-                            <input id="idSocatStatus" type="text" class="form-control" title="{{Status d'installation du package socat}}" disabled>
+                            <input id="idSocatStatus" type="text" class="form-control" title="{{Status d'installation du package socat}}" readonly>
                         </div>
                         <!-- <div id="idSocat'.$zgId.'" class="col-lg-6">
                             <a class="socatStatus" title="Status d'installation du package socat">

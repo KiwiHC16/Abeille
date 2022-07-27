@@ -2810,7 +2810,7 @@ if (0) {
                In case of update, some fields may no longer be required ($unusedConfKey).
                They are removed if not defined in JSON model. */
             // Tcharp38: TODO: For best cleanup all accepted keys should be listed hereafter. Any other should be removed.
-            $unusedConfKey = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'uniqId', 'repeatEventManagement', 'topic'];
+            $unusedConfKey = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'repeatEventManagement', 'topic', 'Polling', 'RefreshData'];
             array_push($unusedConfKey, 'ab::trigOut', 'ab::trigOutOffset', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay');
             if (isset($mCmd["configuration"])) {
                 $configuration = $mCmd["configuration"];
@@ -2833,6 +2833,8 @@ if (0) {
                         $confKey = "ab::trigOutOffset";
 
                     $cmdLogic->setConfiguration($confKey, $confValue);
+
+                    // $confKey is used => no cleanup required
                     foreach ($unusedConfKey as $uk => $uv) {
                         if ($uv != $confKey)
                             continue;
@@ -2846,7 +2848,7 @@ if (0) {
                 // Tcharp38: Is it the proper way to know if entry exists ?
                 if ($cmdLogic->getConfiguration($confKey) == null)
                     continue;
-                // log::add('Abeille', 'debug', '  Removing obsolete configuration entry: '.$confKey);
+                log::add('Abeille', 'debug', '  Removing obsolete configuration key: '.$confKey);
                 $cmdLogic->setConfiguration($confKey, null); // Removing config entry
             }
 

@@ -1,25 +1,12 @@
 <?php
     /*
-     * Abeille support page
+     * Maintenance - Logs part
+     * Included from 'AbeilleMaintenance.php'
      *
      * Allows to
      * - display any log file, even internal (not visible thru Jeedom)
      * - download displayed log or a zip of all logs
      */
-
-    if (!isConnect('admin')) {
-        throw new Exception('{{401 - Accès non autorisé ou session expirée.}}');
-    }
-
-    // TO BE REVISITED
-    // if(init('log','event') == 'event'){
-    //     if(log::getLogLevel('event') > 200){
-    //       $alert = '<div class="alert alert-danger">{{Attention votre niveau de log (event) est inférieur à info, vous ne pouvez donc pas voir de temps réel.}}';
-    //       $alert .= ' <a href="/index.php?v=d&p=administration#logtab" class="success">{{Configuration}}</a>';
-    //       $alert .= '</div>';
-    //       echo $alert;
-    //     }
-    //   }
 
     $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
     $pluginDir = __DIR__."/../../"; // Plugin root dir
@@ -37,8 +24,9 @@
     }
     .topBar {
         height: 40px;
-        margin-top: 20px;
+        margin-top: 10px;
         margin-bottom: 10px;
+        margin-right: 5px;
     }
 </style>
 <div class="row row-overflow">

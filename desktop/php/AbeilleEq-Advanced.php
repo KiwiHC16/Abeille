@@ -61,7 +61,7 @@
 
     // Add manufacturer ID input
     function addManufIdInput($id) {
-        echo '<input id="'.$id.'" style="width:80px; margin-left: 8px" title="{{Manuf ID. Format hex string 4 car (par défaut=aucun)}}" placeholder="{{Manuf ID (ex: 115F)}}" />';
+        echo '<input id="'.$id.'" style="width:80px; margin-left: 8px" title="{{Manuf ID. Format hex string 4 car (par d?faut=aucun)}}" placeholder="{{Manuf ID (ex: 115F)}}" />';
     }
 
     // Create drop down list of IEEE addresses, excluding zigate by default
@@ -86,13 +86,17 @@
         echo '<input id="'.$id.'" style="width:120px; margin-left: 8px" placeholder="{{Attrib (ex: 0021)}}" title="Attribut, format hex 4 caracteres (ex: 0508)"/>';
     }
 
-    function addJsUpdateFunction($eqId, $cmdLogicId, $spanId) {
+    function addJsUpdateFunction($eqId, $cmdLogicId, $spanId, $isInput = false) {
         echo "<script>";
         echo "jeedom.cmd.update['".getCmdIdByLogicId($eqId, $cmdLogicId)."'] = function(_options) {";
-            echo "console.log('jeedom.cmd.update[".$cmdLogicId."]');";
+            echo "console.log('jeedom.cmd.update[".$cmdLogicId."] <= ' + _options.display_value);";
             // console.log(_options);
             echo "var element = document.getElementById('".$spanId."');";
-            echo "element.textContent = _options.display_value;";
+            echo "console.log('element=', element);";
+            if ($isInput)
+                echo "element.value = _options.display_value;";
+            else // Not <input>. Assuming <span>
+                echo "element.textContent = _options.display_value;";
         echo "}";
         echo "</script>";
     }

@@ -33,6 +33,7 @@
             "BBRHCJR": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0108" },
             "BBRHPJR": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=010A" },
             "IINST": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=0508" },
+            "Get IINST": { "use": "zbReadAttribute", "params": "clustId=0B04&attrId=0508", "execAtCreation": 1 },
             "SetReporting IINST": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=",

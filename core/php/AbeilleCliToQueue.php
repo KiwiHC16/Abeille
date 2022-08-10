@@ -66,9 +66,10 @@
                 'topic' => $topic,
                 'payload' => $payload,
             );
+            $msgJson = json_encode($msg);
 
-            if (msg_send($queue, 1, $msg, true, false)) {
-                echo "(fichier xmlhttpMQQTSend) added to queue: ".json_encode($msg);
+            if (msg_send($queue, 1, $msgJson, false, false)) {
+                echo "(fichier xmlhttpMQQTSend) added to queue: ".$msgJson;
                 // print_r(msg_stat_queue($queue));
             } else {
                 echo "debug","(fichier xmlhttpMQQTSend) could not add message to queue";
@@ -198,8 +199,9 @@
                 'topic' => $topic,
                 'payload' => $request,
             );
-        if (isset($dbgTcharp38)) logDebug("CliToQueue: msg_send(): ".json_encode($msg));
-        if (msg_send($queue, 1, $msg, true, false) == false) {
+            $msgJson = json_encode($msg);
+            if (isset($dbgTcharp38)) logDebug("CliToQueue: msg_send(): ".$msgJson);
+            if (msg_send($queue, 1, $msgJson, false, false) == false) {
                 if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: msg_send()");
             }
         }
@@ -210,8 +212,9 @@
                 'topic' => "CmdCreate".$eqNet."/".$eqAddr."/resetFromJson",
                 'payload' => '',
             );
-            if (isset($dbgTcharp38)) logDebug("reinit msg to Abeille: ".json_encode($msg));
-            msg_send($queue, 1, $msg, true, false);
+            $msgJson = json_encode($msg);
+            if (isset($dbgTcharp38)) logDebug("reinit msg to Abeille: ".$msgJson);
+            msg_send($queue, 1, $msgJson, false, false);
         }
 
         // Inform parser that EQ config has changed

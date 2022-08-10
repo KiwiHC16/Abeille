@@ -9,14 +9,15 @@
     function sendMessageFromFormToCmd($topic, $payload) {
         global $abQueues;
         $queueId = $abQueues['xToCmd']['id']; // Previously formToCmd queue
-        $queueKeyFormToCmd = msg_get_queue($queueId);
+        $queue = msg_get_queue($queueId);
 
         $msg = array();
         $msg['topic']   = $topic;
         $msg['payload'] = $payload;
+        $msgJson = json_encode($msg);
 
-        if (msg_send($queueKeyFormToCmd, 1, $msg, true, false)) {
-            echo "added to queue ID ".$queueId.": ".json_encode($msg)."<br>\n";
+        if (msg_send($queue, 1, $msgJson, false, false)) {
+            echo "added to queue ID ".$queueId.": ".$msgJson."<br>\n";
         } else {
             echo "could not add message to queue ID ".$queueId."<br>\n";
         }

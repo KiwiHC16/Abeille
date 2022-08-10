@@ -353,7 +353,7 @@
         // Send the command to the queue for processing
         $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
         if ( $queueKeyAbeilleToCmd ) {
-            if (msg_send($queueKeyAbeilleToCmd, priorityUserCmd, $msg, true, false)) {
+            if (msg_send($queueKeyAbeilleToCmd, priorityUserCmd, json_encode($msg), false, false)) {
                 echo "Msg sent: " . json_encode($msg) . "\n";
             } else {
                 echo "Could not send Msg\n";
@@ -534,7 +534,7 @@
         // Send the command to the queue for processing
         $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
         if ( $queueKeyAbeilleToCmd ) {
-            if (msg_send($queueKeyAbeilleToCmd, priorityUserCmd, $msg, true, false)) {
+            if (msg_send($queueKeyAbeilleToCmd, priorityUserCmd, json_encode($msg), false, false)) {
                 echo "Msg sent: " . json_encode($msg) . "\n";
             } else {
                 echo "Could not send Msg\n";

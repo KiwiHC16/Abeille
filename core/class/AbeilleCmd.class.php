@@ -148,19 +148,19 @@
                 $msg = array();
                 $msg['topic'] = $topic;
                 $msg['payload'] = $request;
+                $msgJson = json_encode($msg);
 
                 if (strpos($topic, "CmdCreate") === 0) {
                     $queueAbeilleToAbeille = msg_get_queue($abQueues["abeilleToAbeille"]["id"]);
-                    if (msg_send($queueAbeilleToAbeille, 1, $msg, true, false)) {
-                        logMessage('debug', '-- execute(): CmdCreate: Msg sent: '.json_encode($msg));
+                    if (msg_send($queueAbeilleToAbeille, 1, $msgJson, false, false)) {
+                        logMessage('debug', '-- execute(): CmdCreate: Msg sent: '.$msgJson);
                     } else {
                         logMessage('debug', '-- execute(): ERROR: CmdCreate: Could not send Msg');
                     }
                 } else {
-                    // $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
                     $queue = msg_get_queue($abQueues['xToCmd']['id']);
-                    if (msg_send($queue, PRIO_NORM, $msg, true, false)) {
-                        logMessage('debug', '-- execute(): Msg sent: '.json_encode($msg));
+                    if (msg_send($queue, PRIO_NORM, $msgJson, false, false)) {
+                        logMessage('debug', '-- execute(): Msg sent: '.$msgJson);
                     } else {
                         logMessage('debug', '-- execute(): ERROR: Could not send Msg');
                     }

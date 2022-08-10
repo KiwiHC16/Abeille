@@ -127,36 +127,6 @@
             $this->queueParserToLQI     = msg_get_queue($abQueues["parserToLQI"]["id"]);
         }
 
-        // $srcAddr = dest / shortaddr
-        // Tcharp38: This function is OBSOLETE. It is smoothly replaced by msgToAbeille2() with new msg format
-        // function msgToAbeille($srcAddr, $clustId, $attrId, $data) {
-        //     // dest / short addr / Cluster ID - Attr ID -> data
-
-        //     $errCode = 0;
-        //     $blocking = true;
-
-        //     $msg = array(
-        //         'topic' => $srcAddr."/".$clustId."-".$attrId,
-        //         'payload' => $data,
-        //     );
-        //     if (msg_send($this->queueParserToAbeille, 1, $msg, true, $blocking, $errCode) == false) {
-        //         parserLog("error", "msg_send() ERREUR ".$errCode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
-        //         parserLog("error", "  Message=".json_encode($msg));
-        //     }
-
-        //     $msg = array('topic' => $srcAddr."/Time-TimeStamp", 'payload' => time());
-        //     if (msg_send($this->queueParserToAbeille, 1, $msg, true, $blocking, $errCode) == false) {
-        //         parserLog("error", "msg_send() ERREUR ".$errCode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
-        //         parserLog("error", "  Message=".json_encode($msg));
-        //     }
-
-        //     $msg = array('topic' => $srcAddr."/Time-Time", 'payload' => date("Y-m-d H:i:s"));
-        //     if (msg_send($this->queueParserToAbeille, 1, $msg, true, $blocking, $errCode) == false) {
-        //         parserLog("error", "msg_send() ERREUR ".$errCode.". Impossible d'envoyer le message sur la queue 'queueKeyParserToAbeille'");
-        //         parserLog("error", "  Message=".json_encode($msg));
-        //     }
-        // }
-
         /* Send message to 'AbeilleCmd' thru 'queueKeyParserToCmd' */
         function msgToCmd($prio, $topic, $payload = '') {
             $msg = array(
@@ -166,7 +136,7 @@
             );
 
             $errCode = 0;
-            if (msg_send($this->queueXToCmd, 1, $msg, true, false, $errCode) == false) {
+            if (msg_send($this->queueXToCmd, 1, json_encode($msg), false, false, $errCode) == false) {
                 parserLog("debug", "msgToCmd() ERROR: Can't write to 'queueXToCmd', error=".$errCode);
             }
         }
@@ -715,6 +685,26 @@
             $eq['status'] = 'configuring';
             if (isset($eqModel['tuyaEF00']))
                 $eq['tuyaEF00'] = $eqModel['tuyaEF00'];
+            else
+                $eq['tuyaEF00'] = null;
+
+            /* Config ongoing. Informing Abeille for EQ creation/update */
+            $msg = array(
+                // 'src' => 'parser',
+                'type' => 'eqAnnounce',
+                'net' => $net,
+                'addr' => $addr,
+                'ieee' => $eq['ieee'],
+                // 'ep' => $eq['epFirst'],
+                'ep' => $eq['mainEp'],
+                'modelId' => $eq['modelId'],
+                'manufId' => $eq['manufId'],
+                'jsonId' => $eq['jsonId'],
+                'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
+                'capa' => $eq['capa'],
+                'time' => time()
+            );
+            msgToAbeille2($msg);
 
             if (!isset($eqModel['commands'])) {
                 parserLog('debug', "    No cmds in JSON model.");
@@ -729,6 +719,7 @@
                     $c = $cmd['configuration'];
                     if (!isset($c['execAtCreation']))
                         continue;
+
                     if (isset($c['execAtCreationDelay']))
                         $delay = $c['execAtCreationDelay'];
                     else
@@ -752,25 +743,16 @@
                         $this->msgToCmd(PRIO_NORM, "TempoCmd".$net."/".$addr."/".$topic.'&time='.$delay, $request);
                     }
                 }
-            }
 
-            /* Config ongoing. Informing Abeille for EQ creation/update */
-            $msg = array(
-                // 'src' => 'parser',
-                'type' => 'eqAnnounce',
-                'net' => $net,
-                'addr' => $addr,
-                'ieee' => $eq['ieee'],
-                // 'ep' => $eq['epFirst'],
-                'ep' => $eq['mainEp'],
-                'modelId' => $eq['modelId'],
-                'manufId' => $eq['manufId'],
-                'jsonId' => $eq['jsonId'],
-                'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
-                'capa' => $eq['capa'],
-                'time' => time()
-            );
-            msgToAbeille2($msg);
+                // TODO: WORK ONGOING
+                // For each 'info', attempting to read corresponding cluster/attribute
+                // Note: How to handle non standard zigbee attributes (ex: Tuya) ?
+                // Note: This part should be done in Abeille.class once createDevice() is completed.
+                foreach ($cmds as $cmdJName => $cmd) {
+                    if ($cmd['type'] != 'info')
+                        continue; // Not 'info'
+                }
+            }
 
             // TODO: Tcharp38: 'idle' state might be too early since execAtCreation commands might not be completed yet
             $eq['status'] = 'idle';

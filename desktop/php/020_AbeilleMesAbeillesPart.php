@@ -30,16 +30,16 @@
         $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 
         // Find icon
-        $icon = $eqLogic->getConfiguration('icone', '');
+        $icon = $eqLogic->getConfiguration('ab::icon', '');
         if ($icon == '')
             $icon = 'defaultUnknown';
         $icon = 'node_'.$icon.'.png';
         $iconPath = __DIR__.'/../../images/'.$icon;
         if (!file_exists($iconPath))
             $icon = 'node_defaultUnknown.png';
-        // $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
+        // $test = 'node_' . $eqLogic->getConfiguration('ab::icon') . '.png';
         // if (in_array($test, $files, 0)) {
-        //     $path = 'node_' . $eqLogic->getConfiguration('icone');
+        //     $path = 'node_' . $eqLogic->getConfiguration('ab::icon');
         // } else {
         //     $path = 'Abeille_icon';
         // }

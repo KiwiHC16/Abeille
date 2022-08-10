@@ -100,7 +100,17 @@
     <div class="col-lg-10 col-md-9 col-sm-8" style="border-left: solid 1px #EEE; padding-left: 25px;overflow-y:hidden;overflow-x:hidden;">
         <div class="topBar">
             <a id="idCurrentDisplay" style="width:90%">{{Selectionnez le log ou la commande à afficher.}}</a>
-            <a class="btn btn-success pull-right" id="idDownloadCurrent"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>
+
+            <div class="input-group pull-right" style="display:inline;">
+                <input type="checkbox" id="brutlogcheck" autoswitch="0" checked hidden/>
+                <i id="brutlogicon" class="fas fa-exclamation-circle icon_orange" hidden></i>
+
+                <input class="input-sm roundedLeft" id="in_eventLogSearch" style="width : 200px;margin-left:5px;" placeholder="{{Rechercher}}" />
+                <a class="btn btn-warning btn-sm" data-state="1" id="bt_eventLogStopStart"><i class="fas fa-pause"></i> {{Pause}}
+                <a class="btn btn-success btn-sm" id="idDownloadCurrent"><i class="fas fa-cloud-download-alt"></i> {{Télécharger}}</a>
+                <a class="btn btn-warning btn-sm" id="bt_logdisplayclearLog"><i class="fas fa-times"></i> {{Vider}}</a>
+                <a class="btn btn-danger roundedRight btn-sm" id="bt_logdisplayremoveLog"><i class="far fa-trash-alt"></i> {{Supprimer}}</a>
+            </div>
         </div>
         <pre id="idPreResults" style="height : calc(100% - 110px);width:100%;margin-top:5px;"></pre>
     </div>
@@ -163,13 +173,21 @@
         genKeyInfos.send();
     });
 
+    var $rawLogCheck = $('#brutlogcheck')
     $('.btnDisplayLog').off('click').on('click',function() {
         var location = $(this).attr('location'); // "JEEDOM-LOG" or "JEEDOM-TMP"
         var logFile = $(this).text();
         console.log("btnDisplayLog click => "+logFile+", type="+location);
         $('.btnDisplayLog').parent().removeClass("active")
         $(this).parent().addClass("active")
-        displayLog(location, logFile)
+        // displayLog(location, logFile)
+        jeedom.log.autoupdate({
+            log: logFile,
+            // default_search: log_default_search,
+            display: $('#idPreResults'),
+            search: $('#in_eventLogSearch'),
+            control: $('#bt_eventLogStopStart')
+        })
     });
 
     /* Pack and download all logs at once */

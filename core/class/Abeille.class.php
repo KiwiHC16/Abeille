@@ -223,7 +223,7 @@ if (0) {
         $i = 0;
         foreach ($eqLogics as $eqLogic) {
             // Filtre sur Ikea
-            if (strpos("_".$eqLogic->getConfiguration("icone"), "IkeaTradfriBulb") > 0) {
+            if (strpos("_".$eqLogic->getConfiguration("ab::icon"), "IkeaTradfriBulb") > 0) {
                 list($dest, $addr) = explode("/", $eqLogic->getLogicalId());
                 $i = $i + 1;
 
@@ -918,7 +918,8 @@ if (0) {
             // const int ENOMSG = 42; /* No message of desired type */
 
             while (true) {
-                if (msg_receive($queueAbeilleToAbeille, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
+                if (msg_receive($queueAbeilleToAbeille, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
+                    $msg = json_decode($msgJson, true);
                     self::message($msg['topic'], $msg['payload']);
                 } else { // Error
                     if ($errCode != 42)
@@ -939,7 +940,8 @@ if (0) {
 
                 /* Legacy path parser to Abeille. To be progressively removed */
                 $msgMax = $queueParserToAbeilleMax;
-                if (msg_receive($queueParserToAbeille, 0, $msgType, $msgMax, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
+                if (msg_receive($queueParserToAbeille, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
+                    $msg = json_decode($msgJson, true);
                     self::message($msg['topic'], $msg['payload']);
                 } else { // Error
                     if ($errCode == 7) {
@@ -949,14 +951,16 @@ if (0) {
                         log::add('Abeille', 'debug', 'deamon(): msg_receive queueParserToAbeille error '.$errCode);
                 }
 
-                if (msg_receive($queueCmdToAbeille, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
+                if (msg_receive($queueCmdToAbeille, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
+                    $msg = json_decode($msgJson, true);
                     self::message($msg['topic'], $msg['payload']);
                 } else { // Error
                     if ($errCode != 42)
                         log::add('Abeille', 'debug', 'deamon(): msg_receive queueCmdToAbeille error '.$errCode);
                 }
 
-                if (msg_receive($queueXmlToAbeille, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT, $errCode)) {
+                if (msg_receive($queueXmlToAbeille, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
+                    $msg = json_decode($msgJson, true);
                     self::message($msg['topic'], $msg['payload']);
                 } else { // Error
                     if ($errCode != 42)
@@ -2212,12 +2216,13 @@ if (0) {
         $msg = array();
         $msg['topic'] = $topic;
         $msg['payload'] = $payload;
+        $msgJson = json_encode($msg);
 
-        if (msg_send($queue, $priority, $msg, true, false, $error_code)) {
-            log::add('Abeille', 'debug', "  publishMosquitto(): Envoyé '".json_encode($msg)."' vers queue ".$queueId);
+        if (msg_send($queue, $priority, $msgJson, false, false, $error_code)) {
+            log::add('Abeille', 'debug', "  publishMosquitto(): Envoyé '".$msgJson."' vers queue ".$queueId);
             $queueStatus[$queueId] = "ok"; // Status ok
         } else
-            log::add('Abeille', 'warning', "publishMosquitto(): Impossible d'envoyer '".json_encode($msg)."' vers queue ".$queueId);
+            log::add('Abeille', 'warning', "publishMosquitto(): Impossible d'envoyer '".$msgJson."' vers queue ".$queueId);
     } // End publishMosquitto()
 
     // Beehive creation/update function. Called on daemon startup or new beehive creation.
@@ -2242,7 +2247,7 @@ if (0) {
             // $eqLogic->setConfiguration('type', 'topic'); // Tcharp38: What for ?
             // $eqLogic->setConfiguration('lastCommunicationTimeOut', '-1');
             $eqLogic->setIsVisible("0");
-            $eqLogic->setConfiguration('icone', "Ruche");
+            $eqLogic->setConfiguration('ab::icon', "Ruche");
             $eqLogic->setTimeout(5); // timeout en minutes
             $eqLogic->setIsEnable("1");
         } else {
@@ -2525,13 +2530,13 @@ if (0) {
         }
 
         // Update only if new device (missing info) or reinit
-        $curIcon = $eqLogic->getConfiguration('icone', '');
+        $curIcon = $eqLogic->getConfiguration('ab::icon', '');
         if (($action == 'reset') || ($curIcon == '')) {
             if (isset($modelConf["icon"]))
                 $icon = $modelConf["icon"];
             else
                 $icon = '';
-            $eqLogic->setConfiguration('icone', $icon);
+            $eqLogic->setConfiguration('ab::icon', $icon);
         }
         $curTimeout = $eqLogic->getTimeout(null);
         if (($action == 'reset') || ($curTimeout === null)) {

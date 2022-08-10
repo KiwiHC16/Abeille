@@ -454,7 +454,9 @@
                 $icon = $eqLogic->getConfiguration('ab::icon', null);
                 if (!$icon && $icone) {
                     $eqLogic->setConfiguration('ab::icon', $icone);
+                    $eqLogic->setConfiguration('icone', null);
                     log::add('Abeille', 'debug', '  '.$eqHName.": 'icone' key renamed to 'ab::icon'");
+                    $saveEq = true;
                 }
 
                 // Removing obsolete keys
@@ -501,10 +503,10 @@
                     "GLEDOPTO" => "Gledopto-BulbGU10",
                     "plug.maeu01" => "Xiaomi-SmartPlug",
                 );
-                $curIcon = $eqLogic->getConfiguration('icone', '');
+                $curIcon = $eqLogic->getConfiguration('ab::icon', '');
                 if (($curIcon != '') && isset($iList[$curIcon])) {
                     $newIcon = $iList[$curIcon];
-                    $eqLogic->setConfiguration('icone', $newIcon);
+                    $eqLogic->setConfiguration('ab::icon', $newIcon);
                     log::add('Abeille', 'debug', '  '.$eqHName.": Icon '".$curIcon."' changed to '".$newIcon."'");
                     $saveEq = true;
                 }

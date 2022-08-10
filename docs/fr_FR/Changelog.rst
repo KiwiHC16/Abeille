@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220810-BETA-1
+-------------
+
 - Orvibo ST30: Correction modèle pour humidité (2193).
 - Page de config: Changements mineurs.
 - Page zigate/avancé: Choix du canal Zigbee amélioré.

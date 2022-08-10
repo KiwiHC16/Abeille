@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="220810-BETA-1"
+# VERSION="220810-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -918,7 +918,7 @@ a3cd29e67aed1895c8d34d574373ae8a *core/config/devices/ZBEK-4_Adeo/discovery.json
 130b73bb7c0440ae8f63fa9ea5e43549 *core/config/devices/ZLO-ExtendedColor/ZLO-ExtendedColor.json
 964c210c8576069e1054e7a6836ad191 *core/config/devices/ZLO-LTOSensor/ZLO-LTOSensor.json
 af5280141edfcd4c735a0efe11df0f5d *core/config/devices/ZLO-OccupancySensor/ZLO-OccupancySensor.json
-ca8fc6cc49efc13b2258a9508ef987fb *core/config/devices/ZLinky_TIC_LiXee/ZLinky_TIC_LiXee.json
+c3d5e66916c19d1f0a3175a628be2c5e *core/config/devices/ZLinky_TIC_LiXee/ZLinky_TIC_LiXee.json
 c1ab498c93a62b68d49a65b43b843774 *core/config/devices/airmonitor.acn01/airmonitor.acn01.json
 c231624feb1712be4f3ce9448521092a *core/config/devices/airmonitor.acn01/discovery.json
 c205e0829d673cd22122fe79888e753e *core/config/devices/ctrl_86plug.aq1/ctrl_86plug.aq1.json
@@ -1095,7 +1095,7 @@ e3cbd4d3d053b03bcd4ca05f3842a3b3 *desktop/php/AbeilleMaintenance-Logs.php
 2828ed78df3cd572f2085498078e74db *desktop/php/AbeilleMaintenance.php
 81553e24c6d73b8508a4c22b43ac74bf *desktop/php/AbeilleNetworkGraph.php
 c4af115eaf2d0a06c5add78ccafa0282 *desktop/php/AbeilleSupport.php
-25db160cebc7b49a8ac13c27bc16da12 *docs/fr_FR/Changelog.rst
+f23ea9118e87cdefbc12c15189e8c9fe *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1371,11 +1371,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-ce9b9cf488d7c33c2ecdf4c980763004 *plugin_info/Abeille.version
+338fccab8aa2cbb2d6e4d5c705ac9dab *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 90b1c9d0379cb3301daacc8caf1ffbb4 *plugin_info/configuration.php
-1be936281c85daa9ace36434755a3477 *plugin_info/info.json
-8b7a040761f1a4935476688682c0e88a *plugin_info/install.php
+1d0df4019514c06ff2b40654cf7fa633 *plugin_info/info.json
+a2598c41c8fed7c798ff322085aed442 *plugin_info/install.php
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 33ec19ebdb900ee787fc2be90cf4657f *resources/AbeilleDeamon/CheckAlive.php
 6e982a0e815c42df825e4f50f75e9e78 *resources/AbeilleDeamon/CheckBattery.php

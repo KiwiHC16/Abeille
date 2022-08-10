@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220810-BETA-2
+-------------
+
 - Interne: Correction regression DB eqLogic pour 'icone' => 'ab::icon'.
 - Zlinky: Amélioration modèle.
 

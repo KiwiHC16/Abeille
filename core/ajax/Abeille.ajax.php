@@ -55,8 +55,9 @@
         $msg = array();
         $msg['topic']   = $topic;
         $msg['payload'] = $payload;
+        $msgJson = json_encode($msg);
 
-        if (msg_send($queue, 1, $msg, true, false) == false) {
+        if (msg_send($queue, 1, $msgJson, false, false) == false) {
             return false;
         }
         return true;

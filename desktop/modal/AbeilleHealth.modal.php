@@ -112,7 +112,7 @@ Démons:
 
             // Module type
             // TODO: Put real device type instead of icon
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getConfiguration('icone').'</span></td>';
+            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getConfiguration('ab::icon').'</span></td>';
 
             // ID
             // echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getId().'</span></td>';
@@ -124,7 +124,7 @@ Démons:
             /* Extended address/IEEE
                If present in config, taking it.
                If not, asking IEEE adress */
-            if ($eqLogic->getConfiguration('icone') == "remotecontrol") {
+            if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol") {
                 $addrIEEE = "-";
             } else {
                 $addrIEEE = $eqLogic->getConfiguration('IEEE', 'none');
@@ -156,7 +156,7 @@ Démons:
                 $status = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Désactivé}}</span>';
             else if ($eqLogic->getStatus('state') == '-')
                 $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
-            else if ($eqLogic->getConfiguration('icone') == "remotecontrol")
+            else if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol")
                 $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
             else if ((time() - strtotime($eqLogic->getStatus('lastCommunication'))) > ((2*60*$eqLogic->getTimeout())))
                 $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">Time-out</span>';
@@ -171,7 +171,7 @@ Démons:
             // if (isset($dbgDeveloperMode)) {
             //     if ($eqLogic->getIsEnable() == 0) // Disabled ?
             //         $APS_ACK = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Désactivé}}</span>';
-            //     else if ($eqLogic->getConfiguration('icone') == "remotecontrol")
+            //     else if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol")
             //         $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
             //     else if ($eqLogic->getStatus('APS_ACK') == '0')
             //         $APS_ACK = $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">{{NOK}}</span>';
@@ -183,7 +183,7 @@ Démons:
             // }
 
             // Last comm.
-            if ($eqLogic->getConfiguration('icone') == "remotecontrol") {
+            if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol") {
                 $lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>';
             } else if (strlen($eqLogic->getStatus('lastCommunication'))>2) {
                 $lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getStatus('lastCommunication').'</span>';
@@ -193,7 +193,7 @@ Démons:
 
             // Depuis
             $Depuis = '<span class="label label-info" style="font-size: 1em; cursor: default;">'.(floor((time() - strtotime($eqLogic->getStatus('lastCommunication'))) / 3600)).'</span>';
-             if ($eqLogic->getConfiguration('icone') == "remotecontrol") {
+             if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol") {
                  $Depuis = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>';
              }
             //if ($eqLogic->getStatus('state') == '-') { $Depuis = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>'; }

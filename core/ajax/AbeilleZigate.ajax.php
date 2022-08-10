@@ -45,10 +45,11 @@
             $msg = array();
             $msg['topic']   = $topic;
             $msg['payload'] = $payload;
+            $msgJson = json_encode($msg);
 
             $queue = msg_get_queue($abQueues['xToCmd']['id']);
-            if (msg_send($queue, 1, $msg, true, false) == false) {
-                $error = "Could not send msg to 'xToCmd': msg=".json_encode($msg);
+            if (msg_send($queue, 1, $msgJson, false, false) == false) {
+                $error = "Could not send msg to 'xToCmd': msg=".$msgJson;
                 $status = -1;
             }
 
@@ -71,9 +72,10 @@
                 "type" => $type,
                 "network" => $network
             );
+            $msgJson = json_encode($msg);
 
-            if (msg_send($queue, 1, $msg, true, false) == false) {
-                $error = "Could not send msg to 'assistToParser': msg=".json_encode($msg);
+            if (msg_send($queue, 1, $msgJson, false, false) == false) {
+                $error = "Could not send msg to 'assistToParser': msg=".$msgJson;
                 $status = -1;
             }
 

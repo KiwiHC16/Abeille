@@ -23,14 +23,14 @@
     function zgWrite($zgF, $zgMsg)
     {
         logMessage('debug', "zgWrite(".$zgMsg.")");
-        if ($zgF == FALSE) {
+        if ($zgF == false) {
             logMessage('error', "zgWrite() END: fopen ERROR");
             return -1;
         }
         $frame = zgMsgToFrame($zgMsg);
         $status = fwrite($zgF, pack("H*", $frame));
         fflush($zgF);
-        if ($status == FALSE) {
+        if ($status == false) {
             logMessage('error', "zgWrite() END: fwrite ERROR");
             return -1;
         }
@@ -48,10 +48,11 @@
             "type" => "msg",
             "msg" => $frame
         );
+        $msgJson = json_encode($msg);
 
         $queue = msg_get_queue(queueKeyAssistToCmd);
-        if (msg_send($queue, 1, $msg, TRUE, false) == FALSE) {
-            logMessage("error", "Could not send msg to 'queueKeyAssistToCmd': msg=".json_encode($msg));
+        if (msg_send($queue, 1, $msgJson, false, false) == false) {
+            logMessage("error", "Could not send msg to 'queueKeyAssistToCmd': msg=".$msgJson);
             return -1;
         }
 
@@ -62,7 +63,7 @@
        Returns: 0=OK, -1=ERROR */
     function zgRead($zgF, &$zgMsg) {
         logMessage('debug', "zgRead()");
-        if ($zgF == FALSE) {
+        if ($zgF == false) {
             logMessage('error', "zgRead() ERROR: bad desc for reading");
             return -1;
         }
@@ -107,7 +108,8 @@
         $msg_type = NULL;
         $zgMsg = "";
         while ($timeout > 0) {
-            if (msg_receive($queue, 0, $msg_type, $max_msg_size, $zgMsg, TRUE, MSG_IPC_NOWAIT) == TRUE) {
+            if (msg_receive($queue, 0, $msg_type, $max_msg_size, $zgMsg, false, MSG_IPC_NOWAIT) == TRUE) {
+                $zgMsg = json_decode($zgMsg);
                 logMessage('debug', '  Read='.$zgMsg);
                 return 0;
             }
@@ -181,7 +183,7 @@
 
         $version = 0;
         $zgF = fopen($zgPort, "w+"); // Zigate input/output
-        if ($zgF == FALSE) {
+        if ($zgF == false) {
             logMessage("error", "zgGetVersion(): ERREUR d'accès à la Zigate sur port ".$zgPort);
             return -1;
         }
@@ -229,7 +231,7 @@
     {
         logMessage('debug', "zgGetDevicesList(zgPort=".$zgPort.")");
         $zgF = fopen($zgPort, "w+"); // Zigate input/output
-        if ($zgF == FALSE) {
+        if ($zgF == false) {
             logMessage("error", "zgGetDevicesList(): ERREUR d'accès à la Zigate sur port " . $zgPort);
             return -1;
         }
@@ -294,7 +296,7 @@
     {
         logMessage('debug', "zgRemoveDevice(zgPort=".$zgPort.")");
         $zgF = fopen($zgPort, "w+"); // Zigate input/output
-        if ($zgF == FALSE) {
+        if ($zgF == false) {
             logMessage("error", "zgRemoveDevice(): ERREUR d'accès à la Zigate sur port ".$zgPort);
             return -1;
         }
@@ -631,7 +633,7 @@
             //      $attr['DataType']
             //      $attr['Data']
             $l = strlen($zgMsg);
-            $unknownType = FALSE;
+            $unknownType = false;
             for ($i = 0; $i < $l;) {
                 $attrId = substr($zgMsg, $i + 2, 2).substr($zgMsg, $i, 2);
                 $attrStatus = substr($zgMsg, $i + 4, 2);
@@ -746,7 +748,7 @@
                 $zgMsg = substr($zgMsg, 32, -2);
                 $attributes = [];
                 $l = strlen($zgMsg);
-                $unknownType = FALSE;
+                $unknownType = false;
                 for ($i = 0; $i < $l;) {
                     $attrId = substr($zgMsg, $i + 2, 2).substr($zgMsg, $i, 2);
                     $attrStatus = substr($zgMsg, $i + 4, 2);
@@ -985,23 +987,24 @@
             "type" => ($stop == 1 ? "reroutestop" : "reroute"),
             "network" => "Abeille".$zgNb
         );
+        $msgJson = json_encode($msg);
 
         $status = 0;
         $parserQueue = msg_get_queue($abQueues["assistToParser"]["id"]);
         $cmdQueue = msg_get_queue($abQueues["assistToCmd"]["id"]);
-        if (($parserQueue == FALSE) || ($cmdQueue == FALSE)) {
+        if (($parserQueue == false) || ($cmdQueue == false)) {
             logMessage("error", "msg_get_queue() ERROR");
             $status = -1;
         }
         if ($status == 0) {
-            if (msg_send($parserQueue, 1, $msg, TRUE, FALSE) == FALSE) {
-                logMessage("error", "Could not send msg to 'assistToParser': msg=".json_encode($msg));
+            if (msg_send($parserQueue, 1, $msgJson, false, false) == false) {
+                logMessage("error", "Could not send msg to 'assistToParser': msg=".$msgJson);
                 $status = -1;
             }
         }
         if ($status == 0) {
-            if (msg_send($cmdQueue, 1, $msg, TRUE, FALSE) == FALSE) {
-                logMessage("error", "Could not send msg to 'assistToCmd': msg=".json_encode($msg));
+            if (msg_send($cmdQueue, 1, $msgJson, false, false) == false) {
+                logMessage("error", "Could not send msg to 'assistToCmd': msg=".$msgJson);
                 $status = -1;
             }
         }

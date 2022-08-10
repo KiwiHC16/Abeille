@@ -406,6 +406,7 @@
            - eqLogic DB: 'MACCapa' => 'ab::zigbee['macCapa']'
            - eqLogic DB: 'RxOnWhenIdle' => 'ab::zigbee['rxOnWhenIdle']'
            - eqLogic DB: 'AC_Power' => 'ab::zigbee['mainsPowered']'
+           - eqLogic DB: 'icone' => 'ab::icon'
          */
         if (intval($dbVersion) < 20220421) {
             $eqLogics = eqLogic::byType('Abeille');
@@ -447,6 +448,14 @@
                     $saveEq = true;
                 }
                 array_push($toRemove, 'MACCapa', 'RxOnWhenIdle', 'AC_Power');
+
+                // 'icone' => 'ab::icon'
+                $icone = $eqLogic->getConfiguration('icone', null);
+                $icon = $eqLogic->getConfiguration('ab::icon', null);
+                if (!$icon && $icone) {
+                    $eqLogic->setConfiguration('ab::icon', $icone);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'icone' key renamed to 'ab::icon'");
+                }
 
                 // Removing obsolete keys
                 foreach ($toRemove as $key) {

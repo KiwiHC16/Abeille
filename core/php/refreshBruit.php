@@ -34,11 +34,12 @@
         $msg = array();
         $msg['topic'] = $topic;
         $msg['payload'] = $payload;
+        $msgJson = json_encode($msg);
 
-        if (msg_send($queue, $priority, $msg, true, false, $errCode)) {
-            // log::add('Abeille', 'debug', "refreshBruit():(): Envoyé '".json_encode($msg)."' vers queue ".$queueId);
+        if (msg_send($queue, $priority, $msgJson, false, false, $errCode)) {
+            // log::add('Abeille', 'debug', "refreshBruit():(): Envoyé '".$msgJson."' vers queue ".$queueId);
         } else
-            log::add('Abeille', 'warning', "refreshBruit(): Impossible d'envoyer '".json_encode($msg)."' vers 'xToCmd'");
+            log::add('Abeille', 'warning', "refreshBruit(): Impossible d'envoyer '".$msgJson."' vers 'xToCmd'");
     }
 
     $eqLogics = Abeille::byType('Abeille');

@@ -61,7 +61,7 @@
 
     // Add manufacturer ID input
     function addManufIdInput($id) {
-        echo '<input id="'.$id.'" style="width:80px; margin-left: 8px" title="{{Manuf ID. Format hex string 4 car (par d?faut=aucun)}}" placeholder="{{Manuf ID (ex: 115F)}}" />';
+        echo '<input id="'.$id.'" style="width:80px; margin-left: 8px" title="{{Manuf ID. Format hex string 4 car (par défaut=aucun)}}" placeholder="{{Manuf ID (ex: 115F)}}" />';
     }
 
     // Create drop down list of IEEE addresses, excluding zigate by default

@@ -222,11 +222,12 @@
             $msg = array();
             $msg['topic']   = $topic;
             $msg['payload'] = $payload;
+            $msgJson = json_encode($msg);
 
-            if (msg_send($queue, $priority, $msg, true, false)) {
-                cmdLog('debug', '(fct publishMosquitto) mesage: '.json_encode($msg).' added to queue : '.$queueId, $this->debug['tempo']);
+            if (msg_send($queue, $priority, $msgJson, false, false)) {
+                cmdLog('debug', '(fct publishMosquitto) mesage: '.$msgJson.' added to queue : '.$queueId, $this->debug['tempo']);
             } else {
-                cmdLog('debug', '(fct publishMosquitto) could not add message '.json_encode($msg).' to queue : '.$queueId, $this->debug['tempo']);
+                cmdLog('debug', '(fct publishMosquitto) could not add message '.$msgJson.' to queue : '.$queueId, $this->debug['tempo']);
             }
         }
 
@@ -238,11 +239,12 @@
             $msg = array();
             $msg['topic']   = $topic;
             $msg['payload'] = $payload;
+            $msgJson = json_encode($msg);
 
-            if (msg_send($queue, 1, $msg, true, false)) {
-                cmdLog('debug', 'msgToAbeille() mesage: '.json_encode($msg).' added to queue : '.$queueId, $this->debug['tempo']);
+            if (msg_send($queue, 1, $msgJson, false, false)) {
+                cmdLog('debug', 'msgToAbeille() mesage: '.$msgJson.' added to queue : '.$queueId, $this->debug['tempo']);
             } else {
-                cmdLog('debug', 'msgToAbeille() could not add message '.json_encode($msg).' to queue : '.$queueId, $this->debug['tempo']);
+                cmdLog('debug', 'msgToAbeille() could not add message '.$msgJson.' to queue : '.$queueId, $this->debug['tempo']);
             }
         }
 
@@ -808,15 +810,16 @@
             $queue = $this->queueXToCmd;
             $msg = NULL;
             $msgMax = 512;
-            if (msg_receive($queue, 0, $msgType, $msgMax, $msg, true, MSG_IPC_NOWAIT, $errCode) == false) {
+            if (msg_receive($queue, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode) == false) {
                 if ($errCode == 7) {
-                    msg_receive($queue, 0, $msgType, $msgMax, $msg, false, MSG_IPC_NOWAIT | MSG_NOERROR);
+                    msg_receive($queue, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
                     logMessage('debug', 'collectAllOtherMessages() ERROR: msg TOO BIG ignored.');
                 } else if ($errCode != 42) // 42 = No message
                     logMessage("error", "collectAllOtherMessages() ERROR ".$errCode." on queue 'xToCmd'");
                 return;
             }
 
+            $msg = json_decode($msgJson, true);
             $prio = isset($msg['priority']) ? $msg['priority']: PRIO_NORM;
             $topic = $msg['topic'];
             $payload = $msg['payload'];

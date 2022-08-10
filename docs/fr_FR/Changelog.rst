@@ -9,6 +9,9 @@ ChangeLog
 - Gledopto GL-C-007P: Support préliminaire.
 - Interne: Nettoyage entrées 'Polling' + 'RefreshData' sur mise-à-jour d'une commande.
 - Zlinky: Mise-à-jour modèle (2418).
+- Interne: msg_send()/msg_receive() avec json_encode()/json_decode() partout.
+- Interne: DB eqLogic, 'icone' => 'ab::icon'.
+- INNR RC250: Support préliminaire (2420).
 
 220714-STABLE-1
 ---------------

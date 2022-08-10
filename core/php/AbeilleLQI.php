@@ -57,7 +57,7 @@
     function msgFromParserFlush() {
         global $queueParserToLQI;
 
-        while (msg_receive($queueParserToLQI, 0, $msgType, 2048, $msg, true, MSG_IPC_NOWAIT | MSG_NOERROR));
+        while (msg_receive($queueParserToLQI, 0, $msgType, 2048, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR));
     }
 
     /* Treat request responses (804E) from parser.
@@ -359,10 +359,11 @@
         $msg = array();
         $msg['topic'] = "Cmd".$dest."/".$addr."/getNeighborTable";
         $msg['payload'] = "startIndex=".$index;
-        logMessage("", "msgToCmd: ".json_encode($msg));
+        $msgJson = json_encode($msg);
+        logMessage("", "msgToCmd: ".$msgJson);
 
         global $queueLQIToCmd;
-        if (msg_send($queueLQIToCmd, priorityInterrogation, $msg, true, false) == false) {
+        if (msg_send($queueLQIToCmd, priorityInterrogation, $msgJson, false, false) == false) {
             logMessage('error', "msgToCmd: Unable to send message to AbeilleCmd");
             return -1;
         }
@@ -446,7 +447,7 @@
             $objName = $eqParent->getName();
         $knownFromJeedom[$eqLogicId]['parent'] = $objName;
         $knownFromJeedom[$eqLogicId]['ieee'] = $eqLogic->getConfiguration('IEEE', '');
-        $knownFromJeedom[$eqLogicId]['icon'] = $eqLogic->getConfiguration('icone', 'defaultUnknown');
+        $knownFromJeedom[$eqLogicId]['icon'] = $eqLogic->getConfiguration('ab::icon', 'defaultUnknown');
         // $objKnownFromAbeille[$eqLogicId] = $objName;
         logMessage("", "  Eq='".$eqLogicId."', parent='".$objName."'");
     }

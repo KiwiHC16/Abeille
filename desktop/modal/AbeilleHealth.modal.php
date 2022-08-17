@@ -38,10 +38,10 @@ Démons:
     displayDaemonStatus($diff, "Cmd", $oneMissing);
     displayDaemonStatus($diff, "Parser", $oneMissing);
     for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-        if ($config['AbeilleActiver'.$zgId] != "Y")
+        if ($config['ab::zgEnabled'.$zgId] != "Y")
             continue; // Zigate disabled
         displayDaemonStatus($diff, "SerialRead".$zgId, $oneMissing);
-        if ($config['AbeilleType'.$zgId] == "WIFI")
+        if ($config['ab::zgType'.$zgId] == "WIFI")
             displayDaemonStatus($diff, "Socat".$zgId, $oneMissing);
     }
     if ($oneMissing)
@@ -50,7 +50,7 @@ Démons:
     /* Checking if active Zigates are not in timeout */
     echo "  Zigates: ";
     for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-        if ($config['AbeilleActiver'.$zgId] != "Y")
+        if ($config['ab::zgEnabled'.$zgId] != "Y")
             continue; // Zigate disabled
 
         $eqLogic = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');

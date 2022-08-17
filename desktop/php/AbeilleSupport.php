@@ -102,17 +102,17 @@
             <a id="idCurrentDisplay" style="width:90%">{{Selectionnez le log ou la commande à afficher.}}</a>
 
             <div class="input-group pull-right" style="display:inline;">
-                <input type="checkbox" id="brutlogcheck" autoswitch="0" checked hidden/>
+                <input type="hidden" id="brutlogcheck" autoswitch="0" checked />
                 <i id="brutlogicon" class="fas fa-exclamation-circle icon_orange" hidden></i>
 
-                <input class="input-sm roundedLeft" id="in_eventLogSearch" style="width : 200px;margin-left:5px;" placeholder="{{Rechercher}}" />
-                <a class="btn btn-warning btn-sm" data-state="1" id="bt_eventLogStopStart"><i class="fas fa-pause"></i> {{Pause}}
+                <!-- <input class="input-sm roundedLeft" id="in_eventLogSearch" style="width : 200px;margin-left:4px;" placeholder="{{Rechercher}}" /> -->
+                <!-- <a class="btn btn-warning btn-sm" data-state="1" id="bt_eventLogStopStart"><i class="fas fa-pause"></i> {{Pause}}</a> -->
                 <a class="btn btn-success btn-sm" id="idDownloadCurrent"><i class="fas fa-cloud-download-alt"></i> {{Télécharger}}</a>
-                <a class="btn btn-warning btn-sm" id="bt_logdisplayclearLog"><i class="fas fa-times"></i> {{Vider}}</a>
-                <a class="btn btn-danger roundedRight btn-sm" id="bt_logdisplayremoveLog"><i class="far fa-trash-alt"></i> {{Supprimer}}</a>
+                <a class="btn btn-warning btn-sm" id="idClearLogFile"><i class="fas fa-times"></i> {{Vider}}</a>
+                <a class="btn btn-danger roundedRight btn-sm" id="idRemoveLogFile"><i class="far fa-trash-alt"></i> {{Supprimer}}</a>
             </div>
         </div>
-        <pre id="idPreResults" style="height : calc(100% - 110px);width:100%;margin-top:5px;"></pre>
+        <pre id="idPreResults" style="height:calc(100% - 110px);width:100%;margin-top:5px;"></pre>
     </div>
 </div>
 
@@ -146,6 +146,8 @@
                 res = JSON.parse(json_res.result); // res.status, res.error, res.content
                 if (res.status != 0) {
                     $('#idCurrentDisplay').empty().append('{{Log : }}'+logFile+" => ERREUR");
+                    $('#idPreResults').empty();
+                    curDisplay = "";
                 } else {
                     var log = res.content;
                     $('#idPreResults').empty();
@@ -177,18 +179,18 @@
     $('.btnDisplayLog').off('click').on('click',function() {
         var location = $(this).attr('location'); // "JEEDOM-LOG" or "JEEDOM-TMP"
         var logFile = $(this).text();
-        console.log("btnDisplayLog click => "+logFile+", type="+location);
+        console.log("btnDisplayLog click: File="+logFile+", location="+location);
         $('.btnDisplayLog').parent().removeClass("active")
         $(this).parent().addClass("active")
-        // displayLog(location, logFile)
-        jeedom.log.autoupdate({
-            log: logFile,
-            // default_search: log_default_search,
-            display: $('#idPreResults'),
-            search: $('#in_eventLogSearch'),
-            control: $('#bt_eventLogStopStart')
-        })
-    });
+        displayLog(location, logFile)
+        // jeedom.log.autoupdate({
+        //     log: logFile,
+        //     // default_search: log_default_search,
+        //     display: $('#idPreResults'),
+        //     search: $('#in_eventLogSearch'),
+        //     control: $('#bt_eventLogStopStart')
+        // })
+    })
 
     /* Pack and download all logs at once */
     $('#idDownloadAllLogs').click(function() {
@@ -218,7 +220,7 @@
                 }
             }
         });
-    });
+    })
 
     /* Execute command & display result */
     $('.btnCommand').off('click').on('click', function() {
@@ -234,7 +236,7 @@
                 curDisplayType = "COMMAND";
             }
         })
-    });
+    })
 
     /* Save given 'text' to 'fileName' */
     function saveToFile(fileName, text) {
@@ -252,6 +254,7 @@
         if (curDisplay == "")
             return; // Nothing displayed
 
+        console.log("idDownloadCurrent click: curDisplay="+curDisplay);
         if (curDisplayType == "COMMAND") {
             content = $('#idPreResults').text();
             var f = curDisplay.split(".");
@@ -269,6 +272,69 @@
                 path = js_pluginDir+"/../../log/"+curDisplay;
             window.open('plugins/Abeille/core/php/AbeilleDownload.php?pathfile='+path+'&addext=log', "_blank", null);
         }
-    });
+    })
+
+    // Clear selected log file
+    $("#idClearLogFile").on('click', function(event) {
+        console.log("idClearLogFile click: curDisplay="+curDisplay+", type="+curDisplayType);
+
+        if (curDisplay == "")
+            return;
+
+        logFile = curDisplay;
+        logLocation = curDisplayType; // JEEDOM-LOG or JEEDOM-TMP
+
+        console.log("lf="+logFile+", loc="+logLocation);
+        $.ajax({
+            type: 'POST',
+            url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+            data: {
+                action: "clearFile",
+                file : logFile,
+                location : logLocation,
+            },
+            dataType: "json",
+            global: false,
+            cache: false,
+            error: function (request, status, error) {
+            },
+            success: function (json_res) {
+            }
+        });
+    })
+
+    // Remove selected log file
+    $("#idRemoveLogFile").on('click', function(event) {
+        console.log("idRemoveLogFile click: curDisplay="+curDisplay+", type="+curDisplayType);
+
+        if (curDisplay == "")
+            return;
+
+        logFile = curDisplay;
+        let action = "";
+        if (curDisplayType == "JEEDOM-LOG") {
+            action = "delFile";
+            logPath = "../../log/"+logFile;
+        } else { // curDisplayType == "JEEDOM-TMP"
+            action = "delTmpFile";
+            logPath = logFile;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+            data: {
+                action: action,
+                file : logPath,
+            },
+            dataType: "json",
+            global: false,
+            cache: false,
+            error: function (request, status, error) {
+            },
+            success: function (json_res) {
+            }
+        });
+    })
 
 </script>

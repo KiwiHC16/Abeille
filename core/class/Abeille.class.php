@@ -64,14 +64,14 @@ class Abeille extends eqLogic
     {
         $result = '';
         for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
-            if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') == 'N')
+            if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') == 'N')
                 continue; // Disabled
-            if (config::byKey('AbeilleType'.$zgId, 'Abeille', '') == 'WIFI')
+            if (config::byKey('ab::zgType'.$zgId, 'Abeille', '') == 'WIFI')
                 continue; // WIFI does not use a physical port
 
             if ($result != '')
                 $result .= ", ";
-            $result .= config::byKey('AbeilleSerialPort'.$zgId, 'Abeille', '');
+            $result .= config::byKey('ab::zgPort'.$zgId, 'Abeille', '');
         }
 
         $return[] = array(
@@ -303,7 +303,7 @@ if (0) {
                 continue; // Does not exist on Jeedom side.
             if (!$zigate->getIsEnable())
                 continue; // Zigate disabled
-            if ($config['AbeilleActiver'.$zgId] != 'Y')
+            if ($config['ab::zgEnabled'.$zgId] != 'Y')
                 continue; // Zigate disabled.
 
             $eqLogics = Abeille::byType('Abeille');
@@ -469,12 +469,12 @@ if (0) {
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
         // so I need to create a minimum of traffic, so pull zigate every minutes
         for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-            if ($config['AbeilleActiver'.$i] != 'Y')
+            if ($config['ab::zgEnabled'.$i] != 'Y')
                 continue; // Zigate disabled
-            if ($config['AbeilleSerialPort'.$i] == "none")
+            if ($config['ab::zgPort'.$i] == "none")
                 continue; // Serial port undefined
             // TODO Tcharp38: Currently leads to PI zigate timeout. No sense since still alive.
-            // if ($config['AbeilleType'.$i] != "WIFI")
+            // if ($config['ab::zgType'.$i] != "WIFI")
             //     continue; // Not a WIFI zigate. No polling required
 
             // TODO: Better to read time to correct it if required, instead of version that rarely changes
@@ -679,26 +679,26 @@ if (0) {
         /* Checking config */
         // TODO Tcharp38: Should be done during deamon_info() and report proper 'launchable'
         for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
-            if ($config['AbeilleActiver'.$zgId] != 'Y')
+            if ($config['ab::zgEnabled'.$zgId] != 'Y')
                 continue; // Disabled
 
             /* This zigate is enabled. Checking other parameters */
             $error = "";
-            $sp = $config['AbeilleSerialPort'.$zgId];
+            $sp = $config['ab::zgPort'.$zgId];
             if (($sp == 'none') || ($sp == "")) {
                 $error = "Port série de la zigate ".$zgId." INVALIDE";
             }
             if ($error == "") {
-                if ($config['AbeilleType'.$zgId] == "WIFI") {
-                    $wifiAddr = $config['IpWifiZigate'.$zgId];
+                if ($config['ab::zgType'.$zgId] == "WIFI") {
+                    $wifiAddr = $config['ab::zgIpAddr'.$zgId];
                     if (($wifiAddr == 'none') || ($wifiAddr == "")) {
                         $error = "Adresse Wifi de la zigate ".$zgId." INVALIDE";
                     }
                 }
             }
             if ($error != "") {
-                $config['AbeilleActiver'.$zgId] = 'N';
-                config::save('AbeilleActiver'.$zgId, 'N', 'Abeille');
+                $config['ab::zgEnabled'.$zgId] = 'N';
+                config::save('ab::zgEnabled'.$zgId, 'N', 'Abeille');
                 log::add('Abeille', 'error', $error." ! Zigate désactivée.");
             }
         }
@@ -709,9 +709,9 @@ if (0) {
             - port 2 = FLASH
             - Production mode: FLASH=1, RESET=0 then 1 */
         for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-            if (($config['AbeilleSerialPort'.$i] == 'none') or ($config['AbeilleActiver'.$i] != 'Y'))
+            if (($config['ab::zgPort'.$i] == 'none') or ($config['ab::zgEnabled'.$i] != 'Y'))
                 continue; // Undefined or disabled
-            if ($config['AbeilleType'.$i] == "PI") {
+            if ($config['ab::zgType'.$i] == "PI") {
                 AbeilleTools::checkGpio(); // Found an active PI Zigate, needed once
                 break;
             }
@@ -729,10 +729,10 @@ if (0) {
         // TODO Tcharp38: Note: This should not longer be required as the parser itself do the request on startup
         $expected = 0; // 1 bit per expected serial read daemon
         for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
-            if (($config['AbeilleSerialPort'.$zgId] == 'none') or ($config['AbeilleActiver'.$zgId] != 'Y'))
+            if (($config['ab::zgPort'.$zgId] == 'none') or ($config['ab::zgEnabled'.$zgId] != 'Y'))
                 continue; // Undefined or disabled
             $expected |= constant("daemonSerialRead".$zgId);
-            if ($config['AbeilleType'.$zgId] == 'WIFI')
+            if ($config['ab::zgType'.$zgId] == 'WIFI')
                 $expected |= constant("daemonSocat".$zgId);
         }
         $timeout = 10;
@@ -862,7 +862,7 @@ if (0) {
         // Tcharp38: Moved from deamon_start()
         $config = AbeilleTools::getParameters();
         for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
-            if (($config['AbeilleSerialPort'.$zgId] == 'none') or ($config['AbeilleActiver'.$zgId] != 'Y'))
+            if (($config['ab::zgPort'.$zgId] == 'none') or ($config['ab::zgEnabled'.$zgId] != 'Y'))
                 continue; // Undefined or disabled
 
             // Create/update beehive equipment on Jeedom side
@@ -987,8 +987,8 @@ if (0) {
     //     // Testons la validité de la configuration
     //     $atLeastOneZigateActiveWithOnePortDefined = 0;
     //     for ( $i=1; $i<=$GLOBALS['maxNbOfZigate']; $i++ ) {
-    //         if ($return['AbeilleActiver'.$i ]=='Y') {
-    //             if ($return['AbeilleSerialPort'.$i]!='none') {
+    //         if ($return['ab::zgEnabled'.$i ]=='Y') {
+    //             if ($return['ab::zgPort'.$i]!='none') {
     //                 $atLeastOneZigateActiveWithOnePortDefined++;
     //             }
     //         }
@@ -1001,17 +1001,17 @@ if (0) {
 
     //     // Vérifions l existence des ports
     //     for ( $i=1; $i<=$GLOBALS['maxNbOfZigate']; $i++ ) {
-    //         if ($return['AbeilleActiver'.$i ]=='Y') {
-    //             if ($return['AbeilleSerialPort'.$i] != 'none') {
-    //                 if (@!file_exists($return['AbeilleSerialPort'.$i])) {
-    //                     log::add('Abeille','debug','checkParameters: Le port série n existe pas: '.$return['AbeilleSerialPort'.$i]);
-    //                     message::add('Abeille','Warning: Le port série n existe pas: '.$return['AbeilleSerialPort'.$i],'' );
+    //         if ($return['ab::zgEnabled'.$i ]=='Y') {
+    //             if ($return['ab::zgPort'.$i] != 'none') {
+    //                 if (@!file_exists($return['ab::zgPort'.$i])) {
+    //                     log::add('Abeille','debug','checkParameters: Le port série n existe pas: '.$return['ab::zgPort'.$i]);
+    //                     message::add('Abeille','Warning: Le port série n existe pas: '.$return['ab::zgPort'.$i],'' );
     //                     $return['parametersCheck']="nok";
-    //                     $return['parametersCheck_message'] = __('Le port série '.$return['AbeilleSerialPort'.$i].' n existe pas (zigate déconnectée ?)', __FILE__);
+    //                     $return['parametersCheck_message'] = __('Le port série '.$return['ab::zgPort'.$i].' n existe pas (zigate déconnectée ?)', __FILE__);
     //                     return 0;
     //                 } else {
-    //                     if (substr(decoct(fileperms($return['AbeilleSerialPort'.$i])), -4) != "0777") {
-    //                         exec(system::getCmdSudo().'chmod 777 '.$return['AbeilleSerialPort'.$i].' > /dev/null 2>&1');
+    //                     if (substr(decoct(fileperms($return['ab::zgPort'.$i])), -4) != "0777") {
+    //                         exec(system::getCmdSudo().'chmod 777 '.$return['ab::zgPort'.$i].' > /dev/null 2>&1');
     //                     }
     //                 }
     //             }
@@ -2237,8 +2237,8 @@ if (0) {
             $eqLogic->setName("Ruche-".$dest);
             $eqLogic->setLogicalId($dest."/0000");
             $config = AbeilleTools::getParameters();
-            if ($config['AbeilleParentId'] > 0) {
-                $eqLogic->setObject_id($config['AbeilleParentId']);
+            if ($config['ab::defaultParent'] > 0) {
+                $eqLogic->setObject_id($config['ab::defaultParent']);
             } else {
                 $eqLogic->setObject_id(jeeObject::rootObject()->getId());
             }
@@ -2394,7 +2394,7 @@ if (0) {
         $eqLogic->setName($eqName);
         $eqLogic->setLogicalId($logicalId);
         $abeilleConfig = AbeilleTools::getParameters();
-        $eqLogic->setObject_id($abeilleConfig['AbeilleParentId']);
+        $eqLogic->setObject_id($abeilleConfig['ab::defaultParent']);
         $eqLogic->setConfiguration('IEEE', $ieee);
         $eqLogic->setIsVisible(0); // Hidden by default
         $eqLogic->setIsEnable(1);
@@ -2447,7 +2447,7 @@ if (0) {
             // $eqLogic->setName($modelType); // Default name = short desc from model ('type')
             $eqLogic->setLogicalId($logicalId);
             $abeilleConfig = AbeilleTools::getParameters();
-            $eqLogic->setObject_id($abeilleConfig['AbeilleParentId']);
+            $eqLogic->setObject_id($abeilleConfig['ab::defaultParent']);
             $eqLogic->setConfiguration('IEEE', $dev['ieee']);
         } else {
             $newEq = false;

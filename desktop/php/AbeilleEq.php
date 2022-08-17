@@ -29,7 +29,7 @@
     $eqLogicId = $eqLogic->getLogicalid();
     list($eqNet, $eqAddr) = explode("/", $eqLogicId);
     $zgId = substr($eqNet, 7); // Extracting zigate number from network
-    $zgType = config::byKey('AbeilleType'.$zgId, 'Abeille', '', 1); // USB, WIFI, PIN, DIN
+    $zgType = config::byKey('ab::zgType'.$zgId, 'Abeille', '', 1); // USB, WIFI, PIN, DIN
     $mainEP = $eqLogic->getConfiguration('mainEP', '01');
     $eqIeee = $eqLogic->getConfiguration('IEEE', '');
     $batteryType = $eqLogic->getConfiguration('battery_type', '');

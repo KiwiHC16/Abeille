@@ -2576,27 +2576,29 @@
                         /* Tcharp38: Cluster 0005 specific case.
                         Why is it handled here in Parser ?? Moreover why in decode8002 since supported by decode8100 ? */
                         if ($clustId == "0005") {
-                            $abeille = Abeille::byLogicalId($dest."/".$srcAddr,'Abeille');
-                            $sceneStored = json_decode($abeille->getConfiguration('sceneJson', '{}'), true);
-                            foreach ($attributes as $attrId => $attr) {
-                                if ($attrId == "0000") {
-                                    $sceneCount = $attr['value'];
-                                    $sceneStored["sceneCount"] = $sceneCount - 1; // On ZigLight need to remove one
-                                } else if ($attrId == "0001") {
-                                    $sceneCurrent = $attr['value'];
-                                    $sceneStored["sceneCurrent"] = $sceneCurrent;
-                                } else if ($attrId == "0002") {
-                                    $groupCurrent = $attr['value'];
-                                    $sceneStored["groupCurrent"] = $groupCurrent;
-                                } else if ($attrId == "0003") {
-                                    $sceneActive = $attr['value'];
-                                    $sceneStored["sceneActive"] = $sceneActive;
+                            $eqLogic = Abeille::byLogicalId($dest."/".$srcAddr, 'Abeille');
+                            if (is_object($eqLogic)) {
+                                $sceneStored = json_decode($eqLogic->getConfiguration('sceneJson', '{}'), true);
+                                foreach ($attributes as $attrId => $attr) {
+                                    if ($attrId == "0000") {
+                                        $sceneCount = $attr['value'];
+                                        $sceneStored["sceneCount"] = $sceneCount - 1; // On ZigLight need to remove one
+                                    } else if ($attrId == "0001") {
+                                        $sceneCurrent = $attr['value'];
+                                        $sceneStored["sceneCurrent"] = $sceneCurrent;
+                                    } else if ($attrId == "0002") {
+                                        $groupCurrent = $attr['value'];
+                                        $sceneStored["groupCurrent"] = $groupCurrent;
+                                    } else if ($attrId == "0003") {
+                                        $sceneActive = $attr['value'];
+                                        $sceneStored["sceneActive"] = $sceneActive;
+                                    }
                                 }
+                                $eqLogic->setConfiguration('sceneJson', json_encode($sceneStored));
+                                $eqLogic->save();
+                                // Tcharp38: To be removed. Saving to DB slows down execution time a lot
+                                parserLog("debug", '  TODO: '.json_encode($sceneStored));
                             }
-                            $abeille->setConfiguration('sceneJson', json_encode($sceneStored));
-                            $abeille->save();
-                            // Tcharp38: To be removed. Saving to DB slows down execution time a lot
-                            parserLog("debug", '  TODO: '.json_encode($sceneStored));
                             // return;
                         }
                     } // End '$cmd == "01"'

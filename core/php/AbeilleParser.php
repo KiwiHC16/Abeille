@@ -333,8 +333,8 @@
 
     // In case parser only is restarted, let's get zigates IEEE if known */
     for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-        // if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
-        if ($config['AbeilleActiver'.$zgId] != 'Y')
+        // if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
+        if ($config['ab::zgEnabled'.$zgId] != 'Y')
             continue; // This Zigate is not enabled
         // $ieeeOk = config::byKey('AbeilleIEEE_Ok'.$zgId, 'Abeille', 0);
         $ieeeOk = $config['AbeilleIEEE_Ok'.$zgId];

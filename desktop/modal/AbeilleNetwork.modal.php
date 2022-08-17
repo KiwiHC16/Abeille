@@ -12,7 +12,7 @@
     function displayButtons($nbOfZigates, $what="linksTable") {
         echo 'Réseau :';
         for ($i = 1; $i <= $nbOfZigates; $i++) {
-            if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
+            if (config::byKey('ab::zgEnabled'.$i, 'Abeille', 'N') != 'Y')
                 continue; // Disabled
 
             if ($what == "linksTable")

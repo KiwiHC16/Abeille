@@ -110,7 +110,7 @@
 
     function zigateInfos() {
         for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-            if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
+            if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
                 continue; // Zigate disabled
 
             $eqLogic = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');

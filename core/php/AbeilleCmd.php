@@ -113,8 +113,8 @@
             //         logMessage('debug', $rerouteNet.", rerouting: ".$msg['msg']);
             //         /* TODO: Tcharp38: Can be optimized */
             //         $zgNb = str_replace('Abeille', '', $rerouteNet);
-            //         if (config::byKey('AbeilleActiver'.$zgNb, 'Abeille', 'N') == 'Y' ) {
-            //             $sp = config::byKey('AbeilleSerialPort'.$zgNb, 'Abeille', '1', 1);
+            //         if (config::byKey('ab::zgEnabled'.$zgNb, 'Abeille', 'N') == 'Y' ) {
+            //             $sp = config::byKey('ab::zgPort'.$zgNb, 'Abeille', '1', 1);
             //             $f = fopen($sp, "w");
             //             fwrite($f, pack("H*", $msg['msg']));
             //             fclose($f);

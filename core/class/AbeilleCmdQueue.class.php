@@ -148,13 +148,13 @@
 
         public function initNewZigateDefault($zgId) {
             $zg = array();
-            // cmdLog("debug", __FUNCTION__." Enabled: ".config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N'));
-            if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') == 'Y') {
+            // cmdLog("debug", __FUNCTION__." Enabled: ".config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N'));
+            if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') == 'Y') {
                 $zg['enabled'] = 1;
             } else {
                 $zg['enabled'] = 0;
             }
-            $zg['port'] = config::byKey('AbeilleSerialPort'.$zgId, 'Abeille', '');
+            $zg['port'] = config::byKey('ab::zgPort'.$zgId, 'Abeille', '');
             if ($zg['port'] == '') {
                 $zg['enabled'] = 0;
                 cmdLog('error', 'initNewZigateDefault: port non défini');

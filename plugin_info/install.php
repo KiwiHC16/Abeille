@@ -50,6 +50,16 @@
         }
     }
 
+    // Config DB: replace 'key1' by 'key2'
+    function replaceConfigDB($key1, $key2) {
+        $val = config::byKey($key1, 'Abeille', 'nada', true);
+        if ($val != 'nada') {
+            config::save($key2, $val, 'Abeille');
+            config::remove($key1, 'Abeille');
+            log::add('Abeille', 'debug', "  config DB: '".$key1."' changed to '".$key2."'");
+        }
+    }
+
     /* Check and update configuration DB if required.
        This function can update other informations in Jeedom DB.
        Note: This function can be called before daemons startup. Useful for
@@ -57,7 +67,8 @@
     function updateConfigDB() {
 
         /* Version 20200225 changes:
-        - Added multi-zigate support */
+           - Added multi-zigate support
+         */
         if (config::byKey('DbVersion', 'Abeille', '') == '') {
 
             // ******************************************************************************************************************
@@ -117,7 +128,8 @@
         }
 
         /* Version 20200510 changes:
-        Added 'AbeilleTypeX' (X=1 to 10): 'USB', 'WIFI', or 'PI' */
+           - Added 'AbeilleTypeX' (X=1 to 10): 'USB', 'WIFI', or 'PI'
+         */
         $dbVersion = config::byKey('DbVersion', 'Abeille', '');
         if (($dbVersion == '') || (intval($dbVersion) < 20200510)) {
             for ($i = 1; $i <= 10; $i++) {
@@ -136,7 +148,8 @@
         }
 
         /* Version 20201025 changes:
-        All hexa values are now UPPER-CASE */
+           - All hexa values are now UPPER-CASE
+         */
         if (intval($dbVersion) < 20201025) {
             /* Updating addresses in config */
             for ($i = 1; $i <= 10; $i++) {
@@ -407,6 +420,11 @@
            - eqLogic DB: 'RxOnWhenIdle' => 'ab::zigbee['rxOnWhenIdle']'
            - eqLogic DB: 'AC_Power' => 'ab::zigbee['mainsPowered']'
            - eqLogic DB: 'icone' => 'ab::icon'
+           - config DB: 'AbeilleActiver' => 'ab::zgEnabled'
+           - config DB: 'AbeilleType' => 'ab::zgType'
+           - config DB: 'AbeilleSerialPort' => 'ab::zgPort'
+           - config DB: 'IpWifiZigate' => 'ab::zgIpAddr'
+           - config DB: 'AbeilleParentId' => 'ab::defaultParent'
          */
         if (intval($dbVersion) < 20220421) {
             $eqLogics = eqLogic::byType('Abeille');
@@ -515,7 +533,16 @@
                     $eqLogic->save();
             }
 
-            // config::save('DbVersion', '20220421', 'Abeille'); // NOT FROZEN YET
+            // Config DB updates
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                replaceConfigDB('AbeilleActiver'.$zgId, 'ab::zgEnabled'.$zgId);
+                replaceConfigDB('AbeilleType'.$zgId, 'ab::zgType'.$zgId);
+                replaceConfigDB('AbeilleSerialPort'.$zgId, 'ab::zgPort'.$zgId);
+                replaceConfigDB('IpWifiZigate'.$zgId, 'ab::zgIpAddr'.$zgId);
+            }
+            replaceConfigDB('AbeilleParentId', 'ab::defaultParent');
+
+            // config::save('DbVersion', '20220421', 'Abeille'); // OT FROZEN YET
         }
     }
 

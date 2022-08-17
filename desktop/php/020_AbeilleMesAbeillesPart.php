@@ -66,7 +66,7 @@
     $NbOfZigatesON = 0; // Number of enabled zigates
     // $eqAll = array(); // All equipments, sorted per zigate
     for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-        if ( config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y' )
+        if ( config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y' )
             continue; // This Zigate is not enabled
 
         $NbOfZigatesON++;
@@ -86,7 +86,7 @@
         /* Exclude feature */
         echo '<a onclick="removeBees('.$zgId.')" class="btn btn-warning btn-xs" style="margin-top:-10px; margin-left:8px" title="Demande aux équipement(s) sélectionné(s) de sortir du réseau.">{{Exclure}}</a>';
 
-        $port = config::byKey('AbeilleSerialPort'.$zgId, 'Abeille', '');
+        $port = config::byKey('ab::zgPort'.$zgId, 'Abeille', '');
 
         /* Monitoring feature */
         echo '<a onclick="monitorIt('.$zgId.', \''.$port.'\')" class="btn btn-warning btn-xs" style="margin-top:-10px; margin-left:8px" title="Surveillance des messages vers/de l\'équipement sélectionné. Sortie dans \'AbeilleMonitor\'.">{{Surveiller}}</a>';

@@ -831,7 +831,7 @@ console.log("json_res=", json_res);
                 <!-- Select 1st Zigate if none passed as argument (zigate=X) -->
                 <?php
                 for ($i=1; $i<=maxNbOfZigate; $i++) {
-                    if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
+                    if (config::byKey('ab::zgEnabled'.$i, 'Abeille', 'N') != 'Y')
                         continue;
 
                     if ($i == $zgId)

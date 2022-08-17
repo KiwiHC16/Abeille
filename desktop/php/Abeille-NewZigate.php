@@ -33,7 +33,7 @@
 	<select id="idNewZigate" style="width : 40%">
 	<?php
 		for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-			if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
+			if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
 				continue; // Disabled
 			$eqLogic = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
 			if (!is_object($eqLogic))

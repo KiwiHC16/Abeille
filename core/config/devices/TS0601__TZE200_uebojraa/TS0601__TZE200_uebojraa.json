@@ -1,0 +1,22 @@
+{
+    "TS0601__TZE200_uebojraa": {
+        "alternateIds": "TS0601__TZE200_t5p1vj8r",
+        "manufacturer": "Aubess",
+        "model": "?",
+        "type": "Aubess smoke sensor",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Aubess-SmokeSensor",
+            "mainEP": "01",
+            "batteryType": "?"
+        },
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            }
+        }
+    }
+}

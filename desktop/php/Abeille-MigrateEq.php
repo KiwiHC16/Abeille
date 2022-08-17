@@ -28,7 +28,7 @@
 			<select id="idDstZg" style="width : 40%">
 			<?php
 				for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-					if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
+					if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
 						continue; // Disabled
 					echo '<option value="'.$zgId.'">Zigate '.$zgId.'</option>';
 				}

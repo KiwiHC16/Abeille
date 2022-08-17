@@ -29,7 +29,7 @@
 
 					// foreach ($eqLogics as $key => $eqLogic) {
 					for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-						if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
+						if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
 							continue; // This Zigate is disabled
 
 						foreach ($eqPerZigate[$zgId] as $eq) {

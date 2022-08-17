@@ -286,6 +286,33 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        /* Clear file content.
+           'file' = file name.
+           'location' = 'JEEDOM-LOG' (default, default log dir) or 'JEEDOM-TMP' (temp Abeille log dir)
+           Returns: status=0 if ok, 1=not found, -1=other error */
+        if (init('action') == 'clearFile') {
+            $file = init('file');
+            $location = init('location');
+
+            if (($location == '') || ($location == 'JEEDOM-LOG'))
+                $path = __DIR__."/../../../../log/".$file;
+            else if ($location == "JEEDOM-TMP")
+                $path = jeedom::getTmpFolder("Abeille").'/'.$file;
+            logDebug("action=clearFile, path=".$path);
+            $status = 0;
+            $error = "";
+
+            if (!file_exists($path)) {
+                $status = 1;
+                $error = "Le fichier '".$file."' n'existe pas.";
+            }
+            if ($status == 0) {
+                com_shell::execute(system::getCmdSudo().'chmod 664 '.$path.'>/dev/null 2>&1; cat /dev/null >'.$path);
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
         /* Check if a file exists.
            'path' is relative to plugin root dir (/var/www/html/plugins/Abeille).
            Returns: status=0 if found, -1 else */

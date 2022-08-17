@@ -1,6 +1,18 @@
 ChangeLog
 =========
 
+- Interne: Boutons 'vider' & 'supprimer' page support.
+- Interne: Modifications clefs DB 'config'
+
+  - 'AbeilleActiverX' => 'ab::zgEnabledX'.
+  - 'AbeilleTypeX' => 'ab::zgTypeX'.
+  - 'AbeilleSerialPortX' => 'ab::zgPortX'.
+  - 'IpWifiZigateX' => 'ab::zgIpAddrX'.
+  - 'AbeilleParentId' => 'ab::defaultParent'
+- Gledopto GL-C-008P: Mise-à-jour icone.
+- Aubess detecteur de fumée: Ajout support préliminaire (2426).
+- Interne: Parser: Read Attributes Response, correction crash cluster ID 0005.
+
 220810-BETA-2
 -------------
 

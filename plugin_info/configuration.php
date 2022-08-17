@@ -92,7 +92,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Type : }}</label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelZgType'.$zgId.'" class="configKey form-control" data-l1key="AbeilleType'.$zgId.'" onchange="checkZigateType('.$zgId.')"  title="{{Type de zigate}}">';
+                echo '<select id="idSelZgType'.$zgId.'" class="configKey form-control" data-l1key="ab::zgType'.$zgId.'" onchange="checkZigateType('.$zgId.')"  title="{{Type de zigate}}">';
                     echo '<option value="USB" selected>{{USB v1}}</option>';
                     echo '<option value="WIFI">{{WIFI/Ethernet}}</option>';
                     echo '<option value="PI">{{PI v1}}</option>';
@@ -107,7 +107,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Port série}} : </label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelSP'.$zgId.'" class="configKey form-control" data-l1key="AbeilleSerialPort'.$zgId.'" title="{{Port série si zigate USB, Pi ou DIN.}}" disabled>';
+                echo '<select id="idSelSP'.$zgId.'" class="configKey form-control" data-l1key="ab::zgPort'.$zgId.'" title="{{Port série si zigate USB, Pi ou DIN.}}" disabled>';
                     echo '<option value="none" selected>{{Aucun}}</option>';
                     echo '<option value="'.wifiLink.$zgId.'" >{{WIFI'.$zgId.'}}</option>';
                     echo '<option value="/dev/monitZigate'.$zgId.'" >{{Monit'.$zgId.'}}</option>';
@@ -137,7 +137,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Adresse IP (IP:Port) : }}</label>';
             echo '<div class="col-lg-4">';
-                echo '<input id="idWifiAddr'.$zgId.'" class="configKey form-control" data-l1key="IpWifiZigate'.$zgId.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
+                echo '<input id="idWifiAddr'.$zgId.'" class="configKey form-control" data-l1key="ab::zgIpAddr'.$zgId.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
             echo '</div>';
         echo '</div>';
 
@@ -188,7 +188,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Status : }}</label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelZgStatus'.$zgId.'" class="configKey form-control" data-l1key="AbeilleActiver'.$zgId.'" onchange="statusChange('.$zgId.')" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';
+                echo '<select id="idSelZgStatus'.$zgId.'" class="configKey form-control" data-l1key="ab::zgEnabled'.$zgId.'" onchange="statusChange('.$zgId.')" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';
                     echo '<option value="N" selected>{{Désactivée}}</option>';
                     echo '<option value="Y">{{Activée}}</option>';
                 echo '</select>';
@@ -279,7 +279,7 @@
                 <div class="form-group">
                     <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Objet Parent : }}</label>
                     <div class="col-lg-4" title="{{Objet parent (ex: une pièce de la maison) par défaut pour toute nouvelle zigate. Peut être changé plus tard via la page de gestion d'Abeille en cliquant sur la ruche correspondante}}.">
-                        <select class="configKey form-control" data-l1key="AbeilleParentId">
+                        <select class="configKey form-control" data-l1key="ab::defaultParent">
                             <?php
                                 foreach (jeeObject::all() as $object) {
                                     echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
@@ -350,7 +350,7 @@
             // How many zigates to display ? (check if enabled or not)
             $maxId = 1;
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                $status = config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N');
+                $status = config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N');
                 if ($status == "Y")
                     $maxId = $zgId;
             }

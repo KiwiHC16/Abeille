@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220817-BETA-1
+-------------
+
 - Interne: Boutons 'vider' & 'supprimer' page support.
 - Interne: Modifications clefs DB 'config'
 

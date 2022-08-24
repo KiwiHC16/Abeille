@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220824-BETA-1
+-------------
+
 - Interne: Mise-à-jour page maintenance.
 - Aeotec Multi purpose sensor: Mise-à-jour du modèle pour 'vibration' (2376).
 - Page support: Remplacée par page 'maintenance' + améliorations.

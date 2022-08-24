@@ -170,7 +170,7 @@ function trackLQICollectStatus(_autoUpdate, zgId) {
         url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
         data: {
             action: "getTmpFile",
-            file: "AbeilleLQI_MapDataAbeille" + zgId + ".json.lock",
+            file: "AbeilleLQI-Abeille" + zgId + ".json.lock",
         },
         dataType: "json",
         global: false,
@@ -252,7 +252,6 @@ function displayLinksTable(zgId) {
         url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
         data: {
             action: "getTmpFile",
-            // file: "AbeilleLQI_MapDataAbeille" + zgId + ".json",
             file: "AbeilleLQI-Abeille" + zgId + ".json",
         },
         dataType: "json",

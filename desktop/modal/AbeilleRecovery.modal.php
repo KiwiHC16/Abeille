@@ -94,7 +94,7 @@
             url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
             data: {
                 action: "getTmpFile",
-                file: "AbeilleLQI_MapDataAbeille" + zigateX + ".json",
+                file: "AbeilleLQI-Abeille" + zigateX + ".json",
             },
             dataType: "json",
             cache: false,
@@ -108,18 +108,29 @@
             } else {
                 // Ok
                 var json = JSON.parse(res.content);
-                var entries = json.data;
-                for (var entry in entries) {
-                    console.log('entry=', entries[entry]);
-                    logicId = entries[entry].NE; // Router logical ID
-                    console.log('jeedomDevices=', jeedomDevices);
-                    if (logicId in jeedomDevices)
-                        continue; // Known
-                    console.log('Phantom='+logicId);
+                console.log('json=', json);
+                var routers = json.routers;
+                console.log('jeedomDevices=', jeedomDevices);
+                for (var routerLogicId in routers) {
+                    router = routers[routerLogicId];
+                    console.log('router=', router);
+                    // if (routerLogicId in jeedomDevices)
+                    //     continue; // Known
+                    if (jeedomDevices.includes(routerLogicId) == false) {
+                        console.log('Phantom='+routerLogicId);
+                        continue; // Unknown
+                    }
+                    for (var neighborLogicId in router.neighbors) {
+                        console.log('neighbor=', router.neighbors[neighborLogicId]);
+                        if (jeedomDevices.includes(neighborLogicId) == false) {
+                            console.log('Phantom='+neighborLogicId);
+                            continue; // Unknown
+                        }
+                    }
                 }
             }
         });
     }
 </script>
 
-<!-- <?php include_file('desktop', 'network', 'js', 'Abeille'); ?> -->
+<!-- <?php include_file('desktop', 'AbeilleNetwork', 'js', 'Abeille'); ?> -->

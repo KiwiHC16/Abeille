@@ -137,7 +137,7 @@
 
                 if ($newSyntax) {
                     // List of supported command keys
-                    $supportedKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'trigOut', 'trigOutOffset', 'logicalId', 'invertBinary', 'historizeRound'];
+                    $supportedKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'trigOut', 'trigOutOffset', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
                     foreach ($value as $key2 => $value2) {
                         if (in_array($key2, $supportedKeys))
                             continue;

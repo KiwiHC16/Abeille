@@ -466,9 +466,9 @@
         }
 
         $netName = "Abeille".$zgId; // Abeille network
-        $dataFile = $tmpDir."/AbeilleLQI_MapData".$netName.".json";
+        // $dataFile = $tmpDir."/AbeilleLQI_MapData".$netName.".json";
         $newDataFile = $tmpDir."/AbeilleLQI-".$netName.".json"; // New format, replacing 'AbeilleLQI_MapDataAbeilleX.json'
-        $lockFile = $dataFile.".lock";
+        $lockFile = $newDataFile.".lock";
         if (file_exists($lockFile)) {
             $content = file_get_contents($lockFile);
             logMessage("", $netName." lock content: '".$content."'");
@@ -547,18 +547,12 @@
 
         /* Write JSON cache only if collect completed successfully or on timeout */
         if ($collectStatus != -1) {
-            // Encode array to json
-            $json = json_encode(array('data' => $LQI));
-
-            // Write json to file
-            if (file_put_contents($dataFile, $json)) {
+            // Storing also new output format
+            $json = json_encode($lqiTable);
+            if (file_put_contents($newDataFile, $json)) {
                 echo "Ok: ".$netName." collect ended successfully";
-
-                // Storing also new output format
-                $json = json_encode($lqiTable);
-                file_put_contents($newDataFile, $json);
             } else {
-                unlink($dataFile);
+                unlink($newDataFile);
                 echo "ERROR: Data file write pb.";
             }
         }

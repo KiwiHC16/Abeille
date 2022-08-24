@@ -73,7 +73,7 @@
             "Vibration": {
                 "use": "attr-Generic",
                 "subType": "binary",
-                "logicalId": "'FC02-01-0010",
+                "logicalId": "FC02-01-0010",
                 "genericType": "ALARM_STATE",
                 "isVisible": "1"
             },

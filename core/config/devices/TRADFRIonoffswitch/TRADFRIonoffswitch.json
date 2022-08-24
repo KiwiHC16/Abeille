@@ -25,7 +25,9 @@
             "include4": "offGroup",
             "include6": "onGroup",
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "zb-0001-BatteryPercent",
+                "calculValueOffset" : "#value#*2",
+                "comment": "Battery percent reporting seems half the expected value"
             },
             "Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",
@@ -34,7 +36,8 @@
             },
             "SetReporting-0001-0021": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0CE4&changeVal=",
+                "comment": "Reporting every 55mins max",
                 "execAtCreation": "Yes"
             },
             "include7": "Up-Down",

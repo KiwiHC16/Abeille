@@ -1,6 +1,16 @@
 ChangeLog
 =========
 
+- Interne: Mise-à-jour page maintenance.
+- Aeotec Multi purpose sensor: Mise-à-jour du modèle pour 'vibration' (2376).
+- Page support: Remplacée par page 'maintenance' + améliorations.
+- Volet Profalux: Ajout cmde info 'Not Closed' (2429).
+- Ikea on/off switch: Correction modele pour batterie à mi valeur (2056).
+- JSON équipement: Ajout possibilité surcharge 'calculValueOffset'.
+- Interne: 'AbeilleLQI_MapDataAbeilleX.json.lock' => 'AbeilleLQI-AbeilleX.json.lock'.
+- Interne: Arret generation ancien format 'AbeilleLQI_MapDataAbeilleX.json'.
+- Interne: Recup équipements fantomes.
+
 220817-BETA-1
 -------------
 

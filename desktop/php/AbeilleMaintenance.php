@@ -21,12 +21,12 @@
 <div style="padding-top: 5px">
     <ul class="nav nav-tabs" role="tablist">
         <li role="tab" class="active"><a href="#idLogs"> {{Logs}} </a></li>
-        <li role="tab"               ><a href="#idModeles"> {{Modèles}} </a></li>
+        <!-- <li role="tab"               ><a href="#idModeles"> {{Modèles}} </a></li> -->
     </ul>
 
-    <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
+    <div class="tab-content" style="height:inherit;overflow-y:hidden;overflow-x:hidden;">
 
-        <div role="tabpanel" class="tab-pane active" id="idLogs">
+        <div role="tabpanel" class="tab-pane active" id="idLogs" style="height:inherit">
             <?php
             include_once "AbeilleMaintenance-Logs.php";
             ?>

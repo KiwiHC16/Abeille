@@ -22,12 +22,28 @@
             "include0008-8": "setLevelVoletDown",
             "include0008-7": "setLevelVoletUp",
             "include0008-6": "levelVoletStop",
+            "Not Closed": {
+                "use": "zb-0006-OnOff",
+                "nextLine": "after"
+            },
+            "Bind 0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "SetReporting 0006-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
+            "include0008-5": "setLevelVolet",
             "CurrentLevel": {
                 "use": "zb-0008-CurrentLevel",
                 "genericType": "FLAP_STATE",
                 "isVisible": 1
             },
-            "include0008-5": "setLevelVolet",
             "Bind-0008-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0008",

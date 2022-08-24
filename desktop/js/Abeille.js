@@ -41,10 +41,12 @@ $("#bt_healthAbeille").on("click", function () {
         .dialog("open");
 });
 
-$("#bt_supportPage").on("click", function () {
-    // $('#md_modal').dialog({title: "{{Support}}"});
-    // $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=supportPage').dialog('open');
-    window.open("index.php?v=d&m=Abeille&p=AbeilleSupport");
+// $("#bt_supportPage").on("click", function () {
+//     window.open("index.php?v=d&m=Abeille&p=AbeilleSupport");
+// });
+
+$("#bt_maintenancePage").on("click", function () {
+    window.open("index.php?v=d&m=Abeille&p=AbeilleMaintenance");
 });
 
 $("#bt_template").on("click", function () {
@@ -272,7 +274,7 @@ function removeBees(zgId) {
 
 /* Called when 'setTimeout' button is pressed
    Allows to modify timeout of selected equipements. */
-   function setBeesTimeout(zgId) {
+function setBeesTimeout(zgId) {
     console.log("setBeesTimeout(zgId=" + zgId + ")");
 
     var sel = getSelectedEqs(zgId);
@@ -352,7 +354,7 @@ function replaceEq() {
     const selectedDeadEq = document.querySelector("#idDeadEq");
     deadIdx = selectedDeadEq.selectedIndex;
     let deadSelectedOption = selectedDeadEq.options[deadIdx];
-    split = deadSelectedOption.text.split(':');
+    split = deadSelectedOption.text.split(":");
     deadZgId = split[0].substring(7); // Zigate X => X
     deadHName = split[1];
 
@@ -360,32 +362,28 @@ function replaceEq() {
     const selectedNewEq = document.querySelector("#idNewEq");
     newIdx = selectedNewEq.selectedIndex;
     let newSelectedOption = selectedNewEq.options[newIdx];
-    split = newSelectedOption.text.split(':');
+    split = newSelectedOption.text.split(":");
     newZgId = split[0].substring(7); // Zigate X => X
     newHName = split[1];
 
     if (newId == deadId) {
-        alert("Un équipement ne peut être remplacé par lui même.")
+        alert("Un équipement ne peut être remplacé par lui même.");
         return;
     }
     // Ensure same jsonId
-    eval('var eqPerZigate = JSON.parse(js_eqPerZigate);');
-    deadJsonId = eqPerZigate[deadZgId][deadId]['jsonId'];
-    newJsonId = eqPerZigate[newZgId][newId]['jsonId'];
+    eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
+    deadJsonId = eqPerZigate[deadZgId][deadId]["jsonId"];
+    newJsonId = eqPerZigate[newZgId][newId]["jsonId"];
     if (deadJsonId != newJsonId) {
         msg = "Les équipements ne sont pas du même modèle.";
-        msg += "\n- Equipement à remplacer: "+deadJsonId;
-        msg += "\n- Remplacant: "+newJsonId;
+        msg += "\n- Equipement à remplacer: " + deadJsonId;
+        msg += "\n- Remplacant: " + newJsonId;
         alert(msg);
         return;
     }
 
     var msg =
-        "{{Vous souhaitez remplacer '" +
-        deadHName +
-        "' par " +
-        newHName +
-        ".";
+        "{{Vous souhaitez remplacer '" + deadHName + "' par " + newHName + ".";
 
     // if (dstZgId == srcZgId) {
     //     msg += "\n\nMais.. ca ne fait aucun sens.";
@@ -393,7 +391,8 @@ function replaceEq() {
     //     return alert(msg);
     // }
 
-    msg += "<br><br>L'équipement mort va recevoir les adresses du nouvel équipement.";
+    msg +=
+        "<br><br>L'équipement mort va recevoir les adresses du nouvel équipement.";
     msg += "<br>Tout l'historique de l'équipement mort sera ainsi préservé.";
     msg += "<br><br>On y va ?}}";
     bootbox.confirm(msg, function (result) {
@@ -534,4 +533,3 @@ function acceptNewZigate() {
         },
     });
 }
-

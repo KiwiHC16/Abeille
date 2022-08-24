@@ -616,8 +616,8 @@ if (0) {
         message::removeAll('Abeille');
 
         // Remove any remaining temporary files
-        for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-            $lockFile = jeedom::getTmpFolder('Abeille').'/AbeilleLQI_MapDataAbeille'.$i.'.json.lock';
+        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
+            $lockFile = jeedom::getTmpFolder('Abeille').'/AbeilleLQI-Abeille'.$zgId.'.json.lock';
             if (file_exists($lockFile)) {
                 unlink($lockFile);
                 log::add('Abeille', 'debug', 'deamon_start_cleanup(): Removed '.$lockFile);

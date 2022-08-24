@@ -450,6 +450,8 @@
                                 $newCmd[$cmd1]['invertBinary'] = $cmd2['invertBinary'];
                             if (isset($cmd2['historizeRound']))
                                 $newCmd[$cmd1]['configuration']['historizeRound'] = $cmd2['historizeRound'];
+                            if (isset($cmd2['calculValueOffset']))
+                                $newCmd[$cmd1]['configuration']['calculValueOffset'] = $cmd2['calculValueOffset'];
 
                             // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
                             $deviceCmds += $newCmd;

@@ -1,12 +1,10 @@
 <?php
-    if (!isConnect('admin')) {
-        throw new Exception('{{401 - Accès non autorisé}}');
-    }
-
-    require_once __DIR__.'/../../core/config/Abeille.config.php';
-    if (file_exists(dbgFile)) {
-        $dbgDeveloperMode = true;
-    }
+    /*
+     * Maintenance - Phantoms part
+     * Included from 'AbeilleMaintenance.php'
+     *
+     * Allows to list phantom devices and attempt to recover those who are always listening.
+     */
 
     // Creating list of Jeedom registered devices
     $eqLogics = eqLogic::byType('Abeille');
@@ -17,16 +15,16 @@
     sendVarToJS('jeedomDevices', $jeedomDevices);
 ?>
 
-<!-- Area to display alert message -->
-<div id='div_networkZigbeeAlert' style="display: none;"></div>
-
-<div>
-    Cette procédure permet de tenter de récupérer certains équipements 'fantômes'.
-    <br><br>
+<div style="height:inherit">
+    MODE DEVELOPPEUR SEULEMENT<br>
+    Cette procèdure n'apporte actuellement RIEN DE PLUS que le 'refresh' réseau<br>
+    <br>
+    Cette procédure permet de tenter de récupérer certains équipements 'fantômes'.<br>
+    <br>
     Les étapes sont les suivantes:
     <br>- Intérrogation du réseau pour lister les équipements Zigbee.
     <br>- Interrogation de chaque équipement inconnu pour tenter de l'identifier.
-    <br><br>Cette procédure ne peut fonctionner sur les équipements sur pile qui, étant en vieille quasiment tout le temps, ne répondront pas.
+    <br><br>ATTENTION ! Cette procédure ne peut fonctionner sur les équipements sur pile qui, étant en vieille quasiment tout le temps, ne répondront pas.
     <br><br>On tente l'experience ?
 
     <a class="btn btn-warning" title="Interrogation du réseau, puis des équipements fantômes. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="goRecovery()"><i class="fas fa-sync"></i> Go !</a>
@@ -34,10 +32,10 @@
     <br>
     Interrogation du réseau: <span id="idNetworkLqiScan" style="width:150px; font-weight:bold">?</span><br>
     Nombre d'équipements fantômes: <span id="idNbPhantoms" style="width:150px; font-weight:bold">?</span><br>
-    Interogation des équipements fantômes: ?<br>
+    Interrogation des équipements fantômes: <span id="idRecoverPhantoms" style="width:150px; font-weight:bold">?</span><br>
 </div>
 
-<script type="text/javascript">
+<script>
     // Launch AbeilleLQI.php to collect network informations.
     function refreshLqiCache() {
         $("#idNetworkLqiScan").empty().append("En cours");
@@ -111,6 +109,8 @@
                 console.log('json=', json);
                 var routers = json.routers;
                 console.log('jeedomDevices=', jeedomDevices);
+                phantoms = new Array;
+                nbPhantoms = 0
                 for (var routerLogicId in routers) {
                     router = routers[routerLogicId];
                     console.log('router=', router);
@@ -118,19 +118,29 @@
                     //     continue; // Known
                     if (jeedomDevices.includes(routerLogicId) == false) {
                         console.log('Phantom='+routerLogicId);
+                        nbPhantoms = phantoms.push(routerLogicId);
                         continue; // Unknown
                     }
                     for (var neighborLogicId in router.neighbors) {
                         console.log('neighbor=', router.neighbors[neighborLogicId]);
                         if (jeedomDevices.includes(neighborLogicId) == false) {
-                            console.log('Phantom='+neighborLogicId);
+                            if (phantoms.includes(neighborLogicId) == false) {
+                                console.log('Phantom='+neighborLogicId);
+                                nbPhantoms = phantoms.push(neighborLogicId);
+                            }
                             continue; // Unknown
                         }
                     }
                 }
+
+                $("#idNbPhantoms").empty().append(nbPhantoms);
+                $("#idRecoverPhantoms").empty().append("En cours");
+                for (var i = 0; i < phantoms.length; i++) {
+                    console.log("Need to interrogate "+phantoms[i]);
+                }
+                $("#idRecoverPhantoms").empty().append("Terminé");
             }
         });
     }
-</script>
 
-<!-- <?php include_file('desktop', 'AbeilleNetwork', 'js', 'Abeille'); ?> -->
+</script>

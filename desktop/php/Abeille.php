@@ -108,10 +108,6 @@
         <!-- Gestion des ReHome / migration d equipements  -->
         <?php include 'Abeille-MigrateEq.php'; ?>
 
-        <?php if (isset($dbgTcharp38)) { ?>
-        <?php include 'Abeille-Recovery.php'; ?>
-        <?php } ?>
-
         <?php include 'Abeille-NewZigate.php'; ?>
 
         <?php if (isset($dbgDeveloperMode)) { ?>

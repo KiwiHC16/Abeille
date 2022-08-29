@@ -519,7 +519,9 @@
                     "GL-S-003Z" => "Gledopto-BulbGU10-Color",
                     "GL-S-004Z" => "Gledopto-BulbGU10",
                     "GLEDOPTO" => "Gledopto-BulbGU10",
-                    "plug.maeu01" => "Xiaomi-SmartPlug",
+                    "LOM001" => "PhilipsSignify-Plug",
+                    "LOM002" => "PhilipsSignify-Plug",
+                    "LTW001" => "Philips-Bulb-E27-White",
                 );
                 $curIcon = $eqLogic->getConfiguration('ab::icon', '');
                 if (($curIcon != '') && isset($iList[$curIcon])) {

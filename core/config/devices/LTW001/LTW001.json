@@ -1,10 +1,13 @@
 {
     "LTW001": {
+        "manufacturer": "Philips",
+        "model": "LTW001",
+        "alternateIds": "LTW015,LTW004",
         "timeout": "60",
         "configuration": {
             "mainEP": "0B",
             "poll": "1",
-            "icon": "LTW001"
+            "icon": "Philips-Bulb-E27-White"
         },
         "category": {
             "light": "1"

@@ -21,6 +21,10 @@
 <div style="padding-top: 5px">
     <ul class="nav nav-tabs" role="tablist">
         <li role="tab" class="active"><a href="#idLogs"> {{Logs}} </a></li>
+        <?php
+        if (isset($dbgDeveloperMode))
+            echo '<li role="tab"><a href="#idPhantoms"> {{Fantômes}} </a></li>';
+        ?>
         <!-- <li role="tab"               ><a href="#idModeles"> {{Modèles}} </a></li> -->
     </ul>
 
@@ -29,6 +33,12 @@
         <div role="tabpanel" class="tab-pane active" id="idLogs" style="height:inherit">
             <?php
             include_once "AbeilleMaintenance-Logs.php";
+            ?>
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="idPhantoms" style="height:inherit">
+            <?php
+            include_once "AbeilleMaintenance-Phantoms.php";
             ?>
         </div>
 

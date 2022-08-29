@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- Page maintenance: Récupération fantomes préliminaire, pour les eq sur secteur (mode dev).
+- Philips HUE Smart plug LOM008: Support préliminaire (2431).
+- Interne: Nettoyage images: 'LOM001'/'LOM002' => 'PhilipsSignify-Plug'
+
 220824-BETA-1
 -------------
 

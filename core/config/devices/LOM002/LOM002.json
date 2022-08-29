@@ -4,7 +4,7 @@
         "configuration": {
             "mainEP": "0B",
             "poll": "1",
-            "icon": "LOM002"
+            "icon": "PhilipsSignify-Plug"
         },
         "category": {
             "automatism": "1"

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="220824-BETA-1"
+# VERSION="220829-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -672,14 +672,16 @@ d34251f479f5bf62f0bd441ed67c45d1 *core/config/devices/LIGHTIFYIndoorFlexRGBW/LIG
 761905d5780903439d186921129b0cbf *core/config/devices/LISEZMOI.txt
 d141324b17764a0180f8f847cb0da0e2 *core/config/devices/LLC011/LLC011.json
 3fc8dc351a7e75e4a99d61ee70466605 *core/config/devices/LLC020/LLC020.json
-ca8aadad843c1475830eb22a1cfcce24 *core/config/devices/LOM001/LOM001.json
-e3f444db562bfc4ae698b95a18890d3e *core/config/devices/LOM002/LOM002.json
-639e682f118422cae9ab03b5cfd60715 *core/config/devices/LOM007/LOM007.json
+793287949d8d8037a055698d61e26e0b *core/config/devices/LOM001/LOM001.json
+8234445406d323708ed2f017d8f751cc *core/config/devices/LOM002/LOM002.json
+95853139ea4fb3a7d2f7eff939635f0a *core/config/devices/LOM007/LOM007.json
 18f03630ab286ba8259d00e4df0e7a13 *core/config/devices/LOM007/discovery.json
+2b63f0eeba5ce3dfda9de977a1d32309 *core/config/devices/LOM008/LOM008.json
+6ae09657a44057ff8ab551bbbb0281e7 *core/config/devices/LOM008/discovery.json
 ed073b9757b78025f8fb26e06b7abdfd *core/config/devices/LST001/LST001.json
 fcc93278866d49589b5581f2df2486c0 *core/config/devices/LST002/LST002.json
 72afbad98b7a828a1721eaa0b90c6605 *core/config/devices/LTA001/LTA001.json
-989d4a1ba59256528dbdd7b082b8e188 *core/config/devices/LTW001/LTW001.json
+ef34b229a5c4fc5145fa8ed85f4eeaf9 *core/config/devices/LTW001/LTW001.json
 ff2e2e02b7149c746e4663025fc7bb68 *core/config/devices/LTW010/LTW010.json
 92cf653f463331e40518716a917f9e2d *core/config/devices/LTW012/LTW012.json
 14f11f3d9fac6d9b03301c57ebb59709 *core/config/devices/LTW013/LTW013.json
@@ -1056,7 +1058,6 @@ b8f459d7488281a49b53c0cb172315c4 *desktop/modal/Abeille-OTA.modal.php
 11c78243113b65c21f6fd1ba0073681c *desktop/modal/AbeilleHealth.modal.php
 066eb590e69ec549df11007e773aaf63 *desktop/modal/AbeilleLoadJsonCmd.modal.php
 071d4648f88d8ceb71186ed78a7a67a1 *desktop/modal/AbeilleNetwork.modal.php
-38d36c60cc408d6acb4655e780eb9b49 *desktop/modal/AbeilleRecovery.modal.php
 6b00578f611f5fa81d811c882c0284dc *desktop/modal/healthShort.php
 6751162df1530c93e749729ea65f4e7a *desktop/modal/inconnu.php
 5d6dab381308612706a7c1edba90de07 *desktop/modal/installSocat.abeille.php
@@ -1071,10 +1072,9 @@ d473a259cb9defac634d93cd184438d6 *desktop/modal/setBeesTimeout.abeille.php
 4d1f4f06e453a3aa070a3038e96eefb0 *desktop/php/Abeille-Js.php
 13396c7ab3b74c60393c395b69f631a3 *desktop/php/Abeille-MigrateEq.php
 a2fd6e2845336b84ae202472aee71946 *desktop/php/Abeille-NewZigate.php
-0972d8c534b43910ce0128bae6bcc766 *desktop/php/Abeille-Recovery.php
 16f78e0a9b6450c1ea81a355567e0d63 *desktop/php/Abeille-ReplaceEq.php
 6a738c201f387c91b3a051053888c08b *desktop/php/Abeille-Scenes.php
-be4a698bc8756b3476aaa533da6d932c *desktop/php/Abeille.php
+d36993b0656938f7db076fdd2bb9569a *desktop/php/Abeille.php
 abd1c64b1ef0a16047ce35ddc5241c8e *desktop/php/AbeilleEq-Advanced-Common.php
 71a03be8be7f4ea2563b133eddc4486c *desktop/php/AbeilleEq-Advanced-Device.php
 cbb5e68f5336ecabe844496f5622af05 *desktop/php/AbeilleEq-Advanced-Interrogations.php
@@ -1094,9 +1094,10 @@ f9634cd1b387111ed5e55177e6916d09 *desktop/php/AbeilleEq-Main.php
 5e65ad286c0301bfb0f720976849d0d8 *desktop/php/AbeilleFormAction.php
 e256ecddfee0c6f38ab215803b321e78 *desktop/php/AbeilleGraph.php
 484f60a11bac3102a25719cf77d0b1a3 *desktop/php/AbeilleMaintenance-Logs.php
-6d3c5a3fada2d2698ca87d6c2ebe60f9 *desktop/php/AbeilleMaintenance.php
+7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
+5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bddee749a8fd653dfce4d2a1c8e938c4 *desktop/php/AbeilleNetworkGraph.php
-2873515322a283fb03345f899087770d *docs/fr_FR/Changelog.rst
+2e093bf621554a691df8cf1cb8421cce *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1173,12 +1174,9 @@ d6cc7433559a70a01214af1149f7a51e *images/node_LCT010.png
 11b3d1bf08eda1a1fc9f3861293c9b08 *images/node_LCT015.png
 6cd4a7fd6b384696ad22e19177940451 *images/node_LIGHTIFYIndoorFlexRGBW.png
 88f27f937d9c9d5b7e90b6d4113cb048 *images/node_LIGHTIFYOutdoorFlexRGBW.png
-fd6aafce12b02f5711b15a28ebcbc23a *images/node_LOM001.png
-fd6aafce12b02f5711b15a28ebcbc23a *images/node_LOM002.png
 929825df450cadb9ab8516b0108d8dfc *images/node_LST001.png
 929825df450cadb9ab8516b0108d8dfc *images/node_LST002.png
 96e20b950b63c77ae987fc0284fbd919 *images/node_LTA001.png
-c88721821ee2b2aea2252399cd015657 *images/node_LTW001.png
 c88721821ee2b2aea2252399cd015657 *images/node_LTW010.png
 c6e0d8197f7415659e769f7f78513114 *images/node_LTW012.png
 ba5d7e89e000b0cfadb3e2d5470746a6 *images/node_LTW013.png
@@ -1217,6 +1215,8 @@ b5eac13c96d07af900271890339882d8 *images/node_Osram-SwitchMini.png
 661d4ae23cdd37361076b31d26a684dd *images/node_PAR1650TW.png
 8241012385542efa86248f28d1d405c3 *images/node_PAR16RGBWZ3.png
 c6d0633524dde492fc571404ff9b76d5 *images/node_PSE03-v1.1.0.png
+2484a7dd57df886d566c3a632b491bd0 *images/node_Philips-Bulb-E27-White.png
+fd6aafce12b02f5711b15a28ebcbc23a *images/node_PhilipsSignify-Plug.png
 bfefbb66f4cbe6318e3d8dda5463186d *images/node_PhilipsSignify-RDM001.png
 ece3df103bb9d9278db499ecaa57fc6a *images/node_Profalux-BSO.png
 0e24fab531fce129873979542ab4ab26 *images/node_Profalux-Remote.png
@@ -1373,11 +1373,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-c74d211bd0885273d3172ef655dc3972 *plugin_info/Abeille.version
+9159880c7f8120678f73bc05509f2415 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 e442f50373343243a59575f2d1bbe574 *plugin_info/configuration.php
-43d991230036fc7ec4ef2a2615a491db *plugin_info/info.json
-5f948ccd711689fc34fcdaeccc00e335 *plugin_info/install.php
+8d715b41be0435855104c7f809cf95e8 *plugin_info/info.json
+cb4e106682173af5b1fead524e4e36f0 *plugin_info/install.php
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 33ec19ebdb900ee787fc2be90cf4657f *resources/AbeilleDeamon/CheckAlive.php
 6e982a0e815c42df825e4f50f75e9e78 *resources/AbeilleDeamon/CheckBattery.php

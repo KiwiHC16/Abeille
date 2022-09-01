@@ -13,7 +13,10 @@
         },
         "type": "Frient Smart Plug Mini Type E (French)",
         "commands": {
-            "include0004-1": "Group-Membership",
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1
@@ -62,7 +65,9 @@
                 "isVisible": 1,
                 "params": "mult=1&div=1"
             },
-            "Poll 0B04": { "use": "poll-0B04-0505-0508-050B" }
+            "Poll 0B04": {
+                "use": "poll-0B04-0505-0508-050B"
+            }
         }
     }
 }

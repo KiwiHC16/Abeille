@@ -13,8 +13,14 @@
         },
         "type": "Hue E27 single filament A60 bulb",
         "commands": {
-            "include0003-1": "Identify",
-            "include0004-1": "Group-Membership",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "etat": {
                 "use": "zb-0006-OnOff",
                 "isVisible": 1

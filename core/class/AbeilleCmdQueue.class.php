@@ -233,7 +233,7 @@
 
         public function msgToAbeille($topic, $payload) {
             global $abQueues;
-            $queueId = $abQueues['cmdToAbeille']['id'];
+            $queueId = $abQueues['xToAbeille']['id'];
             $queue = msg_get_queue($queueId);
 
             $msg = array();

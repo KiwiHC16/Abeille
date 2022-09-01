@@ -104,19 +104,19 @@ Démons:
 
             echo "\n\n\n<tr>";
 
-            // Ruche
+            // Network (AbeilleX)
             echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$net.'</span></td>';
 
-            // Module
+            // Device name
             echo '<td><a href="'.$eqLogic->getLinkToConfiguration().'" style="text-decoration: none;">'.$eqLogic->getHumanName(true).'</a></td>';
 
-            // Module type
-            // TODO: Put real device type instead of icon
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getConfiguration('ab::icon').'</span></td>';
+            // Device type
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            $type = isset($eqModel['type']) ? $eqModel['type'] : '?';
+            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$type.'</span></td>';
 
             // ID
             // echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getId().'</span></td>';
-
 
             // Short Address
             echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$addr.'</span></td>';

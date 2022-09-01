@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+- Interne: Suppression queue obsolete 'parserToAbeille'.
+- Interne: Optimisation queues 'xmlToAbeille'/'cmdToAbeille'/'abeilleToAbeille' => 'xToAbeille'.
+- Page config: Test de port: Amélioration mineure.
+- Interne: Optimisation queues dans deamon(): 'parserToAbeille2' => 'xToAbeille'.
+- Page santé: Affichage du type d'équipement au lieu de son icone.
+- Interne: Ajout type 'Zigate' à l'équipement 'Ruche'.
+- Interne: Format JSON eq: Mise-à-jour 'Identify' & 'Groups'.
+- Interne: Support Tuya: Amélioration 'transId' + 'setPercent1000'.
+
 220829-BETA-1
 -------------
 

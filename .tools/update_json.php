@@ -152,6 +152,36 @@
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
 
+                // Cluster 0003/Identify updates
+                else if (($cmdFName == "Identify") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "Identify",
+                        // "params" => "ep=03",
+                        // "subType" => "numeric",
+                        // "template" => "door",
+                        // "genericType" => "OPENING",
+                        "isVisible" => 1
+                    );
+                    $commands2["Identify"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                }
+
+                // Cluster 0004/Groups updates
+                else if (($cmdFName == "Group-Membership") && $oldSyntax) {
+                    $cmdArr = Array(
+                        "use" => "Group-Membership",
+                        // "params" => "ep=03",
+                        // "subType" => "numeric",
+                        // "template" => "door",
+                        // "genericType" => "OPENING",
+                        "isVisible" => 1
+                    );
+                    $commands2["Groups"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                }
+
                 // Cluster 0006 updates
                 else if (($cmdFName == "etat") && $oldSyntax) {
                     $cmdArr = Array(

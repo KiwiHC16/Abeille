@@ -370,7 +370,7 @@
             case 200:
                 echo "Send a Systeme Message to the Ruche to be used by a scenario by the user\n";
                 // public static function publishMosquitto($queueId, $priority, $topic, $payload)
-                Abeille::publishMosquitto($abQueues["abeilleToAbeille"]["id"], PRIO_NORM, "Abeille1/0000/SystemMessage", "Le message");
+                Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], PRIO_NORM, "Abeille1/0000/SystemMessage", "Le message");
                 break;
             case 201:
                 echo "Send a Systeme Message to the Ruche1 and clean it after 5 sec\n";
@@ -400,7 +400,7 @@
                 break;
             case 205:
                 echo "Send a Systeme Message to the Ruche to create an eq based on a template\n";
-                Abeille::publishMosquitto($abQueues["abeilleToAbeille"]["id"], PRIO_NORM, "Abeille1/FFFF/0000-01-0005", "BSO");
+                Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], PRIO_NORM, "Abeille1/FFFF/0000-01-0005", "BSO");
                 break;
         }
     }

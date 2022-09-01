@@ -188,18 +188,16 @@
             return -1;
         }
 
-        logMessage('debug', 'Interrogation de la Zigate sur port '.$zgPort);
+        logMessage('debug', 'Interrogating zigate on port '.$zgPort);
         $zgMsg = zgComposeMsg("0010");
         $status = zgWrite($zgF, $zgMsg); // Sending "Get Version" command
         $zgMsg = "";
-        if ($status == 0) {
+        while ($status == 0) {
             $status = zgRead($zgF, $zgMsg); // Expecting 8000 'status' frame
-        }
-        if ($status == 0) {
-            $zgMsgType = substr($zgMsg, 0, 4);
-            if ($zgMsgType != "8000") {
-                logMessage('debug', 'Mauvaise réponse. 8000 attendu.');
-                $status = -1;
+            if ($status == 0) {
+                $zgMsgType = substr($zgMsg, 0, 4);
+                if ($zgMsgType == "8000")
+                    break;
             }
         }
         if ($status == 0)
@@ -207,7 +205,7 @@
         if ($status == 0) {
             $zgMsgType = substr($zgMsg, 0, 4);
             if ($zgMsgType != "8010") {
-                logMessage('debug', 'Mauvaise réponse. 8010 attendu.');
+                logMessage('debug', 'Unexpected answer (got='.$zgMsgType.', exp=8010).');
                 $status = -1;
             } else {
                 $major = substr($zgMsg, 10, 4);

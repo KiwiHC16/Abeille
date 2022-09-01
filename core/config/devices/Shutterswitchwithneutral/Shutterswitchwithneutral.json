@@ -30,8 +30,14 @@
                 "use": "zbCmd-0102-Stop"
             },
             "include20": "getcurrent_position_lift_percentage",
-            "include24": "Identify",
-            "include25": "Group-Membership",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "Bind 0102-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0102",

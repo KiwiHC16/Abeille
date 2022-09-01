@@ -183,8 +183,12 @@
         Msg format is now flexible and can transport a bunch of infos coming from zigbee event instead of splitting them
         into several messages to Abeille. */
     function msgToAbeille2($msg) {
-        global $queueParserToAbeille2;
-        if (msg_send($queueParserToAbeille2, 1, json_encode($msg), false, false, $errCode) == false) {
+        // global $queueParserToAbeille2;
+        // if (msg_send($queueParserToAbeille2, 1, json_encode($msg), false, false, $errCode) == false) {
+        //     parserLog("debug", "msgToAbeille2(): ERROR ".$errCode);
+        // }
+        global $queueXToAbeille;
+        if (msg_send($queueXToAbeille, 1, json_encode($msg), false, false, $errCode) == false) {
             parserLog("debug", "msgToAbeille2(): ERROR ".$errCode);
         }
     }
@@ -311,7 +315,8 @@
     }
 
     // Inits
-    $queueParserToAbeille2 = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
+    // $queueParserToAbeille2 = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
+    $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
 
     /* Any device to monitor ?
        It is indicated by 'monitor' key in Jeedom 'config' table. */

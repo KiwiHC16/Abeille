@@ -39,9 +39,15 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
-            "include16": "Identify",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
             "include26": "setLevel",
-            "include27": "Group-Membership",
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "include27 2": "Scene-Membership",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

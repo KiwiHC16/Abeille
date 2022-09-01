@@ -20,7 +20,10 @@
             "Stop": {
                 "use": "zbCmd-0102-Stop"
             },
-            "include25": "Group-Membership",
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

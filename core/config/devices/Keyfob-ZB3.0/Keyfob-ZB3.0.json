@@ -11,7 +11,10 @@
         },
         "type": "NEO  Inmax 07046L Keyfob-ZB3.0",
         "commands": {
-            "include24": "Identify",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

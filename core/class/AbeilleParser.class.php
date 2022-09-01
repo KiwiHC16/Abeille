@@ -120,8 +120,6 @@
             $GLOBALS['requestedlevel'] = $this->requestedlevel ;
 
             $abQueues = $GLOBALS['abQueues'];
-            // $this->queueParserToAbeille     = msg_get_queue($abQueues["parserToAbeille"]["id"]);
-            // $this->queueParserToAbeille2    = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
             $this->queueXToCmd          = msg_get_queue($abQueues["xToCmd"]["id"]);
             $this->queueParserToCmdAck  = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
             $this->queueParserToLQI     = msg_get_queue($abQueues["parserToLQI"]["id"]);

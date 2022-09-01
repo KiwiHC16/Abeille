@@ -1193,7 +1193,7 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
             $messageToSend = ($message == "") ? "" : "$daemonName: $message";
             // log::add('Abeille', 'debug', "Process Monitoring: " .__CLASS__.':'.__FUNCTION__.':'.__LINE__.' sending '.$messageToSend.' to zigate '.$zigateNbr);
             if ( strlen($messageToSend) > 2 ) {
-            Abeille::publishMosquitto($abQueues["abeilleToAbeille"]["id"], PRIO_NORM,
+            Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], PRIO_NORM,
                 "Abeille$zigateNbr/0000/SystemMessage", $messageToSend);
             }
         }

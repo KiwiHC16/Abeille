@@ -11,8 +11,14 @@
         },
         "type": "Yandhi E27 Bulb",
         "commands": {
-            "include16": "Identify",
-            "include25": "Group-Membership",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1

@@ -2,6 +2,8 @@
     // Tuya specific commands (to device) functions.
     // Included by 'AbeilleCmd.php'
 
+    $tuyaTransId = 0; // Transaction ID: 0 to 255
+
     // Types reminder
     // Type	    TypeId  LengthInBytes	Description
     // raw	    0x00	N	            Corresponds to raw datapoint (module pass-through)
@@ -52,7 +54,7 @@
             $dpType = "01"; // Bool
             $dpData = sprintf("%02X", $data);
             break;
-        // Send percent data in (0-1000) range with input in 0-100 range
+        // Send percent data in 0-1000 range with input in 0-100 range
         case "setPercent1000":
             if (!isset($abCmd['dpId'])) {
                 cmdLog('debug', "    ERROR: Undefined dpId for '".$cmd."'");
@@ -60,7 +62,7 @@
             }
             $dpId = $abCmd['dpId'];
             $dpType = "02"; // Value
-            $dpData = sprintf("%04X", $data * 10);
+            $dpData = sprintf("%08X", $data * 10);
             break;
 
         default:
@@ -77,4 +79,13 @@
         return $dp;
     }
 
+    // Returns Tuya specific transaction ID
+    function tuyaGetTransId() {
+        global $tuyaTransId;
+        $tuyaTransId++;
+        if ($tuyaTransId > 255)
+            $tuyaTransId = 0;
+        $tId = sprintf("%02X", $tuyaTransId);
+        return $tId;
+    }
 ?>

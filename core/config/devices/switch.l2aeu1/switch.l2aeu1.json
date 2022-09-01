@@ -12,9 +12,15 @@
             "icon": "Aqara-WallSwitchH1-Double"
         },
         "commands": {
-            "include13 2": "Group-Membership",
-
-            "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1 },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
+            "Status 1": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=01",
+                "isVisible": 1
+            },
             "On 1": {
                 "use": "zbCmd-0006-On",
                 "params": "ep=01",
@@ -29,7 +35,11 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Status 2": { "use": "zb-0006-OnOff", "params": "ep=02", "isVisible": 1 },
+            "Status 2": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=02",
+                "isVisible": 1
+            },
             "On 2": {
                 "use": "zbCmd-0006-On",
                 "params": "ep=02",

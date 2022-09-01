@@ -10,7 +10,10 @@
         },
         "type": "Livolo Switch TI0001",
         "commands": {
-            "include24": "Identify",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
             "include24 2 2 2 2 2": "setLivoloOff2",
             "include24 2 2 2 2 2 3": "setLivoloOff",
             "include24 2 2 2 2 2 2": "setLivoloOn2",

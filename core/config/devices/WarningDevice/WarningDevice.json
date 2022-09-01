@@ -11,8 +11,14 @@
         "type": "Alarm Smart Siren M420-2Evert1.2 HS2WD-E",
         "commands": {
             "include4": "zb-0000-ZCLVersion",
-            "include24": "Identify",
-            "include25": "Group-Membership",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "Bind-0006-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0006",

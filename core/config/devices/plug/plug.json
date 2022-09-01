@@ -29,7 +29,10 @@
             "include11": "conso",
             "include12": "Xiaomi-ff01",
             "include13": "puissance",
-            "include13 2": "Group-Membership",
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

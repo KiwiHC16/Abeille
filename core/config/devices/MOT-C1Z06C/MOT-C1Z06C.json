@@ -16,8 +16,14 @@
         "type": "Profalux volet gen 2",
         "commands": {
             "include4": "zb-0000-ZCLVersion",
-            "include24": "Identify",
-            "include25": "Group-Membership",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "Bind-0006-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0008",

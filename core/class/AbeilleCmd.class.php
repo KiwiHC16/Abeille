@@ -151,8 +151,8 @@
                 $msgJson = json_encode($msg);
 
                 if (strpos($topic, "CmdCreate") === 0) {
-                    $queueAbeilleToAbeille = msg_get_queue($abQueues["abeilleToAbeille"]["id"]);
-                    if (msg_send($queueAbeilleToAbeille, 1, $msgJson, false, false)) {
+                    $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
+                    if (msg_send($queueXToAbeille, 1, $msgJson, false, false)) {
                         logMessage('debug', '-- execute(): CmdCreate: Msg sent: '.$msgJson);
                     } else {
                         logMessage('debug', '-- execute(): ERROR: CmdCreate: Could not send Msg');

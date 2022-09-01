@@ -26,7 +26,10 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include13 2": "Group-Membership",
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

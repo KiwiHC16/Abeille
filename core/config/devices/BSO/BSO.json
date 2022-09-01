@@ -34,8 +34,14 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
-            "include24": "Identify",
-            "include25": "Group-Membership",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "Bind-0006-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0008",

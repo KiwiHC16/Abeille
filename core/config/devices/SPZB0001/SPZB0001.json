@@ -11,7 +11,10 @@
         },
         "type": "Eurotronic Spirit",
         "commands": {
-            "include24": "Identify",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
             "include25 2 2 2": "spiritTemperatureConsigne",
             "include25 2 2": "spiritTemperatureConsigneGet",
             "include25 2": "spiritTemperatureConsigneSet",

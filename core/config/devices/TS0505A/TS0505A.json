@@ -19,7 +19,10 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "include16": "Identify",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
             "Groups": {
                 "use": "Group-Membership"
             },

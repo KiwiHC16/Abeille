@@ -20,7 +20,10 @@
                 "use": "zb-0008-CurrentLevel",
                 "isVisible": 1
             },
-            "include24": "Identify",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
             "include11": "setLevel",
             "On": {
                 "use": "zbCmd-0006-On",

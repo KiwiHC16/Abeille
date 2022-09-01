@@ -27,7 +27,10 @@
                 "isVisible": 1
             },
             "include11": "setLevel",
-            "include24": "Identify",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
             "Get-Status": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
@@ -36,7 +39,10 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
-            "include25": "Group-Membership",
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "Bind-0006-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0008",

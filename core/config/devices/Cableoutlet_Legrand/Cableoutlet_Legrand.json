@@ -17,8 +17,14 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "include25": "Group-Membership",
-            "include24": "Identify",
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
             "etat": {
                 "use": "zb-0006-OnOff",
                 "isVisible": 1
@@ -28,7 +34,8 @@
                 "isVisible": 1
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "cmdG-LegrandFC41",
+                "params": "Mode=05",
                 "isVisible": 1
             },
             "Get-Status": {
@@ -97,11 +104,6 @@
             "Frost protection": {
                 "use": "cmdG-LegrandFC41",
                 "params": "Mode=04",
-                "isVisible": 1
-            },
-            "Off": {
-                "use": "cmdG-LegrandFC41",
-                "params": "Mode=05",
                 "isVisible": 1
             }
         }

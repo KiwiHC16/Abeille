@@ -4321,7 +4321,7 @@
                         return;
                     }
 
-                    $transId = "23"; // Transaction ID ?
+                    $transId = tuyaGetTransId(); // Transaction ID
                     $dpId = $dp['id'];
                     $dpType = $dp['type'];
                     $dpData = $dp['data'];

@@ -31,7 +31,10 @@
             "include13 2 2": "VoltagePrise",
             "include13 2 2 2": "CurrentPrise_mA",
             "include13 2 2 2 2": "temperaturePrise",
-            "include25": "Group-Membership",
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

@@ -789,11 +789,11 @@ if (0) {
         // Tcharp38 note: when all queues in $abQueues, we can delete $allQueues
         $abQueues = $GLOBALS['abQueues'];
         $allQueues = array(
-            $abQueues["abeilleToAbeille"]["id"], $abQueues["parserToAbeille"]["id"], $abQueues["parserToAbeille2"]["id"], $abQueues["cmdToAbeille"]["id"],
+            // $abQueues["parserToAbeille2"]["id"],
             $abQueues["cmdToMon"]["id"], $abQueues["parserToMon"]["id"], $abQueues["monToCmd"]["id"],
             $abQueues["parserToAssist"]["id"], $abQueues["assistToCmd"]["id"],
             $abQueues["parserToLQI"]["id"],
-            $abQueues["xmlToAbeille"]["id"], $abQueues["parserToCli"]["id"],
+            $abQueues["xToAbeille"]["id"], $abQueues["parserToCli"]["id"],
             $abQueues["xToParser"]["id"], $abQueues["parserToCmdAck"]["id"]
         );
         foreach ($allQueues as $queueId) {
@@ -867,7 +867,7 @@ if (0) {
 
             // Create/update beehive equipment on Jeedom side
             // Note: This will reset SW-SDK to '----' to mark FW version invalid.
-            // Abeille::publishMosquitto($abQueues["abeilleToAbeille"]["id"], priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$zgId);
+            // Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$zgId);
             self::createRuche("Abeille".$zgId);
 
             // Configuring zigate: TODO: This should be done on Abeille startup or on new beehive creation.
@@ -903,13 +903,10 @@ if (0) {
         try {
             $abQueues = $GLOBALS['abQueues'];
             // Tcharp38: Merge all the followings queues. Would be more efficient & more reactive.
-            $queueAbeilleToAbeille = msg_get_queue($abQueues["abeilleToAbeille"]["id"]);
-            $queueParserToAbeille = msg_get_queue($abQueues["parserToAbeille"]["id"]);
-            $queueParserToAbeilleMax = $abQueues["parserToAbeille"]["max"];
-            $queueParserToAbeille2 = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
-            $queueParserToAbeille2Max = $abQueues["parserToAbeille2"]["max"];
-            $queueCmdToAbeille = msg_get_queue($abQueues["cmdToAbeille"]["id"]);
-            $queueXmlToAbeille = msg_get_queue($abQueues["xmlToAbeille"]["id"]);
+            // $queueParserToAbeille2 = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
+            // $queueParserToAbeille2Max = $abQueues["parserToAbeille2"]["max"];
+            $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
+            $queueXToAbeilleMax = $abQueues["xToAbeille"]["max"];
 
             $max_msg_size = 512;
 
@@ -917,63 +914,51 @@ if (0) {
             // const int EINVAL = 22;
             // const int ENOMSG = 42; /* No message of desired type */
 
+            // while (true) {
+            //     /* New path parser to Abeille */
+            //     $msgMax = $queueParserToAbeille2Max;
+            //     if (msg_receive($queueParserToAbeille2, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
+            //         self::msgFromParser(json_decode($msgJson, true));
+            //     } else { // Error
+            //         if ($errCode == 7) {
+            //             msg_receive($queueParserToAbeille2, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
+            //             log::add('Abeille', 'debug', 'deamon(): msg_receive queueParserToAbeille2 ERROR: msg TOO BIG ignored.');
+            //         } else if ($errCode != 42)
+            //             log::add('Abeille', 'debug', 'deamon(): msg_receive queueParserToAbeille2 error '.$errCode);
+            //     }
+
+            //     if (msg_receive($queueXToAbeille, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
+            //         $msg = json_decode($msgJson, true);
+            //         self::message($msg['topic'], $msg['payload']);
+            //     } else { // Error
+            //         if ($errCode != 42)
+            //             log::add('Abeille', 'debug', 'deamon(): msg_receive queueXToAbeille error '.$errCode);
+            //     }
+
+            //     time_nanosleep(0, 10000000); // 1/100s
+            // }
+
+            // Blocking queue read
+            $msgMax = $queueXToAbeilleMax;
             while (true) {
-                if (msg_receive($queueAbeilleToAbeille, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
+                if (msg_receive($queueXToAbeille, 0, $msgType, $msgMax, $msgJson, false, 0, $errCode)) {
                     $msg = json_decode($msgJson, true);
-                    self::message($msg['topic'], $msg['payload']);
-                } else { // Error
-                    if ($errCode != 42)
-                        log::add('Abeille', 'error', 'deamon(): msg_receive $abQueues["abeilleToAbeille"]["id"] error '.$errCode);
-                }
-
-                /* New path parser to Abeille */
-                $msgMax = $queueParserToAbeille2Max;
-                if (msg_receive($queueParserToAbeille2, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
-                    self::msgFromParser(json_decode($msgJson, true));
+                    if (isset($msg['topic']))
+                        self::message($msg['topic'], $msg['payload']);
+                    else
+                        self::msgFromParser($msg);
                 } else { // Error
                     if ($errCode == 7) {
-                        msg_receive($queueParserToAbeille2, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
-                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueParserToAbeille2 ERROR: msg TOO BIG ignored.');
+                        msg_receive($queueXToAbeille, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
+                        log::add('Abeille', 'error', 'deamon(): msg trop grand (max='.$msgMax.') ignoré.');
                     } else if ($errCode != 42)
-                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueParserToAbeille2 error '.$errCode);
+                        log::add('Abeille', 'debug', 'deamon(): msg_receive error '.$errCode);
                 }
-
-                /* Legacy path parser to Abeille. To be progressively removed */
-                $msgMax = $queueParserToAbeilleMax;
-                if (msg_receive($queueParserToAbeille, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
-                    $msg = json_decode($msgJson, true);
-                    self::message($msg['topic'], $msg['payload']);
-                } else { // Error
-                    if ($errCode == 7) {
-                        msg_receive($queueParserToAbeille, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
-                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueParserToAbeille ERROR: msg TOO BIG ignored.');
-                    } else if ($errCode != 42)
-                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueParserToAbeille error '.$errCode);
-                }
-
-                if (msg_receive($queueCmdToAbeille, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
-                    $msg = json_decode($msgJson, true);
-                    self::message($msg['topic'], $msg['payload']);
-                } else { // Error
-                    if ($errCode != 42)
-                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueCmdToAbeille error '.$errCode);
-                }
-
-                if (msg_receive($queueXmlToAbeille, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT, $errCode)) {
-                    $msg = json_decode($msgJson, true);
-                    self::message($msg['topic'], $msg['payload']);
-                } else { // Error
-                    if ($errCode != 42)
-                        log::add('Abeille', 'debug', 'deamon(): msg_receive queueXmlToAbeille error '.$errCode);
-                }
-
-                time_nanosleep(0, 10000000); // 1/100s
             }
-
         } catch (Exception $e) {
             log::add('Abeille', 'error', 'deamon(): Exception '.$e->getMessage());
         }
-        log::add('Abeille', 'debug', 'deamon(): Main daemon stoppped');
+        log::add('Abeille', 'debug', 'deamon(): Main daemon stopped');
     }
 
     // public static function checkParameters() {
@@ -1398,7 +1383,7 @@ if (0) {
         //         $eqLogic->save();
 
         //         // Il faut aussi mettre a jour la commande short address
-        //         Abeille::publishMosquitto($abQueues["abeilleToAbeille"]["id"], priorityInterrogation, $dest."/".$addr."/Short-Addr", $addr);
+        //         Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], priorityInterrogation, $dest."/".$addr."/Short-Addr", $addr);
         //     } else {
         //         log::add('Abeille', 'debug', 'message(), !objet & IEEE: Je n ai pas trouvé d Abeille qui corresponde.');
         //         // self::interrogateUnknowNE( $dest, $addr );
@@ -2254,6 +2239,15 @@ if (0) {
             // TODO: If already exist, should we update commands if required ?
             log::add('Abeille', 'debug', "createRuche(): '".$eqLogic->getLogicalId()."' already exists");
         }
+
+        // JSON model infos
+        $eqModelInfos = array(
+            'id' => 'rucheCommand', // Equipment model id
+            'location' => 'Abeille', // Equipment model location
+            'type' => 'Zigate',
+            'lastUpdate' => time() // Store last update from model
+        );
+        $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
 
         $eqLogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
         $eqLogic->save();

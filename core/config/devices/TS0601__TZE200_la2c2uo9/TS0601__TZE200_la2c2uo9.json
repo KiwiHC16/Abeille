@@ -27,6 +27,7 @@
             },
             "Status": {
                 "use": "zb-0006-OnOff",
+                "nextLine": "after",
                 "isVisible": 1
             },
             "Set Level": {

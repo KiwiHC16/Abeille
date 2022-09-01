@@ -43,11 +43,11 @@
     if ($action == "sendMsg") {
         if (isset($dbgTcharp38)) logDebug("CliToQueue: action=".$action);
 
-        // Default target queue = '$abQueues['xmlToAbeille']['id']'
+        // Default target queue = '$abQueues['xToAbeille']['id']'
         if (isset($_GET['queueId']))
             $queueId = $_GET['queueId'];
         else
-            $queueId = $abQueues['xmlToAbeille']['id'];
+            $queueId = $abQueues['xToAbeille']['id'];
         if (isset($dbgTcharp38)) logDebug("CliToQueue: queueId=".$queueId);
         $queue = msg_get_queue($queueId);
         if ($queue === false) {
@@ -55,7 +55,7 @@
             return;
         }
 
-        if (in_array($queueId, [$abQueues['xmlToAbeille']['id'], $abQueues['xToCmd']['id']])) {
+        if (in_array($queueId, [$abQueues['xToAbeille']['id'], $abQueues['xToCmd']['id']])) {
             $topic =  $_GET['topic'];
             $topic = str_replace('_', '/', $topic);
             $payload = $_GET['payload'];
@@ -207,7 +207,7 @@
         }
 
         if ($action == "reinit") {
-            $queue = msg_get_queue($abQueues['xmlToAbeille']['id']);
+            $queue = msg_get_queue($abQueues['xToAbeille']['id']);
             $msg = array(
                 'topic' => "CmdCreate".$eqNet."/".$eqAddr."/resetFromJson",
                 'payload' => '',

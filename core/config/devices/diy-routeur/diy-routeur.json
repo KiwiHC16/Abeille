@@ -11,7 +11,10 @@
         },
         "type": "diy-routeur",
         "commands": {
-            "include24": "Identify",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

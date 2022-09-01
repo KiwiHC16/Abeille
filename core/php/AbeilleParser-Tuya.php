@@ -308,7 +308,7 @@
         // Use exemple:  "02": { "function": "rcvValue", "info": "0008-01-0000" },
         case "rcvValue": // Value sent as Jeedom info
             $val = hexdec($dp['data']);
-            $logMsg = "  ".$dp['m']." => Info=".$info.", Val=".$val;
+            $logMsg = "  ".$dp['m']." => 'rcvValue' => Info=".$info.", Val=".$val;
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,
@@ -318,7 +318,7 @@
         case "rcvValueDiv": // Divided value sent as Jeedom info
             $val = hexdec($dp['data']);
             $val = $val / $div;
-            $logMsg = "  ".$dp['m']." => Info=".$info.", Div=".$div." => Val=".$val;
+            $logMsg = "  ".$dp['m']." => 'rcvValueDiv' => Info=".$info.", Div=".$div." => Val=".$val;
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,
@@ -328,7 +328,7 @@
         case "rcvValueMult": // Multiplied value sent as Jeedom info
             $val = hexdec($dp['data']);
             $val = $val * $mult;
-            $logMsg = "  ".$dp['m']." => Info=".$info.", Mult=".$mult." => Val=".$val;
+            $logMsg = "  ".$dp['m']." => 'rcvValueMult' => Info=".$info.", Mult=".$mult." => Val=".$val;
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,
@@ -340,7 +340,7 @@
                 $val = 1;
             else
                 $val = 0;
-            $logMsg = "  ".$dp['m']." => Info=".$info.", Val=".$val;
+            $logMsg = "  ".$dp['m']." => 'rcvValue0Is1' => Info=".$info.", Val=".$val;
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220901-BETA-1
+-------------
+
 - Interne: Suppression queue obsolete 'parserToAbeille'.
 - Interne: Optimisation queues 'xmlToAbeille'/'cmdToAbeille'/'abeilleToAbeille' => 'xToAbeille'.
 - Page config: Test de port: Amélioration mineure.

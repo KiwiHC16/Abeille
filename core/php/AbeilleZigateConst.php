@@ -37,6 +37,7 @@
             "80A1" => "Add scene response",
             "80A2" => "Remove scene response",
             "8110" => "Write attribute response",
+            "8139" => "Attribute discovery individual response",
             "8140" => "Configure reporting response",
             "8141" => "Discover attributes extended response",
             "8200" => "Save record request response",

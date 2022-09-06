@@ -49,12 +49,12 @@ $("#bt_maintenancePage").on("click", function () {
     window.open("index.php?v=d&m=Abeille&p=AbeilleMaintenance");
 });
 
-$("#bt_template").on("click", function () {
-    $("#md_modal").dialog({ title: "{{Modeles}}" });
-    $("#md_modal")
-        .load("index.php?v=d&plugin=Abeille&modal=modelesPage&testToRun=104")
-        .dialog("open");
-});
+// $("#bt_template").on("click", function () {
+//     $("#md_modal").dialog({ title: "{{Modeles}}" });
+//     $("#md_modal")
+//         .load("index.php?v=d&plugin=Abeille&modal=modelesPage&testToRun=104")
+//         .dialog("open");
+// });
 
 $("#bt_network").on("click", function () {
     $("#md_modal").dialog({ title: "{{Réseau Abeille}}" });

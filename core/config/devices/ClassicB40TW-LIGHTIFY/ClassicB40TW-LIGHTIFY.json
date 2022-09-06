@@ -4,14 +4,14 @@
         "model": "B40TW",
         "timeout": "60",
         "configuration": {
-            "mainEP": "01",
+            "mainEP": "03",
             "poll": "1",
-            "icon": "OSRAMClassicE27Dimmable"
+            "icon": "Osram-Bulb-Lightify-B40Classic"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "ClassicB40TW-LIGHTIFY",
+        "type": "Osram Lightify classic B40 bulb",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

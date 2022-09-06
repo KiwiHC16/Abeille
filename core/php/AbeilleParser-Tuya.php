@@ -113,6 +113,7 @@
             if (isset($mapping[$dpId]['mult']))
                 $mult = $mapping[$dpId]['mult'];
         } else
+            // This case should no longer be required. Obsolete !
             $func = $mapping[$dpId];
 
         // TV02 thermostat (TS0601, _TZE200_hue3yfsn) $mapping exemple: array(

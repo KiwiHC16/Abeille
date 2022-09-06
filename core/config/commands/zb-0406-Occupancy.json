@@ -1,0 +1,14 @@
+{
+    "zb-0406-Occupancy": {
+        "comment": "Cluster 0406, attr Occupancy: Bit 0 only is useful",
+        "subType": "binary",
+        "template": "",
+        "type": "info",
+        "logicalId": "0406-#EP#-0000",
+        "configuration": {
+            "calculValueOffset" : "#value#&1"
+        },
+        "unit": "",
+        "genericType": "ALARM_STATE"
+    }
+}

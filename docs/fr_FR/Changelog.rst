@@ -1,6 +1,18 @@
 ChangeLog
 =========
 
+- Moes smart dimmer MS105Z: Mise-à-jour modèle pour partie dimmer (2363).
+- Interne: Parser: Ajout info msg 8139.
+- Interne: Abeille.class: Correction mise-à-jour cmde info (duplicate entry).
+- Thermostat Schneider Wiser: Support préliminaire (2436).
+- Philips HUE Smart plug LOM008: Mise-à-jour du modèle (2431).
+- Interne: Suppression ancienne syntaxe 'tuyaEF00' dans modèles JSON.
+- OSRAM Classic A60 TW: Support préliminaire (2435).
+- OSRAM Classic B40 TW: Mise-à-jour modèle (2023).
+- Philips SML004: Support préliminaire (2437).
+- Assistant modèle EQ: Ajout support cluster 0406 (Occupancy) + amélioration 0400.
+- Interne: Parser: Cluster 0406 supporté par decode8002() et non plus 8102().
+
 220901-BETA-1
 -------------
 

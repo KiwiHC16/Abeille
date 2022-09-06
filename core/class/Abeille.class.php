@@ -2435,8 +2435,10 @@ if (0) {
             $eqLogic->setEqType_name('Abeille');
             $eqLogic->setName("newDevice-".$dev['addr']); // Temp name to have it non empty
             $eqLogic->save(); // Save to force Jeedom to assign an ID
+
             // $eqName = $dev['net']."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
-            $eqName = $modelType." - ".$eqLogic->getId(); // Default name (ex: '<modeltype> - 12')
+            $eqId = $eqLogic->getId();
+            $eqName = $modelType." - ".$eqId; // Default name (ex: '<modeltype> - 12')
             $eqLogic->setName($eqName);
             // $eqLogic->setName($modelType); // Default name = short desc from model ('type')
             $eqLogic->setLogicalId($logicalId);
@@ -2452,9 +2454,10 @@ if (0) {
             $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
             $curEqModel = isset($jEqModel['id']) ? $jEqModel['id'] : ''; // Current JSON model
             $ieee = $eqLogic->getConfiguration('IEEE'); // IEEE from Jeedom DB
+            $eqId = $eqLogic->getId();
 
             if ($curEqModel == '') { // Jeedom eq exists but init not completed
-                $eqName = $modelType." - ".$eqLogic->getId(); // Default name (ex: '<modeltype> - 12')
+                $eqName = $modelType." - ".$eqId; // Default name (ex: '<modeltype> - 12')
                 $eqLogic->setName($eqName);
                 message::add("Abeille", $eqHName.": Nouvel équipement identifié.", '');
                 $action = 'reset';
@@ -2650,7 +2653,7 @@ if (0) {
                 'cmdLogic' =>
                 'updated' =>
            ) */
-        $jCmds = Cmd::byEqLogicId($eqLogic->getId());
+        $jCmds = Cmd::byEqLogicId($eqId);
         $jeedomCmds = [];
         foreach ($jCmds as $cmdLogic) {
             $c = array(
@@ -2691,7 +2694,7 @@ if (0) {
             } else {
                 $cmdAName = $mCmd["configuration"]['topic']; // Abeille command name
             }
-            $mCmdLogicalId = isset($mCmd["logicalId"]) ? $mCmd["logicalId"] : '';
+            $mCmdLogicId = isset($mCmd["logicalId"]) ? $mCmd["logicalId"] : '';
             if (isset($mCmd["configuration"]['request']))
                 $cmdAParams = $mCmd["configuration"]['request']; // Abeille command params
             else
@@ -2706,11 +2709,12 @@ if (0) {
             $cmdLogic = null;
             if ($jeedomCmds) {
                 if ($mCmdType == 'info') {
-                    // $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $mCmdLogicalId);
+                    // $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $mCmdLogicId);
                     foreach ($jeedomCmds as $jCmdId => $jCmd) {
                         if ($jCmd['type'] != 'info')
                             continue;
-                        if ($jCmd['logicalId'] != $mCmdLogicalId)
+                        // Note: Cmd logical ID & names have to be unique
+                        if (($jCmd['logicalId'] != $mCmdLogicId) && ($jCmd['name'] != $mCmdName))
                             continue;
                         // TODO if ($jCmd['updated'] == 1)
                         //     continue; // ERROR: Possible ?
@@ -2718,11 +2722,11 @@ if (0) {
                         break;
                     }
                 } else {
-                    // $cmdLogic = AbeilleCmd::byEqLogicIdCmdName($eqLogic->getId(), $mCmdName);
+                    // $cmdLogic = AbeilleCmd::byEqLogicIdCmdName($eqId, $mCmdName);
                     foreach ($jeedomCmds as $jCmdId => $jCmd) {
                         if ($jCmd['type'] != 'action')
                             continue;
-                        // if ($jCmd['logicalId'] != $mCmdLogicalId)
+                        // if ($jCmd['logicalId'] != $mCmdLogicId)
                         //     continue;
                         if ($jCmd['name'] != $mCmdName)
                             continue;
@@ -2732,29 +2736,29 @@ if (0) {
                 }
             }
             if (!is_object($cmdLogic)) {
+                if ($mCmdType == 'info')
+                    log::add('Abeille', 'debug', "  Adding ".$mCmdType." '".$mCmdName."' (".$mCmdLogicId.")");
+                else
+                    log::add('Abeille', 'debug', "  Adding ".$mCmdType." '".$mCmdName."' (".$mCmdLogicId.") => '".$cmdAName."', '".$cmdAParams."'");
+                $cmdLogic = new cmd();
                 $newCmd = true;
-                if ($mCmdType == 'info')
-                    log::add('Abeille', 'debug', "  Adding ".$mCmdType." '".$mCmdName."' (".$mCmdLogicalId.")");
-                else
-                    log::add('Abeille', 'debug', "  Adding ".$mCmdType." '".$mCmdName."' (".$mCmdLogicalId.") => '".$cmdAName."', '".$cmdAParams."'");
-                $cmdLogic = new AbeilleCmd();
             } else {
-                $newCmd = false;
                 if ($mCmdType == 'info')
-                    log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$mCmdName."' (".$mCmdLogicalId.")");
+                    log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$mCmdName."' (".$mCmdLogicId.")");
                 else
-                    log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$mCmdName."' (".$mCmdLogicalId.") => '".$cmdAName."', '".$cmdAParams."'");
+                    log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$mCmdName."' (".$mCmdLogicId.") => '".$cmdAName."', '".$cmdAParams."'");
+                $newCmd = false;
             }
 
-            $cmdLogic->setEqLogic_id($eqLogic->getId());
+            $cmdLogic->setEqLogic_id($eqId);
             $cmdLogic->setEqType('Abeille');
             $cmdLogic->setOrder($order++);
-            $cmdLogic->setLogicalId($mCmdLogicalId);
+            $cmdLogic->setLogicalId($mCmdLogicId);
             $cmdLogic->setType($mCmdType); // 'info' or 'action'
             if (isset($mCmd["unit"]))
                 $cmdLogic->setUnite($mCmd["unit"]);
             else
-                $cmdLogic->setUnite(''); // Clear unit
+                $cmdLogic->setUnite(null); // Clear unit
 
             // Updates only if new command or reinit because could be changed by user
             if ($newCmd || ($action == 'reset')) {

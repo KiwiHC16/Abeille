@@ -1064,6 +1064,9 @@
                     cmds["Illuminance"] = newCmd("zb-0400-MeasuredValue");
                     cmds["Illuminance"]["isVisible"] = 1;
                     cmds["Get Illuminance"] = newCmd("zbReadAttribute", "clustId=0400&attrId=0000");
+                    cmds["Bind 0400-ToZigate"] = newCmd("zbBindToZigate", "clustId=0400", "yes");
+                    cmds["SetReporting 0400-0000"] = newCmd("zbConfigureReporting", "clustId=0400&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=0000", "yes");
+                    cmds["SetReporting 0400-0000"]["comment"] = "Reporting every 5 to 10mins";
                 }
             }
 
@@ -1094,6 +1097,20 @@
                     cmds["Bind 0405-ToZigate"] = newCmd("zbBindToZigate", "clustId=0405", "yes");
                     if (minTimeout > 10)
                         minTimeout = 10;
+                }
+            }
+
+            /* Occupancy Sensing cluster */
+            if (isset(ep.servClusters["0406"]) && isset(ep.servClusters["0406"]['attributes'])) {
+                attributes = ep.servClusters["0406"]['attributes'];
+                if (isset(attributes['0000'])) {
+                    cmds["Occupancy"] = newCmd("zb-0406-Occupancy");
+                    cmds["Occupancy"]["isVisible"] = 1;
+                    // cmds["Get Humidity"] = newCmd("zbReadAttribute", "clustId=0405&attrId=0000");
+                    cmds["Bind 0406-ToZigate"] = newCmd("zbBindToZigate", "clustId=0406", "yes");
+                    cmds["SetReporting 0406-0000"] = newCmd("zbConfigureReporting", "clustId=0406&attrType=18&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                    // if (minTimeout > 10)
+                    //     minTimeout = 10;
                 }
             }
 

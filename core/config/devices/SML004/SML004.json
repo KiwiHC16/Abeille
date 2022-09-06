@@ -1,0 +1,93 @@
+{
+    "SML004": {
+        "manufacturer": "Philips",
+        "model": "SML004",
+        "type": "Philips Hue outdoor sensor",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Philips-OutdoorSensor",
+            "mainEP": "02",
+            "batteryType": "2x1.5 AA"
+        },
+        "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
+            "SetReporting 0001-00021": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Identify": {
+                "use": "Identify"
+            },
+            "Illuminance": {
+                "use": "zb-0400-MeasuredValue",
+                "isVisible": "1"
+            },
+            "Get Illuminance": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0400&attrId=0000"
+            },
+            "Bind 0400-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0400",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting 0400-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=0000",
+                "comment": "Reporting every 5 to 10mins",
+                "execAtCreation": "Yes"
+            },
+            "Temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": "1"
+            },
+            "Get Temperature": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0402&attrId=0000"
+            },
+            "SetReporting 0402-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 5 to 10mins"
+            },
+            "Bind 0402-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0402",
+                "execAtCreation": "yes"
+            },
+            "Occupancy": {
+                "use": "zb-0406-Occupancy",
+                "isVisible": "1"
+            },
+            "Bind 0406-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0406",
+                "execAtCreation": "Yes"
+            },
+             "SetReporting 0406-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0406&attrType=18&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes"
+            }
+        }
+    }
+}

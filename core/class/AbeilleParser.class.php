@@ -2667,7 +2667,7 @@
 
                     else if ($cmd == "0A") { // Report attributes
                         // Some clusters are directly handled by 8100/8102 decode
-                        $acceptedCmd0A = ['0005', '0007', '0300', '050B', '0B04', 'EF00', 'FC01', 'FC02']; // Clusters handled here
+                        $acceptedCmd0A = ['0005', '0007', '0300', '0406', '050B', '0B04', 'EF00', 'FC01', 'FC02']; // Clusters handled here
                         if (!in_array($clustId, $acceptedCmd0A)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
@@ -2709,7 +2709,7 @@
 
                             $i += $size;
                         }
-                    }
+                    } // End 'Report attributes'
 
                     else if ($cmd == "0B") { // Default Response
                         // Duplicated message ?
@@ -4752,7 +4752,7 @@
                     return;
                 }
             } else { // 0A/Report attribute
-                $refusedCmd0A = ['0005', '0007', '0300', '050B', '0B04', 'EF00', 'FC01', 'FC02'];
+                $refusedCmd0A = ['0005', '0007', '0300', '0406', '050B', '0B04', 'EF00', 'FC01', 'FC02'];
                 if (in_array($clustId, $refusedCmd0A)) {
                     parserLog('debug', "  Handled by decode8002");
                     return;

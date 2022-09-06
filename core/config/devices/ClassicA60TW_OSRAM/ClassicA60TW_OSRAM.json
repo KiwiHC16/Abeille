@@ -1,15 +1,15 @@
 {
-    "LOM008": {
-        "manufacturer": "Philips",
-        "model": "LOM008",
-        "type": "Philips Hue Smart Plug",
+    "ClassicA60TW_OSRAM": {
+        "manufacturer": "Osram",
+        "model": "Classic A60 TW",
+        "type": "Osram Lightify classic bulb",
         "timeout": "60",
         "category": {
             "automatism": "1"
         },
         "configuration": {
-            "icon": "PhilipsSignify-Plug",
-            "mainEP": "0B"
+            "icon": "Osram-Bulb-Lightify-E27Classic",
+            "mainEP": "03"
         },
         "commands": {
             "SWBuildID": {
@@ -53,6 +53,41 @@
             "SetReporting 0006": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Set Level": {
+                "use": "setLevel",
+                "isVisible": "1"
+            },
+            "Current Level": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Current Level": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "Bind 0008-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0008-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "ColorTemperature": {
+                "use": "zb-0300-ColorTemperatureMireds"
+            },
+            "Get ColorTemperature": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0300&attrId=0007"
+            },
+            "Bind 0300-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0300",
                 "execAtCreation": "yes"
             }
         }

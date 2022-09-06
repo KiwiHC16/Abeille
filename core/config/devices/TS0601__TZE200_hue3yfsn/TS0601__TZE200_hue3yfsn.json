@@ -70,7 +70,7 @@
        },
         "tuyaEF00": {
             "fromDevice": {
-                "02": "rcvThermostat-Mode",
+                "02": { "function": "rcvThermostat-Mode" },
                 "08": { "function": "rcvValue", "info": "01-windowDetectionStatus" },
                 "10": { "function": "rcvValueDiv", "info": "01-setPoint", "div": 10 },
                 "18": { "function": "rcvValueMult", "info": "0402-01-0000", "mult": 10 },

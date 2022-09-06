@@ -159,7 +159,36 @@
                 step('.');
         }
 
-        /* Checking supported keywords */
+        /* Tuya specific checks */
+        // TODO: To be completed
+        if (isset($dev[$devName]['tuyaEF00'])) {
+            foreach ($dev[$devName]['tuyaEF00'] as $key => $value) {
+                if ($key == 'fromDevice') {
+                    foreach ($dev[$devName]['tuyaEF00']['fromDevice'] as $key2 => $value2) {
+                        if (!isset($value2['function'])) {
+                            $error = newDevError($devName, "ERROR", "Missing 'function' for tuyaEF00/fromDevice");
+                            continue;
+                        }
+                        $func = $value2['function'];
+                        $supportedFunc = ['rcvValue', 'rcvValueDiv', 'rcvValueMult', 'rcvValue0Is1'];
+                        if (!in_array($func, $supportedFunc)) {
+                            $error = newDevError($devName, "ERROR", "Invalid function '".$func."' for tuyaEF00/fromDevice");
+                            continue;
+                        }
+                        if ($func == 'rcvValueDiv') {
+                            if (!isset($value2['div'])) {
+                                $error = newDevError($devName, "ERROR", "Missing 'div' for DP '".$key2."' in tuyaEF00/fromDevice");
+                                continue;
+                            }
+                        }
+                    }
+                    continue;
+                }
+                newDevError($devName, "ERROR", "Invalid Tuya key '".$key."'");
+            }
+        }
+
+        /* Checking top level supported keywords */
         $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'tuyaEF00'];
         foreach ($dev[$devName] as $key => $value) {
             if (in_array($key, $supportedKeys))

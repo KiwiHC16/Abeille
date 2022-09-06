@@ -52,9 +52,9 @@
     "tuyaEF00": {
       "fromDevice": {
         "05": { "function": "rcvValue", "info": "01-measuredValue" },
-        "07": "rcvBattery-Percent",
+        "07": { "function": "rcvValue", "info": "0001-01-0021" },
         "0B": { "function": "rcvValue", "info": "01-timeLeft" },
-        "0C": "rcvValve-Status",
+        "0C": { "function": "rcvValve-Status" },
         "0F": { "function": "rcvValue", "info": "01-lastOpenDuration" }
       }
     }

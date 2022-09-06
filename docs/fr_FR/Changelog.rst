@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220906-BETA-1
+-------------
+
 - Moes smart dimmer MS105Z: Mise-à-jour modèle pour partie dimmer (2363).
 - Interne: Parser: Ajout info msg 8139.
 - Interne: Abeille.class: Correction mise-à-jour cmde info (duplicate entry).

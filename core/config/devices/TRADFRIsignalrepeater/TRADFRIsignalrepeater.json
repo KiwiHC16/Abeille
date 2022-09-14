@@ -1,16 +1,18 @@
 {
     "TRADFRIsignalrepeater": {
+        "manufacturer": "Ikea",
+        "model": "10400408",
         "comment 1": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/689",
         "alternateIds": "TRADFRISignalRepeater",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "TRADFRIsignalrepeater"
+            "icon": "Ikea-SignalRepeater"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "TRADFRI signal repeater",
+        "type": "Ikea signal repeater",
         "commands": {
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

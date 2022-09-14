@@ -504,6 +504,7 @@
                     "SNZB-04" => "Sonoff-SNZB-04",
                     "01MINIZB" => "Sonoff-01MINIZB",
                     "TuyaSmartSocket" => "Tuya-SmartSocket",
+                    "Tuya-TS011F" => "Tuya-SmartSocket-2",
                     "Tuya4ButtonsSceneSwitch" => "Tuya-4ButtonsSwitch-Gray",
                     "Tuya4ButtonsSwitch" => "Tuya-4ButtonsSwitch-White",
                     "PlugZ3" => "Ledvance-PlugZ3",
@@ -514,6 +515,9 @@
                     "IkeaTradfriBulbE27Opal1000lm" => "Ikea-BulbE27",
                     "IkeaTradfriBulbE27WOpal1000lm2" => "Ikea-BulbE27",
                     "IkeaTRADFRIbulbE27WSopal980lm" => "Ikea-BulbE27",
+                    "TRADFRItransformer10W" => "Ikea-Transformer",
+                    "TRADFRItransformer30W" => "Ikea-Transformer",
+                    "TRADFRIsignalrepeater" => "Ikea-SignalRepeater",
                     "JR-ZDS01" => "Girier-JR-ZDS01",
                     "GL-C-008" => "Gledopto-RGBCCTLedController",
                     "GL-S-003Z" => "Gledopto-BulbGU10-Color",
@@ -522,6 +526,11 @@
                     "LOM001" => "PhilipsSignify-Plug",
                     "LOM002" => "PhilipsSignify-Plug",
                     "LTW001" => "Philips-Bulb-E27-White",
+                    "XiaomiPorte" => "Xiaomi-DoorSensor",
+                    "XiaomiPorte1" => "Xiaomi-DoorSensor-2",
+                    "XiaomiTemperatureCarre" => "Xiaomi-TempSensor-2",
+                    "XiaomiTemperatureRond" => "Xiaomi-TempSensor-1",
+                    "XiaomiPriseEU" => "Xiaomi-Plug-EU",
                 );
                 $curIcon = $eqLogic->getConfiguration('ab::icon', '');
                 if (($curIcon != '') && isset($iList[$curIcon])) {

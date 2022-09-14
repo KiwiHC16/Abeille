@@ -2,14 +2,14 @@
     "magnet.acn001": {
         "manufacturer": "Xiaomi",
         "model": "MCCGQ14LM",
-        "type": "Xiaomi Aqara MCCGQ14LM door sensor",
+        "type": "Xiaomi Aqara door sensor",
         "comment": "This device send ZoneStatus change notif thru cluster 0500 cmd 00",
         "timeout": "60",
         "category": {
             "automatism": "1"
         },
         "configuration": {
-            "icon": "XiaomiPorte",
+            "icon": "Xiaomi-DoorSensor",
             "mainEP": "01",
             "batteryType": "1x3V CR1632"
         },

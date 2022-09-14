@@ -5,13 +5,13 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiTemperatureCarre",
+            "icon": "Xiaomi-TempSensor-2",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "heating": "1"
         },
-        "type": "Xiaomi temp\/humidity\/pressure square sensor",
+        "type": "Xiaomi temp\/humidity\/pressure sensor",
         "commands": {
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",

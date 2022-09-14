@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+- Philips SML003 motion sensor: Support préliminaire (2440).
+- Tuya smart plug: Support préliminaire (2443).
+- Interne: Normalisation du nom de qq icones.
+- Tuya iHSW02/WHD02 mini smart plug: Ajout modele (2438).
+- Electrovanne Saswell SAS980SWT: Correction modele (2388).
+- Silvercrest motion sensor: Support préliminaire (2445).
+
 220906-BETA-1
 -------------
 

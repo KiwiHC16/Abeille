@@ -6,6 +6,7 @@
         "category": {
             "automatism": "1"
         },
+        "timeout": 60,
         "configuration": {
             "icon": "PhilipsSignify-Plug",
             "mainEP": "0B"
@@ -51,7 +52,8 @@
             },
             "SetReporting 0006": {
                 "use": "zbConfigureReporting",
-                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0D98&maxInterval=0000&changeVal=",
+                "comment": "Reporting every 58min max for 1H timeout",
                 "execAtCreation": "yes"
             }
         }

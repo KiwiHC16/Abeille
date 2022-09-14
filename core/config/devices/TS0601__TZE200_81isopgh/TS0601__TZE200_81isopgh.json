@@ -11,7 +11,7 @@
     "category": {
       "automatism": "1"
     },
-    "type": "Saswell irrigation Valve",
+    "type": "Saswell irrigation valve",
     "commands": {
       "Battery": {
         "use": "zb-0001-BatteryPercent",
@@ -45,6 +45,8 @@
       },
       "Measured value": {
         "use": "attr-Valve-MeasuredValue",
+        "calculValueOffset" : "#value#/10",
+        "historizeRound": 1,
         "isVisible": 1,
         "isHistorized": 1
       }

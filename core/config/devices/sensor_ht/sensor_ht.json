@@ -1,15 +1,17 @@
 {
     "sensor_ht": {
+        "manufacturer": "Xiaomi",
+        "model": "Temp",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiTemperatureRond",
+            "icon": "Xiaomi-TempSensor-1",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "heating": "1"
         },
-        "type": "Xiaomi Temperature Rond",
+        "type": "Xiaomi temp sensor",
         "commands": {
             "Temperature": {
                 "use": "zb-0402-MeasuredValue",

@@ -1,14 +1,16 @@
 {
     "plug.mmeu01": {
+        "manufacturer": "Xiaomi",
+        "model": "plug EU",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiPriseEU"
+            "icon": "Xiaomi-Plug-EU"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Xiaomi Prise EU",
+        "type": "Xiaomi plug EU",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

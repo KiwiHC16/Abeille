@@ -5,7 +5,7 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiPorte",
+            "icon": "Xiaomi-DoorSensor",
             "batteryType": "1x3V CR1632"
         },
         "category": {

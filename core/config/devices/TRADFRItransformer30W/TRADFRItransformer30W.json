@@ -1,14 +1,16 @@
 {
     "TRADFRItransformer30W": {
+        "manufacturer": "Ikea",
+        "model": "30W transformer",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "TRADFRItransformer30W"
+            "icon": "Ikea-Transformer"
         },
         "category": {
             "light": "1"
         },
-        "type": "IKEA Ampoule TRADFRI transformer 30W",
+        "type": "Ikea 30W transformer",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

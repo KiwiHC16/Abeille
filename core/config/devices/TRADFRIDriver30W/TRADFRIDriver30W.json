@@ -1,14 +1,16 @@
 {
     "TRADFRIDriver30W": {
+        "manufacturer": "Ikea",
+        "model": "30W driver",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "TRADFRIDriver10W"
+            "icon": "Ikea-Transformer"
         },
         "category": {
             "light": "1"
         },
-        "type": "IKEA Ampoule TRADFRI Driver 30W",
+        "type": "Ikea 30W driver",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

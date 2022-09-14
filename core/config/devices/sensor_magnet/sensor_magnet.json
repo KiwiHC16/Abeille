@@ -4,13 +4,13 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiPorte1",
+            "icon": "Xiaomi-DoorSensor-2",
             "batteryType": "1x3V CR1632"
         },
         "category": {
             "opening": "1"
         },
-        "type": "Xiaomi Door Sensor",
+        "type": "Xiaomi door sensor",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

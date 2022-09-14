@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220914-BETA-1
+-------------
+
 - Philips SML003 motion sensor: Support préliminaire (2440).
 - Tuya smart plug: Support préliminaire (2443).
 - Interne: Normalisation du nom de qq icones.

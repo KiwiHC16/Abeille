@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220916-BETA-1
+-------------
+
 - Interne: Liste des 'end points' enregistrée dans DB eqLogic.
 - Interne: 'manufCode' enregistré dans DB eqLogic.
 - Page EQ/avancé: Ajout possibilité d'envoyer une 'Node descriptor request'.

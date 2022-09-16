@@ -312,7 +312,7 @@
         /* Cached EQ infos reminder:
             $GLOBALS['eqList'][<network>][<addr>] = array(
                 'ieee' => $ieee,
-                'capa' => '', // MAC capa from device announce
+                'macCapa' => '', // MAC capa from device announce
                 'rxOnWhenIdle' => null/0/1, // If 1 then can always receive
                 'rejoin' => '', // Rejoin info from device announce
                 'status' => 'identifying', // identifying, configuring, discovering, idle
@@ -337,13 +337,13 @@
         */
 
         /* Called on device announce. */
-        function deviceAnnounce($net, $addr, $ieee, $capa, $rejoin) {
+        function deviceAnnounce($net, $addr, $ieee, $macCapa, $rejoin) {
             $eq = &getDevice($net, $addr, $ieee); // By ref
             // 'status' set to 'identifying' if new device
             parserLog('debug', '  eq='.json_encode($eq));
 
-            $eq['capa'] = $capa;
-            $eq['rxOnWhenIdle'] = (hexdec($capa) >> 3) & 0b1;
+            $eq['macCapa'] = $macCapa;
+            $eq['rxOnWhenIdle'] = (hexdec($macCapa) >> 3) & 0b1;
             $eq['rejoin'] = $rejoin;
 
             /* Checking if it's not a too fast consecutive device announce.
@@ -456,8 +456,47 @@
                 if ($updType == 'epList') { // Active end points response
                     $epArr = explode('/', $value);
                     foreach ($epArr as $epId2) {
-                        if (!isset($eq['endPoints'][$epId2]))
+                        if (!isset($eq['endPoints'][$epId2])) {
                             $eq['endPoints'][$epId2] = [];
+                            $endPointsUpdated = true;
+                        }
+                    }
+                    if (isset($endPointsUpdated)) {
+                        $msg = array(
+                            'type' => 'updateDevice',
+                            'net' => $net,
+                            'addr' => $addr,
+                            'updates' => array(
+                                "endPoints" => $eq['endPoints']
+                            ),
+                        );
+                        msgToAbeille2($msg);
+                    }
+                } else if ($updType == 'macCapa') { // MAC capa flags
+                    if (!isset($eq['macCapa'])) {
+                        $eq['macCapa'] = $value;
+                        $msg = array(
+                            'type' => 'updateDevice',
+                            'net' => $net,
+                            'addr' => $addr,
+                            'updates' => array(
+                                "macCapa" => $value
+                            ),
+                        );
+                        msgToAbeille2($msg);
+                    }
+                } else if ($updType == 'manufCode') { // Manufacturer code
+                    if (!isset($eq['manufCode'])) {
+                        $eq['manufCode'] = $value;
+                        $msg = array(
+                            'type' => 'updateDevice',
+                            'net' => $net,
+                            'addr' => $addr,
+                            'updates' => array(
+                                "manufCode" => $value
+                            ),
+                        );
+                        msgToAbeille2($msg);
                     }
                 } else if ($updType == 'modelId') {
                     if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['modelId']))
@@ -699,7 +738,7 @@
                 'manufId' => $eq['manufId'],
                 'jsonId' => $eq['jsonId'],
                 'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
-                'capa' => $eq['capa'],
+                'macCapa' => $eq['macCapa'],
                 'time' => time()
             );
             msgToAbeille2($msg);
@@ -775,7 +814,7 @@
                 'manufId' => $eq['manufId'],
                 'jsonId' => $eq['jsonId'],
                 'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
-                'capa' => $eq['capa'],
+                'macCapa' => $eq['macCapa'],
                 'time' => time()
             );
             msgToAbeille2($msg);
@@ -820,7 +859,7 @@
                 'manufId' => $eq['manufId'],
                 'jsonId' => $eq['jsonId'],
                 'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
-                'capa' => $eq['capa'],
+                'macCapa' => $eq['macCapa'],
                 'time' => time()
             );
             msgToAbeille2($msg);
@@ -1823,6 +1862,25 @@
                     // return;
                 }
 
+                // Node Descriptor Response (Node_Desc_rsp)
+                else if ($clustId == "8002") {
+                    $sqn = substr($pl, 0, 2);
+                    $status = substr($pl, 2, 2);
+                    $addr = substr($pl, 4, 4);
+
+                    // Node descriptor
+                    $b0 = substr($pl, 8, 2);
+                    $b2 = substr($pl, 10, 2); // APS + freq band
+                    $macCapa = substr($pl, 12, 2); // Mac capa
+                    $manufCode = substr($pl, 14, 4);
+
+                    parserLog('debug', '  Node Descriptor Response, SQN='.$sqn.', Status='.$status);
+                    parserLog('debug', '  MacCapa='.$macCapa.', ManufCode='.$manufCode);
+                    // 2 infos to store: macCapa & manufCode
+                    $this->deviceUpdate($dest, $srcAddr, $srcEp, 'macCapa', $macCapa);
+                    $this->deviceUpdate($dest, $srcAddr, $srcEp, 'manufCode', $manufCode);
+                }
+
                 // Management LQI Response (Mgmt_Lqi_rsp)
                 // Handled by decode804E(). Just to try to understand unexpected responses.
                 else if ($clustId == "8031") {
@@ -1834,7 +1892,6 @@
                     parserLog('debug', '  SQN='.$sqn.', Status='.$status.', NTableEntries='.$nTableEntries.', startIdx='.$startIdx.', nTableListCount='.$nTableListCount);
 
                     parserLog('debug', '  Handled by decode804E');
-                    // return;
                 }
 
                 // Routing Table Response (Mgmt_Rtg_rsp)
@@ -1904,8 +1961,6 @@
                     }  else {
                         parserLog('debug', '  abeille not found !!!', "8002");
                     }
-
-                    // return;
                 }
 
                 // Binding Table Response (Mgmt_Bind_rsp)
@@ -3171,7 +3226,7 @@
 
             // Something to report to main daemon ?
             if (isset($toAbeille))
-                $this->msgToClient($toAbeille);
+                $this->msgToAbeille2($toAbeille);
             if (isset($readAttributesResponseN) && (count($readAttributesResponseN) > 0)) {
                 $toAbeille = array(
                     // 'src' => 'parser',
@@ -3729,6 +3784,12 @@
                 'lqi' => $lqi,
             );
             msgToAbeille2($msg);
+        }
+
+        // 8042/Node descriptor response
+        function decode8042($dest, $payload, $lqi)
+        {
+            parserLog('debug', $dest.', Type=8042/Node descriptor response => Handled by decode8002', "8042");
         }
 
         /**

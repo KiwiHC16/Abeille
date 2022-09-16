@@ -426,6 +426,9 @@
             topic = "Cmd"+logicalId+"_getSimpleDescriptor";
             ep = document.getElementById("idEpSDR").value;
             payload = "ep="+ep;
+        } else if (request == "getNodeDescriptor") {
+            topic = "Cmd"+logicalId+"_getNodeDescriptor";
+            payload = "";
         } else if (request == "getIeeeAddress") {
             topic = "Cmd"+logicalId+"_getIeeeAddress";
             payload = "";

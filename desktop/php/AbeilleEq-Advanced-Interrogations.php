@@ -57,6 +57,14 @@
     </div>
 </div>
 <div class="form-group">
+    <label class="col-sm-3 control-label" title="getNodeDescriptor (Node_Desc_req)">{{Descripteur de noeud}}</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-warning" onclick="interrogate(\'getNodeDescriptor\', \''.$eqId.'\')">{{Interroger}}</a>';
+        ?>
+    </div>
+</div>
+<div class="form-group">
     <label class="col-sm-3 control-label" title="getIeeeAddress (IEEE_addr_req)">Adresse IEEE</label>
     <div class="col-sm-5">
         <?php
@@ -114,7 +122,7 @@
             addEpButton("idEpA", $mainEP);
             addClusterButton("idClustIdA");
             addAttrInput("idAttrIdA");
-            addManufIdInput("idManufIdRA"); // Optional
+            addManufCodeInput("idManufIdRA"); // Optional
         ?>
     </div>
 </div>
@@ -126,7 +134,7 @@
             addEpButton("idEpWA", $mainEP);
             addClusterButton("idClustIdWA");
             addDirInput("idDirWA");
-            addManufIdInput("idManufIdWA");
+            addManufCodeInput("idManufIdWA");
             addAttrInput("idAttrIdWA");
         ?>
         <input id="idAttrTypeWA" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" />

@@ -257,7 +257,7 @@
         // This is a new device
         $GLOBALS['eqList'][$net][$addr] = array(
             'ieee' => $ieee,
-            'capa' => '',
+            'macCapa' => '',
             'rxOnWhenIdle' => null,
             'rejoin' => '', // Rejoin info from device announce
             'status' => 'identifying', // identifying, configuring, discovering, idle
@@ -386,12 +386,13 @@
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', null);
             $eq = array(
                 'ieee' => $eqLogic->getConfiguration('IEEE', null),
-                'capa' => $zigbee ? $zigbee['macCapa'] : '',
+                'macCapa' => $zigbee ? $zigbee['macCapa'] : '',
                 'rxOnWhenIdle' => $zigbee ? $zigbee['rxOnWhenIdle'] : null,
+                'manufCode' => ($zigbee & isset($zigbee['manufCode'])) ? $zigbee['manufCode'] : null,
                 'rejoin' => '', // Rejoin info from device announce
                 'status' => $status, // identifying, configuring, discovering, idle
                 'time' => time(),
-                'endPoints' => null, // null(undef)
+                'endPoints' => ($zigbee & isset($zigbee['endPoints'])) ? $zigbee['endPoints'] : null, // null(undef)
                 'mainEp' => '',
                 'manufId' => null, // null(undef)/false(unsupported)/'xx'
                 'modelId' => null, // null(undef)/false(unsupported)/'xx'

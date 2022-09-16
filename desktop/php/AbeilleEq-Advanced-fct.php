@@ -57,10 +57,10 @@
         echo '<input id="'.$id.'" style="width:80px; margin-left: 8px" title="{{Direction. Format hex string 2 car (00=vers serveur, 01=vers client)}}" placeholder="{{Dir (ex: 00)}}" />';
     }
 
-    // Add manufacturer ID input
-    function addManufIdInput($id) {
-        echo '<input id="'.$id.'" style="width:80px; margin-left: 8px" title="{{Manuf ID. Format hex string 4 car (par défaut=aucun)}}" placeholder="{{Manuf ID (ex: 115F)}}" />';
-    }
+    // // Add manufacturer code input
+    // function addManufCodeInput($id) {
+    //     echo '<input id="'.$id.'" style="width:80px; margin-left: 8px" title="{{Manuf code. Format hex string 4 car (par défaut=aucun)}}" placeholder="{{Manuf code (ex: 115F)}}" />';
+    // }
 
     // Create drop down list of IEEE addresses, excluding zigate by default
     function addIeeeListButton($id, $withZigate = false) {

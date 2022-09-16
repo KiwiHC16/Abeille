@@ -2978,6 +2978,23 @@
                     return;
                 }
 
+                // Zigbee command: Node descriptor request (Node_Desc_req)
+                else if ($cmdName == 'getNodeDescriptor') {
+                    $required = ['addr'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // <target short address: uint16_t>
+
+                    $cmd = "0042";
+                    $addr = sprintf("%04X", hexdec($Command['addr']));
+
+                    $data = $addr;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    return;
+                }
+
                 // Zigbee command: Leave request
                 // Mandatory params: 'IEEE'
                 // Optional params: 'Rejoin' & 'RemoveChildren'

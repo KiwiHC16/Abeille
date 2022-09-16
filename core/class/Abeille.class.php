@@ -1655,6 +1655,30 @@ if (0) {
                         log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[rxOnWhenIdle]' updated to ".$updVal);
                         $eqChanged = true;
                     }
+                } else if ($updKey == 'endPoints') {
+                    if (is_object($eqLogic)) {
+                        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                        $zigbee['endPoints'] = $updVal;
+                        $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]' updated to ".json_encode($updVal));
+                        $eqChanged = true;
+                    }
+                } else if ($updKey == 'macCapa') {
+                    if (is_object($eqLogic)) {
+                        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                        $zigbee['macCapa'] = $updVal;
+                        $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[macCapa]' updated to ".$updVal);
+                        $eqChanged = true;
+                    }
+                } else if ($updKey == 'manufCode') {
+                    if (is_object($eqLogic)) {
+                        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                        $zigbee['manufCode'] = $updVal;
+                        $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[manufCode]' updated to ".$updVal);
+                        $eqChanged = true;
+                    }
                 }
             }
             if ($eqChanged)
@@ -1676,7 +1700,7 @@ if (0) {
                     'manufId' =>
                     'jsonId' => $eq['jsonId'], // JSON identifier
                     'jsonLocation' => '', // 'Abeille' or 'local'
-                    'capa' => $eq['capa'],
+                    'macCapa' => $eq['macCapa'],
                     'time' => time()
                 ); */
 
@@ -1732,9 +1756,9 @@ if (0) {
             $eqLogic = self::byLogicalId($logicalId, 'Abeille');
 
             /* MAC capa from 004D/Device announce message */
-            $mc = hexdec($msg['capa']);
+            $mc = hexdec($msg['macCapa']);
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-            $zigbee['macCapa'] = $msg['capa'];
+            $zigbee['macCapa'] = $msg['macCapa'];
             $rxOnWhenIdle = ($mc >> 3) & 0b1;
             $mainsPowered = ($mc >> 2) & 0b1;
             if ($mainsPowered) // 1=mains-powererd

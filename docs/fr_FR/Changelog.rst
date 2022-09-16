@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220916-STABLE-1
+---------------
+
   .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible (v3.21 à ce jour).
   .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
 

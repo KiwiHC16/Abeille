@@ -1,0 +1,13 @@
+{
+    "attr-Illuminance": {
+        "comment": "Illuminance (in Lux)",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": {
+            "historizeRound": "0"
+        },
+        "type": "info",
+        "unit": "Lx",
+        "logicalId": "#EP#-Illuminance"
+    }
+}

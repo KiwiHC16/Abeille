@@ -625,11 +625,11 @@ if (0) {
         }
 
         // Clear zigate IEEE status to detect any port switch.
-        // AbeilleIEEE_Ok=-1: Zigate IEEE is NOT the expected one (port switch ?)
+        // ab::zgIeeeAddrOk=-1: Zigate IEEE is NOT the expected one (port switch ?)
         //     "         = 0: IEEE check to be done
         //     "         = 1: Zigate on the right port
         for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
-            config::save("AbeilleIEEE_Ok".$zgId, 0, 'Abeille');
+            config::save("ab::zgIeeeAddrOk".$zgId, 0, 'Abeille');
         }
 
         /* Check & update configuration DB if required. */
@@ -1574,8 +1574,8 @@ if (0) {
 
     public static function checkZgIeee($net, $ieee) {
         $zgId = substr($net, 7);
-        $keyIeee = str_replace('Abeille', 'AbeilleIEEE', $net); // AbeilleX => AbeilleIEEEX
-        $keyIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $net); // AbeilleX => AbeilleIEEE_OkX
+        $keyIeee = str_replace('Abeille', 'ab::zgIeeeAddr', $net); // AbeilleX => ab::zgIeeeAddrX
+        $keyIeeeOk = str_replace('Abeille', 'ab::zgIeeeAddrOk', $net); // AbeilleX => ab::zgIeeeAddrOkX
         if (config::byKey($keyIeeeOk, 'Abeille', 0) == 0) {
             $ieeeConf = config::byKey($keyIeee, 'Abeille', '');
             if ($ieeeConf == "") {

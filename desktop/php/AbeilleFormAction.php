@@ -264,68 +264,6 @@
                     }
                 }
                 break;
-
-            // Template
-            // case 'Apply Template':
-            //     foreach ( $_POST as $item=>$Value ) {
-            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
-            //             $deviceId = substr( $item, strpos($item,"-")+1 );
-            //             // echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-            //             // $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-            //             // $address = substr($device->getLogicalId(),8);
-            //             // $EP = $device->getConfiguration('mainEP');
-            //             // sendMessageFromFormToCmd('CmdAbeille/0000/addGroup', 'address='.(substr( $item, strpos($item,"-")+1 )).'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
-            //             abeille::updateConfigAbeille( $deviceId );
-            //             // abeille::updateConfigAbeille( );
-            //         }
-            //     }
-            //     break;
-
-            // case 'Get Infos from NE':
-            //     foreach ( $_POST as $item=>$Value ) {
-            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
-            //             // $deviceId = substr( $item, strpos($item,"-")+1 );
-            //             // echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-            //             // $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-            //             // $address = substr($device->getLogicalId(),8);
-            //             // $EP = $device->getConfiguration('mainEP');
-            //             // sendMessageFromFormToCmd('CmdAbeille/0000/addGroup', 'address='.(substr( $item, strpos($item,"-")+1 )).'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
-            //             getInfosFromNe($item, $Value);
-            //             // abeille::updateConfigAbeille( );
-            //         }
-            //     }
-            //     break;
-
-            // case 'Apply Settings to NE':
-            //     foreach ( $_POST as $item=>$Value ) {
-            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
-            //             // $deviceId = substr( $item, strpos($item,"-")+1 );
-            //             // echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-            //             // $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-            //             // $address = substr($device->getLogicalId(),8);
-            //             // $EP = $device->getConfiguration('mainEP');
-            //             // sendMessageFromFormToCmd('CmdAbeille/0000/addGroup', 'address='.(substr( $item, strpos($item,"-")+1 )).'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
-            //             ApplySettingsToNE($item, $Value);
-            //             // abeille::updateConfigAbeille( );
-            //         }
-            //     }
-            //     break;
-
-            // case "Remplace":
-            //     log::add('Abeille', 'debug', 'Replace: '.$_POST['ghost'] . ' - ' . $_POST['real']);
-            //     Abeille::replaceGhost($_POST['ghost'], $_POST['real']);
-            //     break;
-
-            // case "ReHome":
-            //     log::add('Abeille', 'debug', 'ReHome: '.$_POST['beeId'] . ' - ' . $_POST['zigateY']);
-            //     Abeille::migrateBetweenZigates($_POST['beeId'], $_POST['zigateY']);
-            //     break;
-
-            // case "ReplaceZigate":
-            //     log::add('Abeille', 'debug', 'Removing all data of previous zigate: '.$_POST['zigateZ']);
-            //     config::remove( "AbeilleIEEE_Ok".$_POST['zigateZ'], 'Abeille');
-            //     config::remove( "AbeilleIEEE".$_POST['zigateZ'], 'Abeille');
-            //     break;
         }
 
         // TX Power

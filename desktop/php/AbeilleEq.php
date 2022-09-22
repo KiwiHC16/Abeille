@@ -36,6 +36,7 @@
     $eqName = $eqLogic->getName();
 
     $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+    $eqZigbee = $eqLogic->getConfiguration('ab::zigbee', []);
 
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS

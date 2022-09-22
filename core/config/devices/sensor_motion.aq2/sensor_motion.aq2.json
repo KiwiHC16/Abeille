@@ -1,5 +1,6 @@
 {
     "sensor_motion.aq2": {
+        "manufacturer": "Xiaomi",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",

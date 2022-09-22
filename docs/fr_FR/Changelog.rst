@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+- Page EQ/avancé: Affichage code fabricant.
+- Interne: Ajout fabricant dans qq modeles JSON.
+- Livarno Home: Ajout modele préliminaire (2448).
+- Philips SML004: Ajout 'Sensitivity' (2437).
+- Interne: Parser: Support cluster 1000 cmd 41 & 42.
+- Tuya PIR & illuminance: Mise-à-jour du modele (2409).
+- Interne: DB config: 'AbeilleIEEEX' => 'ab::zgIeeeAddrX'
+- Interne: DB config: 'AbeilleIEEE_OkX' => 'ab::zgIeeeAddrOkX'
+- Interne: Parser: isDuplicated() timeout = 2sec au lieu de 10sec.
+- Tuya PIR+illuminance: Mise-à-jour modèle pour 'Illuminance' (2409).
+
 220916-BETA-1
 -------------
 

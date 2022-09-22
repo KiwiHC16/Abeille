@@ -50,13 +50,15 @@
         }
     }
 
-    // Config DB: replace 'key1' by 'key2'
-    function replaceConfigDB($key1, $key2) {
-        $val = config::byKey($key1, 'Abeille', 'nada', true);
+    // Config DB: replace 'oldKey' by 'newKey'
+    function replaceConfigDB($oldKey, $newKey) {
+        $val = config::byKey($oldKey, 'Abeille', 'nada', true);
+log::add('Abeille', 'debug', "LA ok='".$oldKey."', newK='".$newKey."', val=".json_encode($val));
+
         if ($val != 'nada') {
-            config::save($key2, $val, 'Abeille');
-            config::remove($key1, 'Abeille');
-            log::add('Abeille', 'debug', "  config DB: '".$key1."' changed to '".$key2."'");
+            config::save($newKey, $val, 'Abeille');
+            config::remove($oldKey, 'Abeille');
+            log::add('Abeille', 'debug', "  config DB: '".$oldKey."' changed to '".$newKey."'");
         }
     }
 
@@ -420,11 +422,13 @@
            - eqLogic DB: 'RxOnWhenIdle' => 'ab::zigbee['rxOnWhenIdle']'
            - eqLogic DB: 'AC_Power' => 'ab::zigbee['mainsPowered']'
            - eqLogic DB: 'icone' => 'ab::icon'
-           - config DB: 'AbeilleActiver' => 'ab::zgEnabled'
-           - config DB: 'AbeilleType' => 'ab::zgType'
-           - config DB: 'AbeilleSerialPort' => 'ab::zgPort'
-           - config DB: 'IpWifiZigate' => 'ab::zgIpAddr'
+           - config DB: 'AbeilleActiverX' => 'ab::zgEnabledX'
+           - config DB: 'AbeilleTypeX' => 'ab::zgTypeX'
+           - config DB: 'AbeilleSerialPortX' => 'ab::zgPortX'
+           - config DB: 'IpWifiZigateX' => 'ab::zgIpAddrX'
            - config DB: 'AbeilleParentId' => 'ab::defaultParent'
+           - config DB: 'AbeilleIEEEX' => 'ab::zgIeeeAddrX'
+           - config DB: 'AbeilleIEEE_OkX' => 'ab::zgIeeeAddrOkX'
          */
         if (intval($dbVersion) < 20220421) {
             $eqLogics = eqLogic::byType('Abeille');
@@ -550,6 +554,8 @@
                 replaceConfigDB('AbeilleType'.$zgId, 'ab::zgType'.$zgId);
                 replaceConfigDB('AbeilleSerialPort'.$zgId, 'ab::zgPort'.$zgId);
                 replaceConfigDB('IpWifiZigate'.$zgId, 'ab::zgIpAddr'.$zgId);
+                replaceConfigDB('AbeilleIEEE'.$zgId, 'ab::zgIeeeAddr'.$zgId);
+                replaceConfigDB('AbeilleIEEE_Ok'.$zgId, 'ab::zgIeeeAddrOk'.$zgId);
             }
             replaceConfigDB('AbeilleParentId', 'ab::defaultParent');
 

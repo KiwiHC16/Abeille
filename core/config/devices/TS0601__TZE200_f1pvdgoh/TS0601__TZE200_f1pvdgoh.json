@@ -12,6 +12,9 @@
             "mainEP": "01"
         },
         "commands": {
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "Groups": {
                 "use": "Group-Membership"
             },
@@ -20,7 +23,7 @@
                 "isVisible": 1
             },
             "Illuminance": {
-                "use": "zb-0400-MeasuredValue",
+                "use": "attr-Illuminance",
                 "nextLine": "after",
                 "isVisible": 1
             }
@@ -28,8 +31,8 @@
         "tuyaEF00": {
             "fromDevice": {
                 "01": { "function": "rcvValue0Is1", "info": "01-presence" },
-                "04": { "function": "rcvValue", "info": "0400-01-0000" },
-                "65": { "function": "rcvValue", "info": "0001-01-0021" }
+                "04": { "function": "rcvValue", "info": "0001-01-0021" },
+                "65": { "function": "rcvValue", "info": "01-Illuminance" }
             }
         }
     }

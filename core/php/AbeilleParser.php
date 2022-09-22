@@ -341,11 +341,11 @@
         // if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
         if ($config['ab::zgEnabled'.$zgId] != 'Y')
             continue; // This Zigate is not enabled
-        // $ieeeOk = config::byKey('AbeilleIEEE_Ok'.$zgId, 'Abeille', 0);
-        $ieeeOk = $config['AbeilleIEEE_Ok'.$zgId];
+        // $ieeeOk = config::byKey('ab::zgIeeeAddrOk'.$zgId, 'Abeille', 0);
+        $ieeeOk = $config['ab::zgIeeeAddrOk'.$zgId];
         if ($ieeeOk == 1) { // IEEE addr already verified & valid
-            // $extAddr = config::byKey('AbeilleIEEE'.$zgId, 'Abeille', "1212121212121212");
-            $extAddr = $config['AbeilleIEEE'.$zgId];
+            // $extAddr = config::byKey('ab::zgIeeeAddr'.$zgId, 'Abeille', "1212121212121212");
+            $extAddr = $config['ab::zgIeeeAddr'.$zgId];
             $GLOBALS['zigate'.$zgId]['ieee'] = $extAddr;
             logMessage("debug", "Zigate ".$zgId." already verified IEEE: ".$extAddr);
         }

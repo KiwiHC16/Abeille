@@ -650,8 +650,8 @@
                 $config['ab::zgPort'.$zgId] = config::byKey('ab::zgPort'.$zgId, 'Abeille', '', 1);
                 $config['ab::zgIpAddr'.$zgId] = config::byKey('ab::zgIpAddr'.$zgId, 'Abeille', '', 1);
                 $config['ab::zgEnabled'.$zgId] = config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N', 1);
-                $config['AbeilleIEEE_Ok'.$zgId] = config::byKey('AbeilleIEEE_Ok'.$zgId, 'Abeille', 0);
-                $config['AbeilleIEEE'.$zgId] = config::byKey('AbeilleIEEE'.$zgId, 'Abeille', '');
+                $config['ab::zgIeeeAddrOk'.$zgId] = config::byKey('ab::zgIeeeAddrOk'.$zgId, 'Abeille', 0);
+                $config['ab::zgIeeeAddr'.$zgId] = config::byKey('ab::zgIeeeAddr'.$zgId, 'Abeille', '');
             }
             $config['monitor'] = config::byKey('monitor', 'Abeille', false);
             $config['ab::defaultParent'] = config::byKey('ab::defaultParent', 'Abeille', '1', 1);

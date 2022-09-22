@@ -109,4 +109,16 @@
         ?>
     </div>
 </div>
+<div class="form-group">
+    <label class="col-sm-3 control-label">Code fabricant (manufCode)</label>
+    <div class="col-sm-5">
+        <?php
+            if (isset($eqZigbee['manufCode']))
+                $manufCode = $eqZigbee['manufCode'];
+            else
+                $manufCode = '';
+            echo '<input readonly title="{{Code fabricant}}" value="'.$manufCode.'" />';
+        ?>
+    </div>
+</div>
 

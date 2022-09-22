@@ -1,5 +1,7 @@
 {
     "sensor_motion": {
+        "manufacturer": "Xiaomi",
+        "type": "Xiaomi Presence",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -9,7 +11,6 @@
         "category": {
             "security": "1"
         },
-        "type": "Xiaomi Presence",
         "commands": {
             "include3": "presence",
             "include4": "Batterie-Volt",

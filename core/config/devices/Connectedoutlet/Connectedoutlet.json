@@ -10,15 +10,19 @@
         },
         "type": "Legrand Prise Connected Outlet Mural 220V avec Neutre",
         "commands": {
-            "etat": {
-                "use": "zb-0006-OnOff",
-                "isVisible": 1
-            },
             "On": {
                 "use": "zbCmd-0006-On"
             },
             "Off": {
                 "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle"
+            },
+            "Status": {
+                "use": "zb-0006-OnOff",
+                "nextLine": "after",
                 "isVisible": 1
             },
             "Get-Status": {
@@ -58,10 +62,6 @@
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
-            },
-            "Toggle": {
-                "use": "zbCmd-0006-Toggle",
-                "nextLine": "after"
             }
         }
     }

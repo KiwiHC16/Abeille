@@ -2,6 +2,7 @@
     "sensor_magnet.aq2": {
         "manufacturer": "Xiaomi",
         "model": "MCCGQ11LM",
+        "type": "Xiaomi Aqara door sensor",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -11,7 +12,6 @@
         "category": {
             "security": "1"
         },
-        "type": "Xiaomi Aqara door sensor",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

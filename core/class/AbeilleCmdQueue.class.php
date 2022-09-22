@@ -159,7 +159,7 @@
                 $zg['enabled'] = 0;
                 cmdLog('error', 'initNewZigateDefault: port non défini');
             }
-            $zg['ieeeOk'] = config::byKey('AbeilleIEEE_Ok'.$zgId, 'Abeille', '-1');
+            $zg['ieeeOk'] = config::byKey('ab::zgIeeeAddrOk'.$zgId, 'Abeille', '-1');
             // cmdLog("debug", __FUNCTION__." Enabled: ".$zg['enabled']);
             $zg['available'] = 1;           // By default we consider the Zigate available to receive commands
             $zg['hw'] = 0;                  // HW version: 1=v1, 2=v2

@@ -465,8 +465,8 @@
             $status = 0;
             $error = "";
 
-            config::remove("AbeilleIEEE_Ok".$zgId, 'Abeille');
-            config::remove("AbeilleIEEE".$zgId, 'Abeille');
+            config::remove("ab::zgIeeeAddrOk".$zgId, 'Abeille');
+            config::remove("ab::zgIeeeAddr".$zgId, 'Abeille');
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }

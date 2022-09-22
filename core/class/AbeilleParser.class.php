@@ -228,7 +228,7 @@
 
             /* The idea is to store SQN & recept time and ignore any matching SQN during the following 10sec */
             if (isset($eq['sqnList'][$sqn])) {
-                if ($eq['sqnList'][$sqn] + 10 > time()) {
+                if ($eq['sqnList'][$sqn] + 2 > time()) {
                     parserLog('debug', '  Duplicated message for SQN '.$sqn.' => ignoring');
                     return true; // Consider duplicated msg
                 }
@@ -1448,7 +1448,7 @@
             // parserLog('debug','Msg='.$datas." => lqi=".$lqi);
 
             /* To be sure there is no port changes, checking received IEEE vs stored one.
-               'AbeilleIEEE_Ok' is set to 0 on daemon start when interrogation is not done yet.
+               'ab::zgIeeeAddrOk' is set to 0 on daemon start when interrogation is not done yet.
                Should be updated by 8009 or 8024 responses */
             if ($type != '8000') {
                 $zgId = substr($dest, 7); // AbeilleX => X
@@ -1459,7 +1459,7 @@
                 }
 
                 if ($ieeeStatus == 0) { // Still in interrogation
-                    $keyIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
+                    $keyIeeeOk = str_replace('Abeille', 'ab::zgIeeeAddrOk', $dest); // AbeilleX => ab::zgIeeeAddrOkX
                     $ieeeStatus = config::byKey($keyIeeeOk, 'Abeille', '0', true);
                     $GLOBALS['zigate'.$zgId]['ieeeStatus'] = $ieeeStatus; // Updating local status
 
@@ -1468,7 +1468,7 @@
 
                         $acceptedBeforeZigateIdentified = array("0208", "0300", "8009", "8010", "8024");
                         if (!in_array($type, $acceptedBeforeZigateIdentified)) {
-                            parserLog('debug', $dest.', AbeilleIEEE_Ok==0 => msg '.$type." ignored. Waiting 8009 or 8024.");
+                            parserLog('debug', $dest.', ab::zgIeeeAddrOk==0 => msg '.$type." ignored. Waiting 8009 or 8024.");
                             return 0;
                         }
                     }
@@ -3208,6 +3208,42 @@
                         }
                     } // End '$clustId == "0500"'
 
+                    // 1000/Touch link commissioning cluster specific
+                    else if ($clustId == "1000") {
+                        // Duplicated message ?
+                        if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                            return;
+
+                        if ($dir && ($cmd == "41")) { // Get group identifiers response
+                            $total = substr($msg, 0, 2);
+                            $startIdx = substr($msg, 2, 2);
+                            $count = substr($msg, 4, 2);
+                            $msg = substr($msg, 6);
+                            parserLog('debug', '  Get group identifiers response: Total='.$total.', StartIdx='.$startIdx.', Count='.$count);
+                            for ($i = 0; $i < $count; $i++) {
+                                $groupId = AbeilleTools::reverseHex(substr($msg, 0, 4));
+                                $groupType = substr($msg, 4, 2);
+                                $msg = substr($msg, 6);
+                                parserLog('debug', '  - Group='.$groupId.', Type='.$groupType);
+                            }
+                        } else if ($dir && ($cmd == "42")) { // Get endpoint list response
+                            $total = substr($msg, 0, 2);
+                            $startIdx = substr($msg, 2, 2);
+                            $count = substr($msg, 4, 2);
+                            $msg = substr($msg, 6);
+                            parserLog('debug', '  Get endpoint list response: Total='.$total.', StartIdx='.$startIdx.', Count='.$count);
+                            for ($i = 0; $i < $count; $i++) {
+                                $netAddr2 = AbeilleTools::reverseHex(substr($msg, 0, 4));
+                                $epId2 = substr($msg, 4, 2);
+                                $profId2 = AbeilleTools::reverseHex(substr($msg, 6, 4));
+                                $devId2 = AbeilleTools::reverseHex(substr($msg, 10, 4));
+                                $version2 = substr($msg, 12, 2);
+                                $msg = substr($msg, 14);
+                                parserLog('debug', '  - Addr='.$netAddr2.', EP='.$epId2.', ProfId='.$profId2.', DevId='.$decId2);
+                            }
+                        }
+                    } // End '$clustId == "1000"'
+
                     // Cluster EF00 is used by Tuya.
                     else if ($clustId == "EF00") {
                         // Duplicated message ?
@@ -3299,8 +3335,8 @@
 
             /* If still required, checking USB port unexpected switch */
             // Tcharp38: Handled by Abeille.class
-            // $confIeee = str_replace('Abeille', 'AbeilleIEEE', $dest); // AbeilleX => AbeilleIEEEX
-            // $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
+            // $confIeee = str_replace('Abeille', 'ab::zgIeeeAddr', $dest); // AbeilleX => ab::zgIeeeAddrX
+            // $confIeeeOk = str_replace('Abeille', 'ab::zgIeeeAddrOk', $dest); // AbeilleX => ab::zgIeeeAddrOkX
             // if (config::byKey($confIeeeOk, 'Abeille', 0) == 0) {
             //     if (config::byKey($confIeee, 'Abeille', 'none', 1) == "none") {
             //         config::save($confIeee, $extAddr, 'Abeille');
@@ -3613,8 +3649,8 @@
 
             /* If still required, checking USB port unexpected switch */
             // Tcharp38: Handled by Abeille.class
-            // $confIeee = str_replace('Abeille', 'AbeilleIEEE', $dest); // AbeilleX => AbeilleIEEEX
-            // $confIeeeOk = str_replace('Abeille', 'AbeilleIEEE_Ok', $dest); // AbeilleX => AbeilleIEEE_OkX
+            // $confIeee = str_replace('Abeille', 'ab::zgIeeeAddr', $dest); // AbeilleX => ab::zgIeeeAddrX
+            // $confIeeeOk = str_replace('Abeille', 'ab::zgIeeeAddrOk', $dest); // AbeilleX => ab::zgIeeeAddrOkX
             // if (config::byKey($confIeeeOk, 'Abeille', 0) == 0) {
             //     if (config::byKey($confIeee, 'Abeille', 'none', 1) == "none") {
             //         config::save($confIeee, $dataIEEE, 'Abeille');

@@ -5,11 +5,13 @@
         "comment3": "Based on obsolete 'luminositeXiaomi.json'",
         "name": "MeasuredValue",
         "subType": "numeric",
+        "template": "badge",
         "configuration": {
             "calculValueOffset": "pow(10,#value#\/10000+1\/10000)",
             "historizeRound": "0"
         },
         "type": "info",
+        "unit": "Lx",
         "logicalId": "0400-#EP#-0000"
     }
 }

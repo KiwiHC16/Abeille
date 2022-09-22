@@ -1,5 +1,6 @@
 {
     "sensor_natgas": {
+        "manufacturer": "Xiaomi",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",

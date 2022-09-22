@@ -1,6 +1,7 @@
 {
     "sensor_magnet": {
         "manufacturer": "Xiaomi",
+        "type": "Xiaomi door sensor",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -10,7 +11,6 @@
         "category": {
             "opening": "1"
         },
-        "type": "Xiaomi door sensor",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

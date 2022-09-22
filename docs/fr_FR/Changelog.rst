@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220922-BETA-1
+-------------
+
 - Page EQ/avancé: Affichage code fabricant.
 - Interne: Ajout fabricant dans qq modeles JSON.
 - Livarno Home: Ajout modele préliminaire (2448).

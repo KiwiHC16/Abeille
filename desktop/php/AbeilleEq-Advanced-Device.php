@@ -4,7 +4,7 @@
 <hr>
 
 <?php
-    if ($dbgDeveloperMode) echo __FILE__;
+    if (isset($dbgDeveloperMode)) echo __FILE__;
 ?>
 
 <div class="form-group">

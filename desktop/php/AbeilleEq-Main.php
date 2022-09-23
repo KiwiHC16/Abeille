@@ -2,7 +2,7 @@
      Included by 'AbeilleEq.php' -->
 
 <?php
-    if ($dbgDeveloperMode) echo __FILE__;
+    if (isset($dbgDeveloperMode)) echo __FILE__;
 ?>
 
 <form class="form-horizontal">

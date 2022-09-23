@@ -1,9 +1,11 @@
 {
     "511.202": {
+        "manufacturer": "Iluminize",
+        "model": "511.202",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "511.202"
+            "icon": "Iluminize-511202"
         },
         "category": {
             "automatism": "1"

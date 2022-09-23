@@ -8,7 +8,7 @@
             "automatism": "1"
         },
         "configuration": {
-            "icon": "Philips-OutdoorSensor",
+            "icon": "Philips-MotionSensor-2",
             "mainEP": "02",
             "batteryType": "2x1.5 AA"
         },
@@ -90,12 +90,28 @@
                 "comment": "Attr 0030 used as private attribute, not standard",
                 "isVisible": "1"
             },
+            "Sensitivity": {
+                "use": "attr-Sensitivity",
+                "logicalId": "0406-02-0030",
+                "isVisible": "1"
+            },
+            "Set Sensitivity": {
+                "use": "zbWriteAttribute",
+                "params": "clustId=0406&attrId=0030&attrType=20&manufId=100b&attrVal=#value#",
+                "isVisible": "1"
+            },
+            "Sensitivity": {
+                "use": "attr-Sensitivity",
+                "logicalId": "0406-02-0030",
+                "comment": "Attr 0030 used as private attribute, not standard",
+                "isVisible": "1"
+            },
             "Bind 0406-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0406",
                 "execAtCreation": "Yes"
             },
-             "SetReporting 0406-0000": {
+            "SetReporting 0406-0000": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0406&attrType=18&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes"

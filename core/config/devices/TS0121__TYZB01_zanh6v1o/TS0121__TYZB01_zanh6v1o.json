@@ -48,7 +48,7 @@
             },
             "include3 2 2 2 2 2": "PuissanceVoltagePrise",
             "include3 2 2 2 2": "PuissanceCurrentPrise",
-            "include3 2 2 2": "PuissanceLegrandPrise",
+            "Puissance": { "use": "zb-0B04-ActivePower", "params": "mult=1&div=1", "isVisible": 1 },
             "include3 2 2 2 3": "CurrentSummationDelivered",
             "Poll 0B04": {
                 "use": "poll-0B04-0505-0508-050B"

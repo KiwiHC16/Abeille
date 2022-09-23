@@ -2,7 +2,7 @@
      Included by 'AbeilleEq-Advanced.php' -->
 
 <?php
-    if ($dbgDeveloperMode) echo __FILE__;
+    if (isset($dbgDeveloperMode)) echo __FILE__;
 ?>
 
 <?php

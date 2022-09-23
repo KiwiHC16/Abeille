@@ -185,7 +185,7 @@ class Abeille extends eqLogic
     {
         log::add('Abeille', 'debug', 'Starting cronDaily ------------------------------------------------------------------------------------------------------------------------');
 
-        $preventLQIRequest = config::byKey('preventLQIRequest', 'Abeille', 'no');
+        $preventLQIRequest = config::byKey('ab::preventLQIAutoUpdate', 'Abeille', 'no');
         if ($preventLQIRequest == "yes") {
             log::add('Abeille', 'debug', 'cronD: LQI request (AbeilleLQI.php) prevented on user request.');
         } else {

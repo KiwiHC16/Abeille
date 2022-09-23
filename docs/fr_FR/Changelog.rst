@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+- Interne: Suppression cmde obsolete 'luminositeHue.json'.
+- Interne: Normalisation de qq icones Philips.
+- Interne: Normalisation de qq icones Iluminize.
+- Tuya vibration sensor TS0210: Ajout support préliminaire (2452).
+- Interne: DB config: Nettoyage clefs obsoletes.
+- Interne: Suppression erreurs PHP sur 'AbeilleEQ-xxx.php'
+- Commandes JSON: Suppression cmde obsolete 'PuissanceLegrandPrise' => 'zb-0B04-ActivePower'.
+- Assistant modèle: Mise-à-jour pour cluster 0500/IAS zone.
+- Assistant modèle: Correction génération 'category'.
+- Interne: DB config: 'preventLQIRequest' => 'preventLQIAutoUpdate'.
+
 220922-BETA-1
 -------------
 

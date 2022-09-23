@@ -431,7 +431,7 @@
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage interrogation LQI à minuit.}}">{{Blocage interrogation LQI à minuit : }}</label>
                 <div class="col-lg-5">
-                    <select class="configKey form-control" data-l1key="preventLQIRequest" style="width:150px" data-toggle="tooltip" title="{{Si 'oui', empeche l'interrogation du réseau tout les jours à minuit}}">
+                    <select class="configKey form-control" data-l1key="ab::preventLQIAutoUpdate" style="width:150px" data-toggle="tooltip" title="{{Si 'oui', empeche l'interrogation du réseau tout les jours à minuit}}">
                         <option value="yes">{{Oui}}</option>
                         <option value="no" selected>{{Non}}</option>
                     </select>

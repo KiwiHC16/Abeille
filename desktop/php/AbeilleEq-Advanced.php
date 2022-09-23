@@ -2,7 +2,7 @@
      Included by 'AbeilleEq.php' -->
 
 <?php
-    if ($dbgDeveloperMode) echo __FILE__;
+    if (isset($dbgDeveloperMode)) echo __FILE__;
 
     function addDocButton($chapter) {
         // $urlUserMan = "https://kiwihc16.github.io/AbeilleDoc"; // Constant defined in Abeille config

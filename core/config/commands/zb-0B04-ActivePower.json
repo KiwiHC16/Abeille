@@ -7,8 +7,6 @@
         "configuration": {
             "calculValueOffset": "#value#*#MULT#\/#DIV#",
             "historizeRound": "0",
-            "maxValue": "4000",
-            "minValue": "0",
             "visibilityCategory": "All"
         },
         "type": "info",

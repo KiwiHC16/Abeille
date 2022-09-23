@@ -31,7 +31,7 @@
                 "execAtCreationDelay": 7
             },
 
-            "include4": "luminositeHue",
+            "Luminosite": { "use": "zb-0400-MeasuredValue", "isVisible": 1 },
             "Bind 0400-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0400",

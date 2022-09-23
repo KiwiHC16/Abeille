@@ -1,0 +1,52 @@
+{
+    "TS0210__TZ3000_bmfw9ykl": {
+        "manufacturer": "Tuya",
+        "model": "TS0210",
+        "type": "Tuya vibration sensor",
+        "alternateIds": "",
+        "timeout": "60",
+        "category": {
+            "security": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-VibrationSensor",
+            "mainEP": "01",
+            "batteryType": "2x1.5V AAA"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
+            "SetReporting 0001-00021": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Zone Alarm1": {
+                "use": "attr-Zone-Alarm1",
+                "isVisible": "1"
+            },
+            "ZoneStatusChange": {
+                "use": "zb-0500-ZoneStatus-ChangeNotification",
+                "comment": "On receive we trig 01-0500-Alarm1 with extracted boolean value",
+                "trigOut": "01-0500-alarm1",
+                "trigOutOffset": "#value#&1"
+            },
+            "SetReporting 0500-0002": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 0500-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0500",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

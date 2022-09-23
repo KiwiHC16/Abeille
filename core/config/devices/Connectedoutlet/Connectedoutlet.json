@@ -1,15 +1,24 @@
 {
     "Connectedoutlet": {
+        "manufacturer": "Legrand",
+        "model": "Connected outlet",
+        "type": "Legrand outlet",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "Connectedoutlet"
+            "icon": "Legrand-Connectedoutlet"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Legrand Prise Connected Outlet Mural 220V avec Neutre",
         "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
             "On": {
                 "use": "zbCmd-0006-On"
             },
@@ -55,14 +64,7 @@
                 "execAtCreationDelay": 9
             },
             "include28 2": "setReportPuissanceLegrand",
-            "include11 2": "PuissanceLegrandPrise",
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            }
+            "Puissance": { "use": "zb-0B04-ActivePower", "params": "mult=1&div=1", "isVisible": 1 }
         }
     }
 }

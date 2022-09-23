@@ -1,9 +1,11 @@
 {
     "SML001": {
+        "manufacturer": "Philips",
+        "model": "SML001",
         "timeout": "60",
         "configuration": {
             "mainEP": "02",
-            "icon": "SML001",
+            "icon": "Philips-MotionSensor-1",
             "batteryType": "2x AAA"
         },
         "category": {
@@ -12,7 +14,7 @@
         "type": "Philips Presence Indoor",
         "commands": {
             "include3": "presence",
-            "include4": "luminositeHue",
+            "Luminosite": { "use": "zb-0400-MeasuredValue", "isVisible": 1 },
             "Temperature": {
                 "use": "zb-0402-MeasuredValue",
                 "isVisible": 1,

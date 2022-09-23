@@ -2,7 +2,7 @@
     "Contactor": {
         "manufacturer": "Legrand",
         "model": "20AX",
-        "type": "Legrand Contactor",
+        "type": "Legrand contactor",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -23,7 +23,7 @@
             "include8": "LegrandContactorOn",
             "include9": "LegrandContactorOff",
             "include10": "LegrandContactorAuto",
-            "include11 2": "PuissanceLegrandPrise",
+            "Puissance": { "use": "zb-0B04-ActivePower", "params": "mult=1&div=1", "isVisible": 1 },
             "Bind-0B04-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0B04",

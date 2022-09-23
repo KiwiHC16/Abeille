@@ -53,13 +53,12 @@
     // Config DB: replace 'oldKey' by 'newKey'
     function replaceConfigDB($oldKey, $newKey) {
         $val = config::byKey($oldKey, 'Abeille', 'nada', true);
-log::add('Abeille', 'debug', "LA ok='".$oldKey."', newK='".$newKey."', val=".json_encode($val));
-
         if ($val != 'nada') {
             config::save($newKey, $val, 'Abeille');
-            config::remove($oldKey, 'Abeille');
             log::add('Abeille', 'debug', "  config DB: '".$oldKey."' changed to '".$newKey."'");
         }
+        // Note: If old key is defined to null then can't detect it so force remove anyway.
+        config::remove($oldKey, 'Abeille');
     }
 
     /* Check and update configuration DB if required.
@@ -429,6 +428,7 @@ log::add('Abeille', 'debug', "LA ok='".$oldKey."', newK='".$newKey."', val=".jso
            - config DB: 'AbeilleParentId' => 'ab::defaultParent'
            - config DB: 'AbeilleIEEEX' => 'ab::zgIeeeAddrX'
            - config DB: 'AbeilleIEEE_OkX' => 'ab::zgIeeeAddrOkX'
+           - config DB: 'preventLQIRequest' => 'ab::preventLQIAutoUpdate'
          */
         if (intval($dbVersion) < 20220421) {
             $eqLogics = eqLogic::byType('Abeille');
@@ -498,6 +498,11 @@ log::add('Abeille', 'debug', "LA ok='".$oldKey."', newK='".$newKey."', val=".jso
                     "Generic-E27-Color" => "Generic-BulbE27-Color",
                     "Generic-E27" => "Generic-BulbE27",
                     "Generic-GU10" => "Generic-BulbGU10",
+                    "511.201" => "Iluminize-511201",
+                    "511.202" => "Iluminize-511202",
+                    "LegrandRemoteSwitch" => "Legrand-RemoteSwitch",
+                    "Contactor" => "Legrand-Contactor",
+                    "Connectedoutlet" => "Legrand-Connectedoutlet",
                     "ProfaluxTelecommande" => "Profalux-Remote",
                     "voletProFalux" => "Profalux-Shutter",
                     "node_bsoProFalux" => "Profalux-BSO",
@@ -512,8 +517,6 @@ log::add('Abeille', 'debug', "LA ok='".$oldKey."', newK='".$newKey."', val=".jso
                     "Tuya4ButtonsSceneSwitch" => "Tuya-4ButtonsSwitch-Gray",
                     "Tuya4ButtonsSwitch" => "Tuya-4ButtonsSwitch-White",
                     "PlugZ3" => "Ledvance-PlugZ3",
-                    "LegrandRemoteSwitch" => "Legrand-RemoteSwitch",
-                    "Contactor" => "Legrand-Contactor",
                     "Ikea-GU10" => "Ikea-BulbGU10",
                     "Ikea-E27" => "Ikea-BulbE27",
                     "IkeaTradfriBulbE27Opal1000lm" => "Ikea-BulbE27",
@@ -530,11 +533,15 @@ log::add('Abeille', 'debug', "LA ok='".$oldKey."', newK='".$newKey."', val=".jso
                     "LOM001" => "PhilipsSignify-Plug",
                     "LOM002" => "PhilipsSignify-Plug",
                     "LTW001" => "Philips-Bulb-E27-White",
+                    "Philips-MotionSensor-SML003" => "Philips-MotionSensor-1",
+                    "SML001" => "Philips-MotionSensor-1",
+                    "Philips-OutdoorSensor" => "Philips-MotionSensor-2",
                     "XiaomiPorte" => "Xiaomi-DoorSensor",
                     "XiaomiPorte1" => "Xiaomi-DoorSensor-2",
                     "XiaomiTemperatureCarre" => "Xiaomi-TempSensor-2",
                     "XiaomiTemperatureRond" => "Xiaomi-TempSensor-1",
                     "XiaomiPriseEU" => "Xiaomi-Plug-EU",
+                    "sen_ill_mgl01" => "Xiaomi-LightSensor-1",
                 );
                 $curIcon = $eqLogic->getConfiguration('ab::icon', '');
                 if (($curIcon != '') && isset($iList[$curIcon])) {
@@ -558,6 +565,7 @@ log::add('Abeille', 'debug', "LA ok='".$oldKey."', newK='".$newKey."', val=".jso
                 replaceConfigDB('AbeilleIEEE_Ok'.$zgId, 'ab::zgIeeeAddrOk'.$zgId);
             }
             replaceConfigDB('AbeilleParentId', 'ab::defaultParent');
+            replaceConfigDB('preventLQIRequest', 'ab::preventLQIAutoUpdate');
 
             // config::save('DbVersion', '20220421', 'Abeille'); // OT FROZEN YET
         }

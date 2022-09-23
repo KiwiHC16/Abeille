@@ -1117,15 +1117,24 @@
             /* IAS Zone */
             if (isset(ep.servClusters["0500"]) && isset(ep.servClusters["0500"]['attributes'])) {
                 attributes = ep.servClusters["0500"]['attributes'];
-                if (isset(attributes['0002'])) {
-                    cmds["Zone Status"] = newCmd("zb-0500-ZoneStatus");
-                    // cmds["Zone Status"]["isVisible"] = 1;
-                    cmds["Zone Status"]["comment"] = "This should trig 'Zone Alarm1'";
-                    cmds["Get Zone Status"] = newCmd("zbReadAttribute", "clustId=0500&attrId=0002");
-                    cmds["Zone Alarm1"] = newCmd("zb-0500-ZoneStatus-Alarm1");
-                    cmds["Zone Alarm1"]["isVisible"] = 1;
-                    cmds["SetReporting 0500-0002"] = newCmd("zbConfigureReporting", "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=", "yes");
-                }
+                // if (isset(attributes['0002'])) {
+                //     cmds["Zone Status"] = newCmd("zb-0500-ZoneStatus");
+                //     // cmds["Zone Status"]["isVisible"] = 1;
+                //     cmds["Zone Status"]["comment"] = "This should trig 'Zone Alarm1'";
+                //     cmds["Get Zone Status"] = newCmd("zbReadAttribute", "clustId=0500&attrId=0002");
+                //     cmds["Zone Alarm1"] = newCmd("zb-0500-ZoneStatus-Alarm1");
+                //     cmds["Zone Alarm1"]["isVisible"] = 1;
+                //     cmds["SetReporting 0500-0002"] = newCmd("zbConfigureReporting", "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                // }
+
+                // Generated cmd 00 seems to be mandatory. Using it by default
+                cmds["Zone Alarm1"] = newCmd("attr-Zone-Alarm1");
+                cmds["Zone Alarm1"]["isVisible"] = 1;
+                cmds["Zone Status Changed"] = newCmd("zb-0500-ZoneStatus-ChangeNotification");
+                cmds["Zone Status Changed"]["comment"] = "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value";
+                cmds["Zone Status Changed"]["trigOut"] = "01-0500-alarm1";
+                cmds["Zone Status Changed"]["trigOutOffset"] = "#value#&1";
+
                 cmds["Bind 0500-ToZigate"] = newCmd("zbBindToZigate", "clustId=0500", "yes");
             }
 
@@ -1265,9 +1274,16 @@
         // jeq2.comment = // Optional
 
         // 'category'
-        var cat = new Object();
-        cat.automatism = 1;
-        jeq2.category = cat;
+        var category = new Object();
+        for (i = 0; i < js_categories.length; i++) {
+            cat = js_categories[i];
+            checked = document.getElementById("id"+cat).checked;
+            if (checked)
+                category[cat] = 1;
+            else
+                category[cat] = 0;
+        }
+        jeq2.category = category;
 
         // 'configuration'
         var conf = new Object();

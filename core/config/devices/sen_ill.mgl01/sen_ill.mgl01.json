@@ -2,18 +2,18 @@
     "sen_ill.mgl01": {
         "manufacturer": "Xiaomi",
         "model": "GZCGQ01LM",
+        "type": "Xiaomi smart light sensor",
         "timeout": "60",
         "comment": "Does not support clust 0001 attrib 0021 reporting (battery percent)",
         "comment2": "Illuminance reporting set to 10mins",
         "configuration": {
             "mainEP": "01",
-            "icon": "sen_ill_mgl01",
+            "icon": "Xiaomi-LightSensor-1",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "light": "1"
         },
-        "type": "Xiaomi GZCGQ01LM smart light sensor",
         "commands": {
             "SWBuildID": { "use": "zb-0000-SWBuildID" },
             "Get-SWBuildID": { "use": "zbReadAttribute", "params": "clustId=0000&attrId=4000" },
@@ -44,7 +44,7 @@
                 "params": "clustId=0400&attrType=21&attrId=0000&minInterval=0258&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes"
             },
-            "Illuminance": { "use": "zb-0400-MeasuredValue", "unit": "Lux", "isVisible": 1 }
+            "Illuminance": { "use": "zb-0400-MeasuredValue", "isVisible": 1 }
         }
     }
 }

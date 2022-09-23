@@ -1,5 +1,8 @@
 {
     "Cableoutlet_Legrand": {
+        "manufacturer": "Legrand",
+        "model": "Cable outlet",
+        "type": "Legrand cable outlet",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -8,7 +11,6 @@
         "category": {
             "heating": "1"
         },
-        "type": "Legrand Cable Outlet 3000W",
         "commands": {
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
@@ -60,7 +62,7 @@
                 "execAtCreationDelay": 9
             },
             "include28 2": "setReportPuissanceLegrand",
-            "include11 2": "PuissanceLegrandPrise",
+            "Puissance": { "use": "zb-0B04-ActivePower", "params": "mult=1&div=1", "isVisible": 1 },
             "Set Led On": {
                 "use": "setLegrandLEDOn"
             },

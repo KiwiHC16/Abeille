@@ -8,7 +8,7 @@
             "automatism": "1"
         },
         "configuration": {
-            "icon": "Philips-MotionSensor-SML003",
+            "icon": "Philips-MotionSensor-1",
             "mainEP": "02",
             "batteryType": "2x1.5 AAA"
         },

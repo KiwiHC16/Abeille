@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220923-BETA-1
+-------------
+
 - Interne: Suppression cmde obsolete 'luminositeHue.json'.
 - Interne: Normalisation de qq icones Philips.
 - Interne: Normalisation de qq icones Iluminize.

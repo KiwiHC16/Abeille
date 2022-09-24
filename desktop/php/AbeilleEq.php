@@ -46,6 +46,22 @@
     $abQueues = $GLOBALS['abQueues'];
     echo '<script>var js_queueXToCmd = '.$abQueues['xToCmd']['id'].';</script>'; // PHP to JS
     echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
+
+    /* Returns cmd ID identified by its Jeedom logical ID name */
+    function getCmdIdByLogicId($eqId, $logicId) {
+        $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $logicId);
+        if (!is_object($cmd))
+            return "";
+        return $cmd->getId();
+    }
+
+    /* Returns current cmd value identified by its Jeedom logical ID name */
+    function getCmdValueByLogicId($eqId, $logicId) {
+        $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $logicId);
+        if (!is_object($cmd))
+            return "";
+        return $cmd->execCmd();
+    }
 ?>
 
 <!-- For all modals on 'Abeille' page. -->

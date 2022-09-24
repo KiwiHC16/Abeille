@@ -137,13 +137,15 @@
 
                 if ($newSyntax) {
                     // List of supported command keys
-                    $supportedKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'trigOut', 'trigOutOffset', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
+                    $validCmdKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'trigOut', 'trigOutOffset', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
+                    array_push($validCmdKeys, 'repeatEventManagement');
+                    array_push($validCmdKeys, 'returnStateTime', 'returnStateValue');
                     foreach ($value as $key2 => $value2) {
-                        if (in_array($key2, $supportedKeys))
+                        if (in_array($key2, $validCmdKeys))
                             continue;
                         if (substr($key2, 0, 7) == "comment")
                             continue;
-                        $error = newDevError($devName, "ERROR", "Invalid '".$key2."' key for '".$key."' Jeedom command");
+                        $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key for '".$key."' Jeedom command");
                     }
                 }
 
@@ -239,7 +241,8 @@
 
             /* Checking supported 'configuration' keywords */
             $supportedConfKeys = ['topic', 'request', 'historizeRound', 'execAtCreation', 'execAtCreationDelay', 'trigOut', 'trigOutOffset', 'repeatEventManagement', 'visibilityCategory'];
-            array_push($supportedConfKeys, 'minValue', 'maxValue', 'calculValueOffset', 'AbeilleRejectValue', 'returnStateValue', 'returnStateTime', 'Polling', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'visibiltyTemplate');
+            array_push($supportedConfKeys, 'minValue', 'maxValue', 'calculValueOffset', 'AbeilleRejectValue', 'Polling', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'visibiltyTemplate');
+            array_push($supportedConfKeys, 'returnStateTime', 'returnStateValue');
             foreach ($conf as $key => $value) {
                 if (in_array($key, $supportedConfKeys))
                     continue;

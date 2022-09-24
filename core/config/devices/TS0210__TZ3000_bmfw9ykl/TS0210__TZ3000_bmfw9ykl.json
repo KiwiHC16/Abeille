@@ -3,7 +3,7 @@
         "manufacturer": "Tuya",
         "model": "TS0210",
         "type": "Tuya vibration sensor",
-        "alternateIds": "",
+        "alternateIds": "TS0210__TYZB01_3zv6oleo,TS0210__TYZB01_j9xxahcl",
         "timeout": "60",
         "category": {
             "security": "1"
@@ -29,6 +29,10 @@
             },
             "Zone Alarm1": {
                 "use": "attr-Zone-Alarm1",
+                "comment": "'repeatEventManagement' required since device sends only 1 never 0",
+                "repeatEventManagement": "always",
+                "returnStateValue": 0,
+                "returnStateTime": 1,
                 "isVisible": "1"
             },
             "ZoneStatusChange": {
@@ -37,10 +41,9 @@
                 "trigOut": "01-0500-alarm1",
                 "trigOutOffset": "#value#&1"
             },
-            "SetReporting 0500-0002": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=",
-                "execAtCreation": "yes"
+            "Current Zone Sensibility Level": {
+                "use": "zb-0500-CurrentZoneSensibilityLevel",
+                "isVisible": "1"
             },
             "Bind 0500-ToZigate": {
                 "use": "zbBindToZigate",

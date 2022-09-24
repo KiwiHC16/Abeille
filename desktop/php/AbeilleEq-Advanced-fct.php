@@ -15,14 +15,6 @@
         return $cmd->execCmd();
     }
 
-    /* Returns current cmd value identified by its Jeedom logical ID name */
-    function getCmdValueByLogicId($eqId, $logicId) {
-        $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $logicId);
-        if (!is_object($cmd))
-            return "";
-        return $cmd->execCmd();
-    }
-
     /* Returns cmd ID identified by its Jeedom name */
     function getCmdIdByName($eqId, $cmdName) {
         $cmd = AbeilleCmd::byEqLogicIdCmdName($eqId, $cmdName);

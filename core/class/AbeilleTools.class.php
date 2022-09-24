@@ -452,6 +452,12 @@
                                 $newCmd[$cmd1]['configuration']['historizeRound'] = $cmd2['historizeRound'];
                             if (isset($cmd2['calculValueOffset']))
                                 $newCmd[$cmd1]['configuration']['calculValueOffset'] = $cmd2['calculValueOffset'];
+                            if (isset($cmd2['repeatEventManagement']))
+                                $newCmd[$cmd1]['configuration']['repeatEventManagement'] = $cmd2['repeatEventManagement'];
+                            if (isset($cmd2['returnStateTime']))
+                                $newCmd[$cmd1]['configuration']['returnStateTime'] = $cmd2['returnStateTime'];
+                            if (isset($cmd2['returnStateValue']))
+                                $newCmd[$cmd1]['configuration']['returnStateValue'] = $cmd2['returnStateValue'];
 
                             // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
                             $deviceCmds += $newCmd;

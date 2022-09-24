@@ -64,7 +64,11 @@
                 "execAtCreationDelay": 9
             },
             "include28 2": "setReportPuissanceLegrand",
-            "Puissance": { "use": "zb-0B04-ActivePower", "params": "mult=1&div=1", "isVisible": 1 }
+            "Puissance": {
+                "use": "zb-0B04-ActivePower",
+                "params": "mult=1&div=1",
+                "isVisible": 1
+            }
         }
     }
 }

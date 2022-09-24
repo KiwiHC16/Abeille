@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+- Page équipement: Amélioration affichage.
+- Tuya vibration sensor TS0210: Mise-à-jour modèle (2452).
+- Syntaxe modele EQ: Ajout possibilité surcharge 'repeatEventManagement'.
+- Syntaxe modele EQ: Ajout possibilité surcharge 'returnStateTime' & 'returnStateValue'.
+
 220923-BETA-1
 -------------
 
@@ -13,7 +18,7 @@ ChangeLog
 - Commandes JSON: Suppression cmde obsolete 'PuissanceLegrandPrise' => 'zb-0B04-ActivePower'.
 - Assistant modèle: Mise-à-jour pour cluster 0500/IAS zone.
 - Assistant modèle: Correction génération 'category'.
-- Interne: DB config: 'preventLQIRequest' => 'preventLQIAutoUpdate'.
+- Interne: DB config: 'preventLQIRequest' => 'ab::preventLQIAutoUpdate'.
 
 220922-BETA-1
 -------------

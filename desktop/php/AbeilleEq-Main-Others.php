@@ -7,20 +7,6 @@
     if (isset($dbgDeveloperMode)) echo __FILE__;
 ?>
 
-<div class="form-group" >
-    <label class="col-sm-3 control-label">{{Source d'alimentation}}</label>
-    <div class="col-sm-3">
-        <?php
-        /* If battery powered eq. 'batteryType' is defined in device JSON file */
-        if ($eqLogic->getConfiguration('battery_type', '') != "") {
-            echo '<span>{{Batterie}}  </span>';
-            echo '<input class="eqLogicAttr" data-l1key="configuration" data-l2key="battery_type" />';
-        } else
-            echo '<span>{{Secteur}}</span>';
-        ?>
-</div>
-</div>
-
 <hr>
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Position pour les representations graphiques.}}</label>

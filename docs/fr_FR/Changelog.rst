@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220924-BETA-1
+-------------
+
 - Page équipement: Amélioration affichage.
 - Tuya vibration sensor TS0210: Mise-à-jour modèle (2452).
 - Syntaxe modele EQ: Ajout possibilité surcharge 'repeatEventManagement'.

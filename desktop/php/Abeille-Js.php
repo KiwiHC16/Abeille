@@ -43,36 +43,20 @@
     });
 
     <?php
-    for ($i = 1; $i <= 10; $i++) {
+    for ($zgId = 1; $zgId <= 10; $zgId++) {
     ?>
-    $('#bt_include<?php echo $i;?>').on('click', function ()  {
-        console.log("bt_include<?php echo $i;?>");
-        var xmlhttpMQTTSendInclude = new XMLHttpRequest();
-        xmlhttpMQTTSendInclude.onreadystatechange = function()  {
-            if (this.readyState == 4 && this.status == 200) {
-            xmlhttpMQTTSendIncludeResult = this.responseText;
-            }
-        };
-        xmlhttpMQTTSendInclude.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille<?php echo $i;?>_0000_SetPermit&payload=Inclusion", true);
-        xmlhttpMQTTSendInclude.send();
-        $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate <?php echo $i;?> doit se mettre à clignoter pour 4 minutes.}}', level: 'success'});
+    $('#bt_include<?php echo $zgId;?>').on('click', function ()  {
+        console.log("bt_include<?php echo $zgId;?>");
+        sendToCmd("startPermitJoin", <?php echo $zgId;?>);
     });
     <?php } ?>
 
     <?php
-    for ($i = 1; $i <= 10; $i++) {
+    for ($zgId = 1; $zgId <= 10; $zgId++) {
     ?>
-    $('#bt_include_stop<?php echo $i;?>').on('click', function () {
-        console.log("bt_include_stop<?php echo $i;?>");
-        var xmlhttpMQTTSendIncludeStop = new XMLHttpRequest();
-        xmlhttpMQTTSendIncludeStop.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-            xmlhttpMQTTSendIncludeResultStop = this.responseText;
-        }
-        };
-        xmlhttpMQTTSendIncludeStop.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdAbeille<?php echo $i;?>_0000_SetPermit&payload=InclusionStop", true);
-        xmlhttpMQTTSendIncludeStop.send();
-        $('#div_alert').showAlert({message: '{{Arret mode inclusion demandé. La zigate <?php echo $i;?> doit arreter de clignoter.}}', level: 'success'});
+    $('#bt_include_stop<?php echo $zgId;?>').on('click', function () {
+        console.log("bt_include_stop<?php echo $zgId;?>");
+        sendToCmd("stopPermitJoin", <?php echo $zgId;?>);
     });
     <?php } ?>
 
@@ -210,6 +194,18 @@
                     1000
                 );
             });
+            break;
+        case "startPermitJoin":
+            zgId = params;
+            sendCmd('CmdAbeille'+zgId+'/0000/setZgPermitMode', 'mode=start');
+            location.reload(true);
+            $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate '+zgId+' clignoter pendant 4 minutes.}}', level: 'success'});
+            break;
+        case "stopPermitJoin":
+            zgId = params;
+            sendCmd('CmdAbeille'+zgId+'/0000/setZgPermitMode', 'mode=stop');
+            location.reload(true);
+            $('#div_alert').showAlert({message: '{{Arret mode inclusion demandé. La zigate '+zgId+' doit arreter de clignoter.}}', level: 'success'});
             break;
         }
     }

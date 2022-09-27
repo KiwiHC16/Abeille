@@ -114,17 +114,6 @@
         "invertBinary": "0",
         "template": ""
     },
-    "Inclusion": {
-        "name": "Inclusion",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "SetPermit",
-            "request": "Inclusion"
-        }
-    },
     "Get Inclusion Status": {
         "name": "Get Inclusion Status",
         "isHistorized": "0",

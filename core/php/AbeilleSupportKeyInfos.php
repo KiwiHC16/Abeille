@@ -119,13 +119,22 @@
 
                 $major = '????';
                 $minor = '????';
+                $channel = "?";
                 $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'SW-Application');
                 if ($cmdLogic)
                     $major = $cmdLogic->execCmd();
                 $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'SW-SDK');
                 if ($cmdLogic)
                     $minor = $cmdLogic->execCmd();
-                logIt("Zigate ".$zgId.": ".$major.'-'.$minor."\n");
+                $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'Network-Channel');
+                if ($cmdLogic)
+                    $channel = $cmdLogic->execCmd();
+
+
+                logIt("Zigate ".$zgId."\n");
+                $fwVersion = $major.'-'.$minor;
+                logIt(" - Version FW: ".$fwVersion."\n");
+                logIt(" - Canal     : ".$channel."\n");
             } else
                 logIt("Zigate ".$zgId.": ERROR. No Jeedom registered device\n");
         }

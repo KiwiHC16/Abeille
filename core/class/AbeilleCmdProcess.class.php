@@ -2568,8 +2568,9 @@
                 }
 
                 // Zigate specific command
-                else if ($cmdName == 'SetPermit') {
-                    if (isset($Command['Inclusion'])) {
+                else if ($cmdName == 'setZgPermitMode') {
+                    $mode = $Command['mode'];
+                    if ($mode == "start") {
                         $cmd = "0049";
                         $length = "0004";
                         $data = "FFFCFE00";
@@ -2600,7 +2601,7 @@
                         // $CommandAdditionelle['permitJoin'] = "Status";
                         // processCmd( $dest, $CommandAdditionelle,$_requestedlevel );
                         $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "Cmd".$dest."/0000/permitJoin", "Status" );
-                    } elseif (isset($Command["InclusionStop"])) {
+                    } elseif ($mode == "stop") {
                         $cmd = "0049";
                         $length = "0004";
                         $data = "FFFC0000";

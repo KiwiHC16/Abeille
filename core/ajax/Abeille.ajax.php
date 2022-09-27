@@ -383,10 +383,10 @@
             $status = 0;
             $error = "";
 
-            $curMonId = config::byKey('monitor', 'Abeille', false);
+            $curMonId = config::byKey('ab::monitorId', 'Abeille', false);
             if ($eqId !== $curMonId) {
                 /* Saving ID of device to monitor */
-                config::save('monitor', $eqId, 'Abeille');
+                config::save('ab::monitorId', $eqId, 'Abeille');
 
                 /* Need to start AbeilleMonitor if not already running
                 and restart cmd & parser.
@@ -435,8 +435,8 @@
                     // Excluding device from current network
                     // self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$newDestBee."/0000/Remove", "ParentAddressIEEE=".$IEEE."&ChildAddressIEEE=".$IEEE );
                     /* Sending msg to 'AbeilleCmd' */
-                    $topic   = 'CmdAbeille'.$dstZgId.'/0000/SetPermit';
-                    $payload = "Inclusion=1";
+                    $topic   = 'CmdAbeille'.$dstZgId.'/0000/setZgPermitMode';
+                    $payload = "mode=start";
                     if (sendToCmd($topic, $payload) == false) {
                         $errors = "Could not send msg to 'xToCmd': topic=".$topic;
                         $status = -1;

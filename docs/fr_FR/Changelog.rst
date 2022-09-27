@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220927-BETA-1
+-------------
+
 - Orvibo CM10ZW: Ajout affichage 'Status X' (2024).
 - Livarno Home HG07834B: Mise-à-jour modele (2448).
 - Firmware zigate: Recommandation d'utiliser la v3.21.

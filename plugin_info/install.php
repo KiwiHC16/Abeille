@@ -429,6 +429,8 @@
            - config DB: 'AbeilleIEEEX' => 'ab::zgIeeeAddrX'
            - config DB: 'AbeilleIEEE_OkX' => 'ab::zgIeeeAddrOkX'
            - config DB: 'preventLQIRequest' => 'ab::preventLQIAutoUpdate'
+           - config DB: 'monitor' => 'ab::monitorId'
+           - config DB: Removed obsolete 'agressifTraitementAnnonce'.
          */
         if (intval($dbVersion) < 20220421) {
             $eqLogics = eqLogic::byType('Abeille');
@@ -566,6 +568,8 @@
             }
             replaceConfigDB('AbeilleParentId', 'ab::defaultParent');
             replaceConfigDB('preventLQIRequest', 'ab::preventLQIAutoUpdate');
+            replaceConfigDB('monitor', 'ab::monitorId');
+            config::remove('agressifTraitementAnnonce', 'Abeille');
 
             // config::save('DbVersion', '20220421', 'Abeille'); // OT FROZEN YET
         }

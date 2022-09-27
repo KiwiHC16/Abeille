@@ -502,6 +502,12 @@
                 "0000" => array( "name" => "ZoneState", "access" => "R" ),
                 "0001" => array( "name" => "ZoneType", "access" => "R" ),
                 "0002" => array( "name" => "ZoneStatus", "access" => "R" ),
+
+                // Zone Settings Attribute Set
+                "0010" => array( "name" => "IAS_CIE_Address", "access" => "RW", "dataType" => 0xf0 ), // EUI64=IEEE address
+                "0011" => array( "name" => "ZoneID", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0012" => array( "name" => "NumberOfZoneSensitivityLevelsSupported", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0013" => array( "name" => "CurrentZoneSensitivityLevel", "access" => "RW", "dataType" => 0x20 ), // uint8
             ),
             // Commands received
             // Commands generated

@@ -319,9 +319,9 @@
     $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
 
     /* Any device to monitor ?
-       It is indicated by 'monitor' key in Jeedom 'config' table. */
-    // $monId = config::byKey('monitor', 'Abeille', false);
-    $monId = $config['monitor'];
+       It is indicated by 'ab::monitorId' key in Jeedom 'config' table. */
+    // $monId = config::byKey('ab::monitorId', 'Abeille', false);
+    $monId = $config['ab::monitorId'];
     if ($monId !== false) {
         $eqLogic = eqLogic::byId($monId);
         if (!is_object($eqLogic)) {

@@ -1,14 +1,14 @@
 {
     "TS0505B__TZ3000_th6zqqy6": {
-        "manufacturer": "LIvarno home",
-        "model": "?",
+        "manufacturer": "Livarno home",
+        "model": "HG07834B",
         "type": "Livarno home bulb",
         "timeout": "60",
         "category": {
-            "automatism": "1"
+            "light": "1"
         },
         "configuration": {
-            "icon": "?",
+            "icon": "LivarnoHome-Bulb-E14Color",
             "mainEP": "01"
         },
         "commands": {

@@ -659,7 +659,7 @@
                 $config['ab::zgIeeeAddrOk'.$zgId] = config::byKey('ab::zgIeeeAddrOk'.$zgId, 'Abeille', 0);
                 $config['ab::zgIeeeAddr'.$zgId] = config::byKey('ab::zgIeeeAddr'.$zgId, 'Abeille', '');
             }
-            $config['monitor'] = config::byKey('monitor', 'Abeille', false);
+            $config['ab::monitorId'] = config::byKey('ab::monitorId', 'Abeille', false);
             $config['ab::defaultParent'] = config::byKey('ab::defaultParent', 'Abeille', '1', 1);
 
             return $config;
@@ -1097,7 +1097,7 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
                 $daemons .= " AbeilleParser AbeilleCmd";
 
                 /* Starting 'AbeilleMonitor' daemon too if required */
-                if ($config['monitor'] !== false)
+                if ($config['ab::monitorId'] !== false)
                     $daemons .= " AbeilleMonitor";
             }
             log::add('Abeille', 'debug', "  startDaemons(): ".$daemons);

@@ -111,8 +111,6 @@ function createRemote(zgId) {
         }
     };
 
-    // xmlhttpMQTTSendTimer.open("GET", "/plugins/Abeille/Network/TestSVG/xmlhttpMQTTSend.php?topic=CmdCreateAbeille1_zigate_0000-0005&payload=remotecontrol", false); // False pour bloquer sur la recuperation du fichier
-    // wget "http://localhost/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&topic=CmdCreateAbeille1_zigate_createRemote"
     xmlhttpMQTTSendTimer.open(
         "GET",
         "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&topic=CmdCreateAbeille" +

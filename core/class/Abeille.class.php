@@ -351,8 +351,9 @@ if (0) {
                 if (isset($zigbee['rxOnWhenIdle']) && ($zigbee['rxOnWhenIdle'] == 1))
                     $poll = 1;
 
-                if (strlen($eqLogic->getConfiguration("battery_type", '')) == 0)
-                    $poll += 10;
+                // Absence of 'battery_type' does not mean device can receive something
+                // if (strlen($eqLogic->getConfiguration("battery_type", '')) == 0)
+                //     $poll += 10;
 
                 if ($eqLogic->getConfiguration("poll", 'none') == "15")
                     $poll += 100;
@@ -1963,8 +1964,11 @@ if (0) {
                         log::add('Abeille', 'debug', '  Old FW. Configuring zigate '.$zgId.' in normal mode');
                         Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgMode", "mode=normal");
                     }
+                    // TODO: Different msg according to v1 or v2
                     if (hexdec($msg['minor']) < 0x031E)
                         message::add('Abeille', 'Attention: La zigate '.$zgId.' fonctionne avec un vieux FW. Une version >= 3.1E est requise pour un fonctionnement optimal d\'Abeille.');
+                    else if (hexdec($msg['minor']) < 0x0321)
+                        message::add('Abeille', 'Il est recommandé de mettre à jour votre Zigate avec le dernier FW disponible.');
                 }
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['minor']);
             }

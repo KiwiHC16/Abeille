@@ -143,13 +143,13 @@
         // if (pcntl_signal(SIGUSR1, "monReload", false) != true)
         //     logMessage("error", "Erreur pcntl_signal()");
 
-        $GLOBALS["monId"] = config::byKey('monitor', 'Abeille', false);
+        $GLOBALS["monId"] = config::byKey('ab::monitorId', 'Abeille', false);
         $monId = $GLOBALS["monId"];
         if ($monId !== false) {
             $eqLogic = eqLogic::byId($monId);
             if (!is_object($eqLogic)) {
                 logMessage('debug', 'ID '.$monId.' no longer valid. Disabling monitoring');
-                config::save('monitor', false, 'Abeille');
+                config::save('ab::monitorId', false, 'Abeille');
                 logMessage("info", "Aucun équipement à surveiller pour l'instant.");
             } else {
                 list($net, $addr) = explode( "/", $eqLogic->getLogicalId());

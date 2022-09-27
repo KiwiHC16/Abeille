@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+- Orvibo CM10ZW: Ajout affichage 'Status X' (2024).
+- Livarno Home HG07834B: Mise-à-jour modele (2448).
+- Firmware zigate: Recommandation d'utiliser la v3.21.
+- Firmwares v1: Suppression des versions < '3.21'.
+- Page maintenance/infos clefs: Ajout canal.
+- Interne: DB config: Suppression clef obsolete 'agressifTraitementAnnonce'.
+- Interne: DB config: 'monitor' => 'ab::monitorId'.
+- Interne: Abeille.class: Le manque de déclaration de 'batteryType' ne permet plus de dire que le device est en écoute.
+- Interne: Nettoyage code obsolete 'SetPermit' + 'xmlhttpMQTTSend.php'.
+- Interne: ZigbeeConst: Mise à jour cluster 0500.
+
 220924-BETA-1
 -------------
 

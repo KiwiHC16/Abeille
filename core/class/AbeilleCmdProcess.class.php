@@ -57,35 +57,55 @@
         }
 
         // Called to convert '#sliderXX#'
+        // 'XX' is always a decimal value
         function sliderToHex($sliderVal, $type) {
-            $decVal = substr($sliderVal, 7, -1); // Extracting decimal value
+            $strDecVal = substr($sliderVal, 7, -1); // Extracting decimal value
             $signed = false;
             switch ($type) {
-            case '28':
+            case '20': // uint8
+                $size = 1;
+                break;
+            case '21': // uint16
+                $size = 2;
+                break;
+            case '22': // uint24
+                $size = 3;
+                break;
+            case '23': // uint32
+                $size = 3;
+                break;
+            case '28': // int8
                 $size = 1;
                 $signed = true;
                 break;
-            case '29':
+            case '29': // int16
                 $size = 2;
                 $signed = true;
                 break;
-            case '2A':
+            case '2A': // int24
                 $size = 3;
                 $signed = true;
                 break;
-            case '2B':
+            case '2B': // int32
                 $size = 4;
                 $signed = true;
                 break;
             default:
-                cmdLog('debug', "    sliderToHex() ERROR: decVal=".$decVal.", UNSUPPORTED type=".$type);
+                cmdLog('error', "sliderToHex(): strDecVal=".$strDecVal.", UNSUPPORTED type=".$type);
                 return false;
             }
             if ($signed)
-                $hexVal = $this->signed2hex($decVal, $size);
+                $strHexVal = $this->signed2hex($strDecVal, $size);
+            else {
+                $val = intval($strDecVal);
+                $size = $size * 2; // 1 Byte = 2 hex char
+                $format = "%0".$size."X";
+                // cmdLog('debug', "    val=".strval($val).", size=".strval($size)." => format=".$format);
+                $strHexVal = sprintf($format, $val);
+            }
 
-            cmdLog('debug', "    sliderToHex(): decVal=".$decVal." => ".$hexVal);
-            return $hexVal;
+            cmdLog('debug', "    sliderToHex(): strDecVal=".$strDecVal." => ".$strHexVal);
+            return $strHexVal;
         }
 
         // Ne semble pas fonctionner et me fait planté la ZiGate, idem ques etParam()

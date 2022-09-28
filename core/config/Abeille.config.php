@@ -22,7 +22,6 @@
     $abQueues["parserToMon"] = array( "id" => 131, "max" => 512 ); // Messages from zigate (parser to monitor)
     $abQueues["monToCmd"] = array( "id" => 132, "max" => 512 ); // Messages to cmd (addr update)
     $abQueues["parserToAssist"] = array( "id" => 141, "max" => 512 ); // Parser to EQ assistant
-    $abQueues["assistToCmd"] = array( "id" => 142, "max" => 512 ); // Assistant to cmd
     $abQueues["xToAbeille"] = array( "id" => 621, "max" => 512 ); // ?
     $GLOBALS['abQueues'] = $abQueues;
 

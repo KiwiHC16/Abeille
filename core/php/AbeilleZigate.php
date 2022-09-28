@@ -988,21 +988,21 @@
         $msgJson = json_encode($msg);
 
         $status = 0;
-        $parserQueue = msg_get_queue($abQueues["assistToParser"]["id"]);
-        $cmdQueue = msg_get_queue($abQueues["assistToCmd"]["id"]);
+        $parserQueue = msg_get_queue($abQueues["xToParser"]["id"]);
+        $cmdQueue = msg_get_queue($abQueues["xToCmd"]["id"]);
         if (($parserQueue == false) || ($cmdQueue == false)) {
             logMessage("error", "msg_get_queue() ERROR");
             $status = -1;
         }
         if ($status == 0) {
             if (msg_send($parserQueue, 1, $msgJson, false, false) == false) {
-                logMessage("error", "Could not send msg to 'assistToParser': msg=".$msgJson);
+                logMessage("error", "Could not send msg to 'xToParser': msg=".$msgJson);
                 $status = -1;
             }
         }
         if ($status == 0) {
             if (msg_send($cmdQueue, 1, $msgJson, false, false) == false) {
-                logMessage("error", "Could not send msg to 'assistToCmd': msg=".$msgJson);
+                logMessage("error", "Could not send msg to 'xToCmd': msg=".$msgJson);
                 $status = -1;
             }
         }

@@ -33,6 +33,7 @@
                 "repeatEventManagement": "always",
                 "returnStateValue": 0,
                 "returnStateTime": 1,
+                "nextLine": "after",
                 "isVisible": "1"
             },
             "ZoneStatusChange": {
@@ -40,6 +41,14 @@
                 "comment": "On receive we trig 01-0500-Alarm1 with extracted boolean value",
                 "trigOut": "01-0500-alarm1",
                 "trigOutOffset": "#value#&1"
+            },
+            "Set Sensibility": {
+                "use": "zbWriteAttribute",
+                "params": "clustId=0500&attrId=0013&attrType=20&attrVal=#slider#",
+                "subType": "slider",
+                "minValue": 0,
+                "maxValue": 255,
+                "isVisible": "1"
             },
             "Current Zone Sensibility Level": {
                 "use": "zb-0500-CurrentZoneSensibilityLevel",

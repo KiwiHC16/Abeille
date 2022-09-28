@@ -183,6 +183,7 @@
             $this->queueParserToCmdAck      = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
             $this->queueParserToCmdAckMax   = $abQueues["parserToCmdAck"]["max"];
             $this->queueXToCmd              = msg_get_queue($abQueues["xToCmd"]["id"]);
+            $this->queueXToCmdMax           = $abQueues["xToCmd"]["max"];
 
             $this->tempoMessageQueue = array();
 
@@ -808,8 +809,7 @@
         /* Collect & treat other messages for AbeilleCmd */
         function collectAllOtherMessages() {
             $queue = $this->queueXToCmd;
-            $msg = NULL;
-            $msgMax = 512;
+            $msgMax = $this->queueXToCmdMax;
             if (msg_receive($queue, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode) == false) {
                 if ($errCode == 7) {
                     msg_receive($queue, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
@@ -820,11 +820,15 @@
             }
 
             $msg = json_decode($msgJson, true);
-            $prio = isset($msg['priority']) ? $msg['priority']: PRIO_NORM;
-            $topic = $msg['topic'];
-            $payload = $msg['payload'];
-            cmdLog("debug", "Msg from 'xToCmd': Pri=".$prio.", ".$topic." => ".$payload, $this->debug['AbeilleCmdClass']);
-            $this->prepareCmd($prio, $topic, $payload);
+            if (isset($msg['type'])) {
+                cmdLog("debug", "Msg from 'xToCmd': UNSUPPORTED: ".$msgJson);
+            } else {
+                $prio = isset($msg['priority']) ? $msg['priority']: PRIO_NORM;
+                $topic = $msg['topic'];
+                $payload = $msg['payload'];
+                cmdLog("debug", "Msg from 'xToCmd': Pri=".$prio.", ".$topic." => ".$payload, $this->debug['AbeilleCmdClass']);
+                $this->prepareCmd($prio, $topic, $payload);
+            }
         }
     }
 ?>

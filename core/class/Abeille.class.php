@@ -792,7 +792,7 @@ if (0) {
         $allQueues = array(
             // $abQueues["parserToAbeille2"]["id"],
             $abQueues["cmdToMon"]["id"], $abQueues["parserToMon"]["id"], $abQueues["monToCmd"]["id"],
-            $abQueues["parserToAssist"]["id"], $abQueues["assistToCmd"]["id"],
+            $abQueues["parserToAssist"]["id"],
             $abQueues["parserToLQI"]["id"],
             $abQueues["xToAbeille"]["id"], $abQueues["parserToCli"]["id"],
             $abQueues["xToParser"]["id"], $abQueues["parserToCmdAck"]["id"]

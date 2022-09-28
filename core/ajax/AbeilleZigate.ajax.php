@@ -67,7 +67,7 @@
             $status = 0;
             $error = "";
 
-            $queue = msg_get_queue($abQueues['assistToParser']['id']);
+            $queue = msg_get_queue($abQueues['xToParser']['id']);
             $msg = Array(
                 "type" => $type,
                 "network" => $network
@@ -75,7 +75,7 @@
             $msgJson = json_encode($msg);
 
             if (msg_send($queue, 1, $msgJson, false, false) == false) {
-                $error = "Could not send msg to 'assistToParser': msg=".$msgJson;
+                $error = "Could not send msg to 'xToParser': msg=".$msgJson;
                 $status = -1;
             }
 

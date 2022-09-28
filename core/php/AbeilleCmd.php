@@ -44,7 +44,6 @@
 
     /* Any device to monitor ?
        It is indicated by 'ab::monitorId' key in Jeedom 'config' table. */
-    // $monId = config::byKey('ab::monitorId', 'Abeille', false);
     $monId = $abeilleConfig['ab::monitorId'];
     if ($monId !== false) {
         $eqLogic = eqLogic::byId($monId);
@@ -89,38 +88,9 @@
             // Treat pending commands for zigate
             $AbeilleCmdQueue->processCmdQueues();
 
-            // Check zigate ACK
+            // Check zigate ACK timeout
             $AbeilleCmdQueue->zigateAckCheck();
 
-            /* Performing msg rerouting from 'EQ assistant' */
-            // $max_msg_size = 2048;
-            // $msg_type = NULL;
-            // if (msg_receive($fromAssistQueue, 0, $msg_type, $max_msg_size, $msg, true, MSG_IPC_NOWAIT) == true) {
-            //     logMessage('debug', "Received=".json_encode($msg));
-            //     if ($msg['type'] == 'reroute') {
-            //         $rerouteNet = $msg['network'];
-            //         /* TODO: Tcharp38: Can be optimized */
-            //         $zgNb = str_replace('Abeille', '', $rerouteNet);
-            //         $AbeilleCmdQueue->zigateAvailable[$zgNb] = 0;
-            //         logMessage('debug', "'".$rerouteNet."' messages must be rerouted");
-            //     } else if ($msg['type'] == 'reroutestop') {
-            //         logMessage('debug', "Stopping '".$rerouteNet."' msg rerouting.");
-            //         $rerouteNet = "";
-            //         /* TODO: Tcharp38: Can be optimized */
-            //         $zgNb = str_replace('Abeille', '', $rerouteNet);
-            //         $AbeilleCmdQueue->zigateAvailable[$zgNb] = 1;
-            //     } else if ($msg['type'] == 'msg') {
-            //         logMessage('debug', $rerouteNet.", rerouting: ".$msg['msg']);
-            //         /* TODO: Tcharp38: Can be optimized */
-            //         $zgNb = str_replace('Abeille', '', $rerouteNet);
-            //         if (config::byKey('ab::zgEnabled'.$zgNb, 'Abeille', 'N') == 'Y' ) {
-            //             $sp = config::byKey('ab::zgPort'.$zgNb, 'Abeille', '1', 1);
-            //             $f = fopen($sp, "w");
-            //             fwrite($f, pack("H*", $msg['msg']));
-            //             fclose($f);
-            //         }
-            //     }
-            // }
             /* Checking if there is any control message for Cmd */
             if (msg_receive($queueCtrlToCmd, 0, $msgType, $queueCtrlToCmdMax, $jsonMsg, false, MSG_IPC_NOWAIT, $errorCode) == true) {
                 logMessage('debug', "queueCtrlToCmd=".$jsonMsg);
@@ -132,9 +102,11 @@
                 logMessage('debug', '  msg_receive(queueCtrlToCmd) ERROR '.$errorCode);
             }
 
+            // Check 'xToCmd' queue
             $AbeilleCmdQueue->collectAllOtherMessages();
 
-            // Recuperes tous les messages en attente sur timer
+            // Check tempo queue
+            // TODO: This should be a separate thread to not disturb cmd to Zigate process.
             $AbeilleCmdQueue->execTempoCmdAbeille();
 
             /* Display queues status every 30sec */

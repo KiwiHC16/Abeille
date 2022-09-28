@@ -454,7 +454,7 @@
                         logMessage('debug', 'EQ id '.$eqId.' updated. Need to read Jeedom DB.');
                         updateDeviceFromDB($eqId);
                     } else
-                        logMessage('error', 'ERROR: Unexpected msg: '.json_encode($msg));
+                        logMessage('error', 'ERROR: Unexpected msg: '.$msgJson);
                 }
             }
             if ($errCode == 7) { // Too big

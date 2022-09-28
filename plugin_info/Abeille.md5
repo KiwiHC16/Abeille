@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="220927-BETA-1"
+# VERSION="220928-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -36,14 +36,14 @@ b01724fc9b23be86f3d465a639ab6c95 *core/ajax/AbeilleEqAssist.ajax.php
 d80b24d5796dff216f73e88f7be98278 *core/ajax/AbeilleFiles.ajax.php
 e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 61bf99720e324129d300f737bd7d3eb6 *core/ajax/AbeilleRoutes.ajax.php
-ad668063372f1e750d73e7fa61b6929d *core/ajax/AbeilleZigate.ajax.php
-c9eb1c007495c83fb8ec7fb9a43f8e75 *core/class/Abeille.class.php
+8290855d0e5ee94968a6fb01ba8d5a7b *core/ajax/AbeilleZigate.ajax.php
+5b91124473b568859d80bf080a1cb4e5 *core/class/Abeille.class.php
 c040b6318e91424c908afcd7f047a59a *core/class/AbeilleCmd.class.php
 de953c4966ffddb340281f11d7c4bfdc *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
-15514a7bcab010409a235715789fa71a *core/class/AbeilleCmdProcess.class.php
+eb62770c84771437a4442655692f500e *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
-ed4a3c5b98a1b9a56d9ff4c7883a6fa0 *core/class/AbeilleCmdQueue.class.php
+bc9b85311ebe7a0ddbc98f868eb2746c *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
 d9cf2de8892a0587575bfde6c9280d87 *core/class/AbeilleParser.class.php
@@ -55,7 +55,7 @@ f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 8c4188be1bbbb03c8d7b4cd600ba3046 *core/class/AbeilleTest.class.php
 0055fd31d027d69a736381f5cc77ebf9 *core/class/AbeilleTestDB.class.php
 e4609d22fd1ae51197d81842e2055a3f *core/class/AbeilleTools.class.php
-c18d6e2caa262928be388f498510c8fd *core/config/Abeille.config.php
+554fb6d35d9041f8418a93e73533f116 *core/config/Abeille.config.php
 96b14488adfe25210ff0b340be3f531d *core/config/HueCatalogue.json
 5373985868d2b6309d47fe0eaf784f00 *core/config/IAS ACE Cluster  IAS Zone & Diagnostics Only_ZHA.xml
 544199d4607a555546ff5f7507154e4b *core/config/addParameterToAllTemplates.php
@@ -877,7 +877,7 @@ cb0390f5c94fb760cc86de001865f53d *core/config/devices/TS0203__TYZB01_xph99wvr/TS
 4fd13e1246a575965ffecc793427c22c *core/config/devices/TS0203__TZ3000_f1hmoyj4/discovery.json
 522c86048958a70fc2d1055c75367113 *core/config/devices/TS0207__TZ3000_m0vaazab/TS0207__TZ3000_m0vaazab.json
 d17feac58de5e98ee29611181aa76ab7 *core/config/devices/TS0207__TZ3000_m0vaazab/discovery.json
-d7ad0e3cf21b9080675e6f7f6345e8ab *core/config/devices/TS0210__TZ3000_bmfw9ykl/TS0210__TZ3000_bmfw9ykl.json
+349235b9abfbdfd1bacd9d3a924f91de *core/config/devices/TS0210__TZ3000_bmfw9ykl/TS0210__TZ3000_bmfw9ykl.json
 aefad1cd77e5f77cad0e04b41002ffa6 *core/config/devices/TS0210__TZ3000_bmfw9ykl/discovery.json
 0c5cd08125c106dd09dac4295e0512ab *core/config/devices/TS0222__TYZB01_kvwjujy9/TS0222__TYZB01_kvwjujy9.json
 9e3aad9ea90e4385479c1fa4d478f1e9 *core/config/devices/TS0302/TS0302.json
@@ -1040,7 +1040,7 @@ d6c238244f9c013900173241106e8b95 *core/i18n/en_US.json
 fe99369b88ceb7cae45f3453c63f485b *core/i18n/fr_FR.json
 8f60eff063fb3fe41ef52e707aab75b4 *core/php/AbeilleCliToQueue.php
 abd90a4ddd7790fd571a9d219aa3334f *core/php/AbeilleCmd-Tuya.php
-5ff1cc3ce756586fa42ca35ffcf1810c *core/php/AbeilleCmd.php
+937305fe0b8a42d21287aa77b1ce2207 *core/php/AbeilleCmd.php
 3a8347a9ea19d1ee67793bc7080ab672 *core/php/AbeilleDownload.php
 da1a4650f0ab63376c629a59366052fc *core/php/AbeilleGit.php
 cab580c801233aee55ed5492556506a4 *core/php/AbeilleInstall.php
@@ -1049,14 +1049,14 @@ cab580c801233aee55ed5492556506a4 *core/php/AbeilleInstall.php
 f9f0b5c7171e4a3c962b7c7008a4aef1 *core/php/AbeilleMonitor.php
 657c2f8ee31e9267a1b575dc188209a4 *core/php/AbeilleOTA.php
 b97427cf6b77e732427c7021485ec8c6 *core/php/AbeilleParser-Tuya.php
-e097ed72b78412dee9d5afad38750513 *core/php/AbeilleParser.php
+ecce14ea31e74eac8abb8d534686e1f5 *core/php/AbeilleParser.php
 1b6bd54dc6c30b652f73038235050885 *core/php/AbeilleQueueToCli.php
 d16e6de03d8914021d3b35118e2c30a3 *core/php/AbeilleSerialRead.php
 4248d134eef07e173183af90cb770da8 *core/php/AbeilleSocat.php
 119a50dddbf8625a09c7c440c6025a45 *core/php/AbeilleSupportKeyInfos.php
 e4ccac3cb9401f1b2b54e068e55a3c4b *core/php/AbeilleTest.php
 d11a50cfe57f0f6e86a89e383fbb25ff *core/php/AbeilleUpload.php
-0990a9aad7ec4164dd1626e82d0b38d2 *core/php/AbeilleZigate.php
+b55a6ba4c0110b8a29a3c30f4aee6ce1 *core/php/AbeilleZigate.php
 9d7ce0c14c1d3f9e2e9ee8b72a4cb201 *core/php/AbeilleZigateConst.php
 d51de187c1be6c47f9a518216a72a43a *core/php/AbeilleZigbeeConst.php
 c828c23a7ac4bfc558146887ceb925fa *core/php/refreshBruit.php
@@ -1122,7 +1122,7 @@ e256ecddfee0c6f38ab215803b321e78 *desktop/php/AbeilleGraph.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bddee749a8fd653dfce4d2a1c8e938c4 *desktop/php/AbeilleNetworkGraph.php
-dfe4346342a25f673c80d9538449eb8b *docs/fr_FR/Changelog.rst
+353a11db919bfda173f65b26d0f15dae *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1402,10 +1402,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-bfb3d43971eab50d35b0b7487dc6df6e *plugin_info/Abeille.version
+d5bcfbc864e63b10ad5103cae04dbc8c *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 537b82c86bae71e1ab393511ef8a8694 *plugin_info/configuration.php
-ec9367d0e6709364a0e40dcb00ac5f8b *plugin_info/info.json
+0ac09ad2d708532a381bc5e2b25006c1 *plugin_info/info.json
 554e9f36a322630804f020dbf6fa5d33 *plugin_info/install.php
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 33ec19ebdb900ee787fc2be90cf4657f *resources/AbeilleDeamon/CheckAlive.php

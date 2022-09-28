@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220928-BETA-1
+-------------
+
 - Interne: Suppression queue 'assistToCmd' + nettoyage 'assistToParser'.
 - Interne: AbeilleCmd: Amélioration 'sliderToHex()'.
 - Tuya vibration sensor TS0210: Mise-à-jour modèle (2452).

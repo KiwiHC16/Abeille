@@ -1280,8 +1280,9 @@
             checked = document.getElementById("id"+cat).checked;
             if (checked)
                 category[cat] = 1;
-            else
-                category[cat] = 0;
+            // Only generate categories that are set to 1
+            // else
+            //     category[cat] = 0;
         }
         jeq2.category = category;
 

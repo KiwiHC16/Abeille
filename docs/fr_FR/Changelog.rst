@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+- Interne: Suppression queue 'ctrlToCmd' au profil de 'xToCmd' + améliorations 'CliToQueue'.
+- Interne: Mise à jour generation doc.
+- Nous A1Z smart plug: Ajout support préliminaire (2460).
+- Livarno Home HG07834B: Mise-à-jour modele (2448).
+- Philips SML004: Mise-à-jour modele (2437).
+- Maintenance/télécharger tout: Ajout alerte si moins de 5000 lignes de logs.
+- Interne: Parser: Clusters supportés par 8100/8102 revus à la baisse (=> 8002).
+
 220928-BETA-1
 -------------
 

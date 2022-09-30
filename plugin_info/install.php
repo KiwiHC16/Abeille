@@ -61,6 +61,17 @@
         config::remove($oldKey, 'Abeille');
     }
 
+    // Remove log files listed in '$obsolete'
+    function removeLogs($obsolete) {
+        foreach ($obsolete as $file) {
+            $path = __DIR__."/../../../log/".$file;
+            if (!file_exists($path))
+                continue;
+            log::add('Abeille', 'debug', "  Removing obsolete log '".$file."'");
+            unlink($path);
+        }
+    }
+
     /* Check and update configuration DB if required.
        This function can update other informations in Jeedom DB.
        Note: This function can be called before daemons startup. Useful for
@@ -375,13 +386,7 @@
                 $obsolete[] = 'AbeilleSocat'.$z;
                 $obsolete[] = 'AbeilleSerialRead'.$z;
             }
-            foreach ($obsolete as $file) {
-                $path = __DIR__."/../../../log/".$file;
-                if (!file_exists($path))
-                    continue;
-                log::add('Abeille', 'debug', "  Removing obsolete log '".$file."'");
-                unlink($path);
-            }
+            removeLogs($obsolete);
 
             // Removing obsolete commands from existing Zigates (now handled in equipement advanced page)
             // Tcharp38: No longer required. Obsolete cmds are removed at daemon startup in 'Abeille.class'.
@@ -431,8 +436,10 @@
            - config DB: 'preventLQIRequest' => 'ab::preventLQIAutoUpdate'
            - config DB: 'monitor' => 'ab::monitorId'
            - config DB: Removed obsolete 'agressifTraitementAnnonce'.
+           - Removing 'AbeilleDebug.log'. Moved to Jeedom tmp dir.
          */
         if (intval($dbVersion) < 20220421) {
+            // 'edLogic' DB updates
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
                 $saveEq = false; // true if EQ has been updated and therefore must be saved
@@ -555,7 +562,7 @@
 
                 if ($saveEq)
                     $eqLogic->save();
-            }
+            } // End 'eqLogic' updates
 
             // Config DB updates
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
@@ -571,7 +578,11 @@
             replaceConfigDB('monitor', 'ab::monitorId');
             config::remove('agressifTraitementAnnonce', 'Abeille');
 
-            // config::save('DbVersion', '20220421', 'Abeille'); // OT FROZEN YET
+            // Remove obsolete log files
+            $obsolete = ['AbeilleDebug.log'];
+            removeLogs($obsolete);
+
+            // config::save('DbVersion', '20220421', 'Abeille'); // NOT FROZEN YET
         }
     }
 

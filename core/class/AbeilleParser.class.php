@@ -2552,8 +2552,9 @@
                     else if ($cmd == "01") { // Read Attributes Response
                         // Some clusters are directly handled by 8100/8102 decode
                         // Tcharp38 note: At some point do the opposite => what's handled by 8100
-                        $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E001', 'EF00', 'FC01', 'FC02', 'FF66']; // Clusters handled here
-                        if (!in_array($clustId, $acceptedCmd01)) {
+                        // $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E000', 'E001', 'EF00', 'FC01', 'FC02', 'FF66']; // Clusters handled here
+                        $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
+                        if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
                         }
@@ -2722,8 +2723,9 @@
 
                     else if ($cmd == "0A") { // Report attributes
                         // Some clusters are directly handled by 8100/8102 decode
-                        $acceptedCmd0A = ['0005', '0007', '0300', '0406', '050B', '0B04', 'EF00', 'FC01', 'FC02']; // Clusters handled here
-                        if (!in_array($clustId, $acceptedCmd0A)) {
+                        // $acceptedCmd0A = ['0005', '0007', '0300', '0406', '050B', '0B04', 'EF00', 'FC01', 'FC02']; // Clusters handled here
+                        $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
+                        if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
                         }
@@ -4842,19 +4844,24 @@
             $toMon[] = $msgDecoded;
 
             // Checking if decode is handled by 8002 or still there
-            if ($cmdId == '01') { // 01/Read attribute response
-                $refusedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E001', 'EF00', 'FC01', 'FC02', 'FF66'];
-                if (in_array($clustId, $refusedCmd01)) {
-                    parserLog('debug', "  Handled by decode8002");
-                    return;
-                }
-            } else { // 0A/Report attribute
-                $refusedCmd0A = ['0005', '0007', '0300', '0406', '050B', '0B04', 'EF00', 'FC01', 'FC02'];
-                if (in_array($clustId, $refusedCmd0A)) {
-                    parserLog('debug', "  Handled by decode8002");
-                    return;
-                }
+            $accepted = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
+            if (!in_array($clustId, $accepted)) {
+                parserLog('debug', "  Handled by decode8002");
+                return;
             }
+            // if ($cmdId == '01') { // 01/Read attribute response
+            //     $refusedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E000', 'E001', 'EF00', 'FC01', 'FC02', 'FF66'];
+            //     if (in_array($clustId, $refusedCmd01)) {
+            //         parserLog('debug', "  Handled by decode8002");
+            //         return;
+            //     }
+            // } else { // 0A/Report attribute
+            //     $refusedCmd0A = ['0005', '0007', '0300', '0406', '050B', '0B04', 'EF00', 'FC01', 'FC02'];
+            //     if (in_array($clustId, $refusedCmd0A)) {
+            //         parserLog('debug', "  Handled by decode8002");
+            //         return;
+            //     }
+            // }
 
             // Duplicated message ?
             // if ($this->isDuplicated($dest, $srcAddr, $sqn))

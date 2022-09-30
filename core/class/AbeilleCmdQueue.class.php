@@ -806,7 +806,7 @@
             }
         }
 
-        /* Collect & treat other messages for AbeilleCmd */
+        /* Collect & treat other messages from 'xToCmd' queue. */
         function collectAllOtherMessages() {
             $queue = $this->queueXToCmd;
             $msgMax = $this->queueXToCmdMax;
@@ -819,9 +819,13 @@
                 return;
             }
 
+            // cmdLog("debug", "Msg from 'xToCmd': ".$msgJson);
             $msg = json_decode($msgJson, true);
             if (isset($msg['type'])) {
-                cmdLog("debug", "Msg from 'xToCmd': UNSUPPORTED: ".$msgJson);
+                if ($msg['type'] == 'readOtaFirmwares') {
+                    otaReadFirmwares(); // Reread available firmwares
+                } else
+                    cmdLog("error", "Msg from 'xToCmd': UNSUPPORTED: ".$msgJson);
             } else {
                 $prio = isset($msg['priority']) ? $msg['priority']: PRIO_NORM;
                 $topic = $msg['topic'];

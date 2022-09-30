@@ -91,7 +91,7 @@
             return;
         }
         $GLOBALS["logNbOfLines"] = intval($out[0]);
-   }
+    }
 
     /* Log given message to '$logFile' defined thru 'logSetConf()'.
        '\n' is automatically added at end of line.
@@ -99,6 +99,8 @@
        WARNING: A call to 'logSetConf()' is expected once prior to 'logMessage()'. */
     function logMessage($logLevel, $msg)
     {
+        global $tmpDir;
+
         if ($logLevel != "") {
             if (!isset($GLOBALS["curLogLevelNb"]))
                 $GLOBALS["curLogLevelNb"] = 0;
@@ -132,7 +134,6 @@
                 message::add("Abeille", "ERREUR: ".$msg, '');
 
             if ($GLOBALS["logNbOfLines"] > $GLOBALS["logMaxLines"]) {
-                $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
                 $tmpLogFile = $GLOBALS["logFile"];
                 if (substr($tmpLogFile, -4) == ".log")
                     $tmpLogFile = substr($tmpLogFile, 0, -4); // Removing extension
@@ -147,11 +148,11 @@
     }
 
     /* Log function for development purposes.
-       Output message to "AbeilleDebug.log" */
+       Output message to <JeedomTempDir>"/Abeille/AbeilleDebug.log" */
     function logDebug($msg = "")
     {
         global $tmpDir;
-        // $logDir = __DIR__.'/../../../../log/';
+
         $logFile = "AbeilleDebug.log";
         file_put_contents($tmpDir.'/'.$logFile, '['.date('Y-m-d H:i:s').'] '.$msg."\n", FILE_APPEND);
     }

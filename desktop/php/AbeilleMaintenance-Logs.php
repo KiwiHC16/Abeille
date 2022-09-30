@@ -15,6 +15,8 @@
     echo 'let js_pluginDir = "'.$pluginDir.'";';
     echo 'let curDisplay = "";'; // Current displayed file/command
     echo 'let curDisplayType = "";'; // "JEEDOM-TMP", "JEEDOM-LOG", or "COMMAND"
+    $maxLineLog = config::byKey('maxLineLog', 'core');
+    echo 'let maxLineLog = '.$maxLineLog.';';
     echo '</script>';
 ?>
 
@@ -183,6 +185,14 @@
     /* Pack and download all logs at once */
     $('#idDownloadAllLogs').click(function() {
         console.log("idDownloadAllLogs click");
+
+        if (maxLineLog < 5000) {
+            msg = "ATTENTION !\n\n"
+                + "Il est recommandé de configurer au moins 5000 lignes de logs pour les besoins de debug.\n"
+                + "La valeur actuelle est: "+maxLineLog+"\n\n"
+                + "Voir: https://kiwihc16.github.io/AbeilleDoc/Debug.html#support";
+            alert(msg);
+        }
 
         $.showLoading();
         $.ajax({

@@ -62,8 +62,8 @@
     // Reading available OTA firmwares
     otaReadFirmwares();
 
-    $queueCtrlToCmd = msg_get_queue($abQueues["ctrlToCmd"]["id"]);
-    $queueCtrlToCmdMax = $abQueues["ctrlToCmd"]["max"];
+    // $queueCtrlToCmd = msg_get_queue($abQueues["ctrlToCmd"]["id"]);
+    // $queueCtrlToCmdMax = $abQueues["ctrlToCmd"]["max"];
 
     function cmdLog($loglevel = 'NONE', $message = "", $isEnable = 1) {
         if ($isEnable == 0)
@@ -92,15 +92,15 @@
             $AbeilleCmdQueue->zigateAckCheck();
 
             /* Checking if there is any control message for Cmd */
-            if (msg_receive($queueCtrlToCmd, 0, $msgType, $queueCtrlToCmdMax, $jsonMsg, false, MSG_IPC_NOWAIT, $errorCode) == true) {
-                logMessage('debug', "queueCtrlToCmd=".$jsonMsg);
-                $msg = json_decode($jsonMsg, true);
-                if ($msg['type'] == 'readOtaFirmwares') {
-                    otaReadFirmwares(); // Reread available firmwares
-                }
-            } else if ($errorCode != 42) { // 42 = No message
-                logMessage('debug', '  msg_receive(queueCtrlToCmd) ERROR '.$errorCode);
-            }
+            // if (msg_receive($queueCtrlToCmd, 0, $msgType, $queueCtrlToCmdMax, $jsonMsg, false, MSG_IPC_NOWAIT, $errorCode) == true) {
+            //     logMessage('debug', "queueCtrlToCmd=".$jsonMsg);
+            //     $msg = json_decode($jsonMsg, true);
+            //     if ($msg['type'] == 'readOtaFirmwares') {
+            //         otaReadFirmwares(); // Reread available firmwares
+            //     }
+            // } else if ($errorCode != 42) { // 42 = No message
+            //     logMessage('debug', '  msg_receive(queueCtrlToCmd) ERROR '.$errorCode);
+            // }
 
             // Check 'xToCmd' queue
             $AbeilleCmdQueue->collectAllOtherMessages();

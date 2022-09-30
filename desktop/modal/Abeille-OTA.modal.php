@@ -6,7 +6,7 @@
     $abQueues = $GLOBALS['abQueues'];
     echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
     echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
-    echo '<script>var js_queueCtrlToCmd = "'.$abQueues['ctrlToCmd']['id'].'";</script>'; // PHP to JS
+    // echo '<script>var js_queueCtrlToCmd = "'.$abQueues['ctrlToCmd']['id'].'";</script>'; // PHP to JS
 ?>
 <div class="col-sm-8">
     Mise-à-jour des équipements "Over-The-Air".
@@ -250,9 +250,7 @@
                 xhr.onload = function () {
                     /* Asking cmd to refresh its firmwares list */
                     var xhr = new XMLHttpRequest();
-                    topic = "CmdAbeille1_readOtaFirmwares";
-                    payload = "";
-                    xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueCtrlToCmd+"&msg=type:readOtaFirmwares", true);
+                    xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueXToCmd+"&msg=type:readOtaFirmwares", true);
                     xhr.send();
                 };
                 xhr.send();

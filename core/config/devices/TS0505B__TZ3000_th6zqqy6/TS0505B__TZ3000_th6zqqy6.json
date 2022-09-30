@@ -131,6 +131,18 @@
                 "isVisible": "1",
                 "nextLine": "after"
             },
+            "Cool white": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=0",
+                "subType": "other",
+                "isVisible": 1
+            },
+            "Warm white": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=200",
+                "subType": "other",
+                "isVisible": 1
+            },
             "ColorTemperature": {
                 "use": "zb-0300-ColorTemperatureMireds"
             },

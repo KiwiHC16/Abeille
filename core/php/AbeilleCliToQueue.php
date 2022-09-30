@@ -55,30 +55,44 @@
             return;
         }
 
-        if (in_array($queueId, [$abQueues['xToAbeille']['id'], $abQueues['xToCmd']['id']])) {
-            $topic =  $_GET['topic'];
-            $topic = str_replace('_', '/', $topic);
-            $payload = $_GET['payload'];
-            $payload = str_replace('_', '&', $payload);
-            if (isset($dbgTcharp38)) logDebug("CliToQueue: topic=".$topic.", payload=".$payload);
+        // if (in_array($queueId, [$abQueues['xToAbeille']['id'], $abQueues['xToCmd']['id']])) {
+        //     $topic =  $_GET['topic'];
+        //     $topic = str_replace('_', '/', $topic);
+        //     $payload = $_GET['payload'];
+        //     $payload = str_replace('_', '&', $payload);
+        //     if (isset($dbgTcharp38)) logDebug("CliToQueue: topic=".$topic.", payload=".$payload);
 
-            $msg = array(
-                'topic' => $topic,
-                'payload' => $payload,
-            );
-            $msgJson = json_encode($msg);
+        //     $msg = array(
+        //         'topic' => $topic,
+        //         'payload' => $payload,
+        //     );
+        //     $msgJson = json_encode($msg);
 
-            if (msg_send($queue, 1, $msgJson, false, false)) {
-                echo "(fichier xmlhttpMQQTSend) added to queue: ".$msgJson;
-                // print_r(msg_stat_queue($queue));
-            } else {
-                echo "debug","(fichier xmlhttpMQQTSend) could not add message to queue";
-            }
-        } else {
-            if (!isset($_GET['msg'])) {
-                if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: 'msg' is undefined");
-                return;
-            }
+        //     if (msg_send($queue, 1, $msgJson, false, false)) {
+        //         echo "(fichier xmlhttpMQQTSend) added to queue: ".$msgJson;
+        //         // print_r(msg_stat_queue($queue));
+        //     } else {
+        //         echo "debug","(fichier xmlhttpMQQTSend) could not add message to queue";
+        //     }
+        // } else {
+        //     if (!isset($_GET['msg'])) {
+        //         if (isset($dbgTcharp38)) logDebug("CliToQueue: ERROR: 'msg' is undefined");
+        //         return;
+        //     }
+        //     $msgString = $_GET['msg'];
+        //     if (isset($dbgTcharp38)) logDebug("CliToQueue: msg=".$msgString);
+        //     $msgArr = explode('_', $msgString);
+        //     $m = array();
+        //     foreach ($msgArr as $idx => $value) {
+        //         // logDebug("CliToQueue LA: ".$value);
+        //         $a = explode(':', $value);
+        //         $m[$a[0]] = $a[1];
+        //     }
+        //     if (isset($dbgTcharp38)) logDebug("CliToQueue: ".json_encode($m));
+        //     msg_send($queue, 1, json_encode($m), false, false);
+        // }
+
+        if (isset($_GET['msg'])) {
             $msgString = $_GET['msg'];
             if (isset($dbgTcharp38)) logDebug("CliToQueue: msg=".$msgString);
             $msgArr = explode('_', $msgString);
@@ -90,7 +104,20 @@
             }
             if (isset($dbgTcharp38)) logDebug("CliToQueue: ".json_encode($m));
             msg_send($queue, 1, json_encode($m), false, false);
-        }
+        } else if (isset($_GET['topic'])) {
+            $topic =  $_GET['topic'];
+            $topic = str_replace('_', '/', $topic);
+            $payload = $_GET['payload'];
+            $payload = str_replace('_', '&', $payload);
+            if (isset($dbgTcharp38)) logDebug("CliToQueue: topic=".$topic.", payload=".$payload);
+
+            $msg = array(
+                'topic' => $topic,
+                'payload' => $payload,
+            );
+            msg_send($queue, 1, json_encode($msg), false, false);
+        } else
+            logMessage('error', 'CliToQueue: Unexpected msg');
 
         return;
     } // End $action == "sendMsg"

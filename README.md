@@ -22,4 +22,4 @@ https://kiwihc16.github.io/AbeilleDoc/Presentation.html#cagnotte
 
 ## Generer 'CompatibilityList.rst'
 
-php .tools/gen_devices_list
+php .tools/gen_devices_list.php

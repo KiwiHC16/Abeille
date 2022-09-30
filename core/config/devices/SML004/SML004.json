@@ -81,23 +81,11 @@
             },
             "Set Sensitivity": {
                 "use": "zbWriteAttribute",
-                "params": "clustId=0406&attrId=0030&attrType=20&manufId=100b&attrVal=#value#",
-                "isVisible": "1"
-            },
-            "Sensitivity": {
-                "use": "attr-Sensitivity",
-                "logicalId": "0406-02-0030",
+                "params": "clustId=0406&attrId=0030&attrType=20&attrVal=#slider#",
                 "comment": "Attr 0030 used as private attribute, not standard",
-                "isVisible": "1"
-            },
-            "Sensitivity": {
-                "use": "attr-Sensitivity",
-                "logicalId": "0406-02-0030",
-                "isVisible": "1"
-            },
-            "Set Sensitivity": {
-                "use": "zbWriteAttribute",
-                "params": "clustId=0406&attrId=0030&attrType=20&manufId=100b&attrVal=#value#",
+                "subType": "slider",
+                "minValue": 0,
+                "maxValue": 4,
                 "isVisible": "1"
             },
             "Sensitivity": {

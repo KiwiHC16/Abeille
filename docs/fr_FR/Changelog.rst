@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+220930-BETA-1
+-------------
+
 - Interne: Suppression queue 'ctrlToCmd' au profil de 'xToCmd' + améliorations 'CliToQueue'.
 - Interne: Mise à jour generation doc.
 - Nous A1Z smart plug: Ajout support préliminaire (2460).

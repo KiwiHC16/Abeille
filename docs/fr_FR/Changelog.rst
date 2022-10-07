@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221007-BETA-1
+-------------
+
 - Interne: Parser: Amélioration msg debug.
 - Network graph: Correction.
 - Network graph: Nombreux changements internes.. normalisation, nettoyage.

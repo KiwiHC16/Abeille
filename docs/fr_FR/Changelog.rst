@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+- Interne: Parser: Amélioration msg debug.
+- Network graph: Correction.
+- Network graph: Nombreux changements internes.. normalisation, nettoyage.
+- Interne: DB eqLogic: 'positionX' => 'ab::settings[physLocationX]'.
+- Interne: DB eqLogic: 'positionY' => 'ab::settings[physLocationY]'.
+- Interne: Nettoyage DB au démarrage revu.
+- Page EQ/avancé d'une Zigate: Ajout boutons 'démarrer/arrêter' pour inclusion.
+- Moes curtain module: Support preliminaire (2464).
+- Interne: DB config: Suppression clefs obsoletes 'blocageRecuperationEquipement' + 'blocageTraitementAnnonce'.
+- Interne: DB config: 'DbVersion' => 'ab::dbVersion'.
+
 220930-BETA-1
 -------------
 

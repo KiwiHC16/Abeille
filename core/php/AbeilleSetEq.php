@@ -9,11 +9,12 @@
     $AbeilleTopo = json_decode($AbeilleTopoJSON, false, 512, JSON_UNESCAPED_UNICODE);
 
     foreach ( $AbeilleTopo as $id=>$abeille ) {
-
-        if (is_object(eqLogic::byLogicalId( $id, 'Abeille'))) {
-            $eqLogic = eqLogic::byLogicalId($id, 'Abeille');
-            $eqLogic->setConfiguration('positionX',$abeille->x);
-            $eqLogic->setConfiguration('positionY',$abeille->y);
+        $eqLogic = eqLogic::byLogicalId($id, 'Abeille');
+        if (is_object($eqLogic)) {
+            $settings = $eqLogic->getConfiguration('ab::settings', []);
+            $settings['physLocationX'] = $abeille->x;
+            $settings['physLocationY'] = $abeille->y;
+            $eqLogic->setConfiguration('ab::settings', $settings);
             $eqLogic->save();
             echo "Position de l'abeille: ".$id." sauvegarde en BD\n";
         } else {

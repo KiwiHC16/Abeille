@@ -2586,12 +2586,19 @@
                                 break; // Stop decode there
 
                             $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
-                            parserLog('debug', '  AttrId='.$attr['id'].'/'.$attrName
-                                .', Status='.$attr['status']
-                                .', AttrType='.$attr['dataType']
-                                .', Value='.$attr['valueHex'].' => '.$attr['value'],
-                                "8002"
-                            );
+                            if ($attr['status'] == '00')
+                                parserLog('debug', '  AttrId='.$attr['id'].'/'.$attrName
+                                    .', Status='.$attr['status']
+                                    .', AttrType='.$attr['dataType']
+                                    .', Value='.$attr['valueHex'].' => '.$attr['value'],
+                                    "8002"
+                                );
+                            else
+                                parserLog('debug', '  AttrId='.$attr['id'].'/'.$attrName
+                                    .', Status='.$attr['status']
+                                    .' => '.zbGetZCLStatus($attr['status']),
+                                    "8002"
+                                );
 
                             $attrId = $attr['id'];
                             unset($attr['id']); // Remove 'id' from object for optimization

@@ -18,7 +18,7 @@
     //-----------------------------------------------------------------------
     // Global Variables
     //-----------------------------------------------------------------------
-    var myVoisinesOrg;
+    var netTopo; // Network topology coming from LQI collect.
     var topo;
     var networkInformation = "";
     var networkInformationProgress = "Processing";
@@ -48,13 +48,13 @@
     // Functions
     //-----------------------------------------------------------------------
 
-    function getVoisinesJSON() {
-        console.log("getVoisinesJSON("+Ruche+")");
+    function getNetworkTopology() {
+        console.log("getNetworkTopology("+Ruche+")");
 
         // var xmlhttp = new XMLHttpRequest();
         // xmlhttp.onreadystatechange = function() {
         //     if (this.readyState == 4 && this.status == 200) {
-        //         myVoisinesOrg = JSON.parse(this.responseText);
+        //         netTopo = JSON.parse(this.responseText);
         //     }
         // };
 
@@ -66,14 +66,15 @@
             url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
             data: {
                 action: 'getTmpFile',
-                file : "AbeilleLQI_MapData"+Ruche+".json",
+                // file : "AbeilleLQI_MapData"+Ruche+".json",
+                file : "AbeilleLQI-"+Ruche+".json",
             },
             dataType: "json",
             global: false,
             cache: false,
             async: false,
             error: function (request, status, error) {
-                console.log("ERROR: Call to getTmpFile failed. Error='"+error+"'");
+                console.log("ERROR: Call to getTmpFile failed ("+error+").");
             },
             success: function (json_res) {
                 res = JSON.parse(json_res.result);
@@ -85,7 +86,8 @@
                     // $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide. Rien à traiter}}', level: 'danger'});
                     console.log("ERROR: empty content");
                 } else {
-                    myVoisinesOrg = JSON.parse(res.content);
+                    netTopo = JSON.parse(res.content);
+                    console.log("netTopo=", netTopo);
                 }
             },
         });
@@ -99,14 +101,14 @@
             }
         };
 
-        xmlhttpGetTopo.open("GET", "/plugins/Abeille/Network/TestSVG/TopoGet.php", false); // False pour bloquer sur la recuperation du fichier
+        xmlhttpGetTopo.open("GET", "/plugins/Abeille/core/php/AbeilleGetEq.php", false); // False pour bloquer sur la recuperation du fichier
         xmlhttpGetTopo.send();
     }
 
     function setTopoJSON(Topo) {
         // console.log("Coucou");
         // var requestTopo = "/plugins/Abeille/Network/TestSVG/TopoSet.php?TopoJSON=";
-        var requestTopoURL = "/plugins/Abeille/Network/TestSVG/TopoSet.php";
+        var requestTopoURL = "/plugins/Abeille/core/php/AbeilleSetEq.php";
         // var param = encodeURIComponent(Topo);
         var param = "TopoJSON="+Topo;
         // console.log(param);
@@ -172,7 +174,8 @@
             url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
             data: {
                 action: 'getTmpFile',
-                file : "AbeilleLQI_MapData"+Ruche+".json.lock",
+                // file : "AbeilleLQI_MapData"+Ruche+".json.lock",
+                file : "AbeilleLQI-"+Ruche+".json.lock",
             },
             dataType: "json",
             global: false,
@@ -308,21 +311,21 @@ console.log("json_res=", json_res);
     function drawLegend(includeGroup) {
         var legend = "";
 
-        if ( includeGroup=="Yes" ) { legend = legend + '<g id="legend">'; }
+        if ( includeGroup ) { legend = legend + '<g id="legend">'; }
 
         legend = legend + '<circle cx="100" cy="875" r="10" fill="red" />\n';
-        legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="875" fill="red" style="font-size: 8px;">Coordinator</text> </a>\n';
+        legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="875" fill="black" style="font-size: 8px;">Coordinator</text> </a>\n';
 
-        legend = legend + '<circle cx="100" cy="900" r="10" fill="green" />\n';
-        legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="green" style="font-size: 8px;">End Equipment</text> </a>\n';
+        legend = legend + '<circle cx="100" cy="900" r="10" fill="blue" />\n';
+        legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="black" style="font-size: 8px;">Routeur</a>\n';
 
-        legend = legend + '<circle cx="100" cy="925" r="10" fill="orange" />\n';
-        legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="orange" style="font-size: 8px;">Routeur</a>\n';
+        legend = legend + '<circle cx="100" cy="925" r="10" fill="green" />\n';
+        legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="black" style="font-size: 8px;">End Equipment</text> </a>\n';
 
-        legend = legend + '<circle cx="100" cy="950" r="10" fill="grey" />\n';
-        legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="grey" style="font-size: 8px;">Dans Jeedom mais pas dans l audit du reseau</text> </a>\n';
+        legend = legend + '<circle cx="100" cy="950" r="10" fill="yellow" />\n';
+        legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="black" style="font-size: 8px;">Dans Jeedom mais pas dans l audit du reseau</text> </a>\n';
 
-        if ( includeGroup=="Yes" ) { legend = legend + '</g>'; }
+        if ( includeGroup ) { legend = legend + '</g>'; }
 
         return legend;
     }
@@ -330,8 +333,8 @@ console.log("json_res=", json_res);
     function dessineLesTextes(offsetX, includeGroup) {
         console.log("dessineLesTextes()");
 
-        if (typeof myVoisinesOrg === "undefined") {
-            console.log("=> myVoisinesOrg is UNDEFINED")
+        if (typeof netTopo === "undefined") {
+            console.log("=> netTopo is UNDEFINED")
             return;
         }
 
@@ -340,13 +343,13 @@ console.log("json_res=", json_res);
 
         if ( includeGroup=="Yes" ) { lesTextes = lesTextes + '<g id="lesTextes">'; }
 
-        for (voisines in myVoisinesOrg.data) {
+        for (voisines in netTopo.data) {
 
-            // lesTextes = lesTextes + myVoisinesOrg.data[voisines].NE + "->" + myVoisinesOrg.data[voisines].Voisine + " / ";
-            var NE = myVoisinesOrg.data[voisines].NE; var voisine = myVoisinesOrg.data[voisines].Voisine;
+            // lesTextes = lesTextes + netTopo.data[voisines].NE + "->" + netTopo.data[voisines].Voisine + " / ";
+            var NE = netTopo.data[voisines].NE; var voisine = netTopo.data[voisines].Voisine;
             var X1=0; var X2=0; var Y1=0; var Y2=0; var midX=0; var midY=0;
 
-            if ( ( (Source=="All") || (Source==NE) || (Destination=="All")|| (Destination==voisine) ) && ( (Hierarchy==myVoisinesOrg.data[voisines].Relationship) || (Hierarchy=="All") ) ) {
+            if ( ( (Source=="All") || (Source==NE) || (Destination=="All")|| (Destination==voisine) ) && ( (Hierarchy==netTopo.data[voisines].Relationship) || (Hierarchy=="All") ) ) {
                 if ( typeof myObjNew[NE] == "undefined" ) {
 
                 }
@@ -363,13 +366,13 @@ console.log("json_res=", json_res);
 
                 midX=(X1+X2)/2; midY=(Y1+Y2)/2;
 
-                if ( Parameter == "LinkQualityDec" )    { info = myVoisinesOrg.data[voisines].LinkQualityDec;   }
-                if ( Parameter == "Depth" )             { info = myVoisinesOrg.data[voisines].Depth;            }
-                if ( Parameter == "Voisine" )           { info = myVoisinesOrg.data[voisines].Voisine;          }
-                if ( Parameter == "IEEE_Address" )      { info = myVoisinesOrg.data[voisines].IEEE_Address;     }
-                if ( Parameter == "Type" )              { info = myVoisinesOrg.data[voisines].Type;             }
-                if ( Parameter == "Relationship" )      { info = myVoisinesOrg.data[voisines].Relationship;     }
-                if ( Parameter == "Rx" )                { info = myVoisinesOrg.data[voisines].Rx;               }
+                if ( Parameter == "LinkQualityDec" )    { info = netTopo.data[voisines].LinkQualityDec;   }
+                if ( Parameter == "Depth" )             { info = netTopo.data[voisines].Depth;            }
+                if ( Parameter == "Voisine" )           { info = netTopo.data[voisines].Voisine;          }
+                if ( Parameter == "IEEE_Address" )      { info = netTopo.data[voisines].IEEE_Address;     }
+                if ( Parameter == "Type" )              { info = netTopo.data[voisines].Type;             }
+                if ( Parameter == "Relationship" )      { info = netTopo.data[voisines].Relationship;     }
+                if ( Parameter == "Rx" )                { info = netTopo.data[voisines].Rx;               }
 
                 // console.log("dessineLesTextes function: Parameter: " + Parameter );
 
@@ -385,8 +388,8 @@ console.log("json_res=", json_res);
     function dessineLesVoisinesV2(offsetX, includeGroup) {
         console.log("dessineLesVoisinesV2()");
 
-        if (typeof myVoisinesOrg === "undefined") {
-            console.log("=> myVoisinesOrg is UNDEFINED")
+        if (typeof netTopo === "undefined") {
+            console.log("=> netTopo is UNDEFINED")
             return;
         }
 
@@ -394,13 +397,13 @@ console.log("json_res=", json_res);
 
         if ( includeGroup=="Yes" ) { lesVoisines = lesVoisines + '<g id="lesVoisines">'; }
 
-        for (voisines in myVoisinesOrg.data) {
+        for (voisines in netTopo.data) {
 
-            //var NE = myVoisinesOrg.data[voisines].NE;
-            var NE = myVoisinesOrg.data[voisines].NE;
-            var voisine = myVoisinesOrg.data[voisines].Voisine;
+            //var NE = netTopo.data[voisines].NE;
+            var NE = netTopo.data[voisines].NE;
+            var voisine = netTopo.data[voisines].Voisine;
 
-            if ( ( (Source=="All") || (Source==NE) || (Destination=="All")|| (Destination==voisine) ) && ( (Hierarchy==myVoisinesOrg.data[voisines].Relationship) || (Hierarchy=="All") ) ) {
+            if ( ( (Source=="All") || (Source==NE) || (Destination=="All")|| (Destination==voisine) ) && ( (Hierarchy==netTopo.data[voisines].Relationship) || (Hierarchy=="All") ) ) {
                 var X1=0; var X2=0; var Y1=0; var Y2=0;
                 var color="orange";
 
@@ -418,8 +421,8 @@ console.log("json_res=", json_res);
                     if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
                 }
 
-                if ( myVoisinesOrg.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
-                if ( myVoisinesOrg.data[voisines].LinkQualityDec <  50 ) { color = "red";}
+                if ( netTopo.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
+                if ( netTopo.data[voisines].LinkQualityDec <  50 ) { color = "red";}
 
                 lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:'+color+';stroke-width:1"/>';
             }
@@ -544,64 +547,64 @@ console.log("json_res=", json_res);
     function myJSON_AddMissing() {
         console.log("myJSON_AddMissing()");
 
-        if (typeof myVoisinesOrg === "undefined") {
-            console.log("=> myVoisinesOrg is UNDEFINED")
+        if (typeof netTopo === "undefined") {
+            console.log("=> netTopo is UNDEFINED")
             return;
         }
 
         var color = "";
 
-        console.log("myVoisinesOrgLA2="+myVoisinesOrg);
-        for (voisines in myVoisinesOrg.data) {
-            // console.log("Voisine: "+myVoisinesOrg.data[voisines].NE+"->"+myVoisinesOrg.data[voisines].Voisine);
+        console.log("netTopoLA2="+netTopo);
+        for (voisines in netTopo.data) {
+            // console.log("Voisine: "+netTopo.data[voisines].NE+"->"+netTopo.data[voisines].Voisine);
 
-            if ( typeof myObjOrg[myVoisinesOrg.data[voisines].NE] === "undefined" ) {
+            if ( typeof myObjOrg[netTopo.data[voisines].NE] === "undefined" ) {
 
-                myObjOrg[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
-                myObjNew[myVoisinesOrg.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
+                myObjOrg[netTopo.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
+                myObjNew[netTopo.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
 
-                if ( typeof topo[myVoisinesOrg.data[voisines].NE] === "undefined" ) {
-                    myObjOrg[myVoisinesOrg.data[voisines].NE].name = "Pas dans Jeedom";
-                    myObjOrg[myVoisinesOrg.data[voisines].NE].name = "Pas dans Jeedom";
+                if ( typeof topo[netTopo.data[voisines].NE] === "undefined" ) {
+                    myObjOrg[netTopo.data[voisines].NE].name = "Pas dans Jeedom";
+                    myObjOrg[netTopo.data[voisines].NE].name = "Pas dans Jeedom";
                 } else {
-                    myObjOrg[myVoisinesOrg.data[voisines].NE].name = topo[myVoisinesOrg.data[voisines].NE].name;
-                    myObjNew[myVoisinesOrg.data[voisines].NE].name = topo[myVoisinesOrg.data[voisines].NE].name;
+                    myObjOrg[netTopo.data[voisines].NE].name = topo[netTopo.data[voisines].NE].name;
+                    myObjNew[netTopo.data[voisines].NE].name = topo[netTopo.data[voisines].NE].name;
                 }
             }
 
-            if ( typeof myObjOrg[myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
+            if ( typeof myObjOrg[netTopo.data[voisines].Voisine] === "undefined" ) {
 
-                myObjOrg[myVoisinesOrg.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
-                myObjNew[myVoisinesOrg.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
+                myObjOrg[netTopo.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
+                myObjNew[netTopo.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
 
-                if ( myVoisinesOrg.data[voisines].Type == "End Device" ) { color="Green"; }
-                if ( myVoisinesOrg.data[voisines].Type == "Router" ) { color="Orange"; }
-                if ( myVoisinesOrg.data[voisines].Type == "Coordinator" ) { color="Red"; }
-                myObjOrg[myVoisinesOrg.data[voisines].Voisine].color = color;
-                myObjNew[myVoisinesOrg.data[voisines].Voisine].color = color;
+                if ( netTopo.data[voisines].Type == "End Device" ) { color="Green"; }
+                if ( netTopo.data[voisines].Type == "Router" ) { color="Orange"; }
+                if ( netTopo.data[voisines].Type == "Coordinator" ) { color="Red"; }
+                myObjOrg[netTopo.data[voisines].Voisine].color = color;
+                myObjNew[netTopo.data[voisines].Voisine].color = color;
 
-                if ( typeof topo[myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
-                    myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = "Pas dans Jeedom";
-                    myObjNew[myVoisinesOrg.data[voisines].Voisine].name = "Pas dans Jeedom";
+                if ( typeof topo[netTopo.data[voisines].Voisine] === "undefined" ) {
+                    myObjOrg[netTopo.data[voisines].Voisine].name = "Pas dans Jeedom";
+                    myObjNew[netTopo.data[voisines].Voisine].name = "Pas dans Jeedom";
                 }
                 else {
-                    myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = topo[myVoisinesOrg.data[voisines].Voisine].name;
-                    myObjNew[myVoisinesOrg.data[voisines].Voisine].name = topo[myVoisinesOrg.data[voisines].Voisine].name;
+                    myObjOrg[netTopo.data[voisines].Voisine].name = topo[netTopo.data[voisines].Voisine].name;
+                    myObjNew[netTopo.data[voisines].Voisine].name = topo[netTopo.data[voisines].Voisine].name;
                 }
             } else {
-                if ( myVoisinesOrg.data[voisines].Type == "End Device" ) { color="Green"; }
-                if ( myVoisinesOrg.data[voisines].Type == "Router" ) { color="Orange"; }
-                if ( myVoisinesOrg.data[voisines].Type == "Coordinator" ) { color="Red"; }
-                myObjOrg[myVoisinesOrg.data[voisines].Voisine].color = color;
-                myObjNew[myVoisinesOrg.data[voisines].Voisine].color = color;
+                if ( netTopo.data[voisines].Type == "End Device" ) { color="Green"; }
+                if ( netTopo.data[voisines].Type == "Router" ) { color="Orange"; }
+                if ( netTopo.data[voisines].Type == "Coordinator" ) { color="Red"; }
+                myObjOrg[netTopo.data[voisines].Voisine].color = color;
+                myObjNew[netTopo.data[voisines].Voisine].color = color;
 
-                if ( typeof topo[myVoisinesOrg.data[voisines].Voisine] === "undefined" ) {
-                    myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = "Pas dans Jeedom";
-                    myObjNew[myVoisinesOrg.data[voisines].Voisine].name = "Pas dans Jeedom";
+                if ( typeof topo[netTopo.data[voisines].Voisine] === "undefined" ) {
+                    myObjOrg[netTopo.data[voisines].Voisine].name = "Pas dans Jeedom";
+                    myObjNew[netTopo.data[voisines].Voisine].name = "Pas dans Jeedom";
                 }
                 else {
-                    myObjOrg[myVoisinesOrg.data[voisines].Voisine].name = topo[myVoisinesOrg.data[voisines].Voisine].name;
-                    myObjNew[myVoisinesOrg.data[voisines].Voisine].name = topo[myVoisinesOrg.data[voisines].Voisine].name;
+                    myObjOrg[netTopo.data[voisines].Voisine].name = topo[netTopo.data[voisines].Voisine].name;
+                    myObjNew[netTopo.data[voisines].Voisine].name = topo[netTopo.data[voisines].Voisine].name;
                 }
             }
         }
@@ -611,7 +614,7 @@ console.log("json_res=", json_res);
         console.log("function refreshAll: "+ mode );
 
         if ( mode == "All" ) {
-            getVoisinesJSON();
+            getNetworkTopology();
             getTopoJSON();
 
             myJSON_AddAbeillesFromJeedom();
@@ -620,7 +623,7 @@ console.log("json_res=", json_res);
             // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
         }
 
-        document.getElementById("legend").innerHTML = drawLegend("No");
+        document.getElementById("legend").innerHTML = drawLegend(false);
         document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,"No");
         document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,"No");
         document.getElementById("lesAbeillesText").innerHTML = dessineLesAbeillesText(myObjNew, 22,"No");
@@ -790,7 +793,7 @@ console.log("json_res=", json_res);
     // if (res.length > 2) Ruche = res;
     // console.log("Ruche=" + Ruche);
 
-    getVoisinesJSON();
+    getNetworkTopology();
     getTopoJSON();
     myJSON_AddAbeillesFromJeedom();
     // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
@@ -894,7 +897,7 @@ console.log("json_res=", json_res);
             }
         ?>
         <script>
-        document.write( drawLegend("Yes") );
+        document.write( drawLegend(true) );
         document.write( dessineLesVoisinesV2(0,"Yes") );
         document.write( dessineLesTextes(10,"Yes") );
         document.write( dessineLesAbeillesText(myObjNew, 22, "Yes") );
@@ -921,7 +924,7 @@ console.log("json_res=", json_res);
     //     1000  // ms
     // );
 
-    // console.log("Name list: "+JSON.stringify(myVoisinesOrg));
+    // console.log("Name list: "+JSON.stringify(netTopo));
     // console.log("Name list: "+JSON.stringify(topo));
     // console.log("Name 1: " + JSON.stringify(topo["0000"]));
 

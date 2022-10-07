@@ -60,7 +60,7 @@
             $res = getCmdValueByName($eqId, 'Network Status');
             echo '<input type="text" value="'.$res.'" readonly>';
             if (isset($dbgDeveloperMode))
-                echo '<a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate(\'startNetwork\', \'\')">Démarrer</a>';
+                echo '<a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate(\'startNetwork\', \'\')">{{Démarrer}}</a>';
         ?>
     </div>
 </div>
@@ -98,10 +98,12 @@
     </div>
     <div class="col-sm-5">
         <?php
-        echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Inclusion Status").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-            echo '<input type="text" id="idInclusionMode" value="'.getCmdValueByName($eqId, 'Inclusion Status').'" readonly>';
-            addJsUpdateFunction($eqId, 'permitJoin-Status', 'idInclusionMode');
+            echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, "permitJoin-Status").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+            echo '<input type="text" id="idInclusionMode" value="'.getCmdValueByLogicId($eqId, "permitJoin-Status").'" readonly>';
+            addJsUpdateFunction($eqId, 'permitJoin-Status', 'idInclusionMode', true);
             ?>
+            <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('setInclusion', 'start')">{{Démarrer}}</a>
+            <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('setInclusion', 'stop')">{{Arrêter}}</a>
         </div>
     </div>
 </div>

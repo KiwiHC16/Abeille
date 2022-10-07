@@ -1,0 +1,50 @@
+{
+    "TS130F__TZ3000_1dd0d5yi": {
+        "manufacturer": "Moes",
+        "model": "TS130F",
+        "type": "Moes curtain module",
+        "timeout": "60",
+        "category": {
+            "opening": "1"
+        },
+        "configuration": {
+            "icon": "Moes-CurtainModule",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Up": {
+                "use": "zbCmd-0102-UpOpen",
+                "isVisible": "1"
+            },
+            "Stop": {
+                "use": "zbCmd-0102-Stop",
+                "isVisible": "1"
+            },
+            "Down": {
+                "use": "zbCmd-0102-DownClose",
+                "isVisible": "1"
+            },
+            "Current Level": {
+                "use": "zb-0102-CurPosLiftPercent",
+                "isVisible": "1"
+            },
+            "Get Current Level": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0102&attrId=0008"
+            },
+            "Bind 0102-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0102",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0102": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

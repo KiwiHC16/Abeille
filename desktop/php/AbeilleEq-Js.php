@@ -202,6 +202,10 @@
             topic = 'CmdAbeille'+js_zgId+'/0000/startZgNetwork';
             payload = '';
             break;
+        case "setInclusion":
+            topic = 'CmdAbeille'+js_zgId+'/0000/setZgPermitMode';
+            payload = 'mode='+param;
+            break;
         case "setMode":
             topic = 'CmdAbeille'+js_zgId+'/0000/setZgMode';
             if (param == "Normal")

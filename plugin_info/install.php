@@ -78,10 +78,14 @@
              GIT users & developpers. */
     function updateConfigDB() {
 
+        $dbVersion = config::byKey('ab::dbVersion', 'Abeille', '');
+        if ($dbVersion == '')
+            $dbVersion = config::byKey('DbVersion', 'Abeille', '');
+
         /* Version 20200225 changes:
            - Added multi-zigate support
          */
-        if (config::byKey('DbVersion', 'Abeille', '') == '') {
+        if ($dbVersion == '') {
 
             // ******************************************************************************************************************
             // Update Abeille instance from previous version from Abeille/ to Abeille1/
@@ -136,14 +140,14 @@
             else {
                 config::save('AbeilleSerialPort1', $port1, 'Abeille');
             }
-            config::save('DbVersion', '20200225', 'Abeille');
+            config::save('ab::dbVersion', '20200225', 'Abeille');
+            $dbVersion = '20200225';
         }
 
         /* Version 20200510 changes:
            - Added 'AbeilleTypeX' (X=1 to 10): 'USB', 'WIFI', or 'PI'
          */
-        $dbVersion = config::byKey('DbVersion', 'Abeille', '');
-        if (($dbVersion == '') || (intval($dbVersion) < 20200510)) {
+        if (intval($dbVersion) < 20200510) {
             for ($i = 1; $i <= 10; $i++) {
                 if (config::byKey('AbeilleActiver'.$i, 'Abeille', '') != "Y")
                     continue; // Disabled or undefined
@@ -156,7 +160,8 @@
                 else
                     config::save('AbeilleType'.$i, 'USB', 'Abeille');
             }
-            config::save('DbVersion', '20200510', 'Abeille');
+            config::save('ab::dbVersion', '20200510', 'Abeille');
+            $dbVersion = '20200510';
         }
 
         /* Version 20201025 changes:
@@ -208,7 +213,8 @@
                 }
             }
 
-            config::save('DbVersion', '20201025', 'Abeille');
+            config::save('ab::dbVersion', '20201025', 'Abeille');
+            $dbVersion = '20201025';
         }
 
         /* Version 20220407 changes:
@@ -231,15 +237,16 @@
            - Eq DB: Removing obsolete 'lastCommunicationTimeOut', 'type'.
          */
         if (intval($dbVersion) < 20220407) {
-            if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
-                config::save('blocageTraitementAnnonce', 'Non', 'Abeille');
-            }
-            if (config::byKey('blocageRecuperationEquipement', 'Abeille', 'none', 1) == "none") {
-                config::save('blocageRecuperationEquipement', 'Oui', 'Abeille');
-            }
-            if (config::byKey('agressifTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
-                config::save('agressifTraitementAnnonce', '4', 'Abeille');
-            }
+            // The following is now obsolete
+            // if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
+            //     config::save('blocageTraitementAnnonce', 'Non', 'Abeille');
+            // }
+            // if (config::byKey('blocageRecuperationEquipement', 'Abeille', 'none', 1) == "none") {
+            //     config::save('blocageRecuperationEquipement', 'Oui', 'Abeille');
+            // }
+            // if (config::byKey('agressifTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
+            //     config::save('agressifTraitementAnnonce', '4', 'Abeille');
+            // }
 
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
@@ -417,7 +424,8 @@
                 log::add('Abeille', 'debug', '  Zigate '.$zgId.": Updated 'AbeilleSerialPort".$zgId."'");
             }
 
-            config::save('DbVersion', '20220407', 'Abeille');
+            config::save('ab::dbVersion', '20220407', 'Abeille');
+            $dbVersion = '20220407';
         } // End 'intval($dbVersion) < 20220407'
 
         /* Version 20220421 changes:
@@ -426,6 +434,8 @@
            - eqLogic DB: 'RxOnWhenIdle' => 'ab::zigbee['rxOnWhenIdle']'
            - eqLogic DB: 'AC_Power' => 'ab::zigbee['mainsPowered']'
            - eqLogic DB: 'icone' => 'ab::icon'
+           - eqLogic DB: 'positionX' => 'ab::settings[physLocationX]'
+           - eqLogic DB: 'positionY' => 'ab::settings[physLocationY]'
            - config DB: 'AbeilleActiverX' => 'ab::zgEnabledX'
            - config DB: 'AbeilleTypeX' => 'ab::zgTypeX'
            - config DB: 'AbeilleSerialPortX' => 'ab::zgPortX'
@@ -436,6 +446,9 @@
            - config DB: 'preventLQIRequest' => 'ab::preventLQIAutoUpdate'
            - config DB: 'monitor' => 'ab::monitorId'
            - config DB: Removed obsolete 'agressifTraitementAnnonce'.
+           - config DB: Removed obsolete 'blocageRecuperationEquipement'.
+           - config DB: Removed obsolete 'blocageTraitementAnnonce'.
+           - config DB: 'DbVersion' => 'ab::dbVersion'.
            - Removing 'AbeilleDebug.log'. Moved to Jeedom tmp dir.
          */
         if (intval($dbVersion) < 20220421) {
@@ -490,12 +503,37 @@
                     $saveEq = true;
                 }
 
+                // 'positionX' => 'ab::settings[physLocationX]'
+                // 'positionY' => 'ab::settings[physLocationY]'
+                $settings = $eqLogic->getConfiguration('ab::settings', []);
+                $saveSettings = false;
+// log::add('Abeille', 'debug', '  '.$eqHName.": positionX=".json_encode($eqLogic->getConfiguration('positionX')));
+// log::add('Abeille', 'debug', '  '.$eqHName.": positionY=".json_encode($eqLogic->getConfiguration('positionY')));
+                $posX = $eqLogic->getConfiguration('positionX', 'nada');
+                if ($posX !== 'nada') {
+                    $settings['physLocationX'] = $posX;
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'positionX' key renamed to 'ab::settings[physLocationX]'");
+                    $saveSettings = true;
+                }
+                $posY = $eqLogic->getConfiguration('positionY', 'nada');
+                if ($posY !== 'nada') {
+                    $settings['physLocationY'] = $posY;
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'positionY' key renamed to 'ab::settings[physLocationY]'");
+                    $saveSettings = true;
+                }
+                if ($saveSettings) {
+                    $eqLogic->setConfiguration('ab::settings', $settings);
+                    $saveEq = true;
+                }
+                array_push($toRemove, 'positionX', 'positionY');
+
                 // Removing obsolete keys
                 foreach ($toRemove as $key) {
-                    if ($eqLogic->getConfiguration($key, null) === null)
-                        continue;
+                    // if ($eqLogic->getConfiguration($key, 'nada') === 'nada')
+                    //     continue; // Really undefined ??
+                    // No way to detect all obsolete keys. If set to empty it is the same as does not exist.
                     $eqLogic->setConfiguration($key, null);
-                    log::add('Abeille', 'debug', '  '.$eqHName.": Removed configuration key '".$key."'");
+                    // log::add('Abeille', 'debug', '  '.$eqHName.": Removed configuration key '".$key."'");
                     $saveEq = true;
                 }
 
@@ -577,12 +615,16 @@
             replaceConfigDB('preventLQIRequest', 'ab::preventLQIAutoUpdate');
             replaceConfigDB('monitor', 'ab::monitorId');
             config::remove('agressifTraitementAnnonce', 'Abeille');
+            config::remove('blocageRecuperationEquipement', 'Abeille');
+            config::remove('blocageTraitementAnnonce', 'Abeille');
+            replaceConfigDB('DbVersion', 'ab::dbVersion');
 
             // Remove obsolete log files
             $obsolete = ['AbeilleDebug.log'];
             removeLogs($obsolete);
 
-            // config::save('DbVersion', '20220421', 'Abeille'); // NOT FROZEN YET
+            // config::save('ab::dbVersion', '20220421', 'Abeille'); // NOT FROZEN YET
+            // $dbVersion = '20220421';
         }
     }
 

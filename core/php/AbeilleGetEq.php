@@ -14,8 +14,9 @@
         $device['name']         = $eqLogic->getName();
         $device['logicalId']    = $eqLogic->getLogicalId();
         $device['id']           = $eqLogic->getId();
-        $device['X']            = max( 0, $eqLogic->getConfiguration('positionX'));
-        $device['Y']            = max( 0, $eqLogic->getConfiguration('positionY'));
+        $settings = $eqLogic->getConfiguration('ab::settings', []);
+        $device['X']            = isset($settings['physLocationX']) ? $settings['physLocationX'] : 0;
+        $device['Y']            = isset($settings['physLocationY']) ? $settings['physLocationY'] : 0;
 
         $table[$eqLogic->getLogicalId()] = $device;
         unset( $device );

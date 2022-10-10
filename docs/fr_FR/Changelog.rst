@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221010-BETA-1
+-------------
+
 - Xiaomi D1 wall switch single: Support préliminaire (2466).
 - Moes BRT-100: Support préliminaire (2467).
 - Silvercrest smart button: Support préliminaire (2468).

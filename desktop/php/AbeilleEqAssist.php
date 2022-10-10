@@ -1061,12 +1061,12 @@
             if (isset(ep.servClusters["0400"]) && isset(ep.servClusters["0400"]['attributes'])) {
                 attributes = ep.servClusters["0400"]['attributes'];
                 if (isset(attributes['0000'])) {
-                    cmds["Illuminance"] = newCmd("zb-0400-MeasuredValue");
+                    cmds["Illuminance"] = newCmd("zb-0400-MeasuredValue", "ep="+epId);
                     cmds["Illuminance"]["isVisible"] = 1;
-                    cmds["Get Illuminance"] = newCmd("zbReadAttribute", "clustId=0400&attrId=0000");
-                    cmds["Bind 0400-ToZigate"] = newCmd("zbBindToZigate", "clustId=0400", "yes");
-                    cmds["SetReporting 0400-0000"] = newCmd("zbConfigureReporting", "clustId=0400&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=0000", "yes");
-                    cmds["SetReporting 0400-0000"]["comment"] = "Reporting every 5 to 10mins";
+                    cmds["Get Illuminance"] = newCmd("zbReadAttribute", "ep="+epId+"&clustId=0400&attrId=0000");
+                    cmds["Bind "+epId+"-0400-ToZigate"] = newCmd("zbBindToZigate", "ep="+epId+"&clustId=0400", "yes");
+                    cmds["SetReporting "+epId+"-0400-0000"] = newCmd("zbConfigureReporting", "ep="+epId+"&clustId=0400&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=0000", "yes");
+                    cmds["SetReporting "+epId+"-0400-0000"]["comment"] = "Reporting every 5 to 10mins";
                 }
             }
 
@@ -1074,12 +1074,12 @@
             if (isset(ep.servClusters["0402"]) && isset(ep.servClusters["0402"]['attributes'])) {
                 attributes = ep.servClusters["0402"]['attributes'];
                 if (isset(attributes['0000'])) {
-                    cmds["Temperature"] = newCmd("zb-0402-MeasuredValue");
+                    cmds["Temperature"] = newCmd("zb-0402-MeasuredValue", "ep="+epId);
                     cmds["Temperature"]["isVisible"] = 1;
-                    cmds["Get Temperature"] = newCmd("zbReadAttribute", "clustId=0402&attrId=0000");
-                    cmds["SetReporting 0402-0000"] = newCmd("zbConfigureReporting", "clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=", "yes");
-                    cmds["SetReporting 0402-0000"]["comment"] = "Reporting every 5 to 10mins";
-                    cmds["Bind 0402-ToZigate"] = newCmd("zbBindToZigate", "clustId=0402", "yes");
+                    cmds["Get Temperature"] = newCmd("zbReadAttribute", "ep="+epId+"&clustId=0402&attrId=0000");
+                    cmds["SetReporting "+epId+"-0402-0000"] = newCmd("zbConfigureReporting", "ep="+epId+"&clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=", "yes");
+                    cmds["SetReporting "+epId+"-0402-0000"]["comment"] = "Reporting every 5 to 10mins";
+                    cmds["Bind "+epId+"-0402-ToZigate"] = newCmd("zbBindToZigate", "ep="+epId+"&clustId=0402", "yes");
                     if (minTimeout > 10)
                         minTimeout = 10;
                 }
@@ -1089,12 +1089,12 @@
             if (isset(ep.servClusters["0405"]) && isset(ep.servClusters["0405"]['attributes'])) {
                 attributes = ep.servClusters["0405"]['attributes'];
                 if (isset(attributes['0000'])) {
-                    cmds["Humidity"] = newCmd("zb-0405-MeasuredValue");
+                    cmds["Humidity"] = newCmd("zb-0405-MeasuredValue", "ep="+epId);
                     cmds["Humidity"]["isVisible"] = 1;
-                    cmds["Get Humidity"] = newCmd("zbReadAttribute", "clustId=0405&attrId=0000");
-                    cmds["SetReporting 0405-0000"] = newCmd("zbConfigureReporting", "clustId=0405&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=", "yes");
-                    cmds["SetReporting 0405-0000"]["comment"] = "Reporting every 5 to 10mins";
-                    cmds["Bind 0405-ToZigate"] = newCmd("zbBindToZigate", "clustId=0405", "yes");
+                    cmds["Get Humidity"] = newCmd("zbReadAttribute", "ep="+epId+"&clustId=0405&attrId=0000");
+                    cmds["SetReporting "+epId+"-0405-0000"] = newCmd("zbConfigureReporting", "ep="+epId+"&clustId=0405&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=", "yes");
+                    cmds["SetReporting "+epId+"-0405-0000"]["comment"] = "Reporting every 5 to 10mins";
+                    cmds["Bind "+epId+"-0405-ToZigate"] = newCmd("zbBindToZigate", "ep="+epId+"&clustId=0405", "yes");
                     if (minTimeout > 10)
                         minTimeout = 10;
                 }
@@ -1481,6 +1481,9 @@
         } else if (infoType == "discoverCommandsReceived") {
             topic = "Cmd"+logicalId+"_discoverCommandsReceived";
             payload = "ep="+epId+"_clustId="+clustId;
+        } else if (infoType == "discoverCommandsGenerated") {
+            topic = "Cmd"+logicalId+"_discoverCommandsGenerated";
+            payload = "ep="+epId+"_clustId="+clustId;
         } else {
             console.log("requestInfos("+infoType+") => UNEXPECTED type !");
             return;
@@ -1805,8 +1808,10 @@ console.log(zEndPoints);
                     var newCell = row.insertCell(-1);
                     newCell.innerHTML = '<a id="id'+sEp+'-Serv'+sClustId+'-RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
                     newCell.innerHTML += '<a id="idEP'+sEp+'-Serv'+sClustId+'-RB4" class="btn btn-warning" title="Interrogation des commandes reçues" onclick="requestInfos(\'discoverCommandsReceived\', \''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                    newCell.innerHTML += '<a id="idEP'+sEp+'-Serv'+sClustId+'-RB5" class="btn btn-warning" title="Interrogation des commandes générées" onclick="requestInfos(\'discoverCommandsGenerated\', \''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
                 }
                 requestInfos('discoverCommandsReceived', sEp, sClustId);
+                requestInfos('discoverCommandsGenerated', sEp, sClustId);
                 changeClass("idServClust"+sEp+"-"+sClustId+"RBEx", "btn-warning", "btn-success");
                 changeClass("idServClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
             } else
@@ -2030,6 +2035,35 @@ console.log(zEndPoints);
 
             /* Updating display: button moved to green */
             id='idEP'+sEp+'-Serv'+sClustId+'-RB4';
+            changeClass(id, "btn-warning", "btn-success");
+        } else if (res.type == "discoverCommandsGeneratedResponse") {
+            // 'src' => 'parser',
+            // 'type' => 'discoverCommandsGeneratedResponse',
+            // 'net' => $dest,
+            // 'addr' => $srcAddress,
+            // 'ep' => $srcEndPoint,
+            // 'clustId' => $cluster,
+            // 'commands' => $commands
+            sEp = res.ep;
+            sClustId = res.clustId;
+            sCommands = res.commands;
+            // console.log("commandsReceived: clust="+sClustId);
+            // console.log(sCommands);
+
+            /* Updating internal datas */
+            if (typeof zigbee.endPoints[sEp] === "undefined") {
+                openReturnChannel();
+                return;
+            }
+
+            ep = zigbee.endPoints[sEp];
+            clust = ep.servClusters[sClustId];
+            if (typeof clust.commandsGenerated === "undefined")
+                clust.commandsGenerated = new Object();
+            clust.commandsGenerated = sCommands;
+
+            /* Updating display: button moved to green */
+            id='idEP'+sEp+'-Serv'+sClustId+'-RB5';
             changeClass(id, "btn-warning", "btn-success");
         } else if (res.type == "defaultResponse") {
             // 'src' => 'parser',

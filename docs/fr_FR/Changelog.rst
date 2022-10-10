@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+- Xiaomi D1 wall switch single: Support préliminaire (2466).
+- Moes BRT-100: Support préliminaire (2467).
+- Silvercrest smart button: Support préliminaire (2468).
+- Interne: Cmd+Parser: Ajout support 'discoverCommandsGenerated'.
+- Assistant découverte: Amélioration: Ajout recherche commandes generées.
+- Network graph: Temporairement masqué. En cours de refonte.
+- Moes - Smart Brightness Thermometer: Support préliminaire (2469).
+- Assistant découverte: Correction pour support multi EP.
+
 221007-BETA-1
 -------------
 

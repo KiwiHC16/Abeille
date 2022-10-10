@@ -550,6 +550,7 @@
                     "LegrandRemoteSwitch" => "Legrand-RemoteSwitch",
                     "Contactor" => "Legrand-Contactor",
                     "Connectedoutlet" => "Legrand-Connectedoutlet",
+                    "Moes-ZSS-ZK-THL" => "Moes-Thermometer",
                     "ProfaluxTelecommande" => "Profalux-Remote",
                     "voletProFalux" => "Profalux-Shutter",
                     "node_bsoProFalux" => "Profalux-BSO",

@@ -1,0 +1,46 @@
+{
+    "TS004F__TZ3000_rco1yzb1": {
+        "manufacturer": "Silvercrest",
+        "model": "HG08164",
+        "type": "Silvercrest smart button",
+        "timeout": "60",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "Silvercrest-SmartButton",
+            "mainEP": "01",
+            "batteryType": "1x3V CR2032"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
+            "SetReporting 0001-00021": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Status": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1
+            },
+            "On": {
+                "use": "zbCmdR-0006-On",
+                "trigOut": "0006-01-0000",
+                "trigOutOffset": 1
+            }
+        }
+    }
+}

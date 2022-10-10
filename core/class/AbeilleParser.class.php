@@ -2508,6 +2508,8 @@
                         0x0b Default Response
                         0x0d Discover Attributes Response
                         0x12 Discover Commands Received Response
+                        0x13 Discover Commands Generated
+                        0x14 Discover Commands Generated Response
                         0x16 Discover Attributes Extended Response
                     */
                     if ($cmd == "00") { // Read Attributes
@@ -2857,13 +2859,16 @@
                         // return;
                     }
 
-                    else if ($cmd == "12") { // Discover Commands Received Response
+                    else if (($cmd == "12") || ($cmd == "14")) { // Discover Commands Received/Generated Response
                         // Duplicated message ?
                         // if ($this->isDuplicated($dest, $srcAddr, $sqn))
                         //     return;
                         // Tcharp38: Need to check how to deal with 'completed' flag
 
-                        $toMon[] = "8002/Discover Commands Received Response"; // For monitor
+                        if ($cmd == "12")
+                            $toMon[] = "8002/Discover Commands Received Response"; // For monitor
+                        else
+                            $toMon[] = "8002/Discover Commands Generated Response"; // For monitor
 
                         $completed = substr($msg, 2);
                         $msg = substr($msg, 2); // Skipping 'completed' status
@@ -2873,20 +2878,22 @@
                             $commands[] = substr($msg, $i, 2);
                             $i += 2;
                         }
-                        parserLog('debug', '  Supported received commands: '.implode("/", $commands));
+                        parserLog('debug', '  Supported commands: '.implode("/", $commands));
 
                         /* Send to client if required (ex: EQ page opened) */
                         $toCli = array(
                             // 'src' => 'parser',
-                            'type' => 'discoverCommandsReceivedResponse',
+                            // 'type' => 'discoverCommandsReceivedResponse',
                             'net' => $dest,
                             'addr' => $srcAddr,
                             'ep' => $srcEp,
                             'clustId' => $clustId,
                             'commands' => $commands
                         );
-                        // $this->msgToClient($toCli);
-                        // return;
+                        if ($cmd == "12")
+                            $toCli['type'] = 'discoverCommandsReceivedResponse';
+                        else
+                            $toCli['type'] = 'discoverCommandsGeneratedResponse';
                     }
 
                     else if ($cmd == "16") { // Discover Attributes Extended Response

@@ -3351,7 +3351,60 @@
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     return;
-                }
+                } // End 'discoverCommandsReceived'
+
+                // ZCL global: Discover commands generated
+                // Mandatory params: 'addr', 'ep', 'clustId'
+                // Optional params: 'startId' (default=00), 'max' (default=FF)
+                else if ($cmdName == 'discoverCommandsGenerated') {
+                    $required = ['addr', 'ep', 'clustId'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $cmd = "0530";
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <profile ID: uint16_t>
+                    // <cluster ID: uint16_t>
+                    // <security mode: uint8_t>
+                    // <radius: uint8_t>
+                    // <data length: uint8_t>
+
+                    // <data: auint8_t>
+                    //  ZCL Control Field
+                    //  ZCL SQN
+                    //  Command Id
+                    //  ....
+
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['ep'];
+                    $profId     = "0104";
+                    $clustId    = $Command['clustId'];
+                    $secMode    = "02";
+                    $radius     = "1E";
+
+                    /* ZCL header */
+                    $fcf        = "10"; // Frame Control Field
+                    $sqn        = $this->genSqn();
+                    $cmdId      = "13"; // Discover Commands Generated
+
+                    $startId    = isset($Command['startId']) ? $Command['startId'] : "00";
+                    $max        = isset($Command['max']) ? $Command['max'] : "FF";
+
+                    $data2 = $fcf.$sqn.$cmdId.$startId.$max;
+                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
+
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
+                    $data = $data1.$data2;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    return;
+                } // End 'discoverCommandsGenerated'
 
                 // ZCL global: Read Attributes Response
                 // Mandatory params: 'addr', 'ep', 'clustId', 'attrId', 'status', 'attrType', 'attrVal'

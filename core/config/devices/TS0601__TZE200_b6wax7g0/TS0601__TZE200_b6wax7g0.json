@@ -1,0 +1,21 @@
+{
+    "TS0601__TZE200_b6wax7g0": {
+        "manufacturer": "Moes",
+        "model": "BRT-100",
+        "type": "Moes thermostatic head",
+        "timeout": "60",
+        "category": {
+            "heating": "1"
+        },
+        "configuration": {
+            "icon": "Moes-ThermostaticHead",
+            "mainEP": "01",
+            "batteryType": "2x1.5 AA"
+        },
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            }
+        }
+    }
+}

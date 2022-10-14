@@ -1,0 +1,55 @@
+{
+    "motion.ac02": {
+        "manufacturer": "Xiaomi",
+        "model": "MS-S02",
+        "type": "Aqara motion sensor P1",
+        "timeout": "60",
+        "category": {
+            "security": "1"
+        },
+        "configuration": {
+            "icon": "Xiaomi-MotionSensorP1",
+            "mainEP": "01",
+            "batteryType": "2x3V CR2450"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0001&attrId=0021"
+            },
+            "Illuminance": {
+                "use": "zb-0400-MeasuredValue",
+                "isVisible": "1"
+            },
+            "Bind 0400-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0400",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting 0400-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=0000",
+                "comment": "Reporting every 5 to 10mins",
+                "execAtCreation": "Yes"
+            },
+           "Occupancy": {
+                "use": "zb-0406-Occupancy",
+                "isVisible": "1"
+            },
+            "Bind 0406-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0406",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting 0406-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0406&attrType=18&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "Yes"
+            },
+            "Zone Status": {
+                "use": "zb-0500-ZoneStatus",
+                "isVisible": "1"
+            }
+        }
+    }
+}

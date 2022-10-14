@@ -12,7 +12,7 @@
      *
      */
 
-    include_once __DIR__.'/../../core/config/Abeille.config.php';
+    include_once __DIR__.'/../config/Abeille.config.php';
 
     /* Developers mode ? */
     if (file_exists(dbgFile)) {
@@ -40,43 +40,6 @@
         }
         return true;
     }
-
-    logSetConf('', true); // Log to STDOUT until log name fully known (need Zigate number)
-    logMessage('info', '>>> Démarrage d\'AbeilleSerialRead sur port '.$argv[2]);
-
-    /* Checking parameters */
-    if ($argc < 3) { // Currently expecting <cmdname> <AbeilleX> <ZigatePort>
-        logMessage('error', 'Argument(s) manquant(s)');
-        exit(1);
-    }
-    if (substr($argv[1], 0, 7) != "Abeille") {
-        logMessage('error', 'Argument 1 incorrect (devrait être \'AbeilleX\')');
-        exit(2);
-    }
-
-    $net            = $argv[1]; // Network name (ex: 'Abeille1')
-    $serial         = $argv[2]; // Zigate port (ex: '/dev/ttyUSB0')
-    $requestedlevel = $argv[3]; // Currently unused
-    $zgId = (int)substr($net, 7); // Zigate number (ex: 1)
-    logSetConf("AbeilleSerialRead".$zgId.".log", true); // Log to file with line nb check
-
-    // Check if already running
-    $config = AbeilleTools::getParameters();
-    $running = AbeilleTools::getRunningDaemons();
-    $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
-    logMessage('debug', 'Daemons='.json_encode($daemons));
-    if ($daemons["serialRead".$zgId] > 1) {
-        logMessage('error', 'Un démon AbeilleSerialRead'.$zgId.' est déja lancé.');
-        exit(4);
-    }
-
-    if ($serial == 'none') {
-        $serial = $resourcePath.'/COM';
-        logMessage('info', 'Main: com file (experiment): '.$serial);
-        exec(system::getCmdSudo().'touch '.$serial.' > /dev/null 2>&1');
-    }
-
-    // $firstFrame = true; // To indicate that first frame might be corrupted
 
     // Wait for port to be available, configure it then open it
     function waitPort($serial) {
@@ -114,6 +77,53 @@
             sleep(1);
         }
     }
+
+    logSetConf('', true); // Log to STDOUT until log name fully known (need Zigate number)
+    logMessage('info', '>>> Démarrage d\'AbeilleSerialRead sur port '.$argv[2]);
+
+    /* Checking parameters */
+    if ($argc < 3) { // Currently expecting <cmdname> <AbeilleX> <ZigatePort>
+        logMessage('error', 'Argument(s) manquant(s)');
+        exit(1);
+    }
+    if (substr($argv[1], 0, 7) != "Abeille") {
+        logMessage('error', 'Argument 1 incorrect (devrait être \'AbeilleX\')');
+        exit(2);
+    }
+
+    $net            = $argv[1]; // Network name (ex: 'Abeille1')
+    $serial         = $argv[2]; // Zigate port (ex: '/dev/ttyUSB0')
+    $requestedlevel = $argv[3]; // Currently unused
+    $zgId = (int)substr($net, 7); // Zigate number (ex: 1)
+    logSetConf("AbeilleSerialRead".$zgId.".log", true); // Log to file with line nb check
+
+    // Check if already running
+    $config = AbeilleTools::getParameters();
+    $running = AbeilleTools::getRunningDaemons();
+    $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
+    logMessage('debug', 'Daemons='.json_encode($daemons));
+    if ($daemons["serialRead".$zgId] > 1) {
+        logMessage('error', 'Un démon AbeilleSerialRead'.$zgId.' est déja lancé.');
+        exit(4);
+    }
+
+    declare(ticks = 1);
+    pcntl_signal(SIGTERM, 'signalHandler', false);
+    function signalHandler($signal) {
+        global $f, $zgId;
+
+        fclose($f);
+        logMessage('info', '<<< Arret du démon AbeilleSerialRead'.$zgId);
+        exit;
+    }
+
+    if ($serial == 'none') {
+        $serial = $resourcePath.'/COM';
+        logMessage('info', 'Main: com file (experiment): '.$serial);
+        exec(system::getCmdSudo().'touch '.$serial.' > /dev/null 2>&1');
+    }
+
+    // $firstFrame = true; // To indicate that first frame might be corrupted
 
     // TODO Tcharp38: May make sense to wait for port to be ready
     // to cover socat > serialread case if socat starts later.

@@ -32,7 +32,7 @@
     }
 </style>
 <div class="row" style="height:inherit">
-    <div class="col-lg-2 col-md-3 col-sm-4" style="overflow-y:auto;overflow-x:hidden;">
+    <div class="col-lg-2 col-md-3 col-sm-4" style="height:inherit;overflow-y:auto;overflow-x:hidden;">
         <div class="topBar">
         </div>
 

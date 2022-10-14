@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221014-BETA-1
+-------------
+
 - Aqara Motion Sensor P1 MS-S02: Support preliminaire (2463).
 - Silvercrest smart button: Mise-à-jour modèle (2468).
 - Page maintenance/logs: Correction ascenseur partie gauche.

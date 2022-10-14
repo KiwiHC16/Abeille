@@ -314,6 +314,13 @@
         exit(3);
     }
 
+    declare(ticks = 1);
+    pcntl_signal(SIGTERM, 'signalHandler', false);
+    function signalHandler($signal) {
+        logMessage('info', '<<< Arret du démon AbeilleParser');
+        exit;
+    }
+
     // Inits
     // $queueParserToAbeille2 = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
     $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
@@ -475,8 +482,9 @@
         unset($AbeilleParser);
     }
     catch (Exception $e) {
+        // Tcharp38: Can we reach this ?
         logMessage('debug', 'error: '.json_encode($e->getMessage()));
     }
 
-    logMessage('info', '<<< AbeilleParser: arret du démon');
+    logMessage('info', '<<< AbeilleParser: arret du démon'); // Tcharp38: Can we reach this ?
 ?>

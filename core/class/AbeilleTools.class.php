@@ -1033,18 +1033,19 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
             $nbOfDaemons = sizeof($running);
             if ($nbOfDaemons != 0) {
                 log::add('Abeille', 'debug', '  stopDaemons(): Stopping '.$nbOfDaemons.' daemons');
+                $allPids = '';
                 for ($i = 0; $i < $nbOfDaemons; $i++) {
     // log::add('Abeille', 'debug', 'deamon_stopDaemonsstop(): running[i]='.$running[$i]);
                     $arr = explode(" ", $running[$i]);
-                    $pid = $arr[0];
-                    exec("sudo kill -s TERM ".$pid);
-    // log::add('Abeille', 'debug', 'stopDaemons(): kill -s TERM '.$pid);
+                    $allPids .= ' '.$arr[0];
                 }
+                exec("sudo kill -s TERM".$allPids);
+    log::add('Abeille', 'debug', 'stopDaemons(): kill -s TERM'.$allPids);
                 /* Waiting until timeout that all daemons be ended */
-                define ("stopTimeout", 2000); // 2sec
-                $running = array(); // Clear previous result.
-                for ($t = 0; ($nbOfDaemons != 0) && ($t < stopTimeout); $t+=500) {
+                for ($t = 0; ($nbOfDaemons != 0) && ($t < daemonStopTimeout); $t+=500) {
                     usleep(500000); // Sleep 500ms
+                    $running = array(); // Clear previous result.
+                    $running2 = array(); // Clear previous result.
                     exec($cmd1, $running);
                     if ($cmd2 != "") {
                         exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
@@ -1054,7 +1055,7 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
     // log::add('Abeille', 'debug', 'stopDaemons(): LA'.$nbOfDaemons."=".json_encode($running));
                 }
                 if ($nbOfDaemons != 0) {
-                    log::add('Abeille', 'debug', '  stopDaemons(): '.$nbOfDaemons.' daemons still active after '.stopTimeout.' ms');
+                    log::add('Abeille', 'debug', '  stopDaemons(): '.$nbOfDaemons.' daemons still active after '.daemonStopTimeout.' ms');
                     log::add('Abeille', 'debug', '  stopDaemons(): '.json_encode($running));
                     for ($i = 0; $i < $nbOfDaemons; $i++) {
                         $arr = explode(" ", $running[$i]);

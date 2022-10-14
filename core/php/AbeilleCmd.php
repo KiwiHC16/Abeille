@@ -42,6 +42,13 @@
         exit(3);
     }
 
+    declare(ticks = 1);
+    pcntl_signal(SIGTERM, 'signalHandler', false);
+    function signalHandler($signal) {
+        logMessage('info', '<<< Arret du démon AbeilleCmd');
+        exit;
+    }
+
     /* Any device to monitor ?
        It is indicated by 'ab::monitorId' key in Jeedom 'config' table. */
     $monId = $abeilleConfig['ab::monitorId'];
@@ -120,9 +127,11 @@
         }
     }
     catch (Exception $e) {
+        // Tcharp38: Can we reach this ?
         logMessage('debug', 'error: '. json_encode($e->getMessage()));
     }
 
+    // Tcharp38: Can we reach this ?
     unset($AbeilleCmdQueue);
     logMessage('info', '<<< Fin du démon \'AbeilleCmd\'');
 ?>

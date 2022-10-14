@@ -74,4 +74,6 @@
     define('daemonSocat9', 1 << 20);
     define('daemonSocat10', 1 << 21);
     define('daemonMonitor', 1 << 22);
+
+    define ("daemonStopTimeout", 3000); // 3sec
 ?>

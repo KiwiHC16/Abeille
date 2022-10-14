@@ -494,7 +494,7 @@
 
         $LQI = array(); // Result from interrogations (old format)
         $lqiTable = array(
-            'signature' => 'lqiTable',
+            'signature' => 'Abeille LQI table',
             'net' => "Abeille".$zgId,
             'collectTime' => time(), // Time here is start of collect
             'routers' => array()

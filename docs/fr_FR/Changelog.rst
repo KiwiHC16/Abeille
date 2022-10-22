@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221022-BETA-1
+-------------
+
 - Moes curtain module: Mise-à-jour modèle (2464).
 - Moes 2 gang dimmer module: Modele preliminaire (2473).
 - Interne: Premier fichier 'packages.json' pour installation de dependances.

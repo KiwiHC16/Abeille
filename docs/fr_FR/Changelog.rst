@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221023-BETA-1
+-------------
+
 - Interne: Correction regression constantes Zigbee.
 
 221022-BETA-1

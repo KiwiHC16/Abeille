@@ -63,9 +63,11 @@
             $signed = false;
             switch ($type) {
             case '20': // uint8
+            case '30': // enum8
                 $size = 1;
                 break;
             case '21': // uint16
+            case '31': // enum16
                 $size = 2;
                 break;
             case '22': // uint24

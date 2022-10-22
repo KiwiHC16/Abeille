@@ -29,11 +29,27 @@
             },
             "Current Level": {
                 "use": "zb-0102-CurPosLiftPercent",
-                "isVisible": "1"
+                "isVisible": "1",
+                "nextLine": "after"
             },
             "Get Current Level": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0102&attrId=0008"
+            },
+            "Set calibration time": {
+                "use": "zbWriteAttribute",
+                "subType": "slider",
+                "maxValue": 300,
+                "unit": "s",
+                "comment": "F003 is uint16/x21",
+                "params": "clustId=0102&attrId=F003&attrType=21&attrVal=#slider#",
+                "isVisible": "1"
+            },
+            "Calibration time": {
+                "use": "zb-CustomInfo",
+                "logicalId": "0102-01-F003",
+                "template": "badge",
+                "isVisible": "1"
             },
             "Bind 0102-ToZigate": {
                 "use": "zbBindToZigate",

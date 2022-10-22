@@ -17,6 +17,9 @@
     echo 'let curDisplayType = "";'; // "JEEDOM-TMP", "JEEDOM-LOG", or "COMMAND"
     $maxLineLog = config::byKey('maxLineLog', 'core');
     echo 'let maxLineLog = '.$maxLineLog.';';
+    require_once __DIR__.'/../../core/class/AbeilleTools.class.php';
+    $curLogLevel = AbeilleTools::getLogLevel();
+    echo 'let curLogLevel = '.$curLogLevel.';';
     echo '</script>';
 ?>
 
@@ -63,7 +66,7 @@
                     echo '<li class="cursor list-group-item list-group-item-success"><a class="btnDisplayLog" location="JEEDOM-TMP">'.$fileName.'</a></li>';
                 }
             ?>
-            <a id="idDownloadAllLogs" class="btn btn-success" style="margin-top:8px"><i class="fas fa-cloud-download-alt"></i> Télécharger tout</a>
+            <a id="idDownloadAllLogs" class="btn btn-success" style="margin-top:8px"><i class="fas fa-cloud-download-alt"></i> {{Télécharger tout}}</a>
         </ul>
 
         <!-- Data (JSON) -->
@@ -182,18 +185,7 @@
         // })
     })
 
-    /* Pack and download all logs at once */
-    $('#idDownloadAllLogs').click(function() {
-        console.log("idDownloadAllLogs click");
-
-        if (maxLineLog < 5000) {
-            msg = "ATTENTION !\n\n"
-                + "Il est recommandé de configurer au moins 5000 lignes de logs pour les besoins de debug.\n"
-                + "La valeur actuelle est: "+maxLineLog+"\n\n"
-                + "Voir: https://kiwihc16.github.io/AbeilleDoc/Debug.html#support";
-            alert(msg);
-        }
-
+    function createLogsZipFile() {
         $.showLoading();
         $.ajax({
             type: 'POST',
@@ -218,7 +210,35 @@
                 }
             }
         });
-    })
+    }
+
+    /* Pack and download all logs at once */
+    $('#idDownloadAllLogs').click(function() {
+        console.log("idDownloadAllLogs click");
+
+        msg = "";
+        if (curLogLevel != 4) {
+            msg += "ATTENTION !\n\n"
+                + "Vous n'êtes pas en mode debug pour les logs.<br>"
+                + "Voir: https://kiwihc16.github.io/AbeilleDoc/Debug.html#support<br><br>"
+                + "Etes vous sur de vouloir continuer ?";
+        } else if (maxLineLog < 5000) {
+            msg += "ATTENTION !\n\n"
+                + "Il est recommandé de configurer au moins 5000 lignes de logs pour les besoins de debug.<br>"
+                + "La valeur actuelle est: "+maxLineLog+"<br>"
+                + "Voir: https://kiwihc16.github.io/AbeilleDoc/Debug.html#support<br><br>"
+                + "Etes vous sur de vouloir continuer ?";
+        }
+        if (msg != "") {
+            bootbox.confirm(msg, function (result) {
+                if (result)
+                    createLogsZipFile();
+                else
+                    return;
+            });
+        } else
+            createLogsZipFile
+    });
 
     /* Execute command & display result */
     $('.btnCommand').off('click').on('click', function() {

@@ -1,6 +1,31 @@
 ChangeLog
 =========
 
+- Moes curtain module: Mise-à-jour modèle (2464).
+- Moes 2 gang dimmer module: Modele preliminaire (2473).
+- Interne: Premier fichier 'packages.json' pour installation de dependances.
+- H1 dual wall switch: Support preliminaire (2474).
+- Interne: Cmd: sliderToHex(), ajout support enum8 & 16.
+- Nous A1Z smart plug: Mise-à-jour du modèle (2460).
+- Page maintenance/logs: Message si pas en mode 'debug' lors du téléchargement.
+- Interne: Constantes Zigbee: Definitions des types.
+- Philips E14 white bulb: Modele preliminaire (2422).
+- Philips E27 white bulb: Modele preliminaire (2421).
+
+221019-STABLE-1
+---------------
+
+  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible (v3.21 à ce jour).
+  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal mais la dernière en date (3.21) est fortement recommandée.
+
 221014-BETA-1
 -------------
 

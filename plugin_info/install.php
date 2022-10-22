@@ -37,6 +37,8 @@
      * @return none
      */
     function Abeille_install() {
+        log::add('Abeille', 'debug', 'Abeille_install() starting');
+
         $cron = cron::byClassAndFunction('Abeille', 'deamon');
         if (!is_object($cron)) {
             $cron = new cron();
@@ -637,9 +639,9 @@
      * @return none
      */
     function Abeille_update() {
+        log::add('Abeille', 'debug', 'Abeille_update() starting');
 
         $error = false;
-
         if (validMd5Exists($version)) {
             if (checkIntegrity() != true) {
                 message::add('Abeille', 'Fichiers corrompus detectés ! La version \''.$version.'\' est mal installée. Problème de place ?', null, null);
@@ -665,6 +667,8 @@
      * @return none
      */
     function Abeille_remove() {
+        log::add('Abeille', 'debug', 'Abeille_remove() starting');
+
         $cron = cron::byClassAndFunction('Abeille', 'deamon');
         if (is_object($cron)) {
             $cron->stop();

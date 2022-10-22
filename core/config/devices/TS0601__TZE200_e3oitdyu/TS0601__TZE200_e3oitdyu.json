@@ -1,0 +1,50 @@
+{
+    "TS0601__TZE200_e3oitdyu": {
+        "manufacturer": "Moes",
+        "model": "MS-105B",
+        "type": "Moes dual dimmer module",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Moes-DualDimmerModule",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "On": {
+                "use": "cmdG-TuyaEF00-Set-OnOff",
+                "params": "onOff=01&dpId=01",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "cmdG-TuyaEF00-Set-OnOff",
+                "params": "onOff=00&dpId=01",
+                "isVisible": 1
+            },
+            "Status": {
+                "use": "zb-0006-OnOff",
+                "nextLine": "after",
+                "isVisible": 1
+            },
+            "Set Level": {
+                "use": "cmdG-TuyaEF00-Set-Level",
+                "params": "dpId=02",
+                "isVisible": 1
+            },
+            "Level": {
+                "use": "attr-LevelPercent",
+                "isVisible": 1
+            }
+        },
+        "tuyaEF00": {
+            "fromDevice": {
+                "01": { "function": "rcvValue", "info": "0006-01-0000" },
+                "02": { "function": "rcvValueDiv", "info": "01-LevelPercent", "div": 10 }
+            }
+        }
+    }
+}

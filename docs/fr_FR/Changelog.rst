@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Correction regression constantes Zigbee.
+
 221022-BETA-1
 -------------
 

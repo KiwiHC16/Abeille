@@ -65,11 +65,11 @@
             "ea" => array( "desc" => "BACnet OID", "short" => "bacOID", "size" => 4 ),
             "f0" => array( "desc" => "IEEE address", "short" => "EUI64", "size" => 8 ),
             "f1" => array( "desc" => "128-bit security key", "short" => "key128", "size" => 16 )
-        };
+        );
 
         if (array_key_exists($id, $dataTypes))
             return $dataTypes[$id];
-        $unk = { "desc": "Unknown type ".$id, "short": "unk", "size": 0 };
+        $unk = array( "desc" => "Unknown type ".$id, "short" => "unk", "size" => 0 );
         return $unk;
     }
 

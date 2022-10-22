@@ -59,6 +59,8 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0702&attrId=0000"
             },
+            "Poll 0702": { "use": "poll-0702-0000" },
+
             "RMS Voltage": {
                 "use": "zb-0B04-RMSVoltage",
                 "params": "mult=1&div=1",

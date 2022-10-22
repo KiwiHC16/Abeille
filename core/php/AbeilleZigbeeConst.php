@@ -5,6 +5,74 @@
      * Mainly Zigbee Cluster Library spec (ZCL).
      */
 
+    /* Returns Zigbee data type from its id */
+    function zbGetDataType($id) {
+        $id = strtolower($id);
+        $dataTypes = array(
+            "ff" => array( "desc" => "Unknown", "short" => "unk", "size" => 0 ),
+            "00" => array( "desc" => "No data", "short" => "nodata", "size" => 0 ),
+            "08" => array( "desc" => "8-bit data", "short" => "data8", "size" => 1 ),
+            "09" => array( "desc" => "16-bit data", "short" => "data16", "size" => 2 ),
+            "0a" => array( "desc" => "24-bit data", "short" => "data24", "size" => 3 ),
+            "0b" => array( "desc" => "32-bit data", "short" => "data32", "size" => 4 ),
+            "0c" => array( "desc" => "40-bit data", "short" => "data40", "size" => 5 ),
+            "0d" => array( "desc" => "48-bit data", "short" => "data48", "size" => 6 ),
+            "0e" => array( "desc" => "56-bit data", "short" => "data56", "size" => 7 ),
+            "0f" => array( "desc" => "64-bit data", "short" => "data64", "size" => 8 ),
+            "10" => array( "desc" => "Discrete Boolean", "short" => "bool", "size" => 1 ),
+            "18" => array( "desc" => "8-bit bitmap", "short" => "map8", "size" => 1 ),
+            "19" => array( "desc" => "16-bit bitmap", "short" => "map16", "size" => 2 ),
+            "1a" => array( "desc" => "24-bit bitmap", "short" => "map24", "size" => 3 ),
+            "1b" => array( "desc" => "32-bit bitmap", "short" => "map32", "size" => 4 ),
+            "1c" => array( "desc" => "40-bit bitmap", "short" => "map40", "size" => 5 ),
+            "1d" => array( "desc" => "48-bit bitmap", "short" => "map48", "size" => 6 ),
+            "1e" => array( "desc" => "56-bit bitmap", "short" => "map56", "size" => 7 ),
+            "1f" => array( "desc" => "64-bit bitmap", "short" => "map64", "size" => 8 ),
+            "20" => array( "desc" => "Analog Unsigned 8-bit integer", "short" => "uint8", "size" => 1 ),
+            "21" => array( "desc" => "Unsigned 16-bit integer", "short" => "uint16", "size" => 2 ),
+            "22" => array( "desc" => "Unsigned 24-bit integer", "short" => "uint24", "size" => 3 ),
+            "23" => array( "desc" => "Unsigned 32-bit integer", "short" => "uint32", "size" => 4 ),
+            "24" => array( "desc" => "Unsigned 40-bit integer", "short" => "uint40", "size" => 5 ),
+            "25" => array( "desc" => "Unsigned 48-bit integer", "short" => "uint48", "size" => 6 ),
+            "26" => array( "desc" => "Unsigned 56-bit integer", "short" => "uint56", "size" => 7 ),
+            "27" => array( "desc" => "Unsigned 64-bit integer", "short" => "uint64", "size" => 8 ),
+            "28" => array( "desc" => "Signed 8-bit integer", "short" => "int8", "size" => 1 ),
+            "29" => array( "desc" => "Signed 16-bit integer", "short" => "int16", "size" => 2 ),
+            "2a" => array( "desc" => "Signed 24-bit integer", "short" => "int24", "size" => 3 ),
+            "2b" => array( "desc" => "Signed 32-bit integer", "short" => "int32", "size" => 4 ),
+            "2c" => array( "desc" => "Signed 40-bit integer", "short" => "int40", "size" => 5 ),
+            "2d" => array( "desc" => "Signed 48-bit integer", "short" => "int48", "size" => 6 ),
+            "2e" => array( "desc" => "Signed 56-bit integer", "short" => "int56", "size" => 7 ),
+            "2f" => array( "desc" => "Signed 64-bit integer", "short" => "int64", "size" => 8 ),
+            "30" => array( "desc" => "8-bit enumeration", "short" => "enum8", "size" => 1 ),
+            "31" => array( "desc" => "16-bit enumeration", "short" => "enum16", "size" => 2 ),
+            "38" => array( "desc" => "Semi-precision", "short" => "semi", "size" => 2 ),
+            "39" => array( "desc" => "Single precision", "short" => "single", "size" => 4 ),
+            "3a" => array( "desc" => "Double precision", "short" => "double", "size" => 8 ),
+            "41" => array( "desc" => "Octet string", "short" => "octstr", "size" => 0 ),
+            "42" => array( "desc" => "Character string", "short" => "string", "size" => 0 ),
+            "43" => array( "desc" => "Long octet string", "short" => "octstr16", "size" => 0 ),
+            "44" => array( "desc" => "Long character string", "short" => "string16", "size" => 0 ),
+            "48" => array( "desc" => "Array", "short" => "array", "size" => 0 ),
+            "4c" => array( "desc" => "Structure", "short" => "struct", "size" => 0 ),
+            "50" => array( "desc" => "Set", "short" => "set", "size" => 0 ),
+            "51" => array( "desc" => "Bag", "short" => "bag", "size" => 0 ),
+            "e0" => array( "desc" => "Time of day", "short" => "ToD", "size" => 4 ),
+            "e1" => array( "desc" => "Date", "short" => "date", "size" => 4 ),
+            "e2" => array( "desc" => "UTCTime", "short" => "UTC", "size" => 4 ),
+            "e8" => array( "desc" => "Cluster ID", "short" => "clusterId", "size" => 2 ),
+            "e9" => array( "desc" => "Attribute ID", "short" => "attribId", "size" => 2 ),
+            "ea" => array( "desc" => "BACnet OID", "short" => "bacOID", "size" => 4 ),
+            "f0" => array( "desc" => "IEEE address", "short" => "EUI64", "size" => 8 ),
+            "f1" => array( "desc" => "128-bit security key", "short" => "key128", "size" => 16 )
+        };
+
+        if (array_key_exists($id, $dataTypes))
+            return $dataTypes[$id];
+        $unk = { "desc": "Unknown type ".$id, "short": "unk", "size": 0 };
+        return $unk;
+    }
+
     /* Returns Zigbee APS status from code. */
     function zbGetAPSStatus($status)
     {

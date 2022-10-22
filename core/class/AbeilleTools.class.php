@@ -14,12 +14,12 @@
         const logDir = __DIR__."/../../../../log/";
 
         /**
-         * Get Plugin Log Level.
+         * Get Abeille log level.
          *
-         * @param: pluginName: Nom du plugin
-         * @return: int, niveau de log defini pour le plugin
+         * @param: None
+         * @return: int: 4=debug, 3=info, 2=warning, 1=error, 0=none
          */
-        public static function getPluginLogLevel($pluginName)
+        public static function getLogLevel()
         {
             // var_dump( config::getLogLevelPlugin()["log::level::Abeille"] );
             // si debug:  {"100":"1","200":"0","300":"0","400":"0","1000":"0","default":"0"}
@@ -30,11 +30,12 @@
             // si defaut: {"100":"0","200":"0","300":"0","400":"0","1000":"0","default":"1"}
             $logLevelPluginJson = config::getLogLevelPlugin()["log::level::Abeille"];
             if ($logLevelPluginJson['100']) return 4;
-            if ($logLevelPluginJson['200']) return 3;
-            if ($logLevelPluginJson['300']) return 2;
-            if ($logLevelPluginJson['400']) return 1;
-            if ($logLevelPluginJson['1000']) return 0;
-            if ($logLevelPluginJson['default']) return 1; // This one is set to 1 but should be found from conf
+            else if ($logLevelPluginJson['200']) return 3;
+            else if ($logLevelPluginJson['300']) return 2;
+            else if ($logLevelPluginJson['400']) return 1;
+            else if ($logLevelPluginJson['1000']) return 0;
+            else if ($logLevelPluginJson['default']) return 1; // This one is set to 1 but should be found from conf
+            else return 1; // Default = error
         }
 
         /**
@@ -73,7 +74,7 @@
         public static function deamonlogFilter($loglevel = 'NONE', $pluginName, $loggerName = 'Tools', $message = '')
         {
             if (strlen($message) < 1) return;
-            if (self::getNumberFromLevel($loglevel) <= self::getPluginLogLevel($pluginName)) {
+            if (self::getNumberFromLevel($loglevel) <= self::getLogLevel($pluginName)) {
                 $loglevel = strtolower(trim($loglevel));
                 if ($loglevel == "warning")
                     $loglevel = "warn";

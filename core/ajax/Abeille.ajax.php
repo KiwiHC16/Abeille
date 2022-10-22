@@ -32,7 +32,7 @@
     function logToFile($logFile = '', $logLevel = '', $msg = "")
     {
         if ($logLevel != '') {
-            if (AbeilleTools::getNumberFromLevel($logLevel) > AbeilleTools::getPluginLogLevel('Abeille'))
+            if (AbeilleTools::getNumberFromLevel($logLevel) > AbeilleTools::getLogLevel())
                 return; // Nothing to do
             /* Note: sprintf("%-5.5s", $loglevel) to have vertical alignment. Log level truncated to 5 chars => error/warn/info/debug */
             $pref = '['.date('Y-m-d H:i:s').']['.sprintf("%-5.5s", $logLevel).'] ';

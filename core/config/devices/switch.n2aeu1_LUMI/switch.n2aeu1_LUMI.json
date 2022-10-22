@@ -1,0 +1,120 @@
+ {
+    "switch.n2aeu1_LUMI": {
+        "manufacturer": "Xiaomi",
+        "model": "WS-EUK04",
+        "type": "Xiaomi H1 dual wall switch",
+        "timeout": "60",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "Xiaomi-H1WallSwitch-Dual",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "On 1": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Off 1": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Toggle 1": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Status 1": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=01",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status 1": {
+                "use": "zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
+            "Bind 01-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0006": {
+                "use": "zbConfigureReporting",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "On 2": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=02",
+                "isVisible": "1"
+            },
+            "Off 2": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=02",
+                "isVisible": "1"
+            },
+            "Toggle 2": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=02"
+            },
+            "Status 2": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=02",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status 2": {
+                "use": "zbReadAttribute",
+                "params": "ep=02&clustId=0006&attrId=0000"
+            },
+            "Bind 02-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=02&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 02-0006": {
+                "use": "zbConfigureReporting",
+                "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Total power": {
+                "use": "zb-0702-CurrentSummationDelivered",
+                "params": "div=10000000",
+                "unit": "KWh",
+                "isVisible": "1"
+            },
+            "Get Total power": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0702&attrId=0000"
+            },
+            "Active Power": {
+                "use": "zb-0B04-ActivePower",
+                "params": "mult=1&div=1",
+                "isVisible": "1"
+            },
+            "Get Active Power": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0B04&attrId=050B"
+            },
+            "Bind 0B04-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0B04",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0B04-050B": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

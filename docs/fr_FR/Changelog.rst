@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221024-BETA-1
+-------------
+
 - Interne: Parser: Correction decodeDataType() impactant types longs (ex: uint48).
 - Interne: Parser: Types 18, 19, 28 & 29 maintenant traités par decodeDataType().
 - Interne: Parser+install+modele: Attribut '0405-xx-0000' (humidity) directement décodé par parser.

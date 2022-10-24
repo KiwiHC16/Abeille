@@ -21,7 +21,7 @@
                 "isHistorized": 1
             },
             "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 },
-            "Pressure": { "use": "zb-0403-MeasuredValue", "isVisible": 1 },
+            "Pressure": { "use": "zb-0403-MeasuredValue", "isVisible": 0 },
             "include7": "Xiaomi-ff01"
         }
     }

@@ -2,7 +2,7 @@
     "motion.ac02": {
         "manufacturer": "Xiaomi",
         "model": "MS-S02",
-        "type": "Aqara motion sensor P1",
+        "type": "Xiaomi Aqara motion sensor P1",
         "timeout": "60",
         "category": {
             "security": "1"

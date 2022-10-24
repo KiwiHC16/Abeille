@@ -237,7 +237,7 @@
                     return;
             });
         } else
-            createLogsZipFile
+            createLogsZipFile();
     });
 
     /* Execute command & display result */

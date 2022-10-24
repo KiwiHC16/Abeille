@@ -1049,14 +1049,14 @@
             return $manufId;
         }
 
-        function hex2str($hex)   {
-            $str = '';
-            for ($i = 0; $i < strlen($hex); $i += 2) {
-                $str .= chr(hexdec(substr($hex, $i, 2)));
-            }
+        // function hex2str($hex)   {
+        //     $str = '';
+        //     for ($i = 0; $i < strlen($hex); $i += 2) {
+        //         $str .= chr(hexdec(substr($hex, $i, 2)));
+        //     }
 
-            return $str;
-        }
+        //     return $str;
+        // }
 
         // Fonction dupliquée dans Abeille.
         public function volt2pourcent($voltage) {
@@ -1234,19 +1234,11 @@
                 return false;
             }
 
+            // 'hs' is now reduced to proper size
+            $hs = substr($iHs, 0, $dataSize * 2); // Truncate in case something unexpected after
             // Reordering raw bytes
-            if ($raw) {
-                // 'hs' is now reduced to proper size
-                if ($dataSize == 1)
-                    $hs = substr($iHs, 0, 2);
-                else {
-                    $hs = '';
-                    for ($i = 0; $i < ($dataSize * 2); $i += 4) {
-                        $hs .= substr($iHs, $i + 2, 2).substr($iHs, $i, 2);
-                    }
-                }
-            } else
-                $hs = substr($iHs, 0, $dataSize * 2);
+            if ($raw && ($dataSize > 1))
+                $hs = AbeilleTools::reverseHex($hs);
 // parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexString." => hs=".$hs);
 
             // Computing value
@@ -1340,6 +1332,8 @@
 
         /* Decode FF01 attribut payload */
         function decodeFF01($data) {
+            parserLog("debug", "  decodeFF01(".$data.")");
+
             $fields = array();
             $dataLen = strlen($data);
             while ($dataLen != 0) {
@@ -1720,8 +1714,8 @@
                 if ($status == "00") {
                     parserLog("debug", "  Zigate mode has been properly changed.");
                 } else {
-                    parserLog("debug", "  WARNING: Failed to change Zigate mode.");
-                    message::add("Abeille", "Erreur lors du changement de mode de la Zigate.", "");
+                    parserLog("error", $dest.": Impossible de changer le mode de la Zigate.");
+                    // message::add("Abeille", "Erreur lors du changement de mode de la Zigate.", "");
                 }
             }
         }
@@ -2420,18 +2414,43 @@
             // Prise Xiaomi
             // Tcharp38: Seen also as reporting from 'sen_ill_mgl01' during inclusion. There is probably something wrong/not robust there.
             else if ($clustId == "FCC0") {
-                $FCF = substr($payload,26, 2);
-                if ( $FCF=='1C' ) {
-                    $Manufacturer   = substr($payload,30, 2).substr($payload,28, 2);
-                    if ( $Manufacturer=='115F' ) {
-                        $sqn = substr($payload,32, 2);
-                        $Cmd = substr($payload,34, 2);
-                        if ($Cmd == '0A') {
+                $fcf = substr($payload, 26, 2); // Frame Control Field
+                $frameType = hexdec($fcf) & 3; // Bits 0 & 1: 00=global, 01=cluster specific
+                $manufSpecific = (hexdec($fcf) >> 2) & 1;
+                $dir = (hexdec($fcf) >> 3) & 1;
+                if ($frameType == 0)
+                    $fcfTxt = "General";
+                else
+                    $fcfTxt = "Cluster-specific";
+                if ($dir)
+                    $fcfTxt .= "/Serv->Cli";
+                else
+                    $fcfTxt .= "/Cli->Serv";
+                if ($manufSpecific) {
+                    $manufCode = AbeilleTools::reverseHex(substr($payload, 28, 4)); // 16bits for manuf specific code
+                    $fcfTxt .= "/ManufCode=".$manufCode;
+                    $sqn = substr($payload, 32, 2); // Sequence Number
+                    $cmd = substr($payload, 34, 2); // Command
+                    $msg = substr($payload, 36);
+                } else {
+                    $sqn = substr($payload, 28, 2); // Sequence Number
+                    $cmd = substr($payload, 30, 2); // Command
+                    $msg = substr($payload, 32);
+                }
+                if ($frameType == 0) // General command
+                    $msgDecoded = "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLGlobalCmdName($cmd);
+                else // Cluster specific command
+                    $msgDecoded = "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLClusterCmdName($clustId, $cmd);
+                parserLog('debug', $msgDecoded);
+
+                if ($fcf == '1C') {
+                    if ($manufCode == '115F') {
+                        parserLog('debug', "  Xiaomi FCC0 cluster");
+                        if ($cmd == '0A') {
                             $Attribut = substr($payload,38, 2).substr($payload,36, 2);
                             if ($Attribut=='00F7') {
                                 $dataType = substr($payload,40, 2);
                                 if ($dataType == "41") { // 0x41 Octet stream
-                                    parserLog('debug', "  Xiaomi FCC0 cluster");
                                     $dataLength = hexdec(substr($payload,42, 2));
                                     $fcc0 = $this->decodeFF01(substr($payload, 44, $dataLength*2));
                                     // parserLog('debug', "  ".json_encode($fcc0));
@@ -2476,7 +2495,8 @@
                 else
                     $fcfTxt .= "/Cli->Serv";
                 if ($manufSpecific) {
-                    /* 16bits for manuf specific code */
+                    $manufCode = AbeilleTools::reverseHex(substr($payload, 28, 4)); // 16bits for manuf specific code
+                    $fcfTxt .= "/ManufCode=".$manufCode;
                     $sqn = substr($payload, 32, 2); // Sequence Number
                     $cmd = substr($payload, 34, 2); // Command
                     $msg = substr($payload, 36);
@@ -2555,7 +2575,8 @@
                         // Some clusters are directly handled by 8100/8102 decode
                         // Tcharp38 note: At some point do the opposite => what's handled by 8100
                         // $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E000', 'E001', 'EF00', 'FC01', 'FC02', 'FF66']; // Clusters handled here
-                        $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
+                        // $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
+                        $refused = ['0000', '0001', '000C', '0400', '0402', '0403', 'FC00'];
                         if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
@@ -2602,10 +2623,16 @@
                                     "8002"
                                 );
 
+                            // Attribute value post correction according to ZCL spec
+                            if ($clustId == "0405") {
+                                if ($attr['id'] == "0000") {
+                                    $attr['value'] /= 100; // Humidity
+                                }
+                            }
+
                             $attrId = $attr['id'];
                             unset($attr['id']); // Remove 'id' from object for optimization
                             $attributes[$attrId] = $attr;
-
                             $attrN = array(
                                 'name' => $clustId.'-'.$srcEp.'-'.$attrId,
                                 'value' => $attr['value'],
@@ -2699,7 +2726,8 @@
                             $dir = substr($msg, $i + 2, 2);
                             $attrId = AbeilleTools::reverseHex(substr($msg, $i + 4, 4));
 
-                            $m = "  Attr=".$attrId.", Dir=".$dir.", Status=".$status.'/'.zbGetZCLStatus($status);
+                            // $m = "  Attr=".$attrId.", Dir=".$dir.", Status=".$status.'/'.zbGetZCLStatus($status);
+                            $m = "  Status=".$status.'/'.zbGetZCLStatus($status).", Attr=".$attrId.", Dir=".$dir;
                             parserLog('debug', $m);
                             $toMon[] = $m; // For monitor
 
@@ -2733,7 +2761,8 @@
                     else if ($cmd == "0A") { // Report attributes
                         // Some clusters are directly handled by 8100/8102 decode
                         // $acceptedCmd0A = ['0005', '0007', '0300', '0406', '050B', '0B04', 'EF00', 'FC01', 'FC02']; // Clusters handled here
-                        $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
+                        // $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
+                        $refused = ['0000', '0001', '000C', '0400', '0402', '0403', 'FC00'];
                         if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
@@ -2752,20 +2781,25 @@
                         $l = strlen($msg);
                         $attributesReportN = [];
                         for ($i = 0; $i < $l;) {
+                            // Decode attribute
                             $attr = $this->decode8002_ReportAttribute(substr($msg, $i), $size);
                             if ($attr === false)
                                 break;
 
-                            // Decode attribute
-                            $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
-
                             // Log
+                            $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
                             $m = '  AttrId='.$attr['id'].'/'.$attrName
                                 .', AttrType='.$attr['dataType']
                                 .', Value='.$attr['value'];
                             parserLog('debug', $m, "8002");
-
                             $toMon[] = $m; // For monitor
+
+                            // Attribute value post correction according to ZCL spec
+                            if ($clustId == "0405") {
+                                if ($attr['id'] == "0000") {
+                                    $attr['value'] /= 100; // Humidity
+                                }
+                            }
 
                             $attr2 = array(
                                 'name' => $clustId.'-'.$srcEp.'-'.$attr['id'],
@@ -4858,24 +4892,12 @@
             $toMon[] = $msgDecoded;
 
             // Checking if decode is handled by 8002 or still there
-            $accepted = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
+            // $accepted = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
+            $accepted = ['0000', '0001', '000C', '0400', '0402', '0403', 'FC00'];
             if (!in_array($clustId, $accepted)) {
                 parserLog('debug', "  Handled by decode8002");
                 return;
             }
-            // if ($cmdId == '01') { // 01/Read attribute response
-            //     $refusedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E000', 'E001', 'EF00', 'FC01', 'FC02', 'FF66'];
-            //     if (in_array($clustId, $refusedCmd01)) {
-            //         parserLog('debug', "  Handled by decode8002");
-            //         return;
-            //     }
-            // } else { // 0A/Report attribute
-            //     $refusedCmd0A = ['0005', '0007', '0300', '0406', '050B', '0B04', 'EF00', 'FC01', 'FC02'];
-            //     if (in_array($clustId, $refusedCmd0A)) {
-            //         parserLog('debug', "  Handled by decode8002");
-            //         return;
-            //     }
-            // }
 
             // Duplicated message ?
             // if ($this->isDuplicated($dest, $srcAddr, $sqn))
@@ -5076,7 +5098,7 @@
                         array( "name" => "Batterie-Volt", "value" => $voltage ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
                         array( "name" => "0402-01-0000", "value" => $temperature ),
-                        array( "name" => "0405-01-0000", "value" => $humidity ),
+                        array( "name" => "0405-01-0000", "value" => $humidity / 100 ),
                     ];
                 }
 
@@ -5154,7 +5176,7 @@
                         array( "name" => "Batterie-Volt", "value" => $voltage ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
                         array( "name" => '0402-01-0000', "value" => $temperature ),
-                        array( "name" => '0405-01-0000', "value" => $humidity ),
+                        array( "name" => '0405-01-0000', "value" => $humidity / 100 ),
                     ];
                 }
 
@@ -5393,13 +5415,13 @@
                 }
             } // End cluster 0403
 
-            else if ($clustId == "0405") { // Relative Humidity cluster
-                if ($attrId == "0000") { // MeasuredValue
-                    $MeasuredValue = substr($Attribut, 0, 4);
-                    $humidity = hexdec($MeasuredValue) / 100;
-                    parserLog('debug', '  Humidity, MeasuredValue='.$MeasuredValue.' => '.$humidity.'%');
-                }
-            } // End cluster 0405
+            // else if ($clustId == "0405") { // Relative Humidity cluster
+            //     if ($attrId == "0000") { // MeasuredValue
+            //         $MeasuredValue = substr($Attribut, 0, 4);
+            //         $humidity = hexdec($MeasuredValue) / 100;
+            //         parserLog('debug', '  Humidity, MeasuredValue='.$MeasuredValue.' => '.$humidity.'%');
+            //     }
+            // } // End cluster 0405
 
             // else if ($clustId == "0406") { // Occupancy Sensing cluster
             //     if ($attrId == "0000") { // Occupancy
@@ -5461,28 +5483,28 @@
                 // 0x30 Enumeration : 8bit
                 // 0x42 string                  -> hex2bin
 
-                if ($dataType == "18") {
-                    $data = substr($payload, 24, 2);
-                }
+                // if ($dataType == "18") {
+                //     $data = substr($payload, 24, 2);
+                // }
 
-                // Exemple Heiman Smoke Sensor Attribut 0002 sur cluster 0500
-                else if ($dataType == "19") {
-                    $data = substr($payload, 24, 4);
-                }
+                // // Exemple Heiman Smoke Sensor Attribut 0002 sur cluster 0500
+                // else if ($dataType == "19") {
+                //     $data = substr($payload, 24, 4);
+                // }
 
-                else if ($dataType == "28") {
-                    // $data = hexdec(substr($payload, 24, 2));
-                    $in = substr($payload, 24, 2);
-                    if ( hexdec($in)>127 ) { $raw = "FF".$in ; } else  { $raw = "00".$in; }
+                // if ($dataType == "28") {
+                //     // $data = hexdec(substr($payload, 24, 2));
+                //     $in = substr($payload, 24, 2);
+                //     if ( hexdec($in)>127 ) { $raw = "FF".$in ; } else  { $raw = "00".$in; }
 
-                    $data = unpack("s", pack("s", hexdec($raw)))[1];
-                }
+                //     $data = unpack("s", pack("s", hexdec($raw)))[1];
+                // }
 
                 // Example Temperature d un Xiaomi Carre
                 // Sniffer dit Signed 16bit integer
-                else if ($dataType == "29") { // int16
-                    $data = unpack("s", pack("s", hexdec(substr($Attribut, 0, 4))))[1];
-                }
+                // else if ($dataType == "29") { // int16
+                //     $data = unpack("s", pack("s", hexdec(substr($Attribut, 0, 4))))[1];
+                // }
 
                 // else if ($dataType == "30") {
                 //     // $data = hexdec(substr($payload, 24, 4));
@@ -5496,13 +5518,13 @@
                 // }
 
                 /* Note: If $data is not set, then nothing to send to Abeille. This might be because data type is unsupported */
-                else {
+                // else {
                     $data = $this->decodeDataType(substr($payload, 24), $dataType, false, hexdec($attrSize), $oSize, $hexValue);
                     if ($data === false)
                         return; // Unsupported data type
                     $attrName = zbGetZCLAttributeName($clustId, $attrId);
                     parserLog('debug', '  '.$attrName.', hexValue='.$hexValue.' => '.$data);
-                }
+                // }
             }
 
             $unknown = false;

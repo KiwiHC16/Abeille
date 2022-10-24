@@ -1305,6 +1305,4 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
             return $reverse;
         }
     }
-
-    // var_dump(AbeilleTools::getDeviceNameFromJson());
 ?>

@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+- Interne: Parser: Correction decodeDataType() impactant types longs (ex: uint48).
+- Interne: Parser: Types 18, 19, 28 & 29 maintenant traités par decodeDataType().
+- Interne: Parser+install+modele: Attribut '0405-xx-0000' (humidity) directement décodé par parser.
+- Interne: Parser: Cluster 0405 traité par decode8002().
+- Philips E27 white bulb: Mise-à-jour du modèle (2421).
+- Page EQ/avancé: amélioration mineure.
+- Page maintenance: Correction regression sur 'Telecharger tout'.
+- Interne: Parser: Améliorations support cluster 'FCC0' Xiaomi.
+
 221023-BETA-1
 -------------
 

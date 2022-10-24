@@ -10,7 +10,10 @@
 <div class="form-group">
     <div class="col-sm-3">
     </div>
-    <h3 class="col-sm-5" style="text-align:left">{{Interrogation de l'équipement. Sortie dans 'AbeilleParser.log'}}</h3>
+    <h3 class="col-sm-9" style="text-align:left">{{Interrogation de l'équipement.}}</h3>
+    <div class="col-sm-3">
+    </div>
+    <h4 class="col-sm-9" style="text-align:left">{{Sortie dans 'AbeilleParser.log' si mode 'debug' actif.}}</h4>
 </div>
 
 <!-- Zigbee standard commands -->

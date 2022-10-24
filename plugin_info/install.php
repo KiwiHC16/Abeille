@@ -451,6 +451,7 @@
            - config DB: Removed obsolete 'blocageRecuperationEquipement'.
            - config DB: Removed obsolete 'blocageTraitementAnnonce'.
            - config DB: 'DbVersion' => 'ab::dbVersion'.
+           - cmd DB: 0405-XX-0000: Removed 'calculValueOffset'.
            - Removing 'AbeilleDebug.log'. Moved to Jeedom tmp dir.
          */
         if (intval($dbVersion) < 20220421) {
@@ -509,8 +510,6 @@
                 // 'positionY' => 'ab::settings[physLocationY]'
                 $settings = $eqLogic->getConfiguration('ab::settings', []);
                 $saveSettings = false;
-// log::add('Abeille', 'debug', '  '.$eqHName.": positionX=".json_encode($eqLogic->getConfiguration('positionX')));
-// log::add('Abeille', 'debug', '  '.$eqHName.": positionY=".json_encode($eqLogic->getConfiguration('positionY')));
                 $posX = $eqLogic->getConfiguration('positionX', 'nada');
                 if ($posX !== 'nada') {
                     $settings['physLocationX'] = $posX;
@@ -605,7 +604,7 @@
                     $eqLogic->save();
             } // End 'eqLogic' updates
 
-            // Config DB updates
+            // 'config' DB updates
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
                 replaceConfigDB('AbeilleActiver'.$zgId, 'ab::zgEnabled'.$zgId);
                 replaceConfigDB('AbeilleType'.$zgId, 'ab::zgType'.$zgId);
@@ -621,6 +620,29 @@
             config::remove('blocageRecuperationEquipement', 'Abeille');
             config::remove('blocageTraitementAnnonce', 'Abeille');
             replaceConfigDB('DbVersion', 'ab::dbVersion');
+
+            // 'cmd' DB updates
+            foreach ($eqLogics as $eqLogic) {
+                $eqId = $eqLogic->getId();
+                $cmds = Cmd::byEqLogicId($eqId);
+                foreach ($cmds as $cmdLogic) {
+                    $saveCmd = false;
+                    $cmdLogicId = $cmdLogic->getLogicalId();
+
+                    // Removing 'calculValueOffset' for cmds '0405-XX-0000' (humidity)
+                    if (preg_match("/^0405-[0-9A-F]*-0000/", $cmdLogicId)) {
+                        $confVal = $cmdLogic->getConfiguration('calculValueOffset', 'nada');
+                        if ($confVal != 'nada') {
+                            $cmdLogic->setConfiguration('calculValueOffset', null);
+                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Removed 'calculValueOffset'");
+                            $saveCmd = true;
+                        }
+                    }
+
+                    if ($saveCmd)
+                        $cmdLogic->save();
+                }
+            }
 
             // Remove obsolete log files
             $obsolete = ['AbeilleDebug.log'];

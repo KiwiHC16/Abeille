@@ -1,14 +1,14 @@
 {
     "TS0601__TZE200_e3oitdyu": {
         "manufacturer": "Moes",
-        "model": "MS-105B",
+        "model": "MS-105BZ",
         "type": "Moes dual dimmer module",
         "timeout": "60",
         "category": {
             "automatism": "1"
         },
         "configuration": {
-            "icon": "Moes-DualDimmerModule",
+            "icon": "Generic-2GangDimmerModule",
             "mainEP": "01"
         },
         "commands": {

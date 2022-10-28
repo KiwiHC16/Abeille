@@ -75,5 +75,5 @@
     define('daemonSocat10', 1 << 21);
     define('daemonMonitor', 1 << 22);
 
-    define ("daemonStopTimeout", 3000); // 3sec
+    define ("daemonStopTimeout", 2000); // 2sec
 ?>

@@ -19,8 +19,7 @@
          * @param: None
          * @return: int: 4=debug, 3=info, 2=warning, 1=error, 0=none
          */
-        public static function getLogLevel()
-        {
+        public static function getLogLevel() {
             // var_dump( config::getLogLevelPlugin()["log::level::Abeille"] );
             // si debug:  {"100":"1","200":"0","300":"0","400":"0","1000":"0","default":"0"}
             // si info:   {"100":"0","200":"1","300":"0","400":"0","1000":"0","default":"0"}
@@ -44,8 +43,7 @@
          * @param $loglevel
          * @return int
          */
-        public static function getNumberFromLevel($loglevel)
-        {
+        public static function getNumberFromLevel($loglevel) {
             $niveau = array(
                 "NONE" => 0,
                 "ERROR" => 1,
@@ -71,8 +69,7 @@
          * @param string le message lui meme
          * @param string $message
          */
-        public static function deamonlogFilter($loglevel = 'NONE', $pluginName, $loggerName = 'Tools', $message = '')
-        {
+        public static function deamonlogFilter($loglevel = 'NONE', $pluginName, $loggerName = 'Tools', $message = '') {
             if (strlen($message) < 1) return;
             if (self::getNumberFromLevel($loglevel) <= self::getLogLevel($pluginName)) {
                 $loglevel = strtolower(trim($loglevel));
@@ -285,8 +282,7 @@
          *  'newJCmdName' = cmd name to replace (coming from 'use')
          * Returns: array() or false if not found.
          */
-        public static function getCommandConfig($cmdFName, $newJCmdName = '')
-        {
+        public static function getCommandConfig($cmdFName, $newJCmdName = '') {
             $fullPath = cmdsDir.$cmdFName.'.json';
             if (!file_exists($fullPath)) {
                 log::add('Abeille', 'error', "Le fichier de commande '".$cmdFName.".json' n'existe pas.");
@@ -320,8 +316,7 @@
          * 'mode': 0/default=load commands too, 1=split cmd call & file
          * Return: device associative array without top level key (jsonId) or false if error.
          */
-        public static function getDeviceModel($deviceName, $from="Abeille", $mode=0)
-        {
+        public static function getDeviceModel($deviceName, $from="Abeille", $mode=0) {
             // log::add('Abeille', 'debug', 'getDeviceModel start, deviceName='.$deviceName.", from=".$from);
 
             if (($from == 'Abeille') || ($from == ''))
@@ -418,7 +413,6 @@
                                 else if ($value === "no")
                                     $value = 0;
                                 $newCmd[$cmd1]['isVisible'] = $value;
-    // log::add('Abeille', 'debug', 'LA value='.$value.', newCmd='.json_encode($newCmd));
                             }
                             if (isset($cmd2['nextLine']))
                                 $newCmd[$cmd1]['nextLine'] = $cmd2['nextLine'];
@@ -507,8 +501,7 @@
          * @param null $jsonFile
          * @return mixed|void
          */
-        public static function getJSonConfigFiles($jsonFile = null)
-        {
+        public static function getJSonConfigFiles($jsonFile = null) {
             $configDir = self::configDir;
 
             // self::deamonlog("debug", "Tools: loading file ".$jsonFile." in ".$configDir);
@@ -540,8 +533,7 @@
          * @param Abeille logger name
          * @return bool|mixed|void
          */
-        public static function getJSonConfigFilebyDevices($device = 'none', $logger = 'Abeille')
-        {
+        public static function getJSonConfigFilebyDevices($device = 'none', $logger = 'Abeille') {
             $modelPath = AbeilleTools::getDevicePath($device);
             // log::add('Abeille', 'debug', 'getJSonConfigFilebyDevices: devicefilename'.$modelPath);
             if ($modelPath === false) {
@@ -567,8 +559,7 @@
          * @param string $filename
          * @return mixed|string*
          */
-        public static function getTrimmedValueForJsonFiles($filename = "")
-        {
+        public static function getTrimmedValueForJsonFiles($filename = "") {
             //remove lumi. from name as all xiaomi devices have a lumi. name
             //remove all space in names for easier filename handling
             $trimmed = strlen($filename) > 1 ? str_replace(' ', '', str_replace('lumi.', '', $filename)) : "";
@@ -581,8 +572,7 @@
         * @param string $logger
         * @return array of json devices name
         */
-        public static function getDeviceNameFromJson($logger = 'Abeille')
-        {
+        public static function getDeviceNameFromJson($logger = 'Abeille') {
             $return = array();
             // $dirCount = 0;
             // $dirExcluded = 0;
@@ -644,8 +634,7 @@
          *
          * @return array
          */
-        public static function getParameters()
-        {
+        public static function getParameters() {
             $config = array();
 
             // Tcharp38: Should not be there
@@ -674,8 +663,7 @@
          *
          * @return string of comma separated missing daemon
          */
-        public
-        static function getMissingDaemons(array $parameters, $running): string
+        public static function getMissingDaemons(array $parameters, $running): string
         {
             $found = self::diffExpectedRunningDaemons($parameters, $running);
             $missing = "";
@@ -781,11 +769,11 @@
 
             $expected[] = 'Parser';
             $expected[] = 'Cmd';
-log::add('Abeille', 'debug', '  expected='.json_encode($expected));
+            log::add('Abeille', 'debug', '  expected='.json_encode($expected));
 
             // Running daemons
             $running = AbeilleTools::getRunningDaemons2();
-log::add('Abeille', 'debug', '  running='.json_encode($running));
+            log::add('Abeille', 'debug', '  running='.json_encode($running));
 
             // Restart missing ones
             $restart = '';
@@ -819,15 +807,23 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
         }
 
         /**
-         * Get running processes for Abeille plugin
+         * Get Abeille's running processes
          *
          * @return array of array
          */
-        public static function getRunningDaemons2(): array
-        {
+        public static function getRunningDaemons2(): array {
+            $cmd1 = "pgrep -a php | grep Abeille";
+            exec($cmd1, $running); // Get all Abeille daemons
+            /* 'pgrep -a php | grep Abeille' example:
+                6333 /usr/bin/php /var/www/html/plugins/Abeille/core/class/../php/AbeilleSocat.php /tmp/zigateWifi2 debug 192.168.0.102:9999 */
+            $cmd2 = "pgrep -a socat | grep ".wifiLink;
+            exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
+            /*  'pgrep -a socat' example:
+                16343 socat -d -d pty,raw,echo=0,link=/tmp/zigateWifi2 tcp:192.168.0.101:80 */
+            $processes = array_merge($running, $running2);
+
             $daemons = [];
             $runBits = 0;
-            exec("pgrep -a php | grep Abeille", $processes);
             foreach ($processes as $line) {
                 $lineArr = explode(" ", $line);
                 if (strstr($line, "AbeilleCmd") != false) {
@@ -849,6 +845,11 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
                     $zgId = substr($net, strlen(wifiLink));
                     $shortName = "Socat".$zgId;
                     $runBits |= constant("daemonSocat".$zgId);
+                } else if (strstr($line, "socat") !== false) {
+                    $pos = strpos($line, wifiLink);
+                    // TO BE COMPLETED if required
+                    $zgId = substr($line, $pos + strlen(wifiLink), 1); // WARNING: Currently limited to 1 to 9. Zigate 10 missing
+                    $shortName = "socat".$zgId;
                 } else
                     $shortName = "Unknown";
                 $d = array(
@@ -858,6 +859,7 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
                 $daemons[$shortName] = $d;
             }
             $return = array(
+                'runningNb' => sizeof($daemons), // Nb of running daemons
                 'runBits' => $runBits, // 1 bit per running daemon
                 'daemons' => $daemons, // Detail on each daemon
             );
@@ -996,76 +998,135 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
          * Ex: $daemons = "AbeilleMonitor AbeilleCmd AbeilleParser"
          * @param string $daemons Deamons list to stop, space separated. Empty string = ALL
          */
-        public static function stopDaemons($daemons = "") {
-            log::add('Abeille', 'debug', "  stopDaemons($daemons)");
+        public static function stopDaemons($toStop = "") {
+            log::add('Abeille', 'debug', "  stopDaemons($toStop)");
+            /* 'pgrep -a php | grep Abeille' example:
+                6333 /usr/bin/php /var/www/html/plugins/Abeille/core/class/../php/AbeilleSocat.php /tmp/zigateWifi2 debug 192.168.0.102:9999
+                'pgrep -a socat' example:
+                16343 socat -d -d pty,raw,echo=0,link=/tmp/zigateWifi2 tcp:192.168.0.101:80 */
+
             $cmd1 = $cmd2 = "";
-            if ($daemons != "") {
-                $daemonsArr = explode(" ", $daemons);
-                $grep = "";
-                $grep2 = ""; // Grep pattern for 'socat'
-                foreach ($daemonsArr as $daemon) {
-                    if ($grep != "")
-                        $grep .= "\|";
-                    $grep .= $daemon;
-                    if (substr($daemon, 0, 12) == "AbeilleSocat") {
-                        $zgId = substr($daemon, 12);
-                        if ($grep2 != "")
-                            $grep2 .= "\|";
-                        $grep2 .= "zigate".$zgId;
+            if ($toStop != "") {
+                $running2 = self::getRunningDaemons2();
+                if ($running2['runningNb'] == 0) {
+                    log::add('Abeille', 'debug', '  stopDaemons(): No active daemons');
+                    return true;
+                }
+                $toStopArr = explode(" ", $toStop);
+                $running = [];
+                $running['daemons'] = [];
+                foreach($running2['daemons'] as $daemonName => $daemon) {
+                    $found = false;
+                    foreach($toStopArr as $daemonToStop) {
+                        if (strstr($daemon['cmd'], $daemonToStop) !== false) {
+                            $found = true;
+                            break;
+                        }
+                    }
+                    if ($found) {
+                        $running['daemons'][$daemonName] = $daemon;
                     }
                 }
-                $cmd1 = "pgrep -a php | grep '".$grep."'";
-                exec($cmd1, $running);
-                if ($grep2 != "") {
-                    $cmd2 = "pgrep -a socat | grep '".$grep."'";
-                    exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
-                    $running = array_merge($running, $running2);
-                }
+                $running['runningNb'] = sizeof($running['daemons']);
+                $running['runBits'] = 0; // TODO if required
+
+                // $daemonsArr = explode(" ", $toStop);
+                // $grep = "";
+                // $grep2 = ""; // Grep pattern for 'socat'
+                // foreach ($daemonsArr as $daemon) {
+                //     if ($grep != "")
+                //         $grep .= "\|";
+                //     $grep .= $daemon;
+                //     if (substr($daemon, 0, 12) == "AbeilleSocat") {
+                //         $zgId = substr($daemon, 12);
+                //         if ($grep2 != "")
+                //             $grep2 .= "\|";
+                //         $grep2 .= "zigate".$zgId;
+                //     }
+                // }
+                // $cmd1 = "pgrep -a php | grep '".$grep."'";
+                // exec($cmd1, $running);
+                // if ($grep2 != "") {
+                //     $cmd2 = "pgrep -a socat | grep '".$grep."'";
+                //     exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
+                //     $running = array_merge($running, $running2);
+                // }
             } else {
-                $cmd1 = "pgrep -a php | grep Abeille";
-                exec($cmd1, $running); // Get all Abeille daemons
-                /* 'pgrep -a socat' example:
-                16343 socat -d -d pty,raw,echo=0,link=/tmp/zigateWifi2 tcp:192.168.0.101:80 */
-                $cmd2 = "pgrep -a socat | grep ".wifiLink;
-                exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
-                $running = array_merge($running, $running2);
+                // Stopping all Abeille's daemons
+                $running = self::getRunningDaemons2();
+
+                // $cmd1 = "pgrep -a php | grep Abeille";
+                // exec($cmd1, $running); // Get all Abeille daemons
+                // $cmd2 = "pgrep -a socat | grep ".wifiLink;
+                // exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
+                // $running = array_merge($running, $running2);
+            }
+            log::add('Abeille', 'debug', '  stopDaemons(): running='.json_encode($running));
+
+            /* Reminder:
+                $running = array(
+                    'runningNb' => $runningNb, // Nb of running daemons
+                    'runBits' => $runBits, // 1 bit per running daemon
+                    'daemons' => $daemons, // Detail on each daemon
+                );
+            */
+
+            $nbOfDaemons = $running['runningNb'];
+            if ($nbOfDaemons == 0) {
+                log::add('Abeille', 'debug', '  stopDaemons(): No active daemons');
+                return true;
             }
 
-            $nbOfDaemons = sizeof($running);
+            log::add('Abeille', 'debug', '  stopDaemons(): Stopping '.$nbOfDaemons.' daemons');
+            $allPids = '';
+            $allPids2 = '';
+            // for ($i = 0; $i < $nbOfDaemons; $i++) {
+            //     // log::add('Abeille', 'debug', 'deamon_stopDaemonsstop(): running[i]='.$running[$i]);
+            //     $arr = explode(" ", $running[$i]);
+            //     $allPids .= ' '.$arr[0];
+            // }
+            foreach($running['daemons'] as $daemon) {
+                $allPids .= ' '.$daemon['pid'];
+                if (strstr($daemon['cmd'], "AbeilleSerialRead") !== false)
+                    $allPids2 .= ' '.$daemon['pid']; // AbeilleSerialRead needs a 2nd kill
+            }
+            $cmd = "sudo kill -s TERM".$allPids;
+            /* Note: Serial read has special behavior. Can't be killed with simple 'kill -s TERM' and when 'kill -s KILL'
+                port still used but by 'apache2 -k ...'.
+                Using double 'kill -s TERM' with delay seems to solve this pb. */
+            if ($allPids2 != '')
+                $cmd .= "; sleep 0.5; sudo kill -s TERM".$allPids2;
+            log::add('Abeille', 'debug', '  stopDaemons(): '.$cmd);
+            exec($cmd);
+
+            /* Waiting until timeout that all daemons be ended */
+            for ($t = 0; ($nbOfDaemons != 0) && ($t < daemonStopTimeout); $t+=500) {
+                usleep(500000); // Sleep 500ms
+                // $running = array(); // Clear previous result.
+                // $running2 = array(); // Clear previous result.
+                // exec($cmd1, $running);
+                // if ($cmd2 != "") {
+                //     exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
+                //     $running = array_merge($running, $running2);
+                // }
+                // $nbOfDaemons = sizeof($running);
+                $running = self::getRunningDaemons2();
+                $nbOfDaemons = $running['runningNb'];
+            }
             if ($nbOfDaemons != 0) {
-                log::add('Abeille', 'debug', '  stopDaemons(): Stopping '.$nbOfDaemons.' daemons');
+                log::add('Abeille', 'debug', '  stopDaemons(): '.$nbOfDaemons.' daemons still active after '.daemonStopTimeout.' ms');
+                log::add('Abeille', 'debug', '  stopDaemons(): '.json_encode($running));
+                // for ($i = 0; $i < $nbOfDaemons; $i++) {
+                //     $arr = explode(" ", $running[$i]);
+                //     $pid = $arr[0];
+                //     exec("sudo kill -s KILL ".$pid);
+                // }
                 $allPids = '';
-                for ($i = 0; $i < $nbOfDaemons; $i++) {
-    // log::add('Abeille', 'debug', 'deamon_stopDaemonsstop(): running[i]='.$running[$i]);
-                    $arr = explode(" ", $running[$i]);
-                    $allPids .= ' '.$arr[0];
+                foreach ($running['daemons'] as $daemon) {
+                    $allPids .= ' '.$daemon['pid'];
                 }
-                exec("sudo kill -s TERM".$allPids);
-    log::add('Abeille', 'debug', 'stopDaemons(): kill -s TERM'.$allPids);
-                /* Waiting until timeout that all daemons be ended */
-                for ($t = 0; ($nbOfDaemons != 0) && ($t < daemonStopTimeout); $t+=500) {
-                    usleep(500000); // Sleep 500ms
-                    $running = array(); // Clear previous result.
-                    $running2 = array(); // Clear previous result.
-                    exec($cmd1, $running);
-                    if ($cmd2 != "") {
-                        exec($cmd2, $running2); // Get zigate specifc 'socat' processes if any
-                        $running = array_merge($running, $running2);
-                    }
-                    $nbOfDaemons = sizeof($running);
-    // log::add('Abeille', 'debug', 'stopDaemons(): LA'.$nbOfDaemons."=".json_encode($running));
-                }
-                if ($nbOfDaemons != 0) {
-                    log::add('Abeille', 'debug', '  stopDaemons(): '.$nbOfDaemons.' daemons still active after '.daemonStopTimeout.' ms');
-                    log::add('Abeille', 'debug', '  stopDaemons(): '.json_encode($running));
-                    for ($i = 0; $i < $nbOfDaemons; $i++) {
-                        $arr = explode(" ", $running[$i]);
-                        $pid = $arr[0];
-                        exec("sudo kill -s KILL ".$pid);
-                    }
-                }
-            } else
-                log::add('Abeille', 'debug', '  stopDaemons(): No active daemon');
+                exec("sudo kill -s KILL".$allPids);
+            }
 
             return true;
         }
@@ -1134,8 +1195,7 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
          * @param $daemonFile (ex: 'cmd', 'parser', serialread1'...)
          * @return String
          */
-        public static function getStartCommand($config, $daemonFile): string
-        {
+        public static function getStartCommand($config, $daemonFile): string {
             $nohup = "/usr/bin/nohup";
             $php = "/usr/bin/php";
             $nb = (preg_match('/[0-9]/', $daemonFile, $matches) != true ? "" : $matches[0]);
@@ -1190,9 +1250,7 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
          *
          * @param $daemon
          */
-        public
-        static function sendMessageToRuche($daemon, $message = "")
-        {
+        public static function sendMessageToRuche($daemon, $message = "") {
             global $abQueues;
 
             $daemonName = (preg_match('/[a-zA-Z]*/', $daemon, $matches) != true ? $daemon : $matches[0]);
@@ -1212,9 +1270,7 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
          * @param array $parameters jeedom Abeille's config
          * @param string $which number, from 1 to 9
          */
-        public
-        static function clearSystemMessage($parameters, $which = 'all')
-        {
+        public static function clearSystemMessage($parameters, $which = 'all') {
             if ($which == 'all') {
                 for ($n = 1; $n <= maxNbOfZigate; $n++) {
                     if ($parameters['ab::zgEnabled'.$n] == "Y") {
@@ -1228,9 +1284,7 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
             }
         }
 
-        public
-        static function checkRequired($type, $zigateNumber)
-        {
+        public static function checkRequired($type, $zigateNumber) {
             if ($type == 'PI')
                 self::checkGpio();
             else if ($type == 'WIFI')
@@ -1240,9 +1294,7 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
         /**
          * @param $zigateNumber
          */
-        public
-        static function checkWifi($zigateNumber)
-        {
+        public static function checkWifi($zigateNumber) {
             exec("command -v socat", $out, $ret);
             if ($ret != 0) {
                 log::add('Abeille', 'error', 'socat n\'est  pas installé. zigate Wifi inutilisable. Installer socat depuis la partie wifi zigate de la page de configuration');
@@ -1275,8 +1327,7 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
          *
          * @return true if running, else false
          */
-        public static function isAbeilleCronRunning()
-        {
+        public static function isAbeilleCronRunning() {
             $cron = cron::byClassAndFunction('Abeille', 'deamon');
             if (!is_object($cron))
                 return false;
@@ -1291,8 +1342,7 @@ log::add('Abeille', 'debug', '  running='.json_encode($running));
          * @param string $loglevel
          * @param string $message
          */
-        function deamonlog($loglevel = 'NONE', $message = "")
-        {
+        function deamonlog($loglevel = 'NONE', $message = "") {
             log::add('Abeille', $loglevel, $message);
         }
 

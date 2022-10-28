@@ -570,8 +570,14 @@ if (0) {
      * @param none
      * @return array with state, launchable, launchable_message
      */
-    public static function deamon_info()
-    {
+    public static function deamon_info() {
+        // $smId = @shmop_open(12, "a", 0, 0);
+        // if ($smId !== false) {
+        //     $smContent = shmop_read($smId, 0, shmop_size($smId));
+        //     log::add('Abeille', 'debug', 'deamon_info(): smContent='.json_encode($smContent));
+        //     shmop_close($smId);
+        // }
+
         /* Notes:
            Since Abeille has its own way to restart missing daemons, reporting only
            cron status as global Abeille status to avoid conflict between
@@ -609,8 +615,7 @@ if (0) {
         - run some cleanup
         - update the config database if changes needed
         Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
-    public static function deamon_start_cleanup()
-    {
+    public static function deamon_start_cleanup() {
         // log::add('Abeille', 'debug', 'deamon_start_cleanup(): Démarrage');
 
         // Remove Abeille's user messages
@@ -651,15 +656,25 @@ if (0) {
     /* Jeedom required function.
        Starts all daemons.
        Note: incorrect naming 'deamon' instead of 'daemon' due to Jeedom mistake. */
-    public static function deamon_start($_debug = false)
-    {
-        log::add('Abeille', 'debug', 'deamon_start(): Démarrage');
+    public static function deamon_start($_debug = false) {
+        $smId = @shmop_open(12, "a", 0, 0);
+        if ($smId !== false) {
+            $smContent = shmop_read($smId, 0, shmop_size($smId));
+            log::add('Abeille', 'debug', 'deamon_start(): smContent='.$smContent);
+            shmop_close($smId);
+            $smContent = json_decode($smContent, true);
+            if (isset($smContent['daemonsPaused']) && ($smContent['daemonsPaused'] == true)) {
+                log::add('Abeille', 'debug', 'deamon_start(): IGNORED => daemons PAUSED');
+                return;
+            }
+        } else
+            log::add('Abeille', 'debug', 'deamon_start(): NO shared mem');
 
         /* Some checks before starting daemons
                - Are dependancies ok ?
                - does Abeille cron exist ? */
         if (self::dependancy_info()['state'] != 'ok') {
-            message::add("Abeille", "Tentative de demarrage alors qu il y a un soucis avec les dependances", "Avez vous installée les dépendances.");
+            message::add("Abeille", "Tentative de demarrage alors qu\'il y a un soucis avec les dépendances");
             log::add('Abeille', 'debug', "Tentative de demarrage alors qu il y a un soucis avec les dependances");
             return false;
         }
@@ -764,51 +779,70 @@ if (0) {
         return true;
     }
 
-    /* Stopping all daemons and removing queues */
-    public static function deamon_stop()
-    {
-        log::add('Abeille', 'debug', 'deamon_stop(): Démarrage');
+    /* Jeedom required function.
+       Stopping all daemons and removing queues */
+    public static function deamon_stop() {
+        log::add('Abeille', 'debug', 'deamon_stop(): Starting');
 
         /* Stopping cron */
         $cron = cron::byClassAndFunction('Abeille', 'deamon');
         if (!is_object($cron))
             log::add('Abeille', 'error', 'deamon_stop(): Tache cron introuvable');
         else if ($cron->running()) {
-            log::add('Abeille', 'debug', 'deamon_stop(): Arret du cron');
+            log::add('Abeille', 'debug', 'deamon_stop(): Stopping cron');
             $cron->halt();
             while ($cron->running()) {
                 usleep(500000);
                 log::add('Abeille', 'debug', 'deamon_stop(): cron STILL running');
             }
         } else
-            log::add('Abeille', 'debug', 'deamon_stop(): cron déja arrété');
+            log::add('Abeille', 'debug', 'deamon_stop(): cron already stopped');
 
         /* Stopping all 'Abeille' daemons */
         AbeilleTools::stopDaemons();
 
         /* Removing all queues */
-        // Tcharp38 note: when all queues in $abQueues, we can delete $allQueues
         $abQueues = $GLOBALS['abQueues'];
-        $allQueues = array(
-            // $abQueues["parserToAbeille2"]["id"],
-            $abQueues["cmdToMon"]["id"], $abQueues["parserToMon"]["id"], $abQueues["monToCmd"]["id"],
-            $abQueues["parserToAssist"]["id"],
-            $abQueues["parserToLQI"]["id"],
-            $abQueues["xToAbeille"]["id"], $abQueues["parserToCli"]["id"],
-            $abQueues["xToParser"]["id"], $abQueues["parserToCmdAck"]["id"]
-        );
-        foreach ($allQueues as $queueId) {
+        foreach ($abQueues as $q) {
+            $queueId = $q['id'];
             $queue = msg_get_queue($queueId);
-            if ($queue != false)
+            if ($queue !== false)
                 msg_remove_queue($queue);
         }
 
-        log::add('Abeille', 'debug', 'deamon_stop(): Terminé');
+        log::add('Abeille', 'debug', 'deamon_stop(): Ended');
     }
 
-    public static function dependancy_info()
-    {
-        log::add('Abeille', 'warning', '-------------------------------------> dependancy_info()');
+    /* Temporary stop daemons and prevent auto-restart from Jeedom */
+    public static function pauseDaemons($start) {
+        $smId = shmop_open(12, "c", 0644, 50);
+        $smContent = [];
+        if ($start)
+            $smContent['daemonsPaused'] = true;
+        else
+            $smContent['daemonsPaused'] = false;
+        shmop_write($smId, json_encode($smContent), 0);
+        shmop_close($smId);
+
+        log::add('Abeille', 'debug', 'pauseDaemons('.$start.')');
+        if ($start) {
+            $daemons = AbeilleTools::getRunningDaemons2();
+            if ($daemons['runBits'] == 0)
+                $GLOBALS['daemonsRunning'] = false; // No running daemon
+            else
+                $GLOBALS['daemonsRunning'] = true;
+            log::add('Abeille', 'debug', 'Stopping daemons');
+            self::deamon_stop(); // Stopping daemons
+        } else {
+            if ($GLOBALS['daemonsRunning']) {
+                log::add('Abeille', 'debug', 'Restarting daemons');
+                abeille::deamon_start(); // Restarting daemon
+            }
+        }
+    }
+
+    public static function dependancy_info() {
+        log::add('Abeille', 'debug', 'dependancy_info()');
 
         // Called by js dans plugin.class.js(getDependancyInfo) -> plugin.ajax.php(dependancy_info())
         // $dependancy_info['state'] pour affichage
@@ -835,9 +869,9 @@ if (0) {
     }
 
     /* Called from Jeedom */
-    public static function dependancy_install()
-    {
-        log::add('Abeille', 'debug', 'Installation des dépendances: IN');
+    public static function dependancy_install() {
+        log::add('Abeille', 'debug', 'dependancy_install()');
+
         message::add("Abeille", "Installation des dépendances en cours.", "N'oubliez pas de lire la documentation: https://kiwihc16.github.io/AbeilleDoc");
         log::remove(__CLASS__.'_update');
         $result = [
@@ -850,8 +884,7 @@ if (0) {
     }
 
     /* This is Abeille's main daemon, directly controlled by Jeedom itself. */
-    public static function deamon()
-    {
+    public static function deamon() {
         global $abQueues;
 
         log::add('Abeille', 'debug', 'deamon(): Main daemon starting');
@@ -959,6 +992,7 @@ if (0) {
         } catch (Exception $e) {
             log::add('Abeille', 'error', 'deamon(): Exception '.$e->getMessage());
         }
+
         log::add('Abeille', 'debug', 'deamon(): Main daemon stopped');
     }
 

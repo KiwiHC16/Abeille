@@ -112,7 +112,8 @@
     function signalHandler($signal) {
         global $f, $zgId;
 
-        fclose($f);
+        if (fclose($f) === false)
+            logMessage('debug', 'ERROR: fclose()');
         logMessage('info', '<<< Arret du démon AbeilleSerialRead'.$zgId);
         exit;
     }
@@ -186,6 +187,10 @@
         }
 
         $byte = fread($f, 01);
+        if ($byte === false) {
+            logMessage('debug', 'ERROR: fread()');
+            continue;
+        }
 
         $byte = strtoupper(bin2hex($byte));
 

@@ -530,6 +530,17 @@
                 "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x29 ), // int16
             ),
         ),
+        "0403" => array(
+            "name" => "Pressure Measurement",
+            "attributes" => array(
+                "0000" => array( "name" => "MeasuredValue", "access" => "R", "dataType" => 0x29 ), // int16
+                "0001" => array( "name" => "MinMeasuredValue", "access" => "R", "dataType" => 0x29 ), // int16
+                "0002" => array( "name" => "MaxMeasuredValue", "access" => "R", "dataType" => 0x29 ), // int16
+                "0003" => array( "name" => "Tolerance", "access" => "R", "dataType" => 0x29 ), // int16
+                "0010" => array( "name" => "ScaledValue", "access" => "R", "dataType" => 0x29 ), // int16
+                "0014" => array( "name" => "Scale", "access" => "R", "dataType" => 0x28 ), // int8
+            ),
+        ),
         "0405" => array(
             "name" => "Relative Humidity",
             "attributes" => array(

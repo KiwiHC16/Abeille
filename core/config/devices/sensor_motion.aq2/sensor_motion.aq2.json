@@ -13,7 +13,7 @@
         "type": "Xiaomi Presence Aqara 2",
         "commands": {
             "include3": "presence",
-            "include4": "luminosite",
+            "Illuminance": { "use": "zb-0400-MeasuredValue", "isVisible": 1 },
             "include5": "Batterie-Volt",
             "include6": "Batterie-Pourcent",
             "include7": "Xiaomi-ff01",

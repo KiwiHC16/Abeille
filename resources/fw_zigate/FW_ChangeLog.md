@@ -1,7 +1,13 @@
-# Zigate firmware change log
+# Zigate V1 firmware change log
 
 Dernieres infos: https://zigate.fr/category/informations/
 Releases: https://github.com/fairecasoimeme/ZiGate/releases
+
+## Version 3.23
+
+* Add all mode to RAW command (Bound, short, IEEE, group, broadcast)
+* Fix WindowCovering to permit lift percentage
+* Fix : send defaultResponse only if ZCL
 
 ## Version 3.21
 

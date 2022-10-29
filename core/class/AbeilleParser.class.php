@@ -2463,7 +2463,7 @@
                                     // $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--current--', $fcc0["Current"]["valueConverted"]);    // Current
                                     $attributesReportN = [
                                         array( "name" => '0006-01-0000', "value" => $fcc0["Etat SW 1 Binaire"]["valueConverted"] ),
-                                        array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] ),
+                                        array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] / 100 ),
                                     ];
                                     if (isset($fcc0["Puissance"]))
                                         $attributesReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
@@ -2576,7 +2576,7 @@
                         // Tcharp38 note: At some point do the opposite => what's handled by 8100
                         // $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E000', 'E001', 'EF00', 'FC01', 'FC02', 'FF66']; // Clusters handled here
                         // $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
-                        $refused = ['0000', '0001', '000C', '0400', '0402', '0403', 'FC00'];
+                        $refused = ['0000', '0001', '000C', 'FC00'];
                         if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
@@ -2624,7 +2624,19 @@
                                 );
 
                             // Attribute value post correction according to ZCL spec
-                            if ($clustId == "0405") {
+                            if ($clustId == "0400") {
+                                if ($attr['id'] == "0000") {
+                                    $attr['value'] = pow(10, ($attr['value'] - 1) / 10000); // Illuminance
+                                }
+                            } else if ($clustId == "0402") {
+                                if ($attr['id'] == "0000") {
+                                    $attr['value'] /= 100; // Temperature
+                                }
+                            } else if ($clustId == "0403") {
+                                if ($attr['id'] == "0000") {
+                                    $attr['value'] /= 10; // Pressure (in kPa)
+                                }
+                            } else if ($clustId == "0405") {
                                 if ($attr['id'] == "0000") {
                                     $attr['value'] /= 100; // Humidity
                                 }
@@ -2762,7 +2774,7 @@
                         // Some clusters are directly handled by 8100/8102 decode
                         // $acceptedCmd0A = ['0005', '0007', '0300', '0406', '050B', '0B04', 'EF00', 'FC01', 'FC02']; // Clusters handled here
                         // $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
-                        $refused = ['0000', '0001', '000C', '0400', '0402', '0403', 'FC00'];
+                        $refused = ['0000', '0001', '000C', 'FC00'];
                         if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
@@ -2795,7 +2807,19 @@
                             $toMon[] = $m; // For monitor
 
                             // Attribute value post correction according to ZCL spec
-                            if ($clustId == "0405") {
+                            if ($clustId == "0400") {
+                                if ($attr['id'] == "0000") {
+                                    $attr['value'] = pow(10, ($attr['value'] - 1) / 10000); // Illuminance
+                                }
+                            } else if ($clustId == "0402") {
+                                if ($attr['id'] == "0000") {
+                                    $attr['value'] /= 100; // Temperature
+                                }
+                            } else if ($clustId == "0403") {
+                                if ($attr['id'] == "0000") {
+                                    $attr['value'] /= 10; // Pressure (in kPa)
+                                }
+                            } else if ($clustId == "0405") {
                                 if ($attr['id'] == "0000") {
                                     $attr['value'] /= 100; // Humidity
                                 }
@@ -4893,7 +4917,7 @@
 
             // Checking if decode is handled by 8002 or still there
             // $accepted = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
-            $accepted = ['0000', '0001', '000C', '0400', '0402', '0403', 'FC00'];
+            $accepted = ['0000', '0001', '000C', 'FC00'];
             if (!in_array($clustId, $accepted)) {
                 parserLog('debug', "  Handled by decode8002");
                 return;
@@ -5097,7 +5121,7 @@
                     $attributesReportN = [
                         array( "name" => "Batterie-Volt", "value" => $voltage ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
-                        array( "name" => "0402-01-0000", "value" => $temperature ),
+                        array( "name" => "0402-01-0000", "value" => $temperature / 100 ),
                         array( "name" => "0405-01-0000", "value" => $humidity / 100 ),
                     ];
                 }
@@ -5175,7 +5199,7 @@
                     $attributesReportN = [
                         array( "name" => "Batterie-Volt", "value" => $voltage ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
-                        array( "name" => '0402-01-0000', "value" => $temperature ),
+                        array( "name" => '0402-01-0000', "value" => $temperature / 100 ),
                         array( "name" => '0405-01-0000', "value" => $humidity / 100 ),
                     ];
                 }
@@ -5390,30 +5414,30 @@
                 }
             } // End cluster 000C
 
-            else if ($clustId == "0400") { // Illuminance Measurement cluster
-                if ($attrId == "0000") { // MeasuredValue
-                    $MeasuredValue = substr($Attribut, 0, 4);
-                    $illuminance = pow(10, (hexdec($MeasuredValue) - 1) / 10000);
-                    // TODO Tcharp38: Check if correct formula and what returned to Abeille
-                    parserLog('debug', '  Illuminance, MeasuredValue='.$MeasuredValue.' => '.$illuminance.'Lx');
-                }
-            } // End cluster 0400
+            // else if ($clustId == "0400") { // Illuminance Measurement cluster
+            //     if ($attrId == "0000") { // MeasuredValue
+            //         $MeasuredValue = substr($Attribut, 0, 4);
+            //         $illuminance = pow(10, (hexdec($MeasuredValue) - 1) / 10000);
+            //         // TODO Tcharp38: Check if correct formula and what returned to Abeille
+            //         parserLog('debug', '  Illuminance, MeasuredValue='.$MeasuredValue.' => '.$illuminance.'Lx');
+            //     }
+            // } // End cluster 0400
 
-            else if ($clustId == "0402") { // Temperature Measurement cluster
-                if ($attrId == "0000") { // MeasuredValue
-                    $MeasuredValue = substr($Attribut, 0, 4); // int16
-                    $temp = $this->decodeDataType($MeasuredValue, $dataType, false, hexdec($attrSize)) / 100;
-                    parserLog('debug', '  Temp, MeasuredValue='.$MeasuredValue.' => '.$temp.'C');
-                }
-            } // End cluster 0402
+            // else if ($clustId == "0402") { // Temperature Measurement cluster
+            //     if ($attrId == "0000") { // MeasuredValue
+            //         $MeasuredValue = substr($Attribut, 0, 4); // int16
+            //         $temp = $this->decodeDataType($MeasuredValue, $dataType, false, hexdec($attrSize)) / 100;
+            //         parserLog('debug', '  Temp, MeasuredValue='.$MeasuredValue.' => '.$temp.'C');
+            //     }
+            // } // End cluster 0402
 
-            else if ($clustId == "0403") { // Pressure Measurement cluster
-                if ($attrId == "0000") { // MeasuredValue
-                    $MeasuredValue = substr($Attribut, 0, 4); // int16, MeasuredValue = 10 x Pressure
-                    $pressure = $this->decodeDataType($Attribut, $dataType, false, hexdec($attrSize)) / 10;
-                    parserLog('debug', '  Pressure, MeasuredValue='.$MeasuredValue.' => '.$pressure.'kPa');
-                }
-            } // End cluster 0403
+            // else if ($clustId == "0403") { // Pressure Measurement cluster
+            //     if ($attrId == "0000") { // MeasuredValue
+            //         $MeasuredValue = substr($Attribut, 0, 4); // int16, MeasuredValue = 10 x Pressure
+            //         $pressure = $this->decodeDataType($Attribut, $dataType, false, hexdec($attrSize)) / 10;
+            //         parserLog('debug', '  Pressure, MeasuredValue='.$MeasuredValue.' => '.$pressure.'kPa');
+            //     }
+            // } // End cluster 0403
 
             // else if ($clustId == "0405") { // Relative Humidity cluster
             //     if ($attrId == "0000") { // MeasuredValue

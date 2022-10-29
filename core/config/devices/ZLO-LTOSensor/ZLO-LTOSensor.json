@@ -11,7 +11,7 @@
         },
         "type": "ZLO-LTOSensor for Dev",
         "commands": {
-            "include3 2": "luminosite",
+            "Illuminance": { "use": "zb-0400-MeasuredValue", "isVisible": 1 },
             "Temperature": {
                 "use": "zb-0402-MeasuredValue",
                 "isVisible": 1,

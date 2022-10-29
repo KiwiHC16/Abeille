@@ -452,6 +452,8 @@
            - config DB: Removed obsolete 'blocageTraitementAnnonce'.
            - config DB: 'DbVersion' => 'ab::dbVersion'.
            - cmd DB: 0405-XX-0000: Removed 'calculValueOffset'.
+           - cmd DB: 0402-XX-0000: Removed 'calculValueOffset'.
+           - cmd DB: 0400-XX-0000: Removed 'calculValueOffset'.
            - Removing 'AbeilleDebug.log'. Moved to Jeedom tmp dir.
          */
         if (intval($dbVersion) < 20220421) {
@@ -629,8 +631,11 @@
                     $saveCmd = false;
                     $cmdLogicId = $cmdLogic->getLogicalId();
 
+                    // Removing 'calculValueOffset' for cmds '0400-XX-0000' (illuminance)
+                    // Removing 'calculValueOffset' for cmds '0402-XX-0000' (temperature)
                     // Removing 'calculValueOffset' for cmds '0405-XX-0000' (humidity)
-                    if (preg_match("/^0405-[0-9A-F]*-0000/", $cmdLogicId)) {
+                    if (preg_match("/^0400-[0-9A-F]*-0000/", $cmdLogicId) || preg_match("/^0402-[0-9A-F]*-0000/", $cmdLogicId) ||
+                        preg_match("/^0405-[0-9A-F]*-0000/", $cmdLogicId)) {
                         $confVal = $cmdLogic->getConfiguration('calculValueOffset', 'nada');
                         if ($confVal != 'nada') {
                             $cmdLogic->setConfiguration('calculValueOffset', null);

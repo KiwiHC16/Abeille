@@ -2,7 +2,7 @@
     "switch.b1nacn02": {
         "manufacturer": "Xiaomi",
         "model": "CQC17003181848",
-        "type": "Xiaomi Aqara Wall switch D1",
+        "type": "Xiaomi Aqara D1 wall switch",
         "timeout": "",
         "category": {
             "automatism": "1"

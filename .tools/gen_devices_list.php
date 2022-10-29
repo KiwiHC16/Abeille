@@ -37,7 +37,7 @@
             echo "  name  : ".$eq['type']."\n";
 
             addToFile(rstFile, $eq['manufacturer'].", ".$eq['model'].", ".$eq['type']."\n\n");
-            addToFile(rstFile, ".. image:: images/node_".$eq['icon'].".png\n");
+            addToFile(rstFile, ".. image:: ../images/node_".$eq['icon'].".png\n");
             addToFile(rstFile, "   :width: 200px\n\n");
         }
     }

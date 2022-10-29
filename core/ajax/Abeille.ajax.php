@@ -29,8 +29,7 @@
         ini_set('log_errors', 'On');
     }
 
-    function logToFile($logFile = '', $logLevel = '', $msg = "")
-    {
+    function logToFile($logFile = '', $logLevel = '', $msg = "") {
         if ($logLevel != '') {
             if (AbeilleTools::getNumberFromLevel($logLevel) > AbeilleTools::getLogLevel())
                 return; // Nothing to do
@@ -68,7 +67,7 @@
         require_once __DIR__.'/../../../../core/php/core.inc.php';
         require_once __DIR__.'/../class/Abeille.class.php';
         require_once __DIR__.'/../php/AbeilleZigate.php';
-        include_once __DIR__.'/../class/AbeilleTools.class.php'; // deamonlogFilter()
+        include_once __DIR__.'/../class/AbeilleTools.class.php'; // deamonlogFilter()/getRunningDaemons2()
         require_once __DIR__.'/../php/AbeilleInstall.php'; // checkIntegrity()
         include_once __DIR__.'/../php/AbeilleLog.php'; // logDebug()
 
@@ -158,8 +157,7 @@
             logSetConf('AbeilleConfig.log', true);
             logMessage('info', 'Test de communication avec la Zigate; type='.$zgType.', port='.$zgPort);
 
-            logMessage('debug', 'Arret des démons');
-            abeille::deamon_stop(); // Stopping daemon
+            Abeille::pauseDaemons(1);
 
             /* Checks port exists and is not already used */
             $prefix = logGetPrefix(""); // Get log prefix
@@ -173,8 +171,7 @@
                 $status = zgGetVersion($zgPort, $version);
             }
 
-            logMessage('debug', 'Redémarrage des démons');
-            abeille::deamon_start(); // Restarting daemon
+            Abeille::pauseDaemons(0);
 
             ajax::success(json_encode(array('status' => $status, 'fw' => $version)));
         }
@@ -194,22 +191,21 @@
             $zgId = init('zgId');
 
             logSetConf('AbeilleConfig.log', true);
-            logMessage('debug', 'Démarrage updateFirmware('.$zgType.', '.$zgFwFile.', '.$zgPort.')');
+            logMessage('debug', 'updateFirmware('.$zgType.', '.$zgFwFile.', '.$zgPort.')');
 
             if ($zgType == "PI")
                 $script = "updateFirmware.sh";
             else
                 $script = "updateFirmwareDIN.sh";
 
-            logMessage('debug', 'Vérification des paramètres');
+            logMessage('debug', 'Checking parameters');
             $cmdToExec = $script." check ".$zgPort;
             $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
 
             $version = 0; // FW version
             if ($status == 0) {
-                logMessage('info', 'Arret des démons');
-                abeille::deamon_stop(); // Stopping daemon
+                Abeille::pauseDaemons(1);
 
                 /* Updating FW and reset Zigate */
                 $cmdToExec = $script." flash ".$zgPort." ".$zgFwFile;
@@ -224,8 +220,7 @@
                 //     $status = zgGetVersion($zgPort, $version);
                 // }
 
-                logMessage('info', 'Redémarrage des démons');
-                abeille::deamon_start(); // Restarting daemon
+                Abeille::pauseDaemons(0);
 
                 if ($erasePdm) {
                     logMessage('info', 'Effacement de la PDM');
@@ -268,12 +263,16 @@
             $cmd = 'cd '.__DIR__.'/../scripts/; sudo cp -p switchBranch.sh ../../tmp/switchBranch.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd);
 
-            logMessage('debug', 'Arret des démons');
-            abeille::deamon_stop(); // Stopping daemon
+            // logMessage('debug', 'Arret des démons');
+            // abeille::deamon_stop(); // Stopping daemon
+            Abeille::pauseDaemons(1);
 
             $cmdToExec = "switchBranch.sh ".$branch.' "'.$prefix.'"';
-            $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
+            // $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
+            $cmd = '/bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
             exec($cmd);
+
+            Abeille::pauseDaemons(0);
 
             /* Note: Returning immediately but switch not completed yet. Anyway server side code
             might be completely different after switch */
@@ -369,6 +368,7 @@
             }
             $status = doPostUpdateCleanup();
             $error = "";
+
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 

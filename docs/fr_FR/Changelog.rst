@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221029-BETA-1
+-------------
+
 - Interne: Zigbee const: Ajout 0403/pressure.
 - Interne: Parser: Attribut '0403-xx-0000' (pressure) directement décodé par 8002.
 - Interne: Parser+install+modele: Attribut '0402-xx-0000' (temperature) directement décodé par parser/8002.

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221103-BETA-2
+-------------
+
 - Equipements: Qq modeles revus.
 - Modèle de commandes: 'Batterie-Volt' remplacé par '0001-01-0020'.
 - Interne: Constantes Zigbee: Ajout data types cluster 0000.

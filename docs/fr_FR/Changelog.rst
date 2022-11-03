@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-221029-BETA-1
+221103-BETA-1
 -------------
 
 - Interne: Zigbee const: Ajout 0403/pressure.

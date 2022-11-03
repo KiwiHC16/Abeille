@@ -25,7 +25,10 @@
             "include10": "offVolet",
             "include11": "toggleVolet",
             "include12": "setLevelVolet",
-            "include13": "levelVoletStop",
+            "Stop": {
+                "use": "zbCmdG-0008-StopWithOnOff",
+                "isVisible": 1
+            },
             "Get-Status": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"

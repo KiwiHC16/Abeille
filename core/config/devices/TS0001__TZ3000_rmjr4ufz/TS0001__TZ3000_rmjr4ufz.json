@@ -4,7 +4,10 @@
         "model": "iHSW02",
         "type": "Tuya mini smart switch",
         "comment": "Alternate model: WHD02",
-        "alternateIds": "TS0001__TZ3000_hktqahrq,TS0001__TZ3000_m9af2l6gz",
+        "alternateIds": {
+            "TS0001__TZ3000_hktqahrq": [],
+            "TS0001__TZ3000_m9af2l6gz": []
+        },
         "timeout": "60",
         "configuration": {
             "mainEP": "01",

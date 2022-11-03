@@ -1,8 +1,7 @@
 {
     "zb-0008-CurrentLevel": {
         "comment": "Based on obsolete 'levelLight.json'",
-        "comment2": "TODO: calculValueOffset to be moved in parser if part of Zigbee spec",
-        "name": "Level",
+        "comment2": "calculValueOffset required since interpretation is device dependant => default = %",
         "subType": "numeric",
         "template": "",
         "configuration": {

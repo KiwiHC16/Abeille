@@ -1,0 +1,13 @@
+{
+    "zbCmdG-0008-StopWithOnOff": {
+        "comment": "Cluster 0008, stop with OnOff cmd",
+        "subType": "other",
+        "template": "default",
+        "configuration": {
+            "topic": "cmd-0008",
+            "request": "ep=#EP#&cmd=07",
+            "visibilityCategory": "All"
+        },
+        "type": "action"
+    }
+}

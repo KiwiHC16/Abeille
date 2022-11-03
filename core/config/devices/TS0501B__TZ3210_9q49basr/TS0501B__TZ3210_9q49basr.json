@@ -3,7 +3,10 @@
         "manufacturer": "Tuya",
         "model": "TS0501B ",
         "type": "Tuya Single Color LED Controller",
-        "alternateIds": "TS0501B__TZ3210_4whigl8i,TS0501B__TZ3000_4whigl8i",
+        "alternateIds": {
+            "TS0501B__TZ3210_4whigl8i": [],
+            "TS0501B__TZ3000_4whigl8i": []
+        },
         "comment": "At least TS0501B__TZ3210_9q49basr seems to not support color commands",
         "timeout": "60",
         "configuration": {

@@ -24,7 +24,9 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0001&attrId=0021"
             },
-            "include3 1 - Ok": "Batterie-Volt-Konke",
+            "Battery-Volt": {
+                "use": "zb-0001-BatteryVolt"
+            },
             "Get Battery-Volt": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0001&attrId=0020"

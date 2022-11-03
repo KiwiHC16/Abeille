@@ -116,8 +116,9 @@
             parserLog("debug", "AbeilleParser constructor", "AbeilleParserClass");
             // $this->parameters_info = AbeilleTools::getParameters();
 
-            $this->requestedlevel = '' ? 'none' : $argv[1];
-            $GLOBALS['requestedlevel'] = $this->requestedlevel ;
+            // Seems unused
+            // $this->requestedlevel = '' ? 'none' : $argv[1];
+            // $GLOBALS['requestedlevel'] = $this->requestedlevel ;
 
             $abQueues = $GLOBALS['abQueues'];
             $this->queueXToCmd          = msg_get_queue($abQueues["xToCmd"]["id"]);
@@ -772,7 +773,7 @@
                     $request = str_ireplace('#IEEE#', $eq['ieee'], $request);
                     $zgId = substr($net, 7); // 'AbeilleX' => 'X'
                     $request = str_ireplace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgId]['ieee'], $request);
-    parserLog('debug', '      topic='.$topic.', request='.$request);
+                    parserLog('debug', '      topic='.$topic.', request='.$request);
                     if ($delay == 0)
                         $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/".$topic, $request);
                     else {
@@ -1213,7 +1214,7 @@
                 break;
             case "41": // String discrete: octstr
             case "42": // String discrete: string
-// parserLog('debug', "  iHs=".$iHs);
+                // parserLog('debug', "  iHs=".$iHs);
                 if ($raw) {
                     $dataSize = hexdec(substr($iHs, 0, 2));
                     $oSize = $dataSize + 1;
@@ -1239,7 +1240,7 @@
             // Reordering raw bytes
             if ($raw && ($dataSize > 1))
                 $hs = AbeilleTools::reverseHex($hs);
-// parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexString." => hs=".$hs);
+            // parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexString." => hs=".$hs);
 
             // Computing value
             switch ($dataType) {
@@ -1473,7 +1474,7 @@
             if (method_exists($this, $fct)) {
                 $this->$fct($dest, $payload, $lqi);
             } else {
-                parserLog('debug', $dest.', Type='.$type.'/'.zgGetMsgByType($type).', ignored (unsupported).');
+                parserLog('debug', $dest.', Type='.$type.'/'.zgGetMsgByType($type).' (unused).');
             }
 
             return 0;
@@ -2576,7 +2577,7 @@
                         // Tcharp38 note: At some point do the opposite => what's handled by 8100
                         // $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E000', 'E001', 'EF00', 'FC01', 'FC02', 'FF66']; // Clusters handled here
                         // $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
-                        $refused = ['0000', '0001', '000C', 'FC00'];
+                        $refused = ['0000', '000C', 'FC00'];
                         if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
@@ -2602,6 +2603,7 @@
                         $attributes = [];
                         $readAttributesResponseN = []; // Attributes by Jeedom logical name
                         $l = strlen($msg);
+                        $eq = getDevice($dest, $srcAddr, ''); // Corresponding device
                         for ($i = 0; $i < $l;) {
                             $size = 0;
                             $attr = $this->decode8002_ReadAttrStatusRecord(substr($msg, $i), $size);
@@ -2610,23 +2612,32 @@
 
                             $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
                             if ($attr['status'] == '00')
-                                parserLog('debug', '  AttrId='.$attr['id'].'/'.$attrName
+                                $m = '  AttrId='.$attr['id'].'/'.$attrName
                                     .', Status='.$attr['status']
                                     .', AttrType='.$attr['dataType']
-                                    .', Value='.$attr['valueHex'].' => '.$attr['value'],
-                                    "8002"
-                                );
+                                    .', Value='.$attr['valueHex'].' => '.$attr['value'];
                             else
-                                parserLog('debug', '  AttrId='.$attr['id'].'/'.$attrName
+                                $m = '  AttrId='.$attr['id'].'/'.$attrName
                                     .', Status='.$attr['status']
-                                    .' => '.zbGetZCLStatus($attr['status']),
-                                    "8002"
-                                );
+                                    .' => '.zbGetZCLStatus($attr['status']);
+                            parserLog('debug', $m, "8002");
+                            $toMon[] = $m;
 
                             // Attribute value post correction according to ZCL spec
-                            if ($clustId == "0400") {
+                            if ($clustId == "0001") {
+                                if ($attr['id'] == "0020") {
+                                    $attr['value'] = $attr['value'] / 10; // Battery voltage
+                                } else if ($attr['id'] == "0021") {
+                                    $attr['value'] = $attr['value'] / 2; // Battery percent
+                                }
+                            } else if ($clustId == "0400") {
                                 if ($attr['id'] == "0000") {
-                                    $attr['value'] = pow(10, ($attr['value'] - 1) / 10000); // Illuminance
+                                    $val = $attr['value'];
+                                    if (!isset($eq['notStandard-0400-0000']))
+                                        $val = ($val == 0 ? 0 : pow(10, ($val - 1) / 10000)); // Illuminance
+                                    else
+                                        parserLog('debug', '  NOT STANDARD attribute value');
+                                    $attr['value'] = $val;
                                 }
                             } else if ($clustId == "0402") {
                                 if ($attr['id'] == "0000") {
@@ -2774,7 +2785,7 @@
                         // Some clusters are directly handled by 8100/8102 decode
                         // $acceptedCmd0A = ['0005', '0007', '0300', '0406', '050B', '0B04', 'EF00', 'FC01', 'FC02']; // Clusters handled here
                         // $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
-                        $refused = ['0000', '0001', '000C', 'FC00'];
+                        $refused = ['0000', '000C', 'FC00'];
                         if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
@@ -2792,6 +2803,7 @@
 
                         $l = strlen($msg);
                         $attributesReportN = [];
+                        $eq = getDevice($dest, $srcAddr, ''); // Corresponding device
                         for ($i = 0; $i < $l;) {
                             // Decode attribute
                             $attr = $this->decode8002_ReportAttribute(substr($msg, $i), $size);
@@ -2802,14 +2814,25 @@
                             $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
                             $m = '  AttrId='.$attr['id'].'/'.$attrName
                                 .', AttrType='.$attr['dataType']
-                                .', Value='.$attr['value'];
+                                .', Value='.$attr['valueHex'].' => '.$attr['value'];
                             parserLog('debug', $m, "8002");
                             $toMon[] = $m; // For monitor
 
                             // Attribute value post correction according to ZCL spec
-                            if ($clustId == "0400") {
+                            if ($clustId == "0001") {
+                                if ($attr['id'] == "0020") {
+                                    $attr['value'] = $attr['value'] / 10; // Battery voltage
+                                } else if ($attr['id'] == "0021") {
+                                    $attr['value'] = $attr['value'] / 2; // Battery percent
+                                }
+                            } else if ($clustId == "0400") {
                                 if ($attr['id'] == "0000") {
-                                    $attr['value'] = pow(10, ($attr['value'] - 1) / 10000); // Illuminance
+                                    $val = $attr['value'];
+                                    if (!isset($eq['notStandard-0400-0000']))
+                                        $val = ($val == 0 ? 0 : pow(10, ($val - 1) / 10000)); // Illuminance
+                                    else
+                                        parserLog('debug', '  NOT STANDARD attribute value');
+                                    $attr['value'] = $val;
                                 }
                             } else if ($clustId == "0402") {
                                 if ($attr['id'] == "0000") {
@@ -4917,7 +4940,7 @@
 
             // Checking if decode is handled by 8002 or still there
             // $accepted = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
-            $accepted = ['0000', '0001', '000C', 'FC00'];
+            $accepted = ['0000', '000C', 'FC00'];
             if (!in_array($clustId, $accepted)) {
                 parserLog('debug', "  Handled by decode8002");
                 return;
@@ -5050,11 +5073,8 @@
 
                     parserLog('debug', '  Voltage='.$voltage.' Voltage%='.$this->volt2pourcent($voltage));
 
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    // return; // Nothing more to publish
                     $attributesReportN = [
-                        array( "name" => "Batterie-Volt", "value" => $voltage ),
+                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
@@ -5069,13 +5089,9 @@
 
                     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage).', Etat=' .$etat);
 
-                    // $this->msgToAbeille($dest."/".$srcAddr, '0006',     '01-0000', $etat);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    // return; // Nothing more to publish
                     $attributesReportN = [
                         array( "name" => "0006-01-0000", "value" => $etat ),
-                        array( "name" => "Batterie-Volt", "value" => $voltage ),
+                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
@@ -5091,12 +5107,8 @@
 
                     parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
 
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    // $this->msgToAbeille($dest."/".$srcAddr, '0006', '01-0000', $etat);
-                    // return; // Nothing more to publish
                     $attributesReportN = [
-                        array( "name" => "Batterie-Volt", "value" => $voltage ),
+                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
                         array( "name" => "0006-01-0000", "value" => $etat ),
                     ];
@@ -5112,14 +5124,8 @@
 
                     parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity );
 
-                    // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity');
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    // $this->msgToAbeille($dest."/".$srcAddr, '0402', '01-0000', $temperature);
-                    // $this->msgToAbeille($dest."/".$srcAddr, '0405', '01-0000', $humidity);
-                    // return; // Nothing more to publish
                     $attributesReportN = [
-                        array( "name" => "Batterie-Volt", "value" => $voltage ),
+                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
                         array( "name" => "0402-01-0000", "value" => $temperature / 100 ),
                         array( "name" => "0405-01-0000", "value" => $humidity / 100 ),
@@ -5146,13 +5152,8 @@
                     $lux = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
                     parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Lux='.$lux);
 
-                    // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity');
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    // $this->msgToAbeille($dest."/".$srcAddr, '0400', '01-0000', $lux); // Luminosite
-                    // return;
                     $attributesReportN = [
-                        array( "name" => "Batterie-Volt", "value" => $voltage ),
+                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
                         array( "name" => "0400-01-0000", "value" => $lux ),
                     ];
@@ -5167,12 +5168,8 @@
                     $etat = substr($payload, 88, 2);
                     parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Etat='.$etat);
 
-                    // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity');
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    // return;
                     $attributesReportN = [
-                        array( "name" => "Batterie-Volt", "value" => $voltage ),
+                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
@@ -5190,14 +5187,8 @@
 
                     parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity.', Pressure='.$pression);
 
-                    // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity');
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    // $this->msgToAbeille($dest."/".$srcAddr, '0402', '01-0000', $temperature);
-                    // $this->msgToAbeille($dest."/".$srcAddr, '0405', '01-0000', $humidity);
-                    // return;
                     $attributesReportN = [
-                        array( "name" => "Batterie-Volt", "value" => $voltage ),
+                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
                         array( "name" => '0402-01-0000', "value" => $temperature / 100 ),
                         array( "name" => '0405-01-0000', "value" => $humidity / 100 ),
@@ -5212,12 +5203,8 @@
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent($voltage));
 
-                    // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt');
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    // return;
                     $attributesReportN = [
-                        array( "name" => "Batterie-Volt", "value" => $voltage ),
+                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
@@ -5229,12 +5216,8 @@
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
 
-                    // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt');
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    // return;
                     $attributesReportN = [
-                        array( "name" => "Batterie-Volt", "value" => $voltage ),
+                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
@@ -5247,12 +5230,8 @@
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent($voltage));
 
-                    // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity');
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    // return;
                     $attributesReportN = [
-                        array( "name" => "Batterie-Volt", "value" => $voltage ),
+                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
@@ -5265,12 +5244,8 @@
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
 
-                    // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $attrId, '$this->decoded as Volt-Temperature-Humidity');
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    // return;
                     $attributesReportN = [
-                        array( "name" => "Batterie-Volt", "value" => $voltage ),
+                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
@@ -5289,11 +5264,6 @@
 
                     parserLog('debug', '  OnOff='.$onOff.', Puissance='.$puissanceValue.', Consommation='.$consoValue);
 
-                    // $this->msgToAbeille($srcAddr,$clustId,$attrId,'$this->decoded as OnOff-Puissance-Conso');
-                    // $this->msgToAbeille($dest."/".$srcAddr, '0006',  '-01-0000',        $onOff);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'tbd',   '--puissance--',   $puissanceValue);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'tbd',   '--conso--',       $consoValue);
-                    // return;
                     $attributesReportN = [
                         array( "name" => '0006-01-0000', "value" => $onOff ),
                     ];
@@ -5305,11 +5275,6 @@
                     parserLog('debug', "  Xiaomi proprietary (Double relay)");
                     parserLog('debug', "  ".json_encode($FF01));
 
-                    // $this->msgToAbeille($dest."/".$srcAddr, '0006', '01-0000',   $FF01["Etat SW 1 Binaire"]["valueConverted"]);
-                    // $this->msgToAbeille($dest."/".$srcAddr, '0006', '02-0000',   $FF01["Etat SW 2 Binaire"]["valueConverted"]);
-                    // $this->msgToAbeille($dest."/".$srcAddr, '000C', '01-0055',   $FF01["Puissance"]["valueConverted"]);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--conso--', $FF01["Consommation"]["valueConverted"]);
-                    // return;
                     $attributesReportN = [
                         array( "name" => '0006-01-0000', "value" => $FF01["Etat SW 1 Binaire"]["valueConverted"] ),
                         array( "name" => '0006-02-0000', "value" => $FF01["Etat SW 2 Binaire"]["valueConverted"] ),
@@ -5326,11 +5291,8 @@
 
                     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
 
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Volt', $voltage);
-                    // $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
-                    // return;
                     $attributesReportN = [
-                        array( "name" => 'Batterie-Volt', "value" => $voltage ),
+                        // array( "name" => 'Battery-Volt', "value" => $voltage ),
                         array( "name" => 'Batterie-Pourcent', "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
@@ -5350,20 +5312,20 @@
 
             } // End cluster 0000
 
-            else if ($clustId == "0001") { // Power configuration cluster
-                if ($attrId == "0020") { // BatteryVoltage
-                    $batteryVoltage = substr($Attribut, 0, 2);
-                    $volt = hexdec($batteryVoltage) / 10;
-                    parserLog('debug', '  BatteryVoltage='.$batteryVoltage.' => '.$volt.'V');
-                }
+            // else if ($clustId == "0001") { // Power configuration cluster
+            //     if ($attrId == "0020") { // BatteryVoltage
+            //         $batteryVoltage = substr($Attribut, 0, 2);
+            //         $volt = hexdec($batteryVoltage) / 10;
+            //         parserLog('debug', '  BatteryVoltage='.$batteryVoltage.' => '.$volt.'V');
+            //     }
 
-                else if ($attrId == "0021") { // BatteryPercentageRemaining
-                    $BatteryPercent = substr($Attribut, 0, 2);
-                    $percent = hexdec($BatteryPercent) / 2;
-                    parserLog('debug', '  BatteryPercent='.$BatteryPercent.' => '.$percent.'%');
-                    $data = $percent;
-                }
-            } // End cluster 0001/power configuration
+            //     else if ($attrId == "0021") { // BatteryPercentageRemaining
+            //         $BatteryPercent = substr($Attribut, 0, 2);
+            //         $percent = hexdec($BatteryPercent) / 2;
+            //         parserLog('debug', '  BatteryPercent='.$BatteryPercent.' => '.$percent.'%');
+            //         $data = $percent;
+            //     }
+            // } // End cluster 0001/power configuration
 
             else if ($clustId == "000C") { // Analog input cluster
                 if ($attrId == "0055") {

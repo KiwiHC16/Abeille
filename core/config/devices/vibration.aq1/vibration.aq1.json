@@ -16,8 +16,12 @@
             "include5": "setVibrationSensivityLow",
             "include6": "setVibrationSensivityMedium",
             "include7": "setVibrationSensivityHigh",
-            "include8": "Batterie-Volt",
-            "include9": "Batterie-Pourcent",
+            "Battery-Volt": {
+                "use": "zb-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "include10": "Xiaomi-ff01",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

@@ -321,12 +321,23 @@
         document.icon_visu.src = text;
     });
 
-    /* PiZigate HW reset (AbeilleEq-Main) */
+    /* PiZigate HW reset */
     function resetPiZigate() {
         console.log("resetPiZigate()");
 
-        $('#md_modal2').dialog({title: "{{Reset HW de la PiZigate}}"});
-        $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=resetPiZigate').dialog('open');
+        // $('#md_modal2').dialog({title: "{{Reset HW de la PiZigate}}"});
+        // $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=resetPiZigate').dialog('open');
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'resetPiZigate'
+            },
+            dataType: 'json',
+            global: false,
+            success: function (json_res) {
+            }
+        });
     }
 
     /* Remove given local JSON file */

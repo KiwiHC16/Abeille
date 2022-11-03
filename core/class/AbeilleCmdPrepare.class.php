@@ -102,23 +102,23 @@
             //         "address" => $address,
             //     );
             //     break;
-            case "bindShort": // OBSOLETE: Use 'bind0030' instead
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
-                $Command = array(
-                                    "bindShort"                => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $address,
-                                    "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
-                                    "targetEndpoint"           => $parameters['targetEndpoint'],
-                                    "clusterID"                => $parameters['ClusterId'],
-                                    "destinationAddress"       => $parameters['reportToAddress'],
-                                    "destinationEndpoint"      => "01",
-                                    );
-                break;
+            // case "bindShort": // OBSOLETE: Use 'bind0030' instead
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //     }
+            //     $Command = array(
+            //                         "bindShort"                => "1",
+            //                         "priority"                 => $priority,
+            //                         "dest"                     => $dest,
+            //                         "address"                  => $address,
+            //                         "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
+            //                         "targetEndpoint"           => $parameters['targetEndpoint'],
+            //                         "clusterID"                => $parameters['ClusterId'],
+            //                         "destinationAddress"       => $parameters['reportToAddress'],
+            //                         "destinationEndpoint"      => "01",
+            //                         );
+            //     break;
             case "BindToGroup": // OBSOLETE: Use 'bind0030' instead
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -770,30 +770,32 @@
                                     "duration"    => $parameters['duration'],              // FFFF to have max speed of tilt
                                     );
                 break;
-            case "setLevelStop":
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                                    "setLevelStop" => "1",
-                                    "addressMode" => "02",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address" => $address,
-                                    "sourceEndpoint" => "01",
-                                    "destinationEndpoint" => "01",
-                                    );
-                break;
-            case "setLevelStopHue":
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                                    "setLevelStop" => "1",
-                                    "addressMode" => "02",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address" => $address,
-                                    "sourceEndpoint" => "01",
-                                    "destinationEndpoint" => "0B",
-                                    );
-                break;
+            // Obsolete: Use 'cmd-0008' + 'cmd=07'
+            // case "setLevelStop":
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     $Command = array(
+            //                         "setLevelStop" => "1",
+            //                         "addressMode" => "02",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address" => $address,
+            //                         "sourceEndpoint" => "01",
+            //                         "destinationEndpoint" => "01",
+            //                         );
+            //     break;
+            // Seems unused. Anyway, use 'cmd-0008' + 'cmd=07' instead.
+            // case "setLevelStopHue":
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     $Command = array(
+            //                         "setLevelStop" => "1",
+            //                         "addressMode" => "02",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address" => $address,
+            //                         "sourceEndpoint" => "01",
+            //                         "destinationEndpoint" => "0B",
+            //                         );
+            //     break;
             case "setLevelHue":
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(

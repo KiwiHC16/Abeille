@@ -2,8 +2,12 @@
     "TS0601__TZE200_hue3yfsn": {
         "manufacturer": "Tuya",
         "model": "TV02",
-        "alternateIds": "TS0601__TZE200_e9ba97vf,TS0601__TZE200_husqqvux,TS0601__TZE200_lllliz3p",
-        "comment": "Alternate Ids from https://github.com/Koenkk/zigbee-herdsman-converters/blob/master/devices/tuya.js",
+        "alternateIds": {
+            "TS0601__TZE200_e9ba97vf": [],
+            "TS0601__TZE200_husqqvux": [],
+            "TS0601__TZE200_lllliz3p": []
+        },
+        "comment": "Alternate Ids from https:\/\/github.com\/Koenkk\/zigbee-herdsman-converters\/blob\/master\/devices\/tuya.js",
         "comment2": "No timeout so far. Can't tell how frequent is done reporting, nor how to change its freq",
         "timeout": "",
         "configuration": {
@@ -16,8 +20,12 @@
         },
         "type": "Tuya TV02",
         "commands": {
-            "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
-            "Groups": { "use": "Group-Membership" },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
             "Temperature": {
                 "use": "zb-0402-MeasuredValue",
                 "isVisible": 1
@@ -67,15 +75,34 @@
                 "use": "zb-0006-OnOff",
                 "isVisible": 1
             }
-       },
+        },
         "tuyaEF00": {
             "fromDevice": {
-                "02": { "function": "rcvThermostat-Mode" },
-                "08": { "function": "rcvValue", "info": "01-windowDetectionStatus" },
-                "10": { "function": "rcvValueDiv", "info": "01-setPoint", "div": 10 },
-                "18": { "function": "rcvValueMult", "info": "0402-01-0000", "mult": 10 },
-                "23": { "function": "rcvValue", "info": "0001-01-0021" },
-                "73": { "function": "rcvValue", "info": "0006-01-0000" }
+                "02": {
+                    "function": "rcvThermostat-Mode"
+                },
+                "08": {
+                    "function": "rcvValue",
+                    "info": "01-windowDetectionStatus"
+                },
+                "10": {
+                    "function": "rcvValueDiv",
+                    "info": "01-setPoint",
+                    "div": 10
+                },
+                "18": {
+                    "function": "rcvValueMult",
+                    "info": "0402-01-0000",
+                    "mult": 10
+                },
+                "23": {
+                    "function": "rcvValue",
+                    "info": "0001-01-0021"
+                },
+                "73": {
+                    "function": "rcvValue",
+                    "info": "0006-01-0000"
+                }
             }
         }
     }

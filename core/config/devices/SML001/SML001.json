@@ -14,13 +14,18 @@
         "type": "Philips Presence Indoor",
         "commands": {
             "include3": "presence",
-            "Luminosite": { "use": "zb-0400-MeasuredValue", "isVisible": 1 },
+            "Luminosite": {
+                "use": "zb-0400-MeasuredValue",
+                "isVisible": 1
+            },
             "Temperature": {
                 "use": "zb-0402-MeasuredValue",
                 "isVisible": 1,
                 "isHistorized": 1
             },
-            "include4 3 2": "Batterie-Hue",
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "Bind-0406-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0406",

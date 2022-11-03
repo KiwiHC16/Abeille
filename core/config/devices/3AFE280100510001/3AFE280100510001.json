@@ -20,7 +20,9 @@
                 "genericType": "SWITCH_STATE",
                 "isVisible": 1
             },
-            "include4 2": "Batterie-Volt-Konke",
+            "Battery-Volt": {
+                "use": "zb-0001-BatteryVolt"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

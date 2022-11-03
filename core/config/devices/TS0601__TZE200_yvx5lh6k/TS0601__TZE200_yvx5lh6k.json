@@ -3,8 +3,11 @@
         "manufacturer": "Tuya",
         "model": "RSH-AirBox01",
         "type": "Tuya Smart Air Box 01",
-        "alternateIds": "TS0601__TZE200_8ygsuhe1,TS0601__TZE200_ryfmq5rl",
-        "comment": "Alternate IDs from https://zigbee.blakadder.com/Tuya_RSH-AirBox01.html",
+        "alternateIds": {
+            "TS0601__TZE200_8ygsuhe1": [],
+            "TS0601__TZE200_ryfmq5rl": []
+        },
+        "comment": "Alternate IDs from https:\/\/zigbee.blakadder.com\/Tuya_RSH-AirBox01.html",
         "comment2": "This device is generating many messages that may saturate network & zigate",
         "timeout": "60",
         "category": {
@@ -52,11 +55,29 @@
         },
         "tuyaEF00": {
             "fromDevice": {
-                "02": { "function": "rcvValue", "info": "01-CO2_ppm" },
-                "12": { "function": "rcvValueMult", "info": "0402-01-0000", "mult": 10 },
-                "13": { "function": "rcvValueMult", "info": "0405-01-0000", "mult": 10 },
-                "15": { "function": "rcvValueDiv", "info": "01-VOC_ppm", "div": 10 },
-                "16": { "function": "rcvValue", "info": "01-CH20_ppm" }
+                "02": {
+                    "function": "rcvValue",
+                    "info": "01-CO2_ppm"
+                },
+                "12": {
+                    "function": "rcvValueMult",
+                    "info": "0402-01-0000",
+                    "mult": 10
+                },
+                "13": {
+                    "function": "rcvValueMult",
+                    "info": "0405-01-0000",
+                    "mult": 10
+                },
+                "15": {
+                    "function": "rcvValueDiv",
+                    "info": "01-VOC_ppm",
+                    "div": 10
+                },
+                "16": {
+                    "function": "rcvValue",
+                    "info": "01-CH20_ppm"
+                }
             }
         }
     }

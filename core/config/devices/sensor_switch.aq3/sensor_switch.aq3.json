@@ -13,8 +13,12 @@
         "type": "Xiaomi Bouton Aqara 3",
         "commands": {
             "include3": "etatSwitchDoublebSensorSwitchAq3",
-            "include5": "Batterie-Volt",
-            "include6": "Batterie-Pourcent",
+            "Battery-Volt": {
+                "use": "zb-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "include7": "Xiaomi-ff01",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

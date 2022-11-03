@@ -1,11 +1,10 @@
 {
     "zb-0001-BatteryPercent": {
         "isVisible": 0,
-        "name": "Batterie",
         "isHistorized": 0,
         "subType": "numeric",
         "invertBinary": "0",
-        "template": "vuMeter",
+        "template": "default",
         "configuration": {
             "minValue": "0",
             "maxValue": "100",

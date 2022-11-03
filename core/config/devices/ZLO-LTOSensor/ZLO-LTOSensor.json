@@ -11,15 +11,24 @@
         },
         "type": "ZLO-LTOSensor for Dev",
         "commands": {
-            "Illuminance": { "use": "zb-0400-MeasuredValue", "isVisible": 1 },
+            "Illuminance": {
+                "use": "zb-0400-MeasuredValue",
+                "isVisible": 1
+            },
             "Temperature": {
                 "use": "zb-0402-MeasuredValue",
+                "comment": "Seems to be non standard 0400-0000 attribute with direct Lux value",
+                "notStandard": 1,
                 "isVisible": 1,
                 "isHistorized": 1
             },
             "include3 2 2 2": "presence",
-            "include5": "Batterie-Volt",
-            "include6": "Batterie-Pourcent",
+            "Battery-Volt": {
+                "use": "zb-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "include7": "Xiaomi-ff01",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

@@ -3,7 +3,10 @@
         "manufacturer": "Tuya",
         "model": "TS0210",
         "type": "Tuya vibration sensor",
-        "alternateIds": "TS0210__TYZB01_3zv6oleo,TS0210__TYZB01_j9xxahcl",
+        "alternateIds": {
+            "TS0210__TYZB01_3zv6oleo": [],
+            "TS0210__TYZB01_j9xxahcl": []
+        },
         "timeout": "60",
         "category": {
             "security": "1"

@@ -13,8 +13,12 @@
         "type": "Xiaomi Inondation Aqara",
         "commands": {
             "include3": "etatFlood",
-            "include4": "Batterie-Volt",
-            "include5": "Batterie-Pourcent",
+            "Battery-Volt": {
+                "use": "zb-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "include6": "Xiaomi-ff01",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

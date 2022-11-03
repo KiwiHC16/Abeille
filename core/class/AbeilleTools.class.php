@@ -127,14 +127,32 @@
                 $devicesList[$dirEntry] = $dev;
 
                 if (isset($devConf['alternateIds'])) {
-                    $idList = explode(',', $devConf['alternateIds']);
-                    foreach ($idList as $id) {
-                        log::add('Abeille', 'debug', "getDevicesList(): Alternate ID '".$id."' for '".$dirEntry."'");
+                    $ai = $devConf['alternateIds'];
+                    /* Reminder:
+                       "alternateIds": {
+                          "sigX": {
+                            "manufacturer": "manufX", // Optional
+                            "model": "modelX", // Optional
+                            "type": "typeX" // Optional
+                            "icon": "iconX" // Optional
+                          }
+                       } */
+                    foreach ($ai as $aId => $aIdVal) {
+                        log::add('Abeille', 'debug', "getDevicesList(): Alternate ID '".$aId."' for '".$dirEntry."'");
                         $dev = array(
                             'jsonId' => $dirEntry,
                             'location' => $from
                         );
-                        $devicesList[$id] = $dev;
+                        // manufacturer, model, type or icon overload
+                        if (isset($aIdVal['manufacturer']))
+                            $dev['manufacturer'] = $aIdVal['manufacturer'];
+                        if (isset($aIdVal['model']))
+                            $dev['model'] = $aIdVal['model'];
+                        if (isset($aIdVal['type']))
+                            $dev['type'] = $aIdVal['type'];
+                        if (isset($aIdVal['icon']))
+                            $dev['icon'] = $aIdVal['icon'];
+                        $devicesList[$aId] = $dev;
                     }
                 }
             }
@@ -311,35 +329,35 @@
 
         /*
          * Read given device configuration from JSON file and associated commands.
-         * 'deviceName': JSON file name without extension
+         * 'modelName': JSON file name without extension
          * 'from': JSON file location (default=Abeille, or 'local')
          * 'mode': 0/default=load commands too, 1=split cmd call & file
          * Return: device associative array without top level key (jsonId) or false if error.
          */
-        public static function getDeviceModel($deviceName, $from="Abeille", $mode=0) {
-            // log::add('Abeille', 'debug', 'getDeviceModel start, deviceName='.$deviceName.", from=".$from);
+        public static function getDeviceModel($modelName, $from="Abeille", $mode=0) {
+            // log::add('Abeille', 'debug', 'getDeviceModel start, modelName='.$modelName.", from=".$from);
 
             if (($from == 'Abeille') || ($from == ''))
-                $modelPath = devicesDir.$deviceName.'/'.$deviceName.'.json';
+                $modelPath = devicesDir.$modelName.'/'.$modelName.'.json';
             else
-                $modelPath = devicesLocalDir.$deviceName.'/'.$deviceName.'.json';
-            log::add('Abeille', 'debug', '  modelPath='.$modelPath);
+                $modelPath = devicesLocalDir.$modelName.'/'.$modelName.'.json';
+            // log::add('Abeille', 'debug', '  modelPath='.$modelPath);
             if (!is_file($modelPath)) {
-                log::add('Abeille', 'error', 'Modèle \''.$deviceName.'\' inconnu. Utilisation du modèle par défaut.');
-                $deviceName = 'defaultUnknown';
-                $modelPath = devicesDir.$deviceName.'/'.$deviceName.'.json';
+                log::add('Abeille', 'error', 'Modèle \''.$modelName.'\' inconnu. Utilisation du modèle par défaut.');
+                $modelName = 'defaultUnknown';
+                $modelPath = devicesDir.$modelName.'/'.$modelName.'.json';
             }
 
             $jsonContent = file_get_contents($modelPath);
             $device = json_decode($jsonContent, true);
             if (json_last_error() != JSON_ERROR_NONE) {
-                log::add('Abeille', 'error', 'Le modèle JSON \''.$deviceName.'\' est corrompu.');
+                log::add('Abeille', 'error', 'Le modèle JSON \''.$modelName.'\' est corrompu.');
                 log::add('Abeille', 'debug', 'getDeviceModel(): content='.$jsonContent);
                 return false;
             }
 
-            $device = $device[$deviceName]; // Removing top key
-            $device['jsonId'] = $deviceName;
+            $device = $device[$modelName]; // Removing top key
+            $device['jsonId'] = $modelName;
             $device['jsonLocation'] = $from; // Official device or local one ?
 
             if (isset($device['commands'])) {
@@ -453,6 +471,8 @@
                                 $newCmd[$cmd1]['configuration']['returnStateTime'] = $cmd2['returnStateTime'];
                             if (isset($cmd2['returnStateValue']))
                                 $newCmd[$cmd1]['configuration']['returnStateValue'] = $cmd2['returnStateValue'];
+                            if (isset($cmd2['notStandard']))
+                                $newCmd[$cmd1]['configuration']['notStandard'] = $cmd2['notStandard'];
 
                             // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
                             $deviceCmds += $newCmd;
@@ -1284,12 +1304,13 @@
             }
         }
 
-        public static function checkRequired($type, $zigateNumber) {
-            if ($type == 'PI')
-                self::checkGpio();
-            else if ($type == 'WIFI')
-                self::checkWifi($zigateNumber);
-        }
+        // Unused
+        // public static function checkRequired($type, $zigateNumber) {
+        //     if ($type == 'PI')
+        //         self::setPIGpio();
+        //     else if ($type == 'WIFI')
+        //         self::checkWifi($zigateNumber);
+        // }
 
         /**
          * @param $zigateNumber
@@ -1307,19 +1328,25 @@
         }
 
         /**
-         * Checking 'wiringPi' proper installation & configuring GPIOs for PiZigate.
+         * A PI zigate is found. Configuring GPIO for its use.
+         * Returns: true if ok, false if error
          */
-        public static function checkGpio() {
+        public static function setPIGpio() {
             exec("command gpio -v", $out, $ret);
             if ($ret != 0) {
                 log::add('Abeille', 'error', 'WiringPi semble mal installé.');
-                log::add('Abeille', 'debug', 'checkGpio(): command gpio -v => '.json_encode($out));
-                return;
+                log::add('Abeille', 'debug', 'setPIGpio(): command gpio -v => '.json_encode($out));
+                return false;
             }
 
-            // Tcharp38: Wrong: GPIO config is done as soon as WiringPi is found but even if there is PI Zigate.
-            log::add('Abeille', 'debug', 'AbeilleTools:checkGpio(): Active PiZigate found => configuring GPIOs');
+            /* Configuring GPIO for PiZigate if one active found.
+                PiZigate reminder (using 'WiringPi'):
+                - port 0 = RESET
+                - port 2 = FLASH
+                - Production mode: FLASH=1, RESET=0 then 1 */
+            log::add('Abeille', 'debug', 'AbeilleTools:setPIGpio(): Active PiZigate found => configuring GPIOs');
             exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
+            return true;
         }
 
         /**

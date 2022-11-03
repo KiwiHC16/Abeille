@@ -1,6 +1,10 @@
 {
     "TS011F__TZ3000_cphmq0q7": {
-        "alternateIds": "TS011F__TZ3000_typdpbpg,TS011F__TZ3000_ew3ldmgx,TS011F__TZ3000_dpo1ysak",
+        "alternateIds": {
+            "TS011F__TZ3000_typdpbpg": [],
+            "TS011F__TZ3000_ew3ldmgx": [],
+            "TS011F__TZ3000_dpo1ysak": []
+        },
         "comment": "Smart Plug 16A EU, TS011F by Tuya found under different brands",
         "manufacturer": "Sixwgh",
         "model": "WH025",
@@ -50,8 +54,9 @@
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-            "Poll 0006": { "use": "poll-0006-0000" },
-            
+            "Poll 0006": {
+                "use": "poll-0006-0000"
+            },
             "Total power": {
                 "use": "zb-0702-CurrentSummationDelivered",
                 "params": "div=1",
@@ -72,8 +77,9 @@
                 "params": "clustId=0702&attrType=25&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-            "Poll 0702": { "use": "poll-0702-0000" },
-
+            "Poll 0702": {
+                "use": "poll-0702-0000"
+            },
             "RMS Voltage": {
                 "use": "zb-0B04-RMSVoltage",
                 "params": "mult=1&div=1",
@@ -101,7 +107,9 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0B04&attrId=050B"
             },
-            "Poll 0B04": { "use": "poll-0B04-0505-0508-050B" }
+            "Poll 0B04": {
+                "use": "poll-0B04-0505-0508-050B"
+            }
         }
     }
 }

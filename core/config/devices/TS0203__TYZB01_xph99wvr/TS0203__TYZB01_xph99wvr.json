@@ -2,7 +2,9 @@
     "TS0203__TYZB01_xph99wvr": {
         "manufacturer": "Tuya",
         "zbManufacturer": "_TYZB01_xph99wvr",
-        "alternateIds": "TS0203__TYZB01_ncdapbwy",
+        "alternateIds": {
+            "TS0203__TYZB01_ncdapbwy": []
+        },
         "model": "ZM-CG205",
         "timeout": "60",
         "configuration": {
@@ -24,8 +26,10 @@
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },
-
-            "ZoneStatus": { "use": "zb-0500-ZoneStatus", "isVisible": 1 },
+            "ZoneStatus": {
+                "use": "zb-0500-ZoneStatus",
+                "isVisible": 1
+            },
             "Bind-0500-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0500",

@@ -18,13 +18,13 @@
     }
 
     include_once __DIR__.'/AbeilleLog.php';
-    logSetConf("AbeilleCmd.log", true);
-    logMessage('info', '>>> Démarrage d\'AbeilleCmd');
-
     include_once __DIR__.'/../../../../core/php/core.inc.php';
     include_once __DIR__.'/../class/AbeilleCmdQueue.class.php';
     include_once __DIR__.'/AbeilleOTA.php';
     include_once __DIR__.'/AbeilleCmd-Tuya.php';
+
+    logSetConf("AbeilleCmd.log", true);
+    logMessage('info', '>>> Démarrage d\'AbeilleCmd');
 
     // ***********************************************************************************************
     // MAIN

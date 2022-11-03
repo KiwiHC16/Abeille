@@ -3,7 +3,10 @@
         "manufacturer": "Profalux",
         "zbManufacturer": "Profalux",
         "model": "Volets 2nd gen",
-        "alternateIds": "MOT-C1Z06F,MOT-C1Z10C",
+        "alternateIds": {
+            "MOT-C1Z06F": [],
+            "MOT-C1Z10C": []
+        },
         "timeout": "60",
         "category": {
             "automatism": "1"
@@ -38,7 +41,10 @@
             },
             "include0008-8": "setLevelVoletDown",
             "include0008-7": "setLevelVoletUp",
-            "include0008-6": "levelVoletStop",
+            "Stop": {
+                "use": "zbCmdG-0008-StopWithOnOff",
+                "isVisible": 1
+            },
             "CurrentLevel": {
                 "use": "zb-0008-CurrentLevel",
                 "genericType": "FLAP_STATE",

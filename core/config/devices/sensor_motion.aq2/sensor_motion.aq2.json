@@ -13,9 +13,18 @@
         "type": "Xiaomi Presence Aqara 2",
         "commands": {
             "include3": "presence",
-            "Illuminance": { "use": "zb-0400-MeasuredValue", "isVisible": 1 },
-            "include5": "Batterie-Volt",
-            "include6": "Batterie-Pourcent",
+            "Illuminance": {
+                "use": "zb-0400-MeasuredValue",
+                "comment": "Seems to be non standard 0400-0000 attribute with direct Lux value",
+                "notStandard": 1,
+                "isVisible": 1
+            },
+            "Battery-Volt": {
+                "use": "zb-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "include7": "Xiaomi-ff01",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

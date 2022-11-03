@@ -3,7 +3,13 @@
         "manufacturer": "Heiman",
         "model": "HS1CA ?",
         "type": "Heiman smart CO sensor",
-        "alternateIds": "COSensor-N,CO_V15,CO_YDLV10,CO_V16,1ccaa94c49a84abaa9e38687913947ba",
+        "alternateIds": {
+            "COSensor-N": [],
+            "CO_V15": [],
+            "CO_YDLV10": [],
+            "CO_V16": [],
+            "1ccaa94c49a84abaa9e38687913947ba": []
+        },
         "timeout": "60",
         "category": {
             "automatism": "1"

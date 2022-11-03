@@ -74,8 +74,7 @@
     }
 
     /* Returns Zigbee APS status from code. */
-    function zbGetAPSStatus($status)
-    {
+    function zbGetAPSStatus($status) {
         $status = strtoupper($status);
 
         /* Zigbee APS statuses */
@@ -107,8 +106,7 @@
     }
 
     /* Returns Zigbee ZCL status from code. */
-    function zbGetZCLStatus($status)
-    {
+    function zbGetZCLStatus($status) {
         $status = strtolower($status);
 
         /* ZCL statuses */
@@ -167,20 +165,20 @@
         "0000" => array(
             "name" => "Basic",
             "attributes" => array(
-                "0000" => array( "name" => "ZCLVersion", "access" => "R" ),
-                "0001" => array( "name" => "ApplicationVersion", "access" => "R" ),
-                "0002" => array( "name" => "StackVersion", "access" => "R" ),
-                "0003" => array( "name" => "HWVersion", "access" => "R" ),
-                "0004" => array( "name" => "ManufacturerName", "access" => "R" ),
-                "0005" => array( "name" => "ModelIdentifier", "access" => "R" ),
-                "0006" => array( "name" => "DateCode", "access" => "R" ),
-                "0007" => array( "name" => "PowerSource", "access" => "R" ),
-                "0010" => array( "name" => "LocationDescription", "access" => "RW" ),
-                "0011" => array( "name" => "PhysicalEnvironment", "access" => "RW" ),
-                "0012" => array( "name" => "DeviceEnabled", "access" => "RW" ),
-                "0013" => array( "name" => "AlarmMask", "access" => "RW" ),
-                "0014" => array( "name" => "DisableLocalConfig", "access" => "RW" ),
-                "4000" => array( "name" => "SWBuildID", "access" => "R" ),
+                "0000" => array( "name" => "ZCLVersion", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0001" => array( "name" => "ApplicationVersion", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0002" => array( "name" => "StackVersion", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0003" => array( "name" => "HWVersion", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0004" => array( "name" => "ManufacturerName", "access" => "R", "dataType" => 0x42 ), // string
+                "0005" => array( "name" => "ModelIdentifier", "access" => "R", "dataType" => 0x42 ), // string
+                "0006" => array( "name" => "DateCode", "access" => "R", "dataType" => 0x42 ), // string
+                "0007" => array( "name" => "PowerSource", "access" => "R", "dataType" => 0x30 ), // enum8
+                "0010" => array( "name" => "LocationDescription", "access" => "RW", "dataType" => 0x42 ), // string
+                "0011" => array( "name" => "PhysicalEnvironment", "access" => "RW", "dataType" => 0x30 ), // enum8
+                "0012" => array( "name" => "DeviceEnabled", "access" => "RW", "dataType" => 0x10 ), // bool
+                "0013" => array( "name" => "AlarmMask", "access" => "RW", "dataType" => 0x18 ), // map8
+                "0014" => array( "name" => "DisableLocalConfig", "access" => "RW", "dataType" => 0x18 ), // map8
+                "4000" => array( "name" => "SWBuildID", "access" => "R", "dataType" => 0x42 ), // string
             ),
             "commands" => array(
                 "00" => array( "name" => "Reset to factory defaults" ),
@@ -289,7 +287,7 @@
                 "04" => array( "name" => "Move To Level With OnOff" ),
                 "05" => array( "name" => "Move With OnOff" ),
                 "06" => array( "name" => "Step With OnOff" ),
-                // "07" => array( "name" => "Stop" ), // Another "stop" (0x07) ?
+                "07" => array( "name" => "Stop With OnOff" ),
             ),
         ),
         "0009" => array(

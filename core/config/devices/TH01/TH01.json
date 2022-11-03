@@ -1,6 +1,8 @@
 {
     "TH01": {
-        "alternateIds": "66666",
+        "alternateIds": {
+            "66666": []
+        },
         "comment": "Zigbee ModelIdentifier can be 66666 or TH01",
         "manufacturer": "Sonoff",
         "model": "SNZB-02",
@@ -45,7 +47,10 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 12
             },
-            "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 },
+            "Humidity": {
+                "use": "zb-0405-MeasuredValue",
+                "isVisible": 1
+            },
             "Bind-0405-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0405",

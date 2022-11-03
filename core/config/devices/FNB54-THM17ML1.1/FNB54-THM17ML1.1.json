@@ -15,8 +15,13 @@
                 "isVisible": 1,
                 "isHistorized": 1
             },
-            "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 },
-            "include5": "Batterie-Volt-Konke",
+            "Humidity": {
+                "use": "zb-0405-MeasuredValue",
+                "isVisible": 1
+            },
+            "Battery-Volt": {
+                "use": "zb-0001-BatteryVolt"
+            },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1

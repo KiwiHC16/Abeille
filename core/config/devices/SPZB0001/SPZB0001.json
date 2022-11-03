@@ -1,5 +1,7 @@
 {
     "SPZB0001": {
+        "manufacturer": "Eurotronic",
+        "model": "SPZB0001",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -9,7 +11,7 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Eurotronic Spirit",
+        "type": "Spirit Radiator Thermostat",
         "commands": {
             "Identify": {
                 "use": "Identify",
@@ -20,7 +22,11 @@
             "include25 2": "spiritTemperatureConsigneSet",
             "include25 2 2 2 2": "spiritTemperature",
             "include25 2 2 3": "spiritTemperatureGet",
-            "include25 2 2 2 2 3": "spiritTemperatureBindShortToZigate",
+            "Bind 0201-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0201",
+                "execAtCreation": "yes"
+            },
             "include25 2 2 2 2 2": "spiritTemperatureSetReport",
             "include25 2 2 3 2 2": "spiritPiHeatingDemand",
             "include25 2 2 3 2": "spiritPiHeatingDemandGet",

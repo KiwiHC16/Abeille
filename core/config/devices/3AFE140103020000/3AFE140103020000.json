@@ -1,5 +1,7 @@
 {
     "3AFE140103020000": {
+        "manufacturer": "Konke",
+        "model": "?",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -20,7 +22,9 @@
                 "use": "zb-0405-MeasuredValue",
                 "isVisible": 1
             },
-            "include4 2": "Batterie-Volt-Konke",
+            "Battery-Volt": {
+                "use": "zb-0001-BatteryVolt"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

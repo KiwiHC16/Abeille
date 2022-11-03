@@ -3,7 +3,9 @@
         "manufacturer": "Ikea",
         "model": "10400408",
         "comment 1": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/689",
-        "alternateIds": "TRADFRISignalRepeater",
+        "alternateIds": {
+            "TRADFRISignalRepeater": []
+        },
         "timeout": "60",
         "configuration": {
             "mainEP": "01",

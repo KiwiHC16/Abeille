@@ -2,7 +2,10 @@
     "LTW001": {
         "manufacturer": "Philips",
         "model": "LTW001",
-        "alternateIds": "LTW015,LTW004",
+        "alternateIds": {
+            "LTW015": [],
+            "LTW004": []
+        },
         "timeout": "60",
         "configuration": {
             "mainEP": "0B",

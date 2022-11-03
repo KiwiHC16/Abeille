@@ -16,8 +16,9 @@
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },
-
-            "include4 3 2": "Batterie-Hue",
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "Bind 0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
@@ -30,8 +31,10 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },
-
-            "Luminosite": { "use": "zb-0400-MeasuredValue", "isVisible": 1 },
+            "Luminosite": {
+                "use": "zb-0400-MeasuredValue",
+                "isVisible": 1
+            },
             "Bind 0400-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0400",
@@ -45,7 +48,6 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-
             "Temperature": {
                 "use": "zb-0402-MeasuredValue",
                 "isVisible": 1,
@@ -64,7 +66,6 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 12
             },
-
             "include3": "presence",
             "Bind 0406-ToZigate": {
                 "use": "zbBindToZigate",
@@ -72,7 +73,7 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-             "SetReporting 0406-0000": {
+            "SetReporting 0406-0000": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0406&attrType=18&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",

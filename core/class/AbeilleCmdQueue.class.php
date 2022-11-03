@@ -352,11 +352,11 @@
                 return;
             }
             if (!ctype_xdigit($cmd)) {
-                cmdLog('error', '      Invalid cmd. Not hexa ! ('.$cmd.')');
+                cmdLog('error', 'Invalid cmd. Not hexa ! ('.$cmd.')');
                 return;
             }
             if (($payload != '') && !ctype_xdigit($payload)) {
-                cmdLog('error', '      Invalid payload. Not hexa ! ('.$payload.')');
+                cmdLog('error', 'Invalid payload. Not hexa ! ('.$payload.')');
                 return;
             }
 

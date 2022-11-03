@@ -1,6 +1,10 @@
 {
     "WarningDevice-EF-3.0": {
-        "alternateIds": "WarningDevice,SRHMP-I1,TS0216__TYZB01_8scntis1",
+        "alternateIds": {
+            "WarningDevice": [],
+            "SRHMP-I1": [],
+            "TS0216__TYZB01_8scntis1": []
+        },
         "manufacturer": "Heiman",
         "model": "HS2WD",
         "type": "Heiman HS2WD warning device",

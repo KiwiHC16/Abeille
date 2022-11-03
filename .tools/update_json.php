@@ -49,6 +49,20 @@
             }
         }
 
+        if (isset($dev[$devName]['alternateIds'])) {
+            $ai = $dev[$devName]['alternateIds'];
+            if (gettype($ai) == "string") {
+                $sArr = explode(",", $ai);
+                $ai = [];
+                foreach ($sArr as $aId) {
+                    $ai[$aId] = [];
+                }
+                $dev[$devName]['alternateIds'] = $ai;
+                $devUpdated = true;
+                echo "  'alternateIds' syntax updated.\n";
+            }
+        }
+
         if (!isset($dev[$devName]['category'])) {
             if (isset($dev[$devName]['Categorie'])) {
                 $dev[$devName]['category'] = $dev[$devName]['Categorie'];
@@ -102,14 +116,6 @@
             }
         } // End 'configuration'
 
-        if (!isset($dev[$devName]['commands'])) {
-            if (isset($dev[$devName]['Commandes'])) {
-                $dev[$devName]['commands'] = $dev[$devName]['Commandes'];
-                unset($dev[$devName]['Commandes']);
-                $devUpdated = true;
-                echo "  'Commandes' renamed to 'commands'.\n";
-            }
-        }
         if (isset($dev[$devName]['commands'])) {
             $commands = $dev[$devName]['commands'];
             $commands2 = [];
@@ -148,6 +154,30 @@
                         "params" => "clustId=0001&attrId=0021",
                     );
                     $commands2["Get Battery-Percent"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "Batterie-Volt") && $oldSyntax) {
+                    $commands2["Battery-Volt"] = Array(
+                        "use"=> "zb-0001-BatteryVolt"
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "Batterie-Volt-Konke") && $oldSyntax) {
+                    $commands2["Battery-Volt"] = Array(
+                        "use"=> "zb-0001-BatteryVolt"
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "Batterie-Pourcent") && $oldSyntax) {
+                    $commands2["Battery-Percent"] = Array(
+                        "use"=> "zb-0001-BatteryPercent"
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "Batterie-Hue") && $oldSyntax) {
+                    $commands2["Battery-Percent"] = Array(
+                        "use"=> "zb-0001-BatteryPercent"
+                    );
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
@@ -393,6 +423,14 @@
                         "params" => "clustId=0008&attrId=0000"
                     );
                     $commands2["Get-CurrentLevel"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "levelVoletStop") && $oldSyntax) {
+                    $commands2["Stop"] = Array(
+                        "use" => "zbCmdG-0008-StopWithOnOff",
+                        // "params" => "clustId=0008&attrId=0000",
+                        "isVisible" => 1,
+                    );
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }

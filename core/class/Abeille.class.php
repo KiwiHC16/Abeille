@@ -97,8 +97,7 @@ class Abeille extends eqLogic
      *
      * @return Does not return anything as all action are triggered by sending messages in queues
      */
-    public static function executePollCmds($period)
-    {
+    public static function executePollCmds($period) {
         $cmds = cmd::searchConfiguration('Polling', 'Abeille');
         foreach ($cmds as $cmd) {
             if ($cmd->getConfiguration('Polling') != $period)
@@ -118,8 +117,7 @@ class Abeille extends eqLogic
      *
      * @return  Does not return anything as all action are triggered by sending messages in queues
      */
-    public static function refreshCmd()
-    {
+    public static function refreshCmd() {
         global $abQueues;
 
         log::add('Abeille', 'debug', 'refreshCmd: start');
@@ -146,8 +144,7 @@ class Abeille extends eqLogic
      *
      * @return              Does not return anything as all action are triggered by sending messages in queues
      */
-    public static function getIEEE($address)
-    {
+    public static function getIEEE($address) {
         if (strlen(self::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none')) == 16) {
             return self::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none');
         } else {
@@ -181,9 +178,8 @@ class Abeille extends eqLogic
      *
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
-    public static function cronDaily()
-    {
-        log::add('Abeille', 'debug', 'Starting cronDaily ------------------------------------------------------------------------------------------------------------------------');
+    public static function cronDaily() {
+        log::add('Abeille', 'debug', 'cronDaily() starting');
 
         $preventLQIRequest = config::byKey('ab::preventLQIAutoUpdate', 'Abeille', 'no');
         if ($preventLQIRequest == "yes") {
@@ -208,42 +204,42 @@ class Abeille extends eqLogic
      *
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
-    public static function cronHourly()
-    {
-        log::add('Abeille', 'debug', 'Starting cronHourly ------------------------------------------------------------------------------------------------------------------------');
-        log::add('Abeille', 'debug', 'Check Zigate Presence');
+    public static function cronHourly() {
+        log::add('Abeille', 'debug', 'cronHourly() starting');
 
-        $config = AbeilleTools::getParameters();
-if (0) {
-        //--------------------------------------------------------
-        // Refresh Ampoule Ikea Bind et set Report
-        log::add('Abeille', 'debug', 'Refresh Ampoule Ikea Bind et set Report');
+        // log::add('Abeille', 'debug', 'Check Zigate Presence');
 
-        $eqLogics = Abeille::byType('Abeille');
-        $i = 0;
-        foreach ($eqLogics as $eqLogic) {
-            // Filtre sur Ikea
-            if (strpos("_".$eqLogic->getConfiguration("ab::icon"), "IkeaTradfriBulb") > 0) {
-                list($dest, $addr) = explode("/", $eqLogic->getLogicalId());
-                $i = $i + 1;
+        // $config = AbeilleTools::getParameters();
+// if (0) {
+//         //--------------------------------------------------------
+//         // Refresh Ampoule Ikea Bind et set Report
+//         log::add('Abeille', 'debug', 'Refresh Ampoule Ikea Bind et set Report');
 
-                // Recupere IEEE de la Ruche/ZiGate
-                $ZiGateIEEE = self::getIEEE($dest.'/0000');
+//         $eqLogics = Abeille::byType('Abeille');
+//         $i = 0;
+//         foreach ($eqLogics as $eqLogic) {
+//             // Filtre sur Ikea
+//             if (strpos("_".$eqLogic->getConfiguration("ab::icon"), "IkeaTradfriBulb") > 0) {
+//                 list($dest, $addr) = explode("/", $eqLogic->getLogicalId());
+//                 $i = $i + 1;
 
-                // Recupere IEEE de l Abeille
-                $addrIEEE = self::getIEEE($dest.'/'.$addr);
+//                 // Recupere IEEE de la Ruche/ZiGate
+//                 $ZiGateIEEE = self::getIEEE($dest.'/0000');
 
-                log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr);
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/bindShort&time=".(time() + (($i * 33) + 1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE);
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/bindShort&time=".(time() + (($i * 33) + 2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE);
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/setReport&time=".(time() + (($i * 33) + 3)), "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10");
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/setReport&time=".(time() + (($i * 33) + 4)), "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20");
-            }
-        }
-        if (($i * 33) > (3600)) {
-            message::add("Abeille", "Danger il y a trop de message a envoyer dans le cron 1 heure.", "Contactez KiwiHC16 sur le Forum.");
-        }
-    }
+//                 // Recupere IEEE de l Abeille
+//                 $addrIEEE = self::getIEEE($dest.'/'.$addr);
+
+//                 log::add('Abeille', 'debug', 'Refresh bind and report for Ikea Bulb: '.$addr);
+//                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/bindShort&time=".(time() + (($i * 33) + 1)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0006&reportToAddress=".$ZiGateIEEE);
+//                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/bindShort&time=".(time() + (($i * 33) + 2)), "address=".$addr."&targetExtendedAddress=".$addrIEEE."&targetEndpoint=01&ClusterId=0008&reportToAddress=".$ZiGateIEEE);
+//                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/setReport&time=".(time() + (($i * 33) + 3)), "address=".$addr."&ClusterId=0006&AttributeId=0000&AttributeType=10");
+//                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/0000/setReport&time=".(time() + (($i * 33) + 4)), "address=".$addr."&ClusterId=0008&AttributeId=0000&AttributeType=20");
+//             }
+//         }
+//         if (($i * 33) > (3600)) {
+//             message::add("Abeille", "Danger il y a trop de message a envoyer dans le cron 1 heure.", "Contactez KiwiHC16 sur le Forum.");
+//         }
+//     }
         //--------------------------------------------------------
         // Poll Cmd
         self::executePollCmds("cronHourly");
@@ -271,8 +267,7 @@ if (0) {
      *
      * @return          Does not return anything as all action are triggered by sending messages in queues
      */
-    public static function cron15()
-    {
+    public static function cron15() {
         global $abQueues;
 
         /* If main daemon is not running, cron must do nothing */
@@ -428,8 +423,7 @@ if (0) {
      * @param none
      * @return nothing
      */
-    public static function cron()
-    {
+    public static function cron() {
         /* If main daemon is not running, cron must do nothing */
         if (AbeilleTools::isAbeilleCronRunning() == false) {
             log::add('Abeille', 'debug', 'cron(): Main daemon stopped => cron1 canceled');
@@ -660,7 +654,7 @@ if (0) {
         $smId = @shmop_open(12, "a", 0, 0);
         if ($smId !== false) {
             $smContent = shmop_read($smId, 0, shmop_size($smId));
-            log::add('Abeille', 'debug', 'deamon_start(): smContent='.$smContent);
+            log::add('Abeille', 'debug', 'deamon_start(): starting. smContent='.$smContent);
             shmop_close($smId);
             $smContent = json_decode($smContent, true);
             if (isset($smContent['daemonsPaused']) && ($smContent['daemonsPaused'] == true)) {
@@ -668,7 +662,7 @@ if (0) {
                 return;
             }
         } else
-            log::add('Abeille', 'debug', 'deamon_start(): NO shared mem');
+            log::add('Abeille', 'debug', 'deamon_start(): starting. No shared mem');
 
         /* Some checks before starting daemons
                - Are dependancies ok ?
@@ -716,20 +710,13 @@ if (0) {
                 $config['ab::zgEnabled'.$zgId] = 'N';
                 config::save('ab::zgEnabled'.$zgId, 'N', 'Abeille');
                 log::add('Abeille', 'error', $error." ! Zigate désactivée.");
-            }
-        }
-
-        /* Configuring GPIO for PiZigate if one active found.
-            PiZigate reminder (using 'WiringPi'):
-            - port 0 = RESET
-            - port 2 = FLASH
-            - Production mode: FLASH=1, RESET=0 then 1 */
-        for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-            if (($config['ab::zgPort'.$i] == 'none') or ($config['ab::zgEnabled'.$i] != 'Y'))
-                continue; // Undefined or disabled
-            if ($config['ab::zgType'.$i] == "PI") {
-                AbeilleTools::checkGpio(); // Found an active PI Zigate, needed once
-                break;
+            } else if ($config['ab::zgType'.$zgId] == "PI") {
+                /* Configuring GPIO for PiZigate if one active found.
+                    PiZigate reminder (using 'WiringPi'):
+                    - port 0 = RESET
+                    - port 2 = FLASH
+                    - Production mode: FLASH=1, RESET=0 then 1 */
+                AbeilleTools::setPIGpio(); // Found an active PI Zigate. Configure GPIO (needed once).
             }
         }
 
@@ -905,6 +892,7 @@ if (0) {
             self::createRuche("Abeille".$zgId);
 
             // Configuring zigate: TODO: This should be done on Abeille startup or on new beehive creation.
+            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/resetZg", "");
             Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/startZgNetwork", "");
             Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgTimeServer", "");
             Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/getZgVersion", "");
@@ -1494,24 +1482,6 @@ if (0) {
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Si equipement et cmd existe alors on met la valeur a jour
         if (is_object($eqLogic) && is_object($cmdLogic)) {
-            // /* Traitement particulier pour les batteries */
-            // if ($cmdId == "Batterie-Volt") {
-            //     /* Volt en milli V. Max a 3,1V Min a 2,7V, stockage en % batterie */
-            //     // Tcharp38: To be removed. Should not be systematic. Device may report percent too */
-            //     $eqLogic->setStatus('battery', self::volt2pourcent($value));
-            //     $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-            // }
-            // else if (($cmdId == "Battery-Percent") || ($cmdId == "Batterie-Pourcent")) {
-            //     log::add('Abeille', 'debug', "  Battery % reporting: ".$cmdId.", val=".$value);
-            //     $eqLogic->setStatus('battery', $value);
-            //     $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-            // }
-            // else if (preg_match("/^0001-[0-9A-F]*-0021/", $cmdId)) {
-            //     log::add('Abeille', 'debug', "  Battery % reporting: ".$cmdId.", val=".$value);
-            //     $eqLogic->setStatus('battery', $value);
-            //     $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-            // }
-
             /* Traitement particulier pour la remontée de nom qui est utilisé pour les ping des routeurs */
             // if (($cmdId == "0000-0005") || ($cmdId == "0000-0010")) {
             // if (preg_match("/^0000-[0-9A-F]*-*0005/", $cmdId) || preg_match("/^0000-[0-9A-F]*-*0010/", $cmdId)) {
@@ -1627,9 +1597,7 @@ if (0) {
 
     // Check if received attribute is a battery information
     public static function checkIfBatteryInfo($eqLogic, $attrName, $attrVal) {
-        if ($attrName == "Batterie-Volt") {
-            /* Volt en milli V. Max a 3,1V Min a 2,7V, stockage en % batterie */
-            // Tcharp38: To be removed. Should not be systematic. Device may report percent too */
+        if ($attrName == "Battery-Volt") {
             $eqLogic->setStatus('battery', self::volt2pourcent($attrVal));
             $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
         } else if (($attrName == "Battery-Percent") || ($attrName == "Batterie-Pourcent")) {
@@ -1947,7 +1915,15 @@ if (0) {
                     log::add('Abeille', 'debug', "  Unknown Jeedom command logicId='".$attr['name']."'");
                 } else {
                     $cmdName = $cmdLogic->getName();
-                    log::add('Abeille', 'debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']);
+                    $unit = $cmdLogic->getUnite();
+                    if ($unit === null)
+                        $unit = '';
+                    // WARNING: value might not be the final one if 'calculValueOffset' is used
+                    $cvo = $cmdLogic->getConfiguration('calculValueOffset', '');
+                    if ($cvo == '')
+                        log::add('Abeille', 'debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']." ".$unit);
+                    else
+                        log::add('Abeille', 'debug', "  '".$cmdName."' (".$attr['name'].") => ".$attr['value']." (calculValueOffset=".$cvo.")");
                     $eqLogic->checkAndUpdateCmd($cmdLogic, $attr['value']);
 
                     // Check if any action cmd must be executed triggered by this update
@@ -1999,10 +1975,12 @@ if (0) {
                         Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgMode", "mode=normal");
                     }
                     // TODO: Different msg according to v1 or v2
-                    if (hexdec($msg['minor']) < 0x031E)
-                        message::add('Abeille', 'Attention: La zigate '.$zgId.' fonctionne avec un vieux FW. Une version >= 3.1E est requise pour un fonctionnement optimal d\'Abeille.');
-                    else if (hexdec($msg['minor']) < 0x0321)
-                        message::add('Abeille', 'Il est recommandé de mettre à jour votre Zigate avec le dernier FW disponible.');
+                    if (hexdec($msg['minor']) < 0x0321) {
+                        if (hexdec($msg['minor']) < 0x031E)
+                            message::add('Abeille', 'Attention: La zigate '.$zgId.' fonctionne avec un trop vieux FW incompatible avec Abeille. Merci de faire une mise-à-jour en 3.21 ou supérieur.');
+                        else
+                            message::add('Abeille', "Il est recommandé de mettre à jour votre Zigate avec la version '3.21'.");
+                    }
                 }
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['minor']);
             }
@@ -2230,13 +2208,12 @@ if (0) {
         log::add('Abeille', 'debug', "msgFromParser(): Ignored msg ".json_encode($msg));
     } // End msgFromParser()
 
-    public static function publishMosquitto($queueId, $priority, $topic, $payload)
-    {
+    public static function publishMosquitto($queueId, $priority, $topic, $payload) {
         static $queueStatus = []; // "ok" or "error"
 
         $queue = msg_get_queue($queueId);
-        if ($queue == false) {
-            // log::add('Abeille', 'error', "publishMosquitto(): La queue ".$queueId." n'existe pas. Message ignoré.");
+        if ($queue === false) {
+            log::add('Abeille', 'error', "publishMosquitto(): La queue ".$queueId." n'existe pas. Message ignoré.");
             return;
         }
         if (($stat = msg_stat_queue($queue)) == false) {
@@ -2273,8 +2250,7 @@ if (0) {
     } // End publishMosquitto()
 
     // Beehive creation/update function. Called on daemon startup or new beehive creation.
-    public static function createRuche($dest)
-    {
+    public static function createRuche($dest) {
         $eqLogic = self::byLogicalId($dest."/0000", 'Abeille');
         if (!is_object($eqLogic)) {
             message::add("Abeille", "Création de l'équipement 'Ruche' en cours. Rafraichissez votre dashboard dans qq secondes.", '');
@@ -2872,48 +2848,53 @@ if (0) {
             }
 
             /* Updating command 'configuration' fields.
-               In case of update, some fields may no longer be required ($unusedConfKey).
+               In case of update, some fields may no longer be required ($unusedConfKeys).
                They are removed if not defined in JSON model. */
-            // Tcharp38: TODO: For best cleanup all accepted keys should be listed hereafter. Any other should be removed.
-            $unusedConfKey = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'repeatEventManagement', 'topic', 'Polling', 'RefreshData'];
-            array_push($unusedConfKey, 'ab::trigOut', 'ab::trigOutOffset', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay');
+            $unusedConfKeys = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'repeatEventManagement', 'topic', 'Polling', 'RefreshData'];
+            array_push($unusedConfKeys, 'ab::trigOut', 'ab::trigOutOffset', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'ab::notStandard');
+            // Abeille specific keys must be renamed when taken from model (ex: trigOut => ab::trigOut)
+            $toRename = ['trigOut', 'trigOutOffset', 'notStandard'];
             if (isset($mCmd["configuration"])) {
-                $configuration = $mCmd["configuration"];
+                $mCmdConf = $mCmd["configuration"];
 
-                if (isset($configuration["trigOut"]))
-                    $cmdLogic->setConfiguration('ab::trigOut', $configuration["trigOut"]);
-                else
-                    $cmdLogic->setConfiguration('ab::trigOut', null); // Removing config entry
-                if (isset($configuration["trigOutOffset"]))
-                    $cmdLogic->setConfiguration('ab::trigOutOffset', $configuration["trigOutOffset"]);
-                else
-                    $cmdLogic->setConfiguration('ab::trigOutOffset', null); // Removing config entry
+                // if (isset($mCmdConf["trigOut"]))
+                //     $cmdLogic->setConfiguration('ab::trigOut', $mCmdConf["trigOut"]);
+                // else
+                //     $cmdLogic->setConfiguration('ab::trigOut', null); // Removing config entry
+                // if (isset($mCmdConf["trigOutOffset"]))
+                //     $cmdLogic->setConfiguration('ab::trigOutOffset', $mCmdConf["trigOutOffset"]);
+                // else
+                //     $cmdLogic->setConfiguration('ab::trigOutOffset', null); // Removing config entry
 
-                foreach ($configuration as $confKey => $confValue) {
+                foreach ($mCmdConf as $confKey => $confValue) {
                     // Trick for conversion 'key' => 'ab::key' for Abeille specifics
                     // Note: this is currently not applied to all Abeille specific fields.
-                    if ($confKey == 'trigOut')
-                        $confKey = "ab::trigOut";
-                    else if ($confKey == 'trigOutOffset')
-                        $confKey = "ab::trigOutOffset";
+                    // if ($confKey == 'trigOut')
+                    //     $confKey = "ab::trigOut";
+                    // else if ($confKey == 'trigOutOffset')
+                    //     $confKey = "ab::trigOutOffset";
+                    if (in_array($confKey, $toRename))
+                        $confKey = "ab::".$confKey;
 
                     $cmdLogic->setConfiguration($confKey, $confValue);
 
                     // $confKey is used => no cleanup required
-                    foreach ($unusedConfKey as $uk => $uv) {
-                        if ($uv != $confKey)
-                            continue;
-                        unset($unusedConfKey[$uk]);
-                    }
+                    $keyIdx = array_search($confKey, $unusedConfKeys);
+                    unset($unusedConfKeys[$keyIdx]);
+                    // foreach ($unusedConfKeys as $uk => $uv) {
+                    //     if ($uv != $confKey)
+                    //         continue;
+                    //     unset($unusedConfKeys[$uk]);
+                    // }
                 }
             }
 
-            /* Removing any obsolete 'configuration' field */
-            foreach ($unusedConfKey as $confKey) {
-                // Tcharp38: Is it the proper way to know if entry exists ?
-                if ($cmdLogic->getConfiguration($confKey) == null)
-                    continue;
-                log::add('Abeille', 'debug', '  Removing obsolete configuration key: '.$confKey);
+            /* Removing any obsolete 'configuration' fields (those remaining in 'unusedConfKeys') */
+            foreach ($unusedConfKeys as $confKey) {
+                // If key is defined but set to null, no way to detect this. So force remove all the time.
+                // if ($cmdLogic->getConfiguration($confKey) == null)
+                //     continue;
+                // log::add('Abeille', 'debug', '  Removing obsolete configuration key: '.$confKey);
                 $cmdLogic->setConfiguration($confKey, null); // Removing config entry
             }
 

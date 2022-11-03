@@ -21,7 +21,10 @@
             },
             "include0008-8": "setLevelVoletDown",
             "include0008-7": "setLevelVoletUp",
-            "include0008-6": "levelVoletStop",
+            "Stop": {
+                "use": "zbCmdG-0008-StopWithOnOff",
+                "isVisible": 1
+            },
             "Not Closed": {
                 "use": "zb-0006-OnOff",
                 "nextLine": "after"

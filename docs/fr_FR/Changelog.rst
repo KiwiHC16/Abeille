@@ -1,7 +1,22 @@
 ChangeLog
 =========
 
-221103-BETA-1
+- Equipements: Qq modeles revus.
+- Modèle de commandes: 'Batterie-Volt' remplacé par '0001-01-0020'.
+- Interne: Constantes Zigbee: Ajout data types cluster 0000.
+- Page EQ/avancé: Message d'erreur si champ manquant.
+- Interne: AbeilleCmd: Meilleur support type 'string' pour 'writeAttribute()'.
+- Interne: Parser: Cluster 0001 (batterie) traité par 'decode8002()'.
+- Modeles: Commandes obsoletes: 'Batterie-Hue', 'Batterie-Pourcent' & 'Batterie-Volt-Konke'.
+- Interne: Suppression 'bindShort' obsolete.
+- Modèle équipements: Syntaxe 'alternateIds' améliorée.
+- Ruche: Cmde 'Set inclusion mode' est de retour pour cas 2476 non résolu.
+- Page EQ/avancé pour Zigate: Correction 'Reset HW' pour PI-Zigate.
+- Interne: Qq changements autour du séquencement du démarrage des démons.
+- Interne: Remplacement cmd obsolete 'levelVoletStop' + nettoyage code.
+- Modeles: Support 'notStandard' pour les commandes 'illuminance' qui ne respectent pas la spec ZCL.
+
+221029-BETA-1
 -------------
 
 - Interne: Zigbee const: Ajout 0403/pressure.

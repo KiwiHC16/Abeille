@@ -15,8 +15,12 @@
             "include4": "etatSwitchDoubleb286acn01_1",
             "include4 3": "etatSwitchDoubleb286acn01_2",
             "include4 3 2": "etatSwitchDoubleb286acn01_3",
-            "include4 2": "Batterie-Volt",
-            "include5": "Batterie-Pourcent",
+            "Battery-Volt": {
+                "use": "zb-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "include6": "Xiaomi-ff01",
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

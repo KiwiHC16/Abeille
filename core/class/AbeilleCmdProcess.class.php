@@ -14,9 +14,9 @@
                         continue; // No other check on non string types
                     if ($Command[$param] != '')
                         continue; // String not empty => ok
-                    cmdLog('debug', "    ERROR: Empty '".$param."'");
+                    cmdLog('error', "'".$param."' vide !");
                 } else {
-                    cmdLog('debug', "    ERROR: Missing '".$param."'");
+                    cmdLog('error', "Paramètre '".$param."' manquant.");
                 }
                 $paramError = true;
             }
@@ -44,8 +44,7 @@
          *
          * @return string, upper case hex value, both bytes padded left with zeros
          */
-        function signed2hex($value, $size, $reverseEndianness = true)
-        {
+        function signed2hex($value, $size, $reverseEndianness = true) {
             $packed = pack('i', $value);
             $hex='';
             for ($i=0; $i < $size; $i++){
@@ -108,6 +107,32 @@
 
             cmdLog('debug', "    sliderToHex(): strDecVal=".$strDecVal." => ".$strHexVal);
             return $strHexVal;
+        }
+
+        /* Format attribute value.
+           Return hex string formatted value according to its type */
+        function formatAttribute($valIn, $type) {
+            // cmdLog('debug', "formatAttribute(".$valIn.", ".$type.")");
+            if (substr($valIn, 0, 7) == "#slider") {
+                $slider = true;
+                $valIn = $this->sliderToHex($valIn, $type);
+                if ($valIn === false)
+                    return;
+            } else
+                $slider = false;
+
+            $valOut = '';
+            switch ($type) {
+            case '42': // string
+                $len = sprintf("%02X", strlen($valIn));
+                $valOut = $len.bin2hex($valIn);
+                // cmdLog('debug', "len=".$len.", valOut=".$valOut);
+                break;
+            default:
+                $valOut = $valIn;
+            }
+
+            return $valOut;
         }
 
         // Ne semble pas fonctionner et me fait planté la ZiGate, idem ques etParam()
@@ -1024,78 +1049,77 @@
             // Title => 000B57fffe3025ad (IEEE de l ampoule) <= to be reviewed
             // message => reportToAddress=00158D0001B22E24&ClusterId=0006 <= to be reviewed
             // Tcharp38: Why the need of a 0530 based function ?
-            if (isset($Command['bindShort']))
-            {
-                cmdLog('debug', "    command bind short", $this->debug['processCmd']);
-                // Msg Type = 0x0530
-                $cmd = "0530";
+            // if (isset($Command['bindShort'])) {
+            //     cmdLog('debug', "    command bind short", $this->debug['processCmd']);
+            //     // Msg Type = 0x0530
+            //     $cmd = "0530";
 
-                // <address mode: uint8_t>              -> 1
-                // <target short address: uint16_t>     -> 2
-                // <source endpoint: uint8_t>           -> 1
-                // <destination endpoint: uint8_t>      -> 1
+            //     // <address mode: uint8_t>              -> 1
+            //     // <target short address: uint16_t>     -> 2
+            //     // <source endpoint: uint8_t>           -> 1
+            //     // <destination endpoint: uint8_t>      -> 1
 
-                // <profile ID: uint16_t>               -> 2
-                // <cluster ID: uint16_t>               -> 2
+            //     // <profile ID: uint16_t>               -> 2
+            //     // <cluster ID: uint16_t>               -> 2
 
-                // <security mode: uint8_t>             -> 1
-                // <radius: uint8_t>                    -> 1
-                // <data length: uint8_t>               -> 1  (22 -> 0x16)
-                // <data: auint8_t>
-                // APS Part <= data
-                // dummy 00 to align mesages                                            -> 1
-                // <target extended address: uint64_t>                                  -> 8
-                // <target endpoint: uint8_t>                                           -> 1
-                // <cluster ID: uint16_t>                                               -> 2
-                // <destination address mode: uint8_t>                                  -> 1
-                // <destination address:uint16_t or uint64_t>                           -> 8
-                // <destination endpoint (value ignored for group address): uint8_t>    -> 1
-                // => 34 -> 0x22
+            //     // <security mode: uint8_t>             -> 1
+            //     // <radius: uint8_t>                    -> 1
+            //     // <data length: uint8_t>               -> 1  (22 -> 0x16)
+            //     // <data: auint8_t>
+            //     // APS Part <= data
+            //     // dummy 00 to align mesages                                            -> 1
+            //     // <target extended address: uint64_t>                                  -> 8
+            //     // <target endpoint: uint8_t>                                           -> 1
+            //     // <cluster ID: uint16_t>                                               -> 2
+            //     // <destination address mode: uint8_t>                                  -> 1
+            //     // <destination address:uint16_t or uint64_t>                           -> 8
+            //     // <destination endpoint (value ignored for group address): uint8_t>    -> 1
+            //     // => 34 -> 0x22
 
-                $addrMode                = "02";
-                $addr         = $Command['address'];
-                $srcEpBind         = "00";
-                $dstEpBind    = "00";
-                $profIdBind              = "0000";
-                $clustIdBind              = "0021";
-                $secMode               = "02";
-                $radius                     = "30";
-                $dataLength                 = "16";
+            //     $addrMode                = "02";
+            //     $addr         = $Command['address'];
+            //     $srcEpBind         = "00";
+            //     $dstEpBind    = "00";
+            //     $profIdBind              = "0000";
+            //     $clustIdBind              = "0021";
+            //     $secMode               = "02";
+            //     $radius                     = "30";
+            //     $dataLength                 = "16";
 
-                $dummy = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
+            //     $dummy = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
 
-                if (strlen($Command['targetExtendedAddress']) < 2 ) {
-                    cmdLog('debug', "  command bind short: param targetExtendedAddress is empty. Can t do. So return", $this->debug['processCmd']);
-                    return;
-                }
-                $targetExtendedAddress = AbeilleTools::reverseHex($Command['targetExtendedAddress']);
+            //     if (strlen($Command['targetExtendedAddress']) < 2 ) {
+            //         cmdLog('debug', "  command bind short: param targetExtendedAddress is empty. Can t do. So return", $this->debug['processCmd']);
+            //         return;
+            //     }
+            //     $targetExtendedAddress = AbeilleTools::reverseHex($Command['targetExtendedAddress']);
 
-                $targetEndpoint = $Command['targetEndpoint'];
+            //     $targetEndpoint = $Command['targetEndpoint'];
 
-                $clustId = AbeilleTools::reverseHex($Command['clusterID']);
+            //     $clustId = AbeilleTools::reverseHex($Command['clusterID']);
 
-                $destinationAddressMode = "03";
-                if (strlen($Command['destinationAddress']) < 2 ) {
-                    cmdLog('debug', "  command bind short: param destinationAddress is empty. Can t do. So return", $this->debug['processCmd']);
-                    return;
-                }
-                $destinationAddress = AbeilleTools::reverseHex($Command['destinationAddress']);
+            //     $destinationAddressMode = "03";
+            //     if (strlen($Command['destinationAddress']) < 2 ) {
+            //         cmdLog('debug', "  command bind short: param destinationAddress is empty. Can t do. So return", $this->debug['processCmd']);
+            //         return;
+            //     }
+            //     $destinationAddress = AbeilleTools::reverseHex($Command['destinationAddress']);
 
-                $dstEp = $Command['destinationEndpoint'];
+            //     $dstEp = $Command['destinationEndpoint'];
 
-                $length = "0022";
+            //     $length = "0022";
 
-                $data1 = $addrMode.$addr.$srcEpBind.$dstEpBind.$clustIdBind.$profIdBind.$secMode.$radius.$dataLength;
-                $data2 = $dummy.$targetExtendedAddress.$targetEndpoint.$clustId .$destinationAddressMode.$destinationAddress.$dstEp;
+            //     $data1 = $addrMode.$addr.$srcEpBind.$dstEpBind.$clustIdBind.$profIdBind.$secMode.$radius.$dataLength;
+            //     $data2 = $dummy.$targetExtendedAddress.$targetEndpoint.$clustId .$destinationAddressMode.$destinationAddress.$dstEp;
 
-                cmdLog('debug', "  Data1: ".$addrMode."-".$addr."-".$srcEpBind."-".$dstEpBind."-".$clustIdBind."-".$profIdBind."-".$secMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2), $this->debug['processCmd'] );
-                cmdLog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clustId."-".$destinationAddressMode."-".$destinationAddress."-".$dstEp." len: ".(strlen($data2)/2), $this->debug['processCmd'] );
+            //     cmdLog('debug', "  Data1: ".$addrMode."-".$addr."-".$srcEpBind."-".$dstEpBind."-".$clustIdBind."-".$profIdBind."-".$secMode."-".$radius."-".$dataLength." len: ".(strlen($data1)/2), $this->debug['processCmd'] );
+            //     cmdLog('debug', "  Data2: ".$dummy."-".$targetExtendedAddress."-".$targetEndpoint."-".$clustId."-".$destinationAddressMode."-".$destinationAddress."-".$dstEp." len: ".(strlen($data2)/2), $this->debug['processCmd'] );
 
-                $data = $data1.$data2;
+            //     $data = $data1.$data2;
 
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
-                return;
-            }
+            //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+            //     return;
+            // }
 
             // setReport
             // Title => setReport
@@ -1909,27 +1933,27 @@
                 return;
             }
 
-            // setLevelStop
-            if (isset($Command['setLevelStop']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['sourceEndpoint']) && isset($Command['destinationEndpoint']))
-            {
-                // <address mode: uint8_t>
-                // <target short address: uint16_t>
-                // <source endpoint: uint8_t>
-                // <destination endpoint: uint8_t>
+            // // setLevelStop => Obsolete: Use 'cmd-0008' + 'cmd=07' instead
+            // if (isset($Command['setLevelStop']) && isset($Command['address']) && isset($Command['addressMode']) && isset($Command['sourceEndpoint']) && isset($Command['destinationEndpoint']))
+            // {
+            //     // <address mode: uint8_t>
+            //     // <target short address: uint16_t>
+            //     // <source endpoint: uint8_t>
+            //     // <destination endpoint: uint8_t>
 
-                $cmd = "0084";
-                $addrMode            = $Command['addressMode'];
-                $address                = $Command['address'];
-                $srcEp         = $Command['sourceEndpoint'];
-                $dstEp    = $Command['destinationEndpoint'];
+            //     $cmd = "0084"; // Stop with OnOff = Cluster 0008, cmd 07
+            //     $addrMode            = $Command['addressMode'];
+            //     $address                = $Command['address'];
+            //     $srcEp         = $Command['sourceEndpoint'];
+            //     $dstEp    = $Command['destinationEndpoint'];
 
-                $data = $addrMode.$address.$srcEp.$dstEp ;
+            //     $data = $addrMode.$address.$srcEp.$dstEp ;
 
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-                return;
-            }
+            //     // $length = sprintf("%04s", dechex(strlen($data) / 2));
+            //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
+            //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
+            //     return;
+            // }
 
             // WriteAttributeRequest ------------------------------------------------------------------------------------
             if ((isset($Command['WriteAttributeRequest'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']))
@@ -3124,7 +3148,7 @@
                         /* Attempting to find attribute type according to its id */
                         $attr = zbGetZCLAttribute($Command['clustId'], $Command['attrId']);
                         if (($attr === false) || !isset($attr['dataType'])) {
-                            cmdLog('debug', "    command writeAttribute ERROR: Missing 'attrType'");
+                            cmdLog('error', "writeAttribute: 'attrType' manquant");
                             return;
                         }
                         $Command['attrType'] = sprintf("%02X", $attr['dataType']);
@@ -3170,6 +3194,7 @@
                         $manufId        = "0000";
                     }
                     $nbOfAttributes = "01";
+                    $attrVal        = $this->formatAttribute($attrVal, $Command['attrType']);
                     $attrList       = $Command['attrId'].$Command['attrType'].$attrVal;
 
                     cmdLog('debug', "    Using dir=".$dir.", manufId=".$manufId.", attrType=".$Command['attrType'].", attrVal=".$attrVal, $this->debug['processCmd']);
@@ -3793,6 +3818,34 @@
                     }
                     return;
                 }
+
+                // ZCL cluster 0008/Level control specific.
+                // Mandatory params: addr, ep & cmd ('07')
+                // Optional params: currently none
+                else if ($cmdName == 'cmd-0008') {
+                    $required = ['addr', 'ep', 'cmd']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $cmdId = $Command['cmd'];
+
+                    // TO BE COMPLETED
+                    if ($cmdId == '07') { // Stop with OnOff
+                        $cmd        = "0084"; // Stop with OnOff = Cluster 0008, cmd 07
+                        $addrMode   = "02"; // Assuming short addr
+                        $addr       = $Command['addr'];
+                        $srcEp      = "01";
+                        $dstEp      = $Command['ep'];
+
+                        $data       = $addrMode.$addr.$srcEp.$dstEp;
+
+                        $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    } else {
+                        cmdLog('error', "Unsupported cluster 0008 command ".$cmdId);
+                        return;
+                    }
+
+                } // End $cmdName == 'cmd-0008'
 
                 // ZCL cluster 0019 specific: Inform Zigate that there is a valid OTA image
                 else if ($cmdName == 'otaLoadImage') {

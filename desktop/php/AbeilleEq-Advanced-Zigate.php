@@ -206,21 +206,21 @@
     </div>
 </div>
 
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{Reset SW}}</label>
+    <div class="col-sm-5">
+        <a class="btn btn-warning" onclick="sendZigate('resetZigate', '')" title="{{Reset SW (Commande 0011)}}"><i class="fas fa-sync"></i> {{Reset}}</a>
+    </div>
+</div>
+
 <?php
     if ($zgType == "PI") { ?>
         <div class="form-group">
-        <label class="col-sm-3 control-label">Reset HW</label>
+        <label class="col-sm-3 control-label">{{Reset HW}}</label>
         <div class="col-sm-5">
             <a class="btn btn-warning" onclick="resetPiZigate()" title="{{Reset HW de la PiZigate}}"><i class="fas fa-sync"></i> {{Reset}}</a>
         </div>
     </div>
 <?php } ?>
-
-<div class="form-group">
-    <label class="col-sm-3 control-label">Reset SW</label>
-    <div class="col-sm-5">
-        <a class="btn btn-warning" onclick="sendZigate('resetZigate', '')" title="{{Reset SW (Commande 0011)}}"><i class="fas fa-sync"></i> {{Reset}}</a>
-    </div>
-</div>
 
 <hr>

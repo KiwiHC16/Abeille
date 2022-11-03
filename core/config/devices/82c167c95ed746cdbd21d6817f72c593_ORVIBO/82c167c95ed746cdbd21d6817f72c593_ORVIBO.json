@@ -1,6 +1,8 @@
 {
     "82c167c95ed746cdbd21d6817f72c593_ORVIBO": {
-        "alternateIds": "396483ce8b3f4e0d8e9d79079a35a420_ORVIBO",
+        "alternateIds": {
+            "396483ce8b3f4e0d8e9d79079a35a420_ORVIBO": []
+        },
         "manufacturer": "Orvibo",
         "model": "CM10ZW",
         "zbManufacturer": "ORVIBO",
@@ -14,21 +16,81 @@
         },
         "type": "Orvibo multi-functional relay",
         "commands": {
-            "On 1": { "use": "zbCmd-0006-On", "params": "ep=01", "isVisible": 1 },
-            "Off 1": { "use": "zbCmd-0006-Off", "params": "ep=01", "isVisible": 1 },
-            "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },
-            "Get-Status 1": { "use": "zbReadAttribute", "params": "ep=01&clustId=0006&attrId=0000" },
-            "On 2": { "use": "zbCmd-0006-On", "params": "ep=02", "isVisible": 1 },
-            "Off 2": { "use": "zbCmd-0006-Off", "params": "ep=02", "isVisible": 1 },
-            "Status 2": { "use": "zb-0006-OnOff", "params": "ep=02", "isVisible": 1, "nextLine": "after" },
-            "Get-Status 2": { "use": "zbReadAttribute", "params": "ep=02&clustId=0006&attrId=0000" },
-            "On 3": { "use": "zbCmd-0006-On", "params": "ep=03", "isVisible": 1 },
-            "Off 3": { "use": "zbCmd-0006-Off", "params": "ep=03", "isVisible": 1 },
-            "Status 3": { "use": "zb-0006-OnOff", "params": "ep=03", "isVisible": 1, "nextLine": "after" },
-            "Get-Status 3": { "use": "zbReadAttribute", "params": "ep=03&clustId=0006&attrId=0000" },
-            "Bind-01-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0006", "execAtCreation": "Yes" },
-            "Bind-02-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=02&clustId=0006", "execAtCreation": "Yes" },
-            "Bind-03-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=03&clustId=0006", "execAtCreation": "Yes" },
+            "On 1": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Off 1": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Status 1": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=01",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Get-Status 1": {
+                "use": "zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
+            "On 2": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Off 2": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Status 2": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=02",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Get-Status 2": {
+                "use": "zbReadAttribute",
+                "params": "ep=02&clustId=0006&attrId=0000"
+            },
+            "On 3": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=03",
+                "isVisible": 1
+            },
+            "Off 3": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=03",
+                "isVisible": 1
+            },
+            "Status 3": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=03",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Get-Status 3": {
+                "use": "zbReadAttribute",
+                "params": "ep=03&clustId=0006&attrId=0000"
+            },
+            "Bind-01-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Bind-02-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=02&clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Bind-03-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=03&clustId=0006",
+                "execAtCreation": "Yes"
+            },
             "Set-OnOffReporting-01": {
                 "use": "zbConfigureReporting",
                 "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",

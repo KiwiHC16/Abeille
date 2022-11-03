@@ -1,5 +1,7 @@
 {
     "1-digital-input": {
+        "manufacturer": "DIY",
+        "model": "1-digital-input",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",

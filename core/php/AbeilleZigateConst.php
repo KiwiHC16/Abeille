@@ -5,8 +5,7 @@
      */
 
     /* Returns Zigate message name based on given '$msgType' */
-    function zgGetMsgByType($msgType)
-    {
+    function zgGetMsgByType($msgType) {
         $msgType = strtoupper($msgType);
 
         /* Type and name of zigate messages */
@@ -58,8 +57,7 @@
 
 
     /* Returns Zigate PDM event desc based on given '$code' */
-    function zgGetPDMEvent($code)
-    {
+    function zgGetPDMEvent($code) {
         $code = strtoupper($code);
 
         /* PDM event codes & desc.
@@ -89,8 +87,7 @@
     }
 
     /* Returns zigbee profile name based on given 'profId' */
-    function zgGetProfile($profId)
-    {
+    function zgGetProfile($profId) {
         $profId = strtoupper($profId);
 
         /* List of known zigbee profiles */
@@ -105,8 +102,7 @@
     }
 
     /* Returns zigbee device name based on given 'profId/devId' couple. */
-    function zgGetDevice($profId, $devId)
-    {
+    function zgGetDevice($profId, $devId) {
         $profId = strtoupper($profId);
         $devId = strtoupper($devId);
 
@@ -209,8 +205,7 @@
 
     /* Returns zigate 8000 cmd status based on given '$status' value.
        Tcharp38: Still unclear how to decode such statutes. */
-    function zgGet8000Status($status)
-    {
+    function zgGet8000Status($status) {
         $status = strtoupper($status);
 
         $statusesTable = array (
@@ -230,8 +225,7 @@
 
     /* Returns a string corresponding to 804E bitmap info, based on given '$bitMap' value.
        Example: "RxONWhenIdle/Parent/PermitJoinON/Coordinator" */
-    function zgGet804EBitMap($bitMap)
-    {
+    function zgGet804EBitMap($bitMap) {
         $bitMap = hexdec($bitMap);
         $desc = "";
 

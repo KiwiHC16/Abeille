@@ -14,8 +14,12 @@
         "type": "Xiaomi Smoke Sensor",
         "commands": {
             "include3": "securitySafetySmoke",
-            "include4": "Batterie-Volt",
-            "include5": "Batterie-Pourcent",
+            "Battery-Volt": {
+                "use": "zb-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "include6": "Xiaomi-ff01",
             "include7": "setSmokeSensivityLow",
             "include8": "setSmokeSensivityMedium",

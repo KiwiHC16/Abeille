@@ -268,7 +268,9 @@
             'modelId' => null, // null(undef)/false(unsupported)/'xx'
             'location' => null, // null(undef)/false(unsupported)/'xx'
             'jsonId' => '',
-            'jsonLocation' => ''
+            'jsonLocation' => '',
+            // Optional 'tuyaEF00'
+            // Optional 'notStandard-0400-0000'
         );
         $new = true; // This is a new device
 
@@ -407,7 +409,34 @@
                 'jsonId' => $jsonId,
                 'jsonLocation' => '',
                 'tuyaEF00' => $eqLogic->getConfiguration('ab::tuyaEF00', null)
+                // Optional 'notStandard-0400-0000'
             );
+
+            // Checking for '0400-0000' not standard attribute
+            $cmds = Cmd::byEqLogicId($eqLogic->getId(), 'info');
+            foreach ($cmds as $cmdLogic) {
+                $notStandard = $cmdLogic->getConfiguration('ab::notStandard', 0);
+                if ($notStandard != 0) {
+                    $eq['notStandard-0400-0000'] = 1; // Only 'notStandard' supported case
+                    logMessage('debug', "'".$eqLogicId."' has non standard 0400-0000 attribute");
+                }
+            }
+            // if (($jsonId != '') && ($jsonId != 'rucheCommand')) {
+            //     $devModel = AbeilleTools::getDeviceModel($jsonId);
+            //     if (isset($devModel['commands'])) {
+            //         // parserLog('debug', 'ZOB='.json_encode($devModel['commands']));
+            //         foreach ($devModel['commands'] as $c) {
+            //             if ($c['type'] != 'info')
+            //                 continue;
+            //             // parserLog('debug', $eqLogicId.': c='.json_encode($c));
+            //             if (!isset($c['configuration']) || !isset($c['configuration']['notStandard']))
+            //                 continue;
+            //             $eq['notStandard-0400-0000'] = 1; // Only 'notStandard' supported case
+            //             logMessage('debug', "'".$eqLogicId."' has non standard 0400-0000 attribute");
+            //         }
+            //     }
+            // }
+
             $GLOBALS['eqList'][$net][$addr] = $eq;
         }
 

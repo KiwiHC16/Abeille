@@ -12,8 +12,12 @@
         "type": "zigbeeOccupencySensor",
         "commands": {
             "include3": "presence",
-            "include5": "Batterie-Volt",
-            "include6": "Batterie-Pourcent",
+            "Battery-Volt": {
+                "use": "zb-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

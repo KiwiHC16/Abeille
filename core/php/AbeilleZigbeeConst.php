@@ -73,6 +73,74 @@
         return $unk;
     }
 
+    /* Returns 'Mgmt_lqi_rsp' bitmap description as string */
+    function zbGetMgmtLqiRspBitmap($bitMap) {
+        $bitMap = hexdec($bitMap);
+        $desc = "";
+
+        // Device type, 2, 0x00 - 0x03
+        //     The type of the neighbor device:
+        //     0x00 = ZigBee coordinator
+        //     0x01 = ZigBee router
+        //     0x02 = ZigBee end device
+        //     0x03 = Unknown
+        // RxOnWhenIdle, 2, 0x00 - 0x02
+        //     Indicates if neighbor's receiver is enabled during idle portions of the CAP:
+        //     0x00 = Receiver is off
+        //     0x01 = Receiver is on
+        //     0x02 = unknown
+        // Relationship, 3, 0x00 - 0x04
+        //     The relationship between the neighbor and the current device:
+        //     0x00 = neighbor is the parent
+        //     0x01 = neighbor is a child
+        //     0x02 = neighbor is a sibling
+        //     0x03 = None of the above
+        //     0x04 = previous child
+        // Reserved, 1
+        //     This reserved bit shall be set to 0.
+        // Permit joining, 2, 0x00 - 0x02
+        //     An indication of whether the neighbor device is accepting join requests:
+        //     0x00 = neighbor is not accepting join re-quests
+        //     0x01 = neighbor is accepting join requests
+        //     0x02 = unknown
+        // Reserved, 6
+        //     Each of these reserved bits shall be set to 0.
+
+        $pj = ($bitMap >> 8) & 0x3;
+        switch ($pj) {
+        case 0: $desc .= "PermitJoinOFF"; break;
+        case 1: $desc .= "PermitJoinON"; break;
+        default; $desc .= "?"; break;
+        }
+
+        $rel = ($bitMap >> 4) & 0x7;
+        switch ($rel) {
+        case 0: $desc .= "/Parent"; break;
+        case 1: $desc .= "/Child"; break;
+        case 2: $desc .= "/Sibling"; break;
+        case 3: $desc .= "/None"; break;
+        case 4: $desc .= "/Previous"; break;
+        default; $desc .= "/?"; break;
+        }
+
+        $rx = ($bitMap >> 2) & 0x3;
+        switch ($rx) {
+        case 0: $desc .= "/RxOFFWhenIdle"; break;
+        case 1: $desc .= "/RxONWhenIdle"; break;
+        default; $desc .= "/?"; break;
+        }
+
+        $dt = ($bitMap >> 0) & 0x3;
+        switch ($dt) {
+        case 0: $desc .= "/Coordinator"; break;
+        case 1: $desc .= "/Router"; break;
+        case 2; $desc .= "/EndDevice"; break;
+        default; $desc .= "/?"; break;
+        }
+
+        return $desc;
+    }
+
     /* Returns Zigbee APS status from code. */
     function zbGetAPSStatus($status) {
         $status = strtoupper($status);
@@ -696,8 +764,7 @@
     }
 
     /* Returns Zigbee ZCL global command name from id. */
-    function zbGetZCLGlobalCmdName($cmdId)
-    {
+    function zbGetZCLGlobalCmdName($cmdId) {
         $id = strtolower($cmdId);
 
         /* List of known ZCL commands */
@@ -734,8 +801,7 @@
 
     /* Based on ZCL spec.
        Returns cluster specific command from $clustId-$cmdId or false if unknown */
-    function zbGetZCLClusterCmd($clustId, $cmdId)
-    {
+    function zbGetZCLClusterCmd($clustId, $cmdId) {
         global $zbClusters;
 
         $clustId = strtoupper($clustId);

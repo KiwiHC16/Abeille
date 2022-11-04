@@ -130,11 +130,13 @@
                 if ($cmdLogic)
                     $channel = $cmdLogic->execCmd();
 
+                $zgType = config::byKey('ab::zgType'.$zgId, 'Abeille', '?');
 
                 logIt("Zigate ".$zgId."\n");
                 $fwVersion = $major.'-'.$minor;
-                logIt(" - Version FW: ".$fwVersion."\n");
-                logIt(" - Canal     : ".$channel."\n");
+                logIt(" - FW version: ".$fwVersion."\n");
+                logIt(" - Channel   : ".$channel."\n");
+                logIt(" - Type      : ".$zgType."\n");
             } else
                 logIt("Zigate ".$zgId.": ERROR. No Jeedom registered device\n");
         }
@@ -167,19 +169,18 @@
     logIt('Quand <a href="https://github.com/KiwiHC16/Abeille/issues/new" target="_blank">vous ouvrez une "issue"</a> dans GitHub merci de copier/coller les 3 premiers chapitres ci dessous '."\n");
     logIt("Pour l'intégration d'un équipement non encore supporté ajoutez le chapitre 4.\n\n");
 
-    /* Reading version */
+    // Plateform infos
+    exec('uname -a', $result2);
+    logIt("Kernel: ".json_encode($result2)."\n\n");
+
+    // Abeille's version
     $file = fopen(__DIR__."/../../plugin_info/Abeille.version", "r");
     $line = fgets($file); // Should be a comment
     $abeilleVersion = trim(fgets($file)); // Should be Abeille's version
     fclose($file);
     logIt("Version Abeille: ".$abeilleVersion."\n\n");
 
-    // Linux
-    // exec('cat /etc/issue', $result1);
-    // logIt("Kernel: ".json_encode($result1)."\n");
-    exec('uname -a', $result2);
-    logIt("Kernel: ".json_encode($result2)."\n\n");
-
+    // Zigate infos
     zigateInfos();
 
     jeedomInfos($logFile, $CONFIG);

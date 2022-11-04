@@ -93,9 +93,9 @@
             $this->zigates[$this->zgId]['cmdQueue'][$priority][0]['sqnAps'] = $sqnAps;
         }
 
-        public function zgGetEnable() {
-            return $this->zigates[$this->zgId]['enabled'];
-        }
+        // public function zgGetEnable() {
+        //     return $this->zigates[$this->zgId]['enabled'];
+        // }
 
         public function zgGetAvailable() {
             return $this->zigates[$this->zgId]['available'];
@@ -343,7 +343,7 @@
             $this->zgId = $zgId;
 
             // Checking min parameters
-            if (!$this->zgGetEnable()) {
+            if (!$this->zigates[$zgId]['enabled']) {
                 cmdLog("debug", "      Zigate disabled. Ignoring command.");
                 return;
             }
@@ -489,7 +489,7 @@
             $destSerial = $this->zigates[$zgId]['port'];
 
             // Test should not be needed as we already tested in addCmdToQueue2
-            if (!$this->zgGetEnable()) {
+            if (!$this->zigates[$this->zgId]['enabled']) {
                 cmdLog("debug", "  Zigate ".$this->zgId." (".$destSerial.") disabled => ignoring cmd ".$cmd.'-'.$datas);
                 return;
             }
@@ -546,7 +546,7 @@
                 // cmdLog("debug", __FUNCTION__." zgId: ".$zgId);
                 $this->zgId = $zgId;
 
-                if (!$this->zgGetEnable())      continue; // Disabled
+                if (!$this->zigates[$this->zgId]['enabled'])      continue; // Disabled
                 if (!$this->zgGetAvailable())   continue;  // Not free
 
                 foreach(range(priorityMax, priorityMin) as $priority) {
@@ -789,7 +789,7 @@
 
                 $this->zgId = $zgId;
 
-                if (!$this->zgGetEnable())
+                if (!$this->zigates[$this->zgId]['enabled'])
                     continue; // This zigate is disabled/unconfigured
                 if ($this->zgGetAvailable())
                     continue; // Zigate is ON & available => nothing to check

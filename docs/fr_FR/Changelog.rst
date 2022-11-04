@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- Support: Infos clefs: Affichage type de Zigate.
+- Interne: Suppression 'uniqId' DB eqLogic/configuration.
+- Interne: Message zigate 804E plus utilisé. Pas assez robuste => decode8002().
+
 221103-BETA-2
 -------------
 

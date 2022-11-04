@@ -1670,8 +1670,7 @@
         }
 
         // 8000/Zigate Status
-        function decode8000($dest, $payload, $lqi)
-        {
+        function decode8000($dest, $payload, $lqi) {
             $status     = substr($payload, 0, 2);
             $sqn        = substr($payload, 2, 2);
             $packetType = substr($payload, 4, 4);
@@ -1792,6 +1791,86 @@
             return $attr;
         }
 
+        /* Called from decode8002() to decode "Mgmt_lqi_rsp" message */
+        function decode8002_MgmtLqiRsp($dest, $srcAddr, $pl, &$toMon) {
+
+            $zgId = substr($dest, 7); // 'AbeilleX' => 'X'
+
+            $sqn = substr($pl, 0, 2);
+            $status = substr($pl, 2, 2);
+            $nTableEntries = substr($pl, 4, 2); // NeighborTableEntries
+            $startIdx = substr($pl, 6, 2);
+            $nTableListCount = substr($pl, 8, 2); // NeighborTableListCount
+            $pl = substr($pl, 10);
+
+            $m = '  SQN='.$sqn.', Status='.$status.', NTableEntries='.$nTableEntries.', startIdx='.$startIdx.', nTableListCount='.$nTableListCount;
+            parserLog('debug', $m);
+            $toMon[] = $m;
+
+            if ($status != "00") {
+                parserLog('debug', "  Status != 00 => Decode canceled");
+                return;
+            }
+
+            $corrupted = false;
+            if (hexdec($nTableListCount) > hexdec($nTableEntries))
+                $corrupted = true;
+            if ((hexdec($startIdx) + hexdec($nTableListCount)) > hexdec($nTableEntries))
+                $corrupted = true;
+            // Each entry must be 64+64+16+2+2+3+1+2+6+8+8=176 bits=22 bytes
+            if ((strlen($pl) / 2) != (hexdec($nTableListCount) * 22))
+                $corrupted = true; // Wrong size
+            if ($corrupted) {
+                parserLog('debug', '  WARNING: Corrupted/inconsistent message => ignored');
+                $toMon[] = $m;
+                return;
+            }
+
+            $nList = []; // List of neighbors
+            $j = 0;
+            for ($i = 0; $i < hexdec($nTableListCount); $j += 44, $i++) {
+                $extPanId = AbeilleTools::reverseHex(substr($pl, $j + 0, 16));
+                // Filtering-out devices from other networks
+                if (isset($GLOBALS['zigate'.$zgId]['extPanId'])) {
+                    if ($extPanId != $GLOBALS['zigate'.$zgId]['extPanId']) {
+                        // parserLog('debug', '  Alternate network (extPanId='.$extPanId.') ignored');
+                        continue;
+                    }
+                }
+                $N = array(
+                    "extPANId" => $extPanId,
+                    "extAddr"  => AbeilleTools::reverseHex(substr($pl, $j + 16, 16)),
+                    "addr"     => AbeilleTools::reverseHex(substr($pl, $j + 32, 4)),
+                    "bitMap"   => AbeilleTools::reverseHex(substr($pl, $j + 36, 4)),
+                    "depth"    => substr($pl, $j + 40, 2),
+                    "lqi"      => substr($pl, $j + 42, 2),
+                );
+                $nList[] = $N; // Add to neighbors list
+                parserLog('debug', '  NExtPANId='.$N['extPANId']
+                    .', NExtAddr='.$N['extAddr']
+                    .', NAddr='.$N['addr']
+                    .', NBitMap='.$N['bitMap'].' => '.zbGetMgmtLqiRspBitmap($N['bitMap'])
+                    .', NDepth='.$N['depth']
+                    .', NLQI='.$N['lqi']);
+            }
+            $this->msgToLQICollector($srcAddr, $nTableEntries, $nTableListCount, $startIdx, $nList);
+
+            // Any useful infos to update ?
+            foreach ($nList as $N) {
+                if ($N['addr'] == "0000")
+                    continue; // It's a zigate
+
+                // Foreach neighbor, let's ensure that useful infos are stored
+                $bitMap = hexdec($N['bitMap']);
+                $rxOn = ($bitMap >> 2) & 0x3; // 1 = RX ON when idle
+                $update = array(
+                    'ieee' => $N['extAddr'],
+                    'rxOnWhenIdle' => $rxOn,
+                );
+                $this->updateDevice($dest, $N['addr'], $update);
+            }
+        } // End decode8002_MgmtLqiRsp()
+
         /**
          * 8002/Data indication decode function
          *
@@ -1877,16 +1956,9 @@
                 }
 
                 // Management LQI Response (Mgmt_Lqi_rsp)
-                // Handled by decode804E(). Just to try to understand unexpected responses.
+                // No longer handled by decode804E() due to lack of reliability (see https://github.com/fairecasoimeme/ZiGate/issues/407)
                 else if ($clustId == "8031") {
-                    $sqn = substr($pl, 0, 2);
-                    $status = substr($pl, 2, 2);
-                    $nTableEntries = substr($pl, 4, 2); // NeighborTableEntries
-                    $startIdx = substr($pl, 6, 2);
-                    $nTableListCount = substr($pl, 8, 2); // NeighborTableListCount
-                    parserLog('debug', '  SQN='.$sqn.', Status='.$status.', NTableEntries='.$nTableEntries.', startIdx='.$startIdx.', nTableListCount='.$nTableListCount);
-
-                    parserLog('debug', '  Handled by decode804E');
+                    $this->decode8002_MgmtLqiRsp($dest, $srcAddr, $pl, $toMon);
                 }
 
                 // Routing Table Response (Mgmt_Rtg_rsp)
@@ -2027,9 +2099,6 @@
                         break;
                     case "8021": // Bind_rsp
                         parserLog('debug', '  Handled by decode8030');
-                        break;
-                    case "8031": // Mgmt_Lqi_rsp
-                        parserLog('debug', '  Handled by decode804E');
                         break;
                     case "8038":
                         parserLog('debug', '  Handled by decode804A');
@@ -3403,8 +3472,7 @@
         } // End decode8002()
 
         /* 8009/Network State Reponse */
-        function decode8009($dest, $payload, $lqi)
-        {
+        function decode8009($dest, $payload, $lqi) {
             // <Short Address: uint16_t>
             // <Extended Address: uint64_t>
             // <PAN ID: uint16_t>
@@ -4230,8 +4298,8 @@
         }
 
         /* 804E/Management LQI response */
-        function decode804E($dest, $payload, $lqi)
-        {
+        // NO LONGER USED. NOT ROBUST ENOUGH. Handled by decode8002()
+        function decode804E($dest, $payload, $lqi) {
             // <Sequence number: uint8_t>
             // <status: uint8_t>
             // <Neighbour Table Entries : uint8_t>
@@ -4309,6 +4377,10 @@
                     .', NBitMap='.$N['bitMap'].' => '.zgGet804EBitMap($N['bitMap']));
             }
 
+            // Now handled by decode8002 due to lack of robustness
+            parserLog('debug', '  804E no longer used => decode8002()');
+            return;
+
             // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
                 monMsgFromZigate($decoded); // Send message to monitor
@@ -4363,8 +4435,7 @@
         }
 
         //----------------------------------------------------------------------------------------------------------------
-        function decode8060($dest, $payload, $lqi)
-        {
+        function decode8060($dest, $payload, $lqi) {
             // Answer format changed: https://github.com/fairecasoimeme/ZiGate/pull/97
             // Bizard je ne vois pas la nouvelle ligne dans le maaster zigate alors qu elle est dans GitHub
 

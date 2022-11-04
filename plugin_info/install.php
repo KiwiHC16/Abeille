@@ -438,6 +438,7 @@
            - eqLogic DB: 'icone' => 'ab::icon'
            - eqLogic DB: 'positionX' => 'ab::settings[physLocationX]'
            - eqLogic DB: 'positionY' => 'ab::settings[physLocationY]'
+           - eqLogic DB: 'uniqId' is obsolete
            - config DB: 'AbeilleActiverX' => 'ab::zgEnabledX'
            - config DB: 'AbeilleTypeX' => 'ab::zgTypeX'
            - config DB: 'AbeilleSerialPortX' => 'ab::zgPortX'
@@ -463,7 +464,7 @@
             foreach ($eqLogics as $eqLogic) {
                 $saveEq = false; // true if EQ has been updated and therefore must be saved
                 $eqHName = $eqLogic->getHumanName();
-                $toRemove = []; // Configration keys to remove
+                $toRemove = []; // eqLogic 'configuration' keys to remove
 
                 // Updating 'ab::eqModel'
                 // 'ab::jsonId' + 'ab::jsonLocation' => 'ab::eqModel['id'/'location]'
@@ -530,8 +531,9 @@
                     $saveEq = true;
                 }
                 array_push($toRemove, 'positionX', 'positionY');
+                array_push($toRemove, 'uniqId');
 
-                // Removing obsolete keys
+                // Removing obsolete configuration keys
                 foreach ($toRemove as $key) {
                     // if ($eqLogic->getConfiguration($key, 'nada') === 'nada')
                     //     continue; // Really undefined ??

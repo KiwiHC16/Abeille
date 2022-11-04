@@ -126,12 +126,12 @@
                 'startIdx' => $startIdx,
                 'nList' => $nList
                     $N = array(
-                        "addr"     => substr($payload, $j + 0, 4),
-                        "extPANId" => substr($payload, $j + 4, 16),
-                        "extAddr"  => substr($payload, $j + 20, 16),
-                        "depth"    => substr($payload, $j + 36, 2),
-                        "lqi"      => substr($payload, $j + 38, 2),
-                        "bitMap"   => substr($payload, $j + 40, 2)
+                        "extPANId"
+                        "extAddr"
+                        "addr"
+                        "bitMap"
+                        "depth"
+                        "lqi"
                 )
             ); */
 
@@ -203,14 +203,9 @@
                 'icon' => $nIcon,
             );
 
-            // Decode Bitmap Attribut
-            // Bit map of attributes Described below: uint8_t
-            // bit 0-1 Device Type (0-Coordinator 1-Router 2-End Device)    => Process
-            // bit 2-3 Permit Join status (1- On 0-Off)                     => Skip no need for the time being
-            // bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)            => Process
-            // bit 6-7 Rx On When Idle status (1-On 0-Off)                  => Process
-            $attr = hexdec($N->bitMap);
-            $attrType = $attr & 0b00000011;
+            // Decode bitmap
+            $bitMap = hexdec($N->bitMap);
+            $attrType = ($bitMap >> 0) & 0x3;
             if ($attrType == 0) {
                 $newNeighbor['type'] = "Coordinator";
             } else if ($attrType == 1) {
@@ -222,7 +217,7 @@
                 $newNeighbor['type'] = "Unknown";
             }
 
-            $attrRel = ($attr & 0b00110000) >> 4;
+            $attrRel = ($bitMap >> 4) & 0x7;
             if ($attrRel == 0) {
                 $newNeighbor['relationship'] = "Parent";
             } else if ($attrRel == 1) {
@@ -239,11 +234,15 @@
                     logMessage("", "  WARNING: Unkown device '".$netName."/".$N->addr."'");
             } else if ($attrRel == 2) {
                 $newNeighbor['relationship'] = "Sibling";
+            } else if ($attrRel == 2) {
+                $newNeighbor['relationship'] = "None";
+            } else if ($attrRel == 2) {
+                $newNeighbor['relationship'] = "Previous";
             } else { // if ($attrRel == 3)
                 $newNeighbor['relationship'] = "Unknown";
             }
 
-            $attrRx = ($attr & 0b11000000) >> 6;
+            $attrRx = ($bitMap >> 2) & 0x3;
             if ($attrRx == 0) {
                 $newNeighbor['rx'] = "Rx-Off";
             } else if ($attrRx == 1) {

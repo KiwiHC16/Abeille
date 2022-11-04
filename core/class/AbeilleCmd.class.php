@@ -107,12 +107,12 @@
            Tcharp38: why is it part of AbeilleCmd ? Shouldn't be in Abeille.class.php ?
            KiwiHC16: It's part of Jeedom Structure. You have a class for Eq and a Class for Cmd. AbeilleCmd is child of Cmd Class, Abeille is child of eqLogic class.
         */
-        public function execute($_options = null)
-        {
+        public function execute($_options = null) {
             global $abQueues;
 
+            $eqLogic = $this->getEqLogic();
             logSetConf("AbeilleCmd.log", true); // Mandatory since called from 'Abeille.class.php'
-            logMessage('debug', "-- execute(eqName='".$this->getEqLogic()->getName()."' name='".$this->getName()."' type=".$this->getType().', options='.json_encode($_options).')');
+            logMessage('debug', "-- execute(eqName='".$eqLogic->getName()."' name='".$this->getName()."' type=".$this->getType().', options='.json_encode($_options).')');
 
             // TODO: A revoir, je ne sais plus ce qu'est ce truc.
             // cmdId : 12676 est le level d une ampoule
@@ -127,7 +127,12 @@
 
             if ($this->getType() == 'action') {
 
-                list($dest, $addr) = explode("/", $this->getEqLogic()->getLogicalId());
+                $eqLogicId = $eqLogic->getLogicalId();
+                list($dest, $addr) = explode("/", $eqLogicId);
+                if ($dest == '' || $addr == '') {
+                    logMessage('error', $eqLogic->getHumanName().': DB corrompue. Cmde annulée.');
+                    return;
+                }
 
                 // -------------------------------------------------------------------------
                 // Process topic
@@ -135,7 +140,7 @@
                 if (strpos($this->getConfiguration('topic'), "CmdAbeille") === 0) {
                     $topic = str_replace("Abeille", $dest, $this->getConfiguration('topic'));
                 } else {
-                    $topic = "Cmd".$this->getEqLogic()->getLogicalId()."/".$this->getConfiguration('topic');
+                    $topic = "Cmd".$eqLogicId."/".$this->getConfiguration('topic');
                 }
                 // Tcharp38: What must be replaced in 'topic' ?
                 $topic = $this->updateField($dest, $this, $topic, $_options);

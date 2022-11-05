@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221105-BETA-1
+-------------
+
 - Interne: Parser: Xiaomi tags decode update.
 - Modèles: Historisation activée par défaut pour 0400/0402/0403 & 0405 clusters attr 0000.
 - Modèles: Surcharge possible de 'isHistorized'.

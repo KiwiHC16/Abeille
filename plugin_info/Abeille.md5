@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="221104-BETA-1"
+# VERSION="221105-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -51,7 +51,7 @@ bf9b20107feb480a8c4ff11005f061d0 *core/class/AbeilleCmdProcess.class.php
 d1019e550f54a7875fa5f31cdc40979a *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-39d87ca261d31a87b85ff1c51c361851 *core/class/AbeilleParser.class.php
+250a56e1c9655d2a563ee9d68bd3e9fe *core/class/AbeilleParser.class.php
 59230e66b7fe7a8f08b997955361e4ab *core/class/AbeilleParserTest.class.php
 fbc81985db0cfa51df2b142d357f7eb3 *core/class/AbeilleParserTestDB.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
@@ -59,7 +59,7 @@ f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 9578cfc0a141da78879349e9bb90648b *core/class/AbeilleTemplateEq.class.php
 8c4188be1bbbb03c8d7b4cd600ba3046 *core/class/AbeilleTest.class.php
 0055fd31d027d69a736381f5cc77ebf9 *core/class/AbeilleTestDB.class.php
-0d48a6094af6b2e906c4b8599dbce418 *core/class/AbeilleTools.class.php
+f1f0990c8d7725d09f464c1841a07111 *core/class/AbeilleTools.class.php
 c82edeb5dfceb75770c97c5a3894fb4a *core/config/Abeille.config.php
 96b14488adfe25210ff0b340be3f531d *core/config/HueCatalogue.json
 5373985868d2b6309d47fe0eaf784f00 *core/config/IAS ACE Cluster  IAS Zone & Diagnostics Only_ZHA.xml
@@ -544,10 +544,10 @@ a9806dae86c34a68fc822f72dca4f5fc *core/config/commands/zb-0300-CurrentHue.json
 4cfc93e5ae4712a408d5288e95bfb024 *core/config/commands/zb-0300-CurrentSaturation.json
 77e929d359a0b471b0156164854fc6b8 *core/config/commands/zb-0300-CurrentX.json
 d4cd6df32a4430ccbe7e0ee2174f107a *core/config/commands/zb-0300-CurrentY.json
-a2184aa6ed4e105d7ab5f16beb5d8440 *core/config/commands/zb-0400-MeasuredValue.json
-7df35b245ac78c7c25aa7a797726a857 *core/config/commands/zb-0402-MeasuredValue.json
-48b1f55b68d9c68997eb3678ab77db66 *core/config/commands/zb-0403-MeasuredValue.json
-8c99688b0b6fa8b90535105d10134224 *core/config/commands/zb-0405-MeasuredValue.json
+8c7a1dc8fa7c30eaf3676846bb4641c9 *core/config/commands/zb-0400-MeasuredValue.json
+8b4cd83dcdd83e2202aec60dda840eeb *core/config/commands/zb-0402-MeasuredValue.json
+ff680d5ca06fe52c472768df5876b1e1 *core/config/commands/zb-0403-MeasuredValue.json
+80d43bbebfc54d412fc79b83f9698145 *core/config/commands/zb-0405-MeasuredValue.json
 db8539e41c43e79518590820589f858d *core/config/commands/zb-0406-Occupancy.json
 40a4f132ceaff21e2eeb8f9ddb4f2a3f *core/config/commands/zb-0500-CurrentZoneSensibilityLevel.json
 df8d2cc5e5e8246ab435d0bc84fcfa03 *core/config/commands/zb-0500-ZoneStatus-Alarm1.json
@@ -1047,7 +1047,7 @@ edc8b0bd9c2364e7a47c0b8bd005e1ea *core/config/devices/switch.n3acn3/switch.n3acn
 0fd716f7b7d86cc9f9317e4bcd0d0a81 *core/config/devices/vibration.aq1/vibration.aq1.json
 ef2a20b521eeafe97cd57f2b66aa7b39 *core/config/devices/volet/discovery.json
 5ea46e3006cb176937248222486812b5 *core/config/devices/volet/volet.json
-99f50d636e30aaee9017d07c8dff5589 *core/config/devices/weather/weather.json
+5b3b1729550f1d74ee1429c21b7513ba *core/config/devices/weather/weather.json
 ab013fac137af9a60057d54b13a8eecb *core/config/devices/zigbeeColorDimmableLight/zigbeeColorDimmableLight.json
 c32bab6e8be8f15cdade8b287f36f269 *core/config/devices/zigbeeColortemperaturelight/zigbeeColortemperaturelight.json
 b15af9bc25b2ba8de1984fe23908e10b *core/config/devices/zigbeeDimmableLight/zigbeeDimmableLight.json
@@ -1079,7 +1079,8 @@ cab580c801233aee55ed5492556506a4 *core/php/AbeilleInstall.php
 f9f0b5c7171e4a3c962b7c7008a4aef1 *core/php/AbeilleMonitor.php
 657c2f8ee31e9267a1b575dc188209a4 *core/php/AbeilleOTA.php
 b97427cf6b77e732427c7021485ec8c6 *core/php/AbeilleParser-Tuya.php
-9e054ac0ff9dbda4c51ab9c8dada0744 *core/php/AbeilleParser.php
+e0dca0c37a7da51ed4e3c8fc6c4fdc23 *core/php/AbeilleParser-Xiaomi.php
+2f7f965d015378b20a18e202b0885066 *core/php/AbeilleParser.php
 1b6bd54dc6c30b652f73038235050885 *core/php/AbeilleQueueToCli.php
 279b384363d1e9294d0c1a003d1f88b4 *core/php/AbeilleSerialRead.php
 220cfe670ad55774709d2fa3e67b1c34 *core/php/AbeilleSetEq.php
@@ -1089,7 +1090,7 @@ e4ccac3cb9401f1b2b54e068e55a3c4b *core/php/AbeilleTest.php
 d11a50cfe57f0f6e86a89e383fbb25ff *core/php/AbeilleUpload.php
 b55a6ba4c0110b8a29a3c30f4aee6ce1 *core/php/AbeilleZigate.php
 32f2536e1938075559c4acffab8ade64 *core/php/AbeilleZigateConst.php
-e0e69e38e8102477cb7c865418e20349 *core/php/AbeilleZigbeeConst.php
+840846ffeebaa024c7a744c55d899527 *core/php/AbeilleZigbeeConst.php
 c828c23a7ac4bfc558146887ceb925fa *core/php/refreshBruit.php
 33091517c2fbbab6e5546154033a9362 *core/scripts/checkSocat.sh
 b76a3ce2ed465d107311329f7ab3091d *core/scripts/checkTTY.sh
@@ -1153,7 +1154,7 @@ be4358fb4827e4c8ea8fe85f50779a80 *desktop/php/AbeilleEq-Main-Generic.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-85aa0453db1feb2a3a4943ece270bbb0 *docs/fr_FR/Changelog.rst
+2f7677c8ee74c1a161de943c8ddb60ca *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1442,10 +1443,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-56f280ad55026735e2227319175a2e6f *plugin_info/Abeille.version
+704c5eea03a851d94bdd615fa1896cac *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 721b9c51a8529a69104fa8b2e2a22d24 *plugin_info/configuration.php
-7cba68a8b5309db49a9e531fec428122 *plugin_info/info.json
+39a3d1608d3a917e7baeb630239ca6b7 *plugin_info/info.json
 3a25278503c784837bbb20a88234cf9a *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

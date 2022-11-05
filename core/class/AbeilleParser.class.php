@@ -2501,11 +2501,11 @@
                     $fcfTxt .= "/ManufCode=".$manufCode;
                     $sqn = substr($payload, 32, 2); // Sequence Number
                     $cmd = substr($payload, 34, 2); // Command
-                    $msg = substr($payload, 36);
+                    $pl = substr($payload, 36);
                 } else {
                     $sqn = substr($payload, 28, 2); // Sequence Number
                     $cmd = substr($payload, 30, 2); // Command
-                    $msg = substr($payload, 32);
+                    $pl = substr($payload, 32);
                 }
                 if ($frameType == 0) // General command
                     $msgDecoded = "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLGlobalCmdName($cmd);
@@ -2513,16 +2513,21 @@
                     $msgDecoded = "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLClusterCmdName($clustId, $cmd);
                 parserLog('debug', $msgDecoded);
 
-                if ($fcf == '1C') {
+                // if ($fcf == '1C') {
                     if ($manufCode == '115F') {
                         parserLog('debug', "  Xiaomi FCC0 cluster");
-                        if ($cmd == '0A') {
-                            $Attribut = substr($payload,38, 2).substr($payload,36, 2);
+                        parserLog('debug', "  PL=".$pl);
+                        if ($cmd == '0A') { // Report attributes
+                            $Attribut = substr($pl, 2, 2).substr($pl, 0, 2);
+                            $dataType = substr($pl, 4, 2);
                             if ($Attribut=='00F7') {
-                                $dataType = substr($payload,40, 2);
                                 if ($dataType == "41") { // 0x41 Octet stream
-                                    $dataLength = hexdec(substr($payload,42, 2));
-                                    $fcc0 = $this->decodeFF01(substr($payload, 44, $dataLength*2));
+                                    // WORK ONGOING
+                                    xiaomiDecodeTags(substr($pl, 8));
+                                    // WORK ONGOING
+
+                                    $dataLength = hexdec(substr($pl, 6, 2));
+                                    $fcc0 = $this->decodeFF01(substr($pl, 8, $dataLength*2));
                                     // parserLog('debug', "  ".json_encode($fcc0));
 
                                     // $this->msgToAbeille($dest."/".$srcAddr, '0006', '01-0000', $fcc0["Etat SW 1 Binaire"]["valueConverted"]);    // On Off Etat
@@ -2541,7 +2546,7 @@
                             }
                         }
                     }
-                }
+                // }
             } // End profile 0104 cluster FCC0
 
             /* WARNING:
@@ -5171,6 +5176,10 @@
                 else if (($attrId == "FF01") && ($attrSize == "001D")) {
                     // Assuming $dataType == "42"
 
+                    // FOR INFO ONLY. WORK ONGOING.
+                    xiaomiDecodeTags($Attribut);
+                    // FOR INFO ONLY. WORK ONGOING.
+
                     // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     $voltage = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
                     // $etat           = substr($payload, 80, 2);
@@ -5250,6 +5259,10 @@
                     // Assuming $dataType == "42"
 
                     parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
+
+                    // FOR INFO ONLY. WORK ONGOING.
+                    xiaomiDecodeTags($Attribut);
+                    // FOR INFO ONLY. WORK ONGOING.
 
                     $voltage        = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
                     $temperature    = unpack("s", pack("s", hexdec(substr($Attribut, 21 * 2 + 2, 2).substr($Attribut, 21 * 2, 2))))[1];

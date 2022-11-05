@@ -37,6 +37,7 @@
     include_once __DIR__.'/../class/Abeille.class.php';
     include_once __DIR__.'/AbeilleOTA.php';
     include_once __DIR__.'/AbeilleParser-Tuya.php'; // Tuya specific functions
+    include_once __DIR__.'/AbeilleParser-Xiaomi.php'; // Xiaomi specific functions
 
     // Needed for decode8701 and decode8702
     // Voir https://github.com/fairecasoimeme/ZiGate/issues/161

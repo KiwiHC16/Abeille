@@ -3,6 +3,7 @@
         "comment": "0403/Pressure cluster, attrib 0000/MeasuredValue",
         "subType": "numeric",
         "template": "badge",
+        "isHistorized": "1",
         "configuration": {
         },
         "type": "info",

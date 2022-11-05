@@ -4,6 +4,7 @@
         "name": "MeasuredValue",
         "subType": "numeric",
         "template": "badge",
+        "isHistorized": "1",
         "configuration": {
             "historizeRound": "1"
         },

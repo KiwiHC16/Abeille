@@ -447,20 +447,23 @@
                                 $newCmd[$cmd1]['subType'] = $cmd2['subType'];
                             if (isset($cmd2['unit']))
                                 $newCmd[$cmd1]['unit'] = $cmd2['unit'];
-                            if (isset($cmd2['minValue']))
-                                $newCmd[$cmd1]['configuration']['minValue'] = $cmd2['minValue'];
-                            if (isset($cmd2['maxValue']))
-                                $newCmd[$cmd1]['configuration']['maxValue'] = $cmd2['maxValue'];
+                            if (isset($cmd2['isHistorized']))
+                                $newCmd[$cmd1]['isHistorized'] = $cmd2['isHistorized'];
                             if (isset($cmd2['genericType']))
                                 $newCmd[$cmd1]['genericType'] = $cmd2['genericType'];
-                            if (isset($cmd2['trigOut']))
-                                $newCmd[$cmd1]['configuration']['trigOut'] = $cmd2['trigOut'];
-                            if (isset($cmd2['trigOutOffset']))
-                                $newCmd[$cmd1]['configuration']['trigOutOffset'] = $cmd2['trigOutOffset'];
                             if (isset($cmd2['logicalId']))
                                 $newCmd[$cmd1]['logicalId'] = $cmd2['logicalId'];
                             if (isset($cmd2['invertBinary']))
                                 $newCmd[$cmd1]['invertBinary'] = $cmd2['invertBinary'];
+
+                            if (isset($cmd2['minValue']))
+                                $newCmd[$cmd1]['configuration']['minValue'] = $cmd2['minValue'];
+                            if (isset($cmd2['maxValue']))
+                                $newCmd[$cmd1]['configuration']['maxValue'] = $cmd2['maxValue'];
+                            if (isset($cmd2['trigOut']))
+                                $newCmd[$cmd1]['configuration']['trigOut'] = $cmd2['trigOut'];
+                            if (isset($cmd2['trigOutOffset']))
+                                $newCmd[$cmd1]['configuration']['trigOutOffset'] = $cmd2['trigOutOffset'];
                             if (isset($cmd2['historizeRound']))
                                 $newCmd[$cmd1]['configuration']['historizeRound'] = $cmd2['historizeRound'];
                             if (isset($cmd2['calculValueOffset']))

@@ -73,6 +73,12 @@
         return $unk;
     }
 
+    /* Returns size (in B) of the given data type ID */
+    function zbGetDataSize($id) {
+        $type = zbGetDataType($id);
+        return $type['size'];
+    }
+
     /* Returns 'Mgmt_lqi_rsp' bitmap description as string */
     function zbGetMgmtLqiRspBitmap($bitMap) {
         $bitMap = hexdec($bitMap);

@@ -241,7 +241,7 @@
             ajax::success();
         }
 
-    /* Devloper mode: Switch GIT branch */
+        /* Devloper mode: Switch GIT branch */
         if (init('action') == 'switchBranch') {
             $branch = init('branch');
             $updateOnly = init('updateOnly'); // TODO: No longer required
@@ -271,6 +271,10 @@
             // $cmd = 'nohup /bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
             $cmd = '/bin/bash '.__DIR__.'/../../tmp/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1 &';
             exec($cmd);
+
+            // TODO: There is something to be revisited there
+            // switch done in backbround but daemons are restarted BEFORE switch ended.
+            // TODO: Wait for switch end ?
 
             Abeille::pauseDaemons(0);
 

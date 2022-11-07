@@ -456,6 +456,7 @@
            - cmd DB: 0402-XX-0000: Removed 'calculValueOffset'.
            - cmd DB: 0400-XX-0000: Removed 'calculValueOffset'.
            - cmd DB: '0001-#EP#-0020': Updating trigOutOffset: '#value#*100\/30' => '#value#*100\/3'
+           - cmd DB: 'Batterie-Pourcent' => '0001-01-0021'
            - Removing 'AbeilleDebug.log'. Moved to Jeedom tmp dir.
          */
         if (intval($dbVersion) < 20220421) {
@@ -655,6 +656,16 @@
                         $cmdLogic->setConfiguration('visibilityCategory', 'All');
                         $cmdLogic->setLogicalId('0001-01-0020');
                         log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Updated to '0001-01-0020'");
+                        $saveCmd = true;
+                    }
+                    // 'Batterie-Pourcent' => '0001-01-0021'
+                    else if ($cmdLogicId == 'Batterie-Pourcent') {
+                        $cmdLogic->setConfiguration('calculValueOffset', null);
+                        $cmdLogic->setConfiguration('minValue', null);
+                        $cmdLogic->setConfiguration('maxValue', null);
+                        $cmdLogic->setConfiguration('visibilityCategory', 'All');
+                        $cmdLogic->setLogicalId('0001-01-0021');
+                        log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Updated to '0001-01-0021'");
                         $saveCmd = true;
                     }
                     // '0001-#EP#-0020': Updating trigOutOffset: '#value#*100\/30' => '#value#*100\/3'

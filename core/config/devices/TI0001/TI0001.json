@@ -1,5 +1,7 @@
 {
     "TI0001": {
+        "manufacturer": "Livolo",
+        "model": "TI0001",
         "timeout": "80",
         "configuration": {
             "mainEP": "06",
@@ -8,7 +10,7 @@
         "category": {
             "light": "1"
         },
-        "type": "Livolo Switch TI0001",
+        "type": "Livolo switch",
         "commands": {
             "Identify": {
                 "use": "Identify",
@@ -55,7 +57,6 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        },
-        "comment": "Reference: "
+        }
     }
 }

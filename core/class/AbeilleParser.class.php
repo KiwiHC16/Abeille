@@ -5151,7 +5151,7 @@
 
                     $attributesReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
+                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
 
@@ -5168,7 +5168,7 @@
                     $attributesReportN = [
                         array( "name" => "0006-01-0000", "value" => $etat ),
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
+                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
 
@@ -5189,7 +5189,7 @@
 
                     $attributesReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
+                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                         array( "name" => "0006-01-0000", "value" => $etat ),
                     ];
                 }
@@ -5206,7 +5206,7 @@
 
                     $attributesReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
+                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                         array( "name" => "0402-01-0000", "value" => $temperature / 100 ),
                         array( "name" => "0405-01-0000", "value" => $humidity / 100 ),
                     ];
@@ -5234,7 +5234,7 @@
 
                     $attributesReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
+                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                         array( "name" => "0400-01-0000", "value" => $lux ),
                     ];
                 }
@@ -5250,7 +5250,7 @@
 
                     $attributesReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
+                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
 
@@ -5273,7 +5273,7 @@
 
                     $attributesReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
+                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                         array( "name" => '0402-01-0000', "value" => $temperature / 100 ),
                         array( "name" => '0405-01-0000', "value" => $humidity / 100 ),
                     ];
@@ -5289,7 +5289,7 @@
 
                     $attributesReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
+                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
 
@@ -5302,7 +5302,7 @@
 
                     $attributesReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
+                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
 
@@ -5316,7 +5316,7 @@
 
                     $attributesReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
+                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
 
@@ -5330,7 +5330,7 @@
 
                     $attributesReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "Batterie-Pourcent", "value" => $this->volt2pourcent($voltage) ),
+                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
 

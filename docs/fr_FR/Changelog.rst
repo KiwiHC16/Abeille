@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221107-BETA-1
+-------------
+
 - Interne: Parser: 'Batterie-Pourcent' => '0001-01-0021'.
 - Interne: install/DB cmd: 'Batterie-Pourcent' => '0001-01-0021'
 

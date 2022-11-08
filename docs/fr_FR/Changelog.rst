@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221108-BETA-1
+-------------
+
 - Modèles: Nettoyage. Suppression cmds obsoletes setLevelVoletUp/setLevelVoletDown.
 - Modèles: Correction 'sensor_86sw1' pour 'Battery-Percent'.
 - Modèles: Ajout qq 'manufacturer' manquants.

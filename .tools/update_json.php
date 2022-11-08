@@ -433,6 +433,22 @@
                     );
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "setLevelVoletUp") && $oldSyntax) {
+                    $commands2["Up"] = Array(
+                        "use" => "zbCmd-0008-UpOpen",
+                        // "params" => "clustId=0008&attrId=0000",
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if (($cmdFName == "setLevelVoletDown") && $oldSyntax) {
+                    $commands2["Down"] = Array(
+                        "use" => "zbCmd-0008-DownClose",
+                        // "params" => "clustId=0008&attrId=0000",
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
 
                 // Cluster 0102 updates

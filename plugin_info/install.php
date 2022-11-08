@@ -457,6 +457,7 @@
            - cmd DB: 0400-XX-0000: Removed 'calculValueOffset'.
            - cmd DB: '0001-#EP#-0020': Updating trigOutOffset: '#value#*100\/30' => '#value#*100\/3'
            - cmd DB: 'Batterie-Pourcent' => '0001-01-0021'
+           - cmd DB: 'WindowsCovering' => 'cmd-0102' + 'cmd=XX'
            - Removing 'AbeilleDebug.log'. Moved to Jeedom tmp dir.
          */
         if (intval($dbVersion) < 20220421) {
@@ -683,6 +684,17 @@
                         $cmdLogic->setConfiguration('request', 'ep=01&cmd=07');
                         log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": 'setLevelStop' => 'cmd-0008'");
                         $saveCmd = true;
+                    }
+                    // 'WindowsCovering' => 'cmd-0102' + 'cmd=XX'
+                    else if ($cmdTopic == 'WindowsCovering') {
+                        $cmdLogic->setConfiguration('topic', 'cmd-0102');
+                        $c = $cmdLogic->setConfiguration('request', ''); // Expecting something like 'clusterCommand=02'
+                        if ($c != '') {
+                            $c = substr($c, 15); // Removing 'clusterCommand='
+                            $cmdLogic->setConfiguration('request', 'ep=01&cmd='.$c);
+                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": 'WindowsCovering' => 'cmd-0102' + 'cmd='".$c);
+                            $saveCmd = true;
+                        }
                     }
 
                     if ($saveCmd)

@@ -684,7 +684,7 @@
                                     );
                 break;
 
-            // case "setLevel":
+            // case "ActiveEndPoint
             //     $fields = preg_split("/[=&]+/", $msg);
             //     if (count($fields) > 1) {
             //         $parameters = $this->proper_parse_str($msg);
@@ -1245,20 +1245,20 @@
              * Cluster 0102/Window covering support
              */
 
-            case "WindowsCovering":
-                $fields = preg_split("/[=&]+/", $msg);
-                    if (count($fields) > 1) {
-                        $parameters = $this->proper_parse_str($msg);
-                    }
+            // case "WindowsCovering":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //         if (count($fields) > 1) {
+            //             $parameters = $this->proper_parse_str($msg);
+            //         }
 
-                $Command = array(
-                                    "WindowsCovering"          => "1",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address"                  => $address,
-                                    "clusterCommand"           => $parameters['clusterCommand'],
-                );
-                break;
+            //     $Command = array(
+            //                         "WindowsCovering"          => "1",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address"                  => $address,
+            //                         "clusterCommand"           => $parameters['clusterCommand'],
+            //     );
+            //     break;
 
             case "WindowsCoveringLevel":
                 $fields = preg_split("/[=&]+/", $msg);

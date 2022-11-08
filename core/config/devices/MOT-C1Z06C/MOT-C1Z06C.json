@@ -39,8 +39,14 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include0008-8": "setLevelVoletDown",
-            "include0008-7": "setLevelVoletUp",
+            "Down": {
+                "use": "zbCmd-0008-DownClose",
+                "isVisible": 1
+            },
+            "Up": {
+                "use": "zbCmd-0008-UpOpen",
+                "isVisible": 1
+            },
             "Stop": {
                 "use": "zbCmdG-0008-StopWithOnOff",
                 "isVisible": 1

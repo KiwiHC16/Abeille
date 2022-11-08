@@ -1,5 +1,6 @@
 {
     "sensor_86sw1": {
+        "manufacturer": "Xiaomi",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -12,6 +13,9 @@
         "type": "Xiaomi Interrupteur Carr\u00e9 simple",
         "commands": {
             "include4": "etatSwitchSimple",
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

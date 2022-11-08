@@ -7,8 +7,8 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-            "topic": "WindowsCovering",
-            "request": "clusterCommand=01"
+            "topic": "cmd-0102",
+            "request": "ep=#EP#&cmd=01"
         },
         "type": "action",
         "genericType": "FLAP_DOWN"

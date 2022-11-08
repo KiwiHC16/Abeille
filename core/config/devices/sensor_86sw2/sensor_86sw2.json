@@ -1,5 +1,6 @@
 {
     "sensor_86sw2": {
+        "manufacturer": "Xiaomi",
         "timeout": "60",
         "comment": "Remonte le nom lumi.sensor_86sw2 apres association et lumi.sensor_86sw2Un sur un getName EP 01  donc les deux fichiers doivent \u00eatre identiques.",
         "configuration": {

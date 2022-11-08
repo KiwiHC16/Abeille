@@ -1452,8 +1452,8 @@
         // 'Cmd'.$device->getLogicalId().'/readAttribute', 'ep=01&clustId=0005&attrId=0000'
         logicalId = "Abeille"+js_zgNb+"_"+js_eqAddr;
         if (infoType == "epList") {
-            topic = "Cmd"+logicalId+"_ActiveEndPoint";
-            payload = "address="+js_eqAddr;
+            topic = "Cmd"+logicalId+"_getActiveEndpoints";
+            payload = "addr="+js_eqAddr;
         } else if (infoType == "manufacturer") {
             topic = "Cmd"+logicalId+"_readAttribute";
             payload = "ep="+epId+"_clustId=0000_attrId=0004"; // Manufacturer

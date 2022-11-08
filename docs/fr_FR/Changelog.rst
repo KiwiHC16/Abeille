@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+- Modèles: Nettoyage. Suppression cmds obsoletes setLevelVoletUp/setLevelVoletDown.
+- Modèles: Correction 'sensor_86sw1' pour 'Battery-Percent'.
+- Modèles: Ajout qq 'manufacturer' manquants.
+- Interne: AbeilleCmd: Ajout support 'cmd-0102' + suppression 'WindowsCovering'.
+- Moes curtain module: Mise-à-jour modèle (2464).
+
 221107-BETA-1
 -------------
 

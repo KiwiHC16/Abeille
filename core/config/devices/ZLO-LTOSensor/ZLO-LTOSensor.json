@@ -13,12 +13,12 @@
         "commands": {
             "Illuminance": {
                 "use": "zb-0400-MeasuredValue",
+                "comment": "Seems to be non standard 0400-0000 attribute with direct Lux value",
+                "notStandard": 1,
                 "isVisible": 1
             },
             "Temperature": {
                 "use": "zb-0402-MeasuredValue",
-                "comment": "Seems to be non standard 0400-0000 attribute with direct Lux value",
-                "notStandard": 1,
                 "isVisible": 1,
                 "isHistorized": 1
             },

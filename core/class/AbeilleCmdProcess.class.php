@@ -1674,40 +1674,6 @@
                 return;
             }
 
-            // https://zigate.fr/documentation/commandes-zigate/ Windows covering (v3.0f only)
-            if (isset($Command['WindowsCovering']) && isset($Command['address']) && isset($Command['clusterCommand']))
-            {
-                // 0x00FA    Windows covering (v3.0f only)
-                // <address mode: uint8_t>
-                // <target short address: uint16_t>
-                // <source endpoint: uint8_t>
-                // <destination endpoint: uint8_t>
-                // <cluster command : uint8_t>
-                // 0 = Up/Open
-                // 1 = Down/Close
-                // 2 = Stop
-                // 4 = Go To Lift Value (extra cmd : Value in cm)
-                // 5 = Go To Lift Percentage (extra cmd : percentage 0-100)
-                // 7 = Go To Tilt Value (extra cmd : Value in cm)
-                // 8 = Go To Tilt Percentage (extra cmd : percentage 0-100)
-                // <extra command : uint8_t or uint16_t >
-
-                $cmd = "00FA";
-
-                $addrMode    = "02"; // 01 pour groupe, 02 pour NE
-                $address        = $Command['address'];
-                $srcEp          = "01";
-                $detEP          = "01";
-                $clusterCommand = $Command['clusterCommand'];
-
-                $data = $addrMode.$address.$srcEp.$detEP.$clusterCommand;
-
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-                return;
-            }
-
             if (isset($Command['WindowsCoveringLevel']) && isset($Command['address']) && isset($Command['clusterCommand']))
             {
                 // echo "Windows Covering test for Store Ikea: lift to %\n";
@@ -1775,25 +1741,25 @@
                 return;
             }
 
-            /* Expected format:
-            net/0000 ActiveEndpointRequest address=<addr>*/
-            if (isset($Command['ActiveEndPoint'])) // OBSOLETE: Use getActiveEndpoints instead
-            {
-                $cmd = "0045";
+            // /* Expected format:
+            // net/0000 ActiveEndpointRequest address=<addr>*/
+            // if (isset($Command['ActiveEndPoint'])) // OBSOLETE: Use getActiveEndpoints instead
+            // {
+            //     $cmd = "0045";
 
-                // <target short address: uint16_t>
+            //     // <target short address: uint16_t>
 
-                $address = $Command['address']; // -> 4
+            //     $address = $Command['address']; // -> 4
 
-                //  4 = 4/2 => 2
-                // $length = "0002";
+            //     //  4 = 4/2 => 2
+            //     // $length = "0002";
 
-                $data = $address;
+            //     $data = $address;
 
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-                return;
-            }
+            //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
+            //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
+            //     return;
+            // }
 
             //----------------------------------------------------------------------------
             if (isset($Command['Network_Address_request']))
@@ -2481,26 +2447,26 @@
                 return;
             }
 
-            if (isset($Command['getManufacturerName']) && isset($Command['address']))
-            {
-                if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-                $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0004");
-                return;
-            }
+            // if (isset($Command['getManufacturerName']) && isset($Command['address']))
+            // {
+            //     if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
+            //     $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0004");
+            //     return;
+            // }
 
-            if (isset($Command['getName']) && isset($Command['address']))
-            {
-                if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-                $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0005");
-                return;
-            }
+            // if (isset($Command['getName']) && isset($Command['address']))
+            // {
+            //     if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
+            //     $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0005");
+            //     return;
+            // }
 
-            if (isset($Command['getLocation']) && isset($Command['address']))
-            {
-                if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
-                $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0010");
-                return;
-            }
+            // if (isset($Command['getLocation']) && isset($Command['address']))
+            // {
+            //     if ($Command['destinationEndPoint'] == "" ) { $Command['destinationEndPoint'] = "01"; }
+            //     $this->readAttribute(PRIO_NORM, $dest, $Command['address'], $Command['destinationEndPoint'], "0000", "0010");
+            //     return;
+            // }
 
             // Tcharp38: Seems no longer used
             // if (isset($Command['setLocation']) && isset($Command['address']))
@@ -4083,6 +4049,86 @@
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                     return;
                 }
+
+                // // ZCL cluster 0102 specific
+                // // https://zigate.fr/documentation/commandes-zigate/ Windows covering (v3.0f only)
+                // else if ($cmdName == 'WindowsCovering') { // OBSOLETE !! Use cmd-0102 instead
+                //     $required = ['address', 'clusterCommand']; // Mandatory infos
+                //     if (!$this->checkRequiredParams($required, $Command))
+                //         return;
+
+                //     // 0x00FA    Windows covering (v3.0f only)
+                //     // <address mode: uint8_t>
+                //     // <target short address: uint16_t>
+                //     // <source endpoint: uint8_t>
+                //     // <destination endpoint: uint8_t>
+                //     // <cluster command : uint8_t>
+                //     // 0 = Up/Open
+                //     // 1 = Down/Close
+                //     // 2 = Stop
+                //     // 4 = Go To Lift Value (extra cmd : Value in cm)
+                //     // 5 = Go To Lift Percentage (extra cmd : percentage 0-100)
+                //     // 7 = Go To Tilt Value (extra cmd : Value in cm)
+                //     // 8 = Go To Tilt Percentage (extra cmd : percentage 0-100)
+                //     // <extra command : uint8_t or uint16_t >
+
+                //     $cmd = "00FA";
+
+                //     $addrMode       = "02"; // 01 pour groupe, 02 pour NE
+                //     $address        = $Command['address'];
+                //     $srcEp          = "01";
+                //     $detEP          = "01";
+                //     $clusterCommand = $Command['clusterCommand'];
+
+                //     $data = $addrMode.$address.$srcEp.$detEP.$clusterCommand;
+
+                //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
+                //     return;
+                // } // End $cmdName == 'WindowsCovering'
+
+                // ZCL cluster 0102/Window covering specific cmds
+                // Mandatory params: addr, ep, cmd
+                //      + value (décimal) for cmd '04'/'05'/'06'/'07'
+                // Optional params: none
+                else if ($cmdName == 'cmd-0102') {
+                    $required = ['addr', 'ep', 'cmd']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+                    $cmdId = $Command['cmd'];
+                    if ($cmdId == '04' || $cmdId == '05' || $cmdId == '06' || $cmdId == '07')
+                        if (!isset($Command['value'])) {
+                            cmdLog('error', "cmd-0102: Champ 'value' non renseigné");
+                            return;
+                        }
+
+                    // cmdId reminder:
+                    // 0 = Up/Open
+                    // 1 = Down/Close
+                    // 2 = Stop
+                    // 4 = Go To Lift Value (extra cmd : Value in cm)
+                    // 5 = Go To Lift Percentage (extra cmd : percentage 0-100)
+                    // 7 = Go To Tilt Value (extra cmd : Value in cm)
+                    // 8 = Go To Tilt Percentage (extra cmd : percentage 0-100)
+
+                    $cmd        = "00FA";
+
+                    $addrMode   = "02"; // 01 pour groupe, 02 pour NE
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['ep'];
+                    $extra      = '';
+                    $value      = (int)$Command['value'];
+                    if ($cmdId == "04" || $cmdId == "06")
+                        $extra = sprintf("%04X", $value); // uint16
+                    else if ($cmdId == "05" || $cmdId == "07")
+                        $extra = sprintf("%02X", $value); // uint8
+
+                    cmdLog('debug', '    Using cmdId='.$cmdId.', extra='.$extra);
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$cmdId.$extra;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    return;
+                } // End $cmdName == 'cmd-0102'
 
                 // ZCL cluster 0201 specific: (received) commands
                 // PRELIM: Work ongoing !!! Not tested yet.

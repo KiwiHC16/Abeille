@@ -1497,8 +1497,7 @@
          *
          * @return Nothing
          */
-        function decode004d($dest, $payload, $lqi)
-        {
+        function decode004d($dest, $payload, $lqi) {
             /* < short address: uint16_t>
                < IEEE address: uint64_t>
                < MAC capability: uint8_t> MAC capability

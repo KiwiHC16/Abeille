@@ -435,8 +435,8 @@
             startIdx = document.getElementById("idStartIdx").value;
             payload = "startIndex="+startIdx;
         } else if (request == "getActiveEndPoints") {
-            topic = "Cmd"+logicalId+"_ActiveEndPoint";
-            payload = "address="+js_eqAddr;
+            topic = "Cmd"+logicalId+"_getActiveEndpoints";
+            payload = "addr="+js_eqAddr;
         } else if (request == "getSimpleDescriptor") {
             topic = "Cmd"+logicalId+"_getSimpleDescriptor";
             ep = document.getElementById("idEpSDR").value;

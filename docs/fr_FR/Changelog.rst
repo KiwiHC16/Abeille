@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- Interne: Install: Correction 'Batterie Volt' (0001-01-0020). Suppression 'calculValueOffset'.
+- Interne: Parser: Check NPDU and force SW reset if stuck for more than 3 mins.
+- Modèles: Ajout 'customization' optionnelle pour corriger/forcer infos.
+
 221108-BETA-1
 -------------
 

@@ -671,6 +671,7 @@
                     }
                     // '0001-#EP#-0020': Updating trigOutOffset: '#value#*100\/30' => '#value#*100\/3'
                     else if (preg_match("/^0001-[0-9A-F]*-0020/", $cmdLogicId)) {
+                        $cmdLogic->setConfiguration('calculValueOffset', null);
                         $trigOutOffset = $cmdLogic->getConfiguration('trigOutOffset', '');
                         if ($trigOutOffset != '') {
                             $trigOutOffset = $cmdLogic->setConfiguration('trigOutOffset', '#value#*100\/3');

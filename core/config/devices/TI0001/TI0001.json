@@ -2,19 +2,24 @@
     "TI0001": {
         "manufacturer": "Livolo",
         "model": "TI0001",
+        "type": "Livolo switch",
+        "comment": "Needs to be paired on Channel 26! Then you can eventually switch the channel to 11 and Livolo devices will be switching automatically",
         "timeout": "80",
         "configuration": {
             "mainEP": "06",
             "icon": "TI0001"
         },
+        "customization": {
+            "comment": "macCapa: mains + RX ON",
+            "macCapa": "8C"
+        },
         "category": {
             "light": "1"
         },
-        "type": "Livolo switch",
         "commands": {
             "Identify": {
                 "use": "Identify",
-                "isVisible": 1
+                "isVisible": 0
             },
             "include24 2 2 2 2 2": "setLivoloOff2",
             "include24 2 2 2 2 2 3": "setLivoloOff",
@@ -32,17 +37,17 @@
             "include8 2 2": "LivoloSwitchTrick2",
             "include8 2 2 2": "LivoloSwitchTrick3",
             "include8 2 2 2 3": "LivoloSwitchTrick4",
-            "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
-                "params": "clustId=0008",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 9
-            },
             "SetReporting-0006-0000": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
+            },
+            "Bind-0008-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
             },
             "SetReporting-0008-0000": {
                 "use": "zbConfigureReporting",

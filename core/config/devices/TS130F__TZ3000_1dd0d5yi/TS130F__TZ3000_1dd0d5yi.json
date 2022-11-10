@@ -27,7 +27,7 @@
                 "use": "zbCmd-0102-DownClose",
                 "isVisible": "1"
             },
-            "Set current level": {
+            "Set level": {
                 "use": "zbCmd-0102-GoToLiftPercentage",
                 "isVisible": "1"
             },

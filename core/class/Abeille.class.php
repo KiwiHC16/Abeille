@@ -2654,6 +2654,12 @@ class Abeille extends eqLogic
         else
             $eqLogic->setConfiguration('ab::tuyaEF00', null);
 
+        // Customization
+        if (isset($model['customization']))
+            $eqLogic->setConfiguration('ab::customization', $model['customization']);
+        else
+            $eqLogic->setConfiguration('ab::customization', null);
+
         // JSON model infos
         $eqModelInfos = array(
             'id' => $jsonId, // Equipment model id

@@ -418,12 +418,6 @@
 
                                 // log::add('Abeille', 'debug', 'newCmd AFTER='.json_encode($newCmd));
                             }
-                            if (isset($cmd2['execAtCreation'])) {
-                                $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
-                            }
-                            if (isset($cmd2['execAtCreationDelay'])) {
-                                $newCmd[$cmd1]['configuration']['execAtCreationDelay'] = $cmd2['execAtCreationDelay'];
-                            }
                             if (isset($cmd2['isVisible'])) {
                                 $value = $cmd2['isVisible'];
                                 if ($value === "yes")
@@ -456,6 +450,10 @@
                             if (isset($cmd2['invertBinary']))
                                 $newCmd[$cmd1]['invertBinary'] = $cmd2['invertBinary'];
 
+                            if (isset($cmd2['execAtCreation']))
+                                $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
+                            if (isset($cmd2['execAtCreationDelay']))
+                                $newCmd[$cmd1]['configuration']['execAtCreationDelay'] = $cmd2['execAtCreationDelay'];
                             if (isset($cmd2['minValue']))
                                 $newCmd[$cmd1]['configuration']['minValue'] = $cmd2['minValue'];
                             if (isset($cmd2['maxValue']))

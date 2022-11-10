@@ -94,6 +94,13 @@ Exemple: BASICZBR3.json
   - paramType: ?
     "telecommande", "telecommande7groups"
 
+* customization: optionnel
+  Permet de corriger/forcer qq infos remontées par l'équipement.
+  Ex:  "customization": {
+          "comment": "macCapa: mains + RX ON",
+          "macCapa": "8C"
+       },
+
 * commands: OBLIGATOIRE, liste des commandes implémentées
   ATTENTION !! TOUS les nombres sont donnés en HEXA.
     Ex: minInterval=1800. Si 1800sec alors c'est FAUX => minInterval=0708

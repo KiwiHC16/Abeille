@@ -126,6 +126,34 @@
             $this->queueParserToLQI     = msg_get_queue($abQueues["parserToLQI"]["id"]);
         }
 
+        /* Check NPDU status */
+        function checkNpdu($net, $nPdu) {
+            $zgId = substr($net, 7); // AbeilleX => X
+            if (!isset($GLOBALS['zigate'.$zgId]))
+                $GLOBALS['zigate'.$zgId] = [];
+            if (!isset($GLOBALS['zigate'.$zgId]['nPdu'])) {
+                $GLOBALS['zigate'.$zgId]['nPdu'] = $nPdu;
+                $GLOBALS['zigate'.$zgId]['nPduTime'] = time();
+                return;
+            }
+            $curNpdu = $GLOBALS['zigate'.$zgId]['nPdu'];
+            if (hexdec($nPdu) != $curNpdu) { // Npdu increased or reduced
+                $GLOBALS['zigate'.$zgId]['nPdu'] = $nPdu;
+                $GLOBALS['zigate'.$zgId]['nPduTime'] = time();
+                return;
+            }
+            // NDPU stil the same
+            if ($curNpdu == '00')
+                return;
+            $duration = time() - $GLOBALS['zigate'.$zgId]['nPduTime'];
+            if ($duration < (3 * 60))
+                return; // NPDU stable since less than 3 mins.
+
+            parserLog('warning', '  Ndpu stuck at '.$curNpdu.' for more than 3mins => SW reset.');
+            $this->msgToCmd(PRIO_NORM, "Cmd".$net."/0000/resetZg");
+            // message::add("Abeille", "Erreur lors du changement de mode de la Zigate.", "");
+        }
+
         /* Send message to 'AbeilleCmd' thru 'queueKeyParserToCmd' */
         function msgToCmd($prio, $topic, $payload = '') {
             $msg = array(
@@ -343,8 +371,12 @@
             // 'status' set to 'identifying' if new device
             parserLog('debug', '  eq='.json_encode($eq));
 
-            $eq['macCapa'] = $macCapa;
-            $eq['rxOnWhenIdle'] = (hexdec($macCapa) >> 3) & 0b1;
+            if (isset($eq['customization']) && isset($eq['customization']['macCapa'])) {
+                $eq['macCapa'] = $eq['customization']['macCapa'];
+                parserLog('debug', "  'macCapa' customized: ".$macCapa." => ".$eq['macCapa']);
+            } else
+                $eq['macCapa'] = $macCapa;
+            $eq['rxOnWhenIdle'] = (hexdec($eq['macCapa']) >> 3) & 0b1;
             $eq['rejoin'] = $rejoin;
 
             /* Checking if it's not a too fast consecutive device announce.
@@ -1640,33 +1672,30 @@
 
         // PDM Management
 
-        function decode0302($dest, $payload, $lqi)
-        {
-            // E_SL_MSG_PDM_LOADED = 0x0302
-            // https://zigate.fr/documentation/deplacer-le-pdm-de-la-zigate/
-            parserLog('debug', $dest.', Type=0302/E_SL_MSG_PDM_LOADED');
-        }
+        // function decode0208($dest, $payload, $lqi) {
+        //     // "0208 0003 19001000"
+        //     // E_SL_MSG_PDM_EXISTENCE_REQUEST = 0x0208
 
-        function decode0300($dest, $payload, $lqi)
-        {
-            // "0300 0001DCDE"
-            // E_SL_MSG_PDM_HOST_AVAILABLE = 0x0300
-            parserLog('debug', $dest.', Type=0300/E_SL_MSG_PDM_HOST_AVAILABLE : PDM Host Available ?');
+        //     $id = substr( $payload, 0  , 4);
 
-            $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/PDM", "req=E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE");
-        }
+        //     parserLog('debug', $dest.', Type=0208/E_SL_MSG_PDM_EXISTENCE_REQUEST : PDM Exist for id : '.$id.' ?');
 
-        function decode0208($dest, $payload, $lqi)
-        {
-            // "0208 0003 19001000"
-            // E_SL_MSG_PDM_EXISTENCE_REQUEST = 0x0208
+        //     $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/PDM", "req=E_SL_MSG_PDM_EXISTENCE_RESPONSE&recordId=".$id);
+        // }
 
-            $id = substr( $payload, 0  , 4);
+        // function decode0300($dest, $payload, $lqi) {
+        //     // "0300 0001DCDE"
+        //     // E_SL_MSG_PDM_HOST_AVAILABLE = 0x0300
+        //     parserLog('debug', $dest.', Type=0300/E_SL_MSG_PDM_HOST_AVAILABLE : PDM Host Available ?');
 
-            parserLog('debug', $dest.', Type=0208/E_SL_MSG_PDM_EXISTENCE_REQUEST : PDM Exist for id : '.$id.' ?');
+        //     $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/PDM", "req=E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE");
+        // }
 
-            $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/PDM", "req=E_SL_MSG_PDM_EXISTENCE_RESPONSE&recordId=".$id);
-        }
+        // function decode0302($dest, $payload, $lqi) {
+        //     // E_SL_MSG_PDM_LOADED = 0x0302
+        //     // https://zigate.fr/documentation/deplacer-le-pdm-de-la-zigate/
+        //     parserLog('debug', $dest.', Type=0302/E_SL_MSG_PDM_LOADED');
+        // }
 
         // 8000/Zigate Status
         function decode8000($dest, $payload, $lqi) {
@@ -1717,19 +1746,23 @@
                     // message::add("Abeille", "Erreur lors du changement de mode de la Zigate.", "");
                 }
             }
+
+            // Checking NDPU. If stuck too long Zigate SW reset is required
+            if (isset($nPDU))
+                $this->checkNpdu($dest, $nPDU);
         }
 
-        // 8001/Log message
-        function decode8001($dest, $payload, $lqi) {
-            $level  = substr($payload, 0, 2);
-            $msg    = substr($payload, 2);
-            $msg    = pack("H*", $msg);
+        // // 8001/Log message
+        // function decode8001($dest, $payload, $lqi) {
+        //     $level  = substr($payload, 0, 2);
+        //     $msg    = substr($payload, 2);
+        //     $msg    = pack("H*", $msg);
 
-            $msgDecoded = '8001/Log message'
-                .', Level='.$level
-                .', Msg='.$msg;
-            parserLog('debug', $dest.', Type='.$msgDecoded, "8001");
-        }
+        //     $msgDecoded = '8001/Log message'
+        //         .', Level='.$level
+        //         .', Msg='.$msg;
+        //     parserLog('debug', $dest.', Type='.$msgDecoded, "8001");
+        // }
 
         /* Called from decode8002() to decode a "Read Attribute Status Record"
            Returns: false if error */
@@ -2085,19 +2118,19 @@
                 else {
                     switch ($clustId) {
                     case "0013": // Device_annce
-                        parserLog('debug', '  Handled by decode004D');
+                        parserLog('debug', '  Device announce => Handled by decode004D');
                         break;
                     case "8001": // IEEE_addr_rsp
-                        parserLog('debug', '  Handled by decode8041');
+                        parserLog('debug', '  IEEE addr response => Handled by decode8041');
                         break;
                     case "8004": // Simple_Desc_rsp
-                        parserLog('debug', '  Handled by decode8043');
+                        parserLog('debug', '  Simple descriptor response => Handled by decode8043');
                         break;
                     case "8005": // Active_EP_rsp
-                        parserLog('debug', '  Handled by decode8045');
+                        parserLog('debug', '  Active endpoints => Handled by decode8045');
                         break;
                     case "8021": // Bind_rsp
-                        parserLog('debug', '  Handled by decode8030');
+                        parserLog('debug', '  Bind response => Handled by decode8030');
                         break;
                     case "8038":
                         parserLog('debug', '  Handled by decode804A');
@@ -2502,6 +2535,7 @@
                     $cmd = substr($payload, 34, 2); // Command
                     $pl = substr($payload, 36);
                 } else {
+                    $manufCode = '';
                     $sqn = substr($payload, 28, 2); // Sequence Number
                     $cmd = substr($payload, 30, 2); // Command
                     $pl = substr($payload, 32);
@@ -2575,6 +2609,7 @@
                     $cmd = substr($payload, 34, 2); // Command
                     $msg = substr($payload, 36);
                 } else {
+                    $manufCode = '';
                     $sqn = substr($payload, 28, 2); // Sequence Number
                     $cmd = substr($payload, 30, 2); // Command
                     $msg = substr($payload, 32);
@@ -4301,142 +4336,142 @@
             parserLog('debug', '  Channels='.json_encode($results), "804A");
         }
 
-        /* 804E/Management LQI response */
-        // NO LONGER USED. NOT ROBUST ENOUGH. Handled by decode8002()
-        function decode804E($dest, $payload, $lqi) {
-            // <Sequence number: uint8_t>
-            // <status: uint8_t>
-            // <Neighbour Table Entries : uint8_t>
-            // <Neighbour Table List Count : uint8_t>
-            // <Start Index : uint8_t>
-            // <List of elements described below :> (empty if 'Neighbour Table list count' is 0)
-            //      NWK Address : uint16_t
-            //      Extended PAN ID : uint64_t
-            //      IEEE Address : uint64_t
-            //      Depth : uint_t
-            //      Link Quality : uint8_t
-            //      Bit map of attributes Described below: uint8_t
-            //          bit 0-1 Device Type (0-Coordinator 1-Router 2-End Device)
-            //          bit 2-3 Permit Join status (1- On 0-Off)
-            //          bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)
-            //          bit 6-7 Rx On When Idle status (1-On 0-Off)
-            // <Src Address : uint16_t> (only since v3.1a)
+        // /* 804E/Management LQI response */
+        // // NO LONGER USED. NOT ROBUST ENOUGH. Handled by decode8002()
+        // function decode804E($dest, $payload, $lqi) {
+        //     // <Sequence number: uint8_t>
+        //     // <status: uint8_t>
+        //     // <Neighbour Table Entries : uint8_t>
+        //     // <Neighbour Table List Count : uint8_t>
+        //     // <Start Index : uint8_t>
+        //     // <List of elements described below :> (empty if 'Neighbour Table list count' is 0)
+        //     //      NWK Address : uint16_t
+        //     //      Extended PAN ID : uint64_t
+        //     //      IEEE Address : uint64_t
+        //     //      Depth : uint_t
+        //     //      Link Quality : uint8_t
+        //     //      Bit map of attributes Described below: uint8_t
+        //     //          bit 0-1 Device Type (0-Coordinator 1-Router 2-End Device)
+        //     //          bit 2-3 Permit Join status (1- On 0-Off)
+        //     //          bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)
+        //     //          bit 6-7 Rx On When Idle status (1-On 0-Off)
+        //     // <Src Address : uint16_t> (only since v3.1a)
 
-            $sqn = substr($payload, 0, 2);
-            $status = substr($payload, 2, 2);
-            $nTableEntries = substr($payload, 4, 2);
-            $nTableListCount = substr($payload, 6, 2);
-            $startIdx = substr($payload, 8, 2);
-            $srcAddr = substr($payload, 10 + (hexdec($nTableListCount) * 42), 4); // 21 bytes per neighbor entry
-            $nList = []; // List of neighbors
-            $j = 10; // Neighbours list starts at char 10
-            $zgId = substr($dest, 7); // 'AbeilleX' => 'X'
-            // Filtering-out stupid & unconsistent msg from zigate (see: https://github.com/fairecasoimeme/ZiGate/issues/370#)
-            $corrupted = false;
-            if (hexdec($nTableListCount) > hexdec($nTableEntries))
-                $corrupted = true;
-            if ((hexdec($startIdx) + hexdec($nTableListCount)) > hexdec($nTableEntries))
-                $corrupted = true;
-            if ($corrupted == false) {
-                for ($i = 0; $i < hexdec($nTableListCount); $j += 42, $i++) {
-                    $extPanId = substr($payload, $j + 4, 16);
-                    // Filtering-out devices from other networks
-                    if (isset($GLOBALS['zigate'.$zgId]['extPanId'])) {
-                        if ($extPanId != $GLOBALS['zigate'.$zgId]['extPanId']) {
-                            // parserLog('debug', '  Alternate network (extPanId='.$extPanId.') ignored');
-                            continue;
-                        }
-                    }
-                    $N = array(
-                        "addr"     => substr($payload, $j + 0, 4),
-                        "extPANId" => $extPanId,
-                        "extAddr"  => substr($payload, $j + 20, 16),
-                        "depth"    => substr($payload, $j + 36, 2),
-                        "lqi"      => substr($payload, $j + 38, 2),
-                        "bitMap"   => substr($payload, $j + 40, 2)
-                    );
-                    $nList[] = $N; // Add to neighbors list
-                }
-            }
+        //     $sqn = substr($payload, 0, 2);
+        //     $status = substr($payload, 2, 2);
+        //     $nTableEntries = substr($payload, 4, 2);
+        //     $nTableListCount = substr($payload, 6, 2);
+        //     $startIdx = substr($payload, 8, 2);
+        //     $srcAddr = substr($payload, 10 + (hexdec($nTableListCount) * 42), 4); // 21 bytes per neighbor entry
+        //     $nList = []; // List of neighbors
+        //     $j = 10; // Neighbours list starts at char 10
+        //     $zgId = substr($dest, 7); // 'AbeilleX' => 'X'
+        //     // Filtering-out stupid & unconsistent msg from zigate (see: https://github.com/fairecasoimeme/ZiGate/issues/370#)
+        //     $corrupted = false;
+        //     if (hexdec($nTableListCount) > hexdec($nTableEntries))
+        //         $corrupted = true;
+        //     if ((hexdec($startIdx) + hexdec($nTableListCount)) > hexdec($nTableEntries))
+        //         $corrupted = true;
+        //     if ($corrupted == false) {
+        //         for ($i = 0; $i < hexdec($nTableListCount); $j += 42, $i++) {
+        //             $extPanId = substr($payload, $j + 4, 16);
+        //             // Filtering-out devices from other networks
+        //             if (isset($GLOBALS['zigate'.$zgId]['extPanId'])) {
+        //                 if ($extPanId != $GLOBALS['zigate'.$zgId]['extPanId']) {
+        //                     // parserLog('debug', '  Alternate network (extPanId='.$extPanId.') ignored');
+        //                     continue;
+        //                 }
+        //             }
+        //             $N = array(
+        //                 "addr"     => substr($payload, $j + 0, 4),
+        //                 "extPANId" => $extPanId,
+        //                 "extAddr"  => substr($payload, $j + 20, 16),
+        //                 "depth"    => substr($payload, $j + 36, 2),
+        //                 "lqi"      => substr($payload, $j + 38, 2),
+        //                 "bitMap"   => substr($payload, $j + 40, 2)
+        //             );
+        //             $nList[] = $N; // Add to neighbors list
+        //         }
+        //     }
 
-            // Log
-            $decoded = '804E/Management LQI response'
-                .', SQN='               .$sqn
-                .', Status='            .$status
-                .', NTableEntries='     .$nTableEntries
-                .', NTableListCount='   .$nTableListCount
-                .', StartIndex='        .$startIdx
-                .', SrcAddr='           .$srcAddr;
-            parserLog('debug', $dest.', Type='.$decoded);
-            if ($corrupted) {
-                parserLog('debug', '  WARNING: Corrupted/inconsistent message => ignored');
-                return;
-            }
-            foreach ($nList as $N) {
-                parserLog('debug', '  NAddr='.$N['addr']
-                    .', NExtPANId='.$N['extPANId']
-                    .', NExtAddr='.$N['extAddr']
-                    .', NDepth='.$N['depth']
-                    .', NLQI='.$N['lqi']
-                    .', NBitMap='.$N['bitMap'].' => '.zgGet804EBitMap($N['bitMap']));
-            }
+        //     // Log
+        //     $decoded = '804E/Management LQI response'
+        //         .', SQN='               .$sqn
+        //         .', Status='            .$status
+        //         .', NTableEntries='     .$nTableEntries
+        //         .', NTableListCount='   .$nTableListCount
+        //         .', StartIndex='        .$startIdx
+        //         .', SrcAddr='           .$srcAddr;
+        //     parserLog('debug', $dest.', Type='.$decoded);
+        //     if ($corrupted) {
+        //         parserLog('debug', '  WARNING: Corrupted/inconsistent message => ignored');
+        //         return;
+        //     }
+        //     foreach ($nList as $N) {
+        //         parserLog('debug', '  NAddr='.$N['addr']
+        //             .', NExtPANId='.$N['extPANId']
+        //             .', NExtAddr='.$N['extAddr']
+        //             .', NDepth='.$N['depth']
+        //             .', NLQI='.$N['lqi']
+        //             .', NBitMap='.$N['bitMap'].' => '.zgGet804EBitMap($N['bitMap']));
+        //     }
 
-            // Now handled by decode8002 due to lack of robustness
-            parserLog('debug', '  804E no longer used => decode8002()');
-            return;
+        //     // Now handled by decode8002 due to lack of robustness
+        //     parserLog('debug', '  804E no longer used => decode8002()');
+        //     return;
 
-            // Monitor if requested
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
-                monMsgFromZigate($decoded); // Send message to monitor
+        //     // Monitor if requested
+        //     if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
+        //         monMsgFromZigate($decoded); // Send message to monitor
 
-            $this->whoTalked[] = $dest.'/'.$srcAddr;
+        //     $this->whoTalked[] = $dest.'/'.$srcAddr;
 
-            if ($status != "00") {
-                parserLog('debug', "  Status != 00 => Decode canceled");
-                return;
-            }
+        //     if ($status != "00") {
+        //         parserLog('debug', "  Status != 00 => Decode canceled");
+        //         return;
+        //     }
 
-            $this->msgToLQICollector($srcAddr, $nTableEntries, $nTableListCount, $startIdx, $nList);
-            // Tcharp38 TODO: lastComm can be updated for $srcAddr only
+        //     $this->msgToLQICollector($srcAddr, $nTableEntries, $nTableListCount, $startIdx, $nList);
+        //     // Tcharp38 TODO: lastComm can be updated for $srcAddr only
 
-            // TODO: Update devices table in case this router is unknown to Jeedom
-            // $this->deviceUpdate($dest, $srcAddr, "00");
+        //     // TODO: Update devices table in case this router is unknown to Jeedom
+        //     // $this->deviceUpdate($dest, $srcAddr, "00");
 
-            foreach ($nList as $N) {
-                if ($N['addr'] == "0000")
-                    continue; // It's a zigate
+        //     foreach ($nList as $N) {
+        //         if ($N['addr'] == "0000")
+        //             continue; // It's a zigate
 
-                // Foreach neighbor, let's ensure that useful infos are stored
-                $bitMap = hexdec($N['bitMap']);
-                $rxOn = ($bitMap >> 6) & 0x3; // 1 = RX ON when idle
-                $update = array(
-                    'ieee' => $N['extAddr'],
-                    'rxOnWhenIdle' => $rxOn,
-                );
-                $this->updateDevice($dest, $N['addr'], $update);
+        //         // Foreach neighbor, let's ensure that useful infos are stored
+        //         $bitMap = hexdec($N['bitMap']);
+        //         $rxOn = ($bitMap >> 6) & 0x3; // 1 = RX ON when idle
+        //         $update = array(
+        //             'ieee' => $N['extAddr'],
+        //             'rxOnWhenIdle' => $rxOn,
+        //         );
+        //         $this->updateDevice($dest, $N['addr'], $update);
 
-                /* If equipment is unknown, may try to interrogate it.
-                   Note: this is blocked by default. Unknown equipement should join only during inclusion phase.
-                   Note: this could not work for battery powered eq since they will not listen & reply.
-                   Cmdxxxx/Ruche/getName address=bbf5&destinationEndPoint=0B */
-                // if (($N['addr'] != "0000") && !Abeille::byLogicalId($dest.'/'.$N['addr'], 'Abeille')) {
-                //     if (config::byKey('blocageRecuperationEquipement', 'Abeille', 'Oui', 1) == "Oui") {
-                //         parserLog('debug', '  Eq addr '.$N['addr']." is unknown.");
-                //     } else {
-                //         parserLog('debug', '  Eq addr '.$N['addr']." is unknown. Trying to interrogate.");
+        //         /* If equipment is unknown, may try to interrogate it.
+        //            Note: this is blocked by default. Unknown equipement should join only during inclusion phase.
+        //            Note: this could not work for battery powered eq since they will not listen & reply.
+        //            Cmdxxxx/Ruche/getName address=bbf5&destinationEndPoint=0B */
+        //         // if (($N['addr'] != "0000") && !Abeille::byLogicalId($dest.'/'.$N['addr'], 'Abeille')) {
+        //         //     if (config::byKey('blocageRecuperationEquipement', 'Abeille', 'Oui', 1) == "Oui") {
+        //         //         parserLog('debug', '  Eq addr '.$N['addr']." is unknown.");
+        //         //     } else {
+        //         //         parserLog('debug', '  Eq addr '.$N['addr']." is unknown. Trying to interrogate.");
 
-                //         $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=01");
-                //         $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=03");
-                //         $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=0B");
-                //     }
-                // }
+        //         //         $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=01");
+        //         //         $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=03");
+        //         //         $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=0B");
+        //         //     }
+        //         // }
 
-                /* Tcharp38: Commented for 2 reasons
-                   1/ this leads to 'lastCommunication' updated for $N['Addr'] while NO message received from him, so just wrong.
-                   2/ such code is just there to work-around a missed short addr change. */
-                // $this->msgToAbeilleCmdFct($dest."/".$N['Addr']."/IEEE-Addr", $N['ExtAddr']);
-            }
-        }
+        //         /* Tcharp38: Commented for 2 reasons
+        //            1/ this leads to 'lastCommunication' updated for $N['Addr'] while NO message received from him, so just wrong.
+        //            2/ such code is just there to work-around a missed short addr change. */
+        //         // $this->msgToAbeilleCmdFct($dest."/".$N['Addr']."/IEEE-Addr", $N['ExtAddr']);
+        //     }
+        // }
 
         //----------------------------------------------------------------------------------------------------------------
         function decode8060($dest, $payload, $lqi) {
@@ -4522,8 +4557,7 @@
             msgToAbeille2($msg);
         }
 
-        function decode8063($dest, $payload, $lqi)
-        {
+        function decode8063($dest, $payload, $lqi) {
             // <Sequence number: uin8_t>    -> 2
             // <endpoint: uint8_t>          -> 2
             // <Cluster id: uint16_t>       -> 4
@@ -4563,8 +4597,7 @@
         // Remote is unable to send other button commands at least when left or right is hold down.
 
         /* Level cluster command coming from a device (broadcast or unicast to Zigate) */
-        function decode8085($dest, $payload, $lqi)
-        {
+        function decode8085($dest, $payload, $lqi) {
             // <Sequence number: uin8_t>    -> 2
             // <endpoint: uint8_t>          -> 2
             // <Cluster id: uint16_t>       -> 4
@@ -4623,8 +4656,7 @@
         }
 
         /* OnOff cluster command coming from a device (broadcast or unicast to Zigate) */
-        function decode8095($dest, $payload, $lqi)
-        {
+        function decode8095($dest, $payload, $lqi) {
             // <Sequence number: uin8_t>
             // <endpoint: uint8_t>
             // <Cluster id: uint16_t>
@@ -4698,8 +4730,7 @@
         ##TODO
         #reponse scene
         #80a0-80a6
-        function decode80A0($dest, $payload, $lqi)
-        {
+        function decode80A0($dest, $payload, $lqi) {
             // <sequence number: uint8_t>                           -> 2
             // <endpoint : uint8_t>                                 -> 2
             // <cluster id: uint16_t>                               -> 4
@@ -4737,8 +4768,7 @@
                             .', scene extensions : '            .substr($payload,34, 2) );
         }
 
-        function decode80A3($dest, $payload, $lqi)
-        {
+        function decode80A3($dest, $payload, $lqi) {
             // <sequence number: uint8_t>   -> 2
             // <endpoint : uint8_t>         -> 2
             // <cluster id: uint16_t>       -> 4
@@ -4755,8 +4785,7 @@
                             .', source='       .substr($payload,14, 4)  );
         }
 
-        function decode80A4($dest, $payload, $lqi)
-        {
+        function decode80A4($dest, $payload, $lqi) {
             // <sequence number: uint8_t>   -> 2
             // <endpoint : uint8_t>         -> 2
             // <cluster id: uint16_t>       -> 4
@@ -4775,8 +4804,7 @@
                             .', Source='       .substr($payload,16, 4)  );
         }
 
-        function decode80A6($dest, $payload, $lqi)
-        {
+        function decode80A6($dest, $payload, $lqi) {
             // parserLog('debug', ';Type: 80A6: raw data: '.$payload );
 
             // Cas du message retour lors d un storeScene sur une ampoule Hue
@@ -4904,8 +4932,7 @@
         // Remote won't tell which button was released left or right, but it will be same button that was last hold.
         // Remote is unable to send other button commands at least when left or right is hold down.
 
-        function decode80A7($dest, $payload, $lqi)
-        {
+        function decode80A7($dest, $payload, $lqi) {
             // <Sequence number: uin8_t>    -> 2
             // <endpoint: uint8_t>          -> 2
             // <Cluster id: uint16_t>       -> 4

@@ -58,8 +58,7 @@
          If not absolut path, log dir = Jeedom default (/var/www/html/log)
          If absolut path, this is the taken destination.
        'hideLevel' = Allows to disable display of log level if TRUE. */
-    function logSetConf($lFile = '', $hideLevel = false)
-    {
+    function logSetConf($lFile = '', $hideLevel = false) {
         $GLOBALS["curLogLevelNb"] = logGetPluginLevel();
         $GLOBALS["logDir"] = "";
         $GLOBALS["logFile"] = "";
@@ -97,8 +96,7 @@
        '\n' is automatically added at end of line.
        If 'logLevel' is empty, always log and do not print log level.
        WARNING: A call to 'logSetConf()' is expected once prior to 'logMessage()'. */
-    function logMessage($logLevel, $msg)
-    {
+    function logMessage($logLevel, $msg) {
         global $tmpDir;
 
         if ($logLevel != "") {
@@ -149,8 +147,7 @@
 
     /* Log function for development purposes.
        Output message to <JeedomTempDir>"/Abeille/AbeilleDebug.log" */
-    function logDebug($msg = "")
-    {
+    function logDebug($msg = "") {
         global $tmpDir;
 
         $logFile = "AbeilleDebug.log";

@@ -409,8 +409,9 @@
                 'location' => null, // null(undef)/false(unsupported)/'xx'
                 'jsonId' => $jsonId,
                 'jsonLocation' => '',
-                'tuyaEF00' => $eqLogic->getConfiguration('ab::tuyaEF00', null)
+                'tuyaEF00' => $eqLogic->getConfiguration('ab::tuyaEF00', null),
                 // Optional 'notStandard-0400-0000'
+                'customization' => $eqLogic->getConfiguration('ab::customization', null),
             );
 
             // Checking for '0400-0000' not standard attribute

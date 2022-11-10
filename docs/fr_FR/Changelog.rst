@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: Surveillance NPDU, timeout 4mins.
+
 221110-BETA-1
 -------------
 

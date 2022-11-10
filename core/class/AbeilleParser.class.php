@@ -146,11 +146,12 @@
             if ($curNpdu == '00')
                 return;
             $duration = time() - $GLOBALS['zigate'.$zgId]['nPduTime'];
-            if ($duration < (3 * 60))
+            if ($duration < (4 * 60))
                 return; // NPDU stable since less than 3 mins.
 
-            parserLog('warning', '  Ndpu stuck at '.$curNpdu.' for more than 3mins => SW reset.');
-            $this->msgToCmd(PRIO_NORM, "Cmd".$net."/0000/resetZg");
+            parserLog('warning', '  Ndpu stuck at '.$curNpdu.' for more than 4mins => SW reset.');
+            $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/0000/resetZg");
+            $GLOBALS['zigate'.$zgId]['nPduTime'] = time(); // Reset timer
             // message::add("Abeille", "Erreur lors du changement de mode de la Zigate.", "");
         }
 

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221110-BETA-2
+-------------
+
 - Interne: Parser: Surveillance NPDU, timeout 4mins.
 
 221110-BETA-1

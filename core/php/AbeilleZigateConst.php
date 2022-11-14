@@ -32,6 +32,7 @@
             "8046" => "Match descriptor response",
             "8047" => "Management leave response",
             "804B" => "System server discovery response",
+            "804E" => "Management LQI response",
             "8061" => "View group response",
             "80A1" => "Add scene response",
             "80A2" => "Remove scene response",

@@ -34,17 +34,18 @@
                 parserLog('debug', '  Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].' SIZE 0');
                 break;
             }
-            $data = substr($pl, $i + 4, $size * 2);
-            if ($size > 1)
-                $data = AbeilleTools::reverseHex($data);
+            $valueHex = substr($pl, $i + 4, $size * 2);
             $i += 4 + ($size * 2);
+            if ($size > 1)
+                $valueHex = AbeilleTools::reverseHex($valueHex);
+            $value = AbeilleParser::decodeDataType($valueHex, $typeId, false, 0, $dataSize, $valueHex);
 
             $idx = strtoupper($tagId.'-'.$typeId);
             if (isset($tagsList[$idx]))
                 $tagName = '/'.$tagsList[$idx]['desc'];
             else
                 $tagName = '';
-            parserLog('debug', '  Tag='.$tagId.$tagName.', Type='.$typeId.'/'.$type['short'].', Data='.$data);
+            parserLog('debug', '  Tag='.$tagId.$tagName.', Type='.$typeId.'/'.$type['short'].', Value='.$valueHex.' => '.$value);
         }
     }
 ?>

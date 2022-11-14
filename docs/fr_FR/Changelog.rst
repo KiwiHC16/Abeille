@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+- Interne: Parser: Optimisation.
+- Interne: Cmd: Modification gestion ACK. 8702 ignoré au profit de 8011.
+- Interne: Parser: Amélioration messages dbg Xiaomi.
+- Interne: Parser: Nettoyage 'manufacturer' revu (cleanManufId()).
+- Interne: Parser: Correction 'customization' + 'macCapa'.
+- Interne: Parser: Divers correctifs & améliorations.
+
 221110-BETA-2
 -------------
 

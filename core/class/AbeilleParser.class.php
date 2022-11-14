@@ -1861,13 +1861,16 @@
             parserLog('debug', '  MacCapa='.$macCapa.', ManufCode='.$manufCode);
             // 2 infos to store: macCapa & manufCode
             $eq = getDevice($dest, $srcAddr, '');
-            if ($eq['macCapa'] != $macCapa)
-                // WARNING: macCapa can be overloaded by customization
-                if (isset($eq['customization']) && isset($eq['customization']['macCapa'])) {
+            // WARNING: macCapa can be overloaded by customization
+            if (isset($eq['customization']) && isset($eq['customization']['macCapa'])) {
+                if ($eq['macCapa'] != $eq['customization']['macCapa']) {
                     parserLog('debug', '  Updating macCapa from customization: '.$macCapa.' => '.$eq['customization']['macCapa']);
-                    $macCapa = $eq['customization']['macCapa'];
+                    $newMacCapa = $eq['customization']['macCapa'];
                 }
-                $this->deviceUpdate($dest, $srcAddr, 'xx', 'macCapa', $macCapa);
+            } else if ($eq['macCapa'] != $macCapa)
+                $newMacCapa = $macCapa;
+            if (isset($newMacCapa))
+                $this->deviceUpdate($dest, $srcAddr, 'xx', 'macCapa', $newMacCapa);
             if ($eq['manufCode'] != $manufCode)
                 $this->deviceUpdate($dest, $srcAddr, 'xx', 'manufCode', $manufCode);
         }

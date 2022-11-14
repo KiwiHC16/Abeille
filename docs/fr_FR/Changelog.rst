@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-221114-BETA-1
+221114-BETA-2
 -------------
 
 - Interne: Parser: Optimisation.

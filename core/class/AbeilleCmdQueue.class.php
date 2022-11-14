@@ -130,17 +130,17 @@
             return $this->zigates[$this->zgId]['fw'];
         }
 
-        public function zgSetnPDU($hw) {
-            $this->zigates[$this->zgId]['nPDU'] = $hw;
-        }
+        // public function zgSetnPDU($hw) {
+        //     $this->zigates[$this->zgId]['nPDU'] = $hw;
+        // }
 
         public function zgGetnPDU() {
             return $this->zigates[$this->zgId]['nPDU'];
         }
 
-        public function zgSetaPDU($hw) {
-            $this->zigates[$this->zgId]['aPDU'] = $hw;
-        }
+        // public function zgSetaPDU($hw) {
+        //     $this->zigates[$this->zgId]['aPDU'] = $hw;
+        // }
 
         public function zgGetaPDU() {
             return $this->zigates[$this->zgId]['aPDU'];
@@ -663,21 +663,22 @@
 
                 if (isset($msg['nPDU'])) {
                     $nPDU = $msg['nPDU'];
-                    $this->zgSetnPDU(hexdec($nPDU));
+                    $this->zigates[$zgId]['nPDU'] = hexdec($nPDU);
                 } else
                     $nPDU = "?";
 
                 if (isset($msg['aPDU'])) {
                     $aPDU = $msg['aPDU'];
-                    $this->zgSetaPDU(hexdec($aPDU));
+                    $this->zigates[$zgId]['aPDU'] = hexdec($aPDU);
                 } else
                     $aPDU = "?";
 
                 /* ACK or no ACK ?
                    In all cases expecting 8000 as first last sent cmd ack.
                    If ackAps is 1 (addrMode 02 or 03), zigate is released after
-                     - 8702 => device did not ack (got 8000 then 8702)
-                     - 8011 (following 8012) => device acknowledged cmd (got 8000, 8012, then 8011)
+                     - 8702 => Buffered. Does not mean anything. May finish sucessfully or not.
+                     - 8012 => Message received by next hope.
+                     - 8011 (following 8012) => device acknowledged (or not) cmd (got 8000, 8012, then 8011)
                    If ackAps is 0, zigate is released after 8000 msg
                  */
 
@@ -748,20 +749,26 @@
                         $removeCmd = true;
                 }
 
-                else if ($msg['type'] == "8702") {
-// cmdLog('debug', '  zigates='.json_encode($this->zigates));
-                    $cmd = $this->getCmd($zgId, $msg['sqnAps'], $lastSent);
-                    if ($cmd == null) {
-                        cmdLog('debug', '  Corresponding cmd not found.');
-                        // Note: This can appear for cmds not sent from zigate, but received by zigate (ex: request cluster 000A/time from device)
-                        continue;
-                    }
+                /* Tcharp38: 8702 now ignored. Just means message buffered but does not
+                   mean failed. It may terminate with a 8011/ACK or 8011/NO_ACK
+                   Ex:
+                   [2022-11-11 00:15:48] Abeille1, Type=8000/Status, Status=00/Success, SQN=14, PacketType=004E, Sent=02, SQNAPS=2E, NPDU=02, APDU=01
+                   [2022-11-11 00:15:48] Abeille1, Type=8702/APS data confirm fail, Status=D4/ZPS_NWK_ENUM_FRAME_IS_BUFFERED, SrcEP=00, DstEP=00, AddrMode=02, Addr=6903, SQNAPS=2E, NPDU=02, APDU=01
+                   [2022-11-11 00:15:49] Abeille1, Type=8011/APS data ACK, Status=00/Success, Addr=6903, EP=00, ClustId=0031, SQNAPS=2E
+                */
+                // else if ($msg['type'] == "8702") {
+                //     $cmd = $this->getCmd($zgId, $msg['sqnAps'], $lastSent);
+                //     if ($cmd == null) {
+                //         cmdLog('debug', '  Corresponding cmd not found.');
+                //         // Note: This can appear for cmds not sent from zigate, but received by zigate (ex: request cluster 000A/time from device)
+                //         continue;
+                //     }
 
-                    // If ACK is requested but failed, removing cmd or it will lead to cmd timeout.
-                    // Note: This is done only if cmd == last sent.
-                    if ($cmd['ackAps'] && $lastSent)
-                        $removeCmd = true;
-                }
+                //     // If ACK is requested but failed, removing cmd or it will lead to cmd timeout.
+                //     // Note: This is done only if cmd == last sent.
+                //     if ($cmd['ackAps'] && $lastSent)
+                //         $removeCmd = true;
+                // }
 
                 // Removing last sent cmd
                 if (isset($removeCmd)) {

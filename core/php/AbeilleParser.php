@@ -296,6 +296,7 @@
         list($net, $addr) = explode("/", $eqLogicId);
 
         $GLOBALS['eqList'][$net][$addr]['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null);
+        $GLOBALS['eqList'][$net][$addr]['customization'] = $eqLogic->getConfiguration('ab::customization', null);
         // TO BE COMPLETED if any other key info
     }
 

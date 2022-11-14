@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221114-BETA-1
+-------------
+
 - Interne: Parser: Optimisation.
 - Interne: Cmd: Modification gestion ACK. 8702 ignoré au profit de 8011.
 - Interne: Parser: Amélioration messages dbg Xiaomi.

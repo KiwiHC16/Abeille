@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221119-BETA-1
+-------------
+
 - Zigate PI v2: Correction controle GPIO (rc.local n'est plus nécessaire).
 - Repeteur Loratap: Ajout support (2498).
 - Interne: AbeilleCmd: Pas de renvoi si message 8000 status 06.

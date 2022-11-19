@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-221119-BETA-1
+221119-BETA-2
 -------------
 
 - Zigate PI v2: Correction controle GPIO (rc.local n'est plus nécessaire).

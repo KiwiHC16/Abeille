@@ -1654,7 +1654,9 @@ class Abeille extends eqLogic
                     if (is_object($eqLogic)) {
                         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
                         $zigbee['macCapa'] = $updVal;
-                        $zigbee['rxOnWhenIdle'] = (hexdec($zigbee['macCapa']) >> 3) & 0b1;
+                        $mc = hexdec($zigbee['macCapa']);
+                        $zigbee['mainsPowered'] = ($mc >> 2) & 0b1; // 1=mains-powered
+                        $zigbee['rxOnWhenIdle'] = ($mc >> 3) & 0b1;
                         $eqLogic->setConfiguration('ab::zigbee', $zigbee);
                         log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[macCapa]' updated to ".$updVal);
                         $eqChanged = true;
@@ -1759,6 +1761,7 @@ class Abeille extends eqLogic
             Abeille::createDevice("create", $dev);
 
             $eqLogic = self::byLogicalId($logicalId, 'Abeille');
+            $eqId = $eqLogic->getId();
 
             // /* MAC capa from 004D/Device announce message */
             // $mc = hexdec($msg['macCapa']);
@@ -1779,15 +1782,19 @@ class Abeille extends eqLogic
 
             Abeille::updateTimestamp($eqLogic, $msg['time']);
 
-            $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), "Short-Addr");
+            $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqId, "Short-Addr");
             if (is_object($cmdLogic))
                 $ret = $eqLogic->checkAndUpdateCmd($cmdLogic, $addr);
-            $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), "IEEE-Addr");
+
+            $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqId, "IEEE-Addr");
             if (is_object($cmdLogic))
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $ieee);
-            $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), "Mains-Powered");
+
+            $mc = hexdec($msg['macCapa']);
+            $mainsPowered = ($mc >> 2) & 0b1;
+            $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqId, "Mains-Powered");
             if (!is_object($cmdLogic))
-                $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), "Power-Source"); // Old name support
+                $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqId, "Power-Source"); // Old name support
             if (is_object($cmdLogic))
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $mainsPowered);
 
@@ -2677,7 +2684,7 @@ class Abeille extends eqLogic
         }
         if (isset($zigbee['macCapa'])) {
             $mc = hexdec($zigbee['macCapa']);
-            $zigbee['mainsPowered'] = ($mc >> 2) & 0b1; // 1=mains-powererd
+            $zigbee['mainsPowered'] = ($mc >> 2) & 0b1; // 1=mains-powered
             $zigbee['rxOnWhenIdle'] = ($mc >> 3) & 0b1; // 1=Receiver enabled when idle
         }
         $eqLogic->setConfiguration('ab::zigbee', $zigbee);

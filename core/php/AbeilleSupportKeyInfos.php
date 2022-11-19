@@ -38,8 +38,7 @@
      *
      * @return  none
      */
-    function logIt($msg, $append = 1)
-    {
+    function logIt($msg, $append = 1) {
         global $logFile;
 
         // echo $msg;
@@ -57,8 +56,9 @@
      *
      * @return  none
      */
-    function echoTitle($logFile, $title)
-    {
+    function logTitle($title) {
+        global $logFile;
+
         $line = "";
         if (substr($title, 0, 2) == '{{') {
             $title = substr($title, 2);
@@ -73,8 +73,8 @@
         logIt($line."\n");
     }
 
-    function requestAndPrint($logFile, $link, $table, $title) {
-        echoTitle($logFile, $title);
+    function requestAndPrint($link, $table, $title) {
+        logTitle($title);
 
         switch ($table) {
         case "update": $sql = "SELECT * FROM `update` WHERE `name` = 'Abeille'"; break;
@@ -108,7 +108,8 @@
         logIt("}\n\n");
     }
 
-    function zigateInfos() {
+    // Display Zigates informations
+    function zigatesInfos() {
         for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
             if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
                 continue; // Zigate disabled
@@ -143,7 +144,26 @@
         logIt("\n");
     }
 
-    function jeedomInfos($logFile,$CONFIG) {
+    // Display devices status
+    function devicesStatus() {
+        logTitle("Devices status");
+
+        $eqLogics = Abeille::byType('Abeille');
+        foreach ($eqLogics as $eqLogic) {
+            // list($net, $addr) = explode("/", $eqLogic->getLogicalId());
+            $eqHName = $eqLogic->getHumanName();
+            $eqId = $eqLogic->getId();
+            if ($eqLogic->getStatus('timeout') == 1) {
+                $lastComm = $eqLogic->getStatus('lastCommunication');
+                $timeoutS = "TIMEOUT (".$lastComm.")";
+            } else
+                $timeoutS = "ok";
+            logIt(" - ".$eqHName." (id=".$eqId."): ".$timeoutS."\n");
+        }
+        logIt("\n");
+    }
+
+    function jeedomInfos($CONFIG) {
         /* Connect to DB */
         $link = mysqli_connect($CONFIG['db']['host'], $CONFIG['db']['username'], $CONFIG['db']['password'], $CONFIG['db']['dbname']);
 
@@ -153,11 +173,11 @@
             return;
         }
 
-        requestAndPrint($logFile, $link, 'update', "Table 'update'");
-        requestAndPrint($logFile, $link, 'cron', "Table 'cron'");
-        requestAndPrint($logFile, $link, 'config', "Table 'config'");
-        requestAndPrint($logFile, $link, 'eqLogic', "Table 'eqLogic'");
-        requestAndPrint($logFile, $link, 'cmd', "Table 'cmd'");
+        requestAndPrint($link, 'update', "Table 'update'");
+        requestAndPrint($link, 'cron', "Table 'cron'");
+        requestAndPrint($link, 'config', "Table 'config'");
+        requestAndPrint($link, 'eqLogic', "Table 'eqLogic'");
+        requestAndPrint($link, 'cmd', "Table 'cmd'");
 
         mysqli_close($link);
     }
@@ -181,7 +201,10 @@
     logIt("Version Abeille: ".$abeilleVersion."\n\n");
 
     // Zigate infos
-    zigateInfos();
+    zigatesInfos();
 
-    jeedomInfos($logFile, $CONFIG);
+    // Devices status
+    devicesStatus();
+
+    jeedomInfos($CONFIG);
 ?>

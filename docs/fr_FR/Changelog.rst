@@ -1,6 +1,20 @@
 ChangeLog
 =========
 
+- Zigate PI v2: Correction controle GPIO (rc.local n'est plus nécessaire).
+- Repeteur Loratap: Ajout support (2498).
+- Interne: AbeilleCmd: Pas de renvoi si message 8000 status 06.
+- Interne: Abeille.class: 'customization' & 'macCapa'. Encore une update.
+- Interne: Reinitialisation d'un équipement: delai interne avant relecture DB par parser.
+- Moes temp/humidity sensor: Ajout support (2500).
+- Interne: Petite update page santé.
+- Maintenance/infos clefs: Ajout status (timeout) de chaque équipement.
+- Interne: Abeille.class: Amélioration mineure msg debug executePollCmds().
+- Moes BRT-100: Mise-à-jour modèle (2467).
+- Interne: Support Tuya amélioré: Cmd: Ajout 'setValue', 'setValueMult' & 'setValueDiv'.
+- GLEDOPTO GL-FL-004P: Support préliminaire (2501).
+- Page Zigate/avancé: Modification choix canal zigbee.
+
 221114-BETA-2
 -------------
 
@@ -113,20 +127,6 @@ ChangeLog
 - Interne: Constantes Zigbee: Definitions des types.
 - Philips E14 white bulb: Modele preliminaire (2422).
 - Philips E27 white bulb: Modele preliminaire (2421).
-
-221019-STABLE-1
----------------
-
-  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible (v3.21 à ce jour).
-  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
-
-      - Toute nouvelle installation.
-      - Dès lors qu'un réappairage complet est nécéssaire.
-      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-      - Les firmwares avant 3.1e sont forcement 'legacy'.
-      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
-
-  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal mais la dernière en date (3.21) est fortement recommandée.
 
 221019-STABLE-1
 ---------------

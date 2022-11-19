@@ -4,6 +4,9 @@
         "model": "Generic smart socket",
         "zbManufacturer": "_TZ3000_rdtixbnu",
         "timeout": "60",
+        "customization": {
+            "macCapa": "12"
+        },
         "configuration": {
             "mainEP": "01",
             "poll": "1",

@@ -35,8 +35,7 @@
 class Abeille extends eqLogic
 {
     // Fonction dupliquée dans AbeilleParser.
-    public static function volt2pourcent($voltage)
-    {
+    public static function volt2pourcent($voltage) {
         $max = 3.135;
         $min = 2.8;
         if ($voltage / 1000 > $max) {
@@ -60,8 +59,7 @@ class Abeille extends eqLogic
      * @return advice comment by question mark icon
      * @return state  if the test was successful or not
      */
-    public static function health()
-    {
+    public static function health() {
         $result = '';
         for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
             if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') == 'N')
@@ -93,7 +91,7 @@ class Abeille extends eqLogic
      * executePollCmds
      * Execute commands with "Polling" flag according to given "period".
      *
-     * @param $period One of the crons: cron, cron15, cronHourly....
+     * @param $period One of the crons: 'cron', 'cron15', 'cronHourly' ....
      *
      * @return Does not return anything as all action are triggered by sending messages in queues
      */
@@ -103,8 +101,8 @@ class Abeille extends eqLogic
             if ($cmd->getConfiguration('Polling') != $period)
                 continue;
             $eqLogic = $cmd->getEqLogic();
-            $eqLogicId = $eqLogic->getHumanName();
-            log::add('Abeille', 'debug', "executePollCmds(".$period."), '".$eqLogicId."', cmdLogicId='".$cmd->getLogicalId()."'");
+            $eqHName = $eqLogic->getHumanName();
+            log::add('Abeille', 'debug', "executePollCmds(".$period."): ".$eqHName.", cmd='".$cmd->getName()."' (".$cmd->getLogicalId().")");
             $cmd->execute();
         }
     }
@@ -508,13 +506,16 @@ class Abeille extends eqLogic
 
         /**
          * Refresh health information
+         * Reminder:
+         * eqLogic->xxStatus/lastCommunication: Used by Jeedom too. Format = string 'Y-m-d H:i:s'. Updated by checkAndUpdateCmd().
+         * eqLogic->xxStatus/timeout: Used by Jeedom too. Format = number (0 or 1). Set to 1 if device is in timeout.
          */
         foreach ($eqLogics as $eqLogic) {
             $timeout = $eqLogic->getTimeout(0);
-            $timeoutS = $eqLogic->getStatus('timeout', 0);
+            $timeoutS = $eqLogic->getStatus('timeout', 0); // Timeout status
             if ($timeout == 0) {
                 $newTimeoutS = 0;
-                $newState = '-';
+                // $newState = '-';
             } else {
                 // Tcharp38: If no comm, should we take Abeille start time ? Something else ?
                 $lastComm = $eqLogic->getStatus('lastCommunication', '');
@@ -527,11 +528,11 @@ class Abeille extends eqLogic
                 if (($lastComm + (60 * $timeout)) > time()) {
                     // Ok
                     $newTimeoutS = 0;
-                    $newState = 'ok';
+                    // $newState = 'ok';
                 } else {
                     // NOK
                     $newTimeoutS = 1;
-                    $newState = 'Time Out Last Communication';
+                    // $newState = 'Time Out Last Communication';
                 }
             }
 
@@ -539,7 +540,7 @@ class Abeille extends eqLogic
                 log::add('Abeille', 'debug', 'cron(): '.$eqLogic->getName().': timeout status changed to '.$newTimeoutS);
                 $newStatus = array(
                     'timeout' => $newTimeoutS,
-                    'state' => $newState, // Tcharp38: Only used by Abeille. Really required ?
+                    // 'state' => $newState, // Tcharp38: Only used by Abeille. Really required ?
                 );
                 $eqLogic->setStatus($newStatus);
             }
@@ -710,7 +711,7 @@ class Abeille extends eqLogic
                 $config['ab::zgEnabled'.$zgId] = 'N';
                 config::save('ab::zgEnabled'.$zgId, 'N', 'Abeille');
                 log::add('Abeille', 'error', $error." ! Zigate désactivée.");
-            } else if ($config['ab::zgType'.$zgId] == "PI") {
+            } else if (($config['ab::zgType'.$zgId] == "PI") || ($config['ab::zgType'.$zgId] == "PIv2")) {
                 /* Configuring GPIO for PiZigate if one active found.
                     PiZigate reminder (using 'WiringPi'):
                     - port 0 = RESET
@@ -1209,8 +1210,7 @@ class Abeille extends eqLogic
     //     return;
     // }
 
-    public static function message($topic, $payload)
-    {
+    public static function message($topic, $payload) {
         // KiwiHC16: Please leave this line log::add commented otherwise too many messages in log Abeille
         // and keep the 3 lines below which print all messages except Time-Time, Time-TimeStamp and Link-Quality that we get for every message.
         // Divide by 3 the log quantity and ease the log reading
@@ -1650,6 +1650,15 @@ class Abeille extends eqLogic
                             $eqChanged = true;
                         }
                     }
+                } else if ($updKey == 'macCapa') {
+                    if (is_object($eqLogic)) {
+                        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                        $zigbee['macCapa'] = $updVal;
+                        $zigbee['rxOnWhenIdle'] = (hexdec($zigbee['macCapa']) >> 3) & 0b1;
+                        $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[macCapa]' updated to ".$updVal);
+                        $eqChanged = true;
+                    }
                 } else if ($updKey == 'rxOnWhenIdle') {
                     if (is_object($eqLogic)) {
                         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
@@ -1664,14 +1673,6 @@ class Abeille extends eqLogic
                         $zigbee['endPoints'] = $updVal;
                         $eqLogic->setConfiguration('ab::zigbee', $zigbee);
                         log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]' updated to ".json_encode($updVal));
-                        $eqChanged = true;
-                    }
-                } else if ($updKey == 'macCapa') {
-                    if (is_object($eqLogic)) {
-                        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-                        $zigbee['macCapa'] = $updVal;
-                        $eqLogic->setConfiguration('ab::zigbee', $zigbee);
-                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[macCapa]' updated to ".$updVal);
                         $eqChanged = true;
                     }
                 } else if ($updKey == 'manufCode') {
@@ -1753,27 +1754,28 @@ class Abeille extends eqLogic
                 'manufId' => $msg['manufId'],
                 'jsonId' => $jsonId,
                 'jsonLocation' => $jsonLocation,
+                'macCapa' => $msg['macCapa']
             );
             Abeille::createDevice("create", $dev);
 
             $eqLogic = self::byLogicalId($logicalId, 'Abeille');
 
-            /* MAC capa from 004D/Device announce message */
-            $mc = hexdec($msg['macCapa']);
-            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-            $zigbee['macCapa'] = $msg['macCapa'];
-            $rxOnWhenIdle = ($mc >> 3) & 0b1;
-            $mainsPowered = ($mc >> 2) & 0b1;
-            if ($mainsPowered) // 1=mains-powererd
-                $zigbee['mainsPowered'] = 1;
-            else
-                $zigbee['mainsPowered'] = 0;
-            if ($rxOnWhenIdle) // 1=Receiver enabled when idle
-                $zigbee['rxOnWhenIdle'] = 1;
-            else
-                $zigbee['rxOnWhenIdle'] = 0;
-            $eqLogic->setConfiguration('ab::zigbee', $zigbee);
-            $eqLogic->save();
+            // /* MAC capa from 004D/Device announce message */
+            // $mc = hexdec($msg['macCapa']);
+            // $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            // $zigbee['macCapa'] = $msg['macCapa'];
+            // $rxOnWhenIdle = ($mc >> 3) & 0b1;
+            // $mainsPowered = ($mc >> 2) & 0b1;
+            // if ($mainsPowered) // 1=mains-powererd
+            //     $zigbee['mainsPowered'] = 1;
+            // else
+            //     $zigbee['mainsPowered'] = 0;
+            // if ($rxOnWhenIdle) // 1=Receiver enabled when idle
+            //     $zigbee['rxOnWhenIdle'] = 1;
+            // else
+            //     $zigbee['rxOnWhenIdle'] = 0;
+            // $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+            // $eqLogic->save();
 
             Abeille::updateTimestamp($eqLogic, $msg['time']);
 
@@ -1873,6 +1875,7 @@ class Abeille extends eqLogic
                     message::add("Abeille", "'".$eqLogic->getHumanName()."' a quitté le réseau => désactivé.", '');
                 $eqLogic->save();
                 $eqLogic->refresh();
+                log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().' has left the network => DISABLED');
 
                 Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
             } else
@@ -2449,6 +2452,10 @@ class Abeille extends eqLogic
             $jsonLocation = 'Abeille';
         if ($jsonId != '' && $jsonLocation != '') {
             $model = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
+            if ($model === false) {
+                log::add('Abeille', 'debug', "  Invalid model name ".$jsonLocation."/".$jsonId);
+                return;
+            }
             $modelType = $model['type'];
         }
 
@@ -2654,11 +2661,26 @@ class Abeille extends eqLogic
         else
             $eqLogic->setConfiguration('ab::tuyaEF00', null);
 
-        // Customization
-        if (isset($model['customization']))
+        // Zigbee & customization from model
+        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+        if (isset($model['customization'])) {
             $eqLogic->setConfiguration('ab::customization', $model['customization']);
-        else
+            if (isset($model['customization']['macCapa'])) {
+                $zigbee['macCapa'] = $model['customization']['macCapa'];
+                log::add('Abeille', 'debug', "  'macCapa' forced to ".$zigbee['macCapa']);
+            }
+        } else {
             $eqLogic->setConfiguration('ab::customization', null);
+            if (isset($dev['macCapa'])) {
+                $zigbee['macCapa'] = $dev['macCapa'];
+            }
+        }
+        if (isset($zigbee['macCapa'])) {
+            $mc = hexdec($zigbee['macCapa']);
+            $zigbee['mainsPowered'] = ($mc >> 2) & 0b1; // 1=mains-powererd
+            $zigbee['rxOnWhenIdle'] = ($mc >> 3) & 0b1; // 1=Receiver enabled when idle
+        }
+        $eqLogic->setConfiguration('ab::zigbee', $zigbee);
 
         // JSON model infos
         $eqModelInfos = array(

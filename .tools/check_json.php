@@ -140,6 +140,7 @@
                     $validCmdKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'trigOut', 'trigOutOffset', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
                     array_push($validCmdKeys, 'repeatEventManagement');
                     array_push($validCmdKeys, 'returnStateTime', 'returnStateValue');
+                    array_push($validCmdKeys, 'notStandard');
                     foreach ($value as $key2 => $value2) {
                         if (in_array($key2, $validCmdKeys))
                             continue;
@@ -191,13 +192,13 @@
         }
 
         /* Checking top level supported keywords */
-        $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'tuyaEF00'];
+        $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'tuyaEF00', 'customization'];
         foreach ($dev[$devName] as $key => $value) {
             if (in_array($key, $supportedKeys))
                 continue;
             if (substr($key, 0, 7) == "comment")
                 continue;
-            newDevError($devName, "ERROR", "Invalid key '".$key."'");
+            newDevError($devName, "ERROR", "Invalid device key '".$key."'");
         }
     }
 
@@ -259,9 +260,9 @@
                 continue;
             if (substr($key, 0, 7) == "comment")
                 continue;
-                newCmdError($cmdName, "ERROR", "Invalid key '".$key."'");
+                newCmdError($cmdName, "ERROR", "Invalid command key '".$key."'");
         }
-    }
+    } // End checkCommand()
 
     function buildDevicesList() {
         echo "Building devices list ...\n";

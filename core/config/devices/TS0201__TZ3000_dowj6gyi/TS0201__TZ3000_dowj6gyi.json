@@ -2,8 +2,14 @@
     "TS0201__TZ3000_dowj6gyi": {
         "manufacturer": "Tuya",
         "model": "IH-K009",
-        "type": "Temperature and humidity sensor",
+        "type": "Tuya temperature & humidity sensor",
         "timeout": "60",
+        "alternateIds": {
+            "RH3052_TUYATEC-gqhxixyk": {
+                "manufacturer": "Moes",
+                "type": "Moes temperature & humidity sensor"
+            }
+        },
         "category": {
             "automatism": "1"
         },

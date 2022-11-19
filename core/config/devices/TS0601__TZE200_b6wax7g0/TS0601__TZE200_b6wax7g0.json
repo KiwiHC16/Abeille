@@ -15,6 +15,29 @@
         "commands": {
             "Groups": {
                 "use": "Group-Membership"
+            },
+            "Battery percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
+            "Local temp": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": 1
+            },
+            "Set Setpoint": {
+                "use": "cmdG-TuyaEF00-Set-Setpoint",
+                "params": "dpId=02",
+                "isVisible": 1
+            },
+            "Setpoint": {
+                "use": "attr-Thermostat-Setpoint",
+                "isVisible": 1
+            }
+        },
+        "tuyaEF00": {
+            "fromDevice": {
+                "02": { "function": "rcvValue", "info": "01-setpoint" },
+                "03": { "function": "rcvValueDiv", "info": "0402-01-0000", "div": 10 },
+                "OE": { "function": "rcvValue", "info": "0001-01-0021" }
             }
         }
     }

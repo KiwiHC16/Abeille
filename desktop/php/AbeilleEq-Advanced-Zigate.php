@@ -9,7 +9,11 @@
 
 <div class="form-group">
     <div class="col-sm-3"></div>
-    <h3 class="col-sm-5" style="text-align:left">{{Zigate}}</h3>
+    <h3 class="col-sm-5" style="text-align:left">{{Zigate}}
+        <?php
+            addDocButton("Utilisation.html#mode-avance-pour-une-zigate");
+        ?>
+    </h3>
 </div>
 
 <div class="form-group">
@@ -67,10 +71,7 @@
 
 <div class="form-group">
     <div class="col-sm-3 control-label">
-        <label class="">Canal</label>
-        <?php
-            addDocButton("Radio.html#zigate-channel-selection");
-        ?>
+        <label class="">Canal Zigbee</label>
     </div>
     <div class="col-sm-5">
         <?php
@@ -88,6 +89,7 @@
                 }
                 ?>
             </select>
+            <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('startNetwork', '')">{{Appliquer}}</a>
         </div>
     </div>
 </div>

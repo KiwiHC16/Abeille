@@ -150,18 +150,19 @@ Démons:
                 echo '<td><span class="label label-warning" style="font-size: 1em; cursor: default;">Manquante</span></td>';
             }
 
-            // Status
-            // Status Ok par defaut, apres on test et on met le status à la valeur voulue
+            // Status: Updated every minutes by cron() (see Abeille.class.php)
             if ($eqLogic->getIsEnable() == 0) // Disabled ?
                 $status = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Désactivé}}</span>';
-            else if ($eqLogic->getStatus('state') == '-')
-                $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
+            // else if ($eqLogic->getStatus('state') == '-')
+            //     $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
             else if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol")
                 $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
-            else if ((time() - strtotime($eqLogic->getStatus('lastCommunication'))) > ((2*60*$eqLogic->getTimeout())))
-                $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">Time-out</span>';
-            else if ((time() - strtotime($eqLogic->getStatus('lastCommunication'))) > (60*$eqLogic->getTimeout()))
-                $status = '<span class="label label-warning" style="font-size: 1em; cursor: default;">Time-out</span>';
+            // else if ((time() - strtotime($eqLogic->getStatus('lastCommunication'))) > ((2*60*$eqLogic->getTimeout())))
+            //     $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">Time-out</span>';
+            // else if ((time() - strtotime($eqLogic->getStatus('lastCommunication'))) > (60*$eqLogic->getTimeout()))
+            //     $status = '<span class="label label-warning" style="font-size: 1em; cursor: default;">Time-out</span>';
+            else if ($eqLogic->getStatus('timeout') == 1)
+                $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">{{Time-out}}</span>';
             else
                 $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">{{OK}}</span>';
             echo '<td>'.$status.'</td>';

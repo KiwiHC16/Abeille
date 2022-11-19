@@ -719,8 +719,9 @@
                         //     $removeCmd = true;
                         // }
                     }
-                    else if (in_array($msg['status'], ['01', '02', '03', '05'])) {
+                    else if (in_array($msg['status'], ['01', '02', '03', '05', '06'])) {
                         // Status is: bad param, unhandled, failed (?), stack already started
+                        // Status 06 = Unknown EP ? (Zigate v2)
                         // $cmd['status'] = '8000';
                         $removeCmd = true;
                     }

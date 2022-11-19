@@ -509,12 +509,13 @@
                 } else if ($updType == 'macCapa') { // MAC capa flags
                     if (!isset($eq['macCapa']) || ($eq['macCapa'] != $value)) {
                         $eq['macCapa'] = $value;
+                        $eq['rxOnWhenIdle'] = (hexdec($eq['macCapa']) >> 3) & 0b1;
                         $msg = array(
                             'type' => 'updateDevice',
                             'net' => $net,
                             'addr' => $addr,
                             'updates' => array(
-                                "macCapa" => $value
+                                "macCapa" => $value // Will trig rxOnWhenIdle update too
                             ),
                         );
                         msgToAbeille2($msg);
@@ -1867,8 +1868,9 @@
                     parserLog('debug', '  Updating macCapa from customization: '.$macCapa.' => '.$eq['customization']['macCapa']);
                     $newMacCapa = $eq['customization']['macCapa'];
                 }
-            } else if ($eq['macCapa'] != $macCapa)
+            } else if ($eq['macCapa'] != $macCapa) {
                 $newMacCapa = $macCapa;
+            }
             if (isset($newMacCapa))
                 $this->deviceUpdate($dest, $srcAddr, 'xx', 'macCapa', $newMacCapa);
             if ($eq['manufCode'] != $manufCode)
@@ -1948,7 +1950,7 @@
 
                 // Foreach neighbor, let's ensure that useful infos are stored
                 $bitMap = hexdec($N['bitMap']);
-                $rxOn = ($bitMap >> 2) & 0x3; // 1 = RX ON when idle
+                $rxOn = ($bitMap >> 2) & 0x1; // 01 = RX ON when idle
                 $update = [];
                 if ($eq['ieee'] != $N['extAddr'])
                     $update['ieee'] = $N['extAddr'];

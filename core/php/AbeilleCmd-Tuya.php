@@ -4,6 +4,17 @@
 
     $tuyaTransId = 0; // Transaction ID: 0 to 255
 
+    function tuyaCheckRequiredParams($required, $abCmd) {
+        $cmd = $abCmd['cmd'];
+        foreach ($required as $req) {
+            if (!isset($abCmd[$req])) {
+                cmdLog('debug', "    ERROR: Undefined '".$req."' for '".$cmd."'");
+                return false;
+            }
+        }
+        return true;
+    }
+
     // Types reminder
     // Type	    TypeId  LengthInBytes	Description
     // raw	    0x00	N	            Corresponds to raw datapoint (module pass-through)
@@ -46,13 +57,38 @@
 
         // Send boolean data
         case "setBool":
-            if (!isset($abCmd['dpId'])) {
-                cmdLog('debug', "    ERROR: Undefined dpId for '".$cmd."'");
+            $required = ['dpId', 'data'];
+            if (!tuyaCheckRequiredParams($required, $abCmd))
                 return false;
-            }
             $dpId = $abCmd['dpId'];
             $dpType = "01"; // Bool
-            $dpData = sprintf("%02X", $data);
+            $dpData = sprintf("%02X", $abCmd['data']);
+            break;
+        case "setValue":
+            $required = ['dpId', 'data'];
+            if (!tuyaCheckRequiredParams($required, $abCmd))
+                return false;
+            $dpId = $abCmd['dpId'];
+            $dpType = "02"; // Value
+            $dpData = sprintf("%08X", $abCmd['data']);
+            break;
+        case "setValueMult":
+            $required = ['dpId', 'mult', 'data'];
+            if (!tuyaCheckRequiredParams($required, $abCmd))
+                return false;
+            $dpId = $abCmd['dpId'];
+            $mult = $abCmd['mult'];
+            $dpType = "02"; // Value
+            $dpData = sprintf("%08X", $abCmd['data'] * $mult);
+            break;
+        case "setValueDiv":
+            $required = ['dpId', 'div', 'data'];
+            if (!tuyaCheckRequiredParams($required, $abCmd))
+                return false;
+            $dpId = $abCmd['dpId'];
+            $div = $abCmd['div'];
+            $dpType = "02"; // Value
+            $dpData = sprintf("%08X", $abCmd['data'] / $div);
             break;
         // Send percent data in 0-1000 range with input in 0-100 range
         case "setPercent1000":

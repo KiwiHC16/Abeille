@@ -290,13 +290,16 @@
     }
 
     // Reread Jeedom useful infos on DB update
+    // Note: A delay is required prior to this if DB has to be updated (createDevice() in Abeille.class)
     function updateDeviceFromDB($eqId) {
         $eqLogic = eqLogic::byId($eqId);
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
 
         $GLOBALS['eqList'][$net][$addr]['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null);
+        parserLog('debug', "  'tuyaEF00' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['tuyaEF00']));
         $GLOBALS['eqList'][$net][$addr]['customization'] = $eqLogic->getConfiguration('ab::customization', null);
+        parserLog('debug', "  'customization' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['customization']));
         // TO BE COMPLETED if any other key info
     }
 

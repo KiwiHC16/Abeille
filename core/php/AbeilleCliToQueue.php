@@ -240,8 +240,9 @@
                 'payload' => '',
             );
             $msgJson = json_encode($msg);
-            if (isset($dbgTcharp38)) logDebug("reinit msg to Abeille: ".$msgJson);
+            if (isset($dbgTcharp38)) logDebug("'reinit' msg to Abeille: ".$msgJson);
             msg_send($queue, 1, $msgJson, false, false);
+            sleep(2); // To let Abeille.class time to update DB
         }
 
         // Inform parser that EQ config has changed
@@ -250,7 +251,7 @@
             'type' => "eqUpdated",
             'id' => $eqId,
         );
-        if (isset($dbgTcharp38)) logDebug("eqUpdated msg to Parser: ".json_encode($msg));
+        if (isset($dbgTcharp38)) logDebug("'eqUpdated' msg to Parser: ".json_encode($msg));
         msg_send($queue, 1, json_encode($msg), false, false);
 
         return;

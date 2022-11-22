@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221122-BETA-1
+-------------
+
 - Page Zigate/avancé: Reset HW possible sur Piv2.
 - Page Zigate/avancé: Amélioration selection du canal.
 - Modèles EQ: Support customization 'rxOn'.

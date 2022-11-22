@@ -21,7 +21,8 @@
             },
             "Local temp": {
                 "use": "zb-0402-MeasuredValue",
-                "isVisible": 1
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "Set Setpoint": {
                 "use": "cmdG-TuyaEF00-Set-Setpoint",
@@ -36,8 +37,8 @@
         "tuyaEF00": {
             "fromDevice": {
                 "02": { "function": "rcvValue", "info": "01-setpoint" },
-                "03": { "function": "rcvValueDiv", "info": "0402-01-0000", "div": 10 },
-                "OE": { "function": "rcvValue", "info": "0001-01-0021" }
+                "03": { "function": "rcvValue", "info": "0402-01-0000" },
+                "0E": { "function": "rcvValue", "info": "0001-01-0021" }
             }
         }
     }

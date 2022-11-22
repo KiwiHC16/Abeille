@@ -10,8 +10,9 @@
             "icon": "TI0001"
         },
         "customization": {
-            "comment": "macCapa: mains + RX ON",
-            "macCapa": "8C"
+            "comment": "Force mainsPowered + RX ON",
+            "macCapa": "8C",
+            "rxOn": 1
         },
         "category": {
             "light": "1"
@@ -21,10 +22,30 @@
                 "use": "Identify",
                 "isVisible": 0
             },
-            "include24 2 2 2 2 2": "setLivoloOff2",
-            "include24 2 2 2 2 2 3": "setLivoloOff",
-            "include24 2 2 2 2 2 2": "setLivoloOn2",
-            "include24 2 2 2 2 2 2 2": "setLivoloOn",
+            "On 1": {
+                "use": "act_zbCmdG-0008-MoveToLevelWithOnOff",
+                "params": "slider=108&duration=01",
+                "genericType": "LIGHT_ON",
+                "isVisible": 1
+            },
+            "Off 1": {
+                "use": "act_zbCmdG-0008-MoveToLevelWithOnOff",
+                "params": "slider=1&duration=01",
+                "genericType": "LIGHT_OFF",
+                "isVisible": 1
+            },
+            "On 2": {
+                "use": "act_zbCmdG-0008-MoveToLevelWithOnOff",
+                "params": "slider=108&duration=02",
+                "genericType": "LIGHT_ON",
+                "isVisible": 1
+            },
+            "Off 2": {
+                "use": "act_zbCmdG-0008-MoveToLevelWithOnOff",
+                "params": "slider=1&duration=02",
+                "genericType": "LIGHT_OFF",
+                "isVisible": 1
+            },
             "etat": {
                 "use": "zb-0006-OnOff",
                 "isVisible": 1

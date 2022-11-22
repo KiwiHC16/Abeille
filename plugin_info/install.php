@@ -548,31 +548,20 @@
                 // Renaming icons if required
                 $iList = array(
                     "Blitzwolf-BW-SHP13" => "Blitzwolf-SmartPlug",
+
                     "BulbE27" => "Generic-BulbE27",
                     "Generic-E14" => "Generic-BulbE14",
                     "Generic-E27-Color" => "Generic-BulbE27-Color",
                     "Generic-E27" => "Generic-BulbE27",
                     "Generic-GU10" => "Generic-BulbGU10",
-                    "511.201" => "Iluminize-511201",
-                    "511.202" => "Iluminize-511202",
-                    "LegrandRemoteSwitch" => "Legrand-RemoteSwitch",
-                    "Contactor" => "Legrand-Contactor",
-                    "Connectedoutlet" => "Legrand-Connectedoutlet",
-                    "Moes-ZSS-ZK-THL" => "Moes-Thermometer",
-                    "ProfaluxTelecommande" => "Profalux-Remote",
-                    "voletProFalux" => "Profalux-Shutter",
-                    "node_bsoProFalux" => "Profalux-BSO",
-                    "BASICZBR3" => "Sonoff-BASICZBR3",
-                    "SNZB-01" => "Sonoff-SNZB-01",
-                    "SNZB-02" => "Sonoff-SNZB-02",
-                    "SNZB-03" => "Sonoff-SNZB-03",
-                    "SNZB-04" => "Sonoff-SNZB-04",
-                    "01MINIZB" => "Sonoff-01MINIZB",
-                    "TuyaSmartSocket" => "Tuya-SmartSocket",
-                    "Tuya-TS011F" => "Tuya-SmartSocket-2",
-                    "Tuya4ButtonsSceneSwitch" => "Tuya-4ButtonsSwitch-Gray",
-                    "Tuya4ButtonsSwitch" => "Tuya-4ButtonsSwitch-White",
-                    "PlugZ3" => "Ledvance-PlugZ3",
+
+                    "JR-ZDS01" => "Girier-JR-ZDS01",
+
+                    "GL-C-008" => "Gledopto-RGBCCTLedController",
+                    "GL-S-003Z" => "Gledopto-BulbGU10-Color",
+                    "GL-S-004Z" => "Gledopto-BulbGU10",
+                    "GLEDOPTO" => "Gledopto-BulbGU10",
+
                     "Ikea-GU10" => "Ikea-BulbGU10",
                     "Ikea-E27" => "Ikea-BulbE27",
                     "IkeaTradfriBulbE27Opal1000lm" => "Ikea-BulbE27",
@@ -581,17 +570,42 @@
                     "TRADFRItransformer10W" => "Ikea-Transformer",
                     "TRADFRItransformer30W" => "Ikea-Transformer",
                     "TRADFRIsignalrepeater" => "Ikea-SignalRepeater",
-                    "JR-ZDS01" => "Girier-JR-ZDS01",
-                    "GL-C-008" => "Gledopto-RGBCCTLedController",
-                    "GL-S-003Z" => "Gledopto-BulbGU10-Color",
-                    "GL-S-004Z" => "Gledopto-BulbGU10",
-                    "GLEDOPTO" => "Gledopto-BulbGU10",
+
+                    "511.201" => "Iluminize-511201",
+                    "511.202" => "Iluminize-511202",
+
+                    "PlugZ3" => "Ledvance-PlugZ3",
+
+                    "LegrandRemoteSwitch" => "Legrand-RemoteSwitch",
+                    "Contactor" => "Legrand-Contactor",
+                    "Connectedoutlet" => "Legrand-Connectedoutlet",
+
+                    "Moes-ZSS-ZK-THL" => "Moes-Thermometer",
+
                     "LOM001" => "PhilipsSignify-Plug",
                     "LOM002" => "PhilipsSignify-Plug",
                     "LTW001" => "Philips-Bulb-E27-White",
                     "Philips-MotionSensor-SML003" => "Philips-MotionSensor-1",
                     "SML001" => "Philips-MotionSensor-1",
                     "Philips-OutdoorSensor" => "Philips-MotionSensor-2",
+                    "RB285C" => "Innr-E27Bulb-Colour",
+
+                    "ProfaluxTelecommande" => "Profalux-Remote",
+                    "voletProFalux" => "Profalux-Shutter",
+                    "node_bsoProFalux" => "Profalux-BSO",
+
+                    "BASICZBR3" => "Sonoff-BASICZBR3",
+                    "SNZB-01" => "Sonoff-SNZB-01",
+                    "SNZB-02" => "Sonoff-SNZB-02",
+                    "SNZB-03" => "Sonoff-SNZB-03",
+                    "SNZB-04" => "Sonoff-SNZB-04",
+                    "01MINIZB" => "Sonoff-01MINIZB",
+
+                    "TuyaSmartSocket" => "Tuya-SmartSocket",
+                    "Tuya-TS011F" => "Tuya-SmartSocket-2",
+                    "Tuya4ButtonsSceneSwitch" => "Tuya-4ButtonsSwitch-Gray",
+                    "Tuya4ButtonsSwitch" => "Tuya-4ButtonsSwitch-White",
+
                     "XiaomiPorte" => "Xiaomi-DoorSensor",
                     "XiaomiPorte1" => "Xiaomi-DoorSensor-2",
                     "XiaomiTemperatureCarre" => "Xiaomi-TempSensor-2",

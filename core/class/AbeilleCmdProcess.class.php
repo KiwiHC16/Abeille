@@ -2713,6 +2713,13 @@
                     return;
                 }
 
+                // Zigate specific command: Start Network Scan
+                // Unsupported cmd on Zigate v1 at least (FW 3.21)
+                // else if ($cmdName == 'startZgNetworkScan') {
+                //     $this->addCmdToQueue2(PRIO_NORM, $dest, "0025");
+                //     return;
+                // }
+
                 // Zigate specific command: Erase PDM
                 else if (($cmdName == 'eraseZgPDM') || ($cmdName == 'ErasePersistentData')) {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0012");
@@ -2744,9 +2751,7 @@
                     }
                     $mask = str_pad($mask, 8, '0', STR_PAD_LEFT); // Add any missing zeros
 
-                    $cmd = "0021";
-
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $mask);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "0021", $mask);
                     return;
                 }
 
@@ -3748,6 +3753,7 @@
                 // setLevelRaw = same as setLevel but 'Level' is raw data, not %
                 // Mandatory params: addr, EP, Level (in dec, %), duration (dec)
                 // Optional params: duration (default=0001)
+                // OBSOLETE !!! Use 'cmd-0008' instead with 'cmd=00' or '04'
                 else if ($cmdName == 'setLevelRaw') {
                     $required = ['addr', 'EP', 'Level']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
@@ -3786,17 +3792,40 @@
                 }
 
                 // ZCL cluster 0008/Level control specific.
-                // Mandatory params: addr, ep & cmd ('07')
-                // Optional params: currently none
+                // Mandatory params: addr, ep & cmd ('00', '04, '07')
+                //   + 'level' for cmd '00' or '04'
+                // Optional params: 'duration' for cmd '00' or '04'
                 else if ($cmdName == 'cmd-0008') {
-                    $required = ['addr', 'ep', 'cmd']; // Mandatory infos
+                    $required1 = ['addr', 'ep', 'cmd']; // Mandatory infos
+                    $required2 = ['addr', 'ep', 'cmd', 'level']; // Mandatory infos for 00 & 04
+                    if (isset($Command['cmd']) && ($Command['cmd'] == "07"))
+                        $required = $required1;
+                    else
+                        $required = $required2;
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
                     $cmdId = $Command['cmd'];
 
                     // TO BE COMPLETED
-                    if ($cmdId == '07') { // Stop with OnOff
+                    if (($cmdId == '00') || ($cmdId == '04')) { // Move to Level without (00) or with On/Off (04)
+                        $cmd        = "0081";
+                        $addrMode   = "02"; // Assuming short addr
+                        $addr       = $Command['addr'];
+                        $srcEp      = "01";
+                        $dstEp      = $Command['ep'];
+                        if ($cmdId == '00')
+                            $onOff = "00";
+                        else
+                            $onOff = "01";
+                        $level      = sprintf("%02X", intval($Command['level']));
+                        $duration   = isset($Command['duration']) ? sprintf("%04X", $Command['duration']) : "0001";
+                        cmdLog('debug', '    Using onOff='.$onOff.', level='.$level.', duration='.$duration);
+
+                        $data       = $addrMode.$addr.$srcEp.$dstEp.$onOff.$level.$duration;
+
+                        $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    } else if ($cmdId == '07') { // Stop with OnOff
                         $cmd        = "0084"; // Stop with OnOff = Cluster 0008, cmd 07
                         $addrMode   = "02"; // Assuming short addr
                         $addr       = $Command['addr'];
@@ -3807,10 +3836,10 @@
 
                         $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                     } else {
-                        cmdLog('error', "Unsupported cluster 0008 command ".$cmdId);
-                        return;
+                        cmdLog('error', "  Unsupported cluster 0008 command ".$cmdId);
                     }
 
+                    return;
                 } // End $cmdName == 'cmd-0008'
 
                 // ZCL cluster 0019 specific: Inform Zigate that there is a valid OTA image
@@ -4580,13 +4609,13 @@
                     return;
                 } // End 'commandLegrand'
 
-                else {
-                    cmdLog('debug', "    ERROR: Unexpected command '".$cmdName."'");
-                    return;
-                }
+                // else {
+                //     cmdLog('debug', "    ERROR: Unexpected command '".$cmdName."'");
+                //     return;
+                // }
             }
 
-            cmdLog('debug', "    ERROR: Unexpected command '".json_encode($Command)."'");
+            cmdLog('error', "    Commande inattendue: '".json_encode($Command)."'");
         }
     }
 ?>

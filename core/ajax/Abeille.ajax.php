@@ -525,6 +525,45 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        // Read 'ab::settings' content
+        // Params: eqId = Equipment Jeedom ID
+        if (init('action') == 'getSettings') {
+            $status = 0;
+            $error = "";
+
+            $eqId = init('eqId');
+            $eqLogic = Abeille::byId($eqId);
+            $settings = [];
+            if (!is_object($eqLogic)) {
+                $error = "Invalid device ID ".$eqId;
+                $status = -1;
+            } else
+                $settings = $eqLogic->getConfiguration('ab::settings', []);
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'settings' => $settings)));
+        }
+
+        // Change 'ab::settings' content
+        if (init('action') == 'saveSettings') {
+            $status = 0;
+            $error = "";
+
+            $eqId = init('eqId');
+            $settings = init('settings');
+            $settings = json_decode($settings, true);
+
+            $eqLogic = Abeille::byId($eqId);
+            if (!is_object($eqLogic)) {
+                $error = "Invalid device ID ".$eqId;
+                $status = -1;
+            } else {
+                $eqLogic->setConfiguration('ab::settings', $settings);
+                $eqLogic->save();
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.
             Instead 'success' callback is used. This means that
             - take care of error code returned

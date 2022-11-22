@@ -1,14 +1,14 @@
 {
-    "LWA011": {
+    "LWA017_SignifyNetherlandsBV": {
         "manufacturer": "Philips",
-        "model": "9290018216",
+        "model": "LWA017",
         "type": "Philips E27 white bulb",
         "timeout": "60",
         "category": {
             "light": "1"
         },
         "configuration": {
-            "icon": "PhilipsHue-E27Bulb-WhiteAmbiance",
+            "icon": "PhilipsHue-E27Bulb-White",
             "mainEP": "0B"
         },
         "commands": {

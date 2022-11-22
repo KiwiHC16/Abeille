@@ -1,6 +1,16 @@
 ChangeLog
 =========
 
+- Page Zigate/avancé: Reset HW possible sur Piv2.
+- Page Zigate/avancé: Amélioration selection du canal.
+- Modèles EQ: Support customization 'rxOn'.
+- Livolo TI0001: Mise-à-jour modèle (2476).
+- Moes BRT-100: Mise-à-jour modèle (2467).
+- Images: Qq mises-à-jour & renomages.
+- Interne: Parser/cleanManufId(): '.' ignoré.
+- Philips E27 LWA017: Ajout support (2503).
+- Interne: Cmd: Ajout support 'move to level' (cmd-0008).
+
 221119-BETA-2
 -------------
 

@@ -61,10 +61,12 @@
     <label class="col-sm-3 control-label">Status réseau</label>
     <div class="col-sm-5">
         <?php
-            $res = getCmdValueByName($eqId, 'Network Status');
+            $res = getCmdValueByLogicId($eqId, 'Network-Status');
             echo '<input type="text" value="'.$res.'" readonly>';
-            if (isset($dbgDeveloperMode))
+            if (isset($dbgDeveloperMode)) {
                 echo '<a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate(\'startNetwork\', \'\')">{{Démarrer}}</a>';
+                // echo '<a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate(\'startNetworkScan\', \'\')">{{Démarrer scan}}</a>';
+            }
         ?>
     </div>
 </div>
@@ -75,21 +77,32 @@
     </div>
     <div class="col-sm-5">
         <?php
-        echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Network Channel").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-            echo '<input type="text" id="idChannel" title="{{Canal actuel}}" value="'.getCmdValueByName($eqId, 'Network Channel').'" readonly>';
-            addJsUpdateFunction($eqId, 'Network-Channel', 'idChannel');
+        echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, "Network-Channel").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+            echo '<input type="text" id="idChannel" title="{{Canal actuel}}" value="'.getCmdValueByLogicId($eqId, 'Network-Channel').'" readonly>';
+            addJsUpdateFunction($eqId, 'Network-Channel', 'idChannel', true);
         ?>
             <!-- <input type="text" id="idChannelMask" placeholder="ex: 07FFF800" title="{{Masque des canaux autorisés (en hexa, 1 bit par canal, 800=canal 11, 07FFF800=tous les canaux de 11 à 26)}}" style="margin-left:10px; width:100px">
             <a class="btn btn-warning" onclick="sendZigate('setChannelMask', '')">Modifier</a> -->
-            <select id="idZgChan" style="width:80px; margin-left:4px" title="{{Canal Zigbee choisi}}" onchange="sendZigate('setChannel', '')">
-                <option value=0>{{Auto}}</option>
+            <select id="idZgChan" style="width:80px; margin-left:4px" title="{{Canal Zigbee choisi}}">
                 <?php
+                if (isset($eqSettings['channel']))
+                    $chan = $eqSettings['channel'];
+                else
+                    $chan = 0; // Default = auto
+
+                if ($chan == 0)
+                    echo '<option value=0 selected>{{Auto}}</option>';
+                else
+                    echo '<option value=0>{{Auto}}</option>';
                 for ($i = 11; $i < 27; $i++) {
-                    echo '<option value='.$i.'>'.$i.'</option>';
+                    if ($i == $chan)
+                        echo '<option value='.$i.' selected>'.$i.'</option>';
+                    else
+                        echo '<option value='.$i.'>'.$i.'</option>';
                 }
                 ?>
             </select>
-            <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('startNetwork', '')">{{Appliquer}}</a>
+            <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('setChannel', '')">{{Appliquer}}</a>
         </div>
     </div>
 </div>
@@ -117,7 +130,7 @@
     </div>
     <div class="col-sm-7">
         <?php
-        echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "ZiGate-Time").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+        echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, "ZiGate-Time").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
         ?>
             <?php
             echo '<input type="text" id="idZgTime" value="" readonly>';
@@ -133,8 +146,8 @@
     <label class="col-sm-3 control-label">PAN ID</label>
     <div class="col-sm-5">
         <?php
-        echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "PAN ID").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-            echo '<input type="text" id="idPanId" value="'.getCmdValueByName($eqId, 'PAN ID').'" readonly>';
+        echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, "PAN-ID").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+            echo '<input type="text" id="idPanId" value="'.getCmdValueByLogicId($eqId, 'PAN-ID').'" readonly>';
             addJsUpdateFunction($eqId, 'PAN-ID', 'idPanId');
         echo '</div>';
         ?>
@@ -148,8 +161,8 @@
     </div>
     <div class="col-sm-5">
         <?php
-        echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Ext PAN ID").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-            echo '<input type="text" id="idExtPanId" value="'.getCmdValueByName($eqId, 'Ext PAN ID').'" readonly>';
+        echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, "Ext_PAN-ID").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+            echo '<input type="text" id="idExtPanId" value="'.getCmdValueByLogicId($eqId, 'Ext_PAN-ID').'" readonly>';
             addJsUpdateFunction($eqId, 'Ext_PAN-ID', 'idExtPanId');
         ?>
         </div>
@@ -216,7 +229,7 @@
 </div>
 
 <?php
-    if ($zgType == "PI") { ?>
+    if (($zgType == "PI") || ($zgType == "PIv2")) { ?>
         <div class="form-group">
         <label class="col-sm-3 control-label">{{Reset HW}}</label>
         <div class="col-sm-5">

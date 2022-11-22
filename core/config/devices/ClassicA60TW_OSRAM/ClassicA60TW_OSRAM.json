@@ -8,7 +8,7 @@
             "automatism": "1"
         },
         "configuration": {
-            "icon": "Osram-Bulb-Lightify-E27Classic",
+            "icon": "Osram-E27Bulb-Lightify-Classic",
             "mainEP": "03"
         },
         "commands": {

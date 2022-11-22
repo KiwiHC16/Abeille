@@ -6,7 +6,7 @@
         "configuration": {
             "mainEP": "03",
             "poll": "1",
-            "icon": "Osram-Bulb-Lightify-B40Classic"
+            "icon": "Osram-B40Bulb-Lightify-Classic"
         },
         "category": {
             "automatism": "1"

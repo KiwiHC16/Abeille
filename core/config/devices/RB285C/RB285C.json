@@ -5,7 +5,7 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "RB285C"
+            "icon": "Innr-E27Bulb-Colour"
         },
         "category": {
             "light": "1"

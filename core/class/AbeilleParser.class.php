@@ -1099,6 +1099,8 @@
                     continue; // Ignore any control char & space
                 if ($in == '/')
                     continue; // Ignore '/'
+                if ($in == '.')
+                    continue; // Ignore '.'
                 $m = $m.$in;
             }
             return $m;
@@ -1919,7 +1921,7 @@
                 // Filtering-out devices from other networks
                 if (isset($GLOBALS['zigate'.$zgId]['extPanId'])) {
                     if ($extPanId != $GLOBALS['zigate'.$zgId]['extPanId']) {
-                        // parserLog('debug', '  Alternate network (extPanId='.$extPanId.') ignored');
+                        parserLog('debug', '  Alternate network (extPanId='.$extPanId.') ignored');
                         continue;
                     }
                 }
@@ -1941,23 +1943,28 @@
             }
             $this->msgToLQICollector($srcAddr, $nTableEntries, $nTableListCount, $startIdx, $nList);
 
-            // Any useful infos to update ?
+            // Foreach neighbor, let's ensure that useful infos are stored
             foreach ($nList as $N) {
                 if ($N['addr'] == "0000")
                     continue; // It's a zigate
 
                 $eq = getDevice($dest, $N['addr'], '');
 
-                // Foreach neighbor, let's ensure that useful infos are stored
+                // Any useful infos to update ?
                 $bitMap = hexdec($N['bitMap']);
                 $rxOn = ($bitMap >> 2) & 0x1; // 01 = RX ON when idle
-                $update = [];
+                if (isset($eq['customization']) && isset($eq['customization']['rxOn'])) {
+                    $rxOn = $eq['customization']['rxOn'];
+                    parserLog('debug', "  ".$N['addr'].": 'rxOnWhenIdle' customized to ".$rxOn);
+                }
+
+                $updates = [];
                 if ($eq['ieee'] != $N['extAddr'])
-                    $update['ieee'] = $N['extAddr'];
+                    $updates['ieee'] = $N['extAddr'];
                 if ($eq['rxOnWhenIdle'] != $rxOn)
-                    $update['rxOnWhenIdle'] = $rxOn;
-                if ($update != [])
-                    $this->updateDevice($dest, $N['addr'], $update);
+                    $updates['rxOnWhenIdle'] = $rxOn;
+                if ($updates != [])
+                    $this->updateDevice($dest, $N['addr'], $updates);
             }
         } // End decode8002_MgmtLqiRsp()
 

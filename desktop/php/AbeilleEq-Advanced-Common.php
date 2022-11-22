@@ -25,7 +25,7 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
     <?php
-    echo '<div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Last").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+    echo '<div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, "Time-Time").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
         echo '<input type="text" id="idLastComm" value="'.getCmdValueByLogicId($eqId, "Time-Time").'" readonly>';
         addJsUpdateFunction($eqId, 'Time-Time', 'idLastComm');
     ?>

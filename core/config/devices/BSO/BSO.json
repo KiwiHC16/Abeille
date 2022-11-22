@@ -23,7 +23,6 @@
             "include8": "levelVolet",
             "include9": "onVolet",
             "include10": "offVolet",
-            "include11": "toggleVolet",
             "include12": "setLevelVolet",
             "Stop": {
                 "use": "zbCmdG-0008-StopWithOnOff",

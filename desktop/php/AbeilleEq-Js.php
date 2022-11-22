@@ -184,6 +184,7 @@
 
         var topic = "";
         var payload = "";
+
         switch(action) {
         case "setLED":
             topic = 'CmdAbeille'+js_zgId+'/0000/setZgLed';
@@ -200,6 +201,10 @@
             break;
         case "startNetwork": // Not required for end user but for developper.
             topic = 'CmdAbeille'+js_zgId+'/0000/startZgNetwork';
+            payload = '';
+            break;
+        case "startNetworkScan": // Not required for end user but for developper.
+            topic = 'CmdAbeille'+js_zgId+'/0000/startZgNetworkScan';
             payload = '';
             break;
         case "setInclusion":
@@ -260,6 +265,15 @@
             console.log("  Channel=" + chan + " => mask=" + mask);
             topic = 'CmdAbeille'+js_zgId+'/0000/setZgChannelMask';
             payload = 'mask='+mask;
+            sendToZigate(topic, payload);
+
+            console.log("settings1=", js_eqSettings);
+            js_eqSettings.channel = chan;
+            console.log("settings2=", js_eqSettings);
+            saveSettings();
+
+            topic = 'CmdAbeille'+js_zgId+'/0000/startZgNetwork';
+            payload = '';
             break;
         case "getTXPower":
             topic = 'CmdAbeille'+js_zgId+'/0000/getZgTxPower';
@@ -601,6 +615,44 @@
         path = 'core/config/devices_local/'+modelId+'_'+manufId+'/discovery.json';
 
         window.open('plugins/Abeille/core/php/AbeilleDownload.php?pathfile='+path, "_blank", null);
+    }
+
+    /* eqLogic/configuration settings (ab::settings) read */
+    function getSettings(eqId) {
+        console.log("getSettings()");
+
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'getSettings',
+                edId: eqId
+            },
+            dataType: 'json',
+            global: false,
+            success: function (json_res) {
+            }
+        });
+    }
+
+    /* eqLogic/configuration settings (ab::settings) update */
+    function saveSettings() {
+        console.log("saveSettings(): settings=", js_eqSettings);
+        console.log("  js_eqSettings type=", typeof(js_eqSettings));
+
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'saveSettings',
+                eqId: js_eqId,
+                settings: JSON.stringify(js_eqSettings)
+            },
+            dataType: 'json',
+            global: false,
+            success: function (json_res) {
+            }
+        });
     }
 
 </script>

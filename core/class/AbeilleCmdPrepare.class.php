@@ -684,22 +684,6 @@
                                     );
                 break;
 
-            // case "ActiveEndPoint
-            //     $fields = preg_split("/[=&]+/", $msg);
-            //     if (count($fields) > 1) {
-            //         $parameters = $this->proper_parse_str($msg);
-            //         $Command = array(
-            //                         "setLevel"             => "1",
-            //                         "addressMode"          => "02",
-            //                         "priority" => $priority,
-            //                         "dest" => $dest,
-            //                         "address"              => $address,
-            //                         "destinationEndpoint"  => $parameters['EP'],
-            //                         "Level"                => intval($parameters['Level'] * 255 / 100),
-            //                         "duration"             => $parameters['duration'],
-            //                     );
-            //     }
-            //     break;
             case "setLevelRaw":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {

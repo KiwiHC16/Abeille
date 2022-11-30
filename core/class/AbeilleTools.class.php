@@ -272,19 +272,19 @@
         If device is not found, returns false. */
         public static function getDevicePath($device) {
             /* Reminder:
-            config/devices => devices officially supported by Abeille
             config/devices_local => user/custom devices not supported yet
+            config/devices => devices officially supported by Abeille
             */
 
-            /* Is that a supported device ? */
-            $modelPath = devicesDir.$device.'/'.$device.'.json';
+            /* Is that an unsupported or user device ? */
+            $modelPath = devicesLocalDir.$device.'/'.$device.'.json';
             if (file_exists($modelPath)) {
                 log::add('Abeille', 'debug', '  getDevicePath('.$device.') => '.$modelPath);
                 return $modelPath;
             }
 
-            /* Is that an unsupported or user device ? */
-            $modelPath = devicesLocalDir.$device.'/'.$device.'.json';
+            /* Is that a supported device ? */
+            $modelPath = devicesDir.$device.'/'.$device.'.json';
             if (file_exists($modelPath)) {
                 log::add('Abeille', 'debug', '  getDevicePath('.$device.') => '.$modelPath);
                 return $modelPath;
@@ -474,6 +474,8 @@
                                 $newCmd[$cmd1]['configuration']['returnStateValue'] = $cmd2['returnStateValue'];
                             if (isset($cmd2['notStandard']))
                                 $newCmd[$cmd1]['configuration']['notStandard'] = $cmd2['notStandard'];
+                            if (isset($cmd2['valueOffset']))
+                                $newCmd[$cmd1]['configuration']['valueOffset'] = $cmd2['valueOffset'];
 
                             // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
                             $deviceCmds += $newCmd;
@@ -684,8 +686,7 @@
          *
          * @return string of comma separated missing daemon
          */
-        public static function getMissingDaemons(array $parameters, $running): string
-        {
+        public static function getMissingDaemons(array $parameters, $running): string {
             $found = self::diffExpectedRunningDaemons($parameters, $running);
             $missing = "";
             foreach ($found as $daemon => $value) {
@@ -748,8 +749,7 @@
          * @param $config
          * @return array
          */
-        public static function checkAllDaemons2($config)
-        {
+        public static function checkAllDaemons2($config) {
             log::add('Abeille', 'debug', __FUNCTION__.'()');
 
             //remove all message before each check
@@ -821,8 +821,7 @@
          *
          * @return array
          */
-        public static function getRunningDaemons(): array
-        {
+        public static function getRunningDaemons(): array {
             exec("pgrep -a php | awk '/Abeille(Parser|SerialRead|Cmd|Socat).php /'", $running);
             return $running;
         }

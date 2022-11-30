@@ -27,7 +27,7 @@
 
     /* Add to list a new eq (router or coordinator) to interrogate.
        Check first is not aleady in the list. */
-    function newEqToInterrogate($logicId) {
+    function newRouter($logicId) {
         global $eqToInterrogate;
         global $knownFromJeedom;
 
@@ -63,7 +63,7 @@
     /* Treat request responses (804E) from parser.
        Returns: 0=OK, -1=fatal error, 1=timeout */
     function msgFromParser($eqIdx) {
-        logMessage("", "msgFromParser(eqIndex=".$eqIdx.")");
+        logMessage("", "  msgFromParser(eqIndex=".$eqIdx.")");
 
         global $queueParserToLQI, $queueParserToLQIMax;
         global $eqToInterrogate;
@@ -135,7 +135,7 @@
                 )
             ); */
 
-        logMessage("", "msg=".json_encode($msg));
+        logMessage("", "  msg=".json_encode($msg));
         $tableEntries = $msg->tableEntries; // Total entries on interrogated eq
         $tableListCount = $msg->tableListCount; // Number of neighbours listed in msg
         $startIdx = $msg->startIdx;
@@ -210,7 +210,7 @@
                 $newNeighbor['type'] = "Coordinator";
             } else if ($attrType == 1) {
                 $newNeighbor['type'] = "Router";
-                newEqToInterrogate($nLogicId);
+                newRouter($nLogicId);
             } else if ($attrType== 2) {
                 $newNeighbor['type'] = "End Device";
             } else { // $attrType== 3
@@ -256,98 +256,98 @@
         $router['neighbors'] = $neighbors;
         $lqiTable['routers'][$NE] = $router;
 
-        //
-        // Old format support
-        // TO BE REMOVED when AbeilleLQI_MapDataAbeilleX.json is no longer used.
-        //
-        $parameters = array();
-        $parameters['NE'] = $NE; // Logical ID
-        if (isset($knownFromJeedom[$NE])) {
-            $parameters['NE_Name'] = $knownFromJeedom[$NE]['name']; // Name
-            // $parameters['NE_Objet'] = $objKnownFromAbeille[$NE]; // Parent object
-            $parameters['NE_Objet'] = $knownFromJeedom[$NE]['parent']; // Parent object
-            $parent = Abeille::byLogicalId($NE, 'Abeille');
-            $parentIEEE = $parent->getConfiguration('IEEE', '');
-            $parameters['IEEE_Address'] = $parentIEEE;
-        } else {
-            /* EQ is still in Zigbee network but is unknown to Jeedom/Abeille */
-            $parameters['NE_Name'] = "Inconnu";
-            $parameters['NE_Objet'] = "";
-            $parentIEEE = "";
-        }
+        // //
+        // // Old format support
+        // // TO BE REMOVED when AbeilleLQI_MapDataAbeilleX.json is no longer used.
+        // //
+        // $parameters = array();
+        // $parameters['NE'] = $NE; // Logical ID
+        // if (isset($knownFromJeedom[$NE])) {
+        //     $parameters['NE_Name'] = $knownFromJeedom[$NE]['name']; // Name
+        //     // $parameters['NE_Objet'] = $objKnownFromAbeille[$NE]; // Parent object
+        //     $parameters['NE_Objet'] = $knownFromJeedom[$NE]['parent']; // Parent object
+        //     $parent = Abeille::byLogicalId($NE, 'Abeille');
+        //     $parentIEEE = $parent->getConfiguration('IEEE', '');
+        //     $parameters['IEEE_Address'] = $parentIEEE;
+        // } else {
+        //     /* EQ is still in Zigbee network but is unknown to Jeedom/Abeille */
+        //     $parameters['NE_Name'] = "Inconnu";
+        //     $parameters['NE_Objet'] = "";
+        //     $parentIEEE = "";
+        // }
 
-        /* Going thru neighbours list */
-        for ($nIdx = 0; $nIdx < hexdec($tableListCount); $nIdx++ ) {
-            $N = $nList[$nIdx];
-            logMessage("", "  N=".json_encode($N));
+        // /* Going thru neighbours list */
+        // for ($nIdx = 0; $nIdx < hexdec($tableListCount); $nIdx++ ) {
+        //     $N = $nList[$nIdx];
+        //     logMessage("", "  N=".json_encode($N));
 
-            // list( $lqi, $voisineAddr, $i ) = explode("/", $message->topic);
+        //     // list( $lqi, $voisineAddr, $i ) = explode("/", $message->topic);
 
-            $parameters['Voisine'] = $netName."/".$N->addr;
-            if (isset($knownFromJeedom[$parameters['Voisine']])) {
-                $parameters['Voisine_Name'] = $knownFromJeedom[$parameters['Voisine']]['name'];
-                // $parameters['Voisine_Objet'] = $objKnownFromAbeille[$parameters['Voisine']];
-                $parameters['Voisine_Objet'] = $knownFromJeedom[$parameters['Voisine']]['parent'];
-            } else {
-                $parameters['Voisine_Name'] = $parameters['Voisine'];
-                $parameters['Voisine_Objet'] = "Inconnu";
-            }
+        //     $parameters['Voisine'] = $netName."/".$N->addr;
+        //     if (isset($knownFromJeedom[$parameters['Voisine']])) {
+        //         $parameters['Voisine_Name'] = $knownFromJeedom[$parameters['Voisine']]['name'];
+        //         // $parameters['Voisine_Objet'] = $objKnownFromAbeille[$parameters['Voisine']];
+        //         $parameters['Voisine_Objet'] = $knownFromJeedom[$parameters['Voisine']]['parent'];
+        //     } else {
+        //         $parameters['Voisine_Name'] = $parameters['Voisine'];
+        //         $parameters['Voisine_Objet'] = "Inconnu";
+        //     }
 
-            $parameters['Depth'] = $N->depth;
-            $parameters['LinkQualityDec'] = hexdec($N->lqi);
+        //     $parameters['Depth'] = $N->depth;
+        //     $parameters['LinkQualityDec'] = hexdec($N->lqi);
 
-            // Decode Bitmap Attribut
-            // Bit map of attributes Described below: uint8_t
-            // bit 0-1 Device Type (0-Coordinator 1-Router 2-End Device)    => Process
-            // bit 2-3 Permit Join status (1- On 0-Off)                     => Skip no need for the time being
-            // bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)            => Process
-            // bit 6-7 Rx On When Idle status (1-On 0-Off)                  => Process
-            $attr = hexdec($N->bitMap);
-            $attrType = $attr & 0b00000011;
-            if ($attrType == 0) {
-                $parameters['Type'] = "Coordinator";
-            } else if ($attrType == 1) {
-                $parameters['Type'] = "Router";
-                newEqToInterrogate($parameters['Voisine']);
-            } else if ($attrType== 2) {
-                $parameters['Type'] = "End Device";
-            } else { // $attrType== 3
-                $parameters['Type'] = "Unknown";
-            }
+        //     // Decode Bitmap Attribut
+        //     // Bit map of attributes Described below: uint8_t
+        //     // bit 0-1 Device Type (0-Coordinator 1-Router 2-End Device)    => Process
+        //     // bit 2-3 Permit Join status (1- On 0-Off)                     => Skip no need for the time being
+        //     // bit 4-5 Relationship (0-Parent 1-Child 2-Sibling)            => Process
+        //     // bit 6-7 Rx On When Idle status (1-On 0-Off)                  => Process
+        //     $attr = hexdec($N->bitMap);
+        //     $attrType = $attr & 0b00000011;
+        //     if ($attrType == 0) {
+        //         $parameters['Type'] = "Coordinator";
+        //     } else if ($attrType == 1) {
+        //         $parameters['Type'] = "Router";
+        //         newRouter($parameters['Voisine']);
+        //     } else if ($attrType== 2) {
+        //         $parameters['Type'] = "End Device";
+        //     } else { // $attrType== 3
+        //         $parameters['Type'] = "Unknown";
+        //     }
 
-            $attrRel = ($attr & 0b00110000) >> 4;
-            if ($attrRel == 0) {
-                $parameters['Relationship'] = "Parent";
-            } else if ($attrRel == 1) {
-                $parameters['Relationship'] = "Child";
+        //     $attrRel = ($attr & 0b00110000) >> 4;
+        //     if ($attrRel == 0) {
+        //         $parameters['Relationship'] = "Parent";
+        //     } else if ($attrRel == 1) {
+        //         $parameters['Relationship'] = "Child";
 
-                // Required by remove from zigbee feature (#1770)
-                // Tcharp38: It appears that in several cases we don't have any parent IEEE
-                //   might not be required if remove is using 004C cmd instead of 0026
-                $kid = Abeille::byLogicalId($netName.'/'.$N->addr, 'Abeille');
-                if ($kid) { // Saving parent IEEE address
-                    $kid->setConfiguration('parentIEEE', $parentIEEE);
-                    $kid->save();
-                } else
-                    logMessage("", "  WARNING: Unkown device '".$netName."/".$N->addr."'");
-            } else if ($attrRel == 2) {
-                $parameters['Relationship'] = "Sibling";
-            } else { // if ($attrRel == 3)
-                $parameters['Relationship'] = "Unknown";
-            }
+        //         // Required by remove from zigbee feature (#1770)
+        //         // Tcharp38: It appears that in several cases we don't have any parent IEEE
+        //         //   might not be required if remove is using 004C cmd instead of 0026
+        //         $kid = Abeille::byLogicalId($netName.'/'.$N->addr, 'Abeille');
+        //         if ($kid) { // Saving parent IEEE address
+        //             $kid->setConfiguration('parentIEEE', $parentIEEE);
+        //             $kid->save();
+        //         } else
+        //             logMessage("", "  WARNING: Unkown device '".$netName."/".$N->addr."'");
+        //     } else if ($attrRel == 2) {
+        //         $parameters['Relationship'] = "Sibling";
+        //     } else { // if ($attrRel == 3)
+        //         $parameters['Relationship'] = "Unknown";
+        //     }
 
-            $attrRx = ($attr & 0b11000000) >> 6;
-            if ($attrRx == 0) {
-                $parameters['Rx'] = "Rx-Off";
-            } else if ($attrRx == 1) {
-                $parameters['Rx'] = "Rx-On";
-            } else { // 2 or 3
-                $parameters['Rx'] = "Rx-Unknown";
-            }
+        //     $attrRx = ($attr & 0b11000000) >> 6;
+        //     if ($attrRx == 0) {
+        //         $parameters['Rx'] = "Rx-Off";
+        //     } else if ($attrRx == 1) {
+        //         $parameters['Rx'] = "Rx-On";
+        //     } else { // 2 or 3
+        //         $parameters['Rx'] = "Rx-Unknown";
+        //     }
 
-            global $LQI;
-            $LQI[] = $parameters;
-        }
+        //     global $LQI;
+        //     $LQI[] = $parameters;
+        // }
 
         return 0;
     }
@@ -465,7 +465,6 @@
         }
 
         $netName = "Abeille".$zgId; // Abeille network
-        // $dataFile = $tmpDir."/AbeilleLQI_MapData".$netName.".json";
         $newDataFile = $tmpDir."/AbeilleLQI-".$netName.".json"; // New format, replacing 'AbeilleLQI_MapDataAbeilleX.json'
         $lockFile = $newDataFile.".lock";
         if (file_exists($lockFile)) {
@@ -491,7 +490,7 @@
             exit;
         }
 
-        $LQI = array(); // Result from interrogations (old format)
+        // $LQI = array(); // Result from interrogations (old format)
         $lqiTable = array(
             'signature' => 'Abeille LQI table',
             'net' => "Abeille".$zgId,
@@ -499,7 +498,7 @@
             'routers' => array()
         ); // Result from interrogations (new format)
         $eqToInterrogate = array();
-        newEqToInterrogate("Abeille".$zgId."/0000");
+        newRouter("Abeille".$zgId."/0000");
 
         $done = 0;
         $eqIdx = 0; // Index of eq to interrogate

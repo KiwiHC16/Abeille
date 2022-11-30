@@ -142,6 +142,9 @@ Exemple de commande 'action'
   * trigOutOffset: optionnel
     Permet, si 'trigOut' est utilisé, de modifier la valeur reçue avant de l'appliquer à la commande pointée par 'trigOut'.
 
+  * valueOffset: optionnel
+    Permet de modifier la valeur d'une cmde action avant de l'executer (equivalent à 'calculValueOffset' pour cmde info).
+
   * Polling: optionnel
     Défini si cette commande 'action' doit etre executée regulierement.
     Valeurs: 'cron', 'cron5', 'cron10', 'cron15', 'cron30', 'cronHourly', 'cronDaily'

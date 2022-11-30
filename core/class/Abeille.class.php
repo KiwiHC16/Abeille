@@ -1210,6 +1210,56 @@ class Abeille extends eqLogic
     //     return;
     // }
 
+    // TODO: To be moved in AbeilleTools. Could be used by parser too
+    // Attempt to find model corresponding to given zigbee signature.
+    // Returns: associative array('jsonId', 'jsonLocation') or false
+    function findModel($zbModelId, $zbManufId) {
+
+        $identifier1 = $zbModelId.'_'.$zbManufId;
+        $identifier2 = $zbModelId;
+
+        // Search by <zbModelId>_<zbManufId>, starting from local models list
+        $localModels = AbeilleTools::getDevicesList('local');
+        foreach ($localModels as $modelId => $model) {
+            if ($modelId == $identifier1) {
+                $identifier = $identifier1;
+                break;
+            }
+        }
+        if (!isset($identifier)) {
+            // Search by <zbModelId>_<zbManufId>, starting from offical models list
+            $officialModels = AbeilleTools::getDevicesList('Abeille');
+            foreach ($officialModels as $modelId => $model) {
+                if ($modelId == $identifier1) {
+                    $identifier = $identifier1;
+                    break;
+                }
+            }
+        }
+        if (!isset($identifier)) {
+            // Search by <zbModelId> in local models
+            foreach ($localModels as $modelId => $model) {
+                if ($modelId == $identifier2) {
+                    $identifier = $identifier2;
+                    break;
+                }
+            }
+        }
+        if (!isset($identifier)) {
+            // Search by <zbModelId> in offical models
+            foreach ($officialModels as $modelId => $model) {
+                if ($modelId == $identifier2) {
+                    $identifier = $identifier2;
+                    break;
+                }
+            }
+        }
+        if (!isset($identifier))
+            return false; // No model found
+
+        return $model;
+    }
+
     public static function message($topic, $payload) {
         // KiwiHC16: Please leave this line log::add commented otherwise too many messages in log Abeille
         // and keep the 3 lines below which print all messages except Time-Time, Time-TimeStamp and Link-Quality that we get for every message.
@@ -1315,25 +1365,26 @@ class Abeille extends eqLogic
             return;
         }
 
-        /* Request to update device from JSON. Useful to avoid reinclusion */
-        if ($cmdId == "updateFromJson") {
-            log::add('Abeille', 'debug', 'message(): updateFromJson, '.$net.'/'.$addr);
+        // /* Request to update device from JSON. Useful to avoid reinclusion */
+        // // No longer be used
+        // if ($cmdId == "updateFromJson") {
+        //     log::add('Abeille', 'debug', 'message(): updateFromJson, '.$net.'/'.$addr);
 
-            $eqLogic = Abeille::byLogicalId($net.'/'.$addr, 'Abeille');
-            if (!is_object($eqLogic)) {
-                log::add('Abeille', 'debug', '  ERROR: Unknown device');
-                return;
-            }
+        //     $eqLogic = Abeille::byLogicalId($net.'/'.$addr, 'Abeille');
+        //     if (!is_object($eqLogic)) {
+        //         log::add('Abeille', 'debug', '  ERROR: Unknown device');
+        //         return;
+        //     }
 
-            // Abeille::createDevice("update", $dest, $addr);
-            $dev = array(
-                'net' => $dest,
-                'addr' => $addr,
-            );
-            Abeille::createDevice("update", $dev);
+        //     // Abeille::createDevice("update", $dest, $addr);
+        //     $dev = array(
+        //         'net' => $dest,
+        //         'addr' => $addr,
+        //     );
+        //     Abeille::createDevice("update", $dev);
 
-            return;
-        }
+        //     return;
+        // }
 
         /* Request to reset device from JSON. Useful to avoid reinclusion */
         if ($cmdId == "resetFromJson") {
@@ -1341,18 +1392,29 @@ class Abeille extends eqLogic
 
             $eqLogic = Abeille::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                log::add('Abeille', 'debug', '  ERROR: Unknown device');
+                log::add('Abeille', 'error', '  resetFromJson: Equipement inconnu: '.$net.'/'.$addr);
                 return;
             }
 
-            /* Tcharp38 TODO (see #2211)
-               If device is defaultUnknown and there is now a real model for it,
-               it is not detected. Reset is done from defaultUnknown again.
-               Need to store Zigbee modelId + manuf too for that purpose. */
-
-            $eqModel = $eqLogic->getConfiguration('ab::eqModel', '');
-            $jsonId = $eqModel ? $eqModel['id'] : '';
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            $jsonId = ($eqModel != []) ? $eqModel['id'] : '';
             $jsonLocation = $eqModel ? $eqModel['location'] : 'Abeille';
+
+            // Checking if model is defaultUnknown and there is now a real model for it (see #2211).
+            if ($jsonId == "defaultUnknown") {
+                $eqSig = $eqLogic->getConfiguration('ab::signature', []);
+                if ($eqSig != [] && $eqSig['modelId'] != "") {
+                    // Any user or official model ?
+                    $modelInfos = $this->findModel($eqSig['modelId'], $eqSig['manufId']);
+                    if ($modelInfos !== false) {
+                        $jsonId = $modelInfos['jsonId'];
+                        $jsonLocation = $modelInfos['location']; // TODO: rename to jsonLocation
+                        $eqHName = $eqLogic->getHumanName();
+                        message::add("Abeille", $eqHName.": Nouveau modèle trouvé. Mise-à-jour en cours.", '');
+                    }
+                }
+            }
+
             $dev = array(
                 'net' => $dest,
                 'addr' => $addr,
@@ -1360,7 +1422,6 @@ class Abeille extends eqLogic
                 'jsonLocation' => $jsonLocation,
                 'ieee' => $eqLogic->getConfiguration('IEEE'),
             );
-            // Abeille::createDevice("reset", $dest, $addr);
             Abeille::createDevice("reset", $dev);
 
             return;
@@ -2447,7 +2508,6 @@ class Abeille extends eqLogic
        Called in the following cases
        - On 'eqAnnounce' message from parser (device announce) => action = 'create'
        - To create a virtual 'remotecontrol' => action = 'create'
-       - To reload JSON & update commands (EQ page/advanced/reload JSON) => action = 'update'
        - To reset from JSON (identical to new inclusion) => action = 'reset'
      */
     public static function createDevice($action, $dev) {
@@ -2516,8 +2576,9 @@ class Abeille extends eqLogic
             } else if (($curEqModel == 'defaultUnknown') && ($jsonId != 'defaultUnknown')) {
                 message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour du modèle par défaut vers '".$modelType."'", '');
                 $action = 'reset'; // Update from defaultUnknown = reset to new model
-            } else if ($action == "update")
-                message::add("Abeille", $eqHName.": Mise-à-jour à partir de son modèle (source=".$jsonLocation.")");
+            }
+            // else if ($action == "update")
+            //     message::add("Abeille", $eqHName.": Mise-à-jour à partir de son modèle (source=".$jsonLocation.")");
             else if ($action == "reset")
                 message::add("Abeille", $eqHName.": Réinitialisation à partir de son modèle (source=".$jsonLocation.")");
             else { // action = create
@@ -2668,6 +2729,12 @@ class Abeille extends eqLogic
         else
             $eqLogic->setConfiguration('ab::tuyaEF00', null);
 
+        // Xiaomi specific infos
+        if (isset($model['xiaomi']))
+            $eqLogic->setConfiguration('ab::xiaomi', $model['xiaomi']);
+        else
+            $eqLogic->setConfiguration('ab::xiaomi', null);
+
         // Zigbee & customization from model
         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
         if (isset($model['customization'])) {
@@ -2719,12 +2786,13 @@ class Abeille extends eqLogic
             }
         }
 
-        /* Creating list of current Jeedom commands.
+        /* Creating current list of Jeedom commands.
            jeedomCmds[jCmdId] = array(
                 'name' =>
                 'type' =>
+                'logicalId' =>
                 'cmdLogic' =>
-                'updated' =>
+                'obsolete' =>
            ) */
         $jCmds = Cmd::byEqLogicId($eqId);
         $jeedomCmds = [];
@@ -2734,7 +2802,7 @@ class Abeille extends eqLogic
                 'type' => $cmdLogic->getType(), // 'info' or 'action'
                 'logicalId' => $cmdLogic->getLogicalId(''),
                 'cmdLogic' => $cmdLogic,
-                'updated' => 0
+                'obsolete' => 1
             );
             $jeedomCmds[$cmdLogic->getId()] = $c;
         }
@@ -2887,8 +2955,9 @@ class Abeille extends eqLogic
                They are removed if not defined in JSON model. */
             $unusedConfKeys = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'repeatEventManagement', 'topic', 'Polling', 'RefreshData'];
             array_push($unusedConfKeys, 'ab::trigOut', 'ab::trigOutOffset', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'ab::notStandard');
+            array_push($unusedConfKeys, 'ab::valueOffset');
             // Abeille specific keys must be renamed when taken from model (ex: trigOut => ab::trigOut)
-            $toRename = ['trigOut', 'trigOutOffset', 'notStandard'];
+            $toRename = ['trigOut', 'trigOutOffset', 'notStandard', 'valueOffset'];
             if (isset($mCmd["configuration"])) {
                 $mCmdConf = $mCmd["configuration"];
 
@@ -2958,12 +3027,12 @@ class Abeille extends eqLogic
 
             $cmdLogic->save();
             if (isset($jCmdId) && isset($jeedomCmds[$jCmdId])) // Mark updated if cmd was already existing
-                $jeedomCmds[$jCmdId]['updated'] = 1;
+                $jeedomCmds[$jCmdId]['obsolete'] = 0;
         }
 
-        // Removing cmd not updated (obsolete)
+        // Removing obsolete cmds
         foreach ($jeedomCmds as $jCmdId => $jCmd) {
-            if ($jCmd['updated'] == 1)
+            if ($jCmd['obsolete'] == 0)
                 continue;
             log::add('Abeille', 'debug', "  Removing ".$jCmd['type']." '".$jCmd['name']."' (".$jCmd['logicalId'].")");
             $cmdLogic = $jCmd['cmdLogic'];

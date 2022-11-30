@@ -298,6 +298,8 @@
 
         $GLOBALS['eqList'][$net][$addr]['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null);
         parserLog('debug', "  'tuyaEF00' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['tuyaEF00']));
+        $GLOBALS['eqList'][$net][$addr]['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null);
+        parserLog('debug', "  'xiaomi' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['xiaomi']));
         $GLOBALS['eqList'][$net][$addr]['customization'] = $eqLogic->getConfiguration('ab::customization', null);
         parserLog('debug', "  'customization' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['customization']));
         // TO BE COMPLETED if any other key info
@@ -416,6 +418,7 @@
                 'tuyaEF00' => $eqLogic->getConfiguration('ab::tuyaEF00', null),
                 // Optional 'notStandard-0400-0000'
                 'customization' => $eqLogic->getConfiguration('ab::customization', null),
+                'xiaomi' => $eqLogic->getConfiguration('ab::xiaomi', null),
             );
 
             // Checking for '0400-0000' not standard attribute

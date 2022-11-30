@@ -1,6 +1,20 @@
 ChangeLog
 =========
 
+- Syntaxe cmdes: Ajout support 'valueOffset' pour cmde 'action'/'slider'.
+- Moes curtain module: Mise-à-jour modèle (2464).
+- Renitialiser: Amélioration si équipement etait inconnu mais qu'un modèle existe maintenant.
+- Moes BHT-002-GCLZBW: Ajout support préliminaire (2485).
+- Livolo TI0001: Mise-à-jour modèle (2476).
+- Interne: Améliorations AbeileCmd.
+- Interne: AbeilleCmd: Limitation de débit activé.
+- Interne: Améliorations préliminaires pour support générique Xiaomi.
+- Interne: Parser: Correction pour SW reset sur NDPU bloqué.
+- Interne: Collecte LQI: Améliorations mineures.
+- Xiaomi Door Sensor MCCGQ11LM: Mise-à-jour du modèle.
+- Interne: Parser: decodeDataType(): Ajout support 2B/int32.
+- Xiaomi Temp-humidité-pression WSDCGQ11LM: Mise-à-jour du modèle.
+
 221122-BETA-1
 -------------
 

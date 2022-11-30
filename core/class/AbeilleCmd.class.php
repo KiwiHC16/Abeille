@@ -95,9 +95,8 @@
             // logMessage('debug', 'request - cmdToVal: '.$request2);
 
             if ($request2 != $request) {
-                logMessage('debug', 'updateField()');
-                logMessage('debug', "  Updated '".$request."'");
-                logMessage('debug', "  To '".$request2."'");
+                logMessage('debug', "  updateField(): Updated '".$request."'");
+                logMessage('debug', "  updateField(): To '".$request2."'");
                 $request = $request2;
             }
             return $request;
@@ -132,6 +131,17 @@
                 if ($dest == '' || $addr == '') {
                     logMessage('error', $eqLogic->getHumanName().': DB corrompue. Cmde annulée.');
                     return;
+                }
+
+                // Value update if 'valueOffset' is defined.
+                // Reminder: 'valueOffset' is equivalent to 'calculValueOffset' for info cmd.
+                $vo = $this->getConfiguration('ab::valueOffset', null);
+                if ($vo !== null) {
+                    if (isset($_options['slider'])) {
+                        $newValue = jeedom::evaluateExpression(str_replace('#value#', $_options['slider'], $vo));
+                        logMessage('debug', "-- execute(): 'valueOffset' applied: ".$_options['slider']." => ".$newValue);
+                        $_options['slider'] = $newValue;
+                    }
                 }
 
                 // -------------------------------------------------------------------------

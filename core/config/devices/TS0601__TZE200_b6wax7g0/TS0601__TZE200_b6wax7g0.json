@@ -31,6 +31,13 @@
             },
             "Setpoint": {
                 "use": "attr-Thermostat-Setpoint",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Window-Detection": {
+                "use": "attr-Door-Status",
+                "logicalId": "01-windowDetectionStatus",
+                "nextLine": "after",
                 "isVisible": 1
             }
         },
@@ -38,6 +45,10 @@
             "fromDevice": {
                 "02": { "function": "rcvValue", "info": "01-setpoint" },
                 "03": { "function": "rcvValue", "info": "0402-01-0000" },
+                "09": {
+                    "function": "rcvValue",
+                    "info": "01-windowDetectionStatus"
+                },
                 "0E": { "function": "rcvValue", "info": "0001-01-0021" }
             }
         }

@@ -1,0 +1,166 @@
+    {
+        fingerprint: [{modelID: 'TS0601', manufacturerName: '_TZE200_aoclfnxz'},
+            {modelID: 'TS0601', manufacturerName: '_TZE200_ztvwu4nk'},
+            {modelID: 'TS0601', manufacturerName: '_TZE200_ye5jkfsb'},
+            {modelID: 'TS0601', manufacturerName: '_TZE200_u9bfwha0'}],
+        model: 'BHT-002-GCLZB',
+        vendor: 'Moes',
+        description: 'Moes BHT series Thermostat',
+        fromZigbee: [fz.moes_thermostat],
+        toZigbee: [tz.moes_thermostat_child_lock, tz.moes_thermostat_current_heating_setpoint, tz.moes_thermostat_mode,
+            tz.moes_thermostat_standby, tz.moes_thermostat_sensor, tz.moes_thermostat_calibration,
+            tz.moes_thermostat_deadzone_temperature, tz.moes_thermostat_max_temperature_limit, tz.moes_thermostat_min_temperature_limit,
+            tz.moes_thermostat_program_schedule],
+        exposes: [e.child_lock(), e.deadzone_temperature(), e.max_temperature_limit(), e.min_temperature_limit(),
+            exposes.climate().withSetpoint('current_heating_setpoint', 5, 35, 1, ea.STATE_SET)
+                .withLocalTemperature(ea.STATE).withLocalTemperatureCalibration(-30, 30, 0.1, ea.STATE_SET)
+                .withSystemMode(['off', 'heat'], ea.STATE_SET).withRunningState(['idle', 'heat', 'cool'], ea.STATE)
+                .withPreset(['hold', 'program']),
+            e.temperature_sensor_select(['IN', 'AL', 'OU']),
+            exposes.composite('program', 'program').withDescription('Time of day and setpoint to use when in program mode')
+                .withFeature(exposesLocal.hour('weekdays_p1_hour'))
+                .withFeature(exposesLocal.minute('weekdays_p1_minute'))
+                .withFeature(exposesLocal.program_temperature('weekdays_p1_temperature'))
+                .withFeature(exposesLocal.hour('weekdays_p2_hour'))
+                .withFeature(exposesLocal.minute('weekdays_p2_minute'))
+                .withFeature(exposesLocal.program_temperature('weekdays_p2_temperature'))
+                .withFeature(exposesLocal.hour('weekdays_p3_hour'))
+                .withFeature(exposesLocal.minute('weekdays_p3_minute'))
+                .withFeature(exposesLocal.program_temperature('weekdays_p3_temperature'))
+                .withFeature(exposesLocal.hour('weekdays_p4_hour'))
+                .withFeature(exposesLocal.minute('weekdays_p4_minute'))
+                .withFeature(exposesLocal.program_temperature('weekdays_p4_temperature'))
+                .withFeature(exposesLocal.hour('saturday_p1_hour'))
+                .withFeature(exposesLocal.minute('saturday_p1_minute'))
+                .withFeature(exposesLocal.program_temperature('saturday_p1_temperature'))
+                .withFeature(exposesLocal.hour('saturday_p2_hour'))
+                .withFeature(exposesLocal.minute('saturday_p2_minute'))
+                .withFeature(exposesLocal.program_temperature('saturday_p2_temperature'))
+                .withFeature(exposesLocal.hour('saturday_p3_hour'))
+                .withFeature(exposesLocal.minute('saturday_p3_minute'))
+                .withFeature(exposesLocal.program_temperature('saturday_p3_temperature'))
+                .withFeature(exposesLocal.hour('saturday_p4_hour'))
+                .withFeature(exposesLocal.minute('saturday_p4_minute'))
+                .withFeature(exposesLocal.program_temperature('saturday_p4_temperature'))
+                .withFeature(exposesLocal.hour('sunday_p1_hour'))
+                .withFeature(exposesLocal.minute('sunday_p1_minute'))
+                .withFeature(exposesLocal.program_temperature('sunday_p1_temperature'))
+                .withFeature(exposesLocal.hour('sunday_p2_hour'))
+                .withFeature(exposesLocal.minute('sunday_p2_minute'))
+                .withFeature(exposesLocal.program_temperature('sunday_p2_temperature'))
+                .withFeature(exposesLocal.hour('sunday_p3_hour'))
+                .withFeature(exposesLocal.minute('sunday_p3_minute'))
+                .withFeature(exposesLocal.program_temperature('sunday_p3_temperature'))
+                .withFeature(exposesLocal.hour('sunday_p4_hour'))
+                .withFeature(exposesLocal.minute('sunday_p4_minute'))
+                .withFeature(exposesLocal.program_temperature('sunday_p4_temperature')),
+        ],
+        onEvent: tuya.onEventSetLocalTime,
+    },
+
+
+    moes_thermostat: {
+        cluster: 'manuSpecificTuya',
+        type: ['commandDataResponse', 'commandDataReport'],
+        convert: (model, msg, publish, options, meta) => {
+            const dpValue = tuya.firstDpValue(msg, meta, 'moes_thermostat');
+            const dp = dpValue.dp;
+            const value = tuya.getDataValue(dpValue);
+            let temperature;
+            /* See tuyaThermostat above for message structure comment */
+            switch (dp) {
+            case tuya.dataPoints.moesSchedule:
+                return {
+                    program: {
+                        weekdays_p1_hour: value[0],
+                        weekdays_p1_minute: value[1],
+                        weekdays_p1_temperature: value[2] / 2,
+                        weekdays_p2_hour: value[3],
+                        weekdays_p2_minute: value[4],
+                        weekdays_p2_temperature: value[5] / 2,
+                        weekdays_p3_hour: value[6],
+                        weekdays_p3_minute: value[7],
+                        weekdays_p3_temperature: value[8] / 2,
+                        weekdays_p4_hour: value[9],
+                        weekdays_p4_minute: value[10],
+                        weekdays_p4_temperature: value[11] / 2,
+                        saturday_p1_hour: value[12],
+                        saturday_p1_minute: value[13],
+                        saturday_p1_temperature: value[14] / 2,
+                        saturday_p2_hour: value[15],
+                        saturday_p2_minute: value[16],
+                        saturday_p2_temperature: value[17] / 2,
+                        saturday_p3_hour: value[18],
+                        saturday_p3_minute: value[19],
+                        saturday_p3_temperature: value[20] / 2,
+                        saturday_p4_hour: value[21],
+                        saturday_p4_minute: value[22],
+                        saturday_p4_temperature: value[23] / 2,
+                        sunday_p1_hour: value[24],
+                        sunday_p1_minute: value[25],
+                        sunday_p1_temperature: value[26] / 2,
+                        sunday_p2_hour: value[27],
+                        sunday_p2_minute: value[28],
+                        sunday_p2_temperature: value[29] / 2,
+                        sunday_p3_hour: value[30],
+                        sunday_p3_minute: value[31],
+                        sunday_p3_temperature: value[32] / 2,
+                        sunday_p4_hour: value[33],
+                        sunday_p4_minute: value[34],
+                        sunday_p4_temperature: value[35] / 2,
+                    },
+                };
+            case tuya.dataPoints.state: // Thermostat on standby = OFF, running = ON
+                if (model.model === 'BAC-002-ALZB') {
+                    return {system_mode: value ? 'cool' : 'off'};
+                } else {
+                    return {system_mode: value ? 'heat' : 'off'};
+                }
+            case tuya.dataPoints.moesChildLock:
+                return {child_lock: value ? 'LOCK' : 'UNLOCK'};
+            case tuya.dataPoints.moesHeatingSetpoint:
+                return {current_heating_setpoint: value};
+            case tuya.dataPoints.moesMaxTempLimit:
+                return {max_temperature_limit: value};
+            case tuya.dataPoints.moesMaxTemp:
+                return {max_temperature: value};
+            case tuya.dataPoints.moesDeadZoneTemp:
+                return {deadzone_temperature: value};
+            case tuya.dataPoints.moesLocalTemp:
+                temperature = value & 1<<15 ? value - (1<<16) + 1 : value;
+                if (!['_TZE200_ztvwu4nk', '_TZE200_ye5jkfsb'].includes(meta.device.manufacturerName)) {
+                    // https://github.com/Koenkk/zigbee2mqtt/issues/11980
+                    temperature = temperature / 10;
+                }
+
+                return {local_temperature: parseFloat(temperature.toFixed(1))};
+            case tuya.dataPoints.moesTempCalibration:
+                temperature = value;
+                // for negative values produce complimentary hex (equivalent to negative values)
+                if (temperature > 4000) temperature = temperature - 4096;
+                return {local_temperature_calibration: temperature};
+            case tuya.dataPoints.moesHold: // state is inverted, preset_mode is deprecated
+                return {preset_mode: value ? 'program' : 'hold', preset: value ? 'program' : 'hold'};
+            case tuya.dataPoints.moesScheduleEnable: // state is inverted, preset_mode is deprecated
+                return {preset_mode: value ? 'hold' : 'program', preset: value ? 'hold' : 'program'};
+            case tuya.dataPoints.moesValve:
+                return {heat: value ? 'OFF' : 'ON', running_state: (value ? 'idle' : (model.model === 'BAC-002-ALZB' ? 'cool' : 'heat'))};
+            case tuya.dataPoints.moesSensor:
+                switch (value) {
+                case 0:
+                    return {sensor: 'IN'};
+                case 1:
+                    return {sensor: 'AL'};
+                case 2:
+                    return {sensor: 'OU'};
+                default:
+                    return {sensor: 'not_supported'};
+                }
+            case tuya.dataPoints.bacFanMode:
+                return {fan_mode: tuya.fanModes[value]};
+            default: // DataPoint 17 is unknown
+                meta.logger.warn(`zigbee-herdsman-converters:Moes BHT-002: Unrecognized DP #${
+                    dp} with data ${JSON.stringify(dpValue)}`);
+            }
+        },
+    },

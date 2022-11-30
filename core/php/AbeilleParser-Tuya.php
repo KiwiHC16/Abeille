@@ -80,7 +80,9 @@
     function tuyaDecodeDp($ep, $dp, $mapping, &$toMon) {
         $dpId = $dp['id'];
         if (!isset($mapping[$dpId])) {
-            parserLog("debug", "  ".$dp['m'].": Unrecognized DP (data=".$dp['data'].")", "8002");
+            $m = "  ".$dp['m'].": Unrecognized DP (data=".$dp['data'].")";
+            parserLog("debug", $m, "8002");
+            $toMon[] = $m;
             return false;
         }
 

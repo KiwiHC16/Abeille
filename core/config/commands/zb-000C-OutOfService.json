@@ -1,7 +1,7 @@
 {
     "zb-000C-OutOfService": {
         "comment": "Cluster 000C, attrib 0051/OutOfService, type bool",
-        "subType": "boolean",
+        "subType": "binary",
         "template": "",
         "configuration": [],
         "type": "info",

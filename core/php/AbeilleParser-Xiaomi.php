@@ -5,25 +5,53 @@
 
     // WORK ONGOING. Not all functions migrated their yet.
 
+    // Model syntaxe reminder for Xiaomi
+    // "xiaomi": {
+    //     "fromDevice": {
+    //         "XX-YY": { "func": "number", "info": "info_cmd_logic_id" }
+    //         "XX-Y2": { "func": "numberDiv", "div": 100, "info": "info_cmd_logic_id" }
+    //     }
+    // }
+    // where 'XX'=tag value, 'YY'=data type
+    //       'func' (function to apply on value) can be 'raw', 'number', 'numberDiv', 'numberMult', 'toPercent'
+    //              raw: received hexa value transmitted as it is
+    //              number: resulting number transmitted as it is
+    //              numberDiv: resulting number is divided by 'div' before Jeedom update
+    //              numberMult: resulting number is multiplied by 'mult' before Jeedom update
+    //              toPercent: resulting number is converted to percentage (with 'min' & 'max') before Jeedom update
+
     // Decode Xiaomi tags
     // Based on https://github.com/dresden-elektronik/deconz-rest-plugin/wiki/Xiaomi-manufacturer-specific-clusters%2C-attributes-and-attribute-reporting
-    function xiaomiDecodeTags($pl) {
-        $tagsList = array(
-            "01-21" => array( "desc" => "Battery-Volt" ),
-            "03-28" => array( "desc" => "Device-Temp" ),
-            "0A-21" => array( "desc" => "Parent-Addr" ),
-            "0B-21" => array( "desc" => "Light-Level" ),
-            "64-10" => array( "desc" => "OnOff" ), // Or Open/closed
-            "64-29" => array( "desc" => "Temperature" ),
-            "65-21" => array( "desc" => "Humidity" ),
-            "66-2B" => array( "desc" => "Pressure" ),
-            "95-39" => array( "desc" => "Current" ), // Or Consumption
-            "96-39" => array( "desc" => "Voltage" ),
-            "97-39" => array( "desc" => "Consumption" ),
-            "98-39" => array( "desc" => "Power" ),
-        );
+    // Could be cluster 0000, attr FF01, type 42 (character string)
+    // Could be cluster FCC0, attr 00F7, type 41 (octet string)
+    function xiaomiDecodeTags($net, $addr, $pl, &$attrReportN = null) {
+        // $tagsList = array(
+        //     "01-21" => array( "desc" => "Battery-Volt" ),
+        //     "03-28" => array( "desc" => "Device-Temp" ),
+        //     "0A-21" => array( "desc" => "Parent-Addr" ),
+        //     "0B-21" => array( "desc" => "Light-Level" ),
+        //     "64-10" => array( "desc" => "OnOff" ), // Or Open/closed
+        //     "64-29" => array( "desc" => "Temperature" ),
+        //     "65-21" => array( "desc" => "Humidity" ),
+        //     "66-2B" => array( "desc" => "Pressure" ),
+        //     "95-39" => array( "desc" => "Current" ), // Or Consumption
+        //     "96-39" => array( "desc" => "Voltage" ),
+        //     "97-39" => array( "desc" => "Consumption" ),
+        //     "98-39" => array( "desc" => "Power" ),
+        // );
+
+        $eq = &getDevice($net, $addr); // By ref
+        // parserLog('debug', 'eq='.json_encode($eq));
+        if (!isset($eq['xiaomi']) || !isset($eq['xiaomi']['fromDevice'])) {
+            parserLog('debug', "  No defined Xiaomi mapping");
+            // return;
+            $mapping = [];
+        } else
+            $mapping = $eq['xiaomi']['fromDevice'];
 
         $l = strlen($pl);
+        if ($attrReportN !== null)
+            $attrReportN = [];
         for ($i = 0; $i < $l; ) {
             $tagId = substr($pl, $i + 0, 2);
             $typeId = substr($pl, $i + 2, 2);
@@ -41,11 +69,46 @@
             $value = AbeilleParser::decodeDataType($valueHex, $typeId, false, 0, $dataSize, $valueHex);
 
             $idx = strtoupper($tagId.'-'.$typeId);
-            if (isset($tagsList[$idx]))
-                $tagName = '/'.$tagsList[$idx]['desc'];
-            else
-                $tagName = '';
-            parserLog('debug', '  Tag='.$tagId.$tagName.', Type='.$typeId.'/'.$type['short'].', Value='.$valueHex.' => '.$value);
+            // if (isset($tagsList[$idx]))
+            //     $tagName = '/'.$tagsList[$idx]['desc'];
+            // else
+            //     $tagName = '';
+            // parserLog('debug', '  Tag='.$tagId.$tagName.', Type='.$typeId.'/'.$type['short'].', Value='.$valueHex.' => '.$value);
+            if (isset($mapping[$idx])) {
+                $map = $mapping[$idx];
+                $value2 = $value;
+                $mapTxt = ' ==> ';
+
+                $func = (isset($map['func']) ? $map['func'] : "raw");
+                if ($func == "raw") {
+                    $value2 = $valueHex;
+                } else if ($func == "numberDiv") {
+                    $div = $map['div'];
+                    $value2 = $value / $div;
+                    $mapTxt .= 'div='.$div.', ';
+                } else if ($func == "numberMult") {
+                    $mult = $map['mult'];
+                    $value2 = $value * $mult;
+                    $mapTxt .= 'mult='.$mult.', ';
+                } else if ($func == "toPercent") {
+                    $min = (isset($map['min']) ? $map['min'] : 2.85);
+                    $max = (isset($map['max']) ? $map['max'] : 3.0);
+                    if ($value > $max)
+                        $value2 = $max;
+                    else if ($value < $min)
+                        $value2 = $min;
+                    $value2 = ($value2 - $min) / ($max - $min);
+                    $value2 *= 100;
+                    $mapTxt .= 'min='.$min.', max='.$max.', ';
+                }
+                $mapTxt .= $map['info'];
+                $mapTxt .= '='.$value2;
+
+                if ($attrReportN !== null)
+                    $attrReportN[] = array( "name" => $map['info'], "value" => $value2 );
+            } else
+                $mapTxt = ' (ignored)';
+            parserLog('debug', '  Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].', ValueHex='.$valueHex.' => '.$value.$mapTxt);
         }
     }
 ?>

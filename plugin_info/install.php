@@ -459,9 +459,10 @@
            - cmd DB: 'Batterie-Pourcent' => '0001-01-0021'
            - cmd DB: 'WindowsCovering' => 'cmd-0102' + 'cmd=XX'
            - Removing 'AbeilleDebug.log'. Moved to Jeedom tmp dir.
+           - Forcing some models reload (Xiaomi devices).
          */
         if (intval($dbVersion) < 20220421) {
-            // 'edLogic' DB updates
+            // 'eqLogic' DB updates
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
                 $saveEq = false; // true if EQ has been updated and therefore must be saved
@@ -715,11 +716,41 @@
                     if ($saveCmd)
                         $cmdLogic->save();
                 }
-            }
+            } // End 'cmd' DB updates
 
             // Remove obsolete log files
             $obsolete = ['AbeilleDebug.log'];
             removeLogs($obsolete);
+
+            // Models reset
+            // Some Xiaomi devices are now managed thru 'xiaomi' structure in model.
+            foreach ($eqLogics as $eqLogic) {
+                $xiaomi = $eqLogic->getConfiguration('ab::xiaomi', null);
+                if ($xiaomi !== null)
+                    continue;
+
+                $reloadModel = false;
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                if (isset($eqModel['id']) && ($eqModel['id'] == 'sensor_magnet.aq2')) {
+                    $reloadModel = true;
+                } else if (isset($eqModel['id']) && ($eqModel['id'] == 'weather')) {
+                    $reloadModel = true;
+                }
+
+
+                if ($reloadModel) {
+                    list($net, $addr) = explode("/", $eqLogic->getLogicalId());
+                    $dev = array(
+                        'net' => $net,
+                        'addr' => $addr,
+                        'jsonId' => $eqModel['id'],
+                        'jsonLocation' => 'Abeille',
+                        'ieee' => $eqLogic->getConfiguration('IEEE'),
+                    );
+                    Abeille::createDevice("reset", $dev);
+                    log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Updating Jeedom equipement from model");
+                }
+            }
 
             // config::save('ab::dbVersion', '20220421', 'Abeille'); // NOT FROZEN YET
             // $dbVersion = '20220421';

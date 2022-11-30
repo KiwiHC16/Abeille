@@ -129,6 +129,8 @@
         /* Check NPDU status */
         function checkNpdu($net, $nPdu) {
             $zgId = substr($net, 7); // AbeilleX => X
+            $nPdu = hexdec($nPdu); // Hex string to number
+
             if (!isset($GLOBALS['zigate'.$zgId]))
                 $GLOBALS['zigate'.$zgId] = [];
             if (!isset($GLOBALS['zigate'.$zgId]['nPdu'])) {
@@ -137,13 +139,13 @@
                 return;
             }
             $curNpdu = $GLOBALS['zigate'.$zgId]['nPdu'];
-            if (hexdec($nPdu) != $curNpdu) { // Npdu increased or reduced
+            if ($nPdu != $curNpdu) { // Npdu increased or reduced
                 $GLOBALS['zigate'.$zgId]['nPdu'] = $nPdu;
                 $GLOBALS['zigate'.$zgId]['nPduTime'] = time();
                 return;
             }
-            // NDPU stil the same
-            if ($curNpdu == '00')
+            // NDPU still the same
+            if ($curNpdu == 0)
                 return;
             $duration = time() - $GLOBALS['zigate'.$zgId]['nPduTime'];
             if ($duration < (4 * 60))
@@ -1335,6 +1337,11 @@
                 if ($value > 0x7fffff) // is negative
                     $value -= 0x1000000;
                 break;
+            case "2B": // int32
+                $value = hexdec($hs);
+                if ($value > 0x7fffffff) // is negative
+                    $value -= 0x100000000;
+                break;
             case "41": // String discrete: octstr
             case "F0": // IEEE addr
             case "F1": // 128bits key
@@ -1530,7 +1537,7 @@
             if (method_exists($this, $fct)) {
                 $this->$fct($dest, $payload, $lqi);
             } else {
-                parserLog('debug', $dest.', Type='.$type.'/'.zgGetMsgByType($type).' (unused).');
+                parserLog('debug', $dest.', Type='.$type.'/'.zgGetMsgName($type).' (unused).');
             }
 
             return 0;
@@ -2607,7 +2614,7 @@
                             if ($Attribut=='00F7') {
                                 if ($dataType == "41") { // 0x41 Octet stream
                                     // WORK ONGOING
-                                    xiaomiDecodeTags(substr($pl, 8));
+                                    xiaomiDecodeTags($dest, $srcAddr, substr($pl, 8));
                                     // WORK ONGOING
 
                                     $dataLength = hexdec(substr($pl, 6, 2));
@@ -5240,22 +5247,24 @@
                 else if (($attrId == "FF01") && ($attrSize == "001D")) {
                     // Assuming $dataType == "42"
 
-                    // FOR INFO ONLY. WORK ONGOING.
-                    xiaomiDecodeTags($Attribut);
-                    // FOR INFO ONLY. WORK ONGOING.
+                    // WORK ONGOING.
+                    parserLog('debug', '  Xiaomi proprietary (Door Sensor)');
+                    $attributesReportN = [];
+                    xiaomiDecodeTags($dest, $srcAddr, $Attribut, $attributesReportN);
+                    // WORK ONGOING.
 
-                    // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    $voltage = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
-                    // $etat           = substr($payload, 80, 2);
-                    $etat = substr($Attribut, 80 - 24, 2);
+                    // // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    // $voltage = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
+                    // // $etat           = substr($payload, 80, 2);
+                    // $etat = substr($Attribut, 80 - 24, 2);
 
-                    parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
+                    // parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
 
-                    $attributesReportN = [
-                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                        array( "name" => "0006-01-0000", "value" => $etat ),
-                    ];
+                    // $attributesReportN = [
+                    //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
+                    //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
+                    //     array( "name" => "0006-01-0000", "value" => $etat ),
+                    // ];
                 }
 
                 // Xiaomi capteur temperature rond V1 / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
@@ -5325,7 +5334,8 @@
                     parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
 
                     // FOR INFO ONLY. WORK ONGOING.
-                    xiaomiDecodeTags($Attribut);
+                    $attributesReportN = [];
+                    xiaomiDecodeTags($dest, $srcAddr, $Attribut, $attributesReportN);
                     // FOR INFO ONLY. WORK ONGOING.
 
                     $voltage        = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
@@ -5335,12 +5345,12 @@
 
                     parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity.', Pressure='.$pression);
 
-                    $attributesReportN = [
-                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                        array( "name" => '0402-01-0000', "value" => $temperature / 100 ),
-                        array( "name" => '0405-01-0000', "value" => $humidity / 100 ),
-                    ];
+                    // $attributesReportN = [
+                    //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
+                    //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
+                    //     array( "name" => '0402-01-0000', "value" => $temperature / 100 ),
+                    //     array( "name" => '0405-01-0000', "value" => $humidity / 100 ),
+                    // ];
                 }
 
                 // Xiaomi bouton Aqara Wireless Switch V3 #712 (https://github.com/KiwiHC16/Abeille/issues/712)

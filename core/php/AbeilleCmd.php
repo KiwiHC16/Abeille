@@ -22,6 +22,7 @@
     include_once __DIR__.'/../class/AbeilleCmdQueue.class.php';
     include_once __DIR__.'/AbeilleOTA.php';
     include_once __DIR__.'/AbeilleCmd-Tuya.php';
+    include_once __DIR__.'/AbeilleZigateConst.php';
 
     logSetConf("AbeilleCmd.log", true);
     logMessage('info', '>>> Démarrage d\'AbeilleCmd');

@@ -50,6 +50,12 @@
                 "use": "zb-0500-ZoneStatus",
                 "isVisible": "1"
             }
+        },
+        "xiaomi": {
+            "fromDevice": {
+                "01-21": { "func": "toPercent", "info": "0001-01-0021" },
+                "65-21": { "func": "number", "info": "0400-01-0000" }
+            }
         }
     }
 }

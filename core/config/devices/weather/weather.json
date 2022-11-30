@@ -13,9 +13,6 @@
         },
         "type": "Xiaomi temp\/humidity\/pressure sensor",
         "commands": {
-            "Battery-Volt": {
-                "use": "zb-0001-BatteryVolt"
-            },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent"
             },
@@ -33,6 +30,14 @@
                 "isVisible": 1
             },
             "include7": "Xiaomi-ff01"
+        },
+        "xiaomi": {
+            "fromDevice": {
+                "01-21": { "func": "toPercent", "info": "0001-01-0021" },
+                "64-29": { "func": "numberDiv", "div": 100,  "info": "0402-01-0000" },
+                "66-2B": { "func": "number", "info": "0403-01-0000" },
+                "65-21": { "func": "numberDiv", "div": 100, "info": "0405-01-0000" }
+            }
         }
     }
 }

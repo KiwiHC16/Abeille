@@ -50,6 +50,21 @@
         $cmdErrors[] = $e;
     }
 
+    // Check 'subType'. Returns true if ok, else false
+    function subTypeIsOk($type, $subType) {
+        if ($type == "action") {
+            $actSubTypes = ['other', 'slider', 'message', 'color', 'select'];
+            if (!in_array($subType, $actSubTypes))
+                return false;
+        } else {
+            $infSubTypes = ['numeric', 'binary', 'string'];
+            if (!in_array($subType, $infSubTypes))
+                return false;
+        }
+        return true;
+    }
+
+    // Check device model
     function checkDevice($devName, $dev) {
         global $missingCmds;
         global $commandsList;
@@ -62,10 +77,13 @@
         // echo "dev=".json_encode($dev)."\n";
 
         $error = false;
+
+        // Checking 'type'
         if (!isset($dev[$devName]['type'])) {
             $error = newDevError($devName, "ERROR", "No equipment 'type' defined");
         }
 
+        // Checking 'category'
         if (!isset($dev[$devName]['category'])) {
             $error = newDevError($devName, "ERROR", "No 'category' defined");
         } else {
@@ -78,6 +96,7 @@
                 }
         }
 
+        // Checking 'configuration'
         if (!isset($dev[$devName]['configuration'])) {
             $error = newDevError($devName, "WARNING", "No configuration defined");
         } else {
@@ -114,6 +133,7 @@
             }
         }
 
+        // Checking 'commands'
         $unusedCmds = &$GLOBALS['unusedCmds'];
         if (!isset($dev[$devName]['commands'])) {
             $error = newDevError($devName, "WARNING", "No commands defined");
@@ -137,13 +157,19 @@
 
                 if ($newSyntax) {
                     // List of supported command keys
-                    $validCmdKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'trigOut', 'trigOutOffset', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
+                    $validCmdKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
                     array_push($validCmdKeys, 'repeatEventManagement');
                     array_push($validCmdKeys, 'returnStateTime', 'returnStateValue');
-                    array_push($validCmdKeys, 'notStandard');
+                    array_push($validCmdKeys, 'trigOut', 'trigOutOffset', 'notStandard', 'valueOffset');
                     foreach ($value as $key2 => $value2) {
-                        if (in_array($key2, $validCmdKeys))
+                        if (in_array($key2, $validCmdKeys)) {
+                            // if ($key2 == 'subType') {
+                            //     // TODO: How to know cmd type ?
+                            //     if (!subTypeIsOk($type, $value2))
+                            //         $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key value for '".$key."' Jeedom command");
+                            // }
                             continue;
+                        }
                         if (substr($key2, 0, 7) == "comment")
                             continue;
                         $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key for '".$key."' Jeedom command");
@@ -191,8 +217,13 @@
             }
         }
 
+        /* Xiaomi specific checks */
+        // TODO: To be completed
+        if (isset($dev[$devName]['xiaomi'])) {
+        }
+
         /* Checking top level supported keywords */
-        $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'tuyaEF00', 'customization'];
+        $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'tuyaEF00', 'customization', 'xiaomi'];
         foreach ($dev[$devName] as $key => $value) {
             if (in_array($key, $supportedKeys))
                 continue;
@@ -202,6 +233,7 @@
         }
     }
 
+    // Check command model
     function checkCommand($cmdName, $cmd) {
         global $commandsList;
 
@@ -215,9 +247,18 @@
             newCmdError($cmdName, "ERROR", "Missing 'type' field (info or action)");
             return;
         }
+
+        // Checking 'type'
         $type = $c['type'];
         if (($type == "action") && ($type == "info")) {
             newCmdError($cmdName, "ERROR", "Invalid 'type' value ".$type." ('info' or 'action' allowed)");
+            return;
+        }
+
+        // Checking 'subType'
+        $subType = $c['subType'];
+        if (!subTypeIsOk($type, $subType)) {
+            newCmdError($cmdName, "ERROR", "Invalid 'subType' value '".$subType."'");
             return;
         }
 
@@ -359,7 +400,7 @@
 
         $jsonCmds = $device['commands'];
         $error = false;
-// echo "jsonCmds=".json_encode($jsonCmds)."\n";
+        // echo "jsonCmds=".json_encode($jsonCmds)."\n";
         foreach ($jsonCmds as $cmd1 => $cmd2) {
             if (substr($cmd1, 0, 7) == "include") {
                 /* Old command JSON commands syntax: "includeX": "json_cmd_name" */
@@ -392,7 +433,7 @@
                 }
             }
 
-// echo "newCmdText=".$newCmdText."\n";
+            // echo "newCmdText=".$newCmdText."\n";
             while (true) {
                 $start = strpos($newCmdText, "#"); // Start
                 if ($start === false)
@@ -404,7 +445,7 @@
                     break;
                 }
                 $len += 2;
-// echo "S=".$start.", L=".$len."\n";
+                // echo "S=".$start.", L=".$len."\n";
                 $var = substr($newCmdText, $start, $len);
 
                 if ($var == "#EP#") {
@@ -425,7 +466,7 @@
 
                 $newCmdText = substr($newCmdText, $start + $len);
             }
-// break;
+            // break;
         }
         if ($error)
             step('E');
@@ -439,7 +480,7 @@
     buildAllCommandsList();
 
     // echo "devl=".json_encode($devicesList)."\n";
-    echo "Checking devices syntax\n- ";
+    echo "Checking devices models syntax\n- ";
     $idx = 2;
     foreach ($devicesList as $devName => $fullPath) {
         $jsonContent = file_get_contents($fullPath);

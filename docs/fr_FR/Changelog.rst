@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221130-BETA-1
+-------------
+
 - Syntaxe cmdes: Ajout support 'valueOffset' pour cmde 'action'/'slider'.
 - Moes curtain module: Mise-à-jour modèle (2464).
 - Renitialiser: Amélioration si équipement etait inconnu mais qu'un modèle existe maintenant.

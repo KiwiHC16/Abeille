@@ -89,8 +89,8 @@ Exemple de commande 'action'
   Non par défaut ("isHistorized":0).
   Ce parametre est à mettre dans le modele d'équipement pour personnaliser la commande.
 
-* genericType: ??
-  A priori surtout nécessaire pour toute appli 'mobile' pour associer un widget représentatif.
+* genericType: RECOMMANDE
+  Permet d'associer un widget représentatif de la commande.
 
 * invertBinary: optionnel.
   Utile uniquement pour une commande 'info' de subType 'binary'.
@@ -143,7 +143,9 @@ Exemple de commande 'action'
     Permet, si 'trigOut' est utilisé, de modifier la valeur reçue avant de l'appliquer à la commande pointée par 'trigOut'.
 
   * valueOffset: optionnel
-    Permet de modifier la valeur d'une cmde action avant de l'executer (equivalent à 'calculValueOffset' pour cmde info).
+    Permet de modifier la valeur d'une cmde action avant de l'executer (equivalent à 'calculValueOffset' d'une cmde info).
+        // Ex: "valueOffset": "#value#*10"
+        // Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
 
   * Polling: optionnel
     Défini si cette commande 'action' doit etre executée regulierement.

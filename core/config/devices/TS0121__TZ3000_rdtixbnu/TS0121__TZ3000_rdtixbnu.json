@@ -48,6 +48,12 @@
                 "execAtCreation": "yes"
             },
 
+            "Set level": {
+                "use": "zbCmd-0102-GoToLiftPercentage",
+                "valueOffset": "#value#*#logicid0B04-01-0505#/100",
+                "isVisible": "1"
+            },
+
             "Total power": {
                 "use": "zb-0702-CurrentSummationDelivered",
                 "params": "div=10",

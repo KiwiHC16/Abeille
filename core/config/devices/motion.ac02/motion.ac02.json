@@ -1,7 +1,7 @@
 {
     "motion.ac02": {
         "manufacturer": "Xiaomi",
-        "model": "MS-S02",
+        "model": "RTCGQ14LM/MS-S02",
         "type": "Xiaomi Aqara motion sensor P1",
         "timeout": "60",
         "category": {
@@ -13,6 +13,27 @@
             "batteryType": "2x3V CR2450"
         },
         "commands": {
+            "Config 0": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0001&attrId=0020",
+                "execAtCreation": "Yes"
+            },
+            "Config 1": {
+                "use": "zbReadAttribute",
+                "params": "clustId=FCC0&attrId=0102&manufId=115F",
+                "execAtCreation": "Yes"
+            },
+            "Config 2": {
+                "use": "zbReadAttribute",
+                "params": "clustId=FCC0&attrId=010C&manufId=115F",
+                "execAtCreation": "Yes"
+            },
+            "Config 3": {
+                "use": "zbReadAttribute",
+                "params": "clustId=FCC0&attrId=0152&manufId=115F",
+                "execAtCreation": "Yes"
+            },
+
             "Battery-Percent": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0001&attrId=0021"
@@ -53,7 +74,7 @@
         },
         "xiaomi": {
             "fromDevice": {
-                "01-21": { "func": "toPercent", "info": "0001-01-0021" },
+                "01-21": { "func": "divAndPercent", "div": 1000, "info": "0001-01-0021" },
                 "65-21": { "func": "number", "info": "0400-01-0000" }
             }
         }

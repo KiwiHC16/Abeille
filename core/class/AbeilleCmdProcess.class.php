@@ -3071,18 +3071,18 @@
                     // Scan count: Scan repeats 0 – 5
                     // Network Update ID: 0 – 0xFF Transaction ID for scan
 
-                    $cmd = "004A";
+                    $cmd                = "004A";
 
-                    $shortAddress               = $Command['addr'];
-                    $channelMask                = "07FFF800";
-                    $scanDuration               = "01";
-                    $scanCount                  = "01";
-                    $networkUpdateId            = "01";
-                    $networkManagerShortAddress = "0000";
+                    $addr               = $Command['addr'];
+                    $chanMask           = "07FFF800";
+                    $scanDuration       = "01";
+                    $scanCount          = "01";
+                    $networkUpdateId    = "01";
+                    $networkManagerAddr = "0000";
 
-                    $data = $shortAddress.$channelMask.$scanDuration.$scanCount.$networkUpdateId.$networkManagerShortAddress;
+                    $data = $addr.$chanMask.$scanDuration.$scanCount.$networkUpdateId.$networkManagerAddr;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $shortAddress);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                     return;
                 }
 
@@ -3779,7 +3779,7 @@
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$onoff.$level.$duration;
 
-                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
 
                     if ($addrMode == "02") {
                         $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
@@ -3824,7 +3824,7 @@
 
                         $data       = $addrMode.$addr.$srcEp.$dstEp.$onOff.$level.$duration;
 
-                        $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                        $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     } else if ($cmdId == '07') { // Stop with OnOff
                         $cmd        = "0084"; // Stop with OnOff = Cluster 0008, cmd 07
                         $addrMode   = "02"; // Assuming short addr
@@ -3834,7 +3834,7 @@
 
                         $data       = $addrMode.$addr.$srcEp.$dstEp;
 
-                        $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                        $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     } else {
                         cmdLog('error', "  Unsupported cluster 0008 command ".$cmdId);
                     }

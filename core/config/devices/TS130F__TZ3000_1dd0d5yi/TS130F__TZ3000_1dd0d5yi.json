@@ -30,6 +30,7 @@
             },
             "Set level": {
                 "use": "zbCmd-0102-GoToLiftPercentage",
+                "valueOffset": "#value#*#logicid0102-01-F003#/100",
                 "isVisible": "1"
             },
             "Level": {

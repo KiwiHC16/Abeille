@@ -19,6 +19,7 @@
     //              numberDiv: resulting number is divided by 'div' before Jeedom update
     //              numberMult: resulting number is multiplied by 'mult' before Jeedom update
     //              toPercent: resulting number is converted to percentage (with 'min' & 'max') before Jeedom update
+    //              divAndPercent: resulting number is divided ('div') then converted to percentage (with 'min' & 'max') before Jeedom update
 
     // Decode Xiaomi tags
     // Based on https://github.com/dresden-elektronik/deconz-rest-plugin/wiki/Xiaomi-manufacturer-specific-clusters%2C-attributes-and-attribute-reporting
@@ -100,6 +101,18 @@
                     $value2 = ($value2 - $min) / ($max - $min);
                     $value2 *= 100;
                     $mapTxt .= 'min='.$min.', max='.$max.', ';
+                } else if ($func == "divAndPercent") {
+                    $div = (isset($map['div']) ? $map['div'] : 1);
+                    $value2 /= $div;
+                    $min = (isset($map['min']) ? $map['min'] : 2.85);
+                    $max = (isset($map['max']) ? $map['max'] : 3.0);
+                    if ($value2 > $max)
+                        $value2 = $max;
+                    else if ($value2 < $min)
+                        $value2 = $min;
+                    $value2 = ($value2 - $min) / ($max - $min);
+                    $value2 *= 100;
+                    $mapTxt .= 'div='.$div.', min='.$min.', max='.$max.', ';
                 }
                 $mapTxt .= $map['info'];
                 $mapTxt .= '='.$value2;
@@ -109,6 +122,24 @@
             } else
                 $mapTxt = ' (ignored)';
             parserLog('debug', '  Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].', ValueHex='.$valueHex.' => '.$value.$mapTxt);
+        }
+    }
+
+    // WORK ONGOING. FOR INFO ONLY
+    function xiaomiReportAttributes($net, $addr, $pl, &$attrReportN = null) {
+        // $l = strlen($pl);
+        for ( ; true; ) {
+            $attrId = substr($pl, 2, 2).substr($pl, 0, 2);
+            $attrType = substr($pl, 4, 2);
+            $pl = substr($pl, 6);
+            parserLog('debug', "  ".$attrId."-".$attrType.": ".$pl);
+
+            if (($attrId == "00F7") && ($attrType == "41")) {
+                $size = substr($pl, 0, 2); // Octet string size
+                xiaomiDecodeTags($net, $addr, substr($pl, 2));
+            }
+
+            break; // Currently supporting only 1 attribut.
         }
     }
 ?>

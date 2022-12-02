@@ -17,18 +17,18 @@
             "BatteryVolt2Percent": { "use": "battery-Volt2Percent-3" },
             "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
 
-			"Etat1": {
-				"use": "etatSwitchDoubleb286acn01_1"
-			},
-			"Etat2": {
-				"use": "etatSwitchDoubleb286acn01_2"
-			},
-			"Etat3": {
-				"use": "etatSwitchDoubleb286acn01_3",
-				"comment": "Event from EP3 corresponding to simultanenous push of both buttons"
-			},
-			
-			"Bind-0001-ToZigate": {
+            "Etat1": {
+                "use": "etatSwitchDoubleb286acn01_1"
+            },
+            "Etat2": {
+                "use": "etatSwitchDoubleb286acn01_2"
+            },
+            "Etat3": {
+                "use": "etatSwitchDoubleb286acn01_3",
+                "comment": "Event from EP3 corresponding to simultanenous push of both buttons"
+            },
+
+            "Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"

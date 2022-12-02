@@ -223,6 +223,9 @@
         "8110" => array(
             "name" => "Write attribute response",
         ),
+        "8120" => array(
+            "name" => "Configure reporting response",
+        ),
         "8139" => array(
             "name" => "Attribute discovery individual response",
         ),

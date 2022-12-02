@@ -111,7 +111,8 @@
 
             $eqLogic = $this->getEqLogic();
             logSetConf("AbeilleCmd.log", true); // Mandatory since called from 'Abeille.class.php'
-            logMessage('debug', "-- execute(eqName='".$eqLogic->getName()."' name='".$this->getName()."' type=".$this->getType().', options='.json_encode($_options).')');
+            // logMessage('debug', "-- execute(eqName='".$eqLogic->getName()."' name='".$this->getName()."' type=".$this->getType().', options='.json_encode($_options).')');
+            logMessage('debug', "-- execute(".$this->getHumanName().", type=".$this->getType().', options='.json_encode($_options).')');
 
             // TODO: A revoir, je ne sais plus ce qu'est ce truc.
             // cmdId : 12676 est le level d une ampoule
@@ -134,11 +135,30 @@
                 }
 
                 // Value update if 'valueOffset' is defined.
-                // Reminder: 'valueOffset' is equivalent to 'calculValueOffset' for info cmd.
+                // Reminder: 'valueOffset' is equivalent to 'calculValueOffset' for action cmd.
+                // Ex: "valueOffset": "#value#*10"
+                // Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
                 $vo = $this->getConfiguration('ab::valueOffset', null);
                 if ($vo !== null) {
                     if (isset($_options['slider'])) {
-                        $newValue = jeedom::evaluateExpression(str_replace('#value#', $_options['slider'], $vo));
+                        $vo = str_replace('#value#', $_options['slider'], $vo); // Replace #value# by slider value
+                        $lop = strpos($vo, '#logicid'); // Any #logicid....# variable ?
+                        if ($lop != false) {
+                            // logMessage('debug', "-- execute(): logicId at pos ".$lop);
+                            $logicId = substr($vo, $lop + 8);
+                            $lop = strpos($logicId, '#');
+                            $logicId = substr($logicId, 0, $lop);
+                            // logMessage('debug', "-- execute(): logicId=".$logicId);
+                            $cmdLogic = $eqLogic->getCmd('info', $logicId);
+                            if (!is_object($cmdLogic)) {
+                                message::add("Abeille", $eqLogic->getHumanName().": Commande '".$logicId."' inconnue");
+                            } else {
+                                $cmdVal = $cmdLogic->execCmd();
+                                logMessage('debug', "-- execute(): cmd logicId='".$logicId."', val=".$cmdVal);
+                                $vo = str_replace('#logicid'.$logicId.'#', $cmdVal, $vo); // Replace #logicid...#
+                            }
+                        }
+                        $newValue = jeedom::evaluateExpression($vo); // Compute final formula
                         logMessage('debug', "-- execute(): 'valueOffset' applied: ".$_options['slider']." => ".$newValue);
                         $_options['slider'] = $newValue;
                     }

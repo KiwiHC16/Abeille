@@ -127,6 +127,10 @@ Exemple: BASICZBR3.json
     notStandard: optionnel
         Permet d'indiquer que cette commande (attribut du standard Zigbee) n'est pas standard.
         Ex: Dans le cas 0400-0000 (illuminance value), certains Xiaomi renvoient directement une valeur en Lux.
+    valueOffset: Surcharge de la formule de calcul à appliquer avant commande action.
+        Permet d'appliquer une formule par ex sur la valeur d'un slider avant envoi.
+        Ex: "valueOffset": "#value#*10"
+        Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
 
   Exemples de nouvelle syntaxe:
     "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },

@@ -1,6 +1,13 @@
 ChangeLog
 =========
 
+- Interne: Parser: Nettoyage fonctions obsoletes.
+- Interne: Cmd: Activation ACK pour 'setLevelRaw' + 'cmd-0008'.
+- Interne: Support préliminaire 'Mgmt Nwk Update Req'.
+- Modeles commandes: Amélioration 'valueOffset' pour support ID logique.
+- Moes curtain module: Mise-à-jour modèle (2464).
+- Aqara Motion Sensor P1 RTCGQ14LM/MS-S02: Mise-à-jour modèle (2463).
+
 221130-BETA-1
 -------------
 

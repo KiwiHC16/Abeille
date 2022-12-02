@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221202-BETA-2
+-------------
+
 - Suppression chiffres après virgule sur pourcentage batterie.
 - Interne: Parser: Nettoyage fonctions obsoletes.
 - Interne: Cmd: Activation ACK pour 'setLevelRaw' + 'cmd-0008'.

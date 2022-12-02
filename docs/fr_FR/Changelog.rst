@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221202-BETA-1
+-------------
+
 - Interne: Parser: Nettoyage fonctions obsoletes.
 - Interne: Cmd: Activation ACK pour 'setLevelRaw' + 'cmd-0008'.
 - Interne: Support préliminaire 'Mgmt Nwk Update Req'.

@@ -2981,7 +2981,8 @@
                             $toMon[] = "8002/Report attributes Xiaomi specific"; // For monitor
 
                             // New code
-                            xiaomiReportAttributes($dest, $srcAddr, $pl);
+                            $attributesReportN = [];
+                            xiaomiReportAttributes($dest, $srcAddr, $pl, $attributesReportN);
 
                             // Legacy code to be removed at some point
                             $a = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
@@ -2989,10 +2990,8 @@
                             if (($a == '00F7') && ($t == "41")) {
                                 $dataLength = hexdec(substr($pl, 6, 2));
                                 $fcc0 = $this->decodeFF01(substr($pl, 8, $dataLength*2));
-                                $attributesReportN = [
-                                    array( "name" => '0006-01-0000', "value" => $fcc0["Etat SW 1 Binaire"]["valueConverted"] ),
-                                    array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] / 100 ),
-                                ];
+                                $attributesReportN[] = array( "name" => '0006-01-0000', "value" => $fcc0["Etat SW 1 Binaire"]["valueConverted"] );
+                                $attributesReportN[] = array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] / 100 );
                                 if (isset($fcc0["Puissance"]))
                                     $attributesReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
                             }
@@ -5480,7 +5479,7 @@
 
                     $attributesReportN = [
                         // array( "name" => 'Battery-Volt', "value" => $voltage ),
-                        array( "name" => 'Batterie-Pourcent', "value" => $this->volt2pourcent($voltage) ),
+                        array( "name" => '0001-01-0021', "value" => $this->volt2pourcent($voltage) ),
                     ];
                 }
 

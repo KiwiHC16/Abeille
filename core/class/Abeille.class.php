@@ -32,8 +32,7 @@
     include_once __DIR__.'/../../plugin_info/install.php'; // updateConfigDB()
     include_once __DIR__.'/../php/AbeilleLog.php'; // logGetPluginLevel()
 
-class Abeille extends eqLogic
-{
+class Abeille extends eqLogic {
     // Fonction dupliquée dans AbeilleParser.
     public static function volt2pourcent($voltage) {
         $max = 3.135;
@@ -1604,6 +1603,7 @@ class Abeille extends eqLogic
         }
 
         if (preg_match("/^0001-[0-9A-F]*-0021/", $trigLogicId)) {
+            $trigValue = round($trigValue, 0);
             log::add('Abeille', 'debug', "  Battery % reporting: ".$trigLogicId.", val=".$trigValue);
             $eqLogic->setStatus('battery', $trigValue);
             $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
@@ -1658,14 +1658,17 @@ class Abeille extends eqLogic
 
     // Check if received attribute is a battery information
     public static function checkIfBatteryInfo($eqLogic, $attrName, $attrVal) {
-        if ($attrName == "Battery-Volt") {
+        if ($attrName == "Battery-Volt") { // Obsolete
+            $attrVal = round($attrVal, 0);
             $eqLogic->setStatus('battery', self::volt2pourcent($attrVal));
             $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-        } else if (($attrName == "Battery-Percent") || ($attrName == "Batterie-Pourcent")) {
+        } else if (($attrName == "Battery-Percent") || ($attrName == "Batterie-Pourcent")) {  // Obsolete
+            $attrVal = round($attrVal, 0);
             log::add('Abeille', 'debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
             $eqLogic->setStatus('battery', $attrVal);
             $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
         }  else if (preg_match("/^0001-[0-9A-F]*-0021/", $attrName)) {
+            $attrVal = round($attrVal, 0);
             log::add('Abeille', 'debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
             $eqLogic->setStatus('battery', $attrVal);
             $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));

@@ -35,8 +35,7 @@
             },
 
             "Battery-Percent": {
-                "use": "zbReadAttribute",
-                "params": "clustId=0001&attrId=0021"
+                "use": "zb-0001-BatteryPercent"
             },
             "Illuminance": {
                 "use": "zb-0400-MeasuredValue",
@@ -52,6 +51,10 @@
                 "params": "clustId=0400&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=0000",
                 "comment": "Reporting every 5 to 10mins",
                 "execAtCreation": "Yes"
+            },
+           "Device temperature": {
+                "use": "zb-0402-MeasuredValue",
+                "isVisible": "0"
             },
            "Occupancy": {
                 "use": "zb-0406-Occupancy",
@@ -75,6 +78,7 @@
         "xiaomi": {
             "fromDevice": {
                 "01-21": { "func": "divAndPercent", "div": 1000, "info": "0001-01-0021" },
+                "08-21": { "func": "numberDiv", "div": 10, "info": "0402-01-0000", "comment": "Device temp" },
                 "65-21": { "func": "number", "info": "0400-01-0000" }
             }
         }

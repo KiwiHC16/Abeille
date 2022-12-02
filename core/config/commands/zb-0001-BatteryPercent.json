@@ -8,7 +8,7 @@
         "configuration": {
             "minValue": "0",
             "maxValue": "100",
-            "historizeRound": 1,
+            "historizeRound": 0,
             "visibilityCategory": "All"
         },
         "type": "info",

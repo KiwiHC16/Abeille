@@ -1,15 +1,17 @@
 {
     "MR16TWOSRAM": {
+        "manufacturer": "Osram",
+        "model": "MR16TW",
         "timeout": "60",
         "configuration": {
             "mainEP": "03",
             "poll": "1",
-            "icon": "MR16TWOSRAM"
+            "icon": "Osram-SmartP-MR16Bulb"
         },
         "category": {
             "light": "1"
         },
-        "type": "MR16 TW OSRAM OSRAM Spot LED dimmable connect\u00e9 Smart",
+        "type": "Osram Smart+ MR16 bulb",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

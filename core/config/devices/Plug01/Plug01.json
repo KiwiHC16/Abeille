@@ -1,14 +1,15 @@
 {
     "Plug01": {
+        "manufacturer": "Osram",
         "timeout": "60",
         "configuration": {
             "mainEP": "03",
-            "icon": "OsramLightify"
+            "icon": "Osram-SmartP-Plug"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "OSRAM Prise Lightify",
+        "type": "Osram Smart+ plug",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

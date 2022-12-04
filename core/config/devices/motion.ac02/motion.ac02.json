@@ -52,11 +52,11 @@
                 "comment": "Reporting every 5 to 10mins",
                 "execAtCreation": "Yes"
             },
-           "Device temperature": {
+            "Device temperature": {
                 "use": "zb-0402-MeasuredValue",
                 "isVisible": "0"
             },
-           "Occupancy": {
+            "Occupancy": {
                 "use": "zb-0406-Occupancy",
                 "isVisible": "1"
             },

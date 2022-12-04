@@ -1,16 +1,17 @@
 {
     "PAR1650TW": {
+        "manufacturer": "Osram",
         "timeout": "60",
         "comment 2": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/435",
         "comment 3": " OSRAM GU10",
         "configuration": {
             "mainEP": "01",
-            "icon": "PAR1650TW"
+            "icon": "Osram-Lightify-GU10Bulb"
         },
         "category": {
             "light": "1"
         },
-        "type": "PAR1650TW",
+        "type": "Osram Lightify GU10 bulb",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

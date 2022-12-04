@@ -1404,7 +1404,7 @@ class Abeille extends eqLogic {
                 $eqSig = $eqLogic->getConfiguration('ab::signature', []);
                 if ($eqSig != [] && $eqSig['modelId'] != "") {
                     // Any user or official model ?
-                    $modelInfos = $this->findModel($eqSig['modelId'], $eqSig['manufId']);
+                    $modelInfos = self::findModel($eqSig['modelId'], $eqSig['manufId']);
                     if ($modelInfos !== false) {
                         $jsonId = $modelInfos['jsonId'];
                         $jsonLocation = $modelInfos['location']; // TODO: rename to jsonLocation

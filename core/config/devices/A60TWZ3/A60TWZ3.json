@@ -1,15 +1,16 @@
 {
     "A60TWZ3": {
+        "manufacturer": "Ledvance",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
             "poll": "1",
-            "icon": "A60TWZ3"
+            "icon": "Ledvance-SmartP-E27Bulb"
         },
         "category": {
             "light": "1"
         },
-        "type": "Ampoule Ledvance Classic E27 Tunable White",
+        "type": "Ledvance E27 bulb",
         "commands": {
             "etat": {
                 "use": "zb-0006-OnOff",

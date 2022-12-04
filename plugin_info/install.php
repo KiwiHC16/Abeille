@@ -576,12 +576,17 @@
                     "511.202" => "Iluminize-511202",
 
                     "PlugZ3" => "Ledvance-PlugZ3",
+                    "A60TWZ3" => "Ledvance-SmartP-E27Bulb",
 
                     "LegrandRemoteSwitch" => "Legrand-RemoteSwitch",
                     "Contactor" => "Legrand-Contactor",
                     "Connectedoutlet" => "Legrand-Connectedoutlet",
 
                     "Moes-ZSS-ZK-THL" => "Moes-Thermometer",
+
+                    "MR16TWOSRAM" => "Osram-SmartP-MR16Bulb",
+                    "OsramLightify" => "Osram-SmartP-Plug",
+                    "PAR1650TW" => "Osram-Lightify-GU10Bulb",
 
                     "LOM001" => "PhilipsSignify-Plug",
                     "LOM002" => "PhilipsSignify-Plug",
@@ -593,7 +598,7 @@
 
                     "ProfaluxTelecommande" => "Profalux-Remote",
                     "voletProFalux" => "Profalux-Shutter",
-                    "node_bsoProFalux" => "Profalux-BSO",
+                    "bsoProFalux" => "Profalux-BSO",
 
                     "BASICZBR3" => "Sonoff-BASICZBR3",
                     "SNZB-01" => "Sonoff-SNZB-01",

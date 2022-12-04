@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221204-BETA-1
+-------------
+
 - Images: Normalisation de noms.
 - Interne: Abeille.class: Correction findModel (2509).
 

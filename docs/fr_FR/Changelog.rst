@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Moes thermostat BRT-100: Mise-à-jour modèle (2467).
+- Interne: Parser: Amélioration mineure.
+
 221204-BETA-1
 -------------
 

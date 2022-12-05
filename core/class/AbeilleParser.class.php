@@ -5288,9 +5288,7 @@
                     // $voltage = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
                     // // $etat           = substr($payload, 80, 2);
                     // $etat = substr($Attribut, 80 - 24, 2);
-
                     // parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
-
                     // $attributesReportN = [
                     //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                     //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
@@ -5371,8 +5369,7 @@
                     $temperature    = unpack("s", pack("s", hexdec(substr($Attribut, 21 * 2 + 2, 2).substr($Attribut, 21 * 2, 2))))[1];
                     $humidity       = hexdec(substr($Attribut, 25 * 2 + 2, 2).substr($Attribut, 25 * 2, 2));
                     $pression       = hexdec(substr($Attribut, 29 * 2 + 6, 2).substr($Attribut, 29 * 2 + 4, 2).substr($Attribut, 29 * 2 + 2, 2).substr($Attribut, 29 * 2, 2));
-                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity.', Pressure='.$pression);
-
+                    parserLog('debug', '  Legacy: Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity.', Pressure='.$pression);
                     // $attributesReportN = [
                     //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                     //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
@@ -5473,10 +5470,13 @@
                     // Assuming $dataType == "42"
                     parserLog("debug","  Xiaomi proprietary (IR/button/door V1)" );
 
+                    // $attributesReportN = [];
+                    // xiaomiDecodeTags($dest, $srcAddr, $Attribut, $attributesReportN);
+                    xiaomiDecodeTags($dest, $srcAddr, $Attribut);
+
+                    // Legacy code to be removed
                     $voltage = hexdec(substr($payload, 24 +  8, 2).substr($payload, 24 + 6, 2));
-
-                    parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
-
+                    parserLog('debug', '  Legacy: Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
                     $attributesReportN = [
                         // array( "name" => 'Battery-Volt', "value" => $voltage ),
                         array( "name" => '0001-01-0021', "value" => $this->volt2pourcent($voltage) ),

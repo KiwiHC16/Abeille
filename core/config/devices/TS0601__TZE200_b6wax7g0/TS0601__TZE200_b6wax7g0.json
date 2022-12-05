@@ -21,6 +21,7 @@
             },
             "Local temp": {
                 "use": "zb-0402-MeasuredValue",
+                "genericType": "THERMOSTAT_TEMPERATURE",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -31,6 +32,22 @@
             },
             "Setpoint": {
                 "use": "attr-Thermostat-Setpoint",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "ECO mode": {
+                "use": "cmdG-TuyaEF00-Set-EcoMode",
+                "params": "dpId=6A",
+                "isVisible": 1
+            },
+            "Set ECO temp": {
+                "use": "cmdG-TuyaEF00-Set-Setpoint",
+                "params": "dpId=6B",
+                "isVisible": 1
+            },
+            "ECO temp": {
+                "use": "zb-0402-MeasuredValue",
+                "logicalId": "01-ECO-temp",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -49,7 +66,8 @@
                     "function": "rcvValue",
                     "info": "01-windowDetectionStatus"
                 },
-                "0E": { "function": "rcvValue", "info": "0001-01-0021" }
+                "0E": { "function": "rcvValue", "info": "0001-01-0021" },
+                "6B": { "function": "rcvValue", "info": "01-ECO-temp" }
             }
         }
     }

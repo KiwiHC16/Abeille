@@ -1,0 +1,16 @@
+{
+    "act_tuyaEF00-Set-Setpoint-Mult": {
+        "comment": "Tuya set setpoint with multiply",
+        "isVisible": 0,
+        "subType": "slider",
+        "template": "",
+        "configuration": {
+            "topic": "cmd-tuyaEF00",
+            "request": "ep=#EP#&cmd=setValueMult&mult=#mult#&data=#slider#",
+            "minValue": 0,
+            "maxValue": 30
+        },
+        "type": "action",
+        "genericType": "THERMOSTAT_SET_SETPOINT"
+    }
+}

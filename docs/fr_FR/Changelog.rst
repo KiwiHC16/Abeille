@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221208-BETA-1
+-------------
+
 - Moes thermostat BRT-100: Mise-à-jour modèle (2467).
 - Interne: Parser: Amélioration mineure.
 - Interne: Abeille.class: Amélioration sur reception msg trop grand.

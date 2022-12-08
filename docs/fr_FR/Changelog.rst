@@ -3,6 +3,10 @@ ChangeLog
 
 - Moes thermostat BRT-100: Mise-à-jour modèle (2467).
 - Interne: Parser: Amélioration mineure.
+- Interne: Abeille.class: Amélioration sur reception msg trop grand.
+- Suppression ancien log 'AbeilleConfig' (sans .log) au démarrage.
+- Interne: Taille queue xToAbeille étendue.
+- Interne: Parser: Affichage nPDU/aPDU avec extended error.
 
 221204-BETA-1
 -------------

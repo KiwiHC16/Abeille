@@ -390,7 +390,7 @@
             config::remove('zigateNb', 'Abeille');
 
             // Remove obsolete log files
-            $obsolete = ['AbeilleCmd', 'AbeilleMQTTCmd', 'AbeilleMQTTCmdTimer', 'AbeilleSocat', 'AbeilleSerialRead', 'AbeilleParser', 'AbeilleDebug.log'];
+            $obsolete = ['AbeilleCmd', 'AbeilleMQTTCmd', 'AbeilleMQTTCmdTimer', 'AbeilleSocat', 'AbeilleSerialRead', 'AbeilleParser', 'AbeilleDebug.log', 'AbeilleConfig'];
             for ($z = 1; $z <= 10; $z++) {
                 $obsolete[] = 'AbeilleSocat'.$z;
                 $obsolete[] = 'AbeilleSerialRead'.$z;

@@ -1728,7 +1728,7 @@
         // }
 
         // 8000/Zigate Status
-        function decode8000($dest, $payload, $lqi) {
+        function decode8000($net, $payload, $lqi) {
             $status     = substr($payload, 0, 2);
             $sqn        = substr($payload, 2, 2);
             $packetType = substr($payload, 4, 4);
@@ -1751,7 +1751,7 @@
                 $msgDecoded .= ', NPDU='.$nPDU.', APDU='.$aPDU;
             }
 
-            parserLog('debug', $dest.', Type='.$msgDecoded, "8000");
+            parserLog('debug', $net.', Type='.$msgDecoded, "8000");
 
             // Sending msg to cmd for flow control
             $msg = array (
@@ -1772,14 +1772,16 @@
                 if ($status == "00") {
                     parserLog("debug", "  Zigate mode has been properly changed.");
                 } else {
-                    parserLog("error", $dest.": Impossible de changer le mode de la Zigate.");
+                    parserLog("error", $net.": Impossible de changer le mode de la Zigate.");
                     // message::add("Abeille", "Erreur lors du changement de mode de la Zigate.", "");
                 }
             }
 
-            // Checking NDPU. If stuck too long Zigate SW reset is required
+            // Saving NPDU+APDU & checking NDPU. If stuck too long Zigate SW reset is required
             if (isset($nPDU))
                 $this->checkNpdu($dest, $nPDU);
+            $zgId = substr($net, 7); // AbeilleX => X
+            $GLOBALS['zigate'.$zgId]['aPdu'] = $aPdu;
         }
 
         // // 8001/Log message
@@ -3749,7 +3751,7 @@
         /* 8012/
            Confirms that a data packet sent by the local node has been successfully passed down the stack to the MAC layer
            and has made its first hop towards its destination (an acknowledgment has been received from the next hop node) */
-        function decode8012($dest, $payload, $lqi) {
+        function decode8012($net, $payload, $lqi) {
             // <Status: uint8_t>
             // <Src Endpoint: uint8_t>
             // <Dest Endpoint : uint8_t>
@@ -3776,7 +3778,7 @@
             $msgDecoded = '8012/APS data confirm, Status='.$status.', Addr='.$dstAddr.', SQNAPS='.$sqnAps.', NPDU='.$nPDU.', APDU='.$aPDU;
 
             // Log
-            parserLog('debug', $dest.', Type='.$msgDecoded, "8012");
+            parserLog('debug', $net.', Type='.$msgDecoded, "8012");
 
             // Sending msg to cmd for flow control
             $msg = array (
@@ -3789,6 +3791,10 @@
                 'aPDU'      => $aPDU,
             );
             $this->msgToCmdAck($msg);
+
+            $zgId = substr($net, 7); // AbeilleX => X
+            $GLOBALS['zigate'.$zgId]['nPdu'] = $nPdu;
+            $GLOBALS['zigate'.$zgId]['aPdu'] = $aPdu;
 
             // Monitor if required
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))
@@ -6235,15 +6241,21 @@
             msgToAbeille2($msg);
         }
 
-        /* Extended error */
-        function decode9999($dest, $payload, $lqi) {
+        /* 9999/Extended error */
+        function decode9999($net, $payload, $lqi) {
             /* FW >= 3.1e
                Extended Status: uint8_t */
-            $ExtStatus = substr($payload, 0, 2);
+            $extStatus = substr($payload, 0, 2);
 
-            $decoded = '9999/Extended error'
-                .', ExtStatus='.$ExtStatus;
-            parserLog('debug', $dest.', Type='.$decoded);
+            $zgId = substr($net, 7); // AbeilleX => X
+            $extra = '';
+            if (isset($GLOBALS['zigate'.$zgId]) && isset($GLOBALS['zigate'.$zgId]['nPdu']))
+                $extra = ', NPDU='.$GLOBALS['zigate'.$zgId]['nPdu'];
+            if (isset($GLOBALS['zigate'.$zgId]) && isset($GLOBALS['zigate'.$zgId]['aPdu']))
+                $extra = ', APDU='.$GLOBALS['zigate'.$zgId]['aPdu'];
+
+            $decoded = '9999/Extended error'.', ExtStatus='.$extStatus.$extra;
+            parserLog('debug', $net.', Type='.$decoded);
         }
 
         // /**

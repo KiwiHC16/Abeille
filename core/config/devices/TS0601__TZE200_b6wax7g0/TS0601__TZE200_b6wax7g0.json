@@ -26,7 +26,7 @@
                 "nextLine": "after"
             },
             "Set Setpoint": {
-                "use": "cmdG-TuyaEF00-Set-Setpoint",
+                "use": "act_tuyaEF00-Set-Setpoint",
                 "params": "dpId=02",
                 "isVisible": 1
             },

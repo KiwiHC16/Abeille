@@ -12,17 +12,15 @@
        array['<queueName>'] = array("id" => queueId, "max" => maxMsgSize) */
     $abQueues = array();
     $abQueues["xToParser"] = array( "id" => 0x336, "max" => 2048 );
-    // $abQueues["ctrlToCmd"] = array( "id" => 0x338, "max" => 2048 ); // Ctrl messages for AbeilleCmd
     $abQueues["parserToLQI"] = array( "id" => 0xE1, "max" => 2048 );
     $abQueues["parserToCli"] = array( "id" => 0x2D4, "max" => 1024 );
     $abQueues["parserToCmdAck"] = array( "id" => 0x3E7, "max" => 512 ); // Parser to cmd for 8000/8012/8702 statuses
-    // $abQueues["parserToAbeille2"] = array( "id" => 222, "max" => 512 ); // Parser Abeille, new path
-    $abQueues["xToCmd"] = array( "id" => 1212, "max" => 512 ); // AbeilleCmd inputs
-    $abQueues["cmdToMon"] = array( "id" => 130, "max" => 512 ); // Messages to zigate (cmd to monitor)
-    $abQueues["parserToMon"] = array( "id" => 131, "max" => 512 ); // Messages from zigate (parser to monitor)
-    $abQueues["monToCmd"] = array( "id" => 132, "max" => 512 ); // Messages to cmd (addr update)
-    $abQueues["parserToAssist"] = array( "id" => 141, "max" => 512 ); // Parser to EQ assistant
-    $abQueues["xToAbeille"] = array( "id" => 621, "max" => 512 ); // ?
+    $abQueues["xToCmd"] = array( "id" => 0x4BC, "max" => 512 ); // AbeilleCmd inputs
+    $abQueues["cmdToMon"] = array( "id" => 0x82, "max" => 512 ); // Messages to zigate (cmd to monitor)
+    $abQueues["parserToMon"] = array( "id" => 0x83, "max" => 512 ); // Messages from zigate (parser to monitor)
+    $abQueues["monToCmd"] = array( "id" => 0x84, "max" => 512 ); // Messages to cmd (addr update)
+    $abQueues["parserToAssist"] = array( "id" => 0x8D, "max" => 512 ); // Parser to EQ assistant
+    $abQueues["xToAbeille"] = array( "id" => 0x26D, "max" => 1024 ); // All messages to 'Abeille.class'
     $GLOBALS['abQueues'] = $abQueues;
 
     // Tcharp38 note: WARNING: TOP PRIORITY is 1, not 5

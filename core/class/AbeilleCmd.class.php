@@ -1,7 +1,5 @@
 <?php
-
-    class AbeilleCmd extends cmd
-    {
+    class AbeilleCmd extends cmd {
         /**
          * updateField()
          * Used to replace #xxx# fields with real value

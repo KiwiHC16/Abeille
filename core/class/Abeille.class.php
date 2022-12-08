@@ -972,9 +972,9 @@ class Abeille extends eqLogic {
                 } else { // Error
                     if ($errCode == 7) {
                         msg_receive($queueXToAbeille, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
-                        log::add('Abeille', 'error', 'deamon(): msg trop grand (max='.$msgMax.') ignoré.');
+                        log::add('Abeille', 'error', "Message (xToAbeille) trop grand ignoré: ".$msgJson);
                     } else if ($errCode != 42)
-                        log::add('Abeille', 'debug', 'deamon(): msg_receive error '.$errCode);
+                        log::add('Abeille', 'error', 'deamon(): msg_receive(xToAbeille) erreur '.$errCode.', msg='.$msgJson);
                 }
             }
         } catch (Exception $e) {

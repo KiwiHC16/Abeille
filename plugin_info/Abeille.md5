@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="221208-BETA-1"
+# VERSION="221209-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -48,10 +48,10 @@ d28e6ecedaf5966668b39b08d53b70c0 *core/class/AbeilleCmd.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
 fee5d025144619255ecebc36d9a749d9 *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
-b63140beb6ad39cb24f1b82bb988211c *core/class/AbeilleCmdQueue.class.php
+a84f9e74469b2dac15ebbf7e899100ce *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-a5f2c4180f353bdf57ac8a637cb1d263 *core/class/AbeilleParser.class.php
+04e905446e1cb9a73153f53079ec8ed3 *core/class/AbeilleParser.class.php
 59230e66b7fe7a8f08b997955361e4ab *core/class/AbeilleParserTest.class.php
 fbc81985db0cfa51df2b142d357f7eb3 *core/class/AbeilleParserTestDB.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
@@ -683,6 +683,12 @@ fec583b0dafd8d85197671e3d8799cbc *core/config/devices/GL-S-007Z/GL-S-007Z.json
 ac4bd571a6f1a113ab403fd913bca815 *core/config/devices/GLEDOPTO/GLEDOPTO.json
 3407c1ec0aa8544b1397c08645b34835 *core/config/devices/GUNNARPpanelround/GUNNARPpanelround.json
 2187f4ec5562b34671b00d468a1efd56 *core/config/devices/GardenspotRGB/GardenspotRGB.json
+51f05843f7df54ccdf69edd45af6b1b8 *core/config/devices/ICZB-DC11_icasa/ICZB-DC11_icasa.json
+d8a6cad900d17f49792c0480b1f421d6 *core/config/devices/ICZB-DC11_icasa/discovery.json
+d246a0201bcd5413cec8fe7fcdd9082c *core/config/devices/ICZB-IW11D_icasa/ICZB-IW11D_icasa.json
+4ea2669828f2b4780a0e7ac204342707 *core/config/devices/ICZB-IW11D_icasa/discovery.json
+741177e7889aeb4d803921f1bbf31efc *core/config/devices/ICZB-IW11SW_icasa/ICZB-IW11SW_icasa.json
+713b6788d35f44fd7bf2c20d70e24ed4 *core/config/devices/ICZB-IW11SW_icasa/discovery.json
 7d9e844843ae8d6eb6123a4908156600 *core/config/devices/KADRILJrollerblind/KADRILJrollerblind.json
 68434e259e4352c6167baa4c865fc472 *core/config/devices/Keyfob-ZB3.0/Keyfob-ZB3.0.json
 5b0a7ed753da0490cf0760464a0be630 *core/config/devices/KiwiHC16_Test_01/KiwiHC16_Test_01.json
@@ -874,7 +880,8 @@ bf19af3ca24209a9fcf05a8ee3d19917 *core/config/devices/TS0115__TYZB01_vkwryfdr/TS
 38ef12890aaaea68b1e8718678e64420 *core/config/devices/TS011F__TZ3000_5f43h46b/discovery.json
 021d297c19115d59da5140658d9f496e *core/config/devices/TS011F__TZ3000_amdymr7l/TS011F__TZ3000_amdymr7l.json
 f41e19b4602ad714462205c1f8beda1d *core/config/devices/TS011F__TZ3000_amdymr7l/discovery.json
-78a8a44518bf722d611f66eabd3647d3 *core/config/devices/TS011F__TZ3000_cphmq0q7/TS011F__TZ3000_cphmq0q7.json
+ea6086e319e10164112d2ccd4860ed9c *core/config/devices/TS011F__TZ3000_cphmq0q7/TS011F__TZ3000_cphmq0q7.json
+dc36ef6ac9d610d802459a69c1eb8548 *core/config/devices/TS011F__TZ3000_cphmq0q7/discovery-TS011F__TZ3000_2putqrmw.json
 f589fdf1133958004bef164d33aa9587 *core/config/devices/TS011F__TZ3000_cphmq0q7/discovery.json
 cbc717df55655a2417cbf6579d3a3389 *core/config/devices/TS011F__TZ3000_gjnozsaz/TS011F__TZ3000_gjnozsaz.json
 952828224c143efdedb6aae8331e9696 *core/config/devices/TS011F__TZ3000_gjnozsaz/discovery.json
@@ -1168,7 +1175,7 @@ e525c0bf3ba016aa6079fbfc57ec34aa *desktop/php/AbeilleEqAssist.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-c8a916ddca1c96256a272cfe8b8de93e *docs/fr_FR/Changelog.rst
+ab021f6a295814ab74dff1b3be1fa087 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1225,6 +1232,9 @@ f9065914800e54dcfee414bf8eb84cfb *images/node_HS2WD.png
 ed6d510ab011a30803c321b2c8052666 *images/node_HueEnsis.png
 b0180cfb287fba6ac879ebf92f651523 *images/node_HueGo.png
 57c14d2a972f32b1b8b6115321815e11 *images/node_HueWhite.png
+4c9d6aa3e9bbba635cd46c25d402575d *images/node_Icasa-ICZB-DC11.png
+8c86ca042500eca781dd2c1a1b749636 *images/node_Icasa-ICZB-IW11D.png
+098a628b2db704c1b6202391aa7b3cc1 *images/node_Icasa-ICZB-IW11SW.png
 00d56067f21a49ae7281549403f5f951 *images/node_Ikea-BulbE14CandleWhite.png
 b353914359d596bba8a7175b5a1c859f *images/node_Ikea-BulbE27.png
 69b00fb12b3cc1aae6f98bf2ce6731d2 *images/node_Ikea-BulbGU10.png
@@ -1464,10 +1474,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-1c27f8d35067d706f7a60f8801ced377 *plugin_info/Abeille.version
+7b3453ea162e54bbf2a92d7ad6e321da *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 721b9c51a8529a69104fa8b2e2a22d24 *plugin_info/configuration.php
-774ebb33857ad289d9b29b09c03504f3 *plugin_info/info.json
+2165cc5668ffd4bb19bf174401181ee7 *plugin_info/info.json
 69309d8ac8b68041eefc49c8d79902eb *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

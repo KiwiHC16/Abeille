@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221209-BETA-1
+-------------
+
 - Modele TS011F: Ajout de plusieurs marques blanches.
 - Icasa ICZB-IW11SW: Ajout support préliminaire (2515).
 - Icasa ICZB-IW11D: Ajout support préliminaire (2514).

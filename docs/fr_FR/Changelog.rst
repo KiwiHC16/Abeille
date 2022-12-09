@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-221209-BETA-3
+221209-BETA-4
 -------------
 
 - Moes thermostat BRT-100: Mise-à-jour modèle (2467).

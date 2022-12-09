@@ -1746,9 +1746,9 @@
             }
             if ($l == 16) {
                 // FW >= 3.1e
-                $nPDU = substr($payload, 12, 2);
-                $aPDU = substr($payload, 14, 2);
-                $msgDecoded .= ', NPDU='.$nPDU.', APDU='.$aPDU;
+                $nPdu = substr($payload, 12, 2);
+                $aPdu = substr($payload, 14, 2);
+                $msgDecoded .= ', NPDU='.$nPdu.', APDU='.$aPdu;
             }
 
             parserLog('debug', $net.', Type='.$msgDecoded, "8000");
@@ -1756,15 +1756,15 @@
             // Sending msg to cmd for flow control
             $msg = array (
                 'type'          => "8000",
-                'net'           => $dest,
+                'net'           => $net,
                 'status'        => $status,
                 'sqn'           => $sqn,
                 'sqnAps'        => $sqnAps,
                 'packetType'    => $packetType , // The value of the initiating command request.
             );
-            if (isset($nPDU)) {
-                $msg['nPDU'] = $nPDU;
-                $msg['aPDU'] = $aPDU;
+            if (isset($nPdu)) {
+                $msg['nPDU'] = $nPdu;
+                $msg['aPDU'] = $aPdu;
             }
             $this->msgToCmdAck($msg);
 
@@ -1778,10 +1778,11 @@
             }
 
             // Saving NPDU+APDU & checking NDPU. If stuck too long Zigate SW reset is required
-            if (isset($nPDU))
-                $this->checkNpdu($dest, $nPDU);
-            $zgId = substr($net, 7); // AbeilleX => X
-            $GLOBALS['zigate'.$zgId]['aPdu'] = $aPdu;
+            if (isset($nPdu)) {
+                $this->checkNpdu($net, $nPdu);
+                $zgId = substr($net, 7); // AbeilleX => X
+                $GLOBALS['zigate'.$zgId]['aPdu'] = $aPdu;
+            }
         }
 
         // // 8001/Log message
@@ -3767,15 +3768,15 @@
             if (in_array($dstMode, ["01", "02", "07"])) {
                 $dstAddr    = substr($payload, 8, 4);
                 $sqnAps     = substr($payload,12, 2);
-                $nPDU       = substr($payload,14, 2);
-                $aPDU       = substr($payload,16, 2);
+                $nPdu       = substr($payload,14, 2);
+                $aPdu       = substr($payload,16, 2);
             } else if ($dstMode == "03") { // IEEE
                 $dstAddr    = substr($payload, 8, 16);
                 $sqnAps     = substr($payload,24, 2);
-                $nPDU       = substr($payload,26, 2);
-                $aPDU       = substr($payload,28, 2);
+                $nPdu       = substr($payload,26, 2);
+                $aPdu       = substr($payload,28, 2);
             }
-            $msgDecoded = '8012/APS data confirm, Status='.$status.', Addr='.$dstAddr.', SQNAPS='.$sqnAps.', NPDU='.$nPDU.', APDU='.$aPDU;
+            $msgDecoded = '8012/APS data confirm, Status='.$status.', Addr='.$dstAddr.', SQNAPS='.$sqnAps.', NPDU='.$nPdu.', APDU='.$aPdu;
 
             // Log
             parserLog('debug', $net.', Type='.$msgDecoded, "8012");
@@ -3783,12 +3784,12 @@
             // Sending msg to cmd for flow control
             $msg = array (
                 'type'      => "8012",
-                'net'       => $dest,
+                'net'       => $net,
                 'status'    => $status,
                 'addr'      => $dstAddr,
                 'sqnAps'    => $sqnAps,
-                'nPDU'      => $nPDU,
-                'aPDU'      => $aPDU,
+                'nPDU'      => $nPdu,
+                'aPDU'      => $aPdu,
             );
             $this->msgToCmdAck($msg);
 
@@ -6152,13 +6153,13 @@
             if (in_array($dstMode, ["01", "02", "07"])) {
                 $dstAddr    = substr($payload, 8, 4);
                 $sqnAps     = substr($payload,12, 2);
-                $nPDU       = substr($payload,14, 2);
-                $aPDU       = substr($payload,16, 2);
+                $nPdu       = substr($payload,14, 2);
+                $aPdu       = substr($payload,16, 2);
             } else if ($dstMode == "03") { // IEEE
                 $dstAddr    = substr($payload, 8, 16);
                 $sqnAps     = substr($payload,24, 2);
-                $nPDU       = substr($payload,26, 2);
-                $aPDU       = substr($payload,28, 2);
+                $nPdu       = substr($payload,26, 2);
+                $aPdu       = substr($payload,28, 2);
             }
             $msgDecoded = '8702/APS data confirm fail'
                .', Status='.$status.'/'.$allErrorCode[$status][0]
@@ -6167,7 +6168,7 @@
                .', AddrMode='.$dstMode
                .', Addr='.$dstAddr
                .', SQNAPS='.$sqnAps
-               .', NPDU='.$nPDU.', APDU='.$aPDU;
+               .', NPDU='.$nPdu.', APDU='.$aPdu;
 
             // Log
             parserLog('debug', $dest.', Type='.$msgDecoded, "8702");
@@ -6179,8 +6180,8 @@
                 'status'    => $status,
                 'addr'      => $dstAddr,
                 'sqnAps'    => $sqnAps,
-                'nPDU'      => $nPDU,
-                'aPDU'      => $aPDU,
+                'nPDU'      => $nPdu,
+                'aPDU'      => $aPdu,
             );
             $this->msgToCmdAck($msg);
 

@@ -483,7 +483,7 @@
             $destSerial = $this->zigates[$zgId]['port'];
 
             // Test should not be needed as we already tested in addCmdToQueue2
-            if (!$this->zigates[$this->zgId]['enabled']) {
+            if (!$this->zigates[$zgId]['enabled']) {
                 cmdLog("debug", "  Zigate ".$this->zgId." (".$destSerial.") disabled => ignoring cmd ".$cmd.'-'.$datas);
                 return;
             }
@@ -538,7 +538,7 @@
             // cmdLog('debug', '  processCmdQueues() zigates='.json_encode($this->zigates));
 
             foreach ($this->zigates as $zgId => $zg) {
-                // cmdLog("debug", __FUNCTION__." zgId: ".$zgId);
+                // cmdLog("debug", __FUNCTION__." zgId=".$zgId.", zg=".json_encode($zg));
 
                 if (!$zg['enabled']) continue; // Disabled
                 if (!$zg['available']) continue;  // Not free

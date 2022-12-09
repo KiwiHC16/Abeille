@@ -4,6 +4,7 @@ ChangeLog
 221209-BETA-3
 -------------
 
+- Moes thermostat BRT-100: Mise-à-jour modèle (2467).
 - Assistant découverte: Améliorations.
 - Assistant découverte: Ajout suffixe identiant (ex: discovery-TS0121__TZ3000_rdtixbnu.json)
 - Modele TS011F: Ajout de plusieurs marques blanches.

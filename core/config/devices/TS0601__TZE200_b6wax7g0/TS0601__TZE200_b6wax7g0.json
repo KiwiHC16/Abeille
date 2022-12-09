@@ -61,7 +61,7 @@
         "tuyaEF00": {
             "fromDevice": {
                 "02": { "function": "rcvValue", "info": "01-setpoint" },
-                "03": { "function": "rcvValue", "info": "0402-01-0000" },
+                "03": { "function": "rcvValueDiv", "div": 10, "info": "0402-01-0000", "comment": "Local temp" },
                 "09": {
                     "function": "rcvValue",
                     "info": "01-windowDetectionStatus"

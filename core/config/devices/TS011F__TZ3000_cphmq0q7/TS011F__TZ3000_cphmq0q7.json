@@ -11,7 +11,10 @@
             "TS011F__TZ3000_0zfrhq4i": [],
             "TS011F__TZ3000_gznh2xla": [],
             "TS011F__TZ3000_ss98ec5d": [],
-            "TS011F__TZ3000_2putqrmw": []
+            "TS011F__TZ3000_2putqrmw": {
+                "manufacturer": "Nous",
+                "model": "A1Z"
+            }
         },
         "manufacturer": "Sixwgh",
         "model": "WH025",

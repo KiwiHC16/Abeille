@@ -1368,45 +1368,69 @@
         });
     }
 
-    /* Create 'discovery.json' file */
-    function writeDiscoveryInfos() {
-        console.log("writeDiscoveryInfos()");
+    // /* Create 'discovery.json' file */
+    // function writeDiscoveryInfos() {
+    //     console.log("writeDiscoveryInfos()");
 
-        $.ajax({
-            type: 'POST',
-            url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',
-            data: {
-                action: 'writeFile',
-                path: 'tmp/discovery.log',
-                content: JSON.stringify(eq)
-            },
-            dataType: 'json',
-            global: false,
-            // async: false,
-            error: function (request, status, error) {
-                bootbox.alert("ERREUR 'writeDiscoveryInfos' !<br>Votre installation semble corrompue.<br>"+error);
-                status = -1;
-            },
-            success: function (json_res) {
-                res = JSON.parse(json_res.result);
-                if (res.status != 0) {
-                    console.log("error="+res.error);
-                } else {
-                }
-            }
-        });
-    }
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',
+    //         data: {
+    //             action: 'writeFile',
+    //             path: 'tmp/discovery.log',
+    //             content: JSON.stringify(eq)
+    //         },
+    //         dataType: 'json',
+    //         global: false,
+    //         // async: false,
+    //         error: function (request, status, error) {
+    //             bootbox.alert("ERREUR 'writeDiscoveryInfos' !<br>Votre installation semble corrompue.<br>"+error);
+    //             status = -1;
+    //         },
+    //         success: function (json_res) {
+    //             res = JSON.parse(json_res.result);
+    //             if (res.status != 0) {
+    //                 console.log("error="+res.error);
+    //             } else {
+    //             }
+    //         }
+    //     });
+    // }
 
-    /* Save given 'text' to 'fileName' */
+    /* Zigbee to 'discovery-xxx.json' */
     function downloadDiscovery() {
         console.log("downloadDiscovery()");
+        // console.log("zigbee=", zigbee);
 
         text = JSON.stringify(zigbee);
+
+        // Looking for signature
+        endPoints = zigbee.endPoints;
+        signature = '';
+        for (var epId in endPoints) {
+            // console.log("EP "+epId);
+            ep = endPoints[epId];
+            if (!isset(ep.servClusters))
+                continue;
+            if (!isset(ep.servClusters["0000"]) || !isset(ep.servClusters["0000"]['attributes']))
+                continue;
+
+            attributes = ep.servClusters["0000"]['attributes'];
+            if (!isset(attributes['0005']))
+                break;
+            signature = attributes['0005']['value'];
+            if (isset(attributes['0004']))
+                signature += '_'+attributes['0004']['value'];
+            break;
+        }
 
         let elem = window.document.createElement('a');
         elem.style = "display: none";
         elem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-        elem.setAttribute('download', "discovery.json");
+        if (signature != '')
+            elem.setAttribute('download', "discovery-"+signature+".json");
+        else
+            elem.setAttribute('download', "discovery.json");
         document.body.appendChild(elem);
         elem.click();
         document.body.removeChild(elem);

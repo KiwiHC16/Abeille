@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Assistant découverte: Ajout suffixe identiant (ex: discovery-TS0121__TZ3000_rdtixbnu.json)
+
 221209-BETA-1
 -------------
 

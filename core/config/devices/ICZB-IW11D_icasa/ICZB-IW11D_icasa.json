@@ -1,0 +1,83 @@
+{
+    "ICZB-IW11D_icasa": {
+        "manufacturer": "Icasa",
+        "model": "ICZB-IW11D",
+        "type": "Icasa AC Dimmer",
+        "timeout": "60",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "Icasa-ICZB-IW11D",
+            "mainEP": "01"
+        },
+        "commands": {
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": "1"
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": "1"
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle"
+            },
+            "Status": {
+                "use": "zb-0006-OnOff",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
+            "Bind 0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0006": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Set Level": {
+                "use": "setLevel",
+                "isVisible": "1"
+            },
+            "Current Level": {
+                "use": "zb-0008-CurrentLevel",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Current Level": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "Bind 0008-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0008-0000": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

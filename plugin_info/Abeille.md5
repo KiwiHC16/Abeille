@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="221209-BETA-4"
+# VERSION="221212-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -42,16 +42,16 @@ d80b24d5796dff216f73e88f7be98278 *core/ajax/AbeilleFiles.ajax.php
 e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 61bf99720e324129d300f737bd7d3eb6 *core/ajax/AbeilleRoutes.ajax.php
 8290855d0e5ee94968a6fb01ba8d5a7b *core/ajax/AbeilleZigate.ajax.php
-67f91ff945eab63271ea95d5577d7a7a *core/class/Abeille.class.php
+683489bb867a400ba3d86595b17a2bc2 *core/class/Abeille.class.php
 d28e6ecedaf5966668b39b08d53b70c0 *core/class/AbeilleCmd.class.php
 96ddbb9d27487d44ae1d68feee9c3b24 *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
-fee5d025144619255ecebc36d9a749d9 *core/class/AbeilleCmdProcess.class.php
+729a89f2f582a24c78e9bc34a883229a *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
 a84f9e74469b2dac15ebbf7e899100ce *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-04e905446e1cb9a73153f53079ec8ed3 *core/class/AbeilleParser.class.php
+a2ca00fd13548770dac57c99edf99dc5 *core/class/AbeilleParser.class.php
 59230e66b7fe7a8f08b997955361e4ab *core/class/AbeilleParserTest.class.php
 fbc81985db0cfa51df2b142d357f7eb3 *core/class/AbeilleParserTestDB.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
@@ -329,6 +329,7 @@ e97e476a50d204142554adccb8cb4cce *core/config/commands/WindowsCoveringUpGroup.js
 dac18198aa022bf8e7fce63104cce58c *core/config/commands/Xiaomi-ff01.json
 af9d1499b88ff02c7263ba12b98a88d6 *core/config/commands/act_tuyaEF00-Set-Setpoint-Mult.json
 9f398e43b8ef0d49c83138dc4cf38d1b *core/config/commands/act_tuyaEF00-Set-Setpoint.json
+ef016e3da8b9bc0d6c95294691900f65 *core/config/commands/act_tuyaEF00-SetBool.json
 19ee39c616e894c1912c499e38b26bd1 *core/config/commands/act_zbCmdG-0008-MoveToLevelWithOnOff.json
 50bef834e2b34dcc3247e0294ed8bb3d *core/config/commands/addGroupEP1.json
 d0785a8d75d70ead553d0118ece70aad *core/config/commands/addGroupEP3.json
@@ -641,7 +642,7 @@ e28daad63fdb20baa0dbbf0bb600dfd8 *core/config/devices/ClassicA60TW_OSRAM/Classic
 a5d456a8c3bf1ca4ee2cf4d8eed964b4 *core/config/devices/ClassicA60Wclear-LIGHTIFY/ClassicA60Wclear-LIGHTIFY.json
 8442533e3aaecf4efe3b7daeeec2bb13 *core/config/devices/ClassicB40TW-LIGHTIFY/ClassicB40TW-LIGHTIFY.json
 74a4ddcc5a24ecb124e5f91c3fdf83af *core/config/devices/ClassicB40TW-LIGHTIFY/discovery.json
-6391b8a53998ae78d4251b5affca6463 *core/config/devices/Connectedoutlet/Connectedoutlet.json
+5ef73828460ca3f35bca05b48c838d06 *core/config/devices/Connectedoutlet/Connectedoutlet.json
 9e0e98aa6a7d712812d234fc97db9817 *core/config/devices/Connectedoutlet/discovery.json
 38931e386506e6673c2950623594158f *core/config/devices/Connectedsocketoutlet_NIKONV/Connectedsocketoutlet_NIKONV.json
 5349ed798fe5359da85da4c95f5d02d7 *core/config/devices/Connectedsocketoutlet_NIKONV/discovery.json
@@ -649,6 +650,8 @@ a5d456a8c3bf1ca4ee2cf4d8eed964b4 *core/config/devices/ClassicA60Wclear-LIGHTIFY/
 21ebbeea85a7bed08fc34295fb68d3f3 *core/config/devices/Contactor/discovery.json
 7b8a8d5180635d53a7ed250aeb9218ad *core/config/devices/DIYRuZ_RT/DIYRuZ_RT.json
 8d724b07e551d5013c460b16c1fa35ed *core/config/devices/DS01/DS01.json
+01feb19effe686c38dafca5469346b04 *core/config/devices/Dimmablelight_PaulmannLichtGmbH/Dimmablelight_PaulmannLichtGmbH.json
+5cd4fdf8f485b585dc067954d4523f04 *core/config/devices/Dimmablelight_PaulmannLichtGmbH/discovery.json
 8f402cd9e77fe70ba1d2dffdb6ddecc9 *core/config/devices/Dimmer-Switch-ZB3.0_HZC/Dimmer-Switch-ZB3.0_HZC.json
 9db5fc8ee2fcb4b1b3b20ba0bb6f0c7e *core/config/devices/Dimmerswitchwoneutral/Dimmerswitchwoneutral.json
 712f3725c942268d1209f03ecb4ec635 *core/config/devices/Doublegangsremoteswitch_Legrand/Doublegangsremoteswitch_Legrand.json
@@ -903,7 +906,7 @@ d9e4133d1a2bc4ac11ae0e492b334d06 *core/config/devices/TS0121__TZ3000_8nkb7mof/di
 8ee7a8a26fc5ca875bd4a2b89dafe9a0 *core/config/devices/TS0121__TZ3000_rdtixbnu/TS0121__TZ3000_rdtixbnu.json
 22ada92edf3ca20ca923a06bb6e347b7 *core/config/devices/TS0121__TZ3000_rdtixbnu/discovery.json
 06d13a3c0af39096b0abd37525a725ed *core/config/devices/TS0201/TS0201.json
-e533a82445a680792885beeb6c7c2000 *core/config/devices/TS0201__TZ3000_dowj6gyi/TS0201__TZ3000_dowj6gyi.json
+3933c8aabf9f88ac4e336de9a8fea41e *core/config/devices/TS0201__TZ3000_dowj6gyi/TS0201__TZ3000_dowj6gyi.json
 2b56a31658e57d4b5244c92f0963f154 *core/config/devices/TS0201__TZ3000_dowj6gyi/discovery-RH3052_TUYATEC-gqhxixyk.json
 dce10f18e6b2f27e35d69c9ae5fda107 *core/config/devices/TS0203__TYZB01_xph99wvr/TS0203__TYZB01_xph99wvr.json
 1029e9e518c3a6a1231a9c7292815d9e *core/config/devices/TS0203__TZ3000_f1hmoyj4/TS0203__TZ3000_f1hmoyj4.json
@@ -950,7 +953,7 @@ c3252bc16b181fa1a012f91c6a5337ea *core/config/devices/TS0601__TZE200_e3oitdyu/TS
 4012d199317dc8bf1c89e2a5e1427dbb *core/config/devices/TS0601__TZE200_e3oitdyu/discovery.json
 cff80e71744b96447c941df17ab7c63c *core/config/devices/TS0601__TZE200_f1pvdgoh/TS0601__TZE200_f1pvdgoh.json
 152b1ff18dc78f1c7555127f7f93bdba *core/config/devices/TS0601__TZE200_f1pvdgoh/discovery.json
-2bc669bc2eb081e91bb2dc7a3807a909 *core/config/devices/TS0601__TZE200_hue3yfsn/TS0601__TZE200_hue3yfsn.json
+dd786b1cb2da1b7b80f4a35d313fb7c7 *core/config/devices/TS0601__TZE200_hue3yfsn/TS0601__TZE200_hue3yfsn.json
 6717da48df39cc264c515e3a40054d03 *core/config/devices/TS0601__TZE200_hue3yfsn/discovery.json
 43214eb002f924a6dfdf7b64b8ed7c5b *core/config/devices/TS0601__TZE200_la2c2uo9/TS0601__TZE200_la2c2uo9.json
 e84c9a65b59a5922a2e3f0d971dcf3d3 *core/config/devices/TS0601__TZE200_la2c2uo9/discovery.json
@@ -1009,7 +1012,7 @@ fb277f54808014a51fe3986e7aaa6b95 *core/config/devices/fuel-tank-level/fuel-tank-
 3802d06d89c8c656e4f5f0747467e2f3 *core/config/devices/magnet.acn001/discovery.json
 c320e61f7a714b644f50bcdd3782ffe4 *core/config/devices/magnet.acn001/magnet.acn001.json
 120c68d976da3fd737ce32daf3fbae5f *core/config/devices/motion.ac02/discovery.json
-0de6a5c30f303514c2502de193a37267 *core/config/devices/motion.ac02/motion.ac02.json
+22b2f8e597993f007e70fd03b334e131 *core/config/devices/motion.ac02/motion.ac02.json
 92c050cb373e899f9f8cff0437854bbe *core/config/devices/multi_Samjin/discovery.json
 73a3ddd21dae8f1e819963af0a20879b *core/config/devices/multi_Samjin/multi_Samjin.json
 03dd8caf51b3f992f1a3b1e90825227f *core/config/devices/plug.maeu01/notes.txt
@@ -1089,7 +1092,7 @@ bae2dd0e8f01fe8b019010f5c69f9bb4 *core/config/sortCommand.php
 d6c238244f9c013900173241106e8b95 *core/i18n/en_US.json
 fe99369b88ceb7cae45f3453c63f485b *core/i18n/fr_FR.json
 075dded1c3f832fdd83bcf6fc2bb65b2 *core/php/AbeilleCliToQueue.php
-93f34d17da2757cbc1fb74ab4e999be5 *core/php/AbeilleCmd-Tuya.php
+2be0efa8e9b0a63d0fde958041851dc8 *core/php/AbeilleCmd-Tuya.php
 0498f5d892966720c59bbef17365c835 *core/php/AbeilleCmd.php
 3a8347a9ea19d1ee67793bc7080ab672 *core/php/AbeilleDownload.php
 091667335899b28600020569ee3df924 *core/php/AbeilleGetEq.php
@@ -1099,8 +1102,8 @@ cab580c801233aee55ed5492556506a4 *core/php/AbeilleInstall.php
 255a3cc9c2c67bf09cd584ffb2287b62 *core/php/AbeilleLog.php
 f9f0b5c7171e4a3c962b7c7008a4aef1 *core/php/AbeilleMonitor.php
 657c2f8ee31e9267a1b575dc188209a4 *core/php/AbeilleOTA.php
-90e725978a3fca3882105f312e977cdf *core/php/AbeilleParser-Tuya.php
-58177af4faa7203c1640a9c801b4e467 *core/php/AbeilleParser-Xiaomi.php
+fa900ba3a99bf2cdc36fbf73632fda83 *core/php/AbeilleParser-Tuya.php
+7f93e179c0e6c7f477a993be03f179fc *core/php/AbeilleParser-Xiaomi.php
 bc7e0965ced08dfdbeb412c9ef8d92a3 *core/php/AbeilleParser.php
 da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
 279b384363d1e9294d0c1a003d1f88b4 *core/php/AbeilleSerialRead.php
@@ -1175,7 +1178,7 @@ fa350ab7903504cdc0071aa12759246b *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-eb30da09844cb3c613117bbe5d099ce6 *docs/fr_FR/Changelog.rst
+c7bc1b197ada9214adea9e9b5a42f87d *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1277,7 +1280,7 @@ a528d9b404aaabd50c84e68fe177bbc4 *images/node_Ledvance-BulbE27-White.png
 78d6f4dadbed057c5e0e73a276a40ba2 *images/node_Ledvance-SmartP-E27Bulb.png
 c09f2a421b5e19cf32bc7d55e3f2a83c *images/node_Legrand-Cableoutlet.png
 99556c9075bbe43b9ffa7d052497e5cb *images/node_Legrand-Celiane-Double-Gray.png
-79e4f1bb564088ef5b4e835e5e9579f6 *images/node_Legrand-Connectedoutlet-2.png
+ac2e6e5cbc781b0b17c8451030005d57 *images/node_Legrand-Connectedoutlet-2.png
 74676c4d447eb518e628f9b4fc5514da *images/node_Legrand-Connectedoutlet.png
 0d219890595c018adc282bae28526edc *images/node_Legrand-Contactor.png
 d2971679b1a853a60739cddbd5c3eccc *images/node_Legrand-RemoteSwitch.png
@@ -1389,7 +1392,7 @@ bd9af815f6c6fa32e1db1047613f7ded *images/node_TS0601__TZE200_nueqqe6k.png
 f015a0211c351a2b2bb38d23da37d2a9 *images/node_Tuya-4ButtonsSwitch-White.png
 f8343706b940a9d48f5a15baf9e0c071 *images/node_Tuya-DoorSensor-ZM-CG205.png
 37846302718f478d3adb49c3fbc2b7be *images/node_Tuya-IH-K009.png
-f7cfa63591d7c16b61c775a67f3d3bf1 *images/node_Tuya-MiniSmartSwitch.png
+af63877d56ab8fd5695150bb211848dc *images/node_Tuya-MiniSmartSwitch.png
 f79d94a53a4cd8cdde13ab68ac29f734 *images/node_Tuya-PIR-Illuminance.png
 74da263788e961a846235adeaf35dd61 *images/node_Tuya-QS-Zigbee-C01.png
 25f286104433ff4733c42e6cb3b29b97 *images/node_Tuya-RH3040.png
@@ -1474,10 +1477,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-18ee814bb6f3cb390cd7d5dced060366 *plugin_info/Abeille.version
+3c826dea80d512772387ab1357a826fa *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 721b9c51a8529a69104fa8b2e2a22d24 *plugin_info/configuration.php
-c2644b7cce36418139c73f9f3a58834e *plugin_info/info.json
+91c2dc747cdfbd4d64badbf8426aa691 *plugin_info/info.json
 69309d8ac8b68041eefc49c8d79902eb *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

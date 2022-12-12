@@ -2993,8 +2993,8 @@
                             if (($a == '00F7') && ($t == "41")) {
                                 $dataLength = hexdec(substr($pl, 6, 2));
                                 $fcc0 = $this->decodeFF01(substr($pl, 8, $dataLength*2));
-                                $attributesReportN[] = array( "name" => '0006-01-0000', "value" => $fcc0["Etat SW 1 Binaire"]["valueConverted"] );
-                                $attributesReportN[] = array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] / 100 );
+                                // $attributesReportN[] = array( "name" => '0006-01-0000', "value" => $fcc0["Etat SW 1 Binaire"]["valueConverted"] );
+                                // $attributesReportN[] = array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] / 100 );
                                 if (isset($fcc0["Puissance"]))
                                     $attributesReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
                             }

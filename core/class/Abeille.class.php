@@ -1396,21 +1396,20 @@ class Abeille extends eqLogic {
             }
 
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-            $jsonId = ($eqModel != []) ? $eqModel['id'] : '';
-            $jsonLocation = $eqModel ? $eqModel['location'] : 'Abeille';
+            $jsonId = isset($eqModel['id']) ? $eqModel['id'] : '';
+            $jsonLocation = isset($eqModel['location']) ? $eqModel['location'] : 'Abeille';
 
             // Checking if model is defaultUnknown and there is now a real model for it (see #2211).
-            if ($jsonId == "defaultUnknown") {
-                $eqSig = $eqLogic->getConfiguration('ab::signature', []);
-                if ($eqSig != [] && $eqSig['modelId'] != "") {
-                    // Any user or official model ?
-                    $modelInfos = self::findModel($eqSig['modelId'], $eqSig['manufId']);
-                    if ($modelInfos !== false) {
-                        $jsonId = $modelInfos['jsonId'];
-                        $jsonLocation = $modelInfos['location']; // TODO: rename to jsonLocation
-                        $eqHName = $eqLogic->getHumanName();
-                        message::add("Abeille", $eqHName.": Nouveau modèle trouvé. Mise-à-jour en cours.", '');
-                    }
+            // Also rechecking if model is still the correct one (ex: TS011F => TS011F__TZ3000_2putqrmw)
+            $eqSig = $eqLogic->getConfiguration('ab::signature', []);
+            if ($eqSig != [] && $eqSig['modelId'] != "") {
+                // Any user or official model ?
+                $modelInfos = self::findModel($eqSig['modelId'], $eqSig['manufId']);
+                if ($modelInfos !== false) {
+                    $jsonId = $modelInfos['jsonId'];
+                    $jsonLocation = $modelInfos['location']; // TODO: rename to jsonLocation
+                    $eqHName = $eqLogic->getHumanName();
+                    message::add("Abeille", $eqHName.": Nouveau modèle trouvé. Mise-à-jour en cours.", '');
                 }
             }
 

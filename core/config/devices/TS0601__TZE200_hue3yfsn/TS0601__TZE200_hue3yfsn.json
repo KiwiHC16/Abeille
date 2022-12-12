@@ -60,15 +60,14 @@
                 "isVisible": 1
             },
             "Check ON": {
-                "use": "cmdG-TuyaEF00-Set-OnOff",
-                "params": "onOff=01",
-                "comment": "Purpose not clear",
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=73&data=01",
+                "comment": "Device sends infos when ON",
                 "isVisible": 1
             },
             "Check OFF": {
-                "use": "cmdG-TuyaEF00-Set-OnOff",
-                "params": "onOff=00",
-                "comment": "Purpose not clear",
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=73&data=00",
                 "isVisible": 1
             },
             "Status": {
@@ -91,9 +90,9 @@
                     "div": 10
                 },
                 "18": {
-                    "function": "rcvValueMult",
+                    "function": "rcvValueDiv",
                     "info": "0402-01-0000",
-                    "mult": 10
+                    "div": 10
                 },
                 "23": {
                     "function": "rcvValue",

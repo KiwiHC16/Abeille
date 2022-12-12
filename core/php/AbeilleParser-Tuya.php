@@ -54,7 +54,7 @@
         $tFunc = substr($msg, 4, 2); // What for ?
         $tLen = substr($msg, 6, 2);
         $tData = substr($msg, 8, hexdec($tLen) * 2);
-        $m = "Dp=".$tDpId.", DpType=".$tDataType.", Func=".$tFunc.", DpLen=".$tLen;
+        $m = "Dp=".$tDpId.", Type=".$tDataType.", Func=".$tFunc.", Len=".$tLen.", ValueHex=".$tData;
 
         $dp = array(
             'id' => $tDpId,
@@ -80,7 +80,7 @@
     function tuyaDecodeDp($ep, $dp, $mapping, &$toMon) {
         $dpId = $dp['id'];
         if (!isset($mapping[$dpId])) {
-            $m = "  ".$dp['m'].": Unrecognized DP (data=".$dp['data'].")";
+            $m = "  ".$dp['m'].": Unrecognized DP !";
             parserLog("debug", $m, "8002");
             $toMon[] = $m;
             return false;
@@ -139,137 +139,11 @@
                 $mode = "?";
             $logMsg = "  ".$dp['m']." => Mode = ".$dp['data']."/".$mode;
             parserLog("debug", $logMsg, "8002");
-            $toMon[] = $logMsg; // For monitor
             $attributeN = array(
                 'name' => $ep.'-mode',
                 'value' => $mode,
             );
             break;
-        // Obsolete. Use generic function instead
-        // "02": { "function": "rcvValue", "info": "01-windowDetectionStatus" }
-        // case "rcvThermostat-WindowDetectionStatus": // Window detection status (Checked on TV02)
-        //     parserLog("debug", "  ".$dp['m']." => Window detection status = ".$dp['data'], "8002");
-        //     $attributeN = array(
-        //         'name' => $ep.'-windowDetectionStatus',
-        //         'value' => hexdec($dp['data']),
-        //     );
-        //     break;
-        // Obsolete. Use generic function instead
-        // "02": { "function": "rcvValueDiv", "info": "01-setPoint", "div": 10 }
-        // case "rcvThermostat-Setpoint": // Set point (Checked on TV02)
-        //     $setPoint = hexdec($dp['data']) / 10;
-        //     parserLog("debug", "  ".$dp['m']." => Set point = ".$setPoint." C", "8002");
-        //     $attributeN = array(
-        //         'name' => $ep.'-setpoint',
-        //         'value' => $setPoint,
-        //     );
-        //     break;
-        // Obsolete. Use generic function instead
-        // "02": { "function": "rcvValueMult", "info": "0402-01-0000", "mult": 10 }
-        // case "rcvThermostat-LocalTemp": // Received local temp (Checked on TV02)
-        //     $temp = hexdec($dp['data']) / 10;
-        //     $tempReport = $temp * 100; // Divided by 100 due to model
-        //     parserLog("debug", "  ".$dp['m']." => Temp = ".$temp." C", "8002");
-        //     $attributeN = array(
-        //         'name' => '0402-'.$ep.'-0000',
-        //         'value' => $tempReport,
-        //     );
-        //     break;
-        // Obsolete. Use generic function instead
-        // "02": { "function": "rcvValue", "info": "0001-01-0021" }
-        // case "rcvBattery-Percent": // Received battery percent (Checked on TV02)
-        //     $val = hexdec($dp['data']);
-        //     parserLog("debug", "  ".$dp['m']." => Battery-percent = ".$val." %", "8002");
-        //     $attributeN = array(
-        //         'name' => '0001-'.$ep.'-0021',
-        //         'value' => $val,
-        //     );
-        //     break;
-        // Obsolete. Use generic function instead
-        // "02": { "function": "rcvValue", "info": "0006-01-0000" }
-        // case "rcvOnline-Status": // WORK ONGOING !!! Received ON/OFF status (Checked on TV02)
-        //     $val = hexdec($dp['data']);
-        //     $st = ($val == 1) ? "ON" : "OFF";
-        //     parserLog("debug", "  ".$dp['m']." => On/Off=".$val."/".$st, "8002");
-        //     $attributeN = array(
-        //         'name' => '0006-'.$ep.'-0000',
-        //         'value' => $val,
-        //     );
-        //     break;
-        // Smart Air Box (TS0601, _TZE200_yvx5lh6k) $mapping exemple: array(
-        //     "02" => "rcvSmartAir-CO2",
-        //     "12" => "rcvSmartAir-Temperature",
-        //     "13" => "rcvSmartAir-Humidity",
-        //     "15" => "rcvSmartAir-VOC",
-        //     "16" => "rcvSmartAir-CH20",
-        // );
-        // Obsolete. Use generic function instead
-        // "02": { "function": "rcvValue", "info": "01-CO2_ppm" }
-        // case "rcvSmartAir-CO2": // CO2 (verified on Smart Air sensor)
-        //     $val = hexdec($dp['data']);
-        //     parserLog("debug", "  ".$dp['m']." => CO2=".$val." ppm", "8002");
-        //     $attributeN = array(
-        //         'name' => $ep.'-CO2_ppm',
-        //         'value' => $val,
-        //     );
-        //     break;
-        // Obsolete. Use generic function instead
-        // "02": { "function": "rcvValueMult", "info": "0402-01-0000", "mult": 10 }
-        // case "rcvSmartAir-Temperature": // Temp (verified on Smart Air sensor)
-        //     $val = hexdec($dp['data']);
-        //     $vReport = $val * 10; // Divided by 100 due to model
-        //     $val = $val / 10;
-        //     parserLog("debug", "  ".$dp['m']." => Temp=".$val." C", "8002");
-        //     $attributeN = array(
-        //         'name' => '0402-'.$ep.'-0000',
-        //         'value' => $vReport,
-        //     );
-        //     break;
-        // Obsolete. Use generic function instead
-        // "02": { "function": "rcvValueMult", "info": "0405-01-0000", "mult": 10 }
-        // case "rcvSmartAir-Humidity": // Humidity (verified on Smart Air sensor)
-        //     $val = hexdec($dp['data']);
-        //     $vReport = $val * 10; // Divided by 100 due to model
-        //     $val = $val / 10;
-        //     parserLog("debug", "  ".$dp['m']." => Humidity=".$val." %", "8002");
-        //     $attributeN = array(
-        //         'name' => '0405-'.$ep.'-0000',
-        //         'value' => $vReport,
-        //     );
-        //     break;
-        // Obsolete. Use generic function instead
-        // "02": { "function": "rcvValueDiv", "info": "01-VOC_ppm", "div": 10 }
-        // case "rcvSmartAir-VOC": // VOC (verified on Smart Air sensor)
-        //     $val = hexdec($dp['data']) / 10;
-        //     parserLog("debug", "  ".$dp['m']." => VOC=".$val." ppm", "8002");
-        //     $attributeN = array(
-        //         'name' => $ep.'-VOC_ppm',
-        //         'value' => $val,
-        //     );
-        //     break;
-        // Obsolete. Use generic function instead
-        // "02": { "function": "rcvValue", "info": "01-CH20_ppm" }
-        // case "rcvSmartAir-CH20": // Formaldéhyde µg/m3 (Méthanal / CH2O_ppm) (verified on Smart Air sensor)
-        //     $val = hexdec($dp['data']);
-        //     parserLog("debug", "  ".$dp['m']." => CH2O=".$val." ppm", "8002");
-        //     $attributeN = array(
-        //         'name' => $ep.'-CH20_ppm',
-        //         'value' => $val,
-        //     );
-        //     break;
-        // Obsolete. Replaced by generic function 'rcvValue0Is1'
-        // case "rcvSmokeAlarm": // Smoke status: value to bool
-        //     $val = hexdec($dp['data']);
-        //     if ($val == 0)
-        //         $val = 1;
-        //     else
-        //         $val = 0;
-        //     parserLog("debug", "  ".$dp['m']." => Smoke alarm=".$val, "8002");
-        //     $attributeN = array(
-        //         'name' => $ep.'-smokeAlarm',
-        //         'value' => $val,
-        //     );
-        //     break;
 
         // Solenoid valve Saswell SAS980SWT
         case "rcvValve-Status":
@@ -281,37 +155,13 @@
                 'value' => $val,
             );
             break;
-        // case "rcvValve-TimeLeft":
-        //     $val = hexdec($dp['data']);
-        //     parserLog("debug", "  ".$dp['m']." => Time left=".$val, "8002");
-        //     $attributeN = array(
-        //         'name' => $ep."-timeLeft",
-        //         'value' => $val,
-        //     );
-        //     break;
-        // case "rcvValve-LastOpenDuration":
-        //     $val = hexdec($dp['data']);
-        //     parserLog("debug", "  ".$dp['m']." => Last open duration=".$val, "8002");
-        //     $attributeN = array(
-        //         'name' => $ep."-lastOpenDuration",
-        //         'value' => $val,
-        //     );
-        //     break;
-        // case "rcvValve-MeasuredValue":
-        //     $val = hexdec($dp['data']);
-        //     parserLog("debug", "  ".$dp['m']." => Measured value=".$val, "8002");
-        //     $attributeN = array(
-        //         'name' => $ep."-measuredValue",
-        //         'value' => $val,
-        //     );
-        //     break;
 
         // Generic functions
 
         // Use exemple:  "02": { "function": "rcvValue", "info": "0008-01-0000" },
         case "rcvValue": // Value sent as Jeedom info
             $val = hexdec($dp['data']);
-            $logMsg = "  ".$dp['m']." => 'rcvValue' => Info=".$info.", Val=".$val;
+            $logMsg = "  ".$dp['m']." => 'rcvValue' => '".$info."'=".$val;
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,
@@ -321,7 +171,7 @@
         case "rcvValueDiv": // Divided value sent as Jeedom info
             $val = hexdec($dp['data']);
             $val = $val / $div;
-            $logMsg = "  ".$dp['m']." => 'rcvValueDiv' => Info=".$info.", Div=".$div." => Val=".$val;
+            $logMsg = "  ".$dp['m']." => 'rcvValueDiv', Div=".$div." => '".$info."'=".$val;
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,
@@ -331,7 +181,7 @@
         case "rcvValueMult": // Multiplied value sent as Jeedom info
             $val = hexdec($dp['data']);
             $val = $val * $mult;
-            $logMsg = "  ".$dp['m']." => 'rcvValueMult' => Info=".$info.", Mult=".$mult." => Val=".$val;
+            $logMsg = "  ".$dp['m']." => 'rcvValueMult', Mult=".$mult." => '".$info."'=".$val;
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,
@@ -343,7 +193,7 @@
                 $val = 1;
             else
                 $val = 0;
-            $logMsg = "  ".$dp['m']." => 'rcvValue0Is1' => Info=".$info.", Val=".$val;
+            $logMsg = "  ".$dp['m']." => 'rcvValue0Is1' => '".$info."'=".$val;
             $attributeN = array(
                 'name' => $info,
                 'value' => $val,

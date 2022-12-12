@@ -1,6 +1,15 @@
 ChangeLog
 =========
 
+- Reinitialisation: Remise en cause du modele utilisé chaque fois.
+- Interne: Améliorations support Tuya.
+- Tuya TV02: Mise-à-jour du modèle (2175).
+- Interne: Support cluster FCC0 Xiaomi générique.
+- Moes temp/humidity sensor: Mise-à-jour du modèle (2500).
+- Tuya mini smart switch: Correction image (2438).
+- Aqara Motion Sensor P1 RTCGQ14LM/MS-S02: Mise-à-jour modèle (2463).
+- Paulmann 50044: Ajout support préliminaire (2516).
+
 221209-BETA-4
 -------------
 

@@ -4549,7 +4549,7 @@
                     cmdLog('debug', '    Using transId='.$transId.', dpId='.$dpId.', dpType='.$dpType.', dpData='.$dpData);
                     $len = sprintf("%02X", strlen($dpData) / 2);
                     if (($dpType == "02") && ($len > 4)) {
-                        cmdLog('debug', '    ERROR: Wrong dpData size (max=4B for type 02)');
+                        cmdLog('error', '    Wrong dpData size (max=4B for type 02)');
                         return;
                     }
                     $data2 = $fcf.$sqn.$cmdId."00".$transId.$dpId.$dpType."00".$len.$dpData;

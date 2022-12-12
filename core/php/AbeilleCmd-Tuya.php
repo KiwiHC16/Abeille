@@ -8,7 +8,7 @@
         $cmd = $abCmd['cmd'];
         foreach ($required as $req) {
             if (!isset($abCmd[$req])) {
-                cmdLog('debug', "    ERROR: Undefined '".$req."' for '".$cmd."'");
+                cmdLog('error', "    ERROR: Undefined '".$req."' for '".$cmd."'");
                 return false;
             }
         }
@@ -93,7 +93,7 @@
         // Send percent data in 0-1000 range with input in 0-100 range
         case "setPercent1000":
             if (!isset($abCmd['dpId'])) {
-                cmdLog('debug', "    ERROR: Undefined dpId for '".$cmd."'");
+                cmdLog('error', "    Undefined dpId for '".$cmd."'");
                 return false;
             }
             $dpId = $abCmd['dpId'];

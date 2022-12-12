@@ -132,11 +132,11 @@
             $attrId = substr($pl, 2, 2).substr($pl, 0, 2);
             $attrType = substr($pl, 4, 2);
             $pl = substr($pl, 6);
-            parserLog('debug', "  ".$attrId."-".$attrType.": ".$pl);
+            parserLog('debug', "  Xiaomi ".$attrId."-".$attrType.": ".$pl);
 
             if (($attrId == "00F7") && ($attrType == "41")) {
                 $size = substr($pl, 0, 2); // Octet string size
-                xiaomiDecodeTags($net, $addr, substr($pl, 2));
+                xiaomiDecodeTags($net, $addr, substr($pl, 2), $attrReportN);
             }
 
             break; // Currently supporting only 1 attribut.

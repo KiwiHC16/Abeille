@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Heiman HS1HT: Support préliminaire (2520).
+
 221212-BETA-1
 -------------
 

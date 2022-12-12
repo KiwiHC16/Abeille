@@ -1422,7 +1422,7 @@
             break;
         }
 
-        zigbee.signature = "Abeille discovery file";
+        zigbee.fileSignature = "Abeille discovery file";
         text = JSON.stringify(zigbee);
         let elem = window.document.createElement('a');
         elem.style = "display: none";
@@ -2216,7 +2216,7 @@ console.log(zEndPoints);
             // file.size = the size in bytes
             // file.type = file type ex. 'application/pdf'
             console.log("file="+file.name);
-            console.log(file);
+            console.log( );
 
             var reader = new FileReader();
             reader.onload = function(e) {

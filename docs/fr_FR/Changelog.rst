@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221212-BETA-2
+-------------
+
 - Heiman HS1HT: Support préliminaire (2520).
 - Reinitialisation: Remise en cause du modele utilisé chaque fois.
 - Interne: Améliorations support Tuya.

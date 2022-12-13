@@ -4650,12 +4650,12 @@
             // <Src Addr: uint16_t> (added only from 3.0f version)
 
             parserLog('debug', $dest.', Type=8063/Remove a group response'
-                            .', SQN='          .substr($payload, 0, 2)
-                            .', EndPoint='     .substr($payload, 2, 2)
-                            .', clusterId='    .substr($payload, 4, 4)
-                            .', statusId='     .substr($payload, 8, 2)
-                            .', groupId='      .substr($payload,10, 4)
-                            .', sourceId='     .substr($payload,14, 4) );
+                            .', SQN='.substr($payload, 0, 2)
+                            .', EP='.substr($payload, 2, 2)
+                            .', ClustId='.substr($payload, 4, 4)
+                            .', Status='.substr($payload, 8, 2)
+                            .', Grp='.substr($payload,10, 4)
+                            .', SrcAddr='.substr($payload,14, 4));
         }
 
         // https://github.com/fairecasoimeme/ZiGate/issues/6

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Assistant modèle: Améliorations.
+- Aubess 4 buttons switch: Support préliminaire (2512).
+
 221212-BETA-2
 -------------
 

@@ -1,0 +1,166 @@
+{
+    "TS0044__TZ3000_wkai4ga5": {
+        "manufacturer": "Aubess",
+        "model": "TS0044",
+        "type": "Aubess 4 buttons switch",
+        "timeout": "60",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-4ButtonsSwitch-White",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent"
+            },
+            "SetReporting 0001-00021": {
+                "use": "zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "On 1": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Off 1": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Toggle 1": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Status 1": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=01",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status 1": {
+                "use": "zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
+            "Bind 01-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 010006": {
+                "use": "zbConfigureReporting",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "On 2": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=02",
+                "isVisible": "1"
+            },
+            "Off 2": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=02",
+                "isVisible": "1"
+            },
+            "Toggle 2": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=02"
+            },
+            "Status 2": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=02",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status 2": {
+                "use": "zbReadAttribute",
+                "params": "ep=02&clustId=0006&attrId=0000"
+            },
+            "Bind 02-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=02&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 020006": {
+                "use": "zbConfigureReporting",
+                "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "On 3": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=03",
+                "isVisible": "1"
+            },
+            "Off 3": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=03",
+                "isVisible": "1"
+            },
+            "Toggle 3": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=03"
+            },
+            "Status 3": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=03",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status 3": {
+                "use": "zbReadAttribute",
+                "params": "ep=03&clustId=0006&attrId=0000"
+            },
+            "Bind 03-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=03&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 030006": {
+                "use": "zbConfigureReporting",
+                "params": "ep=03&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "On 4": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=04",
+                "isVisible": "1"
+            },
+            "Off 4": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=04",
+                "isVisible": "1"
+            },
+            "Toggle 4": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=04"
+            },
+            "Status 4": {
+                "use": "zb-0006-OnOff",
+                "params": "ep=04",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status 4": {
+                "use": "zbReadAttribute",
+                "params": "ep=04&clustId=0006&attrId=0000"
+            },
+            "Bind 04-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=04&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 040006": {
+                "use": "zbConfigureReporting",
+                "params": "ep=04&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

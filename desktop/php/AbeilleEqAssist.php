@@ -844,6 +844,7 @@
         endPoints = zigbee.endPoints;
         mainEp = -1;
         minTimeout = 60; // Min timeout = 60min
+        onOffIdx = 1; // For 0006 cluster
         for (var epId in endPoints) {
             // console.log("EP "+epId);
             ep = endPoints[epId];
@@ -851,7 +852,7 @@
             if (!isset(ep.servClusters))
                 continue;
 
-            // Basic cluster
+            // 0000/Basic cluster
             if (isset(ep.servClusters["0000"]) && isset(ep.servClusters["0000"]['attributes'])) {
                 attributes = ep.servClusters["0000"]['attributes'];
 
@@ -873,7 +874,7 @@
                 }
             }
 
-            /* Power configuration */
+            /* 0001/Power configuration cluster */
             if (isset(ep.servClusters["0001"]) && isset(ep.servClusters["0001"]['attributes'])) {
                 attributes = ep.servClusters['0001']['attributes'];
                 if (isset(attributes['0021'])) {
@@ -888,37 +889,38 @@
                 cmds["Bind 0001-ToZigate"] = newCmd("zbBindToZigate", "clustId=0001", "yes");
             }
 
-            /* Identify cluster */
+            /* 0003/Identify cluster */
             if (typeof ep.servClusters["0003"] !== "undefined") {
                 cmds["Identify"] = newCmd("Identify");
             }
 
-            /* Groups cluster */
+            /* 0004/Groups cluster */
             if (typeof ep.servClusters["0004"] !== "undefined") {
                 cmds["Groups"] = newCmd("Group-Membership");
             }
 
-            /* OnOff cluster */
+            /* 0006/OnOff cluster */
             if (isset(ep.servClusters["0006"]) && isset(ep.servClusters["0006"]['attributes'])) {
                 attributes = ep.servClusters["0006"]['attributes'];
                 if (isset(attributes['0000'])) {
                     // Adding on/off & toggle commands but assuming all supported
-                    cmds["On"] = newCmd("zbCmd-0006-On");
-                    cmds["On"]["isVisible"] = 1;
-                    cmds["Off"] = newCmd("zbCmd-0006-Off");
-                    cmds["Off"]["isVisible"] = 1;
-                    cmds["Toggle"] = newCmd("zbCmd-0006-Toggle");
-                    cmds["Status"] = newCmd("zb-0006-OnOff");
-                    cmds["Status"]["isVisible"] = 1;
-                    cmds["Status"]["nextLine"] = "after";
-                    cmds["Get Status"] = newCmd("zbReadAttribute", "clustId=0006&attrId=0000");
+                    cmds["On "+onOffIdx] = newCmd("zbCmd-0006-On", "ep="+epId);
+                    cmds["On "+onOffIdx]["isVisible"] = 1;
+                    cmds["Off "+onOffIdx] = newCmd("zbCmd-0006-Off", "ep="+epId);
+                    cmds["Off "+onOffIdx]["isVisible"] = 1;
+                    cmds["Toggle "+onOffIdx] = newCmd("zbCmd-0006-Toggle", "ep="+epId);
+                    cmds["Status "+onOffIdx] = newCmd("zb-0006-OnOff", "ep="+epId);
+                    cmds["Status "+onOffIdx]["isVisible"] = 1;
+                    cmds["Status "+onOffIdx]["nextLine"] = "after";
+                    cmds["Get Status "+onOffIdx] = newCmd("zbReadAttribute", "ep="+epId+"&clustId=0006&attrId=0000");
+                    onOffIdx++;
                     // Adding bind + configureReporting but assuming supported
-                    cmds["Bind 0006-ToZigate"] = newCmd("zbBindToZigate", "clustId=0006", "yes");
-                    cmds["SetReporting 0006"] = newCmd("zbConfigureReporting", "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                    cmds["Bind "+epId+"-0006-ToZigate"] = newCmd("zbBindToZigate", "ep="+epId+"&clustId=0006", "yes");
+                    cmds["SetReporting "+epId+"0006"] = newCmd("zbConfigureReporting", "ep="+epId+"&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
                 }
             }
 
-            /* Level cluster */
+            /* 0008/Level cluster */
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
                 cmds["Set Level"] = newCmd("setLevel");

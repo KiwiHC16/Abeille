@@ -1,0 +1,227 @@
+{
+    "endPoints": {
+        "01": {
+            "servClusters": {
+                "0000": {
+                    "attributes": {
+                        "0005": {
+                            "value": "TS0044"
+                        },
+                        "0000": {
+                            "value": 3
+                        },
+                        "0001": {
+                            "value": 66
+                        },
+                        "0002": {
+                            "value": 0
+                        },
+                        "0003": {
+                            "value": 1
+                        },
+                        "0004": {
+                            "value": "_TZ3000_wkai4ga5"
+                        },
+                        "0006": {
+                            "value": ""
+                        },
+                        "0007": {
+                            "value": 3
+                        },
+                        "FFDE": {
+                            "value": 11
+                        },
+                        "FFFD": {
+                            "value": 2
+                        },
+                        "FFFE": {
+                            "value": 0
+                        },
+                        "FFE0": {
+                            "value": ""
+                        },
+                        "FFE1": {
+                            "value": ""
+                        },
+                        "FFE2": [],
+                        "FFE3": [],
+                        "FFDF": {
+                            "value": "?"
+                        }
+                    }
+                },
+                "0001": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "21",
+                            "value": 0
+                        },
+                        "0020": {
+                            "dataType": "20",
+                            "value": 3
+                        },
+                        "0021": {
+                            "dataType": "20",
+                            "value": 100
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "0006": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "10",
+                            "value": 0
+                        }
+                    }
+                },
+                "0019": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "",
+                            "value": null
+                        },
+                        "0001": {
+                            "dataType": "",
+                            "value": null
+                        },
+                        "0006": {
+                            "dataType": "",
+                            "value": null
+                        },
+                        "FFFD": {
+                            "dataType": "",
+                            "value": null
+                        }
+                    }
+                },
+                "000A": {
+                    "attributes": {
+                        "FFFD": {
+                            "dataType": "",
+                            "value": null
+                        }
+                    }
+                }
+            },
+            "status": "00",
+            "cliClusters": {
+                "0019": {
+                    "attributes": {
+                        "0000": [],
+                        "0001": [],
+                        "0006": [],
+                        "FFFD": []
+                    }
+                },
+                "000A": {
+                    "attributes": {
+                        "FFFD": []
+                    }
+                }
+            }
+        },
+        "02": {
+            "status": "00",
+            "servClusters": {
+                "0001": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "21",
+                            "value": 0
+                        },
+                        "0020": {
+                            "dataType": "20",
+                            "value": 3
+                        },
+                        "0021": {
+                            "dataType": "20",
+                            "value": 100
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "0006": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "10",
+                            "value": 0
+                        }
+                    }
+                }
+            }
+        },
+        "03": {
+            "status": "00",
+            "servClusters": {
+                "0001": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "21",
+                            "value": 0
+                        },
+                        "0020": {
+                            "dataType": "20",
+                            "value": 3
+                        },
+                        "0021": {
+                            "dataType": "20",
+                            "value": 100
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "0006": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "10",
+                            "value": 0
+                        }
+                    }
+                }
+            }
+        },
+        "04": {
+            "status": "00",
+            "servClusters": {
+                "0001": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "21",
+                            "value": 0
+                        },
+                        "0020": {
+                            "dataType": "20",
+                            "value": 3
+                        },
+                        "0021": {
+                            "dataType": "20",
+                            "value": 100
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "0006": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "10",
+                            "value": 0
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

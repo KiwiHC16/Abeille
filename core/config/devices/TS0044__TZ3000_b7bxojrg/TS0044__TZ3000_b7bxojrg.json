@@ -3,7 +3,7 @@
         "manufacturer": "Tuya",
         "model": "TS0044",
         "zbManufacturer": "_TZ3000_b7bxojrg",
-        "type": "Tuya 4 buttons Zigbee scene switch",
+        "type": "Tuya 4 buttons scene switch",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",

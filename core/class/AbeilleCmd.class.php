@@ -211,6 +211,20 @@
                         }
                     }
                 }
+
+                // An action cmd can trig another action cmd with 'trigOut'
+                $to = $this->getConfiguration('ab::trigOut', null);
+                if ($to !== null) {
+                    // $trigOffset = $cmdLogic->getConfiguration('ab::trigOutOffset');
+                    // Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
+                    $trigCmd = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $to);
+                    if ($trigCmd) {
+                        log::add('Abeille', 'debug', "  SHOULD BE TRIGGERED='".$to."'");
+                        // TODO
+                        // log::add('Abeille', 'debug', "  Triggering cmd '".$to."'");
+                        // $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
+                    }
+                }
             } // End type==action
 
             return true;

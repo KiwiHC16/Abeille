@@ -1212,7 +1212,7 @@ class Abeille extends eqLogic {
     // TODO: To be moved in AbeilleTools. Could be used by parser too
     // Attempt to find model corresponding to given zigbee signature.
     // Returns: associative array('jsonId', 'jsonLocation') or false
-    function findModel($zbModelId, $zbManufId) {
+    public static function findModel($zbModelId, $zbManufId) {
 
         $identifier1 = $zbModelId.'_'.$zbManufId;
         $identifier2 = $zbModelId;
@@ -1398,6 +1398,7 @@ class Abeille extends eqLogic {
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
             $jsonId = isset($eqModel['id']) ? $eqModel['id'] : '';
             $jsonLocation = isset($eqModel['location']) ? $eqModel['location'] : 'Abeille';
+            $jsonId1 = $jsonId;
 
             // Checking if model is defaultUnknown and there is now a real model for it (see #2211).
             // Also rechecking if model is still the correct one (ex: TS011F => TS011F__TZ3000_2putqrmw)
@@ -1409,9 +1410,10 @@ class Abeille extends eqLogic {
                     $jsonId = $modelInfos['jsonId'];
                     $jsonLocation = $modelInfos['location']; // TODO: rename to jsonLocation
                     $eqHName = $eqLogic->getHumanName();
-                    message::add("Abeille", $eqHName.": Nouveau modèle trouvé. Mise-à-jour en cours.", '');
                 }
             }
+            if ($jsonId != $jsonId1)
+                message::add("Abeille", $eqHName.": Nouveau modèle trouvé. Mise-à-jour en cours.", '');
 
             $dev = array(
                 'net' => $dest,

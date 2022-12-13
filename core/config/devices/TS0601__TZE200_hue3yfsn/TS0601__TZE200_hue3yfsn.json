@@ -37,7 +37,8 @@
                 "isVisible": 1
             },
             "Set Setpoint": {
-                "use": "cmdG-TuyaEF00-Set-Setpoint",
+                "use": "act_tuyaEF00-Set-Setpoint-Mult",
+                "params": "dpId=10&mult=10",
                 "isVisible": 1
             },
             "Setpoint": {
@@ -45,13 +46,13 @@
                 "isVisible": 1
             },
             "Manual": {
-                "use": "cmdG-TuyaEF00-Set-ThermostatMode",
-                "params": "mode=01",
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=02&data=01",
                 "isVisible": 1
             },
             "Auto": {
-                "use": "cmdG-TuyaEF00-Set-ThermostatMode",
-                "params": "mode=00",
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=02&data=00",
                 "isVisible": 1
             },
             "Mode": {
@@ -63,14 +64,16 @@
                 "use": "act_tuyaEF00-SetBool",
                 "params": "dpId=73&data=01",
                 "comment": "Device sends infos when ON",
+                "trigOut": "check-off",
                 "isVisible": 1
             },
             "Check OFF": {
                 "use": "act_tuyaEF00-SetBool",
                 "params": "dpId=73&data=00",
+                "logicalId": "check-off",
                 "isVisible": 1
             },
-            "Status": {
+            "Check status": {
                 "use": "zb-0006-OnOff",
                 "isVisible": 1
             }

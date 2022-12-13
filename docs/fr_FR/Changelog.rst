@@ -1,9 +1,7 @@
 ChangeLog
 =========
 
-221213-BETA-4
--------------
-
+- Tuya TV02: Mise-à-jour.
 - Philips SML004: Mise-à-jour modele (2437).
 - Moes thermostat BRT-100: Mise-à-jour modèle (2467).
 - Tuya: Amélioration support.

@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Heiman HS1HT: Mise-à-jour modèle (2520).
+
 221213-BETA-6
 -------------
 

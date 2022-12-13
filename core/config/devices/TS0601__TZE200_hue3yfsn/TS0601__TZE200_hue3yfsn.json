@@ -89,13 +89,13 @@
                 },
                 "10": {
                     "function": "rcvValueDiv",
-                    "info": "01-setPoint",
-                    "div": 10
+                    "div": 10,
+                    "info": "01-setPoint"
                 },
                 "18": {
                     "function": "rcvValueDiv",
-                    "info": "0402-01-0000",
-                    "div": 10
+                    "div": 10,
+                    "info": "0402-01-0000"
                 },
                 "23": {
                     "function": "rcvValue",
@@ -103,7 +103,8 @@
                 },
                 "73": {
                     "function": "rcvValue",
-                    "info": "0006-01-0000"
+                    "info": "0006-01-0000",
+                    "comment": "Check status"
                 }
             }
         }

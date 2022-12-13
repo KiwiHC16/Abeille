@@ -215,11 +215,13 @@
                 // An action cmd can trig another action cmd with 'trigOut'
                 $to = $this->getConfiguration('ab::trigOut', null);
                 if ($to !== null) {
+                    // logMessage('debug', "  LA HOULD BE TRIGGERED='".$to."'");
                     // $trigOffset = $cmdLogic->getConfiguration('ab::trigOutOffset');
                     // Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
                     $trigCmd = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $to);
                     if ($trigCmd) {
-                        log::add('Abeille', 'debug', "  SHOULD BE TRIGGERED='".$to."'");
+                        logMessage('debug', "  Triggering '".$to."'");
+                        $trigCmd->execute();
                         // TODO
                         // log::add('Abeille', 'debug', "  Triggering cmd '".$to."'");
                         // $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);

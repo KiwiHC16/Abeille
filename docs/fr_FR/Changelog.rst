@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-221213-BETA-1
+221213-BETA-2
 -------------
 
 - Assistant modèle: Améliorations.

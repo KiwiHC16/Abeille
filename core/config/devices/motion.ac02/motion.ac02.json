@@ -72,6 +72,17 @@
             },
             "Zone Status": {
                 "use": "zb-0500-ZoneStatus",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Detection interval": {
+                "use": "inf_generic-Badge",
+                "logicalId": "01-detectionInterval",
+                "isVisible": "1"
+            },
+            "Motion sensitivity": {
+                "use": "inf_generic-Badge",
+                "logicalId": "01-motionSensitivity",
                 "isVisible": "1"
             }
         },

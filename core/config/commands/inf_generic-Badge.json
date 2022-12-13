@@ -1,0 +1,13 @@
+{
+    "inf_generic-Badge": {
+        "comment": "Generic info badge command",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": {
+            "historizeRound": "0"
+        },
+        "type": "info",
+        "unit": "",
+        "logicalId": "#EP#-GenericBadge"
+    }
+}

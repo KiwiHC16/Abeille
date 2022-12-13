@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221213-BETA-6
+-------------
+
 - Modele EQ: Support 'trigOut' pour cmde action.
 - Tuya TV02: Mise-à-jour.
 - Philips SML004: Mise-à-jour modele (2437).

@@ -36,12 +36,13 @@
                 "nextLine": "after"
             },
             "ECO mode": {
-                "use": "cmdG-TuyaEF00-Set-EcoMode",
-                "params": "dpId=6A",
+                "use": "act_tuyaEF00-SetValue",
+                "params": "dpId=6A&data=1",
+                "genericType": "THERMOSTAT_SET_MODE",
                 "isVisible": 1
             },
             "Set ECO temp": {
-                "use": "cmdG-TuyaEF00-Set-Setpoint",
+                "use": "act_tuyaEF00-Set-Setpoint",
                 "params": "dpId=6B",
                 "isVisible": 1
             },
@@ -56,6 +57,11 @@
                 "logicalId": "01-windowDetectionStatus",
                 "nextLine": "after",
                 "isVisible": 1
+            },
+            "Valve position": {
+                "use": "inf_generic-Badge",
+                "logicalId": "01-valvePosition",
+                "isVisible": "1"
             }
         },
         "tuyaEF00": {
@@ -67,6 +73,7 @@
                     "info": "01-windowDetectionStatus"
                 },
                 "0E": { "function": "rcvValue", "info": "0001-01-0021" },
+                "68": { "function": "rcvValue", "info": "01-valvePosition", "comment": "Valve position" },
                 "6B": { "function": "rcvValue", "info": "01-ECO-temp" }
             }
         }

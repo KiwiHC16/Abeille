@@ -1,13 +1,12 @@
 {
-    "cmdG-TuyaEF00-Set-EcoMode": {
-        "isVisible": 0,
+    "act_tuyaEF00-SetValue": {
         "subType": "other",
         "template": "",
         "configuration": {
             "topic": "cmd-tuyaEF00",
-            "request": "ep=#EP#&cmd=setValue&data=1"
+            "request": "ep=#EP#&cmd=setValue&data=#data#"
         },
         "type": "action",
-        "genericType": "THERMOSTAT_SET_MODE"
+        "genericType": "GENERIC_ACTION"
     }
 }

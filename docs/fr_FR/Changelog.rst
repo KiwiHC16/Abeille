@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221213-BETA-1
+-------------
+
 - Assistant modèle: Améliorations.
 - Aubess 4 buttons switch: Support préliminaire (2512).
 - Aqara Motion Sensor P1 RTCGQ14LM/MS-S02: Mise-à-jour modèle (2463).

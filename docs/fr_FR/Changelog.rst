@@ -3,10 +3,6 @@ ChangeLog
 
 - Moes thermostat BRT-100: Mise-à-jour modèle (2467).
 - Tuya: Amélioration support.
-
-221213-BETA-2
--------------
-
 - Assistant modèle: Améliorations.
 - Aubess 4 buttons switch: Support préliminaire (2512).
 - Aqara Motion Sensor P1 RTCGQ14LM/MS-S02: Mise-à-jour modèle (2463).

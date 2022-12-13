@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="221213-BETA-6"
+# VERSION="221214-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -687,7 +687,7 @@ fec583b0dafd8d85197671e3d8799cbc *core/config/devices/GL-S-007Z/GL-S-007Z.json
 ac4bd571a6f1a113ab403fd913bca815 *core/config/devices/GLEDOPTO/GLEDOPTO.json
 3407c1ec0aa8544b1397c08645b34835 *core/config/devices/GUNNARPpanelround/GUNNARPpanelround.json
 2187f4ec5562b34671b00d468a1efd56 *core/config/devices/GardenspotRGB/GardenspotRGB.json
-18ae386029c0e041b803e5cd7891c1e7 *core/config/devices/HT-EF-3.0_HEIMAN/HT-EF-3.0_HEIMAN.json
+965906addefff5ae4bd68c952a3a596f *core/config/devices/HT-EF-3.0_HEIMAN/HT-EF-3.0_HEIMAN.json
 2a33082a61f258fbb4052ef326dbb36b *core/config/devices/HT-EF-3.0_HEIMAN/discovery-HT-EF-3.0_HEIMAN.json
 51f05843f7df54ccdf69edd45af6b1b8 *core/config/devices/ICZB-DC11_icasa/ICZB-DC11_icasa.json
 d8a6cad900d17f49792c0480b1f421d6 *core/config/devices/ICZB-DC11_icasa/discovery.json
@@ -1183,7 +1183,7 @@ c05a698dfa065abfbf9f6a3811a063f6 *desktop/php/AbeilleEqAssist.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-fd24894f2ec5b64bfa9842bca398b1ef *docs/fr_FR/Changelog.rst
+1140986da89feaefc12f7604f792f8db *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1483,10 +1483,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-7d8c8bdb73dd0718cc441dd8c6062fa8 *plugin_info/Abeille.version
+969cdc9fdca36cf8316806de3030aa26 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 721b9c51a8529a69104fa8b2e2a22d24 *plugin_info/configuration.php
-9f3e2332657d8974b131a0f393c157cd *plugin_info/info.json
+d5bf30424b51bbb6aaf690048f730f9a *plugin_info/info.json
 69309d8ac8b68041eefc49c8d79902eb *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

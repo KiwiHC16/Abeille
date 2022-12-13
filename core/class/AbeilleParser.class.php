@@ -6253,7 +6253,7 @@
             if (isset($GLOBALS['zigate'.$zgId]) && isset($GLOBALS['zigate'.$zgId]['nPdu']))
                 $extra = ', NPDU='.$GLOBALS['zigate'.$zgId]['nPdu'];
             if (isset($GLOBALS['zigate'.$zgId]) && isset($GLOBALS['zigate'.$zgId]['aPdu']))
-                $extra = ', APDU='.$GLOBALS['zigate'.$zgId]['aPdu'];
+                $extra .= ', APDU='.$GLOBALS['zigate'.$zgId]['aPdu'];
 
             $decoded = '9999/Extended error'.', ExtStatus='.$extStatus.$extra;
             parserLog('debug', $net.', Type='.$decoded);

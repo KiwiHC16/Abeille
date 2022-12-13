@@ -2,10 +2,6 @@ ChangeLog
 =========
 
 - Philips SML004: Mise-à-jour modele (2437).
-
-221213-BETA-3
--------------
-
 - Moes thermostat BRT-100: Mise-à-jour modèle (2467).
 - Tuya: Amélioration support.
 - Assistant modèle: Améliorations.

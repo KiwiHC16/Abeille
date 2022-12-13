@@ -3412,7 +3412,7 @@
                     //  On/Off cluster specific
                     else if ($clustId == "0006") {
                         if ($cmd == "FD") {
-                            parserLog("debug", "  Tuya 0006 specific cmd FD", "8002");
+                            // parserLog("debug", "  Tuya 0006 specific cmd FD", "8002");
                             $attributesReportN = tuyaDecode0006CmdFD($srcEp, $msg);
                         }
 

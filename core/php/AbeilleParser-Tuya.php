@@ -23,7 +23,7 @@
         }
 
         parserLog('debug',  '  Tuya 0006-FD specific command'
-                        .', value='.$value.' => click='.$click, "8002");
+                        .', ValueHex='.$value.' => Click='.$click, "8002");
 
         // Generating an event thru '#EP#-click' Jeedom cmd (ex: '01-click' = 'single')
         $attr = array(

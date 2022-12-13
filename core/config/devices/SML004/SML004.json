@@ -81,7 +81,7 @@
             },
             "Set Sensitivity": {
                 "use": "zbWriteAttribute",
-                "params": "clustId=0406&attrId=0030&attrType=20&attrVal=#slider#",
+                "params": "clustId=0406&attrId=0030&attrType=20&attrVal=#slider#&manufId=100B",
                 "comment": "Attr 0030 used as private attribute, not standard",
                 "subType": "slider",
                 "minValue": 0,
@@ -92,6 +92,7 @@
                 "use": "attr-Sensitivity",
                 "logicalId": "0406-02-0030",
                 "comment": "Attr 0030 used as private attribute, not standard",
+                "comment2": "low/medium/high/very_high/max",
                 "isVisible": "1"
             },
             "Bind 0406-ToZigate": {

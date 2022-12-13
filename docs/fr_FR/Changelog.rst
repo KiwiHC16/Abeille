@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Philips SML004: Mise-à-jour modele (2437).
+
 221213-BETA-3
 -------------
 

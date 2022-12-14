@@ -56,6 +56,7 @@
                 "use": "attr-Door-Status",
                 "logicalId": "01-windowDetectionStatus",
                 "nextLine": "after",
+                "invertBinary": 0,
                 "isVisible": 1
             },
             "Valve position": {

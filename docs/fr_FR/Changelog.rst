@@ -1,14 +1,12 @@
 ChangeLog
 =========
 
-221214-BETA-4
--------------
-
 - Modèle EQ: Surcharge possible de 'listValue'.
 - Interne: Support cmde action de type 'liste'.
 - Interne: Parser: Mise à jour 'node descriptor'.
 - Heiman HS1HT: Mise-à-jour modèle (2520).
 - Interne: Cmd: Mise-à-jour 'writeAttribute' pour '#select#'.
+- Moes thermostat BRT-100: Mise-à-jour modèle (2467).
 
 221213-BETA-6
 -------------

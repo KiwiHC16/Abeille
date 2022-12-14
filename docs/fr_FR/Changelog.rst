@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221214-BETA-4
+-------------
+
 - Modèle EQ: Surcharge possible de 'listValue'.
 - Interne: Support cmde action de type 'liste'.
 - Interne: Parser: Mise à jour 'node descriptor'.

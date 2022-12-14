@@ -1,0 +1,12 @@
+{
+    "act_zbWriteAttribute-list": {
+        "comment": "Generic command to write any attribute",
+        "comment2": "Optional params: attrType=XX, dir=XX (default=00), manufId=XXXX",
+        "subType": "select",
+        "configuration": {
+            "topic": "writeAttribute",
+            "request": "ep=#EP#&clustId=#CLUSTID#&attrId=#ATTRID#&attrVal=#select#"
+        },
+        "type": "action"
+    }
+}

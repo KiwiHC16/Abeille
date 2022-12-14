@@ -2957,7 +2957,7 @@ class Abeille extends eqLogic {
             /* Updating command 'configuration' fields.
                In case of update, some fields may no longer be required ($unusedConfKeys).
                They are removed if not defined in JSON model. */
-            $unusedConfKeys = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'repeatEventManagement', 'topic', 'Polling', 'RefreshData'];
+            $unusedConfKeys = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'repeatEventManagement', 'topic', 'Polling', 'RefreshData', 'listValue'];
             array_push($unusedConfKeys, 'ab::trigOut', 'ab::trigOutOffset', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'ab::notStandard');
             array_push($unusedConfKeys, 'ab::valueOffset');
             // Abeille specific keys must be renamed when taken from model (ex: trigOut => ab::trigOut)

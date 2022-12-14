@@ -158,7 +158,7 @@
                 if ($newSyntax) {
                     // List of supported command keys
                     $validCmdKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
-                    array_push($validCmdKeys, 'repeatEventManagement');
+                    array_push($validCmdKeys, 'repeatEventManagement', 'listValue');
                     array_push($validCmdKeys, 'returnStateTime', 'returnStateValue');
                     array_push($validCmdKeys, 'trigOut', 'trigOutOffset', 'notStandard', 'valueOffset');
                     foreach ($value as $key2 => $value2) {

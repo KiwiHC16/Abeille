@@ -75,6 +75,16 @@
                     } else
                         $request2 = str_replace('#slider#', $sliderVal, $request2);
                     break;
+                case 'select':
+                    $sliderVal = $_options['select'];
+                    $sliderVal = trim($sliderVal); // Remove potential space seen at end of slider value
+                    $cmdTopic = $cmd->getConfiguration('topic', '');
+                    if ($cmdTopic == "writeAttribute") {
+                        // New way of handling #slider#
+                        $request2 = str_replace('#select#', '#select'.$sliderVal.'#', $request2);
+                    } else
+                        $request2 = str_replace('#select#', $sliderVal, $request2);
+                    break;
                 case 'color':
                     $request2 = str_replace('#color#', $_options['color'], $request2);
                     break;

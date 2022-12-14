@@ -55,7 +55,7 @@
             return $out;
         }
 
-        // Called to convert '#sliderXX#'
+        // Called to convert '#sliderXX#' or '#selectXX#'
         // 'XX' is always a decimal value
         function sliderToHex($sliderVal, $type) {
             $strDecVal = substr($sliderVal, 7, -1); // Extracting decimal value
@@ -113,25 +113,27 @@
            Return hex string formatted value according to its type */
         function formatAttribute($valIn, $type) {
             // cmdLog('debug', "formatAttribute(".$valIn.", ".$type.")");
+            $valIn2 = $valIn;
             if (substr($valIn, 0, 7) == "#slider") {
-                $slider = true;
-                $valIn = $this->sliderToHex($valIn, $type);
-                if ($valIn === false)
-                    return;
-            } else
-                $slider = false;
+                $valIn2 = $this->sliderToHex($valIn, $type);
+            } else if (substr($valIn, 0, 7) == "#select") {
+                $valIn2 = $this->sliderToHex($valIn, $type);
+            }
+            if ($valIn2 === false)
+                return false;
 
             $valOut = '';
             switch ($type) {
             case '42': // string
-                $len = sprintf("%02X", strlen($valIn));
-                $valOut = $len.bin2hex($valIn);
+                $len = sprintf("%02X", strlen($valIn2));
+                $valOut = $len.bin2hex($valIn2);
                 // cmdLog('debug', "len=".$len.", valOut=".$valOut);
                 break;
             default:
-                $valOut = $valIn;
+                $valOut = $valIn2;
             }
 
+            cmdLog('debug', "    formatAttribute(".$valIn.", type=".$type.") => valOut=".$valOut);
             return $valOut;
         }
 
@@ -3122,16 +3124,18 @@
                             cmdLog('error', "writeAttribute: 'attrType' manquant");
                             return;
                         }
-                        $Command['attrType'] = sprintf("%02X", $attr['dataType']);
-                    }
+                        $attrType = sprintf("%02X", $attr['dataType']);
+                    } else
+                        $attrType = $Command['attrType'];
+
 
                     // If attrVal is coming from slider, it must be converted to proper data type
-                    $attrVal = $Command['attrVal'];
-                    if (substr($attrVal, 0, 7) == "#slider") {
-                        $attrVal = $this->sliderToHex($attrVal, $Command['attrType']);
-                        if ($attrVal === false)
-                            return;
-                    }
+                    // $attrVal = $Command['attrVal'];
+                    // if (substr($attrVal, 0, 7) == "#slider") {
+                    //     $attrVal = $this->sliderToHex($attrVal, $Command['attrType']);
+                    //     if ($attrVal === false)
+                    //         return;
+                    // }
 
                     /* Cmd 0110 reminder:
                         <address mode: uint8_t>	Data Indication
@@ -3159,17 +3163,19 @@
                     $dir        = (isset($Command['dir']) ? $Command['dir'] : "00"); // 00 = to server side, 01 = to client site
                     if (isset($Command['manufId']) && ($Command['manufId'] != "0000")) {
                         $manufSpecific  = "01";
-                        $manufId        = $Command['manufId'];
+                        $manufCode      = $Command['manufId'];
                     } else {
                         $manufSpecific  = "00";
-                        $manufId        = "0000";
+                        $manufCode      = "0000";
                     }
                     $nbOfAttributes = "01";
-                    $attrVal        = $this->formatAttribute($attrVal, $Command['attrType']);
-                    $attrList       = $Command['attrId'].$Command['attrType'].$attrVal;
+                    $attrVal    = $this->formatAttribute($Command['attrVal'], $attrType);
+                    if ($attrVal === false)
+                        return;
+                    $attrList   = $Command['attrId'].$attrType.$attrVal;
 
-                    cmdLog('debug', "    Using dir=".$dir.", manufId=".$manufId.", attrType=".$Command['attrType'].", attrVal=".$attrVal, $this->debug['processCmd']);
-                    $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufId.$nbOfAttributes.$attrList;
+                    cmdLog('debug', "    Using dir=".$dir.", manufId=".$manufCode.", attrType=".$attrType.", attrVal=".$attrVal, $this->debug['processCmd']);
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufCode.$nbOfAttributes.$attrList;
 
                     $this->addCmdToQueue2($priority, $dest, "0110", $data, $addr, $addrMode);
                     return;

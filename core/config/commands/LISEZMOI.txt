@@ -78,7 +78,7 @@ Exemple de commande 'action'
 * unit: optionnel
   Permet de préciser l'unité de l'information remontée (cmd 'info').
   Ex: "unit": "%"
-  
+
 * isVisible: EVITER.
   Indique si la commande est visible dans le widget.
   Invisible par défaut ("isVisible":0).
@@ -158,3 +158,13 @@ Exemple de commande 'action'
   * PollingOnCmdChangeDelay: optionnel
     ?
 
+  * listValue: optionnel
+    Dans le cas d'une commande action du type 'select', permet de définir la liste des cas.
+    Ex:
+            "Set Sensitivity": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FCC0&attrId=010C&attrType=20&manufId=115F",
+                "listValue": "1|low;2|medium;3|high",
+                "isVisible": 1,
+                "comment": "Motion sensitivity, 1=low, 2=medium, 3=high"
+            },

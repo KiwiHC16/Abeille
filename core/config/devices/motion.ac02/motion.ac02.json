@@ -78,7 +78,15 @@
             "Detection interval": {
                 "use": "inf_generic-Badge",
                 "logicalId": "01-detectionInterval",
-                "isVisible": "1"
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Set Sensitivity": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FCC0&attrId=010C&attrType=20&manufId=115F",
+                "listValue": "1|low;2|medium;3|high",
+                "isVisible": 1,
+                "comment": "Motion sensitivity, 1=low, 2=medium, 3=high"
             },
             "Motion sensitivity": {
                 "use": "inf_generic-Badge",

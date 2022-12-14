@@ -1,11 +1,11 @@
 ChangeLog
 =========
 
-221214-BETA-3
--------------
-
+- Modèle EQ: Surcharge possible de 'listValue'.
+- Interne: Support cmde action de type 'liste'.
 - Interne: Parser: Mise à jour 'node descriptor'.
 - Heiman HS1HT: Mise-à-jour modèle (2520).
+- Interne: Cmd: Mise-à-jour 'writeAttribute' pour '#select#'.
 
 221213-BETA-6
 -------------

@@ -476,6 +476,8 @@
                                 $newCmd[$cmd1]['configuration']['notStandard'] = $cmd2['notStandard'];
                             if (isset($cmd2['valueOffset']))
                                 $newCmd[$cmd1]['configuration']['valueOffset'] = $cmd2['valueOffset'];
+                            if (isset($cmd2['listValue']))
+                                $newCmd[$cmd1]['configuration']['listValue'] = $cmd2['listValue'];
 
                             // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
                             $deviceCmds += $newCmd;

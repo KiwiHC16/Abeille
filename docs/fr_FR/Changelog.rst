@@ -1,9 +1,8 @@
 ChangeLog
 =========
 
-221214-BETA-7
--------------
-
+- Interne: Cmd: 'setLevelVolet' utilise 'cmd-0008'.
+- Interne: Cmd: 'setLevel': Suppression 'readAttribute' consecutifs.
 - Modèle EQ: Surcharge possible de 'listValue'.
 - Interne: Support cmde action de type 'liste'.
 - Interne: Parser: Mise à jour 'node descriptor'.

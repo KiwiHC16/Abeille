@@ -40,15 +40,15 @@
                 "execAtCreationDelay": 11
             },
             "Down": {
-                "use": "zbCmd-0008-DownClose",
+                "use": "act_zbCmdG-0008-DownClose",
                 "isVisible": 1
             },
             "Up": {
-                "use": "zbCmd-0008-UpOpen",
+                "use": "act_zbCmdG-0008-UpOpen",
                 "isVisible": 1
             },
             "Stop": {
-                "use": "zbCmdG-0008-StopWithOnOff",
+                "use": "act_zbCmdG-0008-StopWithOnOff",
                 "isVisible": 1
             },
             "CurrentLevel": {

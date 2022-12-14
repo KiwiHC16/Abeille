@@ -25,7 +25,7 @@
             "include10": "offVolet",
             "include12": "setLevelVolet",
             "Stop": {
-                "use": "zbCmdG-0008-StopWithOnOff",
+                "use": "act_zbCmdG-0008-StopWithOnOff",
                 "isVisible": 1
             },
             "Get-Status": {

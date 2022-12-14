@@ -16,8 +16,8 @@
             "Groups": { "use": "Group-Membership" },
 
             "Position": { "use": "zb-0008-CurrentLevel", "isVisible": 1 },
-            "Up": { "use": "zbCmd-0008-UpOpen", "isVisible": 1 },
-            "Down": { "use": "zbCmd-0008-DownClose", "isVisible": 1 }
+            "Up": { "use": "act_zbCmdG-0008-UpOpen", "isVisible": 1 },
+            "Down": { "use": "act_zbCmdG-0008-DownClose", "isVisible": 1 }
         }
     }
 }

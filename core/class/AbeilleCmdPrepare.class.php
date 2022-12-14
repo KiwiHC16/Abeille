@@ -727,13 +727,23 @@
                 $levelPourcent = $a * $levelSliderPourcent * $levelSliderPourcent + $b * $levelSliderPourcent + $c;
                 $level = $levelPourcent * 255;
                 $level = min(max(round($level), 0), 255);
+                // $Command = array(
+                //     "name" => "setLevelRaw",
+                //     "priority" => $priority,
+                //     "dest" => $dest,
+                //     "addr" => $address,
+                //     "EP" => "01",
+                //     "Level" => $level,
+                //     "duration" => $parameters['duration'],
+                // );
                 $Command = array(
-                    "name" => "setLevelRaw",
+                    "name" => "cmd-0008",
                     "priority" => $priority,
                     "dest" => $dest,
                     "addr" => $address,
-                    "EP" => "01",
-                    "Level" => $level,
+                    "ep" => "01",
+                    "cmd" => "04", // Move to Level with On/Off
+                    "level" => $level,
                     "duration" => $parameters['duration'],
                 );
                 break;

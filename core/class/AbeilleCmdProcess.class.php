@@ -3745,13 +3745,13 @@
 
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
 
-                    if ($addrMode == "02") {
-                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
-                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000");
+                    // if ($addrMode == "02") {
+                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
+                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000");
 
-                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2+$Command['duration']), "ep=".$dstEp."&clustId=0006&attrId=0000");
-                        $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3+$Command['duration']), "ep=".$dstEp."&clustId=0008&attrId=0000");
-                    }
+                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2+$Command['duration']), "ep=".$dstEp."&clustId=0006&attrId=0000");
+                    //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+3+$Command['duration']), "ep=".$dstEp."&clustId=0008&attrId=0000");
+                    // }
                     return;
                 }
 

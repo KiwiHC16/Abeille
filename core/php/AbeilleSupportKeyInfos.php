@@ -153,12 +153,14 @@
             // list($net, $addr) = explode("/", $eqLogic->getLogicalId());
             $eqHName = $eqLogic->getHumanName();
             $eqId = $eqLogic->getId();
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
             if ($eqLogic->getStatus('timeout') == 1) {
                 $lastComm = $eqLogic->getStatus('lastCommunication');
                 $timeoutS = "TIMEOUT (".$lastComm.")";
             } else
                 $timeoutS = "ok";
-            logIt(" - ".$eqHName." (id=".$eqId."): ".$timeoutS."\n");
+            logIt(" - ".$eqHName.", id=".$eqId.", type='".$eqType."': ".$timeoutS."\n");
         }
         logIt("\n");
     }

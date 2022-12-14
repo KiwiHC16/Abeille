@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221214-BETA-2
+-------------
+
 - Interne: Parser: Mise à jour 'node descriptor'.
 - Heiman HS1HT: Mise-à-jour modèle (2520).
 

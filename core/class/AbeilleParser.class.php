@@ -1883,7 +1883,7 @@
 
             if ($macCapa != $eq['macCapa'])
                 $this->deviceUpdate($dest, $srcAddr, 'xx', 'macCapa', $macCapa);
-            if ($manufCode != $eq['manufCode'])
+            if (!isset($eq['manufCode']) || ($manufCode != $eq['manufCode']))
                 $this->deviceUpdate($dest, $srcAddr, 'xx', 'manufCode', $manufCode);
         }
 

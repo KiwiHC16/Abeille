@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="221214-BETA-6"
+# VERSION="221214-BETA-7"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -754,6 +754,8 @@ ec4c365dfbcef22c285caa0cad6a210b *core/config/devices/MOT-C1Z06C/notes.txt
 528bcedd1d817044c8e18a3190ecf438 *core/config/devices/OSRAMSwitch/OSRAMSwitch.json
 fc4bace74ce8c810df3218cd455b2fa9 *core/config/devices/PAR1650TW/PAR1650TW.json
 f1e436935e7548d129f07f7d13127124 *core/config/devices/PAR16RGBWZ3/PAR16RGBWZ3.json
+c6561e3c50f0b09608dd3758833bfda1 *core/config/devices/PIRSensor-EF-3.0_HEIMAN/PIRSensor-EF-3.0_HEIMAN.json
+f9bac7896fc1205a90ed393845c27693 *core/config/devices/PIRSensor-EF-3.0_HEIMAN/discovery-PIRSensor-EF-3.0_HEIMAN.json
 bfffe7da42750336963643ee53ef1751 *core/config/devices/PRZ/PRZ.json
 534bf2cfc08355bb21669707de4b8603 *core/config/devices/PSE03-v1.1.0/PSE03-v1.1.0.json
 be7c8a7a86fb26c7b4b07071bcd3efce *core/config/devices/PSE03-v1.1.0/notes.txt
@@ -1184,7 +1186,7 @@ fa350ab7903504cdc0071aa12759246b *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-ab6f002534635a7215efcd04b2be44bb *docs/fr_FR/Changelog.rst
+0668b7faf6441d9c453bbdee4d9e822a *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1238,6 +1240,7 @@ bc6bebdd5da8889895c4a490e1a97bcc *images/node_Gledopto-GL-C-007P.png
 19accb90d8f345dea966bb3ad6d90e3e *images/node_Gledopto-RGBCCTLedController.png
 f9065914800e54dcfee414bf8eb84cfb *images/node_HS2WD.png
 6063b894bc5780f69b95b51284c20526 *images/node_Heiman-COSensor.png
+ce929e75cf63224bdef435719a8d4878 *images/node_Heiman-MotionSensor.png
 f3b81a64e67cc0ba5d9fbc61cd5c3c70 *images/node_Heiman-TempHumidity.png
 ed6d510ab011a30803c321b2c8052666 *images/node_HueEnsis.png
 b0180cfb287fba6ac879ebf92f651523 *images/node_HueGo.png
@@ -1484,10 +1487,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-1ec0c9201996fe8846522cbbc9924e7c *plugin_info/Abeille.version
+2fc9b8a98f08aabc4361e03520058d4d *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 721b9c51a8529a69104fa8b2e2a22d24 *plugin_info/configuration.php
-64e73ebf7cd9b36e1055f55d7d839bb7 *plugin_info/info.json
+8c121a8a098491c64c4b3449db472359 *plugin_info/info.json
 69309d8ac8b68041eefc49c8d79902eb *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

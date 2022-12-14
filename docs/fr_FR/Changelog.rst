@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-221214-BETA-8
+221214-BETA-9
 -------------
 
 - Interne: Cmd: 'setLevelVolet' utilise 'cmd-0008'.

@@ -878,15 +878,15 @@
             if (isset(ep.servClusters["0001"]) && isset(ep.servClusters["0001"]['attributes'])) {
                 attributes = ep.servClusters['0001']['attributes'];
                 if (isset(attributes['0021'])) {
-                    cmds["Battery-Percent"] = newCmd("zb-0001-BatteryPercent");
+                    cmds["Battery-Percent"] = newCmd("zb-0001-BatteryPercent", "ep="+epId);
                     // cmds["Battery-Percent"]["isVisible"] = 1;
-                    cmds["SetReporting 0001-00021"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
+                    cmds["SetReporting "+epId+"-0001-00021"] = newCmd("zbConfigureReporting", "ep="+epId+"&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
                 } else if (isset(attributes['0020'])) {
-                    cmds["Battery-Percent"] = newCmd("zb-0001-BatteryPercent");
-                    cmds["Battery-Volt2Percent"] = newCmd("battery-Volt2Percent-3");
-                    cmds["SetReporting 0001-00020"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
+                    cmds["Battery-Percent"] = newCmd("zb-0001-BatteryPercent", "ep="+epId);
+                    cmds["Battery-Volt2Percent"] = newCmd("battery-Volt2Percent-3", "ep="+epId);
+                    cmds["SetReporting "+epId+"-0001-00020"] = newCmd("zbConfigureReporting", "ep="+epId+"&clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
                 }
-                cmds["Bind 0001-ToZigate"] = newCmd("zbBindToZigate", "clustId=0001", "yes");
+                cmds["Bind "+epId+"-0001-ToZigate"] = newCmd("zbBindToZigate", "ep="+epId+"&clustId=0001", "yes");
             }
 
             /* 0003/Identify cluster */
@@ -916,7 +916,7 @@
                     onOffIdx++;
                     // Adding bind + configureReporting but assuming supported
                     cmds["Bind "+epId+"-0006-ToZigate"] = newCmd("zbBindToZigate", "ep="+epId+"&clustId=0006", "yes");
-                    cmds["SetReporting "+epId+"0006"] = newCmd("zbConfigureReporting", "ep="+epId+"&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                    cmds["SetReporting "+epId+"-0006"] = newCmd("zbConfigureReporting", "ep="+epId+"&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
                 }
             }
 

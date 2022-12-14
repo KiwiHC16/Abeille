@@ -25,7 +25,7 @@
                 "use": "zb-0001-BatteryPercent",
                 "params": "ep=01"
             },
-            "SetReporting 0001-00021": {
+            "SetReporting 01-0001-00021": {
                 "use": "zbConfigureReporting",
                 "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "yes"

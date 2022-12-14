@@ -1872,20 +1872,18 @@
             $manufCode = AbeilleTools::reverseHex(substr($pl, 14, 4));
 
             parserLog('debug', '  MacCapa='.$macCapa.', ManufCode='.$manufCode);
+
             // 2 infos to store: macCapa & manufCode
             $eq = getDevice($dest, $srcAddr, '');
             // WARNING: macCapa can be overloaded by customization
             if (isset($eq['customization']) && isset($eq['customization']['macCapa'])) {
-                if ($eq['macCapa'] != $eq['customization']['macCapa']) {
-                    parserLog('debug', '  Updating macCapa from customization: '.$macCapa.' => '.$eq['customization']['macCapa']);
-                    $newMacCapa = $eq['customization']['macCapa'];
-                }
-            } else if ($eq['macCapa'] != $macCapa) {
-                $newMacCapa = $macCapa;
+                $macCapa = $eq['customization']['macCapa'];
+                parserLog('debug', "  'macCapa' customization: ".$macCapa);
             }
-            if (isset($newMacCapa))
-                $this->deviceUpdate($dest, $srcAddr, 'xx', 'macCapa', $newMacCapa);
-            if ($eq['manufCode'] != $manufCode)
+
+            if ($macCapa != $eq['macCapa'])
+                $this->deviceUpdate($dest, $srcAddr, 'xx', 'macCapa', $macCapa);
+            if ($manufCode != $eq['manufCode'])
                 $this->deviceUpdate($dest, $srcAddr, 'xx', 'manufCode', $manufCode);
         }
 
@@ -3014,7 +3012,7 @@
                                 $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
                                 $m = '  AttrId='.$attr['id'].'/'.$attrName
                                     .', AttrType='.$attr['dataType']
-                                    .', Value='.$attr['valueHex'].' => '.$attr['value'];
+                                    .', ValueHex='.$attr['valueHex'].' => '.$attr['value'];
                                 parserLog('debug', $m, "8002");
                                 $toMon[] = $m; // For monitor
 
@@ -5916,53 +5914,53 @@
                 parserLog('debug', '  AttrType='.$attrType.', AttrId='.$attrId.', MinInterval='.$minInterval.', MaxInterval='.$maxInterval);
         }
 
-        function decode8140($dest, $payload, $lqi) {
-            // Some changes in this message so read: https://github.com/fairecasoimeme/ZiGate/pull/90
-            // https://zigate.fr/documentation/commandes-zigate/
-            // Obj-> ZiGate	0x8140	Attribute Discovery response
-            // <complete: uint8_t>
-            // <attribute type: uint8_t>
-            // <attribute id: uint16_t>
-            // <Src Addr: uint16_t> (added only from 3.0f version)
-            // <Src EndPoint: uint8_t> (added only from 3.0f version)
-            // <Cluster id: uint16_t> (added only from 3.0f version)
+        // function decode8140($dest, $payload, $lqi) {
+        //     // Some changes in this message so read: https://github.com/fairecasoimeme/ZiGate/pull/90
+        //     // https://zigate.fr/documentation/commandes-zigate/
+        //     // Obj-> ZiGate	0x8140	Attribute Discovery response
+        //     // <complete: uint8_t>
+        //     // <attribute type: uint8_t>
+        //     // <attribute id: uint16_t>
+        //     // <Src Addr: uint16_t> (added only from 3.0f version)
+        //     // <Src EndPoint: uint8_t> (added only from 3.0f version)
+        //     // <Cluster id: uint16_t> (added only from 3.0f version)
 
-            // Abeille Serial Example
-            //                                     Cmd  Len  CRC Co Type Attr   Addr EP Clus LQI
-            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 01  01 20   0000   1B53 01 0000 A2"
-            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 00  01 20   0001   1B53 01 0000 A2"
-            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 03  01 20   0002   1B53 01 0000 A2"
-            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 02  01 20   0003   1B53 01 0000 A2"
-            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 67  01 42   0004   1B53 01 0000 A2"
-            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 66  01 42   0005   1B53 01 0000 A2"
-            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 65  01 42   0006   1B53 01 0000 A2"
-            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 16  01 30   0007   1B53 01 0000 A2"
-            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 73  01 42   0010   1B53 01 0000 A2"
-            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 23  01 42   4000   1B53 01 0000 A2"
-            // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 02  01 21   FFFD   1B53 01 0000 A2"
+        //     // Abeille Serial Example
+        //     //                                     Cmd  Len  CRC Co Type Attr   Addr EP Clus LQI
+        //     // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 01  01 20   0000   1B53 01 0000 A2"
+        //     // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 00  01 20   0001   1B53 01 0000 A2"
+        //     // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 03  01 20   0002   1B53 01 0000 A2"
+        //     // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 02  01 20   0003   1B53 01 0000 A2"
+        //     // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 67  01 42   0004   1B53 01 0000 A2"
+        //     // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 66  01 42   0005   1B53 01 0000 A2"
+        //     // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 65  01 42   0006   1B53 01 0000 A2"
+        //     // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 16  01 30   0007   1B53 01 0000 A2"
+        //     // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 73  01 42   0010   1B53 01 0000 A2"
+        //     // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 23  01 42   4000   1B53 01 0000 A2"
+        //     // [2021-01-27 17:48:06][debug] Reçu: "8140 000A 02  01 21   FFFD   1B53 01 0000 A2"
 
-            // Payload
-            // Co Type Attr Addr EP Clus
-            // 01 20   0000 1B53 01 0000
-            // Co = complete
+        //     // Payload
+        //     // Co Type Attr Addr EP Clus
+        //     // 01 20   0000 1B53 01 0000
+        //     // Co = complete
 
-            $completed  = substr($payload, 0, 2);
-            $type       = substr($payload, 2, 2);
-            $Attr       = substr($payload, 4, 4);
-            $Addr       = substr($payload, 8, 4);
-            $EP         = substr($payload,12, 2);
-            $clustId    = substr($payload,14, 4);
+        //     $completed  = substr($payload, 0, 2);
+        //     $type       = substr($payload, 2, 2);
+        //     $Attr       = substr($payload, 4, 4);
+        //     $Addr       = substr($payload, 8, 4);
+        //     $EP         = substr($payload,12, 2);
+        //     $clustId    = substr($payload,14, 4);
 
-            $msgDecoded = '8140/Attribute discovery response'
-               .', Comp='.$completed
-               .', AttrType='.$type
-               .', AttrId='.$Attr
-               .', EP='.$EP
-               .', Addr='.$Addr
-               .', ClustId='.$clustId
-               .' => Handled by decode8002';
-            parserLog('debug', $dest.', Type='.$msgDecoded, "8140");
-        }
+        //     $msgDecoded = '8140/Attribute discovery response'
+        //        .', Comp='.$completed
+        //        .', AttrType='.$type
+        //        .', AttrId='.$Attr
+        //        .', EP='.$EP
+        //        .', Addr='.$Addr
+        //        .', ClustId='.$clustId
+        //        .' => Handled by decode8002';
+        //     parserLog('debug', $dest.', Type='.$msgDecoded, "8140");
+        // }
 
         // function decode8141($dest, $payload, $lqi) {
         //     $msgDecoded = '8141/Attributes extended response => Handled by decode8002';

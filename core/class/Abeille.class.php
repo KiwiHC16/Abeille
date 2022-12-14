@@ -2584,7 +2584,7 @@ class Abeille extends eqLogic {
             // else if ($action == "update")
             //     message::add("Abeille", $eqHName.": Mise-à-jour à partir de son modèle (source=".$jsonLocation.")");
             else if ($action == "reset")
-                message::add("Abeille", $eqHName.": Réinitialisation à partir de son modèle (source=".$jsonLocation.")");
+                message::add("Abeille", $eqHName.": Réinitialisation à partir de '".$jsonId."' (source=".$jsonLocation.")");
             else { // action = create
                 /* Tcharp38: Following https://github.com/KiwiHC16/Abeille/issues/2132#, device re-announce is just ignored here
                     to not generate plenty messages, unless device was disabled.

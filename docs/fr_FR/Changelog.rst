@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-221214-BETA-2
+221214-BETA-3
 -------------
 
 - Interne: Parser: Mise à jour 'node descriptor'.

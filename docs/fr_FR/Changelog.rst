@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221214-BETA-8
+-------------
+
 - Interne: Cmd: 'setLevelVolet' utilise 'cmd-0008'.
 - Interne: Cmd: 'setLevel': Suppression 'readAttribute' consecutifs.
 - Modèle EQ: Surcharge possible de 'listValue'.

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="221214-BETA-7"
+# VERSION="221214-BETA-8"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -44,9 +44,9 @@ e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 8290855d0e5ee94968a6fb01ba8d5a7b *core/ajax/AbeilleZigate.ajax.php
 87f1093d9af57af49caca2ca7547511e *core/class/Abeille.class.php
 b9650cf3fe0dc8dcfdd532e3fc1252b5 *core/class/AbeilleCmd.class.php
-96ddbb9d27487d44ae1d68feee9c3b24 *core/class/AbeilleCmdPrepare.class.php
+356469eb1f1214b351e178ccb7e94cf3 *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
-fd2bc0b0ed63c4ea7f4ad8a1d726042b *core/class/AbeilleCmdProcess.class.php
+26ef9886f622b14ee922462f206eb07d *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
 a84f9e74469b2dac15ebbf7e899100ce *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
@@ -333,7 +333,10 @@ af9d1499b88ff02c7263ba12b98a88d6 *core/config/commands/act_tuyaEF00-Set-Setpoint
 9f398e43b8ef0d49c83138dc4cf38d1b *core/config/commands/act_tuyaEF00-Set-Setpoint.json
 ef016e3da8b9bc0d6c95294691900f65 *core/config/commands/act_tuyaEF00-SetBool.json
 11eaabb82df713365a5e5fda59d6ef3a *core/config/commands/act_tuyaEF00-SetValue.json
+5d37a8616d7abaa3df6aabed6561789d *core/config/commands/act_zbCmdG-0008-DownClose.json
 19ee39c616e894c1912c499e38b26bd1 *core/config/commands/act_zbCmdG-0008-MoveToLevelWithOnOff.json
+3a53ec37be4afe0c1eebbf3e6189a340 *core/config/commands/act_zbCmdG-0008-StopWithOnOff.json
+3069776664e71000201caab4f26550ef *core/config/commands/act_zbCmdG-0008-UpOpen.json
 e8791ca8e54e38270686529ecc62e101 *core/config/commands/act_zbWriteAttribute-list.json
 50bef834e2b34dcc3247e0294ed8bb3d *core/config/commands/addGroupEP1.json
 d0785a8d75d70ead553d0118ece70aad *core/config/commands/addGroupEP3.json
@@ -573,8 +576,6 @@ a208917c49440c54a33c085318381805 *core/config/commands/zbBindToZigate.json
 4297dba0a2c325cf9480e625928ceaf6 *core/config/commands/zbCmd-0006-Off.json
 5cff19452e81e968afc9faeee38b901a *core/config/commands/zbCmd-0006-On.json
 f8c41190e73ae506db5bc89a13afdf16 *core/config/commands/zbCmd-0006-Toggle.json
-511f507a17175d4a53677525ab1640b6 *core/config/commands/zbCmd-0008-DownClose.json
-539806fe863e5630eaa72fae1a3cd6d3 *core/config/commands/zbCmd-0008-UpOpen.json
 cc84e3086c4d06f8dd1d3420d608aaeb *core/config/commands/zbCmd-0102-DownClose.json
 635af524db89e40b78e36f89c5690717 *core/config/commands/zbCmd-0102-GoToLiftPercentage.json
 32eb1c3dc4bed80d295518ff659f39de *core/config/commands/zbCmd-0102-Stop.json
@@ -591,7 +592,6 @@ f05f0138288e213c603df18d3d9ce4f3 *core/config/commands/zbCmd-EF00-GotoLevel.json
 4687573cb39e7cf373bd3e7529c36049 *core/config/commands/zbCmd-EF00-Stop.json
 40e12115cf58156cdbc09ce8235c5602 *core/config/commands/zbCmd-EF00-Up.json
 3241f94c31b07c88edf8dc5f59544503 *core/config/commands/zbCmd-XXXX-Custom.json
-5ad83e122471d47b3c97c2ec7014fb1d *core/config/commands/zbCmdG-0008-StopWithOnOff.json
 745cb5bb36bf1f9168a60890f169dd7b *core/config/commands/zbCmdG-TuyaEF00.json
 f930d2a1ad10812fd3ac202e13e2297b *core/config/commands/zbCmdR-0006-Off.json
 3898729830f719df326f69bd7def9187 *core/config/commands/zbCmdR-0006-On.json
@@ -630,7 +630,7 @@ fbb80d0f9ed1907f5d3adb74edb95c28 *core/config/devices/A60STW_LEDVANCE/A60STW_LED
 91601de01d3070f973c53dfa033983f3 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/ALCANTARA2D1.00P1.02Z1.00.json
 b3de5b2b6933161949c28715effe4536 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/discovery.json
 702f1a05cff393dbc319103d91529745 *core/config/devices/BASICZBR3/BASICZBR3.json
-5f60b9a71b06486cb654ce8ab0821d50 *core/config/devices/BSO/BSO.json
+d43d606fb455d35c6a495b80a7ea78f5 *core/config/devices/BSO/BSO.json
 3cc4c1ff850154a36eedaccd4d8e70c5 *core/config/devices/CLA60RGBWOSRAM/CLA60RGBWOSRAM.json
 060b33365dfd10954c18b5349471a9ad *core/config/devices/CLA60TWOSRAM/CLA60TWOSRAM.json
 37ad23e6e3d46eb407c52a338f33f277 *core/config/devices/COSensor-EF-3.0/COSensor-EF-3.0.json
@@ -743,7 +743,7 @@ b6b81b428a291c84169a58e37a9cd5de *core/config/devices/LightifySwitchMini_OSRAM/L
 0f851ba6193f0c95885b2d2336557b96 *core/config/devices/LightifySwitchMini_OSRAM/discovery.json
 101e4b37d02d6fd7bf94712d54631c01 *core/config/devices/LightifySwitchMini_OSRAM/notes.txt
 de76629c5c68fb4cfd89c48cf9ca0742 *core/config/devices/MAI-ZTS_Profalux/MAI-ZTS_Profalux.json
-bc0fb4818b18ce2bc7f1b9f64ad28769 *core/config/devices/MOT-C1Z06C/MOT-C1Z06C.json
+3b9d66ab308f84a9d91a1ebbcf2da1ac *core/config/devices/MOT-C1Z06C/MOT-C1Z06C.json
 ec4c365dfbcef22c285caa0cad6a210b *core/config/devices/MOT-C1Z06C/notes.txt
 489a66e7ca10858c00c1d3a4a7ce5409 *core/config/devices/MR16TWOSRAM/MR16TWOSRAM.json
 170eb02fd69fd71b9194d2612e8f7798 *core/config/devices/MS01/MS01.json
@@ -977,7 +977,7 @@ ad2ff14f59b28912366826ef1b89dca3 *core/config/devices/TS0601__TZE200_yvx5lh6k/TS
 0bbef1f26b77c36711b630350d5afba8 *core/config/devices/TS130F__TZ3000_1dd0d5yi/discovery.json
 4957eacd183f368fe03a813e71bdf52a *core/config/devices/TS130F__TZ3000_fccpjz5z/TS130F__TZ3000_fccpjz5z.json
 cf6bea379380812d8a44a8e21119f7c3 *core/config/devices/TS130F__TZ3000_fccpjz5z/discovery.json
-0aa5931996e7becd93528347c7f5eda5 *core/config/devices/TS130F__TZ3000_vd43bbfq/TS130F__TZ3000_vd43bbfq.json
+902eeacd508c037b9ddcb2a0d3c6ce66 *core/config/devices/TS130F__TZ3000_vd43bbfq/TS130F__TZ3000_vd43bbfq.json
 1c00b135fb5cc0d65016d6de133c3c4c *core/config/devices/TS130F__TZ3000_vd43bbfq/discovery.json
 e45413592058c81e0af14bbe1e181271 *core/config/devices/TS130F__TZ3000_xxgrunjb/TS130F__TZ3000_xxgrunjb.json
 464d01c1b1a882bea7f85e837105e053 *core/config/devices/TS130F__TZ3000_xxgrunjb/discovery.json
@@ -1078,7 +1078,7 @@ e5b50b2ba6b52ced55fb1426574b324a *core/config/devices/switch.n2aeu1_LUMI/switch.
 edc8b0bd9c2364e7a47c0b8bd005e1ea *core/config/devices/switch.n3acn3/switch.n3acn3.json
 0fd716f7b7d86cc9f9317e4bcd0d0a81 *core/config/devices/vibration.aq1/vibration.aq1.json
 ef2a20b521eeafe97cd57f2b66aa7b39 *core/config/devices/volet/discovery.json
-bfc9478bbdf447d84d2706e96b18e089 *core/config/devices/volet/volet.json
+1b25942ec2d31348b0debc57e6554e64 *core/config/devices/volet/volet.json
 c4a7e4527f0acee8823754494bf28cfd *core/config/devices/weather/weather.json
 ab013fac137af9a60057d54b13a8eecb *core/config/devices/zigbeeColorDimmableLight/zigbeeColorDimmableLight.json
 c32bab6e8be8f15cdade8b287f36f269 *core/config/devices/zigbeeColortemperaturelight/zigbeeColortemperaturelight.json
@@ -1186,7 +1186,7 @@ fa350ab7903504cdc0071aa12759246b *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-0668b7faf6441d9c453bbdee4d9e822a *docs/fr_FR/Changelog.rst
+dfc737865659beca9c1f7c0d740ed672 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1487,10 +1487,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-2fc9b8a98f08aabc4361e03520058d4d *plugin_info/Abeille.version
+75c874a46364b03c3fd4725bd059fb05 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 721b9c51a8529a69104fa8b2e2a22d24 *plugin_info/configuration.php
-8c121a8a098491c64c4b3449db472359 *plugin_info/info.json
+86ba5ca598febab5284d65503ae19f21 *plugin_info/info.json
 69309d8ac8b68041eefc49c8d79902eb *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

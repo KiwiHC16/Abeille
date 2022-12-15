@@ -1,0 +1,13 @@
+{
+    "inf_zbAttr-0006-OnOff": {
+        "subType": "binary",
+        "template": "light",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "visibilityCategory": "All"
+        },
+        "type": "info",
+        "logicalId": "0006-#EP#-0000",
+        "genericType": "LIGHT_STATE_BOOL"
+    }
+}

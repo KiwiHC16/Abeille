@@ -4152,7 +4152,7 @@
                     $srcEp      = "01";
                     $dstEp      = $Command['ep'];
                     $extra      = '';
-                    $value      = (int)$Command['value'];
+                    $value      = (isset($Command['value']) ? (int)$Command['value'] : 0);
                     if ($cmdId == "04" || $cmdId == "06")
                         $extra = sprintf("%04X", $value); // uint16
                     else if ($cmdId == "05" || $cmdId == "07")

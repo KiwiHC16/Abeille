@@ -1,0 +1,13 @@
+{
+    "act_zbCmdG-0102-DownClose": {
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "cmd-0102",
+            "request": "ep=#EP#&cmd=01"
+        },
+        "type": "action",
+        "genericType": "FLAP_DOWN"
+    }
+}

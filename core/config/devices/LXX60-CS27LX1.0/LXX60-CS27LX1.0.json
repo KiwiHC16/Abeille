@@ -2,36 +2,38 @@
     "LXX60-CS27LX1.0": {
         "manufacturer": "Zemismart",
         "model": "ZW-EC-01",
+        "type": "Zemismart curtain switch",
+        "comment": "NOT RECOMMENDED !! No way to get position reporting",
         "timeout": "",
         "configuration": {
             "mainEP": "01",
-            "icon": "LXX60-CS27LX1.0"
+            "icon": "Zemismart-LXX60-CS27LX1.0"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Zemismart ZW-EC-01 curtain switch",
         "commands": {
             "Identify": {
-                "use": "Identify",
-                "isVisible": 1
+                "use": "Identify"
             },
             "Groups": {
-                "use": "Group-Membership",
-                "isVisible": 1
-            },
-            "etat": {
-                "use": "zb-0006-OnOff",
-                "isVisible": 1
+                "use": "Group-Membership"
             },
             "Up": {
-                "use": "zbCmd-0102-UpOpen"
+                "use": "act_zbCmdG-0102-UpOpen",
+                "isVisible": 1
             },
             "Down": {
-                "use": "zbCmd-0102-DownClose"
+                "use": "act_zbCmdG-0102-DownClose",
+                "isVisible": 1
             },
             "Stop": {
-                "use": "zbCmd-0102-Stop"
+                "use": "act_zbCmdG-0102-Stop",
+                "isVisible": 1
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1
             }
         }
     }

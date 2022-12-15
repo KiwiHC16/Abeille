@@ -11,17 +11,16 @@ Attention !! Toute modification de ce répertoire sera écrasée lors des mises-
 Nom des commandes
 =================
 En dehors des commandes "historiques" en passe d'être normalisées, les noms de fichiers doivent suivre les regles suivantes:
-- Toute commande specifique Zigbee (issu du standard Zigbee) commence par "zb"
-- Le nom des commandes commence par une minuscule (ex: click.json)
-- zbCmd-<cluster>-<cmdName>.json : une commande du 'cluster', générée par la Zigate (ex: zbCmd-0006-On).
-  Peut donc être déclenchée d'une commande Jeedom du type ACTION.
-  TODO: A renommer en 'zbCmdG-<clustId>-<cmdName>'
-- zbCmdR-<cluster>-<cmdName>.json
-  Une commande "reçue" par la Zigate. Peut donc alimenter une commande Jeedom du type INFO.
-- zb-<cluster>-<attribName>.json: un attribut du 'cluster' (ex: zb-0001-BatteryPercent) = Command Jeedom du type INFO.
-  Ces commandes Jeedom sont mises à jour par un "attribute report" ou "read attribute response".
-  TODO: A renommer en 'zbAttr-<clustId>-<attrName>'
-- zbConfigureReporting, zbReadAttribute... actions du standard Zigbee.
+- Toute commande 'action' commande par 'act_'.
+- Toute commande 'info' commande par 'inf_'.
+
+- Les commandes specifiques Zigbee (issues du standard Zigbee) sont ensuite prefixées par "zb"
+  Ex: inf_zbXXX ou act_zbXXX
+  Commandes 'générées': act_zbCmdG-xxxx.
+  Commandes 'reçues': inf_zbCmdR-xxxx.
+  Attributs: inf_zbAttr-xxx
+  Commandes génériques: act_zbXXX
+    Ex: zbConfigureReporting, zbReadAttribute... actions du standard Zigbee.
 
 Format de fichier
 =================

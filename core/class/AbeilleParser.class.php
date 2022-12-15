@@ -2767,7 +2767,7 @@
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
 
-                        $toMon[] = "8002/Read attributes response"; // For monitor
+                        // $toMon[] = "8002/Read attributes response"; // For monitor
 
                         /* Command frame format:
                             ZCL header
@@ -2901,7 +2901,7 @@
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
 
-                        $toMon[] = "8002/Write Attributes Response"; // For monitor
+                        // $toMon[] = "8002/Write Attributes Response"; // For monitor
 
                         $l = strlen($msg);
                         for ($i = 0; $i < $l; ) {
@@ -2921,7 +2921,7 @@
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
 
-                        $toMon[] = "8002/Configure Reporting Response"; // For monitor
+                        // $toMon[] = "8002/Configure Reporting Response"; // For monitor
 
                         $l = strlen($msg);
                         for ($i = 0; $i < $l; ) {
@@ -2943,7 +2943,7 @@
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
 
-                        $toMon[] = "8002/Read Reporting Configuration Response"; // For monitor
+                        // $toMon[] = "8002/Read Reporting Configuration Response"; // For monitor
 
                         $status = substr($msg, 0, 2);
                         $dir = substr($msg, 2, 2);
@@ -2984,7 +2984,7 @@
                             return; // So far unknown to Jeedom
 
                         if ($manufCode == '115F') { // Xiaomi specific
-                            $toMon[] = "8002/Report attributes Xiaomi specific"; // For monitor
+                            $toMon[] = "  Report attributes Xiaomi specific"; // For monitor
 
                             // New code
                             $attributesReportN = [];
@@ -3002,7 +3002,7 @@
                                     $attributesReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
                             }
                         } else {
-                            $toMon[] = "8002/Report attributes"; // For monitor
+                            // $toMon[] = "8002/Report attributes"; // For monitor
 
                             $l = strlen($msg);
                             $attributesReportN = [];
@@ -3150,10 +3150,10 @@
                         //     return;
                         // Tcharp38: Need to check how to deal with 'completed' flag
 
-                        if ($cmd == "12")
-                            $toMon[] = "8002/Discover Commands Received Response"; // For monitor
-                        else
-                            $toMon[] = "8002/Discover Commands Generated Response"; // For monitor
+                        // if ($cmd == "12")
+                        //     $toMon[] = "8002/Discover Commands Received Response"; // For monitor
+                        // else
+                        //     $toMon[] = "8002/Discover Commands Generated Response"; // For monitor
 
                         $completed = substr($msg, 2);
                         $msg = substr($msg, 2); // Skipping 'completed' status
@@ -3163,7 +3163,9 @@
                             $commands[] = substr($msg, $i, 2);
                             $i += 2;
                         }
-                        parserLog('debug', '  Supported commands: '.implode("/", $commands));
+                        $m = '  Supported commands: '.implode("/", $commands);
+                        parserLog('debug', $m);
+                        $toMon[] = $m; // For monitor
 
                         /* Send to client if required (ex: EQ page opened) */
                         $toCli = array(
@@ -3187,7 +3189,7 @@
                         //     return;
                         // Tcharp38: Need to check how to deal with 'completed' flag
 
-                        $toMon[] = "8002/Discover Attributes Extended Response"; // For monitor
+                        // $toMon[] = "8002/Discover Attributes Extended Response"; // For monitor
 
                         $completed = substr($msg, 2);
                         $msg = substr($msg, 2); // Skipping 'completed' status
@@ -3218,6 +3220,7 @@
                                 $m .= 'P'; // Reportable
                         }
                         parserLog('debug', '  Clust '.$clustId.': '.$m);
+                        $toMon[] = '  Clust '.$clustId.': '.$m;
 
                         // $this->discoverLog('- Clust '.$clustId.': '.$m);
                         $discovering = $this->discoveringState($dest, $srcAddr);
@@ -3240,7 +3243,7 @@
                     } // Discover Attributes Extended Response
 
                     else {
-                        parserLog("debug", "  Ignored general command", "8002");
+                        parserLog("debug", "  Ignored general command ".$cmd, "8002");
                         return;
                     }
                 } else {

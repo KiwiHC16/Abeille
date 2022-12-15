@@ -618,6 +618,8 @@
                     "XiaomiTemperatureRond" => "Xiaomi-TempSensor-1",
                     "XiaomiPriseEU" => "Xiaomi-Plug-EU",
                     "sen_ill_mgl01" => "Xiaomi-LightSensor-1",
+
+                    "LXX60-CS27LX1.0" => "Zemismart-LXX60-CS27LX1.0",
                 );
                 $curIcon = $eqLogic->getConfiguration('ab::icon', '');
                 if (($curIcon != '') && isset($iList[$curIcon])) {

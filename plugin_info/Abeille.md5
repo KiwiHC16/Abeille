@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="221215-BETA-2"
+# VERSION="221215-BETA-3"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -46,12 +46,12 @@ ba261401a3a9c72e07378db3c7d9b4ba *core/class/Abeille.class.php
 b9650cf3fe0dc8dcfdd532e3fc1252b5 *core/class/AbeilleCmd.class.php
 356469eb1f1214b351e178ccb7e94cf3 *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
-26ef9886f622b14ee922462f206eb07d *core/class/AbeilleCmdProcess.class.php
+ee1facdf4381781e54940eae1d125db0 *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
 5bfa9782cd4c79b0837d6d2d0e81bea5 *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-e89108b8f27bfd46e48b9a75641c71da *core/class/AbeilleParser.class.php
+6e09c4380f757e30d4354f3ccb7633a4 *core/class/AbeilleParser.class.php
 59230e66b7fe7a8f08b997955361e4ab *core/class/AbeilleParserTest.class.php
 fbc81985db0cfa51df2b142d357f7eb3 *core/class/AbeilleParserTestDB.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
@@ -81,7 +81,7 @@ ad69d09e995793a5ea02b294a0680e61 *core/config/commands/CurrentPrise_mA.json
 a4822259592a3ca19099223982b13190 *core/config/commands/IEEE-Addr.json
 57dd805b1a091c37254cf2858910a758 *core/config/commands/Identify.json
 a8e23345abae1946a7b5180ecf7b7aba *core/config/commands/IkeaTeleCmdLeftRigth.json
-d0a72a16b65953df52f43704c88f6e76 *core/config/commands/LISEZMOI.txt
+f7ba4a9bdcd6b1dcbc91de2a2a7db7b8 *core/config/commands/LISEZMOI.txt
 b6b844e9b4859fc495717b92d936d818 *core/config/commands/Left-Right-Cmd.json
 95bb1521fb6d62d15f8146ff644ebcf5 *core/config/commands/Left-Right-Direction.json
 dda4fcbe7a568ade80d93733ec7a0138 *core/config/commands/LegrandContactorAuto.json
@@ -337,6 +337,9 @@ ef016e3da8b9bc0d6c95294691900f65 *core/config/commands/act_tuyaEF00-SetBool.json
 19ee39c616e894c1912c499e38b26bd1 *core/config/commands/act_zbCmdG-0008-MoveToLevelWithOnOff.json
 3a53ec37be4afe0c1eebbf3e6189a340 *core/config/commands/act_zbCmdG-0008-StopWithOnOff.json
 3069776664e71000201caab4f26550ef *core/config/commands/act_zbCmdG-0008-UpOpen.json
+85d3f4e3471d019cbbcea0954b8a2ff2 *core/config/commands/act_zbCmdG-0102-DownClose.json
+f47a0011bcee73ef6a21d7b4eb4e6da3 *core/config/commands/act_zbCmdG-0102-Stop.json
+9ef60be3ee57c14a638b802b037c5c43 *core/config/commands/act_zbCmdG-0102-UpOpen.json
 e8791ca8e54e38270686529ecc62e101 *core/config/commands/act_zbWriteAttribute-list.json
 50bef834e2b34dcc3247e0294ed8bb3d *core/config/commands/addGroupEP1.json
 d0785a8d75d70ead553d0118ece70aad *core/config/commands/addGroupEP3.json
@@ -413,6 +416,7 @@ d0794406c29f943ca9616c838bf5ca36 *core/config/commands/etatSwitchSimple.json
 b4eee0b81571b70b8756d03097b8ace7 *core/config/commands/getColorTemperature.json
 0fcfa354c22e045937305ef985852b3c *core/config/commands/getcurrent_position_lift_percentage.json
 33976c9c73f06c9e1db35bbc71624576 *core/config/commands/inf_generic-Badge.json
+24c7bdf9d1c7ccb27bb0bf46b4021bf3 *core/config/commands/inf_zbAttr-0006-OnOff.json
 2d505be5e6d88557cec425a46f49d249 *core/config/commands/levelVolet.json
 6d0222192bd035565821e8285293003c *core/config/commands/moveToLiftAndTiltBSO_Lift.json
 931466699709b82dc59579ac8a05389f *core/config/commands/moveToLiftAndTiltBSO_Tilt.json
@@ -737,7 +741,8 @@ a960ab8990340c0520bd4caeb3def795 *core/config/devices/LWU001/LWU001.json
 6763c658a21947788032c2dfaa967e85 *core/config/devices/LWU001/discovery.json
 157cc75ccf665b0ab10eb850dd55b8b7 *core/config/devices/LXEK-1_Adeo/LXEK-1_Adeo.json
 c984e7f4e029552eb971ae85e985ce02 *core/config/devices/LXEK-1_Adeo/discovery.json
-386533af1a1e652bc77a13884f43a93f *core/config/devices/LXX60-CS27LX1.0/LXX60-CS27LX1.0.json
+b3d4b7a7a9fa897c510d94a337108440 *core/config/devices/LXX60-CS27LX1.0/LXX60-CS27LX1.0.json
+2b626c0bb0a48cc6f35178d0c19e3d6e *core/config/devices/LXX60-CS27LX1.0/discovery-LXX60-CS27LX1.0_3ASmartHomeDE.json
 4d407795d99ccb2fe1fb8965385d73e4 *core/config/devices/Lamp_01/Lamp_01.json
 b6b81b428a291c84169a58e37a9cd5de *core/config/devices/LightifySwitchMini_OSRAM/LightifySwitchMini_OSRAM.json
 0f851ba6193f0c95885b2d2336557b96 *core/config/devices/LightifySwitchMini_OSRAM/discovery.json
@@ -1188,7 +1193,7 @@ fa350ab7903504cdc0071aa12759246b *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-4d03ca961674eb42c494f505bb5c0c8f *docs/fr_FR/Changelog.rst
+ac0744eab24626f443955b8b5d53bf4b *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1284,7 +1289,6 @@ c6e0d8197f7415659e769f7f78513114 *images/node_LTW012.png
 ba5d7e89e000b0cfadb3e2d5470746a6 *images/node_LTW013.png
 8f862d7f3b036de77bbcd75b4da4ee28 *images/node_LWA009.png
 a6570ef735600c0148a7aad57eb01064 *images/node_LWO001.png
-ccb34d97ffa00e0f4f038193d9a7bb1e *images/node_LXX60-CS27LX1.0.png
 e855c47cef73a6e579bb8ad8dbb94b93 *images/node_Lamp_01.png
 0eb695975ef6314f7aeba9da2c64ad30 *images/node_Ledvance-BulbE27-Color.png
 a528d9b404aaabd50c84e68fe177bbc4 *images/node_Ledvance-BulbE27-White.png
@@ -1458,6 +1462,7 @@ a974ffe61a8e3f502fcd24ae31c6ac9e *images/node_ZLO-LTOSensor.png
 807e8ad00803ee38ea14435d36a33c1a *images/node_ZLO-OccupancySensor.png
 b7eb63dff5703896147781076f9989a4 *images/node_Zemismart-2ButtonsSwitch.png
 bb69f46bc88f0a988ba4da5646d86952 *images/node_Zemismart-DoorSensor.png
+ccb34d97ffa00e0f4f038193d9a7bb1e *images/node_Zemismart-LXX60-CS27LX1.0.png
 0abbf0a7a7cce78de303e48e206a31c4 *images/node_ctrl_86plug.aq1.png
 6e5c178ccce618a80a906bf3cd44142f *images/node_ctrl_ln1.aq1.png
 81433f382343e89bf118abff8f348aaa *images/node_ctrl_ln2.aq1.png
@@ -1489,11 +1494,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-256e6e7265816bafe37215149abae3df *plugin_info/Abeille.version
+8c523e99fdb57cbd744fa576d160f56d *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 721b9c51a8529a69104fa8b2e2a22d24 *plugin_info/configuration.php
-67f829b4fe1d5160f9b451ccfc0ca2d8 *plugin_info/info.json
-69309d8ac8b68041eefc49c8d79902eb *plugin_info/install.php
+23e8e6eb23b6a873a3eaf03778096ebc *plugin_info/info.json
+0318020435fd6cfada0221deeb2c3bd3 *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 4d1e64cfeef3737228cc3cc708ca42c5 *resources/AbeilleDeamon/Debug/getLastMessageInQueue.php

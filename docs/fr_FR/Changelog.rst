@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221215-BETA-3
+-------------
+
 - Interne: Amélioration infos en mode surveillance (AbeilleMonitor.log).
 - Zemismart ZW-EC-01 curtain switch: Modèle revu mais équipement déconseillé.
 - Interne: AbeilleCmd: Optimisation & nettoyage.

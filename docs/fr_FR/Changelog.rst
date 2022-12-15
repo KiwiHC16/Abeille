@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+221215-BETA-2
+-------------
+
 - Interne: AbeilleCmd: Optimisation & nettoyage.
 - Heiman HS1HT: Mise-à-jour image (2520).
 - Heiman HS1MS-EF: Mise-à-jour image (2521).

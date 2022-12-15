@@ -677,11 +677,11 @@
             "name" => "Metering (Smart Energy)",
             "attributes" => array(
                 // Reading information attribute set
-                "0000" => array( "name" => "CurrentSummationDelivered", "access" => "R" ),
-                "0001" => array( "name" => "CurrentSummationReceived", "access" => "R" ),
-                "0002" => array( "name" => "CurrentMaxDemandDelivered", "access" => "R" ),
-                "0003" => array( "name" => "CurrentMaxDemandReceived", "access" => "R" ),
-                "0006" => array( "name" => "PowerFactor", "access" => "R" ),
+                "0000" => array( "name" => "CurrentSummationDelivered", "access" => "R", "dataType" => 0x25 ), // uint48
+                "0001" => array( "name" => "CurrentSummationReceived", "access" => "R", "dataType" => 0x25 ), // uint48
+                "0002" => array( "name" => "CurrentMaxDemandDelivered", "access" => "R", "dataType" => 0x25 ), // uint48
+                "0003" => array( "name" => "CurrentMaxDemandReceived", "access" => "R", "dataType" => 0x25 ), // uint48
+                "0006" => array( "name" => "PowerFactor", "access" => "R", "dataType" => 0x28 ), // int8
 
                 // Meter status attribute set
                 "0200" => array( "name" => "Status", "access" => "R" ),

@@ -204,7 +204,7 @@
         if (isset($GLOBALS['eqList'][$net][$addr]))
             return $GLOBALS['eqList'][$net][$addr];
 
-        // Not found. If IEEE is given let's check if short addr has changed.
+            // Not found. If IEEE is given let's check if short addr has changed.
         if ($ieee) {
             foreach ($GLOBALS['eqList'][$net] as $oldAddr => $eq) {
                 if (!isset($eq['ieee']) || ($eq['ieee'] !== $ieee))

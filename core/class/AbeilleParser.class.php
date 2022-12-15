@@ -448,6 +448,7 @@
             else
                 $ieee = null;
             $eq = &getDevice($net, $addr, $ieee, $newDev); // By ref
+
             $confirmed = array();
             foreach ($updates as $updKey => $updVal) {
                 if ($updKey == 'ieee')
@@ -458,7 +459,7 @@
                 }
             }
 
-            // Any change to report to Abeille ?
+            // Any changes to report to Abeille ?
             if (count($confirmed) > 0) {
                 $msg = array(
                     'type' => 'updateDevice',
@@ -1956,7 +1957,7 @@
                 if ($N['addr'] == "0000")
                     continue; // It's a zigate
 
-                $eq = getDevice($dest, $N['addr'], '');
+                $eq = getDevice($dest, $N['addr'], $N['extAddr']);
 
                 // Any useful infos to update ?
                 $bitMap = hexdec($N['bitMap']);
@@ -2794,7 +2795,7 @@
                                 $m = '  AttrId='.$attr['id'].'/'.$attrName
                                     .', Status='.$attr['status']
                                     .', AttrType='.$attr['dataType']
-                                    .', Value='.$attr['valueHex'].' => '.$attr['value'];
+                                    .', ValueHex='.$attr['valueHex'].' => '.$attr['value'];
                             else
                                 $m = '  AttrId='.$attr['id'].'/'.$attrName
                                     .', Status='.$attr['status']
@@ -2938,6 +2939,10 @@
                     } // End '$cmd == "07"'
 
                     else if ($cmd == "09") { // Read Reporting Configuration Response
+                        // Duplicated message ?
+                        if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                            return;
+
                         $toMon[] = "8002/Read Reporting Configuration Response"; // For monitor
 
                         $status = substr($msg, 0, 2);

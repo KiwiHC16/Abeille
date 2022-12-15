@@ -1725,7 +1725,8 @@ class Abeille extends eqLogic {
                         $eqLogic->setConfiguration('ab::zigbee', $zigbee);
                         log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[macCapa]' updated to ".$updVal);
                         $eqChanged = true;
-                    }
+                    } else
+                        log::add('Abeille', 'debug', '  ERROR: Unknown '.$net.'/'.$addr." device");
                 } else if ($updKey == 'rxOnWhenIdle') {
                     if (is_object($eqLogic)) {
                         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
@@ -1733,7 +1734,8 @@ class Abeille extends eqLogic {
                         $eqLogic->setConfiguration('ab::zigbee', $zigbee);
                         log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[rxOnWhenIdle]' updated to ".$updVal);
                         $eqChanged = true;
-                    }
+                    } else
+                        log::add('Abeille', 'debug', '  ERROR: Unknown '.$net.'/'.$addr." device");
                 } else if ($updKey == 'endPoints') {
                     if (is_object($eqLogic)) {
                         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
@@ -1741,7 +1743,8 @@ class Abeille extends eqLogic {
                         $eqLogic->setConfiguration('ab::zigbee', $zigbee);
                         log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]' updated to ".json_encode($updVal));
                         $eqChanged = true;
-                    }
+                    } else
+                        log::add('Abeille', 'debug', '  ERROR: Unknown '.$net.'/'.$addr." device");
                 } else if ($updKey == 'manufCode') {
                     if (is_object($eqLogic)) {
                         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
@@ -1749,7 +1752,8 @@ class Abeille extends eqLogic {
                         $eqLogic->setConfiguration('ab::zigbee', $zigbee);
                         log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[manufCode]' updated to ".$updVal);
                         $eqChanged = true;
-                    }
+                    } else
+                        log::add('Abeille', 'debug', '  ERROR: Unknown '.$net.'/'.$addr." device");
                 }
             }
             if ($eqChanged)

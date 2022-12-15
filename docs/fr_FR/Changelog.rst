@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Heiman HS1HT: Mise-à-jour image (2520).
+
 221214-BETA-9
 -------------
 

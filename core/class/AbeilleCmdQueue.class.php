@@ -71,13 +71,9 @@
                 cmdLog("debug", __FUNCTION__." Trying to remove a cmd in an empty queue.");
         }
 
-        public function zgGetQueueFirstMessage($priority) {
-            return $this->zigates[$this->zgId]['cmdQueue'][$priority][0];
-        }
-
-        public function zgGetQueue($priority) {
-            return $this->zigates[$this->zgId]['cmdQueue'][$priority];
-        }
+        // public function zgGetQueue($priority) {
+        //     return $this->zigates[$this->zgId]['cmdQueue'][$priority];
+        // }
 
         public function zgChangeStatusSentQueueFirstMessage($priority, $status) {
             $this->zigates[$this->zgId]['cmdQueue'][$priority][0]['status'] = $status;
@@ -86,26 +82,6 @@
         public function zgChangesqnApsSentQueueFirstMessage($priority, $sqnAps) {
             $this->zigates[$this->zgId]['cmdQueue'][$priority][0]['sqnAps'] = $sqnAps;
         }
-
-        // public function zgGetEnable() {
-        //     return $this->zigates[$this->zgId]['enabled'];
-        // }
-
-        // public function zgGetAvailable() {
-        //     return $this->zigates[$this->zgId]['available'];
-        // }
-
-        // public function zgSetNotAvailable() {
-        //     $this->zigates[$this->zgId]['available'] = 0;
-        // }
-
-        // public function zgSetAvailable() {
-        //     $this->zigates[$this->zgId]['available'] = 1;
-        // }
-
-        // public function zgSetSentPri($queuePri) {
-        //     $this->zigates[$this->zgId]['sentPri'] = $queuePri;
-        // }
 
         // public function zgGetSentPri() {
         //     return $this->zigates[$this->zgId]['sentPri'];
@@ -122,22 +98,6 @@
 
         // public function zgGetFw() {
         //     return $this->zigates[$this->zgId]['fw'];
-        // }
-
-        // public function zgSetnPDU($hw) {
-        //     $this->zigates[$this->zgId]['nPDU'] = $hw;
-        // }
-
-        // public function zgGetnPDU() {
-        //     return $this->zigates[$this->zgId]['nPDU'];
-        // }
-
-        // public function zgSetaPDU($hw) {
-        //     $this->zigates[$this->zgId]['aPDU'] = $hw;
-        // }
-
-        // public function zgGetaPDU() {
-        //     return $this->zigates[$this->zgId]['aPDU'];
         // }
 
         public function initNewZigateDefault($zgId) {
@@ -543,63 +503,65 @@
                 if (!$zg['enabled']) continue; // Disabled
                 if (!$zg['available']) continue;  // Not free
 
-                // Throughput limitation
-                // $zg['tp_time'] gives time (in us) when Zigate can be considered available again.
-                $mt = microtime(true);
-                if (isset($zg['tp_time']) && ($zg['tp_time'] > $mt)) {
-                    // cmdLog('debug', "  Throughput limitation for Zigate ".$zgId." (tp_time=".$zg['tp_time'].", mt=".$mt.")");
-                    cmdLog('debug', "  Throughput limitation for Zigate ".$zgId);
-                    continue; // Not yet avail
-                }
-
                 $this->zgId = $zgId;
                 foreach (range(priorityMax, priorityMin) as $priority) {
-                    if ($this->checkCmdToSendInTheQueue($priority)) {
-                        cmdLog('debug', "processCmdQueues(): zigate ".$zgId);
+                    $count = count($zg['cmdQueue'][$priority]);
+                    if ($count == 0)
+                        continue; // Queue empty
 
-                        $cmd = $zg['cmdQueue'][$priority][0]; // Takes first cmd
-                        cmdLog('debug', "  cmd=".json_encode($cmd));
-                        if ($cmd['status'] != '') {
-                            cmdLog('debug', "  WARNING: Unexpected cmd status '".$cmd['status']."'");
-                        }
-                        // $zgMsg = zgGetMsg($cmd['cmd']);
-                        // cmdLog('debug', "  zgMsg ".$cmd['cmd']."=".json_encode($zgMsg));
-
-                        /* Additional flow control with nPDU/aPDU regulation to avoid zigate internal saturation.
-                            This must not prevent zigate internal commands (ex: read version).
-                            If HW v1
-                                If FW >= 3.1e, using NPDU/APDU regulation.
-                                If FW <  3.1e, regulation based on max cmd per sec => NO regulation done so far
-                            If HW v2
-                                No flow control. Regulation based on max cmd per sec => NO regulation done so far
-                        */
-                        // if (($zg['hw'] == 1) && !isset($zgMsg['type'])) { // Not a cmd for Zigate only
-                        //     cmdLog('debug', "processCmdQueues(): nPDU/aPDU regulation to be checked: ".json_encode($zg));
-                        //     if ($zg['aPDU'] > 2) {
-                        //         cmdLog('debug', 'processCmdQueues(): APDU>2 => send delayed for Zigate '.$zgId);
-                        //         break; // Will retry later for this zigate
-                        //     }
-                        //     if ($zg['nPDU'] > 7) {
-                        //         cmdLog('debug', 'processCmdQueues(): NPDU>7 => send delayed for Zigate '.$zgId);
-                        //         break; // Will retry later for this zigate
-                        //     }
-                        // }
-
-                        $this->zigates[$zgId]['available'] = 0; // Zigate no longer free
-                        $this->zigates[$zgId]['sentPri'] = $priority; // Keep the last queue used to send a cmd to this Zigate
-
-                        $this->sendCmdToZigate($cmd['dest'], $cmd['addr'], $cmd['cmd'], $cmd['datas']);
-
-                        $this->zigates[$zgId]['cmdQueue'][$priority][0]['status'] = "SENT";
-                        $this->zigates[$zgId]['cmdQueue'][$priority][0]['sentTime'] = time();
-                        $this->zigates[$zgId]['cmdQueue'][$priority][0]['try']--;
-                        $this->zigates[$zgId]['tp_time'] = microtime(true) + 0.1; // Next avail time in 100ms
-
-                        if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
-                            monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?
-
-                        break; // This zigate is no longer idle so do not check other priorities now.
+                    // Throughput limitation
+                    // $zg['tp_time'] gives time (in us) when Zigate can be considered available again.
+                    $mt = microtime(true);
+                    if (isset($zg['tp_time']) && ($zg['tp_time'] > $mt)) {
+                        // cmdLog('debug', "  Throughput limitation for Zigate ".$zgId." (tp_time=".$zg['tp_time'].", mt=".$mt.")");
+                        cmdLog('debug', "  Throughput limitation for Zigate ".$zgId);
+                        break; // This ziaget is not yet available
                     }
+
+                    cmdLog('debug', "processCmdQueues(): zigate=".$zgId.", pri=".$priority);
+
+                    $cmd = $zg['cmdQueue'][$priority][0]; // Takes first cmd
+                    cmdLog('debug', "  cmd=".json_encode($cmd));
+                    if ($cmd['status'] != '') {
+                        cmdLog('debug', "  WARNING: Unexpected cmd status '".$cmd['status']."'");
+                    }
+                    // $zgMsg = zgGetMsg($cmd['cmd']);
+                    // cmdLog('debug', "  zgMsg ".$cmd['cmd']."=".json_encode($zgMsg));
+
+                    /* Additional flow control with nPDU/aPDU regulation to avoid zigate internal saturation.
+                        This must not prevent zigate internal commands (ex: read version).
+                        If HW v1
+                            If FW >= 3.1e, using NPDU/APDU regulation.
+                            If FW <  3.1e, regulation based on max cmd per sec => NO regulation done so far
+                        If HW v2
+                            No flow control. Regulation based on max cmd per sec => NO regulation done so far
+                    */
+                    // if (($zg['hw'] == 1) && !isset($zgMsg['type'])) { // Not a cmd for Zigate only
+                    //     cmdLog('debug', "processCmdQueues(): nPDU/aPDU regulation to be checked: ".json_encode($zg));
+                    //     if ($zg['aPDU'] > 2) {
+                    //         cmdLog('debug', 'processCmdQueues(): APDU>2 => send delayed for Zigate '.$zgId);
+                    //         break; // Will retry later for this zigate
+                    //     }
+                    //     if ($zg['nPDU'] > 7) {
+                    //         cmdLog('debug', 'processCmdQueues(): NPDU>7 => send delayed for Zigate '.$zgId);
+                    //         break; // Will retry later for this zigate
+                    //     }
+                    // }
+
+                    $this->zigates[$zgId]['available'] = 0; // Zigate no longer free
+                    $this->zigates[$zgId]['sentPri'] = $priority; // Keep the last queue used to send a cmd to this Zigate
+
+                    $this->sendCmdToZigate($cmd['dest'], $cmd['addr'], $cmd['cmd'], $cmd['datas']);
+
+                    $this->zigates[$zgId]['cmdQueue'][$priority][0]['status'] = "SENT";
+                    $this->zigates[$zgId]['cmdQueue'][$priority][0]['sentTime'] = time();
+                    $this->zigates[$zgId]['cmdQueue'][$priority][0]['try']--;
+                    $this->zigates[$zgId]['tp_time'] = microtime(true) + 0.1; // Next avail time in 100ms
+
+                    if (isset($GLOBALS["dbgMonitorAddr"]) && ($cmd['addr'] != "") && ($GLOBALS["dbgMonitorAddr"] != "") && !strncasecmp($cmd['addr'], $GLOBALS["dbgMonitorAddr"], 4))
+                        monMsgToZigate($cmd['addr'], $cmd['cmd'].'-'.$cmd['datas']); // Monitor this addr ?
+
+                    break; // This zigate is no longer idle so do not check other priorities now.
                 }
             }
 
@@ -691,7 +653,7 @@
                         continue;
                     }
 
-                    $cmd = $this->zgGetQueueFirstMessage($sentPri);
+                    $cmd = $this->zigates[$zgId]['cmdQueue'][$sentPri][0];
 
                     // Checking sent cmd vs received ack misalignment
                     if ($msg['packetType'] != $cmd['cmd']) {
@@ -802,8 +764,8 @@
                 if ($zg['available'])
                     continue; // Zigate is ON & available => nothing to check
 
-                $sentPri = $this->zigates[$zgId]['sentPri'];
-                $cmd = $this->zgGetQueueFirstMessage($sentPri);
+                $sentPri = $zg['sentPri'];
+                $cmd = $zg['cmdQueue'][$sentPri][0];
                 if ($cmd['status'] == '')
                     continue; // Not sent yet
                 if ($cmd['sentTime'] + 3 > time())

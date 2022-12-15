@@ -1,9 +1,7 @@
 ChangeLog
 =========
 
-221215-BETA-1
--------------
-
+- Interne: AbeilleCmd: Optimisation & nettoyage.
 - Heiman HS1HT: Mise-à-jour image (2520).
 - Heiman HS1MS-EF: Mise-à-jour image (2521).
 - Tuya 1Ch switch module: Ajout support préliminaire 'TS0001__TZ3000_tqlv4ug4'.

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230102-BETA-1
+-------------
+
 - Interne: Constantes Zigbee: Améliorations.
 - Interne: Parser: Update mineure msg debug Xiaomi.
 - Interne: Parser: Suppression support 8041, 8043 & 8045 pour compatibilité mode 'raw'.

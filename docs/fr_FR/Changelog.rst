@@ -1,6 +1,33 @@
 ChangeLog
 =========
 
+- Interne: Constantes Zigbee: Améliorations.
+- Interne: Parser: Update mineure msg debug Xiaomi.
+- Interne: Parser: Suppression support 8041, 8043 & 8045 pour compatibilité mode 'raw'.
+- Interne: Parser: Suppression support 804A pour compatibilité mode 'raw'.
+- Interne: Parser: Suppression support 8030 pour compatibilité mode 'raw'.
+- Interne: Parser: Suppression support 8060, 8062 & 8063 pour compatibilité mode 'raw'.
+- Profalux shutter: Correction modele pour retour de 'Level'.
+- Interne: Parser: decodeDataType(), ajout support type 39/single.
+- Frient keypad: Support préliminaire (2525).
+
+230102-STABLE-1
+---------------
+
+  .. important:: Zigates v2
+
+    - Doivent être à jour du dernier firmware disponible (v3.21 à ce jour).
+  .. important:: Zigates v1
+
+    - Doivent avoir un firmware >= 3.1e pour un fonctionnement optimal mais la dernière en date (3.21) est fortement recommandée.
+    - L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
 221215-BETA-3
 -------------
 

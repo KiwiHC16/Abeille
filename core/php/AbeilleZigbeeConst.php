@@ -627,6 +627,10 @@
             "attributes" => array(
                 "0000" => array( "name" => "Occupancy", "access" => "R", "dataType" => 0x18 ), // map8
                 "0001" => array( "name" => "OccupancySensorType", "access" => "R", "dataType" => 0x30 ), // enum8
+
+                "0030" => array( "name" => "PhysicalContactOccupiedToUnoccupiedDelay", "access" => "RW", "dataType" => 0x21 ), // uint16
+                "0031" => array( "name" => "PhysicalContactUnoccupiedToOccupiedDelay", "access" => "RW", "dataType" => 0x21 ), // uint16
+                "0032" => array( "name" => "PhysicalContactUnoccupiedToOccupiedThreshold", "access" => "RW", "dataType" => 0x20 ), // uint8
             ),
         ),
         "0407" => array(

@@ -184,8 +184,11 @@
         "802C" => array(
             "name" => "User descriptor response",
         ),
+        "8030" => array(
+            "name" => "Bind response", // Unused by Abeille
+        ),
         "8031" => array(
-            "name" => "Unbind response",
+            "name" => "Unbind response", // Unused by Abeille
         ),
         "8034" => array(
             "name" => "Complex descriptor response",
@@ -193,11 +196,20 @@
         "8035" => array(
             "name" => "PDM event code",
         ),
+        "8041" => array(
+            "name" => "IEEE address response", // Unused by Abeille
+        ),
         "8042" => array(
             "name" => "Node descriptor response",
         ),
+        "8043" => array(
+            "name" => "Simple descriptor response", // Unused by Abeille
+        ),
         "8044" => array(
             "name" => "Power descriptor response",
+        ),
+        "8045" => array(
+            "name" => "Active endpoints response", // Unused by Abeille
         ),
         "8046" => array(
             "name" => "Match descriptor response",
@@ -205,14 +217,26 @@
         "8047" => array(
             "name" => "Management leave response",
         ),
+        "804A" => array(
+            "name" => "Network management update notify", // Unused by Abeille
+        ),
         "804B" => array(
             "name" => "System server discovery response",
         ),
         "804E" => array(
             "name" => "Management LQI response",
         ),
+        "8060" => array(
+            "name" => "Add group response", // Unused by Abeille
+        ),
         "8061" => array(
             "name" => "View group response",
+        ),
+        "8062" => array(
+            "name" => "Get group membership response", // Unused by Abeille
+        ),
+        "8063" => array(
+            "name" => "Remove group response", // Unused by Abeille
         ),
         "80A1" => array(
             "name" => "Add scene response",
@@ -230,10 +254,10 @@
             "name" => "Attribute discovery individual response",
         ),
         "8140" => array(
-            "name" => "Configure reporting response",
+            "name" => "Discover attributes response", // Same as 8139 ??
         ),
         "8141" => array(
-            "name" => "Discover attributes extended response",
+            "name" => "Discover attributes extended response", // Unused by Abeille
         ),
         "8150" => array(
             "name" => "Discover commands received individual response",
@@ -272,6 +296,19 @@
         if (array_key_exists($msgType, $zgMessages))
             return $zgMessages[$msgType];
         return [];
+    }
+
+    /* Returns 'true' is message is for Zigate only (not transmitted over the air) */
+    function zgIsZigateOnly($msgType) {
+        $msgType = strtoupper($msgType);
+        global $zgMessages;
+
+        if (array_key_exists($msgType, $zgMessages))
+            $zgMsg = $zgMessages[$msgType];
+        else
+            $zgMsg = [];
+        // WARNING: To be revisited if another type than ZIGATE_CMD is added
+        return (isset($zgMsg['type']) ? true : false);
     }
 
     /* Returns Zigate message name based on given '$msgType' */

@@ -87,10 +87,10 @@
         //     return $this->zigates[$this->zgId]['sentPri'];
         // }
 
-        public function setFwVersion($zgId, $hw, $fw) {
-            $this->zigates[$zgId]['hw'] = $hw;
-            $this->zigates[$zgId]['fw'] = $fw;
-        }
+        // public function setFwVersion($zgId, $hw, $fw) {
+        //     $this->zigates[$zgId]['hw'] = $hw;
+        //     $this->zigates[$zgId]['fw'] = $fw;
+        // }
 
         // public function zgGetHw() {
         //     return $this->zigates[$this->zgId]['hw'];
@@ -276,6 +276,35 @@
             return $mess;
         }
 
+        // Push a new zigate cmd to be sent
+        // If 'begin' is set to true, cmd is added in front of queue to be the first one
+        function pushZigateCmd($zgId, $pri, $cmd, $payload, $addr, $addrMode, $begin = false) {
+            if (($addrMode == "02") || ($addrMode == "03"))
+                $ackAps = 1;
+            else
+                $ackAps = 0;
+            $newCmd = array(
+                // 'priority'  => $pri,
+                'dest'      => 'Abeille'.$zgId,
+                'addr'      => $addr, // For monitoring purposes
+                'cmd'       => $cmd, // Zigate message type
+                'datas'     => $payload,
+                'zgOnly'    => zgIsZigateOnly($cmd), // Msg for Zigate only if true, not to be transmitted
+                'status'    => '', // '', 'SENT', '8000', '8012' or '8702', '8011'
+                'try'       => $this->maxRetry + 1, // Number of retries if failed
+                'sentTime'  => 0, // For lost cmds timeout
+                'sqn'       => '', // Zigate SQN
+                'sqnAps'    => '', // Network SQN
+                'ackAps'    => $ackAps, // 1 if ACK, 0 else
+            );
+            if ($begin) {
+                // cmdLog('debug', 'LA='.json_encode($this->zigates[$zgId]['cmdQueue'][$pri]));
+                array_unshift($this->zigates[$zgId]['cmdQueue'][$pri], $newCmd);
+                // cmdLog('debug', 'LA2='.json_encode($this->zigates[$zgId]['cmdQueue'][$pri]));
+            } else
+                $this->zigates[$zgId]['cmdQueue'][$pri][] = $newCmd;
+        }
+
         /**
          * addCmdToQueue()
          *
@@ -306,18 +335,18 @@
                 return;
             }
             if (!ctype_xdigit($cmd)) {
-                cmdLog('error', 'Invalid cmd. Not hexa ! ('.$cmd.')');
+                cmdLog('error', '      Invalid cmd. Not hexa ! ('.$cmd.')');
                 return;
             }
             if (($payload != '') && !ctype_xdigit($payload)) {
-                cmdLog('error', 'Invalid payload. Not hexa ! ('.$payload.')');
+                cmdLog('error', '      Invalid payload. Not hexa ! ('.$payload.')');
                 return;
             }
 
             // Ok. Checking payload length
             $len = strlen($payload);
             if ($len % 2) {
-                cmdLog("debug", "      ERROR: Odd payload length => cmd IGNORED");
+                cmdLog("error", "      Odd payload length => cmd IGNORED");
                 return;
             }
 
@@ -336,30 +365,7 @@
 
             // $this->incStatCmd($cmd);
 
-            if (($addrMode == "02") || ($addrMode == "03"))
-                $ackAps = 1;
-            else
-                $ackAps = 0;
-            $newCmd = array(
-                // 'priority'  => $priority,
-                'dest'      => $net,
-                'addr'      => $addr, // For monitoring purposes
-                'cmd'       => $cmd, // Zigate message type
-                'datas'     => $payload,
-                'status'    => '', // '', 'SENT', '8000', '8012' or '8702', '8011'
-                'try'       => $this->maxRetry + 1, // Number of retries if failed
-                'sentTime'  => 0, // For lost cmds timeout
-                'sqn'       => '', // Internal SQN
-                'sqnAps'    => '', // Network SQN
-                'ackAps'    => $ackAps, // 1 if ACK, 0 else
-            );
-            // Tcharp38: This is for nPDU/aPDU regulation. To be revisited later.
-            // if ($addrMode && ($this->zgGetHw()) && ($this->zgGetFw() >= 0x31e))
-            //     $newCmd['addrMode'] = $addrMode; // For flow control if v1 & FW >= 3.1e
-
-            // Adding new cmd to FIFO
-            // $this->addNewCmdToQueue($priority, $newCmd);
-            $this->zigates[$zgId]['cmdQueue'][$priority][] = $newCmd;
+            $this->pushZigateCmd($zgId, $priority, $cmd, $payload, $addr, $addrMode);
 
             $queuesTxt = '';
             foreach (range(priorityMax, priorityMin) as $prio) {
@@ -444,7 +450,7 @@
 
             // Test should not be needed as we already tested in addCmdToQueue2
             if (!$this->zigates[$zgId]['enabled']) {
-                cmdLog("debug", "  Zigate ".$this->zgId." (".$destSerial.") disabled => ignoring cmd ".$cmd.'-'.$datas);
+                cmdLog("debug", "  Zigate ".$zgId." (".$destSerial.") disabled => ignoring cmd ".$cmd.'-'.$datas);
                 return;
             }
 
@@ -518,33 +524,30 @@
                         break; // This ziaget is not yet available
                     }
 
-                    cmdLog('debug', "processCmdQueues(): zigate=".$zgId.", pri=".$priority);
+                    cmdLog('debug', "processCmdQueues(): zigate=".$zgId.", pri=".$priority.", NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
 
                     $cmd = $zg['cmdQueue'][$priority][0]; // Takes first cmd
                     cmdLog('debug', "  cmd=".json_encode($cmd));
                     if ($cmd['status'] != '') {
                         cmdLog('debug', "  WARNING: Unexpected cmd status '".$cmd['status']."'");
                     }
-                    // $zgMsg = zgGetMsg($cmd['cmd']);
-                    // cmdLog('debug', "  zgMsg ".$cmd['cmd']."=".json_encode($zgMsg));
 
                     /* Additional flow control with nPDU/aPDU regulation to avoid zigate internal saturation.
                         This must not prevent zigate internal commands (ex: read version).
                         If HW v1
                             If FW >= 3.1e, using NPDU/APDU regulation.
-                            If FW <  3.1e, regulation based on max cmd per sec => NO regulation done so far
+                            If FW <  3.1e, regulation based on max cmd per sec => Throughput limitation
                         If HW v2
-                            No flow control. Regulation based on max cmd per sec => NO regulation done so far
+                            No flow control. Regulation based on max cmd per sec => Throughput limitation
                     */
-                    // if (($zg['hw'] == 1) && !isset($zgMsg['type'])) { // Not a cmd for Zigate only
-                    //     cmdLog('debug', "processCmdQueues(): nPDU/aPDU regulation to be checked: ".json_encode($zg));
-                    //     if ($zg['aPDU'] > 2) {
-                    //         cmdLog('debug', 'processCmdQueues(): APDU>2 => send delayed for Zigate '.$zgId);
-                    //         break; // Will retry later for this zigate
-                    //     }
-                    //     if ($zg['nPDU'] > 7) {
-                    //         cmdLog('debug', 'processCmdQueues(): NPDU>7 => send delayed for Zigate '.$zgId);
-                    //         break; // Will retry later for this zigate
+                    // if (($zg['hw'] == 1) && !$cmd['zgOnly']) { // Not a cmd for Zigate only
+                    //     // cmdLog('debug', "processCmdQueues(): nPDU/aPDU regulation to be checked: ".json_encode($zg));
+                    //     if (($zg['nPDU'] > 7) || ($zg['aPDU'] > 2)) {
+                    //         cmdLog('debug', '  NPDU/APDU regulation for Zigate  '.$zgId.' (NPDU='.$zg['nPDU'].', APDU='.$zg['aPDU'].')');
+
+                    //         // Adding a "read version" cmd as FIRST CMD to force NDPU/APDU update
+                    //         $this->pushZigateCmd($zgId, $priority, "0010", "", "0000", "00", true);
+                    //         $cmd = $this->zigates[$zgId]['cmdQueue'][$priority][0]; // Takes first cmd
                     //     }
                     // }
 
@@ -607,7 +610,9 @@
                         $hw = 2; // Zigate v2
                     else
                         $hw = 1;
-                    $this->setFwVersion($zgId, $hw, hexdec($msg['minor']));
+                    // $this->setFwVersion($zgId, $hw, hexdec($msg['minor']));
+                    $this->zigates[$zgId]['hw'] = $hw;
+                    $this->zigates[$zgId]['fw'] = hexdec($msg['minor']);
                     continue;
                 }
 

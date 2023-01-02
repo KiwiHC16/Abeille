@@ -1,0 +1,54 @@
+{
+    "KEPZB-110_frientAS": {
+        "manufacturer": "Frient",
+        "model": "KEYZB-110",
+        "type": "Frient keypad",
+        "timeout": "60",
+        "category": {
+            "security": "1"
+        },
+        "configuration": {
+            "icon": "Frient-Keypad",
+            "mainEP": "2C",
+            "batteryType": "?"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "zb-0001-BatteryPercent",
+                "params": "ep=2C"
+            },
+            "Battery-Volt2Percent": {
+                "use": "battery-Volt2Percent-3",
+                "params": "ep=2C"
+            },
+            "SetReporting 2C-0001-00020": {
+                "use": "zbConfigureReporting",
+                "params": "ep=2C&clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 2C-0001-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=2C&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Identify": {
+                "use": "Identify"
+            },
+            "Zone Alarm1": {
+                "use": "attr-Zone-Alarm1",
+                "isVisible": "1"
+            },
+            "Zone Status Changed": {
+                "use": "zb-0500-ZoneStatus-ChangeNotification",
+                "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean\/bit0 value",
+                "trigOut": "01-0500-alarm1",
+                "trigOutOffset": "#value#&1"
+            },
+            "Bind 0500-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0500",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

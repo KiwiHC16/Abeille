@@ -125,7 +125,6 @@
         }
     }
 
-    // WORK ONGOING. FOR INFO ONLY
     function xiaomiReportAttributes($net, $addr, $pl, &$attrReportN = null) {
         // $l = strlen($pl);
         for ( ; true; ) {

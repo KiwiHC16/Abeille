@@ -1,0 +1,51 @@
+Support OTA
+    Qui renvoi "Query Next Image Response" ? Zigate ou le plugin ?
+    
+Lorsqu'un equipement quitte le réseau
+    il doit etre désactivé
+    plus aucun envoi ne doit lui etre fait
+    parser doit prevenir cmd sur leave, ou abeille => cmd ?
+
+Equipements en time-out à cause de la Zigate
+    Si Zigate devient "sans reponse" ALERTER utilisateur.
+    Ex: impossible d'ecrire quoi que ce soit via AbeilleCmd
+        [2022-11-10 12:15:27]   sendCmdToZigate(Dest=Abeille1, cmd=0100, datas=02D06D0101000000000000010000)
+        [2022-11-10 12:15:30] zigateAckCheck(): WARNING: Zigate1 cmd 0100 TIMEOUT (SQN=, SQNAPS=) => Considering zigate available.
+        [2022-11-10 12:16:24]   sendCmdToZigate(Dest=Abeille1, cmd=0010, datas=)
+        [2022-11-10 12:16:27] zigateAckCheck(): WARNING: Zigate1 cmd 0010 TIMEOUT (SQN=, SQNAPS=) => Considering zigate available.
+
+switch branch & update
+    Les demons ne sont pas arretes pendant la mise à jour.
+    Qqch n'est pas propre
+
+Canal Zigbee: memoriser choix user pour reappliquer redemarrage.
+    Ajouter choix du canal sur page de config.
+    Par defaut = auto = tous les canaux
+
+Page support/logs: Mise a  jour en temps reel sur selection courante
+
+Inclusion device: ajouter readAttribute sur toutes les cmdes infos
+
+Retour d'état
+    Trouver solution pour supporter retour d'état < 1min (ex: 30sec).
+    Pas supporté par Jeedom/returnStateTime.
+
+Doc: Améliorer support de nouveau equipements
+    Demander image PNG SANS arriere plan
+    Demander type et nomber de batteries
+    Demander ref/modele fabricant
+
+Page EQ/avancé
+    Ajouter liste de types pour simplifier
+
+Commandes: normaliser
+    A FINALISER !!
+    inf_xxx.json
+        inf_Illuminance.json
+        inf_zbAttr-0001-BatteryPercent.json
+        inf_zbCmdR-0500-ZoneStatus-ZoneEnrollRequest.json
+    act_xxx.json
+        act_zbBindToZigate.json
+        act_zbCmdG-0006-On.json
+        act_zbCmdG-0102-DownClose.json
+        act_tuyaEF00-SetBool.json

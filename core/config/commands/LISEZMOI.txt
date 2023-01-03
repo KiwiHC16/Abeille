@@ -19,8 +19,8 @@ En dehors des commandes "historiques" en passe d'être normalisées, les noms de
   Commandes 'générées': act_zbCmdG-xxxx.
   Commandes 'reçues': inf_zbCmdR-xxxx.
   Attributs: inf_zbAttr-xxx
-  Commandes génériques: act_zbXXX
-    Ex: zbConfigureReporting, zbReadAttribute... actions du standard Zigbee.
+  Commandes génériques Zigbee: act_zbXXX
+    Ex: act_zbConfigureReporting, act_zbReadAttribute... actions du standard Zigbee.
 
 Format de fichier
 =================
@@ -28,7 +28,7 @@ Format de fichier
 Exemple de commande 'info'
 
     {
-      "Status": {
+      "inf_status": {
         "logicalId": "0006-#EP#-0000",
         "type": "info",
         "subType": "binary",
@@ -45,7 +45,7 @@ Exemple de commande 'info'
 Exemple de commande 'action'
 
     {
-      "getStatus": {
+      "act_getStatus": {
         "type": "action",
         "subType": "other",
         "configuration": {

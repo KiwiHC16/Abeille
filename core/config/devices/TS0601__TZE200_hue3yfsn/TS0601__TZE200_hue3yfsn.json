@@ -65,17 +65,19 @@
                 "params": "dpId=73&data=01",
                 "comment": "Device sends infos when ON",
                 "trigOut": "check-off",
-                "isVisible": 1
+                "Polling": "cron10",
+                "comment 2": "Exec every 10 minutes",
+                "isVisible": 0
             },
             "Check OFF": {
                 "use": "act_tuyaEF00-SetBool",
                 "params": "dpId=73&data=00",
                 "logicalId": "check-off",
-                "isVisible": 1
+                "isVisible": 0
             },
             "Check status": {
                 "use": "zb-0006-OnOff",
-                "isVisible": 1
+                "isVisible": 0
             }
         },
         "tuyaEF00": {

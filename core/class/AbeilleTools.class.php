@@ -478,6 +478,8 @@
                                 $newCmd[$cmd1]['configuration']['valueOffset'] = $cmd2['valueOffset'];
                             if (isset($cmd2['listValue']))
                                 $newCmd[$cmd1]['configuration']['listValue'] = $cmd2['listValue'];
+                            if (isset($cmd2['Polling']))
+                                $newCmd[$cmd1]['configuration']['Polling'] = $cmd2['Polling'];
 
                             // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
                             $deviceCmds += $newCmd;

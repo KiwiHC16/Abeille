@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230103-BETA-2"
+# VERSION="230103-BETA-3"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -60,7 +60,7 @@ f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 9578cfc0a141da78879349e9bb90648b *core/class/AbeilleTemplateEq.class.php
 8c4188be1bbbb03c8d7b4cd600ba3046 *core/class/AbeilleTest.class.php
 0055fd31d027d69a736381f5cc77ebf9 *core/class/AbeilleTestDB.class.php
-38a7930c555c44d2e6c95def68809f5a *core/class/AbeilleTools.class.php
+4da32fbb90337d48995d95b533349d22 *core/class/AbeilleTools.class.php
 dcf963d1196c3e342d0f42439444896f *core/config/Abeille.config.php
 96b14488adfe25210ff0b340be3f531d *core/config/HueCatalogue.json
 5373985868d2b6309d47fe0eaf784f00 *core/config/IAS ACE Cluster  IAS Zone & Diagnostics Only_ZHA.xml
@@ -165,6 +165,8 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/PuissanceLegrand
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Rouge.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/SW.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Short-Addr.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Time-Time.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Time-TimeStamp.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/Toggle.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/ToggleEp01.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/ToggleEp02.json
@@ -319,8 +321,6 @@ f9f87461850e663bc83fcf0d74a6b289 *core/config/commands/PuissanceVoltagePrise.jso
 ac507268942fcc7975301710a8176ab1 *core/config/commands/RougeGroup.json
 0ef3463e392fc9ff2112fd5951942600 *core/config/commands/Scene-Membership.json
 b708adef8853f7633b7ab22680d9582a *core/config/commands/Tilt.json
-9f2562d9e51b45660ab62ef48a85c8f9 *core/config/commands/Time-Time.json
-dd0403d1beb4c6af089fcaacfab99b9e *core/config/commands/Time-TimeStamp.json
 95533c5694af9520839cca18708fecdf *core/config/commands/Up-Down.json
 66023daa19e826275be3fa4eabc5cdb2 *core/config/commands/VertGroup.json
 ffaeb457ad60824360b9e61e98610a7b *core/config/commands/VoltagePrise.json
@@ -422,6 +422,8 @@ aada58669c2edd1011092dc727f93f2b *core/config/commands/inf_addr-Ieee.json
 33976c9c73f06c9e1db35bbc71624576 *core/config/commands/inf_generic-Badge.json
 8bbda749c212d7e7add6bd5cc4383cd8 *core/config/commands/inf_linkQuality.json
 cf9451d877e9a550a021bf058b2c7189 *core/config/commands/inf_online.json
+4a45e1279f447a34b74927b7c7c0f984 *core/config/commands/inf_time-String.json
+bb2f32691e8e6f84003d1b28f8ae5865 *core/config/commands/inf_time-Timestamp.json
 24c7bdf9d1c7ccb27bb0bf46b4021bf3 *core/config/commands/inf_zbAttr-0006-OnOff.json
 2d505be5e6d88557cec425a46f49d249 *core/config/commands/levelVolet.json
 6d0222192bd035565821e8285293003c *core/config/commands/moveToLiftAndTiltBSO_Lift.json
@@ -1207,7 +1209,7 @@ fa350ab7903504cdc0071aa12759246b *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-18c0643c2dc9b6b3766a554929efcb83 *docs/fr_FR/Changelog.rst
+cd6144b4b83ef3e878accc012c4157dc *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1512,10 +1514,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-276308f4a3282ad39e03ba979264c65b *plugin_info/Abeille.version
+7dfe3097cc5b4b799e7563981d235e0e *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 721b9c51a8529a69104fa8b2e2a22d24 *plugin_info/configuration.php
-153862446f4361dd091ac7ba9da2f992 *plugin_info/info.json
+7256f1e784e08bd8b0e2da4590420d3a *plugin_info/info.json
 0318020435fd6cfada0221deeb2c3bd3 *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

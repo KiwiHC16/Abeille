@@ -295,12 +295,12 @@
         }
 
         /**
-         * Read given command JSON file.
+         * Read given command JSON model.
          *  'cmdFName' = command file name without '.json'
          *  'newJCmdName' = cmd name to replace (coming from 'use')
          * Returns: array() or false if not found.
          */
-        public static function getCommandConfig($cmdFName, $newJCmdName = '') {
+        public static function getCommandModel($cmdFName, $newJCmdName = '') {
             $fullPath = cmdsDir.$cmdFName.'.json';
             if (!file_exists($fullPath)) {
                 log::add('Abeille', 'error', "Le fichier de commande '".$cmdFName.".json' n'existe pas.");
@@ -368,14 +368,14 @@
                     foreach ($jsonCmds as $cmd1 => $cmd2) {
                         // if (substr($cmd1, 0, 7) == "include") {
                         //     /* Old command JSON format: "includeX": "json_cmd_name" */
-                        //     $newCmd = self::getCommandConfig($cmd2);
+                        //     $newCmd = self::getCommandModel($cmd2);
                         //     if ($newCmd === false)
                         //         continue; // Cmd does not exist.
                         //     $deviceCmds += $newCmd;
                         // } else {
                             /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
                             $cmdFName = $cmd2['use']; // File name without '.json'
-                            $newCmd = self::getCommandConfig($cmdFName, $cmd1);
+                            $newCmd = self::getCommandModel($cmdFName, $cmd1);
                             if ($newCmd === false)
                                 continue; // Cmd does not exist.
 
@@ -485,9 +485,16 @@
                     }
 
                     // Adding base commands
-                    $baseCmds = ['inf_addr-Short', 'inf_addr-Ieee', 'inf_linkQuality', 'inf_online', 'inf_time-String', 'inf_time-Timestamp'];
-                    foreach ($baseCmds as $base) {
-                        $c = self::getCommandConfig($base);
+                    $baseCmds = array(
+                        'inf_addr-Short' => 'Short-Addr',
+                        'inf_addr-Ieee' => 'IEEE-Addr',
+                        'inf_linkQuality' => 'Link Quality',
+                        'inf_online' => 'Online',
+                        'inf_time-String' => 'Time-Time',
+                        'inf_time-Timestamp' => 'Time-TimeStamp'
+                    );
+                    foreach ($baseCmds as $cFName => $cJName) {
+                        $c = self::getCommandModel($cFName, $cJName);
                         if ($c !== false)
                             $deviceCmds += $c;
                     }
@@ -499,13 +506,13 @@
                         // if (substr($cmd1, 0, 7) == "include") {
                         //     /* Old command JSON format: "includeX": "json_cmd_name" */
                         //     $cmdFName = $cmd2;
-                        //     $newCmd = self::getCommandConfig($cmdFName);
+                        //     $newCmd = self::getCommandModel($cmdFName);
                         //     if ($newCmd === false)
                         //         continue; // Cmd does not exist.
                         // } else {
                             /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
                             $cmdFName = $cmd2['use']; // File name without '.json'
-                            $newCmd = self::getCommandConfig($cmdFName, $cmd1);
+                            $newCmd = self::getCommandModel($cmdFName, $cmd1);
                             if ($newCmd === false)
                                 continue; // Cmd does not exist.
                         // }

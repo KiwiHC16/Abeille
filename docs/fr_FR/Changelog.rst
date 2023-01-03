@@ -14,7 +14,7 @@ ChangeLog
 - Moes thermostat BRT-100: Mise-à-jour modèle (2467).
 - Modèles commandes: 'Short-Addr' & 'IEEE-Addr' => 'inf_addr-Short'/'inf_addr-Ieee'.
 - Modèles commandes: 'Link-Quality'/'online' => 'inf_linkQuality'/'inf_online'.
-- Modèles commandes: 'Time-Time'/'Time-TimeStampt' => 'inf_time-String'/'inf_time-Timestamp'.
+- Modèles commandes: 'Time-Time'/'Time-TimeStamp' => 'inf_time-String'/'inf_time-Timestamp'.
 
 230102-BETA-1
 -------------

@@ -53,13 +53,14 @@
                 "use": "act_zbCmdG-0008-StopWithOnOff",
                 "isVisible": 1
             },
+            "Set Level": {
+                "use": "act_zbCmdG-0008-MoveToLevelWithOnOff",
+                "isVisible": 1
+            },
             "CurrentLevel": {
                 "use": "zb-0008-CurrentLevel",
                 "genericType": "FLAP_STATE",
                 "isVisible": 1
-            },
-            "setLevel": {
-                "use": "setLevelVolet"
             },
             "Get-CurrentLevel": {
                 "use": "zbReadAttribute",

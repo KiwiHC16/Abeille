@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230103-BETA-1"
+# VERSION="230103-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -28,6 +28,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *.tools/update_version.sh
 75346ede6b113d9f463fff95a2e1471a *Network/TestSVG/images/AbeilleLQI_MapData.png
 c1dd18b0fa3f4a72740521c506c2a556 *Network/TestSVG/upload.php
 9ff17ac9be475a5a75b87dafd1db1169 *README.md
+5ccf78f2ce03d1af8cd08dc6cb41b0bf *TODO.txt
 a5d78aa22a50e40b07931d9e3d2120b7 *Zigate_Module/ReadJN5168/EEPROMRead1OnlyFlashed.bin
 6e8731f2a0d8d7c4368b2cbaae620618 *Zigate_Module/ReadJN5168/EEPROMRead2BootGetVersion.bin
 752e9cd340de6e6571e4cd456335b02f *Zigate_Module/ReadJN5168/EEPROMRead3SetMask17.bin
@@ -754,7 +755,7 @@ b6b81b428a291c84169a58e37a9cd5de *core/config/devices/LightifySwitchMini_OSRAM/L
 0f851ba6193f0c95885b2d2336557b96 *core/config/devices/LightifySwitchMini_OSRAM/discovery.json
 101e4b37d02d6fd7bf94712d54631c01 *core/config/devices/LightifySwitchMini_OSRAM/notes.txt
 de76629c5c68fb4cfd89c48cf9ca0742 *core/config/devices/MAI-ZTS_Profalux/MAI-ZTS_Profalux.json
-85aa40199cb7d831866b038edb6e6635 *core/config/devices/MOT-C1Z06C/MOT-C1Z06C.json
+c6fc79dd14caff9094885bea00a29f73 *core/config/devices/MOT-C1Z06C/MOT-C1Z06C.json
 ec4c365dfbcef22c285caa0cad6a210b *core/config/devices/MOT-C1Z06C/notes.txt
 68634b9cc5f955b3638dbe00419823a4 *core/config/devices/MR16TWOSRAM/MR16TWOSRAM.json
 1032c62ee65f9c8a9ed82c342c6f4d81 *core/config/devices/MS01/MS01.json
@@ -1143,6 +1144,7 @@ b55a6ba4c0110b8a29a3c30f4aee6ce1 *core/php/AbeilleZigate.php
 1de2ce87c87ff9a7198f1bf508d0d844 *core/php/AbeilleZigateConst.php
 945a0109ffa5a1a580d87e22ed3495d0 *core/php/AbeilleZigbeeConst.php
 c828c23a7ac4bfc558146887ceb925fa *core/php/refreshBruit.php
+e2b6a4cd856fc09bff24be60d72960c8 *core/python/AbeilleSerialRead.py
 33091517c2fbbab6e5546154033a9362 *core/scripts/checkSocat.sh
 b76a3ce2ed465d107311329f7ab3091d *core/scripts/checkTTY.sh
 0e976aa3c9dceb4638b16cd060c8e6f6 *core/scripts/checkWifi.sh
@@ -1205,7 +1207,7 @@ fa350ab7903504cdc0071aa12759246b *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-9a462a363dc157b6ecb1af0c39dab836 *docs/fr_FR/Changelog.rst
+18c0643c2dc9b6b3766a554929efcb83 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1510,10 +1512,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-9148b3949b09add1ee82fbde9110a292 *plugin_info/Abeille.version
+276308f4a3282ad39e03ba979264c65b *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 721b9c51a8529a69104fa8b2e2a22d24 *plugin_info/configuration.php
-fa7de531280eaac3b75eecb0afd91774 *plugin_info/info.json
+153862446f4361dd091ac7ba9da2f992 *plugin_info/info.json
 0318020435fd6cfada0221deeb2c3bd3 *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

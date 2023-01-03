@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230103-BETA-1
+230103-BETA-2
 -------------
 
 - Modèles: Suppression support ancienne syntaxe 'include'.

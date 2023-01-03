@@ -1,6 +1,6 @@
 {
     "relay.c2acn01": {
-        "manufacturer": "Xiaomi/Aqara",
+        "manufacturer": "Xiaomi\/Aqara",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -53,9 +53,15 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include11": "conso",
-            "include12": "Xiaomi-ff01",
-            "include13": "puissance1",
+            "Conso": {
+                "use": "conso"
+            },
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
+            "Puissance Inst": {
+                "use": "puissance1"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

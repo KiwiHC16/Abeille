@@ -43,12 +43,16 @@
                 "use": "Identify",
                 "isVisible": 1
             },
-            "include26": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "Groups": {
                 "use": "Group-Membership",
                 "isVisible": 1
             },
-            "include27 2": "Scene-Membership",
+            "Scenes": {
+                "use": "Scene-Membership"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

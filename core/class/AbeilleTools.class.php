@@ -366,13 +366,13 @@
                     $jsonCmds = $device['commands'];
                     unset($device['commands']);
                     foreach ($jsonCmds as $cmd1 => $cmd2) {
-                        if (substr($cmd1, 0, 7) == "include") {
-                            /* Old command JSON format: "includeX": "json_cmd_name" */
-                            $newCmd = self::getCommandConfig($cmd2);
-                            if ($newCmd === false)
-                                continue; // Cmd does not exist.
-                            $deviceCmds += $newCmd;
-                        } else {
+                        // if (substr($cmd1, 0, 7) == "include") {
+                        //     /* Old command JSON format: "includeX": "json_cmd_name" */
+                        //     $newCmd = self::getCommandConfig($cmd2);
+                        //     if ($newCmd === false)
+                        //         continue; // Cmd does not exist.
+                        //     $deviceCmds += $newCmd;
+                        // } else {
                             /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
                             $cmdFName = $cmd2['use']; // File name without '.json'
                             $newCmd = self::getCommandConfig($cmdFName, $cmd1);
@@ -481,11 +481,11 @@
 
                             // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
                             $deviceCmds += $newCmd;
-                        }
+                        // }
                     }
 
                     // Adding base commands
-                    $baseCmds = ['IEEE-Addr', 'Link-Quality', 'Time-Time', 'Time-TimeStamp', 'Short-Addr', 'online'];
+                    $baseCmds = ['inf_addr-Short', 'inf_addr-Ieee', 'inf_linkQuality', 'inf_online', 'Time-Time', 'Time-TimeStamp'];
                     foreach ($baseCmds as $base) {
                         $c = self::getCommandConfig($base);
                         if ($c !== false)
@@ -496,19 +496,19 @@
                 } else if ($mode == 1) {
                     $jsonCmds = $device['commands'];
                     foreach ($jsonCmds as $cmd1 => $cmd2) {
-                        if (substr($cmd1, 0, 7) == "include") {
-                            /* Old command JSON format: "includeX": "json_cmd_name" */
-                            $cmdFName = $cmd2;
-                            $newCmd = self::getCommandConfig($cmdFName);
-                            if ($newCmd === false)
-                                continue; // Cmd does not exist.
-                        } else {
+                        // if (substr($cmd1, 0, 7) == "include") {
+                        //     /* Old command JSON format: "includeX": "json_cmd_name" */
+                        //     $cmdFName = $cmd2;
+                        //     $newCmd = self::getCommandConfig($cmdFName);
+                        //     if ($newCmd === false)
+                        //         continue; // Cmd does not exist.
+                        // } else {
                             /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
                             $cmdFName = $cmd2['use']; // File name without '.json'
                             $newCmd = self::getCommandConfig($cmdFName, $cmd1);
                             if ($newCmd === false)
                                 continue; // Cmd does not exist.
-                        }
+                        // }
                         $cmdsFiles[$cmdFName] = $newCmd;
                     }
                 } else if ($mode == 2) {

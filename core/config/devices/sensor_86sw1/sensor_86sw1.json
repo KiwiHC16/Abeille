@@ -12,7 +12,9 @@
         },
         "type": "Xiaomi Interrupteur Carr\u00e9 simple",
         "commands": {
-            "include4": "etatSwitchSimple",
+            "etat": {
+                "use": "etatSwitchSimple"
+            },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent"
             },

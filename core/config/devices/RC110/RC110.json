@@ -19,11 +19,21 @@
         },
         "type": "T\u00e9l\u00e9commande RC110 INNR",
         "commands": {
-            "include1": "offGroup",
-            "include2": "toggleGroup",
-            "include3": "onGroup",
-            "include3 2": "setLevelGroup",
-            "include8": "addGroupEP1",
+            "Off": {
+                "use": "offGroup"
+            },
+            "Toggle": {
+                "use": "toggleGroup"
+            },
+            "On": {
+                "use": "onGroup"
+            },
+            "setLevel": {
+                "use": "setLevelGroup"
+            },
+            "Add Group EP1": {
+                "use": "addGroupEP1"
+            },
             "Get Battery-Percent": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0001&attrId=0021"
@@ -40,40 +50,105 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },
-            "include12": "BindToGroupLevelEP03",
-            "include13": "BindToGroupLevelEP04",
-            "include14": "BindToGroupLevelEP05",
-            "include15": "BindToGroupLevelEP06",
-            "include16": "BindToGroupLevelEP07",
-            "include17": "BindToGroupLevelEP08",
-            "include19": "addGroupEP3",
-            "include20": "addGroupEP4",
-            "include21": "addGroupEP5",
-            "include22": "addGroupEP6",
-            "include23": "addGroupEP7",
-            "include24": "addGroupEP8",
-            "include25": "onGroupEP1",
-            "include26": "onGroupEP3",
-            "include27": "onGroupEP4",
-            "include28": "onGroupEP5",
-            "include29": "onGroupEP6",
-            "include30": "onGroupEP7",
-            "include31": "onGroupEP8",
-            "include32": "onGroupEP8",
-            "include33": "offGroupEP1",
-            "include34": "offGroupEP3",
-            "include35": "offGroupEP4",
-            "include36": "offGroupEP5",
-            "include37": "offGroupEP6",
-            "include38": "offGroupEP7",
-            "include39": "offGroupEP8",
-            "include40": "setLevelGroupEP1",
-            "include41": "setLevelGroupEP3",
-            "include42": "setLevelGroupEP4",
-            "include43": "setLevelGroupEP5",
-            "include44": "setLevelGroupEP6",
-            "include45": "setLevelGroupEP7",
-            "include46": "setLevelGroupEP8"
+            "BindToGroupButtonEP3": {
+                "use": "BindToGroupLevelEP03"
+            },
+            "BindToGroupButtonEP4": {
+                "use": "BindToGroupLevelEP04"
+            },
+            "BindToGroupButtonEP5": {
+                "use": "BindToGroupLevelEP05"
+            },
+            "BindToGroupButtonEP6": {
+                "use": "BindToGroupLevelEP06"
+            },
+            "BindToGroupButtonEP7": {
+                "use": "BindToGroupLevelEP07"
+            },
+            "BindToGroupButtonEP8": {
+                "use": "BindToGroupLevelEP08"
+            },
+            "Add Group EP3": {
+                "use": "addGroupEP3"
+            },
+            "Add Group EP4": {
+                "use": "addGroupEP4"
+            },
+            "Add Group EP5": {
+                "use": "addGroupEP5"
+            },
+            "Add Group EP6": {
+                "use": "addGroupEP6"
+            },
+            "Add Group EP7": {
+                "use": "addGroupEP7"
+            },
+            "Add Group EP8": {
+                "use": "addGroupEP8"
+            },
+            "On Gp1": {
+                "use": "onGroupEP1"
+            },
+            "On Gp3": {
+                "use": "onGroupEP3"
+            },
+            "On Gp4": {
+                "use": "onGroupEP4"
+            },
+            "On Gp5": {
+                "use": "onGroupEP5"
+            },
+            "On Gp6": {
+                "use": "onGroupEP6"
+            },
+            "On Gp7": {
+                "use": "onGroupEP7"
+            },
+            "On Gp8": {
+                "use": "onGroupEP8"
+            },
+            "Off Gp1": {
+                "use": "offGroupEP1"
+            },
+            "Off Gp3": {
+                "use": "offGroupEP3"
+            },
+            "Off Gp4": {
+                "use": "offGroupEP4"
+            },
+            "Off Gp5": {
+                "use": "offGroupEP5"
+            },
+            "Off Gp6": {
+                "use": "offGroupEP6"
+            },
+            "Off Gp7": {
+                "use": "offGroupEP7"
+            },
+            "Off Gp8": {
+                "use": "offGroupEP8"
+            },
+            "setLevel Gp1": {
+                "use": "setLevelGroupEP1"
+            },
+            "setLevel Gp3": {
+                "use": "setLevelGroupEP3"
+            },
+            "setLevel Gp4": {
+                "use": "setLevelGroupEP4"
+            },
+            "setLevel Gp5": {
+                "use": "setLevelGroupEP5"
+            },
+            "setLevel Gp6": {
+                "use": "setLevelGroupEP6"
+            },
+            "setLevel Gp7": {
+                "use": "setLevelGroupEP7"
+            },
+            "setLevel Gp8": {
+                "use": "setLevelGroupEP8"
+            }
         }
     }
 }

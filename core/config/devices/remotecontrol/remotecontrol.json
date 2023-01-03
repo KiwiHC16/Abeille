@@ -12,24 +12,60 @@
         },
         "type": "Virtual remote for groups control",
         "commands": {
-            "include1": "offGroup",
-            "include1 2": "onGroup",
-            "include1 2 2": "onGroupBroadcast",
-            "include1 2 2 2": "offGroupBroadcast",
-            "include2": "toggleGroup",
-            "include3": "onGroupTimed",
-            "include3 2": "offGroupTimed",
-            "include4": "downGroup",
-            "include5": "upGroup",
-            "include6": "setLevelGroup",
-            "include6 2": "setTemperatureLightGroup",
-            "include7": "sceneGroupRecall1",
-            "include7 2": "sceneGroupRecall2",
-            "include7 2 2": "sceneGroupRecall3",
-            "include11 2 2 2 2 2": "BlancGroup",
-            "include11 2 2 2 2 2 2": "BleuGroup",
-            "include11 2 2 2 2 2 2 2": "RougeGroup",
-            "include11 2 2 2 2 2 2 2 2": "VertGroup"
+            "Off": {
+                "use": "offGroup"
+            },
+            "On": {
+                "use": "onGroup"
+            },
+            "On_All": {
+                "use": "onGroupBroadcast"
+            },
+            "Off_All": {
+                "use": "offGroupBroadcast"
+            },
+            "Toggle": {
+                "use": "toggleGroup"
+            },
+            "OnTimed": {
+                "use": "onGroupTimed"
+            },
+            "OffTimed": {
+                "use": "offGroupTimed"
+            },
+            "Down": {
+                "use": "downGroup"
+            },
+            "Up": {
+                "use": "upGroup"
+            },
+            "setLevel": {
+                "use": "setLevelGroup"
+            },
+            "setTemperatureLightGroup": {
+                "use": "setTemperatureLightGroup"
+            },
+            "Sc1": {
+                "use": "sceneGroupRecall1"
+            },
+            "Sc2": {
+                "use": "sceneGroupRecall2"
+            },
+            "Sc3": {
+                "use": "sceneGroupRecall3"
+            },
+            "Blanc Group": {
+                "use": "BlancGroup"
+            },
+            "Bleu Group": {
+                "use": "BleuGroup"
+            },
+            "Rouge Group": {
+                "use": "RougeGroup"
+            },
+            "Vert Group": {
+                "use": "VertGroup"
+            }
         }
     }
 }

@@ -150,7 +150,7 @@
 
         $eqLogics = Abeille::byType('Abeille');
         foreach ($eqLogics as $eqLogic) {
-            // list($net, $addr) = explode("/", $eqLogic->getLogicalId());
+            list($net, $addr) = explode("/", $eqLogic->getLogicalId());
             $eqHName = $eqLogic->getHumanName();
             $eqId = $eqLogic->getId();
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
@@ -160,7 +160,7 @@
                 $timeoutS = "TIMEOUT (".$lastComm.")";
             } else
                 $timeoutS = "ok";
-            logIt(" - ".$eqHName.", id=".$eqId.", type='".$eqType."': ".$timeoutS."\n");
+            logIt(" - ".$eqHName.", id=".$eqId.", addr=".$addr.", type='".$eqType."': ".$timeoutS."\n");
         }
         logIt("\n");
     }

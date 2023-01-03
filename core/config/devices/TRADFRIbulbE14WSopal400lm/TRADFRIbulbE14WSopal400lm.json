@@ -27,7 +27,9 @@
                 "use": "zbCmd-0006-Off",
                 "isVisible": 1
             },
-            "include11": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "Set 2200K": {
                 "use": "zbCmd-0300-MoveToColorTemp",
                 "params": "slider=2200",
@@ -43,8 +45,12 @@
                 "params": "slider=4000",
                 "isVisible": 1
             },
-            "include40": "temperatureLight",
-            "include40 2 2": "setTemperatureLight",
+            "temperatureLight": {
+                "use": "temperatureLight"
+            },
+            "setTemperatureLight": {
+                "use": "setTemperatureLight"
+            },
             "Get-Status": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
@@ -61,7 +67,9 @@
                 "use": "Group-Membership",
                 "isVisible": 1
             },
-            "include25 2": "Scene-Membership",
+            "Scenes": {
+                "use": "Scene-Membership"
+            },
             "Bind-0006-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0008",
@@ -86,7 +94,9 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include29 2 2": "setReportLightColorSpectre",
+            "setReportLightColorSpectre": {
+                "use": "setReportLightColorSpectre"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

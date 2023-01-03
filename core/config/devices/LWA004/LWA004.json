@@ -37,7 +37,9 @@
                 "use": "zbCmd-0006-Off",
                 "isVisible": 1
             },
-            "include11": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "Get-Status": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"

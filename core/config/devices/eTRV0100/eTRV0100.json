@@ -13,9 +13,15 @@
         },
         "type": "Dansfoss Ally Radiator Thermostat 014G2461",
         "commands": {
-            "include1 1 - Ok": "danfossTemperatureConsigneValue",
-            "include1 2 - Ok": "danfossTemperatureConsigneGet",
-            "include1 3 - Ok": "danfossTemperatureConsigneSet",
+            "Consigne": {
+                "use": "danfossTemperatureConsigneValue"
+            },
+            "Consigne Get": {
+                "use": "danfossTemperatureConsigneGet"
+            },
+            "Consigne Set": {
+                "use": "danfossTemperatureConsigneSet"
+            },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1
@@ -31,18 +37,42 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0001&attrId=0020"
             },
-            "include4 1 - Ok": "spiritTemperature",
-            "include4 2 - Ok": "spiritTemperatureGet",
-            "include5 1 - Ok": "danfossSystemeModeValue",
-            "include5 2 - Ok": "danfossSystemeModeGet",
-            "include6 1 - Ok": "spiritPiHeatingDemand",
-            "include6 2 - Ok": "spiritPiHeatingDemandGet",
-            "include7 1 - Ok": "danfossUIDisplayModeValue",
-            "include7 2 - Ok": "danfossUIDisplayModeGet",
-            "include7 3 - Refused by rad Head": "danfossUIDisplayModeSet",
-            "include8 1 - Ok": "danfossUIKeyLockValue",
-            "include8 2 - Ok": "danfossUIKeyLockGet",
-            "include8 3 - Ok (0 ou 1)": "danfossUIKeyLockSet",
+            "Temp\u00e9rature": {
+                "use": "spiritTemperature"
+            },
+            "getTemperature": {
+                "use": "spiritTemperatureGet"
+            },
+            "Mode": {
+                "use": "danfossSystemeModeValue"
+            },
+            "Mode Get": {
+                "use": "danfossSystemeModeGet"
+            },
+            "Pi Heating Demand": {
+                "use": "spiritPiHeatingDemand"
+            },
+            "Get Pi Heating Demand": {
+                "use": "spiritPiHeatingDemandGet"
+            },
+            "Display Mode": {
+                "use": "danfossUIDisplayModeValue"
+            },
+            "Display Mode Get": {
+                "use": "danfossUIDisplayModeGet"
+            },
+            "Set Deg Mode": {
+                "use": "danfossUIDisplayModeSet"
+            },
+            "Key Lock": {
+                "use": "danfossUIKeyLockValue"
+            },
+            "Key Lock Get": {
+                "use": "danfossUIKeyLockGet"
+            },
+            "Set Key Lock": {
+                "use": "danfossUIKeyLockSet"
+            },
             "Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
@@ -67,8 +97,12 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 10
             },
-            "include10 2 - Ok": "setReportRadiateurLocalTemperature",
-            "include10 3 - Ok": "setReportRadiateurConsigneTemperature"
+            "setReportRadiateurLocalTemperature": {
+                "use": "setReportRadiateurLocalTemperature"
+            },
+            "setReportRadiateurConsigneTemperature": {
+                "use": "setReportRadiateurConsigneTemperature"
+            }
         }
     }
 }

@@ -13,16 +13,24 @@
         },
         "type": "Xiaomi Interrupteur Mural Carr\u00e9 Double",
         "commands": {
-            "include4": "etatSwitchDouble_1",
-            "include4 3": "etatSwitchDouble_2",
-            "include4 3 2": "etatSwitchDouble_3",
+            "etat1": {
+                "use": "etatSwitchDouble_1"
+            },
+            "etat2": {
+                "use": "etatSwitchDouble_2"
+            },
+            "etat3": {
+                "use": "etatSwitchDouble_3"
+            },
             "Battery-Volt": {
                 "use": "zb-0001-BatteryVolt"
             },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent"
             },
-            "include6": "Xiaomi-ff01",
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

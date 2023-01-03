@@ -12,14 +12,18 @@
             "security": "1"
         },
         "commands": {
-            "include3": "presence",
+            "etat": {
+                "use": "presence"
+            },
             "Battery-Volt": {
                 "use": "zb-0001-BatteryVolt"
             },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent"
             },
-            "include6": "Xiaomi-ff01",
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

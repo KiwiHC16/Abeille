@@ -11,10 +11,18 @@
         },
         "type": "IKEA TRADFRI Dimmer Jaune",
         "commands": {
-            "include1": "offGroup",
-            "include2": "toggleGroup",
-            "include3": "onGroup",
-            "include6": "setLevelGroup",
+            "Off": {
+                "use": "offGroup"
+            },
+            "Toggle": {
+                "use": "toggleGroup"
+            },
+            "On": {
+                "use": "onGroup"
+            },
+            "setLevel": {
+                "use": "setLevelGroup"
+            },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1

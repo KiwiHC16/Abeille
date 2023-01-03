@@ -19,7 +19,9 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "include5": "current_position_lift_percentage",
+            "current_position_lift_percentage": {
+                "use": "current_position_lift_percentage"
+            },
             "Up": {
                 "use": "zbCmd-0102-UpOpen"
             },
@@ -29,7 +31,9 @@
             "Stop": {
                 "use": "zbCmd-0102-Stop"
             },
-            "include20": "getcurrent_position_lift_percentage",
+            "getcurrent_position_lift_percentage": {
+                "use": "getcurrent_position_lift_percentage"
+            },
             "Identify": {
                 "use": "Identify",
                 "isVisible": 1

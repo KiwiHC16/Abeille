@@ -43,19 +43,45 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },
-            "include1": "offGroup",
-            "include2": "toggleGroup",
-            "include3": "onGroup",
-            "include4": "downGroup",
-            "include5": "upGroup",
-            "include6": "boutonStateRWL021_1",
-            "include6 2": "boutonStateRWL021_2",
-            "include6 2 2": "boutonStateRWL021_3",
-            "include6 2 2 2": "boutonStateRWL021_4",
-            "include6 2 2 2 2": "boutonStateRWL021_5",
-            "include6 2 2 2 2 2": "boutonStateRWL021_6",
-            "include6 2 2 2 2 2 2": "boutonStateRWL021_7",
-            "include6 2 2 2 2 2 2 2": "boutonStateRWL021_8",
+            "Off": {
+                "use": "offGroup"
+            },
+            "Toggle": {
+                "use": "toggleGroup"
+            },
+            "On": {
+                "use": "onGroup"
+            },
+            "Down": {
+                "use": "downGroup"
+            },
+            "Up": {
+                "use": "upGroup"
+            },
+            "EventButtonI": {
+                "use": "boutonStateRWL021_1"
+            },
+            "DureeButtonI": {
+                "use": "boutonStateRWL021_2"
+            },
+            "EventButtonLumPlus": {
+                "use": "boutonStateRWL021_3"
+            },
+            "DureeButtonLumPlus": {
+                "use": "boutonStateRWL021_4"
+            },
+            "EventButtonLumMoins": {
+                "use": "boutonStateRWL021_5"
+            },
+            "DureeButtonLumMoins": {
+                "use": "boutonStateRWL021_6"
+            },
+            "EventButtonO": {
+                "use": "boutonStateRWL021_7"
+            },
+            "DureeButtonO": {
+                "use": "boutonStateRWL021_8"
+            },
             "Bind-FC00-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "ep=02&clustId=FC00",

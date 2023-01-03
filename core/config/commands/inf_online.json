@@ -1,0 +1,15 @@
+{
+    "inf_online": {
+        "subType": "binary",
+        "invertBinary": "0",
+        "template": "default",
+        "configuration": {
+            "returnStateValue": "0",
+            "returnStateTime": "60",
+            "visibilityCategory": "Network"
+        },
+        "type": "info",
+        "logicalId": "online",
+        "genericType": "ONLINE"
+    }
+}

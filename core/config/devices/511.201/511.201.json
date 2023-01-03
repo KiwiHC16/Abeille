@@ -62,7 +62,9 @@
                 "use": "zb-0008-CurrentLevel",
                 "isVisible": 1
             },
-            "include11": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "Get-CurrentLevel": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"

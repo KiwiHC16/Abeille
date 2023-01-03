@@ -26,9 +26,15 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include11": "conso",
-            "include12": "Xiaomi-ff01",
-            "include13": "puissance",
+            "Conso": {
+                "use": "conso"
+            },
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
+            "Puissance Inst": {
+                "use": "puissance"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

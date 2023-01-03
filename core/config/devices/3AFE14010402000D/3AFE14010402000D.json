@@ -13,7 +13,9 @@
         },
         "type": "Konke IR INfra Rouge Presence",
         "commands": {
-            "include3": "etatIR_Alarme",
+            "etat": {
+                "use": "etatIR_Alarme"
+            },
             "Battery-Volt": {
                 "use": "zb-0001-BatteryVolt"
             },

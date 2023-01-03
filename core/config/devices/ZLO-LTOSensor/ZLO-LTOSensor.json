@@ -22,14 +22,18 @@
                 "isVisible": 1,
                 "isHistorized": 1
             },
-            "include3 2 2 2": "presence",
+            "etat": {
+                "use": "presence"
+            },
             "Battery-Volt": {
                 "use": "zb-0001-BatteryVolt"
             },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent"
             },
-            "include7": "Xiaomi-ff01",
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

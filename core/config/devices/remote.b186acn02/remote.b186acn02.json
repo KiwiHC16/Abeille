@@ -12,9 +12,15 @@
         },
         "type": "Xiaomi Interrupteur Mural Carr\u00e9 Simple",
         "commands": {
-            "include4": "etatSwitchDoubleb286acn01_1",
-            "include4 3": "etatSwitchDoubleb286acn01_2",
-            "include4 3 2": "etatSwitchDoubleb286acn01_3",
+            "etat1": {
+                "use": "etatSwitchDoubleb286acn01_1"
+            },
+            "etat2": {
+                "use": "etatSwitchDoubleb286acn01_2"
+            },
+            "etat3": {
+                "use": "etatSwitchDoubleb286acn01_3"
+            },
             "Battery-Volt": {
                 "use": "zb-0001-BatteryVolt"
             },

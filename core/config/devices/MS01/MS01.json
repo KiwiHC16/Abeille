@@ -16,7 +16,9 @@
         },
         "type": "Sonoff motion sensor",
         "commands": {
-            "include1": "etatSonOffIR",
+            "etat": {
+                "use": "etatSonOffIR"
+            },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1

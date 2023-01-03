@@ -1,0 +1,11 @@
+{
+    "inf_addr-Short": {
+        "subType": "string",
+        "template": "badge",
+        "configuration": {
+            "visibilityCategory": "Network"
+        },
+        "type": "info",
+        "logicalId": "Short-Addr"
+    }
+}

@@ -44,13 +44,19 @@
                 "use": "zb-0008-CurrentLevel",
                 "isVisible": 1
             },
-            "include23": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "Get-CurrentLevel": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
-            "include300-1": "temperatureLight",
-            "include300-2": "setTemperatureLight",
+            "temperatureLight": {
+                "use": "temperatureLight"
+            },
+            "setTemperatureLight": {
+                "use": "setTemperatureLight"
+            },
             "Set 2200K": {
                 "use": "zbCmd-0300-MoveToColorTemp",
                 "params": "slider=2200",

@@ -23,15 +23,23 @@
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent"
             },
-            "include6": "Xiaomi-ff01",
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }
         },
         "xiaomi": {
             "fromDevice": {
-                "01-21": { "func": "toPercent", "info": "0001-01-0021" },
-                "64-10": { "func": "raw", "info": "0006-01-0000" }
+                "01-21": {
+                    "func": "toPercent",
+                    "info": "0001-01-0021"
+                },
+                "64-10": {
+                    "func": "raw",
+                    "info": "0006-01-0000"
+                }
             }
         }
     }

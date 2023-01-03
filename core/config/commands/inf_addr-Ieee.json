@@ -1,0 +1,11 @@
+{
+    "inf_addr-Ieee": {
+        "subType": "string",
+        "template": "badge",
+        "configuration": {
+            "visibilityCategory": "Network"
+        },
+        "type": "info",
+        "logicalId": "IEEE-Addr"
+    }
+}

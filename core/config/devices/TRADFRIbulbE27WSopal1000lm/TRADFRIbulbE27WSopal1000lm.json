@@ -26,7 +26,9 @@
                 "use": "zbCmd-0006-Off",
                 "isVisible": 1
             },
-            "include11": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "Set 2200K": {
                 "use": "zbCmd-0300-MoveToColorTemp",
                 "params": "slider=2200",
@@ -42,8 +44,12 @@
                 "params": "slider=4000",
                 "isVisible": 1
             },
-            "include15": "temperatureLight",
-            "include16": "setTemperatureLight",
+            "temperatureLight": {
+                "use": "temperatureLight"
+            },
+            "setTemperatureLight": {
+                "use": "setTemperatureLight"
+            },
             "Get-Status": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
@@ -84,7 +90,9 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include29 2": "setReportLightColorSpectre",
+            "setReportLightColorSpectre": {
+                "use": "setReportLightColorSpectre"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

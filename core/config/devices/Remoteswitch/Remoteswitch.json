@@ -20,7 +20,6 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent"
             },
@@ -37,21 +36,48 @@
                 "params": "clustId=0001",
                 "execAtCreation": "yes"
             },
-
-            "include1": "offGroup",
-            "include2": "toggleGroup",
-            "include3": "onGroup",
-            "include4": "downGroup",
-            "include5": "upGroup",
-            "include6": "setLevelGroup",
-            "include6 2": "setTemperatureLightGroup",
-            "include7": "sceneGroupRecall1",
-            "include7 2": "sceneGroupRecall2",
-            "include7 2 2": "sceneGroupRecall3",
-            "include11 2": "Up-Down",
-            "include11 2 2": "Click-Middle",
-            "include11 2 2 2": "Left-Right-Cmd",
-            "include11 2 2 2 2": "Left-Right-Direction"
+            "Off": {
+                "use": "offGroup"
+            },
+            "Toggle": {
+                "use": "toggleGroup"
+            },
+            "On": {
+                "use": "onGroup"
+            },
+            "Down": {
+                "use": "downGroup"
+            },
+            "Up": {
+                "use": "upGroup"
+            },
+            "setLevel": {
+                "use": "setLevelGroup"
+            },
+            "setTemperatureLightGroup": {
+                "use": "setTemperatureLightGroup"
+            },
+            "Sc1": {
+                "use": "sceneGroupRecall1"
+            },
+            "Sc2": {
+                "use": "sceneGroupRecall2"
+            },
+            "Sc3": {
+                "use": "sceneGroupRecall3"
+            },
+            "Up-Down": {
+                "use": "Up-Down"
+            },
+            "Click-Middle": {
+                "use": "Click-Middle"
+            },
+            "Left-Right-Cmd": {
+                "use": "Left-Right-Cmd"
+            },
+            "Left-Right-Direction": {
+                "use": "Left-Right-Direction"
+            }
         }
     }
 }

@@ -11,7 +11,9 @@
         },
         "type": "Osram Motion Sensor-A",
         "commands": {
-            "include3": "presenceEP2",
+            "etat": {
+                "use": "presenceEP2"
+            },
             "Temperature": {
                 "use": "zb-0402-MeasuredValue",
                 "isVisible": 1,

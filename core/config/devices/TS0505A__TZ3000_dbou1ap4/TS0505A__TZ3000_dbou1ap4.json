@@ -49,7 +49,9 @@
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-            "include11": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "CurrentLevel-0008": {
                 "use": "zb-0008-CurrentLevel",
                 "isVisible": 1
@@ -109,7 +111,9 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0300&attrId=0008"
             },
-            "include12": "Colour",
+            "Colour": {
+                "use": "Colour"
+            },
             "Set White": {
                 "use": "zbCmd-0300-MoveToColor",
                 "params": "X=6000&Y=6000",
@@ -130,15 +134,33 @@
                 "params": "X=147A&Y=D709",
                 "isVisible": 1
             },
-            "include12 2": "ColourRGB",
-            "include30": "setColourRGB",
-            "include30 2": "setRGB",
-            "include31": "colorRouge",
-            "include32": "setRouge",
-            "include33": "colorVert",
-            "include34": "setVert",
-            "include35": "colorBleu",
-            "include36": "setBleu"
+            "ColourRGB": {
+                "use": "ColourRGB"
+            },
+            "RGB": {
+                "use": "setColourRGB"
+            },
+            "setRGB": {
+                "use": "setRGB"
+            },
+            "colorRouge": {
+                "use": "colorRouge"
+            },
+            "setRouge": {
+                "use": "setRouge"
+            },
+            "colorVert": {
+                "use": "colorVert"
+            },
+            "setVert": {
+                "use": "setVert"
+            },
+            "colorBleu": {
+                "use": "colorBleu"
+            },
+            "setBleu": {
+                "use": "setBleu"
+            }
         }
     }
 }

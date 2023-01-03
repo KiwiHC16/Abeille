@@ -1,0 +1,54 @@
+{
+    "TS130F__TZ3000_e3vhyirx": {
+        "manufacturer": "Loratap",
+        "model": "SC500ZB",
+        "type": "Loratap roller shutter module",
+        "timeout": "60",
+        "category": {
+            "opening": "1"
+        },
+        "configuration": {
+            "icon": "Loratap-RollerShutterModule",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Up": {
+                "use": "zbCmd-0102-UpOpen",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Stop": {
+                "use": "zbCmd-0102-Stop",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Down": {
+                "use": "zbCmd-0102-DownClose",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Level": {
+                "use": "zb-0102-CurPosLiftPercent",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Get Level": {
+                "use": "zbReadAttribute",
+                "params": "ep=01&clustId=0102&attrId=0008"
+            },
+            "Bind 01-0102-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0102",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0102-0000": {
+                "use": "zbConfigureReporting",
+                "params": "ep=01&clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

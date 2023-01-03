@@ -41,7 +41,7 @@ Exemple: BASICZBR3.json
         "automatism": "1"
       },
       "configuration": {
-        "icon": "BASICZBR3",
+        "icon": "Sonoff-BASICZBR3",
         "mainEP": "01"
       },
       "commands": {
@@ -91,6 +91,7 @@ Exemple: BASICZBR3.json
     Ex: "1x3V CR2430"
   - icon: Nom de l'icone associé.
     Ce nom correpond à un fichier PNG disponible dans "images" au format "node_<icon>.png"
+    Format RECOMMANDE: 'node_<Vendeur>-<Modele>.png'
   - paramType: ?
     "telecommande", "telecommande7groups"
 
@@ -137,7 +138,7 @@ Exemple: BASICZBR3.json
     "Status 2": { "use": "zb-0006-OnOff", "params": "ep=02", "isVisible": 1, "nextLine": "after" },
     "ActivePower": { "use": "zb-0B04-ActivePower", "params": "ep=01", "isVisible": 1 },
 
-  Pour info: Ancienne syntaxe OBSOLETE:
+  Pour info: L'ancienne syntaxe est OBSOLETE et N'EST PLUS SUPPORTEE.
     Chaque include correspond à une commande de base existante dans 'core/config/commands'
     - "include1":"cmd1",
     - ...

@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+- Modèles: Suppression support ancienne syntaxe 'include'.
+- Girier curtain module: Support préliminaire (2526).
+- Assistant modèle: Mise-à-jour.
+- Maintenance/infos clefs: Amélioration.
+- Heiman water sensor: Support préliminaire (2527).
+- Interne: Parser: Support de certains devices Xiaomi via decode8002 pour compatibilité mode 'raw'.
+- Loratap roller shutter module: Support préliminaire (2528).
+- Moes thermostat BRT-100: Mise-à-jour modèle (2467).
+- Modèles commandes: 'Short-Addr' & 'IEEE-Addr' => 'inf_addr-Short'/'inf_addr-Ieee'.
+- Modèles commandes: 'Link-Quality'/'online' => 'inf_linkQuality'/'inf_online'.
+
 230102-BETA-1
 -------------
 

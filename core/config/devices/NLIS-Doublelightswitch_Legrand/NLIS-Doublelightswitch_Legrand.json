@@ -55,7 +55,6 @@
                 "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-            
             "On 2": {
                 "use": "zbCmd-0006-On",
                 "params": "ep=02",
@@ -90,10 +89,18 @@
                 "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-            "include30": "setLegrandLEDOn",
-            "include31": "setLegrandLEDOff",
-            "include32": "setLegrandLEDOn_if_on",
-            "include33": "setLegrandLEDOff_if_on"
+            "LedOn": {
+                "use": "setLegrandLEDOn"
+            },
+            "LedOff": {
+                "use": "setLegrandLEDOff"
+            },
+            "LedOn_if_on": {
+                "use": "setLegrandLEDOn_if_on"
+            },
+            "LedOff_if_on": {
+                "use": "setLegrandLEDOff_if_on"
+            }
         }
     }
 }

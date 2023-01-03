@@ -20,7 +20,9 @@
                 "genericType": "SWITCH_STATE",
                 "isVisible": 1
             },
-            "include4": "multi",
+            "multi": {
+                "use": "multi"
+            },
             "Battery-Volt": {
                 "use": "zb-0001-BatteryVolt"
             },

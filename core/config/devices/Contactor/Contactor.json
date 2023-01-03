@@ -19,11 +19,20 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-
-            "include8": "LegrandContactorOn",
-            "include9": "LegrandContactorOff",
-            "include10": "LegrandContactorAuto",
-            "Puissance": { "use": "zb-0B04-ActivePower", "params": "mult=1&div=1", "isVisible": 1 },
+            "On": {
+                "use": "LegrandContactorOn"
+            },
+            "Off": {
+                "use": "LegrandContactorOff"
+            },
+            "Auto": {
+                "use": "LegrandContactorAuto"
+            },
+            "Puissance": {
+                "use": "zb-0B04-ActivePower",
+                "params": "mult=1&div=1",
+                "isVisible": 1
+            },
             "Bind-0B04-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0B04",
@@ -36,9 +45,15 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 10
             },
-            "include28 2": "setReportPuissanceLegrand",
-            "include28 2 2": "LegrandContactorMode",
-            "include28 2 2 2": "LegrandContactorEtat"
+            "setReportPuissanceLegrand": {
+                "use": "setReportPuissanceLegrand"
+            },
+            "Mode": {
+                "use": "LegrandContactorMode"
+            },
+            "Etat": {
+                "use": "LegrandContactorEtat"
+            }
         }
     }
 }

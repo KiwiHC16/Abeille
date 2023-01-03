@@ -32,9 +32,15 @@
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-            "include9 2": "WindowsCoveringUpGroup",
-            "include10 2": "WindowsCoveringDownGroup",
-            "include10 2 2": "WindowsCoveringStopGroup"
+            "Up": {
+                "use": "WindowsCoveringUpGroup"
+            },
+            "Down": {
+                "use": "WindowsCoveringDownGroup"
+            },
+            "Stop": {
+                "use": "WindowsCoveringStopGroup"
+            }
         }
     }
 }

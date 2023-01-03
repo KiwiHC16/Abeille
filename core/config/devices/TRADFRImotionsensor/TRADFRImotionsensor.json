@@ -23,12 +23,24 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "include4": "offGroup",
-            "include4 2": "offGroupTimed",
-            "include5": "toggleGroup",
-            "include6": "onGroup",
-            "include6 2": "onGroupTimed",
-            "include7": "Click-Middle",
+            "Off": {
+                "use": "offGroup"
+            },
+            "OffTimed": {
+                "use": "offGroupTimed"
+            },
+            "Toggle": {
+                "use": "toggleGroup"
+            },
+            "On": {
+                "use": "onGroup"
+            },
+            "OnTimed": {
+                "use": "onGroupTimed"
+            },
+            "Click-Middle": {
+                "use": "Click-Middle"
+            },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1

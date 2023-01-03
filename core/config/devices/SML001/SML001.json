@@ -13,7 +13,9 @@
         },
         "type": "Philips Presence Indoor",
         "commands": {
-            "include3": "presence",
+            "etat": {
+                "use": "presence"
+            },
             "Luminosite": {
                 "use": "zb-0400-MeasuredValue",
                 "isVisible": 1

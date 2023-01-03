@@ -1,0 +1,118 @@
+{
+    "endPoints": {
+        "01": {
+            "servClusters": {
+                "0000": {
+                    "attributes": {
+                        "0005": {
+                            "value": "WaterSensor-EM"
+                        },
+                        "0000": {
+                            "value": 1
+                        },
+                        "0001": {
+                            "value": 18
+                        },
+                        "0002": {
+                            "value": 2
+                        },
+                        "0003": {
+                            "value": 16
+                        },
+                        "0004": {
+                            "value": "HEIMAN"
+                        }
+                    }
+                },
+                "0001": {
+                    "attributes": {
+                        "0020": {
+                            "value": 31
+                        },
+                        "0021": {
+                            "value": 100
+                        },
+                        "0034": {
+                            "value": 32
+                        },
+                        "FFFD": {
+                            "value": 1
+                        }
+                    }
+                },
+                "0003": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "21",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                },
+                "0500": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "30",
+                            "value": 0
+                        },
+                        "0001": {
+                            "dataType": "31",
+                            "value": 42
+                        },
+                        "0002": {
+                            "dataType": "19",
+                            "value": 32
+                        },
+                        "0010": {
+                            "dataType": "F0",
+                            "value": "0000000000000000"
+                        },
+                        "0011": {
+                            "dataType": "20",
+                            "value": 255
+                        }
+                    }
+                },
+                "0019": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "",
+                            "value": null
+                        },
+                        "0001": {
+                            "dataType": "",
+                            "value": null
+                        },
+                        "0002": {
+                            "dataType": "",
+                            "value": null
+                        },
+                        "0003": {
+                            "dataType": "",
+                            "value": null
+                        },
+                        "0004": {
+                            "dataType": "",
+                            "value": null
+                        }
+                    }
+                }
+            },
+            "status": "00",
+            "cliClusters": {
+                "0019": {
+                    "attributes": {
+                        "0000": [],
+                        "0001": [],
+                        "0002": [],
+                        "0003": [],
+                        "0004": []
+                    }
+                }
+            }
+        }
+    }
+}

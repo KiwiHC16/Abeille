@@ -60,10 +60,18 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include8 2": "LivoloSwitchTrick1",
-            "include8 2 2": "LivoloSwitchTrick2",
-            "include8 2 2 2": "LivoloSwitchTrick3",
-            "include8 2 2 2 3": "LivoloSwitchTrick4",
+            "LivoloSwitchTrick1": {
+                "use": "LivoloSwitchTrick1"
+            },
+            "LivoloSwitchTrick2": {
+                "use": "LivoloSwitchTrick2"
+            },
+            "LivoloSwitchTrick3": {
+                "use": "LivoloSwitchTrick3"
+            },
+            "LivoloSwitchTrick4": {
+                "use": "LivoloSwitchTrick4"
+            },
             "SetReporting-0006-0000": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",

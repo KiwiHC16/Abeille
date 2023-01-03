@@ -28,8 +28,9 @@
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-
-            "include0500-1": "etatDoorAlarme"
+            "etat": {
+                "use": "etatDoorAlarme"
+            }
         }
     }
 }

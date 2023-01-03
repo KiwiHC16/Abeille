@@ -142,6 +142,7 @@
             // echo "commands=".json_encode($commands)."\n";
             foreach ($commands as $key => $value) {
                 if (substr($key, 0, 7) == "include") {
+                    $error = newDevError($devName, "ERROR", "Old 'include' syntax NO LONGER supported");
                     $cmdFName = $value;
                     $newSyntax = false;
                 } else {
@@ -350,7 +351,9 @@
 
             $dirEntry = substr($dirEntry, 0, -5); // Removing file extension
             $allCommandsList[$dirEntry] = $fullPath;
-            $unusedCmds[] = $dirEntry;
+            $defaultCmds = ['inf_addr-Short', 'inf_addr-Ieee', 'inf_linkQuality', 'inf_online']; // Not in models but added automatically on creation
+            if (!in_array($dirEntry, $defaultCmds))
+                $unusedCmds[] = $dirEntry;
         }
     }
 

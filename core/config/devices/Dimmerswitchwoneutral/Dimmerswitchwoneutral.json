@@ -25,7 +25,9 @@
                 "use": "zb-0008-CurrentLevel",
                 "isVisible": 1
             },
-            "include6": "Onlevel",
+            "Onlevel": {
+                "use": "Onlevel"
+            },
             "On": {
                 "use": "zbCmd-0006-On"
             },
@@ -37,7 +39,9 @@
                 "use": "zbCmd-0006-Toggle",
                 "nextLine": "after"
             },
-            "include11": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "Get-Status": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
@@ -72,12 +76,24 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include29 2": "setLegrandDimmerOn",
-            "include29 2 2": "setLegrandDimmerOff",
-            "include30": "setLegrandLEDOn",
-            "include31": "setLegrandLEDOff",
-            "include32": "setLegrandLEDOn_if_on",
-            "include33": "setLegrandLEDOff_if_on"
+            "DimmerOn": {
+                "use": "setLegrandDimmerOn"
+            },
+            "DimmerOff": {
+                "use": "setLegrandDimmerOff"
+            },
+            "LedOn": {
+                "use": "setLegrandLEDOn"
+            },
+            "LedOff": {
+                "use": "setLegrandLEDOff"
+            },
+            "LedOn_if_on": {
+                "use": "setLegrandLEDOn_if_on"
+            },
+            "LedOff_if_on": {
+                "use": "setLegrandLEDOff_if_on"
+            }
         }
     }
 }

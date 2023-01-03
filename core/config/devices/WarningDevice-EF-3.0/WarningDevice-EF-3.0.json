@@ -17,7 +17,9 @@
             "automatism": "1"
         },
         "commands": {
-            "include4": "zb-0000-ZCLVersion",
+            "ZCL Version": {
+                "use": "zb-0000-ZCLVersion"
+            },
             "Identify": {
                 "use": "Identify",
                 "isVisible": 1
@@ -37,9 +39,15 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include28 2": "writeAttributeRequestIAS_WD_Flash",
-            "include28 2 2": "writeAttributeRequestIAS_WD_Sound",
-            "include28 2 2 2": "writeAttributeRequestIAS_WD_FlashSound",
+            "Flash": {
+                "use": "writeAttributeRequestIAS_WD_Flash"
+            },
+            "Sound": {
+                "use": "writeAttributeRequestIAS_WD_Sound"
+            },
+            "FlashSound": {
+                "use": "writeAttributeRequestIAS_WD_FlashSound"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

@@ -11,7 +11,9 @@
         },
         "type": "zigbeeIASZone",
         "commands": {
-            "include3": "presence",
+            "etat": {
+                "use": "presence"
+            },
             "Battery-Volt": {
                 "use": "zb-0001-BatteryVolt"
             },

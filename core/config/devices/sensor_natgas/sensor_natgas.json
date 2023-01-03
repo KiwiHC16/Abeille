@@ -11,12 +11,24 @@
         },
         "type": "Xiaomi Gaz Sensor",
         "commands": {
-            "include3": "securitySafetySmoke",
-            "include4": "Xiaomi-ff01",
-            "include5": "setSmokeSensivityLow",
-            "include6": "setSmokeSensivityMedium",
-            "include7": "setSmokeSensivityHigh",
-            "include8": "testSmoke",
+            "Etat": {
+                "use": "securitySafetySmoke"
+            },
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
+            "Low": {
+                "use": "setSmokeSensivityLow"
+            },
+            "Medium": {
+                "use": "setSmokeSensivityMedium"
+            },
+            "High": {
+                "use": "setSmokeSensivityHigh"
+            },
+            "Test": {
+                "use": "testSmoke"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

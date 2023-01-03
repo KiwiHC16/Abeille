@@ -47,7 +47,9 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include11 2": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "CurrentLevel-0008": {
                 "use": "zb-0008-CurrentLevel",
                 "isVisible": 1
@@ -70,7 +72,9 @@
                 "use": "zb-0300-CurrentY",
                 "isVisible": 1
             },
-            "include12 2": "Colour",
+            "Colour": {
+                "use": "Colour"
+            },
             "Set White": {
                 "use": "zbCmd-0300-MoveToColor",
                 "params": "X=6000&Y=6000",
@@ -99,15 +103,33 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0300&attrId=0004"
             },
-            "include12 2 2": "ColourRGB",
-            "include30": "setColourRGB",
-            "include30 2": "setRGB",
-            "include31": "colorRouge",
-            "include32": "setRouge",
-            "include33": "colorVert",
-            "include34": "setVert",
-            "include35": "colorBleu",
-            "include36": "setBleu",
+            "ColourRGB": {
+                "use": "ColourRGB"
+            },
+            "RGB": {
+                "use": "setColourRGB"
+            },
+            "setRGB": {
+                "use": "setRGB"
+            },
+            "colorRouge": {
+                "use": "colorRouge"
+            },
+            "setRouge": {
+                "use": "setRouge"
+            },
+            "colorVert": {
+                "use": "colorVert"
+            },
+            "setVert": {
+                "use": "setVert"
+            },
+            "colorBleu": {
+                "use": "colorBleu"
+            },
+            "setBleu": {
+                "use": "setBleu"
+            },
             "Set 2700K": {
                 "use": "zbCmd-0300-MoveToColorTemp",
                 "params": "slider=2700",
@@ -118,7 +140,9 @@
                 "params": "slider=5000",
                 "isVisible": 1
             },
-            "include40": "temperatureLight",
+            "temperatureLight": {
+                "use": "temperatureLight"
+            },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"

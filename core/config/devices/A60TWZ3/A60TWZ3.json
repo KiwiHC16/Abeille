@@ -20,7 +20,9 @@
                 "use": "zb-0008-CurrentLevel",
                 "isVisible": 1
             },
-            "include5 2": "getColorTemperature",
+            "getColorTemperature": {
+                "use": "getColorTemperature"
+            },
             "On": {
                 "use": "zbCmd-0006-On"
             },
@@ -28,7 +30,9 @@
                 "use": "zbCmd-0006-Off",
                 "isVisible": 1
             },
-            "include11": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "Set 2700K": {
                 "use": "zbCmd-0300-MoveToColorTemp",
                 "params": "slider=2700",
@@ -44,8 +48,12 @@
                 "params": "slider=6000",
                 "isVisible": 1
             },
-            "include40": "temperatureLightV2",
-            "include40 2 2": "setTemperatureLight_2700_6500",
+            "TemperatureLight": {
+                "use": "temperatureLightV2"
+            },
+            "setTemperatureLight_2700_6500": {
+                "use": "setTemperatureLight_2700_6500"
+            },
             "Get-Status": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"

@@ -11,16 +11,24 @@
         },
         "type": "Xiaomi Cube",
         "commands": {
-            "include3": "cubeV1_1",
-            "include3 2": "cubeV1_2",
-            "include3 2 2": "cubeV1_3",
+            "Mouvement": {
+                "use": "cubeV1_1"
+            },
+            "Rotation (?)": {
+                "use": "cubeV1_2"
+            },
+            "Rotation Angle": {
+                "use": "cubeV1_3"
+            },
             "Battery-Volt": {
                 "use": "zb-0001-BatteryVolt"
             },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent"
             },
-            "include6": "Xiaomi-ff01",
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

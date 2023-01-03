@@ -3328,9 +3328,8 @@
 
                     else if ($cmd == "0A") { // Report attributes
                         // Some clusters are directly handled by 8100/8102 decode
-                        // $acceptedCmd0A = ['0005', '0007', '0300', '0406', '050B', '0B04', 'EF00', 'FC01', 'FC02']; // Clusters handled here
                         // $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
-                        $refused = ['0000', '000C', 'FC00'];
+                        $refused = ['000C', 'FC00'];
                         if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
@@ -3343,6 +3342,8 @@
                         $unknown = $this->deviceUpdate($dest, $srcAddr, $srcEp);
                         if ($unknown)
                             return; // So far unknown to Jeedom
+
+                        $attrId = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
 
                         if ($manufCode == '115F') { // Xiaomi specific
                             $toMon[] = "  Report attributes Xiaomi specific"; // For monitor
@@ -3362,7 +3363,14 @@
                                 if (isset($fcc0["Puissance"]))
                                     $attributesReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
                             }
-                        } else {
+                        }
+
+                        else if ($attrId == "FF01") { // Xiaomi specific (no manufCode but FF01 used by Xiaomi only)
+                            $attributesReportN = [];
+                            xiaomiReportAttributes($dest, $srcAddr, $pl, $attributesReportN);
+                        }
+
+                        else {
                             // $toMon[] = "8002/Report attributes"; // For monitor
 
                             $l = strlen($msg);
@@ -5668,23 +5676,8 @@
 
                 // Xiaomi door sensor V2
                 else if (($attrId == "FF01") && ($attrSize == "001D")) {
-                    // Assuming $dataType == "42"
-
-                    parserLog('debug', '  Xiaomi proprietary (Door Sensor)');
-                    $attributesReportN = [];
-                    xiaomiDecodeTags($dest, $srcAddr, $Attribut, $attributesReportN);
-
-                    // Previous code. For info only
-                    // // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    // $voltage = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
-                    // // $etat           = substr($payload, 80, 2);
-                    // $etat = substr($Attribut, 80 - 24, 2);
-                    // parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
-                    // $attributesReportN = [
-                    //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                    //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                    //     array( "name" => "0006-01-0000", "value" => $etat ),
-                    // ];
+                    parserLog('debug', '  Xiaomi proprietary (Door Sensor) => Handled by decode8002()');
+                    return;
                 }
 
                 // Xiaomi capteur temperature rond V1 / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
@@ -5757,24 +5750,8 @@
 
                 // Xiaomi temp/humidity/pressure square sensor
                 else if (($attrId == 'FF01') && ($attrSize == "0025")) {
-                    // Assuming $dataType == "42"
-
-                    parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
-                    $attributesReportN = [];
-                    xiaomiDecodeTags($dest, $srcAddr, $Attribut, $attributesReportN);
-
-                    // Previous code. For info only
-                    $voltage        = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
-                    $temperature    = unpack("s", pack("s", hexdec(substr($Attribut, 21 * 2 + 2, 2).substr($Attribut, 21 * 2, 2))))[1];
-                    $humidity       = hexdec(substr($Attribut, 25 * 2 + 2, 2).substr($Attribut, 25 * 2, 2));
-                    $pression       = hexdec(substr($Attribut, 29 * 2 + 6, 2).substr($Attribut, 29 * 2 + 4, 2).substr($Attribut, 29 * 2 + 2, 2).substr($Attribut, 29 * 2, 2));
-                    parserLog('debug', '  Legacy: Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity.', Pressure='.$pression);
-                    // $attributesReportN = [
-                    //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                    //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                    //     array( "name" => '0402-01-0000', "value" => $temperature / 100 ),
-                    //     array( "name" => '0405-01-0000', "value" => $humidity / 100 ),
-                    // ];
+                    parserLog('debug', '  Xiaomi proprietary (Temp square sensor) => Handled by decode8002');
+                    return;
                 }
 
                 // Xiaomi bouton Aqara Wireless Switch V3 #712 (https://github.com/KiwiHC16/Abeille/issues/712)

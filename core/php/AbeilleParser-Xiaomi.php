@@ -126,19 +126,119 @@
     }
 
     function xiaomiReportAttributes($net, $addr, $pl, &$attrReportN = null) {
-        // $l = strlen($pl);
-        for ( ; true; ) {
+        $l = strlen($pl);
+        for ( ; $l > 0; ) {
             $attrId = substr($pl, 2, 2).substr($pl, 0, 2);
             $attrType = substr($pl, 4, 2);
             $pl = substr($pl, 6);
             parserLog('debug', "  Xiaomi ".$attrId."-".$attrType.": ".$pl);
 
-            if (($attrId == "00F7") && ($attrType == "41")) {
-                $size = substr($pl, 0, 2); // Octet string size
-                xiaomiDecodeTags($net, $addr, substr($pl, 2), $attrReportN);
+            // Computing attribute size
+            if (($attrType == "41") || ($attrType == "42")) {
+                $attrSize = hexdec(substr($pl, 0, 2));
+                $pl = substr($pl, 2);
+            } else {
+
+            }
+            $pl2 = substr($pl, 0, $attrSize * 2);
+
+            //
+            // Legacy decoding
+            //
+
+            // Xiaomi door sensor V2
+            if (($attrId == "FF01") && ($attrSize == 29)) {
+                // Assuming $dataType == "42"
+
+                parserLog('debug', '  Xiaomi proprietary (Door Sensor)');
+                $attributesReportN = [];
+                xiaomiDecodeTags($net, $addr, $pl2, $attrReportN);
+
+                // Previous code. For info only
+                // // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                // $voltage = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
+                // // $etat           = substr($payload, 80, 2);
+                // $etat = substr($Attribut, 80 - 24, 2);
+                // parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
+                // $attributesReportN = [
+                //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
+                //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
+                //     array( "name" => "0006-01-0000", "value" => $etat ),
+                // ];
             }
 
-            break; // Currently supporting only 1 attribut.
+            // Xiaomi capteur Presence V2
+            // TO BE COMPLETED !!
+            else if (($attrId == 'FF01') && ($attrSize == 33 /* "0021" */)) {
+                // Assuming $dataType == "42"
+                parserLog('debug', '  Xiaomi proprietary (Capteur Presence V2)');
+
+                // For info until activation
+                xiaomiDecodeTags($net, $addr, $pl2);
+                // For info until activation
+
+                // $voltage = hexdec(substr($pl2, 28+2, 2).substr($pl2, 28, 2));
+                // $lux = hexdec(substr($pl2, 86+2, 2).substr($pl2, 86, 2));
+                // parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Lux='.$lux);
+                // $attrReportN = [
+                //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
+                //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
+                //     array( "name" => "0400-01-0000", "value" => $lux ),
+                // ];
+            }
+
+            // Xiaomi leak sensor
+            // TO BE COMPLETED !!
+            else if (($attrId == 'FF01') && ($attrSize == 34 /* "0022" */)) {
+                // Assuming DataType=42
+                parserLog('debug', '  Xiaomi proprietary (Water leak sensor)');
+
+                // For info until activation
+                xiaomiDecodeTags($net, $addr, $pl2);
+                // For info until activation
+
+                // $voltage = hexdec(substr($pl2, 24 + 2 * 2 + 2, 2).substr($pl2, 24 + 2 * 2, 2));
+                // $etat = substr($pl2, 88, 2);
+                // parserLog('debug', '  Volt='.$voltage.', Etat='.$etat);
+                // $attrReportN = [
+                //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
+                //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
+                // ];
+            }
+
+            // Xiaomi temp/humidity/pressure square sensor
+            else if (($attrId == 'FF01') && ($attrSize == 37)) {
+                // Assuming $dataType == "42"
+
+                parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
+                $attributesReportN = [];
+                xiaomiDecodeTags($net, $addr, $pl2, $attrReportN);
+
+                // Previous code. For info only
+                $voltage        = hexdec(substr($pl2, 2 * 2 + 2, 2).substr($pl2, 2 * 2, 2));
+                $temperature    = unpack("s", pack("s", hexdec(substr($pl2, 21 * 2 + 2, 2).substr($pl2, 21 * 2, 2))))[1];
+                $humidity       = hexdec(substr($pl2, 25 * 2 + 2, 2).substr($pl2, 25 * 2, 2));
+                $pression       = hexdec(substr($pl2, 29 * 2 + 6, 2).substr($pl2, 29 * 2 + 4, 2).substr($pl2, 29 * 2 + 2, 2).substr($pl2, 29 * 2, 2));
+                parserLog('debug', '  Legacy: Volt='.$voltage.', Temp='.$temperature.', Humidity='.$humidity.', Pressure='.$pression);
+                // $attributesReportN = [
+                //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
+                //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
+                //     array( "name" => '0402-01-0000', "value" => $temperature / 100 ),
+                //     array( "name" => '0405-01-0000', "value" => $humidity / 100 ),
+                // ];
+            }
+
+            //
+            // New decoding
+            //
+
+            else if (($attrId == "00F7") && ($attrType == "41")) {
+                xiaomiDecodeTags($net, $addr, $pl2, $attrReportN);
+            }
+
+            // break; // Currently supporting only 1 attribut.
+            $pl = substr($pl, $attrSize * 2);
+            $l = strlen($pl);
         }
     }
 ?>

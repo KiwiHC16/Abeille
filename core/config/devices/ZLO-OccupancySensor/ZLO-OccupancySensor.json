@@ -11,7 +11,10 @@
         },
         "type": "ZLO-OccupancySensor for Dev",
         "commands": {
-            "include3": "presence",
+            "etat": {
+                "use": "zb-0006-OnOff",
+                "isVisible": 1
+            },
             "Illuminance": {
                 "use": "zb-0400-MeasuredValue",
                 "comment": "Seems to be non standard 0400-0000 attribute with direct Lux value",
@@ -24,10 +27,8 @@
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent"
             },
-            "include7": "Xiaomi-ff01",
-            "etat": {
-                "use": "zb-0006-OnOff",
-                "isVisible": 1
+            "Specific": {
+                "use": "Xiaomi-ff01"
             },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"

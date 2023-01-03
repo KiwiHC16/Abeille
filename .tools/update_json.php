@@ -121,16 +121,32 @@
             $commands2 = [];
             foreach ($commands as $key => $value) {
                 if (substr($key, 0, 7) == "include") {
+                    // Old syntax: "includeXX": "<filename>"
                     $cmdFName = $value;
                     $oldSyntax = true;
                 } else {
-                    // New syntax: "<jCmdName>": { "use": "<fileName>" }
+                    // New syntax: "<cmdJName>": { "use": "<fileName>" }
                     $cmdFName = $value['use'];
                     $oldSyntax = false;
                 }
 
+                // Updating old syntax to new syntax
+                if ($oldSyntax) {
+                    $cmdPath = commandsDir.'/'.$cmdFName.'.json';
+                    $jsonCmd = file_get_contents($cmdPath);
+                    $cmd = json_decode($jsonCmd, true);
+                    $cmdJName = $cmd[$cmdFName]['name'];
+
+                    $commands2[$cmdJName] = Array(
+                        "use"=> $cmdFName
+                    );
+
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                }
+
                 // Cluster 0001 updates
-                if (($cmdFName == "BindToPowerConfig") && $oldSyntax) {
+                else if (($cmdFName == "BindToPowerConfig") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbBindToZigate",
                         "params" => "clustId=0001",

@@ -29,14 +29,31 @@
                 "use": "zb-0405-MeasuredValue",
                 "isVisible": 1
             },
-            "include7": "Xiaomi-ff01"
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            }
         },
         "xiaomi": {
             "fromDevice": {
-                "01-21": { "func": "divAndPercent", "div": 1000, "info": "0001-01-0021" },
-                "64-29": { "func": "numberDiv", "div": 100,  "info": "0402-01-0000" },
-                "66-2B": { "func": "number", "info": "0403-01-0000" },
-                "65-21": { "func": "numberDiv", "div": 100, "info": "0405-01-0000" }
+                "01-21": {
+                    "func": "divAndPercent",
+                    "div": 1000,
+                    "info": "0001-01-0021"
+                },
+                "64-29": {
+                    "func": "numberDiv",
+                    "div": 100,
+                    "info": "0402-01-0000"
+                },
+                "66-2B": {
+                    "func": "number",
+                    "info": "0403-01-0000"
+                },
+                "65-21": {
+                    "func": "numberDiv",
+                    "div": 100,
+                    "info": "0405-01-0000"
+                }
             }
         }
     }

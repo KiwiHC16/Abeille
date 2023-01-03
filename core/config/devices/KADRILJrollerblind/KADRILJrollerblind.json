@@ -10,7 +10,9 @@
         },
         "type": "KADRILJ roller blind",
         "commands": {
-            "include4": "zb-0000-ZCLVersion",
+            "ZCL Version": {
+                "use": "zb-0000-ZCLVersion"
+            },
             "Up": {
                 "use": "zbCmd-0102-UpOpen"
             },

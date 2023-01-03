@@ -15,9 +15,13 @@
             "light": "1"
         },
         "commands": {
-            "SWBuildID": { "use": "zb-0000-SWBuildID" },
-            "Get-SWBuildID": { "use": "zbReadAttribute", "params": "clustId=0000&attrId=4000" },
-
+            "SWBuildID": {
+                "use": "zb-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
             "BindToZigate-Power": {
                 "use": "zbBindToZigate",
                 "params": "ep=01&clustId=0001",
@@ -28,12 +32,15 @@
                 "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-            "Battery-Volt2Percent": { "use": "battery-Volt2Percent-3" },
+            "Battery-Volt2Percent": {
+                "use": "battery-Volt2Percent-3"
+            },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent"
             },
-            
-            "include7": "Xiaomi-ff01",
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
             "BindToZigate-Illuminance": {
                 "use": "zbBindToZigate",
                 "params": "EP=01&clustId=0400",
@@ -44,7 +51,10 @@
                 "params": "clustId=0400&attrType=21&attrId=0000&minInterval=0258&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes"
             },
-            "Illuminance": { "use": "zb-0400-MeasuredValue", "isVisible": 1 }
+            "Illuminance": {
+                "use": "zb-0400-MeasuredValue",
+                "isVisible": 1
+            }
         }
     }
 }

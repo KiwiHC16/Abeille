@@ -11,7 +11,9 @@
         },
         "type": "Heiman Smoke Sensor",
         "commands": {
-            "include3": "securitySafetySmokeHeiman",
+            "Etat": {
+                "use": "securitySafetySmokeHeiman"
+            },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1
@@ -38,7 +40,9 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include11 2": "setReportSmokeHeiman",
+            "setReportSmokeHeiman": {
+                "use": "setReportSmokeHeiman"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

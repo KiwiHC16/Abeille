@@ -62,6 +62,9 @@
             "Valve position": {
                 "use": "inf_generic-Badge",
                 "logicalId": "01-valvePosition",
+                "minValue": 0,
+                "maxValue": 100,
+                "unit": "%",
                 "isVisible": "1"
             }
         },

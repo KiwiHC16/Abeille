@@ -28,11 +28,21 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include13": "puissanceEP15",
-            "include13 2": "conso",
-            "include13 2 2": "VoltagePrise",
-            "include13 2 2 2": "CurrentPrise_mA",
-            "include13 2 2 2 2": "temperaturePrise",
+            "Puissance Inst": {
+                "use": "puissanceEP15"
+            },
+            "Conso": {
+                "use": "conso"
+            },
+            "Voltage": {
+                "use": "VoltagePrise"
+            },
+            "Courant": {
+                "use": "CurrentPrise_mA"
+            },
+            "Temperature": {
+                "use": "temperaturePrise"
+            },
             "Groups": {
                 "use": "Group-Membership",
                 "isVisible": 1

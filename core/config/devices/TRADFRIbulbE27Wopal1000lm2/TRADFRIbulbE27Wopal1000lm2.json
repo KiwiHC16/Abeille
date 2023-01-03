@@ -24,7 +24,9 @@
                 "use": "Identify",
                 "isVisible": 1
             },
-            "include11": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1

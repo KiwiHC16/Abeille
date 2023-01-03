@@ -17,28 +17,62 @@
                 "use": "Identify",
                 "isVisible": 1
             },
-            "include25 2 2 2": "spiritTemperatureConsigne",
-            "include25 2 2": "spiritTemperatureConsigneGet",
-            "include25 2": "spiritTemperatureConsigneSet",
-            "include25 2 2 2 2": "spiritTemperature",
-            "include25 2 2 3": "spiritTemperatureGet",
+            "Consigne": {
+                "use": "spiritTemperatureConsigne"
+            },
+            "getConsigne": {
+                "use": "spiritTemperatureConsigneGet"
+            },
+            "Set Consigne": {
+                "use": "spiritTemperatureConsigneSet"
+            },
+            "Temp\u00e9rature": {
+                "use": "spiritTemperature"
+            },
+            "getTemperature": {
+                "use": "spiritTemperatureGet"
+            },
             "Bind 0201-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0201",
                 "execAtCreation": "yes"
             },
-            "include25 2 2 2 2 2": "spiritTemperatureSetReport",
-            "include25 2 2 3 2 2": "spiritPiHeatingDemand",
-            "include25 2 2 3 2": "spiritPiHeatingDemandGet",
-            "include25 2 2 3 2 2 2": "spiritValvePosition",
-            "include25 2 2 3 2 2 2 2": "spiritValvePositionGet",
-            "include25 2 2 3 2 2 2 2 2": "spiritValvePositionSet",
-            "include25 2 2 3 2 2 3": "spiritTrvMode",
-            "include25 2 2 3 2 3": "spiritTrvModeGet",
-            "include25 2 2 3 2 3 2": "spiritTrvModeSet",
-            "include25 2 2 3 2 3 2 2": "spiritTrvModeSetManu",
-            "include25 2 2 3 2 3 2 2 2": "spiritTrvModeSetValve",
-            "include25 2 2 3 2 3 2 2 2 2 2 2": "spiritBatterie-Pourcent",
+            "setReportTemperature": {
+                "use": "spiritTemperatureSetReport"
+            },
+            "Pi Heating Demand": {
+                "use": "spiritPiHeatingDemand"
+            },
+            "Get Pi Heating Demand": {
+                "use": "spiritPiHeatingDemandGet"
+            },
+            "Valve Position": {
+                "use": "spiritValvePosition"
+            },
+            "Get Valve Positon": {
+                "use": "spiritValvePositionGet"
+            },
+            "Set Valve": {
+                "use": "spiritValvePositionSet"
+            },
+            "Trv Mode": {
+                "use": "spiritTrvMode"
+            },
+            "Get Trv Mode": {
+                "use": "spiritTrvModeGet"
+            },
+            "Set TRV Mode": {
+                "use": "spiritTrvModeSet"
+            },
+            "Set TRV Mode Manu": {
+                "use": "spiritTrvModeSetManu"
+            },
+            "Set TRV Mode Valve": {
+                "use": "spiritTrvModeSetValve"
+            },
+            "BatteriePourcent": {
+                "use": "spiritBatterie-Pourcent"
+            },
             "Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
@@ -51,15 +85,33 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include25 2 2 3 2 3 2 2 2 2 2 3": "spiritHostFlags",
-            "include25 2 2 3 2 3 2 2 2 2 2 3 2": "spiritErrors",
-            "include25 2 3": "spiritHostFlagsDisplayDownSet",
-            "include25 2 3 2": "spiritHostFlagsDefaultSet",
-            "include25 2 3 2 2": "spiritHostFlagsBoostSet",
-            "include25 2 3 2 2 2": "spiritHostFlagsChildLockSet",
-            "include25 2 3 2 2 2 2": "spiritHostFlagsOffSet",
-            "include25 2 3 2 2 2 2 2": "spiritUnknown1",
-            "include25 2 3 2 2 2 2 2 2": "spiritUnknown2",
+            "Host Flags": {
+                "use": "spiritHostFlags"
+            },
+            "Errors": {
+                "use": "spiritErrors"
+            },
+            "Display Down": {
+                "use": "spiritHostFlagsDisplayDownSet"
+            },
+            "Default": {
+                "use": "spiritHostFlagsDefaultSet"
+            },
+            "Boost": {
+                "use": "spiritHostFlagsBoostSet"
+            },
+            "Child Lock": {
+                "use": "spiritHostFlagsChildLockSet"
+            },
+            "Off": {
+                "use": "spiritHostFlagsOffSet"
+            },
+            "Unknown1": {
+                "use": "spiritUnknown1"
+            },
+            "Unknown2": {
+                "use": "spiritUnknown2"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

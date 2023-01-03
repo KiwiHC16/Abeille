@@ -29,7 +29,9 @@
                 "use": "zbCmd-0006-Off",
                 "isVisible": 1
             },
-            "include11": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "Set 2200K": {
                 "use": "zbCmd-0300-MoveToColorTemp",
                 "params": "slider=2200",
@@ -45,9 +47,15 @@
                 "params": "slider=4000",
                 "isVisible": 1
             },
-            "include40": "temperatureLight",
-            "include40 2 2": "setTemperatureLight",
-            "include12": "Colour",
+            "temperatureLight": {
+                "use": "temperatureLight"
+            },
+            "setTemperatureLight": {
+                "use": "setTemperatureLight"
+            },
+            "Colour": {
+                "use": "Colour"
+            },
             "Set White": {
                 "use": "zbCmd-0300-MoveToColor",
                 "params": "X=6000&Y=6000",

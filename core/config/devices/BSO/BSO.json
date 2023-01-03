@@ -12,18 +12,32 @@
         },
         "type": "Profalux BSO",
         "commands": {
-            "include0 2 2": "Lift",
-            "include0 2 2 2": "Tilt",
-            "include4": "zb-0000-ZCLVersion",
+            "Lift": {
+                "use": "Lift"
+            },
+            "Tilt": {
+                "use": "Tilt"
+            },
+            "ZCL Version": {
+                "use": "zb-0000-ZCLVersion"
+            },
             "etat": {
                 "use": "zb-0006-OnOff",
                 "genericType": "FLAP_STATE",
                 "isVisible": 1
             },
-            "include8": "levelVolet",
-            "include9": "onVolet",
-            "include10": "offVolet",
-            "include12": "setLevelVolet",
+            "Level": {
+                "use": "levelVolet"
+            },
+            "Monter": {
+                "use": "onVolet"
+            },
+            "Descendre": {
+                "use": "offVolet"
+            },
+            "setLevel": {
+                "use": "setLevelVolet"
+            },
             "Stop": {
                 "use": "act_zbCmdG-0008-StopWithOnOff",
                 "isVisible": 1
@@ -62,8 +76,12 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include30": "moveToLiftAndTiltBSO_Lift",
-            "include30 2": "moveToLiftAndTiltBSO_Tilt",
+            "Set Lift": {
+                "use": "moveToLiftAndTiltBSO_Lift"
+            },
+            "Set Tilt": {
+                "use": "moveToLiftAndTiltBSO_Tilt"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             },

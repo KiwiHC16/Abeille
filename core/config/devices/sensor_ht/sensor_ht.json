@@ -28,7 +28,9 @@
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent"
             },
-            "include7": "Xiaomi-ff01",
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
             "SWBuildID": {
                 "use": "zb-0000-SWBuildID"
             }

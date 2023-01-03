@@ -60,7 +60,9 @@
                 "use": "zb-0008-CurrentLevel",
                 "isVisible": 1
             },
-            "include11": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "Get-CurrentLevel": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
@@ -91,14 +93,20 @@
                 "params": "slider=4000",
                 "isVisible": 1
             },
-            "include15": "temperatureLight",
-            "include16": "setTemperatureLight",
+            "temperatureLight": {
+                "use": "temperatureLight"
+            },
+            "setTemperatureLight": {
+                "use": "setTemperatureLight"
+            },
             "Bind-0300-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0300",
                 "execAtCreation": "Yes"
             },
-            "include29 2": "setReportLightColorSpectre"
+            "setReportLightColorSpectre": {
+                "use": "setReportLightColorSpectre"
+            }
         }
     }
 }

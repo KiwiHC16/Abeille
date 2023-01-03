@@ -13,7 +13,9 @@
         },
         "type": "Sonoff Door\/Window Sensor",
         "commands": {
-            "include1": "etatSonoff",
+            "etat": {
+                "use": "etatSonoff"
+            },
             "Battery-Percent": {
                 "use": "zb-0001-BatteryPercent",
                 "isVisible": 1

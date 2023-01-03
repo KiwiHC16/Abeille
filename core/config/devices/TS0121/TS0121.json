@@ -46,10 +46,20 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include3 2 2 2 2 2": "PuissanceVoltagePrise",
-            "include3 2 2 2 2": "PuissanceCurrentPrise",
-            "Puissance": { "use": "zb-0B04-ActivePower", "params": "mult=1&div=1", "isVisible": 1 },
-            "include3 2 2 2 3": "CurrentSummationDelivered",
+            "Voltage": {
+                "use": "PuissanceVoltagePrise"
+            },
+            "Current": {
+                "use": "PuissanceCurrentPrise"
+            },
+            "Puissance": {
+                "use": "zb-0B04-ActivePower",
+                "params": "mult=1&div=1",
+                "isVisible": 1
+            },
+            "Conso": {
+                "use": "CurrentSummationDelivered"
+            },
             "Poll 0B04-050B": {
                 "use": "poll-0B04-050B"
             },

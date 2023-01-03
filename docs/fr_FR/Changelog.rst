@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230103-BETA-1
+-------------
+
 - Modèles: Suppression support ancienne syntaxe 'include'.
 - Girier curtain module: Support préliminaire (2526).
 - Assistant modèle: Mise-à-jour.

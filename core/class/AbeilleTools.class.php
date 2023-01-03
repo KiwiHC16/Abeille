@@ -485,7 +485,7 @@
                     }
 
                     // Adding base commands
-                    $baseCmds = ['inf_addr-Short', 'inf_addr-Ieee', 'inf_linkQuality', 'inf_online', 'Time-Time', 'Time-TimeStamp'];
+                    $baseCmds = ['inf_addr-Short', 'inf_addr-Ieee', 'inf_linkQuality', 'inf_online', 'inf_time-String', 'inf_time-Timestamp'];
                     foreach ($baseCmds as $base) {
                         $c = self::getCommandConfig($base);
                         if ($c !== false)

@@ -351,7 +351,8 @@
 
             $dirEntry = substr($dirEntry, 0, -5); // Removing file extension
             $allCommandsList[$dirEntry] = $fullPath;
-            $defaultCmds = ['inf_addr-Short', 'inf_addr-Ieee', 'inf_linkQuality', 'inf_online']; // Not in models but added automatically on creation
+            // defaultCmds = Commands not in models but added automatically on creation
+            $defaultCmds = ['inf_addr-Short', 'inf_addr-Ieee', 'inf_linkQuality', 'inf_online', 'inf_time-String', 'inf_time-Timestamp'];
             if (!in_array($dirEntry, $defaultCmds))
                 $unusedCmds[] = $dirEntry;
         }

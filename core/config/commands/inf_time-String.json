@@ -1,0 +1,11 @@
+{
+    "inf_time-String": {
+        "subType": "string",
+        "template": "",
+        "configuration": {
+            "visibilityCategory": "Time"
+        },
+        "type": "info",
+        "logicalId": "Time-Time"
+    }
+}

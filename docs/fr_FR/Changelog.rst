@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Modèles commandes: 'Time-Time'/'Time-TimeStampt' => 'inf_time-String'/'inf_time-Timestamp'.
+
 230103-BETA-2
 -------------
 

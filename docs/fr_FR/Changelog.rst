@@ -1831,23 +1831,6 @@ Secours
 * Vous testez le nouvel équipement
 * si ok vous pouvez supprimer l'ancien.
 
-Bugs
-----
-
-Il est fort probable que des bugs soient découverts.
-
-Dans ce cas aller voir le forum: `FORUM <https://community.jeedom.com/tag/plugin-abeille>`_
-
-ou issue dans GitHub: `ISSUE <https://github.com/KiwiHC16/Abeille/issues?utf8=✓&q=is%3Aissue+>`_
-
-Changelog
----------
-
-En fait le ChangeLog est dans GitHub alors je perds mon temps a essayer de la mettre a jour dans cette doc. Je ne fais plus de mise à jour ou que des principales choses quand j'ai le temps.
-
-Voir directement dans `GitHub <https://github.com/KiwiHC16/Abeille/commits/master>`_
-
-
 2019-11-25
 ----------
 

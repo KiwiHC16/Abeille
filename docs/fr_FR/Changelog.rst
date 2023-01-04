@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: Correction 'single precision'.
+
 230103-BETA-5
 -------------
 

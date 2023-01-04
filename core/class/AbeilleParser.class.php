@@ -1213,7 +1213,7 @@
         //     return $num;
         // }
 
-        function hexTo32Float($strHex) {
+        static function hexTo32Float($strHex) {
             $v = hexdec($strHex);
             $x = ($v & ((1 << 23) - 1)) + (1 << 23) * ($v >> 31 | 1);
             $exp = ($v >> 23 & 0xFF) - 127;
@@ -1352,7 +1352,7 @@
                     $value -= 0x100000000;
                 break;
             case "39": // Single precision
-                $value = $this->hexTo32Float($hs);
+                $value =  AbeilleParser::hexTo32Float($hs);
                 break;
             case "41": // String discrete: octstr
             case "F0": // IEEE addr

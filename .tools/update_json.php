@@ -145,6 +145,14 @@
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
 
+                // TO BE COMPLETED
+                // else if (preg_match('/^zb-[a-zA-Z0-9]{4}-/', $cmdFName)) {
+                //     $new = "inf_zbAttr-".substr($cmdFName, 3);
+                //     $commands2[$key]["use"] = $new;
+                //     $devUpdated = true;
+                //     echo "  Cmd '".$cmdFName."' RENAMED.\n";
+                // }
+
                 // Cluster 0001 updates
                 else if (($cmdFName == "BindToPowerConfig") && $oldSyntax) {
                     $cmdArr = Array(
@@ -785,8 +793,46 @@
         echo "= Ok";
     }
 
+    function renameCmds() {
+        echo "Renaming commands\n";
+        $dh = opendir(commandsDir);
+        while (($dirEntry = readdir($dh)) !== false) {
+             /* Ignoring some entries */
+             if (in_array($dirEntry, array(".", "..")))
+                continue;
+            if (pathinfo($dirEntry, PATHINFO_EXTENSION) != "json")
+                continue;
+
+            $fullPath = commandsDir.'/'.$dirEntry;
+            if (!file_exists($fullPath)) {
+                echo "- ".$dirEntry.": path access ERROR\n";
+                echo "  ".$fullPath."\n";
+                continue;
+            }
+
+            $dirEntry = substr($dirEntry, 0, -5); // Removing file extension
+            if (!preg_match('/^zb-[a-zA-Z0-9]{4}-/', $dirEntry))
+                continue;
+
+            $new = "inf_zbAttr-".substr($dirEntry, 3);
+
+            $jsonContent = file_get_contents($fullPath);
+            $content = json_decode($jsonContent, true);
+            $content[$new] = $content[$dirEntry];
+            unset($content[$dirEntry]);
+            $jsonContent = json_encode($content, JSON_PRETTY_PRINT);
+            $fullPath2 = commandsDir.'/'.$new.'.json';
+            file_put_contents($fullPath2, $jsonContent);
+            unlink($fullPath);
+            echo "- ".$dirEntry." renamed to ".$new."\n";
+        }
+        echo "= Ok";
+    }
+
     buildDevicesList();
+    // renameCmds();
     buildCommandsList();
+    // exit();
 
     echo "\nUpdating devices if required ...\n";
     foreach ($devicesList as $entry => $fullPath) {

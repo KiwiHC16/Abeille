@@ -43,16 +43,16 @@
                 "params": "clustId=0006&attrId=0000"
             },
             "On": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "isVisible": "1"
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "nextLine": "after",
                 "isVisible": "1"
             },
             "Toggle": {
-                "use": "zbCmd-0006-Toggle"
+                "use": "act_zbCmdG-0006-Toggle"
             },
             "Bind-0006-ToZigate": {
                 "use": "zbBindToZigate",

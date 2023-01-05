@@ -20,11 +20,11 @@
                 "use": "Group-Membership"
             },
             "On": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "isVisible": 1
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "isVisible": 1
             },
             "Status": {
@@ -66,7 +66,7 @@
                 "execAtCreationDelay": 11
             },
             "Set Temperature": {
-                "use": "zbCmd-0300-MoveToColorTemp",
+                "use": "act_zbCmdG-0300-MoveToColorTemp",
                 "minValue": "2000",
                 "maxValue": "6500",
                 "isVisible": 1

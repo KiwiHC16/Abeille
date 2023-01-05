@@ -145,9 +145,16 @@
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
 
-                // TO BE COMPLETED
                 else if (preg_match('/^zb-[a-zA-Z0-9]{4}-/', $cmdFName)) {
                     $new = "inf_zbAttr-".substr($cmdFName, 3);
+                    $commands2[$key] = $value;
+                    $commands2[$key]["use"] = $new;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' RENAMED.\n";
+                }
+
+                else if (preg_match('/^zbCmd-[a-zA-Z0-9]{4}-/', $cmdFName)) {
+                    $new = "act_zbCmdG-".substr($cmdFName, 6);
                     $commands2[$key] = $value;
                     $commands2[$key]["use"] = $new;
                     $devUpdated = true;
@@ -813,10 +820,14 @@
             }
 
             $dirEntry = substr($dirEntry, 0, -5); // Removing file extension
-            if (!preg_match('/^zb-[a-zA-Z0-9]{4}-/', $dirEntry))
-                continue;
 
-            $new = "inf_zbAttr-".substr($dirEntry, 3);
+            // if (!preg_match('/^zb-[a-zA-Z0-9]{4}-/', $dirEntry))
+            //     continue;
+            // $new = "inf_zbAttr-".substr($dirEntry, 3);
+
+            if (!preg_match('/^zbCmd-[a-zA-Z0-9]{4}-/', $dirEntry))
+                continue;
+            $new = "act_zbCmdG-".substr($dirEntry, 6);
 
             $jsonContent = file_get_contents($fullPath);
             $content = json_decode($jsonContent, true);

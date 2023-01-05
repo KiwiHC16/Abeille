@@ -1,16 +1,16 @@
 {
-    "zbCmd-0102-DownClose": {
-        "isVisible": 0,
+    "act_zbCmdG-EF00-Down": {
+        "isVisible": 1,
         "name": "Down",
         "isHistorized": 0,
         "subType": "other",
         "invertBinary": "0",
         "template": "",
         "configuration": {
-            "topic": "cmd-0102",
-            "request": "ep=#EP#&cmd=01"
+            "topic": "cmd-EF00",
+            "request": "cmd=01&param=02"
         },
         "type": "action",
-        "genericType": "FLAP_DOWN"
+        "genericType": ""
     }
 }

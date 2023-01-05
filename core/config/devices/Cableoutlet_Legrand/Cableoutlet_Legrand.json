@@ -32,7 +32,7 @@
                 "isVisible": 1
             },
             "On": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "isVisible": 1
             },
             "Off": {

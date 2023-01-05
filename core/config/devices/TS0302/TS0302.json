@@ -14,13 +14,13 @@
                 "use": "inf_zbAttr-0000-ZCLVersion"
             },
             "Up": {
-                "use": "zbCmd-0102-UpOpen"
+                "use": "act_zbCmdG-0102-UpOpen"
             },
             "Down": {
-                "use": "zbCmd-0102-DownClose"
+                "use": "act_zbCmdG-0102-DownClose"
             },
             "Stop": {
-                "use": "zbCmd-0102-Stop"
+                "use": "act_zbCmdG-0102-Stop"
             },
             "Groups": {
                 "use": "Group-Membership",

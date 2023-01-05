@@ -16,20 +16,20 @@
                 "use": "Group-Membership"
             },
             "Up": {
-                "use": "zbCmd-0102-UpOpen",
+                "use": "act_zbCmdG-0102-UpOpen",
                 "isVisible": "1"
             },
             "Stop": {
-                "use": "zbCmd-0102-Stop",
+                "use": "act_zbCmdG-0102-Stop",
                 "isVisible": "1"
             },
             "Down": {
-                "use": "zbCmd-0102-DownClose",
+                "use": "act_zbCmdG-0102-DownClose",
                 "isVisible": "1",
                 "nextLine": "after"
             },
             "Set level": {
-                "use": "zbCmd-0102-GoToLiftPercentage",
+                "use": "act_zbCmdG-0102-GoToLiftPercentage",
                 "valueOffset": "#value#*#logicid0102-01-F003#/100",
                 "isVisible": "1"
             },

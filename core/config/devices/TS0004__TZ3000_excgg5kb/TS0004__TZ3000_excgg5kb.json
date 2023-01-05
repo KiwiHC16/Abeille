@@ -19,15 +19,15 @@
                 "use": "Group-Membership"
             },
             "On 1": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "isVisible": "1"
             },
             "Off 1": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "isVisible": "1"
             },
             "Toggle 1": {
-                "use": "zbCmd-0006-Toggle"
+                "use": "act_zbCmdG-0006-Toggle"
             },
             "Status 1": {
                 "use": "inf_zbAttr-0006-OnOff",
@@ -40,17 +40,17 @@
                 "params": "clustId=0006&attrId=0000"
             },
             "On 2": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "params": "ep=02",
                 "isVisible": "1"
             },
             "Off 2": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "params": "ep=02",
                 "isVisible": "1"
             },
             "Toggle 2": {
-                "use": "zbCmd-0006-Toggle",
+                "use": "act_zbCmdG-0006-Toggle",
                 "params": "ep=02"
             },
             "Status 2": {
@@ -64,17 +64,17 @@
                 "params": "ep=02&clustId=0006&attrId=0000"
             },
             "On 3": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "params": "ep=03",
                 "isVisible": "1"
             },
             "Off 3": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "params": "ep=03",
                 "isVisible": "1"
             },
             "Toggle 3": {
-                "use": "zbCmd-0006-Toggle",
+                "use": "act_zbCmdG-0006-Toggle",
                 "params": "ep=03"
             },
             "Status 3": {
@@ -88,17 +88,17 @@
                 "params": "ep=03&clustId=0006&attrId=0000"
             },
             "On 4": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "params": "ep=04",
                 "isVisible": "1"
             },
             "Off 4": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "params": "ep=04",
                 "isVisible": "1"
             },
             "Toggle 4": {
-                "use": "zbCmd-0006-Toggle",
+                "use": "act_zbCmdG-0006-Toggle",
                 "params": "ep=04"
             },
             "Status 4": {

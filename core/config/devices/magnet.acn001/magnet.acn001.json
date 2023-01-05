@@ -34,7 +34,7 @@
                 "use": "Identify"
             },
             "Status": {
-                "use": "zbCmd-XXXX-Custom",
+                "use": "act_zbCmdG-XXXX-Custom",
                 "logicalId": "0500-Status",
                 "isVisible": "1"
             },

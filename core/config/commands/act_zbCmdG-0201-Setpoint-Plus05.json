@@ -1,5 +1,5 @@
 {
-    "zbCmd-0201-Setpoint-Plus05": {
+    "act_zbCmdG-0201-Setpoint-Plus05": {
         "name": "zbCmd-0201-Setpoint-Plus05",
         "comment": "Cluster 0201/thermostat, Setpoint raise/lower cmd (00)",
         "isHistorized": "0",

@@ -1,14 +1,14 @@
 {
-    "zbCmd-EF00-Backward": {
+    "act_zbCmdG-EF00-Stop": {
         "isVisible": 1,
-        "name": "Backward",
+        "name": "Stop",
         "isHistorized": 0,
         "subType": "other",
         "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "cmd-EF00",
-            "request": "cmd=05&param=01"
+            "request": "cmd=01&param=01"
         },
         "type": "action",
         "genericType": ""

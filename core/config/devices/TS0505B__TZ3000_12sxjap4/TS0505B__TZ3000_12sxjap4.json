@@ -20,11 +20,11 @@
                 "isVisible": 1
             },
             "On": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "isVisible": 1
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "isVisible": 1
             },
             "etat": {
@@ -76,22 +76,22 @@
                 "use": "Colour"
             },
             "Set White": {
-                "use": "zbCmd-0300-MoveToColor",
+                "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=6000&Y=6000",
                 "isVisible": 1
             },
             "Set Blue": {
-                "use": "zbCmd-0300-MoveToColor",
+                "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=228F&Y=228F",
                 "isVisible": 1
             },
             "Set Red": {
-                "use": "zbCmd-0300-MoveToColor",
+                "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=AE13&Y=51EB",
                 "isVisible": 1
             },
             "Set Green": {
-                "use": "zbCmd-0300-MoveToColor",
+                "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=147A&Y=D709",
                 "isVisible": 1
             },
@@ -131,12 +131,12 @@
                 "use": "setBleu"
             },
             "Set 2700K": {
-                "use": "zbCmd-0300-MoveToColorTemp",
+                "use": "act_zbCmdG-0300-MoveToColorTemp",
                 "params": "slider=2700",
                 "isVisible": 1
             },
             "Set 5000K": {
-                "use": "zbCmd-0300-MoveToColorTemp",
+                "use": "act_zbCmdG-0300-MoveToColorTemp",
                 "params": "slider=5000",
                 "isVisible": 1
             },

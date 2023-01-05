@@ -28,11 +28,11 @@
                 "isVisible": 1
             },
             "On": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "params": "ep=01"
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "isVisible": 1
             },
             "Get-Status": {
@@ -40,7 +40,7 @@
                 "params": "clustId=0006&attrId=0000"
             },
             "Toggle": {
-                "use": "zbCmd-0006-Toggle",
+                "use": "act_zbCmdG-0006-Toggle",
                 "nextLine": "after"
             }
         }

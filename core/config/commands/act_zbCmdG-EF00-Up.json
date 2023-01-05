@@ -1,14 +1,14 @@
 {
-    "zbCmd-EF00-GotoLevel": {
+    "act_zbCmdG-EF00-Up": {
         "isVisible": 1,
-        "name": "GotoLevel",
+        "name": "Up",
         "isHistorized": 0,
-        "subType": "slider",
+        "subType": "other",
         "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "cmd-EF00",
-            "request": "cmd=02&param=#slider#"
+            "request": "cmd=01&param=00"
         },
         "type": "action",
         "genericType": ""

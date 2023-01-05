@@ -16,15 +16,15 @@
                 "use": "Group-Membership"
             },
             "Up": {
-                "use": "zbCmd-0102-UpOpen",
+                "use": "act_zbCmdG-0102-UpOpen",
                 "isVisible": "1"
             },
             "Stop": {
-                "use": "zbCmd-0102-Stop",
+                "use": "act_zbCmdG-0102-Stop",
                 "isVisible": "1"
             },
             "Down": {
-                "use": "zbCmd-0102-DownClose",
+                "use": "act_zbCmdG-0102-DownClose",
                 "isVisible": "1"
             },
             "Current Level": {

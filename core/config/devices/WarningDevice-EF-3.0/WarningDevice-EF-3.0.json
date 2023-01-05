@@ -56,17 +56,17 @@
                 "params": "clustId=0000&attrId=4000"
             },
             "Test SOUND & FLASH": {
-                "use": "zbCmd-0502-StartWarning",
+                "use": "act_zbCmdG-0502-StartWarning",
                 "params": "ep=01&mode=burglar",
                 "isVisible": "1"
             },
             "Test SOUND only": {
-                "use": "zbCmd-0502-StartWarning",
+                "use": "act_zbCmdG-0502-StartWarning",
                 "params": "ep=01&mode=burglar&strobe=off",
                 "isVisible": "1"
             },
             "Test FLASH only": {
-                "use": "zbCmd-0502-StartWarning",
+                "use": "act_zbCmdG-0502-StartWarning",
                 "params": "ep=01&mode=stop&strobe=on",
                 "isVisible": "1"
             }

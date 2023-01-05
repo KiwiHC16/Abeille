@@ -23,13 +23,13 @@
                 "use": "current_position_lift_percentage"
             },
             "Up": {
-                "use": "zbCmd-0102-UpOpen"
+                "use": "act_zbCmdG-0102-UpOpen"
             },
             "Down": {
-                "use": "zbCmd-0102-DownClose"
+                "use": "act_zbCmdG-0102-DownClose"
             },
             "Stop": {
-                "use": "zbCmd-0102-Stop"
+                "use": "act_zbCmdG-0102-Stop"
             },
             "getcurrent_position_lift_percentage": {
                 "use": "getcurrent_position_lift_percentage"

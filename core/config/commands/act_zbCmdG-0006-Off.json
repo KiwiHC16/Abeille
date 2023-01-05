@@ -1,13 +1,14 @@
 {
-    "zbCmd-0006-Toggle": {
-        "name": "Toggle",
+    "act_zbCmdG-0006-Off": {
+        "name": "Off",
         "subType": "other",
+        "invertBinary": "0",
         "configuration": {
             "topic": "OnOff",
-            "request": "Action=Toggle&EP=#EP#",
+            "request": "Action=Off&EP=#EP#",
             "visibilityCategory": "All"
         },
         "type": "action",
-        "genericType": "LIGHT_TOGGLE"
+        "genericType": "LIGHT_OFF"
     }
 }

@@ -24,15 +24,15 @@
                 "params": "clustId=0102&attrId=0008"
             },
             "Up": {
-                "use": "zbCmd-0102-UpOpen",
+                "use": "act_zbCmdG-0102-UpOpen",
                 "isVisible": "1"
             },
             "Stop": {
-                "use": "zbCmd-0102-Stop",
+                "use": "act_zbCmdG-0102-Stop",
                 "isVisible": "1"
             },
             "Down": {
-                "use": "zbCmd-0102-DownClose",
+                "use": "act_zbCmdG-0102-DownClose",
                 "isVisible": "1"
             },
             "Bind-0102-ToZigate": {

@@ -1,5 +1,5 @@
 {
-    "zbCmd-0300-MoveToColorTemp": {
+    "act_zbCmdG-0300-MoveToColorTemp": {
         "comment": "Cluster 0300, move to color temp",
         "name": "MoveToColorTemp",
         "subType": "slider",

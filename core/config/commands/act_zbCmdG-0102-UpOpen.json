@@ -1,5 +1,8 @@
 {
     "act_zbCmdG-0102-UpOpen": {
+        "isVisible": 0,
+        "name": "Up",
+        "isHistorized": 0,
         "subType": "other",
         "invertBinary": "0",
         "template": "",

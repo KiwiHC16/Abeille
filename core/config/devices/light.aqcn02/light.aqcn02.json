@@ -19,28 +19,28 @@
                 "isVisible": 1
             },
             "On": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "isVisible": 1
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "isVisible": 1
             },
             "setLevel": {
                 "use": "setLevel"
             },
             "Set 2700K": {
-                "use": "zbCmd-0300-MoveToColorTemp",
+                "use": "act_zbCmdG-0300-MoveToColorTemp",
                 "params": "slider=2700",
                 "isVisible": 1
             },
             "Set 4000K": {
-                "use": "zbCmd-0300-MoveToColorTemp",
+                "use": "act_zbCmdG-0300-MoveToColorTemp",
                 "params": "slider=4000",
                 "isVisible": 1
             },
             "Set 5000K": {
-                "use": "zbCmd-0300-MoveToColorTemp",
+                "use": "act_zbCmdG-0300-MoveToColorTemp",
                 "params": "slider=5000",
                 "isVisible": 1
             },
@@ -95,7 +95,7 @@
                 "params": "clustId=0000&attrId=4000"
             },
             "Toggle": {
-                "use": "zbCmd-0006-Toggle",
+                "use": "act_zbCmdG-0006-Toggle",
                 "nextLine": "after"
             }
         }

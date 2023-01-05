@@ -39,12 +39,12 @@
                 "nextLine": "after"
             },
             "Get Level": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0102&attrId=0008"
             },
             "Set calibration time": {
                 "comment": "0 to 30s, multiplied by 10",
-                "use": "zbWriteAttribute",
+                "use": "act_zbWriteAttribute",
                 "subType": "slider",
                 "maxValue": 30,
                 "valueOffset": "#value#*10",
@@ -62,12 +62,12 @@
                 "isVisible": "1"
             },
             "Bind 0102-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0102",
                 "execAtCreation": "yes"
             },
             "SetReporting 0102": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             }

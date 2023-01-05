@@ -32,7 +32,7 @@
                 "isVisible": 1
             },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=0B&clustId=0006&attrId=0000"
             }
         }

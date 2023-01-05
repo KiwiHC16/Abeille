@@ -39,7 +39,7 @@
                 "isVisible": "1"
             },
             "Get Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "On": {
@@ -55,12 +55,12 @@
                 "use": "act_zbCmdG-0006-Toggle"
             },
             "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "yes"
             },
             "SetReporting-0006": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
@@ -74,16 +74,16 @@
                 "isVisible": "1"
             },
             "Get Total power": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0702&attrId=0000"
             },
             "Bind-0702-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0702",
                 "execAtCreation": "yes"
             },
             "SetReporting-0702-TotalPower": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0702&attrType=25&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
@@ -96,7 +96,7 @@
                 "isVisible": "0"
             },
             "Get RMS Voltage": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0B04&attrId=0505"
             },
             "RMS Current": {
@@ -105,7 +105,7 @@
                 "isVisible": "1"
             },
             "Get RMS Current": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0B04&attrId=0508"
             },
             "Active Power": {
@@ -114,7 +114,7 @@
                 "isVisible": "1"
             },
             "Get Active Power": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0B04&attrId=050B"
             },
             "Poll 0B04": {

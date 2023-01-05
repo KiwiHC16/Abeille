@@ -22,12 +22,12 @@
                 "params": "ep=23"
             },
             "SetReporting 23-0001-00020": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "ep=23&clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "yes"
             },
             "Bind 23-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=23&clustId=0001",
                 "execAtCreation": "yes"
             },
@@ -46,12 +46,12 @@
                 "trigOutOffset": "#value#&1"
             },
             "Bind 0500-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0500",
                 "execAtCreation": "yes"
             },
             "SetReporting 0500-0002": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
@@ -61,16 +61,16 @@
                 "isVisible": "1"
             },
             "Get Temperature": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=26&clustId=0402&attrId=0000"
             },
             "Bind 26-0402-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=26&clustId=0402",
                 "execAtCreation": "yes"
             },
             "SetReporting 26-0402-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "ep=26&clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0E10&changeVal=",
                 "execAtCreation": "yes"
             },

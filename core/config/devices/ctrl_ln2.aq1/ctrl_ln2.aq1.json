@@ -69,11 +69,11 @@
                 "params": "ep=02"
             },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "Get-CurrentLevel": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
             "Identify": {
@@ -88,7 +88,7 @@
                 "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
         }

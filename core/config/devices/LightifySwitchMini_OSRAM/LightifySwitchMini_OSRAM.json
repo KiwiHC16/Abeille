@@ -17,12 +17,12 @@
         },
         "commands": {
             "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },
             "SetReporting-0001-0020": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
@@ -33,7 +33,7 @@
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Bind-01-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0006",
                 "execAtCreation": "Yes"
             },
@@ -42,7 +42,7 @@
                 "params": "ep=01&clustId=0006&cmdId=01"
             },
             "Bind-02-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=02&clustId=0006",
                 "execAtCreation": "Yes"
             },
@@ -51,7 +51,7 @@
                 "params": "ep=02&clustId=0006&cmdId=00"
             },
             "Bind-03-0300-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=03&clustId=0300",
                 "execAtCreation": "Yes"
             },

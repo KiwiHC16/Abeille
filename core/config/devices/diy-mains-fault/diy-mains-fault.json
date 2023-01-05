@@ -18,7 +18,7 @@
                 "isVisible": 1
             },
             "Get-Etat 2": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=02&clustId=0006&attrId=0000"
             }
         }

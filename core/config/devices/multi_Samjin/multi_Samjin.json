@@ -17,19 +17,19 @@
                 "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "SetReporting 0001-00021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "yes"
             },
             "Bind 0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "yes"
             },
@@ -41,13 +41,13 @@
                 "isVisible": "1"
             },
             "SetReporting 0402-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=",
                 "execAtCreation": "yes",
                 "comment": "Reporting every 5 to 10mins"
             },
             "Bind 0402-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0402",
                 "execAtCreation": "yes"
             },
@@ -61,12 +61,12 @@
                 "isVisible": "1"
             },
             "Bind 0500-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0500",
                 "execAtCreation": "yes"
             },
             "SetReporting 0500-0002": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
@@ -76,27 +76,27 @@
                 "isVisible": "1"
             },
             "Bind FC02-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=FC02",
                 "execAtCreation": "yes"
             },
             "SetReporting FC02-0010": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=FC02&attrId=0010&attrType=18&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
                 "execAtCreation": "yes"
             },
             "SetReporting FC02-0012": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=FC02&attrId=0012&attrType=29&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
                 "execAtCreation": "yes"
             },
             "SetReporting FC02-0013": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=FC02&attrId=0013&attrType=29&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
                 "execAtCreation": "yes"
             },
             "SetReporting FC02-0014": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=FC02&attrId=0014&attrType=29&minInterval=0000&maxInterval=0000&manufId=1241&changeVal=",
                 "execAtCreation": "yes"
             }

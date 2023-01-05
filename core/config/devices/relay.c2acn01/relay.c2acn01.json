@@ -50,7 +50,7 @@
                 "params": "ep=02"
             },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "Conso": {

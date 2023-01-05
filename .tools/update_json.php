@@ -171,6 +171,15 @@
                     echo "  Cmd '".$cmdFName."' RENAMED.\n";
                 }
 
+                // zbReadAttribute => act_zbReadAttribute
+                else if (in_array($cmdFName, array('zbReadAttribute', 'zbWriteAttribute', 'zbConfigureReporting', 'zbBindToZigate'))) {
+                    $new = "act_zb".substr($cmdFName, 2);
+                    $commands2[$key] = $value;
+                    $commands2[$key]["use"] = $new;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' RENAMED.\n";
+                }
+
                 // Cluster 0001 updates
                 else if (($cmdFName == "BindToPowerConfig") && $oldSyntax) {
                     $cmdArr = Array(
@@ -839,9 +848,13 @@
             //     continue;
             // $new = "act_zbCmdG-".substr($dirEntry, 6);
 
-            if (!preg_match('/^zbCmdR-[a-zA-Z0-9]{4}-/', $dirEntry))
+            // if (!preg_match('/^zbCmdR-[a-zA-Z0-9]{4}-/', $dirEntry))
+            //     continue;
+            // $new = "inf_zbCmdR-".substr($dirEntry, 7);
+
+            if (!in_array($dirEntry, array('zbReadAttribute', 'zbWriteAttribute', 'zbConfigureReporting', 'zbBindToZigate')))
                 continue;
-            $new = "inf_zbCmdR-".substr($dirEntry, 7);
+            $new = "act_zb".substr($dirEntry, 2);
 
             $jsonContent = file_get_contents($fullPath);
             $content = json_decode($jsonContent, true);

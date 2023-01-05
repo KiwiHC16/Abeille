@@ -1,5 +1,5 @@
 {
-    "zbWriteAttribute": {
+    "act_zbWriteAttribute": {
         "comment": "Generic command to write any attribute",
         "comment2": "Optional params: attrType=XX, dir=XX (default=00), manufId=XXXX",
         "isVisible": 0,

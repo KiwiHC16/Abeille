@@ -26,12 +26,12 @@
                 "params": "ep=01"
             },
             "SetReporting 01-0001-00021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "yes"
             },
             "Bind 01-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0001",
                 "execAtCreation": "yes"
             },
@@ -44,17 +44,17 @@
                 "isVisible": "1"
             },
             "Get Temperature": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0402&attrId=0000"
             },
             "SetReporting 01-0402-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "ep=01&clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=",
                 "execAtCreation": "yes",
                 "comment": "Reporting every 5 to 10mins"
             },
             "Bind 01-0402-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0402",
                 "execAtCreation": "yes"
             },
@@ -64,17 +64,17 @@
                 "isVisible": "1"
             },
             "Get Humidity": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=02&clustId=0405&attrId=0000"
             },
             "SetReporting 02-0405-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "ep=02&clustId=0405&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=",
                 "execAtCreation": "yes",
                 "comment": "Reporting every 5 to 10mins"
             },
             "Bind 02-0405-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=02&clustId=0405",
                 "execAtCreation": "yes"
             }

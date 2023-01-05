@@ -21,7 +21,7 @@
                 "isVisible": 1
             },
             "Get-Etat 1": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0006&attrId=0000"
             },
             "Digital Output 1": {
@@ -42,7 +42,7 @@
                 "isVisible": 1
             },
             "Get-Etat 2": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=02&clustId=0006&attrId=0000"
             },
             "Digital Output 2": {
@@ -63,7 +63,7 @@
                 "isVisible": 1
             },
             "Get-Etat 3": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=03&clustId=0006&attrId=0000"
             },
             "Digital Output 3": {
@@ -84,7 +84,7 @@
                 "isVisible": 1
             },
             "Get-Etat 4": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=04&clustId=0006&attrId=0000"
             },
             "Digital Output 4": {
@@ -105,7 +105,7 @@
                 "isVisible": 1
             },
             "Get-Etat 5": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=05&clustId=0006&attrId=0000"
             },
             "Digital Output 5": {
@@ -126,7 +126,7 @@
                 "isVisible": 1
             },
             "Get-Etat 6": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=06&clustId=0006&attrId=0000"
             },
             "Digital Output 6": {
@@ -147,7 +147,7 @@
                 "isVisible": 1
             },
             "Get-Etat 7": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=07&clustId=0006&attrId=0000"
             },
             "Digital Output 7": {
@@ -168,7 +168,7 @@
                 "isVisible": 1
             },
             "Get-Etat 8": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=08&clustId=0006&attrId=0000"
             },
             "Digital Output 8": {

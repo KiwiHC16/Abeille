@@ -22,12 +22,12 @@
                 "params": "ep=2C"
             },
             "SetReporting 2C-0001-00020": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "ep=2C&clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "yes"
             },
             "Bind 2C-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=2C&clustId=0001",
                 "execAtCreation": "yes"
             },
@@ -45,7 +45,7 @@
                 "trigOutOffset": "#value#&1"
             },
             "Bind 0500-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0500",
                 "execAtCreation": "yes"
             }

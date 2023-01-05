@@ -1,5 +1,5 @@
 {
-    "zbBindToZigate": {
+    "act_zbBindToZigate": {
         "name": "Bind device to Zigate",
         "comment": "Simplified version of zbBind",
         "subType": "other",

@@ -1,5 +1,5 @@
 {
-    "zbReadAttribute": {
+    "act_zbReadAttribute": {
         "comment": "Generic command to read any attribute",
         "isVisible": 0,
         "name": "ReadAttribute",

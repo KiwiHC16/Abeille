@@ -1,5 +1,5 @@
 {
-    "zbConfigureReporting": {
+    "act_zbConfigureReporting": {
         "comment": "Generic configure reporting command",
         "name": "Configure reporting",
         "subType": "other",

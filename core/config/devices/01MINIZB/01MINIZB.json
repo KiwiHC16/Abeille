@@ -17,7 +17,7 @@
                 "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "Groups": {
@@ -36,7 +36,7 @@
                 "isVisible": 1
             },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "Toggle": {

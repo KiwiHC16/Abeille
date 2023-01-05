@@ -17,11 +17,11 @@
                 "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "Bind 0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "yes"
             },
@@ -33,17 +33,17 @@
                 "isVisible": "1"
             },
             "Get Temperature": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0402&attrId=0000"
             },
             "SetReporting 0402-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=",
                 "execAtCreation": "yes",
                 "comment": "Reporting every 5 to 10mins"
             },
             "Bind 0402-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0402",
                 "execAtCreation": "yes"
             }

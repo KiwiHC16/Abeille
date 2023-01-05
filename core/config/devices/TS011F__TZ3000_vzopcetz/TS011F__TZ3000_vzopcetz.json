@@ -74,44 +74,44 @@
                 "params": "ep=03"
             },
             "Get-Status 1": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0006&attrId=0000"
             },
             "Get-Status 2": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=02&clustId=0006&attrId=0000"
             },
             "Get-Status 3": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=03&clustId=0006&attrId=0000"
             },
             "Bind-01-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0006",
                 "execAtCreation": "Yes"
             },
             "SetReporting-OnOff-01": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes"
             },
             "Bind-02-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=02&clustId=0006",
                 "execAtCreation": "Yes"
             },
             "SetReporting-OnOff-02": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes"
             },
             "Bind-03-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=03&clustId=0006",
                 "execAtCreation": "Yes"
             },
             "SetReporting-OnOff-03": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "ep=03&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes"
             }

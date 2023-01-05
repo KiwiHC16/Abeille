@@ -19,16 +19,16 @@
                 "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "BindToZigate-Power": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0001",
                 "execAtCreation": "Yes"
             },
             "SetReporting-BatteryVolt": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
@@ -42,12 +42,12 @@
                 "use": "Xiaomi-ff01"
             },
             "BindToZigate-Illuminance": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "EP=01&clustId=0400",
                 "execAtCreation": "Yes"
             },
             "SetReporting-Illuminance": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0400&attrType=21&attrId=0000&minInterval=0258&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes"
             },

@@ -32,16 +32,16 @@
                 "nextLine": "after"
             },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
             "SetReporting-0006-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
@@ -55,7 +55,7 @@
                 "use": "inf_zbAttr-0702-UnitOfMeasure"
             },
             "Get-0702-UnitOfMeasure": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0702&attrId=0300"
             },
             "SummationFormatting": {
@@ -63,7 +63,7 @@
                 "params": "ep=01"
             },
             "Get-0702-SummationFormatting": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0702&attrId=0303"
             },
             "RMSVoltage": {
@@ -76,7 +76,7 @@
                 "isVisible": 1
             },
             "Get-0B04-RMSCurrent": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0B04&attrId=0508"
             },
             "ActivePower": {
@@ -85,7 +85,7 @@
                 "isVisible": 1
             },
             "Get-0B04-ActivePower": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0B04&attrId=050B"
             },
             "Poll 0B04": {

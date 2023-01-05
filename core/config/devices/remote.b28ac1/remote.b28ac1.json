@@ -31,44 +31,44 @@
                 "comment": "Event from EP3 corresponding to simultanenous push of both buttons"
             },
             "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },
             "SetReporting-0001-0020": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
             "SetMode-Scene": {
-                "use": "zbWriteAttribute",
+                "use": "act_zbWriteAttribute",
                 "params": "clustId=FCC0&attrId=0009&attrType=20&attrVal=01&manufId=115F",
                 "execAtCreation": "Yes",
                 "comment": "Xiaomi specific attribute: 1 = event base switching, 2 = zigbee group switching, 3 = xiaomi specific mode"
             },
             "SetMode-Multiclic": {
-                "use": "zbWriteAttribute",
+                "use": "act_zbWriteAttribute",
                 "params": "clustId=FCC0&attrId=0125&attrType=20&attrVal=02&manufId=115F",
                 "execAtCreation": "Yes",
                 "comment": "Xiaomi specific attribute: 1 = single clic only, 2 = multiclic mode"
             },
             "Bind-01-0003-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0003",
                 "execAtCreation": "Yes"
             },
             "Bind-01-0012-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0012",
                 "execAtCreation": "Yes"
             },
             "Bind-02-0012-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=02&clustId=0012",
                 "execAtCreation": "Yes"
             },
             "Bind-03-0012-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=03&clustId=0012",
                 "execAtCreation": "Yes"
             }

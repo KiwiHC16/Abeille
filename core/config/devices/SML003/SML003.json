@@ -17,19 +17,19 @@
                 "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "SetReporting 0001-00021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "yes"
             },
             "Bind 0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "yes"
             },
@@ -41,16 +41,16 @@
                 "isVisible": "1"
             },
             "Get Illuminance": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0400&attrId=0000"
             },
             "Bind 0400-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0400",
                 "execAtCreation": "yes"
             },
             "SetReporting 0400-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0400&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=0000",
                 "execAtCreation": "yes",
                 "comment": "Reporting every 5 to 10mins"
@@ -60,17 +60,17 @@
                 "isVisible": "1"
             },
             "Get Temperature": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0402&attrId=0000"
             },
             "SetReporting 0402-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=",
                 "execAtCreation": "yes",
                 "comment": "Reporting every 5 to 10mins"
             },
             "Bind 0402-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0402",
                 "execAtCreation": "yes"
             },
@@ -79,12 +79,12 @@
                 "isVisible": "1"
             },
             "Bind 0406-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0406",
                 "execAtCreation": "yes"
             },
             "SetReporting 0406-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0406&attrType=18&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             }

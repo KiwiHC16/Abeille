@@ -23,7 +23,7 @@
                 "isVisible": "1"
             },
             "Get Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "On": {
@@ -38,12 +38,12 @@
                 "use": "act_zbCmdG-0006-Toggle"
             },
             "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "yes"
             },
             "SetReporting-0006": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
@@ -52,7 +52,7 @@
                 "isVisible": "1"
             },
             "Get Current Level": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
             "Set-Level": {
@@ -60,12 +60,12 @@
                 "isVisible": "1"
             },
             "Bind-0008-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
                 "execAtCreation": "yes"
             },
             "SetReporting-0008": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
@@ -73,28 +73,28 @@
                 "use": "inf_zbAttr-0300-CurrentHue"
             },
             "Get Current HUE": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0300&attrId=0000"
             },
             "Current Saturation": {
                 "use": "inf_zbAttr-0300-CurrentSaturation"
             },
             "Get Current Saturation": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0300&attrId=0001"
             },
             "Current X": {
                 "use": "inf_zbAttr-0300-CurrentX"
             },
             "Get Current X": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0300&attrId=0003"
             },
             "Current Y": {
                 "use": "inf_zbAttr-0300-CurrentY"
             },
             "Get Current Y": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0300&attrId=0004"
             },
             "Set White": {
@@ -122,7 +122,7 @@
                 "isVisible": "1"
             },
             "Get ColorTemperatureMireds": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0300&attrId=0007"
             },
             "Color Mode": {
@@ -130,7 +130,7 @@
                 "isVisible": "1"
             },
             "Get Color Mode": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0300&attrId=0008"
             },
             "Set Temperature": {
@@ -148,7 +148,7 @@
                 "isVisible": 1
             },
             "Bind-0300-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0300",
                 "execAtCreation": "yes"
             }

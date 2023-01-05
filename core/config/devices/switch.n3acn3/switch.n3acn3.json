@@ -38,11 +38,11 @@
                 "params": "ep=01"
             },
             "Get-Status 1": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0006&attrId=0000"
             },
             "Bind-01-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0006",
                 "execAtCreation": "Yes"
             },
@@ -67,11 +67,11 @@
                 "params": "ep=02"
             },
             "Get-Status 2": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=02&clustId=0006&attrId=0000"
             },
             "Bind-02-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=02&clustId=0006",
                 "execAtCreation": "Yes"
             },
@@ -96,11 +96,11 @@
                 "params": "ep=03"
             },
             "Get-Status 3": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=03&clustId=0006&attrId=0000"
             },
             "Bind-03-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=03&clustId=0006",
                 "execAtCreation": "Yes"
             },
@@ -111,11 +111,11 @@
                 "isVisible": 1
             },
             "Get-Total power": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0702&attrId=0000"
             },
             "Bind-0702-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0702",
                 "execAtCreation": "yes"
             },
@@ -125,11 +125,11 @@
                 "isVisible": 1
             },
             "Get-0B04-ActivePower": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0B04&attrId=050B"
             },
             "Bind-0B04-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0B04",
                 "execAtCreation": "Yes"
             }

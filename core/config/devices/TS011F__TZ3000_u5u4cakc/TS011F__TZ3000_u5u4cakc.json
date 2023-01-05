@@ -35,16 +35,16 @@
                 "nextLine": "after"
             },
             "Get Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "Bind 0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "yes"
             },
             "SetReporting 0006": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
@@ -55,7 +55,7 @@
                 "isVisible": "1"
             },
             "Get Total power": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0702&attrId=0000"
             },
             "RMS Voltage": {
@@ -64,7 +64,7 @@
                 "isVisible": "0"
             },
             "Get RMS Voltage": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0B04&attrId=0505"
             },
             "RMS Current": {
@@ -73,7 +73,7 @@
                 "isVisible": "1"
             },
             "Get RMS Current": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0B04&attrId=0508"
             },
             "Active Power": {
@@ -82,27 +82,27 @@
                 "isVisible": "1"
             },
             "Get Active Power": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0B04&attrId=050B"
             },
             "Bind 0B04-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0B04",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
             "SetReporting 0B04-RMSVoltage": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0B04&attrType=21&attrId=0505&minInterval=0000&maxInterval=0000&changeVal=00C8",
                 "execAtCreation": "yes"
             },
             "SetReporting 0B04-RMSCurrent": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
             "SetReporting 0B04-ActivePower": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             }

@@ -21,12 +21,12 @@
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "SetReporting 0001-00021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "yes"
             },
             "Bind 0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "yes"
             },
@@ -46,7 +46,7 @@
                 "trigOutOffset": "#value#&1"
             },
             "Set Sensibility": {
-                "use": "zbWriteAttribute",
+                "use": "act_zbWriteAttribute",
                 "params": "clustId=0500&attrId=0013&attrType=20&attrVal=#slider#",
                 "subType": "slider",
                 "minValue": 0,
@@ -58,7 +58,7 @@
                 "isVisible": "1"
             },
             "Bind 0500-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0500",
                 "execAtCreation": "yes"
             }

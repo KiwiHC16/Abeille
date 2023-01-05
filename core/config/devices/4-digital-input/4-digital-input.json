@@ -18,7 +18,7 @@
                 "isVisible": 1
             },
             "Get-OnOffStatus 2": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=02&clustId=0006&attrId=0000"
             },
             "Digital Input 3": {
@@ -29,7 +29,7 @@
                 "isVisible": 1
             },
             "Get-OnOffStatus 3": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=03&clustId=0006&attrId=0000"
             },
             "Digital Input 4": {
@@ -40,7 +40,7 @@
                 "isVisible": 1
             },
             "Get-OnOffStatus 4": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=04&clustId=0006&attrId=0000"
             },
             "Digital Input 5": {
@@ -51,7 +51,7 @@
                 "isVisible": 1
             },
             "Get-OnOffStatus 5": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=05&clustId=0006&attrId=0000"
             }
         }

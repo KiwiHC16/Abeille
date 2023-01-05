@@ -22,7 +22,7 @@
                 "isVisible": 1
             },
             "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },
@@ -31,7 +31,7 @@
                 "isVisible": 1
             },
             "Bind-0500-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0500",
                 "execAtCreation": "Yes"
             }

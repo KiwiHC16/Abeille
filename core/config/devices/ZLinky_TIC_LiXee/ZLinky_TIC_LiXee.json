@@ -13,48 +13,176 @@
             "energy": "1"
         },
         "commands": {
-            "OPTARIF": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0000", "template": "badge", "subType": "string", "isVisible": 1 },
-            "Get OPTARIF": { "use": "zbReadAttribute", "params": "clustId=FF66&attrId=0000", "execAtCreation": 1 },
-            "ISOUSC": { "use": "zb-CustomInfo", "params": "clustId=0B01&attrId=000D", "template": "badge", "unit": "A", "isVisible": 1, "nextLine": "after" },
-            "Get ISOUSC": { "use": "zbReadAttribute", "params": "clustId=0B01&attrId=000D", "execAtCreation": 1 },
-            "ADC0": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0308", "subType": "string" },
-            "Get ADC0": { "use": "zbReadAttribute", "params": "clustId=0702&attrId=0308", "execAtCreation": 1 },
-
-            "BASE": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0000", "unit": "Wh", "template": "badge", "isVisible": 1 },
-            "Get BASE": { "use": "zbReadAttribute", "params": "clustId=0702&attrId=0000", "execAtCreation": 1 },
-            "HCHC": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0102", "template": "badge", "isVisible": 1 },
-            "HCHP": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0100", "template": "badge", "isVisible": 1 },
-            "EJPHN": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0100" },
-            "EJPHPM": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0102" },
-            "BBRHCJB": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0100" },
-            "BBRHPJB": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0102" },
-            "BBRHCJW": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0104" },
-            "BBRHPJW": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0106" },
-            "BBRHCJR": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0108" },
-            "BBRHPJR": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=010A" },
-            "IINST": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=0508" },
-            "Get IINST": { "use": "zbReadAttribute", "params": "clustId=0B04&attrId=0508", "execAtCreation": 1 },
+            "OPTARIF": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=FF66&attrId=0000",
+                "template": "badge",
+                "subType": "string",
+                "isVisible": 1
+            },
+            "Get OPTARIF": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=FF66&attrId=0000",
+                "execAtCreation": 1
+            },
+            "ISOUSC": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0B01&attrId=000D",
+                "template": "badge",
+                "unit": "A",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Get ISOUSC": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0B01&attrId=000D",
+                "execAtCreation": 1
+            },
+            "ADC0": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0702&attrId=0308",
+                "subType": "string"
+            },
+            "Get ADC0": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0702&attrId=0308",
+                "execAtCreation": 1
+            },
+            "BASE": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0702&attrId=0000",
+                "unit": "Wh",
+                "template": "badge",
+                "isVisible": 1
+            },
+            "Get BASE": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0702&attrId=0000",
+                "execAtCreation": 1
+            },
+            "HCHC": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0702&attrId=0102",
+                "template": "badge",
+                "isVisible": 1
+            },
+            "HCHP": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0702&attrId=0100",
+                "template": "badge",
+                "isVisible": 1
+            },
+            "EJPHN": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0702&attrId=0100"
+            },
+            "EJPHPM": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0702&attrId=0102"
+            },
+            "BBRHCJB": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0702&attrId=0100"
+            },
+            "BBRHPJB": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0702&attrId=0102"
+            },
+            "BBRHCJW": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0702&attrId=0104"
+            },
+            "BBRHPJW": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0702&attrId=0106"
+            },
+            "BBRHCJR": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0702&attrId=0108"
+            },
+            "BBRHPJR": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0702&attrId=010A"
+            },
+            "IINST": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0B04&attrId=0508"
+            },
+            "Get IINST": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0B04&attrId=0508",
+                "execAtCreation": 1
+            },
             "SetReporting IINST": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-            "IINST1": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=0508" },
-            "IINST2": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=0908" },
-            "IINST3": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=0A08" },
-            "IMAX": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=050A" },
-            "Get-IMAX": { "use": "zbReadAttribute", "params": "clustId=0B04&attrId=050A", "execAtCreation": 1 },
-            "IMAX1": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=050A" },
-            "IMAX2": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=090A" },
-            "IMAX3": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=0A0A" },
-            "PMAX": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=050D" },
-            "PAPP": { "use": "zb-CustomInfo", "params": "clustId=0B04&attrId=050F" },
-            "PTEC": { "use": "zb-CustomInfo", "params": "clustId=0702&attrId=0020" },
-            "DEMAIN": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0001" },
-            "HHPHC": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0002" },
-            "PPOT": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0003" },
-            "PEJP": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0004" },
-            "ADPS": { "use": "zb-CustomInfo", "params": "clustId=FF66&attrId=0005" }
+            "IINST1": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0B04&attrId=0508"
+            },
+            "IINST2": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0B04&attrId=0908"
+            },
+            "IINST3": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0B04&attrId=0A08"
+            },
+            "IMAX": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0B04&attrId=050A"
+            },
+            "Get-IMAX": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0B04&attrId=050A",
+                "execAtCreation": 1
+            },
+            "IMAX1": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0B04&attrId=050A"
+            },
+            "IMAX2": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0B04&attrId=090A"
+            },
+            "IMAX3": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0B04&attrId=0A0A"
+            },
+            "PMAX": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0B04&attrId=050D"
+            },
+            "PAPP": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0B04&attrId=050F"
+            },
+            "PTEC": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=0702&attrId=0020"
+            },
+            "DEMAIN": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=FF66&attrId=0001"
+            },
+            "HHPHC": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=FF66&attrId=0002"
+            },
+            "PPOT": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=FF66&attrId=0003"
+            },
+            "PEJP": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=FF66&attrId=0004"
+            },
+            "ADPS": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=FF66&attrId=0005"
+            }
         }
     }
 }

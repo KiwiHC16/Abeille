@@ -17,7 +17,7 @@
                 "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "Battery-Percent": {
@@ -26,17 +26,17 @@
                 "isVisible": 1
             },
             "Get Battery-Percent": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=02&clustId=0001&attrId=0021"
             },
             "Bind 02-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=02&clustId=0001",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
             "SetReporting 02-0001-0021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "ep=02&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=00",
                 "comment": "Reporting every 30 to 60mins",
                 "comment2": "changeVal=00 seems MANDATORY",
@@ -83,7 +83,7 @@
                 "use": "boutonStateRWL021_8"
             },
             "Bind-FC00-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "ep=02&clustId=FC00",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9

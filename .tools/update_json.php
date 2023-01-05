@@ -180,6 +180,15 @@
                     echo "  Cmd '".$cmdFName."' RENAMED.\n";
                 }
 
+                // // Group-Membership => inf_zbAttr-0004-Group-Membership
+                // else if (in_array($cmdFName, array('zbReadAttribute', 'zbWriteAttribute', 'zbConfigureReporting', 'zbBindToZigate'))) {
+                //     $new = "act_zb".substr($cmdFName, 2);
+                //     $commands2[$key] = $value;
+                //     $commands2[$key]["use"] = $new;
+                //     $devUpdated = true;
+                //     echo "  Cmd '".$cmdFName."' RENAMED.\n";
+                // }
+
                 // Cluster 0001 updates
                 else if (($cmdFName == "BindToPowerConfig") && $oldSyntax) {
                     $cmdArr = Array(

@@ -4,7 +4,7 @@
         "subType": "numeric",
         "configuration": {
             "trigOut": "0001-#EP#-0021",
-            "trigOutOffset": "#value#*100\/3"
+            "trigOutOffset": "#value#*100/3"
         },
         "type": "info",
         "logicalId": "0001-#EP#-0020",

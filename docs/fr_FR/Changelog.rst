@@ -3,6 +3,7 @@ ChangeLog
 
 - Interne: Parser: Correction 'single precision'.
 - Modeles commandes: Normalisation de certains noms (inf_zbAttr-XXXX-YYYY).
+- Heiman water leakage sensor: Mise-à-jour modèle (2527).
 
 230103-BETA-5
 -------------

@@ -12,7 +12,8 @@
         },
         "configuration": {
             "icon": "Heiman-WaterSensor",
-            "mainEP": "01"
+            "mainEP": "01",
+            "batteryType": "2x1.5V AAA"
         },
         "commands": {
             "Battery-Percent": {
@@ -41,11 +42,6 @@
                 "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value",
                 "trigOut": "01-0500-alarm1",
                 "trigOutOffset": "#value#&1"
-            },
-            "Bind 0500-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "clustId=0500",
-                "execAtCreation": "yes"
             }
         }
     }

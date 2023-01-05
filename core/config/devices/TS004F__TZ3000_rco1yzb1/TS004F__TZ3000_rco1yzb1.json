@@ -33,15 +33,15 @@
                 "use": "Group-Membership"
             },
             "Click": {
-                "use": "zbCmdR-0006-On",
+                "use": "inf_zbCmdR-0006-On",
                 "calculValueOffset": 1
             },
             "Double click": {
-                "use": "zbCmdR-0006-Off",
+                "use": "inf_zbCmdR-0006-Off",
                 "calculValueOffset": 1
             },
             "Long click": {
-                "use": "zbCmdR-0008-Stop",
+                "use": "inf_zbCmdR-0008-Stop",
                 "calculValueOffset": 1
             }
         }

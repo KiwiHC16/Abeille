@@ -153,8 +153,18 @@
                     echo "  Cmd '".$cmdFName."' RENAMED.\n";
                 }
 
+                // zbCmd-XXXX-YYYY => act_zbCmdG-XXXX-YYYY
                 else if (preg_match('/^zbCmd-[a-zA-Z0-9]{4}-/', $cmdFName)) {
                     $new = "act_zbCmdG-".substr($cmdFName, 6);
+                    $commands2[$key] = $value;
+                    $commands2[$key]["use"] = $new;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' RENAMED.\n";
+                }
+
+                // zbCmdR-XXXX-YYYY => inf_zbCmdR-XXXX-YYYY
+                else if (preg_match('/^zbCmdR-[a-zA-Z0-9]{4}-/', $cmdFName)) {
+                    $new = "inf_zbCmdR-".substr($cmdFName, 7);
                     $commands2[$key] = $value;
                     $commands2[$key]["use"] = $new;
                     $devUpdated = true;
@@ -825,9 +835,13 @@
             //     continue;
             // $new = "inf_zbAttr-".substr($dirEntry, 3);
 
-            if (!preg_match('/^zbCmd-[a-zA-Z0-9]{4}-/', $dirEntry))
+            // if (!preg_match('/^zbCmd-[a-zA-Z0-9]{4}-/', $dirEntry))
+            //     continue;
+            // $new = "act_zbCmdG-".substr($dirEntry, 6);
+
+            if (!preg_match('/^zbCmdR-[a-zA-Z0-9]{4}-/', $dirEntry))
                 continue;
-            $new = "act_zbCmdG-".substr($dirEntry, 6);
+            $new = "inf_zbCmdR-".substr($dirEntry, 7);
 
             $jsonContent = file_get_contents($fullPath);
             $content = json_decode($jsonContent, true);

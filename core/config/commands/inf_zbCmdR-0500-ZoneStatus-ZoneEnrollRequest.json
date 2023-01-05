@@ -1,5 +1,5 @@
 {
-    "zbCmdR-0500-ZoneStatus-ZoneEnrollRequest": {
+    "inf_zbCmdR-0500-ZoneStatus-ZoneEnrollRequest": {
         "comment": "Received 0500/IAS Zone cluster, cmd 01 (Zone enroll request)",
         "comment2": "#value# formatted as follows 'zoneType-manufCode'",
         "subType": "numeric",

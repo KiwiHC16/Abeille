@@ -18,7 +18,11 @@
             "Groups": {
                 "use": "Group-Membership"
             },
-            "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1

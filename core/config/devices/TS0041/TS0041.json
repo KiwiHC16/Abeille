@@ -11,7 +11,7 @@
         "type": "Zemismart Remote 1 bouton sur pile",
         "commands": {
             "etat inter 0": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
                 "subType": "numeric",
                 "isVisible": 1

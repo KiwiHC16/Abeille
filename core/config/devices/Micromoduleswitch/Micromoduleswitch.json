@@ -11,7 +11,7 @@
         "type": "Legrand Micro Module Encastrable 220V avec Neutre et un bouton poussoir",
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "On": {
@@ -46,7 +46,7 @@
                 "execAtCreationDelay": 11
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",

@@ -13,8 +13,12 @@
         },
         "type": "Aqara Opple wireless switch 6 buttons",
         "commands": {
-            "BatteryVolt2Percent": { "use": "battery-Volt2Percent-3" },
-            "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
+            "BatteryVolt2Percent": {
+                "use": "battery-Volt2Percent-3"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
             "Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
@@ -25,13 +29,31 @@
                 "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-
-            "Click 1": { "use": "zbCmdR-Custom", "params": "ep=01&clustId=0006&cmdId=00", "isVisible": 1 },
-            "Click 2": { "use": "zbCmdR-Custom", "params": "ep=01&clustId=0006&cmdId=01", "isVisible": 1 },
-
-            "Bind-01-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0006", "execAtCreation": "Yes" },
-            "Bind-01-0008-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0008", "execAtCreation": "Yes" },
-            "Bind-01-0300-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0300", "execAtCreation": "Yes" }
+            "Click 1": {
+                "use": "zbCmdR-Custom",
+                "params": "ep=01&clustId=0006&cmdId=00",
+                "isVisible": 1
+            },
+            "Click 2": {
+                "use": "zbCmdR-Custom",
+                "params": "ep=01&clustId=0006&cmdId=01",
+                "isVisible": 1
+            },
+            "Bind-01-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Bind-01-0008-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0008",
+                "execAtCreation": "Yes"
+            },
+            "Bind-01-0300-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0300",
+                "execAtCreation": "Yes"
+            }
         }
     }
 }

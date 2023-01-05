@@ -11,40 +11,119 @@
         },
         "type": "Xiaomi QBKG26LM 3 gang smart wall switch",
         "commands": {
-            "Identify": { "use": "Identify" },
-
-            "Groups": { "use": "Group-Membership" },
-
-            "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1 },
-            "On 1": { "use": "zbCmd-0006-On", "params": "ep=01", "isVisible": 1 },
-            "Off 1": { "use": "zbCmd-0006-Off", "params": "ep=01", "isVisible": 1, "nextLine": "after" },
-            "Toggle 1": { "use": "zbCmd-0006-Toggle", "params": "ep=01" },
-            "Get-Status 1": { "use": "zbReadAttribute", "params": "ep=01&clustId=0006&attrId=0000" },
-            "Bind-01-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0006", "execAtCreation": "Yes" },
-
-            "Status 2": { "use": "zb-0006-OnOff", "params": "ep=02", "isVisible": 1 },
-            "On 2": { "use": "zbCmd-0006-On", "params": "ep=02", "isVisible": 1 },
-            "Off 2": { "use": "zbCmd-0006-Off", "params": "ep=02", "isVisible": 1, "nextLine": "after" },
-            "Toggle 2": { "use": "zbCmd-0006-Toggle", "params": "ep=02" },
-            "Get-Status 2": { "use": "zbReadAttribute", "params": "ep=02&clustId=0006&attrId=0000" },
-            "Bind-02-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=02&clustId=0006", "execAtCreation": "Yes" },
-
-            "Status 3": { "use": "zb-0006-OnOff", "params": "ep=03", "isVisible": 1 },
-            "On 3": { "use": "zbCmd-0006-On", "params": "ep=03", "isVisible": 1 },
-            "Off 3": { "use": "zbCmd-0006-Off", "params": "ep=03", "isVisible": 1, "nextLine": "after"  },
-            "Toggle 3": { "use": "zbCmd-0006-Toggle", "params": "ep=03" },
-            "Get-Status 3": { "use": "zbReadAttribute", "params": "ep=03&clustId=0006&attrId=0000" },
-            "Bind-03-0006-ToZigate": { "use": "zbBindToZigate", "params": "ep=03&clustId=0006", "execAtCreation": "Yes" },
-
-            "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "mult=1&div=1", "unit": "Wh", "isVisible": 1 },
-            "Get-Total power": { "use": "zbReadAttribute", "params": "clustId=0702&attrId=0000" },
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Status 1": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "On 1": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Off 1": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=01",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Toggle 1": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Get-Status 1": {
+                "use": "zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
+            "Bind-01-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Status 2": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "On 2": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Off 2": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=02",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Toggle 2": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=02"
+            },
+            "Get-Status 2": {
+                "use": "zbReadAttribute",
+                "params": "ep=02&clustId=0006&attrId=0000"
+            },
+            "Bind-02-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=02&clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Status 3": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=03",
+                "isVisible": 1
+            },
+            "On 3": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=03",
+                "isVisible": 1
+            },
+            "Off 3": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=03",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Toggle 3": {
+                "use": "zbCmd-0006-Toggle",
+                "params": "ep=03"
+            },
+            "Get-Status 3": {
+                "use": "zbReadAttribute",
+                "params": "ep=03&clustId=0006&attrId=0000"
+            },
+            "Bind-03-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "ep=03&clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "Total power": {
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "params": "mult=1&div=1",
+                "unit": "Wh",
+                "isVisible": 1
+            },
+            "Get-Total power": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0702&attrId=0000"
+            },
             "Bind-0702-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0702",
                 "execAtCreation": "yes"
             },
-
-            "ActivePower": { "use": "zb-0B04-ActivePower", "params": "mult=1&div=1", "isVisible": 1 },
+            "ActivePower": {
+                "use": "inf_zbAttr-0B04-ActivePower",
+                "params": "mult=1&div=1",
+                "isVisible": 1
+            },
             "Get-0B04-ActivePower": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0B04&attrId=050B"

@@ -24,7 +24,7 @@
                 "use": "setLevelGroup"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
             "Get Battery-Percent": {

@@ -2,7 +2,7 @@
     "PAR1650TW": {
         "manufacturer": "Osram",
         "timeout": "60",
-        "comment 2": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/435",
+        "comment 2": "https://github.com/KiwiHC16/Abeille/issues/435",
         "comment 3": " OSRAM GU10",
         "configuration": {
             "mainEP": "01",
@@ -14,11 +14,11 @@
         "type": "Osram Lightify GU10 bulb",
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "CurrentLevel-0008": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "On": {
@@ -111,7 +111,7 @@
                 "execAtCreationDelay": 11
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
@@ -122,6 +122,6 @@
                 "nextLine": "after"
             }
         },
-        "comment": "https:\/\/www.jeedom.com\/forum\/viewtopic.php?p=662710#p662710"
+        "comment": "https://www.jeedom.com/forum/viewtopic.php?p=662710#p662710"
     }
 }

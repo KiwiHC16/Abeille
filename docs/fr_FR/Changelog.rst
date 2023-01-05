@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Interne: Parser: Correction 'single precision'.
+- Modeles commandes: Normalisation de certains noms (inf_zbAttr-XXXX-YYYY).
 
 230103-BETA-5
 -------------

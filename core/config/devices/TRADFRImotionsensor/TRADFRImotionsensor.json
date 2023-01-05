@@ -3,7 +3,7 @@
         "manufacturer": "IKEA",
         "model": "E1745",
         "timeout": "60",
-        "comment": "Ref. IKEA E1525 \/ E1745",
+        "comment": "Ref. IKEA E1525 / E1745",
         "comment2": "Set a remote control for group control",
         "configuration": {
             "paramType": "telecommande",
@@ -17,7 +17,7 @@
         "type": "TRADFRI Detecteur de mouvement",
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
@@ -42,7 +42,7 @@
                 "use": "Click-Middle"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
             "Get Battery-Percent": {

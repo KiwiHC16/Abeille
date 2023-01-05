@@ -2,7 +2,7 @@
     "TRADFRIsignalrepeater": {
         "manufacturer": "Ikea",
         "model": "10400408",
-        "comment 1": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/689",
+        "comment 1": "https://github.com/KiwiHC16/Abeille/issues/689",
         "alternateIds": {
             "TRADFRISignalRepeater": []
         },
@@ -17,13 +17,13 @@
         "type": "Ikea signal repeater",
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
         },
-        "comment": "https:\/\/www.ikea.com\/fr\/fr\/catalog\/products\/10400408\/"
+        "comment": "https://www.ikea.com/fr/fr/catalog/products/10400408/"
     }
 }

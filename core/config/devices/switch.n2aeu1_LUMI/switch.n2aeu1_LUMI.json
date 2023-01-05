@@ -1,4 +1,4 @@
- {
+{
     "switch.n2aeu1_LUMI": {
         "manufacturer": "Xiaomi",
         "model": "WS-EUK04",
@@ -33,7 +33,7 @@
                 "params": "ep=01"
             },
             "Status 1": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
                 "isVisible": "1",
                 "nextLine": "after"
@@ -67,7 +67,7 @@
                 "params": "ep=02"
             },
             "Status 2": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=02",
                 "isVisible": "1",
                 "nextLine": "after"
@@ -87,7 +87,7 @@
                 "execAtCreation": "yes"
             },
             "Total power": {
-                "use": "zb-0702-CurrentSummationDelivered",
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
                 "params": "div=10000000",
                 "unit": "KWh",
                 "isVisible": "1"
@@ -97,7 +97,7 @@
                 "params": "clustId=0702&attrId=0000"
             },
             "Active Power": {
-                "use": "zb-0B04-ActivePower",
+                "use": "inf_zbAttr-0B04-ActivePower",
                 "params": "mult=1&div=10",
                 "isVisible": "1"
             },

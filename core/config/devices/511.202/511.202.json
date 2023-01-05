@@ -13,21 +13,29 @@
         "type": "Module 511.202 iluminize",
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1,
                 "nextLine": "after"
             },
-            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
-            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
-            "Toggle": { "use": "zbCmd-0006-Toggle", "nextLine": "after" },
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
+            "Toggle": {
+                "use": "zbCmd-0006-Toggle",
+                "nextLine": "after"
+            },
             "Get-Status": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"

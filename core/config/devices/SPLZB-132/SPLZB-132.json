@@ -26,7 +26,7 @@
                 "isVisible": 1
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -46,22 +46,22 @@
                 "execAtCreationDelay": 11
             },
             "Total power": {
-                "use": "zb-0702-CurrentSummationDelivered",
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
                 "params": "div=1000",
                 "unit": "KWh",
                 "isVisible": 1
             },
             "RMSVoltage": {
-                "use": "zb-0B04-RMSVoltage",
+                "use": "inf_zbAttr-0B04-RMSVoltage",
                 "isVisible": 0,
                 "params": "mult=1&div=100"
             },
             "RMSCurrent": {
-                "use": "zb-0B04-RMSCurrent",
+                "use": "inf_zbAttr-0B04-RMSCurrent",
                 "isVisible": 1
             },
             "ActivePower": {
-                "use": "zb-0B04-ActivePower",
+                "use": "inf_zbAttr-0B04-ActivePower",
                 "isVisible": 1,
                 "params": "mult=1&div=1"
             },

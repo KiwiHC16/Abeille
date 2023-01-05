@@ -14,7 +14,7 @@
         },
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "SetReporting 0001-00021": {
                 "use": "zbConfigureReporting",
@@ -30,7 +30,7 @@
                 "use": "Identify"
             },
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": "1"
             },
             "Get Temperature": {
@@ -49,7 +49,7 @@
                 "execAtCreation": "yes"
             },
             "Humidity": {
-                "use": "zb-0405-MeasuredValue",
+                "use": "inf_zbAttr-0405-MeasuredValue",
                 "isVisible": "1"
             },
             "Get Humidity": {

@@ -1,0 +1,16 @@
+{
+    "inf_zbAttr-0402-MeasuredValue": {
+        "comment": "0402/Temperature measurement cluster, attrib 0000/MeasuredValue",
+        "name": "MeasuredValue",
+        "subType": "numeric",
+        "template": "badge",
+        "isHistorized": "1",
+        "configuration": {
+            "historizeRound": "1"
+        },
+        "type": "info",
+        "logicalId": "0402-#EP#-0000",
+        "unit": "\u00b0C",
+        "genericType": "TEMPERATURE"
+    }
+}

@@ -9,7 +9,6 @@
         "configuration": {
             "icon": "Blitzwolf-SmartPlug",
             "mainEP": "01"
-
         },
         "commands": {
             "Identify": {
@@ -30,7 +29,7 @@
                 "use": "zbCmd-0006-Toggle"
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": "1",
                 "nextLine": "after"
             },
@@ -49,7 +48,7 @@
                 "execAtCreation": "yes"
             },
             "Total power": {
-                "use": "zb-0702-CurrentSummationDelivered",
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
                 "params": "div=1",
                 "unit": "KWh",
                 "isVisible": "1"
@@ -59,7 +58,7 @@
                 "params": "clustId=0702&attrId=0000"
             },
             "RMS Voltage": {
-                "use": "zb-0B04-RMSVoltage",
+                "use": "inf_zbAttr-0B04-RMSVoltage",
                 "params": "mult=1&div=1",
                 "isVisible": "0"
             },
@@ -68,7 +67,7 @@
                 "params": "clustId=0B04&attrId=0505"
             },
             "RMS Current": {
-                "use": "zb-0B04-RMSCurrent",
+                "use": "inf_zbAttr-0B04-RMSCurrent",
                 "params": "mult=1&div=1",
                 "isVisible": "1"
             },
@@ -77,7 +76,7 @@
                 "params": "clustId=0B04&attrId=0508"
             },
             "Active Power": {
-                "use": "zb-0B04-ActivePower",
+                "use": "inf_zbAttr-0B04-ActivePower",
                 "params": "mult=1&div=1",
                 "isVisible": "1"
             },

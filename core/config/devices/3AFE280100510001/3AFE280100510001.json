@@ -1,7 +1,7 @@
 {
     "3AFE280100510001": {
         "manufacturer": "Konke",
-        "comment": "https:\/\/zigbee.blakadder.com\/Konke_KPKEY.html",
+        "comment": "https://zigbee.blakadder.com/Konke_KPKEY.html",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -14,17 +14,17 @@
         "type": "Konke Multi-function Button",
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "subType": "binary",
                 "template": "badge",
                 "genericType": "SWITCH_STATE",
                 "isVisible": 1
             },
             "Battery-Volt": {
-                "use": "zb-0001-BatteryVolt"
+                "use": "inf_zbAttr-0001-BatteryVolt"
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

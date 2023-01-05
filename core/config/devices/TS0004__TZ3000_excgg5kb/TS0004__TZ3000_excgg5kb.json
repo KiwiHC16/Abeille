@@ -18,7 +18,6 @@
             "Groups": {
                 "use": "Group-Membership"
             },
-
             "On 1": {
                 "use": "zbCmd-0006-On",
                 "isVisible": "1"
@@ -31,7 +30,7 @@
                 "use": "zbCmd-0006-Toggle"
             },
             "Status 1": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
                 "isVisible": "1",
                 "nextLine": "after"
@@ -40,7 +39,6 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-
             "On 2": {
                 "use": "zbCmd-0006-On",
                 "params": "ep=02",
@@ -56,7 +54,7 @@
                 "params": "ep=02"
             },
             "Status 2": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=02",
                 "isVisible": "1",
                 "nextLine": "after"
@@ -65,7 +63,6 @@
                 "use": "zbReadAttribute",
                 "params": "ep=02&clustId=0006&attrId=0000"
             },
-
             "On 3": {
                 "use": "zbCmd-0006-On",
                 "params": "ep=03",
@@ -81,7 +78,7 @@
                 "params": "ep=03"
             },
             "Status 3": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=03",
                 "isVisible": "1",
                 "nextLine": "after"
@@ -90,7 +87,6 @@
                 "use": "zbReadAttribute",
                 "params": "ep=03&clustId=0006&attrId=0000"
             },
-
             "On 4": {
                 "use": "zbCmd-0006-On",
                 "params": "ep=04",
@@ -106,7 +102,7 @@
                 "params": "ep=04"
             },
             "Status 4": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=04",
                 "isVisible": "1",
                 "nextLine": "after"
@@ -115,7 +111,6 @@
                 "use": "zbReadAttribute",
                 "params": "ep=04&clustId=0006&attrId=0000"
             },
-
             "Bind 0006-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0006",

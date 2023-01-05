@@ -22,7 +22,7 @@
                 "execAtCreation": "Yes"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",

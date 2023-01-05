@@ -14,7 +14,7 @@
         "type": "511.201 Iluminize",
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
@@ -27,7 +27,7 @@
                 "use": "Group-Membership"
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -59,7 +59,7 @@
                 "execAtCreation": "yes"
             },
             "CurrentLevel-0008": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "setLevel": {

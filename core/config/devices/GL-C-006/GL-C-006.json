@@ -1,7 +1,7 @@
 {
     "GL-C-006": {
         "timeout": "60",
-        "type": "Gledopto WW\/CW LED Controller",
+        "type": "Gledopto WW/CW LED Controller",
         "comment": "cluster 0300: bind + setReport under test",
         "manufacturer": "Gledopto",
         "model": "GL-C-006",
@@ -15,11 +15,11 @@
         },
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "CurrentLevel-0008": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "On": {

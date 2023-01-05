@@ -10,10 +10,10 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Ledvance on\/off plug",
+        "type": "Ledvance on/off plug",
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "On": {
@@ -44,7 +44,7 @@
                 "execAtCreationDelay": 11
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Toggle": {
                 "use": "zbCmd-0006-Toggle",

@@ -22,7 +22,7 @@
                 "isVisible": 1
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -31,34 +31,34 @@
                 "params": "clustId=0006&attrId=0000"
             },
             "Total power": {
-                "use": "zb-0702-CurrentSummationDelivered",
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
                 "params": "ep=01&div=10",
                 "unit": "KWh",
                 "isVisible": 1
             },
             "UnitOfMeasure": {
-                "use": "zb-0702-UnitOfMeasure"
+                "use": "inf_zbAttr-0702-UnitOfMeasure"
             },
             "Get-0702-UnitOfMeasure": {
                 "use": "zbReadAttribute",
                 "params": "ep=01&clustId=0702&attrId=0300"
             },
             "Multiplier": {
-                "use": "zb-0702-Multiplier"
+                "use": "inf_zbAttr-0702-Multiplier"
             },
             "Get-0702-Multiplier": {
                 "use": "zbReadAttribute",
                 "params": "ep=01&clustId=0702&attrId=0301"
             },
             "Divisor": {
-                "use": "zb-0702-Divisor"
+                "use": "inf_zbAttr-0702-Divisor"
             },
             "Get-0702-Divisor": {
                 "use": "zbReadAttribute",
                 "params": "ep=01&clustId=0702&attrId=0302"
             },
             "SummationFormatting": {
-                "use": "zb-0702-SummationFormatting"
+                "use": "inf_zbAttr-0702-SummationFormatting"
             },
             "Get-0702-SummationFormatting": {
                 "use": "zbReadAttribute",
@@ -75,7 +75,7 @@
                 "execAtCreation": "Yes"
             },
             "ActivePower": {
-                "use": "zb-0B04-ActivePower",
+                "use": "inf_zbAttr-0B04-ActivePower",
                 "params": "mult=1&div=1",
                 "isVisible": 1
             },
@@ -85,6 +85,6 @@
                 "execAtCreation": "Yes"
             }
         },
-        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1578"
+        "comment": "https://github.com/KiwiHC16/Abeille/issues/1578"
     }
 }

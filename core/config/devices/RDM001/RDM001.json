@@ -18,11 +18,15 @@
         },
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
-            "Get-SWBuild": { "use": "zbReadAttribute", "params": "clustId=0000&attrId=4000" },
-
-            "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
+            "Get-SWBuild": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
             "Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
@@ -35,13 +39,23 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 2
             },
-
-            "Identify": { "use": "Identify" },
-
-            "Bind-0006-ToZigate": { "use": "zbBindToZigate", "params": "clustId=0006", "execAtCreation": "Yes", "execAtCreationDelay": 3 },
-
-            "Button event 1": { "use": "zb-CustomInfo", "params": "clustId=FC00&attrId=0001" },
-            "Button event 2": { "use": "zb-CustomInfo", "params": "clustId=FC00&attrId=0002" },
+            "Identify": {
+                "use": "Identify"
+            },
+            "Bind-0006-ToZigate": {
+                "use": "zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 3
+            },
+            "Button event 1": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=FC00&attrId=0001"
+            },
+            "Button event 2": {
+                "use": "zb-CustomInfo",
+                "params": "clustId=FC00&attrId=0002"
+            },
             "Set DualRocker": {
                 "use": "zbWriteAttribute",
                 "params": "clustId=0000&attrId=0034&attrType=30&attrVal=02",

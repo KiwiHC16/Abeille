@@ -14,11 +14,11 @@
         "type": "Osram Smart+ MR16 bulb",
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "CurrentLevel-0008": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "On": {
@@ -67,7 +67,7 @@
                 "execAtCreationDelay": 11
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",

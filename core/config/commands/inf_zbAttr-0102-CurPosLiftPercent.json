@@ -1,0 +1,20 @@
+{
+    "inf_zbAttr-0102-CurPosLiftPercent": {
+        "comment": "Cluster 0102, attrib 0008, type uint8",
+        "isVisible": 0,
+        "name": "Current position",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "minValue": "0",
+            "maxValue": "100",
+            "historizeRound": "0",
+            "visibilityCategory": "All"
+        },
+        "type": "info",
+        "logicalId": "0102-#EP#-0008",
+        "unit": "%"
+    }
+}

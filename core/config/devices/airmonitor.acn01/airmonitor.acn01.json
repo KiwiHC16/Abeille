@@ -15,13 +15,12 @@
         },
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-
             "Bind 0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
@@ -32,24 +31,25 @@
                 "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-            "BatteryVolt2Percent": { "use": "battery-Volt2Percent-3" },
-            "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+            "BatteryVolt2Percent": {
+                "use": "battery-Volt2Percent-3"
             },
-
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
             "OutOfService": {
-                "use": "zb-000C-OutOfService"
+                "use": "inf_zbAttr-000C-OutOfService"
             },
             "Get OutOfService": {
                 "use": "zbReadAttribute",
                 "params": "clustId=000C&attrId=0051"
             },
             "Air quality": {
-                "use": "zb-000C-PresentValue",
+                "use": "inf_zbAttr-000C-PresentValue",
                 "isVisible": 1
             },
             "StatusFlags": {
-                "use": "zb-000C-StatusFlags"
+                "use": "inf_zbAttr-000C-StatusFlags"
             },
             "Get StatusFlags": {
                 "use": "zbReadAttribute",
@@ -66,12 +66,14 @@
                 "comment": "Reporting set every 5min to 10min",
                 "execAtCreation": "Yes"
             },
-
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1
             },
-            "Get-Temperature": { "use": "zbReadAttribute", "params": "clustId=0402&attrId=0000" },
+            "Get-Temperature": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0402&attrId=0000"
+            },
             "Bind 0402-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0402",
@@ -82,12 +84,14 @@
                 "params": "clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-
             "Humidity": {
-                "use": "zb-0405-MeasuredValue",
+                "use": "inf_zbAttr-0405-MeasuredValue",
                 "isVisible": 1
             },
-            "Get-Humidity": { "use": "zbReadAttribute", "params": "clustId=0405&attrId=0000" },
+            "Get-Humidity": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0405&attrId=0000"
+            },
             "Bind 0405-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "ep=01&clustId=0405",

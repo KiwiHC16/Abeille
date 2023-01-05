@@ -11,7 +11,7 @@
         "type": "Yagusmart Tuya ZigBee Smart Switch 1 Bang",
         "commands": {
             "etat charge 0": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
                 "genericType": "LIGHT_STATE",
                 "isVisible": 1
@@ -29,9 +29,9 @@
                 "params": "clustId=0006&attrId=0000"
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         },
-        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1092"
+        "comment": "https://github.com/KiwiHC16/Abeille/issues/1092"
     }
 }

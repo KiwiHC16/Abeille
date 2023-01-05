@@ -14,7 +14,7 @@
         },
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=2C"
             },
             "Battery-Volt2Percent": {
@@ -39,8 +39,8 @@
                 "isVisible": "1"
             },
             "Zone Status Changed": {
-                "use": "zb-0500-ZoneStatus-ChangeNotification",
-                "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean\/bit0 value",
+                "use": "inf_zbAttr-0500-ZoneStatus-ChangeNotification",
+                "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value",
                 "trigOut": "01-0500-alarm1",
                 "trigOutOffset": "#value#&1"
             },

@@ -11,7 +11,7 @@
         "type": "fuel-tank-level",
         "commands": {
             "Digital Input 2": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=2",
                 "subType": "binary",
                 "genericType": "SWITCH_STATE",
@@ -22,7 +22,7 @@
                 "params": "ep=02&clustId=0006&attrId=0000"
             },
             "Digital Input 3": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=3",
                 "subType": "binary",
                 "genericType": "SWITCH_STATE",
@@ -33,7 +33,7 @@
                 "params": "ep=03&clustId=0006&attrId=0000"
             },
             "Digital Input 4": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=4",
                 "subType": "binary",
                 "genericType": "SWITCH_STATE",
@@ -44,7 +44,7 @@
                 "params": "ep=04&clustId=0006&attrId=0000"
             },
             "Digital Input 5": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=5",
                 "subType": "binary",
                 "genericType": "SWITCH_STATE",

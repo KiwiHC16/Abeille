@@ -10,11 +10,11 @@
         "configuration": {
             "icon": "Heiman-MotionSensor",
             "mainEP": "01",
-            "batteryType": "1x3V CR17335\/CR123A"
+            "batteryType": "1x3V CR17335/CR123A"
         },
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=01"
             },
             "SetReporting 01-0001-00021": {
@@ -35,8 +35,8 @@
                 "isVisible": "1"
             },
             "Zone Status Changed": {
-                "use": "zb-0500-ZoneStatus-ChangeNotification",
-                "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean\/bit0 value",
+                "use": "inf_zbAttr-0500-ZoneStatus-ChangeNotification",
+                "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value",
                 "trigOut": "01-0500-alarm1",
                 "trigOutOffset": "#value#&1"
             },

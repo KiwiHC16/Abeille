@@ -1,7 +1,7 @@
 {
     "ZB-RGBCW": {
         "timeout": "60",
-        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1812",
+        "comment": "https://github.com/KiwiHC16/Abeille/issues/1812",
         "configuration": {
             "mainEP": "03",
             "poll": "1",
@@ -13,7 +13,7 @@
         "type": "ZB-RGBCW",
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "On": {
@@ -48,7 +48,7 @@
                 "execAtCreationDelay": 11
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",

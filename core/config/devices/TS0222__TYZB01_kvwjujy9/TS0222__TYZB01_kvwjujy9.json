@@ -26,24 +26,32 @@
                 "execAtCreation": "Yes"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
-
-            "Illuminance": { "use": "zb-0400-MeasuredValue", "isVisible": 1 },
+            "Illuminance": {
+                "use": "inf_zbAttr-0400-MeasuredValue",
+                "isVisible": 1
+            },
             "Bind-0400-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0400",
                 "execAtCreation": "Yes"
             },
-
-            "Temperature": { "use": "zb-0402-MeasuredValue", "params": "ep=02", "isVisible": 1 },
+            "Temperature": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "params": "ep=02",
+                "isVisible": 1
+            },
             "Bind-0402-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "ep=02&clustId=0402",
                 "execAtCreation": "Yes"
             },
-
-            "Humidity": { "use": "zb-0405-MeasuredValue", "params": "ep=02", "isVisible": 1 },
+            "Humidity": {
+                "use": "inf_zbAttr-0405-MeasuredValue",
+                "params": "ep=02",
+                "isVisible": 1
+            },
             "Bind-0405-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "ep=02&clustId=0405",

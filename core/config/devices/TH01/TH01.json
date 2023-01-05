@@ -18,7 +18,7 @@
         "type": "Sonoff temp & humidity sensor",
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Bind-0001-ToZigate": {
                 "use": "zbBindToZigate",
@@ -31,7 +31,7 @@
                 "execAtCreation": "Yes"
             },
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1,
                 "isHistorized": 1
             },
@@ -48,7 +48,7 @@
                 "execAtCreationDelay": 12
             },
             "Humidity": {
-                "use": "zb-0405-MeasuredValue",
+                "use": "inf_zbAttr-0405-MeasuredValue",
                 "isVisible": 1
             },
             "Bind-0405-ToZigate": {

@@ -4,9 +4,9 @@
         "model": "BHT-002-GCLZBW",
         "type": "Moes thermostat",
         "alternateIds": {
-            "TS0601__TZE200_ztvwu4nk": {},
-            "TS0601__TZE200_ye5jkfsb": {},
-            "TS0601__TZE200_u9bfwha0": {}
+            "TS0601__TZE200_ztvwu4nk": [],
+            "TS0601__TZE200_ye5jkfsb": [],
+            "TS0601__TZE200_u9bfwha0": []
         },
         "timeout": "60",
         "category": {
@@ -21,7 +21,7 @@
                 "use": "Group-Membership"
             },
             "Local temp": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -33,8 +33,14 @@
         },
         "tuyaEF00": {
             "fromDevice": {
-                "10": { "function": "rcvValue", "info": "01-setpoint" },
-                "18": { "function": "rcvValue", "info": "0402-01-0000" }
+                "10": {
+                    "function": "rcvValue",
+                    "info": "01-setpoint"
+                },
+                "18": {
+                    "function": "rcvValue",
+                    "info": "0402-01-0000"
+                }
             }
         }
     }

@@ -15,7 +15,7 @@
         },
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Battery-Volt2Percent": {
                 "use": "battery-Volt2Percent-3"
@@ -34,7 +34,7 @@
                 "use": "Identify"
             },
             "Status 1": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=03",
                 "isVisible": 1
             },
@@ -51,7 +51,7 @@
                 "trigOutOffset": 0
             },
             "Status 2": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=04",
                 "isVisible": 1
             },
@@ -68,7 +68,7 @@
                 "trigOutOffset": 0
             },
             "Status 3": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=02",
                 "isVisible": 1
             },
@@ -85,7 +85,7 @@
                 "trigOutOffset": 0
             },
             "Status 4": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
                 "isVisible": 1
             },

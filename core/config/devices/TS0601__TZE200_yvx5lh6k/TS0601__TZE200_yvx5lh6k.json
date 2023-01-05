@@ -7,7 +7,7 @@
             "TS0601__TZE200_8ygsuhe1": [],
             "TS0601__TZE200_ryfmq5rl": []
         },
-        "comment": "Alternate IDs from https:\/\/zigbee.blakadder.com\/Tuya_RSH-AirBox01.html",
+        "comment": "Alternate IDs from https://zigbee.blakadder.com/Tuya_RSH-AirBox01.html",
         "comment2": "This device is generating many messages that may saturate network & zigate",
         "timeout": "60",
         "category": {
@@ -22,11 +22,11 @@
                 "use": "Group-Membership"
             },
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1
             },
             "Humidity": {
-                "use": "zb-0405-MeasuredValue",
+                "use": "inf_zbAttr-0405-MeasuredValue",
                 "nextLine": "after",
                 "isVisible": 1
             },

@@ -13,7 +13,7 @@
         },
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get SWBuildID": {
                 "use": "zbReadAttribute",
@@ -37,7 +37,7 @@
                 "use": "zbCmd-0006-Toggle"
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": "1",
                 "nextLine": "after"
             },
@@ -60,7 +60,7 @@
                 "isVisible": "1"
             },
             "Current Level": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": "1",
                 "nextLine": "after"
             },
@@ -79,35 +79,35 @@
                 "execAtCreation": "yes"
             },
             "Color Mode": {
-                "use": "zb-0300-ColorMode"
+                "use": "inf_zbAttr-0300-ColorMode"
             },
             "Get Color Mode": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0300&attrId=0008"
             },
             "Current HUE": {
-                "use": "zb-0300-CurrentHue"
+                "use": "inf_zbAttr-0300-CurrentHue"
             },
             "Get Current HUE": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0300&attrId=0000"
             },
             "Current Saturation": {
-                "use": "zb-0300-CurrentSaturation"
+                "use": "inf_zbAttr-0300-CurrentSaturation"
             },
             "Get Current Saturation": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0300&attrId=0001"
             },
             "Current X": {
-                "use": "zb-0300-CurrentX"
+                "use": "inf_zbAttr-0300-CurrentX"
             },
             "Get Current X": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0300&attrId=0003"
             },
             "Current Y": {
-                "use": "zb-0300-CurrentY"
+                "use": "inf_zbAttr-0300-CurrentY"
             },
             "Get Current Y": {
                 "use": "zbReadAttribute",
@@ -143,7 +143,7 @@
                 "params": "slider=4000"
             },
             "ColorTemperature": {
-                "use": "zb-0300-ColorTemperatureMireds"
+                "use": "inf_zbAttr-0300-ColorTemperatureMireds"
             },
             "Get ColorTemperature": {
                 "use": "zbReadAttribute",

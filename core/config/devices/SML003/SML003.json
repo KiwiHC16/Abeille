@@ -14,14 +14,14 @@
         },
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "SetReporting 0001-00021": {
                 "use": "zbConfigureReporting",
@@ -37,7 +37,7 @@
                 "use": "Identify"
             },
             "Illuminance": {
-                "use": "zb-0400-MeasuredValue",
+                "use": "inf_zbAttr-0400-MeasuredValue",
                 "isVisible": "1"
             },
             "Get Illuminance": {
@@ -56,7 +56,7 @@
                 "comment": "Reporting every 5 to 10mins"
             },
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": "1"
             },
             "Get Temperature": {
@@ -75,7 +75,7 @@
                 "execAtCreation": "yes"
             },
             "Occupancy": {
-                "use": "zb-0406-Occupancy",
+                "use": "inf_zbAttr-0406-Occupancy",
                 "isVisible": "1"
             },
             "Bind 0406-ToZigate": {

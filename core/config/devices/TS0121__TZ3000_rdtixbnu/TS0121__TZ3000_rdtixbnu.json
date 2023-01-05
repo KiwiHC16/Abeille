@@ -15,8 +15,9 @@
         },
         "type": "Tuya smart socket",
         "commands": {
-            "Groups": { "use": "Group-Membership" },
-
+            "Groups": {
+                "use": "Group-Membership"
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1
@@ -26,7 +27,7 @@
                 "isVisible": 1
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -44,36 +45,34 @@
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-
             "Total power": {
-                "use": "zb-0702-CurrentSummationDelivered",
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
                 "params": "div=10",
                 "unit": "KWh",
                 "isVisible": 1
             },
             "UnitOfMeasure": {
-                "use": "zb-0702-UnitOfMeasure"
+                "use": "inf_zbAttr-0702-UnitOfMeasure"
             },
             "Get-0702-UnitOfMeasure": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0702&attrId=0300"
             },
             "SummationFormatting": {
-                "use": "zb-0702-SummationFormatting",
+                "use": "inf_zbAttr-0702-SummationFormatting",
                 "params": "ep=01"
             },
             "Get-0702-SummationFormatting": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0702&attrId=0303"
             },
-
             "RMSVoltage": {
-                "use": "zb-0B04-RMSVoltage",
+                "use": "inf_zbAttr-0B04-RMSVoltage",
                 "params": "mult=1&div=1",
                 "isVisible": 0
             },
             "RMSCurrent": {
-                "use": "zb-0B04-RMSCurrent",
+                "use": "inf_zbAttr-0B04-RMSCurrent",
                 "isVisible": 1
             },
             "Get-0B04-RMSCurrent": {
@@ -81,7 +80,7 @@
                 "params": "clustId=0B04&attrId=0508"
             },
             "ActivePower": {
-                "use": "zb-0B04-ActivePower",
+                "use": "inf_zbAttr-0B04-ActivePower",
                 "params": "mult=1&div=1",
                 "isVisible": 1
             },
@@ -89,7 +88,9 @@
                 "use": "zbReadAttribute",
                 "params": "clustId=0B04&attrId=050B"
             },
-            "Poll 0B04": { "use": "poll-0B04-0505-0508-050B" }
+            "Poll 0B04": {
+                "use": "poll-0B04-0505-0508-050B"
+            }
         }
     }
 }

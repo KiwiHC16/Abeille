@@ -1,0 +1,12 @@
+{
+    "inf_zbAttr-0B04-RMSCurrent": {
+        "name": "Current",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": [],
+        "type": "info",
+        "logicalId": "0B04-#EP#-0508",
+        "unit": "mA",
+        "genericType": ""
+    }
+}

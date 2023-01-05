@@ -26,7 +26,7 @@
                 "isVisible": 1
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "nextLine": "after",
                 "isVisible": 1
             },
@@ -42,8 +42,15 @@
         },
         "tuyaEF00": {
             "fromDevice": {
-                "01": { "function": "rcvValue", "info": "0006-01-0000" },
-                "02": { "function": "rcvValueDiv", "info": "01-LevelPercent", "div": 10 }
+                "01": {
+                    "function": "rcvValue",
+                    "info": "0006-01-0000"
+                },
+                "02": {
+                    "function": "rcvValueDiv",
+                    "info": "01-LevelPercent",
+                    "div": 10
+                }
             }
         }
     }

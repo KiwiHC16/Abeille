@@ -19,7 +19,7 @@
                 "use": "Group-Membership"
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": "1"
             },
             "Get Status": {
@@ -48,7 +48,7 @@
                 "execAtCreation": "yes"
             },
             "Current Level": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": "1"
             },
             "Get Current Level": {
@@ -70,28 +70,28 @@
                 "execAtCreation": "yes"
             },
             "Current HUE": {
-                "use": "zb-0300-CurrentHue"
+                "use": "inf_zbAttr-0300-CurrentHue"
             },
             "Get Current HUE": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0300&attrId=0000"
             },
             "Current Saturation": {
-                "use": "zb-0300-CurrentSaturation"
+                "use": "inf_zbAttr-0300-CurrentSaturation"
             },
             "Get Current Saturation": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0300&attrId=0001"
             },
             "Current X": {
-                "use": "zb-0300-CurrentX"
+                "use": "inf_zbAttr-0300-CurrentX"
             },
             "Get Current X": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0300&attrId=0003"
             },
             "Current Y": {
-                "use": "zb-0300-CurrentY"
+                "use": "inf_zbAttr-0300-CurrentY"
             },
             "Get Current Y": {
                 "use": "zbReadAttribute",
@@ -118,7 +118,7 @@
                 "isVisible": 1
             },
             "ColorTemperatureMireds": {
-                "use": "zb-0300-ColorTemperatureMireds",
+                "use": "inf_zbAttr-0300-ColorTemperatureMireds",
                 "isVisible": "1"
             },
             "Get ColorTemperatureMireds": {
@@ -126,16 +126,27 @@
                 "params": "clustId=0300&attrId=0007"
             },
             "Color Mode": {
-                "use": "zb-0300-ColorMode",
+                "use": "inf_zbAttr-0300-ColorMode",
                 "isVisible": "1"
             },
             "Get Color Mode": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0300&attrId=0008"
             },
-            "Set Temperature": { "use": "zbCmd-0300-MoveToColorTemp", "isVisible": 1 },
-            "Set 2200K": { "use": "zbCmd-0300-MoveToColorTemp", "params": "slider=2200", "isVisible": 1 },
-            "Set 6500K": { "use": "zbCmd-0300-MoveToColorTemp", "params": "slider=6500", "isVisible": 1 },
+            "Set Temperature": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "isVisible": 1
+            },
+            "Set 2200K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=2200",
+                "isVisible": 1
+            },
+            "Set 6500K": {
+                "use": "zbCmd-0300-MoveToColorTemp",
+                "params": "slider=6500",
+                "isVisible": 1
+            },
             "Bind-0300-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0300",

@@ -13,12 +13,26 @@
             "automatism": "1"
         },
         "commands": {
-            "Groups": { "use": "Group-Membership" },
-
-            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
-            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
-            "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
-            "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "On": {
+                "use": "zbCmd-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "zbCmd-0006-Off",
+                "isVisible": 1
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Get-Status": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "Bind-0006-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0006",
@@ -29,13 +43,30 @@
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-
-            "Total power": { "use": "zb-0702-CurrentSummationDelivered", "params": "div=1000", "unit": "KWh", "isVisible": 1 },
-            "Get-Total power": { "use": "zbReadAttribute", "params": "clustId=0702&attrId=0000" },
-
-            "RMSVoltage": { "use": "zb-0B04-RMSVoltage", "isVisible": 0, "params": "mult=1&div=100" },
-            "RMSCurrent": { "use": "zb-0B04-RMSCurrent", "isVisible": 1 },
-            "ActivePower": { "use": "zb-0B04-ActivePower", "isVisible": 1, "params": "mult=1&div=1" },
+            "Total power": {
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "params": "div=1000",
+                "unit": "KWh",
+                "isVisible": 1
+            },
+            "Get-Total power": {
+                "use": "zbReadAttribute",
+                "params": "clustId=0702&attrId=0000"
+            },
+            "RMSVoltage": {
+                "use": "inf_zbAttr-0B04-RMSVoltage",
+                "isVisible": 0,
+                "params": "mult=1&div=100"
+            },
+            "RMSCurrent": {
+                "use": "inf_zbAttr-0B04-RMSCurrent",
+                "isVisible": 1
+            },
+            "ActivePower": {
+                "use": "inf_zbAttr-0B04-ActivePower",
+                "isVisible": 1,
+                "params": "mult=1&div=1"
+            },
             "Bind-0B04-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0B04",

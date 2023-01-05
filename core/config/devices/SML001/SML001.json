@@ -17,16 +17,16 @@
                 "use": "presence"
             },
             "Luminosite": {
-                "use": "zb-0400-MeasuredValue",
+                "use": "inf_zbAttr-0400-MeasuredValue",
                 "isVisible": 1
             },
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1,
                 "isHistorized": 1
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Bind-0406-ToZigate": {
                 "use": "zbBindToZigate",
@@ -77,7 +77,7 @@
                 "execAtCreationDelay": 7
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

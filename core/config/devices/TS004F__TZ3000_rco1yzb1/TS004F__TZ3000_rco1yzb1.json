@@ -14,7 +14,7 @@
         },
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "SetReporting 0001-00021": {
                 "use": "zbConfigureReporting",

@@ -11,13 +11,13 @@
         "category": {
             "security": "1"
         },
-        "type": "Sonoff Door\/Window Sensor",
+        "type": "Sonoff Door/Window Sensor",
         "commands": {
             "etat": {
                 "use": "etatSonoff"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
             "Bind-0001-ToZigate": {
@@ -33,6 +33,6 @@
                 "execAtCreationDelay": 7
             }
         },
-        "comment": "https:\/\/community.jeedom.com\/t\/sonoff-snzb-04-sur-zigate-et-abeille\/39336\/4"
+        "comment": "https://community.jeedom.com/t/sonoff-snzb-04-sur-zigate-et-abeille/39336/4"
     }
 }

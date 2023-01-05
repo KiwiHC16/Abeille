@@ -1,0 +1,12 @@
+{
+    "inf_zbAttr-000C-PresentValue": {
+        "comment": "Cluster 000C, attrib 0055/PresentValue",
+        "name": "PresentValue",
+        "subType": "numeric",
+        "template": "",
+        "configuration": [],
+        "type": "info",
+        "logicalId": "000C-#EP#-0055",
+        "genericType": ""
+    }
+}

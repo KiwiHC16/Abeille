@@ -30,7 +30,7 @@
                 "nextLine": "after"
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "genericType": "LIGHT_STATE",
                 "isVisible": 1
             },

@@ -15,7 +15,7 @@
                 "use": "securitySafetySmokeHeiman2"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
             "Get Battery-Percent": {
@@ -44,7 +44,7 @@
                 "use": "setReportSmokeHeiman"
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         },
         "comment": "Copy of Heiman Smoke Sensor (SmokeSensor-EM) : Detecteur de fum\u00e9e HEIMAN HS1SA-E\n#1500"

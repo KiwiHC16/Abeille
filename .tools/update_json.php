@@ -146,12 +146,13 @@
                 }
 
                 // TO BE COMPLETED
-                // else if (preg_match('/^zb-[a-zA-Z0-9]{4}-/', $cmdFName)) {
-                //     $new = "inf_zbAttr-".substr($cmdFName, 3);
-                //     $commands2[$key]["use"] = $new;
-                //     $devUpdated = true;
-                //     echo "  Cmd '".$cmdFName."' RENAMED.\n";
-                // }
+                else if (preg_match('/^zb-[a-zA-Z0-9]{4}-/', $cmdFName)) {
+                    $new = "inf_zbAttr-".substr($cmdFName, 3);
+                    $commands2[$key] = $value;
+                    $commands2[$key]["use"] = $new;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' RENAMED.\n";
+                }
 
                 // Cluster 0001 updates
                 else if (($cmdFName == "BindToPowerConfig") && $oldSyntax) {
@@ -634,7 +635,7 @@
         }
 
         if ($devUpdated) {
-            $text = json_encode($dev, JSON_PRETTY_PRINT);
+            $text = json_encode($dev, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
             file_put_contents($fullPath, $text);
         }
     }
@@ -739,7 +740,7 @@
         if ($cmdUpdated) {
             $newCmd = array();
             $newCmd[$fileName] = $cmd2;
-            $text = json_encode($newCmd, JSON_PRETTY_PRINT);
+            $text = json_encode($newCmd, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
             file_put_contents($fullPath, $text);
         }
     }
@@ -793,6 +794,7 @@
         echo "= Ok";
     }
 
+    // Ex: zb-xxxx-yyyy => inf_zbAttr-xxxx-yyyy
     function renameCmds() {
         echo "Renaming commands\n";
         $dh = opendir(commandsDir);
@@ -820,7 +822,7 @@
             $content = json_decode($jsonContent, true);
             $content[$new] = $content[$dirEntry];
             unset($content[$dirEntry]);
-            $jsonContent = json_encode($content, JSON_PRETTY_PRINT);
+            $jsonContent = json_encode($content, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
             $fullPath2 = commandsDir.'/'.$new.'.json';
             file_put_contents($fullPath2, $jsonContent);
             unlink($fullPath);
@@ -829,10 +831,10 @@
         echo "= Ok";
     }
 
+    renameCmds(); // Ex: zb-xxxx-yyyy => inf_zbAttr-xxxx-yyyy
+
     buildDevicesList();
-    // renameCmds();
     buildCommandsList();
-    // exit();
 
     echo "\nUpdating devices if required ...\n";
     foreach ($devicesList as $entry => $fullPath) {

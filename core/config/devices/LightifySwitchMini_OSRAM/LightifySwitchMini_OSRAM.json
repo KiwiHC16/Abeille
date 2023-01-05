@@ -26,11 +26,12 @@
                 "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-            "BatteryVolt2Percent": { "use": "battery-Volt2Percent-3" },
-            "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+            "BatteryVolt2Percent": {
+                "use": "battery-Volt2Percent-3"
             },
-
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
             "Bind-01-0006-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "ep=01&clustId=0006",

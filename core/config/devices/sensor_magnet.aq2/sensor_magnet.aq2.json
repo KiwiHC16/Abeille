@@ -14,20 +14,20 @@
         },
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "template": "door",
                 "genericType": "OPENING",
                 "invertBinary": "1",
                 "isVisible": 1
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Specific": {
                 "use": "Xiaomi-ff01"
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         },
         "xiaomi": {

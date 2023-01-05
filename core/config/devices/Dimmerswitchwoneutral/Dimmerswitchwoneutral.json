@@ -1,6 +1,6 @@
 {
     "Dimmerswitchwoneutral": {
-        "type": "Legrand Dimmer Switch w\/o neutral",
+        "type": "Legrand Dimmer Switch w/o neutral",
         "timeout": "60",
         "category": {
             "automatism": "1"
@@ -11,18 +11,18 @@
         },
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "CurrentLevel": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "Onlevel": {

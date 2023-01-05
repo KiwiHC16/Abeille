@@ -13,21 +13,21 @@
         },
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Battery-Volt": {
-                "use": "zb-0001-BatteryVolt"
+                "use": "inf_zbAttr-0001-BatteryVolt"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1,
                 "isHistorized": 1
             },
             "Humidity": {
-                "use": "zb-0405-MeasuredValue",
+                "use": "inf_zbAttr-0405-MeasuredValue",
                 "params": "ep=01",
                 "historizeRound": 1,
                 "isVisible": 1

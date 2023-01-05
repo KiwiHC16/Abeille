@@ -14,7 +14,7 @@
         },
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=23"
             },
             "Battery-Volt2Percent": {
@@ -40,7 +40,7 @@
                 "isVisible": "1"
             },
             "ZoneStatusChange": {
-                "use": "zb-0500-ZoneStatus-ChangeNotification",
+                "use": "inf_zbAttr-0500-ZoneStatus-ChangeNotification",
                 "comment": "On receive we trig 0500-Status with extracted boolean value",
                 "trigOut": "0500-Status",
                 "trigOutOffset": "#value#&1"
@@ -56,7 +56,7 @@
                 "execAtCreation": "yes"
             },
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "params": "ep=26",
                 "isVisible": "1"
             },

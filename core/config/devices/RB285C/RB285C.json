@@ -13,7 +13,7 @@
         "type": "Innr RB285C RGBW bulb colour E27",
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "On": {
@@ -41,7 +41,7 @@
                 "execAtCreationDelay": 11
             },
             "CurrentLevel-0008": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "setLevel": {

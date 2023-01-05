@@ -32,7 +32,7 @@
                 "isVisible": 1
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -55,7 +55,7 @@
                 "use": "setLevel"
             },
             "CurrentLevel": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "Get-CurrentLevel": {
@@ -74,15 +74,15 @@
                 "execAtCreation": "Yes"
             },
             "ColorMode": {
-                "use": "zb-0300-ColorMode",
+                "use": "inf_zbAttr-0300-ColorMode",
                 "isVisible": 1
             },
             "CurrentX": {
-                "use": "zb-0300-CurrentX",
+                "use": "inf_zbAttr-0300-CurrentX",
                 "isVisible": 1
             },
             "CurrentY": {
-                "use": "zb-0300-CurrentY",
+                "use": "inf_zbAttr-0300-CurrentY",
                 "isVisible": 1
             },
             "Colour": {

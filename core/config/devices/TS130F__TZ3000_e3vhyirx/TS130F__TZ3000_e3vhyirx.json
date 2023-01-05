@@ -31,7 +31,7 @@
                 "isVisible": "1"
             },
             "Level": {
-                "use": "zb-0102-CurPosLiftPercent",
+                "use": "inf_zbAttr-0102-CurPosLiftPercent",
                 "params": "ep=01",
                 "isVisible": "1"
             },

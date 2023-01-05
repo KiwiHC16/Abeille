@@ -4,12 +4,12 @@
         "model": "HS1HT",
         "type": "Heiman temp and humidity sensor",
         "alternateIds": {
-            "TH-EM_HEIMAN": {},
-            "HT-EM_HEIMAN": {},
-            "TH-T_V14_HEIMAN": {},
-            "HT-N_HEIMAN": {},
-            "HS1HT-N_HEIMAN": {},
-            "HS1HT_HEIMAN": {}
+            "TH-EM_HEIMAN": [],
+            "HT-EM_HEIMAN": [],
+            "TH-T_V14_HEIMAN": [],
+            "HT-N_HEIMAN": [],
+            "HS1HT-N_HEIMAN": [],
+            "HS1HT_HEIMAN": []
         },
         "timeout": "60",
         "category": {
@@ -22,7 +22,7 @@
         },
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=01"
             },
             "SetReporting 01-0001-00021": {
@@ -39,7 +39,7 @@
                 "use": "Identify"
             },
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "params": "ep=01",
                 "isVisible": "1"
             },
@@ -59,7 +59,7 @@
                 "execAtCreation": "yes"
             },
             "Humidity": {
-                "use": "zb-0405-MeasuredValue",
+                "use": "inf_zbAttr-0405-MeasuredValue",
                 "params": "ep=02",
                 "isVisible": "1"
             },

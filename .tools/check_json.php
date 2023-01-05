@@ -515,8 +515,9 @@
         checkDeviceCommands($devName, $fullPath);
     }
 
-    echo "\n\nDevices errors summary\n";
-    if (sizeof($devErrors) != 0 ) {
+    $nbErrors = sizeof($devErrors);
+    echo "\n\nDevices errors summary (".$nbErrors." errors)\n";
+    if ($nbErrors != 0 ) {
         $f = "";
         foreach ($devErrors as $e) {
             if ($f != $e['file']) {
@@ -528,8 +529,9 @@
     } else
         echo "= None\n";
 
-    echo "\nCommands errors summary\n";
-    if (sizeof($cmdErrors) != 0 ) {
+    $nbErrors = sizeof($cmdErrors);
+    echo "\nCommands errors summary (".$nbErrors." errors)\n";
+    if ($nbErrors != 0 ) {
         $f = "";
         foreach ($cmdErrors as $e) {
             if ($f != $e['file']) {

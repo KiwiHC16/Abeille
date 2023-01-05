@@ -10,10 +10,25 @@
         },
         "type": "ptvo.switch",
         "commands": {
-            "Status": { "use": "zb-0006-OnOff", "params": "ep=08", "isVisible": 1 },
-            "On 8": { "use": "zbCmd-0006-On", "params": "ep=08", "isVisible": 1 },
-            "Off 8": { "use": "zbCmd-0006-Off", "params": "ep=08", "isVisible": 1 },
-            "Get Status": { "use": "zbReadAttribute", "params": "ep=08&clustId=0006&attrId=0000" }
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=08",
+                "isVisible": 1
+            },
+            "On 8": {
+                "use": "zbCmd-0006-On",
+                "params": "ep=08",
+                "isVisible": 1
+            },
+            "Off 8": {
+                "use": "zbCmd-0006-Off",
+                "params": "ep=08",
+                "isVisible": 1
+            },
+            "Get Status": {
+                "use": "zbReadAttribute",
+                "params": "ep=08&clustId=0006&attrId=0000"
+            }
         }
     }
 }

@@ -11,13 +11,13 @@
         "type": "Xiaomi Wall Switch w Neutral 1",
         "commands": {
             "etat charge 0": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
                 "genericType": "LIGHT_STATE",
                 "isVisible": 1
             },
             "etat switch 1": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=04",
                 "subType": "binary",
                 "template": "badge",
@@ -50,7 +50,7 @@
                 "isVisible": 1
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",

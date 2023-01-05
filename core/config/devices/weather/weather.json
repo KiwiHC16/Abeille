@@ -11,22 +11,22 @@
         "category": {
             "heating": "1"
         },
-        "type": "Xiaomi temp\/humidity\/pressure sensor",
+        "type": "Xiaomi temp/humidity/pressure sensor",
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1,
                 "isHistorized": 1
             },
             "Pressure": {
-                "use": "zb-0403-MeasuredValue",
+                "use": "inf_zbAttr-0403-MeasuredValue",
                 "isVisible": 0
             },
             "Humidity": {
-                "use": "zb-0405-MeasuredValue",
+                "use": "inf_zbAttr-0405-MeasuredValue",
                 "isVisible": 1
             },
             "Specific": {

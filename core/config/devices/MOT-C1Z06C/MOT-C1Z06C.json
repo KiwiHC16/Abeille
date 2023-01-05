@@ -19,7 +19,7 @@
         "type": "Profalux volet gen 2",
         "commands": {
             "ZCL Version": {
-                "use": "zb-0000-ZCLVersion"
+                "use": "inf_zbAttr-0000-ZCLVersion"
             },
             "Identify": {
                 "use": "Identify",
@@ -58,7 +58,7 @@
                 "isVisible": 1
             },
             "CurrentLevel": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "genericType": "FLAP_STATE",
                 "isVisible": 1
             },
@@ -67,7 +67,7 @@
                 "params": "clustId=0008&attrId=0000"
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",

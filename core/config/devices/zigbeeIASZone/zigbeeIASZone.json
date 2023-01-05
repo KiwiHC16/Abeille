@@ -15,10 +15,10 @@
                 "use": "presence"
             },
             "Battery-Volt": {
-                "use": "zb-0001-BatteryVolt"
+                "use": "inf_zbAttr-0001-BatteryVolt"
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

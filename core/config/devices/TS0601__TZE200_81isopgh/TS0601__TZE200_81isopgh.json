@@ -1,64 +1,78 @@
 {
-  "TS0601__TZE200_81isopgh": {
-    "manufacturer": "Saswell",
-    "model": "SAS980SWT-7-Z01(EU)",
-    "timeout": "",
-    "configuration": {
-      "mainEP": "01",
-      "icon": "Saswell-SAS980SWT",
-      "batteryType": "2x1.5V AA"
-    },
-    "category": {
-      "automatism": "1"
-    },
-    "type": "Saswell irrigation valve",
-    "commands": {
-      "Battery": {
-        "use": "zb-0001-BatteryPercent",
-        "isVisible": 1
-      },
-      "Groups": {
-        "use": "Group-Membership"
-      },
-      "Open": {
-        "use": "cmdG-TuyaEF00-Set-OpenClose",
-        "params": "openClose=1",
-        "isVisible": 1
-      },
-      "Close": {
-        "use": "cmdG-TuyaEF00-Set-OpenClose",
-        "params": "openClose=0",
-        "isVisible": 1
-      },
-      "Status": {
-        "use": "zb-0006-OnOff",
-        "isVisible": 1,
-        "isHistorized": 1
-      },
-      "Last open duration": {
-        "use": "attr-Valve-LastOpenDuration",
-        "isVisible": 1
-      },
-      "Time left": {
-        "use": "attr-Valve-TimeLeft",
-        "isVisible": 1
-      },
-      "Measured value": {
-        "use": "attr-Valve-MeasuredValue",
-        "calculValueOffset" : "#value#/10",
-        "historizeRound": 1,
-        "isVisible": 1,
-        "isHistorized": 1
-      }
-    },
-    "tuyaEF00": {
-      "fromDevice": {
-        "05": { "function": "rcvValue", "info": "01-measuredValue" },
-        "07": { "function": "rcvValue", "info": "0001-01-0021" },
-        "0B": { "function": "rcvValue", "info": "01-timeLeft" },
-        "0C": { "function": "rcvValve-Status" },
-        "0F": { "function": "rcvValue", "info": "01-lastOpenDuration" }
-      }
+    "TS0601__TZE200_81isopgh": {
+        "manufacturer": "Saswell",
+        "model": "SAS980SWT-7-Z01(EU)",
+        "timeout": "",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "Saswell-SAS980SWT",
+            "batteryType": "2x1.5V AA"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "type": "Saswell irrigation valve",
+        "commands": {
+            "Battery": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "isVisible": 1
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Open": {
+                "use": "cmdG-TuyaEF00-Set-OpenClose",
+                "params": "openClose=1",
+                "isVisible": 1
+            },
+            "Close": {
+                "use": "cmdG-TuyaEF00-Set-OpenClose",
+                "params": "openClose=0",
+                "isVisible": 1
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1,
+                "isHistorized": 1
+            },
+            "Last open duration": {
+                "use": "attr-Valve-LastOpenDuration",
+                "isVisible": 1
+            },
+            "Time left": {
+                "use": "attr-Valve-TimeLeft",
+                "isVisible": 1
+            },
+            "Measured value": {
+                "use": "attr-Valve-MeasuredValue",
+                "calculValueOffset": "#value#/10",
+                "historizeRound": 1,
+                "isVisible": 1,
+                "isHistorized": 1
+            }
+        },
+        "tuyaEF00": {
+            "fromDevice": {
+                "05": {
+                    "function": "rcvValue",
+                    "info": "01-measuredValue"
+                },
+                "07": {
+                    "function": "rcvValue",
+                    "info": "0001-01-0021"
+                },
+                "0B": {
+                    "function": "rcvValue",
+                    "info": "01-timeLeft"
+                },
+                "0C": {
+                    "function": "rcvValve-Status"
+                },
+                "0F": {
+                    "function": "rcvValue",
+                    "info": "01-lastOpenDuration"
+                }
+            }
+        }
     }
-  }
 }

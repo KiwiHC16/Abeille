@@ -13,7 +13,7 @@
         },
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "SetReporting 0001-00021": {
                 "use": "zbConfigureReporting",
@@ -25,11 +25,26 @@
                 "params": "clustId=0001",
                 "execAtCreation": "yes"
             },
-
-            "Click 1": { "use": "click", "params": "ep=01", "isVisible": 1 },
-            "Click 2": { "use": "click", "params": "ep=02", "isVisible": 1 },
-            "Click 3": { "use": "click", "params": "ep=03", "isVisible": 1 },
-            "Click 4": { "use": "click", "params": "ep=04", "isVisible": 1 }
+            "Click 1": {
+                "use": "click",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Click 2": {
+                "use": "click",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Click 3": {
+                "use": "click",
+                "params": "ep=03",
+                "isVisible": 1
+            },
+            "Click 4": {
+                "use": "click",
+                "params": "ep=04",
+                "isVisible": 1
+            }
         }
     }
 }

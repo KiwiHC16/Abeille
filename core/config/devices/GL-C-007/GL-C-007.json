@@ -36,7 +36,7 @@
                 "use": "zbCmd-0006-Toggle"
             },
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -60,7 +60,7 @@
                 "use": "setLevel"
             },
             "CurrentLevel-0008": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "Get-CurrentLevel": {
@@ -74,11 +74,11 @@
                 "execAtCreationDelay": 11
             },
             "CurrentX": {
-                "use": "zb-0300-CurrentX",
+                "use": "inf_zbAttr-0300-CurrentX",
                 "isVisible": 1
             },
             "CurrentY": {
-                "use": "zb-0300-CurrentY",
+                "use": "inf_zbAttr-0300-CurrentY",
                 "isVisible": 1
             },
             "Set 2200K": {
@@ -161,6 +161,6 @@
                 "use": "setBleu"
             }
         },
-        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1219"
+        "comment": "https://github.com/KiwiHC16/Abeille/issues/1219"
     }
 }

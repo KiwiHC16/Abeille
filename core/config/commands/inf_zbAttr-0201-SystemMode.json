@@ -1,0 +1,10 @@
+{
+    "inf_zbAttr-0201-SystemMode": {
+        "comment": "0201/Thermostat cluster, attrib 001C/SystemMode",
+        "name": "SystemMode",
+        "subType": "numeric",
+        "configuration": [],
+        "type": "info",
+        "logicalId": "0201-#EP#-001C"
+    }
+}

@@ -31,7 +31,7 @@
                 "use": "zbCmd-0006-Toggle"
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -53,7 +53,7 @@
                 "use": "setLevel"
             },
             "CurrentLevel-0008": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "Get-CurrentLevel": {
@@ -72,7 +72,7 @@
                 "execAtCreationDelay": 11
             },
             "Current Hue": {
-                "use": "zb-0300-CurrentHue",
+                "use": "inf_zbAttr-0300-CurrentHue",
                 "isVisible": 1
             },
             "Get-Current Hue": {
@@ -80,7 +80,7 @@
                 "params": "clustId=0300&attrId=0000"
             },
             "Current Saturation": {
-                "use": "zb-0300-CurrentSaturation",
+                "use": "inf_zbAttr-0300-CurrentSaturation",
                 "isVisible": 1
             },
             "Get-Current Saturation": {
@@ -88,7 +88,7 @@
                 "params": "clustId=0300&attrId=0001"
             },
             "Current X": {
-                "use": "zb-0300-CurrentX",
+                "use": "inf_zbAttr-0300-CurrentX",
                 "isVisible": 1
             },
             "Get-Current X": {
@@ -96,7 +96,7 @@
                 "params": "clustId=0300&attrId=0003"
             },
             "Current Y": {
-                "use": "zb-0300-CurrentY",
+                "use": "inf_zbAttr-0300-CurrentY",
                 "isVisible": 1
             },
             "Get-Current Y": {
@@ -104,7 +104,7 @@
                 "params": "clustId=0300&attrId=0004"
             },
             "Color mode": {
-                "use": "zb-0300-ColorMode",
+                "use": "inf_zbAttr-0300-ColorMode",
                 "isVisible": 1
             },
             "Get-Color mode": {

@@ -12,7 +12,7 @@
         "type": "TS0121",
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "On": {
@@ -53,7 +53,7 @@
                 "use": "PuissanceCurrentPrise"
             },
             "Puissance": {
-                "use": "zb-0B04-ActivePower",
+                "use": "inf_zbAttr-0B04-ActivePower",
                 "params": "mult=1&div=1",
                 "isVisible": 1
             },
@@ -70,7 +70,7 @@
                 "use": "poll-0B04-0505"
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",

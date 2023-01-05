@@ -17,7 +17,7 @@
                 "isVisible": 1
             },
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "On": {

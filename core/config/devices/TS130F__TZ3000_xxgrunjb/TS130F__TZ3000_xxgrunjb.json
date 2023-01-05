@@ -16,7 +16,7 @@
                 "use": "Group-Membership"
             },
             "Current Level": {
-                "use": "zb-0102-CurPosLiftPercent",
+                "use": "inf_zbAttr-0102-CurPosLiftPercent",
                 "isVisible": "1"
             },
             "Get Current Level": {

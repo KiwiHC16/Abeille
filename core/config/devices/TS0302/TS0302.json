@@ -11,7 +11,7 @@
         "type": "SM-SW101-CZ",
         "commands": {
             "ZCL Version": {
-                "use": "zb-0000-ZCLVersion"
+                "use": "inf_zbAttr-0000-ZCLVersion"
             },
             "Up": {
                 "use": "zbCmd-0102-UpOpen"
@@ -27,13 +27,13 @@
                 "isVisible": 1
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
         },
-        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1228"
+        "comment": "https://github.com/KiwiHC16/Abeille/issues/1228"
     }
 }

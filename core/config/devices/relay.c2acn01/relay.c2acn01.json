@@ -1,6 +1,6 @@
 {
     "relay.c2acn01": {
-        "manufacturer": "Xiaomi\/Aqara",
+        "manufacturer": "Xiaomi/Aqara",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -12,11 +12,11 @@
         "type": "Xiaomi Module Double Switch Aqara",
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "etat charge 1": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=02",
                 "genericType": "LIGHT_STATE",
                 "isVisible": 1
@@ -63,7 +63,7 @@
                 "use": "puissance1"
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

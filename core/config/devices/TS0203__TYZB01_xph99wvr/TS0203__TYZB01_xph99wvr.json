@@ -18,7 +18,7 @@
         "type": "Tuya ZM-CG205 door sensor",
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
             "Bind-0001-ToZigate": {
@@ -27,7 +27,7 @@
                 "execAtCreation": "Yes"
             },
             "ZoneStatus": {
-                "use": "zb-0500-ZoneStatus",
+                "use": "inf_zbAttr-0500-ZoneStatus",
                 "isVisible": 1
             },
             "Bind-0500-ToZigate": {

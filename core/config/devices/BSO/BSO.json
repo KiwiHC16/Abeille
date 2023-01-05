@@ -19,10 +19,10 @@
                 "use": "Tilt"
             },
             "ZCL Version": {
-                "use": "zb-0000-ZCLVersion"
+                "use": "inf_zbAttr-0000-ZCLVersion"
             },
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "genericType": "FLAP_STATE",
                 "isVisible": 1
             },
@@ -83,7 +83,7 @@
                 "use": "moveToLiftAndTiltBSO_Tilt"
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",

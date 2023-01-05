@@ -14,7 +14,7 @@
         },
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "SetReporting 0001-00021": {
                 "use": "zbConfigureReporting",
@@ -27,7 +27,7 @@
                 "execAtCreation": "yes"
             },
             "Illuminance": {
-                "use": "zb-0400-MeasuredValue",
+                "use": "inf_zbAttr-0400-MeasuredValue",
                 "isVisible": "1"
             },
             "Get Illuminance": {
@@ -46,7 +46,7 @@
                 "comment": "Reporting every 5 to 10mins"
             },
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "params": "ep=02",
                 "isVisible": "1"
             },
@@ -66,7 +66,7 @@
                 "execAtCreation": "yes"
             },
             "Humidity": {
-                "use": "zb-0405-MeasuredValue",
+                "use": "inf_zbAttr-0405-MeasuredValue",
                 "params": "ep=02",
                 "isVisible": "1"
             },

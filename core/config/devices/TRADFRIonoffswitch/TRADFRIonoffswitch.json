@@ -13,10 +13,10 @@
         "category": {
             "light": "1"
         },
-        "type": "TRADFRI on\/off switch",
+        "type": "TRADFRI on/off switch",
         "commands": {
             "SWBuild": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuild": {
                 "use": "zbReadAttribute",
@@ -29,7 +29,7 @@
                 "use": "onGroup"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "calculValueOffset": "#value#*2",
                 "comment": "Battery percent reporting seems half the expected value"
             },

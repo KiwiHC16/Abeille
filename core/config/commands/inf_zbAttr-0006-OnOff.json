@@ -1,5 +1,6 @@
 {
     "inf_zbAttr-0006-OnOff": {
+        "name": "Status",
         "subType": "binary",
         "template": "light",
         "configuration": {

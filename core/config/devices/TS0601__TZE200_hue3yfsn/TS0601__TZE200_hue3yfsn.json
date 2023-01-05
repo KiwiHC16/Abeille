@@ -7,7 +7,7 @@
             "TS0601__TZE200_husqqvux": [],
             "TS0601__TZE200_lllliz3p": []
         },
-        "comment": "Alternate Ids from https:\/\/github.com\/Koenkk\/zigbee-herdsman-converters\/blob\/master\/devices\/tuya.js",
+        "comment": "Alternate Ids from https://github.com/Koenkk/zigbee-herdsman-converters/blob/master/devices/tuya.js",
         "comment2": "No timeout so far. Can't tell how frequent is done reporting, nor how to change its freq",
         "timeout": "",
         "configuration": {
@@ -21,13 +21,13 @@
         "type": "Tuya TV02",
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Groups": {
                 "use": "Group-Membership"
             },
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1
             },
             "Window-Detection": {
@@ -76,7 +76,7 @@
                 "isVisible": 0
             },
             "Check status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 0
             }
         },

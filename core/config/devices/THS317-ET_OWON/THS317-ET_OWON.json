@@ -14,7 +14,7 @@
         },
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get SWBuildID": {
                 "use": "zbReadAttribute",
@@ -29,7 +29,7 @@
                 "use": "Identify"
             },
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": "1"
             },
             "Get Temperature": {

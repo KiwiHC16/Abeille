@@ -16,7 +16,7 @@
         },
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",
@@ -36,7 +36,7 @@
                 "use": "battery-Volt2Percent-3"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Specific": {
                 "use": "Xiaomi-ff01"
@@ -52,7 +52,7 @@
                 "execAtCreation": "Yes"
             },
             "Illuminance": {
-                "use": "zb-0400-MeasuredValue",
+                "use": "inf_zbAttr-0400-MeasuredValue",
                 "isVisible": 1
             }
         }

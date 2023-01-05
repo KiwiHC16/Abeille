@@ -12,11 +12,10 @@
         "type": "Tuya NEO RH3001 door sensor",
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
-
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
             "Bind-0001-ToZigate": {
@@ -29,9 +28,8 @@
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-
             "Zone-Status": {
-                "use": "zb-0500-ZoneStatus",
+                "use": "inf_zbAttr-0500-ZoneStatus",
                 "isVisible": 1
             }
         }

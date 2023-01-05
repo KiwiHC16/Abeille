@@ -17,7 +17,7 @@
                 "isVisible": 1
             },
             "Status 1": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
                 "isVisible": 1
             },
@@ -36,7 +36,7 @@
                 "params": "clustId=0006&attrId=0000"
             },
             "Status 2": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=02",
                 "isVisible": 1
             },

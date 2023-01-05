@@ -15,9 +15,11 @@
         },
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
-            "Battery-Volt2Percent": { "use": "battery-Volt2Percent-3" },
+            "Battery-Volt2Percent": {
+                "use": "battery-Volt2Percent-3"
+            },
             "SetReporting 0001-00020": {
                 "use": "zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
@@ -37,7 +39,7 @@
                 "isVisible": "1"
             },
             "ZoneStatus": {
-                "use": "zb-0500-ZoneStatus-ChangeNotification",
+                "use": "inf_zbAttr-0500-ZoneStatus-ChangeNotification",
                 "comment": "On receive we trig 0500-Status with extracted boolean value",
                 "trigOut": "0500-Status",
                 "trigOutOffset": "#value#&1"

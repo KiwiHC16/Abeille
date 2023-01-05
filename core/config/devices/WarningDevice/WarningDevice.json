@@ -11,7 +11,7 @@
         "type": "Alarm Smart Siren M420-2Evert1.2 HS2WD-E",
         "commands": {
             "ZCL Version": {
-                "use": "zb-0000-ZCLVersion"
+                "use": "inf_zbAttr-0000-ZCLVersion"
             },
             "Identify": {
                 "use": "Identify",
@@ -42,7 +42,7 @@
                 "use": "writeAttributeRequestIAS_WD_FlashSound"
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",

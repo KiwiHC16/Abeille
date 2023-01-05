@@ -21,16 +21,16 @@
                 "isVisible": 1
             },
             "Local temp": {
-                "use": "zb-0201-LocalTemperature",
+                "use": "inf_zbAttr-0201-LocalTemperature",
                 "isVisible": 1,
                 "nextLine": "after"
             },
             "Occupancy": {
-                "use": "zb-0201-Occupancy",
+                "use": "inf_zbAttr-0201-Occupancy",
                 "isVisible": 1
             },
             "System mode": {
-                "use": "zb-0201-SystemMode",
+                "use": "inf_zbAttr-0201-SystemMode",
                 "isVisible": 1
             },
             "Bind 0201-ToZigate": {

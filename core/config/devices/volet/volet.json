@@ -32,7 +32,7 @@
                 "isVisible": 1
             },
             "Not Closed": {
-                "use": "zb-0006-OnOff"
+                "use": "inf_zbAttr-0006-OnOff"
             },
             "Bind 0006-ToZigate": {
                 "use": "zbBindToZigate",
@@ -52,7 +52,7 @@
                 "isVisible": 1
             },
             "CurrentLevel": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "genericType": "FLAP_STATE",
                 "isVisible": 1
             },

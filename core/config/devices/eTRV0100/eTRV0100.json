@@ -1,6 +1,6 @@
 {
     "eTRV0100": {
-        "comment": "Dansfoss Ally Radiator Thermostat 014G2461 ( https:\/\/assets.danfoss.com\/documents\/DOC353849556547\/DOC353849556547.pdf ) ",
+        "comment": "Dansfoss Ally Radiator Thermostat 014G2461 ( https://assets.danfoss.com/documents/DOC353849556547/DOC353849556547.pdf ) ",
         "timeout": "0",
         "configuration": {
             "mainEP": "01",
@@ -23,7 +23,7 @@
                 "use": "danfossTemperatureConsigneSet"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
             "Get Battery-Percent": {
@@ -31,7 +31,7 @@
                 "params": "clustId=0001&attrId=0021"
             },
             "Battery-Volt": {
-                "use": "zb-0001-BatteryVolt"
+                "use": "inf_zbAttr-0001-BatteryVolt"
             },
             "Get Battery-Volt": {
                 "use": "zbReadAttribute",

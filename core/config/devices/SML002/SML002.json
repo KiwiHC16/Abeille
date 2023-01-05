@@ -14,10 +14,10 @@
         },
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Bind 0001-ToZigate": {
                 "use": "zbBindToZigate",
@@ -32,7 +32,7 @@
                 "execAtCreationDelay": 7
             },
             "Luminosite": {
-                "use": "zb-0400-MeasuredValue",
+                "use": "inf_zbAttr-0400-MeasuredValue",
                 "isVisible": 1
             },
             "Bind 0400-ToZigate": {
@@ -49,7 +49,7 @@
                 "execAtCreationDelay": 11
             },
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1,
                 "isHistorized": 1
             },

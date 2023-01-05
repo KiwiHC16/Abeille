@@ -11,7 +11,7 @@
         "type": "diy-mains-fault",
         "commands": {
             "Digital Input 2": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=2",
                 "subType": "binary",
                 "genericType": "SWITCH_STATE",

@@ -12,19 +12,19 @@
         "type": "LIGHTIFY Outdoor Flex RGBW",
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "CurrentLevel-0008": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "CurrentX": {
-                "use": "zb-0300-CurrentX",
+                "use": "inf_zbAttr-0300-CurrentX",
                 "isVisible": 1
             },
             "CurrentY": {
-                "use": "zb-0300-CurrentY",
+                "use": "inf_zbAttr-0300-CurrentY",
                 "isVisible": 1
             },
             "On": {
@@ -131,7 +131,7 @@
                 "use": "setBleu"
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "zbReadAttribute",

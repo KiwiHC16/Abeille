@@ -20,7 +20,7 @@
                 "use": "etatSonOffIR"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
             "Bind-0001-ToZigate": {
@@ -36,6 +36,6 @@
                 "execAtCreationDelay": 7
             }
         },
-        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1324"
+        "comment": "https://github.com/KiwiHC16/Abeille/issues/1324"
     }
 }

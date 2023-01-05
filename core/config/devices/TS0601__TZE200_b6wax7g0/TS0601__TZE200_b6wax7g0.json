@@ -17,10 +17,10 @@
                 "use": "Group-Membership"
             },
             "Battery percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Local temp": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "genericType": "THERMOSTAT_TEMPERATURE",
                 "isVisible": 1,
                 "nextLine": "after"
@@ -47,7 +47,7 @@
                 "isVisible": 1
             },
             "ECO temp": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "logicalId": "01-ECO-temp",
                 "isVisible": 1,
                 "nextLine": "after"
@@ -70,15 +70,33 @@
         },
         "tuyaEF00": {
             "fromDevice": {
-                "02": { "function": "rcvValue", "info": "01-setpoint" },
-                "03": { "function": "rcvValueDiv", "div": 10, "info": "0402-01-0000", "comment": "Local temp" },
+                "02": {
+                    "function": "rcvValue",
+                    "info": "01-setpoint"
+                },
+                "03": {
+                    "function": "rcvValueDiv",
+                    "div": 10,
+                    "info": "0402-01-0000",
+                    "comment": "Local temp"
+                },
                 "09": {
                     "function": "rcvValue",
                     "info": "01-windowDetectionStatus"
                 },
-                "0E": { "function": "rcvValue", "info": "0001-01-0021" },
-                "68": { "function": "rcvValue", "info": "01-valvePosition", "comment": "Valve position" },
-                "6B": { "function": "rcvValue", "info": "01-ECO-temp" }
+                "0E": {
+                    "function": "rcvValue",
+                    "info": "0001-01-0021"
+                },
+                "68": {
+                    "function": "rcvValue",
+                    "info": "01-valvePosition",
+                    "comment": "Valve position"
+                },
+                "6B": {
+                    "function": "rcvValue",
+                    "info": "01-ECO-temp"
+                }
             }
         }
     }

@@ -34,9 +34,9 @@
             },
             "Init3": {
                 "use": "zbReadAttribute",
-                "params": "clustId=0001&attrId=0020,0021",
+                "params": "clustId=0006&attrId=8004",
                 "execAtCreation": "Yes",
-                "execAtCreationDelay": 6
+                "execAtCreationDelay": 8
             },
             "Change config": {
                 "use": "zbWriteAttribute",
@@ -44,14 +44,9 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 6
             },
-            "Init3": {
-                "use": "zbReadAttribute",
-                "params": "clustId=0006&attrId=8004",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 8
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
-
-            "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
             "Bind 0001-ToZigate": {
                 "use": "zbBindToZigate",
                 "params": "clustId=0001",
@@ -62,11 +57,26 @@
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-
-            "Click 1": { "use": "click", "params": "ep=01", "isVisible": 1 },
-            "Click 2": { "use": "click", "params": "ep=02", "isVisible": 1 },
-            "Click 3": { "use": "click", "params": "ep=03", "isVisible": 1 },
-            "Click 4": { "use": "click", "params": "ep=04", "isVisible": 1 }
+            "Click 1": {
+                "use": "click",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Click 2": {
+                "use": "click",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Click 3": {
+                "use": "click",
+                "params": "ep=03",
+                "isVisible": 1
+            },
+            "Click 4": {
+                "use": "click",
+                "params": "ep=04",
+                "isVisible": 1
+            }
         }
     }
 }

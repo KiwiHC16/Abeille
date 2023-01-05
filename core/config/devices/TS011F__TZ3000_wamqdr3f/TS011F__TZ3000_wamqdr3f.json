@@ -12,10 +12,12 @@
             "icon": "Silvercrest-HG06337-FR"
         },
         "commands": {
-            "Identify": { "use": "Identify" },
-
-            "Groups": { "use": "Group-Membership" },
-
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
             "On": {
                 "use": "zbCmd-0006-On",
                 "isVisible": 1
@@ -25,7 +27,7 @@
                 "isVisible": 1
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=0B",
                 "isVisible": 1
             },

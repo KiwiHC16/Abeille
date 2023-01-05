@@ -1,0 +1,16 @@
+{
+    "inf_zbAttr-0B04-RMSVoltage": {
+        "comment": "RMS Voltage. No need to display country voltage by default",
+        "comment2": "Attrib 0505, uint16",
+        "name": "Voltage",
+        "subType": "numeric",
+        "template": "badge",
+        "type": "info",
+        "logicalId": "0B04-#EP#-0505",
+        "configuration": {
+            "calculValueOffset": "#value#*#MULT#/#DIV#"
+        },
+        "unit": "V",
+        "genericType": ""
+    }
+}

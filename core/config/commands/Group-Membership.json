@@ -1,10 +1,6 @@
 {
     "Group-Membership": {
-        "isVisible": 0,
-        "name": "Groups",
-        "isHistorized": 0,
         "subType": "string",
-        "invertBinary": "0",
         "template": "badge",
         "configuration": {
             "visibilityCategory": "Network"

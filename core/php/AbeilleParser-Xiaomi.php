@@ -136,9 +136,14 @@
             // Computing attribute size
             if (($attrType == "41") || ($attrType == "42")) {
                 $attrSize = hexdec(substr($pl, 0, 2));
-                $pl = substr($pl, 2);
+                $pl = substr($pl, 2); // Skip size
             } else {
-
+                $type = zbGetDataType($attrType);
+                $attrSize = $type['size'];
+                if ($attrSize == 0) {
+                    $attrSize = strlen($pl) / 2;
+                    parserLog('debug', "  WARNING: attrSize is unknown for type ".$attrType);
+                }
             }
             $pl2 = substr($pl, 0, $attrSize * 2);
 

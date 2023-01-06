@@ -20,6 +20,9 @@
                 "invertBinary": "1",
                 "isVisible": 1
             },
+            "Battery-Volt": {
+                "use": "inf_batteryVolt2Percent-285-300"
+            },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
@@ -33,8 +36,9 @@
         "xiaomi": {
             "fromDevice": {
                 "01-21": {
-                    "func": "toPercent",
-                    "info": "0001-01-0021"
+                    "func": "numberDiv",
+                    "div": 1000,
+                    "info": "0001-01-0020"
                 },
                 "64-10": {
                     "func": "raw",

@@ -5,6 +5,8 @@ ChangeLog
 - Modeles commandes: Normalisation de certains noms (inf_zbAttr-XXXX-YYYY).
 - Heiman water leakage sensor: Mise-à-jour modèle (2527).
 - Interne: Parser: Correction support Xiaomi.
+- Xiaomi Door Sensor MCCGQ11LM: Mise-à-jour du modèle pour restauration 'Battery-Volt'.
+- Xiaomi Temp-humidité-pression WSDCGQ11LM: Mise-à-jour du modèle pour restauration 'Battery-Volt'.
 
 230103-BETA-5
 -------------

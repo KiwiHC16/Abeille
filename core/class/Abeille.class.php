@@ -1599,7 +1599,8 @@ class Abeille extends eqLogic {
 
         $trigCmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $trigLogicId);
         if ($trigCmd) {
-            log::add('Abeille', 'debug', "  Triggering cmd '".$trigLogicId."' with val=".$trigValue);
+            $trigName = $trigCmd->getName();
+            log::add('Abeille', 'debug', "  Triggering cmd '".$trigName."' (".$trigLogicId.") with val=".$trigValue);
             $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
         }
 

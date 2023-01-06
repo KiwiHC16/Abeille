@@ -25,7 +25,8 @@ jobs:
                 # Disabling shallow clone is recommended for improving relevancy of reporting
                 with:
                     fetch-depth: 0
-
+            -   name: phplint
+                uses: michaelw90/PHP-Lint@master
             -   name: SonarCloud Scan
                 uses: SonarSource/sonarcloud-github-action@master
                 env:
@@ -44,3 +45,6 @@ jobs:
                         -Dsonar.projectKey=edgd1er_Abeille
                         -Dsonar.verbose=true
                         -Dsonar.exclusions='images/,.git/**,.idea/**,.github/**,.scannerwork/**'
+                        -Dsonar.c.file.suffixes=-
+                        -Dsonar.cpp.file.suffixes=-
+                        -Dsonar.objc.file.suffixes=-

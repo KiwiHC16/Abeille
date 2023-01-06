@@ -15,49 +15,58 @@
         "type": "Xiaomi temp/humidity/pressure sensor",
         "commands": {
             "Battery-Volt": {
-                "use": "inf_batteryVoltAndPercent-285-300"
-            },
-            "Battery-Percent": {
-                "use": "inf_zbAttr-0001-BatteryPercent"
-            },
-            "Temperature": {
-                "use": "inf_zbAttr-0402-MeasuredValue",
+                "use": "inf_batteryVoltAndPercent-285-300",
+                "isHistorized": 1,
                 "isVisible": 1,
-                "isHistorized": 1
+                "configuration": {
+                    "minValue": "2.8",
+                    "maxValue": "3.2"
+                },
+                "Battery-Percent": {
+                    "use": "inf_zbAttr-0001-BatteryPercent",
+                    "isHistorized": 1,
+                    "isVisible": 1
+                },
+                "Temperature": {
+                    "use": "inf_zbAttr-0402-MeasuredValue",
+                    "isVisible": 1,
+                    "isHistorized": 1
+                },
+                "Pressure": {
+                    "use": "inf_zbAttr-0403-MeasuredValue",
+                    "isVisible": 0,
+                    "isHistorized": 1
+                },
+                "Humidity": {
+                    "minValue": "960",
+                    "maxValue": "1065"
+                },
+                "Specific": {
+                    "use": "Xiaomi-ff01"
+                }
             },
-            "Pressure": {
-                "use": "inf_zbAttr-0403-MeasuredValue",
-                "isVisible": 0
-            },
-            "Humidity": {
-                "use": "inf_zbAttr-0405-MeasuredValue",
-                "isVisible": 1
-            },
-            "Specific": {
-                "use": "Xiaomi-ff01"
-            }
-        },
-        "xiaomi": {
-            "fromDevice": {
-                "0000-FF01": {
-                    "01-21": {
-                        "func": "numberDiv",
-                        "div": 1000,
-                        "info": "0001-01-0020"
-                    },
-                    "64-29": {
-                        "func": "numberDiv",
-                        "div": 100,
-                        "info": "0402-01-0000"
-                    },
-                    "66-2B": {
-                        "func": "number",
-                        "info": "0403-01-0000"
-                    },
-                    "65-21": {
-                        "func": "numberDiv",
-                        "div": 100,
-                        "info": "0405-01-0000"
+            "xiaomi": {
+                "fromDevice": {
+                    "0000-FF01": {
+                        "01-21": {
+                            "func": "numberDiv",
+                            "div": 1000,
+                            "info": "0001-01-0020"
+                        },
+                        "64-29": {
+                            "func": "numberDiv",
+                            "div": 100,
+                            "info": "0402-01-0000"
+                        },
+                        "66-2B": {
+                            "func": "number",
+                            "info": "0403-01-0000"
+                        },
+                        "65-21": {
+                            "func": "numberDiv",
+                            "div": 100,
+                            "info": "0405-01-0000"
+                        }
                     }
                 }
             }

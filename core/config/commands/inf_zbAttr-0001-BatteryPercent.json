@@ -1,7 +1,7 @@
 {
     "inf_zbAttr-0001-BatteryPercent": {
-        "isVisible": 0,
-        "isHistorized": 0,
+        "isVisible": 1,
+        "isHistorized": 1,
         "subType": "numeric",
         "invertBinary": "0",
         "template": "default",

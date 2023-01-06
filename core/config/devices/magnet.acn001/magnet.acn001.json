@@ -3,6 +3,7 @@
         "manufacturer": "Xiaomi",
         "model": "MCCGQ14LM",
         "type": "Xiaomi Aqara door sensor",
+        "genericType": "Opening",
         "comment": "This device send ZoneStatus change notif thru cluster 0500 cmd 00",
         "timeout": "60",
         "category": {

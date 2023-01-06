@@ -2774,6 +2774,12 @@ class Abeille extends eqLogic {
         );
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
 
+        // generic_type
+        if (isset($model['genericType']))
+            $eqLogic->setGenericType($model['genericType']);
+        else
+            $eqLogic->setGenericType(null);
+
         $eqLogic->setIsEnable(1);
         $eqLogic->save();
 

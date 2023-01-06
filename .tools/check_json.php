@@ -225,6 +225,7 @@
 
         /* Checking top level supported keywords */
         $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'tuyaEF00', 'customization', 'xiaomi'];
+        array_push($supportedKeys, 'genericType');
         foreach ($dev[$devName] as $key => $value) {
             if (in_array($key, $supportedKeys))
                 continue;
@@ -358,7 +359,7 @@
         }
     }
 
-    function getCommandConfig($cmdFName, $newJCmdName = '') {
+    function getCommandModel($cmdFName, $newJCmdName = '') {
         $fullPath = commandsDir.'/'.$cmdFName.'.json';
         if (!file_exists($fullPath)) {
             return false;
@@ -408,7 +409,7 @@
         foreach ($jsonCmds as $cmd1 => $cmd2) {
             if (substr($cmd1, 0, 7) == "include") {
                 /* Old command JSON commands syntax: "includeX": "json_cmd_name" */
-                $newCmd = getCommandConfig($cmd2);
+                $newCmd = getCommandModel($cmd2);
                 if ($newCmd === false)
                     continue; // Cmd does not exist.
                 $cmdJName = $cmd2;
@@ -420,7 +421,7 @@
                        "params": "xxx"...
                     } */
                 $cmdFName = $cmd2['use']; // File name without '.json'
-                $newCmd = getCommandConfig($cmdFName, $cmd1);
+                $newCmd = getCommandModel($cmdFName, $cmd1);
                 if ($newCmd === false)
                     continue; // Cmd does not exist.
                 $cmdJName = $cmd1;

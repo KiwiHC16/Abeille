@@ -3,6 +3,7 @@
         "manufacturer": "Xiaomi",
         "model": "GZCGQ01LM",
         "type": "Xiaomi smart light sensor",
+        "genericType": "Environment",
         "timeout": "60",
         "comment": "Does not support clust 0001 attrib 0021 reporting (battery percent)",
         "comment2": "Illuminance reporting set to 10mins",

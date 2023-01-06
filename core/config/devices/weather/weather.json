@@ -3,6 +3,7 @@
         "manufacturer": "Xiaomi",
         "model": "WSDCGQ11LM",
         "timeout": "60",
+        "genericType": "Environment",
         "configuration": {
             "mainEP": "01",
             "icon": "Xiaomi-TempSensor-2",

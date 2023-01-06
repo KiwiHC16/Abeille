@@ -3,6 +3,8 @@
         "manufacturer": "Profalux",
         "zbManufacturer": "Profalux",
         "model": "Volets 2nd gen",
+        "type": "Profalux volet gen 2",
+        "genericType": "Shutter",
         "alternateIds": {
             "MOT-C1Z06F": [],
             "MOT-C1Z10C": []
@@ -16,7 +18,6 @@
             "paramType": "paramABC",
             "icon": "Profalux-Shutter"
         },
-        "type": "Profalux volet gen 2",
         "commands": {
             "ZCL Version": {
                 "use": "inf_zbAttr-0000-ZCLVersion"

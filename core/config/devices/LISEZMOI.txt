@@ -28,6 +28,7 @@ Exemple: BASICZBR3.json
       "type": "Sonoff smart switch",
       "manufacturer": "Sonoff",
       "model": "BASICZBR3",
+      "genericType": "Generic",
       "alternateIds": {
         "BASICZBR30": {
           "manufacturer": "if-different-from-top",
@@ -70,6 +71,9 @@ Exemple: BASICZBR3.json
 * manufacturer: OBLIGATOIRE, nom du fabricant/vendeur
 
 * model: OBLIGATOIRE, ref/nom du modèle
+
+* genericType: RECOMMANDE
+  Type generique d'équipement (ex: 'Shutter' pour un volet ou un module de controle de volet).
 
 * zbManufacturer: optionnel, identifiant zigbee du fabricant
 
@@ -122,7 +126,7 @@ Exemple: BASICZBR3.json
     minValue, maxValue:
         Permet de changer les limites d'une commande action, en particulier de type "slider".
     genericType: Surcharge du type generique par defaut.
-        ?
+        Type generique de la commande (ex: FLAP_UP pour un bouton 'monter' de volet).
     unit: Surcharge de l'unité par defaut.
         Permet de définir l'unité affichée avec l'information (cmde 'info').
     notStandard: optionnel

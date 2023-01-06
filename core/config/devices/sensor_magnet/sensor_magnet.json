@@ -2,6 +2,7 @@
     "sensor_magnet": {
         "manufacturer": "Xiaomi",
         "type": "Xiaomi door sensor",
+        "genericType": "Opening",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",

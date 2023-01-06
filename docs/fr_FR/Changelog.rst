@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Modeles EQ: Ajout prise en charge 'genericType'.
+- Modèles: Ajout du type generique sur qq modeles.
+
 230106-BETA-1
 -------------
 

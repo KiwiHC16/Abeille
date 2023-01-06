@@ -3,6 +3,7 @@
         "manufacturer": "Xiaomi",
         "model": "MCCGQ11LM",
         "type": "Xiaomi Aqara door sensor",
+        "genericType": "Opening",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -21,7 +22,7 @@
                 "isVisible": 1
             },
             "Battery-Volt": {
-                "use": "inf_batteryVolt2Percent-285-300"
+                "use": "inf_batteryVoltAndPercent-285-300"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"

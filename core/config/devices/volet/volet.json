@@ -2,6 +2,8 @@
     "volet": {
         "manufacturer": "Profalux",
         "model": "volets",
+        "type": "Profalux shutter",
+        "genericType": "Shutter",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -11,7 +13,6 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Profalux shutter",
         "commands": {
             "Identify": {
                 "use": "Identify"

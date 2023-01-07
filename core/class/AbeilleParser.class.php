@@ -1691,7 +1691,7 @@
             parserLog('debug', $dest.', Type='.$msgDecoded);
 
             // $this->msgToAbeille($dest."/".$srcAddr, "0006-".$EPS, "0000", $data);
-            $attributesReportN = [
+            $attrReportN = [
                 array( "name" => "0006-".$EPS."-0000", "value" => $data ),
             ];
             $toAbeille = array(
@@ -1701,7 +1701,7 @@
                 'addr' => $srcAddr,
                 'ep' => $ep,
                 'clustId' => $clustId,
-                'attributes' => $attributesReportN,
+                'attributes' => $attrReportN,
                 'time' => time(),
                 'lqi' => $lqi
             );
@@ -2621,7 +2621,7 @@
                 //                         );
 
                 //         // $this->msgToAbeille($dest."/".$srcAddr, $clustId.'-'.$srcEp, '0000', $value);
-                //         $attributesReportN = [
+                //         $attrReportN = [
                 //             array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
                 //         ];
                 //         // return;
@@ -2851,7 +2851,7 @@
                                 );
 
                 // $this->msgToAbeille($dest."/".$srcAddr, $clustId.'-'.$srcEp, '0000', $value);
-                $attributesReportN = [
+                $attrReportN = [
                     array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
                 ];
                 // return;
@@ -2885,7 +2885,7 @@
                                     );
 
                     // $this->msgToAbeille($dest."/".$srcAddr, $clustId.'-'.$dstEp, $attribute, $value);
-                    $attributesReportN = [
+                    $attrReportN = [
                         array( "name" => $clustId.'-'.$dstEp.'-'.$attribute, "value" => $value ),
                     ];
                     // return;
@@ -2915,7 +2915,7 @@
                                     );
 
                 // $this->msgToAbeille($dest."/".$srcAddr, $clustId.'-'.$dstEp, $attribute, hexdec($value));
-                $attributesReportN = [
+                $attrReportN = [
                     array( "name" => $clustId.'-'.$dstEp.'-'.$attribute, "value" => hexdec($value) ),
                 ];
 
@@ -2936,7 +2936,7 @@
                                     );
 
                     // $this->msgToAbeille($dest."/".$srcAddr, $clustId.'-'.$dstEp, $attribute, hexdec($value));
-                    $attributesReportN[] = [
+                    $attrReportN[] = [
                         array( "name" => $clustId.'-'.$dstEp.'-'.$attribute, "value" => hexdec($value) ),
                     ];
                 }
@@ -3000,12 +3000,12 @@
             //                         // $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--conso--',   $fcc0["Consommation"]["valueConverted"]);    // Consumption
             //                         // $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--volt--',    $fcc0["Voltage"]["valueConverted"]);    // Voltage
             //                         // $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--current--', $fcc0["Current"]["valueConverted"]);    // Current
-            //                         $attributesReportN = [
+            //                         $attrReportN = [
             //                             array( "name" => '0006-01-0000', "value" => $fcc0["Etat SW 1 Binaire"]["valueConverted"] ),
             //                             array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] / 100 ),
             //                         ];
             //                         if (isset($fcc0["Puissance"]))
-            //                             $attributesReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
+            //                             $attrReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
             //                     }
             //                 }
             //             }
@@ -3346,11 +3346,9 @@
                         $attrId = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
 
                         if ($manufCode == '115F') { // Xiaomi specific
-                            $toMon[] = "  Report attributes Xiaomi specific"; // For monitor
-
                             // New code
-                            $attributesReportN = [];
-                            xiaomiReportAttributes($dest, $srcAddr, $pl, $attributesReportN);
+                            $attrReportN = [];
+                            xiaomiReportAttributes($dest, $srcAddr, $pl, $attrReportN, $toMon);
 
                             // Legacy code to be removed at some point
                             $a = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
@@ -3358,23 +3356,21 @@
                             if (($a == '00F7') && ($t == "41")) {
                                 $dataLength = hexdec(substr($pl, 6, 2));
                                 $fcc0 = $this->decodeFF01(substr($pl, 8, $dataLength*2));
-                                // $attributesReportN[] = array( "name" => '0006-01-0000', "value" => $fcc0["Etat SW 1 Binaire"]["valueConverted"] );
-                                // $attributesReportN[] = array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] / 100 );
+                                // $attrReportN[] = array( "name" => '0006-01-0000', "value" => $fcc0["Etat SW 1 Binaire"]["valueConverted"] );
+                                // $attrReportN[] = array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] / 100 );
                                 if (isset($fcc0["Puissance"]))
-                                    $attributesReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
+                                    $attrReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
                             }
                         }
 
                         else if ($attrId == "FF01") { // Xiaomi specific (no manufCode but FF01 used by Xiaomi only)
-                            $attributesReportN = [];
-                            xiaomiReportAttributes($dest, $srcAddr, $pl, $attributesReportN);
+                            $attrReportN = [];
+                            xiaomiReportAttributes($dest, $srcAddr, $pl, $attrReportN);
                         }
 
                         else {
-                            // $toMon[] = "8002/Report attributes"; // For monitor
-
                             $l = strlen($msg);
-                            $attributesReportN = [];
+                            $attrReportN = [];
                             $eq = getDevice($dest, $srcAddr, ''); // Corresponding device
                             for ($i = 0; $i < $l;) {
                                 // Decode attribute
@@ -3424,7 +3420,7 @@
                                     'name' => $clustId.'-'.$srcEp.'-'.$attr['id'],
                                     'value' => $attr['value'],
                                 );
-                                $attributesReportN[] = $attr2;
+                                $attrReportN[] = $attr2;
 
                                 $i += $size;
                             }
@@ -3793,7 +3789,7 @@
                                                .', value='.$value
                                                 );
 
-                                $attributesReportN = [
+                                $attrReportN = [
                                     array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
                                 ];
                                 // return;
@@ -3805,7 +3801,7 @@
                     else if ($clustId == "0006") {
                         if ($cmd == "FD") {
                             // parserLog("debug", "  Tuya 0006 specific cmd FD", "8002");
-                            $attributesReportN = tuyaDecode0006CmdFD($srcEp, $msg);
+                            $attrReportN = tuyaDecode0006CmdFD($srcEp, $msg);
                         }
 
                         if (($cmd == "00") || ($cmd == "01")) {
@@ -3872,7 +3868,7 @@
                     else if ($clustId == "0300") {
                         // Tcharp38: Covering all 0300 commands
                         parserLog("debug", "  msg=".$msg, "8002");
-                        $attributesReportN[] = array(
+                        $attrReportN[] = array(
                             'name' => $srcEp.'-0300-cmd'.$cmd,
                             'value' => $msg, // Rest of command data to be decoded if required
                         );
@@ -3891,7 +3887,7 @@
                             $zoneType = AbeilleTools::reverseHex(substr($msg, 0, 4));
                             $manufCode = AbeilleTools::reverseHex(substr($msg, 4, 4));
                             parserLog('debug', '  Zone enroll request: ZoneType='.$zoneType.', ManufCode='.$manufCode);
-                            $attributesReportN[] = array(
+                            $attrReportN[] = array(
                                 'name' => $srcEp.'-0500-cmd01',
                                 'value' => $zoneType.'-'.$manufCode,
                             );
@@ -3940,7 +3936,7 @@
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
 
-                        $attributesReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $msg, $toMon);
+                        $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $msg, $toMon);
                     }
 
                     else {
@@ -3967,7 +3963,7 @@
                 );
                 msgToAbeille2($toAbeille);
             }
-            if (isset($attributesReportN) && (count($attributesReportN) > 0)) {
+            if (isset($attrReportN) && (count($attrReportN) > 0)) {
                 $toAbeille = array(
                     // 'src' => 'parser',
                     'type' => 'attributesReportN',
@@ -3975,7 +3971,7 @@
                     'addr' => $srcAddr,
                     'ep' => $srcEp,
                     'clustId' => $clustId,
-                    'attributes' => $attributesReportN,
+                    'attributes' => $attrReportN,
                     'time' => time(),
                     'lqi' => $lqi
                 );
@@ -5363,7 +5359,7 @@
                 $clustId = "Scene";
                 $attrId = "Membership";
                 // $this->msgToAbeille($dest."/".$source, $clustId, $attrId, $data);
-                $attributesReportN = [
+                $attrReportN = [
                     array( "name" => $clustId.'-'.$attrId, "value" => $data ),
                 ];
                 $toAbeille = array(
@@ -5373,7 +5369,7 @@
                     'addr' => $source,
                     'ep' => $endpoint,
                     'clustId' => $clustId,
-                    'attributes' => $attributesReportN,
+                    'attributes' => $attrReportN,
                     'time' => time(),
                     'lqi' => $lqi
                 );
@@ -5452,7 +5448,7 @@
             // $data = $direction;
             // $this->msgToAbeille($dest."/".$source, $clustId, $attrId, $data);
 
-            $attributesReportN = [
+            $attrReportN = [
                 array( "name" => '80A7-Cmd', "value" => $cmd ),
                 array( "name" => '80A7-Direction', "value" => $direction ),
             ];
@@ -5463,7 +5459,7 @@
                 'addr' => $source,
                 'ep' => $endpoint,
                 'clustId' => $clustId,
-                'attributes' => $attributesReportN,
+                'attributes' => $attrReportN,
                 'time' => time(),
                 'lqi' => $lqi
             );
@@ -5649,7 +5645,7 @@
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Voltage='.$voltage.' Voltage%='.$this->volt2pourcent($voltage));
-                    $attributesReportN = [
+                    $attrReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                     ];
@@ -5667,7 +5663,7 @@
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     $etat = substr($payload, 80, 2);
                     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage).', Etat=' .$etat);
-                    $attributesReportN = [
+                    $attrReportN = [
                         array( "name" => "0006-01-0000", "value" => $etat ),
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
@@ -5692,7 +5688,7 @@
                     $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
                     $humidity = hexdec( substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2) );
                     parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity );
-                    $attributesReportN = [
+                    $attrReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                         array( "name" => "0402-01-0000", "value" => $temperature / 100 ),
@@ -5723,7 +5719,7 @@
                     $voltage = hexdec(substr($payload, 28+2, 2).substr($payload, 28, 2));
                     $lux = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
                     parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Lux='.$lux);
-                    $attributesReportN = [
+                    $attrReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                         array( "name" => "0400-01-0000", "value" => $lux ),
@@ -5742,7 +5738,7 @@
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     $etat = substr($payload, 88, 2);
                     parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Etat='.$etat);
-                    $attributesReportN = [
+                    $attrReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                     ];
@@ -5765,7 +5761,7 @@
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Volt=' .$voltage.', Volt%='.$this->volt2pourcent($voltage));
-                    $attributesReportN = [
+                    $attrReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                     ];
@@ -5781,7 +5777,7 @@
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
-                    $attributesReportN = [
+                    $attrReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                     ];
@@ -5798,7 +5794,7 @@
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent($voltage));
-                    $attributesReportN = [
+                    $attrReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                     ];
@@ -5815,7 +5811,7 @@
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
                     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
-                    $attributesReportN = [
+                    $attrReportN = [
                         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                         array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                     ];
@@ -5835,7 +5831,7 @@
                     $conso = unpack('f', pack('H*', substr($payload, 24 + 14 * 2, 8)));
                     $consoValue = $conso[1];
                     parserLog('debug', '  OnOff='.$onOff.', Puissance='.$puissanceValue.', Consommation='.$consoValue);
-                    $attributesReportN = [
+                    $attrReportN = [
                         array( "name" => '0006-01-0000', "value" => $onOff ),
                     ];
                 }
@@ -5850,7 +5846,7 @@
 
                     $FF01 = $this->decodeFF01(substr($payload, 24, strlen($payload) - 24 - 2));
                     parserLog('debug', "  ".json_encode($FF01));
-                    $attributesReportN = [
+                    $attrReportN = [
                         array( "name" => '0006-01-0000', "value" => $FF01["Etat SW 1 Binaire"]["valueConverted"] ),
                         array( "name" => '0006-02-0000', "value" => $FF01["Etat SW 2 Binaire"]["valueConverted"] ),
                         array( "name" => '000C-01-0055', "value" => $FF01["Puissance"]["valueConverted"] ),
@@ -5862,8 +5858,8 @@
                     // Assuming $dataType == "42"
                     parserLog("debug","  Xiaomi proprietary (IR/button/door V1)");
 
-                    // $attributesReportN = [];
-                    // xiaomiDecodeTags($dest, $srcAddr, $Attribut, $attributesReportN);
+                    // $attrReportN = [];
+                    // xiaomiDecodeTags($dest, $srcAddr, $Attribut, $attrReportN);
                     // WARNING: This attribut sounds malformed (note this manufCode=1234)
                     // It looks like first byte must be skipped
                     // Original 4C/structure data type is transformed into 42
@@ -5872,7 +5868,7 @@
                     // Legacy code to be removed
                     $voltage = hexdec(substr($payload, 24 +  8, 2).substr($payload, 24 + 6, 2));
                     parserLog('debug', '  Legacy: Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
-                    $attributesReportN = [
+                    $attrReportN = [
                         // array( "name" => 'Battery-Volt', "value" => $voltage ),
                         array( "name" => '0001-01-0021', "value" => $this->volt2pourcent($voltage) ),
                     ];
@@ -5922,7 +5918,7 @@
 
                         // Relay Double
                         // $this->msgToAbeille($dest."/".$srcAddr, '000C', '01-0055', $puissanceValue);
-                        $attributesReportN = [
+                        $attrReportN = [
                             array( "name" => '000C-01-0055', "value" => $puissanceValue ),
                         ];
                     }
@@ -5936,7 +5932,7 @@
 
                         // Relay Double - Prise Xiaomi
                         // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $ep.'-'.$attrId, $puissanceValue);
-                        $attributesReportN = [
+                        $attrReportN = [
                             array( "name" => $clustId.'-'.$ep.'-'.$attrId, "value" => $puissanceValue ),
                         ];
                     }
@@ -5950,7 +5946,7 @@
                         $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
                         $bin = pack('H*', $hexNumberOrder);
                         $value = unpack("f", $bin)[1];
-                        $attributesReportN = [
+                        $attrReportN = [
                             array( "name" => $clustId.'-'.$ep.'-'.$attrId, "value" => $value ),
                         ];
                     }
@@ -6019,13 +6015,13 @@
                 // return;
                 // $data = hexdec($buttonEvent);
 
-                $attributesReportN = [
+                $attrReportN = [
                     array( "name" => $clustId."-".$ep."-".$attrId."-Event", "value" => $buttonEvent ),
                     array( "name" => $clustId."-".$ep."-".$attrId."-Duree", "value" => $buttonDuree ),
                 ];
             }
 
-            if (!isset($attributesReportN) && !isset($data)) {
+            if (!isset($attrReportN) && !isset($data)) {
                 /* Core hereafter is performing default conversion according to data type */
 
                 // 0x00 Null
@@ -6115,7 +6111,7 @@
                 return; // If unknown to Jeedom, nothing to send
 
             /* Forwarding atttribute value to Abeille */
-            if (isset($attributesReportN)) {
+            if (isset($attrReportN)) {
                 $toAbeille = array(
                     // 'src' => 'parser',
                     'type' => 'attributesReportN',
@@ -6123,7 +6119,7 @@
                     'addr' => $srcAddr,
                     'ep' => $ep,
                     'clustId' => $clustId,
-                    'attributes' => $attributesReportN,
+                    'attributes' => $attrReportN,
                     'time' => time(),
                     'lqi' => $lqi
                 );
@@ -6385,16 +6381,16 @@
                .', ZoneId='.substr($payload,20, 2)
                .', Delay='.substr($payload,22, 4);
 
-            $attributesReportN = [];
+            $attrReportN = [];
             // Legacy: Sending 0500-#EP#-0000 with zoneStatus as value
             // To be removed at some point
-            $attributesReportN[] = array(
+            $attrReportN[] = array(
                 'name' => $clustId.'-'.$ep.'-0000',
                 'value' => $zoneStatus,
             );
 
             // New message format '#EP#-0500-cmd00' with $zoneStatus as value
-            $attributesReportN[] = array(
+            $attrReportN[] = array(
                 'name' => $ep.'-0500-cmd00',
                 'value' => $zoneStatus,
             );
@@ -6406,7 +6402,7 @@
                 'addr' => $srcAddr,
                 'ep' => $ep,
                 'clustId' => $clustId,
-                'attributes' => $attributesReportN,
+                'attributes' => $attrReportN,
                 'time' => time(),
                 'lqi' => $lqi
             );

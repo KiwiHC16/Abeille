@@ -183,7 +183,8 @@
                 parserLog('debug', '  Xiaomi proprietary (Capteur Presence V2)');
 
                 // For info until activation
-                xiaomiDecodeTags($net, $addr, $pl2, null, $toMon);
+                $unused = [];
+                xiaomiDecodeTags($net, $addr, $pl2, $unused, $toMon);
                 // For info until activation
 
                 // $voltage = hexdec(substr($pl2, 28+2, 2).substr($pl2, 28, 2));
@@ -203,7 +204,8 @@
                 parserLog('debug', '  Xiaomi proprietary (Water leak sensor)');
 
                 // For info until activation
-                xiaomiDecodeTags($net, $addr, $pl2, null, $toMon);
+                $unused = [];
+                xiaomiDecodeTags($net, $addr, $pl2, $unused, $toMon);
                 // For info until activation
 
                 // $voltage = hexdec(substr($pl2, 24 + 2 * 2 + 2, 2).substr($pl2, 24 + 2 * 2, 2));

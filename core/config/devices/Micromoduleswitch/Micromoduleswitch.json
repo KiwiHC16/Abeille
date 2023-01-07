@@ -1,14 +1,16 @@
 {
     "Micromoduleswitch": {
+        "manufacturer": "Legrand",
+        "model": "064888",
+        "type": "Legrand micro module switch",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "Micromoduleswitch"
+            "icon": "Legrand-MicromoduleSwitch"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Legrand Micro Module Encastrable 220V avec Neutre et un bouton poussoir",
         "commands": {
             "etat": {
                 "use": "inf_zbAttr-0006-OnOff",

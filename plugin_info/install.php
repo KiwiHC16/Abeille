@@ -581,6 +581,7 @@
                     "LegrandRemoteSwitch" => "Legrand-RemoteSwitch",
                     "Contactor" => "Legrand-Contactor",
                     "Connectedoutlet" => "Legrand-Connectedoutlet",
+                    "Micromoduleswitch" => "Legrand-MicromoduleSwitch",
 
                     "Moes-ZSS-ZK-THL" => "Moes-Thermometer",
 

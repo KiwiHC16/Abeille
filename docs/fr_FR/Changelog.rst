@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Legrand micromodule switch: Mise-à-jour modele et image.
+
 230106-BETA-2
 -------------
 

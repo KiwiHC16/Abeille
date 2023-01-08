@@ -6,6 +6,7 @@
             "visibilityCategory": "Network"
         },
         "type": "info",
-        "logicalId": "Link-Quality"
+        "logicalId": "Link-Quality",
+        "genericType": "GENERIC_INFO"
     }
 }

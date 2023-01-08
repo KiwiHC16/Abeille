@@ -6,6 +6,7 @@
             "visibilityCategory": "Network"
         },
         "type": "info",
-        "logicalId": "Short-Addr"
+        "logicalId": "Short-Addr",
+        "genericType": "GENERIC_INFO"
     }
 }

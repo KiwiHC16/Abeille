@@ -10,6 +10,6 @@
         },
         "type": "info",
         "logicalId": "online",
-        "genericType": "ONLINE"
+        "genericType": "GENERIC_INFO"
     }
 }

@@ -3,6 +3,7 @@ ChangeLog
 
 - Legrand micromodule switch: Mise-à-jour modele et image.
 - Interne: Parser: Amélioration mess monitor cas Xiaomi.
+- Modèles: Qq nettoyage + ajout logicalId sur certaines actions.
 
 230106-BETA-2
 -------------

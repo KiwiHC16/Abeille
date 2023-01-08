@@ -6,6 +6,7 @@
             "visibilityCategory": "Network"
         },
         "type": "info",
-        "logicalId": "IEEE-Addr"
+        "logicalId": "IEEE-Addr",
+        "genericType": "GENERIC_INFO"
     }
 }

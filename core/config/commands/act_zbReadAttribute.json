@@ -1,14 +1,12 @@
 {
     "act_zbReadAttribute": {
         "comment": "Generic command to read any attribute",
-        "isVisible": 0,
-        "name": "ReadAttribute",
-        "isHistorized": 0,
         "subType": "other",
         "configuration": {
             "topic": "readAttribute",
             "request": "ep=#EP#&clustId=#CLUSTID#&attrId=#ATTRID#"
         },
-        "type": "action"
+        "type": "action",
+        "logicalId": "readAttr-#EP#-#CLUSTID#-#ATTRID#"
     }
 }

@@ -6,6 +6,7 @@
             "visibilityCategory": "Time"
         },
         "type": "info",
-        "logicalId": "Time-TimeStamp"
+        "logicalId": "Time-TimeStamp",
+        "genericType": "GENERIC_INFO"
     }
 }

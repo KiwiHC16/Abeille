@@ -6,6 +6,7 @@ ChangeLog
 - Modèles: Qq nettoyage + ajout logicalId sur certaines actions.
 - Lexman smart plug: Support préliminaire (2531).
 - Assistant modeles: Mise-à-jour suite renommage des commandes.
+- Tuya 1Ch switch module (TS0001__TZ3000_tqlv4ug4): Mise-à-jour modèle.
 
 230106-BETA-2
 -------------

@@ -750,6 +750,12 @@
 
         // Private clusters
         // No details can be added since nothing "standard" & stable.
+        "E000" => array(
+            "name" => "Tuya private ?",
+        ),
+        "E001" => array(
+            "name" => "Tuya private ?",
+        ),
         "EF00" => array(
             "name" => "Tuya private ?",
         ),

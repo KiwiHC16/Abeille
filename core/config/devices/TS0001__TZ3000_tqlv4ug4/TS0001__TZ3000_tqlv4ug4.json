@@ -3,6 +3,9 @@
         "manufacturer": "Tuya",
         "model": "1ch switch",
         "type": "Tuya 1ch switch module",
+        "alternateIds": {
+            "TS0001__TZ3000_gjrubzje": {}
+        },
         "timeout": "60",
         "category": {
             "energy": "1",
@@ -13,6 +16,44 @@
             "mainEP": "01"
         },
         "commands": {
+            "Config 0": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004",
+                "execAtCreation": "Yes"
+            },
+            "Config 1": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0000",
+                "execAtCreation": "Yes"
+            },
+            "Config 2": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0001",
+                "execAtCreation": "Yes"
+            },
+            "Config 3": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0005",
+                "execAtCreation": "Yes"
+            },
+            "Config 4": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0007",
+                "execAtCreation": "Yes"
+            },
+            "Config 5": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=FFFE",
+                "execAtCreation": "Yes"
+            },
+            "Set push button": {
+                "comment": "Controlled but push button",
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=0006&attrId=D030&attrType=30&attrVal=02",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 6
+            },
+
             "Identify": {
                 "use": "Identify"
             },
@@ -51,58 +92,6 @@
             "SetReporting 01-0006": {
                 "use": "act_zbConfigureReporting",
                 "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
-                "execAtCreation": "yes"
-            },
-            "Total power": {
-                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
-                "params": "div=1",
-                "unit": "KWh",
-                "isVisible": "1"
-            },
-            "Get Total power": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0702&attrId=0000"
-            },
-            "RMS Voltage": {
-                "use": "inf_zbAttr-0B04-RMSVoltage",
-                "params": "mult=1&div=1",
-                "isVisible": "0"
-            },
-            "Get RMS Voltage": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0B04&attrId=0505"
-            },
-            "RMS Current": {
-                "use": "inf_zbAttr-0B04-RMSCurrent",
-                "params": "mult=1&div=1",
-                "isVisible": "1"
-            },
-            "Get RMS Current": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0B04&attrId=0508"
-            },
-            "Active Power": {
-                "use": "inf_zbAttr-0B04-ActivePower",
-                "params": "mult=1&div=1",
-                "isVisible": "1"
-            },
-            "Get Active Power": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0B04&attrId=050B"
-            },
-            "Bind 0B04-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "clustId=0B04",
-                "execAtCreation": "yes"
-            },
-            "SetReporting 0B04-0508": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=",
-                "execAtCreation": "yes"
-            },
-            "SetReporting 0B04-050B": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             }
         }

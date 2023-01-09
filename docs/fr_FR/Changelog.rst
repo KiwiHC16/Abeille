@@ -4,6 +4,8 @@ ChangeLog
 - Legrand micromodule switch: Mise-à-jour modele et image.
 - Interne: Parser: Amélioration mess monitor cas Xiaomi.
 - Modèles: Qq nettoyage + ajout logicalId sur certaines actions.
+- Lexman smart plug: Support préliminaire (2531).
+- Assistant modeles: Mise-à-jour suite renommage des commandes.
 
 230106-BETA-2
 -------------

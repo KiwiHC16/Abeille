@@ -228,7 +228,7 @@
                 return $GLOBALS['eqList'][$net][$addr];
             }
 
-            // Still not found. Checking if was in a different network.
+            // Still not found. Checking if was in a different network but need IEEE for that.
             foreach ($GLOBALS['eqList'] as $oldNet => $oldAddr) {
                 if ($oldNet == $net)
                     continue; // This network has already been checked

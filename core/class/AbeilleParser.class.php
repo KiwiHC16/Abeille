@@ -3416,11 +3416,10 @@
                                     }
                                 }
 
-                                $attr2 = array(
+                                $attrReportN[] = array(
                                     'name' => $clustId.'-'.$srcEp.'-'.$attr['id'],
                                     'value' => $attr['value'],
                                 );
-                                $attrReportN[] = $attr2;
 
                                 $i += $size;
                             }

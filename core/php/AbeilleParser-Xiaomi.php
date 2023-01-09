@@ -160,7 +160,7 @@
                 // Assuming $dataType == "42"
 
                 parserLog('debug', '  Xiaomi proprietary (Door Sensor)');
-                $attributesReportN = [];
+                $attrReportN = [];
                 xiaomiDecodeTags($net, $addr, $pl2, $attrReportN, $toMon);
 
                 // Previous code. For info only
@@ -222,7 +222,7 @@
                 // Assuming $dataType == "42"
 
                 parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
-                $attributesReportN = [];
+                $attrReportN = [];
                 xiaomiDecodeTags($net, $addr, $pl2, $attrReportN, $toMon);
 
                 // Previous code. For info only

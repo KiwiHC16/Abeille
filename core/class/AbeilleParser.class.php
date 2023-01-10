@@ -3092,6 +3092,8 @@
                             if ($clustId == "000A") { // Time cluster
                                 if ($attrId == "0000") {
                                     parserLog('debug', "  Attribute 0000 handled by Zigate");
+                                // } else if ($attrId == "0002") { // TimeZone
+                                    // TODO
                                 } else if ($attrId == "0007") { // LocalTime
                                     // Reminder: Zigbee uses 00:00:00 @1st of jan 2000 as ref
                                     //           PHP uses 00:00:00 @1st of jan 1970 (Linux ref)

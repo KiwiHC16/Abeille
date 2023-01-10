@@ -43,7 +43,7 @@
 
         $eq = &getDevice($net, $addr); // By ref
         // parserLog('debug', 'eq='.json_encode($eq));
-        if (!isset($eq['xiaomi']) || !isset($eq['xiaomi']['fromDevice'])) {
+        if (!isset($eq['xiaomi']) || !isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) {
             parserLog('debug', "  No defined Xiaomi mapping");
             // return;
             $mapping = [];

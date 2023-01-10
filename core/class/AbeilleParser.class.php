@@ -3344,11 +3344,12 @@
                             return; // So far unknown to Jeedom
 
                         $attrId = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
+                        $eq = getDevice($dest, $srcAddr);
 
                         if ($manufCode == '115F') { // Xiaomi specific
                             // New code
                             $attrReportN = [];
-                            xiaomiReportAttributes($dest, $srcAddr, $pl, $attrReportN, $toMon);
+                            xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN, $toMon);
 
                             // Legacy code to be removed at some point
                             $a = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
@@ -3358,15 +3359,22 @@
                                 $fcc0 = $this->decodeFF01(substr($pl, 8, $dataLength*2));
                                 // $attrReportN[] = array( "name" => '0006-01-0000', "value" => $fcc0["Etat SW 1 Binaire"]["valueConverted"] );
                                 // $attrReportN[] = array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] / 100 );
-                                if (isset($fcc0["Puissance"]))
+                                if (isset($fcc0["Puissance"])) {
+                                    parserLog('debug', "  Legacy 'Puissance'");
                                     $attrReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
+                                }
                             }
                         }
 
-                        else if ($attrId == "FF01") { // Xiaomi specific (no manufCode but FF01 used by Xiaomi only)
+                        else if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
                             $attrReportN = [];
-                            xiaomiReportAttributes($dest, $srcAddr, $pl, $attrReportN);
+                            xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN);
                         }
+
+                        // else if ($attrId == "FF01") { // Xiaomi specific (no manufCode but FF01 used by Xiaomi only)
+                        //     $attrReportN = [];
+                        //     xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN);
+                        // }
 
                         else {
                             $l = strlen($msg);
@@ -5639,7 +5647,7 @@
                     parserLog("debug", "  Xiaomi proprietary (Square button)" );
 
                     // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $Attribut);
+                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
                     // For info until activation
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -5655,7 +5663,7 @@
                     parserLog("debug","  Xiaomi proprietary (Wall 1 Switch, Gaz Sensor)" );
 
                     // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $Attribut);
+                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
                     // For info until activation
 
                     // Dans le cas du Gaz Sensor, il n'y a pas de batterie alors le decodage est probablement faux.
@@ -5680,7 +5688,7 @@
                     parserLog("debug","  Xiaomi proprietary (Capteur Temperature Rond/Wall 2 Switch)");
 
                     // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $Attribut);
+                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
                     // For info until activation
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -5712,7 +5720,7 @@
                     parserLog('debug', '  Xiaomi proprietary (Capteur Presence V2)');
 
                     // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $Attribut);
+                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
                     // For info until activation
 
                     $voltage = hexdec(substr($payload, 28+2, 2).substr($payload, 28, 2));
@@ -5731,7 +5739,7 @@
                     parserLog('debug', '  Xiaomi proprietary (Capteur d\'inondation)');
 
                     // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $Attribut);
+                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
                     // For info until activation
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -5755,7 +5763,7 @@
                     parserLog('debug', '  Xiaomi proprietary (Aqara Wireless Switch V3)');
 
                     // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $Attribut);
+                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
                     // For info until activation
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -5771,7 +5779,7 @@
                     parserLog('debug', '  Xiaomi proprietary (Smoke Sensor)');
 
                     // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $Attribut);
+                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
                     // For info until activation
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -5788,7 +5796,7 @@
                     parserLog('debug', '  Xiaomi proprietary (Cube)');
 
                     // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $Attribut);
+                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
                     // For info until activation
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -5805,7 +5813,7 @@
                     parserLog('debug', '   Xiaomi proprietary (Vibration)');
 
                     // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $Attribut);
+                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
                     // For info until activation
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -5821,7 +5829,7 @@
                     parserLog('debug', "  Xiaomi proprietary (Wall Plug)");
 
                     // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $Attribut);
+                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
                     // For info until activation
 
                     $onOff = hexdec(substr($payload, 24 + 2 * 2, 2));
@@ -5840,7 +5848,7 @@
                     parserLog('debug', "  Xiaomi proprietary (Double relay)");
 
                     // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $Attribut);
+                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
                     // For info until activation
 
                     $FF01 = $this->decodeFF01(substr($payload, 24, strlen($payload) - 24 - 2));

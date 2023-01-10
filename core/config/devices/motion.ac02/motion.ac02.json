@@ -95,32 +95,34 @@
         },
         "xiaomi": {
             "fromDevice": {
-                "01-21": {
-                    "func": "divAndPercent",
-                    "div": 1000,
-                    "info": "0001-01-0021",
-                    "comment": "Battery percent"
-                },
-                "08-21": {
-                    "func": "numberDiv",
-                    "div": 10,
-                    "info": "0402-01-0000",
-                    "comment": "Device temp"
-                },
-                "65-21": {
-                    "func": "number",
-                    "info": "0400-01-0000",
-                    "comment": "Illuminance"
-                },
-                "69-20": {
-                    "func": "number",
-                    "info": "01-detectionInterval",
-                    "comment": "Detection interval"
-                },
-                "6A-20": {
-                    "func": "number",
-                    "info": "01-motionSensitivity",
-                    "comment": "Motion sensitivity, 1=low, 2=medium, 3=high"
+                "0000-00F7": {
+                    "01-21": {
+                        "func": "divAndPercent",
+                        "div": 1000,
+                        "info": "0001-01-0021",
+                        "comment": "Battery percent"
+                    },
+                    "08-21": {
+                        "func": "numberDiv",
+                        "div": 10,
+                        "info": "0402-01-0000",
+                        "comment": "Device temp"
+                    },
+                    "65-21": {
+                        "func": "number",
+                        "info": "0400-01-0000",
+                        "comment": "Illuminance"
+                    },
+                    "69-20": {
+                        "func": "number",
+                        "info": "01-detectionInterval",
+                        "comment": "Detection interval"
+                    },
+                    "6A-20": {
+                        "func": "number",
+                        "info": "01-motionSensitivity",
+                        "comment": "Motion sensitivity, 1=low, 2=medium, 3=high"
+                    }
                 }
             }
         }

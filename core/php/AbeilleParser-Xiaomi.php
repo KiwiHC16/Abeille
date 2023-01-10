@@ -25,7 +25,7 @@
     // Based on https://github.com/dresden-elektronik/deconz-rest-plugin/wiki/Xiaomi-manufacturer-specific-clusters%2C-attributes-and-attribute-reporting
     // Could be cluster 0000, attr FF01, type 42 (character string)
     // Could be cluster FCC0, attr 00F7, type 41 (octet string)
-    function xiaomiDecodeTags($net, $addr, $pl, &$attrReportN = null, &$toMon = null) {
+    function xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl, &$attrReportN = null, &$toMon = null) {
         // $tagsList = array(
         //     "01-21" => array( "desc" => "Battery-Volt" ),
         //     "03-28" => array( "desc" => "Device-Temp" ),
@@ -48,7 +48,7 @@
             // return;
             $mapping = [];
         } else
-            $mapping = $eq['xiaomi']['fromDevice'];
+            $mapping = $eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId];
 
         $l = strlen($pl);
         if ($attrReportN !== null)
@@ -129,13 +129,12 @@
         }
     }
 
-    function xiaomiReportAttributes($net, $addr, $pl, &$attrReportN = null, &$toMon = null) {
+    function xiaomiReportAttributes($net, $addr, $clustId, $pl, &$attrReportN = null, &$toMon = null) {
         $l = strlen($pl);
         for ( ; $l > 0; ) {
             $attrId = substr($pl, 2, 2).substr($pl, 0, 2);
             $attrType = substr($pl, 4, 2);
             $pl = substr($pl, 6);
-            parserLog('debug', "  Xiaomi ".$attrId."-".$attrType.": ".$pl);
 
             // Computing attribute size
             if (($attrType == "41") || ($attrType == "42")) {
@@ -149,7 +148,9 @@
                     parserLog('debug', "  WARNING: attrSize is unknown for type ".$attrType);
                 }
             }
-            $pl2 = substr($pl, 0, $attrSize * 2);
+            $pl2 = substr($pl, 0, $attrSize * 2); // pl2 = attribute data
+            $pl = substr($pl, $attrSize * 2);
+            $l = strlen($pl);
 
             //
             // Legacy decoding
@@ -161,7 +162,7 @@
 
                 parserLog('debug', '  Xiaomi proprietary (Door Sensor)');
                 $attrReportN = [];
-                xiaomiDecodeTags($net, $addr, $pl2, $attrReportN, $toMon);
+                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl2, $attrReportN, $toMon);
 
                 // Previous code. For info only
                 // // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -174,6 +175,7 @@
                 //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                 //     array( "name" => "0006-01-0000", "value" => $etat ),
                 // ];
+                continue;
             }
 
             // Xiaomi capteur Presence V2
@@ -184,7 +186,7 @@
 
                 // For info until activation
                 $unused = [];
-                xiaomiDecodeTags($net, $addr, $pl2, $unused, $toMon);
+                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl2, $unused, $toMon);
                 // For info until activation
 
                 // $voltage = hexdec(substr($pl2, 28+2, 2).substr($pl2, 28, 2));
@@ -195,6 +197,7 @@
                 //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                 //     array( "name" => "0400-01-0000", "value" => $lux ),
                 // ];
+                continue;
             }
 
             // Xiaomi leak sensor
@@ -205,7 +208,7 @@
 
                 // For info until activation
                 $unused = [];
-                xiaomiDecodeTags($net, $addr, $pl2, $unused, $toMon);
+                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl2, $unused, $toMon);
                 // For info until activation
 
                 // $voltage = hexdec(substr($pl2, 24 + 2 * 2 + 2, 2).substr($pl2, 24 + 2 * 2, 2));
@@ -215,6 +218,7 @@
                 //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                 //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                 // ];
+                continue;
             }
 
             // Xiaomi temp/humidity/pressure square sensor
@@ -223,33 +227,36 @@
 
                 parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
                 $attrReportN = [];
-                xiaomiDecodeTags($net, $addr, $pl2, $attrReportN, $toMon);
+                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl2, $attrReportN, $toMon);
 
                 // Previous code. For info only
-                $voltage        = hexdec(substr($pl2, 2 * 2 + 2, 2).substr($pl2, 2 * 2, 2));
-                $temperature    = unpack("s", pack("s", hexdec(substr($pl2, 21 * 2 + 2, 2).substr($pl2, 21 * 2, 2))))[1];
-                $humidity       = hexdec(substr($pl2, 25 * 2 + 2, 2).substr($pl2, 25 * 2, 2));
-                $pression       = hexdec(substr($pl2, 29 * 2 + 6, 2).substr($pl2, 29 * 2 + 4, 2).substr($pl2, 29 * 2 + 2, 2).substr($pl2, 29 * 2, 2));
-                parserLog('debug', '  Legacy: Volt='.$voltage.', Temp='.$temperature.', Humidity='.$humidity.', Pressure='.$pression);
+                // $voltage        = hexdec(substr($pl2, 2 * 2 + 2, 2).substr($pl2, 2 * 2, 2));
+                // $temperature    = unpack("s", pack("s", hexdec(substr($pl2, 21 * 2 + 2, 2).substr($pl2, 21 * 2, 2))))[1];
+                // $humidity       = hexdec(substr($pl2, 25 * 2 + 2, 2).substr($pl2, 25 * 2, 2));
+                // $pression       = hexdec(substr($pl2, 29 * 2 + 6, 2).substr($pl2, 29 * 2 + 4, 2).substr($pl2, 29 * 2 + 2, 2).substr($pl2, 29 * 2, 2));
+                // parserLog('debug', '  Legacy: Volt='.$voltage.', Temp='.$temperature.', Humidity='.$humidity.', Pressure='.$pression);
                 // $attributesReportN = [
                 //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
                 //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
                 //     array( "name" => '0402-01-0000', "value" => $temperature / 100 ),
                 //     array( "name" => '0405-01-0000', "value" => $humidity / 100 ),
                 // ];
+                continue;
             }
 
             //
             // New decoding
             //
 
-            else if (($attrId == "00F7") && ($attrType == "41")) {
-                xiaomiDecodeTags($net, $addr, $pl2, $attrReportN, $toMon);
+            if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
+                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl2, $attrReportN, $toMon);
+            } else {
+                parserLog('debug', "  UNHANDLED ".$attrId."-".$attrType.": ".$pl2);
             }
 
             // break; // Currently supporting only 1 attribut.
-            $pl = substr($pl, $attrSize * 2);
-            $l = strlen($pl);
+            // $pl = substr($pl, $attrSize * 2);
+            // $l = strlen($pl);
         }
     }
 ?>

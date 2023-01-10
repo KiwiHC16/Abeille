@@ -492,7 +492,7 @@
             value = document.getElementById("idValueWA").value;
             payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId+"_attrVal="+value;
             attrType = document.getElementById("idAttrTypeWA").value;
-            if (attrType != '')
+            if (attrType != 'FF')
                 payload += "_attrType="+attrType;
             dir = document.getElementById("idDirWA").value;
             if (dir != '')
@@ -508,7 +508,7 @@
             value = document.getElementById("idValueWA2").value;
             payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId+"_attrVal="+value;
             attrType = document.getElementById("idAttrTypeWA2").value;
-            if (attrType != '')
+            if (attrType != 'FF')
                 payload += "_attrType="+attrType;
             dir = document.getElementById("idDirWA2").value;
             if (dir != '')
@@ -564,7 +564,7 @@
                 payload += "_maxInterval="+max;
             if (change != '')
                 payload += "_changeVal="+change;
-            if (attrType != '')
+            if (attrType != 'FF')
                 payload += "_attrType="+attrType;
             if (manufId != '')
                 payload += "_manufId="+manufId;

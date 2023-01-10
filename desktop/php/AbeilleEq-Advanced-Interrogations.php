@@ -144,12 +144,15 @@
             echo '<a class="btn btn-danger" onclick="interrogate(\'writeAttribute\', \''.$eqId.'\')">{{Ecrire}}</a>';
             addEpButton("idEpWA", $mainEP);
             addClusterButton("idClustIdWA");
+            addAttrInput("idAttrIdWA");
+            addTypeList("idAttrTypeWA");
+        ?>
+        <input id="idValueWA" title="{{Valeur à écrire. Format hex string}}"  placeholder="{{Data}}" />
+        <?php
             addDirInput("idDirWA");
             addManufCodeInput("idManufIdWA");
-            addAttrInput("idAttrIdWA");
         ?>
-        <input id="idAttrTypeWA" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" />
-        <input id="idValueWA" title="{{Valeur à écrire. Format hex string}}"  placeholder="{{Data}}" />
+        <!-- <input id="idAttrTypeWA" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" /> -->
     </div>
 </div>
         <div class="form-group">
@@ -161,8 +164,9 @@
                     addClusterButton("idClustIdWA2");
                     addDirInput("idDirWA2");
                     addAttrInput("idAttrIdWA2");
+                    addTypeList("idAttrTypeWA2");
                 ?>
-                <input id="idAttrTypeWA2" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" />
+                <!-- <input id="idAttrTypeWA2" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" /> -->
                 <input id="idValueWA2" title="{{Valeur à écrire. Format hex string}}"  placeholder="{{Data}}" />
             </div>
         </div>
@@ -216,9 +220,10 @@
             addEpButton("idEpCR", $mainEP);
             addClusterButton("idClustIdCR");
             addAttrInput("idAttrIdCR");
+            addTypeList("idAttrTypeCR");
         ?>
         <input id="idManufIdCR" title="{{Code fabricant. Format hex string 4 car (ex: 1241)}}" placeholder="{{Manuf code (ex: 1241)}}" />
-        <input id="idAttrTypeCR" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" />
+        <!-- <input id="idAttrTypeCR" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" /> -->
         <input id="idMinCR" title="{{Interval min. Format hex string 4 car}}" placeholder="{{Min}}" style="width:60px" />
         <input id="idMaxCR" title="{{Interval max. Format hex string 4 car}}" placeholder="{{Max}}" style="width:60px" />
         <input id="idChangeCR" title="{{Change. Format hex string dépendant de l'attribut}}" placeholder="{{Change}}" />

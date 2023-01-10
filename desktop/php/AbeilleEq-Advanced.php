@@ -70,6 +70,20 @@
         echo '<input id="'.$id.'" style="width:120px; margin-left: 8px" placeholder="{{Attrib (ex: 0021)}}" title="Attribut, format hex 4 caracteres (ex: 0508)"/>';
     }
 
+    // Create drop down list of Zigbee possible attribute types
+    function addTypeList($id) {
+        echo '<select id="'.$id.'" style="width:90px; margin-left: 8px" title="{{Type d\'attribut}}" />';
+        global $zbDataTypes;
+        foreach ($zbDataTypes as $typeId => $type) {
+            $typeId = strtoupper($typeId);
+            if ($typeId == 'FF')
+                echo '<option value="'.$typeId.'" select></option>';
+            else
+                echo '<option value="'.$typeId.'">'.$typeId.' / '.$type['short'].'</option>';
+        }
+        echo '</select>';
+    }
+
     function addJsUpdateFunction($eqId, $cmdLogicId, $spanId, $isInput = false) {
         echo "<script>";
         echo "jeedom.cmd.update['".getCmdIdByLogicId($eqId, $cmdLogicId)."'] = function(_options) {";

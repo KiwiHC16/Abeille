@@ -95,7 +95,7 @@
         },
         "xiaomi": {
             "fromDevice": {
-                "0000-00F7": {
+                "FCC0-00F7": {
                     "01-21": {
                         "func": "divAndPercent",
                         "div": 1000,

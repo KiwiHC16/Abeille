@@ -9,6 +9,7 @@ ChangeLog
 - Tuya 1Ch switch module (TS0001__TZ3000_tqlv4ug4): Mise-à-jour modèle.
 - Modeles pour Xiaomi: Amélioration syntaxe.
 - Page EQ/avancé: Liste pour les types possibles d'attribut.
+- Interne: Parser: rxOn n'est plus mis à jour par 'Mgmt_lqi_rsp' (pas fiable).
 
 230106-BETA-2
 -------------

@@ -2059,8 +2059,14 @@
                 $updates = [];
                 if ($eq['ieee'] != $N['extAddr'])
                     $updates['ieee'] = $N['extAddr'];
-                if ($eq['rxOnWhenIdle'] != $rxOn)
-                    $updates['rxOnWhenIdle'] = $rxOn;
+                if ($eq['rxOnWhenIdle'] != $rxOn) {
+                    parserLog('debug', "  ".$N['addr'].": WARNING, unexpected rxOn difference: rxOnWhenIdle=".$eq['rxOnWhenIdle'].", rxOn=".$rxOn);
+                    // $updates['rxOnWhenIdle'] = $rxOn;
+                    // Update DISABLED. Seems not reliable to error in bitMap interpretation. See #2532
+                    // >     Du 0020: "addr":"0E9F","bitMap":"0225"
+                    // >     Du B78D: "addr":"0E9F","bitMap":"0229"
+                    // >     Du 342B: "addr":"0E9F","bitMap":"0229"
+                }
                 if ($updates != [])
                     $this->updateDevice($dest, $N['addr'], $updates);
             }

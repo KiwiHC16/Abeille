@@ -523,6 +523,19 @@
                         );
                         msgToAbeille2($msg);
                     }
+                } else if ($updType == 'rxOnWhenIdle') { // RX ON when idle flag only
+                    if (!isset($eq['rxOnWhenIdle']) || ($eq['rxOnWhenIdle'] != $value)) {
+                        $eq['rxOnWhenIdle'] = $value;
+                        $msg = array(
+                            'type' => 'updateDevice',
+                            'net' => $net,
+                            'addr' => $addr,
+                            'updates' => array(
+                                "rxOnWhenIdle" => $value
+                            ),
+                        );
+                        msgToAbeille2($msg);
+                    }
                 } else if ($updType == 'manufCode') { // Manufacturer code
                     if (!isset($eq['manufCode']) || ($eq['manufCode'] != $value)) {
                         $eq['manufCode'] = $value;
@@ -1946,6 +1959,12 @@
 
             if ($macCapa != $eq['macCapa'])
                 $this->deviceUpdate($dest, $srcAddr, 'xx', 'macCapa', $macCapa);
+            else {
+                // Check rxOn status even if macCapa is correct
+                $rxOnWhenIdle = (hexdec($macCapa) >> 3) & 0b1;
+                if ($rxOnWhenIdle != $eq['rxOnWhenIdle'])
+                    $this->deviceUpdate($dest, $srcAddr, 'xx', 'rxOnWhenIdle', $rxOnWhenIdle);
+            }
             if (!isset($eq['manufCode']) || ($manufCode != $eq['manufCode']))
                 $this->deviceUpdate($dest, $srcAddr, 'xx', 'manufCode', $manufCode);
         }

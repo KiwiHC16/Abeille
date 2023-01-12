@@ -11,6 +11,7 @@ ChangeLog
 - Page EQ/avancé: Liste pour les types possibles d'attribut.
 - Interne: Parser: rxOn n'est plus mis à jour par 'Mgmt_lqi_rsp' (pas fiable).
 - Owon PIR323: Ajout support (2533).
+- Interne: Parser: 'rxOnWhenIdle' peut etre mis-à-jour par 'node descriptor'.
 
 230106-BETA-2
 -------------

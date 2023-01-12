@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230112-BETA-2"
+# VERSION="230112-BETA-3"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -52,7 +52,7 @@ ee1facdf4381781e54940eae1d125db0 *core/class/AbeilleCmdProcess.class.php
 e1cb7d77ab35e5c02968ee6bf9836934 *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-1ca1d724a39fc533954f88935d20bd51 *core/class/AbeilleParser.class.php
+1c4f3a44d743e8f81404f9b60440adb9 *core/class/AbeilleParser.class.php
 59230e66b7fe7a8f08b997955361e4ab *core/class/AbeilleParserTest.class.php
 fbc81985db0cfa51df2b142d357f7eb3 *core/class/AbeilleParserTestDB.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
@@ -1073,7 +1073,7 @@ c189ac6b92ccccca7538ea6cc7521c61 *core/config/devices/sensor_cube/sensor_cube.js
 8aba66322efd932b06a9a3d74d85c662 *core/config/devices/sensor_ht/sensor_ht.json
 6ec1b67979a8bc9c37172a2491e5340c *core/config/devices/sensor_magnet.aq2/sensor_magnet.aq2.json
 4afc54b34ad6ca6079dee8a41ab1de03 *core/config/devices/sensor_magnet/sensor_magnet.json
-31b7ce8208867996ef367ef47387f0de *core/config/devices/sensor_motion.aq2/sensor_motion.aq2.json
+ebf6dff619f7a8257651c068ad8f1683 *core/config/devices/sensor_motion.aq2/sensor_motion.aq2.json
 62409bbd2f1b26cbd36724e19c94c9ee *core/config/devices/sensor_motion/sensor_motion.json
 27ba43637af333ae9b24f32357e6bdae *core/config/devices/sensor_natgas/sensor_natgas.json
 afc3b90fa888faa25ff46317080c8778 *core/config/devices/sensor_smoke/sensor_smoke.json
@@ -1134,7 +1134,7 @@ cab580c801233aee55ed5492556506a4 *core/php/AbeilleInstall.php
 f9f0b5c7171e4a3c962b7c7008a4aef1 *core/php/AbeilleMonitor.php
 657c2f8ee31e9267a1b575dc188209a4 *core/php/AbeilleOTA.php
 51c8ee5d4d340642d4dcbe8acab3f84b *core/php/AbeilleParser-Tuya.php
-84cff8243fc6e524c3a5b845ec03f29e *core/php/AbeilleParser-Xiaomi.php
+98fcf5113f282786570ae8be22fde4a7 *core/php/AbeilleParser-Xiaomi.php
 f36e288d0803339bc92d1996285f0182 *core/php/AbeilleParser.php
 da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
 279b384363d1e9294d0c1a003d1f88b4 *core/php/AbeilleSerialRead.php
@@ -1210,7 +1210,7 @@ fa350ab7903504cdc0071aa12759246b *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-de3c00a47acda9f598c5ff88ff0616ff *docs/fr_FR/Changelog.rst
+0d48399fcc6211f6a569671e45e13725 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1516,11 +1516,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-79cf913797475c4432a44a800055f16b *plugin_info/Abeille.version
+ca400c1ab0be0543ad820db13e568219 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 721b9c51a8529a69104fa8b2e2a22d24 *plugin_info/configuration.php
-de79e8c5e6a9c8a51d6bf927127113b1 *plugin_info/info.json
-53b6903e50e3d6e05e26b1b8319b050b *plugin_info/install.php
+94c0091c82fadbf4ef5bfd4d621f0814 *plugin_info/info.json
+6d636666577f706d6a3e6bb21a7a8c5a *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 4d1e64cfeef3737228cc3cc708ca42c5 *resources/AbeilleDeamon/Debug/getLastMessageInQueue.php

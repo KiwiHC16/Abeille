@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230112-BETA-2
+230112-BETA-3
 -------------
 
 - Legrand micromodule switch: Mise-à-jour modele et image.

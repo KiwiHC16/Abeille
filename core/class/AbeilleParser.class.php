@@ -5744,20 +5744,21 @@
                 // 0B 21 2900 - Param 0xB 11dec - uint16 - 0x0029 (41dec Lux ?) /82
                 else if (($attrId == 'FF01') && ($attrSize == "0021")) {
                     // Assuming $dataType == "42"
-                    parserLog('debug', '  Xiaomi proprietary (Capteur Presence V2)');
+                    parserLog('debug', '  Xiaomi proprietary (Motion/illuminance) => Handled by decode8002');
+                    return;
 
-                    // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
-                    // For info until activation
+                    // // For info until activation
+                    // xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
+                    // // For info until activation
 
-                    $voltage = hexdec(substr($payload, 28+2, 2).substr($payload, 28, 2));
-                    $lux = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
-                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Lux='.$lux);
-                    $attrReportN = [
-                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                        array( "name" => "0400-01-0000", "value" => $lux ),
-                    ];
+                    // $voltage = hexdec(substr($payload, 28+2, 2).substr($payload, 28, 2));
+                    // $lux = hexdec(substr($payload, 86+2, 2).substr($payload, 86, 2));
+                    // parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Lux='.$lux);
+                    // $attrReportN = [
+                    //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
+                    //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
+                    //     array( "name" => "0400-01-0000", "value" => $lux ),
+                    // ];
                 }
 
                 // Xiaomi capteur Inondation

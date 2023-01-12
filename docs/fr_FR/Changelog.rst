@@ -49,6 +49,7 @@ ChangeLog
 - Modèles commandes: 'Time-Time'/'Time-TimeStamp' => 'inf_time-String'/'inf_time-Timestamp'.
 - Modèles EQ: Surcharge possible de 'Polling'.
 - Tuya TV02: Mise-à-jour du modèle (2175).
+- Xiami RTCGQ11LM: Mise-à-jour du modèle.
 
 230102-BETA-1
 -------------

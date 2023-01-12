@@ -732,7 +732,7 @@
 
             // Models reset
             // Some Xiaomi devices are now managed thru 'xiaomi' structure in model.
-            $toReload = ['sensor_magnet.aq2', 'weather', 'motion.ac02', 'switch.n0agl1'];
+            $toReload = ['sensor_magnet.aq2', 'sensor_motion.aq2', 'weather', 'motion.ac02', 'switch.n0agl1'];
             foreach ($eqLogics as $eqLogic) {
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
                 if (!isset($eqModel['id']))
@@ -743,7 +743,7 @@
                 // Check last update from model
                 $updateTime = $eqLogic->getConfiguration('updatetime', "");
                 if ($updateTime != '') {
-                    if (strtotime($updateTime) > strtotime("2023-01-10 13:00:00"))
+                    if (strtotime($updateTime) > strtotime("2023-01-12 23:59:00"))
                         continue;
                 }
 

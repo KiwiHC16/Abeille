@@ -178,28 +178,6 @@
                 continue;
             }
 
-            // Xiaomi capteur Presence V2
-            // TO BE COMPLETED !!
-            else if (($attrId == 'FF01') && ($attrSize == 33 /* "0021" */)) {
-                // Assuming $dataType == "42"
-                parserLog('debug', '  Xiaomi proprietary (Capteur Presence V2)');
-
-                // For info until activation
-                $unused = [];
-                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl2, $unused, $toMon);
-                // For info until activation
-
-                // $voltage = hexdec(substr($pl2, 28+2, 2).substr($pl2, 28, 2));
-                // $lux = hexdec(substr($pl2, 86+2, 2).substr($pl2, 86, 2));
-                // parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Lux='.$lux);
-                // $attrReportN = [
-                //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                //     array( "name" => "0400-01-0000", "value" => $lux ),
-                // ];
-                continue;
-            }
-
             // Xiaomi leak sensor
             // TO BE COMPLETED !!
             else if (($attrId == 'FF01') && ($attrSize == 34 /* "0022" */)) {

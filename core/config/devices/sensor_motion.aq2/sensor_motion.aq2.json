@@ -1,6 +1,8 @@
 {
     "sensor_motion.aq2": {
         "manufacturer": "Xiaomi",
+        "model": "v",
+        "type": "Xiaomi Aqara motion & illuminance sensor",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -10,7 +12,6 @@
         "category": {
             "security": "1"
         },
-        "type": "Xiaomi Presence Aqara 2",
         "commands": {
             "etat": {
                 "use": "presence"
@@ -22,16 +23,27 @@
                 "isVisible": 1
             },
             "Battery-Volt": {
-                "use": "inf_zbAttr-0001-BatteryVolt"
+                "use": "inf_batteryVoltAndPercent-285-300"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
-            },
-            "Specific": {
-                "use": "Xiaomi-ff01"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
+            }
+        },
+        "xiaomi": {
+            "fromDevice": {
+                "0000-FF01": {
+                    "01-21": {
+                        "func": "numberDiv",
+                        "div": 1000,
+                        "info": "0001-01-0020",
+                        "comment": "Battery-Volt"
+                    },
+                    "0B-21": {
+                        "func": "number",
+                        "info": "0400-01-0000",
+                        "comment": "Illuminance lux"
+                    }
+                }
             }
         }
     }

@@ -1,0 +1,111 @@
+{
+    "PIR323-PTH_OWON": {
+        "manufacturer": "Owon",
+        "model": "PIR323-PTH",
+        "type": "Owon multi sensor",
+        "timeout": "60",
+        "category": {
+            "energy": "1",
+            "light": "1",
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Owon-PIR",
+            "mainEP": "02",
+            "batteryType": "2x1.5V AAA"
+        },
+        "commands": {
+            "SWBuildID": {
+                "use": "inf_zbAttr-0000-SWBuildID"
+            },
+            "Get SWBuildID": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=02"
+            },
+            "SetReporting 01-0001-00021": {
+                "use": "act_zbConfigureReporting",
+                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Identify": {
+                "use": "Identify"
+            },
+            "Zone Alarm1": {
+                "use": "attr-Zone-Alarm1",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Zone Status Changed": {
+                "use": "inf_zbAttr-0500-ZoneStatus-ChangeNotification",
+                "params": "ep=01",
+                "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean\/bit0 value",
+                "trigOut": "01-0500-alarm1",
+                "trigOutOffset": "#value#&1"
+            },
+            "Bind 01-0500-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0500",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 02-0001-00021": {
+                "use": "act_zbConfigureReporting",
+                "params": "ep=02&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 02-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=02&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Temperature": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "params": "ep=02",
+                "isVisible": "1"
+            },
+            "Get Temperature": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=02&clustId=0402&attrId=0000"
+            },
+            "SetReporting 02-0402-0000": {
+                "use": "act_zbConfigureReporting",
+                "params": "ep=02&clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 5 to 10mins"
+            },
+            "Bind 02-0402-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=02&clustId=0402",
+                "execAtCreation": "yes"
+            },
+            "Humidity": {
+                "use": "inf_zbAttr-0405-MeasuredValue",
+                "params": "ep=02",
+                "isVisible": "1"
+            },
+            "Get Humidity": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=02&clustId=0405&attrId=0000"
+            },
+            "SetReporting 02-0405-0000": {
+                "use": "act_zbConfigureReporting",
+                "params": "ep=02&clustId=0405&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 5 to 10mins"
+            },
+            "Bind 02-0405-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=02&clustId=0405",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

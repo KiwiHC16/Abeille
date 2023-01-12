@@ -1,11 +1,6 @@
 ChangeLog
 =========
 
-- Modeles: 'minValue', 'maxValue', 'calculValueOffset' mis a jour seulement si reset.
-
-230112-BETA-1
--------------
-
 - Legrand micromodule switch: Mise-à-jour modele et image.
 - Interne: Parser: Amélioration mess monitor cas Xiaomi.
 - Modèles: Qq nettoyage + ajout logicalId sur certaines actions.
@@ -17,6 +12,7 @@ ChangeLog
 - Interne: Parser: rxOn n'est plus mis à jour par 'Mgmt_lqi_rsp' (pas fiable).
 - Owon PIR323: Ajout support (2533).
 - Interne: Parser: 'rxOnWhenIdle' peut etre mis-à-jour par 'node descriptor'.
+- Modeles: 'minValue', 'maxValue', 'calculValueOffset' mis a jour seulement si reset.
 
 230106-BETA-2
 -------------

@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Modeles: 'minValue', 'maxValue', 'calculValueOffset' mis a jour seulement si reset.
+
 230112-BETA-1
 -------------
 

@@ -1352,7 +1352,6 @@ class Abeille extends eqLogic {
 
             /* Remote control short addr = 'rcXX' */
             $rcAddr = sprintf("rc%02X", $max);
-            // Abeille::createDevice("create", $dest, $rcAddr, '', 'remotecontrol', 'Abeille');
             $dev = array(
                 'net' => $dest,
                 'addr' => $rcAddr,
@@ -1817,7 +1816,6 @@ class Abeille extends eqLogic {
 
             /* Create or update device from JSON.
                Note: ep = first End Point */
-            // Abeille::createDevice("create", $net, $addr, $ieee, $jsonId, $jsonLocation);
             $dev = array(
                 'net' => $net,
                 'addr' => $addr,
@@ -2968,48 +2966,41 @@ class Abeille extends eqLogic {
             /* Updating command 'configuration' fields.
                In case of update, some fields may no longer be required ($unusedConfKeys).
                They are removed if not defined in JSON model. */
-            $unusedConfKeys = ['visibilityCategory', 'minValue', 'maxValue', 'historizeRound', 'calculValueOffset', 'execAtCreation', 'execAtCreationDelay', 'repeatEventManagement', 'topic', 'Polling', 'RefreshData', 'listValue'];
-            array_push($unusedConfKeys, 'ab::trigOut', 'ab::trigOutOffset', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'ab::notStandard');
-            array_push($unusedConfKeys, 'ab::valueOffset');
+            $toRemove = ['visibilityCategory', 'historizeRound', 'execAtCreation', 'execAtCreationDelay', 'repeatEventManagement', 'topic', 'Polling', 'RefreshData', 'listValue'];
+            array_push($toRemove, 'ab::trigOut', 'ab::trigOutOffset', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'ab::notStandard');
+            array_push($toRemove, 'ab::valueOffset');
+            $toRemoveIfReset = $toRemove;
+            array_push($toRemoveIfReset, 'minValue', 'maxValue', 'calculValueOffset');
             // Abeille specific keys must be renamed when taken from model (ex: trigOut => ab::trigOut)
             $toRename = ['trigOut', 'trigOutOffset', 'notStandard', 'valueOffset'];
             if (isset($mCmd["configuration"])) {
                 $mCmdConf = $mCmd["configuration"];
 
-                // if (isset($mCmdConf["trigOut"]))
-                //     $cmdLogic->setConfiguration('ab::trigOut', $mCmdConf["trigOut"]);
-                // else
-                //     $cmdLogic->setConfiguration('ab::trigOut', null); // Removing config entry
-                // if (isset($mCmdConf["trigOutOffset"]))
-                //     $cmdLogic->setConfiguration('ab::trigOutOffset', $mCmdConf["trigOutOffset"]);
-                // else
-                //     $cmdLogic->setConfiguration('ab::trigOutOffset', null); // Removing config entry
-
                 foreach ($mCmdConf as $confKey => $confValue) {
                     // Trick for conversion 'key' => 'ab::key' for Abeille specifics
                     // Note: this is currently not applied to all Abeille specific fields.
-                    // if ($confKey == 'trigOut')
-                    //     $confKey = "ab::trigOut";
-                    // else if ($confKey == 'trigOutOffset')
-                    //     $confKey = "ab::trigOutOffset";
                     if (in_array($confKey, $toRename))
                         $confKey = "ab::".$confKey;
 
                     $cmdLogic->setConfiguration($confKey, $confValue);
 
                     // $confKey is used => no cleanup required
-                    $keyIdx = array_search($confKey, $unusedConfKeys);
-                    unset($unusedConfKeys[$keyIdx]);
-                    // foreach ($unusedConfKeys as $uk => $uv) {
-                    //     if ($uv != $confKey)
-                    //         continue;
-                    //     unset($unusedConfKeys[$uk]);
-                    // }
+                    if ($action == 'reset') {
+                        $keyIdx = array_search($confKey, $toRemoveIfReset);
+                        unset($toRemoveIfReset[$keyIdx]);
+                    } else {
+                        $keyIdx = array_search($confKey, $toRemove);
+                        unset($toRemove[$keyIdx]);
+                    }
                 }
             }
 
             /* Removing any obsolete 'configuration' fields (those remaining in 'unusedConfKeys') */
-            foreach ($unusedConfKeys as $confKey) {
+            if ($action == 'reset')
+                $toRm = $toRemoveIfReset;
+            else
+                $toRm = $toRemove;
+            foreach ($toRm as $confKey) {
                 // If key is defined but set to null, no way to detect this. So force remove all the time.
                 // if ($cmdLogic->getConfiguration($confKey) == null)
                 //     continue;

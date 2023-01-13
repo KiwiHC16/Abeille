@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230112-BETA-3"
+# VERSION="230113-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -52,7 +52,7 @@ ee1facdf4381781e54940eae1d125db0 *core/class/AbeilleCmdProcess.class.php
 e1cb7d77ab35e5c02968ee6bf9836934 *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-1c4f3a44d743e8f81404f9b60440adb9 *core/class/AbeilleParser.class.php
+6bec2f09eedadf3c5d253cad5c55b3cf *core/class/AbeilleParser.class.php
 59230e66b7fe7a8f08b997955361e4ab *core/class/AbeilleParserTest.class.php
 fbc81985db0cfa51df2b142d357f7eb3 *core/class/AbeilleParserTestDB.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
@@ -81,7 +81,7 @@ ad69d09e995793a5ea02b294a0680e61 *core/config/commands/CurrentPrise_mA.json
 7414b357c1192f90bd22b25e80244ed1 *core/config/commands/Group-Membership.json
 57dd805b1a091c37254cf2858910a758 *core/config/commands/Identify.json
 a8e23345abae1946a7b5180ecf7b7aba *core/config/commands/IkeaTeleCmdLeftRigth.json
-0daeec5dee34d9d02308b33f92f53362 *core/config/commands/LISEZMOI.txt
+b8dff5b380bbdb20632e75e539426b91 *core/config/commands/LISEZMOI.txt
 b6b844e9b4859fc495717b92d936d818 *core/config/commands/Left-Right-Cmd.json
 95bb1521fb6d62d15f8146ff644ebcf5 *core/config/commands/Left-Right-Direction.json
 dda4fcbe7a568ade80d93733ec7a0138 *core/config/commands/LegrandContactorAuto.json
@@ -470,7 +470,7 @@ c072328f388a06c4bcac585e07f0744f *core/config/commands/inf_zbAttr-0400-MeasuredV
 614e09f40b62a9ab8ec9416437a99c24 *core/config/commands/inf_zbAttr-0402-MeasuredValue.json
 130f595d052573e3ca69a1c735915f94 *core/config/commands/inf_zbAttr-0403-MeasuredValue.json
 e79ce71eb689f9ef5f81171d51fc8f6f *core/config/commands/inf_zbAttr-0405-MeasuredValue.json
-e9925b8fe96c4873f13d6495f9e5db2e *core/config/commands/inf_zbAttr-0406-Occupancy.json
+24eafcd3c6271b09e959cfc307456252 *core/config/commands/inf_zbAttr-0406-Occupancy.json
 f4aa1a5f09778cea58d60ad70756006f *core/config/commands/inf_zbAttr-0500-CurrentZoneSensibilityLevel.json
 06a497a256d71c376e51035b5cd96e00 *core/config/commands/inf_zbAttr-0500-ZoneStatus-Alarm1.json
 339b797ca1b2dc62d0f32c258eeccfa5 *core/config/commands/inf_zbAttr-0500-ZoneStatus-ChangeNotification.json
@@ -718,7 +718,7 @@ db1f0fcf550cdf22d5557b97e4980534 *core/config/devices/LCT015/LCT015.json
 6d8b81f36bdad6884997919523e209e4 *core/config/devices/LDSENK02F_ADEO/discovery.json
 1efe768d20121154f7f775003813a93f *core/config/devices/LIGHTIFYIndoorFlexRGBW/LIGHTIFYIndoorFlexRGBW.json
 5f4bc4c58f08e38147591125cec147e8 *core/config/devices/LIGHTIFYOutdoorFlexRGBW/LIGHTIFYOutdoorFlexRGBW.json
-d446048f098a8d4f2432de6bb75af6eb *core/config/devices/LISEZMOI.txt
+510f5a831c4cd1e6a46ecddcfbcdbca5 *core/config/devices/LISEZMOI.txt
 29f5b4b615cc14e446a4464430a7eab7 *core/config/devices/LLC011/LLC011.json
 d5a15653fa5fde11170bbf34daa97527 *core/config/devices/LLC020/LLC020.json
 4f91da535fcad26221fe04f971447c6a *core/config/devices/LOM001/LOM001.json
@@ -767,7 +767,7 @@ bf8f153a514cec6724a4a42414ee3c2d *core/config/devices/Micromoduleswitch/Micromod
 17ca4c8af0a86a3687da5b14bf31b909 *core/config/devices/OSRAMSwitch/OSRAMSwitch.json
 b568e4397ae3e4891230570a9566aacb *core/config/devices/PAR1650TW/PAR1650TW.json
 aa75d3439c83f954968d24cd6e513394 *core/config/devices/PAR16RGBWZ3/PAR16RGBWZ3.json
-9c72396d6162ba3f5b48e504caabd8d1 *core/config/devices/PIR323-PTH_OWON/PIR323-PTH_OWON.json
+0be97845fbee5cd65521f12ae18e08ee *core/config/devices/PIR323-PTH_OWON/PIR323-PTH_OWON.json
 544d86316b5cf82874f93a4cc735d529 *core/config/devices/PIR323-PTH_OWON/discovery-PIR323-PTH_OWON.json
 f5d3e0823ebf33ee92983ee065c8b6c0 *core/config/devices/PIRSensor-EF-3.0_HEIMAN/PIRSensor-EF-3.0_HEIMAN.json
 f9bac7896fc1205a90ed393845c27693 *core/config/devices/PIRSensor-EF-3.0_HEIMAN/discovery-PIRSensor-EF-3.0_HEIMAN.json
@@ -1043,7 +1043,7 @@ e8fece09da325a689a9633d127d09e97 *core/config/devices/fuel-tank-level/fuel-tank-
 3802d06d89c8c656e4f5f0747467e2f3 *core/config/devices/magnet.acn001/discovery.json
 a9ffa25fcbe5430959aabc80f942960d *core/config/devices/magnet.acn001/magnet.acn001.json
 120c68d976da3fd737ce32daf3fbae5f *core/config/devices/motion.ac02/discovery.json
-888c8ea794f570add463ac3e6ecad504 *core/config/devices/motion.ac02/motion.ac02.json
+b749f3d0d367afe35377d323c872ceb8 *core/config/devices/motion.ac02/motion.ac02.json
 92c050cb373e899f9f8cff0437854bbe *core/config/devices/multi_Samjin/discovery.json
 c3415e54ba3127b8bb8e7c098499e6cc *core/config/devices/multi_Samjin/multi_Samjin.json
 03dd8caf51b3f992f1a3b1e90825227f *core/config/devices/plug.maeu01/notes.txt
@@ -1073,8 +1073,8 @@ c189ac6b92ccccca7538ea6cc7521c61 *core/config/devices/sensor_cube/sensor_cube.js
 8aba66322efd932b06a9a3d74d85c662 *core/config/devices/sensor_ht/sensor_ht.json
 6ec1b67979a8bc9c37172a2491e5340c *core/config/devices/sensor_magnet.aq2/sensor_magnet.aq2.json
 4afc54b34ad6ca6079dee8a41ab1de03 *core/config/devices/sensor_magnet/sensor_magnet.json
-ebf6dff619f7a8257651c068ad8f1683 *core/config/devices/sensor_motion.aq2/sensor_motion.aq2.json
-62409bbd2f1b26cbd36724e19c94c9ee *core/config/devices/sensor_motion/sensor_motion.json
+e4dec8058e29a13ee6791aa071520a88 *core/config/devices/sensor_motion.aq2/sensor_motion.aq2.json
+710cf5f15fd1fcc83af637d568d2cff0 *core/config/devices/sensor_motion/sensor_motion.json
 27ba43637af333ae9b24f32357e6bdae *core/config/devices/sensor_natgas/sensor_natgas.json
 afc3b90fa888faa25ff46317080c8778 *core/config/devices/sensor_smoke/sensor_smoke.json
 c9be1cb5edd10435d73529c9bdd1ad03 *core/config/devices/sensor_switch.aq2/sensor_switch.aq2.json
@@ -1134,7 +1134,7 @@ cab580c801233aee55ed5492556506a4 *core/php/AbeilleInstall.php
 f9f0b5c7171e4a3c962b7c7008a4aef1 *core/php/AbeilleMonitor.php
 657c2f8ee31e9267a1b575dc188209a4 *core/php/AbeilleOTA.php
 51c8ee5d4d340642d4dcbe8acab3f84b *core/php/AbeilleParser-Tuya.php
-98fcf5113f282786570ae8be22fde4a7 *core/php/AbeilleParser-Xiaomi.php
+7f4722152c122972473a8021b6fc5450 *core/php/AbeilleParser-Xiaomi.php
 f36e288d0803339bc92d1996285f0182 *core/php/AbeilleParser.php
 da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
 279b384363d1e9294d0c1a003d1f88b4 *core/php/AbeilleSerialRead.php
@@ -1144,7 +1144,7 @@ da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
 e4ccac3cb9401f1b2b54e068e55a3c4b *core/php/AbeilleTest.php
 d11a50cfe57f0f6e86a89e383fbb25ff *core/php/AbeilleUpload.php
 b55a6ba4c0110b8a29a3c30f4aee6ce1 *core/php/AbeilleZigate.php
-1de2ce87c87ff9a7198f1bf508d0d844 *core/php/AbeilleZigateConst.php
+028b148c935f56a5c4d3c30b68dd2488 *core/php/AbeilleZigateConst.php
 f8ef51649ed2f35bd355dddaf561745b *core/php/AbeilleZigbeeConst.php
 c828c23a7ac4bfc558146887ceb925fa *core/php/refreshBruit.php
 e2b6a4cd856fc09bff24be60d72960c8 *core/python/AbeilleSerialRead.py
@@ -1210,7 +1210,7 @@ fa350ab7903504cdc0071aa12759246b *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-0d48399fcc6211f6a569671e45e13725 *docs/fr_FR/Changelog.rst
+b105d95309b5a2545832a2711d25ad3e *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1349,6 +1349,7 @@ c6e10d6051f4d81b2f3d1ca4ab31f6d9 *images/node_Orvibo-CM10ZW.png
 66667f6e546c036d411e49ed5c6f243d *images/node_Osram-SmartP-Plug.png
 fcbdc367554be3681e7d07009ea9c128 *images/node_Osram-SwitchMini.png
 582b6363039df92297be4ebc2eea3b48 *images/node_OsramLightifyplug01OutDoor.png
+eac3f2fbff21d69dda44e61a5b16c3a4 *images/node_Owon-PIR.png
 15b676559fee2d37c5223c6d666d99fd *images/node_Owon-THS317-ET.png
 8241012385542efa86248f28d1d405c3 *images/node_PAR16RGBWZ3.png
 c6d0633524dde492fc571404ff9b76d5 *images/node_PSE03-v1.1.0.png
@@ -1451,6 +1452,7 @@ ad4e834508273853a60a8c3e763c9350 *images/node_Xiaomi-DoorSensor-2.png
 6a1218f0f78f5adc16b2ab91f0a2fc2d *images/node_Xiaomi-DoorSensor.png
 7d64cdcb6b0915a5c4d4a97afec8f9cb *images/node_Xiaomi-H1WallSwitch-Dual.png
 671d6a8236f3e2e029a81d0625c7a74e *images/node_Xiaomi-LightSensor-1.png
+164ad6c758086a583987eec6daac96ca *images/node_Xiaomi-MotionSensor.png
 4e17fa495f052a381c0d05709667e147 *images/node_Xiaomi-MotionSensorP1.png
 d58878feb61769085ce8dcbfb4bd345b *images/node_Xiaomi-Plug-EU.png
 c22f70fd2103815987ca316f7bd74fb1 *images/node_Xiaomi-SmartPlug.png
@@ -1469,8 +1471,6 @@ c1321282b8497766c6852cfbf677f077 *images/node_XiaomiButtonSW861acn01.png
 c1321282b8497766c6852cfbf677f077 *images/node_XiaomiButtonb186acn01.png
 d86b3b56a02aadf08291b41278946057 *images/node_XiaomiButtonb286acn01.png
 834b11f0b34783e098766591512e6f63 *images/node_XiaomiButtonb286acn02.png
-52ace01f96d8a63d8dc723915bf9db9f *images/node_XiaomiInfraRouge.png
-164ad6c758086a583987eec6daac96ca *images/node_XiaomiInfraRouge2.png
 a10e0b0828d6219d0a61c1487826e138 *images/node_XiaomiPrise.png
 69399d8715cde574822c29bdbc49c716 *images/node_XiaomiSensorGaz.png
 80389ff65c75b2fd2ffce003ff5192b9 *images/node_XiaomiSensorSmoke.png
@@ -1516,11 +1516,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-ca400c1ab0be0543ad820db13e568219 *plugin_info/Abeille.version
+601cc2a55a1849caadd1d4f0211b7274 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 721b9c51a8529a69104fa8b2e2a22d24 *plugin_info/configuration.php
-94c0091c82fadbf4ef5bfd4d621f0814 *plugin_info/info.json
-6d636666577f706d6a3e6bb21a7a8c5a *plugin_info/install.php
+c0a274faccd1198a803e9c8bb88fe531 *plugin_info/info.json
+9243d1a9898e9b5c118d4225b4b90f6a *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 4d1e64cfeef3737228cc3cc708ca42c5 *resources/AbeilleDeamon/Debug/getLastMessageInQueue.php

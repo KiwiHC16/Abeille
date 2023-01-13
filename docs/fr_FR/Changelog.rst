@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230113-BETA-1
+-------------
+
 - Xiaomi RTCGQ11LM: Mise-à-jour modele et image.
 - Interne: Correction support Xiaomi.
 - Owon PIR323: Image (2533).

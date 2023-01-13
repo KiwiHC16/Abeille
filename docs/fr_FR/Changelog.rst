@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230113-BETA-1
+230113-BETA-2
 -------------
 
 - Xiaomi RTCGQ11LM: Mise-à-jour modele et image.

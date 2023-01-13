@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230113-BETA-1"
+# VERSION="230113-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -705,7 +705,7 @@ d7ee5fe7f347965d5a55ad52c42de5d7 *core/config/devices/ICZB-IW11D_icasa/ICZB-IW11
 d56191db815a5256794cbdb5e4884387 *core/config/devices/ICZB-IW11SW_icasa/ICZB-IW11SW_icasa.json
 713b6788d35f44fd7bf2c20d70e24ed4 *core/config/devices/ICZB-IW11SW_icasa/discovery.json
 2dacae0f8f69ff3292c3107d6419f40d *core/config/devices/KADRILJrollerblind/KADRILJrollerblind.json
-87e49f80980349ccdf8a75352c110a21 *core/config/devices/KEPZB-110_frientAS/KEPZB-110_frientAS.json
+8ce3505c51bf17e531f9b88951b755fa *core/config/devices/KEPZB-110_frientAS/KEPZB-110_frientAS.json
 0d91e070c4573ffb8ca8d726650854cc *core/config/devices/KEPZB-110_frientAS/discovery.json
 26615b6877efc8c189e416e95845b0e8 *core/config/devices/Keyfob-ZB3.0/Keyfob-ZB3.0.json
 92db9ad7cbabf120c0e4fd70500a3abd *core/config/devices/KiwiHC16_Test_01/KiwiHC16_Test_01.json
@@ -1203,14 +1203,14 @@ be4358fb4827e4c8ea8fe85f50779a80 *desktop/php/AbeilleEq-Main-Generic.php
 7b3a9f5844771049dc1552c74f604301 *desktop/php/AbeilleEq-Main-Icon.php
 03315c52e16fbf4a4d8bb967c1977c37 *desktop/php/AbeilleEq-Main.php
 fa350ab7903504cdc0071aa12759246b *desktop/php/AbeilleEq.php
-9297b08d70e1bceb1068d09fe1ccb42f *desktop/php/AbeilleEqAssist.php
+273b34beb7e93023160680672569139f *desktop/php/AbeilleEqAssist.php
 36806ce175dc9f0d2495c90b904c33bc *desktop/php/AbeilleFormAction.php
 049be0afc8e0ae0caa7f7c8865e4201e *desktop/php/AbeilleGraph.php
 3f4784f0ada8b1547cde4f9bb9e529dc *desktop/php/AbeilleMaintenance-Logs.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-b105d95309b5a2545832a2711d25ad3e *docs/fr_FR/Changelog.rst
+0d6200b0bf6fd2d4950482e83a390548 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1516,11 +1516,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-601cc2a55a1849caadd1d4f0211b7274 *plugin_info/Abeille.version
+c0b93c6b15a191ab675e850b40b5cbf2 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 721b9c51a8529a69104fa8b2e2a22d24 *plugin_info/configuration.php
-c0a274faccd1198a803e9c8bb88fe531 *plugin_info/info.json
-9243d1a9898e9b5c118d4225b4b90f6a *plugin_info/install.php
+aa8873d9baffd07698aed23cb2660038 *plugin_info/info.json
+dbc88457d203f02f9a84bdabf5335a9b *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 4d1e64cfeef3737228cc3cc708ca42c5 *resources/AbeilleDeamon/Debug/getLastMessageInQueue.php

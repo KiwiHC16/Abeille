@@ -3,6 +3,7 @@
         "manufacturer": "Xiaomi",
         "model": "RTCGQ14LM/MS-S02",
         "type": "Xiaomi Aqara motion sensor P1",
+        "genericType": "Environment",
         "timeout": "60",
         "category": {
             "security": "1"

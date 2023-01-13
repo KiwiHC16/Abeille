@@ -1,26 +1,30 @@
 {
     "sensor_motion.aq2": {
         "manufacturer": "Xiaomi",
-        "model": "v",
+        "model": "RTCGQ11LM",
         "type": "Xiaomi Aqara motion & illuminance sensor",
+        "genericType": "Environment",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiInfraRouge2",
-            "batteryType": "1x3V CR2032"
+            "icon": "Xiaomi-MotionSensor",
+            "batteryType": "1x3V CR2450"
         },
         "category": {
             "security": "1"
         },
         "commands": {
-            "etat": {
-                "use": "presence"
-            },
             "Illuminance": {
                 "use": "inf_zbAttr-0400-MeasuredValue",
                 "comment": "Seems to be non standard 0400-0000 attribute with direct Lux value",
                 "notStandard": 1,
                 "isVisible": 1
+            },
+            "Occupancy": {
+                "use": "inf_zbAttr-0406-Occupancy",
+                "returnStateValue": 0,
+                "returnStateTime": 1,
+                "isVisible": "1"
             },
             "Battery-Volt": {
                 "use": "inf_batteryVoltAndPercent-285-300"
@@ -37,11 +41,6 @@
                         "div": 1000,
                         "info": "0001-01-0020",
                         "comment": "Battery-Volt"
-                    },
-                    "0B-21": {
-                        "func": "number",
-                        "info": "0400-01-0000",
-                        "comment": "Illuminance lux"
                     }
                 }
             }

@@ -2,10 +2,11 @@
     "sensor_motion": {
         "manufacturer": "Xiaomi",
         "type": "Xiaomi Presence",
+        "genericType": "Environment",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiInfraRouge",
+            "icon": "Xiaomi-MotionSensor",
             "batteryType": "1x3V CR2032"
         },
         "category": {

@@ -167,3 +167,9 @@ Exemple de commande 'action'
                 "isVisible": 1,
                 "comment": "Motion sensitivity, 1=low, 2=medium, 3=high"
             },
+
+  * returnStateTime: X
+    Permet d'indiquer à Jeedom de changer automatique la valeur au bout de X sec à celle de 'returnStateValue'
+    
+  * returnStateValue: Y
+    Valeur de retour automatique pour une commande info.

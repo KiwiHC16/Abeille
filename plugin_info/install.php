@@ -619,6 +619,8 @@
                     "XiaomiTemperatureRond" => "Xiaomi-TempSensor-1",
                     "XiaomiPriseEU" => "Xiaomi-Plug-EU",
                     "sen_ill_mgl01" => "Xiaomi-LightSensor-1",
+                    "XiaomiInfraRouge" => "Xiaomi-MotionSensor",
+                    "XiaomiInfraRouge2" => "Xiaomi-MotionSensor",
 
                     "LXX60-CS27LX1.0" => "Zemismart-LXX60-CS27LX1.0",
                 );

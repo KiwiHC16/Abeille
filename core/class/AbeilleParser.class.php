@@ -6205,20 +6205,20 @@
         }
 
         /* 8101/Default response */
-        function decode8101($dest, $payload, $lqi) {
-            $sqn = substr($payload, 0, 2);
-            $clustId = substr($payload, 4, 4);
-            $status = substr($payload, 10, 2);
+        // function decode8101($dest, $payload, $lqi) {
+        //     $sqn = substr($payload, 0, 2);
+        //     $clustId = substr($payload, 4, 4);
+        //     $status = substr($payload, 10, 2);
 
-            // Tcharp38: Decoded in 8002 to get source address.
-            parserLog('debug', $dest.', Type=8101/Default response'
-                            .', SQN='.$sqn
-                            .', EP='.substr($payload, 2, 2)
-                            .', ClustId='.$clustId.'/'.zbGetZCLClusterName($clustId)
-                            .', Cmd='.substr($payload, 8, 2)
-                            .', Status='.$status
-                            .' => Handled by decode8002');
-        }
+        //     // Tcharp38: Decoded in 8002 to get source address.
+        //     parserLog('debug', $dest.', Type=8101/Default response'
+        //                     .', SQN='.$sqn
+        //                     .', EP='.substr($payload, 2, 2)
+        //                     .', ClustId='.$clustId.'/'.zbGetZCLClusterName($clustId)
+        //                     .', Cmd='.substr($payload, 8, 2)
+        //                     .', Status='.$status
+        //                     .' => Handled by decode8002');
+        // }
 
         /* Attribute report */
         function decode8102($dest, $payload, $lqi) {

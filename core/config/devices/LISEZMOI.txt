@@ -136,6 +136,11 @@ Exemple: BASICZBR3.json
         Permet d'appliquer une formule par ex sur la valeur d'un slider avant envoi.
         Ex: "valueOffset": "#value#*10"
         Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
+    returnStateTime: X
+        Permet d'indiquer à Jeedom de changer automatique la valeur au bout de X sec à celle de 'returnStateValue'
+    returnStateValue: Y
+        Valeur de retour automatique pour une commande info.
+
 
   Exemples de nouvelle syntaxe:
     "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },

@@ -139,7 +139,7 @@
             // Computing attribute size
             if (($attrType == "41") || ($attrType == "42")) {
                 $attrSize = hexdec(substr($pl, 0, 2));
-                $pl = substr($pl, 2); // Skip size
+                $pl = substr($pl, 2); // Skip 1B size
             } else {
                 $type = zbGetDataType($attrType);
                 $attrSize = $type['size'];
@@ -148,8 +148,8 @@
                     parserLog('debug', "  WARNING: attrSize is unknown for type ".$attrType);
                 }
             }
-            $pl2 = substr($pl, 0, $attrSize * 2); // pl2 = attribute data
-            $pl = substr($pl, $attrSize * 2);
+            $attrData = substr($pl, 0, $attrSize * 2); // Attribute data
+            $pl = substr($pl, $attrSize * 2); // Point on next attribute
             $l = strlen($pl);
 
             //
@@ -162,7 +162,7 @@
 
                 parserLog('debug', '  Xiaomi proprietary (Door Sensor)');
                 $attrReportN = [];
-                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl2, $attrReportN, $toMon);
+                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
 
                 // Previous code. For info only
                 // // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
@@ -186,7 +186,7 @@
 
                 // For info until activation
                 $unused = [];
-                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl2, $unused, $toMon);
+                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $unused, $toMon);
                 // For info until activation
 
                 // $voltage = hexdec(substr($pl2, 24 + 2 * 2 + 2, 2).substr($pl2, 24 + 2 * 2, 2));
@@ -205,7 +205,7 @@
 
                 parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
                 $attrReportN = [];
-                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl2, $attrReportN, $toMon);
+                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
 
                 // Previous code. For info only
                 // $voltage        = hexdec(substr($pl2, 2 * 2 + 2, 2).substr($pl2, 2 * 2, 2));
@@ -226,10 +226,11 @@
             // New decoding
             //
 
+            $eq = &getDevice($net, $addr); // By ref
             if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
-                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl2, $attrReportN, $toMon);
+                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
             } else {
-                parserLog('debug', "  UNHANDLED ".$attrId."-".$attrType.": ".$pl2);
+                parserLog('debug', "  UNHANDLED ".$clustId."-".$attrId."-".$attrType.": ".$attrData);
             }
 
             // break; // Currently supporting only 1 attribut.

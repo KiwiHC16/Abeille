@@ -3,6 +3,7 @@
         "manufacturer": "Owon",
         "model": "PIR323-PTH",
         "type": "Owon multi sensor",
+        "genericType": "Environment",
         "timeout": "60",
         "category": {
             "energy": "1",

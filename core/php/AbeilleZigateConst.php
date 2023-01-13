@@ -244,6 +244,9 @@
         "80A2" => array(
             "name" => "Remove scene response",
         ),
+        "8101" => array(
+            "name" => "Default response", // Unused by Abeille
+        ),
         "8110" => array(
             "name" => "Write attribute response",
         ),

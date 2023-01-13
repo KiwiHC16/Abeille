@@ -230,7 +230,9 @@
             if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
                 xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
             } else {
-                parserLog('debug', "  UNHANDLED ".$clustId."-".$attrId."-".$attrType.": ".$attrData);
+                $m = "  UNHANDLED ".$clustId."-".$attrId."-".$attrType.": ".$attrData;
+                parserLog('debug', $m);
+                $toMon[] = $m;
             }
 
             // break; // Currently supporting only 1 attribut.

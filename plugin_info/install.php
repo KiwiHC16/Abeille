@@ -745,7 +745,7 @@
                 // Check last update from model
                 $updateTime = $eqLogic->getConfiguration('updatetime', "");
                 if ($updateTime != '') {
-                    if (strtotime($updateTime) > strtotime("2023-01-12 23:59:00"))
+                    if (strtotime($updateTime) > strtotime("2023-01-13 16:33:00"))
                         continue;
                 }
 

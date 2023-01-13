@@ -10,15 +10,11 @@
         "configuration": {
             "icon": "Frient-Keypad",
             "mainEP": "2C",
-            "batteryType": "?"
+            "batteryType": "4x1.5V AA"
         },
         "commands": {
-            "Battery-Percent": {
-                "use": "inf_zbAttr-0001-BatteryPercent",
-                "params": "ep=2C"
-            },
-            "Battery-Volt2Percent": {
-                "use": "battery-Volt2Percent-3",
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt",
                 "params": "ep=2C"
             },
             "SetReporting 2C-0001-00020": {
@@ -36,17 +32,19 @@
             },
             "Zone Alarm1": {
                 "use": "attr-Zone-Alarm1",
+                "params": "ep=2C",
                 "isVisible": "1"
             },
             "Zone Status Changed": {
                 "use": "inf_zbAttr-0500-ZoneStatus-ChangeNotification",
-                "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value",
-                "trigOut": "01-0500-alarm1",
+                "params": "ep=2C",
+                "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean\/bit0 value",
+                "trigOut": "2C-0500-alarm1",
                 "trigOutOffset": "#value#&1"
             },
-            "Bind 0500-ToZigate": {
+            "Bind 2C-0500-ToZigate": {
                 "use": "act_zbBindToZigate",
-                "params": "clustId=0500",
+                "params": "ep=2C&clustId=0500",
                 "execAtCreation": "yes"
             }
         }

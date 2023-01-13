@@ -879,11 +879,10 @@
                 attributes = ep.servClusters['0001']['attributes'];
                 if (isset(attributes['0021'])) {
                     cmds["Battery-Percent"] = newCmd("inf_zbAttr-0001-BatteryPercent", "ep="+epId);
-                    // cmds["Battery-Percent"]["isVisible"] = 1;
                     cmds["SetReporting "+epId+"-0001-00021"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
                 } else if (isset(attributes['0020'])) {
-                    cmds["Battery-Percent"] = newCmd("inf_zbAttr-0001-BatteryPercent", "ep="+epId);
-                    cmds["Battery-Volt2Percent"] = newCmd("battery-Volt2Percent-3", "ep="+epId);
+                    cmds["Battery-Volt"] = newCmd("inf_zbAttr-0001-BatteryVolt", "ep="+epId);
+                    // cmds["Battery-Volt2Percent"] = newCmd("battery-Volt2Percent-3", "ep="+epId);
                     cmds["SetReporting "+epId+"-0001-00020"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
                 }
                 cmds["Bind "+epId+"-0001-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0001", "yes");
@@ -923,14 +922,14 @@
             /* 0008/Level cluster */
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
-                cmds["Set Level"] = newCmd("setLevel");
+                cmds["Set Level"] = newCmd("setLevel", "ep="+epId);
                 cmds["Set Level"]["isVisible"] = 1;
-                cmds["Level"] = newCmd("inf_zbAttr-0008-CurrentLevel");
+                cmds["Level"] = newCmd("inf_zbAttr-0008-CurrentLevel", "ep="+epId);
                 cmds["Level"]["isVisible"] = 1;
                 cmds["Level"]["nextLine"] = "after";
-                cmds["Get Level"] = newCmd("act_zbReadAttribute", "clustId=0008&attrId=0000");
-                cmds["Bind 0008-ToZigate"] = newCmd("act_zbBindToZigate", "clustId=0008", "yes");
-                cmds["SetReporting 0008-0000"] = newCmd("act_zbConfigureReporting", "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                cmds["Get Level"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
+                cmds["Bind "+epId+"-0008-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0008", "yes");
+                cmds["SetReporting "+epId+"-0008-0000"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
             }
 
             /* Analog Input */

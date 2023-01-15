@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Interne: Mise-à-jour équipement revue pour éviter la perte de commandes.
+- Réseau: Mise-à-jour graph réseau.
 
 230113-BETA-2
 -------------

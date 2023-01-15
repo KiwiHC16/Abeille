@@ -207,27 +207,12 @@
                 <!-- Links graph -->
                 <div id="idLinksGraphTab" class="tab-pane">
 
-                    <br />
-                    <?php
-                        displayButtons(maxNbOfZigate, "linksGraph");
-                    ?>
-                    <br />
-                    <hr>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>Actuel :</td>
-                                <td><span id="idCurrentNetworkLG" style="width:150px; font-weight:bold">-</span>, collecte du <span id="idCurrentDateLG" style="width:150px; font-weight:bold">-</span></td>
-                            </tr>
-                            <tr>
-                                <td>Afficher :</td>
-                                <td><label class="checkbox-inline"><input type="checkbox" id="idShowObject" checked/>Objet parent</label></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <table class="table table-bordered table-condensed"
-                           style="width: 150px;position:fixed;margin-top : 25px;">
+                    <div class="col-lg-2" style="height:inherit;overflow-y:auto;overflow-x:hidden;">
+                        <?php
+                            displayButtons(maxNbOfZigate, "linksGraph");
+                        ?>
+                        <table class="table table-bordered table-condensed"
+                        style="width: 150px;position:fixed;margin-top : 25px;">
                         <thead>
                         <tr>
                             <th colspan="2">{{Légende}}</th>
@@ -250,11 +235,17 @@
                             <td class="typeUndefined-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
                             <td>{{Inconnu}}</td>
                         </tr>
-
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
 
-                    <!-- <span id="graph-node-name" style="width: 100%;height: 100%"></span> -->
+                    <div class="col-lg-10" style="height:inherit;overflow-y:auto;overflow-x:hidden;">
+                        Actuel :<span id="idCurrentNetworkLG" style="width:150px; font-weight:bold">-</span>, collecte du <span id="idCurrentDateLG" style="width:150px; font-weight:bold">-</span>
+                        <br />
+                        Afficher :<label class="checkbox-inline"><input type="checkbox" id="idShowObject" checked/>Objet parent</label>
+                        <div id="idLinksGraphTabSVG">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- tab Route -->

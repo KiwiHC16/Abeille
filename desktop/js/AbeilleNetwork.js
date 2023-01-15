@@ -843,13 +843,15 @@ function displayLinksGraph(zgId) {
                     gravity: -0.5,
                 });
 
-                $("#idLinksGraphTab svg").remove(); // Remove previous one
+                // $("#idLinksGraphTab svg").remove(); // Remove previous one
+                $("#idLinksGraphTabSVG svg").remove(); // Remove previous one
 
                 var renderer = Viva.Graph.View.renderer(graph, {
                     layout: layout,
                     graphics: graphics,
                     prerender: 10,
-                    container: document.getElementById("idLinksGraphTab"),
+                    // container: document.getElementById("idLinksGraphTab"),
+                    container: document.getElementById("idLinksGraphTabSVG"),
                 });
                 renderer.run();
                 /*setTimeout(function () {

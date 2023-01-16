@@ -65,7 +65,11 @@
         position: absolute;
     }
 
-    #idLinksGraphTab > svg {
+    #idLinksGraphTabSVG {
+        height: 100%;
+        width: 100%
+    }
+    #idLinksGraphTabSVG >svg {
         height: 100%;
         width: 100%
     }
@@ -239,7 +243,7 @@
                         </table>
                     </div>
 
-                    <div class="col-lg-10" style="height:inherit;overflow-y:auto;overflow-x:hidden;">
+                    <div class="col-lg-10" style="height:100%;overflow-y:auto;overflow-x:hidden;">
                         Actuel :<span id="idCurrentNetworkLG" style="width:150px; font-weight:bold">-</span>, collecte du <span id="idCurrentDateLG" style="width:150px; font-weight:bold">-</span>
                         <br />
                         Afficher :<label class="checkbox-inline"><input type="checkbox" id="idShowObject" checked/>Objet parent</label>

@@ -34,6 +34,9 @@
                 "params": "clustId=FCC0&attrId=0152&manufId=115F",
                 "execAtCreation": "Yes"
             },
+            "Battery-Volt": {
+                "use": "inf_batteryVoltAndPercent-285-300"
+            },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
@@ -58,22 +61,15 @@
             },
             "Occupancy": {
                 "use": "inf_zbAttr-0406-Occupancy",
+                "returnStateValue": 0,
+                "returnStateTime": 1,
                 "isVisible": "1"
             },
-            "Bind 0406-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "clustId=0406",
-                "execAtCreation": "Yes"
-            },
-            "SetReporting 0406-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0406&attrType=18&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
-                "execAtCreation": "Yes"
-            },
-            "Zone Status": {
-                "use": "inf_zbAttr-0500-ZoneStatus",
-                "isVisible": "1",
-                "nextLine": "after"
+            "Illuminance & presence": {
+                "use": "inf_generic-Badge",
+                "logicalId": "01-illumAndPresence",
+                "trigOut": "0406-01-0000",
+                "trigOutOffset": "1"
             },
             "Detection interval": {
                 "use": "inf_generic-Badge",
@@ -96,12 +92,14 @@
         },
         "xiaomi": {
             "fromDevice": {
+                "FCC0-0112": {
+                },
                 "FCC0-00F7": {
                     "01-21": {
-                        "func": "divAndPercent",
+                        "func": "numberDiv",
                         "div": 1000,
-                        "info": "0001-01-0021",
-                        "comment": "Battery percent"
+                        "info": "0001-01-0020"
+                        "comment": "Battery volt"
                     },
                     "08-21": {
                         "func": "numberDiv",

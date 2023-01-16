@@ -3,6 +3,8 @@ ChangeLog
 
 - Interne: Mise-à-jour équipement revue pour éviter la perte de commandes.
 - Réseau: Mise-à-jour graph réseau.
+- Aqara Motion Sensor P1 RTCGQ14LM/MS-S02: Mise-à-jour modèle (2463).
+- Owon PIR323: Mise-à-jour modèle (2533).
 
 230113-BETA-2
 -------------

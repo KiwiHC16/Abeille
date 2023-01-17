@@ -460,18 +460,31 @@ class Abeille extends eqLogic {
         // https://github.com/jeelabs/esp-link
         // The ESP-Link connections on port 23 and 2323 have a 5 minute inactivity timeout.
         // so I need to create a minimum of traffic, so pull zigate every minutes
-        for ($i = 1; $i <= $GLOBALS['maxNbOfZigate']; $i++) {
-            if ($config['ab::zgEnabled'.$i] != 'Y')
+        for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
+            if ($config['ab::zgEnabled'.$zgId] != 'Y')
                 continue; // Zigate disabled
-            if ($config['ab::zgPort'.$i] == "none")
+            if ($config['ab::zgPort'.$zgId] == "none")
                 continue; // Serial port undefined
             // TODO Tcharp38: Currently leads to PI zigate timeout. No sense since still alive.
-            // if ($config['ab::zgType'.$i] != "WIFI")
+            // if ($config['ab::zgType'.$zgId] != "WIFI")
             //     continue; // Not a WIFI zigate. No polling required
 
             // TODO: Better to read time to correct it if required, instead of version that rarely changes
-            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmdAbeille".$i."/0000/getZgVersion&time=".(time() + 20), "");
-            // beille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmdAbeille".$i."/0000/getNetworkStatus&time=".(time() + 24), "getNetworkStatus");
+            Abeille::msgToCmd(PRIO_NORM, "CmdAbeille".$zgId."/0000/getZgVersion");
+
+            // Checking that Zigate is still alive
+            $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+            $lastComm = $eqLogic->getStatus('lastCommunication', '');
+            // log::add('Abeille', 'info', "lastComm1=".$lastComm);
+            if ($lastComm == '')
+                $lastComm = 0;
+            else
+                $lastComm = strtotime($lastComm);
+            // log::add('Abeille', 'info', "lastComm2=".$lastComm);
+            if ((time() - $lastComm ) > (2 * 60)) {
+                log::add('Abeille', 'info', "Pas de réponse de la Zigate ".$zgId." depuis plus de 2min => SW RESET");
+                Abeille::msgToCmd(PRIO_NORM, "CmdAbeille".$zgId."/0000/resetZg");
+            }
         }
 
         $eqLogics = self::byType('Abeille');
@@ -2327,6 +2340,49 @@ class Abeille extends eqLogic {
             log::add('Abeille', 'warning', "publishMosquitto(): Impossible d'envoyer '".$msgJson."' vers queue ".$queueId);
     } // End publishMosquitto()
 
+    public static function msgToCmd($priority, $topic, $payload = "") {
+        static $queueStatus = []; // "ok" or "error"
+
+        $abQueues = $GLOBALS['abQueues'];
+        $queueId = $abQueues['xToCmd']['id'];
+        $queue = msg_get_queue($queueId);
+        if ($queue === false) {
+            log::add('Abeille', 'error', "publishMosquitto(): La queue ".$queueId." n'existe pas. Message ignoré.");
+            return;
+        }
+        if (($stat = msg_stat_queue($queue)) == false) {
+            return; // Something wrong
+        }
+
+        /* To avoid plenty errors, checking if someone really reads the queue.
+           If not, do nothing but a message to user first time.
+           Note: Assuming potential pb if more than 50 pending messages. */
+        $pendMsg = $stat['msg_qnum']; // Pending messages
+        if ($pendMsg > 50) {
+            if (file_exists("/proc/") && !file_exists("/proc/".$stat['msg_lrpid'])) {
+                /* Receiver process seems down */
+                if (isset($queueStatus[$queueId]) && ($queueStatus[$queueId] == "error"))
+                    return; // Queue already marked "in error"
+                message::add("Abeille", "Alerte ! Démon arrété ou planté. (Re)démarrage nécessaire.", '');
+                $queueStatus[$queueId] = "error";
+                return;
+            }
+        }
+
+        // $config = AbeilleTools::getParameters();
+
+        $msg = array();
+        $msg['topic'] = $topic;
+        $msg['payload'] = $payload;
+        $msgJson = json_encode($msg);
+
+        if (msg_send($queue, $priority, $msgJson, false, false, $error_code)) {
+            log::add('Abeille', 'debug', "  publishMosquitto(): Envoyé '".$msgJson."' vers queue ".$queueId);
+            $queueStatus[$queueId] = "ok"; // Status ok
+        } else
+            log::add('Abeille', 'warning', "publishMosquitto(): Impossible d'envoyer '".$msgJson."' vers queue ".$queueId);
+    } // End msgToCmd()
+
     // Beehive creation/update function. Called on daemon startup or new beehive creation.
     public static function createRuche($dest) {
         $eqLogic = self::byLogicalId($dest."/0000", 'Abeille');
@@ -2785,7 +2841,7 @@ class Abeille extends eqLogic {
            If not already done, using default (mainEP) value */
         if (isset($model['commands'])) {
             $modelCmds = $model['commands'];
-            $modelCmds2 = json_encode($modelCmds);
+            $modelCmds2 = json_encode($modelCmds, JSON_UNESCAPED_SLASHES);
             if (strstr($modelCmds2, '#EP#') !== false) {
                 if ($mainEP == "") {
                     message::add("Abeille", "'mainEP' est requis mais n'est pas défini dans '".$jsonId.".json'", '');

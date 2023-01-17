@@ -3371,7 +3371,7 @@
                             return; // So far unknown to Jeedom
 
                         $attrId = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
-                        $eq = getDevice($dest, $srcAddr);
+                        $eq = getDevice($dest, $srcAddr); // Corresponding device
 
                         if ($manufCode == '115F') { // Xiaomi specific
                             // New code
@@ -3406,7 +3406,7 @@
                         else {
                             $l = strlen($msg);
                             $attrReportN = [];
-                            $eq = getDevice($dest, $srcAddr, ''); // Corresponding device
+                            // $eq = getDevice($dest, $srcAddr, ''); // Corresponding device
                             for ($i = 0; $i < $l;) {
                                 // Decode attribute
                                 $attr = $this->decode8002_ReportAttribute(substr($msg, $i), $size);

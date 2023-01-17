@@ -5,6 +5,7 @@ ChangeLog
 - Réseau: Mise-à-jour graph réseau.
 - Aqara Motion Sensor P1 RTCGQ14LM/MS-S02: Mise-à-jour modèle (2463).
 - Owon PIR323: Mise-à-jour modèle (2533).
+- Interne: Reset SW de la Zigate si pas de réponse depuis plus de 2mins.
 
 230113-BETA-2
 -------------

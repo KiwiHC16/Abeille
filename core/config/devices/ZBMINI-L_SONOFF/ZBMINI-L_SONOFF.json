@@ -1,0 +1,64 @@
+{
+    "ZBMINI-L_SONOFF": {
+        "manufacturer": "Sonoff",
+        "model": "ZBMini-L",
+        "type": "Sonoff smart switch",
+        "timeout": "60",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "Sonoff-ZbminiL",
+            "mainEP": "01"
+        },
+        "commands": {
+            "SWBuildID": {
+                "use": "inf_zbAttr-0000-SWBuildID"
+            },
+            "Get SWBuildID": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "On 1": {
+                "use": "act_zbCmdG-0006-On",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Off 1": {
+                "use": "act_zbCmdG-0006-Off",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Toggle 1": {
+                "use": "act_zbCmdG-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Status 1": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=01",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status 1": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
+            "Bind 01-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0006": {
+                "use": "act_zbConfigureReporting",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

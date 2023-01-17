@@ -25,27 +25,27 @@
             "Groups": {
                 "use": "Group-Membership"
             },
-            "On 1": {
+            "On": {
                 "use": "act_zbCmdG-0006-On",
                 "params": "ep=01",
                 "isVisible": "1"
             },
-            "Off 1": {
+            "Off": {
                 "use": "act_zbCmdG-0006-Off",
                 "params": "ep=01",
                 "isVisible": "1"
             },
-            "Toggle 1": {
+            "Toggle": {
                 "use": "act_zbCmdG-0006-Toggle",
                 "params": "ep=01"
             },
-            "Status 1": {
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
                 "isVisible": "1",
                 "nextLine": "after"
             },
-            "Get Status 1": {
+            "Get Status": {
                 "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0006&attrId=0000"
             },

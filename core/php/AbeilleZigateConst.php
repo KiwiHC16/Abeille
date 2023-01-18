@@ -263,10 +263,16 @@
             "name" => "Discover attributes extended response", // Unused by Abeille
         ),
         "8150" => array(
-            "name" => "Discover commands received individual response",
+            "name" => "Discover commands received individual response", // Unused by Abeille
         ),
         "8151" => array(
-            "name" => "Discover commands received individual response completed",
+            "name" => "Discover commands received individual response completed", // Unused by Abeille
+        ),
+        "8160" => array(
+            "name" => "Discover commands generated individual response", // Unused by Abeille
+        ),
+        "8161" => array(
+            "name" => "Discover commands generated individual response completed", // Unused by Abeille
         ),
         "8200" => array(
             "name" => "Save record request response",

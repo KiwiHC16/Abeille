@@ -3645,11 +3645,7 @@
                         parserLog("debug", "  Ignored general command ".$cmd, "8002");
                         return;
                     }
-                } else {
-                    /*
-                    * Cluster specific command
-                    */
-
+                } else { // Cluster specific command
                     // 0004/Groups cluster specific
                     if ($clustId == "0004") {
                         if ($dir && ($cmd == "00")) {
@@ -3897,6 +3893,26 @@
                             return;
                         }
                     }
+
+                    // Poll control cluster specific
+                    else if ($clustId == "0020") {
+                        // Duplicated message ?
+                        if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                            return;
+
+                            // if ($cmd == "00") {
+                            //     parserLog('debug', '  Zone status change notification');
+                            //     // Not handled here
+                            // } else if ($cmd == "01") {
+                            //     $zoneType = AbeilleTools::reverseHex(substr($msg, 0, 4));
+                            //     $manufCode = AbeilleTools::reverseHex(substr($msg, 4, 4));
+                            //     parserLog('debug', '  Zone enroll request: ZoneType='.$zoneType.', ManufCode='.$manufCode);
+                            //     $attrReportN[] = array(
+                            //         'name' => $srcEp.'-0500-cmd01',
+                            //         'value' => $zoneType.'-'.$manufCode,
+                            //     );
+                            // }
+                        } // End '$clustId == "0020"'
 
                     // Color control cluster specific
                     else if ($clustId == "0300") {

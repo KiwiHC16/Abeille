@@ -7,6 +7,7 @@ ChangeLog
 - Owon PIR323: Mise-à-jour modèle (2533).
 - Interne: Reset SW de la Zigate si pas de réponse depuis plus de 2mins.
 - Sonoff ZBMini-L: Ajout support (2539).
+- Interne: Parser: Support préliminaire cluster 0020.
 
 230113-BETA-2
 -------------

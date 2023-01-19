@@ -3930,20 +3930,20 @@
                             $extStatus = substr($msg, 4, 2);
                             $zoneId = substr($msg, 6, 2);
                             $delay = AbeilleTools::reverseHex(substr($msg, 8, 4));
-                            $m = '  Zone status change notification: zoneStatus='.$zoneStatus.', extStatus='.$extStatus.', zoneId='.$zoneId.', delay='.$delay;
-                            parserLog('debug', $m);
-                            $toMon[] = $m;
+                            $m = '  Zone status change notification: ZoneStatus='.$zoneStatus.', ExtStatus='.$extStatus.', ZoneId='.$zoneId.', Delay='.$delay;
                         } else if ($cmd == "01") {
                             $zoneType = AbeilleTools::reverseHex(substr($msg, 0, 4));
                             $manufCode = AbeilleTools::reverseHex(substr($msg, 4, 4));
-                            parserLog('debug', '  Zone enroll request: ZoneType='.$zoneType.', ManufCode='.$manufCode);
-                            // TODO: Where to get Zone ID from ?
-                            $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0500", 'ep='.$srcEp.'&cmd=00&zoneId=00');
+                            $m = '  Zone enroll request: ZoneType='.$zoneType.', ManufCode='.$manufCode;
+                            // TODO: Where to get Zone ID from ? Defaulting to '12' for now.
+                            $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0500", 'ep='.$srcEp.'&cmd=00&zoneId=12');
                             // $attrReportN[] = array(
                             //     'name' => $srcEp.'-0500-cmd01',
                             //     'value' => $zoneType.'-'.$manufCode,
                             // );
                         }
+                        parserLog('debug', $m);
+                        $toMon[] = $m;
                     } // End '$clustId == "0500"'
 
                     // 1000/Touch link commissioning cluster specific
@@ -3989,7 +3989,7 @@
                             return;
 
                         $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $msg, $toMon);
-                    }
+                    } // End $clustId == "EF00"
 
                     else {
                         parserLog("debug", "  Ignored cluster specific command ".$clustId."-".$cmd, "8002");

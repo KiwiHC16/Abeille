@@ -3827,7 +3827,7 @@
                         }
                     }
 
-                    //  On/Off cluster specific
+                    // 0006/On/Off cluster specific
                     else if ($clustId == "0006") {
                         if ($cmd == "FD") {
                             // parserLog("debug", "  Tuya 0006 specific cmd FD", "8002");
@@ -3840,7 +3840,7 @@
                         }
                     }
 
-                    // Level control cluster specific
+                    // 0008/Level control cluster specific
                     else if ($clustId == "0008") {
                         if ($cmd == "04") {
                             parserLog('debug', "  Handled by decode8085");
@@ -3848,7 +3848,7 @@
                         }
                     }
 
-                    // OTA cluster specific
+                    // 0019/OTA cluster specific
                     else if ($clustId == "0019") {
                         if ($cmd == "01") { // Query Next Image Request
                             $fieldControl = substr($msg, 0, 2);
@@ -3894,27 +3894,21 @@
                         }
                     }
 
-                    // Poll control cluster specific
+                    // 0020/Poll control cluster specific
                     else if ($clustId == "0020") {
                         // Duplicated message ?
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
 
-                            // if ($cmd == "00") {
-                            //     parserLog('debug', '  Zone status change notification');
-                            //     // Not handled here
-                            // } else if ($cmd == "01") {
-                            //     $zoneType = AbeilleTools::reverseHex(substr($msg, 0, 4));
-                            //     $manufCode = AbeilleTools::reverseHex(substr($msg, 4, 4));
-                            //     parserLog('debug', '  Zone enroll request: ZoneType='.$zoneType.', ManufCode='.$manufCode);
-                            //     $attrReportN[] = array(
-                            //         'name' => $srcEp.'-0500-cmd01',
-                            //         'value' => $zoneType.'-'.$manufCode,
-                            //     );
-                            // }
-                        } // End '$clustId == "0020"'
+                        if ($cmd == "00") {
+                            parserLog('debug', '  Check-in cmd');
+                            $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0020", 'ep='.$srcEp.'&cmd=00');
+                        } else {
+                            parserLog('debug', '  Unsupported Poll control cluster cmd '.$cmd);
+                        }
+                    } // End '$clustId == "0020"'
 
-                    // Color control cluster specific
+                    // 0300/Color control cluster specific
                     else if ($clustId == "0300") {
                         // Tcharp38: Covering all 0300 commands
                         parserLog("debug", "  msg=".$msg, "8002");
@@ -3924,7 +3918,7 @@
                         );
                     }
 
-                    // IAS cluster specific
+                    // 0500/IAS cluster specific
                     else if ($clustId == "0500") {
                         // Duplicated message ?
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))

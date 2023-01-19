@@ -456,13 +456,13 @@
         "0020" => array(
             "name" => "Poll control",
             "attributes" => array(
-                "0000" => array( "name" => "CheckInInterval", "access" => "RW" ),
-                "0001" => array( "name" => "LongPollInterval", "access" => "R" ),
-                "0002" => array( "name" => "ShortPollInterval", "access" => "R" ),
-                "0003" => array( "name" => "FastPollTimeout", "access" => "RW" ),
-                "0004" => array( "name" => "CheckInIntervalMin", "access" => "R" ),
-                "0005" => array( "name" => "LongPollIntervalMin", "access" => "R" ),
-                "0006" => array( "name" => "FastPollTimeoutMax", "access" => "R" ),
+                "0000" => array( "name" => "CheckInInterval", "access" => "RW", "dataType" => 0x23 ), // uint32
+                "0001" => array( "name" => "LongPollInterval", "access" => "R", "dataType" => 0x23 ), // uint32
+                "0002" => array( "name" => "ShortPollInterval", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0003" => array( "name" => "FastPollTimeout", "access" => "RW", "dataType" => 0x21 ), // uint16
+                "0004" => array( "name" => "CheckInIntervalMin", "access" => "R", "dataType" => 0x23 ), // uint32
+                "0005" => array( "name" => "LongPollIntervalMin", "access" => "R", "dataType" => 0x23 ), // uint32
+                "0006" => array( "name" => "FastPollTimeoutMax", "access" => "R", "dataType" => 0x21 ), // uint16
             ),
             "commands" => array(
                 "00" => array( "name" => "CheckIn" ),

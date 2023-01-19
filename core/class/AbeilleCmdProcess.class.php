@@ -4085,6 +4085,65 @@
                     return;
                 }
 
+                // ZCL cluster 0020 (Poll control) specific client commands
+                else if ($cmdName == 'cmd-0020') {
+                    $required = ['addr', 'ep', 'cmd']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $cmd = "0530";
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <profile ID: uint16_t>
+                    // <cluster ID: uint16_t>
+                    // <security mode: uint8_t>
+                    // <radius: uint8_t>
+                    // <data length: uint8_t>
+
+                    //  ZCL Control Field
+                    //  ZCL SQN
+                    //  Command Id
+                    //  ....
+
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['ep'];
+                    $profId     = "0104";
+                    $clustId    = '0020';
+                    $secMode    = "02";
+                    $radius     = "1E";
+
+                    /* ZCL header */
+                    $fcf        = "19"; // Frame Control Field
+                    $sqn        = $this->genSqn();
+                    $cmdId      = $Command['cmd'];
+
+                    $data2 = $fcf.$sqn.$cmdId;
+
+                    // Cmds reminder:
+                    // 0x00 Check-in Response M
+                    // 0x01 Fast Poll Stop M
+                    // 0x02 Set Long Poll Interval O
+                    // 0x03 Set Short Poll Interval O
+                    if ($cmdId == "00") { // Check-in Response
+                        $data2 .= '00'.'0000';
+                    } else {
+                        cmdLog('debug', "    ERROR: Unsupported cmdId ".$cmdId, $this->debug['processCmd']);
+                        return;
+                    }
+
+                    $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
+                    $data = $data1.$data2;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    return;
+                }
+
                 // // ZCL cluster 0102 specific
                 // // https://zigate.fr/documentation/commandes-zigate/ Windows covering (v3.0f only)
                 // else if ($cmdName == 'WindowsCovering') { // OBSOLETE !! Use cmd-0102 instead

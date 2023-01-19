@@ -8,6 +8,7 @@ ChangeLog
 - Interne: Reset SW de la Zigate si pas de réponse depuis plus de 2mins.
 - Sonoff ZBMini-L: Ajout support (2539).
 - Interne: Parser: Support préliminaire cluster 0020, cmde 'check-in'.
+- Interne: Cmd: Support préliminaire cluster 0500 zone enroll response.
 
 230113-BETA-2
 -------------

@@ -3925,16 +3925,24 @@
                             return;
 
                         if ($cmd == "00") {
-                            parserLog('debug', '  Zone status change notification');
                             // Not handled here
+                            $zoneStatus = AbeilleTools::reverseHex(substr($msg, 0, 4));
+                            $extStatus = substr($msg, 4, 2);
+                            $zoneId = substr($msg, 6, 2);
+                            $delay = AbeilleTools::reverseHex(substr($msg, 8, 4));
+                            $m = '  Zone status change notification: zoneStatus='.$zoneStatus.', extStatus='.$extStatus.', zoneId='.$zoneId.', delay='.$delay;
+                            parserLog('debug', $m);
+                            $toMon[] = $m;
                         } else if ($cmd == "01") {
                             $zoneType = AbeilleTools::reverseHex(substr($msg, 0, 4));
                             $manufCode = AbeilleTools::reverseHex(substr($msg, 4, 4));
                             parserLog('debug', '  Zone enroll request: ZoneType='.$zoneType.', ManufCode='.$manufCode);
-                            $attrReportN[] = array(
-                                'name' => $srcEp.'-0500-cmd01',
-                                'value' => $zoneType.'-'.$manufCode,
-                            );
+                            // TODO: Where to get Zone ID from ?
+                            $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0500", 'ep='.$srcEp.'&cmd=00&zoneId=00');
+                            // $attrReportN[] = array(
+                            //     'name' => $srcEp.'-0500-cmd01',
+                            //     'value' => $zoneType.'-'.$manufCode,
+                            // );
                         }
                     } // End '$clustId == "0500"'
 

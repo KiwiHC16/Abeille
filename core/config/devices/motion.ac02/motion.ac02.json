@@ -72,6 +72,12 @@
                 "trigOut": "0406-01-0000",
                 "trigOutOffset": "1"
             },
+            "Set detection interval": {
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=FCC0&attrId=0102&attrType=20&manufId=115F",
+                "isVisible": 1,
+                "comment": "Set detection interval"
+            },
             "Detection interval": {
                 "use": "inf_generic-Badge",
                 "logicalId": "01-detectionInterval",

@@ -1398,13 +1398,13 @@ class Abeille extends eqLogic {
         // }
 
         /* Request to reset device from JSON. Useful to avoid reinclusion */
-        // if ($cmdId == "updateFromModel") {
-        if ($cmdId == "resetFromJson") {
-            log::add('Abeille', 'debug', 'message(): resetFromJson, '.$net.'/'.$addr);
+        if ($cmdId == "updateFromModel") {
+        // if ($cmdId == "resetFromJson") {
+            log::add('Abeille', 'debug', 'message(): updateFromModel, '.$net.'/'.$addr);
 
             $eqLogic = Abeille::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                log::add('Abeille', 'error', '  resetFromJson: Equipement inconnu: '.$net.'/'.$addr);
+                log::add('Abeille', 'error', '  updateFromModel: Equipement inconnu: '.$net.'/'.$addr);
                 return;
             }
 
@@ -2579,6 +2579,7 @@ class Abeille extends eqLogic {
 
         /* $action reminder
               'update' => create or update device (device announce/update)
+              'reset' => create or reset device from model (user request)
            $dev reminder
                 $dev = array(
                     'net' =>
@@ -2601,18 +2602,18 @@ class Abeille extends eqLogic {
             $modelType = $model['type'];
         }
 
-        $logicalId = $dev['net'].'/'.$dev['addr'];
-        $eqLogic = self::byLogicalId($logicalId, 'Abeille');
+        $eqLogicId = $dev['net'].'/'.$dev['addr'];
+        $eqLogic = self::byLogicalId($eqLogicId, 'Abeille');
         if (!is_object($eqLogic)) {
             $newEq = true;
 
-            if ($action != 'create') {
-                log::add('Abeille', 'debug', '  ERROR: Action='.$action.' but device '.$logicalId.' does not exist');
-                return;
-            }
+            // if ($action != 'create') {
+            //     log::add('Abeille', 'debug', '  ERROR: Action='.$action.' but device '.$eqLogicId.' does not exist');
+            //     return;
+            // }
 
             // $action == 'create'
-            log::add('Abeille', 'debug', '  New device '.$logicalId);
+            log::add('Abeille', 'debug', '  New device '.$eqLogicId);
             if ($jsonId != "defaultUnknown")
                 message::add("Abeille", "Nouvel équipement identifié (".$modelType."). Création en cours. Rafraîchissez votre dashboard dans qq secondes.", '');
             else
@@ -2623,12 +2624,10 @@ class Abeille extends eqLogic {
             $eqLogic->setName("newDevice-".$dev['addr']); // Temp name to have it non empty
             $eqLogic->save(); // Save to force Jeedom to assign an ID
 
-            // $eqName = $dev['net']."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
             $eqId = $eqLogic->getId();
             $eqName = $modelType." - ".$eqId; // Default name (ex: '<modeltype> - 12')
             $eqLogic->setName($eqName);
-            // $eqLogic->setName($modelType); // Default name = short desc from model ('type')
-            $eqLogic->setLogicalId($logicalId);
+            $eqLogic->setLogicalId($eqLogicId);
             $abeilleConfig = AbeilleTools::getParameters();
             $eqLogic->setObject_id($abeilleConfig['ab::defaultParent']);
             $eqLogic->setConfiguration('IEEE', $dev['ieee']);
@@ -2636,7 +2635,7 @@ class Abeille extends eqLogic {
             $newEq = false;
 
             $eqHName = $eqLogic->getHumanName(); // Jeedom hierarchical name
-            log::add('Abeille', 'debug', '  Already existing device '.$logicalId.' => '.$eqHName);
+            log::add('Abeille', 'debug', '  Already existing device '.$eqLogicId.' => '.$eqHName);
 
             $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
             $curEqModel = isset($jEqModel['id']) ? $jEqModel['id'] : ''; // Current JSON model
@@ -2747,13 +2746,12 @@ class Abeille extends eqLogic {
 
         // Update only if new device or reinit
         if (($action == 'reset') || $newEq) {
+            // isVisible: Reseted when leaving network (ex: reset). Must be set when rejoin unless defined in model.
+            if (isset($model["isVisible"]))
+                $eqLogic->setIsVisible($model["isVisible"]);
+            else
+                $eqLogic->setIsVisible(1);
         }
-
-        // isVisible: Reseted when leaving network (ex: reset). Must be set when rejoin unless defined in model.
-        if (isset($model["isVisible"]))
-            $eqLogic->setIsVisible($model["isVisible"]);
-        else
-            $eqLogic->setIsVisible(1);
 
         // Tcharp38: Seems no longer used
         // $lastCommTimeout = (array_key_exists("lastCommunicationTimeOut", $modelConf) ? $modelConf["lastCommunicationTimeOut"] : '-1');
@@ -3016,34 +3014,32 @@ class Abeille extends eqLogic {
                 $cmdLogic->setType($mCmdType); // 'info' or 'action'
             } else {
                 $newCmd = false;
-                log::add('Abeille', 'debug', '  FOUND: id='.$cmdId);
+                log::add('Abeille', 'debug', '  found: id='.$cmdId);
                 $cmdLogic = cmd::byId($cmdId);
                 if ($mCmdType == 'info')
                     log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$mCmdName."' (".$mCmdLogicId.")");
                 else
                     log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$mCmdName."' (".$mCmdLogicId.") => '".$cmdAName."', '".$cmdAParams."'");
-
-                // log::add('Abeille', 'debug', '  LA0='.$cmdLogic->getName()." - ".$cmdLogic->getLogicalId());
-                // $cmdLogic->save();
             }
 
             $cmdLogic->setOrder($order++);
-            // log::add('Abeille', 'debug', '  LA1='.$cmdLogic->getName()." - ".$cmdLogic->getLogicalId());
-            // $cmdLogic->save();
             $cmdLogic->setLogicalId($mCmdLogicId);
-            if (isset($mCmd["unit"]))
-                $cmdLogic->setUnite($mCmd["unit"]);
-            else
-                $cmdLogic->setUnite(null); // Clear unit
 
-            // Updates only if new command or reinit because could be changed by user
-            if ($newCmd || ($action == 'reset')) {
+            // Updates only if reset or new command
+            if (($action == 'reset') || $newCmd) {
+                if (isset($mCmd["unit"]))
+                    $cmdLogic->setUnite($mCmd["unit"]);
+                else
+                    $cmdLogic->setUnite(null); // Clear unit
+
                 $cmdLogic->setName($mCmdName);
                 $cmdLogic->setSubType($mCmd["subType"]);
+
                 if (isset($mCmd["isHistorized"]))
                     $cmdLogic->setIsHistorized($mCmd["isHistorized"]);
                 else
                     $cmdLogic->setIsHistorized(0);
+
                 if (isset($mCmd["isVisible"]))
                     $cmdLogic->setIsVisible($mCmd["isVisible"]);
                 else
@@ -3054,7 +3050,7 @@ class Abeille extends eqLogic {
             $curGenericType = $cmdLogic->getGeneric_type();
             if ($curGenericType === null)
                 $curGenericType = '';
-            if ($newCmd || ($action == 'reset') || ($curGenericType == '')) {
+            if (($action == 'reset') || $newCmd || ($curGenericType == '')) {
                 if (isset($mCmd["genericType"]))
                     $cmdLogic->setGeneric_type($mCmd["genericType"]);
                 else

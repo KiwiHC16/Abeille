@@ -126,8 +126,7 @@
        This is done by executing action cmds with 'execAtCreation' flag set. */
     /* Tcharp38: TODO: Better to put 'reconfigure' functionality inside AbeilleCmd and remove it
        from here & parser too. */
-    // if (($action == "reconfigure") || ($action == "reinit")) {
-    if ($action == "reinit") {
+    if (($action == "update") || ($action == "reinit")) {
         if (isset($dbgTcharp38)) logDebug("CliToQueue: action=".$action);
 
         $eqId = $_GET['eqId'];
@@ -233,10 +232,20 @@
             }
         }
 
-        if ($action == "reinit") {
+        if ($action == "update") {
             $queue = msg_get_queue($abQueues['xToAbeille']['id']);
             $msg = array(
-                'topic' => "CmdCreate".$eqNet."/".$eqAddr."/resetFromJson",
+                'topic' => "CmdCreate".$eqNet."/".$eqAddr."/updateFromModel",
+                'payload' => '',
+            );
+            $msgJson = json_encode($msg);
+            if (isset($dbgTcharp38)) logDebug("'update' msg to Abeille: ".$msgJson);
+            msg_send($queue, 1, $msgJson, false, false);
+            sleep(2); // To let Abeille.class time to update DB
+        } else if ($action == "reinit") {
+            $queue = msg_get_queue($abQueues['xToAbeille']['id']);
+            $msg = array(
+                'topic' => "CmdCreate".$eqNet."/".$eqAddr."/resetFromModel",
                 'payload' => '',
             );
             $msgJson = json_encode($msg);

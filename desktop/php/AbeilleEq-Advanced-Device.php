@@ -26,7 +26,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label">Identifiant du modèle</label>
+    <label class="col-sm-3 control-label">Modèle d'équipement</label>
     <div class="col-sm-5">
         <?php
             if (isset($eqModel['id']))
@@ -76,7 +76,8 @@
     <label class="col-sm-3 control-label">Configuration</label>
     <div class="col-sm-5">
         <?php
-            echo '<a class="btn btn-warning" onclick="reinit(\''.$eqId.'\')" title="Réinitlialise les paramètres par défaut et reconfigure l\'équipement comme s\'il s\'agissait d\'une nouvelle inclusion">Réinitialiser</a>';
+            echo '<a class="btn btn-warning" onclick="update(\''.$eqId.'\')" title="Mise-à-jour à partir de son modèle et reconfiguration">Mise-à-jour</a>';
+            echo '<a class="btn btn-warning" onclick="reinit(\''.$eqId.'\')" style="margin-left:8px" title="Réinitlialise les paramètres par défaut et reconfigure l\'équipement comme s\'il s\'agissait d\'une nouvelle inclusion">Réinitialiser</a>';
             // Tcharp38: Simplifcation for end users. Moreover no sense to do commands updates without device config since might be closely linked.
             // echo ' OU ';
             // echo '<a class="btn btn-warning" onclick="updateFromJSON(\''.$eqNet.'\', \''.$eqAddr.'\')" title="Mets à jour les commandes Jeedom">Recharger</a>';

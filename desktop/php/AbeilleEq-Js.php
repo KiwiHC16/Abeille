@@ -378,17 +378,44 @@
         });
     }
 
+    /* Update Jeedom device & reconfigure.
+       WARNING: If battery powered, device must be wake up. */
+    function update(eqId) {
+        console.log("update("+eqId+")");
+
+        var msg = "{{Vous êtes sur le point de:<br>";
+        msg += "- Mettre à jour l'équipement à partir de son modèle<br>";
+        msg += "- Et reconfigurer l'équipement<br>";
+        msg += "<br>Les noms et ID sont conservés, ainsi que vos customisations.}}";
+        if (js_batteryType != '') {
+            msg += "<br><br>{{ATTENTION! Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.}}";
+        }
+        msg += "<br><br>{{Etes vous sur de vouloir continuer ?}}";
+        bootbox.confirm(msg, function (result) {
+            if (result == false)
+                return
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=update&eqId="+eqId, false);
+            xhttp.send();
+        });
+    }
+
     /* Reinit Jeedom device & reconfigure.
        WARNING: If battery powered, device must be wake up. */
     function reinit(eqId) {
         console.log("reinit("+eqId+")");
 
-        var msg = "{{Vous êtes sur le point de réinitialiser cet équipement (équivalent à une nouvelle inclusion).";
-        msg += "<br><br>Tout sera remis à jour à partir du modèle JSON excepté le nom, l'ID Jeedom ainsi que ses adresses.";
+        var msg = "{{Vous êtes sur le point de:}}<br>";
+        msg += "- Réinitialiser cet équipement (équivalent à une nouvelle inclusion).<br>";
+        msg += "- Et le reconfigurer.<br>";
+        msg += "<br>Tout sera remis à jour à partir du modèle JSON excepté le nom, l'ID Jeedom ainsi que ses adresses.<br>";
+        msg += "Le nom des commandes peut avoir changé et vous serez obligé de revoir les scénaris utilisant cet équipement.<br>";
+
         if (js_batteryType != '') {
-            msg += "<br>Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.";
+            msg += "<br>{{ATTENTION! Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.}}<br>";
         }
-        msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
+        msg += "<br>{{Etes vous sur de vouloir continuer ?}}";
         bootbox.confirm(msg, function (result) {
             if (result == false)
                 return

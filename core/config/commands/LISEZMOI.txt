@@ -141,7 +141,10 @@ Exemple de commande 'action'
   * trigOutOffset: optionnel
     Permet, si 'trigOut' est utilisé, de modifier la valeur reçue avant de l'appliquer à la commande pointée par 'trigOut'.
 
-  * valueOffset: optionnel
+  * calculValueOffset: optionnel (pour cmde info)
+    Permet de modifier la valeur d'une cmde info.
+
+  * valueOffset: optionnel (pour cmde action)
     Permet de modifier la valeur d'une cmde action avant de l'executer (equivalent à 'calculValueOffset' d'une cmde info).
         // Ex: "valueOffset": "#value#*10"
         // Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
@@ -170,6 +173,6 @@ Exemple de commande 'action'
 
   * returnStateTime: X
     Permet d'indiquer à Jeedom de changer automatique la valeur au bout de X sec à celle de 'returnStateValue'
-    
+
   * returnStateValue: Y
     Valeur de retour automatique pour une commande info.

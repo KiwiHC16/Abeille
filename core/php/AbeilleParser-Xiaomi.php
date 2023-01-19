@@ -135,8 +135,9 @@
             $attrId = substr($pl, 2, 2).substr($pl, 0, 2);
             $attrType = substr($pl, 4, 2);
             $pl = substr($pl, 6);
+            $pl2 = $pl;
 
-            // Computing attribute size
+            // Computing attribute size for legacy decodes
             if (($attrType == "41") || ($attrType == "42")) {
                 $attrSize = hexdec(substr($pl, 0, 2));
                 $pl = substr($pl, 2); // Skip 1B size
@@ -148,7 +149,8 @@
                     parserLog('debug', "  WARNING: attrSize is unknown for type ".$attrType);
                 }
             }
-            $attrData = substr($pl, 0, $attrSize * 2); // Attribute data
+            $attrData = substr($pl, 0, $attrSize * 2); // Raw attribute data
+
             $pl = substr($pl, $attrSize * 2); // Point on next attribute
             $l = strlen($pl);
 
@@ -163,18 +165,6 @@
                 parserLog('debug', '  Xiaomi proprietary (Door Sensor)');
                 $attrReportN = [];
                 xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
-
-                // Previous code. For info only
-                // // $voltage        = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                // $voltage = hexdec(substr($Attribut, 2 * 2 + 2, 2).substr($Attribut, 2 * 2, 2));
-                // // $etat           = substr($payload, 80, 2);
-                // $etat = substr($Attribut, 80 - 24, 2);
-                // parserLog('debug', '  Xiaomi proprietary (Door Sensor): Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', State='.$etat);
-                // $attributesReportN = [
-                //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                //     array( "name" => "0006-01-0000", "value" => $etat ),
-                // ];
                 continue;
             }
 
@@ -206,38 +196,53 @@
                 parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
                 $attrReportN = [];
                 xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
-
-                // Previous code. For info only
-                // $voltage        = hexdec(substr($pl2, 2 * 2 + 2, 2).substr($pl2, 2 * 2, 2));
-                // $temperature    = unpack("s", pack("s", hexdec(substr($pl2, 21 * 2 + 2, 2).substr($pl2, 21 * 2, 2))))[1];
-                // $humidity       = hexdec(substr($pl2, 25 * 2 + 2, 2).substr($pl2, 25 * 2, 2));
-                // $pression       = hexdec(substr($pl2, 29 * 2 + 6, 2).substr($pl2, 29 * 2 + 4, 2).substr($pl2, 29 * 2 + 2, 2).substr($pl2, 29 * 2, 2));
-                // parserLog('debug', '  Legacy: Volt='.$voltage.', Temp='.$temperature.', Humidity='.$humidity.', Pressure='.$pression);
-                // $attributesReportN = [
-                //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                //     array( "name" => '0402-01-0000', "value" => $temperature / 100 ),
-                //     array( "name" => '0405-01-0000', "value" => $humidity / 100 ),
-                // ];
                 continue;
             }
 
             //
             // New decoding
             //
+            /* "xiaomi": {
+                   "fromDevice": {
+                        "FCC0-0112": {
+                            "info": "0400-01-0000"
+                        },
+                        "FCC0-00F7": {
+                            "01-21": {
+                                "func": "numberDiv",
+                                "div": 1000,
+                                "info": "0001-01-0020",
+                                "comment": "Battery volt"
+                            }
+                        }
+                    }
+                } */
 
             $eq = &getDevice($net, $addr); // By ref
-            if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
-                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
-            } else {
-                $m = "  UNHANDLED ".$clustId."-".$attrId."-".$attrType.": ".$attrData;
-                parserLog('debug', $m);
-                $toMon[] = $m;
+            if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) {
+                $fromDev = $eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId];
+                if (isset($fromDev['info'])) {
+                    $value = AbeilleParser::decodeDataType($pl2, $attrType, true, 0, $attrSize, $valueHex);
+                    $attrReportN[] = array(
+                        'name' => $fromDev['info'],
+                        'value' => $value
+                    );
+
+                    $m = '  AttrId='.$attrId
+                        .', AttrType='.$attrType
+                        .', ValueHex='.$valueHex.' => '.$value.' ==> '.$fromDev['info'].'='.$value;
+                    parserLog('debug', $m);
+                    $toMon[] = $m;
+                } else {
+                    // 'TAG-TYPE' syntax
+                    xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
+                }
+                continue;
             }
 
-            // break; // Currently supporting only 1 attribut.
-            // $pl = substr($pl, $attrSize * 2);
-            // $l = strlen($pl);
+            $m = "  UNHANDLED ".$clustId."-".$attrId."-".$attrType.": ".$attrData;
+            parserLog('debug', $m);
+            $toMon[] = $m;
         }
     }
 ?>

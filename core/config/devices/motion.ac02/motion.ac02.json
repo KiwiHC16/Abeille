@@ -68,6 +68,7 @@
             "Illuminance & presence": {
                 "use": "inf_generic-Badge",
                 "logicalId": "01-illumAndPresence",
+                "calculValueOffset": "#value#>130536?0:#value#-65536",
                 "trigOut": "0406-01-0000",
                 "trigOutOffset": "1"
             },
@@ -93,12 +94,14 @@
         "xiaomi": {
             "fromDevice": {
                 "FCC0-0112": {
+                    "info": "01-illumAndPresence",
+                    "comment": "Illuminance + motion detection"
                 },
                 "FCC0-00F7": {
                     "01-21": {
                         "func": "numberDiv",
                         "div": 1000,
-                        "info": "0001-01-0020"
+                        "info": "0001-01-0020",
                         "comment": "Battery volt"
                     },
                     "08-21": {

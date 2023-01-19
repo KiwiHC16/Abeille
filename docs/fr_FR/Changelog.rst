@@ -9,6 +9,7 @@ ChangeLog
 - Sonoff ZBMini-L: Ajout support (2539).
 - Interne: Parser: Support préliminaire cluster 0020, cmde 'check-in'.
 - Interne: Cmd: Support préliminaire cluster 0500 zone enroll response.
+- Interne: Reinit à partir du modele revue pour ne pas perdre modifs utilisateur.
 
 230113-BETA-2
 -------------

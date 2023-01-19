@@ -1371,7 +1371,7 @@ class Abeille extends eqLogic {
                 'jsonId' => 'remotecontrol',
                 'jsonLocation' => 'Abeille',
             );
-            Abeille::createDevice("create", $dev);
+            Abeille::createDevice("update", $dev);
 
             return;
         }
@@ -1398,6 +1398,7 @@ class Abeille extends eqLogic {
         // }
 
         /* Request to reset device from JSON. Useful to avoid reinclusion */
+        // if ($cmdId == "updateFromModel") {
         if ($cmdId == "resetFromJson") {
             log::add('Abeille', 'debug', 'message(): resetFromJson, '.$net.'/'.$addr);
 
@@ -1434,7 +1435,7 @@ class Abeille extends eqLogic {
                 'jsonLocation' => $jsonLocation,
                 'ieee' => $eqLogic->getConfiguration('IEEE'),
             );
-            Abeille::createDevice("reset", $dev);
+            Abeille::createDevice("update", $dev);
 
             return;
         }
@@ -1839,7 +1840,7 @@ class Abeille extends eqLogic {
                 'jsonLocation' => $jsonLocation,
                 'macCapa' => $msg['macCapa']
             );
-            Abeille::createDevice("create", $dev);
+            Abeille::createDevice("update", $dev);
 
             $eqLogic = self::byLogicalId($logicalId, 'Abeille');
             $eqId = $eqLogic->getId();
@@ -2569,12 +2570,23 @@ class Abeille extends eqLogic {
 
     /* Create or update Jeedom device based on its JSON model.
        Called in the following cases
-       - On 'eqAnnounce' message from parser (device announce) => action = 'create'
-       - To create a virtual 'remotecontrol' => action = 'create'
-       - To reset from JSON (identical to new inclusion) => action = 'reset'
+       - On 'eqAnnounce' message from parser (device announce) => action = 'update'
+       - To create/update a virtual 'remotecontrol' => action = 'update'
+       - To update from JSON (identical to re-inclusion) => action = 'update'
      */
     public static function createDevice($action, $dev) {
         log::add('Abeille', 'debug', 'createDevice('.$action.', dev='.json_encode($dev));
+
+        /* $action reminder
+              'update' => create or update device (device announce/update)
+           $dev reminder
+                $dev = array(
+                    'net' =>
+                    'addr' =>
+                    'jsonId' => 'remotecontrol',
+                    'jsonLocation' => 'Abeille',
+                );
+         */
 
         $jsonId = (isset($dev['jsonId']) ? $dev['jsonId']: '');
         $jsonLocation = (isset($dev['jsonLocation']) ? $dev['jsonLocation']: '');
@@ -2583,7 +2595,7 @@ class Abeille extends eqLogic {
         if ($jsonId != '' && $jsonLocation != '') {
             $model = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
             if ($model === false) {
-                log::add('Abeille', 'debug', "  Invalid model name ".$jsonLocation."/".$jsonId);
+                log::add('Abeille', 'error', "  createDevice(jsonId=".$jsonId.", location=".$jsonLocation."): Unknown model");
                 return;
             }
             $modelType = $model['type'];

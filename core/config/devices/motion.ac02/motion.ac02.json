@@ -73,10 +73,11 @@
                 "trigOutOffset": "1"
             },
             "Set detection interval": {
-                "use": "act_zbWriteAttribute",
+                "use": "act_zbWriteAttribute-list",
                 "params": "clustId=FCC0&attrId=0102&attrType=20&manufId=115F",
+                "listValue": "2|2s;10|10s;30|30s;60|1m;120|2m;180|3m",
                 "isVisible": 1,
-                "comment": "Set detection interval"
+                "comment": "Detection Interval, 2 secondes a 3 minutes"
             },
             "Detection interval": {
                 "use": "inf_generic-Badge",
@@ -94,6 +95,18 @@
             "Motion sensitivity": {
                 "use": "inf_generic-Badge",
                 "logicalId": "01-motionSensitivity",
+                "isVisible": "1"
+            },
+            "Set Indicator": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FCC0&attrId=0152&attrType=20&manufId=115F",
+                "listValue": "0|Off;1|On",
+                "isVisible": 1,
+                "comment": "Led enable or disabled"
+            },
+            "Indicator": {
+                "use": "inf_generic-Badge",
+                "logicalId": "01-indicator",
                 "isVisible": "1"
             }
         },
@@ -130,7 +143,13 @@
                         "func": "number",
                         "info": "01-motionSensitivity",
                         "comment": "Motion sensitivity, 1=low, 2=medium, 3=high"
+                    },
+                    "6B-20": {
+                        "func": "number",
+                        "info": "01-indicator",
+                        "comment": "LED indicator"
                     }
+
                 }
             }
         }

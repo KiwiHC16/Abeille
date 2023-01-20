@@ -1,14 +1,13 @@
 {
     "act_zbCmdG-0006-On": {
-        "name": "On",
+        "type": "action",
         "subType": "other",
-        "invertBinary": "0",
+        "logicalId": "#EP#-0006-CmdOn",
         "configuration": {
             "topic": "OnOff",
             "request": "Action=On&EP=#EP#",
             "visibilityCategory": "All"
         },
-        "type": "action",
         "genericType": "LIGHT_ON"
     }
 }

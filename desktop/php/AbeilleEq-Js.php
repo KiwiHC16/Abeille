@@ -384,13 +384,13 @@
         console.log("update("+eqId+")");
 
         var msg = "{{Vous êtes sur le point de:<br>";
-        msg += "- Mettre à jour l'équipement à partir de son modèle<br>";
+        msg += "- Mettre à jour l'équipement Jeedom à partir de son modèle<br>";
         msg += "- Et reconfigurer l'équipement<br>";
         msg += "<br>Les noms et ID sont conservés, ainsi que vos customisations.}}";
         if (js_batteryType != '') {
             msg += "<br><br>{{ATTENTION! Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.}}";
         }
-        msg += "<br><br>{{Etes vous sur de vouloir continuer ?}}";
+        msg += "<br><br>{{Cliquez 'Ok' continuer}}";
         bootbox.confirm(msg, function (result) {
             if (result == false)
                 return

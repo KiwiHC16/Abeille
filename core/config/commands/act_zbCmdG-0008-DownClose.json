@@ -1,17 +1,15 @@
 {
     "act_zbCmdG-0008-DownClose": {
-        "isVisible": 0,
+        "type": "action",
         "comment": "Cluster 0008, move to level 0%",
-        "isHistorized": "0",
         "subType": "other",
-        "invertBinary": "0",
+        "logicalId": "#EP#-0008-CmdDownClose",
         "template": "",
         "genericType": "FLAP_DOWN",
         "configuration": {
             "topic": "setLevel",
             "request": "Level=0&duration=0000&EP=#EP#",
             "visibilityCategory": "All"
-        },
-        "type": "action"
+        }
     }
 }

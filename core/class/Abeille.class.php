@@ -2877,15 +2877,17 @@ class Abeille extends eqLogic {
         $jeedomCmdsAct = [];
         foreach ($jCmds as $cmdLogic) {
             log::add('Abeille', 'debug', "  TOTO n=".$cmdLogic->getName().", id=".$cmdLogic->getId());
+            $type = $cmdLogic->getType();
             $c = array(
                 // 'cmdLogic' => $cmdLogic,
                 'name' => $cmdLogic->getName(),
+                // 'type' => $type,
                 'logicalId' => $cmdLogic->getLogicalId(''),
                 'topic' => $cmdLogic->getConfiguration('topic', ''), // action
                 'request' => $cmdLogic->getConfiguration('request', ''), // action
                 'obsolete' => True
             );
-            if ($cmdLogic->getType() == 'info')
+            if ($type == 'info')
                 $jeedomCmdsInf[$cmdLogic->getId()] = $c;
             else
                 $jeedomCmdsAct[$cmdLogic->getId()] = $c;
@@ -3016,10 +3018,12 @@ class Abeille extends eqLogic {
                 $newCmd = false;
                 log::add('Abeille', 'debug', '  found: id='.$cmdId);
                 $cmdLogic = cmd::byId($cmdId);
+                $jCmdName = $cmdLogic->getName();
+                $jCmdLogicId = $cmdLogic->getLogicalId();
                 if ($mCmdType == 'info')
-                    log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$mCmdName."' (".$mCmdLogicId.")");
+                    log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$jCmdName."' (".$jCmdLogicId.")");
                 else
-                    log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$mCmdName."' (".$mCmdLogicId.") => '".$cmdAName."', '".$cmdAParams."'");
+                    log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$jCmdName."' (".$jCmdLogicId.") => logicId='".$mCmdLogicId."' topic='".$cmdAName."', request='".$cmdAParams."'");
             }
 
             $cmdLogic->setOrder($order++);
@@ -3156,12 +3160,18 @@ class Abeille extends eqLogic {
         }
 
         // Removing obsolete cmds
-        $jeedomCmds = array_merge($jeedomCmdsInf, $jeedomCmdsAct);
-        foreach ($jeedomCmds as $jCmdId => $jCmd) {
+        foreach ($jeedomCmdsInf as $jCmdId => $jCmd) {
             if ($jCmd['obsolete'] == False)
                 continue;
-            log::add('Abeille', 'debug', "  Removing ".$jCmd['type']." '".$jCmd['name']."' (".$jCmd['logicalId'].")");
-            $cmdLogic = $jCmd['cmdLogic'];
+            log::add('Abeille', 'debug', "  Removing info '".$jCmd['name']."' (".$jCmd['logicalId'].")");
+            $cmdLogic = cmd::byId($jCmdId);
+            $cmdLogic->remove();
+        }
+        foreach ($jeedomCmdsAct as $jCmdId => $jCmd) {
+            if ($jCmd['obsolete'] == False)
+                continue;
+            log::add('Abeille', 'debug', "  Removing action '".$jCmd['name']."' (".$jCmd['logicalId'].")");
+            $cmdLogic = cmd::byId($jCmdId);
             $cmdLogic->remove();
         }
     } // End createDevice()

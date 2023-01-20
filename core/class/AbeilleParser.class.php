@@ -2859,31 +2859,32 @@
 
             // $cmd = substr($payload, 30, 2);
 
-            // Tcharp38: What is cmd 'FD' ?? Can we remove ?
-            else if (($clustId == "0008") && (substr($payload, 30, 2) == "FD")) {
+            // // Tcharp38: What is cmd 'FD' ?? Can we remove ?
+            // else if (($clustId == "0008") && (substr($payload, 30, 2) == "FD")) {
 
-                $frameCtrlField         = substr($payload,26, 2);
-                $sqn                    = substr($payload,28, 2);
-                // $cmd                    = substr($payload,30, 2); if ( $cmd != "FD" ) return;
-                $value                  = substr($payload,32, 2);
+            //     $frameCtrlField         = substr($payload,26, 2);
+            //     $sqn                    = substr($payload,28, 2);
+            //     // $cmd                    = substr($payload,30, 2); if ( $cmd != "FD" ) return;
+            //     $value                  = substr($payload,32, 2);
 
-                parserLog('debug', '  '
-                               .', frameCtrlField='.$frameCtrlField
-                                .', SQN='.$sqn
-                                .', cmd='.$cmd
-                                .', value='.$value,
-                                 "8002"
-                                );
+            //     parserLog('debug', '  '
+            //                    .', frameCtrlField='.$frameCtrlField
+            //                     .', SQN='.$sqn
+            //                     .', cmd='.$cmd
+            //                     .', value='.$value,
+            //                      "8002"
+            //                     );
 
-                // $this->msgToAbeille($dest."/".$srcAddr, $clustId.'-'.$srcEp, '0000', $value);
-                $attrReportN = [
-                    array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
-                ];
-                // return;
-            }
+            //     // $this->msgToAbeille($dest."/".$srcAddr, $clustId.'-'.$srcEp, '0000', $value);
+            //     $attrReportN = [
+            //         array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
+            //     ];
+            //     // return;
+            // }
 
             // Tcharp38: TODO: Move to ZCL global or cluster specific part
-            else if ($clustId == "0204") {
+            // else if ($clustId == "0204") {
+            if ($clustId == "0204") {
                 $frameCtrlField         = substr($payload,26, 2);
                 $sqn                    = substr($payload,28, 2);
                 $cmd                    = substr($payload,30, 2);
@@ -3924,14 +3925,27 @@
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
 
-                        if ($cmd == "00") {
+                        if ($cmd == "00") { // Zone status change notification
                             // Not handled here
                             $zoneStatus = AbeilleTools::reverseHex(substr($msg, 0, 4));
                             $extStatus = substr($msg, 4, 2);
                             $zoneId = substr($msg, 6, 2);
                             $delay = AbeilleTools::reverseHex(substr($msg, 8, 4));
                             $m = '  Zone status change notification: ZoneStatus='.$zoneStatus.', ExtStatus='.$extStatus.', ZoneId='.$zoneId.', Delay='.$delay;
-                        } else if ($cmd == "01") {
+
+                            // Legacy: Sending 0500-#EP#-0000 with zoneStatus as value
+                            // To be removed at some point
+                            $attrReportN[] = array(
+                                'name' => '0500-'.$srcEp.'-0000',
+                                'value' => $zoneStatus,
+                            );
+                            // New message format '#EP#-0500-cmd00' with $zoneStatus as value
+                            $attrReportN[] = array(
+                                'name' => $srcEp.'-0500-cmd00',
+                                'value' => $zoneStatus,
+                            );
+                            // TODO: Disable decode8401()
+                        } else if ($cmd == "01") { // Zone enroll request
                             $zoneType = AbeilleTools::reverseHex(substr($msg, 0, 4));
                             $manufCode = AbeilleTools::reverseHex(substr($msg, 4, 4));
                             $m = '  Zone enroll request: ZoneType='.$zoneType.', ManufCode='.$manufCode;

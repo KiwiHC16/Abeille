@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: Support cluster 0500 cmd 00/Zone status change notif.
+
 230120-BETA-1
 -------------
 

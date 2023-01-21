@@ -6,6 +6,7 @@ ChangeLog
 
 - Interne: Parser: Support cluster 0500 cmd 00/Zone status change notif.
 - Interne: Parser: Correction regression.
+- Interne: Cmd: Changement cosmetique msg debug.
 
 230120-BETA-1
 -------------

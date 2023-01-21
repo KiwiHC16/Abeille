@@ -806,7 +806,7 @@
                 $prio = isset($msg['priority']) ? $msg['priority']: PRIO_NORM;
                 $topic = $msg['topic'];
                 $payload = $msg['payload'];
-                cmdLog("debug", "Msg from 'xToCmd': Pri=".$prio.", ".$topic." => ".$payload, $this->debug['AbeilleCmdClass']);
+                cmdLog("debug", "Msg from 'xToCmd': Pri=".$prio.", topic='".$topic."', payload='".$payload."'", $this->debug['AbeilleCmdClass']);
                 $this->prepareCmd($prio, $topic, $payload);
             }
         }

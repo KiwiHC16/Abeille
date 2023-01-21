@@ -50,7 +50,7 @@
          */
         function prepareCmd($priority, $topic, $payload, $phpunit=0) {
 
-            cmdLog("debug", "  prepareCmd(".$priority.", ".$topic.", ".$payload.")", $this->debug['prepareCmd']);
+            // cmdLog("debug", "  prepareCmd(".$priority.", ".$topic.", ".$payload.")", $this->debug['prepareCmd']);
 
             $msg        = $payload;
 

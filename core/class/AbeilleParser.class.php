@@ -2883,39 +2883,8 @@
             // }
 
             // Tcharp38: TODO: Move to ZCL global or cluster specific part
-            // else if ($clustId == "0204") {
-            if ($clustId == "0204") {
-                $frameCtrlField         = substr($payload,26, 2);
-                $sqn                    = substr($payload,28, 2);
-                $cmd                    = substr($payload,30, 2);
-
-                if ($cmd == '01') { // Read Response
-                    $attribute                 = substr($payload,34, 2).substr($payload,32, 2);
-                    $status                    = substr($payload,36, 2);
-                    $attributeType              = substr($payload,38, 2);
-                    $value                     = substr($payload,40, 2);
-
-                    if ( !$status ) {
-                        parserLog('debug', '  Status not null - not processing. ');
-                        return;
-                    }
-
-                    parserLog('debug', '  Time Request - (decoded but not processed) '
-                                   .', frameCtrlField='.$frameCtrlField
-                                   .', SQN='.$sqn
-                                   .', cmd='.$cmd
-                                   .', attribute='.$attribute
-                                   .', status='.$status
-                                   .', attributeType='.$attributeType
-                                   .', value='.$value
-                                    );
-
-                    // $this->msgToAbeille($dest."/".$srcAddr, $clustId.'-'.$dstEp, $attribute, $value);
-                    $attrReportN = [
-                        array( "name" => $clustId.'-'.$dstEp.'-'.$attribute, "value" => $value ),
-                    ];
-                    // return;
-                }
+            // WARNING: KEEP 'else if' here
+            else if ($clustId == "0204") {
             } // End profile 0104 cluster 0204
 
             // Remontée etat relai module Legrand 20AX

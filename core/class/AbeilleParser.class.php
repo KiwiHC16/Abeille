@@ -3857,9 +3857,12 @@
                             $fileOffset = AbeilleTools::reverseHex(substr($pl, 18, 8));
                             $maxDataSize = AbeilleTools::reverseHex(substr($pl, 26, 2));
 
-                            parserLog('debug', "  fieldCtrl=".$fieldControl.", manufCode=".$manufCode.", imgType=".$imgType.", fileVers=".$fileVersion.", fileOffset=".$fileOffset.", maxData=".$maxDataSize);
-                            // $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
                             $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/otaImageBlockResponse", 'ep='.$srcEp.'&sqn='.$sqn.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
+                            // $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
+
+                            $m = "  fieldCtrl=".$fieldControl.", manufCode=".$manufCode.", imgType=".$imgType.", fileVers=".$fileVersion.", fileOffset=".$fileOffset.", maxData=".$maxDataSize;
+                            parserLog('debug', $m);
+                            $toMon[] = $m;
                         } else if ($cmd == "06") { // Upgrade end request
                             $status = substr($pl, 0, 2);
                             $manufCode = substr($pl, 2, 4);

@@ -50,8 +50,8 @@
     sendVarToJS('js_eqSettings', $eqSettings);
 
     /* Returns cmd ID identified by its Jeedom logical ID name */
-    function getCmdIdByLogicId($eqId, $logicId) {
-        $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $logicId);
+    function getCmdIdByLogicId($eqId, $cmdLogicId) {
+        $cmd = cmd::byEqLogicIdAndLogicalId($eqId, $cmdLogicId);
         if (!is_object($cmd))
             return "";
         return $cmd->getId();

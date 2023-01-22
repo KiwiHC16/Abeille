@@ -287,7 +287,7 @@
             "name" => "Zone status change notification",
         ),
         "8501" => array(
-            "name" => "OTA block request",
+            "name" => "OTA block request", // Unused by Abeille
         ),
         "8503" => array(
             "name" => "OTA upgrade end request",

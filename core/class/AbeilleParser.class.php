@@ -3862,7 +3862,7 @@
                             parserLog('debug', "  Handled by decode8503");
                             return;
                         }
-                    }
+                    } // End clustId == "0019"
 
                     // 0020/Poll control cluster specific
                     else if ($clustId == "0020") {
@@ -6060,70 +6060,12 @@
             if (!isset($attrReportN) && !isset($data)) {
                 /* Core hereafter is performing default conversion according to data type */
 
-                // 0x00 Null
-                // 0x10 boolean                 -> hexdec
-                // 0x18 8-bit bitmap
-                // 0x20 Unsigned 8-bit  integer uint8
-                // 0x21 Unsigned 16-bit integer uint16
-                // 0x22 Unsigned 24-bit integer uint24
-                // 0x23 Unsigned 32-bit integer uint32
-                // 0x24 Unsigned 40-bit integer uint40
-                // 0x25 Unsigned 48-bit integer uint48
-                // 0x26 Unsigned 56-bit integer uint56
-                // 0x27 Unsigned 64-bit integer uint64
-                // 0x28 Signed 8-bit  integer int8
-                // 0x29 Signed 16-bit integer int16
-                // 0x2a Signed 24-bit integer int24
-                // 0x2b Signed 32-bit integer int32
-                // 0x2c Signed 40-bit integer int40
-                // 0x2d Signed 48-bit integer int48
-                // 0x2e Signed 56-bit integer int56
-                // 0x2f Signed 64-bit integer int64
-                // 0x30 Enumeration : 8bit
-                // 0x42 string                  -> hex2bin
-
-                // if ($dataType == "18") {
-                //     $data = substr($payload, 24, 2);
-                // }
-
-                // // Exemple Heiman Smoke Sensor Attribut 0002 sur cluster 0500
-                // else if ($dataType == "19") {
-                //     $data = substr($payload, 24, 4);
-                // }
-
-                // if ($dataType == "28") {
-                //     // $data = hexdec(substr($payload, 24, 2));
-                //     $in = substr($payload, 24, 2);
-                //     if ( hexdec($in)>127 ) { $raw = "FF".$in ; } else  { $raw = "00".$in; }
-
-                //     $data = unpack("s", pack("s", hexdec($raw)))[1];
-                // }
-
-                // Example Temperature d un Xiaomi Carre
-                // Sniffer dit Signed 16bit integer
-                // else if ($dataType == "29") { // int16
-                //     $data = unpack("s", pack("s", hexdec(substr($Attribut, 0, 4))))[1];
-                // }
-
-                // else if ($dataType == "30") {
-                //     // $data = hexdec(substr($payload, 24, 4));
-                //     $data = substr($payload, 24, 4);
-                // }
-
-                // else if ($dataType == "48") { // Array
-                //     // Tcharp38: Don't know how to handle it.
-                //     parserLog('debug', "  WARNING: Don't know how to decode 'array' data type.");
-                //     $data = "00"; // Fake value
-                // }
-
                 /* Note: If $data is not set, then nothing to send to Abeille. This might be because data type is unsupported */
-                // else {
-                    $data = $this->decodeDataType(substr($payload, 24), $dataType, false, hexdec($attrSize), $oSize, $hexValue);
-                    if ($data === false)
-                        return; // Unsupported data type
-                    $attrName = zbGetZCLAttributeName($clustId, $attrId);
-                    parserLog('debug', '  '.$attrName.', hexValue='.$hexValue.' => '.$data);
-                // }
+                $data = $this->decodeDataType(substr($payload, 24), $dataType, false, hexdec($attrSize), $oSize, $hexValue);
+                if ($data === false)
+                    return; // Unsupported data type
+                $attrName = zbGetZCLAttributeName($clustId, $attrId);
+                parserLog('debug', '  '.$attrName.', ValueHex='.$hexValue.' => '.$data);
             }
 
             $unknown = false;

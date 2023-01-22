@@ -23,13 +23,13 @@
     //     return $cmd->getId();
     // }
 
-    /* Returns cmd ID identified by its Jeedom logical ID name */
-    function getCmdIdByLogicId($eqId, $logicId) {
-        $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $logicId);
-        if (!is_object($cmd))
-            return "";
-        return $cmd->getId();
-    }
+    // /* Returns cmd ID identified by its Jeedom logical ID name */
+    // function getCmdIdByLogicId($eqId, $logicId) {
+    //     $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $logicId);
+    //     if (!is_object($cmd))
+    //         return "";
+    //     return $cmd->getId();
+    // }
 
     function addEpButton($id, $defEp) {
         echo '<input id="'.$id.'" title="{{End Point, format hexa (ex: 01)}}" value="'.$defEp.'"  style="width:30px; margin-left: 8px" />';

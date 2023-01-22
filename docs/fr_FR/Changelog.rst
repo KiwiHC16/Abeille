@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Page avancé: Ajout version SW du device (clust 0000, attr 4000).
+
 230121-BETA-2
 -------------
 

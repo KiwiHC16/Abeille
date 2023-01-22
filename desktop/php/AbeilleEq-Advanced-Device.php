@@ -25,6 +25,7 @@
     ?>
     </div>
 </div>
+
 <div class="form-group">
     <label class="col-sm-3 control-label">Modèle d'équipement</label>
     <div class="col-sm-5">
@@ -72,6 +73,7 @@
         ?>
     </div>
 </div>
+
 <div class="form-group">
     <label class="col-sm-3 control-label">Configuration</label>
     <div class="col-sm-5">
@@ -86,6 +88,7 @@
         ?>
     </div>
 </div>
+
 <?php
     if ($sig) {
         $path = __DIR__.'/../../core/config/devices_local/'.$sig['modelId'].'_'.$sig['manufId'].'/discovery.json';
@@ -102,6 +105,7 @@
     </div>
 </div>
 <?php } } ?>
+
 <div class="form-group">
     <label class="col-sm-3 control-label">Assistant de découverte</label>
     <div class="col-sm-5">
@@ -110,6 +114,7 @@
         ?>
     </div>
 </div>
+
 <div class="form-group">
     <label class="col-sm-3 control-label">Code fabricant (manufCode)</label>
     <div class="col-sm-5">
@@ -121,5 +126,16 @@
             echo '<input readonly title="{{Code fabricant}}" value="'.$manufCode.'" />';
         ?>
     </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{Version SW}} (SWBuildID)</label>
+    <?php
+    $cmdLogicId = "0000-01-4000";
+    echo '<div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, $cmdLogicId).'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+        echo '<input type="text" id="idSwBuild" value="'.getCmdValueByLogicId($eqId, $cmdLogicId).'" readonly>';
+        addJsUpdateFunction($eqId, $cmdLogicId, 'idSwBuild', true);
+    echo '</div>';
+    ?>
 </div>
 

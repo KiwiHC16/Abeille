@@ -3821,11 +3821,12 @@
                     // 0019/OTA cluster specific
                     else if ($clustId == "0019") {
                         if ($cmd == "01") { // Query Next Image Request
-                            $fieldControl = substr($msg, 0, 2);
-                            $manufCode = AbeilleTools::reverseHex(substr($msg, 2, 4));
-                            $imgType = AbeilleTools::reverseHex(substr($msg, 6, 4));
-                            $curFileVers = AbeilleTools::reverseHex(substr($msg, 10, 8));
-                            $hwVers = AbeilleTools::reverseHex(substr($msg, 18, 4));
+                            $fieldControl = substr($pl, 0, 2);
+                            $manufCode = AbeilleTools::reverseHex(substr($pl, 2, 4));
+                            $imgType = AbeilleTools::reverseHex(substr($pl, 6, 4));
+                            $curFileVers = AbeilleTools::reverseHex(substr($pl, 10, 8));
+                            $hwVers = AbeilleTools::reverseHex(substr($pl, 18, 4));
+
                             parserLog('debug', "  fieldCtrl=".$fieldControl.", manufCode=".$manufCode.", imgType=".$imgType.", fileVers=".$curFileVers.", hwVers=".$hwVers);
                             if (!isset($GLOBALS['ota_fw']) || !isset($GLOBALS['ota_fw'][$manufCode])) {
                                 parserLog('debug', "  NO fw update available for this manufacturer.");
@@ -3850,17 +3851,46 @@
                             // $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
                         } else if ($cmd == "03") { // Image Block Request
                             $fieldControl = substr($msg, 0, 2);
-                            $manufCode = AbeilleTools::reverseHex(substr($msg, 2, 4));
-                            $imgType = AbeilleTools::reverseHex(substr($msg, 6, 4));
-                            $fileVersion = AbeilleTools::reverseHex(substr($msg, 10, 8));
-                            $fileOffset = AbeilleTools::reverseHex(substr($msg, 18, 8));
-                            $maxDataSize = AbeilleTools::reverseHex(substr($msg, 26, 2));
+                            $manufCode = AbeilleTools::reverseHex(substr($pl, 2, 4));
+                            $imgType = AbeilleTools::reverseHex(substr($pl, 6, 4));
+                            $fileVersion = AbeilleTools::reverseHex(substr($pl, 10, 8));
+                            $fileOffset = AbeilleTools::reverseHex(substr($pl, 18, 8));
+                            $maxDataSize = AbeilleTools::reverseHex(substr($pl, 26, 2));
+
                             parserLog('debug', "  fieldCtrl=".$fieldControl.", manufCode=".$manufCode.", imgType=".$imgType.", fileVers=".$fileVersion.", fileOffset=".$fileOffset.", maxData=".$maxDataSize);
                             // $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
                             $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/otaImageBlockResponse", 'ep='.$srcEp.'&sqn='.$sqn.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
                         } else if ($cmd == "06") { // Upgrade end request
-                            parserLog('debug', "  Handled by decode8503");
-                            return;
+                            $status = substr($pl, 0, 2);
+                            $manufCode = substr($pl, 2, 4);
+                            $imgType = substr($pl, 6, 4);
+                            $fileVersion = substr($pl, 10, 8);
+
+                            $m = '  OTA upgrade end request'
+                                .', Status='.$status
+                                .', ManufCode='.$manufCode
+                                .', ImgType='.$imgType
+                                .', FileVers='.$fileVersion;
+                            parserLog('debug', $m);
+                            $toMon[] = $m;
+
+                            // $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$addr."/otaUpgradeEndResponse", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
+                            $eqLogic = Abeille::byLogicalId($dest.'/'.$srcAddr, 'Abeille');
+                            $eqHName = $eqLogic->getHumanName();
+                            switch ($status) {
+                            case "00":
+                                message::add("Abeille", $eqHName.": Mise-à-jour terminée");
+                                break;
+                            case "95":
+                                message::add("Abeille", $eqHName.": Transfert du firmware annulé par l'équipement");
+                                break;
+                            case "96":
+                                message::add("Abeille", $eqHName.": Transfert du firmware terminé mais invalide");
+                                break;
+                            case "99":
+                                message::add("Abeille", $eqHName.": Transfert du firmware terminé mais d'autres images sont requises pour la mise-à-jour");
+                                break;
+                            }
                         }
                     } // End clustId == "0019"
 
@@ -6399,63 +6429,63 @@
         //     parserLog('debug', $dest.', Type='.$msg, "8501");
         // }
 
-        // OTA specific: ZiGate will receive this request when device received last part of FW.
-        function decode8503($dest, $payload, $lqi) {
-            // Doc from Doudz/zigate
-            // s = OrderedDict([('sequence', 'B'),
-            // ('endpoint', 'B'),
-            // ('cluster', 'H'),
-            // ('address_mode', 'B'),
-            // ('addr', 'H'),
-            // ('file_version', 'L'),
-            // ('image_type', 'H'),
-            // ('manufacture_code', 'H'),
-            // ('status', 'B')
+        // // OTA specific: ZiGate will receive this request when device received last part of FW.
+        // function decode8503($dest, $payload, $lqi) {
+        //     // Doc from Doudz/zigate
+        //     // s = OrderedDict([('sequence', 'B'),
+        //     // ('endpoint', 'B'),
+        //     // ('cluster', 'H'),
+        //     // ('address_mode', 'B'),
+        //     // ('addr', 'H'),
+        //     // ('file_version', 'L'),
+        //     // ('image_type', 'H'),
+        //     // ('manufacture_code', 'H'),
+        //     // ('status', 'B')
 
-            $sqn = substr($payload, 0, 2);
-            $ep = substr($payload, 2, 2);
-            $clustId = substr($payload, 4, 4);
-            $addrMode = substr($payload, 8, 2);
-            $addr = substr($payload, 10, 4);
-            $imgVersion = substr($payload, 14, 8);
-            $imgType = substr($payload, 22, 4);
-            $manufCode = substr($payload, 26, 4);
-            $status = substr($payload, 30, 2);
+        //     $sqn = substr($payload, 0, 2);
+        //     $ep = substr($payload, 2, 2);
+        //     $clustId = substr($payload, 4, 4);
+        //     $addrMode = substr($payload, 8, 2);
+        //     $addr = substr($payload, 10, 4);
+        //     $imgVersion = substr($payload, 14, 8);
+        //     $imgType = substr($payload, 22, 4);
+        //     $manufCode = substr($payload, 26, 4);
+        //     $status = substr($payload, 30, 2);
 
-            $decoded = '8503/OTA upgrade end request'
-                .', SQN='.$sqn
-                .', EP='.$ep
-                .', ClustId='.$clustId
-                .', AddrMode='.$addrMode
-                .', Addr='.$addr
-                .', ImgVers='.$imgVersion
-                .', ImgType='.$imgType
-                .', ManuCode='.$manufCode
-                .', Status='.$status;
-            parserLog('debug', $dest.', Type='.$decoded, "8503");
+        //     $decoded = '8503/OTA upgrade end request'
+        //         .', SQN='.$sqn
+        //         .', EP='.$ep
+        //         .', ClustId='.$clustId
+        //         .', AddrMode='.$addrMode
+        //         .', Addr='.$addr
+        //         .', ImgVers='.$imgVersion
+        //         .', ImgType='.$imgType
+        //         .', ManuCode='.$manufCode
+        //         .', Status='.$status;
+        //     parserLog('debug', $dest.', Type='.$decoded, "8503");
 
-            // Monitor if required
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
-                monMsgFromZigate($decoded); // Send message to monitor
+        //     // Monitor if required
+        //     if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
+        //         monMsgFromZigate($decoded); // Send message to monitor
 
-            // $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$addr."/otaUpgradeEndResponse", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
-            $eqLogic = Abeille::byLogicalId($dest.'/'.$addr, 'Abeille');
-            $eqPath = $eqLogic->getHumanName();
-            switch ($status) {
-            case "00":
-                message::add("Abeille", $eqPath.": Mise-à-jour terminée");
-                break;
-            case "95":
-                message::add("Abeille", $eqPath.": Transfert du firmware annulé par l'équipement");
-                break;
-            case "96":
-                message::add("Abeille", $eqPath.": Transfert du firmware terminé mais invalide");
-                break;
-            case "99":
-                message::add("Abeille", $eqPath.": Transfert du firmware terminé mais d'autres images sont requises pour la mise-à-jour");
-                break;
-            }
-        }
+        //     // $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$addr."/otaUpgradeEndResponse", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
+        //     $eqLogic = Abeille::byLogicalId($dest.'/'.$addr, 'Abeille');
+        //     $eqPath = $eqLogic->getHumanName();
+        //     switch ($status) {
+        //     case "00":
+        //         message::add("Abeille", $eqPath.": Mise-à-jour terminée");
+        //         break;
+        //     case "95":
+        //         message::add("Abeille", $eqPath.": Transfert du firmware annulé par l'équipement");
+        //         break;
+        //     case "96":
+        //         message::add("Abeille", $eqPath.": Transfert du firmware terminé mais invalide");
+        //         break;
+        //     case "99":
+        //         message::add("Abeille", $eqPath.": Transfert du firmware terminé mais d'autres images sont requises pour la mise-à-jour");
+        //         break;
+        //     }
+        // }
 
         /**
          * 0x8701/Router Discovery Confirm -  Warning: potential swap between statuses.

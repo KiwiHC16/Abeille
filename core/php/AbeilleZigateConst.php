@@ -290,7 +290,7 @@
             "name" => "OTA block request", // Unused by Abeille
         ),
         "8503" => array(
-            "name" => "OTA upgrade end request",
+            "name" => "OTA upgrade end request", // Unused by Abeille
         ),
         "8531" => array(
             "name" => "Complex descriptor response",

@@ -3830,18 +3830,18 @@
                             parserLog('debug', "  fieldCtrl=".$fieldControl.", manufCode=".$manufCode.", imgType=".$imgType.", fileVers=".$curFileVers.", hwVers=".$hwVers);
                             if (!isset($GLOBALS['ota_fw']) || !isset($GLOBALS['ota_fw'][$manufCode])) {
                                 parserLog('debug', "  NO fw update available for this manufacturer.");
-                                // TODO: Respond to device: no image
+                                // Respond 'no image' to device => Handled by Zigate server
                                 return;
                             }
                             if (!isset($GLOBALS['ota_fw'][$manufCode][$imgType])) {
                                 parserLog('debug', "  NO fw update available for this image type.");
-                                // TODO: Respond to device: no image
+                                // Respond 'no image' to device => Handled by Zigate server
                                 return;
                             }
                             $fw = $GLOBALS['ota_fw'][$manufCode][$imgType];
                             if (hexdec($curFileVers) >= hexdec($fw['fileVersion'])) {
                                 parserLog('debug', "  Found compliant FW but same version or older.");
-                                // TODO: Respond to device: no image
+                                // Respond 'no image' to device => Handled by Zigate server
                                 return;
                             }
                             // Responding to device: image found

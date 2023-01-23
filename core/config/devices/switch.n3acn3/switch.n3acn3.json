@@ -1,6 +1,9 @@
 {
     "switch.n3acn3": {
         "manufacturer": "Xiaomi Aqara",
+        "model": "QBKG26LM",
+        "type": "Xiaomi D1 triple wall switch",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -9,7 +12,6 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Xiaomi QBKG26LM 3 gang smart wall switch",
         "commands": {
             "Identify": {
                 "use": "Identify"

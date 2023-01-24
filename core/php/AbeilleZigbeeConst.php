@@ -400,6 +400,7 @@
                 "0055" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x39 ), // 0x39 = Single precision
                 "006F" => array( "name" => "StatusFlags", "access" => "R", "dataType" => 0x18 ), // Type map8
             ),
+            // No received nor generated commands
         ),
         "0012" => array(
             "name" => "Multistate Input",

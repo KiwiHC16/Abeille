@@ -3115,7 +3115,7 @@
                         // Tcharp38 note: At some point do the opposite => what's handled by 8100
                         // $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E000', 'E001', 'EF00', 'FC01', 'FC02', 'FF66']; // Clusters handled here
                         // $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
-                        $refused = ['0000', '000C', 'FC00'];
+                        $refused = ['0000', 'FC00'];
                         if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
@@ -3326,7 +3326,7 @@
                     else if ($cmd == "0A") { // Report attributes
                         // Some clusters are directly handled by 8100/8102 decode
                         // $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
-                        $refused = ['000C', 'FC00'];
+                        $refused = ['FC00'];
                         if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
@@ -3367,11 +3367,6 @@
                             $attrReportN = [];
                             xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN);
                         }
-
-                        // else if ($attrId == "FF01") { // Xiaomi specific (no manufCode but FF01 used by Xiaomi only)
-                        //     $attrReportN = [];
-                        //     xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN);
-                        // }
 
                         else {
                             $l = strlen($msg);
@@ -5578,7 +5573,7 @@
 
             // Checking if decode is handled by 8002 or still there
             // $accepted = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
-            $accepted = ['0000', '000C', 'FC00'];
+            $accepted = ['0000', 'FC00'];
             if (!in_array($clustId, $accepted)) {
                 parserLog('debug', "  Handled by decode8002");
                 return;
@@ -5973,54 +5968,54 @@
             //     }
             // } // End cluster 0001/power configuration
 
-            else if ($clustId == "000C") { // Analog input cluster
-                if ($attrId == "0055") {
-                    // assuming $dataType == "39"
+            // else if ($clustId == "000C") { // Analog input cluster
+            //     if ($attrId == "0055") {
+            //         // assuming $dataType == "39"
 
-                    if ($ep == "01") {
-                        // Remontée puissance (instantannée) relay double switch 1
-                        // On va envoyer ca sur la meme variable que le champ ff01
-                        $hexNumber = substr($payload, 24, 8);
-                        $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
-                        $bin = pack('H*', $hexNumberOrder);
-                        $puissanceValue = unpack("f", $bin )[1];
+            //         if ($ep == "01") {
+            //             // Remontée puissance (instantannée) relay double switch 1
+            //             // On va envoyer ca sur la meme variable que le champ ff01
+            //             $hexNumber = substr($payload, 24, 8);
+            //             $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+            //             $bin = pack('H*', $hexNumberOrder);
+            //             $puissanceValue = unpack("f", $bin )[1];
 
-                        // Relay Double
-                        // $this->msgToAbeille($dest."/".$srcAddr, '000C', '01-0055', $puissanceValue);
-                        $attrReportN = [
-                            array( "name" => '000C-01-0055', "value" => $puissanceValue ),
-                        ];
-                    }
-                    if (($ep == "02") || ($ep == "15")) {
-                        // Remontée puissance (instantannée) de la prise xiaomi et relay double switch 2
-                        // On va envoyer ca sur la meme variable que le champ ff01
-                        $hexNumber = substr($payload, 24, 8);
-                        $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
-                        $bin = pack('H*', $hexNumberOrder );
-                        $puissanceValue = unpack("f", $bin )[1];
+            //             // Relay Double
+            //             // $this->msgToAbeille($dest."/".$srcAddr, '000C', '01-0055', $puissanceValue);
+            //             $attrReportN = [
+            //                 array( "name" => '000C-01-0055', "value" => $puissanceValue ),
+            //             ];
+            //         }
+            //         if (($ep == "02") || ($ep == "15")) {
+            //             // Remontée puissance (instantannée) de la prise xiaomi et relay double switch 2
+            //             // On va envoyer ca sur la meme variable que le champ ff01
+            //             $hexNumber = substr($payload, 24, 8);
+            //             $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+            //             $bin = pack('H*', $hexNumberOrder );
+            //             $puissanceValue = unpack("f", $bin )[1];
 
-                        // Relay Double - Prise Xiaomi
-                        // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $ep.'-'.$attrId, $puissanceValue);
-                        $attrReportN = [
-                            array( "name" => $clustId.'-'.$ep.'-'.$attrId, "value" => $puissanceValue ),
-                        ];
-                    }
-                    if ($ep == "03") {
-                        // Example Cube Xiaomi
-                        // Sniffer dit Single Precision Floating Point
-                        // b9 1e 38 c2 -> -46,03
-                        // $data = hexdec(substr($payload, 24, 4));
-                        // $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
-                        $hexNumber = substr($payload, 24, 8);
-                        $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
-                        $bin = pack('H*', $hexNumberOrder);
-                        $value = unpack("f", $bin)[1];
-                        $attrReportN = [
-                            array( "name" => $clustId.'-'.$ep.'-'.$attrId, "value" => $value ),
-                        ];
-                    }
-                }
-            } // End cluster 000C
+            //             // Relay Double - Prise Xiaomi
+            //             // $this->msgToAbeille($dest."/".$srcAddr, $clustId, $ep.'-'.$attrId, $puissanceValue);
+            //             $attrReportN = [
+            //                 array( "name" => $clustId.'-'.$ep.'-'.$attrId, "value" => $puissanceValue ),
+            //             ];
+            //         }
+            //         if ($ep == "03") {
+            //             // Example Cube Xiaomi
+            //             // Sniffer dit Single Precision Floating Point
+            //             // b9 1e 38 c2 -> -46,03
+            //             // $data = hexdec(substr($payload, 24, 4));
+            //             // $data = unpack("s", pack("s", hexdec(substr($payload, 24, 4))))[1];
+            //             $hexNumber = substr($payload, 24, 8);
+            //             $hexNumberOrder = $hexNumber[6].$hexNumber[7].$hexNumber[4].$hexNumber[5].$hexNumber[2].$hexNumber[3].$hexNumber[0].$hexNumber[1];
+            //             $bin = pack('H*', $hexNumberOrder);
+            //             $value = unpack("f", $bin)[1];
+            //             $attrReportN = [
+            //                 array( "name" => $clustId.'-'.$ep.'-'.$attrId, "value" => $value ),
+            //             ];
+            //         }
+            //     }
+            // } // End cluster 000C
 
             // else if ($clustId == "0400") { // Illuminance Measurement cluster
             //     if ($attrId == "0000") { // MeasuredValue

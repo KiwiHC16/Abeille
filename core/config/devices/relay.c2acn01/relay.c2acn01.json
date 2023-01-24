@@ -1,6 +1,7 @@
 {
     "relay.c2acn01": {
         "manufacturer": "Xiaomi/Aqara",
+        "type": "Xiaomi Module Double Switch Aqara",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -9,7 +10,6 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Xiaomi Module Double Switch Aqara",
         "commands": {
             "etat": {
                 "use": "inf_zbAttr-0006-OnOff",
@@ -60,7 +60,9 @@
                 "use": "Xiaomi-ff01"
             },
             "Puissance Inst": {
-                "use": "puissance1"
+                "use": "inf_zbAttr-000C-PresentValue",
+                "params": "ep=01",
+                "isHistorized": "1"
             },
             "SWBuildID": {
                 "use": "inf_zbAttr-0000-SWBuildID"

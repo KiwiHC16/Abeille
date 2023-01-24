@@ -1,5 +1,7 @@
 {
     "plug": {
+        "manufacturer": "Xiaomi",
+        "type": "Xiaomi plug",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -8,7 +10,6 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Xiaomi Prise",
         "commands": {
             "etat": {
                 "use": "inf_zbAttr-0006-OnOff",
@@ -33,7 +34,9 @@
                 "use": "Xiaomi-ff01"
             },
             "Puissance Inst": {
-                "use": "puissance"
+                "use": "inf_zbAttr-000C-PresentValue",
+                "params": "ep=02",
+                "isHistorized": "1"
             },
             "Groups": {
                 "use": "Group-Membership",

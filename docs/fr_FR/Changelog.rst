@@ -4,6 +4,8 @@ ChangeLog
 - Page avancé: Ajout version SW du device (clust 0000, attr 4000).
 - Interne: Parser: Supression utilisation msg OTA 8503 pour compatibilité raw.
 - Xiaomi Aqara QBKG26LM: Mise-à-jour modèle (2174).
+- Interne: Parser: Cluster 000C géré par decode8002().
+- Modèles: Suppression cmdes obsoletes 'puissance1', 'puissance', & 'puissanceEP15'.
 
 230121-BETA-2
 -------------

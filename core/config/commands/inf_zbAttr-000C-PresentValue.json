@@ -1,12 +1,13 @@
 {
     "inf_zbAttr-000C-PresentValue": {
         "comment": "Cluster 000C, attrib 0055/PresentValue",
-        "name": "PresentValue",
-        "subType": "numeric",
-        "template": "",
-        "configuration": [],
+        "comment2": "Defaulted to POWER value",
         "type": "info",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": [],
         "logicalId": "000C-#EP#-0055",
-        "genericType": ""
+        "unit": "W",
+        "genericType": "POWER"
     }
 }

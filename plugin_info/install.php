@@ -452,10 +452,11 @@
            - config DB: Removed obsolete 'blocageRecuperationEquipement'.
            - config DB: Removed obsolete 'blocageTraitementAnnonce'.
            - config DB: 'DbVersion' => 'ab::dbVersion'.
+           - config DB: Added 'ab::zgChan' for Zigbee channel.
            - cmd DB: 0405-XX-0000: Removed 'calculValueOffset'.
            - cmd DB: 0402-XX-0000: Removed 'calculValueOffset'.
            - cmd DB: 0400-XX-0000: Removed 'calculValueOffset'.
-           - cmd DB: '0001-#EP#-0020': Updating trigOutOffset: '#value#*100\/30' => '#value#*100\/3'
+           - cmd DB: '0001-#EP#-0020': Updating trigOutOffset: '#value#*100/30' => '#value#*100/3'
            - cmd DB: 'Batterie-Pourcent' => '0001-01-0021'
            - cmd DB: 'WindowsCovering' => 'cmd-0102' + 'cmd=XX'
            - Removing 'AbeilleDebug.log'. Moved to Jeedom tmp dir.
@@ -652,6 +653,23 @@
             config::remove('blocageRecuperationEquipement', 'Abeille');
             config::remove('blocageTraitementAnnonce', 'Abeille');
             replaceConfigDB('DbVersion', 'ab::dbVersion');
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
+                    continue;
+                if (config::byKey('ab::zgChan'.$zgId, 'Abeille', 0) != 0)
+                    continue; // Channel already defined
+
+                // What was last used channel ?
+                $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+                $chan = 11; // Defaulting to channel 11
+                if (is_object($eqLogic)) {
+                    $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'Network-Channel');
+                    if (is_object($cmdLogic))
+                        $chan = $cmdLogic->execCmd();
+                }
+                config::save('ab::zgChan'.$zgId, $chan, 'Abeille');
+                log::add('Abeille', 'debug', '  Zigate '.$zgId.": Set 'ab::zgChan' to ".$chan);
+            }
 
             // 'cmd' DB updates
             foreach ($eqLogics as $eqLogic) {
@@ -698,9 +716,9 @@
                     else if (preg_match("/^0001-[0-9A-F]*-0020/", $cmdLogicId)) {
                         $cmdLogic->setConfiguration('calculValueOffset', null);
                         $trigOutOffset = $cmdLogic->getConfiguration('trigOutOffset', '');
-                        if ($trigOutOffset != '') {
-                            $trigOutOffset = $cmdLogic->setConfiguration('trigOutOffset', '#value#*100\/3');
-                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Updated trigOutOffset to '#value#*100\/3'");
+                        if (($trigOutOffset != '') && ($trigOutOffset != '#value#*100/3')) {
+                            $trigOutOffset = $cmdLogic->setConfiguration('trigOutOffset', '#value#*100/3');
+                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Updated trigOutOffset to '#value#*100/3'");
                             $saveCmd = true;
                         }
                     }
@@ -745,7 +763,7 @@
                 // Check last update from model
                 $updateTime = $eqLogic->getConfiguration('updatetime', "");
                 if ($updateTime != '') {
-                    if (strtotime($updateTime) > strtotime("2023-01-25 16:33:00"))
+                    if (strtotime($updateTime) > strtotime("2023-01-25 14:00:00"))
                         continue;
                 }
 

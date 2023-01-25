@@ -30,6 +30,9 @@
     list($eqNet, $eqAddr) = explode("/", $eqLogicId);
     $zgId = substr($eqNet, 7); // Extracting zigate number from network
     $zgType = config::byKey('ab::zgType'.$zgId, 'Abeille', '', 1); // USB, WIFI, PI, DIN
+    $zgChan = config::byKey('ab::zgChan'.$zgId, 'Abeille', 11); // Zigbee channel
+    $config = [];
+    $config['ab::zgChan'.$zgId] = $zgChan;
     $mainEP = $eqLogic->getConfiguration('mainEP', '01');
     $eqIeee = $eqLogic->getConfiguration('IEEE', '');
     $batteryType = $eqLogic->getConfiguration('battery_type', '');
@@ -37,7 +40,7 @@
 
     $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
     $eqZigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-    $eqSettings = $eqLogic->getConfiguration('ab::settings', []);
+    // $eqSettings = $eqLogic->getConfiguration('ab::settings', []);
 
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
@@ -47,7 +50,8 @@
     $abQueues = $GLOBALS['abQueues'];
     echo '<script>var js_queueXToCmd = '.$abQueues['xToCmd']['id'].';</script>'; // PHP to JS
     echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
-    sendVarToJS('js_eqSettings', $eqSettings);
+    // sendVarToJS('js_eqSettings', $eqSettings);
+    sendVarToJS('js_config', $config);
 
     /* Returns cmd ID identified by its Jeedom logical ID name */
     function getCmdIdByLogicId($eqId, $cmdLogicId) {

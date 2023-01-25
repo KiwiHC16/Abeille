@@ -49,7 +49,7 @@
         if ( ($device == $eqLogic->getLogicalId()) || ($device == "All") ) {
             list($dest, $address) = explode('/', $eqLogic->getLogicalId());
             if ( strlen($address) == 4 ) {
-                sendToCmd($queueId, PRIO_NORM, "Cmd".$dest."/".$address."/managementNetworkUpdateRequest", "");
+                sendToCmd($queueId, PRIO_NORM, "Cmd".$dest."/".$address."/mgmtNetworkUpdateReq", "");
                 sleep(5);
             }
         }

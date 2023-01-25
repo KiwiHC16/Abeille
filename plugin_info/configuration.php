@@ -186,6 +186,17 @@
         echo '</div>';
 
         echo '<div class="form-group">';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Canal Zigbee}} : </label>';
+            echo '<div class="col-lg-4">';
+                echo '<select id="idSelChan'.$zgId.'" class="configKey form-control" data-l1key="ab::zgChan'.$zgId.'" title="{{Canal Zigbee}}" disabled>';
+                    for ($i = 11; $i < 27; $i++) {
+                        echo '<option value='.$i.'>'.$i.'</option>';
+                    }
+                    echo '</select>';
+            echo '</div>';
+        echo '</div>';
+
+        echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Status : }}</label>';
             echo '<div class="col-lg-4">';
                 echo '<select id="idSelZgStatus'.$zgId.'" class="configKey form-control" data-l1key="ab::zgEnabled'.$zgId.'" onchange="statusChange('.$zgId.')" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';

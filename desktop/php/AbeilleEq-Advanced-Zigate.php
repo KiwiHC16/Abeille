@@ -81,21 +81,10 @@
             echo '<input type="text" id="idChannel" title="{{Canal actuel}}" value="'.getCmdValueByLogicId($eqId, 'Network-Channel').'" readonly>';
             addJsUpdateFunction($eqId, 'Network-Channel', 'idChannel', true);
         ?>
-            <!-- <input type="text" id="idChannelMask" placeholder="ex: 07FFF800" title="{{Masque des canaux autorisés (en hexa, 1 bit par canal, 800=canal 11, 07FFF800=tous les canaux de 11 à 26)}}" style="margin-left:10px; width:100px">
-            <a class="btn btn-warning" onclick="sendZigate('setChannelMask', '')">Modifier</a> -->
             <select id="idZgChan" style="width:80px; margin-left:4px" title="{{Canal Zigbee choisi}}">
                 <?php
-                if (isset($eqSettings['channel']))
-                    $chan = $eqSettings['channel'];
-                else
-                    $chan = 0; // Default = auto
-
-                if ($chan == 0)
-                    echo '<option value=0 selected>{{Auto}}</option>';
-                else
-                    echo '<option value=0>{{Auto}}</option>';
                 for ($i = 11; $i < 27; $i++) {
-                    if ($i == $chan)
+                    if ($i == $zgChan)
                         echo '<option value='.$i.' selected>'.$i.'</option>';
                     else
                         echo '<option value='.$i.'>'.$i.'</option>';

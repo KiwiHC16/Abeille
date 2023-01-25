@@ -78,7 +78,7 @@
 
         ajax::init();
 
-        // logDebug('Abeille.ajax.php: action='.init('action'));
+        logDebug('Abeille.ajax.php: action='.init('action'));
 
         /* For Wifi Zigate
         - check 'Addr:Port' via ping
@@ -559,6 +559,21 @@
             } else {
                 $eqLogic->setConfiguration('ab::settings', $settings);
                 $eqLogic->save();
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
+        // Change 'config' DB content based on given keys
+        if (init('action') == 'saveConfig') {
+            $status = 0;
+            $error = "";
+
+            $config = init('config');
+            $config = json_decode($config, true);
+
+            foreach ($config as $key => $value) {
+                config::save($key, $value, 'Abeille');
             }
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));

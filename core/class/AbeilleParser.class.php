@@ -2097,9 +2097,9 @@
 
             $sqn = substr($pl, 0, 2);
             $status = substr($pl, 2, 2);
-            $TotalTransmission = substr($pl, 4, 4);
-            $TransmFailures = substr($pl, 8, 4);
-            $ScannedChannels = substr($pl, 12, 8);
+            $ScannedChannels = AbeilleTools::reverseHex(substr($pl, 4, 8));
+            $TotalTransmission = AbeilleTools::reverseHex(substr($pl, 12, 4));
+            $TransmFailures = AbeilleTools::reverseHex(substr($pl, 16, 4));
             $ScannedChannelsCount = substr($pl, 20, 2);
 
             $m = '  Management network update response'
@@ -2109,10 +2109,10 @@
                .', TxFailures='.$TransmFailures
                .', ScannedChan='.$ScannedChannels
                .', ScannedChanCount='.$ScannedChannelsCount;
-            parserLog('debug', $net.', Type='.$m, "804A");
+            parserLog('debug', $m);
 
             if ($status != "00") {
-                parserLog('debug', '  Status Error ('.$status.') can not process the message.', "804A");
+                parserLog('debug', '  Status Error ('.$status.') can not process the message.');
                 return;
             }
 

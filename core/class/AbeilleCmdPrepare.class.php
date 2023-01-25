@@ -94,31 +94,6 @@
              * Zigbee ZDO commands
              */
 
-            // case "managementNetworkUpdateRequest":
-            //     $Command = array(
-            //         "managementNetworkUpdateRequest" => "1",
-            //         "priority" => $priority,
-            //         "dest" => $dest,
-            //         "address" => $address,
-            //     );
-            //     break;
-            // case "bindShort": // OBSOLETE: Use 'bind0030' instead
-            //     $fields = preg_split("/[=&]+/", $msg);
-            //     if (count($fields) > 1) {
-            //         $parameters = $this->proper_parse_str($msg);
-            //     }
-            //     $Command = array(
-            //                         "bindShort"                => "1",
-            //                         "priority"                 => $priority,
-            //                         "dest"                     => $dest,
-            //                         "address"                  => $address,
-            //                         "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
-            //                         "targetEndpoint"           => $parameters['targetEndpoint'],
-            //                         "clusterID"                => $parameters['ClusterId'],
-            //                         "destinationAddress"       => $parameters['reportToAddress'],
-            //                         "destinationEndpoint"      => "01",
-            //                         );
-            //     break;
             case "BindToGroup": // OBSOLETE: Use 'bind0030' instead
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {

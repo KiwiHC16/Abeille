@@ -267,10 +267,10 @@
             payload = 'mask='+mask;
             sendToZigate(topic, payload);
 
-            console.log("settings1=", js_eqSettings);
-            js_eqSettings.channel = chan;
-            console.log("settings2=", js_eqSettings);
-            saveSettings();
+            console.log("config=", js_config);
+            js_config['ab::zgChan'+js_zgId] = chan;
+            console.log("config2=", js_config);
+            saveConfig();
 
             topic = 'CmdAbeille'+js_zgId+'/0000/startZgNetwork';
             payload = '';
@@ -489,8 +489,17 @@
             topic = "Cmd"+logicalId+"_getIeeeAddress";
             payload = "";
         } else if (request == "mgmtNetworkUpdateReq") {
-            topic = "Cmd"+logicalId+"_managementNetworkUpdateRequest";
+            topic = "Cmd"+logicalId+"_mgmtNetworkUpdateReq";
+            scanChan = '';
+            scanDuration = '';
             payload = "";
+            if (scanChan != '')
+                payload += "scanChan="+scanChan;
+            if (scanDuration != '') {
+                if (payload != '')
+                    payload += "_"
+                payload += "scanDuration="+scanDuration;
+            }
         } else if (request == "leaveRequest") {
             topic = "Cmd"+logicalId+"_LeaveRequest";
             payload = "IEEE="+js_eqIeee;
@@ -666,17 +675,34 @@
     }
 
     /* eqLogic/configuration settings (ab::settings) update */
-    function saveSettings() {
-        console.log("saveSettings(): settings=", js_eqSettings);
-        console.log("  js_eqSettings type=", typeof(js_eqSettings));
+    // function saveSettings() {
+    //     console.log("saveSettings(): settings=", js_eqSettings);
+    //     console.log("  js_eqSettings type=", typeof(js_eqSettings));
+
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+    //         data: {
+    //             action: 'saveSettings',
+    //             eqId: js_eqId,
+    //             settings: JSON.stringify(js_eqSettings)
+    //         },
+    //         dataType: 'json',
+    //         global: false,
+    //         success: function (json_res) {
+    //         }
+    //     });
+    // }
+
+    function saveConfig() {
+        console.log("saveConfig(): config=", js_config);
 
         $.ajax({
             type: 'POST',
             url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
             data: {
-                action: 'saveSettings',
-                eqId: js_eqId,
-                settings: JSON.stringify(js_eqSettings)
+                action: 'saveConfig',
+                config: JSON.stringify(js_config)
             },
             dataType: 'json',
             global: false,
@@ -684,5 +710,4 @@
             }
         });
     }
-
 </script>

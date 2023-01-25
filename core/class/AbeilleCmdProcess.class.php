@@ -3051,10 +3051,10 @@
                     return;
                 }
 
-                // Zigbee command: Management Network Update request
+                // Zigbee command: Management Network Update request (Mgmt_NWK_Update_req, cluster 0038)
                 // Mandatory params: 'addr'
-                // Optional params:
-                else if ($cmdName == 'managementNetworkUpdateRequest') {
+                // Optional params: 'scanChan' (default='07FFF800'), 'scanDuration' (default='01')
+                else if ($cmdName == 'mgmtNetworkUpdateReq') {
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
@@ -3076,13 +3076,16 @@
                     $cmd                = "004A";
 
                     $addr               = $Command['addr'];
-                    $chanMask           = "07FFF800";
-                    $scanDuration       = "01";
+                    $scanChan           = isset($Command['scanChan']) ? $Command['scanChan'] : "07FFF800";
+                    // $chanMask           = "00008000"; // Chan 15
+                    $scanDuration       = isset($Command['scanDuration']) ? $Command['scanDuration'] : "01";
+                    // $scanDuration       = "FE"; // Channel change request
                     $scanCount          = "01";
                     $networkUpdateId    = "01";
-                    $networkManagerAddr = "0000";
+                    $networkManagerAddr = "0000"; // Useful if scanDuration==FF
 
-                    $data = $addr.$chanMask.$scanDuration.$scanCount.$networkUpdateId.$networkManagerAddr;
+                    cmdLog('debug', "    Using scanChan=".$scanChan.", scanDuration=".$scanDuration);
+                    $data = $addr.$scanChan.$scanDuration.$scanCount.$networkUpdateId.$networkManagerAddr;
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                     return;

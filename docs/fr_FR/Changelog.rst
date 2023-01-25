@@ -4,6 +4,10 @@ ChangeLog
 - Heiman water leakage sensor: Mise-à-jour modèle (2527).
 - Xiaomi water leak sensor: Mise-à-jour modèle.
 - Interne: Parser: Nettoyage support Xiaomi pour 'magnet.aq2', 'weather'.
+- Interne: Parser: Corrections decode 'Mgmt_NWK_Update_notify'.
+- Interne: DB config: Ajout 'ab::zgChan' pour sauver choix de canal Zigbee.
+- Page de config: Canal Zigbee affiché.
+- Interne: Sauvegarde choix du canal Zigbee (11 par défaut).
 
 230124-BETA-1
 -------------

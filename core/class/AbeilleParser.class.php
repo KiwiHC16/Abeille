@@ -5793,19 +5793,20 @@
                 // Xiaomi capteur Inondation
                 else if (($attrId == 'FF01') && ($attrSize == "0022")) {
                     // Assuming DataType=42
-                    parserLog('debug', '  Xiaomi proprietary (Capteur d\'inondation)');
+                    parserLog('debug', '  Xiaomi proprietary (Water leak sensor) => Handled by decode8002');
+                    return;
 
-                    // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
-                    // For info until activation
+                    // // For info until activation
+                    // xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
+                    // // For info until activation
 
-                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    $etat = substr($payload, 88, 2);
-                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Etat='.$etat);
-                    $attrReportN = [
-                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                    ];
+                    // $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    // $etat = substr($payload, 88, 2);
+                    // parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Etat='.$etat);
+                    // $attrReportN = [
+                    //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
+                    //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
+                    // ];
                 }
 
                 // Xiaomi temp/humidity/pressure square sensor

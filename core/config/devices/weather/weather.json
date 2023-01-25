@@ -32,9 +32,6 @@
             "Humidity": {
                 "use": "inf_zbAttr-0405-MeasuredValue",
                 "isVisible": 1
-            },
-            "Specific": {
-                "use": "Xiaomi-ff01"
             }
         },
         "xiaomi": {

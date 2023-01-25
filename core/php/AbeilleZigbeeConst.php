@@ -657,9 +657,9 @@
         "0500" => array(
             "name" => "IAS Zone",
             "attributes" => array(
-                "0000" => array( "name" => "ZoneState", "access" => "R" ),
-                "0001" => array( "name" => "ZoneType", "access" => "R" ),
-                "0002" => array( "name" => "ZoneStatus", "access" => "R" ),
+                "0000" => array( "name" => "ZoneState", "access" => "R", "dataType" => 0x30 ), // enum8
+                "0001" => array( "name" => "ZoneType", "access" => "R", "dataType" => 0x31 ), // enum16
+                "0002" => array( "name" => "ZoneStatus", "access" => "R", "dataType" => 0x19 ), // map16
 
                 // Zone Settings Attribute Set
                 "0010" => array( "name" => "IAS_CIE_Address", "access" => "RW", "dataType" => 0xf0 ), // EUI64=IEEE address

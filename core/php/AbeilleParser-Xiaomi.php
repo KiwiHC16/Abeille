@@ -158,46 +158,27 @@
             // Legacy decoding
             //
 
+            // No longer required as soon as 'xiaomi' JSON field is there
+
             // Xiaomi door sensor V2
-            if (($attrId == "FF01") && ($attrSize == 29)) {
-                // Assuming $dataType == "42"
+            // if (($attrId == "FF01") && ($attrSize == 29)) {
+            //     // Assuming $dataType == "42"
 
-                parserLog('debug', '  Xiaomi proprietary (Door Sensor)');
-                $attrReportN = [];
-                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
-                continue;
-            }
-
-            // Xiaomi leak sensor
-            // TO BE COMPLETED !!
-            else if (($attrId == 'FF01') && ($attrSize == 34 /* "0022" */)) {
-                // Assuming DataType=42
-                parserLog('debug', '  Xiaomi proprietary (Water leak sensor)');
-
-                // For info until activation
-                $unused = [];
-                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $unused, $toMon);
-                // For info until activation
-
-                // $voltage = hexdec(substr($pl2, 24 + 2 * 2 + 2, 2).substr($pl2, 24 + 2 * 2, 2));
-                // $etat = substr($pl2, 88, 2);
-                // parserLog('debug', '  Volt='.$voltage.', Etat='.$etat);
-                // $attrReportN = [
-                //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                // ];
-                continue;
-            }
+            //     parserLog('debug', '  Xiaomi proprietary (Door Sensor)');
+            //     $attrReportN = [];
+            //     xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
+            //     continue;
+            // }
 
             // Xiaomi temp/humidity/pressure square sensor
-            else if (($attrId == 'FF01') && ($attrSize == 37)) {
-                // Assuming $dataType == "42"
+            // else if (($attrId == 'FF01') && ($attrSize == 37)) {
+            //     // Assuming $dataType == "42"
 
-                parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
-                $attrReportN = [];
-                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
-                continue;
-            }
+            //     parserLog('debug', '  Xiaomi proprietary (Temp square sensor)');
+            //     $attrReportN = [];
+            //     xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
+            //     continue;
+            // }
 
             //
             // New decoding

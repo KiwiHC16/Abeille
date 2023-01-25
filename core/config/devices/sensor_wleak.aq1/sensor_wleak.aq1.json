@@ -1,6 +1,7 @@
 {
     "sensor_wleak.aq1": {
         "manufacturer": "Xiaomi",
+        "type": "Xiaomi Aqara water leak sensor",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -10,22 +11,30 @@
         "category": {
             "security": "1"
         },
-        "type": "Xiaomi Inondation Aqara",
         "commands": {
             "Etat": {
                 "use": "etatFlood"
             },
             "Battery-Volt": {
-                "use": "inf_zbAttr-0001-BatteryVolt"
+                "use": "inf_batteryVoltAndPercent-285-300"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
-            "Specific": {
-                "use": "Xiaomi-ff01"
-            },
             "SWBuildID": {
                 "use": "inf_zbAttr-0000-SWBuildID"
+            }
+        },
+        "xiaomi": {
+            "fromDevice": {
+                "0000-FF01": {
+                    "01-21": {
+                        "func": "numberDiv",
+                        "div": 1000,
+                        "info": "0001-01-0020",
+                        "comment": "Battery volt"
+                    }
+                }
             }
         }
     }

@@ -2,6 +2,8 @@ ChangeLog
 =========
 
 - Heiman water leakage sensor: Mise-à-jour modèle (2527).
+- Xiaomi water leak sensor: Mise-à-jour modèle.
+- Interne: Parser: Nettoyage support Xiaomi pour 'magnet.aq2', 'weather'.
 
 230124-BETA-1
 -------------

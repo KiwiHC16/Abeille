@@ -30,6 +30,11 @@
                 "params": "ep=01&clustId=0001",
                 "execAtCreation": "yes"
             },
+            "Get Battery-Percent": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0001&attrId=0021",
+                "execAtCreation": "yes"
+            },
             "Identify": {
                 "use": "Identify"
             },

@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230126-BETA-1
+230126-BETA-2
 -------------
 
 - Heiman water leakage sensor: Mise-à-jour modèle (2527).

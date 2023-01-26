@@ -11,6 +11,7 @@ ChangeLog
 - Interne: Parser: Correction crash Xiaomi.
 - Modele Xiaomi 'sensor_swith' revu.
 - Interne: AbeilleCmd: timeout passé de 3 à 4sec avant de déclarer cmd perdue.
+- Interne: Correction mise-à-jour (au lieu de reset) équipements au démarrage.
 
 230124-BETA-1
 -------------

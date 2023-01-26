@@ -785,7 +785,7 @@
                     'jsonLocation' => 'Abeille',
                     'ieee' => $eqLogic->getConfiguration('IEEE'),
                 );
-                Abeille::createDevice("reset", $dev);
+                Abeille::createDevice("update", $dev);
                 log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Updating Jeedom equipment from model");
             }
 

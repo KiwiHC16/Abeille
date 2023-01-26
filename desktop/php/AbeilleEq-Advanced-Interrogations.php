@@ -76,11 +76,13 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="Management Network Update Request">Mgmt network update request</label>
+    <label class="col-sm-3 control-label" title="Mgmt_NWK_Update_req">Mgmt network update request</label>
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-warning" onclick="interrogate(\'mgmtNetworkUpdateReq\', \''.$eqId.'\')">{{Interroger}}</a>';
         ?>
+        <input id="idMgmtNwkUpdReqSC" title="{{Scanned channels mask (ex: all=07FFF800)}}" />
+        <input id="idMgmtNwkUpdReqSD" title="{{Scan duration (01-05, FE=channel change, or FF)}}" />
     </div>
 </div>
 <div class="form-group">

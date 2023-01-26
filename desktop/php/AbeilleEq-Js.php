@@ -256,24 +256,46 @@
         //     payload = 'mask='+mask;
         //     break;
         case 'setChannel':
-            var chan = $("#idZgChan").val();
-            if (chan == 0)
-                mask = 0x7fff800; // All channels = auto
-            else
-                mask = 1 << chan;
-            mask = mask.toString(16);
-            console.log("  Channel=" + chan + " => mask=" + mask);
-            topic = 'CmdAbeille'+js_zgId+'/0000/setZgChannelMask';
-            payload = 'mask='+mask;
-            sendToZigate(topic, payload);
+            msg = '{{Vous êtes sur le point de changer le canal Zigbee de la Zigate}} <b>'+js_zgId+'</b>';
+            msg += '{{<br>Les équipements sur secteur devraient suivre mais pas forcément tous ceux sur batterie.}}'
+            msg += '{{<br>Dans ce cas vous pourriez avoir à refaire une inclusion.}}'
+            msg += '{{<br><br>Etes vous sur de vouloir continuer ?}}'
+            bootbox.confirm(msg, function (result) {
+                if (result) {
+                    var chan = $("#idZgChan").val();
+                    if (chan == 0)
+                        mask = 0x7fff800; // All channels = auto
+                    else
+                        mask = 1 << chan;
+                    mask = mask.toString(16);
+                    // Note: missing leading 0 completed in AbeilleCmdProcess.
+                    // while (mask.length < 8) { // Adding missing leading 0
+                    //     mask = "0" + mask;
+                    // }
+                    console.log("  Channel=" + chan + " => mask=" + mask);
 
-            console.log("config=", js_config);
-            js_config['ab::zgChan'+js_zgId] = chan;
-            console.log("config2=", js_config);
-            saveConfig();
+                    // Request ALL devices to change channel
+                    // But WARNING.. those who are not RxONWhenIdle may not receive it.
+                    topic = 'CmdAbeille'+js_zgId+'/FFFF/mgmtNetworkUpdateReq';
+                    payload = 'scanChan='+mask+'&scanDuration=FE';
+                    sendToZigate(topic, payload);
 
-            topic = 'CmdAbeille'+js_zgId+'/0000/startZgNetwork';
-            payload = '';
+                    topic = 'CmdAbeille'+js_zgId+'/0000/setZgChannelMask';
+                    payload = 'mask='+mask;
+                    sendToZigate(topic, payload);
+
+                    console.log("config=", js_config);
+                    js_config['ab::zgChan'+js_zgId] = chan;
+                    console.log("config2=", js_config);
+                    saveConfig();
+
+                    topic = 'CmdAbeille'+js_zgId+'/0000/startZgNetwork';
+                    payload = '';
+                    sendToZigate(topic, payload);
+                }
+                return;
+            });
+
             break;
         case "getTXPower":
             topic = 'CmdAbeille'+js_zgId+'/0000/getZgTxPower';
@@ -490,8 +512,8 @@
             payload = "";
         } else if (request == "mgmtNetworkUpdateReq") {
             topic = "Cmd"+logicalId+"_mgmtNetworkUpdateReq";
-            scanChan = '';
-            scanDuration = '';
+            scanChan = document.getElementById("idMgmtNwkUpdReqSC").value;
+            scanDuration = document.getElementById("idMgmtNwkUpdReqSD").value;
             payload = "";
             if (scanChan != '')
                 payload += "scanChan="+scanChan;

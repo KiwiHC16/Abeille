@@ -2748,7 +2748,7 @@
 
                     $mask = $Command['mask'];
                     if (!ctype_xdigit($mask)) {
-                        cmdLog('error', '    Invalid mask. Not hexa ! ('.$mask.')');
+                        cmdLog('error', '    Invalid channel mask. Not hexa ! ('.$mask.')');
                         return;
                     }
                     $mask = str_pad($mask, 8, '0', STR_PAD_LEFT); // Add any missing zeros
@@ -3053,7 +3053,7 @@
 
                 // Zigbee command: Management Network Update request (Mgmt_NWK_Update_req, cluster 0038)
                 // Mandatory params: 'addr'
-                // Optional params: 'scanChan' (default='07FFF800'), 'scanDuration' (default='01')
+                // Optional params: 'scanChan' (hex string, default='07FFF800'), 'scanDuration' (hex string, default='01')
                 else if ($cmdName == 'mgmtNetworkUpdateReq') {
                     $required = ['addr'];
                     if (!$this->checkRequiredParams($required, $Command))
@@ -3076,15 +3076,18 @@
                     $cmd                = "004A";
 
                     $addr               = $Command['addr'];
-                    $scanChan           = isset($Command['scanChan']) ? $Command['scanChan'] : "07FFF800";
-                    // $chanMask           = "00008000"; // Chan 15
+                    $scanChan           = isset($Command['scanChan']) ? hexdec($Command['scanChan']) : 0x7FFF800;
+                    $scanChan           = sprintf("%08X", $scanChan);
                     $scanDuration       = isset($Command['scanDuration']) ? $Command['scanDuration'] : "01";
-                    // $scanDuration       = "FE"; // Channel change request
-                    $scanCount          = "01";
+                    $scanDuration       = strtoupper($scanDuration);
+                    if ($scanDuration == "FE") // Channel change request
+                        $scanCount      = "00";
+                    else
+                        $scanCount      = "01";
                     $networkUpdateId    = "01";
-                    $networkManagerAddr = "0000"; // Useful if scanDuration==FF
+                    $networkManagerAddr = "0000"; // Useful only if scanDuration==FF
 
-                    cmdLog('debug', "    Using scanChan=".$scanChan.", scanDuration=".$scanDuration);
+                    cmdLog('debug', "    Using addr=".$addr.", scanChan=".$scanChan.", scanDuration=".$scanDuration.', scanCount='.$scanCount);
                     $data = $addr.$scanChan.$scanDuration.$scanCount.$networkUpdateId.$networkManagerAddr;
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);

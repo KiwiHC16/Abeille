@@ -250,9 +250,9 @@
             if (!isset($GLOBALS['eqList'][$net]))
                 $GLOBALS['eqList'][$net] = [];
             if (!isset($GLOBALS['eqList'][$net][$addr]))
-                $GLOBALS['eqList'][$net][$addr] = [];
+                newDevice($net, $addr);
 
-            $eq = &$GLOBALS['eqList'][$net][$addr];
+            $eq = &$GLOBALS['eqList'][$net][$addr]; // Get EQ by ref
             if (!isset($eq['sqnList']))
                 $eq['sqnList'] = [];
 

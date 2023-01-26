@@ -194,6 +194,28 @@
         }
     }
 
+    // Create a new device in internal devices list => $GLOBALS['eqList'][$net][$addr]
+    function newDevice($net, $addr) {
+        // This is a new device
+        $GLOBALS['eqList'][$net][$addr] = array(
+            'ieee' => $ieee,
+            'macCapa' => '',
+            'rxOnWhenIdle' => null,
+            'rejoin' => '', // Rejoin info from device announce
+            'status' => 'identifying', // identifying, configuring, discovering, idle
+            'time' => time(),
+            'endPoints' => null,
+            'mainEp' => '',
+            'manufId' => null, // null(undef)/false(unsupported)/'xx'
+            'modelId' => null, // null(undef)/false(unsupported)/'xx'
+            'location' => null, // null(undef)/false(unsupported)/'xx'
+            'jsonId' => '',
+            'jsonLocation' => '',
+            // Optional 'tuyaEF00'
+            // Optional 'notStandard-0400-0000'
+        );
+    } // End newDevice()
+
     /* Check if device is already known to parser.
         If not, add entry with given net/addr/ieee.
         Returns: device entry by reference */
@@ -256,23 +278,7 @@
         }
 
         // This is a new device
-        $GLOBALS['eqList'][$net][$addr] = array(
-            'ieee' => $ieee,
-            'macCapa' => '',
-            'rxOnWhenIdle' => null,
-            'rejoin' => '', // Rejoin info from device announce
-            'status' => 'identifying', // identifying, configuring, discovering, idle
-            'time' => time(),
-            'endPoints' => null,
-            'mainEp' => '',
-            'manufId' => null, // null(undef)/false(unsupported)/'xx'
-            'modelId' => null, // null(undef)/false(unsupported)/'xx'
-            'location' => null, // null(undef)/false(unsupported)/'xx'
-            'jsonId' => '',
-            'jsonLocation' => '',
-            // Optional 'tuyaEF00'
-            // Optional 'notStandard-0400-0000'
-        );
+        newDevice($net, $addr);
         $new = true; // This is a new device
 
         // Informing Abeille to create a new (but empty) device.
@@ -287,7 +293,7 @@
         }
 
         return $GLOBALS['eqList'][$net][$addr];
-    }
+    } // End getDevice()
 
     // Reread Jeedom useful infos on DB update
     // Note: A delay is required prior to this if DB has to be updated (createDevice() in Abeille.class)

@@ -91,7 +91,7 @@
                 }
                 ?>
             </select>
-            <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('setChannel', '')">{{Appliquer}}</a>
+            <a class="btn btn-danger" style="margin-left:4px" onclick="sendZigate('setChannel', '')">{{Appliquer}}</a>
         </div>
     </div>
 </div>

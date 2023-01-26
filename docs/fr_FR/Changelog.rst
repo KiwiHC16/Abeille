@@ -15,6 +15,9 @@ ChangeLog
 - Modele Xiaomi 'sensor_swith' revu.
 - Interne: AbeilleCmd: timeout passé de 3 à 4sec avant de déclarer cmd perdue.
 - Interne: Correction mise-à-jour (au lieu de reset) équipements au démarrage.
+- Interne: AbeilleCmd: Correction setChannel.
+- Interne: Changement de canal Zigbee revu (broadcast mgmtNwkUpdateRequest).
+- Interne: Parser: Correction erreurs PHP.
 
 230124-BETA-1
 -------------

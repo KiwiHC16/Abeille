@@ -750,20 +750,30 @@
             $obsolete = ['AbeilleDebug.log'];
             removeLogs($obsolete);
 
-            // Models reset
-            // Some Xiaomi devices are now managed thru 'xiaomi' structure in model.
-            $toReload = ['sensor_magnet.aq2', 'sensor_motion.aq2', 'weather', 'motion.ac02', 'switch.n0agl1', 'sensor_wleak.aq1'];
+            // Force some equipments update if model has changed.
+            // Some Xiaomi devices are now managed thru 'xiaomi' JSON model structure.
+            $toReload = array(
+                'sensor_magnet.aq2' => '2023-01-25 14:00:00',
+                'sensor_motion.aq2' => '2023-01-25 14:00:00',
+                'weather' => '2023-01-25 14:00:00',
+                'motion.ac02' => '2023-01-25 14:00:00',
+                'switch.n0agl1' => '2023-01-25 14:00:00',
+                'sensor_wleak.aq1' => '2023-01-25 14:00:00',
+                'sensor_switch' => '2023-01-26 11:18:00',
+            );
             foreach ($eqLogics as $eqLogic) {
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
                 if (!isset($eqModel['id']))
-                    continue;
-                if (!in_array($eqModel['id'], $toReload))
+                    continue; // Unexpected or too old
+                if (!array_key_exists($eqModel['id'], $toReload))
                     continue;
 
                 // Check last update from model
+                $modelTime = $toReload[$eqModel['id']];
                 $updateTime = $eqLogic->getConfiguration('updatetime', "");
+                log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": modelTime=".$modelTime.", updateTime=".$updateTime);
                 if ($updateTime != '') {
-                    if (strtotime($updateTime) > strtotime("2023-01-25 14:00:00"))
+                    if (strtotime($updateTime) > strtotime($modelTime))
                         continue;
                 }
 

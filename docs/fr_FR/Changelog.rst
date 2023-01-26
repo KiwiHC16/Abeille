@@ -8,6 +8,8 @@ ChangeLog
 - Interne: DB config: Ajout 'ab::zgChan' pour sauver choix de canal Zigbee.
 - Page de config: Canal Zigbee affiché.
 - Interne: Sauvegarde choix du canal Zigbee (11 par défaut).
+- Interne: Parser: Correction crash Xiaomi.
+- Modele Xiaomi 'sensor_swith' revu.
 
 230124-BETA-1
 -------------

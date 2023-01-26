@@ -5921,22 +5921,23 @@
                 // Xiaomi Presence Infrarouge IR V1 / Bouton V1 Rond
                 else if (($attrId == "FF02")) {
                     // Assuming $dataType == "42"
-                    parserLog("debug","  Xiaomi proprietary (IR/button/door V1)");
+                    parserLog("debug","  Xiaomi proprietary (IR/button/door V1) => Handled by decode8002");
+                    return;
 
-                    // $attrReportN = [];
-                    // xiaomiDecodeTags($dest, $srcAddr, $Attribut, $attrReportN);
-                    // WARNING: This attribut sounds malformed (note this manufCode=1234)
-                    // It looks like first byte must be skipped
-                    // Original 4C/structure data type is transformed into 42
-                    xiaomiDecodeTags($dest, $srcAddr, substr($Attribut, 2));
+                    // // $attrReportN = [];
+                    // // xiaomiDecodeTags($dest, $srcAddr, $Attribut, $attrReportN);
+                    // // WARNING: This attribut sounds malformed (note this manufCode=1234)
+                    // // It looks like first byte must be skipped
+                    // // Original 4C/structure data type is transformed into 42
+                    // xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, substr($Attribut, 2));
 
-                    // Legacy code to be removed
-                    $voltage = hexdec(substr($payload, 24 +  8, 2).substr($payload, 24 + 6, 2));
-                    parserLog('debug', '  Legacy: Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
-                    $attrReportN = [
-                        // array( "name" => 'Battery-Volt', "value" => $voltage ),
-                        array( "name" => '0001-01-0021', "value" => $this->volt2pourcent($voltage) ),
-                    ];
+                    // // Legacy code to be removed
+                    // $voltage = hexdec(substr($payload, 24 +  8, 2).substr($payload, 24 + 6, 2));
+                    // parserLog('debug', '  Legacy: Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage));
+                    // $attrReportN = [
+                    //     // array( "name" => 'Battery-Volt', "value" => $voltage ),
+                    //     array( "name" => '0001-01-0021', "value" => $this->volt2pourcent($voltage) ),
+                    // ];
                 }
 
                 // Xiaomi Capteur Presence

@@ -10,6 +10,7 @@ ChangeLog
 - Interne: Sauvegarde choix du canal Zigbee (11 par défaut).
 - Interne: Parser: Correction crash Xiaomi.
 - Modele Xiaomi 'sensor_swith' revu.
+- Interne: AbeilleCmd: timeout passé de 3 à 4sec avant de déclarer cmd perdue.
 
 230124-BETA-1
 -------------

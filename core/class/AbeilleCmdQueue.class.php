@@ -773,8 +773,9 @@
                 $cmd = $zg['cmdQueue'][$sentPri][0];
                 if ($cmd['status'] == '')
                     continue; // Not sent yet
-                if ($cmd['sentTime'] + 3 > time())
-                    continue; // 3sec timeout not reached yet
+                // Timeout: At least 4sec to let Zigate do its job but is that enough ?
+                if ($cmd['sentTime'] + 4 > time())
+                    continue; // 4sec timeout not reached yet
 
                 cmdLog("debug", "zigateAckCheck(): WARNING: Zigate".$zgId." cmd ".$cmd['cmd']." TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
                 $this->removeFirstCmdFromQueue($sentPri); // Removing blocked cmd

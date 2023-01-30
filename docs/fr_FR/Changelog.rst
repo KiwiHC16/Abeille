@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230130-BETA-1
+230130-BETA-2
 -------------
 
 - Interne: Parser: Ajout infos debug pour support Xiaomi.

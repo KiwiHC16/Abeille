@@ -2498,7 +2498,7 @@
                     $routingTable = array();
                     for ($i = 0; $i < $tableCount; $i++) {
 
-                        $addressDest = substr($pl, 0, 4);
+                        $addressDest = AbeilleTools::reverseHex(substr($pl, 0, 4));
                         $flags = substr($pl, 4, 2);
                         $flags = hexdec($flags);
                         $statusRouting = $flags >> 5;
@@ -2506,7 +2506,7 @@
                         $statusDecoded = $statusDecode[$statusRouting];
                         if ($manyToOne)
                             $status .= " + Many To One";
-                        $nextHop = substr($pl, 6, 4);
+                        $nextHop = AbeilleTools::reverseHex(substr($pl, 6, 4));
 
                         parserLog('debug', '  Addr='.$addressDest.', Status='.$statusRouting.'/'.$statusDecoded.', NextHop='.$nextHop, "8002");
 

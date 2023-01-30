@@ -8,6 +8,7 @@ ChangeLog
 - Modeles: Mise-à-jour 'sensor_cube' + 'sensor_cube.aqgl01'.
 - Reseau: Mise-à-jour graphique des liens.
 - Perte formule au redémarrage: Correction (2540).
+- Interne: Parser: Correction décodage 'routing table response'.
 
 230126-BETA-2
 -------------

@@ -6,6 +6,8 @@
         "comment": "Zigbee ModelIdentifier can be 66666 or TH01",
         "manufacturer": "Sonoff",
         "model": "SNZB-02",
+        "type": "Sonoff temp and humidity sensor",
+        "genericType": "Environment",
         "timeout": "140",
         "configuration": {
             "mainEP": "01",
@@ -15,7 +17,6 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Sonoff temp & humidity sensor",
         "commands": {
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"

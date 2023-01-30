@@ -9,18 +9,22 @@
     }
 
     /* Add network display & refresh buttons for all active zigates */
-    function displayButtons($nbOfZigates, $what="linksTable") {
+    function displayNetworks($nbOfZigates, $what="linksTable", $mode="") {
         echo 'Réseau :';
-        for ($i = 1; $i <= $nbOfZigates; $i++) {
-            if (config::byKey('ab::zgEnabled'.$i, 'Abeille', 'N') != 'Y')
+        if ($mode == "column")
+            echo '<br>';
+        for ($zgId = 1; $zgId <= $nbOfZigates; $zgId++) {
+            if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
                 continue; // Disabled
 
             if ($what == "linksTable")
-                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksTable('.$i.')">Abeille'.$i.'</a>';
+                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksTable('.$zgId.')">Abeille'.$zgId.'</a>';
             else // "linksGraph"
-                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksGraph('.$i.')">Abeille'.$i.'</a>';
-            echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLQICache('.$i.', \''.$what.'\')"><i class="fas fa-sync"></i></a>';
+                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksGraph('.$zgId.')">Abeille'.$zgId.'</a>';
+            echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLQICache('.$zgId.', \''.$what.'\')"><i class="fas fa-sync"></i></a>';
             echo '&nbsp;&nbsp;';
+            if ($mode == "column")
+                echo '<br>';
         }
     }
 
@@ -158,7 +162,7 @@
                     <br />
                     <div id="div_routingTable">
                         <?php
-                            displayButtons(maxNbOfZigate, "linksTable");
+                            displayNetworks(maxNbOfZigate, "linksTable");
                         ?>
                         <br />
                         <hr>
@@ -209,7 +213,7 @@
 
                     <div class="col-lg-2" style="height:inherit;overflow-y:auto;overflow-x:hidden;">
                         <?php
-                            displayButtons(maxNbOfZigate, "linksGraph");
+                            displayNetworks(maxNbOfZigate, "linksGraph", "column");
                         ?>
                         <table class="table table-bordered table-condensed"
                         style="width: 150px;position:fixed;margin-top : 25px;">
@@ -243,7 +247,7 @@
                         Actuel :<span id="idCurrentNetworkLG" style="width:150px; font-weight:bold">-</span>, collecte du <span id="idCurrentDateLG" style="width:150px; font-weight:bold">-</span>
                         <br />
                         Afficher :<label class="checkbox-inline"><input type="checkbox" id="idShowObject" checked/>Objet parent</label>
-                        <div id="idLinksGraphTabSVG">
+                        <div id="idLinksGraphTabSVG" style="height:inherit">
                         </div>
                     </div>
                 </div>

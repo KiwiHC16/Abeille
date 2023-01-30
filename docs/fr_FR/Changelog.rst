@@ -3,6 +3,7 @@ ChangeLog
 
 - Interne: Parser: Ajout infos debug pour support Xiaomi.
 - Modeles: Mise-à-jour 'sensor_cube' + 'sensor_cube.aqgl01'.
+- Reseau: Mise-à-jour graphique des liens.
 
 230126-BETA-2
 -------------

@@ -681,11 +681,19 @@
                     $cmdLogicId = $cmdLogic->getLogicalId();
                     $cmdTopic = $cmdLogic->getConfiguration('topic', '');
 
-                    // Removing 'calculValueOffset' for cmds '0400-XX-0000' (illuminance)
                     // Removing 'calculValueOffset' for cmds '0402-XX-0000' (temperature)
                     // Removing 'calculValueOffset' for cmds '0405-XX-0000' (humidity)
-                    if (preg_match("/^0400-[0-9A-F]*-0000/", $cmdLogicId) || preg_match("/^0402-[0-9A-F]*-0000/", $cmdLogicId) ||
+                    if (preg_match("/^0402-[0-9A-F]*-0000/", $cmdLogicId) ||
                         preg_match("/^0405-[0-9A-F]*-0000/", $cmdLogicId)) {
+                        $confVal = $cmdLogic->getConfiguration('calculValueOffset', '');
+                        if (($confVal == "#value#\/100") || ($confVal == "#value#/100")) {
+                            $cmdLogic->setConfiguration('calculValueOffset', null);
+                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Removed 'calculValueOffset'");
+                            $saveCmd = true;
+                        }
+                    }
+                    // Removing 'calculValueOffset' for cmds '0400-XX-0000' (illuminance)
+                    if (preg_match("/^0400-[0-9A-F]*-0000/", $cmdLogicId)) {
                         $confVal = $cmdLogic->getConfiguration('calculValueOffset', 'nada');
                         if ($confVal != 'nada') {
                             $cmdLogic->setConfiguration('calculValueOffset', null);

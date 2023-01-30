@@ -622,6 +622,7 @@
                     "sen_ill_mgl01" => "Xiaomi-LightSensor-1",
                     "XiaomiInfraRouge" => "Xiaomi-MotionSensor",
                     "XiaomiInfraRouge2" => "Xiaomi-MotionSensor",
+                    "sensor_cube" => "Xiaomi-Cube",
 
                     "LXX60-CS27LX1.0" => "Zemismart-LXX60-CS27LX1.0",
                 );
@@ -760,6 +761,8 @@
                 'switch.n0agl1' => '2023-01-25 14:00:00',
                 'sensor_wleak.aq1' => '2023-01-25 14:00:00',
                 'sensor_switch' => '2023-01-26 11:18:00',
+                "sensor_cube" => '2023-01-30 12:38:00',
+                "sensor_cube.aqgl01" => '2023-01-30 12:38:00',
             );
             foreach ($eqLogics as $eqLogic) {
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);

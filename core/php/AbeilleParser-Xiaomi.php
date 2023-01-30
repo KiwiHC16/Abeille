@@ -224,6 +224,8 @@
             $m = "  UNHANDLED ".$clustId."-".$attrId."-".$attrType.": ".$attrData;
             parserLog('debug', $m);
             $toMon[] = $m;
+            if (($attrType == "41") || ($attrType == "42")) // Even if unhandled, displaying debug infos
+                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
         }
     }
 ?>

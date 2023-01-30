@@ -1,15 +1,16 @@
 {
     "sensor_cube": {
+        "manufacturer": "Xiaomi",
+        "type": "Xiaomi Cube",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "sensor_cube",
+            "icon": "Xiaomi-Cube",
             "batteryType": "1x3V CR2450"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Xiaomi Cube",
         "commands": {
             "Mouvement": {
                 "use": "cubeV1_1"
@@ -26,11 +27,20 @@
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
-            "Specific": {
-                "use": "Xiaomi-ff01"
-            },
             "SWBuildID": {
                 "use": "inf_zbAttr-0000-SWBuildID"
+            }
+        },
+        "xiaomi": {
+            "fromDevice": {
+                "0000-FF01": {
+                    "01-21": {
+                        "func": "numberDiv",
+                        "div": 1000,
+                        "info": "0001-01-0020",
+                        "comment": "Battery-Volt"
+                    }
+                }
             }
         }
     }

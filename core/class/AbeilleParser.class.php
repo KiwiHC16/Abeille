@@ -5735,7 +5735,7 @@
 
                 // Xiaomi door sensor V2
                 else if (($attrId == "FF01") && ($attrSize == "001D")) {
-                    parserLog('debug', '  Xiaomi proprietary (Door Sensor) => Handled by decode8002()');
+                    parserLog('debug', '  Xiaomi proprietary (Door Sensor) => Handled by xiaomi section');
                     return;
                 }
 
@@ -5773,7 +5773,7 @@
                 // 0B 21 2900 - Param 0xB 11dec - uint16 - 0x0029 (41dec Lux ?) /82
                 else if (($attrId == 'FF01') && ($attrSize == "0021")) {
                     // Assuming $dataType == "42"
-                    parserLog('debug', '  Xiaomi proprietary (Motion/illuminance) => Handled by decode8002');
+                    parserLog('debug', '  Xiaomi proprietary (Motion/illuminance) => Handled by xiaomi section');
                     return;
 
                     // // For info until activation
@@ -5793,7 +5793,7 @@
                 // Xiaomi capteur Inondation
                 else if (($attrId == 'FF01') && ($attrSize == "0022")) {
                     // Assuming DataType=42
-                    parserLog('debug', '  Xiaomi proprietary (Water leak sensor) => Handled by decode8002');
+                    parserLog('debug', '  Xiaomi proprietary (Water leak sensor) => Handled by xiaomi section');
                     return;
 
                     // // For info until activation
@@ -5811,7 +5811,7 @@
 
                 // Xiaomi temp/humidity/pressure square sensor
                 else if (($attrId == 'FF01') && ($attrSize == "0025")) {
-                    parserLog('debug', '  Xiaomi proprietary (Temp square sensor) => Handled by decode8002');
+                    parserLog('debug', '  Xiaomi proprietary (Temp square sensor) => Handled by xiaomi section');
                     return;
                 }
 
@@ -5851,18 +5851,19 @@
                 // Xiaomi Cube
                 // Xiaomi capteur Inondation
                 else if (($attrId == 'FF01') && ($attrSize == "002A")) {
-                    parserLog('debug', '  Xiaomi proprietary (Cube)');
+                    parserLog('debug', '  Xiaomi proprietary (Cube) => Handled by xiaomi section');
+                    return;
 
-                    // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
-                    // For info until activation
+                    // // For info until activation
+                    // xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
+                    // // For info until activation
 
-                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent($voltage));
-                    $attrReportN = [
-                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                    ];
+                    // $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    // parserLog('debug', '  Voltage=' .$voltage.', Pourcent='.$this->volt2pourcent($voltage));
+                    // $attrReportN = [
+                    //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
+                    //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
+                    // ];
                 }
 
                 // Xiaomi Vibration
@@ -5921,7 +5922,7 @@
                 // Xiaomi Presence Infrarouge IR V1 / Bouton V1 Rond
                 else if (($attrId == "FF02")) {
                     // Assuming $dataType == "42"
-                    parserLog("debug","  Xiaomi proprietary (IR/button/door V1) => Handled by decode8002");
+                    parserLog("debug","  Xiaomi proprietary (IR/button/door V1) => Handled by xiaomi section");
                     return;
 
                     // // $attrReportN = [];

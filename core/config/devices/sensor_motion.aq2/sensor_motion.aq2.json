@@ -2,7 +2,7 @@
     "sensor_motion.aq2": {
         "manufacturer": "Xiaomi",
         "model": "RTCGQ11LM",
-        "type": "Xiaomi Aqara motion & illuminance sensor",
+        "type": "Xiaomi Aqara motion and illuminance sensor",
         "genericType": "Environment",
         "timeout": "60",
         "configuration": {

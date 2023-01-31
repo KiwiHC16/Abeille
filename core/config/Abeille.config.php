@@ -13,6 +13,7 @@
     $abQueues = array();
     $abQueues["xToParser"] = array( "id" => 0x336, "max" => 2048 );
     $abQueues["parserToLQI"] = array( "id" => 0xE1, "max" => 2048 );
+    $abQueues["parserToRoutes"] = array( "id" => 0xE2, "max" => 2048 );
     $abQueues["parserToCli"] = array( "id" => 0x2D4, "max" => 1024 );
     $abQueues["parserToCmdAck"] = array( "id" => 0x3E7, "max" => 512 ); // Parser to cmd for 8000/8012/8702 statuses
     $abQueues["xToCmd"] = array( "id" => 0x4BC, "max" => 512 ); // AbeilleCmd inputs

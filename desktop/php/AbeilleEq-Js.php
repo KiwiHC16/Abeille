@@ -489,7 +489,7 @@
         logicalId = "Abeille"+js_zgId+"_"+js_eqAddr;
         if (request == "getRoutingTable") {
             topic = "Cmd"+logicalId+"_getRoutingTable";
-            payload = "address="+js_eqAddr;
+            payload = "";
         } else if (request == "getBindingTable") {
             topic = "Cmd"+logicalId+"_getBindingTable";
             payload = "address="+js_eqAddr;

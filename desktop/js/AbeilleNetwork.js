@@ -50,8 +50,8 @@ $("#nodeTo")
 
 /* Launch AbeilleLQI.php to collect network informations.
    Progress is displayed in 'AlertDiv' */
-function refreshLQICache(zgId, page) {
-    console.log("refreshLQICache(zgId=" + zgId + ", page=" + page + ")");
+function refreshLqiTable(zgId, page) {
+    console.log("refreshLqiTable(zgId=" + zgId + ", page=" + page + ")");
 
     /* Collect status displayed every 1sec */
     setTimeout(function () {
@@ -62,8 +62,8 @@ function refreshLQICache(zgId, page) {
         url: "/plugins/Abeille/core/php/AbeilleLQI.php?zigate=" + zgId,
         async: true,
         error: function (jqXHR, status, error) {
-            //console.log("refreshLQICache error status: " + status);
-            //console.log("refreshLQICache error msg: " + error);
+            //console.log("refreshLqiTable error status: " + status);
+            //console.log("refreshLqiTable error msg: " + error);
             if (page == "linksTable") $("#idLinksTable tbody").empty();
             else $("#idLinksTable tbody").empty();
             $("#div_networkZigbeeAlert").showAlert({
@@ -75,8 +75,8 @@ function refreshLQICache(zgId, page) {
             }, 10000);
         },
         success: function (data, status, jqhr) {
-            //console.log("refreshLQICache success status: " + status);
-            //console.log("refreshLQICache success msg: " + data);
+            //console.log("refreshLqiTable success status: " + status);
+            //console.log("refreshLqiTable success msg: " + data);
             // php file checks for write rights
             console.log("AbeilleLQI.php output=" + data);
             if (data.indexOf("successfully") >= 0) {
@@ -98,6 +98,20 @@ function refreshLQICache(zgId, page) {
     });
 }
 
+function refreshRoutes(device) {
+    console.log("refreshRoutes(" + device + ")");
+    // $.ajax({
+    //     type: "POST",
+    //     url:
+    //         "/plugins/Abeille/core/ajax/AbeilleRoutes.ajax.php?device=" +
+    //         device,
+    // });
+    $.ajax({
+        type: "POST",
+        url: "/plugins/Abeille/core/php/AbeilleRoutes.php",
+    });
+}
+
 function refreshBruit(Device) {
     console.log("refreshBruit start");
     $.ajax({
@@ -106,60 +120,51 @@ function refreshBruit(Device) {
     console.log("refreshBruit end");
 }
 
-function refreshRoutes(device) {
-    console.log("refreshRoutes(" + device + ")");
-    $.ajax({
-        type: "POST",
-        url:
-            "/plugins/Abeille/core/ajax/AbeilleRoutes.ajax.php?device=" +
-            device,
-    });
-}
-
-function getAbeilleLog(_autoUpdate, _log) {
-    $.ajax({
-        type: "POST",
-        url: "core/ajax/log.ajax.php",
-        data: {
-            action: "get",
-            log: _log,
-        },
-        dataType: "json",
-        global: false,
-        error: function (request, status, error) {
-            setTimeout(function () {
-                getAbeilleLog(_autoUpdate, _log);
-            }, 1000);
-        },
-        success: function (data) {
-            if (data.state != "ok") {
-                setTimeout(function () {
-                    getAbeilleLog(_autoUpdate, _log);
-                }, 1000);
-                return;
-            }
-            if ($.isArray(data.result)) {
-                var aLog = data.result;
-                //console.log(aLog.length);
-                //console.log(aLog);
-                log = aLog.filter(function (val) {
-                    return val.toLowerCase().indexOf("lqi") > -1;
-                });
-                //console.log('last log LQI: ' + log.reverse()[0]);
-                //log = data.result[data.result.length-1];
-                $("#div_networkZigbeeAlert").showAlert({
-                    message: log.reverse()[0],
-                    level: "success",
-                });
-            }
-            if (init(_autoUpdate, 0) == 1) {
-                setTimeout(function () {
-                    getAbeilleLog(_autoUpdate, _log);
-                }, 1000);
-            }
-        },
-    });
-}
+// Tcharp38: Seems unused
+// function getAbeilleLog(_autoUpdate, _log) {
+//     $.ajax({
+//         type: "POST",
+//         url: "core/ajax/log.ajax.php",
+//         data: {
+//             action: "get",
+//             log: _log,
+//         },
+//         dataType: "json",
+//         global: false,
+//         error: function (request, status, error) {
+//             setTimeout(function () {
+//                 getAbeilleLog(_autoUpdate, _log);
+//             }, 1000);
+//         },
+//         success: function (data) {
+//             if (data.state != "ok") {
+//                 setTimeout(function () {
+//                     getAbeilleLog(_autoUpdate, _log);
+//                 }, 1000);
+//                 return;
+//             }
+//             if ($.isArray(data.result)) {
+//                 var aLog = data.result;
+//                 //console.log(aLog.length);
+//                 //console.log(aLog);
+//                 log = aLog.filter(function (val) {
+//                     return val.toLowerCase().indexOf("lqi") > -1;
+//                 });
+//                 //console.log('last log LQI: ' + log.reverse()[0]);
+//                 //log = data.result[data.result.length-1];
+//                 $("#div_networkZigbeeAlert").showAlert({
+//                     message: log.reverse()[0],
+//                     level: "success",
+//                 });
+//             }
+//             if (init(_autoUpdate, 0) == 1) {
+//                 setTimeout(function () {
+//                     getAbeilleLog(_autoUpdate, _log);
+//                 }, 1000);
+//             }
+//         },
+//     });
+// }
 
 /* Read & display lock file content until "done" found */
 function trackLQICollectStatus(_autoUpdate, zgId) {

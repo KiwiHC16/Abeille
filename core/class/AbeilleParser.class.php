@@ -124,6 +124,7 @@
             $this->queueXToCmd          = msg_get_queue($abQueues["xToCmd"]["id"]);
             $this->queueParserToCmdAck  = msg_get_queue($abQueues["parserToCmdAck"]["id"]);
             $this->queueParserToLQI     = msg_get_queue($abQueues["parserToLQI"]["id"]);
+            $this->queueParserToRoutes  = msg_get_queue($abQueues["parserToRoutes"]["id"]);
         }
 
         /* Check NPDU status */
@@ -182,13 +183,30 @@
                 'startIdx' => $startIdx,
                 'nList' => $nList
             );
-
-            /* Message size control. If too big it would block queue forever */
             $msgJson = json_encode($msg);
             if (msg_send($this->queueParserToLQI, 1, $msgJson, false, false, $errCode) == true)
                 return true;
 
             parserLog("error", "msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$errCode.")");
+            return false;
+        }
+
+        /* Send message to 'AbeilleRoutes'.
+           Returns: true=ok, false=ERROR */
+        function msgToRoutingCollector($srcAddr, $tableEntries, $tableCount, $startIdx, $table) {
+            $msg = array(
+                'type' => 'routingTable',
+                'srcAddr' => $srcAddr,
+                'tableEntries' => $tableEntries,
+                'tableListCount' => $tableCount,
+                'startIdx' => $startIdx,
+                'table' => $table
+            );
+            $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+            if (msg_send($this->queueParserToRoutes, 1, $msgJson, false, false, $errCode) == true)
+                return true;
+
+            parserLog("error", "msgToRoutingCollector(): Impossible d'envoyer le msg vers AbeilleRoutes (err ".$errCode.")");
             return false;
         }
 
@@ -2091,6 +2109,77 @@
             }
         } // End decode8002_MgmtLqiRsp()
 
+        /* Called from decode8002() to decode "Routing table response" (Mgmt_Rtg_rsp) message */
+        function decode8002_MgmtRtgRsp($net, $srcAddr, $pl, &$toMon) {
+            // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
+            // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
+            // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
+            $statusDecode = array(
+                0x00 => "Active",
+                0x01 => "Discovery_Underway",
+                0x02 => "Discovery_Failed",
+                0x03 => "Inactive",
+                0x04 => "Validation_Underway", // Got that if interrogate the Zigate
+                0x05 => "Reserved",
+                0x06 => "Reserved",
+                0x07 => "Reserved",
+                );
+
+            $sqn            = substr($pl, 0, 2);
+            $status         = substr($pl, 2, 2);
+            $tableEntries   = hexdec(substr($pl, 4, 2));
+            $startIdx       = hexdec(substr($pl, 6, 2));
+            $tableListCount = hexdec(substr($pl, 8, 2));
+
+            $m = '  Routing table response'
+                    .', SQN='.$sqn
+                    .', Status='.$status
+                    .', TableEntries='.$tableEntries
+                    .', StartIdx='.$startIdx
+                    .', TableListCount='.$tableListCount;
+            parserLog('debug', $m);
+            $toMon[] = $m;
+
+            // Duplicated message ?
+            if ($this->isDuplicated($net, $srcAddr, $sqn))
+                return;
+
+            $pl = substr($pl, 10);
+            $routingTable = array();
+            for ($i = 0; $i < $tableListCount; $i++) {
+
+                $destAddr = AbeilleTools::reverseHex(substr($pl, 0, 4));
+                $flags = hexdec(substr($pl, 4, 2));
+                $statusRouting = $flags >> 5;
+                $manyToOne = ($flags >> 3) & 1;
+                $statusDecoded = $statusDecode[$statusRouting];
+                if ($manyToOne)
+                    $status .= " + Many To One";
+                $nextHop = AbeilleTools::reverseHex(substr($pl, 6, 4));
+                $pl = substr($pl, 10);
+
+                $m = '  Addr='.$destAddr.', Status='.$statusRouting.'/'.$statusDecoded.', NextHop='.$nextHop;
+                parserLog('debug', $m);
+                $toMon[] = $m;
+
+                if (($statusRouting == 0) && ($nextHop != $destAddr)) {
+                    $routingTable[$destAddr] = $nextHop;
+                }
+            }
+            $this->msgToRoutingCollector($srcAddr, $tableEntries, $tableListCount, $startIdx, $routingTable);
+
+            // if ( $srcAddr == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
+
+            // // TODO: Move it outside parser. This slows down excution accessing DB.
+            // $abeille = Abeille::byLogicalId($dest.'/'.$srcAddr, 'Abeille');
+            // if ( $abeille ) {
+            //     $abeille->setConfiguration('routingTable', json_encode($routingTable) );
+            //     $abeille->save();
+            // }  else {
+            //     parserLog('debug', '  abeille not found !!!', "8002");
+            // }
+        } // End decode8002_MgmtRtgRsp()
+
         /* Called from decode8002() to decode "Mgmt_NWK_Update_notify" (cluster=8038))
            previously handled by 804A. */
         function decode8002_MgmtNwkUpdateNotify($net, $srcAddr, $pl, &$toMon) {
@@ -2461,71 +2550,7 @@
 
                 // Routing Table Response (Mgmt_Rtg_rsp)
                 else if ($clustId == "8032") {
-
-                    // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
-                    // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
-                    // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
-                    $statusDecode = array(
-                        0x00 => "Active",
-                        0x01 => "Discovery_Underway",
-                        0x02 => "Discovery_Failed",
-                        0x03 => "Inactive",
-                        0x04 => "Validation_Underway", // Got that if interrogate the Zigate
-                        0x05 => "Reserved",
-                        0x06 => "Reserved",
-                        0x07 => "Reserved",
-                        );
-
-                    $sqn            = substr($pl, 0, 2);
-                    $status         = substr($pl, 2, 2);
-                    $tableEntries   = hexdec(substr($pl, 4, 2));
-                    $index          = hexdec(substr($pl, 6, 2));
-                    $tableCount     = hexdec(substr($pl, 8, 2));
-
-                    parserLog('debug', '  Routing table response'
-                            .', SQN='.$sqn
-                            .', Status='.$status
-                            .', TableEntries='.$tableEntries
-                            .', Index='.$index
-                            .', TableCount='.$tableCount,
-                                "8002");
-
-                    // Duplicated message ?
-                    if ($this->isDuplicated($dest, $srcAddr, $sqn))
-                        return;
-
-                    $pl = substr($pl, 10);
-                    $routingTable = array();
-                    for ($i = 0; $i < $tableCount; $i++) {
-
-                        $addressDest = AbeilleTools::reverseHex(substr($pl, 0, 4));
-                        $flags = substr($pl, 4, 2);
-                        $flags = hexdec($flags);
-                        $statusRouting = $flags >> 5;
-                        $manyToOne = ($flags >> 3) & 1;
-                        $statusDecoded = $statusDecode[$statusRouting];
-                        if ($manyToOne)
-                            $status .= " + Many To One";
-                        $nextHop = AbeilleTools::reverseHex(substr($pl, 6, 4));
-
-                        parserLog('debug', '  Addr='.$addressDest.', Status='.$statusRouting.'/'.$statusDecoded.', NextHop='.$nextHop, "8002");
-
-                        if ($statusRouting == 0) {
-                            $routingTable[] = array( $addressDest => $nextHop );
-                        }
-                        $pl = substr($pl, 10);
-                    }
-
-                    // if ( $srcAddr == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
-
-                    // TODO: Move it outside parser. This slows down excution accessing DB.
-                    $abeille = Abeille::byLogicalId($dest.'/'.$srcAddr, 'Abeille');
-                    if ( $abeille ) {
-                        $abeille->setConfiguration('routingTable', json_encode($routingTable) );
-                        $abeille->save();
-                    }  else {
-                        parserLog('debug', '  abeille not found !!!', "8002");
-                    }
+                    $this->decode8002_MgmtRtgRsp($dest, $srcAddr, $pl, $toMon);
                 }
 
                 // Binding Table Response (Mgmt_Bind_rsp)

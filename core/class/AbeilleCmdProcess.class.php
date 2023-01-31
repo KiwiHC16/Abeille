@@ -2788,6 +2788,8 @@
 
                 // Zigbee command: Mgmt_Rtg_req
                 // Request routing table. To Zigbee router or coordinator.
+                // Mandatory params: 'addr'
+                // Optional params: 'startIdx' (hex byte, default='00')
                 else if ($cmdName == 'getRoutingTable') {
                     /* Checking that mandatory infos are there */
                     $required = ['addr'];
@@ -2811,30 +2813,26 @@
                     // <data: auint8_t>
                     // APS Part <= data
 
-                    $addrMode            = "02";
-                    $addr     = $Command['addr'];
-                    $srcEp         = "00";
-                    $dstEp    = "00";
-                    $profId              = "0000";
-                    $clustId              = "0032";
-                    $secMode           = "28";
-                    $radius                 = "30";
-                    // $dataLength             = "16";
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "00";
+                    $dstEp      = "00";
+                    $profId     = "0000";
+                    $clustId    = "0032";
+                    $secMode    = "28";
+                    $radius     = "30";
 
-                    $SQN = "00";  // I don't know why I need this but if I don't put it then I'm missing some data: C'est ls SQN que je met à 00 car de toute facon je ne sais pas comment le calculer.
-                    $startIndex = "00";
+                    $sqn        = $this->genSqn();
+                    $startIdx   = isset($Command['startIdx']) ? $Command['startIdx'] : "00";
 
-                    $data2 = $SQN.$startIndex;
-                    $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+                    $data2 = $sqn.$startIdx;
+                    $dataLength = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
-
                     $data = $data1.$data2;
 
-                    // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                    // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                     return;
-                }
+                } // End $cmdName == 'getRoutingTable'
 
                 // Zigbee command: Get binding table (Mgmt_Bind_req)
                 // Mandatory params: 'address'

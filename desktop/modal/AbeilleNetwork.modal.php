@@ -21,7 +21,7 @@
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksTable('.$zgId.')">Abeille'.$zgId.'</a>';
             else // "linksGraph"
                 echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksGraph('.$zgId.')">Abeille'.$zgId.'</a>';
-            echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLQICache('.$zgId.', \''.$what.'\')"><i class="fas fa-sync"></i></a>';
+            echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLqiTable('.$zgId.', \''.$what.'\')"><i class="fas fa-sync"></i></a>';
             echo '&nbsp;&nbsp;';
             if ($mode == "column")
                 echo '<br>';
@@ -409,7 +409,7 @@
     <?php
         // for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
         //     echo '$(".btn.displayLinksTable'.$i.'")       .off("click").on("click", function () { displayLinksTable('.$i.'); });'."\n";
-        //     echo '$(".btn.refreshNetworkCache'.$i.'").off("click").on("click", function () { refreshLQICache('.$i.'); displayLinksTable('.$i.'); });'."\n";
+        //     echo '$(".btn.refreshNetworkCache'.$i.'").off("click").on("click", function () { refreshLqiTable('.$i.'); displayLinksTable('.$i.'); });'."\n";
         // }
 
         $eqLogics = Abeille::byType('Abeille');

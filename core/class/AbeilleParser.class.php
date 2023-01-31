@@ -2111,25 +2111,15 @@
 
         /* Called from decode8002() to decode "Routing table response" (Mgmt_Rtg_rsp) message */
         function decode8002_MgmtRtgRsp($net, $srcAddr, $pl, &$toMon) {
-            // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
-            // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
-            // Il faudrait faire un decodage bit a bit mais pour l instant je prends les plus courant et on verra si besoin.
-            $statusDecode = array(
-                0x00 => "Active",
-                0x01 => "Discovery_Underway",
-                0x02 => "Discovery_Failed",
-                0x03 => "Inactive",
-                0x04 => "Validation_Underway", // Got that if interrogate the Zigate
-                0x05 => "Reserved",
-                0x06 => "Reserved",
-                0x07 => "Reserved",
-                );
-
             $sqn            = substr($pl, 0, 2);
             $status         = substr($pl, 2, 2);
             $tableEntries   = hexdec(substr($pl, 4, 2));
             $startIdx       = hexdec(substr($pl, 6, 2));
             $tableListCount = hexdec(substr($pl, 8, 2));
+
+            // Duplicated message ?
+            if ($this->isDuplicated($net, $srcAddr, $sqn))
+                return;
 
             $m = '  Routing table response'
                     .', SQN='.$sqn
@@ -2140,25 +2130,42 @@
             parserLog('debug', $m);
             $toMon[] = $m;
 
-            // Duplicated message ?
-            if ($this->isDuplicated($net, $srcAddr, $sqn))
+            if ($status != "00") {
+                $m = "  Status != 00 => Decode canceled";
+                parserLog('debug', $m);
+                $toMon[] = $m;
                 return;
+            }
+
+            // ZigBee Specification: 2.4.4.3.3   Mgmt_Rtg_rsp
+            // 3 bits (status) + 1 bit memory constrained concentrator + 1 bit many-to-one + 1 bit Route Record required + 2 bit reserved
+            $statusDecode = array(
+                0x00 => "Active",
+                0x01 => "Discovery_Underway",
+                0x02 => "Discovery_Failed",
+                0x03 => "Inactive",
+                0x04 => "Validation_Underway", // Got that if interrogate the Zigate
+                0x05 => "Reserved",
+                0x06 => "Reserved",
+                0x07 => "Reserved",
+            );
 
             $pl = substr($pl, 10);
             $routingTable = array();
             for ($i = 0; $i < $tableListCount; $i++) {
+// parserLog('debug', 'pl='.$pl);
 
                 $destAddr = AbeilleTools::reverseHex(substr($pl, 0, 4));
                 $flags = hexdec(substr($pl, 4, 2));
-                $statusRouting = $flags >> 5;
-                $manyToOne = ($flags >> 3) & 1;
+                $statusRouting = ($flags >> 0) & 0x7;
+                $manyToOne = ($flags >> 4) & 1;
                 $statusDecoded = $statusDecode[$statusRouting];
                 if ($manyToOne)
                     $status .= " + Many To One";
                 $nextHop = AbeilleTools::reverseHex(substr($pl, 6, 4));
                 $pl = substr($pl, 10);
 
-                $m = '  Addr='.$destAddr.', Status='.$statusRouting.'/'.$statusDecoded.', NextHop='.$nextHop;
+                $m = '  Addr='.$destAddr.', Status='.$status.'/'.$statusDecoded.', NextHop='.$nextHop;
                 parserLog('debug', $m);
                 $toMon[] = $m;
 

@@ -136,7 +136,7 @@
         $routers[$routerIdx]['tableIndex'] = hexdec($startIdx) + hexdec($tableListCount);
 
         $routerLogicId = $routers[$routerIdx]["logicId"]; // Ex: 'Abeille1/A3B4'
-        list($netName, $addr) = explode('/', $NE);
+        list($netName, $addr) = explode('/', $routerLogicId);
 
         //
         // 'AbeilleRoutes-AbeilleX.json' format

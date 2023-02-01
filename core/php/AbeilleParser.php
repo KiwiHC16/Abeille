@@ -223,8 +223,11 @@
         if (!isset($GLOBALS['eqList'][$net]))
             $GLOBALS['eqList'][$net] = [];
 
-        if (isset($GLOBALS['eqList'][$net][$addr]))
+        if (isset($GLOBALS['eqList'][$net][$addr])) {
+            if (($GLOBALS['eqList'][$net][$addr]['ieee'] === null) && ($ieee !== null))
+                $GLOBALS['eqList'][$net][$addr]['ieee'] = $ieee;
             return $GLOBALS['eqList'][$net][$addr];
+        }
 
             // Not found. If IEEE is given let's check if short addr has changed.
         if ($ieee) {

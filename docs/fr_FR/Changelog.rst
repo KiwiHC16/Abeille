@@ -6,6 +6,7 @@ ChangeLog
 - Interne: Parser: Amélioration affichage cmds cluster.
 - Interne: Zigbee const: Amélioration support cluster 0501.
 - Interne: Parser: Amélioration getDevice() is IEEE pas défini.
+- Interne: Parser: Amélioration 'cleanModelId()' pour caracteres speciaux.
 
 230130-BETA-2
 -------------

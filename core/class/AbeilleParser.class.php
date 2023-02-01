@@ -1088,12 +1088,14 @@
             return true;
         }
 
-        /* Clean modelIdentifier, removing some unwanted chars */
+        /* Clean modelIdentifier, removing some unwanted chars
+           Ex: 53494E2D342D322D3230002000000014000000CCCB0020B1020100900000003D = 'SIN-4-2-20        ÌË  ±    ='
+         */
         function cleanModelId($modelId) {
             // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
             if ($modelId == "lumi.sens") $modelId = "lumi.sensor_ht";
 
-            if ($modelId == "TRADFRI Signal Repeater") $modelId = "TRADFRI signal repeater";
+            // if ($modelId == "TRADFRI Signal Repeater") $modelId = "TRADFRI signal repeater";
 
             if ($modelId == "lumi.sensor_swit") $modelId = "lumi.sensor_switch.aq3";
 
@@ -1104,18 +1106,31 @@
                 $modelId = substr($modelId, 5); // Remove leading "lumi." case insensitive
 
             //remove all space in names for easier filename handling
-            $modelId = str_replace(' ', '', $modelId);
+            // $modelId = str_replace(' ', '', $modelId);
 
             // On enleve le / comme par exemple le nom des equipements Legrand
-            $modelId = str_replace('/', '', $modelId);
+            // $modelId = str_replace('/', '', $modelId);
 
             // On enleve le * Ampoules GU10 Philips #1778
-            $modelId = str_replace('*', '', $modelId);
+            // $modelId = str_replace('*', '', $modelId);
 
             // On enleve les 0x00 comme par exemple le nom des equipements Legrand
-            $modelId = str_replace("\0", '', $modelId);
+            // $modelId = str_replace("\0", '', $modelId);
 
-            return $modelId;
+            $m = '';
+            for ($i = $j = 0; $i < strlen($modelId); $i++) {
+                $in = substr($modelId, $i, 1);
+                if ($in <= ' ')
+                    continue; // Ignore any control char & space
+                if ($in == '/')
+                    continue; // Ignore '/'
+                if ($in == '*')
+                    continue; // Ignore '*'
+                // if ($in == '.')
+                //     continue; // Ignore '.'
+                $m = $m.$in;
+            }
+            return $m;
         }
 
         /* Clean manufacturer ID, removing some unwanted chars.

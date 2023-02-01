@@ -2161,11 +2161,11 @@
                 $manyToOne = ($flags >> 4) & 1;
                 $statusDecoded = $statusDecode[$statusRouting];
                 if ($manyToOne)
-                    $status .= " + Many To One";
+                    $statusDecoded .= " + Many To One";
                 $nextHop = AbeilleTools::reverseHex(substr($pl, 6, 4));
                 $pl = substr($pl, 10);
 
-                $m = '  Addr='.$destAddr.', Status='.$status.'/'.$statusDecoded.', NextHop='.$nextHop;
+                $m = '  DestAddr='.$destAddr.', Status='.$statusRouting.'/'.$statusDecoded.', NextHop='.$nextHop;
                 parserLog('debug', $m);
                 $toMon[] = $m;
 

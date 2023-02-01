@@ -247,17 +247,35 @@
     // $objKnownFromAbeille = array();
     foreach ($eqLogics as $eqLogic) {
         $eqLogicId = $eqLogic->getLogicalId();
-        $knownFromJeedom[$eqLogicId]['name'] = $eqLogic->getName();
-        $eqHName = $eqLogic->getHumanName();
-        $knownFromJeedom[$eqLogicId]['hName'] = $eqHName;
+        list($net, $addr) = explode('/', $eqLogicId);
+        $zgId2 = substr($net, 7); // AbeilleX => X
+        if (($zgId2 < $zgStart) || ($zgId2 > $zgEnd))
+            continue; // Not in the scope
+
+        $newEq = [];
+        $newEq['name'] = $eqLogic->getName();
+        $newEq['hName'] = $eqLogic->getHumanName();
         $eqParent = $eqLogic->getObject();
         if (!is_object($eqParent))
-            $objName = "";
+            $eqPName = "";
         else
-            $objName = $eqParent->getName();
-        $knownFromJeedom[$eqLogicId]['parent'] = $objName;
-        $knownFromJeedom[$eqLogicId]['ieee'] = $eqLogic->getConfiguration('IEEE', '');
-        $knownFromJeedom[$eqLogicId]['icon'] = $eqLogic->getConfiguration('ab::icon', 'defaultUnknown');
+            $eqPName = $eqParent->getName();
+        $newEq['parent'] = $eqPName;
+        $newEq['ieee'] = $eqLogic->getConfiguration('IEEE', '');
+        $newEq['icon'] = $eqLogic->getConfiguration('ab::icon', 'defaultUnknown');
+
+        // Router ?
+        if ($addr == '0000')
+            newRouter("Abeille".$zgId2."/0000");
+        else {
+            // TODO: Where to take info it is a ROUTER ????
+            // $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            // if (isset($zigbee['macCapa'])) {
+            //     $mc = hexdec($zigbee['macCapa']);
+            // }
+        }
+
+        $knownFromJeedom[$eqLogicId] = $newEq;
         logMessage("", "  ".$eqHName." (".$eqLogicId.")");
     }
 
@@ -307,7 +325,7 @@
             'collectTime' => time(), // Time here is start of collect
             'routers' => array()
         );
-        newRouter("Abeille".$zgId."/0000");
+        // newRouter("Abeille".$zgId."/0000");
 
         $done = 0;
         $routerIdx = 0; // Index of eq to interrogate

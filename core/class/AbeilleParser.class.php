@@ -3958,10 +3958,10 @@
 
                         if ($cmd == "00") { // Zone status change notification
                             // Not handled here
-                            $zoneStatus = AbeilleTools::reverseHex(substr($msg, 0, 4));
-                            $extStatus = substr($msg, 4, 2);
-                            $zoneId = substr($msg, 6, 2);
-                            $delay = AbeilleTools::reverseHex(substr($msg, 8, 4));
+                            $zoneStatus = AbeilleTools::reverseHex(substr($pl, 0, 4));
+                            $extStatus = substr($pl, 4, 2);
+                            $zoneId = substr($pl, 6, 2);
+                            $delay = AbeilleTools::reverseHex(substr($pl, 8, 4));
                             $m = '  Zone status change notification: ZoneStatus='.$zoneStatus.', ExtStatus='.$extStatus.', ZoneId='.$zoneId.', Delay='.$delay;
 
                             // Legacy: Sending 0500-#EP#-0000 with zoneStatus as value
@@ -3977,9 +3977,9 @@
                             );
                             // TODO: Disable decode8401()
                         } else if ($cmd == "01") { // Zone enroll request
-                            $zoneType = AbeilleTools::reverseHex(substr($msg, 0, 4));
-                            $manufCode = AbeilleTools::reverseHex(substr($msg, 4, 4));
-                            $m = '  Zone enroll request: ZoneType='.$zoneType.', ManufCode='.$manufCode;
+                            $zoneType = AbeilleTools::reverseHex(substr($pl, 0, 4));
+                            $manufCode = AbeilleTools::reverseHex(substr($pl, 4, 4));
+                            $m = '  Zone enroll request: ZoneType='.$zoneType.', ManufCode='.$manufCode.' => Answering ZoneId=12';
                             // TODO: Where to get Zone ID from ? Defaulting to '12' for now.
                             $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0500", 'ep='.$srcEp.'&cmd=00&zoneId=12');
                             // $attrReportN[] = array(
@@ -4055,6 +4055,9 @@
                                 $msg = substr($msg, 14);
                                 parserLog('debug', '  - Addr='.$netAddr2.', EP='.$epId2.', ProfId='.$profId2.', DevId='.$decId2);
                             }
+                        } else {
+                            parserLog("debug", "  Ignored 1000/Touchlink cluster specific command ".$cmd, "8002");
+                            return;
                         }
                     } // End '$clustId == "1000"'
 

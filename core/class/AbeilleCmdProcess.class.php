@@ -2799,19 +2799,18 @@
                     // Msg Type = 0x0530
                     $cmd = "0530";
 
-                    // <address mode: uint8_t>              -> 1
-                    // <target short address: uint16_t>     -> 2
-                    // <source endpoint: uint8_t>           -> 1
-                    // <destination endpoint: uint8_t>      -> 1
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
 
-                    // <profile ID: uint16_t>               -> 2
-                    // <cluster ID: uint16_t>               -> 2
+                    // <profile ID: uint16_t>
+                    // <cluster ID: uint16_t>
 
-                    // <security mode: uint8_t>             -> 1
-                    // <radius: uint8_t>                    -> 1
-                    // <data length: uint8_t>               -> 1  (22 -> 0x16)
+                    // <security mode: uint8_t>
+                    // <radius: uint8_t>
+                    // <data length: uint8_t>
                     // <data: auint8_t>
-                    // APS Part <= data
 
                     $addrMode   = "02";
                     $addr       = $Command['addr'];

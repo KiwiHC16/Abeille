@@ -63,13 +63,14 @@
         global $queueParserToRoutes, $queueParserToRoutesMax;
         global $routers;
         global $knownFromJeedom;
-        // global $objKnownFromAbeille;
 
         $timeout = 10; // 10sec (useful when there is unknown eq interrogation during LQI collect)
         for ($t = 0; $t < $timeout; ) {
             // logMessage("", "  Queue stat=".json_encode(msg_stat_queue($queueParserToRoutes)));
             $msgMax = $queueParserToRoutesMax;
             if (msg_receive($queueParserToRoutes, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode) == true) {
+                logMessage("", "  msgJson=".$msgJson);
+
                 /* Message received. Let's check it is the expected one */
                 $msg = json_decode($msgJson);
                 if ($msg->type != "routingTable") {
@@ -240,6 +241,15 @@
         $zgEnd = $zgId;
     }
 
+    $queueXToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
+    $queueParserToRoutes = msg_get_queue($abQueues["parserToRoutes"]["id"]);
+    if ($queueParserToRoutes == false) {
+        logMessage("", "ERROR: Can't get queue 'ParserToRoutes'.");
+        exit;
+    }
+    $queueParserToRoutesMax = $abQueues["parserToRoutes"]["max"];
+    msgFromParserFlush(); // Flush the queue if not empty
+
     // Collecting known equipments list
     logMessage("", "Jeedom known equipments:");
     $eqLogics = eqLogic::byType('Abeille');
@@ -276,13 +286,8 @@
         }
 
         $knownFromJeedom[$eqLogicId] = $newEq;
-        logMessage("", "  ".$eqHName." (".$eqLogicId.")");
+        logMessage("", "  ".$newEq['hName']." (".$eqLogicId.")");
     }
-
-    $queueXToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
-    $queueParserToRoutes = msg_get_queue($abQueues["parserToRoutes"]["id"]);
-    $queueParserToRoutesMax = $abQueues["parserToRoutes"]["max"];
-    msgFromParserFlush(); // Flush the queue if not empty
 
     $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
 

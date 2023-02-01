@@ -3,6 +3,8 @@ ChangeLog
 
 - Interne: AbeilleCmd: Mise-à-jour 'getRoutingTable'.
 - Interne: Collecte des tables de routage revue.
+- Interne: Parser: Amélioration affichage cmds cluster.
+- Interne: Zigbee const: Amélioration support cluster 0501.
 
 230130-BETA-2
 -------------

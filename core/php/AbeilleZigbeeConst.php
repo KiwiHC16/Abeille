@@ -256,7 +256,7 @@
                 "0014" => array( "name" => "DisableLocalConfig", "access" => "RW", "dataType" => 0x18 ), // map8
                 "4000" => array( "name" => "SWBuildID", "access" => "R", "dataType" => 0x42 ), // string
             ),
-            "commands" => array(
+            "commandsR" => array(
                 "00" => array( "name" => "Reset to factory defaults" ),
             ),
         ),
@@ -276,7 +276,7 @@
             "attributes" => array(
                 "0000" => array( "name" => "IdentifyTime", "access" => "RW" ),
             ),
-            "commands" => array(
+            "commandsR" => array(
                 "00" => array( "name" => "Identify" ),
                 "01" => array( "name" => "IdentifyQuery" ),
                 "40" => array( "name" => "TriggerEffect" ),
@@ -287,7 +287,7 @@
             "attributes" => array(
                 "0000" => array( "name" => "NameSupport", "access" => "R" ),
             ),
-            "commands" => array(
+            "commandsR" => array(
                 "00" => array( "name" => "AddGroup" ),
                 "01" => array( "name" => "ViewGroup" ),
                 "02" => array( "name" => "GetGroupMembership" ),
@@ -306,7 +306,7 @@
                 "0004" => array( "name" => "NameSupport", "access" => "R" ),
                 "0005" => array( "name" => "LastConfiguredBy", "access" => "R" ),
             ),
-            "commands" => array(
+            "commandsR" => array(
                 "00" => array( "name" => "AddScene" ),
                 "01" => array( "name" => "ViewScene" ),
                 "02" => array( "name" => "RemoveScene" ),
@@ -327,7 +327,7 @@
                 "4001" => array( "name" => "OnTime", "access" => "RW", "dataType" => 0x21 ),
                 "4002" => array( "name" => "OffWaitTime", "access" => "RW", "dataType" => 0x21 ),
             ),
-            "commands" => array(
+            "commandsR" => array(
                 "00" => array( "name" => "Off" ),
                 "01" => array( "name" => "On" ),
                 "02" => array( "name" => "Toggle" ),
@@ -355,7 +355,7 @@
                 "0014" => array( "name" => "DefaultMoveRate", "access" => "RW" ),
                 "4000" => array( "name" => "StartUpCurrentLevel", "access" => "RW", "dataType" => 0x20 ), // uint8
             ),
-            "commands" => array(
+            "commandsR" => array(
                 "00" => array( "name" => "Move To Level" ),
                 "01" => array( "name" => "Move" ),
                 "02" => array( "name" => "Step" ),
@@ -371,7 +371,7 @@
             "attributes" => array(
                 "0000" => array( "name" => "AlarmCount", "access" => "R" ),
             ),
-            "commands" => array(
+            "commandsR" => array(
                 "00" => array( "name" => "ResetAlarm" ),
                 "01" => array( "name" => "ResetAllAlarms" ),
                 "02" => array( "name" => "GetAlarm" ),
@@ -441,7 +441,7 @@
                 "0009" => array( "name" => "MinimumBlockPeriod", "access" => "R" ),
                 "000A" => array( "name" => "Image Stamp", "access" => "R" ),
             ),
-            "commands" => array(
+            "commandsR" => array(
                 "00" => array( "name" => "Image Notify" ),
                 "01" => array( "name" => "Query Next Image Request" ),
                 "02" => array( "name" => "Query Next Image Response" ),
@@ -465,7 +465,7 @@
                 "0005" => array( "name" => "LongPollIntervalMin", "access" => "R", "dataType" => 0x23 ), // uint32
                 "0006" => array( "name" => "FastPollTimeoutMax", "access" => "R", "dataType" => 0x21 ), // uint16
             ),
-            "commands" => array(
+            "commandsR" => array(
                 "00" => array( "name" => "CheckIn" ),
             ),
         ),
@@ -521,7 +521,7 @@
                 "0018" => array( "name" => "IntermSetpointsLift", "access" => "RW" ),
                 "0019" => array( "name" => "IntermSetpointsTilt", "access" => "RW" ),
             ),
-            "commands" => array(
+            "commandsR" => array(
                 "00" => array( "name" => "UpOpen" ),
                 "01" => array( "name" => "DownClose" ),
                 "02" => array( "name" => "Stop" ),
@@ -562,7 +562,7 @@
                 "0019" => array( "name" => "Primary3X", "access" => "R", "dataType" => 0x21 ), // uint16
                 "001B" => array( "name" => "Primary3Intensity", "access" => "R", "dataType" => 0x20 ), // uint8
             ),
-            "commands" => array(
+            "commandsR" => array(
                 "00" => array( "name" => "Move To Hue" ),
                 "01" => array( "name" => "Move Hue" ),
                 "02" => array( "name" => "Step Hue" ),
@@ -676,6 +676,18 @@
         ),
         "0501" => array(
             "name" => "IAS ACE",
+
+            "commandsG" => array(
+                "00" => array( "name" => "Arm Response" ),
+                "01" => array( "name" => "Get Zone ID Map Response" ),
+                "02" => array( "name" => "Get Zone Information Response" ),
+                "03" => array( "name" => "Zone Status Changed" ),
+                "04" => array( "name" => "Panel Status Changed" ),
+                "05" => array( "name" => "Get Panel Status Response" ),
+                "06" => array( "name" => "Set Bypassed Zone List" ),
+                "07" => array( "name" => "Bypass Response" ),
+                "08" => array( "name" => "Get Zone Status Response" ),
+            ),
         ),
         "0502" => array( // IAS Warning Device
             "name" => "IAS WD",
@@ -702,7 +714,7 @@
             ),
             // Commands received: none
             // Commands generated
-            // "commands" => array(
+            // "commandsR" => array(
                 // "00" => array( "name" => "Get Profile" ),
                 // "01" => array( "name" => "Request Mirror" ),
                 // "02" => array( "name" => "Mirror Removed" ),
@@ -725,7 +737,7 @@
                 "0604" => array( "name" => "AC Power Multiplier", "access" => "R" ),
                 "0605" => array( "name" => "AC Power Divisor", "access" => "R" ),
             ),
-            // "commands" => array(
+            // "commandsR" => array(
             //     // "cmd1" => array( "name" => "GetProfile" ),
             //     // "cmd2" => array( "name" => "RequestMirrorResponse" ),
             //     // "cmd3" => array( "name" => "MirrorRemoved" ),
@@ -737,7 +749,7 @@
         ),
         "1000" => array(
             "name" => "Touchlink",
-            "commands" => array(
+            "commandsR" => array(
                 "00" => array( "name" => "Scan Request" ),
                 "02" => array( "name" => "Dev Info Req" ),
                 "06" => array( "name" => "Identify Req" ),
@@ -820,7 +832,7 @@
 
     /* Based on ZCL spec.
        Returns cluster specific command from $clustId-$cmdId or false if unknown */
-    function zbGetZCLClusterCmd($clustId, $cmdId) {
+    function zbGetZCLClusterCmd($clustId, $cmdId, $dir = 0) {
         global $zbClusters;
 
         $clustId = strtoupper($clustId);
@@ -828,11 +840,19 @@
 
         if (!array_key_exists($clustId, $zbClusters))
             return false; // Unknown cluster
-        if (!isset($zbClusters[$clustId]['commands']))
-            return false; // No commands defined
-        if (!array_key_exists($cmdId, $zbClusters[$clustId]['commands']))
-            return false; // Unknown command
-        return $zbClusters[$clustId]['commands'][$cmdId];
+        if ($dir) { // Server to cli so command generated from server
+            if (!isset($zbClusters[$clustId]['commandsG']))
+                return false; // No commands defined
+            if (!array_key_exists($cmdId, $zbClusters[$clustId]['commandsG']))
+                return false; // Unknown command
+            return $zbClusters[$clustId]['commandsG'][$cmdId];
+        } else {
+            if (!isset($zbClusters[$clustId]['commandsR']))
+                return false; // No commands defined
+            if (!array_key_exists($cmdId, $zbClusters[$clustId]['commandsR']))
+                return false; // Unknown command
+            return $zbClusters[$clustId]['commandsR'][$cmdId];
+        }
     }
 
     /* Based on ZCL spec.

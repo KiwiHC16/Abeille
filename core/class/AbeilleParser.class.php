@@ -3076,8 +3076,10 @@
                 }
                 if ($frameType == 0) // General command
                     $m = "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLGlobalCmdName($cmd);
-                else // Cluster specific command
-                    $m = "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLClusterCmdName($clustId, $cmd);
+                else { // Cluster specific command
+                    $cmdName = zbGetZCLClusterCmdName($clustId, $cmd, $dir);
+                    $m = "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.$cmdName;
+                }
                 parserLog('debug', $m);
                 $toMon[] = $m;
 
@@ -3984,10 +3986,25 @@
                             //     'name' => $srcEp.'-0500-cmd01',
                             //     'value' => $zoneType.'-'.$manufCode,
                             // );
+                        } else {
+                            parserLog("debug", "  Ignored 0500/IAS_Zone cluster specific command ".$cmd, "8002");
+                            return;
                         }
+
                         parserLog('debug', $m);
                         $toMon[] = $m;
                     } // End '$clustId == "0500"'
+
+                    // 0501/IAS ACE specific
+                    else if ($clustId == "0501") {
+                        // Duplicated message ?
+                        if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                            return;
+
+                        // TODO
+                        parserLog("debug", "  Ignored 0501/IAS_ACE cluster specific command ".$cmd, "8002");
+                        return;
+                    } // End '$clustId == "0501"'
 
                     // 1000/Touch link commissioning cluster specific
                     else if ($clustId == "1000") {

@@ -4001,9 +4001,25 @@
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
 
-                        // TODO
-                        parserLog("debug", "  Ignored 0501/IAS_ACE cluster specific command ".$cmd, "8002");
-                        return;
+                        if ($cmd == "00") { // Arm Response
+                            $armNotif = substr($pl, 0, 2);
+
+                            $notifs = array(
+                                "00" => "All Zones Disarmed",
+                                "01" => "Only Day/Home Zones Armed",
+                                "02" => "Only Night/Sleep Zones Armed",
+                                "03" => "All Zones Armed",
+                                "04" => "Invalid Arm/Disarm Code",
+                                "05" => "Not ready to arm",
+                                "06" => "Already disarmed",
+                            );
+                            $m = "  Arm notification: ".$notifs[$armNotif];
+                            parserLog('debug', $m);
+                            $toMon[] = $m;
+                        } else {
+                            parserLog("debug", "  Ignored 0501/IAS_ACE cluster specific command ".$cmd, "8002");
+                            return;
+                        }
                     } // End '$clustId == "0501"'
 
                     // 1000/Touch link commissioning cluster specific

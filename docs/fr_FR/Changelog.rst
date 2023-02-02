@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230202-BETA-1
+-------------
+
 - Interne: AbeilleCmd: Mise-à-jour 'getRoutingTable'.
 - Interne: Collecte des tables de routage revue.
 - Interne: Parser: Amélioration affichage cmds cluster.

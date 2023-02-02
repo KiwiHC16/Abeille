@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230202-BETA-2
+230202-BETA-3
 -------------
 
 - Interne: AbeilleCmd: Mise-à-jour 'getRoutingTable'.

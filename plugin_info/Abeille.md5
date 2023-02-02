@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230202-BETA-2"
+# VERSION="230202-BETA-3"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1166,7 +1166,7 @@ e64421de79c60f5b69daf6a5b302be8a *core/scripts/updateFirmware.sh
 8152b9a95c1e174c3246ea4176c6325a *core/scripts/updateFirmwareDIN.sh
 f43f8f808ea001dff6f5f3a8677c09c8 *core/scripts/waitPortFree.sh
 70a62c6847cde5020849713d8ed658b5 *desktop/js/Abeille.js
-3d5c1ee4bf3cf0f560923dd6e1a67ddc *desktop/js/AbeilleNetwork.js
+a7e3df9d843218181446fb43cf914cfd *desktop/js/AbeilleNetwork.js
 f702906f38781759747c1bbcf6aa0715 *desktop/js/health.js
 968a05d736de04da688373851c970daa *desktop/modal/Abeille-OTA.modal.php
 0620afd56b87a67e1f670dc45fd2da2d *desktop/modal/AbeilleCompatibility.modal.php
@@ -1211,7 +1211,7 @@ a1d870cadad75bcd9878aaafe90a3f09 *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-48659243764fcab1accf6a73fd36a7ef *docs/fr_FR/Changelog.rst
+5f5d0f870674a7f3a764e4b770d59f4d *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1519,10 +1519,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-d534ff7fff093aac3cca70b4c35e3f0a *plugin_info/Abeille.version
+98ac0daedb0fa6bc5ac5c27d95debe7b *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 2ce698a8944eb62133c068d96cdcfc69 *plugin_info/configuration.php
-df102a77e07fcd7c53cd749fd7ccc6a6 *plugin_info/info.json
+828e3b3af3581842b90c7edc4263a099 *plugin_info/info.json
 7bb28c3c720c1539f403d109a2ef4832 *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
@@ -1535,6 +1535,7 @@ d41d8cd98f00b204e9800998ecf8427e *resources/COM
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/AbeilleEq-Main-Others.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/AbeilleInterrogate.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/AbeilleLQI_List.php
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/AbeilleRoutes.ajax.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/AbeilleSupport.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/CheckAlive.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/CheckBattery.php

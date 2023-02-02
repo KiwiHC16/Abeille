@@ -255,6 +255,11 @@
     $routers = []; // List of routers
     foreach ($eqLogics as $eqLogic) {
         $eqLogicId = $eqLogic->getLogicalId();
+        $eqHName = $eqLogic->getHumanName();
+        if (!$eqLogic->getIsEnable()) {
+            logMessage("", "  ".$eqHName." (".$eqLogicId.") => DISABLED");
+            continue; // Disabled
+        }
         list($net, $addr) = explode('/', $eqLogicId);
         $zgId2 = substr($net, 7); // AbeilleX => X
         if (($zgId2 < $zgStart) || ($zgId2 > $zgEnd))
@@ -262,7 +267,7 @@
 
         $newEq = [];
         $newEq['name'] = $eqLogic->getName();
-        $newEq['hName'] = $eqLogic->getHumanName();
+        $newEq['hName'] = $eqHName;
         $eqParent = $eqLogic->getObject();
         if (!is_object($eqParent))
             $eqPName = "";

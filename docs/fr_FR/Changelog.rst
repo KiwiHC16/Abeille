@@ -11,6 +11,7 @@ ChangeLog
 - Interne: Parser: Amélioration 'getDevice()' si IEEE pas défini.
 - Interne: Parser: Amélioration 'cleanModelId()' pour caracteres speciaux.
 - Interne: Suppression 'routingTable' de la table 'eqLogic'.
+- Réseau/graph des liens: Mise-à-jour.
 
 230130-BETA-2
 -------------

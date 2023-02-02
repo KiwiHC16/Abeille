@@ -805,14 +805,13 @@ function displayLinksGraph(zgId) {
                     }
 
                     svgText = Viva.Graph.svg("text")
-                        .attr("y", "0px")
-                        .text(nodeName);
-                    var ui = Viva.Graph.svg("g");
+                        .attr("y", "-3px")
+                        .text(nodeName)
+                        .attr("fill", nodeColor);
                     var img1 = Viva.Graph.svg("rect")
                         .attr("width", nodeSize)
                         .attr("height", nodeSize)
                         .attr("fill", nodeColor);
-
                     var img2 = Viva.Graph.svg("image")
                         .attr("x", 5)
                         .attr("y", 5)
@@ -822,6 +821,7 @@ function displayLinksGraph(zgId) {
                             "/plugins/Abeille/images/node_" + iconName + ".png"
                         );
 
+                    var ui = Viva.Graph.svg("g");
                     ui.append(svgText);
                     ui.append(img1);
                     ui.append(img2);

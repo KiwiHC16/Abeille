@@ -7,6 +7,7 @@ ChangeLog
 - Interne: Zigbee const: Amélioration support cluster 0501.
 - Interne: Parser: Amélioration 'getDevice()' si IEEE pas défini.
 - Interne: Parser: Amélioration 'cleanModelId()' pour caracteres speciaux.
+- Interne: Suppression 'routingTable' de la table 'eqLogic'.
 
 230130-BETA-2
 -------------

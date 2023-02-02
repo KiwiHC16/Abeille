@@ -439,6 +439,7 @@
            - eqLogic DB: 'positionX' => 'ab::settings[physLocationX]'
            - eqLogic DB: 'positionY' => 'ab::settings[physLocationY]'
            - eqLogic DB: 'uniqId' is obsolete
+           - eqLogic DB: 'routingTable' is obsolete
            - config DB: 'AbeilleActiverX' => 'ab::zgEnabledX'
            - config DB: 'AbeilleTypeX' => 'ab::zgTypeX'
            - config DB: 'AbeilleSerialPortX' => 'ab::zgPortX'
@@ -535,7 +536,7 @@
                     $saveEq = true;
                 }
                 array_push($toRemove, 'positionX', 'positionY');
-                array_push($toRemove, 'uniqId');
+                array_push($toRemove, 'uniqId', 'routingTable');
 
                 // Removing obsolete configuration keys
                 foreach ($toRemove as $key) {

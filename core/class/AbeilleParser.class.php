@@ -2188,18 +2188,8 @@
                     $routingTable[$destAddr] = $nextHop;
                 }
             }
+            // Routing table is now stored in /tmp/jeedom/Abeille/AbeilleRoutes-AbeilleX.json
             $this->msgToRoutingCollector($srcAddr, $tableEntries, $tableListCount, $startIdx, $routingTable);
-
-            // if ( $srcAddr == "Ruche" ) return; // Verrue car si j interroge l alarme Heiman, je ne vois pas a tous les coups la reponse sur la radio et le message recu par Abeille vient d'abeille !!!
-
-            // // TODO: Move it outside parser. This slows down excution accessing DB.
-            // $abeille = Abeille::byLogicalId($dest.'/'.$srcAddr, 'Abeille');
-            // if ( $abeille ) {
-            //     $abeille->setConfiguration('routingTable', json_encode($routingTable) );
-            //     $abeille->save();
-            // }  else {
-            //     parserLog('debug', '  abeille not found !!!', "8002");
-            // }
         } // End decode8002_MgmtRtgRsp()
 
         /* Called from decode8002() to decode "Mgmt_NWK_Update_notify" (cluster=8038))

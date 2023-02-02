@@ -18,34 +18,30 @@
     include_once __DIR__."/../../../../core/php/core.inc.php";
     include_once "AbeilleLog.php"; // Log library
 
-    $routers = []; // List of routers
-
     /* Add to list a new eq (router or coordinator) to interrogate.
        Check first is not aleady in the list. */
-    function newRouter($logicId) {
+    function newRouter($zgId, $rLogicId) {
         global $routers;
         global $knownFromJeedom;
 
         /* Checking if not already in the list */
-        foreach ($routers as $router) {
-            if ($router['logicId'] == $logicId)
+        if (!isset($routers[$zgId]))
+            $routers[$zgId] = [];
+        else {
+            if (in_array($rLogicId, $routers[$zgId]))
                 return; // Already there
         }
         // TODO: What to do if mesg received does not match interrogated eq ?
 
-        if (isset($knownFromJeedom[$logicId]))
-            $eqName = $knownFromJeedom[$logicId]['name'];
-        else
-            $eqName = "";
-        list($netName, $addr) = explode('/', $logicId);
-        $routers[] = array(
-            "logicId" => $logicId,
-            "name" => $eqName,
+        list($net, $addr) = explode('/', $rLogicId);
+        $routers[$zgId][$rLogicId] = array(
+            // "logicId" => $rLogicId,
+            "name" => $knownFromJeedom[$rLogicId]['name'],
             "addr" => $addr,
             "tableEntries" => 0,    // Nb of entries in its table
             "tableIndex" => 0,      // Index to interrogate
         );
-        logMessage("", "  New router to interrogate: '".$eqName."' (".$logicId.")");
+        logMessage("", "  New Abeille".$zgId." router: ".$knownFromJeedom[$rLogicId]['hName']." (".$rLogicId.")");
     }
 
     /* Remove any pending messages from parser */
@@ -57,19 +53,21 @@
 
     /* Treat request responses (804E) from parser.
        Returns: 0=OK, -1=fatal error, 1=timeout */
-    function msgFromParser($routerIdx) {
-        logMessage("", "  msgFromParser(eqIndex=".$routerIdx.")");
+    function msgFromParser($zgId, $rLogicId) {
+        logMessage("", "  msgFromParser(".$rLogicId.")");
 
         global $queueParserToRoutes, $queueParserToRoutesMax;
         global $routers;
         global $knownFromJeedom;
+
+        $router = &$routers[$zgId][$rLogicId];
 
         $timeout = 10; // 10sec (useful when there is unknown eq interrogation during LQI collect)
         for ($t = 0; $t < $timeout; ) {
             // logMessage("", "  Queue stat=".json_encode(msg_stat_queue($queueParserToRoutes)));
             $msgMax = $queueParserToRoutesMax;
             if (msg_receive($queueParserToRoutes, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode) == true) {
-                logMessage("", "  msgJson=".$msgJson);
+                // logMessage("", "  msgJson=".$msgJson);
 
                 /* Message received. Let's check it is the expected one */
                 $msg = json_decode($msgJson);
@@ -77,13 +75,13 @@
                     logMessage("", "  WARNING: Unsupported message type (".$msg->type.") => Ignored.");
                     continue;
                 }
-                if (hexdec($msg->startIdx) != $routers[$routerIdx]['tableIndex']) {
+                if (hexdec($msg->startIdx) != $router['tableIndex']) {
                     /* Note: this case is due to too many identical 004E messages sent to eq
                        leading to several identical 804E answers */
                     logMessage("", "  WARNING: Unexpected start index (".$msg->startIdx.") => Ignored.");
                     continue;
                 }
-                if ($msg->srcAddr != $routers[$routerIdx]['addr']) {
+                if ($msg->srcAddr != $router['addr']) {
                     logMessage("", "  WARNING: Unexpected source addr (".$msg->srcAddr.") => Ignored.");
                     continue;
                 }
@@ -117,9 +115,9 @@
             $msg = array(
                 'type' => 'routingTable',
                 'srcAddr' => $srcAddr,
-                'tableEntries' => $tableEntries,
-                'tableListCount' => $tableCount,
-                'startIdx' => $startIdx,
+                'tableEntries' => $tableEntries (number),
+                'tableListCount' => $tableCount (number),
+                'startIdx' => $startIdx (number),
                 'table' => $table
                     'addr X' => 'nextHop X'
                     'addr Y' => 'nextHop Y'
@@ -133,11 +131,11 @@
         logMessage("", "  TableEntries=".$tableEntries.", TableListCount=".$tableListCount.", StartIdx=".$startIdx);
 
         /* Updating collect infos for this coordinator/router */
-        $routers[$routerIdx]['tableEntries'] = hexdec($tableEntries);
-        $routers[$routerIdx]['tableIndex'] = hexdec($startIdx) + hexdec($tableListCount);
+        $router['tableEntries'] = $tableEntries;
+        $router['tableIndex'] = $startIdx + $tableListCount;
 
-        $routerLogicId = $routers[$routerIdx]["logicId"]; // Ex: 'Abeille1/A3B4'
-        list($netName, $addr) = explode('/', $routerLogicId);
+        // $routerLogicId = $routers[$routerIdx]["logicId"]; // Ex: 'Abeille1/A3B4'
+        list($netName, $addr) = explode('/', $rLogicId);
 
         //
         // 'AbeilleRoutes-AbeilleX.json' format
@@ -148,15 +146,15 @@
         //     )
         // )
         global $routingTable;
-        if (isset($routingTable['routers'][$routerLogicId])) {
-            $router = $routingTable['routers'][$routerLogicId];
+        if (isset($routingTable['routers'][$rLogicId])) {
+            $router2 = $routingTable['routers'][$rLogicId];
         } else {
-            $router = array(
+            $router2 = array(
                 'addr' => $msg->srcAddr,
                 'table' => $msg->table,
             );
         }
-        $routingTable['routers'][$routerLogicId] = $router;
+        $routingTable['routers'][$rLogicId] = $router2;
 
         return 0;
     }
@@ -178,35 +176,35 @@
         return 0;
     }
 
-    /* Send 1 to several table requests thru AbeilleCmd to collect neighbour table entries.
-       Returns: 0=OK, -1=ERROR (stops collect for current zigate), 1=timeout */
-    function interrogateEq($net, $addr, $routerIdx) {
-        global $routers;
+    // /* Send 1 to several table requests thru AbeilleCmd to collect neighbour table entries.
+    //    Returns: 0=OK, -1=ERROR (stops collect for current zigate), 1=timeout */
+    // function interrogateEq($zgId, $rLogicId, $net, $addr) {
+    //     global $routers;
 
-        while (true) {
-            $router = $routers[$routerIdx]; // Read eq status
-            msgToCmd($net, $addr, sprintf("%02X", $router['tableIndex']));
+    //     while (true) {
+    //         $router = &$routers[$zgId][$rLogicId]; // Read eq status
+    //         msgToCmd($net, $addr, sprintf("%02X", $router['tableIndex']));
 
-            usleep(200000); // Delay of 200ms to let response to come back
-            $ret = msgFromParser($routerIdx);
-            if ($ret == 1) {
-                /* If time-out, cancel interrogation for current eq only */
-                logMessage("", "Time-out => Cancelling interrogation of '".$router['name']."' (".$router['addr'].").");
-                return 1;
-            }
-            if ($ret != 0) {
-                /* Something failed. Stopping collect since might be due to several reasons
-                   like some daemons crash & restarted */
-                return -1;
-            }
+    //         usleep(200000); // Delay of 200ms to let response to come back
+    //         $ret = msgFromParser($zgId, $rLogicId);
+    //         if ($ret == 1) {
+    //             /* If time-out, cancel interrogation for current eq only */
+    //             logMessage("", "Time-out => Cancelling interrogation of '".$router['name']."' (".$router['addr'].").");
+    //             return 1;
+    //         }
+    //         if ($ret != 0) {
+    //             /* Something failed. Stopping collect since might be due to several reasons
+    //                like some daemons crash & restarted */
+    //             return -1;
+    //         }
 
-            $router = $routers[$routerIdx]; // Read eq status
-            if ($router['tableIndex'] >= $router['tableEntries'])
-                break; // Exiting interrogation loop
-        }
+    //         // $router = $routers[$routerIdx]; // Read eq status
+    //         if ($router['tableIndex'] >= $router['tableEntries'])
+    //             break; // Exiting interrogation loop
+    //     }
 
-        return 0;
-    }
+    //     return 0;
+    // }
 
     /*--------------------------------------------------------------------------------------------------*/
     /* Main
@@ -254,7 +252,7 @@
     logMessage("", "Jeedom known equipments:");
     $eqLogics = eqLogic::byType('Abeille');
     $knownFromJeedom = array();
-    // $objKnownFromAbeille = array();
+    $routers = []; // List of routers
     foreach ($eqLogics as $eqLogic) {
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode('/', $eqLogicId);
@@ -273,20 +271,21 @@
         $newEq['parent'] = $eqPName;
         $newEq['ieee'] = $eqLogic->getConfiguration('IEEE', '');
         $newEq['icon'] = $eqLogic->getConfiguration('ab::icon', 'defaultUnknown');
+        $knownFromJeedom[$eqLogicId] = $newEq;
+        logMessage("", "  ".$newEq['hName']." (".$eqLogicId.")");
 
         // Router ?
         if ($addr == '0000')
-            newRouter("Abeille".$zgId2."/0000");
+            newRouter($zgId2, "Abeille".$zgId2."/0000");
         else {
-            // TODO: Where to take info it is a ROUTER ????
-            // $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-            // if (isset($zigbee['macCapa'])) {
-            //     $mc = hexdec($zigbee['macCapa']);
-            // }
+            // If device is FFD, it is a router
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            if (isset($zigbee['macCapa'])) {
+                $mc = hexdec($zigbee['macCapa']);
+                if (($mc >> 1) & 1) // Device type = 1 => FFD
+                    newRouter($zgId2, $eqLogicId);
+            }
         }
-
-        $knownFromJeedom[$eqLogicId] = $newEq;
-        logMessage("", "  ".$newEq['hName']." (".$eqLogicId.")");
     }
 
     $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
@@ -332,22 +331,14 @@
         );
         // newRouter("Abeille".$zgId."/0000");
 
-        $done = 0;
-        $routerIdx = 0; // Index of eq to interrogate
         $collectStatus = 0;
-        while (true) { // Go thru all routers
-            $total = count($routers);
+        $done = 0;
+        $total = count($routers[$zgId]);
+        foreach ($routers[$zgId] as $rLogicId => $router) { // Go thru all routers
             logMessage("", "Zigate ".$zgId." progress: ".$done."/".$total);
 
-            $currentNeAddress = $routers[$routerIdx]['logicId'];
-            list($netName, $addr) = explode('/', $currentNeAddress);
-
-            $NE = $currentNeAddress;
-
-            if (isset($knownFromJeedom[$currentNeAddress]))
-                $name = $knownFromJeedom[$currentNeAddress]['name'];
-            else
-                $name = "Inconnu-" . $currentNeAddress;
+            $name = $router['name'];
+            $addr = $router['addr'];
 
             logMessage("", "Interrogating '".$name."' (".$addr.")");
             // $nbwritten = file_put_contents($lockFile, "Analyse du réseau ".$netName.": ".$done."/".$total." => interrogation de '".$name."' (".$addr.")");
@@ -358,7 +349,29 @@
             //     exit;
             // }
 
-            $ret = interrogateEq($netName, $addr, $routerIdx);
+            // $ret = interrogateEq($zgId, $rLogicId, $netName, $addr);
+            while (true) {
+                // $router = &$routers[$zgId][$rLogicId]; // Read eq status
+                msgToCmd($net, $addr, sprintf("%02X", $router['tableIndex']));
+
+                usleep(200000); // Delay of 200ms to let response to come back
+                $ret = msgFromParser($zgId, $rLogicId);
+                if ($ret == 1) {
+                    /* If time-out, cancel interrogation for current eq only */
+                    // logMessage("", "Time-out => Cancelling interrogation of '".$router['name']."' (".$router['addr'].").");
+                    break;
+                }
+                if ($ret != 0) {
+                    /* Something failed. Stopping collect since might be due to several reasons
+                       like some daemons crash & restarted */
+                    break;
+                }
+
+                // $router = $routers[$routerIdx]; // Read eq status
+                if ($router['tableIndex'] >= $router['tableEntries'])
+                    break; // Exiting interrogation loop
+            }
+
             $done++;
             if ($ret == -1) {
                 $collectStatus = -1; // Collect interrupted due to error
@@ -366,13 +379,8 @@
                 break;
             }
             if ($ret == 1) {
-                $collectStatus = 1; // At least 1 interrogation canceled due to timeout
+                $collectStatus = 1; // Collect is partial due to timeout
             }
-
-            /* End of list ? */
-            if (($routerIdx + 1) == count($routers))
-                break;
-            $routerIdx++;
         }
 
         /* Write JSON cache only if collect completed successfully or on timeout */

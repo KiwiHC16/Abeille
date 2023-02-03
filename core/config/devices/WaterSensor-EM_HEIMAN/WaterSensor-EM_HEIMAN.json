@@ -20,14 +20,14 @@
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=01"
             },
-            "SetReporting 01-0001-00021": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
-                "execAtCreation": "yes"
-            },
             "Bind 01-0001-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0001-00021": {
+                "use": "act_zbConfigureReporting",
+                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "yes"
             },
             "Get Battery-Percent": {

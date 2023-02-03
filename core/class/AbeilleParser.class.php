@@ -1088,7 +1088,8 @@
             return true;
         }
 
-        /* Clean modelIdentifier, removing some unwanted chars
+        /* Clean modelIdentifier, removing some unwanted chars.
+           Note: Stops on first null char but so far we don't take care about encoding.
            Ex: 53494E2D342D322D3230002000000014000000CCCB0020B1020100900000003D = 'SIN-4-2-20        ÌË  ±    ='
          */
         function cleanModelId($modelId) {
@@ -1120,6 +1121,8 @@
             $m = '';
             for ($i = $j = 0; $i < strlen($modelId); $i++) {
                 $in = substr($modelId, $i, 1);
+                if ($in == '\0')
+                    break; // Assuming everything bad after
                 if ($in <= ' ')
                     continue; // Ignore any control char & space
                 if ($in == '/')

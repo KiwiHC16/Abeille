@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: 'ModelIdentifier', 0 devient caractère de fin.
+
 230202-BETA-3
 -------------
 

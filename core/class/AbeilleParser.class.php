@@ -3983,7 +3983,6 @@
                                 'name' => $srcEp.'-0500-cmd00',
                                 'value' => $zoneStatus,
                             );
-                            // TODO: Disable decode8401()
                         } else if ($cmd == "01") { // Zone enroll request
                             $zoneType = AbeilleTools::reverseHex(substr($pl, 0, 4));
                             $manufCode = AbeilleTools::reverseHex(substr($pl, 4, 4));
@@ -4027,13 +4026,13 @@
                             $armCodeSize = hexdec(substr($pl, 2, 2));
                             $armCode = substr($pl, 4, $armCodeSize * 2);
                             $zoneId = hexdec(substr($pl, 4 + $armCodeSize * 2, 2));
-                            $notifs = array(
+                            $armModeT = array(
                                 "00" => "Disarm",
                                 "01" => "Arm Day/Home Zones Only",
                                 "02" => "Arm Night/Sleep Zones Only",
                                 "03" => "Arm All Zones",
                             );
-                            $m = "  Arm: Mode=".$armMode.", Code=".$armCode.", ZoneId=".$zoneId;
+                            $m = "  Arm: Mode=".$armMode."/".$armModeT[$armMode].", Code=".$armCode.", ZoneId=".$zoneId;
                         } else if (($cmd == "07") && ($dir == 0)) { // Client to server: Get Panel Status
                             $m = "  Get Panel Status Response command";
                             // Generate a 'Get Panel Status Response command'
@@ -6454,67 +6453,67 @@
         //     parserLog('debug', $dest.', Type='.$msgDecoded, "8141");
         // }
 
-        // Cluster 0500/IAS zone, Zone Status Change Notification (generated cmd 00)
-        function decode8401($dest, $payload, $lqi) {
-            // <sequence number: uint8_t>
-            // <endpoint : uint8_t>
-            // <cluster id: uint16_t>
-            // <src address mode: uint8_t>
-            // <src address: uint64_t  or uint16_t based on address mode>
-            // <zone status: uint16_t>
-            // <extended status: uint8_t>
-            // <zone id : uint8_t>
-            // <delay: data each element uint16_t>
+        // // Cluster 0500/IAS zone, Zone Status Change Notification (generated cmd 00)
+        // function decode8401($dest, $payload, $lqi) {
+        //     // <sequence number: uint8_t>
+        //     // <endpoint : uint8_t>
+        //     // <cluster id: uint16_t>
+        //     // <src address mode: uint8_t>
+        //     // <src address: uint64_t  or uint16_t based on address mode>
+        //     // <zone status: uint16_t>
+        //     // <extended status: uint8_t>
+        //     // <zone id : uint8_t>
+        //     // <delay: data each element uint16_t>
 
-            $ep         = substr($payload, 2, 2);
-            $clustId    = substr($payload, 4, 4);
-            $srcAddr    = substr($payload,10, 4); // Assuming short mode
-            $zoneStatus = substr($payload,14, 4);
+        //     $ep         = substr($payload, 2, 2);
+        //     $clustId    = substr($payload, 4, 4);
+        //     $srcAddr    = substr($payload,10, 4); // Assuming short mode
+        //     $zoneStatus = substr($payload,14, 4);
 
-            $msgDecoded = '8401/IAS zone status change notification'
-               .', SQN='.substr($payload, 0, 2)
-               .', EP='.$ep
-               .', ClustId='.$clustId
-               .', SrcAddrMode='.substr($payload, 8, 2)
-               .', SrcAddr='.$srcAddr
-               .', ZoneStatus='.$zoneStatus
-               .', ExtStatus='.substr($payload,18, 2)
-               .', ZoneId='.substr($payload,20, 2)
-               .', Delay='.substr($payload,22, 4);
+        //     $msgDecoded = '8401/IAS zone status change notification'
+        //        .', SQN='.substr($payload, 0, 2)
+        //        .', EP='.$ep
+        //        .', ClustId='.$clustId
+        //        .', SrcAddrMode='.substr($payload, 8, 2)
+        //        .', SrcAddr='.$srcAddr
+        //        .', ZoneStatus='.$zoneStatus
+        //        .', ExtStatus='.substr($payload,18, 2)
+        //        .', ZoneId='.substr($payload,20, 2)
+        //        .', Delay='.substr($payload,22, 4);
 
-            $attrReportN = [];
-            // Legacy: Sending 0500-#EP#-0000 with zoneStatus as value
-            // To be removed at some point
-            $attrReportN[] = array(
-                'name' => $clustId.'-'.$ep.'-0000',
-                'value' => $zoneStatus,
-            );
+        //     $attrReportN = [];
+        //     // Legacy: Sending 0500-#EP#-0000 with zoneStatus as value
+        //     // To be removed at some point
+        //     $attrReportN[] = array(
+        //         'name' => $clustId.'-'.$ep.'-0000',
+        //         'value' => $zoneStatus,
+        //     );
 
-            // New message format '#EP#-0500-cmd00' with $zoneStatus as value
-            $attrReportN[] = array(
-                'name' => $ep.'-0500-cmd00',
-                'value' => $zoneStatus,
-            );
+        //     // New message format '#EP#-0500-cmd00' with $zoneStatus as value
+        //     $attrReportN[] = array(
+        //         'name' => $ep.'-0500-cmd00',
+        //         'value' => $zoneStatus,
+        //     );
 
-            $msg = array(
-                // 'src' => 'parser',
-                'type' => 'attributesReportN',
-                'net' => $dest,
-                'addr' => $srcAddr,
-                'ep' => $ep,
-                'clustId' => $clustId,
-                'attributes' => $attrReportN,
-                'time' => time(),
-                'lqi' => $lqi
-            );
-            msgToAbeille2($msg);
+        //     $msg = array(
+        //         // 'src' => 'parser',
+        //         'type' => 'attributesReportN',
+        //         'net' => $dest,
+        //         'addr' => $srcAddr,
+        //         'ep' => $ep,
+        //         'clustId' => $clustId,
+        //         'attributes' => $attrReportN,
+        //         'time' => time(),
+        //         'lqi' => $lqi
+        //     );
+        //     msgToAbeille2($msg);
 
-            parserLog('debug', $dest.', Type='.$msgDecoded);
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
-                monMsgFromZigate($msg); // Send message to monitor
+        //     parserLog('debug', $dest.', Type='.$msgDecoded);
+        //     if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
+        //         monMsgFromZigate($msg); // Send message to monitor
 
-            $this->whoTalked[] = $dest.'/'.$srcAddr;
-        }
+        //     $this->whoTalked[] = $dest.'/'.$srcAddr;
+        // }
 
         // // OTA specific: ZiGate will receive this command when device asks OTA firmware
         // function decode8501($dest, $payload, $lqi) {

@@ -3,6 +3,7 @@ ChangeLog
 
 - Interne: Parser: 'ModelIdentifier', 0 devient caractère de fin.
 - Interne: Cmd: Améliorations support clusters 0500 & 0501.
+- Interne: Parser: Msg 8401 désactivé.
 
 230202-BETA-3
 -------------

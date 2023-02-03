@@ -284,7 +284,7 @@
             "name" => "Host PDM available response",
         ),
         "8401" => array(
-            "name" => "Zone status change notification",
+            "name" => "Zone status change notification", // Unused by Abeille
         ),
         "8501" => array(
             "name" => "OTA block request", // Unused by Abeille

@@ -1092,47 +1092,50 @@
            Note: Stops on first null char but so far we don't take care about encoding.
            Ex: 53494E2D342D322D3230002000000014000000CCCB0020B1020100900000003D = 'SIN-4-2-20        ÌË  ±    ='
          */
-        function cleanModelId($modelId) {
-            // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
-            if ($modelId == "lumi.sens") $modelId = "lumi.sensor_ht";
-
-            // if ($modelId == "TRADFRI Signal Repeater") $modelId = "TRADFRI signal repeater";
-
-            if ($modelId == "lumi.sensor_swit") $modelId = "lumi.sensor_switch.aq3";
-
-            // Work-around: getName = lumi.sensor_86sw2Un avec probablement des caractere cachés alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2 ou l inverse, je ne sais plus
-            if (strpos($modelId, "sensor_86sw2") > 2) { $modelId="lumi.sensor_86sw2"; }
-
-            if (!strncasecmp($modelId, "lumi.", 5))
-                $modelId = substr($modelId, 5); // Remove leading "lumi." case insensitive
-
+        function cleanModelId($hexString) {
             //remove all space in names for easier filename handling
-            // $modelId = str_replace(' ', '', $modelId);
+            // $hexString = str_replace(' ', '', $hexString);
 
             // On enleve le / comme par exemple le nom des equipements Legrand
-            // $modelId = str_replace('/', '', $modelId);
+            // $hexString = str_replace('/', '', $hexString);
 
             // On enleve le * Ampoules GU10 Philips #1778
-            // $modelId = str_replace('*', '', $modelId);
+            // $hexString = str_replace('*', '', $hexString);
 
             // On enleve les 0x00 comme par exemple le nom des equipements Legrand
-            // $modelId = str_replace("\0", '', $modelId);
+            // $hexString = str_replace("\0", '', $hexString);
 
             $m = '';
-            for ($i = $j = 0; $i < strlen($modelId); $i++) {
-                $in = substr($modelId, $i, 1);
-                if ($in == '\0')
+            for ($i = 0; $i < strlen($hexString); $i += 2) {
+                $in = substr($hexString, $i, 2);
+                $in2 = hexdec($in);
+// parserLog('debug', 'LA'.$i."='".$in."' => hexdec=".$in2);
+                if ($in2 == 0) // null char
                     break; // Assuming everything bad after
-                if ($in <= ' ')
+                if ($in2 <= ' ')
                     continue; // Ignore any control char & space
-                if ($in == '/')
+                if ($in2 == '/')
                     continue; // Ignore '/'
-                if ($in == '*')
+                if ($in2 == '*')
                     continue; // Ignore '*'
                 // if ($in == '.')
                 //     continue; // Ignore '.'
-                $m = $m.$in;
+                $m = $m.pack("H*", $in);
             }
+
+            // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName
+            if ($m == "lumi.sens") $m = "lumi.sensor_ht";
+
+            // if ($hexString == "TRADFRI Signal Repeater") $hexString = "TRADFRI signal repeater";
+
+            if ($m == "lumi.sensor_swit") $m = "lumi.sensor_switch.aq3";
+
+            // Work-around: getName = lumi.sensor_86sw2Un avec probablement des caractere cachés alors que lorsqu'il envoie son nom spontanement c'est lumi.sensor_86sw2 ou l inverse, je ne sais plus
+            if (strpos($m, "sensor_86sw2") > 2) { $m="lumi.sensor_86sw2"; }
+
+            if (!strncasecmp($m, "lumi.", 5))
+                $m = substr($m, 5); // Remove leading "lumi." case insensitive
+
             return $m;
         }
 
@@ -5756,6 +5759,13 @@
             */
             $data = null; // Data to push to Abeille
             if ($clustId == "0000") { // Basic cluster
+                // TEST
+                // if ($attrId == "0005") {
+                //     $Attribut = "53494E2D342D322D3230002000000014000000CCCB0020B1020100900000003D9F";
+                // }
+                // TEST END
+
+
                 // 0004: ManufacturerName
                 // 0005: ModelIdentifier
                 // 0010: Location => Used for Profalux 1st gen
@@ -5765,26 +5775,27 @@
                     $trimmedValue = pack('H*', $Attribut);
 
                     if ($attrId == "0004") { // 0x0004 ManufacturerName string
-                        $trimmedValue = $this->cleanManufId($trimmedValue);
+                        $cleanedValue = $this->cleanManufId($trimmedValue);
 
-                        parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."', cleaned='".$trimmedValue."'");
-                        $data = $trimmedValue;
+                        parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."' => cleaned='".$cleanedValue."'");
+                        $data = $cleanedValue;
 
-                        $this->deviceUpdate($dest, $srcAddr, $ep, 'manufId', $trimmedValue);
+                        $this->deviceUpdate($dest, $srcAddr, $ep, 'manufId', $cleanedValue);
                     } else if ($attrId == "0005") { // 0x0005 ModelIdentifier string
-                        $trimmedValue = $this->cleanModelId($trimmedValue);
+                        // $cleanedValue = $this->cleanModelId($trimmedValue);
+                        $cleanedValue = $this->cleanModelId($Attribut);
 
-                        parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."', cleaned='".$trimmedValue."'");
-                        $data = $trimmedValue;
+                        parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."' => cleaned='".$cleanedValue."'");
+                        $data = $cleanedValue;
 
-                        $this->deviceUpdate($dest, $srcAddr, $ep, 'modelId', $trimmedValue);
+                        $this->deviceUpdate($dest, $srcAddr, $ep, 'modelId', $cleanedValue);
                     } else if ($attrId == "0010") { // Location
-                        $trimmedValue = $this->cleanModelId($trimmedValue);
+                        $cleanedValue = $this->cleanModelId($trimmedValue);
 
-                        parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."', trimmed='".$trimmedValue."'");
-                        $data = $trimmedValue;
+                        parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."' => cleaned='".$cleanedValue."'");
+                        $data = $cleanedValue;
 
-                        $this->deviceUpdate($dest, $srcAddr, $ep, 'location', $trimmedValue);
+                        $this->deviceUpdate($dest, $srcAddr, $ep, 'location', $cleanedValue);
                     }
                 }
 

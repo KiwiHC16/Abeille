@@ -3059,7 +3059,7 @@
                 $fcf = substr($payload, 26, 2); // Frame Control Field
                 $frameType = hexdec($fcf) & 3; // Bits 0 & 1: 00=global, 01=cluster specific
                 $manufSpecific = (hexdec($fcf) >> 2) & 1;
-                $dir = (hexdec($fcf) >> 3) & 1;
+                $dir = (hexdec($fcf) >> 3) & 1; // 1=sent from server side to cluster, 0=sent from client side to server
                 if ($frameType == 0)
                     $fcfTxt = "General";
                 else
@@ -4009,7 +4009,7 @@
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
 
-                        if ($cmd == "00") { // Arm Response
+                        if (($cmd == "00") && ($dir == 1)) { // Server to client: Arm Response
                             $armNotif = substr($pl, 0, 2);
 
                             $notifs = array(
@@ -4022,12 +4022,28 @@
                                 "06" => "Already disarmed",
                             );
                             $m = "  Arm notification: ".$notifs[$armNotif];
-                            parserLog('debug', $m);
-                            $toMon[] = $m;
+                        } else if (($cmd == "00") && ($dir == 0)) { // Client to server: Arm cmd
+                            $armMode = substr($pl, 0, 2);
+                            $armCodeSize = hexdec(substr($pl, 2, 2));
+                            $armCode = substr($pl, 4, $armCodeSize * 2);
+                            $zoneId = hexdec(substr($pl, 4 + $armCodeSize * 2, 2));
+                            $notifs = array(
+                                "00" => "Disarm",
+                                "01" => "Arm Day/Home Zones Only",
+                                "02" => "Arm Night/Sleep Zones Only",
+                                "03" => "Arm All Zones",
+                            );
+                            $m = "  Arm: Mode=".$armMode.", Code=".$armCode.", ZoneId=".$zoneId;
+                        } else if (($cmd == "07") && ($dir == 0)) { // Client to server: Get Panel Status
+                            $m = "  Get Panel Status Response command";
+                            // Generate a 'Get Panel Status Response command'
+                            $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0501", 'ep='.$srcEp.'&cmd=05');
                         } else {
                             parserLog("debug", "  Ignored 0501/IAS_ACE cluster specific command ".$cmd, "8002");
                             return;
                         }
+                        parserLog('debug', $m);
+                        $toMon[] = $m;
                     } // End '$clustId == "0501"'
 
                     // 1000/Touch link commissioning cluster specific

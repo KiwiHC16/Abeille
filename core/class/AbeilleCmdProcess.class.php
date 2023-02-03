@@ -4407,19 +4407,76 @@
 
                     $cmdId      = $Command['cmd'];
                     if ($cmdId == "00") { // Zone enroll response
-                        $data2 = '00'.$Command['zoneId'];
+                        $data2 = $fcf.$sqn.$cmdId.'00'.$Command['zoneId'];
                     } else {
                         cmdLog('error', "    Unsupported cmdId ".$cmdId);
                         return;
                     }
 
-                    $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
+                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     return;
                 } // End $cmdName == 'cmd-0500'
+
+                // ZCL cluster 0501/IAS ACE commands
+                // Mantatory params: 'addr', 'ep', 'cmd' (05)
+                // Optional params: ?
+                else if ($cmdName == 'cmd-0501') {
+                    $required = ['addr', 'ep', 'cmd']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <profile ID: uint16_t>
+                    // <cluster ID: uint16_t>
+                    // <security mode: uint8_t>
+                    // <radius: uint8_t>
+                    // <data length: uint8_t>
+
+                    //  ZCL Control Field
+                    //  ZCL SQN
+                    //  Command Id
+                    //  ....
+
+                    $cmd        = "0530";
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['ep'];
+                    $profId     = "0104";
+                    $clustId    = '0501'; // IAS ACE
+                    $secMode    = "02";
+                    $radius     = "1E";
+
+                    /* ZCL header */
+                    $fcf        = "11"; // Frame Control Field
+                    $sqn        = $this->genSqn();
+
+                    $cmdId      = $Command['cmd'];
+                    if ($cmdId == "05") { // Get Panel Status Response
+                        $panelStatus = "00";
+                        $secRemaining = "00";
+                        $audibleNotif = "00";
+                        $alarmStatus = "00";
+                        $data2 = $fcf.$sqn.$cmdId.$panelStatus.$secRemaining.$audibleNotif.$alarmStatus;
+                    } else {
+                        cmdLog('error', "    Unsupported cmdId ".$cmdId);
+                        return;
+                    }
+
+                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
+                    $data = $data1.$data2;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    return;
+                } // End $cmdName == 'cmd-0501'
 
                 // ZCL cluster 0502/IAS Warning Device commands
                 // Mantatory params: 'addr', 'ep', 'cmd' (00 or 01)

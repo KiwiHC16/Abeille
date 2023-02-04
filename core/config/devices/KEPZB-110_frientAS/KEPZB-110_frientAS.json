@@ -3,6 +3,7 @@
         "manufacturer": "Frient",
         "model": "KEYZB-110",
         "type": "Frient keypad",
+        "genericType": "Security",
         "timeout": "60",
         "category": {
             "security": "1"
@@ -30,22 +31,26 @@
             "Identify": {
                 "use": "Identify"
             },
-            "Zone Alarm1": {
-                "use": "attr-Zone-Alarm1",
-                "params": "ep=2C",
-                "isVisible": "1"
+
+            "Arm Value": {
+                "use": "inf_zbCmdC-0501-Arm-Value",
+                "isVisible": 1
             },
-            "Zone Status Changed": {
-                "use": "inf_zbAttr-0500-ZoneStatus-ChangeNotification",
-                "params": "ep=2C",
-                "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean\/bit0 value",
-                "trigOut": "2C-0500-alarm1",
-                "trigOutOffset": "#value#&1"
+            "Arm String": {
+                "use": "inf_zbCmdC-0501-Arm-String",
+                "isVisible": 1,
+                "nextLine": "after"
             },
-            "Bind 2C-0500-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=2C&clustId=0500",
-                "execAtCreation": "yes"
+            "ZoneStatus Change": {
+                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
+                "comment": "On receive we trig 2C-SOS with extracted boolean value",
+                "trigOut": "2C-SOS",
+                "trigOutOffset": "#value#&4"
+            },
+            "SOS": {
+                "use": "inf_generic-Badge",
+                "logicalId": "2C-SOS",
+                "isVisible": 1
             }
         }
     }

@@ -2,7 +2,8 @@
     "TS011F__TZ3000_wamqdr3f": {
         "manufacturer": "Silvercrest",
         "model": "HG06337-FR",
-        "type": "SAPZ-1-A1 connected plug",
+        "type": "Silvercrest connected plug",
+        "genericType": "Electricity",
         "timeout": "60",
         "category": {
             "automatism": "1"

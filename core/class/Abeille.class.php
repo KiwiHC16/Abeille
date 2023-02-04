@@ -1397,14 +1397,17 @@ class Abeille extends eqLogic {
         //     return;
         // }
 
-        /* Request to reset device from JSON. Useful to avoid reinclusion */
-        if ($cmdId == "updateFromModel") {
-        // if ($cmdId == "resetFromJson") {
-            log::add('Abeille', 'debug', 'message(): updateFromModel, '.$net.'/'.$addr);
+        /* Request to update or reset device from JSON. Useful to avoid reinclusion */
+        if (($cmdId == "updateFromModel") || ($cmdId == "resetFromModel")) {
+            if ($cmdId == 'updateFromModel')
+                $action = 'update';
+            else
+                $action = 'reset';
+            log::add('Abeille', 'debug', 'message(): '.$cmdId.', '.$net.'/'.$addr);
 
             $eqLogic = Abeille::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
-                log::add('Abeille', 'error', '  updateFromModel: Equipement inconnu: '.$net.'/'.$addr);
+                log::add('Abeille', 'error', '  '.$cmdId.': Equipement inconnu: '.$net.'/'.$addr);
                 return;
             }
 
@@ -1435,7 +1438,7 @@ class Abeille extends eqLogic {
                 'jsonLocation' => $jsonLocation,
                 'ieee' => $eqLogic->getConfiguration('IEEE'),
             );
-            Abeille::createDevice("update", $dev);
+            Abeille::createDevice($action, $dev);
 
             return;
         }

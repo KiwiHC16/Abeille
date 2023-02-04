@@ -4027,7 +4027,7 @@
                         } else if (($cmd == "00") && ($dir == 0)) { // Client to server: Arm cmd
                             $armMode = substr($pl, 0, 2);
                             $armCodeSize = hexdec(substr($pl, 2, 2));
-                            $armCode = substr($pl, 4, $armCodeSize * 2);
+                            $armCode = pack("H*", substr($pl, 4, $armCodeSize * 2));
                             $zoneId = hexdec(substr($pl, 4 + $armCodeSize * 2, 2));
                             $armModeT = array(
                                 "00" => "Disarm",
@@ -4036,6 +4036,14 @@
                                 "03" => "Arm All Zones",
                             );
                             $m = "  Arm: Mode=".$armMode."/".$armModeT[$armMode].", Code=".$armCode.", ZoneId=".$zoneId;
+                            $attrReportN[] = array(
+                                'name' => $srcEp.'-0501-cmd00C-val',
+                                'value' => $armMode,
+                            );
+                            $attrReportN[] = array(
+                                'name' => $srcEp.'-0501-cmd00C-str',
+                                'value' => $armModeT[$armMode],
+                            );
                         } else if (($cmd == "07") && ($dir == 0)) { // Client to server: Get Panel Status
                             $m = "  Get Panel Status Response command";
                             // Generate a 'Get Panel Status Response command'

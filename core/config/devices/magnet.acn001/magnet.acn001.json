@@ -40,7 +40,7 @@
                 "isVisible": "1"
             },
             "ZoneStatus": {
-                "use": "inf_zbAttr-0500-ZoneStatus-ChangeNotification",
+                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
                 "comment": "On receive we trig 0500-Status with extracted boolean value",
                 "trigOut": "0500-Status",
                 "trigOutOffset": "#value#&1"

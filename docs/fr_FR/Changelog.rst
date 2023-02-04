@@ -4,6 +4,8 @@ ChangeLog
 - Interne: Parser: Nettoyage 'ModelIdentifier' revue; 0 devient caractère de fin.
 - Interne: Cmd: Améliorations support clusters 0500 & 0501.
 - Interne: Parser: Msg 8401 désactivé.
+- Modèles: Correction nom 'inf_zbAttr-0500-ZoneStatus..' => 'inf_zbCmdS-0500-ZoneStatus...'.
+- Frient keypad: Mise-à-jour modele (2525).
 
 230202-BETA-3
 -------------

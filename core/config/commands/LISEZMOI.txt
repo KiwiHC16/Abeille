@@ -17,7 +17,8 @@ En dehors des commandes "historiques" en passe d'être normalisées, les noms de
 - Les commandes specifiques Zigbee (issues du standard Zigbee) sont ensuite prefixées par "zb"
   Ex: inf_zbXXX ou act_zbXXX
   Commandes 'générées': act_zbCmdG-xxxx.
-  Commandes 'reçues': inf_zbCmdR-xxxx.
+  Commandes reçues du SERVEUR: inf_zbCmdS-xxxx (anciennement inf_zbCmdR-xxxx)
+  Commandes reçues du CLIENT: inf_zbCmdC-xxxx.
   Attributs: inf_zbAttr-xxx
   Commandes génériques Zigbee: act_zbXXX
     Ex: act_zbConfigureReporting, act_zbReadAttribute... actions du standard Zigbee.

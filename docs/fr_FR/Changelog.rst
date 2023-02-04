@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230204-BETA-1
+230204-BETA-2
 -------------
 
 - Interne: Parser: Nettoyage 'ModelIdentifier' revue; 0 devient caractère de fin.

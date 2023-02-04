@@ -1112,6 +1112,8 @@
 // parserLog('debug', 'LA'.$i."='".$in."' => hexdec=".$in2);
                 if ($in2 == 0) // null char
                     break; // Assuming everything bad after
+
+                $in2 = pack("H*", $in); // Convert to char
                 if ($in2 <= ' ')
                     continue; // Ignore any control char & space
                 if ($in2 == '/')
@@ -1120,7 +1122,7 @@
                     continue; // Ignore '*'
                 // if ($in == '.')
                 //     continue; // Ignore '.'
-                $m = $m.pack("H*", $in);
+                $m = $m.$in2;
             }
 
             // Le capteur de temperature rond V1 xiaomi envoie spontanement son nom: ->lumi.sensor_ht<- mais envoie ->lumi.sens<- sur un getName

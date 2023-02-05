@@ -9,7 +9,11 @@
             "TS011F__TZ3000_hdopuwv6": [],
             "TS011F__TZ3000_typdpbpg": [],
             "TS011F__TZ3000_0zfrhq4i": [],
-            "TS011F__TZ3000_gznh2xla": [],
+            "TS011F__TZ3000_gznh2xla": {
+                "manufacturer": "Moes",
+                "model": "ZK-FR16M-WH",
+                "icon": "Tuya-SmartSocket-3"
+            },
             "TS011F__TZ3000_ss98ec5d": [],
             "TS011F__TZ3000_2putqrmw": {
                 "manufacturer": "Nous",

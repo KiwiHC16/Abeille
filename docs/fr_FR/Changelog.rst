@@ -1,6 +1,37 @@
 ChangeLog
 =========
 
+- Interne: Parser: Correction regression inclusion.
+- Interne: Plusieurs correctifs 'deviceUpdates'.
+- Page avancé: Ajout 'siren level' pour cmde 'Start Warning' (cluster 0502).
+- Sirène M0L0-HS2WD-TY: Ajout info pourcentage batterie (2550).
+
+230314-BETA-1
+-------------
+
+- Loratap shutter: Nouveau modele: TS130F, _TZ3000_femsaaua (2552)
+- MOES ZK-FR16M-WH: Mise-à-jour modèle 'TS011F__TZ3000_cphmq0q7' (2554).
+- Interne: Cmd 0502: Amélioration pour support 'siren level'.
+- Sirène M0L0-HS2WD-TY: Mise-à-jour modèle (2550).
+- Commandes: Suppression 'VoltagePrise'.
+
+230311-BETA-1
+-------------
+
+- Xiaomi Aqara 2 way control module: Mise-à-jour modèle (2551).
+- Page avancé/Mise-à-jour: Amélioration correction icone si invalide.
+- Sirène M0L0-HS2WD-TY: Mise-à-jour modèle (2550).
+- Interne: parser: correction crash decode8002_MgmtRtgRsp().
+- Image: Renommage 'HS2WD' => 'Heinman-IndoorSiren'.
+
+230308-BETA-1
+-------------
+
+- Interne: Parser: Décodage single/double precision revu.
+- WarningDevice: Modèle supprimé. Supporté via 'WarningDevice-EF-3.0'.
+- Interne: AbeilleTools: Suppression des 'commentX'.
+- Page avancé: Cluster 0502/IAS WD, cmd 00/Start warning: Ajout 'duration'.
+
 230306-BETA-1
 -------------
 

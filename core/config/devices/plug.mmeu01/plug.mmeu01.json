@@ -36,9 +36,6 @@
             "Conso": {
                 "use": "conso"
             },
-            "Voltage": {
-                "use": "VoltagePrise"
-            },
             "Courant": {
                 "use": "CurrentPrise_mA"
             },

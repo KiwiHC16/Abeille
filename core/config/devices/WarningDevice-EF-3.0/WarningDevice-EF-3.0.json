@@ -3,22 +3,27 @@
         "alternateIds": {
             "WarningDevice": [],
             "SRHMP-I1": [],
-            "TS0216__TYZB01_8scntis1": []
+            "TS0216__TYZB01_8scntis1": {
+                "manufacturer": "M0L0",
+                "model": "HS2WD-TY",
+                "type": "M0L0 smart indoor siren"
+            }
         },
         "manufacturer": "Heiman",
         "model": "HS2WD",
-        "type": "Heiman HS2WD warning device",
+        "type": "Heiman warning device",
+        "genericType": "Security",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "HS2WD"
+            "icon": "Heiman-IndoorSiren"
         },
         "category": {
             "automatism": "1"
         },
         "commands": {
-            "ZCL Version": {
-                "use": "inf_zbAttr-0000-ZCLVersion"
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Identify": {
                 "use": "Identify",
@@ -39,35 +44,23 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "Flash": {
-                "use": "writeAttributeRequestIAS_WD_Flash"
-            },
-            "Sound": {
-                "use": "writeAttributeRequestIAS_WD_Sound"
-            },
-            "FlashSound": {
-                "use": "writeAttributeRequestIAS_WD_FlashSound"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
-            "Test SOUND & FLASH": {
+            "SIREN": {
                 "use": "act_zbCmdG-0502-StartWarning",
-                "params": "ep=01&mode=burglar",
+                "params": "ep=01&mode=burglar&sirenl=#slider#",
+                "subType": "slider",
+                "minValue": 0,
+                "maxValue": 3,
+                "comment": "slider to select siren level from 0 to 3",
                 "isVisible": "1"
             },
-            "Test SOUND only": {
-                "use": "act_zbCmdG-0502-StartWarning",
-                "params": "ep=01&mode=burglar&strobe=off",
-                "isVisible": "1"
-            },
-            "Test FLASH only": {
+            "FLASH only": {
                 "use": "act_zbCmdG-0502-StartWarning",
                 "params": "ep=01&mode=stop&strobe=on",
+                "isVisible": "1"
+            },
+            "Stop": {
+                "use": "act_zbCmdG-0502-StartWarning",
+                "params": "ep=01&mode=stop&strobe=off",
                 "isVisible": "1"
             }
         }

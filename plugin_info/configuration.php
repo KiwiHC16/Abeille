@@ -354,6 +354,39 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label" data-toggle="tooltip" title="PiGpio est nécéssaire pour les Zigates de type PI">{{PiGpio}} : </label>
+                        <div id="idPiGpio" class="col-lg-4">
+                            <input id="idPiGpioStatus" type="text" class="form-control" title="{{Status d'installation du package PiGpio}}" readonly>
+                            <!-- <a class="PiGpioStatus" title="">
+                                <span class="label label-success" style="font-size:1em;">-?-</span>
+                            </a> -->
+                        </div>
+                        <div class="col-lg-5">
+                            <a class="btn btn-default" id="bt_installPiGpio" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Lib GPIO à utiliser : }}</label>
+                            <div class="col-lg-4" title="{{Choisissez la libraiie qui va piloter les PIN GPIO de la PiZigate.}}">
+                                <select id="idZgGpioLib" class="configKey form-control" data-l1key="ab::defaultGpioLib">
+                                    <option value="WiringPi">WiringPi</option>
+                                    <option value="PiGpio">PiGpio</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-5">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                    </div>
+                </div>
             </div>
 
             <!-- Display zigates 2 per line -->
@@ -597,6 +630,7 @@
             if ((zgType == "PI") || (zgType == "PIv2")) {
                 // $("#idWiringPi"+zgId).show();
                 checkWiringPi(); // Force WiringPi check
+                checkPiGpio();
             }
             //     $("#idUpdFw"+zgId).show();
             // } else if (zgType == "DIN") {
@@ -799,11 +833,49 @@
         });
     }
 
+    function checkPiGpio() {
+        if (window.checkPiGpioOngoing)
+            return;
+        window.checkPiGpioOngoing = true;
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'checkPiGpio',
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                bootbox.alert("ERREUR 'checkPiGpio' !<br>Votre installation semble corrompue.");
+                window.checkPiGpioOngoing = false;
+            },
+            success: function (res) {
+                if (res.result == 0) {
+                    // $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                    document.getElementById("idPiGpioStatus").value = "OK";
+                } else {
+                    // $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                    document.getElementById("idPiGpioStatus").value = "NOK";
+                }
+                window.checkPiGpioOngoing = false;
+            }
+        });
+    }
+
     $('#bt_installWiringPi').on('click', function() {
         bootbox.confirm('{{Vous êtes sur le point d installer WiringPi (http://wiringpi.com) et cela peut provoquer des conflits avec d\'autres gestionnaires de GPIO.<br> Voulez vous continuer ?}}', function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Installation de WiringPi}}"});
                 $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installWiringPi.abeille').dialog('open');
+            }
+        });
+    })
+
+    $('#bt_installPiGpio').on('click', function() {
+        bootbox.confirm('{{Vous êtes sur le point d installer PiGpio (http://abyz.me.uk/rpi/pigpio/) et cela peut provoquer des conflits avec d\'autres gestionnaires de GPIO.<br> Voulez vous continuer ?}}', function (result) {
+            if (result) {
+                $('#md_modal2').dialog({title: "{{Installation de PiGpio}}"});
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installPiGpio.abeille').dialog('open');
             }
         });
     })
@@ -858,6 +930,7 @@
                 action: 'checkTTY',
                 zgport: $("#idSelSP" + zgId).val(),
                 zgtype: $("#idSelZgType" + zgId).val(),
+                zgGpioLib: $("#idZgGpioLib").val(),
             },
             dataType: 'json',
             global: false,

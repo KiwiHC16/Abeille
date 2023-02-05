@@ -17,13 +17,14 @@ FW_DIR=${PWD}/../../resources/fw_zigate
 # Qq tests preliminaires
 echo "Vérifications préliminaires"
 error=0
-if [ $# -lt 2 ]; then
+if [ $# -lt 3 ]; then
     echo "= ERREUR: Argument(s) manquant(s) !"
-    echo "=         updateFirmware.sh <action> <zigateport> [fwfile]"
+    echo "=         updateFirmware.sh <action> <zigateport> <GpioLib> [fwfile]"
     error=1
 fi
 ACTION=$1
 ZGPORT=$2
+LIBGPIO=$3
 FW=""
 if [ ${ACTION} != "flash" ] && [ ${ACTION} != "check" ] && [ ${ACTION} != "eraseeeprom" ]; then
     echo "= ERREUR: Action '${ACTION}' non supportée."
@@ -43,11 +44,13 @@ else
         echo "=         Port: ${ZGPORT}"
         error=1
     fi
-    command -v gpio >/dev/null
-    if [ $? -ne 0 ]; then
-        echo "= ERREUR: Commande 'gpio' manquante ou non exécutable !"
-        echo "=         Le package WiringPi est probablement mal installé."
-        error=1
+    if [ ${LIBGPIO} == "WiringPi" ]
+        command -v gpio >/dev/null
+        if [ $? -ne 0 ]; then
+            echo "= ERREUR: Commande 'gpio' manquante ou non exécutable !"
+            echo "=         Le package WiringPi est probablement mal installé."
+            error=1
+        fi
     fi
     if [ ! -e ${PROG} ]; then
         # Compiling Jennic programmer since v0.7
@@ -96,19 +99,25 @@ fi
 # Mode production: FLASH=1, RESET=0 puis 1
 # Mode flash: FLASH=0, RESET=0 puis 1
 
-gpio mode 0 out
-gpio mode 2 out
 
-# Passage en mode 'flash'
-gpio write 2 0
-sleep 1
-gpio write 0 0
-sleep 1
-gpio write 0 1
-sleep 1
+if [ ${LIBGPIO} == "WiringPi" ]
+    gpio mode 0 out
+    gpio mode 2 out
 
-# gpio write 2 1
-# sleep 1
+    # Passage en mode 'flash'
+    gpio write 2 0
+    sleep 1
+    gpio write 0 0
+    sleep 1
+    gpio write 0 1
+    sleep 1
+
+    gpio write 2 1
+    sleep 1
+fi
+if [ ${LIBGPIO} == "PiGpio" ]
+    python pizigateModeFlash.py
+fi
 
 if [ ${ACTION} == "eraseeeprom" ]; then
     sudo ${PROG} -V 6 -P 115200 -v --eraseeeprom -s ${ZGPORT} 2>&1
@@ -133,11 +142,16 @@ else
 fi
 
 # Passage en mode 'prod'
-gpio write 2 1
-sleep 1
-gpio write 0 0
-sleep 1
+if [ ${LIBGPIO} == "WiringPi" ]
+    gpio write 2 1
+    sleep 1
+    gpio write 0 0
+    sleep 1
 gpio write 0 1
+fi
+if [ ${LIBGPIO} == "PiGpio" ]
+    python resetPiZigate.py
+fi
 
 if [ $status  -eq 0 ]; then
     echo "= Tout s'est bien passé. Vous pouvez fermer ce log."

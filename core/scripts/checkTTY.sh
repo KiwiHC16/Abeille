@@ -10,7 +10,7 @@
 # checkTTY.sh <portname> <zigatetype> [prefix]
 # ex: checkTTY.sh /dev/ttyS1 PI "[2021-03-18 12:44:09] "
 
-PREFIX=$3
+PREFIX=$4
 
 # NOW=`date +"%Y-%m-%d %H:%M:%S"`
 # echo "[${NOW}] Démarrage de '$(basename $0)'"
@@ -23,7 +23,7 @@ fi
 PORT=$1
 TYPE=$2
 
-echo "${PREFIX}Vérifications du port '${PORT}'"
+echo "${PREFIX} Vérifications du port '${PORT}'"
 
 # Port exists ?
 if [ ! -e ${PORT} ]; then
@@ -58,27 +58,28 @@ fi
 
 # If Zigate type is "PI", let's check if "WiringPi" is properly installed
 if [ "${TYPE}" == "PI" ]; then
-    # 'gpio' commands are provided from "WiringPi" package (or equivalent)
-    echo "${PREFIX}Vérification de l'installation du package 'WiringPi'"
-    command -v gpio >/dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        echo "${PREFIX}= ERREUR: Commande 'gpio' manquante !"
-        echo "${PREFIX}=         Le package 'WiringPi' est probablement mal installé."
-        exit 4
-    fi
-    echo "= Ok"
+    # # 'gpio' commands are provided from "WiringPi" package (or equivalent)
+    # echo "${PREFIX}Vérification de l'installation du package 'WiringPi'"
+    # command -v gpio >/dev/null 2>&1
+    # if [ $? -ne 0 ]; then
+    #     echo "${PREFIX}= ERREUR: Commande 'gpio' manquante !"
+    #     echo "${PREFIX}=         Le package 'WiringPi' est probablement mal installé."
+    #     exit 4
+    # fi
+    # echo "= Ok"
 
     # Note: Do not perform PiZigate reset unless you flush messages sent
     #       on startup.
     echo "${PREFIX}Configuration des GPIOs"
-    gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 1
-    READ2=`gpio read 2`
-    READ0=`gpio read 0`
-    if [ ${READ2} -ne 1 ] || [ ${READ0} -ne 1 ]; then
-        echo "${PREFIX}= ERREUR: Votre package WiringPi ne semble pas fonctionnel.";
-        exit 5
-    fi
-    echo "${PREFIX}= Ok"
+    # gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 1
+    # READ2=`gpio read 2`
+    # READ0=`gpio read 0`
+    # if [ ${READ2} -ne 1 ] || [ ${READ0} -ne 1 ]; then
+    #     echo "${PREFIX}= ERREUR: Votre package WiringPi ne semble pas fonctionnel.";
+    #     exit 5
+    # fi
+    # echo "${PREFIX}= Ok"
+    python /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py
 
     echo "${PREFIX}Configuration du port série"
     stty -F ${PORT} speed 115200 cs8 -parenb -cstopb -echo raw >/dev/null 2>&1

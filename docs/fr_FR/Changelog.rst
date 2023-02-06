@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: SerialRead: Filtrage des msgs de mauvaise longueur.
+
 230204-BETA-2
 -------------
 

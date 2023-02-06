@@ -174,6 +174,9 @@
        last  : 03 = stop
 
        CRC = 0x00 XOR MSG-TYPE XOR LENGTH XOR PAYLOAD XOR LQI
+
+       Note: Frame must be decoded first (removing 01, 02 & 03 chars)
+       then CRC checked.
      */
 
     while (true) {
@@ -206,18 +209,24 @@
             // if (($frame != "") && !$firstFrame)
             //     logMessage('debug', 'ERROR: Frame outside 01/02 markers: '.json_encode($frame));
             $frame = "";
-            // $firstFrame = false;
             $step = "WAITEND";
             $byteIdx = 1; // Next byte is index 1
             $ccrc = 0;
         } else { // Step = WAITEND
             /* Waiting for "03" end byte */
             if ($byte == "03") {
-                logMessage('debug', 'Got '.json_encode($frame));
+                logMessage('debug', 'Got '.$frame);
 
+                $fExpLen = hexdec(substr($frame, 4, 4)) + 5; // Frame expected length
+                $fLen = strlen($frame) / 2;
                 if ($ccrc != $ecrc) {
                     // CRC ERROR => no longer transmitted to Parser
-                    logMessage('debug', 'ERROR: CRC: got=0x'.dechex($ccrc).', exp=0x'.dechex($ecrc).', msg='.substr($frame, 0, 12).'...'.substr($frame, -2, 2));
+                    logMessage('debug', 'ERROR: CRC: got=0x'.dechex($ccrc).', exp=0x'.dechex($ecrc));
+                    logMessage('debug', 'Frame='.$frame);
+                } else if ($fLen != $fExpLen) {
+                    // LENGTH ERROR => no longer transmitted to Parser
+                    logMessage('debug', 'ERROR: Length MISMATCH: got='.$fLen.', exp='.$fExpLen);
+                    logMessage('debug', 'Frame='.$frame);
                 } else {
                     $msgToSend = array(
                         'type' => 'serialRead',
@@ -226,23 +235,20 @@
                     );
                     msgToParser($msgToSend);
                 }
-                // $frame = "";
                 $step = "WAITSTART";
+            } else if ($byte == "02") {
+                $transcode = true; // Next char to be transcoded
             } else {
-                if ($byte == "02") {
-                    $transcode = true; // Next char to be transcoded
-                } else {
-                    if ($transcode) {
-                        $byte = sprintf("%02X", (hexdec($byte) ^ 0x10));
-                        $transcode = false;
-                    }
-                    $frame .= $byte;
-                    if ($byteIdx == 5)
-                        $ecrc = hexdec($byte); // Byte 5 is expected CRC
-                    else
-                        $ccrc = $ccrc ^ hexdec($byte);
-                    $byteIdx++;
+                if ($transcode) {
+                    $byte = sprintf("%02X", (hexdec($byte) ^ 0x10));
+                    $transcode = false;
                 }
+                $frame .= $byte;
+                if ($byteIdx == 5)
+                    $ecrc = hexdec($byte); // Byte 5 is expected CRC
+                else
+                    $ccrc = $ccrc ^ hexdec($byte);
+                $byteIdx++;
             }
         }
     }

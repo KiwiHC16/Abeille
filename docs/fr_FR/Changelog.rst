@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Interne: SerialRead: Filtrage des msgs de mauvaise longueur.
+- Livarno Home floor lamp: Support préliminaire (2544).
 
 230204-BETA-2
 -------------

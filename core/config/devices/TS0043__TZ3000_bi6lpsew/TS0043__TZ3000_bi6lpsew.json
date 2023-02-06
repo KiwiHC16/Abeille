@@ -2,6 +2,10 @@
     "TS0043__TZ3000_bi6lpsew": {
         "manufacturer": "LoraTap",
         "model": "SS600ZB",
+        "type": "LoraTap 3 gang remote",
+        "alternateIds": {
+            "TS0043__TZ3000_famkxci2": {}
+        },
         "timeout": "250",
         "configuration": {
             "mainEP": "01",
@@ -10,7 +14,6 @@
         "category": {
             "automatism": "1"
         },
-        "type": "LoraTap Zigbee 3 gang remote",
         "commands": {
             "Click 1": { "use": "click", "params": "ep=01", "isVisible": 1 },
             "Click 2": { "use": "click", "params": "ep=02", "isVisible": 1 },

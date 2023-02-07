@@ -298,6 +298,10 @@
                 $path = __DIR__."/../../../../log/".$file;
             else if ($location == "JEEDOM-TMP")
                 $path = jeedom::getTmpFolder("Abeille").'/'.$file;
+            else {
+                ajax::error(json_encode(array('status' => -1, 'error' => "clearFile: Invalid 'location'")));
+            }
+
             logDebug("action=clearFile, path=".$path);
             $status = 0;
             $error = "";

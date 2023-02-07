@@ -101,7 +101,7 @@
                 <!-- <input class="input-sm roundedLeft" id="in_eventLogSearch" style="width : 200px;margin-left:4px;" placeholder="{{Rechercher}}" /> -->
                 <!-- <a class="btn btn-warning btn-sm" data-state="1" id="bt_eventLogStopStart"><i class="fas fa-pause"></i> {{Pause}}</a> -->
                 <a class="btn btn-success btn-sm" id="idDownloadCurrent"><i class="fas fa-cloud-download-alt"></i> {{Télécharger}}</a>
-                <a class="btn btn-warning btn-sm" id="idClearLogFile"><i class="fas fa-times"></i> {{Vider}}</a>
+                <a class="btn btn-warning btn-sm" id="idClearContent"><i class="fas fa-times"></i> {{Vider}}</a>
                 <a class="btn btn-danger roundedRight btn-sm" id="idRemoveLogFile"><i class="far fa-trash-alt"></i> {{Supprimer}}</a>
             </div>
         </div>
@@ -292,9 +292,9 @@
         }
     })
 
-    // Clear selected log file
-    $("#idClearLogFile").on('click', function(event) {
-        console.log("idClearLogFile click: curDisplay="+curDisplay+", type="+curDisplayType);
+    // Clear content of selected log file
+    $("#idClearContent").on('click', function(event) {
+        console.log("idClearContent click: curDisplay="+curDisplay+", type="+curDisplayType);
 
         if (curDisplay == "")
             return;

@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230207-BETA-2
+230207-BETA-3
 -------------
 
 - Interne: SerialRead: Filtrage des msgs de mauvaise longueur.

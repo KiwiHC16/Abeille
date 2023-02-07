@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230207-BETA-1
+-------------
+
 - Interne: SerialRead: Filtrage des msgs de mauvaise longueur.
 - Livarno Home floor lamp: Support préliminaire (2544).
 - LoraTap Zigbee 3 gang remote: Ajout support (2542).

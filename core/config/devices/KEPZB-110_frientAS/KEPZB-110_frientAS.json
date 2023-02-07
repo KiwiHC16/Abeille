@@ -43,7 +43,7 @@
             },
             "Arm Code": {
                 "use": "inf_zbCmdC-0501-Arm-String",
-                "logicalId": "#EP#-0501-cmd00C-code",
+                "logicalId": "2C-0501-cmd00C-code",
                 "isVisible": 1
             },
             "SOS": {

@@ -772,6 +772,7 @@
                 'sensor_switch' => '2023-01-26 11:18:00',
                 "sensor_cube" => '2023-01-30 12:38:00',
                 "sensor_cube.aqgl01" => '2023-01-30 12:38:00',
+                "relay.c2acn01" => '2023-02-07 12:29:00',
             );
             foreach ($eqLogics as $eqLogic) {
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);

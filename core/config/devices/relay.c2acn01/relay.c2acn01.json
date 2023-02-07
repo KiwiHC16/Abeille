@@ -1,7 +1,9 @@
 {
     "relay.c2acn01": {
-        "manufacturer": "Xiaomi/Aqara",
-        "type": "Xiaomi Module Double Switch Aqara",
+        "manufacturer": "Xiaomi",
+        "model": "LLKZMK11LM",
+        "type": "Xiaomi Aqara 2 way control module",
+        "genericType": "Outlet",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -11,32 +13,32 @@
             "automatism": "1"
         },
         "commands": {
-            "etat": {
+            "Status 1": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
-            "etat charge 1": {
+            "Status 2": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=02",
                 "genericType": "LIGHT_STATE",
                 "isVisible": 1
             },
-            "On": {
+            "On 1": {
                 "use": "act_zbCmdG-0006-On",
                 "params": "ep=01",
                 "isVisible": 1
             },
-            "On1": {
+            "On 2": {
                 "use": "act_zbCmdG-0006-On",
                 "params": "ep=02",
                 "isVisible": 1
             },
-            "Off": {
+            "Off 1": {
                 "use": "act_zbCmdG-0006-Off",
                 "params": "ep=01",
                 "isVisible": 1
             },
-            "Off1": {
+            "Off 2": {
                 "use": "act_zbCmdG-0006-Off",
                 "params": "ep=02",
                 "isVisible": 1
@@ -66,6 +68,27 @@
             },
             "SWBuildID": {
                 "use": "inf_zbAttr-0000-SWBuildID"
+            }
+        },
+        "xiaomi": {
+            "fromDevice": {
+                "0000-FF01": {
+                    "64-10": {
+                        "func": "number",
+                        "info": "0006-01-0000",
+                        "comment": "On/off state 1"
+                    },
+                    "65-10": {
+                        "func": "number",
+                        "info": "0006-02-0000",
+                        "comment": "On/off state 2"
+                    },
+                    "98-39": {
+                        "func": "number",
+                        "info": "000C-01-0055",
+                        "comment": "Power ?"
+                    }
+                }
             }
         }
     }

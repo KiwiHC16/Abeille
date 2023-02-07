@@ -7,6 +7,7 @@ ChangeLog
 - Interne: Page maintenance/logs. Correction mineure.
 - Interne: Cmd: 004E/LQI attend ACK.
 - Interne: Cmd: Timeout 7s si ACK.
+- Xiaomi relay (relay.c2acn01): Mise-à-jour modèle.
 
 230204-BETA-2
 -------------

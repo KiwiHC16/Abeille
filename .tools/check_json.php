@@ -83,6 +83,14 @@
             $error = newDevError($devName, "ERROR", "No equipment 'type' defined");
         }
 
+        // Checking 'genericType'
+        if (isset($dev[$devName]['genericType'])) {
+            $genType = $dev[$devName]['genericType'];
+            $validGenTypes = ['Other', 'Battery', 'Camera', 'Heating', 'Electricity', 'Environment', 'Generic', 'Light', 'Mode', 'Multimedia', 'Weather', 'Opening', 'Outlet', 'Robot', 'Security', 'Thermostat', 'Fan', 'Shutter'];
+            if (!in_array($genType, $validGenTypes))
+                $error = newDevError($devName, "ERROR", "Invalid 'genericType' defined: ".$genType);
+        }
+
         // Checking 'category'
         if (!isset($dev[$devName]['category'])) {
             $error = newDevError($devName, "ERROR", "No 'category' defined");

@@ -6016,19 +6016,20 @@
 
                 // Xiaomi Double Relay (ref ?)
                 else if (($attrId == "FF01") && ($attrSize == "0044")) {
-                    parserLog('debug', "  Xiaomi proprietary (Double relay)");
+                    parserLog('debug', "  Xiaomi proprietary (Double relay) => Handled by xiaomi section");
+                    return;
 
-                    // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
-                    // For info until activation
+                    // // For info until activation
+                    // xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
+                    // // For info until activation
 
-                    $FF01 = $this->decodeFF01(substr($payload, 24, strlen($payload) - 24 - 2));
-                    parserLog('debug', "  ".json_encode($FF01));
-                    $attrReportN = [
-                        array( "name" => '0006-01-0000', "value" => $FF01["Etat SW 1 Binaire"]["valueConverted"] ),
-                        array( "name" => '0006-02-0000', "value" => $FF01["Etat SW 2 Binaire"]["valueConverted"] ),
-                        array( "name" => '000C-01-0055', "value" => $FF01["Puissance"]["valueConverted"] ),
-                    ];
+                    // $FF01 = $this->decodeFF01(substr($payload, 24, strlen($payload) - 24 - 2));
+                    // parserLog('debug', "  ".json_encode($FF01));
+                    // $attrReportN = [
+                    //     array( "name" => '0006-01-0000', "value" => $FF01["Etat SW 1 Binaire"]["valueConverted"] ),
+                    //     array( "name" => '0006-02-0000', "value" => $FF01["Etat SW 2 Binaire"]["valueConverted"] ),
+                    //     array( "name" => '000C-01-0055', "value" => $FF01["Puissance"]["valueConverted"] ),
+                    // ];
                 }
 
                 // Xiaomi Presence Infrarouge IR V1 / Bouton V1 Rond

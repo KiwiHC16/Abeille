@@ -14,6 +14,7 @@ ChangeLog
 - Frient keypad: Mise-à-jour modele (2525).
 - Interne: Parser: Améliorations support cluster 0501 pour 'Emergency'/'Fire'/'Panic'.
 - Interne: Parser: Support 0501/Arm code.
+- Page des équipements: Groupes par Zigate (967).
 
 230204-BETA-2
 -------------

@@ -43,8 +43,8 @@
     $eqLogics = eqLogic::byType('Abeille');
     /* Creating a per Zigate list of eq ids.
        For each zigate, the first eq is the zigate.
-       $eqPerZigate[zgId][0] => id for zigate
-       $eqPerZigate[zgId][1] => id for next eq... */
+       $eqPerZigate[$zgId][id1] => id for zigate
+       $eqPerZigate[$zgId][id2] => id for next eq... */
     $eqPerZigate = array(); // All equipements id/addr per zigate
     foreach ($eqLogics as $eqLogic) {
         $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/0000'
@@ -65,6 +65,7 @@
         } else
             $eqPerZigate[$zgId][$eqId] = $eq;
     }
+    $GLOBALS['eqPerZigate'] = $eqPerZigate;
     echo '<script>var js_eqPerZigate = \''.json_encode($eqPerZigate).'\';</script>';
 
     // logDebug("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only

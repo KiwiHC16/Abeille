@@ -1,0 +1,10 @@
+{
+    "inf_generic-String": {
+        "comment": "Generic string info command",
+        "subType": "string",
+        "template": "default",
+        "type": "info",
+        "unit": "",
+        "logicalId": "#EP#-generic-String"
+    }
+}

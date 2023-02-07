@@ -4046,6 +4046,21 @@
                                 'name' => $srcEp.'-0501-cmd00C-str',
                                 'value' => $armModeT[$armMode],
                             );
+                        } else if (($cmd == "02") && ($dir == 0)) { // Client to server: Emergency
+                            $attrReportN[] = array(
+                                'name' => $srcEp.'-0501-cmd02C',
+                                'value' => 'EMERGENCY',
+                            );
+                        } else if (($cmd == "03") && ($dir == 0)) { // Client to server: Fire
+                            $attrReportN[] = array(
+                                'name' => $srcEp.'-0501-cmd03C',
+                                'value' => 'FIRE',
+                            );
+                        } else if (($cmd == "04") && ($dir == 0)) { // Client to server: Panic
+                            $attrReportN[] = array(
+                                'name' => $srcEp.'-0501-cmd04C',
+                                'value' => 'PANIC',
+                            );
                         } else if (($cmd == "07") && ($dir == 0)) { // Client to server: Get Panel Status
                             $m = "  Get Panel Status Response command";
                             // Generate a 'Get Panel Status Response command'

@@ -66,7 +66,7 @@
                 "isVisible": "1"
             },
             "Illuminance & presence": {
-                "use": "inf_generic-Badge",
+                "use": "inf_generic-NumericBadge",
                 "logicalId": "01-illumAndPresence",
                 "calculValueOffset": "#value#>130536?0:#value#-65536",
                 "trigOut": "0406-01-0000",
@@ -80,7 +80,7 @@
                 "comment": "Detection Interval, 2 secondes a 3 minutes"
             },
             "Detection interval": {
-                "use": "inf_generic-Badge",
+                "use": "inf_generic-NumericBadge",
                 "logicalId": "01-detectionInterval",
                 "isVisible": "1",
                 "nextLine": "after"
@@ -93,7 +93,7 @@
                 "comment": "Motion sensitivity, 1=low, 2=medium, 3=high"
             },
             "Motion sensitivity": {
-                "use": "inf_generic-Badge",
+                "use": "inf_generic-NumericBadge",
                 "logicalId": "01-motionSensitivity",
                 "isVisible": "1"
             },
@@ -105,7 +105,7 @@
                 "comment": "Led enable or disabled"
             },
             "Indicator": {
-                "use": "inf_generic-Badge",
+                "use": "inf_generic-NumericBadge",
                 "logicalId": "01-indicator",
                 "isVisible": "1"
             }

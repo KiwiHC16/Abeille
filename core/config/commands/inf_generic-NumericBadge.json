@@ -1,6 +1,6 @@
 {
-    "inf_generic-Badge": {
-        "comment": "Generic info badge command",
+    "inf_generic-NumericBadge": {
+        "comment": "Generic numeric badge info command",
         "subType": "numeric",
         "template": "badge",
         "configuration": {

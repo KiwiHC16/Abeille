@@ -41,15 +41,11 @@
                 "isVisible": 1,
                 "nextLine": "after"
             },
-            "ZoneStatus Change": {
-                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
-                "comment": "On receive we trig 2C-SOS with extracted boolean value",
-                "trigOut": "2C-SOS",
-                "trigOutOffset": "#value#&4"
-            },
             "SOS": {
-                "use": "inf_generic-Badge",
-                "logicalId": "2C-SOS",
+                "use": "inf_generic-String",
+                "logicalId": "2C-0501-cmd02C",
+                "returnStateValue": "",
+                "returnStateTime": 1,
                 "isVisible": 1
             }
         }

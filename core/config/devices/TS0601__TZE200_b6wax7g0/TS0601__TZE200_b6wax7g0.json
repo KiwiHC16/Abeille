@@ -3,6 +3,7 @@
         "manufacturer": "Moes",
         "model": "BRT-100",
         "type": "Moes thermostatic head",
+        "genericType": "Thermostat",
         "timeout": "60",
         "category": {
             "heating": "1"
@@ -60,7 +61,7 @@
                 "isVisible": 1
             },
             "Valve position": {
-                "use": "inf_generic-Badge",
+                "use": "inf_generic-NumericBadge",
                 "logicalId": "01-valvePosition",
                 "minValue": 0,
                 "maxValue": 100,

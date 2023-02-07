@@ -251,13 +251,13 @@
                 $temp ^= hexdec($datas[$i].$datas[$i+1]);
             }
 
-            cmdLog('debug',"getChecksum fct - msgtype: " . $msgtype . " length: " . $length . " datas: " . $datas . " strlen data: " . strlen($datas) . " checksum calculated: " . sprintf("%02X",$temp), $this->debug["Checksum"]);
+            // cmdLog('debug',"getChecksum fct - msgtype: " . $msgtype . " length: " . $length . " datas: " . $datas . " strlen data: " . strlen($datas) . " checksum calculated: " . sprintf("%02X",$temp), $this->debug["Checksum"]);
 
             return sprintf("%02X",$temp);
         }
 
         function transcode($datas) {
-            cmdLog('debug','transcode fct - transcode data: '.$datas, $this->debug['transcode']);
+            // cmdLog('debug','transcode fct - transcode data: '.$datas, $this->debug['transcode']);
             $mess="";
 
             if (strlen($datas)%2 !=0) return -1;
@@ -280,9 +280,9 @@
         // If 'begin' is set to true, cmd is added in front of queue to be the first one
         function pushZigateCmd($zgId, $pri, $cmd, $payload, $addr, $addrMode, $begin = false) {
             if (($addrMode == "02") || ($addrMode == "03"))
-                $ackAps = 1;
+                $ackAps = true;
             else
-                $ackAps = 0;
+                $ackAps = false;
             $newCmd = array(
                 // 'priority'  => $pri,
                 'dest'      => 'Abeille'.$zgId,
@@ -295,7 +295,7 @@
                 'sentTime'  => 0, // For lost cmds timeout
                 'sqn'       => '', // Zigate SQN
                 'sqnAps'    => '', // Network SQN
-                'ackAps'    => $ackAps, // 1 if ACK, 0 else
+                'ackAps'    => $ackAps, // True if ACK, false else
             );
             if ($begin) {
                 // cmdLog('debug', 'LA='.json_encode($this->zigates[$zgId]['cmdQueue'][$pri]));
@@ -641,11 +641,11 @@
 
                 /* ACK or no ACK ?
                    In all cases expecting 8000 as first last sent cmd ack.
-                   If ackAps is 1 (addrMode 02 or 03), zigate is released after
+                   If ackAps is true (addrMode 02 or 03), zigate is released after
                      - 8702 => Buffered. Does not mean anything. May finish sucessfully or not.
                      - 8012 => Message received by next hope.
                      - 8011 (following 8012) => device acknowledged (or not) cmd (got 8000, 8012, then 8011)
-                   If ackAps is 0, zigate is released after 8000 msg
+                   If ackAps is false, zigate is released after 8000 msg
                  */
 
                 unset($removeCmd); // Unset in case set in previous msg
@@ -774,8 +774,12 @@
                 if ($cmd['status'] == '')
                     continue; // Not sent yet
                 // Timeout: At least 4sec to let Zigate do its job but is that enough ?
-                if ($cmd['sentTime'] + 4 > time())
-                    continue; // 4sec timeout not reached yet
+                if ($cmd['ackAps'])
+                    $timeout = 7; // Zigate has 7s internal timeout when ACK
+                else
+                    $timeout = 4;
+                if ($cmd['sentTime'] + $timeout > time())
+                    continue; // Timeout not reached yet
 
                 cmdLog("debug", "zigateAckCheck(): WARNING: Zigate".$zgId." cmd ".$cmd['cmd']." TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
                 $this->removeFirstCmdFromQueue($sentPri); // Removing blocked cmd

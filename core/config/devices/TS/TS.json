@@ -2,9 +2,11 @@
     "TS": {
         "manufacturer": "Profalux",
         "model": "T\u00e9lecommande",
+        "type": "Profalux t\u00e9l\u00e9commande",
         "alternateIds": {
             "TG1": []
         },
+        "genericType": "Shutter",
         "comment": "S'annonce mais a ignorer. On ne peut rien faire avec",
         "isVisible": 0,
         "configuration": {
@@ -15,7 +17,6 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Profalux t\u00e9l\u00e9commande",
         "commands": []
     }
 }

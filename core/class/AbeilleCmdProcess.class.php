@@ -2773,16 +2773,13 @@
                     // <target short address: uint16_t>
                     // <Start Index: uint8_t>
 
-                    $address = $Command['addr'];
+                    $addr = $Command['addr'];
                     $startIndex = $Command['startIndex'];
 
-                    //  4 + 2 = 6/2 => 3
-                    // $length = "0003";
+                    $data = $addr.$startIndex ;
 
-                    $data = $address.$startIndex ;
-
-                    // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
+                    // Note: 004E seems to be ACKed command.
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, "02");
                     return;
                 }
 

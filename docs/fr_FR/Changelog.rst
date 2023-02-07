@@ -5,6 +5,8 @@ ChangeLog
 - Livarno Home floor lamp: Support préliminaire (2544).
 - LoraTap Zigbee 3 gang remote: Ajout support (2542).
 - Interne: Page maintenance/logs. Correction mineure.
+- Interne: Cmd: 004E/LQI attend ACK.
+- Interne: Cmd: Timeout 7s si ACK.
 
 230204-BETA-2
 -------------

@@ -4046,6 +4046,10 @@
                                 'name' => $srcEp.'-0501-cmd00C-str',
                                 'value' => $armModeT[$armMode],
                             );
+                            $attrReportN[] = array(
+                                'name' => $srcEp.'-0501-cmd00C-code',
+                                'value' => $armCode,
+                            );
                         } else if (($cmd == "02") && ($dir == 0)) { // Client to server: Emergency
                             $attrReportN[] = array(
                                 'name' => $srcEp.'-0501-cmd02C',

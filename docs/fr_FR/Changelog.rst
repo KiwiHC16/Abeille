@@ -13,6 +13,7 @@ ChangeLog
 - Xiaomi relay (relay.c2acn01): Mise-à-jour modèle.
 - Frient keypad: Mise-à-jour modele (2525).
 - Interne: Parser: Améliorations support cluster 0501 pour 'Emergency'/'Fire'/'Panic'.
+- Interne: Parser: Support 0501/Arm code.
 
 230204-BETA-2
 -------------

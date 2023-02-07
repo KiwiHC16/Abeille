@@ -41,6 +41,11 @@
                 "isVisible": 1,
                 "nextLine": "after"
             },
+            "Arm Code": {
+                "use": "inf_zbCmdC-0501-Arm-String",
+                "logicalId": "#EP#-0501-cmd00C-code",
+                "isVisible": 1
+            },
             "SOS": {
                 "use": "inf_generic-String",
                 "logicalId": "2C-0501-cmd02C",

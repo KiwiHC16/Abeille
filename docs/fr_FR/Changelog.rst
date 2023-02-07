@@ -8,6 +8,8 @@ ChangeLog
 - Interne: Cmd: 004E/LQI attend ACK.
 - Interne: Cmd: Timeout 7s si ACK.
 - Xiaomi relay (relay.c2acn01): Mise-à-jour modèle.
+- Frient keypad: Mise-à-jour modele (2525).
+- Interne: Cmd: Améliorations support cluster 0501 pour 'Emergency'/'Fire'/'Panic'.
 
 230204-BETA-2
 -------------

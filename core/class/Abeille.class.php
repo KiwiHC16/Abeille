@@ -1908,6 +1908,7 @@ class Abeille extends eqLogic {
             $eqLogic->setLogicalId($net.'/'.$addr);
             $eqLogic->setIsEnable(1);
             $eqLogic->save();
+            message::add("Abeille", $eqLogic->getHumanName().": a migré vers le réseau ".$net, '');
 
             return;
         } // End 'eqMigrated'
@@ -1964,7 +1965,7 @@ class Abeille extends eqLogic {
                 $eqLogic->setIsEnable(0);
                 /* Display message only if NOT in include mode */
                 if (self::checkInclusionStatus($net) != 1)
-                    message::add("Abeille", "'".$eqLogic->getHumanName()."' a quitté le réseau => désactivé.", '');
+                    message::add("Abeille", $eqLogic->getHumanName().": a quitté le réseau => désactivé.", '');
                 $eqLogic->save();
                 $eqLogic->refresh();
                 log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().' has left the network => DISABLED');

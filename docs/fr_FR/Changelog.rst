@@ -4,6 +4,8 @@ ChangeLog
 - Interne: Cmd: Correction 'bind0030'.
 - Eurotronic SPZB0001: Mise-à-jour modèle.
 - Interne: Parser: Optimisation correction valeur suivant spec ZCL.
+- Interne: Parser: Correction regression clean location. Peut impacter Profalux.
+- Interne: Parser: Suppression progressive decode8100_8102().
 
 230207-BETA-3
 -------------

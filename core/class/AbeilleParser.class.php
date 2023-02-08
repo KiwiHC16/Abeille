@@ -3202,13 +3202,12 @@
                             return;
 
                         // Some clusters are directly handled by 8100/8102 decode
-                        $refused = ['0000', 'FC00'];
+                        // $refused = ['0000', 'FC00'];
+                        $refused = ['FC00'];
                         if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
                         }
-
-                        // $toMon[] = "8002/Read attributes response"; // For monitor
 
                         /* Command frame format:
                             ZCL header
@@ -3223,11 +3222,11 @@
 
                         $attributes = [];
                         $readAttributesResponseN = []; // Attributes by Jeedom logical name
-                        $l = strlen($msg);
+                        $l = strlen($pl);
                         $eq = getDevice($dest, $srcAddr, ''); // Corresponding device
                         for ($i = 0; $i < $l;) {
                             $size = 0;
-                            $attr = $this->decode8002_ReadAttrStatusRecord(substr($msg, $i), $size);
+                            $attr = $this->decode8002_ReadAttrStatusRecord(substr($pl, $i), $size);
                             if ($attr === false)
                                 break; // Stop decode there
 
@@ -3235,6 +3234,17 @@
                             $correct = ['0001-0020', '0001-0021', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
                             if (in_array($clustId.'-'.$attr['id'], $correct))
                                 $this->decode8002_ZCLCorrectAttrValue($clustId, $eq, $attr);
+
+                            // If cluster 0000, attributes manufId/modelId or location.. need to clean string
+                            if ($clustId == "0000") {
+                                if (($attr['id'] == "0005") || ($attr['id'] == "0010")) {
+                                    $attr['value'] = $this->cleanModelId($attr['valueHex']);
+                                    $attr['comment'] = "cleaned model";
+                                } else if ($attr['id'] == "0004") {
+                                    $attr['value'] = $this->cleanManufId($attr['value']);
+                                    $attr['comment'] = "cleaned manuf";
+                                }
+                            }
 
                             $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
                             if ($attr['status'] == '00') {
@@ -3293,6 +3303,7 @@
 
                             $i += $size;
                         }
+
                         if (sizeof($attributes) != 0) {
                             // If discovering step, recording infos
                             $discovering = $this->discoveringState($dest, $srcAddr);
@@ -3316,7 +3327,7 @@
                         }
 
                         /* Tcharp38: Cluster 0005 specific case.
-                        Why is it handled here in Parser ?? Moreover why in decode8002 since supported by decode8100 ? */
+                           TO BE REVISITED to remove DB accesses from parser. */
                         if ($clustId == "0005") {
                             $eqLogic = Abeille::byLogicalId($dest."/".$srcAddr, 'Abeille');
                             if (is_object($eqLogic)) {
@@ -3350,8 +3361,6 @@
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
 
-                        // $toMon[] = "8002/Write Attributes Response"; // For monitor
-
                         $l = strlen($msg);
                         for ($i = 0; $i < $l; ) {
                             $status = substr($msg, $i + 0, 2);
@@ -3370,15 +3379,12 @@
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
 
-                        // $toMon[] = "8002/Configure Reporting Response"; // For monitor
-
                         $l = strlen($msg);
                         for ($i = 0; $i < $l; ) {
                             $status = substr($msg, $i + 0, 2);
                             $dir = substr($msg, $i + 2, 2);
                             $attrId = AbeilleTools::reverseHex(substr($msg, $i + 4, 4));
 
-                            // $m = "  Attr=".$attrId.", Dir=".$dir.", Status=".$status.'/'.zbGetZCLStatus($status);
                             $m = "  Status=".$status.'/'.zbGetZCLStatus($status).", Attr=".$attrId.", Dir=".$dir;
                             parserLog('debug', $m);
                             $toMon[] = $m; // For monitor
@@ -3391,8 +3397,6 @@
                         // Duplicated message ?
                         if ($this->isDuplicated($dest, $srcAddr, $sqn))
                             return;
-
-                        // $toMon[] = "8002/Read Reporting Configuration Response"; // For monitor
 
                         $status = substr($msg, 0, 2);
                         $dir = substr($msg, 2, 2);
@@ -3472,6 +3476,17 @@
                                 $correct = ['0001-0020', '0001-0021', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
                                 if (in_array($clustId.'-'.$attr['id'], $correct))
                                     $this->decode8002_ZCLCorrectAttrValue($clustId, $eq, $attr);
+
+                                // If cluster 0000, attributes manufId/modelId or location.. need to clean string
+                                if ($clustId == "0000") {
+                                    if (($attr['id'] == "0005") || ($attr['id'] == "0010")) {
+                                        $attr['value'] = $this->cleanModelId($attr['valueHex']);
+                                        $attr['comment'] = "cleaned model";
+                                    } else if ($attr['id'] == "0004") {
+                                        $attr['value'] = $this->cleanManufId($attr['value']);
+                                        $attr['comment'] = "cleaned manuf";
+                                    }
+                                }
 
                                 // Log
                                 $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
@@ -3651,8 +3666,6 @@
                         // if ($this->isDuplicated($dest, $srcAddr, $sqn))
                         //     return;
                         // Tcharp38: Need to check how to deal with 'completed' flag
-
-                        // $toMon[] = "8002/Discover Attributes Extended Response"; // For monitor
 
                         $completed = substr($msg, 2);
                         $msg = substr($msg, 2); // Skipping 'completed' status
@@ -5871,7 +5884,8 @@
 
                         $this->deviceUpdate($dest, $srcAddr, $ep, 'modelId', $cleanedValue);
                     } else if ($attrId == "0010") { // Location
-                        $cleanedValue = $this->cleanModelId($trimmedValue);
+                        // $cleanedValue = $this->cleanModelId($trimmedValue);
+                        $cleanedValue = $this->cleanModelId($Attribut);
 
                         parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."' => cleaned='".$cleanedValue."'");
                         $data = $cleanedValue;

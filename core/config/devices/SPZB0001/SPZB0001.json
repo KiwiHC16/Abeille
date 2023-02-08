@@ -2,6 +2,8 @@
     "SPZB0001": {
         "manufacturer": "Eurotronic",
         "model": "SPZB0001",
+        "type": "Eurotronic Spirit Radiator Thermostat",
+        "genericType": "Thermostat",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -11,7 +13,6 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Spirit Radiator Thermostat",
         "commands": {
             "Identify": {
                 "use": "Identify",
@@ -38,7 +39,10 @@
                 "execAtCreation": "yes"
             },
             "setReportTemperature": {
-                "use": "spiritTemperatureSetReport"
+                "use": "act_zbConfigureReporting",
+                "params": "clustId=0201&attrType=29&attrId=0000&minInterval=012C&maxInterval=0DAC&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
             },
             "Pi Heating Demand": {
                 "use": "spiritPiHeatingDemand"

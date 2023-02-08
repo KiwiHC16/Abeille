@@ -196,7 +196,7 @@
             //                         );
             //     break;
 
-            case "setReportSpirit": // OBSOLETE: Use 'configureReporting' instead
+            // case "setReportSpirit": // OBSOLETE: Use 'configureReporting' instead
             case "setReport": // OBSOLETE: Use 'configureReporting' instead
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {

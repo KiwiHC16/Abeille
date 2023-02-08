@@ -2898,7 +2898,7 @@
                     // Source
                     $addr = $Command['addr'];
                     if (strlen($addr) != 16) {
-                        cmdLog('debug', "    ERROR: Invalid addr length");
+                        cmdLog('error', "    ERROR: Invalid addr length");
                         return;
                     }
                     $ep = $Command['ep'];
@@ -2913,13 +2913,15 @@
                     else if (strlen($dstAddr) == 16)
                         $dstAddrMode = "03";
                     else {
-                        cmdLog('debug', "    ERROR: Invalid dest addr length");
+                        cmdLog('error', "    ERROR: Invalid dest addr length");
                         return;
                     }
                     $dstEp = isset($Command['destEp']) ? $Command['destEp'] : "00"; // destEp ignored if group address
+                    cmdLog('debug', '    Bind0030: '.$addr.'/EP'.$ep.'/Clust'.$clustId.' to '.$dstAddr.'/EP'.$dstEp);
                     $data = $addr.$ep.$clustId.$dstAddrMode.$dstAddr.$dstEp;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $dstAddrMode);
+                    // Note: Bind is sent with ACK request
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, "02");
                     return;
                 }
 

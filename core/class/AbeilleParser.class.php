@@ -1863,6 +1863,45 @@
         //     parserLog('debug', $dest.', Type='.$msgDecoded, "8001");
         // }
 
+        // Some attributs defined in ZCL spec have a predefined formula to apply.
+        // Ex: Cluster 0402, attr 0000 = temperature to be devided by 100.
+        // 'attr' is passed by ref as it could be updated.
+        function decode8002_ZCLCorrectAttrValue($clustId, $eq, &$attr) {
+            $newVal = $attr['value'];
+            $attrId  = $attr['id'];
+
+            if ($clustId == "0001") {
+                if ($attrId == "0020") {
+                    $newVal = $newVal / 10; // Battery voltage
+                } else if ($attrId == "0021") {
+                    $newVal = $newVal / 2; // Battery percent
+                }
+            } else if ($clustId == "0400") {
+                if ($attrId == "0000") {
+                    if (!isset($eq['notStandard-0400-0000']))
+                        $newVal = ($newVal == 0 ? 0 : pow(10, ($newVal - 1) / 10000)); // Illuminance
+                    else
+                        $comment = 'NOT STANDARD value';
+                }
+            } else if ($clustId == "0402") {
+                if ($attrId == "0000") {
+                    $newVal /= 100; // Temperature
+                }
+            } else if ($clustId == "0403") {
+                if ($attrId == "0000") {
+                    $newVal /= 10; // Pressure (in kPa)
+                }
+            } else if ($clustId == "0405") {
+                if ($attrId == "0000") {
+                    $newVal /= 100; // Humidity
+                }
+            }
+            if ($newVal != $attr['value']) {
+                $attr['value'] = $newVal;
+                $attr['comment'] = isset($comment) ? $comment : "ZCL corrected value";
+            }
+        }
+
         /* Called from decode8002() to decode a "Read Attribute Status Record"
            Returns: false if error */
         function decode8002_ReadAttrStatusRecord($hexString, &$size) {
@@ -3158,19 +3197,16 @@
                     } // End 'Read Attributes' (cmd 00)
 
                     else if ($cmd == "01") { // Read Attributes Response
+                        // Duplicated message ?
+                        if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                            return;
+
                         // Some clusters are directly handled by 8100/8102 decode
-                        // Tcharp38 note: At some point do the opposite => what's handled by 8100
-                        // $acceptedCmd01 = ['0005', '0009', '0015', '0020', '0007', '0100', '0B01', '0B04', '1000', 'E000', 'E001', 'EF00', 'FC01', 'FC02', 'FF66']; // Clusters handled here
-                        // $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
                         $refused = ['0000', 'FC00'];
                         if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
                         }
-
-                        // Duplicated message ?
-                        if ($this->isDuplicated($dest, $srcAddr, $sqn))
-                            return;
 
                         // $toMon[] = "8002/Read attributes response"; // For monitor
 
@@ -3195,48 +3231,56 @@
                             if ($attr === false)
                                 break; // Stop decode there
 
+                            // Attribute value post correction according to ZCL spec
+                            $correct = ['0001-0020', '0001-0021', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
+                            if (in_array($clustId.'-'.$attr['id'], $correct))
+                                $this->decode8002_ZCLCorrectAttrValue($clustId, $eq, $attr);
+
                             $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
-                            if ($attr['status'] == '00')
+                            if ($attr['status'] == '00') {
                                 $m = '  AttrId='.$attr['id'].'/'.$attrName
                                     .', Status='.$attr['status']
                                     .', AttrType='.$attr['dataType']
-                                    .', ValueHex='.$attr['valueHex'].' => '.$attr['value'];
-                            else
+                                    .', ValueHex='.$attr['valueHex'].' => ';
+                                if (isset($attr['comment']))
+                                    $m .= $attr['comment'].', '.$attr['value'];
+                                else
+                                    $m .= $attr['value'];
+                            } else
                                 $m = '  AttrId='.$attr['id'].'/'.$attrName
                                     .', Status='.$attr['status']
                                     .' => '.zbGetZCLStatus($attr['status']);
                             parserLog('debug', $m, "8002");
                             $toMon[] = $m;
 
-                            // Attribute value post correction according to ZCL spec
-                            if ($clustId == "0001") {
-                                if ($attr['id'] == "0020") {
-                                    $attr['value'] = $attr['value'] / 10; // Battery voltage
-                                } else if ($attr['id'] == "0021") {
-                                    $attr['value'] = $attr['value'] / 2; // Battery percent
-                                }
-                            } else if ($clustId == "0400") {
-                                if ($attr['id'] == "0000") {
-                                    $val = $attr['value'];
-                                    if (!isset($eq['notStandard-0400-0000']))
-                                        $val = ($val == 0 ? 0 : pow(10, ($val - 1) / 10000)); // Illuminance
-                                    else
-                                        parserLog('debug', '  NOT STANDARD attribute value');
-                                    $attr['value'] = $val;
-                                }
-                            } else if ($clustId == "0402") {
-                                if ($attr['id'] == "0000") {
-                                    $attr['value'] /= 100; // Temperature
-                                }
-                            } else if ($clustId == "0403") {
-                                if ($attr['id'] == "0000") {
-                                    $attr['value'] /= 10; // Pressure (in kPa)
-                                }
-                            } else if ($clustId == "0405") {
-                                if ($attr['id'] == "0000") {
-                                    $attr['value'] /= 100; // Humidity
-                                }
-                            }
+                            // if ($clustId == "0001") {
+                            //     if ($attr['id'] == "0020") {
+                            //         $attr['value'] = $attr['value'] / 10; // Battery voltage
+                            //     } else if ($attr['id'] == "0021") {
+                            //         $attr['value'] = $attr['value'] / 2; // Battery percent
+                            //     }
+                            // } else if ($clustId == "0400") {
+                            //     if ($attr['id'] == "0000") {
+                            //         $val = $attr['value'];
+                            //         if (!isset($eq['notStandard-0400-0000']))
+                            //             $val = ($val == 0 ? 0 : pow(10, ($val - 1) / 10000)); // Illuminance
+                            //         else
+                            //             parserLog('debug', '  NOT STANDARD attribute value');
+                            //         $attr['value'] = $val;
+                            //     }
+                            // } else if ($clustId == "0402") {
+                            //     if ($attr['id'] == "0000") {
+                            //         $attr['value'] /= 100; // Temperature
+                            //     }
+                            // } else if ($clustId == "0403") {
+                            //     if ($attr['id'] == "0000") {
+                            //         $attr['value'] /= 10; // Pressure (in kPa)
+                            //     }
+                            // } else if ($clustId == "0405") {
+                            //     if ($attr['id'] == "0000") {
+                            //         $attr['value'] /= 100; // Humidity
+                            //     }
+                            // }
 
                             $attrId = $attr['id'];
                             unset($attr['id']); // Remove 'id' from object for optimization
@@ -3371,17 +3415,16 @@
                     }
 
                     else if ($cmd == "0A") { // Report attributes
+                        // Duplicated message ?
+                        if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                            return;
+
                         // Some clusters are directly handled by 8100/8102 decode
-                        // $refused = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
                         $refused = ['FC00'];
                         if (in_array($clustId, $refused)) {
                             parserLog('debug', "  Handled by decode8100_8102");
                             return;
                         }
-
-                        // Duplicated message ?
-                        if ($this->isDuplicated($dest, $srcAddr, $sqn))
-                            return;
 
                         $unknown = $this->deviceUpdate($dest, $srcAddr, $srcEp);
                         if ($unknown)
@@ -3425,43 +3468,52 @@
                                 if ($attr === false)
                                     break;
 
+                                // Attribute value post correction according to ZCL spec
+                                $correct = ['0001-0020', '0001-0021', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
+                                if (in_array($clustId.'-'.$attr['id'], $correct))
+                                    $this->decode8002_ZCLCorrectAttrValue($clustId, $eq, $attr);
+
                                 // Log
                                 $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
                                 $m = '  AttrId='.$attr['id'].'/'.$attrName
                                     .', AttrType='.$attr['dataType']
-                                    .', ValueHex='.$attr['valueHex'].' => '.$attr['value'];
+                                    .', ValueHex='.$attr['valueHex'].' => ';
+                                if (isset($attr['comment']))
+                                    $m .= $attr['comment'].', '.$attr['value'];
+                                else
+                                    $m .= $attr['value'];
                                 parserLog('debug', $m, "8002");
                                 $toMon[] = $m; // For monitor
 
-                                // Attribute value post correction according to ZCL spec
-                                if ($clustId == "0001") {
-                                    if ($attr['id'] == "0020") {
-                                        $attr['value'] = $attr['value'] / 10; // Battery voltage
-                                    } else if ($attr['id'] == "0021") {
-                                        $attr['value'] = $attr['value'] / 2; // Battery percent
-                                    }
-                                } else if ($clustId == "0400") {
-                                    if ($attr['id'] == "0000") {
-                                        $val = $attr['value'];
-                                        if (!isset($eq['notStandard-0400-0000']))
-                                            $val = ($val == 0 ? 0 : pow(10, ($val - 1) / 10000)); // Illuminance
-                                        else
-                                            parserLog('debug', '  NOT STANDARD attribute value');
-                                        $attr['value'] = $val;
-                                    }
-                                } else if ($clustId == "0402") {
-                                    if ($attr['id'] == "0000") {
-                                        $attr['value'] /= 100; // Temperature
-                                    }
-                                } else if ($clustId == "0403") {
-                                    if ($attr['id'] == "0000") {
-                                        $attr['value'] /= 10; // Pressure (in kPa)
-                                    }
-                                } else if ($clustId == "0405") {
-                                    if ($attr['id'] == "0000") {
-                                        $attr['value'] /= 100; // Humidity
-                                    }
-                                }
+                                // // Attribute value post correction according to ZCL spec
+                                // if ($clustId == "0001") {
+                                //     if ($attr['id'] == "0020") {
+                                //         $attr['value'] = $attr['value'] / 10; // Battery voltage
+                                //     } else if ($attr['id'] == "0021") {
+                                //         $attr['value'] = $attr['value'] / 2; // Battery percent
+                                //     }
+                                // } else if ($clustId == "0400") {
+                                //     if ($attr['id'] == "0000") {
+                                //         $val = $attr['value'];
+                                //         if (!isset($eq['notStandard-0400-0000']))
+                                //             $val = ($val == 0 ? 0 : pow(10, ($val - 1) / 10000)); // Illuminance
+                                //         else
+                                //             parserLog('debug', '  NOT STANDARD attribute value');
+                                //         $attr['value'] = $val;
+                                //     }
+                                // } else if ($clustId == "0402") {
+                                //     if ($attr['id'] == "0000") {
+                                //         $attr['value'] /= 100; // Temperature
+                                //     }
+                                // } else if ($clustId == "0403") {
+                                //     if ($attr['id'] == "0000") {
+                                //         $attr['value'] /= 10; // Pressure (in kPa)
+                                //     }
+                                // } else if ($clustId == "0405") {
+                                //     if ($attr['id'] == "0000") {
+                                //         $attr['value'] /= 100; // Humidity
+                                //     }
+                                // }
 
                                 $attrReportN[] = array(
                                     'name' => $clustId.'-'.$srcEp.'-'.$attr['id'],

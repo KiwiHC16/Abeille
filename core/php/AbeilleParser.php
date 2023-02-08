@@ -195,7 +195,7 @@
     }
 
     // Create a new device in internal devices list => $GLOBALS['eqList'][$net][$addr]
-    function newDevice($net, $addr) {
+    function newDevice($net, $addr, $ieee = null) {
         // This is a new device
         $GLOBALS['eqList'][$net][$addr] = array(
             'ieee' => $ieee,
@@ -281,7 +281,7 @@
         }
 
         // This is a new device
-        newDevice($net, $addr);
+        newDevice($net, $addr, $ieee);
         $new = true; // This is a new device
 
         // Informing Abeille to create a new (but empty) device.

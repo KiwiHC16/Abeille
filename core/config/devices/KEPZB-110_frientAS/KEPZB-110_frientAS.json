@@ -52,6 +52,16 @@
                 "returnStateValue": "",
                 "returnStateTime": 1,
                 "isVisible": 1
+            },
+            "ZoneStatus Change": {
+                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
+                "comment": "On receive we trig 2C-0500-0002-tamper with extracted boolean value",
+                "trigOut": "2C-0500-0002-tamper",
+                "trigOutOffset": "#value#&4"
+            },
+            "Tamper": {
+                "use": "inf_zbAttr-0500-ZoneStatus-Tamper",
+                "isVisible": 1
             }
         }
     }

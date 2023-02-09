@@ -154,10 +154,10 @@
             "name" => "Delete all records",
         ),
         "0300" => array(
-            "name" => "Host PDM available request",
+            "name" => "Host PDM available request", // Unused by Abeille
         ),
         "0302" => array(
-            "name" => "PDM loaded",
+            "name" => "PDM loaded", // Unused by Abeille
         ),
 
         "8001" => array(
@@ -174,6 +174,12 @@
         ),
         "8009" => array(
             "name" => "Network state response",
+        ),
+        "8017" => array(
+            "name" => "Get Time Server Response",
+        ),
+        "8024" => array(
+            "name" => "Network joined/formed",
         ),
         "8028" => array(
             "name" => "Authenticate response",
@@ -217,6 +223,9 @@
         "8047" => array(
             "name" => "Management leave response",
         ),
+        "8048" => array(
+            "name" => "Leave indication",
+        ),
         "804A" => array(
             "name" => "Network management update notify", // Unused by Abeille
         ),
@@ -224,7 +233,7 @@
             "name" => "System server discovery response",
         ),
         "804E" => array(
-            "name" => "Management LQI response",
+            "name" => "Management LQI response", // Unused by Abeille
         ),
         "8060" => array(
             "name" => "Add group response", // Unused by Abeille
@@ -238,20 +247,38 @@
         "8063" => array(
             "name" => "Remove group response", // Unused by Abeille
         ),
+        "80A0" => array(
+            "name" => "Scene View", // Unused by Abeille
+        ),
         "80A1" => array(
-            "name" => "Add scene response",
+            "name" => "Add scene response", // Unused by Abeille
         ),
         "80A2" => array(
-            "name" => "Remove scene response",
+            "name" => "Remove scene response", // Unused by Abeille
+        ),
+        "80A3" => array(
+            "name" => "SRemove All Scene", // Unused by Abeille
+        ),
+        "80A4" => array(
+            "name" => "Store Scene Response", // Unused by Abeille
+        ),
+        "80A6" => array(
+            "name" => "?",
+        ),
+        "80A7" => array(
+            "name" => "?",
         ),
         "8101" => array(
             "name" => "Default response", // Unused by Abeille
         ),
         "8110" => array(
-            "name" => "Write attribute response",
+            "name" => "Write attribute response", // Unused by Abeille
         ),
         "8120" => array(
-            "name" => "Configure reporting response",
+            "name" => "Configure reporting response", // Unused by Abeille
+        ),
+        "8122" => array(
+            "name" => "Read reporting config response", // Unused by Abeille
         ),
         "8139" => array(
             "name" => "Attribute discovery individual response",

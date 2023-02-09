@@ -6,6 +6,7 @@ ChangeLog
 - Interne: Parser: Optimisation correction valeur suivant spec ZCL.
 - Interne: Parser: Correction regression clean location. Peut impacter Profalux.
 - Interne: Parser: Suppression progressive decode8100_8102().
+- Interne: Parser: Suppression support messages 80A0/80A3/80A4 pour compatibilité 'raw'.
 
 230207-BETA-3
 -------------

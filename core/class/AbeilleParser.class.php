@@ -2161,7 +2161,7 @@
                 if ($eq['rxOnWhenIdle'] != $rxOn) {
                     parserLog('debug', "  ".$N['addr'].": WARNING, unexpected rxOn difference: rxOnWhenIdle=".$eq['rxOnWhenIdle'].", rxOn=".$rxOn);
                     // $updates['rxOnWhenIdle'] = $rxOn;
-                    // Update DISABLED. Seems not reliable to error in bitMap interpretation. See #2532
+                    // Update DISABLED. Seems not reliable or error in bitMap interpretation. See #2532
                     // >     Du 0020: "addr":"0E9F","bitMap":"0225"
                     // >     Du B78D: "addr":"0E9F","bitMap":"0229"
                     // >     Du 342B: "addr":"0E9F","bitMap":"0229"
@@ -2571,10 +2571,10 @@
                     // return;
                 }
 
-                // Management Network Update Request (Mgmt_NWK_Update_req)
-                else if ($clustId == "0038") {
-                    // $this->decode8002_MgmtNwkUpdateReq($dest, $srcAddr, $pl, $toMon);
-                }
+                // // Management Network Update Request (Mgmt_NWK_Update_req)
+                // else if ($clustId == "0038") {
+                //     // $this->decode8002_MgmtNwkUpdateReq($dest, $srcAddr, $pl, $toMon);
+                // }
 
                 // IEEE addr response (IEEE_addr_rsp)
                 else if ($clustId == "8001") {
@@ -4551,7 +4551,7 @@
             msgToAbeille2($msg);
         }
 
-        /* Network joined/formed */
+        /* 8024/Network joined/formed */
         function decode8024($dest, $payload, $lqi) {
             // https://github.com/fairecasoimeme/ZiGate/issues/74
 
@@ -4950,9 +4950,7 @@
          * 8048/Leave indication
          *
          * This method process a Zigbeee message coming from a device indicating Leaving
-         *  Will first decode it.
-         *  Continue device identification by requesting Manufacturer, Name, Location, simpleDescriptor to the device.
-         *  Then request the configuration of the device and even more infos.
+         * Note: message compliant with RAW mode.
          *
          * @param $dest     Zigbee network (ex: Abeille1)
          * @param $payload  Parameter sent by the device in the zigbee message
@@ -5446,83 +5444,83 @@
             msgToAbeille2($msg);
         }
 
-        //----------------------------------------------------------------------------------------------------------------
-        ##TODO
-        #reponse scene
-        #80a0-80a6
-        function decode80A0($dest, $payload, $lqi) {
-            // <sequence number: uint8_t>                           -> 2
-            // <endpoint : uint8_t>                                 -> 2
-            // <cluster id: uint16_t>                               -> 4
-            // <status: uint8_t>                                    -> 2
+        // //----------------------------------------------------------------------------------------------------------------
+        // ##TODO
+        // #reponse scene
+        // #80a0-80a6
+        // function decode80A0($dest, $payload, $lqi) {
+        //     // <sequence number: uint8_t>                           -> 2
+        //     // <endpoint : uint8_t>                                 -> 2
+        //     // <cluster id: uint16_t>                               -> 4
+        //     // <status: uint8_t>                                    -> 2
 
-            // <group ID: uint16_t>                                 -> 4
-            // <scene ID: uint8_t>                                  -> 2
-            // <transition time: uint16_t>                          -> 4
+        //     // <group ID: uint16_t>                                 -> 4
+        //     // <scene ID: uint8_t>                                  -> 2
+        //     // <transition time: uint16_t>                          -> 4
 
-            // <scene name length: uint8_t>                         -> 2
-            // <scene name max length: uint8_t>                     -> 2
-            // <scene name  data: data each element is uint8_t>     -> 2
+        //     // <scene name length: uint8_t>                         -> 2
+        //     // <scene name max length: uint8_t>                     -> 2
+        //     // <scene name  data: data each element is uint8_t>     -> 2
 
-            // <extensions length: uint16_t>                        -> 4
-            // <extensions max length: uint16_t>                    -> 4
-            // <extensions data: data each element is uint8_t>      -> 2
-            // <Src Addr: uint16_t> (added only from 3.0f version)
+        //     // <extensions length: uint16_t>                        -> 4
+        //     // <extensions max length: uint16_t>                    -> 4
+        //     // <extensions data: data each element is uint8_t>      -> 2
+        //     // <Src Addr: uint16_t> (added only from 3.0f version)
 
-            parserLog('debug', $dest.', Type=80A0/Scene View'
-                            .', SQN='                           .substr($payload, 0, 2)
-                            .', EndPoint='                      .substr($payload, 2, 2)
-                            .', ClusterId='                     .substr($payload, 4, 4)
-                            .', Status='                        .substr($payload, 8, 2)
+        //     parserLog('debug', $dest.', Type=80A0/Scene View'
+        //                     .', SQN='                           .substr($payload, 0, 2)
+        //                     .', EndPoint='                      .substr($payload, 2, 2)
+        //                     .', ClusterId='                     .substr($payload, 4, 4)
+        //                     .', Status='                        .substr($payload, 8, 2)
 
-                            .', GroupID='                       .substr($payload,10, 4)
-                            .', SceneID='                       .substr($payload,14, 2)
-                            .', transition time: '              .substr($payload,16, 4)
+        //                     .', GroupID='                       .substr($payload,10, 4)
+        //                     .', SceneID='                       .substr($payload,14, 2)
+        //                     .', transition time: '              .substr($payload,16, 4)
 
-                            .', scene name lenght: '            .substr($payload,20, 2)  // Osram Plug repond 0 pour lenght et rien apres.
-                            .', scene name max lenght: '        .substr($payload,22, 2)
-                            .', scene name : '                  .substr($payload,24, 2)
+        //                     .', scene name lenght: '            .substr($payload,20, 2)  // Osram Plug repond 0 pour lenght et rien apres.
+        //                     .', scene name max lenght: '        .substr($payload,22, 2)
+        //                     .', scene name : '                  .substr($payload,24, 2)
 
-                            .', scene extensions lenght: '      .substr($payload,26, 4)
-                            .', scene extensions max lenght: '  .substr($payload,30, 4)
-                            .', scene extensions : '            .substr($payload,34, 2) );
-        }
+        //                     .', scene extensions lenght: '      .substr($payload,26, 4)
+        //                     .', scene extensions max lenght: '  .substr($payload,30, 4)
+        //                     .', scene extensions : '            .substr($payload,34, 2) );
+        // }
 
-        function decode80A3($dest, $payload, $lqi) {
-            // <sequence number: uint8_t>   -> 2
-            // <endpoint : uint8_t>         -> 2
-            // <cluster id: uint16_t>       -> 4
-            // <status: uint8_t>            -> 2
-            // <group ID: uint16_t>         -> 4
-            // <Src Addr: uint16_t> (added only from 3.0f version)
+        // function decode80A3($dest, $payload, $lqi) {
+        //     // <sequence number: uint8_t>   -> 2
+        //     // <endpoint : uint8_t>         -> 2
+        //     // <cluster id: uint16_t>       -> 4
+        //     // <status: uint8_t>            -> 2
+        //     // <group ID: uint16_t>         -> 4
+        //     // <Src Addr: uint16_t> (added only from 3.0f version)
 
-            parserLog('debug', $dest.', Type=80A3/Remove All Scene'
-                            .', SQN='          .substr($payload, 0, 2)
-                            .', EndPoint='     .substr($payload, 2, 2)
-                            .', ClusterId='    .substr($payload, 4, 4)
-                            .', Status='       .substr($payload, 8, 2)
-                            .', group ID='     .substr($payload,10, 4)
-                            .', source='       .substr($payload,14, 4)  );
-        }
+        //     parserLog('debug', $dest.', Type=80A3/Remove All Scene'
+        //                     .', SQN='          .substr($payload, 0, 2)
+        //                     .', EndPoint='     .substr($payload, 2, 2)
+        //                     .', ClusterId='    .substr($payload, 4, 4)
+        //                     .', Status='       .substr($payload, 8, 2)
+        //                     .', group ID='     .substr($payload,10, 4)
+        //                     .', source='       .substr($payload,14, 4)  );
+        // }
 
-        function decode80A4($dest, $payload, $lqi) {
-            // <sequence number: uint8_t>   -> 2
-            // <endpoint : uint8_t>         -> 2
-            // <cluster id: uint16_t>       -> 4
-            // <status: uint8_t>            -> 2
-            // <group ID: uint16_t>         -> 4
-            // <scene ID: uint8_t>          -> 2
-            // <Src Addr: uint16_t> (added only from 3.0f version)
+        // function decode80A4($dest, $payload, $lqi) {
+        //     // <sequence number: uint8_t>   -> 2
+        //     // <endpoint : uint8_t>         -> 2
+        //     // <cluster id: uint16_t>       -> 4
+        //     // <status: uint8_t>            -> 2
+        //     // <group ID: uint16_t>         -> 4
+        //     // <scene ID: uint8_t>          -> 2
+        //     // <Src Addr: uint16_t> (added only from 3.0f version)
 
-            parserLog('debug', $dest.', Type=80A4/Store Scene Response'
-                            .', SQN='          .substr($payload, 0, 2)
-                            .', EndPoint='     .substr($payload, 2, 2)
-                            .', ClusterId='    .substr($payload, 4, 4)
-                            .', Status='       .substr($payload, 8, 2)
-                            .', GroupID='      .substr($payload,10, 4)
-                            .', SceneID='      .substr($payload,14, 2)
-                            .', Source='       .substr($payload,16, 4)  );
-        }
+        //     parserLog('debug', $dest.', Type=80A4/Store Scene Response'
+        //                     .', SQN='          .substr($payload, 0, 2)
+        //                     .', EndPoint='     .substr($payload, 2, 2)
+        //                     .', ClusterId='    .substr($payload, 4, 4)
+        //                     .', Status='       .substr($payload, 8, 2)
+        //                     .', GroupID='      .substr($payload,10, 4)
+        //                     .', SceneID='      .substr($payload,14, 2)
+        //                     .', Source='       .substr($payload,16, 4)  );
+        // }
 
         function decode80A6($dest, $payload, $lqi) {
             // parserLog('debug', ';Type: 80A6: raw data: '.$payload );
@@ -6472,40 +6470,40 @@
         //     //     monMsgFromZigate($msg); // Send message to monitor
         // }
 
-        // 8122/Read Reporting Configuration
-        function decode8122($dest, $payload, $lqi) {
-            // <Sequence number: uint8_t>
-            // <Src address : uint16_t>
-            // <Endpoint: uint8_t>
-            // <Cluster id: uint16_t>
-            // <Status: uint8_t>
-            // Attribute type : uint8_t
-            // Attribute id : uint16_t
-            // Min interval : uint16_t
-            // Max interval : uint16_t
-            $sqn = substr($payload, 0, 2);
-            $srcAddr = substr($payload, 2, 4);
-            $ep = substr($payload, 6, 2);
-            $clustId = substr($payload, 8, 4);
-            $status = substr($payload, 12, 2);
-            if ($status == "00") {
-                $attrType = substr($payload, 14, 2);
-                $attrId = substr($payload, 16, 4);
-                // Tcharp38: min & max seem inverted compared to NXP spec
-                $maxInterval = hexdec(substr($payload, 20, 4));
-                $minInterval = hexdec(substr($payload, 24, 4));
-            }
+        // // 8122/Read Reporting Configuration
+        // function decode8122($dest, $payload, $lqi) {
+        //     // <Sequence number: uint8_t>
+        //     // <Src address : uint16_t>
+        //     // <Endpoint: uint8_t>
+        //     // <Cluster id: uint16_t>
+        //     // <Status: uint8_t>
+        //     // Attribute type : uint8_t
+        //     // Attribute id : uint16_t
+        //     // Min interval : uint16_t
+        //     // Max interval : uint16_t
+        //     $sqn = substr($payload, 0, 2);
+        //     $srcAddr = substr($payload, 2, 4);
+        //     $ep = substr($payload, 6, 2);
+        //     $clustId = substr($payload, 8, 4);
+        //     $status = substr($payload, 12, 2);
+        //     if ($status == "00") {
+        //         $attrType = substr($payload, 14, 2);
+        //         $attrId = substr($payload, 16, 4);
+        //         // Tcharp38: min & max seem inverted compared to NXP spec
+        //         $maxInterval = hexdec(substr($payload, 20, 4));
+        //         $minInterval = hexdec(substr($payload, 24, 4));
+        //     }
 
-            $decoded = '8122/Read reporting config'
-                .', SQN='.$sqn
-                .', Addr='.$srcAddr
-                .', EP='.$ep
-                .', ClustId='.$clustId
-                .', Status='.$status.'/'.zbGetZCLStatus($status);
-            parserLog('debug', $dest.', Type='.$decoded);
-            if ($status == "00")
-                parserLog('debug', '  AttrType='.$attrType.', AttrId='.$attrId.', MinInterval='.$minInterval.', MaxInterval='.$maxInterval);
-        }
+        //     $decoded = '8122/Read reporting config'
+        //         .', SQN='.$sqn
+        //         .', Addr='.$srcAddr
+        //         .', EP='.$ep
+        //         .', ClustId='.$clustId
+        //         .', Status='.$status.'/'.zbGetZCLStatus($status);
+        //     parserLog('debug', $dest.', Type='.$decoded);
+        //     if ($status == "00")
+        //         parserLog('debug', '  AttrType='.$attrType.', AttrId='.$attrId.', MinInterval='.$minInterval.', MaxInterval='.$maxInterval);
+        // }
 
         // function decode8140($dest, $payload, $lqi) {
         //     // Some changes in this message so read: https://github.com/fairecasoimeme/ZiGate/pull/90

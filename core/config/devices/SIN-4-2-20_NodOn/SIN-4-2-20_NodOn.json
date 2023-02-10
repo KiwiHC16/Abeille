@@ -1,0 +1,127 @@
+{
+    "SIN-4-2-20_NodOn": {
+        "manufacturer": "NodOn",
+        "model": "SIN-4-2-20",
+        "type": "NodOn lighting relay switch",
+        "genericType": "Light",
+        "timeout": "60",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "Nodon-SIN-4-2-20",
+            "mainEP": "02"
+        },
+        "commands": {
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "On 1": {
+                "use": "act_zbCmdG-0006-On",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Off 1": {
+                "use": "act_zbCmdG-0006-Off",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Toggle 1": {
+                "use": "act_zbCmdG-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Status 1": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=01",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status 1": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
+            "Bind 01-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0006": {
+                "use": "act_zbConfigureReporting",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Set Level": {
+                "use": "setLevel",
+                "params": "ep=02",
+                "isVisible": "1"
+            },
+            "Level": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "params": "ep=02",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=02&clustId=0008&attrId=0000"
+            },
+            "Bind 01-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0008-0000": {
+                "use": "act_zbConfigureReporting",
+                "params": "ep=01&clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "On 2": {
+                "use": "act_zbCmdG-0006-On",
+                "params": "ep=02",
+                "isVisible": "1"
+            },
+            "Off 2": {
+                "use": "act_zbCmdG-0006-Off",
+                "params": "ep=02",
+                "isVisible": "1"
+            },
+            "Toggle 2": {
+                "use": "act_zbCmdG-0006-Toggle",
+                "params": "ep=02"
+            },
+            "Status 2": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=02",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status 2": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=02&clustId=0006&attrId=0000"
+            },
+            "Bind 02-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=02&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 02-0006": {
+                "use": "act_zbConfigureReporting",
+                "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 02-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=02&clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 02-0008-0000": {
+                "use": "act_zbConfigureReporting",
+                "params": "ep=02&clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

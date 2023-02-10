@@ -2,6 +2,8 @@
     "DS01": {
         "manufacturer": "Sonoff",
         "model": "SNZB-04",
+        "type": "Sonoff Door/Window Sensor",
+        "genericType": "Opening",
         "timeout": "140",
         "configuration": {
             "mainEP": "01",
@@ -11,9 +13,8 @@
         "category": {
             "security": "1"
         },
-        "type": "Sonoff Door/Window Sensor",
         "commands": {
-            "etat": {
+            "Status": {
                 "use": "etatSonoff"
             },
             "Battery-Percent": {

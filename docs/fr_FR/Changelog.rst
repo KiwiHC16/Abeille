@@ -10,6 +10,7 @@ ChangeLog
 - Interne: Parser: Optimisations pour compatiblité futur mode 'raw'.
 - Frient keypad: Mise-à-jour modele (2525).
 - Nodon SIN-4-2-20: Support préliminaire (2541).
+- Interne: Parser: Optimisations.
 
 230207-BETA-3
 -------------

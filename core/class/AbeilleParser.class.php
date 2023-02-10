@@ -423,7 +423,9 @@
                         $epList .= "/";
                     $epList .= $epId;
                 }
-                $this->deviceUpdate($net, $addr, '', 'epList', $epList);
+                $updates = [];
+                $updates['epList'] = $epList;
+                $this->deviceUpdates($net, $addr, '', $updates);
                 return;
             }
 
@@ -568,7 +570,7 @@
                         );
                         msgToAbeille2($msg);
                     }
-                } else if ($updType == 'modelId') {
+                } else if (($updType == 'modelId') || ($updType == '0000-0005')) { // Model identifier
                     if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['modelId']))
                         $eq['endPoints'][$ep]['modelId'] = $value;
                     if (($eq['modelId'] === null) || ($eq['modelId'] === false)) {
@@ -576,7 +578,7 @@
                         if ($eq['mainEp'] == '')
                             $eq['mainEp'] = $ep;
                     }
-                } else if ($updType == 'manufId') {
+                } else if (($updType == 'manufId') || ($updType == '0000-0004')) { // Manufacturer name
                     if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['manufId']))
                         $eq['endPoints'][$ep]['manufId'] = $value;
                     if (($eq['manufId'] === null) || ($eq['manufId'] === false)) {
@@ -584,7 +586,7 @@
                         if ($eq['mainEp'] == '')
                             $eq['mainEp'] = $ep;
                     }
-                } else if ($updType == "location") {
+                } else if (($updType == "location") || ($updType == "0000-0010")) { // Location
                     if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['location']))
                         $eq['endPoints'][$ep]['location'] = $value;
                     if (($eq['location'] === null) || ($eq['location'] === false))
@@ -780,7 +782,7 @@
 
         /* There is a device info updates (manufId + modelId, or location).
            Note: As opposed to 'updateDevice()', info is coming from device itself. */
-        function deviceUpdates($net, $addr, $ep, $updates) {
+        function deviceUpdates($net, $addr, $ep, $updates = []) {
             if (isset($updates['ieee']))
                 $ieee = $updates['ieee'];
             else
@@ -788,6 +790,7 @@
             $eq = &getDevice($net, $addr, $ieee, $newDev); // By ref
             // 'status' set to 'identifying' if new device
 
+            $abUpdates = []; // Updates for Abeille.class
             foreach ($updates as $updType => $value) {
                 // Log only if relevant
                 if ($updType && ($eq['status'] != 'idle')) {
@@ -797,92 +800,69 @@
                 }
 
                 /* Updating entry: 'epList', 'manufId', 'modelId' or 'location', 'ieee', 'bindingTableSize' */
-                if ($updType) {
-                    if ($updType == 'epList') { // Active end points response
-                        $epArr = explode('/', $value);
-                        foreach ($epArr as $epId2) {
-                            if (!isset($eq['endPoints'][$epId2])) {
-                                $eq['endPoints'][$epId2] = [];
-                                $endPointsUpdated = true;
-                            }
+                if ($updType == 'epList') { // Active end points response
+                    $epArr = explode('/', $value);
+                    foreach ($epArr as $epId2) {
+                        if (!isset($eq['endPoints'][$epId2])) {
+                            $eq['endPoints'][$epId2] = [];
+                            $endPointsUpdated = true;
                         }
-                        if (isset($endPointsUpdated)) {
-                            $msg = array(
-                                'type' => 'updateDevice',
-                                'net' => $net,
-                                'addr' => $addr,
-                                'updates' => array(
-                                    "endPoints" => $eq['endPoints']
-                                ),
-                            );
-                            msgToAbeille2($msg);
-                        }
-                    } else if ($updType == 'macCapa') { // MAC capa flags
-                        if (!isset($eq['macCapa']) || ($eq['macCapa'] != $value)) {
-                            $eq['macCapa'] = $value;
-                            $eq['rxOnWhenIdle'] = (hexdec($eq['macCapa']) >> 3) & 0b1;
-                            $msg = array(
-                                'type' => 'updateDevice',
-                                'net' => $net,
-                                'addr' => $addr,
-                                'updates' => array(
-                                    "macCapa" => $value // Will trig rxOnWhenIdle update too
-                                ),
-                            );
-                            msgToAbeille2($msg);
-                        }
-                    } else if ($updType == 'rxOnWhenIdle') { // RX ON when idle flag only
-                        if (!isset($eq['rxOnWhenIdle']) || ($eq['rxOnWhenIdle'] != $value)) {
-                            $eq['rxOnWhenIdle'] = $value;
-                            $msg = array(
-                                'type' => 'updateDevice',
-                                'net' => $net,
-                                'addr' => $addr,
-                                'updates' => array(
-                                    "rxOnWhenIdle" => $value
-                                ),
-                            );
-                            msgToAbeille2($msg);
-                        }
-                    } else if ($updType == 'manufCode') { // Manufacturer code
-                        if (!isset($eq['manufCode']) || ($eq['manufCode'] != $value)) {
-                            $eq['manufCode'] = $value;
-                            $msg = array(
-                                'type' => 'updateDevice',
-                                'net' => $net,
-                                'addr' => $addr,
-                                'updates' => array(
-                                    "manufCode" => $value
-                                ),
-                            );
-                            msgToAbeille2($msg);
-                        }
-                    } else if ($updType == 'modelId') {
-                        if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['modelId']))
-                            $eq['endPoints'][$ep]['modelId'] = $value;
-                        if (($eq['modelId'] === null) || ($eq['modelId'] === false)) {
-                            $eq['modelId'] = $value;
-                            if ($eq['mainEp'] == '')
-                                $eq['mainEp'] = $ep;
-                        }
-                    } else if ($updType == 'manufId') {
-                        if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['manufId']))
-                            $eq['endPoints'][$ep]['manufId'] = $value;
-                        if (($eq['manufId'] === null) || ($eq['manufId'] === false)) {
-                            $eq['manufId'] = $value;
-                            if ($eq['mainEp'] == '')
-                                $eq['mainEp'] = $ep;
-                        }
-                    } else if ($updType == "location") {
-                        if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['location']))
-                            $eq['endPoints'][$ep]['location'] = $value;
-                        if (($eq['location'] === null) || ($eq['location'] === false))
-                            $eq['location'] = $value;
-                    } else // 'ieee' or 'bindingTableSize'
-                        $eq[$updType] = $value;
-                    parserLog('debug', '  Updated eq='.json_encode($eq));
-                }
+                    }
+                    if (isset($endPointsUpdated)) {
+                        $abUpdates["endPoints"] = $eq['endPoints'];
+                    }
+                } else if ($updType == 'macCapa') { // MAC capa flags
+                    if (!isset($eq['macCapa']) || ($eq['macCapa'] != $value)) {
+                        $eq['macCapa'] = $value;
+                        $eq['rxOnWhenIdle'] = (hexdec($eq['macCapa']) >> 3) & 0b1;
+                        $abUpdates["macCapa"] = $value;
+                    }
+                } else if ($updType == 'rxOnWhenIdle') { // RX ON when idle flag only
+                    if (!isset($eq['rxOnWhenIdle']) || ($eq['rxOnWhenIdle'] != $value)) {
+                        $eq['rxOnWhenIdle'] = $value;
+                        $abUpdates["rxOnWhenIdle"] = $value;
+                    }
+                } else if ($updType == 'manufCode') { // Manufacturer code
+                    if (!isset($eq['manufCode']) || ($eq['manufCode'] != $value)) {
+                        $eq['manufCode'] = $value;
+                        $abUpdates["manufCode"] = $value;
+                    }
+                } else if (($updType == 'modelId') || ($updType == '0000-0005')) { // Model identifier
+                    if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['modelId']))
+                        $eq['endPoints'][$ep]['modelId'] = $value;
+                    if (($eq['modelId'] === null) || ($eq['modelId'] === false)) {
+                        $eq['modelId'] = $value;
+                        if ($eq['mainEp'] == '')
+                            $eq['mainEp'] = $ep;
+                    }
+                } else if (($updType == 'manufId') || ($updType == '0000-0004')) { // Manufacturer name
+                    if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['manufId']))
+                        $eq['endPoints'][$ep]['manufId'] = $value;
+                    if (($eq['manufId'] === null) || ($eq['manufId'] === false)) {
+                        $eq['manufId'] = $value;
+                        if ($eq['mainEp'] == '')
+                            $eq['mainEp'] = $ep;
+                    }
+                } else if (($updType == "location") || ($updType == "0000-0010")) { // Location
+                    if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['location']))
+                        $eq['endPoints'][$ep]['location'] = $value;
+                    if (($eq['location'] === null) || ($eq['location'] === false))
+                        $eq['location'] = $value;
+                } else // 'ieee' or 'bindingTableSize'
+                    $eq[$updType] = $value;
+                parserLog('debug', '  Updated eq='.json_encode($eq));
             } // End foreach($updates)
+
+            // Any new info for Abeille.class ?
+            if (count($abUpdates) != 0) {
+                $msg = array(
+                    'type' => 'updateDevice',
+                    'net' => $net,
+                    'addr' => $addr,
+                    'updates' => $abUpdates
+                );
+                msgToAbeille2($msg);
+            }
 
             if (($eq['status'] != "unknown_ident") && ($eq['status'] != "identifying"))
                 return false; // Not in any identification phase
@@ -2271,7 +2251,7 @@
 
             if ($status != "00") {
                 parserLog('debug', '  Status='.$status.' => Unknown error');
-                $unknown = $this->deviceUpdate($net, $addr, '');
+                // $unknown = $this->deviceUpdate($net, $addr, ''); // Useless
                 return;
             }
 
@@ -2288,7 +2268,9 @@
             // $this->whoTalked[] = $net.'/'.$addr;
 
             // If device is unknown, may have pending messages for him
-            $unknown = $this->deviceUpdate($net, $addr, '', "ieee", $ieee);
+            $updates = [];
+            $updates['ieee'] = $ieee;
+            $unknown = $this->deviceUpdates($net, $addr, '', $updates);
             if ($unknown)
                 return;
 
@@ -2329,16 +2311,19 @@
                 parserLog('debug', "  'macCapa' customization: ".$macCapa);
             }
 
+            $updates = [];
             if ($macCapa != $eq['macCapa'])
-                $this->deviceUpdate($dest, $srcAddr, 'xx', 'macCapa', $macCapa);
+                $updates['macCapa'] = $macCapa;
             else {
                 // Check rxOn status even if macCapa is correct
                 $rxOnWhenIdle = (hexdec($macCapa) >> 3) & 0b1;
                 if ($rxOnWhenIdle != $eq['rxOnWhenIdle'])
-                    $this->deviceUpdate($dest, $srcAddr, 'xx', 'rxOnWhenIdle', $rxOnWhenIdle);
+                    $updates['rxOnWhenIdle'] = $rxOnWhenIdle;
             }
             if (!isset($eq['manufCode']) || ($manufCode != $eq['manufCode']))
-                $this->deviceUpdate($dest, $srcAddr, 'xx', 'manufCode', $manufCode);
+                $updates['manufCode'] = $manufCode;
+            if (count($updates) != 0)
+                $this->deviceUpdates($net, $addr, '', $updates);
         }
 
         /* Called from decode8002() to decode "Bind response" message (Bind_rsp, cluster 8021) */
@@ -2715,7 +2700,9 @@
             // $this->whoTalked[] = $net.'/'.$srcAddr;
 
             /* Update equipement key infos */
-            $unknown = $this->deviceUpdate($net, $srcAddr, '', 'epList', $epList);
+            $updates = [];
+            $updates['epList'] = $epList;
+            $unknown = $this->deviceUpdates($net, $srcAddr, '', $updates);
             if ($unknown)
                 return;
 
@@ -3728,7 +3715,7 @@
                             return;
                         }
 
-                        $unknown = $this->deviceUpdate($dest, $srcAddr, $srcEp);
+                        $unknown = $this->deviceUpdates($dest, $srcAddr, $srcEp);
                         if ($unknown)
                             return; // So far unknown to Jeedom
 
@@ -5698,8 +5685,8 @@
             if ($this->isDuplicated($dest, $srcAddr, $sqn))
                 return;
 
-            $this->whoTalked[] = $dest.'/'.$srcAddr;
-            if ($this->deviceUpdate($dest, $srcAddr, ''))
+            // $this->whoTalked[] = $dest.'/'.$srcAddr;
+            if ($this->deviceUpdates($dest, $srcAddr, ''))
                 return; // Unknown device
 
             // Monitor if required

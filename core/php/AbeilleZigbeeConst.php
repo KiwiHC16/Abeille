@@ -832,7 +832,7 @@
 
     /* Based on ZCL spec.
        Returns cluster specific command from $clustId-$cmdId or false if unknown */
-    function zbGetZCLClusterCmd($clustId, $cmdId, $dir = 0) {
+    function zbGetZCLClusterCmd($clustId, $cmdId, $dir = 1) {
         global $zbClusters;
 
         $clustId = strtoupper($clustId);
@@ -857,8 +857,8 @@
 
     /* Based on ZCL spec.
        Returns cluster specific command name from $clustId-$cmdId. */
-    function zbGetZCLClusterCmdName($clustId, $cmdId) {
-        $cmd = zbGetZCLClusterCmd($clustId, $cmdId);
+    function zbGetZCLClusterCmdName($clustId, $cmdId, $dir = 1) {
+        $cmd = zbGetZCLClusterCmd($clustId, $cmdId, $dir);
         if ($cmd === false)
             return "Unknown-".$clustId."-".$cmdId;
         return $cmd['name'];

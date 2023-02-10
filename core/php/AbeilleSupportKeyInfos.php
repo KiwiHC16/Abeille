@@ -90,16 +90,16 @@
                 if (isset($row['id'])) {
                     $id = $row['id'];
                     unset($row['id']);
-                    logIt('    "'.$id.'": '.json_encode($row).",\n");
+                    logIt('    "'.$id.'": '.json_encode($row, JSON_UNESCAPED_SLASHES).",\n");
                 } else if (isset($row['key'])) {
                     $key = $row['key'];
                     unset($row['key']);
                     if (($table == 'config') && ($key == 'api'))
                         logIt('    "'.$key."\": FILTERED,\n");
                     else
-                        logIt('    "'.$key.'": '.json_encode($row).",\n");
+                        logIt('    "'.$key.'": '.json_encode($row, JSON_UNESCAPED_SLASHES).",\n");
                 } else {
-                    logIt('    "'.$i.'": '.json_encode($row).",\n");
+                    logIt('    "'.$i.'": '.json_encode($row, JSON_UNESCAPED_SLASHES).",\n");
                     $i++;
                 }
             }
@@ -193,7 +193,7 @@
 
     // Plateform infos
     exec('uname -a', $result2);
-    logIt("Kernel: ".json_encode($result2)."\n\n");
+    logIt("Kernel: ".json_encode($result2, JSON_UNESCAPED_SLASHES)."\n\n");
 
     // Abeille's version
     $file = fopen(__DIR__."/../../plugin_info/Abeille.version", "r");

@@ -33,20 +33,20 @@
     include_once __DIR__.'/../php/AbeilleLog.php'; // logGetPluginLevel()
 
 class Abeille extends eqLogic {
-    // Fonction dupliquée dans AbeilleParser.
-    public static function volt2pourcent($voltage) {
-        $max = 3.135;
-        $min = 2.8;
-        if ($voltage / 1000 > $max) {
-            log::add('Abeille', 'debug', 'Voltage remonte par le device a plus de '.$max.'V. Je retourne 100%.');
-            return 100;
-        }
-        if ($voltage / 1000 < $min) {
-            log::add('Abeille', 'debug', 'Voltage remonte par le device a moins de '.$min.'V. Je retourne 0%.');
-            return 0;
-        }
-        return round(100 - ((($max - ($voltage / 1000)) / ($max - $min)) * 100));
-    }
+    // // Fonction dupliquée dans AbeilleParser.
+    // public static function volt2pourcent($voltage) {
+    //     $max = 3.135;
+    //     $min = 2.8;
+    //     if ($voltage / 1000 > $max) {
+    //         log::add('Abeille', 'debug', 'Voltage remonte par le device a plus de '.$max.'V. Je retourne 100%.');
+    //         return 100;
+    //     }
+    //     if ($voltage / 1000 < $min) {
+    //         log::add('Abeille', 'debug', 'Voltage remonte par le device a moins de '.$min.'V. Je retourne 0%.');
+    //         return 0;
+    //     }
+    //     return round(100 - ((($max - ($voltage / 1000)) / ($max - $min)) * 100));
+    // }
 
     /**
      * Jeedom requirement: returns health status.
@@ -133,21 +133,21 @@ class Abeille extends eqLogic {
         log::add('Abeille', 'debug', 'refreshCmd: end');
     }
 
-    /**
-     * getIEEE
-     * get IEEE from the eqLogic
-     *
-     * @param   $address    logicalId of the eqLogic
-     *
-     * @return              Does not return anything as all action are triggered by sending messages in queues
-     */
-    public static function getIEEE($address) {
-        if (strlen(self::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none')) == 16) {
-            return self::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none');
-        } else {
-            return AbeilleCmd::byEqLogicIdAndLogicalId(self::byLogicalId($address, 'Abeille')->getId(), 'IEEE-Addr')->execCmd();
-        }
-    }
+    // /**
+    //  * getIEEE
+    //  * get IEEE from the eqLogic
+    //  *
+    //  * @param   $address    logicalId of the eqLogic
+    //  *
+    //  * @return              Does not return anything as all action are triggered by sending messages in queues
+    //  */
+    // public static function getIEEE($address) {
+    //     if (strlen(self::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none')) == 16) {
+    //         return self::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none');
+    //     } else {
+    //         return AbeilleCmd::byEqLogicIdAndLogicalId(self::byLogicalId($address, 'Abeille')->getId(), 'IEEE-Addr')->execCmd();
+    //     }
+    // }
 
     /**
      * getEqFromIEEE
@@ -722,7 +722,7 @@ class Abeille extends eqLogic {
             if ($error != "") {
                 $config['ab::zgEnabled'.$zgId] = 'N';
                 config::save('ab::zgEnabled'.$zgId, 'N', 'Abeille');
-                log::add('Abeille', 'error', $error." ! Zigate désactivée.");
+                log::add('Abeille', 'error', $error." => Zigate désactivée.");
             } else if (($config['ab::zgType'.$zgId] == "PI") || ($config['ab::zgType'.$zgId] == "PIv2")) {
                 /* Configuring GPIO for PiZigate if one active found.
                     PiZigate reminder (using 'WiringPi'):
@@ -1676,11 +1676,12 @@ class Abeille extends eqLogic {
 
     // Check if received attribute is a battery information
     public static function checkIfBatteryInfo($eqLogic, $attrName, $attrVal) {
-        if ($attrName == "Battery-Volt") { // Obsolete
-            $attrVal = round($attrVal, 0);
-            $eqLogic->setStatus('battery', self::volt2pourcent($attrVal));
-            $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
-        } else if (($attrName == "Battery-Percent") || ($attrName == "Batterie-Pourcent")) {  // Obsolete
+        // if ($attrName == "Battery-Volt") { // Obsolete
+        //     $attrVal = round($attrVal, 0);
+        //     $eqLogic->setStatus('battery', self::volt2pourcent($attrVal));
+        //     $eqLogic->setStatus('batteryDatetime', date('Y-m-d H:i:s'));
+        // } else
+        if (($attrName == "Battery-Percent") || ($attrName == "Batterie-Pourcent")) {  // Obsolete
             $attrVal = round($attrVal, 0);
             log::add('Abeille', 'debug', "  Battery % reporting: ".$attrName.", val=".$attrVal);
             $eqLogic->setStatus('battery', $attrVal);

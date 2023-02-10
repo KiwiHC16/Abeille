@@ -11,6 +11,8 @@ ChangeLog
 - Frient keypad: Mise-à-jour modele (2525).
 - Nodon SIN-4-2-20: Support préliminaire (2541).
 - Interne: Parser: Optimisations.
+- Page maintenance/infos clefs: Amélioration mineure.
+- Interne: Abeille.class: Suppression 'volt2pourcent()'.
 
 230207-BETA-3
 -------------

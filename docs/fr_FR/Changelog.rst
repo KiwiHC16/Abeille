@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230214-BETA-1
+-------------
+
 - Interne: Cmd: Correction 'bind0030'.
 - Eurotronic SPZB0001: Mise-à-jour modèle.
 - Interne: Parser: Optimisation correction valeur suivant spec ZCL.

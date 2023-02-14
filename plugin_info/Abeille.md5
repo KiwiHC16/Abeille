@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230207-BETA-3"
+# VERSION="230214-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -42,16 +42,16 @@ b01724fc9b23be86f3d465a639ab6c95 *core/ajax/AbeilleEqAssist.ajax.php
 f8554295800d4da5939a1f5332ea7c15 *core/ajax/AbeilleFiles.ajax.php
 e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 8290855d0e5ee94968a6fb01ba8d5a7b *core/ajax/AbeilleZigate.ajax.php
-c383e72ba278a790b5fb987f8976345d *core/class/Abeille.class.php
+e64587f82652ddca5859404d87b9fdde *core/class/Abeille.class.php
 b9650cf3fe0dc8dcfdd532e3fc1252b5 *core/class/AbeilleCmd.class.php
-69ee03990728b94143d1b589db81a1c4 *core/class/AbeilleCmdPrepare.class.php
+9907c1e8b19d5a606846863d7453996c *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
-860ec00bb9b3572077c5c01cc7327bac *core/class/AbeilleCmdProcess.class.php
+834cc45ad7d304d282a12bffc483f020 *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
 fc8273a488a9a59a70cf7b24fd4b61b8 *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-b7d5ac6e65963bf2fb63cd2f2edc7aa8 *core/class/AbeilleParser.class.php
+9374dcf202222310f5d0573f187bf524 *core/class/AbeilleParser.class.php
 59230e66b7fe7a8f08b997955361e4ab *core/class/AbeilleParserTest.class.php
 fbc81985db0cfa51df2b142d357f7eb3 *core/class/AbeilleParserTestDB.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
@@ -63,7 +63,6 @@ f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 347116fa8a6260bbf4cc09cafdedfc99 *core/config/Abeille.config.php
 96b14488adfe25210ff0b340be3f531d *core/config/HueCatalogue.json
 5373985868d2b6309d47fe0eaf784f00 *core/config/IAS ACE Cluster  IAS Zone & Diagnostics Only_ZHA.xml
-544199d4607a555546ff5f7507154e4b *core/config/addParameterToAllTemplates.php
 febeb2f75cd9960d44b70be02cd54781 *core/config/commands/BindToGroupLevelEP03.json
 080f2b4e4efe3b67c8a40bf0ffe760dc *core/config/commands/BindToGroupLevelEP04.json
 01b516d267fb3ffea89bdc8bc2b8beb1 *core/config/commands/BindToGroupLevelEP05.json
@@ -304,6 +303,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/setReportTempera
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/societe.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/spiritSetReportBatterie.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/spiritTemperatureBindShortToZigate.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/spiritTemperatureSetReport.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/status-EP01-0006.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/status-EP02-0006.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/status-EP03-0006.json
@@ -476,6 +476,7 @@ e79ce71eb689f9ef5f81171d51fc8f6f *core/config/commands/inf_zbAttr-0405-MeasuredV
 24eafcd3c6271b09e959cfc307456252 *core/config/commands/inf_zbAttr-0406-Occupancy.json
 f4aa1a5f09778cea58d60ad70756006f *core/config/commands/inf_zbAttr-0500-CurrentZoneSensibilityLevel.json
 06a497a256d71c376e51035b5cd96e00 *core/config/commands/inf_zbAttr-0500-ZoneStatus-Alarm1.json
+f983f80c7281a11b71aa19a24c840a23 *core/config/commands/inf_zbAttr-0500-ZoneStatus-Tamper.json
 1be57cd42c50f3c9f77f7505b96c5825 *core/config/commands/inf_zbAttr-0500-ZoneStatus.json
 3fdc1b134eb2d994d1ded332a5bbe74e *core/config/commands/inf_zbAttr-0702-CurrentSummationDelivered.json
 cce8ce9eade98266d2c08998778f7ef0 *core/config/commands/inf_zbAttr-0702-Divisor.json
@@ -585,7 +586,6 @@ d48dcf29f83bafbe9d6e43a1153d0802 *core/config/commands/spiritTemperatureConsigne
 ccde6ee1b6c17809fbe8f923e4df2198 *core/config/commands/spiritTemperatureConsigneGet.json
 1bd8431526a6e378ee24f1d9197ff4d3 *core/config/commands/spiritTemperatureConsigneSet.json
 e52ec70018d71ac959d090e7b876a79c *core/config/commands/spiritTemperatureGet.json
-ca918197474f4f7749cdf75c1f32b61e *core/config/commands/spiritTemperatureSetReport.json
 d38ae0b3049378a24ed743a260e6c7de *core/config/commands/spiritTrvMode.json
 d73deb72287044ce0c6b74d41d8ae015 *core/config/commands/spiritTrvModeGet.json
 2413af17804206f1d2f3c45b3f6c03f5 *core/config/commands/spiritTrvModeSet.json
@@ -661,7 +661,7 @@ be5e1562b6bb2d20c2a0f3748e72f685 *core/config/devices/ClassicA60Wclear-LIGHTIFY-
 1c5fa6cd0e53a5b71f905469b363dfa7 *core/config/devices/Contactor/Contactor.json
 21ebbeea85a7bed08fc34295fb68d3f3 *core/config/devices/Contactor/discovery.json
 1aa2e9fece9de1894fd9e1e9ff92e3f6 *core/config/devices/DIYRuZ_RT/DIYRuZ_RT.json
-d9fb5e88f943fa477396709f42b635a6 *core/config/devices/DS01/DS01.json
+78167bd9abb72db243608ad386a90e74 *core/config/devices/DS01/DS01.json
 cd2bc30622b4962a39b5fb3cdd5212e9 *core/config/devices/Dimmablelight_PaulmannLichtGmbH/Dimmablelight_PaulmannLichtGmbH.json
 5cd4fdf8f485b585dc067954d4523f04 *core/config/devices/Dimmablelight_PaulmannLichtGmbH/discovery.json
 cfaf0cb32bcc763406eaaf1c2bb6e234 *core/config/devices/Dimmer-Switch-ZB3.0_HZC/Dimmer-Switch-ZB3.0_HZC.json
@@ -707,7 +707,7 @@ d7ee5fe7f347965d5a55ad52c42de5d7 *core/config/devices/ICZB-IW11D_icasa/ICZB-IW11
 d56191db815a5256794cbdb5e4884387 *core/config/devices/ICZB-IW11SW_icasa/ICZB-IW11SW_icasa.json
 713b6788d35f44fd7bf2c20d70e24ed4 *core/config/devices/ICZB-IW11SW_icasa/discovery.json
 2dacae0f8f69ff3292c3107d6419f40d *core/config/devices/KADRILJrollerblind/KADRILJrollerblind.json
-ab8ce13080906b0737d1b6f18fcf917e *core/config/devices/KEPZB-110_frientAS/KEPZB-110_frientAS.json
+3ac2c29a06fcccd67ae5754ebda4281c *core/config/devices/KEPZB-110_frientAS/KEPZB-110_frientAS.json
 0d91e070c4573ffb8ca8d726650854cc *core/config/devices/KEPZB-110_frientAS/discovery.json
 26615b6877efc8c189e416e95845b0e8 *core/config/devices/Keyfob-ZB3.0/Keyfob-ZB3.0.json
 92db9ad7cbabf120c0e4fd70500a3abd *core/config/devices/KiwiHC16_Test_01/KiwiHC16_Test_01.json
@@ -796,6 +796,8 @@ a1366186c526b4e7b702c19a880155e3 *core/config/devices/RWL021/discovery.json
 01d7045712be97264688b81bc717ebfd *core/config/devices/Remoteswitch/Remoteswitch.json
 5970e146dbc05f584a351fc27954549e *core/config/devices/S26R2ZB_SONOFF/S26R2ZB_SONOFF.json
 31fbb79665389514cca87c79e4bc3f36 *core/config/devices/SA-003-Zigbee/SA-003-Zigbee.json
+34748a57a677dbc4806864b4cc714ab9 *core/config/devices/SIN-4-2-20_NodOn/SIN-4-2-20_NodOn.json
+39f8d65efacd403cf887d6f6a6d2265f *core/config/devices/SIN-4-2-20_NodOn/discovery-SIN-4-2-20_NodOn.json
 41e042df899beb8f4ed3a54d15ab76e7 *core/config/devices/SM309/SM309.json
 660ed6aaaad8093748ac23bb084128fe *core/config/devices/SML001/SML001.json
 da9fd6049b568c192faf71f8ea97ec67 *core/config/devices/SML002/SML002.json
@@ -810,7 +812,7 @@ a4efc29598fe651291e66980419c2a1f *core/config/devices/SMSZB-120_frientAS/SMSZB-1
 4695063585a7bb3f5556096f5d9fbf26 *core/config/devices/SPLZB-131/discovery.json
 d1e817884059d7491d70d7912c89f26a *core/config/devices/SPLZB-132/SPLZB-132.json
 5e3b1b9baa3c27102fd036f6b4e7ef7a *core/config/devices/SPLZB-132/discovery.json
-ff087ebb98efabee2bee5bb02866cd7b *core/config/devices/SPZB0001/SPZB0001.json
+967d9dfdf69f67d4e07324555d41e619 *core/config/devices/SPZB0001/SPZB0001.json
 c7e4d9ab515155ecce5c548e17789eb0 *core/config/devices/Shutterswitchwithneutral/Shutterswitchwithneutral.json
 0b78bc1a62a1bf7bbaec55f0d8e43daf *core/config/devices/SmokeSensor-EF-3.0/SmokeSensor-EF-3.0.json
 eb3c81c16d13cefd61368792519707dd *core/config/devices/SmokeSensor-EM/SmokeSensor-EM.json
@@ -1141,18 +1143,18 @@ f9f0b5c7171e4a3c962b7c7008a4aef1 *core/php/AbeilleMonitor.php
 657c2f8ee31e9267a1b575dc188209a4 *core/php/AbeilleOTA.php
 51c8ee5d4d340642d4dcbe8acab3f84b *core/php/AbeilleParser-Tuya.php
 dab0a1e33c2353ce10524dc84e10e64d *core/php/AbeilleParser-Xiaomi.php
-1d634bb2d5f58a04300d94845fc34cd8 *core/php/AbeilleParser.php
+0ecec638b213d48017b89f9672872c0b *core/php/AbeilleParser.php
 da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
 2dd71ccb3f901a45a3852a4b92d735c2 *core/php/AbeilleRoutes.php
 1916bb70bda7770eb98a7be0b347412f *core/php/AbeilleSerialRead.php
 220cfe670ad55774709d2fa3e67b1c34 *core/php/AbeilleSetEq.php
 4248d134eef07e173183af90cb770da8 *core/php/AbeilleSocat.php
-87286471fe025ea564fcdb4ee773b6ff *core/php/AbeilleSupportKeyInfos.php
+0683d9dfec177f1baa50c8c7a8ae3c8e *core/php/AbeilleSupportKeyInfos.php
 e4ccac3cb9401f1b2b54e068e55a3c4b *core/php/AbeilleTest.php
 d11a50cfe57f0f6e86a89e383fbb25ff *core/php/AbeilleUpload.php
 b55a6ba4c0110b8a29a3c30f4aee6ce1 *core/php/AbeilleZigate.php
-986f6e518663381f1c265b66de0db61f *core/php/AbeilleZigateConst.php
-216bfd8c0499ba142695c487766523a4 *core/php/AbeilleZigbeeConst.php
+9ae73050950bb59927fe60036fba6dd7 *core/php/AbeilleZigateConst.php
+0a001ec967b7b36c59f2a83492be5e18 *core/php/AbeilleZigbeeConst.php
 b867137b3b8b49c8d70554a2d9220fce *core/php/refreshBruit.php
 e2b6a4cd856fc09bff24be60d72960c8 *core/python/AbeilleSerialRead.py
 33091517c2fbbab6e5546154033a9362 *core/scripts/checkSocat.sh
@@ -1216,7 +1218,7 @@ a1d870cadad75bcd9878aaafe90a3f09 *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-3dda0e672f8dcfb270018cf6db9363bb *docs/fr_FR/Changelog.rst
+5a549bea0ec940c5dc7424419541f52b *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1524,10 +1526,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-49521d3278027dac35fafa79aa2db026 *plugin_info/Abeille.version
+b86291a7955bb7cd29f9af01b57ebe31 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 2ce698a8944eb62133c068d96cdcfc69 *plugin_info/configuration.php
-bc3ba0422a66c6421af535d6bc0bced7 *plugin_info/info.json
+967002bcc999babb8fb6339068108f72 *plugin_info/info.json
 bf61bf7870b847b45437871135dd8bcc *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
@@ -1552,6 +1554,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/RadioVoisines.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/RadioVoisinesMap.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/RouteRecord.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/RouteRecord.php
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/addParameterToAllTemplates.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/essai.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/modelesPage.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/prog_jennic/JennicModuleProgrammerRPI3

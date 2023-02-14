@@ -14,6 +14,7 @@ ChangeLog
 - Page maintenance/infos clefs: Amélioration mineure.
 - Interne: Abeille.class: Suppression 'volt2pourcent()'.
 - Interne: Parser: Revue decode 8001/logs.
+- Interne: SW reset si erreur 06 sur msg 8000 (2490).
 
 230207-BETA-3
 -------------

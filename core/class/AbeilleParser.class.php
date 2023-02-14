@@ -2069,7 +2069,7 @@
             $status     = substr($payload, 0, 2);
             $sqn        = substr($payload, 2, 2);
             $packetType = substr($payload, 4, 4);
-            $msgDecoded = '8000/Status'
+            $m = '8000/Status'
                 .', Status='.$status.'/'.zgGet8000Status($status)
                 .', SQN='.$sqn
                 .', PacketType='.$packetType;
@@ -2079,16 +2079,16 @@
                 // FW >= 3.1d
                 $sent = substr($payload, 8, 2); // 1=Sent to device, 0=zigate only cmd
                 $sqnAps = substr($payload, 10, 2);
-                $msgDecoded .= ', Sent='.$sent.', SQNAPS='.$sqnAps;
+                $m .= ', Sent='.$sent.', SQNAPS='.$sqnAps;
             }
             if ($l == 16) {
                 // FW >= 3.1e
                 $nPdu = substr($payload, 12, 2);
                 $aPdu = substr($payload, 14, 2);
-                $msgDecoded .= ', NPDU='.$nPdu.', APDU='.$aPdu;
+                $m .= ', NPDU='.$nPdu.', APDU='.$aPdu;
             }
 
-            parserLog('debug', $net.', Type='.$msgDecoded, "8000");
+            parserLog('debug', $net.', Type='.$m, "8000");
 
             // Sending msg to cmd for flow control
             $msg = array (
@@ -2112,6 +2112,14 @@
                     parserLog("error", $net.": Impossible de changer le mode de la Zigate.");
                     // message::add("Abeille", "Erreur lors du changement de mode de la Zigate.", "");
                 }
+            }
+
+            // If status 06, let's reset Zigate again
+            // See https://github.com/fairecasoimeme/ZiGatev2/issues/50#top
+            // See https://github.com/KiwiHC16/Abeille/issues/2490#top
+            if ($status == "06") {
+                parserLog("debug", "  Error 06 => SW reset in 20sec");
+                $this->msgToCmd(PRIO_HIGH, "TempoCmd".$net."/0000/resetZg&delay=20");
             }
 
             // Saving NPDU+APDU & checking NDPU. If stuck too long Zigate SW reset is required

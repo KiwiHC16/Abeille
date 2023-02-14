@@ -2122,17 +2122,17 @@
             }
         }
 
-        // // 8001/Log message
-        // function decode8001($dest, $payload, $lqi) {
-        //     $level  = substr($payload, 0, 2);
-        //     $msg    = substr($payload, 2);
-        //     $msg    = pack("H*", $msg);
+        // 8001/Log message
+        function decode8001($dest, $pl, $lqi) {
+            $level  = substr($pl, 0, 2);
+            $msg    = substr($pl, 2);
+            $msg    = pack("H*", $msg);
 
-        //     $msgDecoded = '8001/Log message'
-        //         .', Level='.$level
-        //         .', Msg='.$msg;
-        //     parserLog('debug', $dest.', Type='.$msgDecoded, "8001");
-        // }
+            $m = '8001/Log message'
+                .', Level='.$level
+                .', Msg='.$msg;
+            parserLog('debug', $dest.', Type='.$m, "8001");
+        }
 
         // Some attributs defined in ZCL spec have a predefined formula to apply.
         // Ex: Cluster 0402, attr 0000 = temperature to be devided by 100.

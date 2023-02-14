@@ -13,6 +13,7 @@ ChangeLog
 - Interne: Parser: Optimisations.
 - Page maintenance/infos clefs: Amélioration mineure.
 - Interne: Abeille.class: Suppression 'volt2pourcent()'.
+- Interne: Parser: Revue decode 8001/logs.
 
 230207-BETA-3
 -------------

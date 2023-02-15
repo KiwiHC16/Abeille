@@ -4016,6 +4016,10 @@
                 } else { // Cluster specific command
                     // 0004/Groups cluster specific
                     if ($clustId == "0004") {
+                        // Duplicated message ?
+                        if ($this->isDuplicated($dest, $srcAddr, $sqn))
+                            return;
+
                         if ($dir && ($cmd == "00")) {
                             $this->decode8002_AddGroupRsp($dest, $srcAddr, $srcEp, $pl, $lqi, $toMon);
                             return;
@@ -4028,7 +4032,7 @@
                             $this->decode8002_RemoveGroupRsp($dest, $srcAddr, $srcEp, $pl, $lqi, $toMon);
                             return;
                         } else
-                            parserLog('debug', '  Unsupported cluster 0004 specific cmd');
+                            parserLog('debug', '  Unsupported cluster 0004 specific cmd '.$cmd);
                     } // End clustId == "0004"
 
                     // 0005/Scenes cluster specific
@@ -4193,7 +4197,7 @@
                                 // return;
                             }
                         }
-                    }
+                    } // End $clustId == "0005"
 
                     // 0006/On/Off cluster specific
                     else if ($clustId == "0006") {
@@ -4206,7 +4210,7 @@
                             parserLog('debug', "  Handled by decode8095");
                             return;
                         }
-                    }
+                    } // End $clustId == "0006"
 
                     // 0008/Level control cluster specific
                     else if ($clustId == "0008") {

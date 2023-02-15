@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: Améliorations mineures cluster 0004.
+
 230214-BETA-1
 -------------
 

@@ -3093,11 +3093,11 @@ class Abeille extends eqLogic {
             /* Updating command 'configuration' fields.
                In case of update, some fields may no longer be required ($unusedConfKeys).
                They are removed if not defined in JSON model. */
-            $toRemove = ['visibilityCategory', 'historizeRound', 'execAtCreation', 'execAtCreationDelay', 'repeatEventManagement', 'topic', 'Polling', 'RefreshData', 'listValue'];
+            $toRemove = ['visibilityCategory', 'historizeRound', 'execAtCreation', 'execAtCreationDelay', 'topic', 'Polling', 'RefreshData', 'listValue'];
             array_push($toRemove, 'ab::trigOut', 'ab::trigOutOffset', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'ab::notStandard');
             array_push($toRemove, 'ab::valueOffset');
-            $toRemoveIfReset = $toRemove;
-            array_push($toRemoveIfReset, 'minValue', 'maxValue', 'calculValueOffset');
+            $rmOnlyIfReset = $toRemove;
+            array_push($rmOnlyIfReset, 'minValue', 'maxValue', 'calculValueOffset', 'repeatEventManagement');
             // Abeille specific keys must be renamed when taken from model (ex: trigOut => ab::trigOut)
             $toRename = ['trigOut', 'trigOutOffset', 'notStandard', 'valueOffset'];
             if (isset($mCmd["configuration"])) {
@@ -3113,8 +3113,8 @@ class Abeille extends eqLogic {
 
                     // $confKey is used => no cleanup required
                     if ($action == 'reset') {
-                        $keyIdx = array_search($confKey, $toRemoveIfReset);
-                        unset($toRemoveIfReset[$keyIdx]);
+                        $keyIdx = array_search($confKey, $rmOnlyIfReset);
+                        unset($rmOnlyIfReset[$keyIdx]);
                     } else {
                         $keyIdx = array_search($confKey, $toRemove);
                         unset($toRemove[$keyIdx]);
@@ -3124,7 +3124,7 @@ class Abeille extends eqLogic {
 
             /* Removing any obsolete 'configuration' fields (those remaining in 'unusedConfKeys') */
             if ($action == 'reset')
-                $toRm = $toRemoveIfReset;
+                $toRm = $rmOnlyIfReset;
             else
                 $toRm = $toRemove;
             foreach ($toRm as $confKey) {

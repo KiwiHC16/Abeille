@@ -34,6 +34,7 @@
 
             "Arm Value": {
                 "use": "inf_zbCmdC-0501-Arm-Value",
+                "repeatEventManagement": "always",
                 "isVisible": 1
             },
             "Arm String": {

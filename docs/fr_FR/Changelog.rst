@@ -2,6 +2,8 @@ ChangeLog
 =========
 
 - Interne: Parser: Améliorations mineures cluster 0004.
+- Interne: Abeille.class: 'repeatEventManagement' seulement si reset équipement.
+- Frient keypad: Mise-à-jour modele (2525).
 
 230214-BETA-1
 -------------

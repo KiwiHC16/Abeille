@@ -50,6 +50,7 @@
             "SOS": {
                 "use": "inf_generic-String",
                 "logicalId": "2C-0501-cmd02C",
+                "repeatEventManagement": "always",
                 "returnStateValue": "",
                 "returnStateTime": 1,
                 "isVisible": 1

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230214-BETA-1"
+# VERSION="230215-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -42,7 +42,7 @@ b01724fc9b23be86f3d465a639ab6c95 *core/ajax/AbeilleEqAssist.ajax.php
 f8554295800d4da5939a1f5332ea7c15 *core/ajax/AbeilleFiles.ajax.php
 e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 8290855d0e5ee94968a6fb01ba8d5a7b *core/ajax/AbeilleZigate.ajax.php
-e64587f82652ddca5859404d87b9fdde *core/class/Abeille.class.php
+40a86ac79188a365f4bab1c342a0cbd5 *core/class/Abeille.class.php
 b9650cf3fe0dc8dcfdd532e3fc1252b5 *core/class/AbeilleCmd.class.php
 9907c1e8b19d5a606846863d7453996c *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
@@ -51,7 +51,7 @@ e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
 fc8273a488a9a59a70cf7b24fd4b61b8 *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-9374dcf202222310f5d0573f187bf524 *core/class/AbeilleParser.class.php
+db520b44349e26061cda516cf773fbf1 *core/class/AbeilleParser.class.php
 59230e66b7fe7a8f08b997955361e4ab *core/class/AbeilleParserTest.class.php
 fbc81985db0cfa51df2b142d357f7eb3 *core/class/AbeilleParserTestDB.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
@@ -707,7 +707,7 @@ d7ee5fe7f347965d5a55ad52c42de5d7 *core/config/devices/ICZB-IW11D_icasa/ICZB-IW11
 d56191db815a5256794cbdb5e4884387 *core/config/devices/ICZB-IW11SW_icasa/ICZB-IW11SW_icasa.json
 713b6788d35f44fd7bf2c20d70e24ed4 *core/config/devices/ICZB-IW11SW_icasa/discovery.json
 2dacae0f8f69ff3292c3107d6419f40d *core/config/devices/KADRILJrollerblind/KADRILJrollerblind.json
-3ac2c29a06fcccd67ae5754ebda4281c *core/config/devices/KEPZB-110_frientAS/KEPZB-110_frientAS.json
+574caca6058867f015b9fc38382de3e7 *core/config/devices/KEPZB-110_frientAS/KEPZB-110_frientAS.json
 0d91e070c4573ffb8ca8d726650854cc *core/config/devices/KEPZB-110_frientAS/discovery.json
 26615b6877efc8c189e416e95845b0e8 *core/config/devices/Keyfob-ZB3.0/Keyfob-ZB3.0.json
 92db9ad7cbabf120c0e4fd70500a3abd *core/config/devices/KiwiHC16_Test_01/KiwiHC16_Test_01.json
@@ -1154,7 +1154,7 @@ e4ccac3cb9401f1b2b54e068e55a3c4b *core/php/AbeilleTest.php
 d11a50cfe57f0f6e86a89e383fbb25ff *core/php/AbeilleUpload.php
 b55a6ba4c0110b8a29a3c30f4aee6ce1 *core/php/AbeilleZigate.php
 9ae73050950bb59927fe60036fba6dd7 *core/php/AbeilleZigateConst.php
-0a001ec967b7b36c59f2a83492be5e18 *core/php/AbeilleZigbeeConst.php
+9b34f4a398ee93d7460b1c06e20d9b70 *core/php/AbeilleZigbeeConst.php
 b867137b3b8b49c8d70554a2d9220fce *core/php/refreshBruit.php
 e2b6a4cd856fc09bff24be60d72960c8 *core/python/AbeilleSerialRead.py
 33091517c2fbbab6e5546154033a9362 *core/scripts/checkSocat.sh
@@ -1218,7 +1218,7 @@ a1d870cadad75bcd9878aaafe90a3f09 *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-5a549bea0ec940c5dc7424419541f52b *docs/fr_FR/Changelog.rst
+9001a1fac1dc9647a39a58ead75d881e *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1526,10 +1526,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-b86291a7955bb7cd29f9af01b57ebe31 *plugin_info/Abeille.version
+e55da4515c2e5aeaa948d26dde5c7de3 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 2ce698a8944eb62133c068d96cdcfc69 *plugin_info/configuration.php
-967002bcc999babb8fb6339068108f72 *plugin_info/info.json
+4a2d0dff54cf4b20de01e06727948d74 *plugin_info/info.json
 bf61bf7870b847b45437871135dd8bcc *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

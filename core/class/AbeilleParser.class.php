@@ -850,8 +850,9 @@
                         $eq['location'] = $value;
                 } else // 'ieee' or 'bindingTableSize'
                     $eq[$updType] = $value;
-                parserLog('debug', '  Updated eq='.json_encode($eq));
             } // End foreach($updates)
+
+            parserLog('debug', '  Updated eq='.json_encode($eq));
 
             // Any new info for Abeille.class ?
             if (count($abUpdates) != 0) {
@@ -2948,7 +2949,9 @@
                         }
                     }
 
-                    $this->deviceUpdate($dest, $srcAddr, $srcEp, 'bindingTableSize', $tableSize);
+                    $updates = [];
+                    $updates['bindingTableSize'] = $tableSize;
+                    $this->deviceUpdates($dest, $srcAddr, $srcEp, $updates);
                     // return;
                 }
 
@@ -6158,33 +6161,35 @@
                 // 0010: Location => Used for Profalux 1st gen
                 if (($attrId == "0004") || ($attrId == "0005") || ($attrId == "0010")) {
                     // Assuming $dataType == "42"
+                    parserLog('debug', '  Clust 0000, attr 0004/5/10 => Handled by decode8002()');
+                    return;
 
-                    $trimmedValue = pack('H*', $Attribut);
+                    // $trimmedValue = pack('H*', $Attribut);
 
-                    if ($attrId == "0004") { // 0x0004 ManufacturerName string
-                        $cleanedValue = $this->cleanManufId($trimmedValue);
+                    // if ($attrId == "0004") { // 0x0004 ManufacturerName string
+                    //     $cleanedValue = $this->cleanManufId($trimmedValue);
 
-                        parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."' => cleaned='".$cleanedValue."'");
-                        $data = $cleanedValue;
+                    //     parserLog('debug', "  ManufacturerName='".pack('H*', $Attribut)."' => cleaned='".$cleanedValue."'");
+                    //     $data = $cleanedValue;
 
-                        $this->deviceUpdate($dest, $srcAddr, $ep, 'manufId', $cleanedValue);
-                    } else if ($attrId == "0005") { // 0x0005 ModelIdentifier string
-                        // $cleanedValue = $this->cleanModelId($trimmedValue);
-                        $cleanedValue = $this->cleanModelId($Attribut);
+                    //     $this->deviceUpdate($dest, $srcAddr, $ep, 'manufId', $cleanedValue);
+                    // } else if ($attrId == "0005") { // 0x0005 ModelIdentifier string
+                    //     // $cleanedValue = $this->cleanModelId($trimmedValue);
+                    //     $cleanedValue = $this->cleanModelId($Attribut);
 
-                        parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."' => cleaned='".$cleanedValue."'");
-                        $data = $cleanedValue;
+                    //     parserLog('debug', "  ModelIdentifier='".pack('H*', $Attribut)."' => cleaned='".$cleanedValue."'");
+                    //     $data = $cleanedValue;
 
-                        $this->deviceUpdate($dest, $srcAddr, $ep, 'modelId', $cleanedValue);
-                    } else if ($attrId == "0010") { // Location
-                        // $cleanedValue = $this->cleanModelId($trimmedValue);
-                        $cleanedValue = $this->cleanModelId($Attribut);
+                    //     $this->deviceUpdate($dest, $srcAddr, $ep, 'modelId', $cleanedValue);
+                    // } else if ($attrId == "0010") { // Location
+                    //     // $cleanedValue = $this->cleanModelId($trimmedValue);
+                    //     $cleanedValue = $this->cleanModelId($Attribut);
 
-                        parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."' => cleaned='".$cleanedValue."'");
-                        $data = $cleanedValue;
+                    //     parserLog('debug', "  LocationDescription='".pack('H*', $Attribut)."' => cleaned='".$cleanedValue."'");
+                    //     $data = $cleanedValue;
 
-                        $this->deviceUpdate($dest, $srcAddr, $ep, 'location', $cleanedValue);
-                    }
+                    //     $this->deviceUpdate($dest, $srcAddr, $ep, 'location', $cleanedValue);
+                    // }
                 }
 
                 // Xiaomi Bouton V2 Carré

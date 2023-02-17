@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: Changement support clust 0000, attr 0004/5/10.
+
 230215-BETA-2
 -------------
 

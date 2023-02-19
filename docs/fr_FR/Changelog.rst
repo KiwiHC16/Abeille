@@ -5,6 +5,7 @@ ChangeLog
 - Nodon SIN-4-2-20: Correction image (2541).
 - Interne: Cmd: Timeout 8s si ACK.
 - Xiaomi switch (switch.n0agl1): Correction regression modele (2517).
+- Frient keypad: Mise-à-jour modele (2525).
 
 230215-BETA-2
 -------------

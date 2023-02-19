@@ -4,6 +4,7 @@ ChangeLog
 - Interne: Parser: Changement support clust 0000, attr 0004/5/10.
 - Nodon SIN-4-2-20: Correction image (2541).
 - Interne: Cmd: Timeout 8s si ACK.
+- Xiaomi switch (switch.n0agl1): Correction regression modele (2517).
 
 230215-BETA-2
 -------------

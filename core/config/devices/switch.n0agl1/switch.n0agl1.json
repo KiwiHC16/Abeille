@@ -52,7 +52,7 @@
             },
             "Voltage": {
                 "use": "inf_zbAttr-0B04-RMSVoltage",
-                "params": "mult=1&div=1",
+                "params": "mult=1&div=10",
                 "isVisible": 0
             },
             "Current": {
@@ -71,8 +71,8 @@
                 "FCC0-00F7": {
                     "95-39": {
                         "func": "number",
-                        "info": "0B04-01-050B",
-                        "comment": "Active power"
+                        "info": "0702-01-0000",
+                        "comment": "Total power"
                     },
                     "96-39": {
                         "func": "number",
@@ -86,8 +86,8 @@
                     },
                     "98-39": {
                         "func": "number",
-                        "info": "0702-01-0000",
-                        "comment": "Total power"
+                        "info": "0B04-01-050B",
+                        "comment": "Power"
                     }
                 }
             }

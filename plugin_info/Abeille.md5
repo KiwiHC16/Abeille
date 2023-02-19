@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230215-BETA-2"
+# VERSION="230219-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -48,10 +48,10 @@ b9650cf3fe0dc8dcfdd532e3fc1252b5 *core/class/AbeilleCmd.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
 834cc45ad7d304d282a12bffc483f020 *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
-fc8273a488a9a59a70cf7b24fd4b61b8 *core/class/AbeilleCmdQueue.class.php
+e76577c7a3d63e1ef4a7ee1578cde760 *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
-db520b44349e26061cda516cf773fbf1 *core/class/AbeilleParser.class.php
+fa942d1065807075479a57d2b61b9785 *core/class/AbeilleParser.class.php
 59230e66b7fe7a8f08b997955361e4ab *core/class/AbeilleParserTest.class.php
 fbc81985db0cfa51df2b142d357f7eb3 *core/class/AbeilleParserTestDB.class.php
 f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
@@ -707,7 +707,7 @@ d7ee5fe7f347965d5a55ad52c42de5d7 *core/config/devices/ICZB-IW11D_icasa/ICZB-IW11
 d56191db815a5256794cbdb5e4884387 *core/config/devices/ICZB-IW11SW_icasa/ICZB-IW11SW_icasa.json
 713b6788d35f44fd7bf2c20d70e24ed4 *core/config/devices/ICZB-IW11SW_icasa/discovery.json
 2dacae0f8f69ff3292c3107d6419f40d *core/config/devices/KADRILJrollerblind/KADRILJrollerblind.json
-9bb515014eea35b3c149a8e42037c33d *core/config/devices/KEPZB-110_frientAS/KEPZB-110_frientAS.json
+28f56aba91881aecc5a787b68a065cc0 *core/config/devices/KEPZB-110_frientAS/KEPZB-110_frientAS.json
 0d91e070c4573ffb8ca8d726650854cc *core/config/devices/KEPZB-110_frientAS/discovery.json
 26615b6877efc8c189e416e95845b0e8 *core/config/devices/Keyfob-ZB3.0/Keyfob-ZB3.0.json
 92db9ad7cbabf120c0e4fd70500a3abd *core/config/devices/KiwiHC16_Test_01/KiwiHC16_Test_01.json
@@ -1102,7 +1102,7 @@ c690597daf65833111e1c5d5167d1fc4 *core/config/devices/siren-pni-s002/siren-pni-s
 ed58dd4213726b561bca2329b11e6184 *core/config/devices/switch.l2aeu1/discovery.json
 cc5341c2bf4c425be1c3c81d62f3dabd *core/config/devices/switch.l2aeu1/switch.l2aeu1.json
 b730e0567a7514b90f28a98d2cb691ca *core/config/devices/switch.n0agl1/discovery.json
-7f96f0569f423d4222938c87e3ee3042 *core/config/devices/switch.n0agl1/switch.n0agl1.json
+74da047c765a461e1e57e1455de9aadb *core/config/devices/switch.n0agl1/switch.n0agl1.json
 c575aae01a02d3bcc553bfcfe69dfeac *core/config/devices/switch.n2aeu1_LUMI/discovery.json
 346459dc8f30a3be89025ffb9a233f22 *core/config/devices/switch.n2aeu1_LUMI/switch.n2aeu1_LUMI.json
 6a4c5fc8be522708dd67024c2a096082 *core/config/devices/switch.n3acn3/discovery.json
@@ -1218,7 +1218,7 @@ a1d870cadad75bcd9878aaafe90a3f09 *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-59563d8f0cee7458986025027eba1f9b *docs/fr_FR/Changelog.rst
+41493db576da3a14a1a75e8d8e0b9e5f *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1345,7 +1345,7 @@ db3534d090fb505bda04baed588350f7 *images/node_Moes-Thermostat.png
 6255fd93fe758dd1e6526d9aaae200fb *images/node_Moes-ThermostaticHead.png
 4e7d5aeac49d0d028847bdcb31111880 *images/node_MotionSensor-A.png
 bad9dde9f72b5abe4a7c250671d0b495 *images/node_Niko-ConnectedSocketOutlet.png
-103bcd9b8341a21e94be246f3e10861a *images/node_Nodon-Sin-4-2-20.png
+edbac58b5937a3b8c30b30a61ff99259 *images/node_Nodon-Sin-4-2-20.png
 5723620e5f2d3b28e0669877d6661d75 *images/node_Nous-SmartSocket.png
 488ea8d311b06ce714b86276399fd35a *images/node_OSRAMClassicA60RGBW.png
 aeb0bb343d75eca731e9d6777ee2153f *images/node_OSRAMClassicA60Wclear-LIGHTIFY-2.png
@@ -1526,10 +1526,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-0f924deadb06a99559f61cd4218472ef *plugin_info/Abeille.version
+203551abd48d1548e3295e9c8cee3bce *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 2ce698a8944eb62133c068d96cdcfc69 *plugin_info/configuration.php
-1522a9e2c22d4f2e6cd06820accd02a9 *plugin_info/info.json
+328c6aabd68c0593ac7648fb0e295f82 *plugin_info/info.json
 bf61bf7870b847b45437871135dd8bcc *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

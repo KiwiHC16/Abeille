@@ -775,7 +775,7 @@
                     continue; // Not sent yet
                 // Timeout: At least 4sec to let Zigate do its job but is that enough ?
                 if ($cmd['ackAps'])
-                    $timeout = 7; // Zigate has 7s internal timeout when ACK
+                    $timeout = 8; // Zigate has 7s internal timeout when ACK
                 else
                     $timeout = 4;
                 if ($cmd['sentTime'] + $timeout > time())

@@ -852,7 +852,8 @@
                     $eq[$updType] = $value;
             } // End foreach($updates)
 
-            parserLog('debug', '  Updated eq='.json_encode($eq));
+            if ($updates != [])
+                parserLog('debug', '  Updated eq='.json_encode($eq));
 
             // Any new info for Abeille.class ?
             if (count($abUpdates) != 0) {

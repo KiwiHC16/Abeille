@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Page maintenance/infos clefs: Amélioration mineure.
+- Interne: Parser: Amélioration mineure msg debug.
+
 230219-BETA-1
 -------------
 

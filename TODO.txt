@@ -10,9 +10,9 @@ switch branch & update
     Les demons ne sont pas arretes pendant la mise à jour.
     Qqch n'est pas propre
 
-Canal Zigbee: memoriser choix user pour reappliquer redemarrage.
-    Ajouter choix du canal sur page de config.
-    Par defaut = auto = tous les canaux
+Canal Zigbee: memoriser choix user pour reappliquer redemarrage => 'ab::zgChanX'
+    Ajouter choix du canal sur page de config => ok pour visu only
+    Par defaut = 11
 
 Page support/logs: Mise a  jour en temps reel sur selection courante
 

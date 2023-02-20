@@ -3,6 +3,7 @@ ChangeLog
 
 - Page maintenance/infos clefs: Amélioration mineure.
 - Interne: Parser: Amélioration mineure msg debug.
+- Nodon SIN-4-2-20: Mise-à-jour modele (2541).
 
 230219-BETA-1
 -------------

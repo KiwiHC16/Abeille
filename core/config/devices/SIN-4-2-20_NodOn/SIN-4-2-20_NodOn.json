@@ -53,31 +53,6 @@
                 "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-            "Set Level": {
-                "use": "setLevel",
-                "params": "ep=02",
-                "isVisible": "1"
-            },
-            "Level": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "params": "ep=02",
-                "isVisible": "1",
-                "nextLine": "after"
-            },
-            "Get Level": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=02&clustId=0008&attrId=0000"
-            },
-            "Bind 01-0008-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0008",
-                "execAtCreation": "yes"
-            },
-            "SetReporting 01-0008-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=01&clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
-                "execAtCreation": "yes"
-            },
             "On 2": {
                 "use": "act_zbCmdG-0006-On",
                 "params": "ep=02",
@@ -110,16 +85,6 @@
             "SetReporting 02-0006": {
                 "use": "act_zbConfigureReporting",
                 "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
-                "execAtCreation": "yes"
-            },
-            "Bind 02-0008-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=02&clustId=0008",
-                "execAtCreation": "yes"
-            },
-            "SetReporting 02-0008-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=02&clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             }
         }

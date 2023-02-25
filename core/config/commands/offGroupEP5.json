@@ -7,7 +7,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-            "topic": "CmdAbeille\/#GroupeEP5#\/OnOffGroup",
+            "topic": "CmdAbeille\/#GROUPEP5#\/OnOffGroup",
             "request": "Off",
             "visibilityCategory": "All"
         },

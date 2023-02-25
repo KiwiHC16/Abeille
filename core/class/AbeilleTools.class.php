@@ -337,15 +337,22 @@
         public static function getDeviceModel($modelName, $from="Abeille", $mode=0) {
             // log::add('Abeille', 'debug', 'getDeviceModel start, modelName='.$modelName.", from=".$from);
 
+            if ($modelName == '') {
+                log::add('Abeille', 'error', "getDeviceModel(): 'modelName' vide !");
+                return false;
+            }
+
             if (($from == 'Abeille') || ($from == ''))
                 $modelPath = devicesDir.$modelName.'/'.$modelName.'.json';
             else
                 $modelPath = devicesLocalDir.$modelName.'/'.$modelName.'.json';
             // log::add('Abeille', 'debug', '  modelPath='.$modelPath);
             if (!is_file($modelPath)) {
-                log::add('Abeille', 'error', 'Modèle \''.$modelName.'\' inconnu. Utilisation du modèle par défaut.');
-                $modelName = 'defaultUnknown';
-                $modelPath = devicesDir.$modelName.'/'.$modelName.'.json';
+                // log::add('Abeille', 'error', 'Modèle \''.$modelName.'\' inconnu. Utilisation du modèle par défaut.');
+                // $modelName = 'defaultUnknown';
+                // $modelPath = devicesDir.$modelName.'/'.$modelName.'.json';
+                log::add('Abeille', 'error', 'Modèle \''.$modelName.'\' inconnu.');
+                return false;
             }
 
             $jsonContent = file_get_contents($modelPath);
@@ -366,124 +373,128 @@
                     $jsonCmds = $device['commands'];
                     unset($device['commands']);
                     foreach ($jsonCmds as $cmd1 => $cmd2) {
-                        // if (substr($cmd1, 0, 7) == "include") {
-                        //     /* Old command JSON format: "includeX": "json_cmd_name" */
-                        //     $newCmd = self::getCommandModel($cmd2);
-                        //     if ($newCmd === false)
-                        //         continue; // Cmd does not exist.
-                        //     $deviceCmds += $newCmd;
-                        // } else {
-                            /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
-                            $cmdFName = $cmd2['use']; // File name without '.json'
-                            $newCmd = self::getCommandModel($cmdFName, $cmd1);
-                            if ($newCmd === false)
-                                continue; // Cmd does not exist.
+                        /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
+                        $cmdFName = $cmd2['use']; // File name without '.json'
+                        $newCmd = self::getCommandModel($cmdFName, $cmd1);
+                        if ($newCmd === false)
+                            continue; // Cmd does not exist.
 
-                            if (isset($cmd2['params'])) {
-                                // log::add('Abeille', 'debug', 'params='.json_encode($cmd2['params']));
-                                // log::add('Abeille', 'debug', 'newCmd BEFORE='.json_encode($newCmd));
+                        if (isset($cmd2['params'])) {
+                            // log::add('Abeille', 'debug', 'params='.json_encode($cmd2['params']));
+                            // log::add('Abeille', 'debug', 'newCmd BEFORE='.json_encode($newCmd));
 
-                                // Overwritting default settings with 'params' content
-                                // TODO: This should be done on 'configuration/request' only ??
-                                $paramsArr = explode('&', $cmd2['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
-                                $text = json_encode($newCmd);
+                            // Overwritting default settings with 'params' content
+                            // TODO: This should be done on 'configuration/request' only ??
+                            $paramsArr = explode('&', $cmd2['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
+                            $text = json_encode($newCmd);
+                            foreach ($paramsArr as $p) {
+                                list($pName, $pVal) = explode("=", $p);
+                                // Case insensitive #xxx# replacement
+                                $text = str_ireplace('#'.$pName.'#', $pVal, $text);
+                            }
+                            $newCmd = json_decode($text, true);
+
+                            // Adding new (optional) parameters
+                            if (isset($newCmd[$cmd1]['configuration']['request'])) {
+                                $request = $newCmd[$cmd1]['configuration']['request'];
+                                // log::add('Abeille', 'debug', 'request BEFORE='.json_encode($request));
+                                $requestArr = explode('&', $request); // ep=01&clustId=0000 => ep=01, clustId=0000
                                 foreach ($paramsArr as $p) {
                                     list($pName, $pVal) = explode("=", $p);
-                                    // Case insensitive #xxx# replacement
-                                    $text = str_ireplace('#'.$pName.'#', $pVal, $text);
-                                }
-                                $newCmd = json_decode($text, true);
-
-                                // Adding new (optional) parameters
-                                if (isset($newCmd[$cmd1]['configuration']['request'])) {
-                                    $request = $newCmd[$cmd1]['configuration']['request'];
-                                    // log::add('Abeille', 'debug', 'request BEFORE='.json_encode($request));
-                                    $requestArr = explode('&', $request); // ep=01&clustId=0000 => ep=01, clustId=0000
-                                    foreach ($paramsArr as $p) {
-                                        list($pName, $pVal) = explode("=", $p);
-                                        $found = false;
-                                        foreach ($requestArr as $r) {
-                                            list($rName, $rVal) = explode("=", $r);
-                                            if ($rName == $pName) {
-                                                $found = true;
-                                                break;
-                                            }
+                                    $found = false;
+                                    foreach ($requestArr as $r) {
+                                        list($rName, $rVal) = explode("=", $r);
+                                        if ($rName == $pName) {
+                                            $found = true;
+                                            break;
                                         }
-                                        if ($found == false)
-                                            $request .= "&".$p; // Adding optional param
                                     }
-                                    $newCmd[$cmd1]['configuration']['request'] = $request;
-                                    // log::add('Abeille', 'debug', 'request AFTER='.json_encode($newCmd[$cmd1]['configuration']['request']));
+                                    if ($found == false)
+                                        $request .= "&".$p; // Adding optional param
                                 }
-
-                                // log::add('Abeille', 'debug', 'newCmd AFTER='.json_encode($newCmd));
+                                $newCmd[$cmd1]['configuration']['request'] = $request;
+                                // log::add('Abeille', 'debug', 'request AFTER='.json_encode($newCmd[$cmd1]['configuration']['request']));
                             }
-                            if (isset($cmd2['isVisible'])) {
-                                $value = $cmd2['isVisible'];
-                                if ($value === "yes")
-                                    $value = 1;
-                                else if ($value === "no")
-                                    $value = 0;
-                                $newCmd[$cmd1]['isVisible'] = $value;
+
+                            // log::add('Abeille', 'debug', 'newCmd AFTER='.json_encode($newCmd));
+                        }
+
+                        // Temp '#GROUPEPx#' support
+                        $newCmdTxt = json_encode($newCmd);
+                        for ($g = 1; $g <= 8; $g++) {
+                            if (isset($device['configuration']["groupEP".$g])) {
+                                // Case insensitive #xxx# replacement
+                                $gVal = $device['configuration']["groupEP".$g];
+                                $newCmdTxt = str_ireplace('#GROUPEP'.$g.'#', $gVal, $newCmdTxt);
                             }
-                            if (isset($cmd2['nextLine']))
-                                $newCmd[$cmd1]['nextLine'] = $cmd2['nextLine'];
-                            // {
-                            //     $value = $cmd2['nextLine'];
-                            //     if ($value === "after")
-                            //         $newCmd[$cmd1]['display']['forceReturnLineAfter'] = 1;
-                            //     else if ($value === "before")
-                            //         $newCmd[$cmd1]['display']['forceReturnLineBefore'] = 1;
-                            // }
-                            if (isset($cmd2['template']))
-                                $newCmd[$cmd1]['template'] = $cmd2['template'];
-                            if (isset($cmd2['subType']))
-                                $newCmd[$cmd1]['subType'] = $cmd2['subType'];
-                            if (isset($cmd2['unit']))
-                                $newCmd[$cmd1]['unit'] = $cmd2['unit'];
-                            if (isset($cmd2['isHistorized']))
-                                $newCmd[$cmd1]['isHistorized'] = $cmd2['isHistorized'];
-                            if (isset($cmd2['genericType']))
-                                $newCmd[$cmd1]['genericType'] = $cmd2['genericType'];
-                            if (isset($cmd2['logicalId']))
-                                $newCmd[$cmd1]['logicalId'] = $cmd2['logicalId'];
-                            if (isset($cmd2['invertBinary']))
-                                $newCmd[$cmd1]['invertBinary'] = $cmd2['invertBinary'];
+                        }
+                        $newCmd = json_decode($newCmdTxt, true);
 
-                            if (isset($cmd2['execAtCreation']))
-                                $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
-                            if (isset($cmd2['execAtCreationDelay']))
-                                $newCmd[$cmd1]['configuration']['execAtCreationDelay'] = $cmd2['execAtCreationDelay'];
-                            if (isset($cmd2['minValue']))
-                                $newCmd[$cmd1]['configuration']['minValue'] = $cmd2['minValue'];
-                            if (isset($cmd2['maxValue']))
-                                $newCmd[$cmd1]['configuration']['maxValue'] = $cmd2['maxValue'];
-                            if (isset($cmd2['trigOut']))
-                                $newCmd[$cmd1]['configuration']['trigOut'] = $cmd2['trigOut'];
-                            if (isset($cmd2['trigOutOffset']))
-                                $newCmd[$cmd1]['configuration']['trigOutOffset'] = $cmd2['trigOutOffset'];
-                            if (isset($cmd2['historizeRound']))
-                                $newCmd[$cmd1]['configuration']['historizeRound'] = $cmd2['historizeRound'];
-                            if (isset($cmd2['calculValueOffset']))
-                                $newCmd[$cmd1]['configuration']['calculValueOffset'] = $cmd2['calculValueOffset'];
-                            if (isset($cmd2['repeatEventManagement']))
-                                $newCmd[$cmd1]['configuration']['repeatEventManagement'] = $cmd2['repeatEventManagement'];
-                            if (isset($cmd2['returnStateTime']))
-                                $newCmd[$cmd1]['configuration']['returnStateTime'] = $cmd2['returnStateTime'];
-                            if (isset($cmd2['returnStateValue']))
-                                $newCmd[$cmd1]['configuration']['returnStateValue'] = $cmd2['returnStateValue'];
-                            if (isset($cmd2['notStandard']))
-                                $newCmd[$cmd1]['configuration']['notStandard'] = $cmd2['notStandard'];
-                            if (isset($cmd2['valueOffset']))
-                                $newCmd[$cmd1]['configuration']['valueOffset'] = $cmd2['valueOffset'];
-                            if (isset($cmd2['listValue']))
-                                $newCmd[$cmd1]['configuration']['listValue'] = $cmd2['listValue'];
-                            if (isset($cmd2['Polling']))
-                                $newCmd[$cmd1]['configuration']['Polling'] = $cmd2['Polling'];
-
-                            // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
-                            $deviceCmds += $newCmd;
+                        if (isset($cmd2['isVisible'])) {
+                            $value = $cmd2['isVisible'];
+                            if ($value === "yes")
+                                $value = 1;
+                            else if ($value === "no")
+                                $value = 0;
+                            $newCmd[$cmd1]['isVisible'] = $value;
+                        }
+                        if (isset($cmd2['nextLine']))
+                            $newCmd[$cmd1]['nextLine'] = $cmd2['nextLine'];
+                        // {
+                        //     $value = $cmd2['nextLine'];
+                        //     if ($value === "after")
+                        //         $newCmd[$cmd1]['display']['forceReturnLineAfter'] = 1;
+                        //     else if ($value === "before")
+                        //         $newCmd[$cmd1]['display']['forceReturnLineBefore'] = 1;
                         // }
+                        if (isset($cmd2['template']))
+                            $newCmd[$cmd1]['template'] = $cmd2['template'];
+                        if (isset($cmd2['subType']))
+                            $newCmd[$cmd1]['subType'] = $cmd2['subType'];
+                        if (isset($cmd2['unit']))
+                            $newCmd[$cmd1]['unit'] = $cmd2['unit'];
+                        if (isset($cmd2['isHistorized']))
+                            $newCmd[$cmd1]['isHistorized'] = $cmd2['isHistorized'];
+                        if (isset($cmd2['genericType']))
+                            $newCmd[$cmd1]['genericType'] = $cmd2['genericType'];
+                        if (isset($cmd2['logicalId']))
+                            $newCmd[$cmd1]['logicalId'] = $cmd2['logicalId'];
+                        if (isset($cmd2['invertBinary']))
+                            $newCmd[$cmd1]['invertBinary'] = $cmd2['invertBinary'];
+
+                        if (isset($cmd2['execAtCreation']))
+                            $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
+                        if (isset($cmd2['execAtCreationDelay']))
+                            $newCmd[$cmd1]['configuration']['execAtCreationDelay'] = $cmd2['execAtCreationDelay'];
+                        if (isset($cmd2['minValue']))
+                            $newCmd[$cmd1]['configuration']['minValue'] = $cmd2['minValue'];
+                        if (isset($cmd2['maxValue']))
+                            $newCmd[$cmd1]['configuration']['maxValue'] = $cmd2['maxValue'];
+                        if (isset($cmd2['trigOut']))
+                            $newCmd[$cmd1]['configuration']['trigOut'] = $cmd2['trigOut'];
+                        if (isset($cmd2['trigOutOffset']))
+                            $newCmd[$cmd1]['configuration']['trigOutOffset'] = $cmd2['trigOutOffset'];
+                        if (isset($cmd2['historizeRound']))
+                            $newCmd[$cmd1]['configuration']['historizeRound'] = $cmd2['historizeRound'];
+                        if (isset($cmd2['calculValueOffset']))
+                            $newCmd[$cmd1]['configuration']['calculValueOffset'] = $cmd2['calculValueOffset'];
+                        if (isset($cmd2['repeatEventManagement']))
+                            $newCmd[$cmd1]['configuration']['repeatEventManagement'] = $cmd2['repeatEventManagement'];
+                        if (isset($cmd2['returnStateTime']))
+                            $newCmd[$cmd1]['configuration']['returnStateTime'] = $cmd2['returnStateTime'];
+                        if (isset($cmd2['returnStateValue']))
+                            $newCmd[$cmd1]['configuration']['returnStateValue'] = $cmd2['returnStateValue'];
+                        if (isset($cmd2['notStandard']))
+                            $newCmd[$cmd1]['configuration']['notStandard'] = $cmd2['notStandard'];
+                        if (isset($cmd2['valueOffset']))
+                            $newCmd[$cmd1]['configuration']['valueOffset'] = $cmd2['valueOffset'];
+                        if (isset($cmd2['listValue']))
+                            $newCmd[$cmd1]['configuration']['listValue'] = $cmd2['listValue'];
+                        if (isset($cmd2['Polling']))
+                            $newCmd[$cmd1]['configuration']['Polling'] = $cmd2['Polling'];
+
+                        // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
+                        $deviceCmds += $newCmd;
                     }
 
                     // Adding base commands

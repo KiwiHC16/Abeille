@@ -2353,7 +2353,7 @@ class Abeille extends eqLogic {
         $queueId = $abQueues['xToCmd']['id'];
         $queue = msg_get_queue($queueId);
         if ($queue === false) {
-            log::add('Abeille', 'error', "publishMosquitto(): La queue ".$queueId." n'existe pas. Message ignoré.");
+            log::add('Abeille', 'error', "msgToCmd(): La queue ".$queueId." n'existe pas => Message ignoré.");
             return;
         }
         if (($stat = msg_stat_queue($queue)) == false) {
@@ -2383,10 +2383,10 @@ class Abeille extends eqLogic {
         $msgJson = json_encode($msg);
 
         if (msg_send($queue, $priority, $msgJson, false, false, $error_code)) {
-            log::add('Abeille', 'debug', "  publishMosquitto(): Envoyé '".$msgJson."' vers queue ".$queueId);
+            log::add('Abeille', 'debug', "  msgToCmd(): Envoyé '".$msgJson."' vers queue ".$queueId);
             $queueStatus[$queueId] = "ok"; // Status ok
         } else
-            log::add('Abeille', 'warning', "publishMosquitto(): Impossible d'envoyer '".$msgJson."' vers queue ".$queueId);
+            log::add('Abeille', 'warning', "msgToCmd(): Impossible d'envoyer '".$msgJson."' vers queue ".$queueId);
     } // End msgToCmd()
 
     // Beehive creation/update function. Called on daemon startup or new beehive creation.
@@ -2601,9 +2601,10 @@ class Abeille extends eqLogic {
         if ($jsonId != '' && $jsonLocation != '') {
             $model = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
             if ($model === false) {
-                log::add('Abeille', 'error', "  createDevice(jsonId=".$jsonId.", location=".$jsonLocation."): Unknown model");
+                // log::add('Abeille', 'error', "  createDevice(jsonId=".$jsonId.", location=".$jsonLocation."): Unknown model");
                 return;
             }
+            log::add('Abeille', 'debug', '  Model='.json_encode($model, JSON_UNESCAPED_SLASHES));
             $modelType = $model['type'];
         }
 
@@ -2772,27 +2773,16 @@ class Abeille extends eqLogic {
         if (isset($modelConf['Groupe'])) { // Tcharp38: What for ? Telecommande Innr - KiwiHC16: on doit pouvoir simplifier ce code. Mais comme c etait la premiere version j ai fait detaillé.
             $eqLogic->setConfiguration('Groupe', $modelConf['Groupe']);
         }
-        if (isset($modelConf['GroupeEP1'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP1', $modelConf['GroupeEP1']);
+
+        // Temporary support for 'groupEPx' (to replace #GROUPEPx#)
+        // Constant used to define remote control group per EP
+        for ($g = 1; $g <= 8; $g++) {
+            if (isset($modelConf['groupEP'.$g]))
+                $eqLogic->setConfiguration('groupEP'.$g, $modelConf['groupEP'.$g]);
+            else
+                $eqLogic->setConfiguration('groupEP'.$g, null);
         }
-        if (isset($modelConf['GroupeEP3'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP3', $modelConf['GroupeEP3']);
-        }
-        if (isset($modelConf['GroupeEP4'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP4', $modelConf['GroupeEP4']);
-        }
-        if (isset($modelConf['GroupeEP5'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP5', $modelConf['GroupeEP5']);
-        }
-        if (isset($modelConf['GroupeEP6'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP6', $modelConf['GroupeEP6']);
-        }
-        if (isset($modelConf['GroupeEP7'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP7', $modelConf['GroupeEP7']);
-        }
-        if (isset($modelConf['GroupeEP8'])) { // Tcharp38: What for ?
-            $eqLogic->setConfiguration('GroupeEP8', $modelConf['GroupeEP8']);
-        }
+
         if (isset($modelConf['onTime'])) { // Tcharp38: What for ?
             $eqLogic->setConfiguration('onTime', $modelConf['onTime']);
         }
@@ -3179,7 +3169,32 @@ class Abeille extends eqLogic {
             $cmdLogic = cmd::byId($jCmdId);
             $cmdLogic->remove();
         }
+
+        // Inform cmd & parser that EQ config has changed
+        $msg = array(
+            'type' => "eqUpdated",
+            'id' => $eqId,
+        );
+        Abeille::msgToCmd2($msg);
+        Abeille::msgToParser($msg);
+
     } // End createDevice()
+
+    public static function msgToParser($msg) {
+        global $abQueues;
+        $queue = msg_get_queue($abQueues['xToParser']['id']);
+        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+        msg_send($queue, 1, $msgJson, false, false);
+        log::add('Abeille', 'debug', "  Msg to Parser: ".$msgJson);
+    }
+
+    public static function msgToCmd2($msg) {
+        global $abQueues;
+        $queue = msg_get_queue($abQueues['xToCmd']['id']);
+        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+        msg_send($queue, 1, $msgJson, false, false);
+        log::add('Abeille', 'debug', "  Msg to Cmd: ".$msgJson);
+    }
 
     /* Update all infos related to last communication time & LQI of given device.
        This is based on timestamp of last communication received from device itself. */

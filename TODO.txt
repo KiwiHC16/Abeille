@@ -1,6 +1,10 @@
+Cluster 0004
+    La cmde 'addGroup' devrait sauver le groupe qq part => ab::groups ?
+    ab::groups={'01': '1001', '02': '2002'}
+
 Support OTA
     Qui renvoi "Query Next Image Response" ? Zigate ou le plugin ?
-    
+
 Lorsqu'un equipement quitte le réseau
     il doit etre désactivé
     plus aucun envoi ne doit lui etre fait

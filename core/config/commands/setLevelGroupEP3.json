@@ -7,7 +7,7 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-            "topic": "CmdAbeille\/#GroupeEP3#\/setLevelGroup",
+            "topic": "CmdAbeille\/#GROUPEP3#\/setLevelGroup",
             "request": "Level=#slider#&duration=01",
             "visibilityCategory": "All"
         },

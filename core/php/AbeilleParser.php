@@ -298,7 +298,7 @@
         return $GLOBALS['eqList'][$net][$addr];
     } // End getDevice()
 
-    // Reread Jeedom useful infos on DB update
+    // Reread Jeedom useful infos on eqLogic DB update
     // Note: A delay is required prior to this if DB has to be updated (createDevice() in Abeille.class)
     function updateDeviceFromDB($eqId) {
         $eqLogic = eqLogic::byId($eqId);

@@ -8,7 +8,7 @@
         "template": "",
         "configuration": {
             "topic": "BindToGroup",
-            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=03&clusterID=0008&reportToGroup=#GroupeEP3#",
+            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=03&clusterID=0008&reportToGroup=#GROUPEP3#",
             "visibilityCategory": "Network",
             "execAtCreation": "Yes",
             "execAtCreationDelay": 15

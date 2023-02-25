@@ -4,6 +4,10 @@ ChangeLog
 - Page maintenance/infos clefs: Amélioration mineure.
 - Interne: Parser: Amélioration mineure msg debug.
 - Nodon SIN-4-2-20: Mise-à-jour modele (2541).
+- Innr RC110: Mise-à-jour modèle + renommé 'RC110' => 'RC110_innr'.
+- Interne: Cmd: 'addGroup' revu.
+- Modèles: 'groupEPx' pour définir une constante de groupe par end point.
+- Interne: Configuration équipement faite par AbeilleCmd.
 
 230219-BETA-1
 -------------

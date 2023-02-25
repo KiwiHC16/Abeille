@@ -1,14 +1,11 @@
 {
     "BindToGroupLevelEP08": {
-        "isVisible": 0,
-        "name": "BindToGroupButtonEP8",
-        "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "BindToGroup",
-            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=08&clusterID=0008&reportToGroup=#GroupeEP8#",
+            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=08&clusterID=0008&reportToGroup=#GROUPEP8#",
             "visibilityCategory": "Network",
             "execAtCreation": "Yes",
             "execAtCreationDelay": 25

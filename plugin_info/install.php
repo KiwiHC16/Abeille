@@ -477,6 +477,8 @@
                 $newEqModel = $eqModel;
                 if (!isset($eqModel['id']))
                     $newEqModel['id'] = $eqLogic->getConfiguration('ab::jsonId', '');
+                else if ($eqModel['id'] == 'RC110') // Model 'RC110' => 'RC110_innr'
+                    $newEqModel['id'] = 'RC110_innr';
                 if (!isset($eqModel['location']))
                     $newEqModel['location'] = $eqLogic->getConfiguration('ab::jsonLocation', '');
                 if ($newEqModel != $eqModel) {
@@ -576,6 +578,8 @@
 
                     "511.201" => "Iluminize-511201",
                     "511.202" => "Iluminize-511202",
+
+                    "RC110" => "Innr-RC110",
 
                     "PlugZ3" => "Ledvance-PlugZ3",
                     "A60TWZ3" => "Ledvance-SmartP-E27Bulb",
@@ -773,6 +777,7 @@
                 "sensor_cube" => '2023-01-30 12:38:00',
                 "sensor_cube.aqgl01" => '2023-01-30 12:38:00',
                 "relay.c2acn01" => '2023-02-07 12:29:00',
+                "RC110_innr" => '2023-02-25 16:47:00',
             );
             foreach ($eqLogics as $eqLogic) {
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);

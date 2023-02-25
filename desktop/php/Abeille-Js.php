@@ -135,7 +135,7 @@
                 return alert("Groupe non renseigné");
             selected.forEach((eq) => {
                 console.log("eq=", eq);
-                sendCmd('CmdAbeille'+eq['zgId']+'/0000/addGroup', 'address='+eq['addr']+'&DestinationEndPoint='+eq['mainEp']+'&groupAddress='+group);
+                sendCmd('CmdAbeille'+eq['zgId']+'/'+eq['addr']+'/addGroup', 'ep='+eq['mainEp']+'&group='+group);
                 setTimeout(function () {
                     sendCmd('CmdAbeille'+eq['zgId']+'/'+eq['addr']+'/getGroupMembership', 'ep='+eq['mainEp']);
                     location.reload(true);

@@ -327,11 +327,11 @@
 
             // Checking min parameters
             if (!$this->zigates[$zgId]['enabled']) {
-                cmdLog("debug", "      Zigate disabled. Ignoring command.");
+                cmdLog("debug", "      Zigate disabled => cmd IGNORED");
                 return;
             }
             if ($this->zigates[$zgId]['ieeeOk'] == '-1') {
-                cmdLog("debug", "      Zigate on wrong port. Ignoring command.");
+                cmdLog("debug", "      Zigate on wrong port => cmd IGNORED");
                 return;
             }
             if (!ctype_xdigit($cmd)) {
@@ -788,30 +788,34 @@
         }
 
         /* Collect & treat other messages from 'xToCmd' queue. */
-        function collectAllOtherMessages() {
+        function processXToCmdQueue() {
             $queue = $this->queueXToCmd;
             $msgMax = $this->queueXToCmdMax;
             if (msg_receive($queue, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode) == false) {
                 if ($errCode == 7) {
                     msg_receive($queue, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
-                    logMessage('debug', 'collectAllOtherMessages() ERROR: msg TOO BIG ignored.');
+                    logMessage('debug', 'processXToCmdQueue() ERROR: msg TOO BIG ignored.');
                 } else if ($errCode != 42) // 42 = No message
-                    logMessage("error", "collectAllOtherMessages() ERROR ".$errCode." on queue 'xToCmd'");
+                    logMessage("error", "processXToCmdQueue() ERROR ".$errCode." on queue 'xToCmd'");
                 return;
             }
 
-            // cmdLog("debug", "Msg from 'xToCmd': ".$msgJson);
+            cmdLog("debug", "Msg from 'xToCmd': ".$msgJson);
             $msg = json_decode($msgJson, true);
             if (isset($msg['type'])) {
                 if ($msg['type'] == 'readOtaFirmwares') {
                     otaReadFirmwares(); // Reread available firmwares
+                } else if ($msg['type'] == 'eqUpdated') {
+                    updateDeviceFromDB($msg['id']); // Update device info from eqLogic
+                } else if ($msg['type'] == 'configureDevice') {
+                    configureDevice($msg['net'], $msg['addr']); // Configure device (execAtCreation)
                 } else
-                    cmdLog("error", "Msg from 'xToCmd': UNSUPPORTED: ".$msgJson);
+                    cmdLog("error", "AbeilleCmd: Message inattendu: ".$msgJson);
             } else {
                 $prio = isset($msg['priority']) ? $msg['priority']: PRIO_NORM;
                 $topic = $msg['topic'];
                 $payload = $msg['payload'];
-                cmdLog("debug", "Msg from 'xToCmd': Pri=".$prio.", topic='".$topic."', payload='".$payload."'", $this->debug['AbeilleCmdClass']);
+                // cmdLog("debug", "Msg from 'xToCmd': Pri=".$prio.", topic='".$topic."', payload='".$payload."'", $this->debug['AbeilleCmdClass']);
                 $this->prepareCmd($prio, $topic, $payload);
             }
         }

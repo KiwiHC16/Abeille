@@ -14,9 +14,9 @@
                         continue; // No other check on non string types
                     if ($Command[$param] != '')
                         continue; // String not empty => ok
-                    cmdLog('error', "'".$param."' vide !");
+                    cmdLog('error', "Cmd '".$Command['name']."': Paramètre '".$param."' vide !");
                 } else {
-                    cmdLog('error', "Paramètre '".$param."' manquant.");
+                    cmdLog('error', "Cmd '".$Command['name']."': Paramètre '".$param."' manquant.");
                 }
                 $paramError = true;
             }
@@ -2047,36 +2047,6 @@
                     return;
                 }
 
-            if (isset($Command['addGroup']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupAddress']))
-            {
-                cmdLog('debug', "    Add a group to a device", $this->debug['processCmd']);
-                //echo "Add a group to an IKEA bulb\n";
-
-                // 15:24:36.029 -> 01 02 10 60 02 10 02 19 6D 02 12 83 DF 02 11 02 11 C2 98 02 10 02 10 03
-                // 15:24:36.087 <- 01 80 00 00 04 54 00 B0 00 60 03
-                // 15:24:36.164 <- 01 80 60 00 07 08 B0 01 00 04 00 C2 98 03
-                // Add Group
-                // Message Description
-                // Msg Type = 0x0060 Command ID = 0x00
-                $cmd    = "0060";
-                $length  = "0007";
-                // <address mode: uint8_t>
-                //<target short address: uint16_t>
-                //<source endpoint: uint8_t>
-                //<destination endpoint: uint8_t>
-                //<group address: uint16_t>
-                $addrMode            = "02";
-                $address                = $Command['address'];
-                $srcEp         = "01";
-                $dstEp    = $Command['DestinationEndPoint'];
-                $groupAddress           = $Command['groupAddress'];
-
-                $data = $addrMode.$address.$srcEp.$dstEp.$groupAddress ;
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-                return;
-            }
-
             // Add Group APS
             // Title => 000B57fffe3025ad (IEEE de l ampoule) <= to be reviewed
             // message => reportToAddress=00158D0001B22E24&ClusterId=0006 <= to be reviewed
@@ -3712,6 +3682,31 @@
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
                     return;
                 }
+
+                // ZCL cluster 0004 specific: addGroup, received by server
+                // Mandatory params: 'addr', 'ep', & 'group'
+                else if ($cmdName == 'addGroup') {
+                    $required = ['addr', 'ep', 'group']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $cmd    = "0060";
+                    // <address mode: uint8_t>
+                    //<target short address: uint16_t>
+                    //<source endpoint: uint8_t>
+                    //<destination endpoint: uint8_t>
+                    //<group address: uint16_t>
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['ep'];
+                    $group      = $Command['group'];
+
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$group;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    return;
+                } // End $cmdName == 'addGroup'
 
                 // ZCL cluster 0008/Level control specific: (received) commands
                 // Mandatory params: addr, EP, Level (in dec, %), duration (dec)

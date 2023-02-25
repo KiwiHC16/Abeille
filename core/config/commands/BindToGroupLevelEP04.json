@@ -1,14 +1,11 @@
 {
     "BindToGroupLevelEP04": {
-        "isVisible": 0,
-        "name": "BindToGroupButtonEP4",
-        "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "BindToGroup",
-            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=04&clusterID=0008&reportToGroup=#GroupeEP4#",
+            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=04&clusterID=0008&reportToGroup=#GROUPEP4#",
             "visibilityCategory": "Network",
             "execAtCreation": "Yes",
             "execAtCreationDelay": 17

@@ -1072,17 +1072,17 @@
                 );
                 break;
 
-            case "addGroup":
-                if (strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
-                $Command = array(
-                                    "addGroup"                 => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $parameters['address'],
-                                    "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                    "groupAddress"             => $parameters['groupAddress'],
-                                    );
-                break;
+            // case "addGroup":
+            //     if (strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
+            //     $Command = array(
+            //                         "addGroup"                 => "1",
+            //                         "priority"                 => $priority,
+            //                         "dest"                     => $dest,
+            //                         "address"                  => $parameters['address'],
+            //                         "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+            //                         "groupAddress"             => $parameters['groupAddress'],
+            //                         );
+            //     break;
 
             case "removeGroup":
                 // if ($parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }

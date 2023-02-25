@@ -158,7 +158,7 @@
             // message::add("Abeille", "Erreur lors du changement de mode de la Zigate.", "");
         }
 
-        /* Send message to 'AbeilleCmd' thru 'queueKeyParserToCmd' */
+        /* Send message to 'AbeilleCmd' thru 'xToCmd' queue */
         function msgToCmd($prio, $topic, $payload = '') {
             $msg = array(
                 'priority' => $prio,
@@ -169,6 +169,14 @@
             $errCode = 0;
             if (msg_send($this->queueXToCmd, 1, json_encode($msg), false, false, $errCode) == false) {
                 parserLog("debug", "msgToCmd() ERROR: Can't write to 'queueXToCmd', error=".$errCode);
+            }
+        }
+
+        /* Send message to 'AbeilleCmd' thru 'xToCmd' queue */
+        function msgToCmd2($prio, $msg) {
+            $errCode = 0;
+            if (msg_send($this->queueXToCmd, 1, json_encode($msg), false, false, $errCode) == false) {
+                parserLog("debug", "msgToCmd2() ERROR: Can't write to 'queueXToCmd', error=".$errCode);
             }
         }
 
@@ -1093,6 +1101,14 @@
             );
             msgToAbeille2($msg);
 
+            // TODO
+            // $msg = array(
+            //     'type' => 'configureDevice',
+            //     'net' => $net,
+            //     'addr' => $addr
+            // );
+            // $this->msgToCmd2(PRIO_NORM, $msg);
+
             if (!isset($eqModel['commands'])) {
                 parserLog('debug', "    No cmds in JSON model.");
                 // return;
@@ -1111,7 +1127,7 @@
                         $delay = $c['execAtCreationDelay'];
                     else
                         $delay = 0;
-                    parserLog('debug', "    exec cmd ".$cmdJName." with delay ".$delay);
+                    parserLog('debug', "    exec cmd '".$cmdJName."' with delay ".$delay);
                     $topic = $c['topic'];
                     $request = $c['request'];
                     // TODO: #EP# defaulted to first EP but should be
@@ -1122,7 +1138,7 @@
                     $request = str_ireplace('#IEEE#', $eq['ieee'], $request);
                     $zgId = substr($net, 7); // 'AbeilleX' => 'X'
                     $request = str_ireplace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgId]['ieee'], $request);
-                    parserLog('debug', '      topic='.$topic.', request='.$request);
+                    parserLog('debug', '      topic='.$topic.", request='".$request."'");
                     if ($delay == 0)
                         $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/".$topic, $request);
                     else {
@@ -1135,10 +1151,10 @@
                 // For each 'info', attempting to read corresponding cluster/attribute
                 // Note: How to handle non standard zigbee attributes (ex: Tuya) ?
                 // Note: This part should be done in Abeille.class once createDevice() is completed.
-                foreach ($cmds as $cmdJName => $cmd) {
-                    if ($cmd['type'] != 'info')
-                        continue; // Not 'info'
-                }
+                // foreach ($cmds as $cmdJName => $cmd) {
+                //     if ($cmd['type'] != 'info')
+                //         continue; // Not 'info'
+                // }
             }
 
             // TODO: Tcharp38: 'idle' state might be too early since execAtCreation commands might not be completed yet

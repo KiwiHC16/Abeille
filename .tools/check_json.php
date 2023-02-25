@@ -136,6 +136,8 @@
             /* Checking 'configuration' fields validity */
             $supportedKeys = ['icon', 'mainEP', 'trig', 'trigOffset', 'batteryType', 'poll', 'lastCommunicationTimeOut', 'paramType'];
             foreach ($config as $fieldName => $fieldValue) {
+                if (substr($fieldName, 0, 7) == "groupEP")
+                    continue; // Allowed
                 if (!in_array($fieldName, $supportedKeys))
                     $error = newDevError($devName, "ERROR", "Invalid '".$fieldName."' configuration field");
             }
@@ -149,40 +151,32 @@
             $commands = $dev[$devName]['commands'];
             // echo "commands=".json_encode($commands)."\n";
             foreach ($commands as $key => $value) {
-                if (substr($key, 0, 7) == "include") {
-                    $error = newDevError($devName, "ERROR", "Old 'include' syntax NO LONGER supported");
-                    $cmdFName = $value;
-                    $newSyntax = false;
-                } else {
-                    // New syntax: "<jCmdName>": { "use": "<fileName>" }
-                    $cmdFName = $value['use'];
-                    $newSyntax = true;
-                }
+                // New syntax: "<jCmdName>": { "use": "<fileName>" }
+                $cmdFName = $value['use'];
+
                 $path = commandsDir."/".$cmdFName.".json";
                 if (!file_exists($path)) {
                     $error = newDevError($devName, "ERROR", "Unknown command JSON ".$cmdFName.".json");
                     $missingCmds++;
                 }
 
-                if ($newSyntax) {
-                    // List of supported command keys
-                    $validCmdKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
-                    array_push($validCmdKeys, 'repeatEventManagement', 'listValue');
-                    array_push($validCmdKeys, 'returnStateTime', 'returnStateValue', 'Polling');
-                    array_push($validCmdKeys, 'trigOut', 'trigOutOffset', 'notStandard', 'valueOffset');
-                    foreach ($value as $key2 => $value2) {
-                        if (in_array($key2, $validCmdKeys)) {
-                            // if ($key2 == 'subType') {
-                            //     // TODO: How to know cmd type ?
-                            //     if (!subTypeIsOk($type, $value2))
-                            //         $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key value for '".$key."' Jeedom command");
-                            // }
-                            continue;
-                        }
-                        if (substr($key2, 0, 7) == "comment")
-                            continue;
-                        $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key for '".$key."' Jeedom command");
+                // List of supported command keys
+                $validCmdKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
+                array_push($validCmdKeys, 'repeatEventManagement', 'listValue');
+                array_push($validCmdKeys, 'returnStateTime', 'returnStateValue', 'Polling');
+                array_push($validCmdKeys, 'trigOut', 'trigOutOffset', 'notStandard', 'valueOffset');
+                foreach ($value as $key2 => $value2) {
+                    if (in_array($key2, $validCmdKeys)) {
+                        // if ($key2 == 'subType') {
+                        //     // TODO: How to know cmd type ?
+                        //     if (!subTypeIsOk($type, $value2))
+                        //         $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key value for '".$key."' Jeedom command");
+                        // }
+                        continue;
                     }
+                    if (substr($key2, 0, 7) == "comment")
+                        continue;
+                    $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key for '".$key."' Jeedom command");
                 }
 
                 /* Updating list of unused commands */

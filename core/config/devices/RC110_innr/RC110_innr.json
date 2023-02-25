@@ -1,23 +1,26 @@
 {
-    "RC110": {
+    "RC110_innr": {
+        "manufacturer": "Innr",
+        "model": "RC110",
+        "type": "INNR RC110 remote",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
             "paramType": "telecommande7groups",
-            "GroupeEP1": "1001",
-            "GroupeEP3": "3003",
-            "GroupeEP4": "4004",
-            "GroupeEP5": "5005",
-            "GroupeEP6": "6006",
-            "GroupeEP7": "7007",
-            "GroupeEP8": "8008",
-            "icon": "RC110",
+            "groupEP1": "1001",
+            "groupEP3": "3003",
+            "groupEP4": "4004",
+            "groupEP5": "5005",
+            "groupEP6": "6006",
+            "groupEP7": "7007",
+            "groupEP8": "8008",
+            "icon": "Innr-RC110",
             "batteryType": "2x1.5V"
         },
         "category": {
             "light": "1"
         },
-        "type": "T\u00e9l\u00e9commande RC110 INNR",
         "commands": {
             "Off": {
                 "use": "offGroup"
@@ -30,9 +33,6 @@
             },
             "setLevel": {
                 "use": "setLevelGroup"
-            },
-            "Add Group EP1": {
-                "use": "addGroupEP1"
             },
             "Get Battery-Percent": {
                 "use": "act_zbReadAttribute",
@@ -68,23 +68,47 @@
             "BindToGroupButtonEP8": {
                 "use": "BindToGroupLevelEP08"
             },
+            "Add Group EP1": {
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=01&group=#GROUPEP1#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
+            },
             "Add Group EP3": {
-                "use": "addGroupEP3"
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=03&group=#GROUPEP3#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
             },
             "Add Group EP4": {
-                "use": "addGroupEP4"
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=04&group=#GROUPEP4#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
             },
             "Add Group EP5": {
-                "use": "addGroupEP5"
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=05&group=#GROUPEP5#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
             },
             "Add Group EP6": {
-                "use": "addGroupEP6"
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=06&group=#GROUPEP6#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
             },
             "Add Group EP7": {
-                "use": "addGroupEP7"
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=07&group=#GROUPEP7#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
             },
             "Add Group EP8": {
-                "use": "addGroupEP8"
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=08&group=#GROUPEP8#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
             },
             "On Gp1": {
                 "use": "onGroupEP1"

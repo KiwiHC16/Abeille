@@ -1383,37 +1383,6 @@
                 return;
             }
 
-            if (isset($Command['getGroupMembership'])) {
-                $cmd = "0062";
-
-                // <address mode: uint8_t>
-                // <target short address: uint16_t>
-                // <source endpoint: uint8_t>
-                // <destination endpoint: uint8_t>
-                // <group count: uint8_t>
-                // <group list:data>
-
-                $addrMode = "02";
-                $address = $Command['addr'];
-                $srcEp = "01";
-                $ep = $Command['ep'];
-                $groupCount = "00";
-                $groupList = "";
-
-                /* Correcting EP size if required (ex "1" => "01") */
-                if (strlen($ep) != 2) {
-                    $EP = hexdec($ep);
-                    $ep = sprintf("%02X", (hexdec($EP)));
-                }
-
-                $data = $addrMode.$address.$srcEp.$ep.$groupCount.$groupList;
-                //  2 + 4 + 2 + 2 + 2 + 0 = 12/2 => 6
-                // $length = "0006";
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-                return;
-            }
-
             if (isset($Command['viewScene']) && isset($Command['address']) && isset($Command['DestinationEndPoint']) && isset($Command['groupID']) && isset($Command['sceneID']))
             {
                 $cmd = "00A0";
@@ -3659,43 +3628,43 @@
                     //  Command Id
                     //  ....
 
-                    $addrMode       = "02";
-                    $addr           = $Command['addr'];
-                    $srcEp          = "01";
-                    $dstEp         = $Command['ep'];
-                    $profId         = "0104";
-                    $clustId        = '0000';
-                    $secMode   = "02";
-                    $radius         = "1E";
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['ep'];
+                    $profId     = "0104";
+                    $clustId    = '0000';
+                    $secMode    = "02";
+                    $radius     = "1E";
 
                     /* ZCL header */
-                    $fcf            = "11"; // Frame Control Field
-                    $sqn            = $this->genSqn();
-                    $cmdId          = "00"; // Reset to Factory Defaults
+                    $fcf        = "11"; // Frame Control Field
+                    $sqn        = $this->genSqn();
+                    $cmdId      = "00"; // Reset to Factory Defaults
 
                     $data2 = $fcf.$sqn.$cmdId;
-                    $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
+                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
 
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     return;
                 }
 
-                // ZCL cluster 0004 specific: addGroup, received by server
+                // ZCL cluster 0004 specific: addGroup, sent to server
                 // Mandatory params: 'addr', 'ep', & 'group'
                 else if ($cmdName == 'addGroup') {
                     $required = ['addr', 'ep', 'group']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd    = "0060";
                     // <address mode: uint8_t>
                     //<target short address: uint16_t>
                     //<source endpoint: uint8_t>
                     //<destination endpoint: uint8_t>
                     //<group address: uint16_t>
+                    $cmd        = "0060";
                     $addrMode   = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
@@ -3704,9 +3673,43 @@
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$group;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     return;
-                } // End $cmdName == 'addGroup'
+                } // End cluster 0004, $cmdName == 'addGroup'
+
+                // ZCL cluster 0004 specific: getGroupMembership, sent to server
+                // Mandatory params: 'addr', 'ep'
+                else if ($cmdName == 'getGroupMembership') {
+                    $required = ['addr', 'ep']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $cmd = "0062";
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <group count: uint8_t>
+                    // <group list:data>
+
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $ep         = $Command['ep'];
+                    $groupCount = "00";
+                    $groupList  = "";
+
+                    /* Correcting EP size if required (ex "1" => "01") */
+                    if (strlen($ep) != 2) {
+                        $EP = hexdec($ep);
+                        $ep = sprintf("%02X", (hexdec($EP)));
+                    }
+
+                    $data = $addrMode.$addr.$srcEp.$ep.$groupCount.$groupList;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    return;
+                } // End cluster 0004, $cmdName == 'getGroupMembership'
 
                 // ZCL cluster 0008/Level control specific: (received) commands
                 // Mandatory params: addr, EP, Level (in dec, %), duration (dec)

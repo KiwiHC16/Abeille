@@ -90,7 +90,7 @@
             else if ($from == "local")
                 $rootDir = devicesLocalDir;
             else {
-                log::add('Abeille', 'error', "Emplacement JSON '".$from."' invalide");
+                log::add('Abeille', 'error', "getDevicesList(): Emplacement JSON '".$from."' invalide");
                 return false;
             }
 
@@ -159,7 +159,7 @@
             closedir($dh);
 
             return $devicesList;
-        }
+        } // End getDevicesList()
 
         /* Clean 'devices_local'.
            Returns: true=ok, false=error */
@@ -198,7 +198,7 @@
             closedir($dh);
 
             return true;
-        } // cleanDevices()
+        } // End cleanDevices()
 
         /* Get list of supported commands (found in core/config/commands).
         Returns: Indexed array; $commandsList[] = $fileName, or false if error */

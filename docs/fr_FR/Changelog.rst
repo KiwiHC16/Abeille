@@ -8,6 +8,7 @@ ChangeLog
 - Interne: Cmd: 'addGroup' revu.
 - Modèles: 'groupEPx' pour définir une constante de groupe par end point.
 - Interne: Configuration équipement faite par AbeilleCmd.
+- Interne: getGroupMembership() revu.
 
 230219-BETA-1
 -------------

@@ -1061,16 +1061,16 @@
              * Cluster 0004/Groups support
              */
 
-            case "getGroupMembership":
-                if (!isset($parameters['ep'])) { $parameters['ep'] = "01"; }
-                $Command = array(
-                    "getGroupMembership"    => "1",
-                    "priority"              => $priority,
-                    "dest"                  => $dest,
-                    "addr"                  => $address,
-                    "ep"                    => $parameters['ep'],
-                );
-                break;
+            // case "getGroupMembership":
+            //     if (!isset($parameters['ep'])) { $parameters['ep'] = "01"; }
+            //     $Command = array(
+            //         "getGroupMembership"    => "1",
+            //         "priority"              => $priority,
+            //         "dest"                  => $dest,
+            //         "addr"                  => $address,
+            //         "ep"                    => $parameters['ep'],
+            //     );
+            //     break;
 
             // case "addGroup":
             //     if (strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }

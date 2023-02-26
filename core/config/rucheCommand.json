@@ -152,53 +152,6 @@
             "forceReturnLineAfter": "1"
         }
     },
-    "addGroup": {
-        "name": "Add Group",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "message",
-        "configuration": {
-            "topic": "addGroup",
-            "request": "address=#title#&#message#"
-        },
-        "display": {
-            "title_placeholder": "Adresse courte de l equipement",
-            "message_placeholder": "DestinationEndPoint=XX&groupAddress=YYYY"
-        }
-    },
-    "removeGroup": {
-        "name": "Remove Group",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "message",
-        "configuration": {
-            "topic": "removeGroup",
-            "request": "address=#title#&#message#"
-        },
-        "display": {
-            "forceReturnLineAfter": "0",
-            "title_placeholder": "Adresse courte de l equipement",
-            "message_placeholder": "DestinationEndPoint=XX&groupAddress=YYYY"
-        }
-    },
-    "getGroupMemberShip": {
-        "name": "getGroupMemberShip",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "message",
-        "configuration": {
-            "topic": "getGroupMembership",
-            "request": "address=#ADDR#"
-        },
-        "display": {
-            "forceReturnLineAfter": "1",
-            "title_placeholder": "Adresse courte de l'équipement",
-            "message_placeholder": "[DestinationEndPoint=XX]"
-        }
-    },
     "storeScene": {
         "name": "storeScene",
         "isHistorized": "0",

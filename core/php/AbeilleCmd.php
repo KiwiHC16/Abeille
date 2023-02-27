@@ -193,11 +193,13 @@
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
         $eq['jsonId'] = isset($eqModel['id']) ? $eqModel['id'] : '';
         $eq['jsonLocation'] = isset($eqModel['location']) ? $eqModel['location'] : 'Abeille';
-        // Read JSON to get list of commands to execute
-        $model = AbeilleTools::getDeviceModel($eq['jsonId'], $eq['jsonLocation']);
-        if ($model !== false) {
-            $eq['mainEp'] = isset($model['mainEP']) ? $model['mainEP'] : "01";
-            $eq['commands'] = isset($model['commands']) ? $model['commands'] : [];
+        if ($eq['jsonId'] != '') {
+            // Read JSON to get list of commands to execute
+            $model = AbeilleTools::getDeviceModel($eq['jsonId'], $eq['jsonLocation']);
+            if ($model !== false) {
+                $eq['mainEp'] = isset($model['mainEP']) ? $model['mainEP'] : "01";
+                $eq['commands'] = isset($model['commands']) ? $model['commands'] : [];
+            }
         }
 
         $GLOBALS['devices'][$net][$addr] = $eq;

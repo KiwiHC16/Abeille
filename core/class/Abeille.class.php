@@ -2302,6 +2302,47 @@ class Abeille extends eqLogic {
             return;
         } // End 'ieeeAddrResponse'
 
+        /* Add or remove group response */
+        if (($msg['type'] == "addGroupResponse") || ($msg['type'] == "removeGroupResponse")) {
+            // // 'src' => 'parser',
+            // 'type' => 'addGroupResponse'/'removeGroupResponse',
+            // 'net' => $dest,
+            // 'addr' => $srcAddr,
+            // 'ep' => $srcEp,
+            // 'group' => $grp
+            log::add('Abeille', 'debug', "msgFromParser(): ".$net."/".$addr.", ".$msg['type'].", ep=".$ep.", group=".$msg['group']);
+            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
+            if (!$eqLogic) {
+                log::add('Abeille', 'debug', "  WARNING: Unknown device");
+                return;
+            }
+
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            if (!isset($zigbee['groups']))
+                $zigbee['groups'] = [];
+            if (!isset($zigbee['groups'][$ep]))
+                $zigbee['groups'][$ep] = '';
+            $groups = $zigbee['groups'][$ep];
+            if ($msg['type'] == 'addGroupResponse') {
+                if ($groups == '')
+                    $groups = $msg['group'];
+                else
+                    $groups .= '/'.$msg['group'];
+            } else {
+                $groupsArr = explode("/", $groups);
+                foreach ($groupsArr as $gIdx => $g) {
+                    if ($g == $msg['group'])
+                        unset($groupsArr[$gIdx]);
+                }
+                $groups = implode("/", $groupsArr);
+            }
+            $zigbee['groups'][$ep] = $groups;
+            $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+            $eqLogic->save();
+
+            return;
+        } // End 'addGroupResponse'/'removeGroupResponse'
+
         log::add('Abeille', 'debug', "msgFromParser(): Ignored msg ".json_encode($msg));
     } // End msgFromParser()
 

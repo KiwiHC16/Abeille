@@ -2744,14 +2744,25 @@
         } // End decode8002_ActiveEpRsp()
 
         // Add group response (cluster 0004, cmd 00).
-        function decode8002_AddGroupRsp($net, $srcAddr, $ep, $pl, $lqi, &$toMon) {
+        function decode8002_AddGroupRsp($net, $srcAddr, $ep, $pl, $lqi, &$toAbeille, &$toMon) {
             $status = substr($pl, 0, 2);
             $grp = AbeilleTools::reverseHex(substr($pl, 2, 4));
             $m = '  Add a group response'
-                .', Status='.$status
+                .', Status='.$status.'/'.zbGetZCLStatus($status)
                 .', GroupID='.$grp;
             parserLog('debug', $m);
             $toMon[] = $m;
+
+            if (($status == "00") || ($status == "8A")) { // Ok or duplicate
+                $toAbeille = array(
+                    // 'src' => 'parser',
+                    'type' => 'addGroupResponse',
+                    'net' => $net,
+                    'addr' => $srcAddr,
+                    'ep' => $ep,
+                    'group' => $grp
+                );
+            }
         } // End decode8002_AddGroupRsp()
 
         // Get Group Membership response (cluster 0004, cmd 02)
@@ -2801,14 +2812,25 @@
         } // End decode8002_GetGroupMembership()
 
         // Remove group response (cluster 0004, cmd 03).
-        function decode8002_RemoveGroupRsp($net, $srcAddr, $ep, $pl, $lqi, &$toMon) {
+        function decode8002_RemoveGroupRsp($net, $srcAddr, $ep, $pl, $lqi, &$toAbeille, &$toMon) {
             $status = substr($pl, 0, 2);
             $grp = AbeilleTools::reverseHex(substr($pl, 2, 4));
             $m = '  Remove a group response'
-                .', Status='.$status
+                .', Status='.$status.'/'.zbGetZCLStatus($status)
                 .', GroupID='.$grp;
             parserLog('debug', $m);
             $toMon[] = $m;
+
+            if ($status == "00") { // Ok
+                $toAbeille = array(
+                    // 'src' => 'parser',
+                    'type' => 'removeGroupResponse',
+                    'net' => $net,
+                    'addr' => $srcAddr,
+                    'ep' => $ep,
+                    'group' => $grp
+                );
+            }
         } // End decode8002_RemoveGroupRsp()
 
         /**
@@ -4041,18 +4063,20 @@
                             return;
 
                         if ($dir && ($cmd == "00")) {
-                            $this->decode8002_AddGroupRsp($dest, $srcAddr, $srcEp, $pl, $lqi, $toMon);
-                            return;
+                            $this->decode8002_AddGroupRsp($dest, $srcAddr, $srcEp, $pl, $lqi, $toAbeille, $toMon);
+                            // return;
                         } else if ($dir && ($cmd == "02")) {
                             // Get group membership response
                             $this->decode8002_GetGroupMembership($dest, $srcAddr, $srcEp, $pl, $lqi, $toMon);
                             return;
                         } else if ($dir && ($cmd == "03")) {
                             // Remove group response
-                            $this->decode8002_RemoveGroupRsp($dest, $srcAddr, $srcEp, $pl, $lqi, $toMon);
-                            return;
-                        } else
+                            $this->decode8002_RemoveGroupRsp($dest, $srcAddr, $srcEp, $pl, $lqi, $toAbeille, $toMon);
+                            // return;
+                        } else {
                             parserLog('debug', '  Unsupported cluster 0004 specific cmd '.$cmd);
+                            return;
+                        }
                     } // End clustId == "0004"
 
                     // 0005/Scenes cluster specific
@@ -4514,7 +4538,7 @@
 
             // Something to report to main daemon ?
             if (isset($toAbeille))
-                $this->msgToAbeille2($toAbeille);
+                msgToAbeille2($toAbeille);
             if (isset($readAttributesResponseN) && (count($readAttributesResponseN) > 0)) {
                 $toAbeille = array(
                     // 'src' => 'parser',

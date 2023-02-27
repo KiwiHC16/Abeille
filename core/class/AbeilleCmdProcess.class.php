@@ -3650,7 +3650,7 @@
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     return;
-                }
+                } // Cluster 0000, $cmdName == 'cmd-0000'
 
                 // ZCL cluster 0004 specific: addGroup, sent to server
                 // Mandatory params: 'addr', 'ep', & 'group'
@@ -3659,7 +3659,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    // <address mode: uint8_t>
+                    //<address mode: uint8_t>
                     //<target short address: uint16_t>
                     //<source endpoint: uint8_t>
                     //<destination endpoint: uint8_t>

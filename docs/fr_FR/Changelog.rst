@@ -9,6 +9,7 @@ ChangeLog
 - Modèles: 'groupEPx' pour définir une constante de groupe par end point.
 - Interne: Configuration équipement faite par AbeilleCmd.
 - Interne: getGroupMembership() revu.
+- Interne: Parser: Ajout support 'addGroupResponse'/'removeGroupResponse' + zigbee['groups'].
 
 230219-BETA-1
 -------------

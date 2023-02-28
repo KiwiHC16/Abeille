@@ -10,6 +10,7 @@ ChangeLog
 - Interne: Configuration équipement faite par AbeilleCmd.
 - Interne: getGroupMembership() revu.
 - Interne: Parser: Ajout support 'addGroupResponse'/'removeGroupResponse' + zigbee['groups'].
+- Interne: Parser: Interrogation des groupes lors de l'inclusion.
 
 230219-BETA-1
 -------------

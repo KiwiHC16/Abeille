@@ -1715,8 +1715,8 @@ class Abeille extends eqLogic {
         } // End 'newDevice'
 
         /* Parser has found device infos to update. */
-        if ($msg['type'] == "updateDevice") {
-            log::add('Abeille', 'debug', "msgFromParser(): Device update: ".json_encode($msg));
+        if ($msg['type'] == "deviceUpdates") {
+            log::add('Abeille', 'debug', "msgFromParser(): ".$net.'/'.$addr.", Device updates, ".json_encode($msg));
 
             $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
             $eqChanged = false;
@@ -1777,7 +1777,7 @@ class Abeille extends eqLogic {
             if ($eqChanged)
                 $eqLogic->save();
             return;
-        } // End 'updateDevice'
+        } // End 'deviceUpdates'
 
         /* Parser has received a "device announce" and has identified (or not) the device. */
         if ($msg['type'] == "eqAnnounce") {
@@ -2302,15 +2302,17 @@ class Abeille extends eqLogic {
             return;
         } // End 'ieeeAddrResponse'
 
-        /* Add or remove group response */
-        if (($msg['type'] == "addGroupResponse") || ($msg['type'] == "removeGroupResponse")) {
+        /* AddGroup/removeGroup/getGroupMembership responses */
+        if (($msg['type'] == "addGroupResponse") || ($msg['type'] == "removeGroupResponse") || ($msg['type'] == "getGroupMembershipResponse")) {
             // // 'src' => 'parser',
-            // 'type' => 'addGroupResponse'/'removeGroupResponse',
+            // 'type' => 'addGroupResponse'/'removeGroupResponse'/'getGroupMembershipResponse',
             // 'net' => $dest,
             // 'addr' => $srcAddr,
             // 'ep' => $srcEp,
             // 'group' => $grp
-            log::add('Abeille', 'debug', "msgFromParser(): ".$net."/".$addr.", ".$msg['type'].", ep=".$ep.", group=".$msg['group']);
+            // 'time' => time(),
+            // 'lqi' => $lqi
+            log::add('Abeille', 'debug', "msgFromParser(): ".$net."/".$addr."/".$ep.", ".$msg['type'].", group=".$msg['group']);
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!$eqLogic) {
                 log::add('Abeille', 'debug', "  WARNING: Unknown device");
@@ -2323,7 +2325,9 @@ class Abeille extends eqLogic {
             if (!isset($zigbee['groups'][$ep]))
                 $zigbee['groups'][$ep] = '';
             $groups = $zigbee['groups'][$ep];
-            if ($msg['type'] == 'addGroupResponse') {
+            if ($msg['type'] == 'getGroupMembershipResponse') {
+                $groups = $msg['group'];
+            } else if ($msg['type'] == 'addGroupResponse') {
                 if ($groups == '')
                     $groups = $msg['group'];
                 else
@@ -2336,12 +2340,15 @@ class Abeille extends eqLogic {
                 }
                 $groups = implode("/", $groupsArr);
             }
-            $zigbee['groups'][$ep] = $groups;
-            $eqLogic->setConfiguration('ab::zigbee', $zigbee);
-            $eqLogic->save();
+            if ($groups != $zigbee['groups'][$ep]) {
+                $zigbee['groups'][$ep] = $groups;
+                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                $eqLogic->save();
+            }
 
+            Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
             return;
-        } // End 'addGroupResponse'/'removeGroupResponse'
+        } // End 'addGroupResponse'/'removeGroupResponse'/'getGroupMembershipResponse'
 
         log::add('Abeille', 'debug', "msgFromParser(): Ignored msg ".json_encode($msg));
     } // End msgFromParser()

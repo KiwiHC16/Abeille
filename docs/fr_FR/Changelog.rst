@@ -11,6 +11,7 @@ ChangeLog
 - Interne: getGroupMembership() revu.
 - Interne: Parser: Ajout support 'addGroupResponse'/'removeGroupResponse' + zigbee['groups'].
 - Interne: Parser: Interrogation des groupes lors de l'inclusion.
+- Interne: Groupes: Utilisation eqLogic/config/zigbee/groups au lieu cmde info.
 
 230219-BETA-1
 -------------

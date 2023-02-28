@@ -2320,11 +2320,12 @@ class Abeille extends eqLogic {
             }
 
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-            if (!isset($zigbee['groups']))
-                $zigbee['groups'] = [];
-            if (!isset($zigbee['groups'][$ep]))
-                $zigbee['groups'][$ep] = '';
-            $groups = $zigbee['groups'][$ep];
+            $newZigbee = $zigbee;
+            if (!isset($newZigbee['groups']))
+                $newZigbee['groups'] = [];
+            if (!isset($newZigbee['groups'][$ep]))
+                $newZigbee['groups'][$ep] = '';
+            $groups = $newZigbee['groups'][$ep];
             if ($msg['type'] == 'getGroupMembershipResponse') {
                 $groups = $msg['group'];
             } else if ($msg['type'] == 'addGroupResponse') {
@@ -2340,9 +2341,9 @@ class Abeille extends eqLogic {
                 }
                 $groups = implode("/", $groupsArr);
             }
-            if ($groups != $zigbee['groups'][$ep]) {
-                $zigbee['groups'][$ep] = $groups;
-                $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+            $newZigbee['groups'][$ep] = $groups;
+            if ($newZigbee != $zigbee) {
+                $eqLogic->setConfiguration('ab::zigbee', $newZigbee);
                 $eqLogic->save();
             }
 
@@ -2480,35 +2481,35 @@ class Abeille extends eqLogic {
 
         $rucheCommandList = AbeilleTools::getJSonConfigFiles('rucheCommand.json', 'Abeille');
 
-        // Only needed for debug and dev so by default it's not done.
-        if (0) {
-            $i = 100;
+        // // Only needed for debug and dev so by default it's not done.
+        // if (0) {
+        //     $i = 100;
 
-            //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
-            $items = AbeilleTools::getDeviceNameFromJson('Abeille');
+        //     //Load all commandes from defined objects (except ruche), and create them hidden in Ruche to allow debug and research.
+        //     $items = AbeilleTools::getDeviceNameFromJson('Abeille');
 
-            foreach ($items as $item) {
-                $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevices(AbeilleTools::getTrimmedValueForJsonFiles($item), 'Abeille');
-                // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
-                foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
-                    $rucheCommandList[$objetId] = array(
-                        "name" => $objetId,
-                        "order" => $i++,
-                        "isVisible" => "0",
-                        "isHistorized" => "0",
-                        "Type" => "action",
-                        "subType" => "other",
-                        "configuration" => array(
-                            "topic" => "CmdCreate/".$objetId."/0000-0005",
-                            "request" => $objetId,
-                            "visibilityCategory" => "additionalCommand",
-                            "visibiltyTemplate" => "0"
-                        ),
-                    );
-                }
-            }
-            // print_r($rucheCommandList);
-        }
+        //     foreach ($items as $item) {
+        //         $AbeilleObjetDefinition = AbeilleTools::getJSonConfigFilebyDevices(AbeilleTools::getTrimmedValueForJsonFiles($item), 'Abeille');
+        //         // Creation des commandes au niveau de la ruche pour tester la creations des objets (Boutons par defaut pas visibles).
+        //         foreach ($AbeilleObjetDefinition as $objetId => $objetType) {
+        //             $rucheCommandList[$objetId] = array(
+        //                 "name" => $objetId,
+        //                 "order" => $i++,
+        //                 "isVisible" => "0",
+        //                 "isHistorized" => "0",
+        //                 "Type" => "action",
+        //                 "subType" => "other",
+        //                 "configuration" => array(
+        //                     "topic" => "CmdCreate/".$objetId."/0000-0005",
+        //                     "request" => $objetId,
+        //                     "visibilityCategory" => "additionalCommand",
+        //                     "visibiltyTemplate" => "0"
+        //                 ),
+        //             );
+        //         }
+        //     }
+        //     // print_r($rucheCommandList);
+        // }
 
         // Removing obsolete commands by their logical ID (unique)
         $cmds = Cmd::byEqLogicId($eqLogic->getId());

@@ -1,7 +1,5 @@
 <?php
-	function displayZigateGroups($zgId) {
-		$abeille = new Abeille();
-		$commandIEEE = new AbeilleCmd();
+	function displayGroups($zgId) {
 
 		echo '<br>';
 		// echo '<a class="btn btn-warning" onclick="sendToCmd(\'getGroups\')">Get groups</a>';
@@ -23,30 +21,46 @@
 		echo '<tbody>';
 
 		global $eqPerZigate;
+		// $abeille = new Abeille();
+		// $commandIEEE = new AbeilleCmd();
 		foreach ($eqPerZigate[$zgId] as $eqId => $eq) {
 			// $eqId = $eq['id'];
 			$eqLogic = eqLogic::byId($eqId);
 
-			$name= "";
-			$groupMember = "";
-			$groupTele = "";
-			$print=0;
-			$abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
+			// $name= "";
+			$groupServ = "";
+			$groupCli = "";
+			// $print=0;
 			$name = $eqLogic->getHumanName(true);
 
-			if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {
-				if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd())>2 ) {
-					$groupMember = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd());
-					$print = 1;
+			// $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
+			// if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {
+			// 	if ( strlen($commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd())>2 ) {
+			// 		$groupServ = str_replace('-',' ',$commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership')->execCmd());
+			// 		$print = 1;
+			// 	}
+			// }
+			// if ( strlen($eqLogic->getConfiguration('Groupe'))>3 ) {
+			// 	$groupCli = $eqLogic->getConfiguration('Groupe');
+			// 	$print = 1;
+			// }
+			// if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$groupCli.'</td><td align="center" class="one">'.$groupServ.'</td></tr>';
+
+			$zigbee = $eqLogic->getConfiguration("ab::zigbee", []);
+			if (!isset($zigbee['groups']))
+				continue; // No 'groups' => not supported
+			$groups = $zigbee['groups'];
+			foreach ($groups as $ep => $grps) {
+				if ($grps == '')
+					continue;
+				$gArr = explode("/", $grps);
+				foreach ($gArr as $grp) {
+					if ($groupServ != '')
+						$groupServ .= '/';
+					$groupServ .= $ep.'-'.$grp;
 				}
 			}
-
-			if ( strlen($eqLogic->getConfiguration('Groupe'))>3 ) {
-				$groupTele = $eqLogic->getConfiguration('Groupe');
-				$print = 1;
-			}
-
-			if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$groupTele.'</td><td align="center" class="one">'.$groupMember.'</td></tr>';
+			echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$groupCli.'</td><td align="center" class="one">'.$groupServ.'</td></tr>';
 		} // For each eqPerZigate[]
 		echo '</tbody>';
 		echo '</table>';
@@ -82,7 +96,7 @@
 				if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
 					continue; // This Zigate is disabled
 
-				displayZigateGroups($zgId);
+				displayGroups($zgId);
 			}
 		?>
 	</div>

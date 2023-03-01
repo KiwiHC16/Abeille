@@ -196,7 +196,8 @@
                 return true;
 
             // parserLog("error", "  msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$errCode.")");
-            parserLog("debug", "  ERROR: msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$errCode.")");
+            // Note: FW 0005-03A0 periodically generate LQI requests on its own.
+            parserLog("debug", "  ERROR: msgToLQICollector(): msg_send err ".$errCode);
             return false;
         }
 
@@ -215,7 +216,9 @@
             if (msg_send($this->queueParserToRoutes, 1, $msgJson, false, false, $errCode) == true)
                 return true;
 
-            parserLog("error", "  msgToRoutingCollector(): Impossible d'envoyer le msg vers AbeilleRoutes (err ".$errCode.")");
+            // parserLog("error", "  msgToRoutingCollector(): Impossible d'envoyer le msg vers AbeilleRoutes (err ".$errCode.")");
+            // Note: FW 0005-03A0 periodically generate route requests on its own.
+            parserLog("debug", "  ERROR: msgToRoutingCollector(): msg_send err ".$errCode);
             return false;
         }
 

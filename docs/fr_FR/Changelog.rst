@@ -1,7 +1,8 @@
 ChangeLog
 =========
 
-- Interne: Parser: Erreur 'msgToLQICollector' masquée (2546).
+- Interne: Parser: Erreur 'msgToLQICollector' masquée pour FW 0005-03A0 (2546).
+- Interne: Parser: Erreur 'msgToRoutingCollector' masquée pour FW 0005-03A0 (2546).
 
 230228-BETA-1
 -------------

@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: Erreur 'msgToLQICollector' masquée (2546).
+
 230228-BETA-1
 -------------
 

@@ -168,7 +168,7 @@
 
             $errCode = 0;
             if (msg_send($this->queueXToCmd, 1, json_encode($msg), false, false, $errCode) == false) {
-                parserLog("debug", "msgToCmd() ERROR: Can't write to 'queueXToCmd', error=".$errCode);
+                parserLog("debug", "  ERROR: msgToCmd(): Can't write to 'queueXToCmd', error=".$errCode);
             }
         }
 
@@ -176,7 +176,7 @@
         function msgToCmd2($prio, $msg) {
             $errCode = 0;
             if (msg_send($this->queueXToCmd, 1, json_encode($msg), false, false, $errCode) == false) {
-                parserLog("debug", "msgToCmd2() ERROR: Can't write to 'queueXToCmd', error=".$errCode);
+                parserLog("debug", "  ERROR: msgToCmd2(): Can't write to 'queueXToCmd', error=".$errCode);
             }
         }
 
@@ -195,7 +195,8 @@
             if (msg_send($this->queueParserToLQI, 1, $msgJson, false, false, $errCode) == true)
                 return true;
 
-            parserLog("error", "msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$errCode.")");
+            // parserLog("error", "  msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$errCode.")");
+            parserLog("debug", "  ERROR: msgToLQICollector(): Impossible d'envoyer le msg vers AbeilleLQI (err ".$errCode.")");
             return false;
         }
 
@@ -214,7 +215,7 @@
             if (msg_send($this->queueParserToRoutes, 1, $msgJson, false, false, $errCode) == true)
                 return true;
 
-            parserLog("error", "msgToRoutingCollector(): Impossible d'envoyer le msg vers AbeilleRoutes (err ".$errCode.")");
+            parserLog("error", "  msgToRoutingCollector(): Impossible d'envoyer le msg vers AbeilleRoutes (err ".$errCode.")");
             return false;
         }
 

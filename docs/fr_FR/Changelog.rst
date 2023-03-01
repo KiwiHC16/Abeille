@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230301-BETA-1
+-------------
+
 - Interne: Parser: Erreur 'msgToLQICollector' masquée pour FW 0005-03A0 (2546).
 - Interne: Parser: Erreur 'msgToRoutingCollector' masquée pour FW 0005-03A0 (2546).
 

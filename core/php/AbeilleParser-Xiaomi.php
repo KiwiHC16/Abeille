@@ -5,7 +5,7 @@
 
     // WORK ONGOING. Not all functions migrated their yet.
 
-    // Model syntaxe reminder for Xiaomi
+    // Model syntax reminder for Xiaomi
     // "xiaomi": {
     //     "fromDevice": {
     //         "XX-YY": { "func": "number", "info": "info_cmd_logic_id" }
@@ -44,7 +44,7 @@
         $eq = &getDevice($net, $addr); // By ref
         // parserLog('debug', 'eq='.json_encode($eq));
         if (!isset($eq['xiaomi']) || !isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) {
-            parserLog('debug', "  No defined Xiaomi mapping");
+            parserLog('debug', "    No defined Xiaomi mapping");
             // return;
             $mapping = [];
         } else
@@ -60,7 +60,7 @@
             $type = zbGetDataType($typeId);
             $size = $type['size'];
             if ($size == 0) {
-                parserLog('debug', '  Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].' SIZE 0');
+                parserLog('debug', '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].' SIZE 0');
                 break;
             }
             $valueHex = substr($pl, $i + 4, $size * 2);
@@ -121,7 +121,7 @@
                     $attrReportN[] = array( "name" => $map['info'], "value" => $value2 );
             } else
                 $mapTxt = ' (ignored)';
-            $m = '  Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].', ValueHex='.$valueHex.' => '.$value.$mapTxt;
+            $m = '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].', ValueHex='.$valueHex.' => '.$value.$mapTxt;
             parserLog('debug', $m);
             if ($toMon !== null)
                 $toMon[] = $m;
@@ -203,6 +203,7 @@
             if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) {
                 $fromDev = $eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId];
                 if (isset($fromDev['info'])) {
+                    // 'CLUSTER-ATTRIB' + 'info' syntax
                     $value = AbeilleParser::decodeDataType($pl2, $attrType, true, 0, $attrSize, $valueHex);
                     $attrReportN[] = array(
                         'name' => $fromDev['info'],
@@ -215,7 +216,11 @@
                     parserLog('debug', $m);
                     $toMon[] = $m;
                 } else {
-                    // 'TAG-TYPE' syntax
+                    // 'CLUSTER-ATTRIB' + 'TAG-TYPE' syntax
+                    $m = '  AttrId='.$attrId
+                        .', AttrType='.$attrType;
+                    parserLog('debug', $m);
+                    $toMon[] = $m;
                     xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
                 }
                 continue;

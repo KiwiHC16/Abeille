@@ -575,6 +575,7 @@
                     "TRADFRItransformer10W" => "Ikea-Transformer",
                     "TRADFRItransformer30W" => "Ikea-Transformer",
                     "TRADFRIsignalrepeater" => "Ikea-SignalRepeater",
+                    "IkeaTradfri5BtnRond" => "Ikea-Remote-5buttons",
 
                     "511.201" => "Iluminize-511201",
                     "511.202" => "Iluminize-511202",

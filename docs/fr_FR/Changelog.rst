@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Ikea telecommande 5 boutons: Mise-à-jour modèle.
+
 230301-BETA-1
 -------------
 

@@ -1,16 +1,18 @@
 {
     "TRADFRIremotecontrol": {
+        "manufacturer": "Ikea",
+        "model": "5 buttons remote",
+        "type": "IKEA 5 buttons remote control",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
             "paramType": "telecommande",
-            "icon": "IkeaTradfri5BtnRond",
+            "icon": "Ikea-Remote-5buttons",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "light": "1"
         },
-        "type": "IKEA TRADFRI Rond 5 Boutons Remote Control",
         "commands": {
             "Off": {
                 "use": "offGroup"
@@ -87,7 +89,8 @@
                 "use": "VertGroup"
             },
             "LeftRight": {
-                "use": "IkeaTeleCmdLeftRigth"
+                "use": "IkeaTeleCmdLeftRigth",
+                "isVisible": 1
             }
         }
     }

@@ -3,6 +3,7 @@
         "manufacturer": "Ikea",
         "model": "5 buttons remote",
         "type": "IKEA 5 buttons remote control",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -45,12 +46,7 @@
                 "use": "sceneGroupRecall3"
             },
             "Battery-Percent": {
-                "use": "inf_zbAttr-0001-BatteryPercent",
-                "isVisible": 1
-            },
-            "Get Battery-Percent": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0001&attrId=0021"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Bind-0001-ToZigate": {
                 "use": "act_zbBindToZigate",

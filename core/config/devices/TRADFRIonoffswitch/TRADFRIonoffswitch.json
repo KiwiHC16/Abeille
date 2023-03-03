@@ -3,6 +3,8 @@
         "manufacturer": "IKEA",
         "zbManufacturer": "IKEAofSweden",
         "model": "E1743",
+        "type": "TRADFRI on/off switch",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "paramType": "telecommande",
@@ -13,7 +15,6 @@
         "category": {
             "light": "1"
         },
-        "type": "TRADFRI on/off switch",
         "commands": {
             "SWBuild": {
                 "use": "inf_zbAttr-0000-SWBuildID"

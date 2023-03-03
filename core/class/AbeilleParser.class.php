@@ -4315,14 +4315,27 @@
 
                     // 0006/On/Off cluster specific
                     else if ($clustId == "0006") {
-                        if ($cmd == "FD") {
+                        if (($cmd == "00") || ($cmd == "01")) { // Off=00, On=01
+                            /* Forwarding to Abeille */
+                            // Tcharp38: The 'Click-Middle' must be avoided. Can't define EP so the source of this "click".
+                            //           Moreover no sense since there may have no link with "middle". It's is just a OnOff cmd FROM a device to Zigate.
+                            $attrReportN[] = array(
+                                'name' => 'Click-Middle', // OBSOLETE: Do not use !!
+                                'value' => $cmd,
+                            );
+
+                            // Tcharp38: New way of handling this event (OnOff cmd coming from a device)
+                            $attrReportN[] = array(
+                                'name' => $srcEp.'-0006-cmd'.$cmd,
+                                'value' => 1, // Currently fake value. Not required for Off-00/On-01/Toggle-02 cmds
+                            );
+                            // Tcharp38: TODO: Value should return payload when there is (cmds 40/41/42) but must be decoded by 8002 instead to get it.
+
+                            // parserLog('debug', "  Handled by decode8095");
+                            // return;
+                        } else if ($cmd == "FD") {
                             // parserLog("debug", "  Tuya 0006 specific cmd FD", "8002");
                             $attrReportN = tuyaDecode0006CmdFD($srcEp, $msg);
-                        }
-
-                        if (($cmd == "00") || ($cmd == "01")) {
-                            parserLog('debug', "  Handled by decode8095");
-                            return;
                         }
                     } // End $clustId == "0006"
 
@@ -4332,7 +4345,7 @@
                             parserLog('debug', "  Handled by decode8085");
                             return;
                         }
-                    }
+                    } // End clustId == "0008"
 
                     // 0019/OTA cluster specific
                     else if ($clustId == "0019") {
@@ -5782,76 +5795,77 @@
             msgToAbeille2($msg);
         }
 
-        /* OnOff cluster command coming from a device (broadcast or unicast to Zigate) */
-        function decode8095($dest, $payload, $lqi) {
-            // <Sequence number: uin8_t>
-            // <endpoint: uint8_t>
-            // <Cluster id: uint16_t>
-            // <address_mode: uint8_t>
-            // <SrcAddr: uint16_t>
-            // <status: uint8>
-            $sqn = substr($payload, 0, 2);
-            $ep = substr($payload, 2, 2);
-            $clustId = substr($payload, 4, 4);
-            $addrMode = substr($payload, 8, 2);
-            $srcAddr = substr($payload, 10, 4);
-            $status = substr($payload, 14, 2);
+        // /* OnOff cluster command coming from a device (broadcast or unicast to Zigate) */
+        // function decode8095($dest, $payload, $lqi) {
+        //     // <Sequence number: uin8_t>
+        //     // <endpoint: uint8_t>
+        //     // <Cluster id: uint16_t>
+        //     // <address_mode: uint8_t>
+        //     // <SrcAddr: uint16_t>
+        //     // <status: uint8>
+        //     $sqn = substr($payload, 0, 2);
+        //     $ep = substr($payload, 2, 2);
+        //     $clustId = substr($payload, 4, 4);
+        //     $addrMode = substr($payload, 8, 2);
+        //     $srcAddr = substr($payload, 10, 4);
+        //     $status = substr($payload, 14, 2);
 
-            // Log
-            $decoded = '8095/OnOff update'
-                .', SQN='.$sqn
-                .', EP='.$ep
-                .', ClustId='.$clustId
-                .', AddrMode='.$addrMode
-                .', Addr='.$srcAddr
-                .', Status='.$status;
-            parserLog('debug', $dest.', Type='.$decoded);
+        //     // Log
+        //     $decoded = '8095/OnOff update'
+        //         .', SQN='.$sqn
+        //         .', EP='.$ep
+        //         .', ClustId='.$clustId
+        //         .', AddrMode='.$addrMode
+        //         .', Addr='.$srcAddr
+        //         .', Status='.$status;
+        //     parserLog('debug', $dest.', Type='.$decoded);
 
-            // Duplicated message ?
-            if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
-                return;
+        //     // Can it be duplicated ?
+        //     // Duplicated message ?
+        //     // if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
+        //     //     return;
 
-            // $this->whoTalked[] = $dest.'/'.$srcAddr;
-            if ($this->deviceUpdates($dest, $srcAddr, ''))
-                return; // Unknown device
+        //     // $this->whoTalked[] = $dest.'/'.$srcAddr;
+        //     if ($this->deviceUpdates($dest, $srcAddr, ''))
+        //         return; // Unknown device
 
-            // Monitor if required
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
-                monMsgFromZigate($decoded); // Send message to monitor
+        //     // Monitor if required
+        //     if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr))
+        //         monMsgFromZigate($decoded); // Send message to monitor
 
-            /* Forwarding to Abeille */
-            $attributes = array();
-            // $this->msgToAbeille($dest.'/'.$srcAddr, "Click", "Middle", $status);
-            // Tcharp38: The 'Click-Middle' must be avoided. Can't define EP so the source of this "click".
-            //           Moreover no sense since there may have no link with "middle". It's is just a OnOff cmd FROM a device to Zigate.
-            $attr = array(
-                'name' => 'Click-Middle', // OBSOLETE: Do not use !!
-                'value' => $status,
-            );
-            $attributes[] = $attr;
+        //     /* Forwarding to Abeille */
+        //     $attributes = array();
+        //     // $this->msgToAbeille($dest.'/'.$srcAddr, "Click", "Middle", $status);
+        //     // Tcharp38: The 'Click-Middle' must be avoided. Can't define EP so the source of this "click".
+        //     //           Moreover no sense since there may have no link with "middle". It's is just a OnOff cmd FROM a device to Zigate.
+        //     $attr = array(
+        //         'name' => 'Click-Middle', // OBSOLETE: Do not use !!
+        //         'value' => $status,
+        //     );
+        //     $attributes[] = $attr;
 
-            // Tcharp38: New way of handling this event (OnOff cmd coming from a device)
-            $attr = array(
-                'name' => $ep.'-0006-cmd'.$status,
-                'value' => 1, // Currently fake value. Not required for Off-00/On-01/Toggle-02 cmds
-            );
-            $attributes[] = $attr;
-            // Tcharp38: TODO: Value should return payload when there is (cmds 40/41/42) but must be decoded by 8002 instead to get it.
-            // Tcharp38: Note: Cmd FD (seen as Tuya specific cluster 0006 cmd) may be returned too with recent FW.
+        //     // Tcharp38: New way of handling this event (OnOff cmd coming from a device)
+        //     $attr = array(
+        //         'name' => $ep.'-0006-cmd'.$status,
+        //         'value' => 1, // Currently fake value. Not required for Off-00/On-01/Toggle-02 cmds
+        //     );
+        //     $attributes[] = $attr;
+        //     // Tcharp38: TODO: Value should return payload when there is (cmds 40/41/42) but must be decoded by 8002 instead to get it.
+        //     // Tcharp38: Note: Cmd FD (seen as Tuya specific cluster 0006 cmd) may be returned too with recent FW.
 
-            $msg = array(
-                // 'src' => 'parser',
-                'type' => 'attributesReportN',
-                'net' => $dest,
-                'addr' => $srcAddr,
-                'ep' => $ep,
-                'clustId' => $clustId,
-                'attributes' => $attributes,
-                'time' => time(),
-                'lqi' => $lqi
-            );
-            msgToAbeille2($msg);
-        }
+        //     $msg = array(
+        //         // 'src' => 'parser',
+        //         'type' => 'attributesReportN',
+        //         'net' => $dest,
+        //         'addr' => $srcAddr,
+        //         'ep' => $ep,
+        //         'clustId' => $clustId,
+        //         'attributes' => $attributes,
+        //         'time' => time(),
+        //         'lqi' => $lqi
+        //     );
+        //     msgToAbeille2($msg);
+        // }
 
         // //----------------------------------------------------------------------------------------------------------------
         // ##TODO

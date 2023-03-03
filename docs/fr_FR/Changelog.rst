@@ -3,6 +3,7 @@ ChangeLog
 
 - Ikea telecommande 5 boutons: Mise-à-jour modèle (2547).
 - Affichage groupes: Petite mise-à-jour.
+- Interne: Cmd: Correction 'cmd-0502'.
 
 230301-BETA-1
 -------------

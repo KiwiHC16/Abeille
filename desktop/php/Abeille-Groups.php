@@ -13,9 +13,9 @@
 		echo '<table class="table-bordered table-condensed" style="width:100%">';
 		echo '<thead>';
 		echo '<tr style="background-color: grey !important; color: white !important;">';
-		echo '<th>{{Module}}</th>';
-		echo '<th>{{Telecommande}}</th>';
-		echo '<th>{{Membre}}</th>';
+		echo '<th align="left" style="width:400px">{{Module}}</th>';
+		echo '<th align="left" style="width:100px">{{End point}}</th>';
+		echo '<th align="left">{{Groupes}}</th>';
 		echo '</tr>';
 		echo '</thead>';
 		echo '<tbody>';
@@ -31,7 +31,7 @@
 			$groupServ = "";
 			$groupCli = "";
 			// $print=0;
-			$name = $eqLogic->getHumanName(true);
+			$eqHName = $eqLogic->getHumanName(true);
 
 			// $abeilleId = $abeille->byLogicalId($eqLogic->getLogicalId(), 'Abeille')->getId();
 			// if ( $commandIEEE->byEqLogicIdAndLogicalId($abeilleId, 'Group-Membership') ) {
@@ -44,23 +44,31 @@
 			// 	$groupCli = $eqLogic->getConfiguration('Groupe');
 			// 	$print = 1;
 			// }
-			// if ( $print ) echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$groupCli.'</td><td align="center" class="one">'.$groupServ.'</td></tr>';
+			// if ( $print ) echo '<tr><td class="one">'.$eqHName.'</td><td align="center" class="one">'.$groupCli.'</td><td align="center" class="one">'.$groupServ.'</td></tr>';
 
+			/* ab::zigbee reminder
+			   zigbee = array(
+					"ep1" => "1234/DEAD",
+					"ep2" => "4545/1234"
+			   ) */
 			$zigbee = $eqLogic->getConfiguration("ab::zigbee", []);
 			if (!isset($zigbee['groups']))
 				continue; // No 'groups' => not supported
+
 			$groups = $zigbee['groups'];
-			foreach ($groups as $ep => $grps) {
-				if ($grps == '')
-					continue;
-				$gArr = explode("/", $grps);
-				foreach ($gArr as $grp) {
-					if ($groupServ != '')
-						$groupServ .= '/';
-					$groupServ .= $ep.'-'.$grp;
-				}
+			foreach ($groups as $epId => $grps) {
+				// if ($grps != '') {
+				// 	$gArr = explode("/", $grps);
+				// 	foreach ($gArr as $grp) {
+				// 		if ($groupServ != '')
+				// 			$groupServ .= '/';
+				// 		$groupServ .= $grp;
+				// 	}
+				// }
+				echo '<tr><td>'.$eqHName.'</td>';
+				echo '<td >'.$epId.'</td>';
+				echo '<td >'.$grps.'</td></tr>';
 			}
-			echo '<tr><td class="one">'.$name.'</td><td align="center" class="one">'.$groupCli.'</td><td align="center" class="one">'.$groupServ.'</td></tr>';
 		} // For each eqPerZigate[]
 		echo '</tbody>';
 		echo '</table>';

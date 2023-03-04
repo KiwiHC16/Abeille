@@ -646,6 +646,12 @@
             X = document.getElementById("idX-MTC").value;
             Y = document.getElementById("idX-MTC").value;
             payload = "EP="+ep+"_X="+X+"_Y="+Y;
+        } else if (request == "0502-StartWarning") {
+            topic = "Cmd"+logicalId+"_cmd-0502";
+            ep = document.getElementById("idEp-SW").value;
+            mode = document.getElementById("idMode-SW").value;
+            // Y = document.getElementById("idX-MTC").value;
+            payload = "ep="+ep+"_cmd=00_mode="+mode;
         } else if (request == "1000-GetGroups") {
             topic = "Cmd"+logicalId+"_cmd-1000";
             ep = document.getElementById("idEpC1000-41").value;

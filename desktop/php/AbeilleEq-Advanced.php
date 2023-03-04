@@ -77,10 +77,23 @@
         foreach ($zbDataTypes as $typeId => $type) {
             $typeId = strtoupper($typeId);
             if ($typeId == 'FF')
-                echo '<option value="'.$typeId.'" select></option>';
+                echo '<option value="'.$typeId.'" selected></option>';
             else
                 echo '<option value="'.$typeId.'">'.$typeId.' / '.$type['short'].'</option>';
         }
+        echo '</select>';
+    }
+
+    // Create drop down list of 'Warning modes' (cluster 0502)
+    function addWarningModesList($id) {
+        echo '<select id="'.$id.'" style="width:90px; margin-left: 8px" title="{{Warning mode}}" />';
+        echo '<option value="Stop">Stop</option>';
+        echo '<option value="Burglar">Burglar</option>';
+        echo '<option value="Fire">Fire</option>';
+        echo '<option value="Emergency" selected>Emergency</option>';
+        echo '<option value="PolicePanic">Police panic</option>';
+        echo '<option value="FirePanic">Fire panic</option>';
+        echo '<option value="EmergencyPanic">Emergency panic</option>';
         echo '</select>';
     }
 

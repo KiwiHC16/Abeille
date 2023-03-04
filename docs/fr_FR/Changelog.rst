@@ -5,6 +5,7 @@ ChangeLog
 - Affichage groupes: Petite mise-à-jour.
 - Interne: Cmd: Correction 'cmd-0502'.
 - Interne: Parser: Msg 8095 désactivé pour support mode 'raw'.
+- Page avancé: Support préliminaire 'cluster 0502/IAS WD, cmd 00'.
 
 230301-BETA-1
 -------------

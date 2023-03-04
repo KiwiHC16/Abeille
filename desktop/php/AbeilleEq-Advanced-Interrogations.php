@@ -265,6 +265,18 @@
     </div>
 </div>
 <div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0502/IAS WD, Start warning (cmd 00)">ZCL: 0502 - Start warning</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-danger" onclick="interrogate(\'0502-StartWarning\', \''.$eqId.'\')">{{Appliquer}}</a>';
+            addEpButton("idEp-SW", $mainEP);
+            addWarningModesList("idMode-SW");
+        ?>
+        <!-- <input id="idX-MTC" title="{{X: format hex 4 car}}" placeholder="{{X}}" style="width:60px" />
+        <input id="idY-MTC" title="{{Y: format hex 4 car}}" placeholder="{{Y}}" style="width:60px" /> -->
+    </div>
+</div>
+<div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 1000, Get group identifiers (cmd 41)">ZCL: 1000 - Groupes</label>
     <div class="col-sm-5">
         <?php

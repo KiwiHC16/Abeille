@@ -2,35 +2,38 @@
     "DS01": {
         "manufacturer": "Sonoff",
         "model": "SNZB-04",
+        "type": "Sonoff Door/Window Sensor",
+        "genericType": "Opening",
         "timeout": "140",
         "configuration": {
             "mainEP": "01",
-            "icon": "SNZB-04",
+            "icon": "Sonoff-SNZB-04",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "security": "1"
         },
-        "type": "Sonoff SNZB-04 Wireless Door\/Window Sensor",
         "commands": {
-            "include1": "etatSonoff",
+            "Status": {
+                "use": "etatSonoff"
+            },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
             "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 10
             },
             "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             }
         },
-        "comment": "https:\/\/community.jeedom.com\/t\/sonoff-snzb-04-sur-zigate-et-abeille\/39336\/4"
+        "comment": "https://community.jeedom.com/t/sonoff-snzb-04-sur-zigate-et-abeille/39336/4"
     }
 }

@@ -35,41 +35,16 @@
         ini_set('log_errors', 'On');
     }
 
-    /* Display beehive or bee card */
-    function displayBeeCard($eqLogic, $files, $zgId) {
-        // find opacity
-        $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-
-        // Find icone
-        $test = 'node_' . $eqLogic->getConfiguration('icone') . '.png';
-        if (in_array($test, $files, 0)) {
-            $path = 'node_' . $eqLogic->getConfiguration('icone');
-        } else {
-            $path = 'Abeille_icon';
-        }
-
-        // Affichage
-        $id = $eqLogic->getId();
-        echo '<div>';
-        echo    '<input id="idBeeChecked'.$zgId.'-'.$id.'" type="checkbox" name="eqSelected-'.$id.'" />';
-        echo 	'<br/>';
-        echo 	'<div class="eqLogicDisplayCard cursor'.$opacity.'" style="width: 130px" data-eqLogic_id="' .$id .'">';
-        echo 		'<img src="plugins/Abeille/images/' . $path . '.png"/>';
-        echo 		'<br/>';
-        echo 		'<span class="name">'. $eqLogic->getHumanName(true, true) .'</span>';
-        echo 	'</div>';
-        echo '</div>';
-    }
-
     sendVarToJS('eqType', 'Abeille');
     $abQueues = $GLOBALS['abQueues'];
-    echo '<script>var js_queueCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
 
     $eqLogics = eqLogic::byType('Abeille');
     /* Creating a per Zigate list of eq ids.
        For each zigate, the first eq is the zigate.
-       $eqPerZigate[zgId][0] => id for zigate
-       $eqPerZigate[zgId][1] => id for next eq... */
+       $eqPerZigate[$zgId][id1] => id for zigate
+       $eqPerZigate[$zgId][id2] => id for next eq... */
     $eqPerZigate = array(); // All equipements id/addr per zigate
     foreach ($eqLogics as $eqLogic) {
         $eqLogicId = $eqLogic->getLogicalId(); // Ex: 'Abeille1/0000'
@@ -80,6 +55,8 @@
         $eq['id'] = $eqId;
         $eq['addr'] = $eqAddr;
         $eq['mainEp'] = $eqLogic->getConfiguration('mainEP', '');
+        $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
+        $eq['jsonId'] = $eqModel ? $eqModel['id'] : '';
         if ($eqAddr == "0000") {
             if (isset($eqPerZigate[$zgId][$eqId]))
                 array_unshift($eqPerZigate[$zgId][$eqId], $eq);
@@ -88,8 +65,8 @@
         } else
             $eqPerZigate[$zgId][$eqId] = $eq;
     }
+    $GLOBALS['eqPerZigate'] = $eqPerZigate;
     echo '<script>var js_eqPerZigate = \''.json_encode($eqPerZigate).'\';</script>';
-    echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
 
     // logDebug("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
     // $parametersAbeille = AbeilleTools::getParameters();
@@ -97,13 +74,15 @@
     $outils = array(
         'health'    => array( 'bouton'=>'bt_healthAbeille',         'icon'=>'fa-medkit',        'text'=>'{{Santé}}' ),
         'netList'   => array( 'bouton'=>'bt_network',               'icon'=>'fa-sitemap',       'text'=>'{{Réseau}}' ),
-        'net'       => array( 'bouton'=>'bt_networkAbeille',        'icon'=>'fa-map',           'text'=>'{{Network Graph}}' ),
+        // 'net'       => array( 'bouton'=>'bt_networkAbeille',        'icon'=>'fa-map',           'text'=>'{{Network Graph}}' ),
         'compat'    => array( 'bouton'=>'bt_supportedEqList',       'icon'=>'fa-align-left',    'text'=>'{{Compatibilite}}' ),
         'ota'       => array( 'bouton'=>'bt_Ota',                   'icon'=>'fa-paperclip',     'text'=>'{{Mises-à-jour OTA}}' ),
-        'support'   => array( 'bouton'=>'bt_supportPage',           'icon'=>'fa-medkit',        'text'=>'{{Support}}' ),
+        'support'   => array( 'bouton'=>'bt_maintenancePage',       'icon'=>'fa-medkit',        'text'=>'{{Maintenance}}' ),
     );
-    if (isset($dbgDeveloperMode))
+    if (isset($dbgDeveloperMode)) {
+        $outils['net'] = array( 'bouton'=>'bt_networkAbeille', 'icon'=>'fa-map', 'text'=>'{{Network Graph}}' );
         $outils['graph'] = array( 'bouton'=>'bt_graph', 'icon'=>'fa-flask', 'text'=>'{{Graph}}' );
+    }
 ?>
 
 <!-- For all modals on 'Abeille' page. -->
@@ -125,19 +104,17 @@
         <!-- Groups management  -->
         <?php include 'Abeille-Groups.php'; ?>
 
-        <!-- Gestion des ghosts / remplacement d equipements  -->
-        <?php include '050_AbeilleRemplacementPart.php'; ?>
+        <!-- Replace equipment on Jeedom side -->
+        <?php include 'Abeille-ReplaceEq.php'; ?>
 
         <!-- Gestion des ReHome / migration d equipements  -->
-        <?php include '060_AbeilleReHomePart.php'; ?>
+        <?php include 'Abeille-MigrateEq.php'; ?>
 
-        <?php include '070_AbeilleReplaceZigatePart.php'; ?>
+        <?php include 'Abeille-NewZigate.php'; ?>
 
         <?php if (isset($dbgDeveloperMode)) { ?>
         <legend><i class="fa fa-cogs"></i> {{Visible en MODE DEV UNIQUEMENT}}</legend>
         <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
-
-            <?php include '025_AbeilleNEPart.php'; ?>
 
             <!-- Gestion des scenes  -->
             <?php include 'Abeille-Scenes.php'; ?>

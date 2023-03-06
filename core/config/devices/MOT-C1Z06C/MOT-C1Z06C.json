@@ -3,7 +3,12 @@
         "manufacturer": "Profalux",
         "zbManufacturer": "Profalux",
         "model": "Volets 2nd gen",
-        "alternateIds": "MOT-C1Z10C",
+        "type": "Profalux volet gen 2",
+        "genericType": "Shutter",
+        "alternateIds": {
+            "MOT-C1Z06F": [],
+            "MOT-C1Z10C": []
+        },
         "timeout": "60",
         "category": {
             "automatism": "1"
@@ -11,42 +16,62 @@
         "configuration": {
             "mainEP": "01",
             "paramType": "paramABC",
-            "icon": "voletProFalux"
+            "icon": "Profalux-Shutter"
         },
-        "type": "Profalux volet gen 2",
         "commands": {
-            "include4": "zb-0000-ZCLVersion",
-            "include24": "Identify",
-            "include25": "Group-Membership",
+            "ZCL Version": {
+                "use": "inf_zbAttr-0000-ZCLVersion"
+            },
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
             "SetReporting-0008-0000": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting",
+                "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include0008-8": "setLevelVoletDown",
-            "include0008-7": "setLevelVoletUp",
-            "include0008-6": "levelVoletStop",
-            "CurrentLevel": {
-                "use": "zb-0008-CurrentLevel",
+            "Down": {
+                "use": "act_zbCmdG-0008-DownClose",
                 "isVisible": 1
             },
-            "include0008-5": "setLevelVolet",
+            "Up": {
+                "use": "act_zbCmdG-0008-UpOpen",
+                "isVisible": 1
+            },
+            "Stop": {
+                "use": "act_zbCmdG-0008-StopWithOnOff",
+                "isVisible": 1
+            },
+            "Set Level": {
+                "use": "act_zbCmdG-0008-MoveToLevelWithOnOff",
+                "isVisible": 1
+            },
+            "CurrentLevel": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "genericType": "FLAP_STATE",
+                "isVisible": 1
+            },
             "Get-CurrentLevel": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
         }

@@ -11,8 +11,6 @@
             "repeatEventManagement": "always",
             "visibilityCategory": "Network"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        }
+        "nextLine": "after"
     }
 }

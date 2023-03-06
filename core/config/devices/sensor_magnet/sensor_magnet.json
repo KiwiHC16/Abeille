@@ -1,28 +1,33 @@
 {
     "sensor_magnet": {
         "manufacturer": "Xiaomi",
+        "type": "Xiaomi door sensor",
+        "genericType": "Opening",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiPorte1",
+            "icon": "Xiaomi-DoorSensor-2",
             "batteryType": "1x3V CR1632"
         },
         "category": {
             "opening": "1"
         },
-        "type": "Xiaomi Door Sensor",
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "template": "door",
                 "genericType": "OPENING",
                 "invertBinary": "1",
                 "isVisible": 1
             },
-            "include4": "Batterie-Volt",
-            "include5": "Batterie-Pourcent",
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

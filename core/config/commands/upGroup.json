@@ -12,9 +12,9 @@
             "visibilityCategory": "All"
         },
         "display": {
-            "icon": "<i class=\"icon jeedom2-bright4\"><\/i>",
-            "forceReturnLineAfter": "1"
+            "icon": "<i class=\"icon jeedom2-bright4\"><\/i>"
         },
-        "type": "action"
+        "type": "action",
+        "nextLine": "after"
     }
 }

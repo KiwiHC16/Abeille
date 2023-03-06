@@ -1,0 +1,14 @@
+{
+    "attr-Sensitivity": {
+        "comment": "Motion detector sensitivity info cmd",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": {
+            "historizeRound": "1"
+        },
+        "type": "info",
+        "logicalId": "#EP#-sensitivity",
+        "unit": "",
+        "genericType": ""
+    }
+}

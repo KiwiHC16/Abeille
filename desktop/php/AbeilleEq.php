@@ -29,21 +29,45 @@
     $eqLogicId = $eqLogic->getLogicalid();
     list($eqNet, $eqAddr) = explode("/", $eqLogicId);
     $zgId = substr($eqNet, 7); // Extracting zigate number from network
-    $zgType = config::byKey('AbeilleType'.$zgId, 'Abeille', '', 1); // USB, WIFI, PIN, DIN
+    $zgType = config::byKey('ab::zgType'.$zgId, 'Abeille', '', 1); // USB, WIFI, PI, DIN
+    $zgChan = config::byKey('ab::zgChan'.$zgId, 'Abeille', 11); // Zigbee channel
+    $config = [];
+    $config['ab::zgChan'.$zgId] = $zgChan;
     $mainEP = $eqLogic->getConfiguration('mainEP', '01');
     $eqIeee = $eqLogic->getConfiguration('IEEE', '');
     $batteryType = $eqLogic->getConfiguration('battery_type', '');
     $eqName = $eqLogic->getName();
 
+    $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+    $eqZigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+    // $eqSettings = $eqLogic->getConfiguration('ab::settings', []);
+
     echo '<script>var js_eqId = '.$eqId.';</script>'; // PHP to JS
     echo '<script>var js_eqAddr = "'.$eqAddr.'";</script>'; // PHP to JS
     echo '<script>var js_eqIeee = "'.$eqIeee.'";</script>'; // PHP to JS
     echo '<script>var js_zgId = '.$zgId.';</script>'; // PHP to JS
-    // echo '<script>var js_queueKeyXmlToCmd = '.queueKeyXmlToCmd.';</script>'; // PHP to JS
     echo '<script>var js_batteryType = "'.$batteryType.'";</script>'; // PHP to JS
     $abQueues = $GLOBALS['abQueues'];
-    echo '<script>var js_queueKeyXmlToCmd = '.$abQueues['xToCmd']['id'].';</script>'; // PHP to JS
-    echo '<script>var js_queueCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToCmd = '.$abQueues['xToCmd']['id'].';</script>'; // PHP to JS
+    echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
+    // sendVarToJS('js_eqSettings', $eqSettings);
+    sendVarToJS('js_config', $config);
+
+    /* Returns cmd ID identified by its Jeedom logical ID name */
+    function getCmdIdByLogicId($eqId, $cmdLogicId) {
+        $cmd = cmd::byEqLogicIdAndLogicalId($eqId, $cmdLogicId);
+        if (!is_object($cmd))
+            return "";
+        return $cmd->getId();
+    }
+
+    /* Returns current cmd value identified by its Jeedom logical ID name */
+    function getCmdValueByLogicId($eqId, $logicId) {
+        $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, $logicId);
+        if (!is_object($cmd))
+            return "";
+        return $cmd->execCmd();
+    }
 ?>
 
 <!-- For all modals on 'Abeille' page. -->
@@ -68,7 +92,12 @@
 
         <!-- Displays Jeedom specifics  -->
         <div role="tabpanel" class="tab-pane active" id="idMain">
-            <?php include 'AbeilleEq-Main.php'; ?>
+            <form class="form-horizontal">
+                <?php
+                    include 'AbeilleEq-Main-Generic.php';
+                    include 'AbeilleEq-Main-Icon.php';
+                ?>
+            </form>
         </div>
 
         <!-- Displays advanced & Zigbee specifics  -->

@@ -1,5 +1,13 @@
 {
     "WarningDevice-EF-3.0": {
+        "alternateIds": {
+            "WarningDevice": [],
+            "SRHMP-I1": [],
+            "TS0216__TYZB01_8scntis1": []
+        },
+        "manufacturer": "Heiman",
+        "model": "HS2WD",
+        "type": "Heiman HS2WD warning device",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -8,33 +16,60 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Alarm Smart Siren Heiman Siren : WarningDevice-EF-3.0",
         "commands": {
-            "include4": "zb-0000-ZCLVersion",
-            "include24": "Identify",
-            "include25": "Group-Membership",
+            "ZCL Version": {
+                "use": "inf_zbAttr-0000-ZCLVersion"
+            },
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
             "SetReporting-0006-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include28 2": "writeAttributeRequestIAS_WD_Flash",
-            "include28 2 2": "writeAttributeRequestIAS_WD_Sound",
-            "include28 2 2 2": "writeAttributeRequestIAS_WD_FlashSound",
+            "Flash": {
+                "use": "writeAttributeRequestIAS_WD_Flash"
+            },
+            "Sound": {
+                "use": "writeAttributeRequestIAS_WD_Sound"
+            },
+            "FlashSound": {
+                "use": "writeAttributeRequestIAS_WD_FlashSound"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
+            },
+            "Test SOUND & FLASH": {
+                "use": "act_zbCmdG-0502-StartWarning",
+                "params": "ep=01&mode=burglar",
+                "isVisible": "1"
+            },
+            "Test SOUND only": {
+                "use": "act_zbCmdG-0502-StartWarning",
+                "params": "ep=01&mode=burglar&strobe=off",
+                "isVisible": "1"
+            },
+            "Test FLASH only": {
+                "use": "act_zbCmdG-0502-StartWarning",
+                "params": "ep=01&mode=stop&strobe=on",
+                "isVisible": "1"
             }
-        },
-        "comment": "Draft"
+        }
     }
 }

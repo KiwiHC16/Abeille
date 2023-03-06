@@ -5,7 +5,7 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "plug.maeu01"
+            "icon": "Xiaomi-SmartPlug"
         },
         "category": {
             "automatism": "1",
@@ -14,63 +14,77 @@
         "type": "Aqara SmartPlug",
         "commands": {
             "On": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "isVisible": 1
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "isVisible": 1
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1,
                 "nextLine": "after"
             },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            
             "Total power": {
-                "use": "zb-0702-CurrentSummationDelivered",
-                "params": "ep=01&unit=KWh&div=10",
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "params": "ep=01&div=10",
+                "unit": "KWh",
                 "isVisible": 1
             },
             "UnitOfMeasure": {
-                "use": "zb-0702-UnitOfMeasure"
+                "use": "inf_zbAttr-0702-UnitOfMeasure"
             },
             "Get-0702-UnitOfMeasure": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0702&attrId=0300"
             },
-            "include0702-4": "zb-0702-Multiplier",
+            "Multiplier": {
+                "use": "inf_zbAttr-0702-Multiplier"
+            },
             "Get-0702-Multiplier": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0702&attrId=0301"
             },
-            "include0702-6": "zb-0702-Divisor",
+            "Divisor": {
+                "use": "inf_zbAttr-0702-Divisor"
+            },
             "Get-0702-Divisor": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0702&attrId=0302"
             },
-            "include0702-8": "zb-0702-SummationFormatting",
+            "SummationFormatting": {
+                "use": "inf_zbAttr-0702-SummationFormatting"
+            },
             "Get-0702-SummationFormatting": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0702&attrId=0303"
             },
-            "Bind-01-0702-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0702", "execAtCreation": "Yes" },
+            "Bind-01-0702-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0702",
+                "execAtCreation": "Yes"
+            },
             "Set-0B04-050B-Reporting": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "ep=01&clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
             "ActivePower": {
-                "use": "zb-0B04-ActivePower",
+                "use": "inf_zbAttr-0B04-ActivePower",
                 "params": "mult=1&div=1",
                 "isVisible": 1
             },
-            "Bind-01-0B04-ToZigate": { "use": "zbBindToZigate", "params": "ep=01&clustId=0B04", "execAtCreation": "Yes" }
+            "Bind-01-0B04-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0B04",
+                "execAtCreation": "Yes"
+            }
         },
-        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1578"
+        "comment": "https://github.com/KiwiHC16/Abeille/issues/1578"
     }
 }

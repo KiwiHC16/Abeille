@@ -4,7 +4,7 @@
 <hr>
 
 <?php
-    if ($dbgDeveloperMode) echo __FILE__;
+    if (isset($dbgDeveloperMode)) echo __FILE__;
 ?>
 
 <div class="form-group">
@@ -18,26 +18,17 @@
     <label class="col-sm-3 control-label">{{Id Jeedom}}</label>
     <div class="col-sm-5">
         <!-- 'eqLogicAttr' with data-l1key="id" must not be declared twice in same page -->
-        <span><?php echo $eqId; ?></span>
+        <?php echo '<input type="text" value="'.$eqId.'" readonly>'; ?>
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
     <?php
-    echo '<div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByName($eqId, "Last").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-        echo '<span id="idLastComm">'.getCmdValueByLogicId($eqId, "Time-Time").'</span>';
+    echo '<div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, "Time-Time").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+        echo '<input type="text" id="idLastComm" value="'.getCmdValueByLogicId($eqId, "Time-Time").'" readonly>';
+        addJsUpdateFunction($eqId, 'Time-Time', 'idLastComm');
     ?>
-        <script>
-            <?php
-                $cmdId = getCmdIdByLogicId($eqId, "Time-Time");
-                echo "jeedom.cmd.update['".$cmdId."'] = function(_options){";
-                echo 'console.log("jeedom.cmd.update['.$cmdId.']");';
-            ?>
-                var element = document.getElementById('idLastComm');
-                element.textContent = _options.display_value;
-            }
-        </script>
     </div>
 </div>
 
@@ -57,21 +48,29 @@
     </div>
 </div>
 
-<!-- <div class="form-group">
-    <label class="col-sm-3 control-label">{{Fichier JSON}}</label>
-    <div class="col-sm-5">
-        <span class="eqLogicAttr" data-l1key="configuration" data-l2key="ab::jsonId"></span>
-    </div>
-</div> -->
-
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Documentation}}</label>
     <div class="col-sm-5">
         <?php
-            $model = $eqLogic->getConfiguration('ab::jsonId', '');
-            if ($model != '') {
-                echo '<a href="'.urlProducts.'/'.$model.'" target="_blank">Voir ici si présente</a>';
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
+            $jsonId = $eqModel ? $eqModel['id'] : '';
+            if ($jsonId != '') {
+                echo '<a href="'.urlProducts.'/'.$jsonId.'" target="_blank">Voir ici si présente</a>';
             }
+        ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="{{Groupes Zigbee auquels l'équipement appartient}}">{{Groupes}}</label>
+    <div class="col-sm-5">
+        <?php
+            $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Group-Membership');
+            if (is_object($cmd))
+                $groups = $cmd->execCmd();
+            else
+                $groups = "";
+            echo '<span>'.$groups.'</span>';
         ?>
     </div>
 </div>

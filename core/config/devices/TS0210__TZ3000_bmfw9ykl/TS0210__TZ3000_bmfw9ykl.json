@@ -1,0 +1,67 @@
+{
+    "TS0210__TZ3000_bmfw9ykl": {
+        "manufacturer": "Tuya",
+        "model": "TS0210",
+        "type": "Tuya vibration sensor",
+        "alternateIds": {
+            "TS0210__TYZB01_3zv6oleo": [],
+            "TS0210__TYZB01_j9xxahcl": []
+        },
+        "timeout": "60",
+        "category": {
+            "security": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-VibrationSensor",
+            "mainEP": "01",
+            "batteryType": "2x1.5V AAA"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "SetReporting 0001-00021": {
+                "use": "act_zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Zone Alarm1": {
+                "use": "attr-Zone-Alarm1",
+                "comment": "'repeatEventManagement' required since device sends only 1 never 0",
+                "repeatEventManagement": "always",
+                "returnStateValue": 0,
+                "returnStateTime": 1,
+                "nextLine": "after",
+                "isVisible": "1"
+            },
+            "ZoneStatusChange": {
+                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
+                "comment": "On receive we trig 01-0500-Alarm1 with extracted boolean value",
+                "trigOut": "01-0500-alarm1",
+                "trigOutOffset": "#value#&1"
+            },
+            "Set Sensibility": {
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=0500&attrId=0013&attrType=20&attrVal=#slider#",
+                "subType": "slider",
+                "minValue": 0,
+                "maxValue": 255,
+                "isVisible": "1"
+            },
+            "Current Zone Sensibility Level": {
+                "use": "inf_zbAttr-0500-CurrentZoneSensibilityLevel",
+                "isVisible": "1"
+            },
+            "Bind 0500-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0500",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

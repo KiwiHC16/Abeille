@@ -1,48 +1,83 @@
 {
     "Remoteswitch": {
+        "manufacturer": "Legrand",
+        "model": "067723",
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
-            "icon": "LegrandRemoteSwitch",
+            "icon": "Legrand-RemoteSwitch",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "light": "1"
         },
-        "type": "Legrand T\u00e9l\u00e9commande Depart Arriv\u00e9e",
+        "type": "Legrand remote switch",
         "commands": {
-            "include1": "offGroup",
-            "include2": "toggleGroup",
-            "include3": "onGroup",
-            "include4": "downGroup",
-            "include5": "upGroup",
-            "include6": "setLevelGroup",
-            "include6 2": "setTemperatureLightGroup",
-            "include7": "sceneGroupRecall1",
-            "include7 2": "sceneGroupRecall2",
-            "include7 2 2": "sceneGroupRecall3",
+            "SWBuildID": {
+                "use": "inf_zbAttr-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
-                "isVisible": 1
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
-            "include9": "getBattery",
-            "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+            "Battery-Volt2Percent": {
+                "use": "battery-Volt2Percent-3"
+            },
+            "SetReporting 0001-00020": {
+                "use": "act_zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 0001-ToZigate": {
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 9
+                "execAtCreation": "yes"
             },
-            "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 7
+            "Off": {
+                "use": "offGroup"
             },
-            "include11 2": "Up-Down",
-            "include11 2 2": "Click-Middle",
-            "include11 2 2 2": "Left-Right-Cmd",
-            "include11 2 2 2 2": "Left-Right-Direction"
+            "Toggle": {
+                "use": "toggleGroup"
+            },
+            "On": {
+                "use": "onGroup"
+            },
+            "Down": {
+                "use": "downGroup"
+            },
+            "Up": {
+                "use": "upGroup"
+            },
+            "setLevel": {
+                "use": "setLevelGroup"
+            },
+            "setTemperatureLightGroup": {
+                "use": "setTemperatureLightGroup"
+            },
+            "Sc1": {
+                "use": "sceneGroupRecall1"
+            },
+            "Sc2": {
+                "use": "sceneGroupRecall2"
+            },
+            "Sc3": {
+                "use": "sceneGroupRecall3"
+            },
+            "Up-Down": {
+                "use": "Up-Down"
+            },
+            "Click-Middle": {
+                "use": "Click-Middle"
+            },
+            "Left-Right-Cmd": {
+                "use": "Left-Right-Cmd"
+            },
+            "Left-Right-Direction": {
+                "use": "Left-Right-Direction"
+            }
         }
     }
 }

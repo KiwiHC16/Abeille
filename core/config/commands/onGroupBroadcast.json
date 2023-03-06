@@ -12,9 +12,9 @@
             "visibilityCategory": "All"
         },
         "display": {
-            "icon": "<i class=\"icon jeedom-lumiere-on\"><\/i>",
-            "forceReturnLineAfter": "1"
+            "icon": "<i class=\"icon jeedom-lumiere-on\"><\/i>"
         },
-        "type": "action"
+        "type": "action",
+        "nextLine": "after"
     }
 }

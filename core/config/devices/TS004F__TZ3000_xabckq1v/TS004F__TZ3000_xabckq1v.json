@@ -4,52 +4,78 @@
         "manufacturer": "Tuya",
         "model": "ESW-0ZAA-EU",
         "comment": "https://expo.tuya.com/product/785025#detail",
+        "comment2": "Moes, Wirelesss Scene Switch 21/41",
         "configuration": {
             "mainEP": "01",
-            "icon": "Tuya4ButtonsSwitch",
+            "icon": "Tuya-4ButtonsSwitch-White",
             "batteryType": "1x3V CR2430"
         },
         "category": {
-            "light": "1"
+            "automatism": "1"
         },
         "type": "Tuya 4 buttons scene switch",
         "commands": {
-            "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
+            "Init0": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0005,0000,0001,0007,FFFE",
+                "execAtCreation": "Yes"
+            },
+            "Init1": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=8004",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 2
+            },
+            "Init2": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=E001&attrId=D011",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 4
+            },
+            "Init3": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=8004",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 8
+            },
+            "Change config": {
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=0006&attrId=8004&attrType=30&attrVal=01",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 6
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
             "Bind 0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },
             "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-
-            "Change config": {
-                "use": "zbWriteAttribute",
-                "params": "clustId=0006&attrId=8004&attrType=30&attrVal=01",
-                "execAtCreation": "Yes"
+            "Click 1": {
+                "use": "click",
+                "params": "ep=01",
+                "isVisible": 1
             },
-
-            "Click 1": { "use": "click", "params": "ep=03", "isVisible": 1 },
-            "Click 2": { "use": "click", "params": "ep=04", "isVisible": 1 },
-            "Click 3": { "use": "click", "params": "ep=02", "isVisible": 1 },
-            "Click 4": { "use": "click", "params": "ep=01", "isVisible": 1 },
-            "Bind 0006-EP02-ToZigate": {
-                "use": "zbBindToZigate",
-                "params": "clustId=0006&ep=02",
-                "execAtCreation": "Yes"
+            "Click 2": {
+                "use": "click",
+                "params": "ep=02",
+                "isVisible": 1
             },
-            "Bind 0006-EP03-ToZigate": {
-                "use": "zbBindToZigate",
-                "params": "clustId=0006&ep=03",
-                "execAtCreation": "Yes"
+            "Click 3": {
+                "use": "click",
+                "params": "ep=03",
+                "isVisible": 1
             },
-            "Bind 0006-EP04-ToZigate": {
-                "use": "zbBindToZigate",
-                "params": "clustId=0006&ep=04",
-                "execAtCreation": "Yes"
+            "Click 4": {
+                "use": "click",
+                "params": "ep=04",
+                "isVisible": 1
             }
         }
     }

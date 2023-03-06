@@ -37,31 +37,32 @@ Démons:
     $oneMissing = false;
     displayDaemonStatus($diff, "Cmd", $oneMissing);
     displayDaemonStatus($diff, "Parser", $oneMissing);
-    for ($zgNb = 1; $zgNb <= maxNbOfZigate; $zgNb++) {
-        if ($config['AbeilleActiver'.$zgNb] != "Y")
+    for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+        if ($config['ab::zgEnabled'.$zgId] != "Y")
             continue; // Zigate disabled
-        displayDaemonStatus($diff, "SerialRead".$zgNb, $oneMissing);
-        if ($config['AbeilleType'.$zgNb] == "WIFI")
-            displayDaemonStatus($diff, "Socat".$zgNb, $oneMissing);
+        displayDaemonStatus($diff, "SerialRead".$zgId, $oneMissing);
+        if ($config['ab::zgType'.$zgId] == "WIFI")
+            displayDaemonStatus($diff, "Socat".$zgId, $oneMissing);
     }
     if ($oneMissing)
         echo " Attention: Un ou plusieurs démons ne tournent pas !";
 
     /* Checking if active Zigates are not in timeout */
     echo "  Zigates: ";
-    for ($zgNb = 1; $zgNb <= maxNbOfZigate; $zgNb++) {
-        if ($config['AbeilleActiver'.$zgNb] != "Y")
+    for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+        if ($config['ab::zgEnabled'.$zgId] != "Y")
             continue; // Zigate disabled
 
-        $eqLogic = Abeille::byLogicalId('Abeille'.$zgNb.'/0000', 'Abeille');
+        $eqLogic = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
         if (!is_object($eqLogic))
             continue; // Abnormal
         if ((strtotime($eqLogic->getStatus('lastCommunication')) + (60 * $eqLogic->getTimeout())) > time()) {
-            echo '<span class="label label-success" style="font-size:1em; margin-left:4px">Zigate'.$zgNb.'</span>';
+            echo '<span class="label label-success" style="font-size:1em; margin-left:4px">Zigate'.$zgId.'</span>';
         } else {
-            echo '<span class="label label-danger" style="font-size:1em; margin-left:4px">Zigate '.$zgNb.'</span>';
+            echo '<span class="label label-danger" style="font-size:1em; margin-left:4px">Zigate '.$zgId.'</span>';
         }
     }
+    echo '<br><br>';
 
     // TODO Tcharp38: Display a popup for few sec as soon as ther is
     // an issue with daemons or zigate
@@ -77,9 +78,9 @@ Démons:
 <table class="table table-condensed tablesorter" id="table_healthAbeille">
     <thead>
         <tr>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Ruche}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Equipement}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Type}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Ruche}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Adresse}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{IEEE}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Status}}</th>
@@ -99,21 +100,23 @@ Démons:
         $IEEE_Table = array();
 
         foreach ($eqLogics as $eqLogic) {
+            list($net, $addr) = explode("/", $eqLogic->getLogicalId());
 
-            // Module
-            echo "\n\n\n\n<tr>".'<td><a href="'.$eqLogic->getLinkToConfiguration().'" style="text-decoration: none;">'.$eqLogic->getHumanName(true).'</a></td>';
+            echo "\n\n\n<tr>";
 
-            // Module type
-            // TODO: Put real device type instead of icon
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getConfiguration('icone').'</span></td>';
+            // Network (AbeilleX)
+            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$net.'</span></td>';
+
+            // Device name
+            echo '<td><a href="'.$eqLogic->getLinkToConfiguration().'" style="text-decoration: none;">'.$eqLogic->getHumanName(true).'</a></td>';
+
+            // Device type
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            $type = isset($eqModel['type']) ? $eqModel['type'] : '?';
+            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$type.'</span></td>';
 
             // ID
             // echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getId().'</span></td>';
-
-            list($net, $addr) = explode("/", $eqLogic->getLogicalId());
-
-            // Ruche
-            echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$net.'</span></td>';
 
             // Short Address
             echo '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'.$addr.'</span></td>';
@@ -121,7 +124,7 @@ Démons:
             /* Extended address/IEEE
                If present in config, taking it.
                If not, asking IEEE adress */
-            if ($eqLogic->getConfiguration('icone') == "remotecontrol") {
+            if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol") {
                 $addrIEEE = "-";
             } else {
                 $addrIEEE = $eqLogic->getConfiguration('IEEE', 'none');
@@ -147,18 +150,19 @@ Démons:
                 echo '<td><span class="label label-warning" style="font-size: 1em; cursor: default;">Manquante</span></td>';
             }
 
-            // Status
-            // Status Ok par defaut, apres on test et on met le status à la valeur voulue
+            // Status: Updated every minutes by cron() (see Abeille.class.php)
             if ($eqLogic->getIsEnable() == 0) // Disabled ?
                 $status = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Désactivé}}</span>';
-            else if ($eqLogic->getStatus('state') == '-')
+            // else if ($eqLogic->getStatus('state') == '-')
+            //     $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
+            else if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol")
                 $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
-            else if ($eqLogic->getConfiguration('icone') == "remotecontrol")
-                $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
-            else if ((time() - strtotime($eqLogic->getStatus('lastCommunication'))) > ((2*60*$eqLogic->getTimeout())))
-                $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">Time-out</span>';
-            else if ((time() - strtotime($eqLogic->getStatus('lastCommunication'))) > (60*$eqLogic->getTimeout()))
-                $status = '<span class="label label-warning" style="font-size: 1em; cursor: default;">Time-out</span>';
+            // else if ((time() - strtotime($eqLogic->getStatus('lastCommunication'))) > ((2*60*$eqLogic->getTimeout())))
+            //     $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">Time-out</span>';
+            // else if ((time() - strtotime($eqLogic->getStatus('lastCommunication'))) > (60*$eqLogic->getTimeout()))
+            //     $status = '<span class="label label-warning" style="font-size: 1em; cursor: default;">Time-out</span>';
+            else if ($eqLogic->getStatus('timeout') == 1)
+                $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">{{Time-out}}</span>';
             else
                 $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">{{OK}}</span>';
             echo '<td>'.$status.'</td>';
@@ -168,7 +172,7 @@ Démons:
             // if (isset($dbgDeveloperMode)) {
             //     if ($eqLogic->getIsEnable() == 0) // Disabled ?
             //         $APS_ACK = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Désactivé}}</span>';
-            //     else if ($eqLogic->getConfiguration('icone') == "remotecontrol")
+            //     else if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol")
             //         $status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
             //     else if ($eqLogic->getStatus('APS_ACK') == '0')
             //         $APS_ACK = $status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">{{NOK}}</span>';
@@ -180,7 +184,7 @@ Démons:
             // }
 
             // Last comm.
-            if ($eqLogic->getConfiguration('icone') == "remotecontrol") {
+            if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol") {
                 $lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>';
             } else if (strlen($eqLogic->getStatus('lastCommunication'))>2) {
                 $lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">'.$eqLogic->getStatus('lastCommunication').'</span>';
@@ -190,7 +194,7 @@ Démons:
 
             // Depuis
             $Depuis = '<span class="label label-info" style="font-size: 1em; cursor: default;">'.(floor((time() - strtotime($eqLogic->getStatus('lastCommunication'))) / 3600)).'</span>';
-             if ($eqLogic->getConfiguration('icone') == "remotecontrol") {
+             if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol") {
                  $Depuis = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>';
              }
             //if ($eqLogic->getStatus('state') == '-') { $Depuis = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>'; }

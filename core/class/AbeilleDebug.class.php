@@ -19,8 +19,8 @@
             "AbeilleCmdClass"         => 1,
             "sendCmdToZigate"         => 1,
             "addCmdToQueue2"         => 1,
-            "processZigateAcks"       => 0,
-            "processZigateCmdQueues" => 1,
+            "processAcks"       => 0,
+            "processCmdQueues" => 1,
         );
 
         function deamonlog($loglevel = 'NONE', $message = "", $isEnable = 1)

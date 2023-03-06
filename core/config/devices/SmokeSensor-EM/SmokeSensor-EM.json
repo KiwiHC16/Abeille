@@ -11,33 +11,40 @@
         },
         "type": "Heiman Smoke Sensor",
         "commands": {
-            "include3": "securitySafetySmokeHeiman",
+            "Etat": {
+                "use": "securitySafetySmokeHeiman"
+            },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
-            "include9": "getBattery",
+            "Get Battery-Percent": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0001&attrId=0021"
+            },
             "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
             "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },
             "Bind-0500-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0500",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include11 2": "setReportSmokeHeiman",
+            "setReportSmokeHeiman": {
+                "use": "setReportSmokeHeiman"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

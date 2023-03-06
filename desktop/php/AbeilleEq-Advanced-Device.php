@@ -4,7 +4,7 @@
 <hr>
 
 <?php
-    if ($dbgDeveloperMode) echo __FILE__;
+    if (isset($dbgDeveloperMode)) echo __FILE__;
 ?>
 
 <div class="form-group">
@@ -15,24 +15,38 @@
             if ($sig) {
                 $model = $sig['modelId'];
                 $manuf = $sig['manufId'];
-                echo '<span>'.$model.', '.$manuf.'</span>';
+                // echo '<span>'.$model.', '.$manuf.'</span>';
+            } else {
+                $model = '';
+                $manuf = '';
             }
-        ?>
+            echo '<input readonly title="{{Identifiant Zigbee du modèle}}" value="'.$model.'" />';
+            echo '<input readonly style="margin-left: 8px" title="{{Identifiant Zigbee du fabricant}}" value="'.$manuf.'" />';
+    ?>
     </div>
 </div>
-<div class="form-group">
-    <label class="col-sm-3 control-label">Identifiant modèle JSON</label>
-    <div class="col-sm-5">
-        <span class="eqLogicAttr" data-l1key="configuration" data-l2key="ab::jsonId" title="Nom du fichier de config JSON utilisé"></span>
-        Source:
-        <?php
-            $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', '');
-            if (($jsonLocation == '') || ($jsonLocation == "Abeille"))
-                echo '<span title="Le modèle utilisé est celui fourni par Abeille">Officielle</span>';
-            else
-                echo '<span title="Le modèle utilisé est un modèle local/custom">Locale/custom</span>';
 
-            $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
+<div class="form-group">
+    <label class="col-sm-3 control-label">Modèle d'équipement</label>
+    <div class="col-sm-5">
+        <?php
+            if (isset($eqModel['id']))
+                $jsonId = $eqModel['id'];
+            else
+                $jsonId = '';
+            if (isset($eqModel['id']) && ($eqModel['location'] != ''))
+                $jsonLocation = $eqModel['location'];
+            else
+                $jsonLocation = 'Abeille';
+
+            echo '<input readonly style="width: 200px" title="{{Nom du modèle utilisé}}" value="'.$jsonId.'" />';
+            echo '    Source:';
+            if (($jsonLocation == '') || ($jsonLocation == "Abeille"))
+                $title = "Le modèle utilisé est celui fourni par Abeille";
+            else
+                $title = "Le modèle utilisé est un modèle local/custom";
+            echo '<input readonly style="width:86px" title="{{'.$title.'}}" value="'.$jsonLocation.'" />';
+
             if ($jsonId == "defaultUnknown") {
                 if ($sig) {
                     $id1 = $sig['modelId'].'_'.$sig['manufId'];
@@ -50,10 +64,8 @@
                     }
                 }
             } else {
-                $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
                 if ($jsonLocation != 'Abeille') {
                     echo '<span style="background-color:red;color:black" title="La configuration vient d\'un fichier local (core/config/devices_local)"> ATTENTION: Issu d\'un modèle local </span>';
-                    $jsonId = $eqLogic->getConfiguration('ab::jsonId', '');
                     if (file_exists(__DIR__."/../../core/config/devices_local/".$jsonId."/".$jsonId.".json"))
                         echo '<a class="btn btn-warning" onclick="removeLocalJSON(\''.$jsonId.'\')" title="Supprime la version locale du fichier de config JSON">Supprimer version locale</a>';
                 }
@@ -61,18 +73,22 @@
         ?>
     </div>
 </div>
+
 <div class="form-group">
     <label class="col-sm-3 control-label">Configuration</label>
     <div class="col-sm-5">
         <?php
-            echo '<a class="btn btn-warning" onclick="reinit(\''.$eqId.'\')" title="Réinitlialise les paramètres par défaut et reconfigure l\'équipement comme s\'il s\'agissait d\'une nouvelle inclusion">Réinitialiser</a>';
-            echo ' OU ';
-            echo '<a class="btn btn-warning" onclick="updateFromJSON(\''.$eqNet.'\', \''.$eqAddr.'\')" title="Mets à jour les commandes Jeedom">Recharger</a>';
-            echo ' ';
-            echo '<a class="btn btn-warning" onclick="reconfigure(\''.$eqId.'\')" title="Reconfigure l\'équipement">Reconfigurer</a>';
+            echo '<a class="btn btn-warning" onclick="update(\''.$eqId.'\')" title="Mise-à-jour à partir de son modèle et reconfiguration">Mise-à-jour</a>';
+            echo '<a class="btn btn-warning" onclick="reinit(\''.$eqId.'\')" style="margin-left:8px" title="Réinitlialise les paramètres par défaut et reconfigure l\'équipement comme s\'il s\'agissait d\'une nouvelle inclusion">Réinitialiser</a>';
+            // Tcharp38: Simplifcation for end users. Moreover no sense to do commands updates without device config since might be closely linked.
+            // echo ' OU ';
+            // echo '<a class="btn btn-warning" onclick="updateFromJSON(\''.$eqNet.'\', \''.$eqAddr.'\')" title="Mets à jour les commandes Jeedom">Recharger</a>';
+            // echo ' ';
+            // echo '<a class="btn btn-warning" onclick="reconfigure(\''.$eqId.'\')" title="Reconfigure l\'équipement">Reconfigurer</a>';
         ?>
     </div>
 </div>
+
 <?php
     if ($sig) {
         $path = __DIR__.'/../../core/config/devices_local/'.$sig['modelId'].'_'.$sig['manufId'].'/discovery.json';
@@ -89,6 +105,7 @@
     </div>
 </div>
 <?php } } ?>
+
 <div class="form-group">
     <label class="col-sm-3 control-label">Assistant de découverte</label>
     <div class="col-sm-5">
@@ -96,5 +113,29 @@
             echo '<a class="btn btn-warning" onclick="window.location.href=\'index.php?v=d&m=Abeille&p=AbeilleEqAssist&id='.$eqId.'\'">Ouvrir</a>';
         ?>
     </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">Code fabricant (manufCode)</label>
+    <div class="col-sm-5">
+        <?php
+            if (isset($eqZigbee['manufCode']))
+                $manufCode = $eqZigbee['manufCode'];
+            else
+                $manufCode = '';
+            echo '<input readonly title="{{Code fabricant}}" value="'.$manufCode.'" />';
+        ?>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{Version SW}} (SWBuildID)</label>
+    <?php
+    $cmdLogicId = "0000-01-4000";
+    echo '<div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, $cmdLogicId).'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
+        echo '<input type="text" id="idSwBuild" value="'.getCmdValueByLogicId($eqId, $cmdLogicId).'" readonly>';
+        addJsUpdateFunction($eqId, $cmdLogicId, 'idSwBuild', true);
+    echo '</div>';
+    ?>
 </div>
 

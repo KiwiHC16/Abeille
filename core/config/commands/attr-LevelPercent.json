@@ -1,0 +1,17 @@
+{
+    "attr-LevelPercent": {
+        "comment": "Generic 'Level %' info",
+        "name": "Level",
+        "subType": "numeric",
+        "template": "",
+        "configuration": {
+            "minValue": "0",
+            "maxValue": "100",
+            "historizeRound": "0"
+        },
+        "type": "info",
+        "logicalId": "#EP#-LevelPercent",
+        "unit": "%",
+        "genericType": "LIGHT_STATE"
+    }
+}

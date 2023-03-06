@@ -1,0 +1,12 @@
+{
+    "act_zbCmdG-0004-AddGroup": {
+        "type": "action",
+        "subType": "other",
+        "template": "",
+        "configuration": {
+            "topic": "addGroup",
+            "request": "ep=#EP#&group=#GROUP#",
+            "visibilityCategory": "Network"
+        }
+    }
+}

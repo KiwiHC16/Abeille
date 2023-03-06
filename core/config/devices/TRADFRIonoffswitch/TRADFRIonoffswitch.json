@@ -3,9 +3,10 @@
         "manufacturer": "IKEA",
         "zbManufacturer": "IKEAofSweden",
         "model": "E1743",
+        "type": "TRADFRI on/off switch",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "paramType": "telecommande",
             "mainEP": "01",
             "icon": "TRADFRIonoffswitch",
@@ -14,28 +15,42 @@
         "category": {
             "light": "1"
         },
-        "type": "TRADFRI on\/off switch",
         "commands": {
-            "SWBuild": { "use": "zb-0000-SWBuildID" },
-            "Get-SWBuild": { "use": "zbReadAttribute", "params": "clustId=0000&attrId=4000" },
-
-            "include4": "offGroup",
-            "include6": "onGroup",
-
-            "Battery-Percent": { "use": "zb-0001-BatteryPercent" },
+            "SWBuild": {
+                "use": "inf_zbAttr-0000-SWBuildID"
+            },
+            "Get-SWBuild": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+            "Off": {
+                "use": "offGroup"
+            },
+            "On": {
+                "use": "onGroup"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "calculValueOffset": "#value#*2",
+                "comment": "Battery percent reporting seems half the expected value"
+            },
             "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },
             "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "use": "act_zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0CE4&changeVal=",
+                "comment": "Reporting every 55mins max",
                 "execAtCreation": "Yes"
             },
-
-            "include7": "Up-Down",
-            "include12": "Click-Middle"
+            "Up-Down": {
+                "use": "Up-Down"
+            },
+            "Click-Middle": {
+                "use": "Click-Middle"
+            }
         },
         "comment": "Ref. FR 704.085.95"
     }

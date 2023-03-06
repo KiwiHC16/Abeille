@@ -2,29 +2,32 @@
     "magnet.acn001": {
         "manufacturer": "Xiaomi",
         "model": "MCCGQ14LM",
-        "type": "Xiaomi Aqara MCCGQ14LM door sensor",
+        "type": "Xiaomi Aqara door sensor",
+        "genericType": "Opening",
         "comment": "This device send ZoneStatus change notif thru cluster 0500 cmd 00",
         "timeout": "60",
         "category": {
             "automatism": "1"
         },
         "configuration": {
-            "icon": "XiaomiPorte",
+            "icon": "Xiaomi-DoorSensor",
             "mainEP": "01",
             "batteryType": "1x3V CR1632"
         },
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
-            "Battery-Volt2Percent": { "use": "battery-Volt2Percent-3" },
+            "Battery-Volt2Percent": {
+                "use": "battery-Volt2Percent-3"
+            },
             "SetReporting 0001-00020": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "yes"
             },
             "Bind 0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "yes"
             },
@@ -32,22 +35,22 @@
                 "use": "Identify"
             },
             "Status": {
-                "use": "zbCmd-XXXX-Custom",
+                "use": "act_zbCmdG-XXXX-Custom",
                 "logicalId": "0500-Status",
                 "isVisible": "1"
             },
             "ZoneStatus": {
-                "use": "zb-0500-ZoneStatus-ChangeNotification",
+                "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
                 "comment": "On receive we trig 0500-Status with extracted boolean value",
                 "trigOut": "0500-Status",
                 "trigOutOffset": "#value#&1"
             },
             "Get ZoneStatus": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0500&attrId=0002"
             },
             "Bind 0500-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0500",
                 "execAtCreation": "yes"
             }

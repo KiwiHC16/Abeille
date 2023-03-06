@@ -1,0 +1,178 @@
+{
+    "RC110_innr": {
+        "manufacturer": "Innr",
+        "model": "RC110",
+        "type": "INNR RC110 remote",
+        "genericType": "Light",
+        "timeout": "60",
+        "configuration": {
+            "mainEP": "01",
+            "paramType": "telecommande7groups",
+            "groupEP1": "1001",
+            "groupEP3": "3003",
+            "groupEP4": "4004",
+            "groupEP5": "5005",
+            "groupEP6": "6006",
+            "groupEP7": "7007",
+            "groupEP8": "8008",
+            "icon": "Innr-RC110",
+            "batteryType": "2x1.5V"
+        },
+        "category": {
+            "light": "1"
+        },
+        "commands": {
+            "Off": {
+                "use": "offGroup"
+            },
+            "Toggle": {
+                "use": "toggleGroup"
+            },
+            "On": {
+                "use": "onGroup"
+            },
+            "setLevel": {
+                "use": "setLevelGroup"
+            },
+            "Get Battery-Percent": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0001&attrId=0021"
+            },
+            "Bind-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "SetReporting-0001-0021": {
+                "use": "act_zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 7
+            },
+            "BindToGroupButtonEP3": {
+                "use": "BindToGroupLevelEP03"
+            },
+            "BindToGroupButtonEP4": {
+                "use": "BindToGroupLevelEP04"
+            },
+            "BindToGroupButtonEP5": {
+                "use": "BindToGroupLevelEP05"
+            },
+            "BindToGroupButtonEP6": {
+                "use": "BindToGroupLevelEP06"
+            },
+            "BindToGroupButtonEP7": {
+                "use": "BindToGroupLevelEP07"
+            },
+            "BindToGroupButtonEP8": {
+                "use": "BindToGroupLevelEP08"
+            },
+            "Add Group EP1": {
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=01&group=#GROUPEP1#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
+            },
+            "Add Group EP3": {
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=03&group=#GROUPEP3#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
+            },
+            "Add Group EP4": {
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=04&group=#GROUPEP4#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
+            },
+            "Add Group EP5": {
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=05&group=#GROUPEP5#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
+            },
+            "Add Group EP6": {
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=06&group=#GROUPEP6#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
+            },
+            "Add Group EP7": {
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=07&group=#GROUPEP7#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
+            },
+            "Add Group EP8": {
+                "use": "act_zbCmdG-0004-AddGroup",
+                "params": "ep=08&group=#GROUPEP8#",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 1
+            },
+            "On Gp1": {
+                "use": "onGroupEP1"
+            },
+            "On Gp3": {
+                "use": "onGroupEP3"
+            },
+            "On Gp4": {
+                "use": "onGroupEP4"
+            },
+            "On Gp5": {
+                "use": "onGroupEP5"
+            },
+            "On Gp6": {
+                "use": "onGroupEP6"
+            },
+            "On Gp7": {
+                "use": "onGroupEP7"
+            },
+            "On Gp8": {
+                "use": "onGroupEP8"
+            },
+            "Off Gp1": {
+                "use": "offGroupEP1"
+            },
+            "Off Gp3": {
+                "use": "offGroupEP3"
+            },
+            "Off Gp4": {
+                "use": "offGroupEP4"
+            },
+            "Off Gp5": {
+                "use": "offGroupEP5"
+            },
+            "Off Gp6": {
+                "use": "offGroupEP6"
+            },
+            "Off Gp7": {
+                "use": "offGroupEP7"
+            },
+            "Off Gp8": {
+                "use": "offGroupEP8"
+            },
+            "setLevel Gp1": {
+                "use": "setLevelGroupEP1"
+            },
+            "setLevel Gp3": {
+                "use": "setLevelGroupEP3"
+            },
+            "setLevel Gp4": {
+                "use": "setLevelGroupEP4"
+            },
+            "setLevel Gp5": {
+                "use": "setLevelGroupEP5"
+            },
+            "setLevel Gp6": {
+                "use": "setLevelGroupEP6"
+            },
+            "setLevel Gp7": {
+                "use": "setLevelGroupEP7"
+            },
+            "setLevel Gp8": {
+                "use": "setLevelGroupEP8"
+            }
+        }
+    }
+}

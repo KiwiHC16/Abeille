@@ -1,5 +1,6 @@
 {
     "sensor_86sw2": {
+        "manufacturer": "Xiaomi",
         "timeout": "60",
         "comment": "Remonte le nom lumi.sensor_86sw2 apres association et lumi.sensor_86sw2Un sur un getName EP 01  donc les deux fichiers doivent \u00eatre identiques.",
         "configuration": {
@@ -12,14 +13,26 @@
         },
         "type": "Xiaomi Interrupteur Mural Carr\u00e9 Double",
         "commands": {
-            "include4": "etatSwitchDouble_1",
-            "include4 3": "etatSwitchDouble_2",
-            "include4 3 2": "etatSwitchDouble_3",
-            "include4 2": "Batterie-Volt",
-            "include5": "Batterie-Pourcent",
-            "include6": "Xiaomi-ff01",
+            "etat1": {
+                "use": "etatSwitchDouble_1"
+            },
+            "etat2": {
+                "use": "etatSwitchDouble_2"
+            },
+            "etat3": {
+                "use": "etatSwitchDouble_3"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

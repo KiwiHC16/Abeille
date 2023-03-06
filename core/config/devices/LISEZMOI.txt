@@ -25,15 +25,24 @@ Exemple: BASICZBR3.json
 
   {
     "BASICZBR3": {
-      "type": "Sonoff BASICZBR3 smart switch",
+      "type": "Sonoff smart switch",
       "manufacturer": "Sonoff",
       "model": "BASICZBR3",
+      "genericType": "Generic",
+      "alternateIds": {
+        "BASICZBR30": {
+          "manufacturer": "if-different-from-top",
+          "model": "if-different-from-top",
+          "icon": "if-different-from-top",
+          "type": "if-different-from-top"
+        }
+      },
       "timeout": "60",
       "category": {
         "automatism": "1"
       },
       "configuration": {
-        "icon": "BASICZBR3",
+        "icon": "Sonoff-BASICZBR3",
         "mainEP": "01"
       },
       "commands": {
@@ -53,7 +62,8 @@ Exemple: BASICZBR3.json
   Il est recommandé de combiner l'identifiant zigbee 'modele' avec celui du 'fabricant' => '<zbModelId>_<zbManufId>'
 
 * alternateIds: optionnel
-  Permet de définir un autre identifiant pour le même type d'équipement (ex: TRAFRISignalRepeater & TRAFRIsignalrepeater).
+  Permet d'identifier le même équipement avec une signature differente ou vendu sous une autre marque
+  ex: 'TRAFRISignalRepeater' & 'TRAFRIsignalrepeater'
 
 * type: OBLIGATOIRE, courte description du type d'équipement
   Anciennement "nameJeedom".
@@ -61,6 +71,9 @@ Exemple: BASICZBR3.json
 * manufacturer: OBLIGATOIRE, nom du fabricant/vendeur
 
 * model: OBLIGATOIRE, ref/nom du modèle
+
+* genericType: RECOMMANDE
+  Type generique d'équipement (ex: 'Shutter' pour un volet ou un module de controle de volet).
 
 * zbManufacturer: optionnel, identifiant zigbee du fabricant
 
@@ -82,8 +95,16 @@ Exemple: BASICZBR3.json
     Ex: "1x3V CR2430"
   - icon: Nom de l'icone associé.
     Ce nom correpond à un fichier PNG disponible dans "images" au format "node_<icon>.png"
+    Format RECOMMANDE: 'node_<Vendeur>-<Modele>.png'
   - paramType: ?
     "telecommande", "telecommande7groups"
+
+* customization: optionnel
+  Permet de corriger/forcer qq infos remontées par l'équipement.
+  Ex:  "customization": {
+          "comment": "macCapa: mains + RX ON",
+          "macCapa": "8C"
+       },
 
 * commands: OBLIGATOIRE, liste des commandes implémentées
   ATTENTION !! TOUS les nombres sont donnés en HEXA.
@@ -105,16 +126,28 @@ Exemple: BASICZBR3.json
     minValue, maxValue:
         Permet de changer les limites d'une commande action, en particulier de type "slider".
     genericType: Surcharge du type generique par defaut.
-        ?
+        Type generique de la commande (ex: FLAP_UP pour un bouton 'monter' de volet).
     unit: Surcharge de l'unité par defaut.
         Permet de définir l'unité affichée avec l'information (cmde 'info').
+    notStandard: optionnel
+        Permet d'indiquer que cette commande (attribut du standard Zigbee) n'est pas standard.
+        Ex: Dans le cas 0400-0000 (illuminance value), certains Xiaomi renvoient directement une valeur en Lux.
+    valueOffset: Surcharge de la formule de calcul à appliquer avant commande action.
+        Permet d'appliquer une formule par ex sur la valeur d'un slider avant envoi.
+        Ex: "valueOffset": "#value#*10"
+        Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
+    returnStateTime: X
+        Permet d'indiquer à Jeedom de changer automatique la valeur au bout de X sec à celle de 'returnStateValue'
+    returnStateValue: Y
+        Valeur de retour automatique pour une commande info.
+
 
   Exemples de nouvelle syntaxe:
     "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },
     "Status 2": { "use": "zb-0006-OnOff", "params": "ep=02", "isVisible": 1, "nextLine": "after" },
     "ActivePower": { "use": "zb-0B04-ActivePower", "params": "ep=01", "isVisible": 1 },
 
-  Pour info: Ancienne syntaxe OBSOLETE:
+  Pour info: L'ancienne syntaxe est OBSOLETE et N'EST PLUS SUPPORTEE.
     Chaque include correspond à une commande de base existante dans 'core/config/commands'
     - "include1":"cmd1",
     - ...

@@ -12,41 +12,84 @@
         },
         "type": "Xiaomi Single Switch Module T1 (With Neutral)",
         "commands": {
-            "Groups": { "use": "Group-Membership" },
-
-            "Status": { "use": "zb-0006-OnOff", "isVisible": 1 },
-            "On": { "use": "zbCmd-0006-On", "isVisible": 1 },
-            "Off": { "use": "zbCmd-0006-Off", "isVisible": 1 },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1
+            },
+            "On": {
+                "use": "act_zbCmdG-0006-On",
+                "isVisible": 1
+            },
+            "Off": {
+                "use": "act_zbCmdG-0006-Off",
+                "isVisible": 1
+            },
             "Toggle": {
-                "use": "zbCmd-0006-Toggle",
+                "use": "act_zbCmdG-0006-Toggle",
                 "nextLine": "after"
             },
-            "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+            "Get-Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
             "Set-0006-Reporting": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-
-            "ActivePower": {
-                "use": "zb-0B04-ActivePower",
-                "params": "mult=1&div=10",
+            "Active Power": {
+                "use": "inf_zbAttr-0B04-ActivePower",
+                "params": "mult=1&div=1",
                 "isVisible": 1
             },
-            "Bind-0B04-ToZigate": {
-                "use": "zbBindToZigate",
-                "params": "clustId=0B04",
-                "execAtCreation": "Yes"
+            "Voltage": {
+                "use": "inf_zbAttr-0B04-RMSVoltage",
+                "params": "mult=1&div=10",
+                "isVisible": 0
             },
-            "SetReporting-ActivePower": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=",
-                "execAtCreation": "yes"
+            "Current": {
+                "use": "inf_zbAttr-0B04-RMSCurrent",
+                "params": "mult=1&div=1",
+                "isVisible": 1
+            },
+            "Total power": {
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "params": "mult=1&div=1",
+                "isVisible": 1
+            }
+        },
+        "xiaomi": {
+            "fromDevice": {
+                "FCC0-00F7": {
+                    "95-39": {
+                        "func": "number",
+                        "info": "0702-01-0000",
+                        "comment": "Total power"
+                    },
+                    "96-39": {
+                        "func": "number",
+                        "info": "0B04-01-0505",
+                        "comment": "Voltage"
+                    },
+                    "97-39": {
+                        "func": "number",
+                        "info": "0B04-01-0508",
+                        "comment": "Current"
+                    },
+                    "98-39": {
+                        "func": "number",
+                        "info": "0B04-01-050B",
+                        "comment": "Power"
+                    }
+                }
             }
         }
     }

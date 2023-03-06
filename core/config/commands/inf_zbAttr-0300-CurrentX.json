@@ -1,0 +1,15 @@
+{
+    "inf_zbAttr-0300-CurrentX": {
+        "isVisible": 0,
+        "name": "CurrentX",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": {
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "info",
+        "logicalId": "0300-#EP#-0003",
+        "unit": ""
+    }
+}

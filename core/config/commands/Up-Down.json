@@ -10,10 +10,8 @@
             "visibilityCategory": "All",
             "repeatEventManagement": "always"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
         "type": "info",
-        "logicalId": "Up-Down"
+        "logicalId": "Up-Down",
+        "nextLine": "after"
     }
 }

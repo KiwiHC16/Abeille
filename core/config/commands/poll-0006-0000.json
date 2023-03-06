@@ -6,12 +6,12 @@
         "subType": "other",
         "invertBinary": "0",
         "template": "",
-        "Comment": "Polling every minutes",
         "configuration": {
             "topic": "readAttribute",
             "request": "ep=#EP#&clustId=0006&attrId=0000",
             "Polling": "cron"
         },
-        "type": "action"
+        "type": "action",
+        "comment": "Polling every minutes"
     }
 }

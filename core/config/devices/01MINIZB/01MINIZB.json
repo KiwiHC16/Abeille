@@ -6,41 +6,41 @@
         "configuration": {
             "mainEP": "01",
             "poll": "15",
-            "icon": "01MINIZB"
+            "icon": "Sonoff-01MINIZB"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Sonoff ZBMINI smart switch",
+        "type": "Sonoff smart switch",
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "Groups": {
                 "use": "Group-Membership"
             },
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "On": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "params": "ep=01"
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "isVisible": 1
             },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "Toggle": {
-                "use": "zbCmd-0006-Toggle",
+                "use": "act_zbCmdG-0006-Toggle",
                 "nextLine": "after"
             }
         }

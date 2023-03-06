@@ -4,7 +4,6 @@
         "model": "Shortcut button E1812",
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "icon": "TRADFRISHORTCUTButton",
             "batteryType": "1x3V CR2032"
@@ -15,37 +14,44 @@
         "type": "Ikea Tradfri shortcut button",
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
-            "include9": "getBattery",
+            "Get Battery-Percent": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0001&attrId=0021"
+            },
             "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },
             "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-            "include7": "Up-Down",
-            "include7 1": "Click-Middle",
+            "Up-Down": {
+                "use": "Up-Down"
+            },
+            "Click-Middle": {
+                "use": "Click-Middle"
+            },
             "SetReporting-0006-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
             "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             }

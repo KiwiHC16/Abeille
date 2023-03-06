@@ -7,14 +7,14 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-            "topic": "CmdAbeille\/#GroupeEP8#\/OnOffGroup",
+            "topic": "CmdAbeille\/#GROUPEP8#\/OnOffGroup",
             "request": "On",
             "visibilityCategory": "All"
         },
         "display": {
-            "icon": "<i class=\"icon jeedom-lumiere-on\"><\/i>",
-            "forceReturnLineAfter": "1"
+            "icon": "<i class=\"icon jeedom-lumiere-on\"><\/i>"
         },
-        "type": "action"
+        "type": "action",
+        "nextLine": "after"
     }
 }

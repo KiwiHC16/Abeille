@@ -1,11 +1,5 @@
 <?php
-    /* To update AbeilleDoc's compatibility list:
-       - php desktop/modal/AbeilleCompatibility.modal.php rst
-       - then copy 'CompatibilityList.rst' to AbeilleDoc GIT repo
-       - copy/update images/node_xx to AbeilleDoc source/devices/images
-       - renegerate doc with './gen_docs.sh'
-       - and finally create your Pull Request on GitHub
-     */
+    // Supported devices list generation is now done by '.tools/gen_devices_list.php'
 
     function genHtml($eqList, $resultRaw, $result) {
 
@@ -26,8 +20,8 @@
             echo '<tr>';
             echo '<td>'.$eq['manufacturer'].'</td>';
             echo '<td>'.$eq['model'].'</td>';
-            echo '<td>'.$eq['name'].'</td>';
-            echo '<td><a href="'.urlProducts.'/'.$eq['zbModelId'].'">'.$eq['zbModelId'].'</a></td>';
+            echo '<td>'.$eq['type'].'</td>';
+            echo '<td><a href="'.urlProducts.'/'.$eq['jsonId'].'">'.$eq['jsonId'].'</a></td>';
             echo '<td><img src="/plugins/Abeille/images/node_'.$eq['icon'].'.png" width="100" height="100"></td>';
             echo '</tr>'."\n";
         }
@@ -68,7 +62,7 @@
 
         echo '[cols="<,^"]'."\n";
         echo "|======="."\n";;
-        foreach ( $eqList as $values ) echo '| '.$values['name'].'| image:node_'.$values['icon'].'.png[height=200,width=200]'."\n";
+        foreach ( $eqList as $values ) echo '| '.$values['type'].'| image:node_'.$values['icon'].'.png[height=200,width=200]'."\n";
         echo "|======="."\n";;
     }
 
@@ -79,69 +73,66 @@
             file_put_contents($fileName, $text);
     }
 
-    /* Generate list in "Restructured" format for AbeilleDoc update */
-    function genRst($eqList) {
+    // /* Generate list in "Restructured" format for AbeilleDoc update */
+    // function genRst($eqList) {
 
-        define('rstFile', 'CompatibilityList.rst');
+    //     define('rstFile', 'CompatibilityList.rst');
 
-        echo "***\n";
-        echo "*** Generating equipments list to '".rstFile."'\n";
-        echo "***\n\n";
+    //     echo "***\n";
+    //     echo "*** Generating equipments list to '".rstFile."'\n";
+    //     echo "***\n\n";
 
-        addToFile(rstFile, "Liste des équipements compatibles\n", false);
-        addToFile(rstFile, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-        addToFile(rstFile, "\n");
-        addToFile(rstFile, "Dernière mise-à-jour le ".date('Y-m-d')."\n\n");
+    //     addToFile(rstFile, "Liste des équipements compatibles\n", false);
+    //     addToFile(rstFile, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+    //     addToFile(rstFile, "\n");
+    //     addToFile(rstFile, "Dernière mise-à-jour le ".date('Y-m-d')."\n\n");
 
-        foreach ( $eqList as $eq ) {
-            echo "- ".$eq['zbModelId']."\n";
-            if (isset($eq['manufacturer']))
-                echo "  manuf : ".$eq['manufacturer']."\n";
-            if (isset($eq['model']))
-                echo "  model : ".$eq['model']."\n";
-            echo "  name  : ".$eq['name']."\n";
+    //     foreach ( $eqList as $eq ) {
+    //         echo "- ".$eq['jsonId']."\n";
+    //         if (isset($eq['manufacturer']))
+    //             echo "  manuf : ".$eq['manufacturer']."\n";
+    //         if (isset($eq['model']))
+    //             echo "  model : ".$eq['model']."\n";
+    //         echo "  name  : ".$eq['type']."\n";
 
-            addToFile(rstFile, $eq['manufacturer'].", ".$eq['model'].", ".$eq['name']."\n\n");
-            addToFile(rstFile, ".. image:: images/node_".$eq['icon'].".png\n");
-            addToFile(rstFile, "   :width: 200px\n\n");
-        }
-    }
+    //         addToFile(rstFile, $eq['manufacturer'].", ".$eq['model'].", ".$eq['type']."\n\n");
+    //         addToFile(rstFile, ".. image:: images/node_".$eq['icon'].".png\n");
+    //         addToFile(rstFile, "   :width: 200px\n\n");
+    //     }
+    // }
 
     //----------------------------------------------------------------------------------------------------
     // Main
     //----------------------------------------------------------------------------------------------------
 
     require_once __DIR__.'/../../core/config/Abeille.config.php';
+    require_once __DIR__.'/../../core/class/AbeilleTools.class.php';
 
     // Collecting list of supported devices (by their JSON)
-    foreach (glob(__DIR__.'/../../core/config/devices/*/*.json') as $file) {
+    $devList = AbeilleTools::getDevicesList('Abeille');
+    foreach ($devList as $jsonId => $dev) {
 
-        if ( basename(dirname($file)) == "Template" ) {
-            continue;
-        }
-        // Extracting zigbee model identifier from file name
-        $zbModelId = basename($file, ".json");
-        $contentJSON = file_get_contents( $file );
-// echo "La=".$contentJSON."\n";
-        $content = JSON_decode( $contentJSON, true );
         $eqList[] = array(
-            'manufacturer' => $content[$zbModelId]["manufacturer"],
-            'model' => $content[$zbModelId]["model"],
-            'zbModelId' => $zbModelId,
-            'name' => $content[$zbModelId]["type"],
-            'icon' => $content[$zbModelId]["configuration"]["icon"]
+            'manufacturer' => $dev["manufacturer"],
+            'model' => $dev["model"],
+            'type' => $dev["type"],
+            'jsonId' => $jsonId,
+            'icon' => $dev["icon"]
         );
 
         // Collect all information related to Command used by the products
-        if (isset($content[$zbModelId]['commands'])) {
-            $commands = $content[$zbModelId]['commands'];
+        $path = __DIR__.'/../../core/config/devices/'.$jsonId.'/'.$jsonId.'.json';
+        $contentJSON = file_get_contents($path);
+        $content = json_decode($contentJSON, true);
+        if (isset($content[$jsonId]['commands'])) {
+            $commands = $content[$jsonId]['commands'];
             foreach ($commands as $include) {
                 $resultRaw[] = array(
-                    'zbModelId' => $zbModelId,
-                    'name' => $content[$zbModelId]["type"],
+                    'jsonId' => $jsonId,
+                    'type' => $content[$jsonId]["type"],
                     'fonction' => $include
                 );
-                $result[] = "<tr><td>".$content[$zbModelId]["type"]."</td><td>".$zbModelId."</td><td>".$include."</td></tr>";
+                $result[] = "<tr><td>".$content[$jsonId]["type"]."</td><td>".$jsonId."</td><td>".$include."</td></tr>";
             }
         }
     }
@@ -151,9 +142,9 @@
         if ( $argv[1] == "adoc" ) {
             equipementAdoc($eqList, $resultRaw, $result);
         }
-        if ( $argv[1] == "rst" ) {
-            genRst($eqList);
-        }
+        // if ( $argv[1] == "rst" ) {
+        //     genRst($eqList);
+        // }
     } else {
         genHtml($eqList, $resultRaw, $result);
     }

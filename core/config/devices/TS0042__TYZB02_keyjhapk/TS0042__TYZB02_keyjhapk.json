@@ -15,32 +15,32 @@
         "type": "Zemismart 2 buttons wireless switch",
         "commands": {
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
             "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },
             "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
             "etat inter 0": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
                 "subType": "numeric",
                 "isVisible": 1
             },
             "etat inter 1": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=02",
                 "subType": "numeric",
                 "isVisible": 1
             }
         },
-        "comment": "Zigate in hybrid mode https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1550"
+        "comment": "Zigate in hybrid mode https://github.com/KiwiHC16/Abeille/issues/1550"
     }
 }

@@ -1,5 +1,6 @@
 {
     "sensor_switch.aq2": {
+        "manufacturer": "Xiaomi",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -11,13 +12,23 @@
         },
         "type": "Xiaomi Bouton Aqara 2",
         "commands": {
-            "include3": "etatSwitchXiaomiCarre",
-            "include4": "multi",
-            "include5": "Batterie-Volt",
-            "include6": "Batterie-Pourcent",
-            "include7": "Xiaomi-ff01",
+            "etat": {
+                "use": "etatSwitchXiaomiCarre"
+            },
+            "multi": {
+                "use": "multi"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

@@ -1,5 +1,9 @@
 {
     "SPZB0001": {
+        "manufacturer": "Eurotronic",
+        "model": "SPZB0001",
+        "type": "Eurotronic Spirit Radiator Thermostat",
+        "genericType": "Thermostat",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -9,53 +13,114 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Eurotronic Spirit",
         "commands": {
-            "include24": "Identify",
-            "include25 2 2 2": "spiritTemperatureConsigne",
-            "include25 2 2": "spiritTemperatureConsigneGet",
-            "include25 2": "spiritTemperatureConsigneSet",
-            "include25 2 2 2 2": "spiritTemperature",
-            "include25 2 2 3": "spiritTemperatureGet",
-            "include25 2 2 2 2 3": "spiritTemperatureBindShortToZigate",
-            "include25 2 2 2 2 2": "spiritTemperatureSetReport",
-            "include25 2 2 3 2 2": "spiritPiHeatingDemand",
-            "include25 2 2 3 2": "spiritPiHeatingDemandGet",
-            "include25 2 2 3 2 2 2": "spiritValvePosition",
-            "include25 2 2 3 2 2 2 2": "spiritValvePositionGet",
-            "include25 2 2 3 2 2 2 2 2": "spiritValvePositionSet",
-            "include25 2 2 3 2 2 3": "spiritTrvMode",
-            "include25 2 2 3 2 3": "spiritTrvModeGet",
-            "include25 2 2 3 2 3 2": "spiritTrvModeSet",
-            "include25 2 2 3 2 3 2 2": "spiritTrvModeSetManu",
-            "include25 2 2 3 2 3 2 2 2": "spiritTrvModeSetValve",
-            "include25 2 2 3 2 3 2 2 2 2 2 2": "spiritBatterie-Pourcent",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "Consigne": {
+                "use": "spiritTemperatureConsigne"
+            },
+            "getConsigne": {
+                "use": "spiritTemperatureConsigneGet"
+            },
+            "Set Consigne": {
+                "use": "spiritTemperatureConsigneSet"
+            },
+            "Temp\u00e9rature": {
+                "use": "spiritTemperature"
+            },
+            "getTemperature": {
+                "use": "spiritTemperatureGet"
+            },
+            "Bind 0201-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0201",
+                "execAtCreation": "yes"
+            },
+            "setReportTemperature": {
+                "use": "act_zbConfigureReporting",
+                "params": "clustId=0201&attrType=29&attrId=0000&minInterval=012C&maxInterval=0DAC&changeVal=",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
+            "Pi Heating Demand": {
+                "use": "spiritPiHeatingDemand"
+            },
+            "Get Pi Heating Demand": {
+                "use": "spiritPiHeatingDemandGet"
+            },
+            "Valve Position": {
+                "use": "spiritValvePosition"
+            },
+            "Get Valve Positon": {
+                "use": "spiritValvePositionGet"
+            },
+            "Set Valve": {
+                "use": "spiritValvePositionSet"
+            },
+            "Trv Mode": {
+                "use": "spiritTrvMode"
+            },
+            "Get Trv Mode": {
+                "use": "spiritTrvModeGet"
+            },
+            "Set TRV Mode": {
+                "use": "spiritTrvModeSet"
+            },
+            "Set TRV Mode Manu": {
+                "use": "spiritTrvModeSetManu"
+            },
+            "Set TRV Mode Valve": {
+                "use": "spiritTrvModeSetValve"
+            },
+            "BatteriePourcent": {
+                "use": "spiritBatterie-Pourcent"
+            },
             "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
             "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=A85C&maxInterval=A924&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include25 2 2 3 2 3 2 2 2 2 2 3": "spiritHostFlags",
-            "include25 2 2 3 2 3 2 2 2 2 2 3 2": "spiritErrors",
-            "include25 2 3": "spiritHostFlagsDisplayDownSet",
-            "include25 2 3 2": "spiritHostFlagsDefaultSet",
-            "include25 2 3 2 2": "spiritHostFlagsBoostSet",
-            "include25 2 3 2 2 2": "spiritHostFlagsChildLockSet",
-            "include25 2 3 2 2 2 2": "spiritHostFlagsOffSet",
-            "include25 2 3 2 2 2 2 2": "spiritUnknown1",
-            "include25 2 3 2 2 2 2 2 2": "spiritUnknown2",
+            "Host Flags": {
+                "use": "spiritHostFlags"
+            },
+            "Errors": {
+                "use": "spiritErrors"
+            },
+            "Display Down": {
+                "use": "spiritHostFlagsDisplayDownSet"
+            },
+            "Default": {
+                "use": "spiritHostFlagsDefaultSet"
+            },
+            "Boost": {
+                "use": "spiritHostFlagsBoostSet"
+            },
+            "Child Lock": {
+                "use": "spiritHostFlagsChildLockSet"
+            },
+            "Off": {
+                "use": "spiritHostFlagsOffSet"
+            },
+            "Unknown1": {
+                "use": "spiritUnknown1"
+            },
+            "Unknown2": {
+                "use": "spiritUnknown2"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
         }

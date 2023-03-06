@@ -1,5 +1,8 @@
 {
     "Cableoutlet_Legrand": {
+        "manufacturer": "Legrand",
+        "model": "Cable outlet",
+        "type": "Legrand cable outlet",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -8,49 +11,64 @@
         "category": {
             "heating": "1"
         },
-        "type": "Legrand Cable Outlet 3000W",
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "include25": "Group-Membership",
-            "include24": "Identify",
-            "include4": "etatLight",
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "etat": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1
+            },
             "On": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "isVisible": 1
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "cmdG-LegrandFC41",
+                "params": "Mode=05",
                 "isVisible": 1
             },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
             "SetReporting-0006-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
             "Bind-0B04-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0B04",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include28 2": "setReportPuissanceLegrand",
-            "include11 2": "PuissanceLegrandPrise",
+            "setReportPuissanceLegrand": {
+                "use": "setReportPuissanceLegrand"
+            },
+            "Puissance": {
+                "use": "inf_zbAttr-0B04-ActivePower",
+                "params": "mult=1&div=1",
+                "isVisible": 1
+            },
             "Set Led On": {
                 "use": "setLegrandLEDOn"
             },
@@ -62,6 +80,39 @@
             },
             "Set Led Off If On": {
                 "use": "setLegrandLEDOff_if_on"
+            },
+            "Fil pilote ON": {
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=FC01&attrId=0000&attrType=09&attrVal=0200"
+            },
+            "Fil pilote OFF": {
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=FC01&attrId=0000&attrType=09&attrVal=0100"
+            },
+            "Comfort": {
+                "use": "cmdG-LegrandFC41",
+                "params": "Mode=00",
+                "isVisible": 1
+            },
+            "Comfort-1": {
+                "use": "cmdG-LegrandFC41",
+                "params": "Mode=01",
+                "isVisible": 1
+            },
+            "Comfort-2": {
+                "use": "cmdG-LegrandFC41",
+                "params": "Mode=02",
+                "isVisible": 1
+            },
+            "Eco": {
+                "use": "cmdG-LegrandFC41",
+                "params": "Mode=03",
+                "isVisible": 1
+            },
+            "Frost protection": {
+                "use": "cmdG-LegrandFC41",
+                "params": "Mode=04",
+                "isVisible": 1
             }
         }
     }

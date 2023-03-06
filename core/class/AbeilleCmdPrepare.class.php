@@ -48,36 +48,34 @@
          * @return none
          *
          */
-        function prepareCmd($topic, $payload, $phpunit=0) {
+        function prepareCmd($priority, $topic, $payload, $phpunit=0) {
 
-            cmdLog("debug", "  prepareCmd(".$topic.", ".$payload.")", $this->debug['prepareCmd']);
+            // cmdLog("debug", "  prepareCmd(".$priority.", ".$topic.", ".$payload.")", $this->debug['prepareCmd']);
 
             $msg        = $payload;
-            // $priority   = $message->priority;
-            $priority   = PRIO_NORM; // TO be removed. Default value
 
             // Expecting 3 infos: <type>/<addr>/<action>
             if (sizeof(explode('/', $topic)) != 3) {
-                cmdLog("debug", "  prepareCmd(): Mauvais format de message reçu (topic=".$topic.").");
+                cmdLog("debug", "    WARNING: Bad topic format (".$topic.").");
                 return ;
             }
             list ($type, $address, $action) = explode('/', $topic);
 
             if (preg_match("(^TempoCmd)", $type)) {
-                cmdLog("debug", "  Ajoutons le message a queue Tempo.", $this->debug['prepareCmd2']);
+                cmdLog("debug", "    Ajoutons le message a queue Tempo.", $this->debug['prepareCmd2']);
                 $this->addTempoCmdAbeille($topic, $msg, $priority);
                 return;
             }
 
             if (!preg_match("(^Cmd)", $type)) {
-                cmdLog('warning', '  Msg Received: Type: {'.$type.'} <> Cmdxxxxx donc ce n est pas pour moi, no action.');
+                cmdLog('warning', '    Msg Received: Type: {'.$type.'} <> Cmdxxxxx donc ce n est pas pour moi, no action.');
                 return;
             }
 
             $dest = str_replace('Cmd', '',  $type); // Remove 'Cmd' prefix
 
-            cmdLog("debug", '  Msg Received: Topic: {'.$topic.'} => '.$msg, $this->debug['prepareCmd3']);
-            cmdLog("debug", '  (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action, $this->debug['prepareCmd3']);
+            cmdLog("debug", '    Msg Received: Topic: {'.$topic.'} => '.$msg, $this->debug['prepareCmd3']);
+            cmdLog("debug", '    (ln: '.__LINE__.') - Type: '.$type.' Address: '.$address.' avec Action: '.$action, $this->debug['prepareCmd3']);
 
             $convertOnOff = array(
                 "On"      => "01",
@@ -96,41 +94,6 @@
              * Zigbee ZDO commands
              */
 
-            case "managementNetworkUpdateRequest":
-                $Command = array(
-                    "managementNetworkUpdateRequest" => "1",
-                    "priority" => $priority,
-                    "dest" => $dest,
-                    "address" => $address,
-                );
-                break;
-            // case "IEEE_Address_request":
-            //     $keywords = preg_split("/[=&]+/", $msg);
-            //     $Command = array(
-            //         "IEEE_Address_request"      => "1",
-            //         "priority"                  => $priority,
-            //         "dest"                      => $dest,
-            //         "address"                   => $address,
-            //         "shortAddress"              => $keywords[1],
-            //     );
-            //     break;
-            case "bindShort": // OBSOLETE: Use 'bind0030' instead
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
-                $Command = array(
-                                    "bindShort"                => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $address,
-                                    "targetExtendedAddress"    => $parameters['targetExtendedAddress'],
-                                    "targetEndpoint"           => $parameters['targetEndpoint'],
-                                    "clusterID"                => $parameters['ClusterId'],
-                                    "destinationAddress"       => $parameters['reportToAddress'],
-                                    "destinationEndpoint"      => "01",
-                                    );
-                break;
             case "BindToGroup": // OBSOLETE: Use 'bind0030' instead
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -153,87 +116,87 @@
              * Zigbee ZCL commands
              */
 
-            case "ReadAttributeRequest": // OBSOLETE: Use 'readAttribute' instead
-                $keywords = preg_split("/[=&]+/", $msg);
-                if (count($keywords) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
-                if (!isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
-                $Command = array(
-                                    "ReadAttributeRequest"     => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $address,
-                                    "clusterId"                => $parameters['clusterId'],   // Don't change the speeling here but in the template
-                                    "attributeId"              => $parameters['attributeId'],
-                                    "EP"                       => $parameters['EP'],
-                                    "Proprio"                  => $parameters['Proprio'],
-                                    );
-                break;
+            // case "ReadAttributeRequest": // OBSOLETE: Use 'readAttribute' instead
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     if (count($keywords) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //     }
+            //     if (!isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
+            //     $Command = array(
+            //                         "ReadAttributeRequest"     => "1",
+            //                         "priority"                 => $priority,
+            //                         "dest"                     => $dest,
+            //                         "address"                  => $address,
+            //                         "clusterId"                => $parameters['clusterId'],   // Don't change the speeling here but in the template
+            //                         "attributeId"              => $parameters['attributeId'],
+            //                         "EP"                       => $parameters['EP'],
+            //                         "Proprio"                  => $parameters['Proprio'],
+            //                         );
+            //     break;
 
-            case "readAttributeRequest": // OBSOLETE: Use 'readAttribute' instead
-                    $keywords = preg_split("/[=&]+/", $msg);
-                if (count($keywords) > 1) {
-                    $params = $this->proper_parse_str($msg);
-                }
-                if (!isset($params['ep']) || !isset($params['clustId']) || !isset($params['attrId'])) {
-                    cmdLog('debug', '  readAttributeRequest ERROR: missing minimal infos');
-                    return;
-                }
-                $Command = array(
-                                "readAttributeRequest"      => "1",
-                                "priority"                  => $priority,
-                                "dest"                      => $dest,
-                                "addr"                      => $address,
-                                "ep"                        => $params['ep'],
-                                "clustId"                   => $params['clustId'],
-                                "attrId"                    => $params['attrId']
-                                );
-                break;
+            // case "readAttributeRequest": // OBSOLETE: Use 'readAttribute' instead
+            //         $keywords = preg_split("/[=&]+/", $msg);
+            //     if (count($keywords) > 1) {
+            //         $params = $this->proper_parse_str($msg);
+            //     }
+            //     if (!isset($params['ep']) || !isset($params['clustId']) || !isset($params['attrId'])) {
+            //         cmdLog('debug', '  readAttributeRequest ERROR: missing minimal infos');
+            //         return;
+            //     }
+            //     $Command = array(
+            //                     "readAttributeRequest"      => "1",
+            //                     "priority"                  => $priority,
+            //                     "dest"                      => $dest,
+            //                     "addr"                      => $address,
+            //                     "ep"                        => $params['ep'],
+            //                     "clustId"                   => $params['clustId'],
+            //                     "attrId"                    => $params['attrId']
+            //                     );
+            //     break;
 
-            case "ReadAttributeRequestHue": // OBSOLETE: Use 'readAttribute' instead
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                                    "ReadAttributeRequestHue" => "1",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address" => $address,
-                                    "clusterId" => $keywords[1],
-                                    "attributeId" => $keywords[3],
-                                    );
-                break;
+            // case "ReadAttributeRequestHue": // OBSOLETE: Use 'readAttribute' instead
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     $Command = array(
+            //                         "ReadAttributeRequestHue" => "1",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address" => $address,
+            //                         "clusterId" => $keywords[1],
+            //                         "attributeId" => $keywords[3],
+            //                         );
+            //     break;
 
-            case "ReadAttributeRequestOSRAM": // OBSOLETE: Use 'readAttribute' instead
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                                    "ReadAttributeRequestOSRAM" => "1",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address" => $address,
-                                    "clusterId" => $keywords[1],
-                                    "attributeId" => $keywords[3],
-                                    );
-                break;
+            // case "ReadAttributeRequestOSRAM": // OBSOLETE: Use 'readAttribute' instead
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     $Command = array(
+            //                         "ReadAttributeRequestOSRAM" => "1",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address" => $address,
+            //                         "clusterId" => $keywords[1],
+            //                         "attributeId" => $keywords[3],
+            //                         );
+            //     break;
 
-            case "ReadAttributeRequestMulti":
-                $keywords = preg_split("/[=&]+/", $msg);
-                if (count($keywords) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
-                if (!isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
-                $Command = array(
-                                    "ReadAttributeRequestMulti"     => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $address,
-                                    "EP"                       => $parameters['EP'],
-                                    "clusterId"                => $parameters['clusterId'],   // Don't change the speeling here but in the template
-                                    "Proprio"                  => $parameters['Proprio'],
-                                    "attributeId"              => $parameters['attributeId'],
-                                    );
-                break;
+            // case "ReadAttributeRequestMulti":
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     if (count($keywords) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //     }
+            //     if (!isset($parameters['Proprio']) ) { $parameters['Proprio'] = "0000"; }
+            //     $Command = array(
+            //                         "ReadAttributeRequestMulti"     => "1",
+            //                         "priority"                 => $priority,
+            //                         "dest"                     => $dest,
+            //                         "address"                  => $address,
+            //                         "EP"                       => $parameters['EP'],
+            //                         "clusterId"                => $parameters['clusterId'],   // Don't change the speeling here but in the template
+            //                         "Proprio"                  => $parameters['Proprio'],
+            //                         "attributeId"              => $parameters['attributeId'],
+            //                         );
+            //     break;
 
-            case "setReportSpirit": // OBSOLETE: Use 'configureReporting' instead
+            // case "setReportSpirit": // OBSOLETE: Use 'configureReporting' instead
             case "setReport": // OBSOLETE: Use 'configureReporting' instead
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -264,106 +227,109 @@
                 if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
                 break;
 
-            case "setReportRaw": // OBSOLETE: Use 'configureReporting' instead
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
+            // case "setReportRaw": // OBSOLETE: Use 'configureReporting' instead
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //     }
 
-                $Command = array(
-                                    "setReportRaw"             => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $address,
-                                    "targetEndpoint"           => $parameters['targetEndpoint'],
-                                    "ClusterId"                => $parameters['ClusterId'],
-                                    "AttributeId"              => $parameters['AttributeId'],
-                                    );
-                if (isset($parameters["AttributeDirection"]))      { $Command['AttributeDirection']    = $parameters['AttributeDirection']; }
-                if (isset($parameters["AttributeType"]))           { $Command['AttributeType']         = $parameters['AttributeType']; }
-                if (isset($parameters["MinInterval"]))             { $Command['MinInterval']           = str_pad(dechex($parameters['MinInterval']),   4,0,STR_PAD_LEFT); }
-                if (isset($parameters["MaxInterval"]))             { $Command['MaxInterval']           = str_pad(dechex($parameters['MaxInterval']),   4,0,STR_PAD_LEFT); }
-                if (isset($parameters["Change"]))                  { $Command['Change']                = str_pad(dechex($parameters['Change']),        2,0,STR_PAD_LEFT); }
-                if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
-                break;
+            //     $Command = array(
+            //                         "setReportRaw"             => "1",
+            //                         "priority"                 => $priority,
+            //                         "dest"                     => $dest,
+            //                         "address"                  => $address,
+            //                         "targetEndpoint"           => $parameters['targetEndpoint'],
+            //                         "ClusterId"                => $parameters['ClusterId'],
+            //                         "AttributeId"              => $parameters['AttributeId'],
+            //                         );
+            //     if (isset($parameters["AttributeDirection"]))      { $Command['AttributeDirection']    = $parameters['AttributeDirection']; }
+            //     if (isset($parameters["AttributeType"]))           { $Command['AttributeType']         = $parameters['AttributeType']; }
+            //     if (isset($parameters["MinInterval"]))             { $Command['MinInterval']           = str_pad(dechex($parameters['MinInterval']),   4,0,STR_PAD_LEFT); }
+            //     if (isset($parameters["MaxInterval"]))             { $Command['MaxInterval']           = str_pad(dechex($parameters['MaxInterval']),   4,0,STR_PAD_LEFT); }
+            //     if (isset($parameters["Change"]))                  { $Command['Change']                = str_pad(dechex($parameters['Change']),        2,0,STR_PAD_LEFT); }
+            //     if (isset($parameters["Timeout"]))                 { $Command['Timeout']               = str_pad(dechex($parameters['Timeout']),       4,0,STR_PAD_LEFT); }
+            //     break;
 
             /*
              * Unsorted yet
              */
 
-            case "AnnonceManufacturer":
-                if (strlen($msg) == 2) {
-                    $Command = array(
-                        "ReadAttributeRequest" => "1",
-                        "priority" => $priority,
-                        "dest" => $dest,
-                        "address" => $address,
-                        "clusterId" => "0000",
-                        "attributeId" => "0004",
-                        "EP" => $msg,
-                    );
-                }
-                break;
-            case "Annonce":
-                if (strlen($msg) == 2) {
-                    $Command = array(
-                        "ReadAttributeRequest" => "1",
-                        "priority" => $priority,
-                        "dest" => $dest,
-                        "address" => $address,
-                        "clusterId" => "0000",
-                        "attributeId" => "0005",
-                        "EP" => $msg,
-                    );
-                } else {
-                    if ($msg == "Default") {
-                        $Command = array(
-                            "ReadAttributeRequest" => "1",
-                            "priority" => $priority,
-                            "dest" => $dest,
-                            "address" => $address,
-                            "clusterId" => "0000",
-                            "attributeId" => "0005",
-                            "EP" => "01",
-                        );
-                    }
-                    if ($msg == "Hue") {
-                        $Command = array(
-                            "ReadAttributeRequestHue" => "1",
-                            "priority" => $priority,
-                            "dest" => $dest,
-                            "address" => $address,
-                            "clusterId" => "0000",
-                            "attributeId" => "0005",
-                            "EP" => "0B",
-                        );
-                    }
-                    if ($msg == "OSRAM") {
-                        $Command = array(
-                            "ReadAttributeRequestOSRAM" => "1",
-                            "priority" => $priority,
-                            "dest" => $dest,
-                            "address" => $address,
-                            "clusterId" => "0000",
-                            "attributeId" => "0005",
-                            "EP" => "03",
-                        );
-                    }
-                }
-                break;
-            case "AnnonceProfalux":
-                if ($msg == "Default") {
-                    $Command = array(
-                        "ReadAttributeRequest" => "1",
-                        "priority" => $priority,
-                        "dest" => $dest,
-                        "address" => $address,
-                        "clusterId" => "0000",
-                        "attributeId" => "0010",
-                        "EP" => "03",
-                    );
-                }
-                break;
+            // Tcharp38: Should no longer be required
+            // case "AnnonceManufacturer":
+            //     if (strlen($msg) == 2) {
+            //         $Command = array(
+            //             "ReadAttributeRequest" => "1",
+            //             "priority" => $priority,
+            //             "dest" => $dest,
+            //             "address" => $address,
+            //             "clusterId" => "0000",
+            //             "attributeId" => "0004",
+            //             "EP" => $msg,
+            //         );
+            //     }
+            //     break;
+            // Tcharp38: Should no longer required
+            // case "Annonce":
+            //     if (strlen($msg) == 2) {
+            //         $Command = array(
+            //             "ReadAttributeRequest" => "1",
+            //             "priority" => $priority,
+            //             "dest" => $dest,
+            //             "address" => $address,
+            //             "clusterId" => "0000",
+            //             "attributeId" => "0005",
+            //             "EP" => $msg,
+            //         );
+            //     } else {
+            //         if ($msg == "Default") {
+            //             $Command = array(
+            //                 "ReadAttributeRequest" => "1",
+            //                 "priority" => $priority,
+            //                 "dest" => $dest,
+            //                 "address" => $address,
+            //                 "clusterId" => "0000",
+            //                 "attributeId" => "0005",
+            //                 "EP" => "01",
+            //             );
+            //         }
+            //         if ($msg == "Hue") {
+            //             $Command = array(
+            //                 "ReadAttributeRequestHue" => "1",
+            //                 "priority" => $priority,
+            //                 "dest" => $dest,
+            //                 "address" => $address,
+            //                 "clusterId" => "0000",
+            //                 "attributeId" => "0005",
+            //                 "EP" => "0B",
+            //             );
+            //         }
+            //         if ($msg == "OSRAM") {
+            //             $Command = array(
+            //                 "ReadAttributeRequestOSRAM" => "1",
+            //                 "priority" => $priority,
+            //                 "dest" => $dest,
+            //                 "address" => $address,
+            //                 "clusterId" => "0000",
+            //                 "attributeId" => "0005",
+            //                 "EP" => "03",
+            //             );
+            //         }
+            //     }
+            //     break;
+            // Tcharp38: No longer required
+            // case "AnnonceProfalux":
+            //     if ($msg == "Default") {
+            //         $Command = array(
+            //             "ReadAttributeRequest" => "1",
+            //             "priority" => $priority,
+            //             "dest" => $dest,
+            //             "address" => $address,
+            //             "clusterId" => "0000",
+            //             "attributeId" => "0010",
+            //             "EP" => "03",
+            //         );
+            //     }
+            //     break;
             case "OnOffRaw":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -391,8 +357,7 @@
                         "addressMode"           => "02",
                         "address"               => $address,
                         "destinationEndpoint"   => $parameters['EP'],
-                        "action"                => $convertOnOff[$parameters['Action']],
-                        "AckAPS"                => AckAPS,
+                        "action"                => $convertOnOff[$parameters['Action']]
                     );
                 }
                 else {
@@ -403,8 +368,7 @@
                         "addressMode"           => "02",
                         "address"               => $address,
                         "destinationEndpoint"   => "01",
-                        "action"                => $convertOnOff[$msg],
-                        "AckAPS"                => AckAPS,
+                        "action"                => $convertOnOff[$msg]
                     );
                 }
                 break;
@@ -453,22 +417,22 @@
                     "action"                => $convertOnOff[$msg],
                 );
                 break;
-            case "commandLegrand":
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
+            // case "commandLegrand":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //     }
 
-                $Command = array(
-                    "commandLegrand" => "1",
-                    "addressMode" => "02",
-                    "priority" => $priority,
-                    "dest" => $dest,
-                    "address" => $address,
-                    "destinationEndpoint" => $parameters['EP'],
-                    "Mode" => $parameters['Mode'],
-                );
-                break;
+            //     $Command = array(
+            //         "commandLegrand" => "1",
+            //         "addressMode" => "02",
+            //         "priority" => $priority,
+            //         "dest" => $dest,
+            //         "address" => $address,
+            //         "destinationEndpoint" => $parameters['EP'],
+            //         "Mode" => $parameters['Mode'],
+            //     );
+            //     break;
             case "UpGroup":
                 $Command = array(
                     "UpGroup" => "1",
@@ -695,22 +659,6 @@
                                     );
                 break;
 
-            // case "setLevel":
-            //     $fields = preg_split("/[=&]+/", $msg);
-            //     if (count($fields) > 1) {
-            //         $parameters = $this->proper_parse_str($msg);
-            //         $Command = array(
-            //                         "setLevel"             => "1",
-            //                         "addressMode"          => "02",
-            //                         "priority" => $priority,
-            //                         "dest" => $dest,
-            //                         "address"              => $address,
-            //                         "destinationEndpoint"  => $parameters['EP'],
-            //                         "Level"                => intval($parameters['Level'] * 255 / 100),
-            //                         "duration"             => $parameters['duration'],
-            //                     );
-            //     }
-            //     break;
             case "setLevelRaw":
                 $fields = preg_split("/[=&]+/", $msg);
                 if (count($fields) > 1) {
@@ -754,13 +702,23 @@
                 $levelPourcent = $a * $levelSliderPourcent * $levelSliderPourcent + $b * $levelSliderPourcent + $c;
                 $level = $levelPourcent * 255;
                 $level = min(max(round($level), 0), 255);
+                // $Command = array(
+                //     "name" => "setLevelRaw",
+                //     "priority" => $priority,
+                //     "dest" => $dest,
+                //     "addr" => $address,
+                //     "EP" => "01",
+                //     "Level" => $level,
+                //     "duration" => $parameters['duration'],
+                // );
                 $Command = array(
-                    "name" => "setLevelRaw",
+                    "name" => "cmd-0008",
                     "priority" => $priority,
                     "dest" => $dest,
                     "addr" => $address,
-                    "EP" => "01",
-                    "Level" => $level,
+                    "ep" => "01",
+                    "cmd" => "04", // Move to Level with On/Off
+                    "level" => $level,
                     "duration" => $parameters['duration'],
                 );
                 break;
@@ -781,30 +739,32 @@
                                     "duration"    => $parameters['duration'],              // FFFF to have max speed of tilt
                                     );
                 break;
-            case "setLevelStop":
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                                    "setLevelStop" => "1",
-                                    "addressMode" => "02",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address" => $address,
-                                    "sourceEndpoint" => "01",
-                                    "destinationEndpoint" => "01",
-                                    );
-                break;
-            case "setLevelStopHue":
-                $keywords = preg_split("/[=&]+/", $msg);
-                $Command = array(
-                                    "setLevelStop" => "1",
-                                    "addressMode" => "02",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address" => $address,
-                                    "sourceEndpoint" => "01",
-                                    "destinationEndpoint" => "0B",
-                                    );
-                break;
+            // Obsolete: Use 'cmd-0008' + 'cmd=07'
+            // case "setLevelStop":
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     $Command = array(
+            //                         "setLevelStop" => "1",
+            //                         "addressMode" => "02",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address" => $address,
+            //                         "sourceEndpoint" => "01",
+            //                         "destinationEndpoint" => "01",
+            //                         );
+            //     break;
+            // Seems unused. Anyway, use 'cmd-0008' + 'cmd=07' instead.
+            // case "setLevelStopHue":
+            //     $keywords = preg_split("/[=&]+/", $msg);
+            //     $Command = array(
+            //                         "setLevelStop" => "1",
+            //                         "addressMode" => "02",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address" => $address,
+            //                         "sourceEndpoint" => "01",
+            //                         "destinationEndpoint" => "0B",
+            //                         );
+            //     break;
             case "setLevelHue":
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
@@ -1101,28 +1061,28 @@
              * Cluster 0004/Groups support
              */
 
-            case "getGroupMembership":
-                if (!isset($parameters['ep'])) { $parameters['ep'] = "01"; }
-                $Command = array(
-                    "getGroupMembership"    => "1",
-                    "priority"              => $priority,
-                    "dest"                  => $dest,
-                    "addr"                  => $address,
-                    "ep"                    => $parameters['ep'],
-                );
-                break;
+            // case "getGroupMembership":
+            //     if (!isset($parameters['ep'])) { $parameters['ep'] = "01"; }
+            //     $Command = array(
+            //         "getGroupMembership"    => "1",
+            //         "priority"              => $priority,
+            //         "dest"                  => $dest,
+            //         "addr"                  => $address,
+            //         "ep"                    => $parameters['ep'],
+            //     );
+            //     break;
 
-            case "addGroup":
-                if (strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
-                $Command = array(
-                                    "addGroup"                 => "1",
-                                    "priority"                 => $priority,
-                                    "dest"                     => $dest,
-                                    "address"                  => $parameters['address'],
-                                    "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-                                    "groupAddress"             => $parameters['groupAddress'],
-                                    );
-                break;
+            // case "addGroup":
+            //     if (strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
+            //     $Command = array(
+            //                         "addGroup"                 => "1",
+            //                         "priority"                 => $priority,
+            //                         "dest"                     => $dest,
+            //                         "address"                  => $parameters['address'],
+            //                         "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
+            //                         "groupAddress"             => $parameters['groupAddress'],
+            //                         );
+            //     break;
 
             case "removeGroup":
                 // if ($parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }
@@ -1254,20 +1214,20 @@
              * Cluster 0102/Window covering support
              */
 
-            case "WindowsCovering":
-                $fields = preg_split("/[=&]+/", $msg);
-                    if (count($fields) > 1) {
-                        $parameters = $this->proper_parse_str($msg);
-                    }
+            // case "WindowsCovering":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //         if (count($fields) > 1) {
+            //             $parameters = $this->proper_parse_str($msg);
+            //         }
 
-                $Command = array(
-                                    "WindowsCovering"          => "1",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address"                  => $address,
-                                    "clusterCommand"           => $parameters['clusterCommand'],
-                );
-                break;
+            //     $Command = array(
+            //                         "WindowsCovering"          => "1",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address"                  => $address,
+            //                         "clusterCommand"           => $parameters['clusterCommand'],
+            //     );
+            //     break;
 
             case "WindowsCoveringLevel":
                 $fields = preg_split("/[=&]+/", $msg);
@@ -1317,7 +1277,7 @@
                 $Command = array(
                     $action => $action, // Tcharp38: Legacy. Replaced by 'name' field. To be removed at some point.
                     "name" => $action,
-                    // "priority" => $priority,
+                    "priority" => $priority,
                     "dest" => $dest,
                 );
                 // Splitting by '&' then by '='

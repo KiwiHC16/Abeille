@@ -5,61 +5,90 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "bsoProFalux"
+            "icon": "Profalux-BSO"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Profalux BSO (brise-soleil orientable)",
+        "type": "Profalux BSO",
         "commands": {
-            "include0 2 2": "Lift",
-            "include0 2 2 2": "Tilt",
-            "include4": "zb-0000-ZCLVersion",
-            "include7": "etatVolet",
-            "include8": "levelVolet",
-            "include9": "onVolet",
-            "include10": "offVolet",
-            "include11": "toggleVolet",
-            "include12": "setLevelVolet",
-            "include13": "levelVoletStop",
+            "Lift": {
+                "use": "Lift"
+            },
+            "Tilt": {
+                "use": "Tilt"
+            },
+            "ZCL Version": {
+                "use": "inf_zbAttr-0000-ZCLVersion"
+            },
+            "etat": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "genericType": "FLAP_STATE",
+                "isVisible": 1
+            },
+            "Level": {
+                "use": "levelVolet"
+            },
+            "Monter": {
+                "use": "onVolet"
+            },
+            "Descendre": {
+                "use": "offVolet"
+            },
+            "setLevel": {
+                "use": "setLevelVolet"
+            },
+            "Stop": {
+                "use": "act_zbCmdG-0008-StopWithOnOff",
+                "isVisible": 1
+            },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "Get-CurrentLevel": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
-            "include24": "Identify",
-            "include25": "Group-Membership",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
             "SetReporting-0006-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
             "SetReporting-0008-0000": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting",
+                "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include30": "moveToLiftAndTiltBSO_Lift",
-            "include30 2": "moveToLiftAndTiltBSO_Tilt",
+            "Set Lift": {
+                "use": "moveToLiftAndTiltBSO_Lift"
+            },
+            "Set Tilt": {
+                "use": "moveToLiftAndTiltBSO_Tilt"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
-        },
-        "comment": "Copy of Profalux Volet for BSO Profalux"
+        }
     }
 }

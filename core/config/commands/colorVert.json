@@ -5,14 +5,12 @@
         "isHistorized": "0",
         "subType": "numeric",
         "template": "badge",
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
         "configuration": {
             "visibilityCategory": "additionalCommand"
         },
         "type": "info",
         "logicalId": "colorVert",
-        "unit": ""
+        "unit": "",
+        "nextLine": "after"
     }
 }

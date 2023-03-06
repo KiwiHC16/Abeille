@@ -140,7 +140,7 @@
 
                             // Informing parser that some equipements have to be considered "phantom"
                             var xhr = new XMLHttpRequest();
-                            xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueCtrlToParser+"&msg=type:eqRemoved_net:Abeille"+js_zgId+"_eqList:"+js_eqAddr, true);
+                            xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueXToParser+"&msg=type:eqRemoved_net:Abeille"+js_zgId+"_eqList:"+js_eqAddr, true);
                             xhr.send();
                         }
                     });
@@ -184,6 +184,7 @@
 
         var topic = "";
         var payload = "";
+
         switch(action) {
         case "setLED":
             topic = 'CmdAbeille'+js_zgId+'/0000/setZgLed';
@@ -202,6 +203,14 @@
             topic = 'CmdAbeille'+js_zgId+'/0000/startZgNetwork';
             payload = '';
             break;
+        case "startNetworkScan": // Not required for end user but for developper.
+            topic = 'CmdAbeille'+js_zgId+'/0000/startZgNetworkScan';
+            payload = '';
+            break;
+        case "setInclusion":
+            topic = 'CmdAbeille'+js_zgId+'/0000/setZgPermitMode';
+            payload = 'mode='+param;
+            break;
         case "setMode":
             topic = 'CmdAbeille'+js_zgId+'/0000/setZgMode';
             if (param == "Normal")
@@ -215,31 +224,78 @@
             topic = 'CmdAbeille'+js_zgId+'/0000/setExtendedPANID';
             payload = "";
             break;
-        case "setChannelMask":
-            topic = 'CmdAbeille'+js_zgId+'/0000/setChannelMask';
-            mask = document.getElementById("idChannelMask").value;
-            console.log("mask="+mask);
-            if (mask == "") {
-                alert("Masque vide.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).");
-                return; // Empty
-            }
-            function isHex(str) {
-                return /^[A-F0-9]+$/i.test(str)
-            }
-            if (!isHex(mask)) {
-                alert("Le masque doit être une valeur hexa");
+        // case "setChannelMask":
+        //     mask = document.getElementById("idChannelMask").value;
+        //     console.log("mask="+mask);
+        //     if (mask == "") {
+        //         alert("Masque vide.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).");
+        //         return; // Empty
+        //     }
+        //     if (mask.length > 1)
+        //         mask = mask.replace(/^0+/, ''); // Remove leading zeros
+        //     function isHex(h) {
+        //         // return /^[A-F0-9]+$/i.test(h)
+        //         var a = parseInt(h,16);
+        //         return (a.toString(16) ===h.toLowerCase())
+        //     }
+        //     if (!isHex(mask)) {
+        //         alert("Le masque doit être une valeur hexa");
+        //         return;
+        //     }
+        //     var maskI = parseInt(mask, 16); // Convert hex string to number
+        //     if ((maskI & 0x7fff800) == 0) {
+        //         alert("Aucun canal actif entre 11 et 26.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).")
+        //         return;
+        //     }
+        //     if ((maskI & ~0x7fff800) != 0) {
+        //         alert("Les canaux inférieurs à 11 et supérieurs à 26 sont invalides.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).")
+        //         return;
+        //     }
+        //     mask = mask.toString(16);
+        //     topic = 'CmdAbeille'+js_zgId+'/0000/setZgChannelMask';
+        //     payload = 'mask='+mask;
+        //     break;
+        case 'setChannel':
+            msg = '{{Vous êtes sur le point de changer le canal Zigbee de la Zigate}} <b>'+js_zgId+'</b>';
+            msg += '{{<br>Les équipements sur secteur devraient suivre mais pas forcément tous ceux sur batterie.}}'
+            msg += '{{<br>Dans ce cas vous pourriez avoir à refaire une inclusion.}}'
+            msg += '{{<br><br>Etes vous sur de vouloir continuer ?}}'
+            bootbox.confirm(msg, function (result) {
+                if (result) {
+                    var chan = $("#idZgChan").val();
+                    if (chan == 0)
+                        mask = 0x7fff800; // All channels = auto
+                    else
+                        mask = 1 << chan;
+                    mask = mask.toString(16);
+                    // Note: missing leading 0 completed in AbeilleCmdProcess.
+                    // while (mask.length < 8) { // Adding missing leading 0
+                    //     mask = "0" + mask;
+                    // }
+                    console.log("  Channel=" + chan + " => mask=" + mask);
+
+                    // Request ALL devices to change channel
+                    // But WARNING.. those who are not RxONWhenIdle may not receive it.
+                    topic = 'CmdAbeille'+js_zgId+'/FFFF/mgmtNetworkUpdateReq';
+                    payload = 'scanChan='+mask+'&scanDuration=FE';
+                    sendToZigate(topic, payload);
+
+                    topic = 'CmdAbeille'+js_zgId+'/0000/setZgChannelMask';
+                    payload = 'mask='+mask;
+                    sendToZigate(topic, payload);
+
+                    console.log("config=", js_config);
+                    js_config['ab::zgChan'+js_zgId] = chan;
+                    console.log("config2=", js_config);
+                    saveConfig();
+
+                    topic = 'CmdAbeille'+js_zgId+'/0000/startZgNetwork';
+                    payload = '';
+                    sendToZigate(topic, payload);
+                }
                 return;
-            }
-            var maskI = parseInt(mask, 16); // Convert hex string to number
-            if ((maskI & 0x7fff800) == 0) {
-                alert("Aucun canal actif entre 11 et 26.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).")
-                return;
-            }
-            if ((maskI & ~0x7fff800) != 0) {
-                alert("Les canaux inférieurs à 11 et supérieurs à 26 sont invalides.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).")
-                return;
-            }
-            payload = mask;
+            });
+
             break;
         case "getTXPower":
             topic = 'CmdAbeille'+js_zgId+'/0000/getZgTxPower';
@@ -301,24 +357,23 @@
         document.icon_visu.src = text;
     });
 
-    /* PiZigate HW reset (AbeilleEq-Main) */
+    /* PiZigate HW reset */
     function resetPiZigate() {
         console.log("resetPiZigate()");
 
-        $('#md_modal2').dialog({title: "{{Reset HW de la PiZigate}}"});
-        $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=resetPiZigate').dialog('open');
-    }
-
-    /* Update device from JSON (reload JSON) */
-    function updateFromJSON(eqNet, eqAddr) {
-        console.log("updateFromJSON("+eqNet+","+eqAddr+")");
-
-        var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&topic=CmdCreate"+eqNet+"_"+eqAddr+"_updateFromJson", false);
-        xhttp.send();
-
-        xhttp.onreadystatechange = function() {
-        };
+        // $('#md_modal2').dialog({title: "{{Reset HW de la PiZigate}}"});
+        // $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=resetPiZigate').dialog('open');
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'resetPiZigate'
+            },
+            dataType: 'json',
+            global: false,
+            success: function (json_res) {
+            }
+        });
     }
 
     /* Remove given local JSON file */
@@ -345,27 +400,27 @@
         });
     }
 
-    /* Reconfigure device by sending 'execAtCreation' commands.
+    /* Update Jeedom device & reconfigure.
        WARNING: If battery powered, device must be wake up. */
-    function reconfigure(eqId) {
-        console.log("reconfigure("+eqId+")");
+    function update(eqId) {
+        console.log("update("+eqId+")");
 
+        var msg = "{{Vous êtes sur le point de:<br>";
+        msg += "- Mettre à jour l'équipement Jeedom à partir de son modèle<br>";
+        msg += "- Et reconfigurer l'équipement<br>";
+        msg += "<br>Les noms et ID sont conservés, ainsi que vos customisations.}}";
         if (js_batteryType != '') {
-            var msg = "{{Vous êtes sur le point de reconfigurer cet équipement.";
-            msg += "<br>Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.";
-            msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
-            bootbox.confirm(msg, function (result) {
-                if (result == false)
-                    return
-                var xhttp = new XMLHttpRequest();
-                xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reconfigure&eqId="+eqId, false);
-                xhttp.send();
-            });
-        } else {
-            var xhttp = new XMLHttpRequest();
-            xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reconfigure&eqId="+eqId, false);
-            xhttp.send();
+            msg += "<br><br>{{ATTENTION! Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.}}";
         }
+        msg += "<br><br>{{Cliquez 'Ok' continuer}}";
+        bootbox.confirm(msg, function (result) {
+            if (result == false)
+                return
+
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=update&eqId="+eqId, false);
+            xhttp.send();
+        });
     }
 
     /* Reinit Jeedom device & reconfigure.
@@ -373,12 +428,16 @@
     function reinit(eqId) {
         console.log("reinit("+eqId+")");
 
-        var msg = "{{Vous êtes sur le point de réinitialiser cet équipement (équivalent à une nouvelle inclusion).";
-        msg += "<br><br>Tout sera remis à jour à partir du modèle JSON excepté le nom, l'ID Jeedom ainsi que ses adresses.";
+        var msg = "{{Vous êtes sur le point de:}}<br>";
+        msg += "- Réinitialiser cet équipement (équivalent à une nouvelle inclusion).<br>";
+        msg += "- Et le reconfigurer.<br>";
+        msg += "<br>Tout sera remis à jour à partir du modèle JSON excepté le nom, l'ID Jeedom ainsi que ses adresses.<br>";
+        msg += "Le nom des commandes peut avoir changé et vous serez obligé de revoir les scénaris utilisant cet équipement.<br>";
+
         if (js_batteryType != '') {
-            msg += "<br>Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.";
+            msg += "<br>{{ATTENTION! Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.}}<br>";
         }
-        msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
+        msg += "<br>{{Etes vous sur de vouloir continuer ?}}";
         bootbox.confirm(msg, function (result) {
             if (result == false)
                 return
@@ -389,13 +448,48 @@
         });
     }
 
+    /* Update device from JSON (reload JSON) */
+    // function updateFromJSON(eqNet, eqAddr) {
+    //     console.log("updateFromJSON("+eqNet+","+eqAddr+")");
+
+    //     var xhttp = new XMLHttpRequest();
+    //     xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&topic=CmdCreate"+eqNet+"_"+eqAddr+"_updateFromJson", false);
+    //     xhttp.send();
+
+    //     xhttp.onreadystatechange = function() {
+    //     };
+    // }
+
+    /* Reconfigure device by sending 'execAtCreation' commands.
+       WARNING: If battery powered, device must be wake up. */
+    // function reconfigure(eqId) {
+    //     console.log("reconfigure("+eqId+")");
+
+    //     if (js_batteryType != '') {
+    //         var msg = "{{Vous êtes sur le point de reconfigurer cet équipement.";
+    //         msg += "<br>Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.";
+    //         msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
+    //         bootbox.confirm(msg, function (result) {
+    //             if (result == false)
+    //                 return
+    //             var xhttp = new XMLHttpRequest();
+    //             xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reconfigure&eqId="+eqId, false);
+    //             xhttp.send();
+    //         });
+    //     } else {
+    //         var xhttp = new XMLHttpRequest();
+    //         xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reconfigure&eqId="+eqId, false);
+    //         xhttp.send();
+    //     }
+    // }
+
     function interrogate(request) {
         console.log("interrogate("+request+")");
 
         logicalId = "Abeille"+js_zgId+"_"+js_eqAddr;
         if (request == "getRoutingTable") {
             topic = "Cmd"+logicalId+"_getRoutingTable";
-            payload = "address="+js_eqAddr;
+            payload = "";
         } else if (request == "getBindingTable") {
             topic = "Cmd"+logicalId+"_getBindingTable";
             payload = "address="+js_eqAddr;
@@ -404,15 +498,33 @@
             startIdx = document.getElementById("idStartIdx").value;
             payload = "startIndex="+startIdx;
         } else if (request == "getActiveEndPoints") {
-            topic = "Cmd"+logicalId+"_ActiveEndPoint";
-            payload = "address="+js_eqAddr;
+            topic = "Cmd"+logicalId+"_getActiveEndpoints";
+            payload = "addr="+js_eqAddr;
         } else if (request == "getSimpleDescriptor") {
             topic = "Cmd"+logicalId+"_getSimpleDescriptor";
             ep = document.getElementById("idEpSDR").value;
             payload = "ep="+ep;
+        } else if (request == "getNodeDescriptor") {
+            topic = "Cmd"+logicalId+"_getNodeDescriptor";
+            payload = "";
         } else if (request == "getIeeeAddress") {
             topic = "Cmd"+logicalId+"_getIeeeAddress";
             payload = "";
+        } else if (request == "mgmtNetworkUpdateReq") {
+            topic = "Cmd"+logicalId+"_mgmtNetworkUpdateReq";
+            scanChan = document.getElementById("idMgmtNwkUpdReqSC").value;
+            scanDuration = document.getElementById("idMgmtNwkUpdReqSD").value;
+            payload = "";
+            if (scanChan != '')
+                payload += "scanChan="+scanChan;
+            if (scanDuration != '') {
+                if (payload != '')
+                    payload += "_"
+                payload += "scanDuration="+scanDuration;
+            }
+        } else if (request == "leaveRequest") {
+            topic = "Cmd"+logicalId+"_LeaveRequest";
+            payload = "IEEE="+js_eqIeee;
         }
 
         else if (request == "readReportingConfig") {
@@ -427,6 +539,9 @@
             clustId = document.getElementById("idClustIdA").value;
             attrId = document.getElementById("idAttrIdA").value;
             payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId;
+            manufId = document.getElementById("idManufIdRA").value;
+            if (manufId != '')
+                payload += "_manufId="+manufId;
         } else if (request == "writeAttribute") {
             topic = "Cmd"+logicalId+"_writeAttribute";
             ep = document.getElementById("idEpWA").value;
@@ -435,7 +550,7 @@
             value = document.getElementById("idValueWA").value;
             payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId+"_attrVal="+value;
             attrType = document.getElementById("idAttrTypeWA").value;
-            if (attrType != '')
+            if (attrType != 'FF')
                 payload += "_attrType="+attrType;
             dir = document.getElementById("idDirWA").value;
             if (dir != '')
@@ -451,7 +566,7 @@
             value = document.getElementById("idValueWA2").value;
             payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId+"_attrVal="+value;
             attrType = document.getElementById("idAttrTypeWA2").value;
-            if (attrType != '')
+            if (attrType != 'FF')
                 payload += "_attrType="+attrType;
             dir = document.getElementById("idDirWA2").value;
             if (dir != '')
@@ -495,6 +610,8 @@
             ep = document.getElementById("idEpCR").value;
             clustId = document.getElementById("idClustIdCR").value;
             attrId = document.getElementById("idAttrIdCR").value;
+            manufId = document.getElementById("idManufIdCR").value;
+            attrType = document.getElementById("idAttrTypeCR").value;
             min = document.getElementById("idMinCR").value;
             max = document.getElementById("idMaxCR").value;
             change = document.getElementById("idChangeCR").value;
@@ -505,6 +622,10 @@
                 payload += "_maxInterval="+max;
             if (change != '')
                 payload += "_changeVal="+change;
+            if (attrType != 'FF')
+                payload += "_attrType="+attrType;
+            if (manufId != '')
+                payload += "_manufId="+manufId;
         }
 
         /* Cluster specific commands */
@@ -519,6 +640,22 @@
             amount = document.getElementById("idAmountC0201-00").value;
             if (amount != '')
                 payload += "_amount="+amount;
+        } else if (request == "0300-MoveToColor") {
+            topic = "Cmd"+logicalId+"_setColour";
+            ep = document.getElementById("idEp-MTC").value;
+            X = document.getElementById("idX-MTC").value;
+            Y = document.getElementById("idX-MTC").value;
+            payload = "EP="+ep+"_X="+X+"_Y="+Y;
+        } else if (request == "0502-StartWarning") {
+            topic = "Cmd"+logicalId+"_cmd-0502";
+            ep = document.getElementById("idEp-SW").value;
+            mode = document.getElementById("idMode-SW").value;
+            strobe = document.getElementById("idStrobe-SW").checked;
+            if (strobe)
+                strobe = 'on';
+            else
+                strobe = 'off';
+            payload = "ep="+ep+"_cmd=00_mode="+mode+"_strobe="+strobe;
         } else if (request == "1000-GetGroups") {
             topic = "Cmd"+logicalId+"_cmd-1000";
             ep = document.getElementById("idEpC1000-41").value;
@@ -534,8 +671,9 @@
             return;
         }
 
+        console.log("topic="+topic+", pl="+payload);
         var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueKeyXmlToCmd+"&topic="+topic+"&payload="+payload, false);
+        xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueXToCmd+"&topic="+topic+"&payload="+payload, false);
         xhttp.send();
 
         xhttp.onreadystatechange = function() {
@@ -551,4 +689,58 @@
         window.open('plugins/Abeille/core/php/AbeilleDownload.php?pathfile='+path, "_blank", null);
     }
 
+    /* eqLogic/configuration settings (ab::settings) read */
+    function getSettings(eqId) {
+        console.log("getSettings()");
+
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'getSettings',
+                edId: eqId
+            },
+            dataType: 'json',
+            global: false,
+            success: function (json_res) {
+            }
+        });
+    }
+
+    /* eqLogic/configuration settings (ab::settings) update */
+    // function saveSettings() {
+    //     console.log("saveSettings(): settings=", js_eqSettings);
+    //     console.log("  js_eqSettings type=", typeof(js_eqSettings));
+
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+    //         data: {
+    //             action: 'saveSettings',
+    //             eqId: js_eqId,
+    //             settings: JSON.stringify(js_eqSettings)
+    //         },
+    //         dataType: 'json',
+    //         global: false,
+    //         success: function (json_res) {
+    //         }
+    //     });
+    // }
+
+    function saveConfig() {
+        console.log("saveConfig(): config=", js_config);
+
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'saveConfig',
+                config: JSON.stringify(js_config)
+            },
+            dataType: 'json',
+            global: false,
+            success: function (json_res) {
+            }
+        });
+    }
 </script>

@@ -1,0 +1,13 @@
+{
+    "inf_zbAttr-0300-CurrentY": {
+        "isVisible": 0,
+        "name": "colorY",
+        "isHistorized": "0",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": [],
+        "type": "info",
+        "logicalId": "0300-#EP#-0004",
+        "unit": ""
+    }
+}

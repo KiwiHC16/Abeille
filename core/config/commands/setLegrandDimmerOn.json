@@ -10,9 +10,7 @@
             "repeatEventManagement": "always",
             "visibilityCategory": "Network"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
-        "type": "action"
+        "type": "action",
+        "nextLine": "after"
     }
 }

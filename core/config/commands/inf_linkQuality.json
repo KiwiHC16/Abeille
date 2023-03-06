@@ -1,0 +1,12 @@
+{
+    "inf_linkQuality": {
+        "subType": "string",
+        "template": "badge",
+        "configuration": {
+            "visibilityCategory": "Network"
+        },
+        "type": "info",
+        "logicalId": "Link-Quality",
+        "genericType": "GENERIC_INFO"
+    }
+}

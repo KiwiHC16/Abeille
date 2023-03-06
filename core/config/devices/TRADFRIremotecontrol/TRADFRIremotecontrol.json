@@ -1,54 +1,93 @@
 {
     "TRADFRIremotecontrol": {
+        "manufacturer": "Ikea",
+        "model": "5 buttons remote",
+        "type": "IKEA 5 buttons remote control",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "paramType": "telecommande",
-            "icon": "IkeaTradfri5BtnRond",
+            "icon": "Ikea-Remote-5buttons",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "light": "1"
         },
-        "type": "IKEA TRADFRI Rond 5 Boutons Remote Control",
         "commands": {
-            "include1": "offGroup",
-            "include2": "toggleGroup",
-            "include3": "onGroup",
-            "include4": "downGroup",
-            "include5": "upGroup",
-            "include6": "setLevelGroup",
-            "include6 2": "setTemperatureLightGroup",
-            "include7": "sceneGroupRecall1",
-            "include7 2": "sceneGroupRecall2",
-            "include7 2 2": "sceneGroupRecall3",
-            "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
-                "isVisible": 1
+            "Off": {
+                "use": "offGroup"
             },
-            "include9": "getBattery",
+            "Toggle": {
+                "use": "toggleGroup"
+            },
+            "On": {
+                "use": "onGroup"
+            },
+            "Down": {
+                "use": "downGroup"
+            },
+            "Up": {
+                "use": "upGroup"
+            },
+            "setLevel": {
+                "use": "setLevelGroup"
+            },
+            "setTemperatureLightGroup": {
+                "use": "setTemperatureLightGroup"
+            },
+            "Sc1": {
+                "use": "sceneGroupRecall1"
+            },
+            "Sc2": {
+                "use": "sceneGroupRecall2"
+            },
+            "Sc3": {
+                "use": "sceneGroupRecall3"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
             "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
             "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },
-            "include11 2": "Up-Down",
-            "include11 2 2": "Click-Middle",
-            "include11 2 2 2": "Left-Right-Cmd",
-            "include11 2 2 2 2": "Left-Right-Direction",
-            "include11 2 2 2 2 2": "BlancGroup",
-            "include11 2 2 2 2 2 2": "BleuGroup",
-            "include11 2 2 2 2 2 2 2": "RougeGroup",
-            "include11 2 2 2 2 2 2 2 2": "VertGroup",
-            "include11 2 2 2 2 2 2 2 2 2": "IkeaTeleCmdLeftRigth"
+            "Up-Down": {
+                "use": "Up-Down"
+            },
+            "Click-Middle": {
+                "use": "Click-Middle"
+            },
+            "Left-Right-Cmd": {
+                "use": "Left-Right-Cmd"
+            },
+            "Left-Right-Direction": {
+                "use": "Left-Right-Direction"
+            },
+            "Blanc Group": {
+                "use": "BlancGroup"
+            },
+            "Bleu Group": {
+                "use": "BleuGroup"
+            },
+            "Rouge Group": {
+                "use": "RougeGroup"
+            },
+            "Vert Group": {
+                "use": "VertGroup"
+            },
+            "LeftRight": {
+                "use": "IkeaTeleCmdLeftRigth",
+                "isVisible": 1
+            }
         }
     }
 }

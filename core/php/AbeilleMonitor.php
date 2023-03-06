@@ -44,7 +44,7 @@
 
         /* Write to fifo */
         $queue = msg_get_queue($abQueues['parserToMon']['id']);
-        msg_send($queue, 1, $msg);
+        msg_send($queue, 1, json_encode($msg), false);
     }
 
     /* Called from AbeilleParser when short address has changed (device announce) */
@@ -61,7 +61,7 @@
 
         /* Write to fifo */
         $queue = msg_get_queue($abQueues['parserToMon']['id']);
-        msg_send($queue, 1, $msg);
+        msg_send($queue, 1, json_encode($msg), false);
     }
 
     /* Called from AbeilleCmd to add a message to monitor.
@@ -87,7 +87,7 @@
 
         /* Write to fifo */
         $queue = msg_get_queue($abQueues['cmdToMon']['id']);
-        msg_send($queue, 1, $msg);
+        msg_send($queue, 1, json_encode($msg), false);
     }
 
     /* Called to inform 'AbeilleCmd' to change monitoring address. */
@@ -103,7 +103,7 @@
 
         /* Write to fifo */
         $queue = msg_get_queue($abQueues['monToCmd']['id']);
-        msg_send($queue, 1, $msg);
+        msg_send($queue, 1, json_encode($msg), false);
     }
 
     /* Shutdown function */
@@ -143,13 +143,13 @@
         // if (pcntl_signal(SIGUSR1, "monReload", false) != true)
         //     logMessage("error", "Erreur pcntl_signal()");
 
-        $GLOBALS["monId"] = config::byKey('monitor', 'Abeille', false);
+        $GLOBALS["monId"] = config::byKey('ab::monitorId', 'Abeille', false);
         $monId = $GLOBALS["monId"];
         if ($monId !== false) {
             $eqLogic = eqLogic::byId($monId);
             if (!is_object($eqLogic)) {
                 logMessage('debug', 'ID '.$monId.' no longer valid. Disabling monitoring');
-                config::save('monitor', false, 'Abeille');
+                config::save('ab::monitorId', false, 'Abeille');
                 logMessage("info", "Aucun équipement à surveiller pour l'instant.");
             } else {
                 list($net, $addr) = explode( "/", $eqLogic->getLogicalId());
@@ -189,18 +189,19 @@
                 if (($statCmdQueue['msg_qnum'] != 0) && ($statParserQueue['msg_qnum'] != 0)) {
                     /* Select queue with oldest message */
                     if ($statCmdQueue['msg_stime'] < $statParserQueue['msg_stime'])
-                        msg_receive($queueCmdToMon, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT);
+                        msg_receive($queueCmdToMon, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT);
                     else {
-                        msg_receive($queueParserToMon, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT);
+                        msg_receive($queueParserToMon, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT);
                         $msgSent = false;
                     }
                 } else if ($statCmdQueue['msg_qnum'] != 0)
-                    msg_receive($queueCmdToMon, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT);
+                    msg_receive($queueCmdToMon, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT);
                 else {
-                    msg_receive($queueParserToMon, 0, $msgType, $max_msg_size, $msg, true, MSG_IPC_NOWAIT);
+                    msg_receive($queueParserToMon, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT);
                     $msgSent = false;
                 }
 
+                $msg = json_decode($msgJson, true);
                 if ($msg['type'] == 'x2mon') {
                     /* Log message */
                     if ($msgSent == true)

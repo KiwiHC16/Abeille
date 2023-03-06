@@ -1,0 +1,12 @@
+{
+    "act_tuyaEF00-SetBool": {
+        "subType": "other",
+        "template": "",
+        "configuration": {
+            "topic": "cmd-tuyaEF00",
+            "request": "ep=#EP#&cmd=setBool&data=#DATA#"
+        },
+        "type": "action",
+        "genericType": "GENERIC_ACTION"
+    }
+}

@@ -78,12 +78,13 @@
 
         $shortAddress = $abeille->getLogicalId();
 
-        if (isset($abeille->getConfiguration()["positionX"]))
-            $posX = $abeille->getConfiguration()["positionX"];
+        $settings = $abeille->getConfiguration("ab::settings", []);
+        if (isset($settings["physLocationX"]))
+            $posX = $settings["physLocationX"];
         else
             $posX = "";
-        if (isset($abeille->getConfiguration()["positionY"]))
-            $posY = $abeille->getConfiguration()["positionY"];
+        if (isset($settings["physLocationY"]))
+            $posY = $settings["physLocationY"];
         else
             $posY = "";
         if (($posX == "") || ($posY == "")) {
@@ -92,8 +93,8 @@
             $angle = $angle + $angleIncrement;
             $Z = 0;
         } else {
-            $X = $abeille->getConfiguration()["positionX"];
-            $Y = $abeille->getConfiguration()["positionY"];
+            $X = $settings["physLocationX"];
+            $Y = $settings["physLocationY"];
             if ($abeille->getConfiguration()["positionZ"] == "") {
                 $Z = "0";
             } else {

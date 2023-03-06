@@ -1,22 +1,32 @@
 {
     "sensor_motion": {
+        "manufacturer": "Xiaomi",
+        "type": "Xiaomi Presence",
+        "genericType": "Environment",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiInfraRouge",
+            "icon": "Xiaomi-MotionSensor",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "security": "1"
         },
-        "type": "Xiaomi Presence",
         "commands": {
-            "include3": "presence",
-            "include4": "Batterie-Volt",
-            "include5": "Batterie-Pourcent",
-            "include6": "Xiaomi-ff01",
+            "etat": {
+                "use": "presence"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

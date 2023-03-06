@@ -23,15 +23,15 @@ class AbeilleCmdPrepareTest extends TestCase {
     }
 
     function prepareCmdTest() {
-        $message = (object) array( 
+        $message = (object) array(
             "topic"      => "CmdAbeille1/81F6/OnOff",
             "payload"    => "Action=On&EP=01",
             "priority"   => 3,
         );
-        
+
         $result = '{"onoff":"1","dest":"Abeille1","priority":3,"addressMode":"02","address":"81F6","destinationEndpoint":"01","action":"01"}';
 
-        $this->assertSame( $result, json_encode(AbeilleCmdPrepare::prepareCmd($message, 1)) );
+        $this->assertSame( $result, json_encode(AbeilleCmdPrepare::prepareCmd(1, $message, 1)) );
     }
 
 }

@@ -11,10 +11,8 @@
             "request": "clusterId=0201&attributeId=4008&EP=01&Proprio=1037&attributeType=22&value=000044",
             "visibilityCategory": "All"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
         "type": "action",
-        "genericType": ""
+        "genericType": "",
+        "nextLine": "after"
     }
 }

@@ -5,31 +5,33 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "SNZB-01",
+            "icon": "Sonoff-SNZB-01",
             "batteryType": "1x3V CR2450"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Sonoff SNZB-01 wireless button",
+        "type": "Sonoff wireless button",
         "commands": {
-            "include2 3": "Click-Middle",
+            "Click-Middle": {
+                "use": "Click-Middle"
+            },
             "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent"
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 10
             },
             "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7

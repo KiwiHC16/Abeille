@@ -2,7 +2,7 @@
      Included by 'AbeilleEq.php' -->
 
 <?php
-    if ($dbgDeveloperMode) echo __FILE__;
+    if (isset($dbgDeveloperMode)) echo __FILE__;
 ?>
 
 <form class="form-horizontal">
@@ -11,7 +11,7 @@
             if (1) {
                 include 'AbeilleEq-Main-Generic.php';
                 include 'AbeilleEq-Main-Icon.php';
-                include 'AbeilleEq-Main-Others.php';
+                // include 'AbeilleEq-Main-Others.php';
             }
         ?>
     </fieldset>

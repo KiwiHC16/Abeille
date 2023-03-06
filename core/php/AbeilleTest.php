@@ -353,7 +353,7 @@
         // Send the command to the queue for processing
         $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
         if ( $queueKeyAbeilleToCmd ) {
-            if (msg_send($queueKeyAbeilleToCmd, priorityUserCmd, $msg, true, false)) {
+            if (msg_send($queueKeyAbeilleToCmd, priorityUserCmd, json_encode($msg), false, false)) {
                 echo "Msg sent: " . json_encode($msg) . "\n";
             } else {
                 echo "Could not send Msg\n";
@@ -370,7 +370,7 @@
             case 200:
                 echo "Send a Systeme Message to the Ruche to be used by a scenario by the user\n";
                 // public static function publishMosquitto($queueId, $priority, $topic, $payload)
-                Abeille::publishMosquitto($abQueues["abeilleToAbeille"]["id"], PRIO_NORM, "Abeille1/0000/SystemMessage", "Le message");
+                Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], PRIO_NORM, "Abeille1/0000/SystemMessage", "Le message");
                 break;
             case 201:
                 echo "Send a Systeme Message to the Ruche1 and clean it after 5 sec\n";
@@ -400,7 +400,7 @@
                 break;
             case 205:
                 echo "Send a Systeme Message to the Ruche to create an eq based on a template\n";
-                Abeille::publishMosquitto($abQueues["abeilleToAbeille"]["id"], PRIO_NORM, "Abeille1/FFFF/0000-01-0005", "BSO");
+                Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], PRIO_NORM, "Abeille1/FFFF/0000-01-0005", "BSO");
                 break;
         }
     }
@@ -447,7 +447,7 @@
 
                 echo "Parameters:\n";
                 // $parameters = Abeille::getParameters();
-                $json = '{"parametersCheck":"ok","parametersCheck_message":"","AbeilleParentId":"125","AbeilleType1":"USB","AbeilleSerialPort1":"\/dev\/ttyUSB3","IpWifiZigate1":"192.168.4.1:23","AbeilleActiver1":"Y","AbeilleType2":"WIFI","AbeilleSerialPort2":"\/dev\/zigate2","IpWifiZigate2":"192.168.4.106:23","AbeilleActiver2":"Y","AbeilleType3":"USB","AbeilleSerialPort3":"\/dev\/ttyUSB2","IpWifiZigate3":"192.168.4.119:23","AbeilleActiver3":"Y","AbeilleType4":"WIFI","AbeilleSerialPort4":"\/dev\/zigate4","IpWifiZigate4":"192.168.4.107:23","AbeilleActiver4":"Y"}';
+                $json = '{"parametersCheck":"ok","parametersCheck_message":"","ab::defaultParent":"125","ab::zgType1":"USB","ab::zgPort1":"\/dev\/ttyUSB3","ab::zgIpAddr1":"192.168.4.1:23","ab::zgEnabled1":"Y","ab::zgType2":"WIFI","ab::zgPort2":"\/dev\/zigate2","ab::zgIpAddr2":"192.168.4.106:23","ab::zgEnabled2":"Y","ab::zgType3":"USB","ab::zgPort3":"\/dev\/ttyUSB2","ab::zgIpAddr3":"192.168.4.119:23","ab::zgEnabled3":"Y","ab::zgType4":"WIFI","ab::zgPort4":"\/dev\/zigate4","ab::zgIpAddr4":"192.168.4.107:23","ab::zgEnabled4":"Y"}';
                 $parameters = json_decode($json,1);
                 // var_dump($parameters);
                 // echo "Parameters: ".json_encode($parameters)."\n";
@@ -534,7 +534,7 @@
         // Send the command to the queue for processing
         $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
         if ( $queueKeyAbeilleToCmd ) {
-            if (msg_send($queueKeyAbeilleToCmd, priorityUserCmd, $msg, true, false)) {
+            if (msg_send($queueKeyAbeilleToCmd, priorityUserCmd, json_encode($msg), false, false)) {
                 echo "Msg sent: " . json_encode($msg) . "\n";
             } else {
                 echo "Could not send Msg\n";

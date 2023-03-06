@@ -1,5 +1,7 @@
 {
     "3AFE130104020015": {
+        "manufacturer": "Konke",
+        "model": "?",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -11,10 +13,14 @@
         },
         "type": "Konke Door Sensor",
         "commands": {
-            "include3": "etatDoorAlarme",
-            "include4 2": "Batterie-Volt-Konke",
+            "etat": {
+                "use": "etatDoorAlarme"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

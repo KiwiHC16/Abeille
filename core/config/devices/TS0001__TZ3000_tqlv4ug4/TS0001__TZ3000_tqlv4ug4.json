@@ -1,0 +1,99 @@
+{
+    "TS0001__TZ3000_tqlv4ug4": {
+        "manufacturer": "Tuya",
+        "model": "1ch switch",
+        "type": "Tuya 1ch switch module",
+        "alternateIds": {
+            "TS0001__TZ3000_gjrubzje": {}
+        },
+        "timeout": "60",
+        "category": {
+            "energy": "1",
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-1ChanSwitchModule",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Config 0": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004",
+                "execAtCreation": "Yes"
+            },
+            "Config 1": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0000",
+                "execAtCreation": "Yes"
+            },
+            "Config 2": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0001",
+                "execAtCreation": "Yes"
+            },
+            "Config 3": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0005",
+                "execAtCreation": "Yes"
+            },
+            "Config 4": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0007",
+                "execAtCreation": "Yes"
+            },
+            "Config 5": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=FFFE",
+                "execAtCreation": "Yes"
+            },
+            "Set push button": {
+                "comment": "Controlled but push button",
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=0006&attrId=D030&attrType=30&attrVal=02",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 6
+            },
+
+            "Identify": {
+                "use": "Identify"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "On": {
+                "use": "act_zbCmdG-0006-On",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Off": {
+                "use": "act_zbCmdG-0006-Off",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Toggle": {
+                "use": "act_zbCmdG-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=01",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
+            "Bind 01-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0006": {
+                "use": "act_zbConfigureReporting",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

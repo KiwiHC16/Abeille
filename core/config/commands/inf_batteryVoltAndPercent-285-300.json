@@ -1,0 +1,14 @@
+{
+    "inf_batteryVoltAndPercent-285-300": {
+        "comment": "Special info cmd for devices that send volt only and convert to %",
+        "comment2": "Computing battery percent from received voltage, assuming min=2.85V, max=3V",
+        "type": "info",
+        "subType": "numeric",
+        "configuration": {
+                "trigOut": "0001-#EP#-0021",
+                "trigOutOffset": "(max(min(#value#,3),2.85)-2.85)*100/(3-2.85)"
+        },
+        "logicalId": "0001-#EP#-0020",
+        "unit": "V"
+    }
+}

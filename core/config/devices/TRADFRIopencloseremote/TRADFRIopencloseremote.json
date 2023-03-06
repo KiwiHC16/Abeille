@@ -2,7 +2,6 @@
     "TRADFRIopencloseremote": {
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "icon": "TRADFRIopencloseremote",
             "batteryType": "1x3V CR2032"
@@ -13,29 +12,35 @@
         "type": "IKEA TRADFRI Carre 2 Boutons Remote Control livr\u00e9 avec Fyrtur Store",
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
             "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes"
             },
             "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes"
             },
-            "include9 2": "WindowsCoveringUpGroup",
-            "include10 2": "WindowsCoveringDownGroup",
-            "include10 2 2": "WindowsCoveringStopGroup"
+            "Up": {
+                "use": "WindowsCoveringUpGroup"
+            },
+            "Down": {
+                "use": "WindowsCoveringDownGroup"
+            },
+            "Stop": {
+                "use": "WindowsCoveringStopGroup"
+            }
         }
     }
 }

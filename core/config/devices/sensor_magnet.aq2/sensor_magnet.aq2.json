@@ -2,29 +2,48 @@
     "sensor_magnet.aq2": {
         "manufacturer": "Xiaomi",
         "model": "MCCGQ11LM",
+        "type": "Xiaomi Aqara door sensor",
+        "genericType": "Opening",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiPorte",
+            "icon": "Xiaomi-DoorSensor",
             "batteryType": "1x3V CR1632"
         },
         "category": {
             "security": "1"
         },
-        "type": "Xiaomi Aqara door sensor",
         "commands": {
-            "etat": {
-                "use": "zb-0006-OnOff",
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
                 "template": "door",
                 "genericType": "OPENING",
                 "invertBinary": "1",
                 "isVisible": 1
             },
-            "include4": "Batterie-Volt",
-            "include5": "Batterie-Pourcent",
-            "include6": "Xiaomi-ff01",
+            "Battery-Volt": {
+                "use": "inf_batteryVoltAndPercent-285-300"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
+            }
+        },
+        "xiaomi": {
+            "fromDevice": {
+                "0000-FF01": {
+                    "01-21": {
+                        "func": "numberDiv",
+                        "div": 1000,
+                        "info": "0001-01-0020"
+                    },
+                    "64-10": {
+                        "func": "raw",
+                        "info": "0006-01-0000"
+                    }
+                }
             }
         }
     }

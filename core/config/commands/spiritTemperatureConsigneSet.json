@@ -13,10 +13,8 @@
             "maxValue": "30",
             "visibilityCategory": "All"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
         "type": "action",
-        "genericType": ""
+        "genericType": "",
+        "nextLine": "after"
     }
 }

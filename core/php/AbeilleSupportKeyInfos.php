@@ -38,8 +38,7 @@
      *
      * @return  none
      */
-    function logIt($msg, $append = 1)
-    {
+    function logIt($msg, $append = 1) {
         global $logFile;
 
         // echo $msg;
@@ -57,8 +56,9 @@
      *
      * @return  none
      */
-    function echoTitle($logFile, $title)
-    {
+    function logTitle($title) {
+        global $logFile;
+
         $line = "";
         if (substr($title, 0, 2) == '{{') {
             $title = substr($title, 2);
@@ -73,8 +73,16 @@
         logIt($line."\n");
     }
 
-    function requestAndPrint($logFile, $link, $sql, $title) {
-        echoTitle($logFile, $title);
+    function requestAndPrint($link, $table, $title) {
+        logTitle($title);
+
+        switch ($table) {
+        case "update": $sql = "SELECT * FROM `update` WHERE `name` = 'Abeille'"; break;
+        case "cron": $sql = "SELECT * FROM `cron` WHERE `class` = 'Abeille'"; break;
+        case "config": $sql = "SELECT * FROM `config` WHERE `plugin` = 'Abeille'"; break;
+        case "eqLogic": $sql = "SELECT * FROM `eqLogic` WHERE `eqType_name` = 'Abeille'"; break;
+        case "cmd": $sql = "SELECT * FROM `cmd` WHERE `eqType` = 'Abeille'"; break;
+        }
         $i = 0;
         logIt("{\n");
         if ($result = mysqli_query($link, $sql)) {
@@ -82,13 +90,16 @@
                 if (isset($row['id'])) {
                     $id = $row['id'];
                     unset($row['id']);
-                    logIt('    "'.$id.'": '.json_encode($row).",\n");
+                    logIt('    "'.$id.'": '.json_encode($row, JSON_UNESCAPED_SLASHES).",\n");
                 } else if (isset($row['key'])) {
                     $key = $row['key'];
                     unset($row['key']);
-                    logIt('    "'.$key.'": '.json_encode($row).",\n");
+                    if (($table == 'config') && ($key == 'api'))
+                        logIt('    "'.$key."\": FILTERED,\n");
+                    else
+                        logIt('    "'.$key.'": '.json_encode($row, JSON_UNESCAPED_SLASHES).",\n");
                 } else {
-                    logIt('    "'.$i.'": '.json_encode($row).",\n");
+                    logIt('    "'.$i.'": '.json_encode($row, JSON_UNESCAPED_SLASHES).",\n");
                     $i++;
                 }
             }
@@ -97,9 +108,10 @@
         logIt("}\n\n");
     }
 
-    function zigateInfos() {
+    // Display Zigates informations
+    function zigatesInfos() {
         for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-            if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N') != 'Y')
+            if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
                 continue; // Zigate disabled
 
             $eqLogic = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
@@ -108,20 +120,53 @@
 
                 $major = '????';
                 $minor = '????';
+                $channel = "?";
                 $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'SW-Application');
                 if ($cmdLogic)
                     $major = $cmdLogic->execCmd();
                 $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'SW-SDK');
                 if ($cmdLogic)
                     $minor = $cmdLogic->execCmd();
-                logIt("Zigate ".$zgId.": ".$major.'-'.$minor."\n");
+                $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'Network-Channel');
+                if ($cmdLogic)
+                    $channel = $cmdLogic->execCmd();
+
+                $zgType = config::byKey('ab::zgType'.$zgId, 'Abeille', '?');
+
+                logIt("Zigate ".$zgId."\n");
+                $fwVersion = $major.'-'.$minor;
+                logIt(" - FW version: ".$fwVersion."\n");
+                logIt(" - Channel   : ".$channel."\n");
+                logIt(" - Type      : ".$zgType."\n");
             } else
                 logIt("Zigate ".$zgId.": ERROR. No Jeedom registered device\n");
         }
         logIt("\n");
     }
 
-    function jeedomInfos($logFile,$CONFIG) {
+    // Display devices status
+    function devicesStatus() {
+        logTitle("Devices status");
+
+        $eqLogics = Abeille::byType('Abeille');
+        foreach ($eqLogics as $eqLogic) {
+            list($net, $addr) = explode("/", $eqLogic->getLogicalId());
+            $zgId = substr($net, 7); // AbeilleX => X
+            $eqHName = $eqLogic->getHumanName();
+            $eqId = $eqLogic->getId();
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
+            if ($eqLogic->getStatus('timeout') == 1) {
+                $lastComm = $eqLogic->getStatus('lastCommunication');
+                $timeoutS = "TIMEOUT (".$lastComm.")";
+            } else
+                $timeoutS = "ok";
+            logIt(" - Z".$zgId.": ".$eqHName.", id=".$eqId.", addr=".$addr.", type='".$eqType."': ".$timeoutS."\n");
+        }
+        logIt("\n");
+    }
+
+    function jeedomInfos($CONFIG) {
         /* Connect to DB */
         $link = mysqli_connect($CONFIG['db']['host'], $CONFIG['db']['username'], $CONFIG['db']['password'], $CONFIG['db']['dbname']);
 
@@ -131,11 +176,11 @@
             return;
         }
 
-        requestAndPrint($logFile, $link, "SELECT * FROM `update`    WHERE `name` = 'Abeille'", "Table du plugin");
-        requestAndPrint($logFile, $link, "SELECT * FROM `cron`      WHERE `class` = 'Abeille'", "Table 'cron'");
-        requestAndPrint($logFile, $link, "SELECT * FROM `config`    WHERE `plugin` = 'Abeille'", "Table 'config'");
-        requestAndPrint($logFile, $link, "SELECT * FROM `eqLogic`   WHERE `eqType_name` = 'Abeille'", "Table 'eqLogic'");
-        requestAndPrint($logFile, $link, "SELECT * FROM `cmd`       WHERE `eqType` = 'Abeille'", "Table 'cmd'");
+        requestAndPrint($link, 'update', "Table 'update'");
+        requestAndPrint($link, 'cron', "Table 'cron'");
+        requestAndPrint($link, 'config', "Table 'config'");
+        requestAndPrint($link, 'eqLogic', "Table 'eqLogic'");
+        requestAndPrint($link, 'cmd', "Table 'cmd'");
 
         mysqli_close($link);
     }
@@ -147,20 +192,22 @@
     logIt('Quand <a href="https://github.com/KiwiHC16/Abeille/issues/new" target="_blank">vous ouvrez une "issue"</a> dans GitHub merci de copier/coller les 3 premiers chapitres ci dessous '."\n");
     logIt("Pour l'intégration d'un équipement non encore supporté ajoutez le chapitre 4.\n\n");
 
-    /* Reading version */
+    // Plateform infos
+    exec('uname -a', $result2);
+    logIt("Kernel: ".json_encode($result2, JSON_UNESCAPED_SLASHES)."\n\n");
+
+    // Abeille's version
     $file = fopen(__DIR__."/../../plugin_info/Abeille.version", "r");
     $line = fgets($file); // Should be a comment
     $abeilleVersion = trim(fgets($file)); // Should be Abeille's version
     fclose($file);
     logIt("Version Abeille: ".$abeilleVersion."\n\n");
 
-    // Linux
-    // exec('cat /etc/issue', $result1);
-    // logIt("Kernel: ".json_encode($result1)."\n");
-    exec('uname -a', $result2);
-    logIt("Kernel: ".json_encode($result2)."\n\n");
+    // Zigate infos
+    zigatesInfos();
 
-    zigateInfos();
+    // Devices status
+    devicesStatus();
 
-    jeedomInfos($logFile, $CONFIG);
+    jeedomInfos($CONFIG);
 ?>

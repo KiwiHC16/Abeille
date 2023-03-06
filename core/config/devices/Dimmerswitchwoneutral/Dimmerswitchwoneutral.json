@@ -1,6 +1,6 @@
 {
     "Dimmerswitchwoneutral": {
-        "type": "Legrand Dimmer Switch w\/o neutral",
+        "type": "Legrand Dimmer Switch w/o neutral",
         "timeout": "60",
         "category": {
             "automatism": "1"
@@ -11,67 +11,89 @@
         },
         "commands": {
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "CurrentLevel": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
-            "include6": "Onlevel",
+            "Onlevel": {
+                "use": "Onlevel"
+            },
             "On": {
-                "use": "zbCmd-0006-On"
+                "use": "act_zbCmdG-0006-On"
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "isVisible": 1
             },
             "Toggle": {
-                "use": "zbCmd-0006-Toggle",
+                "use": "act_zbCmdG-0006-Toggle",
                 "nextLine": "after"
             },
-            "include11": "setLevel",
+            "setLevel": {
+                "use": "setLevel"
+            },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "Get-CurrentLevel": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
-            "include24": "Identify",
-            "include25": "Group-Membership",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
             "SetReporting-0006-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
             "SetReporting-0008-0000": {
-                "use": "zbConfigureReporting",
-                "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting",
+                "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "include29 2": "setLegrandDimmerOn",
-            "include29 2 2": "setLegrandDimmerOff",
-            "include30": "setLegrandLEDOn",
-            "include31": "setLegrandLEDOff",
-            "include32": "setLegrandLEDOn_if_on",
-            "include33": "setLegrandLEDOff_if_on"
+            "DimmerOn": {
+                "use": "setLegrandDimmerOn"
+            },
+            "DimmerOff": {
+                "use": "setLegrandDimmerOff"
+            },
+            "LedOn": {
+                "use": "setLegrandLEDOn"
+            },
+            "LedOff": {
+                "use": "setLegrandLEDOff"
+            },
+            "LedOn_if_on": {
+                "use": "setLegrandLEDOn_if_on"
+            },
+            "LedOff_if_on": {
+                "use": "setLegrandLEDOff_if_on"
+            }
         }
     }
 }

@@ -1,19 +1,16 @@
 {
     "BindToGroupLevelEP05": {
-        "Comment": "Used to bind the device to a group",
-        "isVisible": 0,
-        "name": "BindToGroupButtonEP5",
-        "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "BindToGroup",
-            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=05&clusterID=0008&reportToGroup=#GroupeEP5#",
+            "request": "targetExtendedAddress=#addrIEEE#&targetEndpoint=05&clusterID=0008&reportToGroup=#GROUPEP5#",
             "visibilityCategory": "Network",
             "execAtCreation": "Yes",
             "execAtCreationDelay": 19
         },
-        "type": "action"
+        "type": "action",
+        "comment": "Used to bind the device to a group"
     }
 }

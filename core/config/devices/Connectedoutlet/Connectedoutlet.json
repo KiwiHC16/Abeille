@@ -1,58 +1,76 @@
 {
     "Connectedoutlet": {
+        "manufacturer": "Legrand",
+        "model": "Connected outlet",
+        "type": "Legrand outlet",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "Connectedoutlet"
+            "icon": "Legrand-Connectedoutlet"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Legrand Prise Connected Outlet Mural 220V avec Neutre",
         "commands": {
-            "include4": "etatLight",
+            "SWBuildID": {
+                "use": "inf_zbAttr-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
             "On": {
-                "use": "zbCmd-0006-On"
+                "use": "act_zbCmdG-0006-On",
+                "isVisible": 1
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
+                "isVisible": 1
+            },
+            "Toggle": {
+                "use": "act_zbCmdG-0006-Toggle"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "nextLine": "after",
                 "isVisible": 1
             },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include24": "Identify",
-            "include25": "Group-Membership",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
             "SetReporting-0006-0000": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
             "Bind-0B04-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0B04",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "include28 2": "setReportPuissanceLegrand",
-            "include11 2": "PuissanceLegrandPrise",
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+            "setReportPuissanceLegrand": {
+                "use": "setReportPuissanceLegrand"
             },
-            "Get-SWBuildID": {
-                "use": "zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
-            "Toggle": {
-                "use": "zbCmd-0006-Toggle",
-                "nextLine": "after"
+            "Puissance": {
+                "use": "inf_zbAttr-0B04-ActivePower",
+                "params": "mult=1&div=1",
+                "isVisible": 1
             }
         }
     }

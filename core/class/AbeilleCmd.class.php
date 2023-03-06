@@ -1,7 +1,5 @@
 <?php
-
-    class AbeilleCmd extends cmd
-    {
+    class AbeilleCmd extends cmd {
         /**
          * updateField()
          * Used to replace #xxx# fields with real value
@@ -77,6 +75,16 @@
                     } else
                         $request2 = str_replace('#slider#', $sliderVal, $request2);
                     break;
+                case 'select':
+                    $sliderVal = $_options['select'];
+                    $sliderVal = trim($sliderVal); // Remove potential space seen at end of slider value
+                    $cmdTopic = $cmd->getConfiguration('topic', '');
+                    if ($cmdTopic == "writeAttribute") {
+                        // New way of handling #slider#
+                        $request2 = str_replace('#select#', '#select'.$sliderVal.'#', $request2);
+                    } else
+                        $request2 = str_replace('#select#', $sliderVal, $request2);
+                    break;
                 case 'color':
                     $request2 = str_replace('#color#', $_options['color'], $request2);
                     break;
@@ -95,24 +103,24 @@
             // logMessage('debug', 'request - cmdToVal: '.$request2);
 
             if ($request2 != $request) {
-                logMessage('debug', 'updateField()');
-                logMessage('debug', "  Updated '".$request."'");
-                logMessage('debug', "  To '".$request2."'");
+                logMessage('debug', "  updateField(): Updated '".$request."'");
+                logMessage('debug', "  updateField(): To '".$request2."'");
                 $request = $request2;
             }
             return $request;
         }
 
         /* Cmd execution.
-           Tcharp38: why is it part of AbeilleCmd ? Shouldn't be in Abeille.class.php ? 
-           KiwiHC16: It's part of Jeedom Structure. You have a class for Eq and a Class for Cmd. AbeilleCmd is child of Cmd Class, Abeille is child of eqLogic class. 
+           Tcharp38: why is it part of AbeilleCmd ? Shouldn't be in Abeille.class.php ?
+           KiwiHC16: It's part of Jeedom Structure. You have a class for Eq and a Class for Cmd. AbeilleCmd is child of Cmd Class, Abeille is child of eqLogic class.
         */
-        public function execute($_options = null)
-        {
+        public function execute($_options = null) {
             global $abQueues;
 
+            $eqLogic = $this->getEqLogic();
             logSetConf("AbeilleCmd.log", true); // Mandatory since called from 'Abeille.class.php'
-            logMessage('debug', '-- execute(eqName='.$this->getEqLogic()->getName().' name='.$this->getName().' type='.$this->getType().', options='.json_encode($_options).')');
+            // logMessage('debug', "-- execute(eqName='".$eqLogic->getName()."' name='".$this->getName()."' type=".$this->getType().', options='.json_encode($_options).')');
+            logMessage('debug', "-- execute(".$this->getHumanName().", type=".$this->getType().', options='.json_encode($_options).')');
 
             // TODO: A revoir, je ne sais plus ce qu'est ce truc.
             // cmdId : 12676 est le level d une ampoule
@@ -127,7 +135,42 @@
 
             if ($this->getType() == 'action') {
 
-                list($dest, $addr) = explode("/", $this->getEqLogic()->getLogicalId());
+                $eqLogicId = $eqLogic->getLogicalId();
+                list($dest, $addr) = explode("/", $eqLogicId);
+                if ($dest == '' || $addr == '') {
+                    logMessage('error', $eqLogic->getHumanName().': DB corrompue. Cmde annulée.');
+                    return;
+                }
+
+                // Value update if 'valueOffset' is defined.
+                // Reminder: 'valueOffset' is equivalent to 'calculValueOffset' for action cmd.
+                // Ex: "valueOffset": "#value#*10"
+                // Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
+                $vo = $this->getConfiguration('ab::valueOffset', null);
+                if ($vo !== null) {
+                    if (isset($_options['slider'])) {
+                        $vo = str_replace('#value#', $_options['slider'], $vo); // Replace #value# by slider value
+                        $lop = strpos($vo, '#logicid'); // Any #logicid....# variable ?
+                        if ($lop != false) {
+                            // logMessage('debug', "-- execute(): logicId at pos ".$lop);
+                            $logicId = substr($vo, $lop + 8);
+                            $lop = strpos($logicId, '#');
+                            $logicId = substr($logicId, 0, $lop);
+                            // logMessage('debug', "-- execute(): logicId=".$logicId);
+                            $cmdLogic = $eqLogic->getCmd('info', $logicId);
+                            if (!is_object($cmdLogic)) {
+                                message::add("Abeille", $eqLogic->getHumanName().": Commande '".$logicId."' inconnue");
+                            } else {
+                                $cmdVal = $cmdLogic->execCmd();
+                                logMessage('debug', "-- execute(): cmd logicId='".$logicId."', val=".$cmdVal);
+                                $vo = str_replace('#logicid'.$logicId.'#', $cmdVal, $vo); // Replace #logicid...#
+                            }
+                        }
+                        $newValue = jeedom::evaluateExpression($vo); // Compute final formula
+                        logMessage('debug', "-- execute(): 'valueOffset' applied: ".$_options['slider']." => ".$newValue);
+                        $_options['slider'] = $newValue;
+                    }
+                }
 
                 // -------------------------------------------------------------------------
                 // Process topic
@@ -135,7 +178,7 @@
                 if (strpos($this->getConfiguration('topic'), "CmdAbeille") === 0) {
                     $topic = str_replace("Abeille", $dest, $this->getConfiguration('topic'));
                 } else {
-                    $topic = "Cmd".$this->getEqLogic()->getLogicalId()."/".$this->getConfiguration('topic');
+                    $topic = "Cmd".$eqLogicId."/".$this->getConfiguration('topic');
                 }
                 // Tcharp38: What must be replaced in 'topic' ?
                 $topic = $this->updateField($dest, $this, $topic, $_options);
@@ -148,19 +191,19 @@
                 $msg = array();
                 $msg['topic'] = $topic;
                 $msg['payload'] = $request;
+                $msgJson = json_encode($msg);
 
                 if (strpos($topic, "CmdCreate") === 0) {
-                    $queueAbeilleToAbeille = msg_get_queue($abQueues["abeilleToAbeille"]["id"]);
-                    if (msg_send($queueAbeilleToAbeille, 1, $msg, true, false)) {
-                        logMessage('debug', '-- execute(): CmdCreate: Msg sent: '.json_encode($msg));
+                    $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
+                    if (msg_send($queueXToAbeille, 1, $msgJson, false, false)) {
+                        logMessage('debug', '-- execute(): CmdCreate: Msg sent: '.$msgJson);
                     } else {
                         logMessage('debug', '-- execute(): ERROR: CmdCreate: Could not send Msg');
                     }
                 } else {
-                    // $queueKeyAbeilleToCmd = msg_get_queue(queueKeyAbeilleToCmd);
                     $queue = msg_get_queue($abQueues['xToCmd']['id']);
-                    if (msg_send($queue, PRIO_NORM, $msg, true, false)) {
-                        logMessage('debug', '-- execute(): Msg sent: '.json_encode($msg));
+                    if (msg_send($queue, PRIO_NORM, $msgJson, false, false)) {
+                        logMessage('debug', '-- execute(): Msg sent: '.$msgJson);
                     } else {
                         logMessage('debug', '-- execute(): ERROR: Could not send Msg');
                     }
@@ -176,6 +219,22 @@
                             logMessage('debug', '-- execute(): cmdAction with cmd Info Ref: '.$this->getCmdValue()->getName().' with value slider: '.$_options['slider']);
                             $cmdInfo->event($_options['slider']);
                         }
+                    }
+                }
+
+                // An action cmd can trig another action cmd with 'trigOut'
+                $to = $this->getConfiguration('ab::trigOut', null);
+                if ($to !== null) {
+                    // logMessage('debug', "  LA HOULD BE TRIGGERED='".$to."'");
+                    // $trigOffset = $cmdLogic->getConfiguration('ab::trigOutOffset');
+                    // Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
+                    $trigCmd = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $to);
+                    if ($trigCmd) {
+                        logMessage('debug', "  Triggering '".$to."'");
+                        $trigCmd->execute();
+                        // TODO
+                        // log::add('Abeille', 'debug', "  Triggering cmd '".$to."'");
+                        // $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
                     }
                 }
             } // End type==action

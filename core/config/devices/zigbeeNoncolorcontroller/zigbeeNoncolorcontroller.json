@@ -2,7 +2,6 @@
     "zigbeeNoncolorcontroller": {
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "icon": "zigbeeNoncolorcontroller"
         },
@@ -11,12 +10,24 @@
         },
         "type": "zigbee Non color controller",
         "commands": {
-            "include1": "offGroup",
-            "include2": "toggleGroup",
-            "include3": "onGroup",
-            "include4": "downGroup",
-            "include5": "upGroup",
-            "include6": "setLevelGroup"
+            "Off": {
+                "use": "offGroup"
+            },
+            "Toggle": {
+                "use": "toggleGroup"
+            },
+            "On": {
+                "use": "onGroup"
+            },
+            "Down": {
+                "use": "downGroup"
+            },
+            "Up": {
+                "use": "upGroup"
+            },
+            "setLevel": {
+                "use": "setLevelGroup"
+            }
         }
     }
 }

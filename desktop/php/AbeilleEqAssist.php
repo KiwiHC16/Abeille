@@ -38,8 +38,9 @@
     $eqLogicId = $eqLogic->getLogicalid();
     list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
     $zgNb = substr($eqNet, 7); // Extracting zigate number from network
-    $jsonName = $eqLogic->getConfiguration('ab::jsonId', ''); // TODO: rename to 'ab::jsonId'
-    $jsonLocation = $eqLogic->getConfiguration('ab::jsonLocation', 'Abeille');
+    $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
+    $jsonName = $eqModel ? $eqModel['id'] : '';
+    $jsonLocation = $eqModel ? $eqModel['location'] : 'Abeille';
     $eqIeee = $eqLogic->getConfiguration('IEEE', '');
 
     $abQueues = $GLOBALS['abQueues'];
@@ -50,7 +51,7 @@
     echo '<script>var js_jsonName = "'.$jsonName.'";</script>'; // PHP to JS
     echo '<script>var js_jsonLocation = "'.$jsonLocation.'";</script>'; // PHP to JS
     echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
-    echo '<script>var js_queueKeyCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
 
     $pluginDir = __DIR__."/../../"; // Plugin root dir
     echo '<script>let js_pluginDir = "'.$pluginDir.'";</script>';
@@ -842,11 +843,16 @@
         var cmdNb = 0;
         endPoints = zigbee.endPoints;
         mainEp = -1;
+        minTimeout = 60; // Min timeout = 60min
+        onOffIdx = 1; // For 0006 cluster
         for (var epId in endPoints) {
             // console.log("EP "+epId);
             ep = endPoints[epId];
 
-            // Basic cluster
+            if (!isset(ep.servClusters))
+                continue;
+
+            // 0000/Basic cluster
             if (isset(ep.servClusters["0000"]) && isset(ep.servClusters["0000"]['attributes'])) {
                 attributes = ep.servClusters["0000"]['attributes'];
 
@@ -855,8 +861,8 @@
                 /* Only attribute 4000 is converted to user command.
                    No sense for others */
                 if (isset(attributes['4000'])) {
-                    cmds["SWBuildID"] = newCmd("zb-0000-SWBuildID");
-                    cmds["Get SWBuildID"] = newCmd("zbReadAttribute", "clustId=0000&attrId=4000");
+                    cmds["SWBuildID"] = newCmd("inf_zbAttr-0000-SWBuildID");
+                    cmds["Get SWBuildID"] = newCmd("act_zbReadAttribute", "clustId=0000&attrId=4000");
                 }
                 if (typeof zigbee.signature === "undefined")
                     zigbee.signature = new Object();
@@ -868,109 +874,109 @@
                 }
             }
 
-            /* Power configuration */
+            /* 0001/Power configuration cluster */
             if (isset(ep.servClusters["0001"]) && isset(ep.servClusters["0001"]['attributes'])) {
                 attributes = ep.servClusters['0001']['attributes'];
                 if (isset(attributes['0021'])) {
-                    cmds["Battery-Percent"] = newCmd("zb-0001-BatteryPercent");
-                    // cmds["Battery-Percent"]["isVisible"] = 1;
-                    cmds["SetReporting 0001-00021"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
+                    cmds["Battery-Percent"] = newCmd("inf_zbAttr-0001-BatteryPercent", "ep="+epId);
+                    cmds["SetReporting "+epId+"-0001-00021"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
                 } else if (isset(attributes['0020'])) {
-                    cmds["Battery-Percent"] = newCmd("zb-0001-BatteryPercent");
-                    cmds["Battery-Volt2Percent"] = newCmd("battery-Volt2Percent-3");
-                    cmds["SetReporting 0001-00020"] = newCmd("zbConfigureReporting", "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
+                    cmds["Battery-Volt"] = newCmd("inf_zbAttr-0001-BatteryVolt", "ep="+epId);
+                    // cmds["Battery-Volt2Percent"] = newCmd("battery-Volt2Percent-3", "ep="+epId);
+                    cmds["SetReporting "+epId+"-0001-00020"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
                 }
-                cmds["Bind 0001-ToZigate"] = newCmd("zbBindToZigate", "clustId=0001", "yes");
+                cmds["Bind "+epId+"-0001-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0001", "yes");
             }
 
-            /* Identify cluster */
+            /* 0003/Identify cluster */
             if (typeof ep.servClusters["0003"] !== "undefined") {
                 cmds["Identify"] = newCmd("Identify");
             }
 
-            /* Groups cluster */
+            /* 0004/Groups cluster */
             if (typeof ep.servClusters["0004"] !== "undefined") {
                 cmds["Groups"] = newCmd("Group-Membership");
             }
 
-            /* OnOff cluster */
+            /* 0006/OnOff cluster */
             if (isset(ep.servClusters["0006"]) && isset(ep.servClusters["0006"]['attributes'])) {
                 attributes = ep.servClusters["0006"]['attributes'];
                 if (isset(attributes['0000'])) {
                     // Adding on/off & toggle commands but assuming all supported
-                    cmds["On"] = newCmd("zbCmd-0006-On");
-                    cmds["On"]["isVisible"] = 1;
-                    cmds["Off"] = newCmd("zbCmd-0006-Off");
-                    cmds["Off"]["isVisible"] = 1;
-                    cmds["Toggle"] = newCmd("zbCmd-0006-Toggle");
-                    cmds["Status"] = newCmd("zb-0006-OnOff");
-                    cmds["Status"]["isVisible"] = 1;
-                    cmds["Status"]["nextLine"] = "after";
-                    cmds["Get Status"] = newCmd("zbReadAttribute", "clustId=0006&attrId=0000");
+                    cmds["On "+onOffIdx] = newCmd("act_zbCmdG-0006-On", "ep="+epId);
+                    cmds["On "+onOffIdx]["isVisible"] = 1;
+                    cmds["Off "+onOffIdx] = newCmd("act_zbCmdG-0006-Off", "ep="+epId);
+                    cmds["Off "+onOffIdx]["isVisible"] = 1;
+                    cmds["Toggle "+onOffIdx] = newCmd("act_zbCmdG-0006-Toggle", "ep="+epId);
+                    cmds["Status "+onOffIdx] = newCmd("inf_zbAttr-0006-OnOff", "ep="+epId);
+                    cmds["Status "+onOffIdx]["isVisible"] = 1;
+                    cmds["Status "+onOffIdx]["nextLine"] = "after";
+                    cmds["Get Status "+onOffIdx] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0006&attrId=0000");
+                    onOffIdx++;
                     // Adding bind + configureReporting but assuming supported
-                    cmds["Bind 0006-ToZigate"] = newCmd("zbBindToZigate", "clustId=0006", "yes");
-                    cmds["SetReporting 0006"] = newCmd("zbConfigureReporting", "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                    cmds["Bind "+epId+"-0006-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0006", "yes");
+                    cmds["SetReporting "+epId+"-0006"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
                 }
             }
 
-            /* Level cluster */
+            /* 0008/Level cluster */
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
-                cmds["Set Level"] = newCmd("setLevel");
+                cmds["Set Level"] = newCmd("setLevel", "ep="+epId);
                 cmds["Set Level"]["isVisible"] = 1;
-                cmds["Current Level"] = newCmd("zb-0008-CurrentLevel");
-                cmds["Current Level"]["isVisible"] = 1;
-                cmds["Current Level"]["nextLine"] = "after";
-                cmds["Get Current Level"] = newCmd("zbReadAttribute", "clustId=0008&attrId=0000");
-                cmds["Bind 0008-ToZigate"] = newCmd("zbBindToZigate", "clustId=0008", "yes");
-                cmds["SetReporting 0008-0000"] = newCmd("zbConfigureReporting", "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                cmds["Level"] = newCmd("inf_zbAttr-0008-CurrentLevel", "ep="+epId);
+                cmds["Level"]["isVisible"] = 1;
+                cmds["Level"]["nextLine"] = "after";
+                cmds["Get Level"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
+                cmds["Bind "+epId+"-0008-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0008", "yes");
+                cmds["SetReporting "+epId+"-0008-0000"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
             }
 
             /* Analog Input */
             if (isset(ep.servClusters["000C"]) && isset(ep.servClusters["000C"]['attributes'])) {
                 attributes = ep.servClusters["000C"]['attributes'];
                 if (isset(attributes['0051'])) {
-                    cmds["OutOfService"] = newCmd("zb-000C-OutOfService");
+                    cmds["OutOfService"] = newCmd("inf_zbAttr-000C-OutOfService");
                     // cmds["OutOfService"]["isVisible"] = 1;
-                    cmds["Get OutOfService"] = newCmd("zbReadAttribute", "clustId=000C&attrId=0051");
+                    cmds["Get OutOfService"] = newCmd("act_zbReadAttribute", "clustId=000C&attrId=0051");
                 }
                 if (isset(attributes['0055'])) {
-                    cmds["PresentValue"] = newCmd("zb-000C-PresentValue");
+                    cmds["PresentValue"] = newCmd("inf_zbAttr-000C-PresentValue");
                     cmds["PresentValue"]["isVisible"] = 1;
-                    cmds["Get PresentValue"] = newCmd("zbReadAttribute", "clustId=000C&attrId=0055");
+                    cmds["Get PresentValue"] = newCmd("act_zbReadAttribute", "clustId=000C&attrId=0055");
 
-                    cmds["SetReporting 000C-PresentValue"] = newCmd("zbConfigureReporting", "clustId=000C&attrId=0055&attrType=39&minInterval=012C&maxInterval=0258&changeVal=", "yes");
+                    cmds["SetReporting 000C-PresentValue"] = newCmd("act_zbConfigureReporting", "clustId=000C&attrId=0055&attrType=39&minInterval=012C&maxInterval=0258&changeVal=", "yes");
                     cmds["SetReporting 000C-PresentValue"]["comment"] = "Reporting every 5 to 10min";
                 }
                 if (isset(attributes['006F'])) {
-                    cmds["StatusFlags"] = newCmd("zb-000C-StatusFlags");
+                    cmds["StatusFlags"] = newCmd("inf_zbAttr-000C-StatusFlags");
                     // cmds["StatusFlags"]["isVisible"] = 1;
-                    cmds["Get StatusFlags"] = newCmd("zbReadAttribute", "clustId=000C&attrId=006F");
+                    cmds["Get StatusFlags"] = newCmd("act_zbReadAttribute", "clustId=000C&attrId=006F");
                 }
 
-                cmds["Bind 000C-ToZigate"] = newCmd("zbBindToZigate", "clustId=000C", "yes");
+                cmds["Bind 000C-ToZigate"] = newCmd("act_zbBindToZigate", "clustId=000C", "yes");
             }
 
-            /* Window covering */
+            /* 0102/Window covering */
             if (isset(ep.servClusters["0102"]) && isset(ep.servClusters["0102"]['attributes'])) {
                 attributes = ep.servClusters["0102"]['attributes'];
-                cmds["Up"] = newCmd("zbCmd-0102-UpOpen");
+                cmds["Up"] = newCmd("act_zbCmdG-0102-UpOpen", "ep="+epId);
                 cmds["Up"]["isVisible"] = 1;
-                cmds["Stop"] = newCmd("zbCmd-0102-Stop");
+                cmds["Stop"] = newCmd("act_zbCmdG-0102-Stop", "ep="+epId);
                 cmds["Stop"]["isVisible"] = 1;
-                cmds["Down"] = newCmd("zbCmd-0102-DownClose");
+                cmds["Down"] = newCmd("act_zbCmdG-0102-DownClose", "ep="+epId);
                 cmds["Down"]["isVisible"] = 1;
                 if (isset(attributes['0008'])) {
-                    // TODO: Take care if 'Current Level' already used (ex: by cluster 0008)
-                    cmds["Current Level"] = newCmd("zb-0102-CurPosLiftPercent");
-                    cmds["Current Level"]["isVisible"] = 1;
-                    cmds["Get Current Level"] = newCmd("zbReadAttribute", "clustId=0102&attrId=0008");
+                    // TODO: Take care if 'Level' already used (ex: by cluster 0008)
+                    cmds["Level"] = newCmd("inf_zbAttr-0102-CurPosLiftPercent", "ep="+epId);
+                    cmds["Level"]["isVisible"] = 1;
+                    cmds["Get Level"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0102&attrId=0008");
                 }
-                cmds["Bind 0102-ToZigate"] = newCmd("zbBindToZigate", "clustId=0102", "yes");
-                cmds["SetReporting 0102"] = newCmd("zbConfigureReporting", "clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                cmds["Bind "+epId+"-0102-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0102", "yes");
+                cmds["SetReporting "+epId+"-0102-0000"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
             }
 
-            /* Color cluster */
+            /* 0300/Color cluster */
             if (isset(ep.servClusters["0300"]) && isset(ep.servClusters["0300"]['attributes'])) {
                 attributes = ep.servClusters["0300"]['attributes'];
                 currentMode = 1; // Default = CurrentX & CurrentY
@@ -979,37 +985,37 @@
 
                 // Color mode
                 if (isset(attributes['0008'])) {
-                    cmds["Color Mode"] = newCmd("zb-0300-ColorMode");
+                    cmds["Color Mode"] = newCmd("inf_zbAttr-0300-ColorMode");
                     // cmds["Color Mode"]["isVisible"] = 1;
-                    cmds["Get Color Mode"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0008");
+                    cmds["Get Color Mode"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0008");
                 }
 
                 // Hue/saturation mode
                 if (isset(attributes['0000'])) {
-                    cmds["Current HUE"] = newCmd("zb-0300-CurrentHue");
+                    cmds["Current HUE"] = newCmd("inf_zbAttr-0300-CurrentHue");
                     // if (currentMode == 0) // If HUE + saturation
                     //     cmds["Current HUE"]["isVisible"] = 1;
-                    cmds["Get Current HUE"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0000");
+                    cmds["Get Current HUE"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0000");
                 }
                 if (isset(attributes['0001'])) {
-                    cmds["Current Saturation"] = newCmd("zb-0300-CurrentSaturation");
+                    cmds["Current Saturation"] = newCmd("inf_zbAttr-0300-CurrentSaturation");
                     // if (currentMode == 0) // If HUE + saturation
                     //     cmds["Current Saturation"]["isVisible"] = 1;
-                    cmds["Get Current Saturation"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0001");
+                    cmds["Get Current Saturation"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0001");
                 }
 
                 // X/Y mode
                 if (isset(attributes['0003'])) {
-                    cmds["Current X"] = newCmd("zb-0300-CurrentX");
+                    cmds["Current X"] = newCmd("inf_zbAttr-0300-CurrentX");
                     // if (currentMode == 1) // If X + Y
                     //     cmds["Current X"]["isVisible"] = 1;
-                    cmds["Get Current X"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0003");
+                    cmds["Get Current X"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0003");
                 }
                 if (isset(attributes['0004'])) {
-                    cmds["Current Y"] = newCmd("zb-0300-CurrentY");
+                    cmds["Current Y"] = newCmd("inf_zbAttr-0300-CurrentY");
                     // if (currentMode == 1) // If X + Y
                     //     cmds["Current Y"]["isVisible"] = 1;
-                    cmds["Get Current Y"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0004");
+                    cmds["Get Current Y"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0004");
                 }
                 if (isset(attributes['0003']) || isset(attributes['0004'])) {
                     // Associated commands to X/Y mode:
@@ -1017,95 +1023,156 @@
                     // Move color (cmd 0x08)
                     // Step color (cmd 0x09)
                     // Stop move step (cmd 0x47)
-                    cmds["White"] = newCmd("zbCmd-0300-MoveToColor", "X=6000&Y=6000");
+                    cmds["White"] = newCmd("act_zbCmdG-0300-MoveToColor", "X=6000&Y=6000");
                     // if (currentMode == 1) // If X + Y
                         cmds["White"]["isVisible"] = 1;
-                    cmds["Blue"] = newCmd("zbCmd-0300-MoveToColor", "X=228F&Y=228F");
+                    cmds["Blue"] = newCmd("act_zbCmdG-0300-MoveToColor", "X=228F&Y=228F");
                     // if (currentMode == 1) // If X + Y
                         cmds["Blue"]["isVisible"] = 1;
-                    cmds["Red"] = newCmd("zbCmd-0300-MoveToColor", "X=AE13&Y=51EB");
+                    cmds["Red"] = newCmd("act_zbCmdG-0300-MoveToColor", "X=AE13&Y=51EB");
                     // if (currentMode == 1) // If X + Y
                         cmds["Red"]["isVisible"] = 1;
-                    cmds["Green"] = newCmd("zbCmd-0300-MoveToColor", "X=147A&Y=D709");
+                    cmds["Green"] = newCmd("act_zbCmdG-0300-MoveToColor", "X=147A&Y=D709");
                     // if (currentMode == 1) // If X + Y
                         cmds["Green"]["isVisible"] = 1;
+                    cmds["RGB"] = newCmd("setRGB");
+                    cmds["RGB"]["isVisible"] = 1;
+                    cmds["RGB"]["nextLine"] = "after";
                 }
 
                 // Color temperature
                 if (isset(attributes['0007'])) {
-                    cmds["Set 2700K"] = newCmd("zbCmd-0300-MoveToColorTemp", "slider=2700");
-                    if (currentMode == 2) // ColorTemperatureMireds
-                        cmds["Set 2700K"]["isVisible"] = 1;
-                    cmds["Set 4000K"] = newCmd("zbCmd-0300-MoveToColorTemp", "slider=4000");
-                    if (currentMode == 2) // ColorTemperatureMireds
-                        cmds["Set 4000K"]["isVisible"] = 1;
+                    // cmds["Set 2700K"] = newCmd("act_zbCmdG-0300-MoveToColorTemp", "slider=2700");
+                    // if (currentMode == 2) // ColorTemperatureMireds
+                    //     cmds["Set 2700K"]["isVisible"] = 1;
+                    // cmds["Set 4000K"] = newCmd("act_zbCmdG-0300-MoveToColorTemp", "slider=4000");
+                    // if (currentMode == 2) // ColorTemperatureMireds
+                    //     cmds["Set 4000K"]["isVisible"] = 1;
 
-                    cmds["ColorTemperature"] = newCmd("zb-0300-ColorTemperatureMireds");
-                    if (currentMode == 2) // ColorTemperatureMireds
-                        cmds["ColorTemperature"]["isVisible"] = 1;
-                    cmds["Get ColorTemperature"] = newCmd("zbReadAttribute", "clustId=0300&attrId=0007");
+                    cmds["ColorTemperature"] = newCmd("inf_zbAttr-0300-ColorTemperatureMireds");
+                    // if (currentMode == 2) // ColorTemperatureMireds
+                    //     cmds["ColorTemperature"]["isVisible"] = 1;
+                    cmds["Get ColorTemperature"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0007");
                 }
 
-                cmds["Bind 0300-ToZigate"] = newCmd("zbBindToZigate", "clustId=0300", "yes");
+                cmds["Bind 0300-ToZigate"] = newCmd("act_zbBindToZigate", "clustId=0300", "yes");
             }
 
-            /* Illuminance cluster */
+            /* 0400/Illuminance cluster */
             if (isset(ep.servClusters["0400"]) && isset(ep.servClusters["0400"]['attributes'])) {
                 attributes = ep.servClusters["0400"]['attributes'];
                 if (isset(attributes['0000'])) {
-                    cmds["Illuminance"] = newCmd("zb-0400-MeasuredValue");
+                    cmds["Illuminance"] = newCmd("inf_zbAttr-0400-MeasuredValue", "ep="+epId);
                     cmds["Illuminance"]["isVisible"] = 1;
-                    cmds["Get Illuminance"] = newCmd("zbReadAttribute", "clustId=0400&attrId=0000");
+                    cmds["Get Illuminance"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0400&attrId=0000");
+                    cmds["Bind "+epId+"-0400-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0400", "yes");
+                    cmds["SetReporting "+epId+"-0400-0000"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0400&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=0000", "yes");
+                    cmds["SetReporting "+epId+"-0400-0000"]["comment"] = "Reporting every 5 to 10mins";
                 }
             }
 
-            /* Temperature cluster */
+            /* 0402/Temperature cluster */
             if (isset(ep.servClusters["0402"]) && isset(ep.servClusters["0402"]['attributes'])) {
                 attributes = ep.servClusters["0402"]['attributes'];
                 if (isset(attributes['0000'])) {
-                    cmds["Temperature"] = newCmd("zb-0402-MeasuredValue");
+                    cmds["Temperature"] = newCmd("inf_zbAttr-0402-MeasuredValue", "ep="+epId);
                     cmds["Temperature"]["isVisible"] = 1;
-                    cmds["Get Temperature"] = newCmd("zbReadAttribute", "clustId=0402&attrId=0000");
+                    cmds["Get Temperature"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0402&attrId=0000");
+                    cmds["SetReporting "+epId+"-0402-0000"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=", "yes");
+                    cmds["SetReporting "+epId+"-0402-0000"]["comment"] = "Reporting every 5 to 10mins";
+                    cmds["Bind "+epId+"-0402-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0402", "yes");
+                    if (minTimeout > 10)
+                        minTimeout = 10;
                 }
             }
 
-            /* Humidity cluster */
+            /* 0405/Humidity cluster */
             if (isset(ep.servClusters["0405"]) && isset(ep.servClusters["0405"]['attributes'])) {
                 attributes = ep.servClusters["0405"]['attributes'];
                 if (isset(attributes['0000'])) {
-                    cmds["Humidity"] = newCmd("zb-0405-MeasuredValue");
+                    cmds["Humidity"] = newCmd("inf_zbAttr-0405-MeasuredValue", "ep="+epId);
                     cmds["Humidity"]["isVisible"] = 1;
-                    cmds["Get Humidity"] = newCmd("zbReadAttribute", "clustId=0405&attrId=0000");
+                    cmds["Get Humidity"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0405&attrId=0000");
+                    cmds["SetReporting "+epId+"-0405-0000"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0405&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=", "yes");
+                    cmds["SetReporting "+epId+"-0405-0000"]["comment"] = "Reporting every 5 to 10mins";
+                    cmds["Bind "+epId+"-0405-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0405", "yes");
+                    if (minTimeout > 10)
+                        minTimeout = 10;
                 }
             }
 
-            /* IAS Zone */
+            /* 0406/Occupancy Sensing cluster */
+            if (isset(ep.servClusters["0406"]) && isset(ep.servClusters["0406"]['attributes'])) {
+                attributes = ep.servClusters["0406"]['attributes'];
+                if (isset(attributes['0000'])) {
+                    cmds["Occupancy"] = newCmd("inf_zbAttr-0406-Occupancy");
+                    cmds["Occupancy"]["isVisible"] = 1;
+                    // cmds["Get Humidity"] = newCmd("act_zbReadAttribute", "clustId=0405&attrId=0000");
+                    cmds["Bind "+epId+"-0406-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0406", "yes");
+                    cmds["SetReporting "+epId+"-0406-0000"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0406&attrType=18&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                    // if (minTimeout > 10)
+                    //     minTimeout = 10;
+                }
+            }
+
+            /* 0500/IAS Zone */
             if (isset(ep.servClusters["0500"]) && isset(ep.servClusters["0500"]['attributes'])) {
                 attributes = ep.servClusters["0500"]['attributes'];
-                if (isset(attributes['0002'])) {
-                    cmds["Zone Status"] = newCmd("zb-0500-ZoneStatus");
-                    cmds["Zone Status"]["isVisible"] = 1;
-                    cmds["Get Zone Status"] = newCmd("zbReadAttribute", "clustId=0500&attrId=0002");
-                }
-                cmds["Bind 0500-ToZigate"] = newCmd("zbBindToZigate", "clustId=0500", "yes");
-                cmds["SetReporting 0500-0002"] = newCmd("zbConfigureReporting", "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                // if (isset(attributes['0002'])) {
+                //     cmds["Zone Status"] = newCmd("inf_zbAttr-0500-ZoneStatus");
+                //     // cmds["Zone Status"]["isVisible"] = 1;
+                //     cmds["Zone Status"]["comment"] = "This should trig 'Zone Alarm1'";
+                //     cmds["Get Zone Status"] = newCmd("act_zbReadAttribute", "clustId=0500&attrId=0002");
+                //     cmds["Zone Alarm1"] = newCmd("inf_zbAttr-0500-ZoneStatus-Alarm1");
+                //     cmds["Zone Alarm1"]["isVisible"] = 1;
+                //     cmds["SetReporting 0500-0002"] = newCmd("act_zbConfigureReporting", "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                // }
+
+                // Generated cmd 00 seems to be mandatory. Using it by default
+                cmds["Zone Alarm1"] = newCmd("attr-Zone-Alarm1", "ep="+epId);
+                cmds["Zone Alarm1"]["isVisible"] = 1;
+                cmds["Zone Status Changed"] = newCmd("inf_zbAttr-0500-ZoneStatus-ChangeNotification", "ep="+epId);
+                cmds["Zone Status Changed"]["comment"] = "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value";
+                cmds["Zone Status Changed"]["trigOut"] = epId+"-0500-alarm1";
+                cmds["Zone Status Changed"]["trigOutOffset"] = "#value#&1";
+
+                cmds["Bind "+epId+"-0500-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0500", "yes");
             }
 
-            /* Metering (Smart Energy) */
+            /* 0702/Metering (Smart Energy) */
             if (isset(ep.servClusters["0702"]) && isset(ep.servClusters["0702"]['attributes'])) {
                 attributes = ep.servClusters["0702"]['attributes'];
                 cmdName = "Total power"; // Default cmd name
                 unit = "KWh"; // Default unit
                 div = 1; // Default div
+                // TO BE COMPLETED if required
+                // if (isset(attributes['0300'])) { // UnitofMeasure
+                //     switch (attributes['0303']['value']) {
+                //     case 0x00: "KWh"; break; // Pure binary format
+                //     case 0x80: "KWh"; break; // BCD format
+                //     }
+                // }
+                // Note: Summation = Summation received * Multiplier / Divisor (formatted using SummationFormatting)
+                if (isset(attributes['0301'])) { // Multiplier
+                    val = attributes['0301']['value'];
+                }
+                if (isset(attributes['0302'])) { // Divisor
+                    val = attributes['0302']['value'];
+                    if (val != 0)
+                        div = val;
+                }
                 if (isset(attributes['0303'])) { // SummationFormatting
                     val = attributes['0303']['value'];
-                    val = val & 7; // Keep bits 2:0 only => right digits
-                    div = Math.pow(10, val);
+                    if (val != 0) {
+                        val = val & 7; // Keep bits 2:0 only => right digits
+                        div = Math.pow(10, val);
+                    }
                 }
                 if (isset(attributes['0000'])) {
-                    cmds[cmdName] = newCmd("zb-0702-CurrentSummationDelivered", "unit="+unit+"&div="+div);
+                    cmds[cmdName] = newCmd("inf_zbAttr-0702-CurrentSummationDelivered", "div="+div);
+                    cmds[cmdName]["unit"] = unit;
                     cmds[cmdName]["isVisible"] = 1;
-                    cmds["Get "+cmdName] = newCmd("zbReadAttribute", "clustId=0702&attrId=0000");
+                    cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0702&attrId=0000");
                 }
             }
 
@@ -1114,28 +1181,28 @@
                 attributes = ep.servClusters["0B04"]['attributes'];
                 if (isset(attributes['0505'])) { // RMS Voltage
                     cmdName = "RMS Voltage"; // Default cmd name
-                    cmds[cmdName] = newCmd("zb-0B04-RMSVoltage", "mult=1&div=1");
+                    cmds[cmdName] = newCmd("inf_zbAttr-0B04-RMSVoltage", "mult=1&div=1");
                     cmds[cmdName]["isVisible"] = 0;
-                    cmds["Get "+cmdName] = newCmd("zbReadAttribute", "clustId=0B04&attrId=0505");
+                    cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0B04&attrId=0505");
                 }
                 if (isset(attributes['0508'])) { // RMS Current
                     cmdName = "RMS Current"; // Default cmd name
-                    cmds[cmdName] = newCmd("zb-0B04-RMSCurrent", "mult=1&div=1");
+                    cmds[cmdName] = newCmd("inf_zbAttr-0B04-RMSCurrent", "mult=1&div=1");
                     cmds[cmdName]["isVisible"] = 1;
-                    cmds["Get "+cmdName] = newCmd("zbReadAttribute", "clustId=0B04&attrId=0508");
+                    cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0B04&attrId=0508");
                 }
                 if (isset(attributes['050B'])) { // Active power
                     cmdName = "Active Power"; // Default cmd name
-                    cmds[cmdName] = newCmd("zb-0B04-ActivePower", "mult=1&div=1");
+                    cmds[cmdName] = newCmd("inf_zbAttr-0B04-ActivePower", "mult=1&div=1");
                     cmds[cmdName]["isVisible"] = 1;
-                    cmds["Get "+cmdName] = newCmd("zbReadAttribute", "clustId=0B04&attrId=050B");
+                    cmds["Get "+cmdName] = newCmd("act_zbReadAttribute", "clustId=0B04&attrId=050B");
                 }
-                cmds["Bind 0B04-ToZigate"] = newCmd("zbBindToZigate", "clustId=0B04", "yes");
+                cmds["Bind 0B04-ToZigate"] = newCmd("act_zbBindToZigate", "clustId=0B04", "yes");
                 if (isset(attributes['0508'])) { // RMS Current
-                    cmds["SetReporting 0B04-0508"] = newCmd("zbConfigureReporting", "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                    cmds["SetReporting 0B04-0508"] = newCmd("act_zbConfigureReporting", "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=", "yes");
                 }
                 if (isset(attributes['050B'])) { // Active power
-                    cmds["SetReporting 0B04-050B"] = newCmd("zbConfigureReporting", "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                    cmds["SetReporting 0B04-050B"] = newCmd("act_zbConfigureReporting", "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=", "yes");
                 }
             }
 
@@ -1149,6 +1216,7 @@
         console.log(cmds);
         eq.commands = cmds;
         eq.defaultEp = mainEp;
+        eq.timeout = minTimeout;
 
         // Refresh JSON display
         if (typeof zigbee.signature !== "undefined") {
@@ -1207,9 +1275,17 @@
         // jeq2.comment = // Optional
 
         // 'category'
-        var cat = new Object();
-        cat.automatism = 1;
-        jeq2.category = cat;
+        var category = new Object();
+        for (i = 0; i < js_categories.length; i++) {
+            cat = js_categories[i];
+            checked = document.getElementById("id"+cat).checked;
+            if (checked)
+                category[cat] = 1;
+            // Only generate categories that are set to 1
+            // else
+            //     category[cat] = 0;
+        }
+        jeq2.category = category;
 
         // 'configuration'
         var conf = new Object();
@@ -1293,45 +1369,69 @@
         });
     }
 
-    /* Create 'discovery.json' file */
-    function writeDiscoveryInfos() {
-        console.log("writeDiscoveryInfos()");
+    // /* Create 'discovery.json' file */
+    // function writeDiscoveryInfos() {
+    //     console.log("writeDiscoveryInfos()");
 
-        $.ajax({
-            type: 'POST',
-            url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',
-            data: {
-                action: 'writeFile',
-                path: 'tmp/discovery.log',
-                content: JSON.stringify(eq)
-            },
-            dataType: 'json',
-            global: false,
-            // async: false,
-            error: function (request, status, error) {
-                bootbox.alert("ERREUR 'writeDiscoveryInfos' !<br>Votre installation semble corrompue.<br>"+error);
-                status = -1;
-            },
-            success: function (json_res) {
-                res = JSON.parse(json_res.result);
-                if (res.status != 0) {
-                    console.log("error="+res.error);
-                } else {
-                }
-            }
-        });
-    }
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: 'plugins/Abeille/core/ajax/AbeilleFiles.ajax.php',
+    //         data: {
+    //             action: 'writeFile',
+    //             path: 'tmp/discovery.log',
+    //             content: JSON.stringify(eq)
+    //         },
+    //         dataType: 'json',
+    //         global: false,
+    //         // async: false,
+    //         error: function (request, status, error) {
+    //             bootbox.alert("ERREUR 'writeDiscoveryInfos' !<br>Votre installation semble corrompue.<br>"+error);
+    //             status = -1;
+    //         },
+    //         success: function (json_res) {
+    //             res = JSON.parse(json_res.result);
+    //             if (res.status != 0) {
+    //                 console.log("error="+res.error);
+    //             } else {
+    //             }
+    //         }
+    //     });
+    // }
 
-    /* Save given 'text' to 'fileName' */
+    /* Zigbee to 'discovery-xxx.json' */
     function downloadDiscovery() {
         console.log("downloadDiscovery()");
+        // console.log("zigbee=", zigbee);
 
+        // Looking for signature
+        endPoints = zigbee.endPoints;
+        signature = '';
+        for (var epId in endPoints) {
+            // console.log("EP "+epId);
+            ep = endPoints[epId];
+            if (!isset(ep.servClusters))
+                continue;
+            if (!isset(ep.servClusters["0000"]) || !isset(ep.servClusters["0000"]['attributes']))
+                continue;
+
+            attributes = ep.servClusters["0000"]['attributes'];
+            if (!isset(attributes['0005']))
+                break;
+            signature = attributes['0005']['value'];
+            if (isset(attributes['0004']))
+                signature += '_'+attributes['0004']['value'];
+            break;
+        }
+
+        zigbee.fileSignature = "Abeille discovery file";
         text = JSON.stringify(zigbee);
-
         let elem = window.document.createElement('a');
         elem.style = "display: none";
         elem.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
-        elem.setAttribute('download', "discovery.json");
+        if (signature != '')
+            elem.setAttribute('download', "discovery-"+signature+".json");
+        else
+            elem.setAttribute('download', "discovery.json");
         document.body.appendChild(elem);
         elem.click();
         document.body.removeChild(elem);
@@ -1377,8 +1477,8 @@
         // 'Cmd'.$device->getLogicalId().'/readAttribute', 'ep=01&clustId=0005&attrId=0000'
         logicalId = "Abeille"+js_zgNb+"_"+js_eqAddr;
         if (infoType == "epList") {
-            topic = "Cmd"+logicalId+"_ActiveEndPoint";
-            payload = "address="+js_eqAddr;
+            topic = "Cmd"+logicalId+"_getActiveEndpoints";
+            payload = "addr="+js_eqAddr;
         } else if (infoType == "manufacturer") {
             topic = "Cmd"+logicalId+"_readAttribute";
             payload = "ep="+epId+"_clustId=0000_attrId=0004"; // Manufacturer
@@ -1405,6 +1505,9 @@
             payload = "ep="+epId+"_clustId="+clustId+"_attrId="+option;
         } else if (infoType == "discoverCommandsReceived") {
             topic = "Cmd"+logicalId+"_discoverCommandsReceived";
+            payload = "ep="+epId+"_clustId="+clustId;
+        } else if (infoType == "discoverCommandsGenerated") {
+            topic = "Cmd"+logicalId+"_discoverCommandsGenerated";
             payload = "ep="+epId+"_clustId="+clustId;
         } else {
             console.log("requestInfos("+infoType+") => UNEXPECTED type !");
@@ -1527,335 +1630,251 @@ console.log(zEndPoints);
         }
 
         res = JSON.parse(this.responseText);
-        if (res.type == "activeEndpoints") {
-            // 'src' => 'parser',
-            // 'type' => 'activeEndpoints',
-            // 'net' => $dest,
-            // 'addr' => $SrcAddr,
-            // 'epList' => $endPointList
-            sEpList = res.epList;
-            sEpArr = sEpList.split('/');
+        for (const [idx, msg] of Object.entries(res)) {
+            console.log("msg="+msg.type);
 
-            /* Updating internal datas */
-            zigbee.epCount = sEpArr.length;
-            endPoints = new Object;
-            sEpArr.forEach((ep) => {
-                endPoints[ep] = new Object();
-            });
-            zigbee.endPoints = endPoints;
+            if (msg.type == "activeEndpoints") {
+                // 'src' => 'parser',
+                // 'type' => 'activeEndpoints',
+                // 'net' => $dest,
+                // 'addr' => $SrcAddr,
+                // 'epList' => $endPointList
+                sEpList = msg.epList;
+                sEpArr = sEpList.split('/');
 
-            /* Updating display & request clusters list*/
-            updateZigbeeDisplay("epList", true);
-        } else if (res.type == "simpleDesc") {
-            // 'src' => 'parser',
-            // 'type' => 'simpleDesc',
-            // 'net' => $dest,
-            // 'addr' => $SrcAddr,
-            // 'ep' => $EPoint,
-            // 'servClustList' => $inputClusters, // Format: 'xxxx/yyyy/zzzz'
-            // 'cliClustList' => $outputClusters // Format: 'xxxx/yyyy/zzzz'
-            sEp = res.ep;
-            servClustArr = res.inClustList.split('/');
-            cliClustArr = res.outClustList.split('/');
+                /* Updating internal datas */
+                zigbee.epCount = sEpArr.length;
+                endPoints = new Object;
+                sEpArr.forEach((ep) => {
+                    endPoints[ep] = new Object();
+                });
+                zigbee.endPoints = endPoints;
 
-            /* Updating internal datas */
-            if (zigbee.epCount == 0) {
-                // EP list not received yet
-                console.log("EP list not received yet => simpleDesc ignored.")
-                return;
-            }
-            ep = zigbee.endPoints[res.ep];
-            ep.servClusters = new Object();
-            servClustArr.forEach((clustId) => {
-                ep.servClusters[clustId] = new Object();
-            });
-            ep.cliClusters = new Object();
-            cliClustArr.forEach((clustId) => {
-                ep.cliClusters[clustId] = new Object();
-            });
+                /* Updating display & request clusters list*/
+                updateZigbeeDisplay("epList", true);
+            } else if (msg.type == "simpleDesc") {
+                // 'src' => 'parser',
+                // 'type' => 'simpleDesc',
+                // 'net' => $dest,
+                // 'addr' => $SrcAddr,
+                // 'ep' => $EPoint,
+                // 'servClustList' => $inputClusters, // Format: 'xxxx/yyyy/zzzz'
+                // 'cliClustList' => $outputClusters // Format: 'xxxx/yyyy/zzzz'
+                sEp = msg.ep;
+                servClustArr = msg.inClustList.split('/');
+                cliClustArr = msg.outClustList.split('/');
 
-            /* Updating display */
-            var servClustTable = document.getElementById("idServClust"+sEp);
-            var cliClustTable = document.getElementById("idCliClust"+sEp);
-            /* Cleanup tables */
-            var rowCount = servClustTable.rows.length;
-            for (var i = rowCount - 1; i >= 0; i--) {
-                servClustTable.deleteRow(i);
-            }
-            rowCount = cliClustTable.rows.length;
-            for (i = rowCount - 1; i >= 0; i--) {
-                cliClustTable.deleteRow(i);
-            }
-            servClustArr.forEach((clustId) => {
-                console.log("servClust="+clustId);
-                if (clustId == "")
-                    return; // Empty => exit foreach()
-                if (clustId == "0000") // Basic cluster supported on this EP
-                    $("#idEP"+sEp+"Model").show();
-                var newRow = servClustTable.insertRow(-1);
-                var newCell = newRow.insertCell(0);
-                newCell.innerHTML = clustId;
-                // newCell.setAttribute('title', 'toto'); // Tcharp38 TODO: How to retrive cluster name ?
-                newCell.innerHTML += '<a id="idServClust'+sEp+'-'+clustId+'RBEx" class="btn btn-warning" title="Découverte étendue des attributs" onclick="requestInfos(\'attribExtList\', \''+res.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
-                newCell.innerHTML += '<a id="idServClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
-                if (clustId == "0000") { // Basic cluster supported on this EP
-                    requestInfos('manufacturer', sEp, clustId);
-                    requestInfos('modelId', sEp, clustId);
-                    requestInfos('location', sEp, clustId);
+                /* Updating internal datas */
+                if (zigbee.epCount == 0) {
+                    // EP list not received yet
+                    console.log("EP list not received yet => simpleDesc ignored.")
+                    return;
                 }
-                requestInfos('attribExtList', sEp, clustId, '00');
-                // requestInfos('discoverCommandsReceived', sEp, clustId);
-            });
-            cliClustArr.forEach((clustId) => {
-                console.log("cliClust="+clustId);
-                var newRow = cliClustTable.insertRow(-1);
-                var newCell = newRow.insertCell(0);
-                newCell.innerHTML = clustId;
-                newCell.innerHTML += '<a id="idCliClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+res.ep+'\', \''+clustId+'\', \'01\')"><i class="fas fa-sync"></i></a>';
-                requestInfos('attribList', sEp, clustId, '01');
-            });
+                ep = zigbee.endPoints[msg.ep];
+                ep.servClusters = new Object();
+                servClustArr.forEach((clustId) => {
+                    ep.servClusters[clustId] = new Object();
+                });
+                ep.cliClusters = new Object();
+                cliClustArr.forEach((clustId) => {
+                    ep.cliClusters[clustId] = new Object();
+                });
 
-            changeClass("idEP"+sEp+"-RB1", "btn-warning", "btn-success");
-        } else if ((res.type == "discoverAttributesResponse") || (res.type == "discoverAttributesExtendedResponse")) {
-            // 'src' => 'parser',
-            // 'type' => 'discoverAttributesResponse' or 'discoverAttributesExtendedResponse'
-            // 'net' => $dest,
-            // 'addr' => $srcAddress,
-            // 'ep' => $srcEndPoint,
-            // 'clustId' => $cluster,
-            // 'dir' => (hexdec($FCF) >> 3) & 1, // 1=server cluster, 0=client cluster
-            // 'attributes' => $attributes
-            sEp = res.ep;
-            sDir = res.dir;
-            sClustId = res.clustId;
-            sAttributes = res.attributes;
-            let sAttrCount = sAttributes.length;
-            if (res.type == "discoverAttributesResponse") {
-                console.log("discoverAttributesResponse: clustId="+sClustId+", attrCount="+sAttrCount);
-                extended = false;
-            } else {
-                console.log("discoverAttributesExtendedResponse: clustId="+sClustId+", attrCount="+sAttrCount);
-                extended = true;
-            }
-
-            // if (sAttrCount == 0) {
-            //     openReturnChannel();
-            //     return;
-            // }
-
-            /* Updating internal datas */
-            ep = zigbee.endPoints[sEp];
-            if (sDir)
-                clust = ep.servClusters[sClustId];
-            else {
-                 if (typeof ep.cliClusters === "undefined") {
-                     console.log("FIXME: It is a bug ep.cliClusters === undefined for " + sEp);
-                     ep.cliClusters = new Object();
-                 }
-                 if (typeof ep.cliClusters[sClustId] === "undefined") {
-                     console.log("FIXME: It is a bug ep.cliClusters[sClustId] === undefined for " + sEp + "/" + sClustId);
-                     ep.cliClusters[sClustId] = new Object();
-                 }
-                 clust = ep.cliClusters[sClustId];
-            }
-
-            if (typeof clust.attributes === "undefined")
-                clust.attributes = new Object();
-            attributes = clust.attributes;
-            // for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
-            //     sAttr = sAttributes[attrIdx];
-            //     if (typeof attributes[sAttr.id] === "undefined")
-            //         attributes[sAttr.id] = new Object();
-            //     if (typeof attributes[sAttr.value] === "undefined")
-            //         requestInfos('attribValue', sEp, sClustId, sAttr.id); // Read attribute current value
-            // }
-            for (const [sAttrId, sAttr] of Object.entries(sAttributes)) {
-                if (typeof attributes[sAttrId] === "undefined")
-                    attributes[sAttrId] = new Object();
-                if (extended) {
-                    attributes[sAttrId]['dataType'] = sAttr['dataType'];
-                    attributes[sAttrId]['access'] = sAttr['access'];
+                /* Updating display */
+                var servClustTable = document.getElementById("idServClust"+sEp);
+                var cliClustTable = document.getElementById("idCliClust"+sEp);
+                /* Cleanup tables */
+                var rowCount = servClustTable.rows.length;
+                for (var i = rowCount - 1; i >= 0; i--) {
+                    servClustTable.deleteRow(i);
                 }
-                if (typeof attributes[sAttrId]['value'] === "undefined")
-                    requestInfos('attribValue', sEp, sClustId, sAttrId); // Read attribute current value
-            }
-
-            /* Updating display */
-            var row;
-            if (sDir) { // Server to client = server clusters
-                var clustTable = document.getElementById("idServClust"+sEp);
-            } else {
-                var clustTable = document.getElementById("idCliClust"+sEp);
-            }
-
-            if (typeof clustTable === 'undefined') {
-                console.log("Probably not received EP list yet (=> no cluster table)");
-                openReturnChannel();
-                return;
-            }
-            // Find proper line
-            for (var i = 0; row = clustTable.rows[i]; i++) {
-                cellStr = row.cells[0].innerHTML;
-                // console.log("i="+i+", cell[0]="+cellStr.substring(0, 4));
-                if (cellStr.substring(0, 4) == sClustId) {
-                    break;
+                rowCount = cliClustTable.rows.length;
+                for (i = rowCount - 1; i >= 0; i--) {
+                    cliClustTable.deleteRow(i);
                 }
-            }
-            // Empty row
-            if (typeof row !== 'undefined') {
-                var colCount = row.cells.length;
-                for (var i = colCount - 1; i >= 1; i--) {
-                    row.deleteCell(i);
-                }
-            } else {
-            	console.log("FIXME: It is a bug row === undefined for " + sEp + "/" + sClustId);
-            }
-            // Fills row
-            // for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
-            //     rattr = sAttributes[attrIdx];
-            //     var newCell = row.insertCell(-1);
-            //     newCell.innerHTML = rattr.id;
-            //     if (sDir && (attrIdx == sAttrCount - 1)) // Server attributes only
-            //         newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
-            // }
-            for (const [sAttrId, sAttr] of Object.entries(sAttributes)) {
-                // rattr = sAttributes[sAttrId];
-                var newCell = row.insertCell(-1);
-                newCell.innerHTML = sAttrId;
-                // if (sDir && (attrIdx == sAttrCount - 1)) // Server attributes only
-                //     newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
-            }
-            if (sDir) {
-                if (sAttrCount != 0) {
-                    var newCell = row.insertCell(-1);
-                    newCell.innerHTML = '<a id="id'+sEp+'-Serv'+sClustId+'-RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
-                    newCell.innerHTML += '<a id="idEP'+sEp+'-Serv'+sClustId+'-RB4" class="btn btn-warning" title="Interrogation des commandes reçues" onclick="requestInfos(\'discoverCommandsReceived\', \''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
-                }
-                requestInfos('discoverCommandsReceived', sEp, sClustId);
-                changeClass("idServClust"+sEp+"-"+sClustId+"RBEx", "btn-warning", "btn-success");
-                changeClass("idServClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
-            } else
-                changeClass("idCliClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
-        } else if (res.type == "attributeReport") {
-            // 'src' => 'parser',
-            // 'type' => 'attributeReport', // 8100 or 8102
-            // 'net' => $dest,
-            // 'addr' => $SrcAddr,
-            // 'ep' => $EPoint,
-            // 'clustId' => $ClusterId,
-            // 'attrId' => $AttributId,
-            // 'status' => "00", "86"
-            // 'value' => $data
-            sEp = res.ep;
-            sClustId = res.clustId;
-            sAttrId = res.attrId;
-            sStatus = res.status;
-            sValue = res.value;
+                servClustArr.forEach((clustId) => {
+                    console.log("servClust="+clustId);
+                    if (clustId == "")
+                        return; // Empty => exit foreach()
+                    if (clustId == "0000") // Basic cluster supported on this EP
+                        $("#idEP"+sEp+"Model").show();
+                    var newRow = servClustTable.insertRow(-1);
+                    var newCell = newRow.insertCell(0);
+                    newCell.innerHTML = clustId;
+                    // newCell.setAttribute('title', 'toto'); // Tcharp38 TODO: How to retrive cluster name ?
+                    newCell.innerHTML += '<a id="idServClust'+sEp+'-'+clustId+'RBEx" class="btn btn-warning" title="Découverte étendue des attributs" onclick="requestInfos(\'attribExtList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
+                    newCell.innerHTML += '<a id="idServClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
+                    if (clustId == "0000") { // Basic cluster supported on this EP
+                        requestInfos('manufacturer', sEp, clustId);
+                        requestInfos('modelId', sEp, clustId);
+                        requestInfos('location', sEp, clustId);
+                    }
+                    requestInfos('attribExtList', sEp, clustId, '00');
+                    // requestInfos('discoverCommandsReceived', sEp, clustId);
+                });
+                cliClustArr.forEach((clustId) => {
+                    console.log("cliClust="+clustId);
+                    var newRow = cliClustTable.insertRow(-1);
+                    var newCell = newRow.insertCell(0);
+                    newCell.innerHTML = clustId;
+                    newCell.innerHTML += '<a id="idCliClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+msg.ep+'\', \''+clustId+'\', \'01\')"><i class="fas fa-sync"></i></a>';
+                    requestInfos('attribList', sEp, clustId, '01');
+                });
 
-            // Updating internal infos
-            if (sStatus == "00") {
-                if (typeof zigbee.endPoints === "undefined")
-                    zigbee.endPoints = new Object();
-                if (typeof zigbee.endPoints[sEp] === "undefined")
-                    zigbee.endPoints[sEp] = new Object();
+                changeClass("idEP"+sEp+"-RB1", "btn-warning", "btn-success");
+            } else if ((msg.type == "discoverAttributesResponse") || (msg.type == "discoverAttributesExtendedResponse")) {
+                // 'src' => 'parser',
+                // 'type' => 'discoverAttributesResponse' or 'discoverAttributesExtendedResponse'
+                // 'net' => $dest,
+                // 'addr' => $srcAddress,
+                // 'ep' => $srcEndPoint,
+                // 'clustId' => $cluster,
+                // 'dir' => (hexdec($FCF) >> 3) & 1, // 1=server cluster, 0=client cluster
+                // 'attributes' => $attributes
+                sEp = msg.ep;
+                sDir = msg.dir;
+                sClustId = msg.clustId;
+                sAttributes = msg.attributes;
+                let sAttrCount = sAttributes.length;
+                if (msg.type == "discoverAttributesResponse") {
+                    console.log("discoverAttributesResponse: clustId="+sClustId+", attrCount="+sAttrCount);
+                    extended = false;
+                } else {
+                    console.log("discoverAttributesExtendedResponse: clustId="+sClustId+", attrCount="+sAttrCount);
+                    extended = true;
+                }
+
+                // if (sAttrCount == 0) {
+                //     openReturnChannel();
+                //     return;
+                // }
+
+                /* Updating internal datas */
                 ep = zigbee.endPoints[sEp];
-                if (typeof ep.servClusters === "undefined")
-                    ep.servClusters = new Object();
-                if (typeof ep.servClusters[sClustId] === "undefined")
-                    ep.servClusters[sClustId] = new Object();
-                clust = ep.servClusters[sClustId];
+                if (sDir)
+                    clust = ep.servClusters[sClustId];
+                else {
+                    if (typeof ep.cliClusters === "undefined") {
+                        console.log("FIXME: It is a bug ep.cliClusters === undefined for " + sEp);
+                        ep.cliClusters = new Object();
+                    }
+                    if (typeof ep.cliClusters[sClustId] === "undefined") {
+                        console.log("FIXME: It is a bug ep.cliClusters[sClustId] === undefined for " + sEp + "/" + sClustId);
+                        ep.cliClusters[sClustId] = new Object();
+                    }
+                    clust = ep.cliClusters[sClustId];
+                }
+
                 if (typeof clust.attributes === "undefined")
                     clust.attributes = new Object();
                 attributes = clust.attributes;
-                if (typeof attributes[sAttrId] === 'undefined')
-                    attr = new Object();
-                else
-                    attr = attributes[sAttrId];
-                attr['value'] = sValue;
-                attributes[sAttrId] = attr;
-                ep.servClusters[sClustId]['attributes'] = attributes;
-
-                /* Checking Cluster-0000/PowerSource */
-                if ((sClustId == "0000") && (sAttrId == "0007")) {
-                    if (sValue == "03")
-                        zigbee.powerSource = "battery";
-                    else
-                        zigbee.powerSource = "mains";
+                // for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
+                //     sAttr = sAttributes[attrIdx];
+                //     if (typeof attributes[sAttr.id] === "undefined")
+                //         attributes[sAttr.id] = new Object();
+                //     if (typeof attributes[sAttr.value] === "undefined")
+                //         requestInfos('attribValue', sEp, sClustId, sAttr.id); // Read attribute current value
+                // }
+                for (const [sAttrId, sAttr] of Object.entries(sAttributes)) {
+                    if (typeof attributes[sAttrId] === "undefined")
+                        attributes[sAttrId] = new Object();
+                    if (extended) {
+                        attributes[sAttrId]['dataType'] = sAttr['dataType'];
+                        attributes[sAttrId]['access'] = sAttr['access'];
+                    }
+                    if (typeof attributes[sAttrId]['value'] === "undefined")
+                        requestInfos('attribValue', sEp, sClustId, sAttrId); // Read attribute current value
                 }
-            } else
-                attributes = null;
 
-            // Updating display
-            field = null;
-            if (sClustId == "0000") {
-                if (sAttrId == "0004") {
-                    field = document.getElementById("idZbManuf"+sEp);
-                    idRB = "idZbManuf"+sEp+"RB"; // Refresh button
-                } else if (sAttrId == "0005") {
-                    field = document.getElementById("idZbModel"+sEp);
-                    idRB = "idZbModel"+sEp+"RB"; // Refresh button
-                } else if (sAttrId == "0007") {
-                    field = document.getElementById("idZbPowerSource");
-                    idRB = null; // No refresh button
-                    sValue = zigbee.powerSource;
-                } else if (sAttrId == "0010") {
-                    field = document.getElementById("idZbLocation"+sEp);
-                    idRB = "idZbLocation"+sEp+"RB"; // Refresh button
+                /* Updating display */
+                var row;
+                if (sDir) { // Server to client = server clusters
+                    var clustTable = document.getElementById("idServClust"+sEp);
+                } else {
+                    var clustTable = document.getElementById("idCliClust"+sEp);
                 }
-            }
-            if (field !== null) {
-                if (res.status != "00")
-                    field.value = "-- Non supporté --";
-                else
-                    field.value = sValue;
-                if (idRB)
-                    changeClass(idRB, "btn-warning", "btn-success");
-            }
 
-            // If all attributes values are known, change button class
-            if (attributes !== null) {
-                allDone = true;
-                for (const [attrId, attr] of Object.entries(attributes)) {
-                    if (typeof attr.value === "undefined") {
-                        allDone = false;
+                if (typeof clustTable === 'undefined') {
+                    console.log("Probably not received EP list yet (=> no cluster table)");
+                    openReturnChannel();
+                    return;
+                }
+                // Find proper line
+                for (var i = 0; row = clustTable.rows[i]; i++) {
+                    cellStr = row.cells[0].innerHTML;
+                    // console.log("i="+i+", cell[0]="+cellStr.substring(0, 4));
+                    if (cellStr.substring(0, 4) == sClustId) {
                         break;
                     }
                 }
-                if (allDone)
-                    changeClass("id"+sEp+"-Serv"+sClustId+"-RB2", "btn-warning", "btn-success");
-            }
-        } else if (res.type == "readAttributesResponse") {
-            // 'src' => 'parser',
-            // 'type' => 'readAttributesResponse',
-            // 'net' => $dest,
-            // 'addr' => $srcAddr,
-            // 'ep' => $srcEp,
-            // 'clustId' => $cluster,
-            // 'attributes' => $attributes
-            sEp = res.ep;
-            sClustId = res.clustId;
-            sAttributes = res.attributes;
-
-            if (typeof zigbee.endPoints === "undefined")
-                zigbee.endPoints = new Object();
-            if (typeof zigbee.endPoints[sEp] === "undefined")
-                zigbee.endPoints[sEp] = new Object();
-            ep = zigbee.endPoints[sEp];
-            if (typeof ep.servClusters === "undefined")
-                ep.servClusters = new Object();
-            if (typeof ep.servClusters[sClustId] === "undefined")
-                ep.servClusters[sClustId] = new Object();
-            clust = ep.servClusters[sClustId];
-            if (typeof clust.attributes === "undefined")
-                clust.attributes = new Object();
-            attributes = clust.attributes;
-
-            for (const [sAttrId, sAttr] of Object.entries(sAttributes)) {
-                sStatus = sAttr.status;
-                sValue = sAttr.value;
+                // Empty row
+                if (typeof row !== 'undefined') {
+                    var colCount = row.cells.length;
+                    for (var i = colCount - 1; i >= 1; i--) {
+                        row.deleteCell(i);
+                    }
+                } else {
+                    console.log("FIXME: It is a bug row === undefined for " + sEp + "/" + sClustId);
+                }
+                // Fills row
+                // for (attrIdx = 0; attrIdx < sAttrCount; attrIdx++) {
+                //     rattr = sAttributes[attrIdx];
+                //     var newCell = row.insertCell(-1);
+                //     newCell.innerHTML = rattr.id;
+                //     if (sDir && (attrIdx == sAttrCount - 1)) // Server attributes only
+                //         newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                // }
+                for (const [sAttrId, sAttr] of Object.entries(sAttributes)) {
+                    // rattr = sAttributes[sAttrId];
+                    var newCell = row.insertCell(-1);
+                    newCell.innerHTML = sAttrId;
+                    // if (sDir && (attrIdx == sAttrCount - 1)) // Server attributes only
+                    //     newCell.innerHTML += '<a id="idServClust'+sEp+'-'+sClustId+'RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                }
+                if (sDir) {
+                    if (sAttrCount != 0) {
+                        var newCell = row.insertCell(-1);
+                        newCell.innerHTML = '<a id="id'+sEp+'-Serv'+sClustId+'-RB2" class="btn btn-warning" title="Lecture des valeurs des attributs" onclick="requestAttribValues(\''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                        newCell.innerHTML += '<a id="idEP'+sEp+'-Serv'+sClustId+'-RB4" class="btn btn-warning" title="Interrogation des commandes reçues" onclick="requestInfos(\'discoverCommandsReceived\', \''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                        newCell.innerHTML += '<a id="idEP'+sEp+'-Serv'+sClustId+'-RB5" class="btn btn-warning" title="Interrogation des commandes générées" onclick="requestInfos(\'discoverCommandsGenerated\', \''+sEp+'\', \''+sClustId+'\')"><i class="fas fa-sync"></i></a>';
+                    }
+                    requestInfos('discoverCommandsReceived', sEp, sClustId);
+                    requestInfos('discoverCommandsGenerated', sEp, sClustId);
+                    changeClass("idServClust"+sEp+"-"+sClustId+"RBEx", "btn-warning", "btn-success");
+                    changeClass("idServClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
+                } else
+                    changeClass("idCliClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
+            } else if (msg.type == "attributeReport") {
+                // 'src' => 'parser',
+                // 'type' => 'attributeReport', // 8100 or 8102
+                // 'net' => $dest,
+                // 'addr' => $SrcAddr,
+                // 'ep' => $EPoint,
+                // 'clustId' => $ClusterId,
+                // 'attrId' => $AttributId,
+                // 'status' => "00", "86"
+                // 'value' => $data
+                sEp = msg.ep;
+                sClustId = msg.clustId;
+                sAttrId = msg.attrId;
+                sStatus = msg.status;
+                sValue = msg.value;
 
                 // Updating internal infos
                 if (sStatus == "00") {
+                    if (typeof zigbee.endPoints === "undefined")
+                        zigbee.endPoints = new Object();
+                    if (typeof zigbee.endPoints[sEp] === "undefined")
+                        zigbee.endPoints[sEp] = new Object();
+                    ep = zigbee.endPoints[sEp];
+                    if (typeof ep.servClusters === "undefined")
+                        ep.servClusters = new Object();
+                    if (typeof ep.servClusters[sClustId] === "undefined")
+                        ep.servClusters[sClustId] = new Object();
+                    clust = ep.servClusters[sClustId];
+                    if (typeof clust.attributes === "undefined")
+                        clust.attributes = new Object();
+                    attributes = clust.attributes;
                     if (typeof attributes[sAttrId] === 'undefined')
                         attr = new Object();
                     else
@@ -1864,14 +1883,15 @@ console.log(zEndPoints);
                     attributes[sAttrId] = attr;
                     ep.servClusters[sClustId]['attributes'] = attributes;
 
-                    /* Checking Cluster-000/PowerSource */
+                    /* Checking Cluster-0000/PowerSource */
                     if ((sClustId == "0000") && (sAttrId == "0007")) {
                         if (sValue == "03")
                             zigbee.powerSource = "battery";
                         else
                             zigbee.powerSource = "mains";
                     }
-                }
+                } else
+                    attributes = null;
 
                 // Updating display
                 field = null;
@@ -1892,98 +1912,226 @@ console.log(zEndPoints);
                     }
                 }
                 if (field !== null) {
-                    if (sStatus != "00")
+                    if (msg.status != "00")
                         field.value = "-- Non supporté --";
                     else
                         field.value = sValue;
                     if (idRB)
                         changeClass(idRB, "btn-warning", "btn-success");
                 }
-            }
 
-            // If all attributes values are known, change button class
-            if (attributes !== null) {
-                allDone = true;
-                for (const [attrId, attr] of Object.entries(attributes)) {
-                    if (typeof attr.value === "undefined") {
-                        allDone = false;
-                        break;
+                // If all attributes values are known, change button class
+                if (attributes !== null) {
+                    allDone = true;
+                    for (const [attrId, attr] of Object.entries(attributes)) {
+                        if (typeof attr.value === "undefined") {
+                            allDone = false;
+                            break;
+                        }
+                    }
+                    if (allDone)
+                        changeClass("id"+sEp+"-Serv"+sClustId+"-RB2", "btn-warning", "btn-success");
+                }
+            } else if (msg.type == "readAttributesResponse") {
+                // 'src' => 'parser',
+                // 'type' => 'readAttributesResponse',
+                // 'net' => $dest,
+                // 'addr' => $srcAddr,
+                // 'ep' => $srcEp,
+                // 'clustId' => $cluster,
+                // 'attributes' => $attributes
+                sEp = msg.ep;
+                sClustId = msg.clustId;
+                sAttributes = msg.attributes;
+
+                if (typeof zigbee.endPoints === "undefined")
+                    zigbee.endPoints = new Object();
+                if (typeof zigbee.endPoints[sEp] === "undefined")
+                    zigbee.endPoints[sEp] = new Object();
+                ep = zigbee.endPoints[sEp];
+                if (typeof ep.servClusters === "undefined")
+                    ep.servClusters = new Object();
+                if (typeof ep.servClusters[sClustId] === "undefined")
+                    ep.servClusters[sClustId] = new Object();
+                clust = ep.servClusters[sClustId];
+                if (typeof clust.attributes === "undefined")
+                    clust.attributes = new Object();
+                attributes = clust.attributes;
+
+                for (const [sAttrId, sAttr] of Object.entries(sAttributes)) {
+                    sStatus = sAttr.status;
+                    sValue = sAttr.value;
+
+                    // Updating internal infos
+                    if (sStatus == "00") {
+                        if (typeof attributes[sAttrId] === 'undefined')
+                            attr = new Object();
+                        else
+                            attr = attributes[sAttrId];
+                        attr['value'] = sValue;
+                        attributes[sAttrId] = attr;
+                        ep.servClusters[sClustId]['attributes'] = attributes;
+
+                        /* Checking Cluster-000/PowerSource */
+                        if ((sClustId == "0000") && (sAttrId == "0007")) {
+                            if (sValue == "03")
+                                zigbee.powerSource = "battery";
+                            else
+                                zigbee.powerSource = "mains";
+                        }
+                    }
+
+                    // Updating display
+                    field = null;
+                    if (sClustId == "0000") {
+                        if (sAttrId == "0004") {
+                            field = document.getElementById("idZbManuf"+sEp);
+                            idRB = "idZbManuf"+sEp+"RB"; // Refresh button
+                        } else if (sAttrId == "0005") {
+                            field = document.getElementById("idZbModel"+sEp);
+                            idRB = "idZbModel"+sEp+"RB"; // Refresh button
+                        } else if (sAttrId == "0007") {
+                            field = document.getElementById("idZbPowerSource");
+                            idRB = null; // No refresh button
+                            sValue = zigbee.powerSource;
+                        } else if (sAttrId == "0010") {
+                            field = document.getElementById("idZbLocation"+sEp);
+                            idRB = "idZbLocation"+sEp+"RB"; // Refresh button
+                        }
+                    }
+                    if (field !== null) {
+                        if (sStatus != "00")
+                            field.value = "-- Non supporté --";
+                        else
+                            field.value = sValue;
+                        if (idRB)
+                            changeClass(idRB, "btn-warning", "btn-success");
                     }
                 }
-                if (allDone)
-                    changeClass("id"+sEp+"-Serv"+sClustId+"-RB2", "btn-warning", "btn-success");
-            }
-        } else if (res.type == "deviceAnnounce") {
-            // 'src' => 'parser',
-            // 'type' => 'deviceAnnounce',
-            // 'net' => $dest,
-            // 'addr' => $Addr,
-            // 'ieee' => $IEEE
-            console.log("deviceAnnounce: new addr="+res.addr)
-            js_eqAddr = res.addr;
 
-            // Updating internal infos
-            eq.addr = js_eqAddr;
+                // If all attributes values are known, change button class
+                if (attributes !== null) {
+                    allDone = true;
+                    for (const [attrId, attr] of Object.entries(attributes)) {
+                        if (typeof attr.value === "undefined") {
+                            allDone = false;
+                            break;
+                        }
+                    }
+                    if (allDone)
+                        changeClass("id"+sEp+"-Serv"+sClustId+"-RB2", "btn-warning", "btn-success");
+                }
+            } else if (msg.type == "deviceAnnounce") {
+                // 'src' => 'parser',
+                // 'type' => 'deviceAnnounce',
+                // 'net' => $dest,
+                // 'addr' => $Addr,
+                // 'ieee' => $IEEE
+                console.log("deviceAnnounce: new addr="+msg.addr)
+                js_eqAddr = msg.addr;
 
-            // Updating display
-            document.getElementById("idAddr").value = res.addr;
-        } else if (res.type == "discoverCommandsReceivedResponse") {
-            // 'src' => 'parser',
-            // 'type' => 'discoverCommandsReceivedResponse',
-            // 'net' => $dest,
-            // 'addr' => $srcAddress,
-            // 'ep' => $srcEndPoint,
-            // 'clustId' => $cluster,
-            // 'commands' => $commands
-            sEp = res.ep;
-            sClustId = res.clustId;
-            sCommands = res.commands;
-            // console.log("commandsReceived: clust="+sClustId);
-            // console.log(sCommands);
+                // Updating internal infos
+                eq.addr = js_eqAddr;
 
-            /* Updating internal datas */
-            if (typeof zigbee.endPoints[sEp] === "undefined") {
-                openReturnChannel();
-                return;
-            }
+                // Updating display
+                document.getElementById("idAddr").value = msg.addr;
+            } else if (msg.type == "discoverCommandsReceivedResponse") {
+                // 'src' => 'parser',
+                // 'type' => 'discoverCommandsReceivedResponse',
+                // 'net' => $dest,
+                // 'addr' => $srcAddress,
+                // 'ep' => $srcEndPoint,
+                // 'clustId' => $cluster,
+                // 'commands' => $commands
+                sEp = msg.ep;
+                sClustId = msg.clustId;
+                sCommands = msg.commands;
+                // console.log("commandsReceived: clust="+sClustId);
+                // console.log(sCommands);
 
-            ep = zigbee.endPoints[sEp];
-            clust = ep.servClusters[sClustId];
-            if (typeof clust.commandsReceived === "undefined")
-                clust.commandsReceived = new Object();
-            clust.commandsReceived = sCommands;
+                /* Updating internal datas */
+                if (typeof zigbee.endPoints[sEp] === "undefined") {
+                    openReturnChannel();
+                    return;
+                }
 
-            /* Updating display: button moved to green */
-            id='idEP'+sEp+'-Serv'+sClustId+'-RB4';
-            changeClass(id, "btn-warning", "btn-success");
-        } else if (res.type == "defaultResponse") {
-            // 'src' => 'parser',
-            // 'type' => 'defaultResponse',
-            // 'net' => $dest,
-            // 'addr' => $srcAddr,
-            // 'ep' => $srcEp,
-            // 'clustId' => $cluster,
-            // 'cmd' => $cmdId,
-            // 'status' => $status
-            sEp = res.ep;
-            sClustId = res.clustId;
-            sCmd = res.cmd;
-
-            /* Updating internal datas & display */
-            if ((typeof zigbee.endPoints === "undefined") || (typeof zigbee.endPoints[sEp] === "undefined"))
-                zigbee.endPoints[sEp] = new Object();
-            ep = zigbee.endPoints[sEp];
-            clust = ep.servClusters[sClustId];
-            if (sCmd == "11") { // Discover Commands Received
+                ep = zigbee.endPoints[sEp];
+                clust = ep.servClusters[sClustId];
                 if (typeof clust.commandsReceived === "undefined")
                     clust.commandsReceived = new Object();
-                clust.commandsReceived = "UNSUPPORTED";
+                clust.commandsReceived = sCommands;
 
+                /* Updating display: button moved to green */
                 id='idEP'+sEp+'-Serv'+sClustId+'-RB4';
                 changeClass(id, "btn-warning", "btn-success");
-                button = document.getElementById(id);
-                if (button)
-                    button.setAttribute('disabled', true);
+            } else if (msg.type == "discoverCommandsGeneratedResponse") {
+                // 'src' => 'parser',
+                // 'type' => 'discoverCommandsGeneratedResponse',
+                // 'net' => $dest,
+                // 'addr' => $srcAddress,
+                // 'ep' => $srcEndPoint,
+                // 'clustId' => $cluster,
+                // 'commands' => $commands
+                sEp = msg.ep;
+                sClustId = msg.clustId;
+                sCommands = msg.commands;
+                // console.log("commandsReceived: clust="+sClustId);
+                // console.log(sCommands);
+
+                /* Updating internal datas */
+                if (typeof zigbee.endPoints[sEp] === "undefined") {
+                    openReturnChannel();
+                    return;
+                }
+
+                ep = zigbee.endPoints[sEp];
+                clust = ep.servClusters[sClustId];
+                if (typeof clust.commandsGenerated === "undefined")
+                    clust.commandsGenerated = new Object();
+                clust.commandsGenerated = sCommands;
+
+                /* Updating display: button moved to green */
+                id='idEP'+sEp+'-Serv'+sClustId+'-RB5';
+                changeClass(id, "btn-warning", "btn-success");
+            } else if (msg.type == "defaultResponse") {
+                // 'src' => 'parser',
+                // 'type' => 'defaultResponse',
+                // 'net' => $dest,
+                // 'addr' => $srcAddr,
+                // 'ep' => $srcEp,
+                // 'clustId' => $cluster,
+                // 'cmd' => $cmdId,
+                // 'status' => $status
+                sEp = msg.ep;
+                sClustId = msg.clustId;
+                sCmd = msg.cmd;
+
+                /* Updating internal datas & display */
+                if ((typeof zigbee.endPoints === "undefined") || (typeof zigbee.endPoints[sEp] === "undefined"))
+                    zigbee.endPoints[sEp] = new Object();
+                ep = zigbee.endPoints[sEp];
+                clust = ep.servClusters[sClustId];
+                if (sCmd == "11") { // Discover Commands Received
+                    if (typeof clust.commandsReceived === "undefined")
+                        clust.commandsReceived = new Object();
+                    clust.commandsReceived = "UNSUPPORTED";
+
+                    id='idEP'+sEp+'-Serv'+sClustId+'-RB4';
+                    changeClass(id, "btn-warning", "btn-success");
+                    button = document.getElementById(id);
+                    if (button)
+                        button.setAttribute('disabled', true);
+                } else if (sCmd == "13") { // Discover Commands Generated
+                    if (typeof clust.commandsGenerated === "undefined")
+                        clust.commandsGenerated = new Object();
+                    clust.commandsGenerated = "UNSUPPORTED";
+
+                    id='idEP'+sEp+'-Serv'+sClustId+'-RB5';
+                    changeClass(id, "btn-warning", "btn-success");
+                    button = document.getElementById(id);
+                    if (button)
+                        button.setAttribute('disabled', true);
+                }
             }
         }
 
@@ -2011,7 +2159,7 @@ console.log(zEndPoints);
         openReturnChannel();
 
         var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?queueId="+js_queueKeyCtrlToParser+"&msg=type:sendToCli_net:Abeille"+js_zgNb+"_addr:"+js_eqAddr+"_ieee:"+js_eqIeee, true);
+        xhttp.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?queueId="+js_queueXToParser+"&msg=type:sendToCli_net:Abeille"+js_zgNb+"_addr:"+js_eqAddr+"_ieee:"+js_eqIeee, true);
         xhttp.send();
 
         requestInfos('epList');
@@ -2020,7 +2168,7 @@ console.log(zEndPoints);
     /* Update Jeedom infos based on current JSON part */
     function updateJeedom() {
         /* TODO: To be updated
-            - configuration:ab::jsonId
+            - configuration:ab::eqModel
             - reload JSON to update commands
          */
     }
@@ -2069,15 +2217,14 @@ console.log(zEndPoints);
             // file.size = the size in bytes
             // file.type = file type ex. 'application/pdf'
             console.log("file="+file.name);
-            console.log(file);
+            console.log( );
 
             var reader = new FileReader();
             reader.onload = function(e) {
                 var contents = e.target.result;
-                console.log(zigbee);
-                console.log("contents="+contents);
+                // console.log("contents="+contents);
                 zigbee = JSON.parse(contents);
-                console.log(zigbee);
+                console.log("zigbee=", zigbee);
 
                 // Reset general values
                 document.getElementById("idManuf").value = "";

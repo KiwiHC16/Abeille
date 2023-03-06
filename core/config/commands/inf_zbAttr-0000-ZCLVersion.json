@@ -1,0 +1,11 @@
+{
+    "inf_zbAttr-0000-ZCLVersion": {
+        "name": "ZCL Version",
+        "subType": "string",
+        "configuration": {
+            "visibilityCategory": "All"
+        },
+        "type": "info",
+        "logicalId": "0000-#EP#-0000"
+    }
+}

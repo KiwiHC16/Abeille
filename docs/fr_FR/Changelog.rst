@@ -1,6 +1,1101 @@
 ChangeLog
 =========
 
+230306-BETA-1
+-------------
+
+- Ikea telecommande 5 boutons: Mise-à-jour modèle (2547).
+- Affichage groupes: Petite mise-à-jour.
+- Interne: Cmd: Correction 'cmd-0502'.
+- Interne: Parser: Msg 8095 désactivé pour support mode 'raw'.
+- Page avancé: Support 'cluster 0502/IAS WD, cmd 00/Start warning'.
+- Xiaomi Aqara 2 way control module: Mise-à-jour modèle (2551).
+
+230301-BETA-1
+-------------
+
+- Interne: Parser: Erreur 'msgToLQICollector' masquée pour FW 0005-03A0 (2546).
+- Interne: Parser: Erreur 'msgToRoutingCollector' masquée pour FW 0005-03A0 (2546).
+
+230228-BETA-1
+-------------
+
+- Page maintenance/infos clefs: Amélioration mineure.
+- Interne: Parser: Amélioration mineure msg debug.
+- Nodon SIN-4-2-20: Mise-à-jour modele (2541).
+- Innr RC110: Mise-à-jour modèle + renommé 'RC110' => 'RC110_innr'.
+- Interne: Cmd: 'addGroup' revu.
+- Modèles: 'groupEPx' pour définir une constante de groupe par end point.
+- Interne: Configuration équipement faite par AbeilleCmd.
+- Interne: getGroupMembership() revu.
+- Interne: Parser: Ajout support 'addGroupResponse'/'removeGroupResponse' + zigbee['groups'].
+- Interne: Parser: Interrogation des groupes lors de l'inclusion.
+- Interne: Groupes: Utilisation eqLogic/config/zigbee/groups au lieu cmde info.
+
+230219-BETA-1
+-------------
+
+- Interne: Parser: Changement support clust 0000, attr 0004/5/10.
+- Nodon SIN-4-2-20: Correction image (2541).
+- Interne: Cmd: Timeout 8s si ACK.
+- Xiaomi switch (switch.n0agl1): Correction regression modele (2517).
+- Frient keypad: Mise-à-jour modele (2525).
+
+230215-BETA-2
+-------------
+
+- Interne: Parser: Améliorations mineures cluster 0004.
+- Interne: Abeille.class: 'repeatEventManagement' seulement si reset équipement.
+- Frient keypad: Mise-à-jour modele (2525).
+
+230214-BETA-1
+-------------
+
+- Interne: Cmd: Correction 'bind0030'.
+- Eurotronic SPZB0001: Mise-à-jour modèle.
+- Interne: Parser: Optimisation correction valeur suivant spec ZCL.
+- Interne: Parser: Correction regression clean location. Peut impacter Profalux.
+- Interne: Parser: Suppression progressive decode8100_8102().
+- Interne: Parser: Suppression support messages 80A0/80A3/80A4 pour compatibilité 'raw'.
+- Interne: Parser: Optimisations pour compatiblité futur mode 'raw'.
+- Frient keypad: Mise-à-jour modele (2525).
+- Nodon SIN-4-2-20: Support préliminaire (2541).
+- Interne: Parser: Optimisations.
+- Page maintenance/infos clefs: Amélioration mineure.
+- Interne: Abeille.class: Suppression 'volt2pourcent()'.
+- Interne: Parser: Revue decode 8001/logs.
+- Interne: SW reset si erreur 06 sur msg 8000 (2490).
+
+230207-BETA-3
+-------------
+
+- Interne: SerialRead: Filtrage des msgs de mauvaise longueur.
+- Livarno Home floor lamp: Support préliminaire (2544).
+- LoraTap Zigbee 3 gang remote: Ajout support (2542).
+- Interne: Page maintenance/logs. Correction mineure.
+- Interne: Cmd: 004E/LQI attend ACK.
+- Interne: Cmd: Timeout 7s si ACK.
+- Xiaomi relay (relay.c2acn01): Mise-à-jour modèle.
+- Frient keypad: Mise-à-jour modele (2525).
+- Interne: Parser: Améliorations support cluster 0501 pour 'Emergency'/'Fire'/'Panic'.
+- Interne: Parser: Support 0501/Arm code.
+- Page des équipements: Groupes par Zigate (967).
+
+230204-BETA-2
+-------------
+
+- Interne: Parser: Nettoyage 'ModelIdentifier' revue; 0 devient caractère de fin.
+- Interne: Cmd: Améliorations support clusters 0500 & 0501.
+- Interne: Parser: Msg 8401 désactivé.
+- Modèles: Correction nom 'inf_zbAttr-0500-ZoneStatus..' => 'inf_zbCmdS-0500-ZoneStatus...'.
+- Frient keypad: Mise-à-jour modele (2525).
+
+230202-BETA-3
+-------------
+
+- Interne: AbeilleCmd: Mise-à-jour 'getRoutingTable'.
+- Interne: Collecte des tables de routage revue.
+- Interne: Parser: Amélioration affichage cmds cluster.
+- Interne: Zigbee const: Amélioration support cluster 0501.
+- Interne: Parser: Amélioration 'getDevice()' si IEEE pas défini.
+- Interne: Parser: Amélioration 'cleanModelId()' pour caracteres speciaux.
+- Interne: Suppression 'routingTable' de la table 'eqLogic'.
+- Réseau/graph des liens: Mise-à-jour.
+
+230130-BETA-2
+-------------
+
+- Interne: Parser: Ajout infos debug pour support Xiaomi.
+- Modeles: Mise-à-jour 'sensor_cube' + 'sensor_cube.aqgl01'.
+- Reseau: Mise-à-jour graphique des liens.
+- Perte formule au redémarrage: Correction (2540).
+- Interne: Parser: Correction décodage 'routing table response'.
+
+230126-BETA-2
+-------------
+
+- Heiman water leakage sensor: Mise-à-jour modèle (2527).
+- Xiaomi water leak sensor: Mise-à-jour modèle.
+- Interne: Parser: Nettoyage support Xiaomi pour 'magnet.aq2', 'weather'.
+- Interne: Parser: Corrections decode 'Mgmt_NWK_Update_notify'.
+- Interne: DB config: Ajout 'ab::zgChan' pour sauver choix de canal Zigbee.
+- Page de config: Canal Zigbee affiché.
+- Interne: Sauvegarde choix du canal Zigbee (11 par défaut).
+- Interne: Parser: Correction crash Xiaomi.
+- Modele Xiaomi 'sensor_swith' revu.
+- Interne: AbeilleCmd: timeout passé de 3 à 4sec avant de déclarer cmd perdue.
+- Interne: Correction mise-à-jour (au lieu de reset) équipements au démarrage.
+- Interne: AbeilleCmd: Correction setChannel.
+- Interne: Changement de canal Zigbee revu (broadcast mgmtNwkUpdateRequest).
+- Interne: Parser: Correction erreurs PHP.
+
+230124-BETA-1
+-------------
+
+- Page avancé: Ajout version SW du device (clust 0000, attr 4000).
+- Interne: Parser: Supression utilisation msg OTA 8503 pour compatibilité raw.
+- Xiaomi Aqara QBKG26LM: Mise-à-jour modèle (2174).
+- Interne: Parser: Cluster 000C géré par decode8002().
+- Modèles: Suppression cmdes obsoletes 'puissance1', 'puissance', & 'puissanceEP15'.
+
+230121-BETA-2
+-------------
+
+- Interne: Parser: Support cluster 0500 cmd 00/Zone status change notif.
+- Interne: Parser: Correction regression.
+- Interne: Cmd: Changement cosmetique msg debug.
+
+230120-BETA-1
+-------------
+
+- Interne: Mise-à-jour équipement revue pour éviter la perte de commandes.
+- Réseau: Mise-à-jour graph réseau.
+- Aqara Motion Sensor P1 RTCGQ14LM/MS-S02: Mise-à-jour modèle (2463).
+- Owon PIR323: Mise-à-jour modèle (2533).
+- Interne: Reset SW de la Zigate si pas de réponse depuis plus de 2mins.
+- Sonoff ZBMini-L: Ajout support (2539).
+- Interne: Parser: Support préliminaire cluster 0020, cmde 'check-in'.
+- Interne: Cmd: Support préliminaire cluster 0500 zone enroll response.
+- Interne: Reinit à partir du modele revue pour ne pas perdre modifs utilisateur.
+
+230113-BETA-2
+-------------
+
+- Xiaomi RTCGQ11LM: Mise-à-jour modele et image.
+- Interne: Correction support Xiaomi.
+- Owon PIR323: Image (2533).
+- Frient keypad: Mise-à-jour modele (2525).
+
+230112-BETA-3
+-------------
+
+- Legrand micromodule switch: Mise-à-jour modele et image.
+- Interne: Parser: Amélioration mess monitor cas Xiaomi.
+- Modèles: Qq nettoyage + ajout logicalId sur certaines actions.
+- Lexman smart plug: Support préliminaire (2531).
+- Assistant modeles: Mise-à-jour suite renommage des commandes.
+- Tuya 1Ch switch module (TS0001__TZ3000_tqlv4ug4): Mise-à-jour modèle.
+- Modeles pour Xiaomi: Amélioration syntaxe.
+- Page EQ/avancé: Liste pour les types possibles d'attribut.
+- Interne: Parser: rxOn n'est plus mis à jour par 'Mgmt_lqi_rsp' (pas fiable).
+- Owon PIR323: Ajout support (2533).
+- Interne: Parser: 'rxOnWhenIdle' peut etre mis-à-jour par 'node descriptor'.
+- Modeles: 'minValue', 'maxValue', 'calculValueOffset' mis a jour seulement si reset.
+
+230106-BETA-2
+-------------
+
+- Modeles EQ: Ajout prise en charge 'genericType'.
+- Modèles: Ajout du type generique sur qq modeles.
+
+230106-BETA-1
+-------------
+
+- Interne: Parser: Correction 'single precision'.
+- Modeles commandes: Normalisation de certains noms (inf_zbAttr-XXXX-YYYY).
+- Interne: Parser: Correction support Xiaomi.
+- Xiaomi Door Sensor MCCGQ11LM: Mise-à-jour du modèle pour restauration 'Battery-Volt'.
+- Xiaomi Temp-humidité-pression WSDCGQ11LM: Mise-à-jour du modèle pour restauration 'Battery-Volt'.
+
+230103-BETA-5
+-------------
+
+- Modèles: Suppression support ancienne syntaxe 'include'.
+- Girier curtain module: Support préliminaire (2526).
+- Assistant modèle: Mise-à-jour.
+- Maintenance/infos clefs: Amélioration.
+- Heiman water sensor: Support préliminaire (2527).
+- Interne: Parser: Support de certains devices Xiaomi via decode8002 pour compatibilité mode 'raw'.
+- Loratap roller shutter module: Support préliminaire (2528).
+- Moes thermostat BRT-100: Mise-à-jour modèle (2467).
+- Modèles commandes: 'Short-Addr' & 'IEEE-Addr' => 'inf_addr-Short'/'inf_addr-Ieee'.
+- Modèles commandes: 'Link-Quality'/'online' => 'inf_linkQuality'/'inf_online'.
+- Modèles commandes: 'Time-Time'/'Time-TimeStamp' => 'inf_time-String'/'inf_time-Timestamp'.
+- Modèles EQ: Surcharge possible de 'Polling'.
+- Tuya TV02: Mise-à-jour du modèle (2175).
+- Xiami RTCGQ11LM: Mise-à-jour du modèle.
+
+230102-BETA-1
+-------------
+
+- Interne: Constantes Zigbee: Améliorations.
+- Interne: Parser: Update mineure msg debug Xiaomi.
+- Interne: Parser: Suppression support 8041, 8043 & 8045 pour compatibilité mode 'raw'.
+- Interne: Parser: Suppression support 804A pour compatibilité mode 'raw'.
+- Interne: Parser: Suppression support 8030 pour compatibilité mode 'raw'.
+- Interne: Parser: Suppression support 8060, 8062 & 8063 pour compatibilité mode 'raw'.
+- Profalux shutter: Correction modele pour retour de 'Level'.
+- Interne: Parser: decodeDataType(), ajout support type 39/single.
+- Frient keypad: Support préliminaire (2525).
+
+230102-STABLE-1
+---------------
+
+  .. important:: Zigates v2
+
+    - Doivent être à jour du dernier firmware disponible (v3.21 à ce jour).
+  .. important:: Zigates v1
+
+    - Doivent avoir un firmware >= 3.1e pour un fonctionnement optimal mais la dernière en date (3.21) est fortement recommandée.
+    - L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+221215-BETA-3
+-------------
+
+- Interne: Amélioration infos en mode surveillance (AbeilleMonitor.log).
+- Zemismart ZW-EC-01 curtain switch: Modèle revu mais équipement déconseillé.
+- Interne: AbeilleCmd: Optimisation & nettoyage.
+- Heiman HS1HT: Mise-à-jour image (2520).
+- Heiman HS1MS-EF: Mise-à-jour image (2521).
+- Tuya 1Ch switch module: Ajout support préliminaire 'TS0001__TZ3000_tqlv4ug4'.
+- Interne: Correction pour équipement inconnu pendant raffraichissement réseau.
+
+221214-BETA-9
+-------------
+
+- Interne: Cmd: 'setLevelVolet' utilise 'cmd-0008'.
+- Interne: Cmd: 'setLevel': Suppression 'readAttribute' consecutifs.
+- Modèle EQ: Surcharge possible de 'listValue'.
+- Interne: Support cmde action de type 'liste'.
+- Interne: Parser: Mise à jour 'node descriptor'.
+- Heiman HS1HT: Mise-à-jour modèle (2520).
+- Interne: Cmd: Mise-à-jour 'writeAttribute' pour '#select#'.
+- Moes thermostat BRT-100: Mise-à-jour modèle (2467).
+- Maintenance/infos clefs: Amélioration.
+- Heiman HS1MS-EF: Support préliminaire (2521).
+
+221213-BETA-6
+-------------
+
+- Modele EQ: Support 'trigOut' pour cmde action.
+- Tuya TV02: Mise-à-jour.
+- Philips SML004: Mise-à-jour modele (2437).
+- Moes thermostat BRT-100: Mise-à-jour modèle (2467).
+- Tuya: Amélioration support.
+- Assistant modèle: Améliorations.
+- Aubess 4 buttons switch: Support préliminaire (2512).
+- Aqara Motion Sensor P1 RTCGQ14LM/MS-S02: Mise-à-jour modèle (2463).
+
+221212-BETA-2
+-------------
+
+- Heiman HS1HT: Support préliminaire (2520).
+- Reinitialisation: Remise en cause du modele utilisé chaque fois.
+- Interne: Améliorations support Tuya.
+- Tuya TV02: Mise-à-jour du modèle (2175).
+- Interne: Support cluster FCC0 Xiaomi générique.
+- Moes temp/humidity sensor: Mise-à-jour du modèle (2500).
+- Tuya mini smart switch: Correction image (2438).
+- Aqara Motion Sensor P1 RTCGQ14LM/MS-S02: Mise-à-jour modèle (2463).
+- Paulmann 50044: Ajout support préliminaire (2516).
+
+221209-BETA-4
+-------------
+
+- Moes thermostat BRT-100: Mise-à-jour modèle (2467).
+- Assistant découverte: Améliorations.
+- Assistant découverte: Ajout suffixe identiant (ex: discovery-TS0121__TZ3000_rdtixbnu.json)
+- Modele TS011F: Ajout de plusieurs marques blanches.
+- Icasa ICZB-IW11SW: Ajout support préliminaire (2515).
+- Icasa ICZB-IW11D: Ajout support préliminaire (2514).
+- Icasa ICZB-DC11: Ajout support préliminaire (2513).
+- Interne: Parser: Corrections regressions.
+
+221208-BETA-1
+-------------
+
+- Moes thermostat BRT-100: Mise-à-jour modèle (2467).
+- Interne: Parser: Amélioration mineure.
+- Interne: Abeille.class: Amélioration sur reception msg trop grand.
+- Suppression ancien log 'AbeilleConfig' (sans .log) au démarrage.
+- Interne: Taille queue xToAbeille étendue.
+- Interne: Parser: Affichage nPDU/aPDU avec extended error.
+
+221204-BETA-1
+-------------
+
+- Images: Normalisation de noms.
+- Interne: Abeille.class: Correction findModel (2509).
+
+221202-BETA-2
+-------------
+
+- Suppression chiffres après virgule sur pourcentage batterie.
+- Interne: Parser: Nettoyage fonctions obsoletes.
+- Interne: Cmd: Activation ACK pour 'setLevelRaw' + 'cmd-0008'.
+- Interne: Support préliminaire 'Mgmt Nwk Update Req'.
+- Modeles commandes: Amélioration 'valueOffset' pour support ID logique.
+- Moes curtain module: Mise-à-jour modèle (2464).
+- Aqara Motion Sensor P1 RTCGQ14LM/MS-S02: Mise-à-jour modèle (2463).
+
+221130-BETA-1
+-------------
+
+- Syntaxe cmdes: Ajout support 'valueOffset' pour cmde 'action'/'slider'.
+- Moes curtain module: Mise-à-jour modèle (2464).
+- Renitialiser: Amélioration si équipement etait inconnu mais qu'un modèle existe maintenant.
+- Moes BHT-002-GCLZBW: Ajout support préliminaire (2485).
+- Livolo TI0001: Mise-à-jour modèle (2476).
+- Interne: Améliorations AbeileCmd.
+- Interne: AbeilleCmd: Limitation de débit activé.
+- Interne: Améliorations préliminaires pour support générique Xiaomi.
+- Interne: Parser: Correction pour SW reset sur NDPU bloqué.
+- Interne: Collecte LQI: Améliorations mineures.
+- Xiaomi Door Sensor MCCGQ11LM: Mise-à-jour du modèle.
+- Interne: Parser: decodeDataType(): Ajout support 2B/int32.
+- Xiaomi Temp-humidité-pression WSDCGQ11LM: Mise-à-jour du modèle.
+
+221122-BETA-1
+-------------
+
+- Page Zigate/avancé: Reset HW possible sur Piv2.
+- Page Zigate/avancé: Amélioration selection du canal.
+- Modèles EQ: Support customization 'rxOn'.
+- Livolo TI0001: Mise-à-jour modèle (2476).
+- Moes BRT-100: Mise-à-jour modèle (2467).
+- Images: Qq mises-à-jour & renomages.
+- Interne: Parser/cleanManufId(): '.' ignoré.
+- Philips E27 LWA017: Ajout support (2503).
+- Interne: Cmd: Ajout support 'move to level' (cmd-0008).
+
+221119-BETA-2
+-------------
+
+- Zigate PI v2: Correction controle GPIO (rc.local n'est plus nécessaire).
+- Repeteur Loratap: Ajout support (2498).
+- Interne: AbeilleCmd: Pas de renvoi si message 8000 status 06.
+- Interne: Abeille.class: 'customization' & 'macCapa'. Encore une update.
+- Interne: Reinitialisation d'un équipement: delai interne avant relecture DB par parser.
+- Moes temp/humidity sensor: Ajout support (2500).
+- Interne: Petite update page santé.
+- Maintenance/infos clefs: Ajout status (timeout) de chaque équipement.
+- Interne: Abeille.class: Amélioration mineure msg debug executePollCmds().
+- Moes BRT-100: Mise-à-jour modèle (2467).
+- Interne: Support Tuya amélioré: Cmd: Ajout 'setValue', 'setValueMult' & 'setValueDiv'.
+- GLEDOPTO GL-FL-004P: Support préliminaire (2501).
+- Page Zigate/avancé: Modification choix canal zigbee.
+
+221114-BETA-2
+-------------
+
+- Interne: Parser: Optimisation.
+- Interne: Cmd: Modification gestion ACK. 8702 ignoré au profit de 8011.
+- Interne: Parser: Amélioration messages dbg Xiaomi.
+- Interne: Parser: Nettoyage 'manufacturer' revu (cleanManufId()).
+- Interne: Parser: Correction 'customization' + 'macCapa'.
+- Interne: Parser: Divers correctifs & améliorations.
+
+221110-BETA-2
+-------------
+
+- Interne: Parser: Surveillance NPDU, timeout 4mins.
+
+221110-BETA-1
+-------------
+
+- Interne: Install: Correction 'Batterie Volt' (0001-01-0020). Suppression 'calculValueOffset'.
+- Interne: Parser: Check NPDU and force SW reset if stuck for more than 3 mins.
+- Modèles: Ajout 'customization' optionnelle pour corriger/forcer infos.
+
+221108-BETA-1
+-------------
+
+- Modèles: Nettoyage. Suppression cmds obsoletes setLevelVoletUp/setLevelVoletDown.
+- Modèles: Correction 'sensor_86sw1' pour 'Battery-Percent'.
+- Modèles: Ajout qq 'manufacturer' manquants.
+- Interne: AbeilleCmd: Ajout support 'cmd-0102' + suppression 'WindowsCovering'.
+- Moes curtain module: Mise-à-jour modèle (2464).
+
+221107-BETA-1
+-------------
+
+- Interne: Parser: 'Batterie-Pourcent' => '0001-01-0021'.
+- Interne: install/DB cmd: 'Batterie-Pourcent' => '0001-01-0021'
+
+221105-BETA-1
+-------------
+
+- Interne: Parser: Xiaomi tags decode update.
+- Modèles: Historisation activée par défaut pour 0400/0402/0403 & 0405 clusters attr 0000.
+- Modèles: Surcharge possible de 'isHistorized'.
+
+221104-BETA-1
+-------------
+
+- Support: Infos clefs: Affichage type de Zigate.
+- Interne: Suppression 'uniqId' DB eqLogic/configuration.
+- Interne: Message zigate 804E plus utilisé. Pas assez robuste => decode8002().
+
+221103-BETA-2
+-------------
+
+- Equipements: Qq modeles revus.
+- Modèle de commandes: 'Batterie-Volt' remplacé par '0001-01-0020'.
+- Interne: Constantes Zigbee: Ajout data types cluster 0000.
+- Page EQ/avancé: Message d'erreur si champ manquant.
+- Interne: AbeilleCmd: Meilleur support type 'string' pour 'writeAttribute()'.
+- Interne: Parser: Cluster 0001 (batterie) traité par 'decode8002()'.
+- Modeles: Commandes obsoletes: 'Batterie-Hue', 'Batterie-Pourcent' & 'Batterie-Volt-Konke'.
+- Interne: Suppression 'bindShort' obsolete.
+- Modèle équipements: Syntaxe 'alternateIds' améliorée.
+- Ruche: Cmde 'Set inclusion mode' est de retour pour cas 2476 non résolu.
+- Page EQ/avancé pour Zigate: Correction 'Reset HW' pour PI-Zigate.
+- Interne: Qq changements autour du séquencement du démarrage des démons.
+- Interne: Remplacement cmd obsolete 'levelVoletStop' + nettoyage code.
+- Modeles: Support 'notStandard' pour les commandes 'illuminance' qui ne respectent pas la spec ZCL.
+
+221029-BETA-1
+-------------
+
+- Interne: Zigbee const: Ajout 0403/pressure.
+- Interne: Parser: Attribut '0403-xx-0000' (pressure) directement décodé par 8002.
+- Interne: Parser+install+modele: Attribut '0402-xx-0000' (temperature) directement décodé par parser/8002.
+- H1 dual wall switch: Mise-à-jour du modèle (2474).
+- Interne: Parser+install+modele: Attribut '0400-xx-0000' (illuminance) directement décodé par parser/8002.
+- Ajout des FW 3.23 pour les Zigates v1.
+- Interne: Optimisation suppression des queues lors de l'arret des démons.
+- Interne: Blocage relance des démons si mise-à-jour FW ou test de port.
+- Démons start & stop: Amélioration. Devrait limiter les cas 'port toujours utilisé'.
+
+221024-BETA-1
+-------------
+
+- Interne: Parser: Correction decodeDataType() impactant types longs (ex: uint48).
+- Interne: Parser: Types 18, 19, 28 & 29 maintenant traités par decodeDataType().
+- Interne: Parser+install+modele: Attribut '0405-xx-0000' (humidity) directement décodé par parser.
+- Interne: Parser: Cluster 0405 traité par decode8002().
+- Philips E27 white bulb: Mise-à-jour du modèle (2421).
+- Page EQ/avancé: amélioration mineure.
+- Page maintenance: Correction regression sur 'Telecharger tout'.
+- Interne: Parser: Améliorations support cluster 'FCC0' Xiaomi.
+
+221023-BETA-1
+-------------
+
+- Interne: Correction regression constantes Zigbee.
+
+221022-BETA-1
+-------------
+
+- Moes curtain module: Mise-à-jour modèle (2464).
+- Moes 2 gang dimmer module: Modele preliminaire (2473).
+- Interne: Premier fichier 'packages.json' pour installation de dependances.
+- H1 dual wall switch: Support preliminaire (2474).
+- Interne: Cmd: sliderToHex(), ajout support enum8 & 16.
+- Nous A1Z smart plug: Mise-à-jour du modèle (2460).
+- Page maintenance/logs: Message si pas en mode 'debug' lors du téléchargement.
+- Interne: Constantes Zigbee: Definitions des types.
+- Philips E14 white bulb: Modele preliminaire (2422).
+- Philips E27 white bulb: Modele preliminaire (2421).
+
+221019-STABLE-1
+---------------
+
+  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible (v3.21 à ce jour).
+  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal mais la dernière en date (3.21) est fortement recommandée.
+
+221014-BETA-1
+-------------
+
+- Aqara Motion Sensor P1 MS-S02: Support preliminaire (2463).
+- Silvercrest smart button: Mise-à-jour modèle (2468).
+- Page maintenance/logs: Correction ascenseur partie gauche.
+- Interne: Arret des démons: Correction mineure & améliorations.
+
+221010-BETA-1
+-------------
+
+- Xiaomi D1 wall switch single: Support préliminaire (2466).
+- Moes BRT-100: Support préliminaire (2467).
+- Silvercrest smart button: Support préliminaire (2468).
+- Interne: Cmd+Parser: Ajout support 'discoverCommandsGenerated'.
+- Assistant découverte: Amélioration: Ajout recherche commandes generées.
+- Network graph: Temporairement masqué. En cours de refonte.
+- Moes - Smart Brightness Thermometer: Support préliminaire (2469).
+- Assistant découverte: Correction pour support multi EP.
+
+221007-BETA-1
+-------------
+
+- Interne: Parser: Amélioration msg debug.
+- Network graph: Correction.
+- Network graph: Nombreux changements internes.. normalisation, nettoyage.
+- Interne: DB eqLogic: 'positionX' => 'ab::settings[physLocationX]'.
+- Interne: DB eqLogic: 'positionY' => 'ab::settings[physLocationY]'.
+- Interne: Nettoyage DB au démarrage revu.
+- Page EQ/avancé d'une Zigate: Ajout boutons 'démarrer/arrêter' pour inclusion.
+- Moes curtain module: Support preliminaire (2464).
+- Interne: DB config: Suppression clefs obsoletes 'blocageRecuperationEquipement' + 'blocageTraitementAnnonce'.
+- Interne: DB config: 'DbVersion' => 'ab::dbVersion'.
+
+220930-BETA-1
+-------------
+
+- Interne: Suppression queue 'ctrlToCmd' au profil de 'xToCmd' + améliorations 'CliToQueue'.
+- Interne: Mise à jour generation doc.
+- Nous A1Z smart plug: Ajout support préliminaire (2460).
+- Livarno Home HG07834B: Mise-à-jour modele (2448).
+- Philips SML004: Mise-à-jour modele (2437).
+- Maintenance/télécharger tout: Ajout alerte si moins de 5000 lignes de logs.
+- Interne: Parser: Clusters supportés par 8100/8102 revus à la baisse (=> 8002).
+
+220928-BETA-1
+-------------
+
+- Interne: Suppression queue 'assistToCmd' + nettoyage 'assistToParser'.
+- Interne: AbeilleCmd: Amélioration 'sliderToHex()'.
+- Tuya vibration sensor TS0210: Mise-à-jour modèle (2452).
+
+220927-BETA-1
+-------------
+
+- Orvibo CM10ZW: Ajout affichage 'Status X' (2024).
+- Livarno Home HG07834B: Mise-à-jour modele (2448).
+- Firmware zigate: Recommandation d'utiliser la v3.21.
+- Firmwares v1: Suppression des versions < '3.21'.
+- Page maintenance/infos clefs: Ajout canal.
+- Interne: DB config: Suppression clef obsolete 'agressifTraitementAnnonce'.
+- Interne: DB config: 'monitor' => 'ab::monitorId'.
+- Interne: Abeille.class: Le manque de déclaration de 'batteryType' ne permet plus de dire que le device est en écoute.
+- Interne: Nettoyage code obsolete 'SetPermit' + 'xmlhttpMQTTSend.php'.
+- Interne: ZigbeeConst: Mise à jour cluster 0500.
+
+220924-BETA-1
+-------------
+
+- Page équipement: Amélioration affichage.
+- Tuya vibration sensor TS0210: Mise-à-jour modèle (2452).
+- Syntaxe modele EQ: Ajout possibilité surcharge 'repeatEventManagement'.
+- Syntaxe modele EQ: Ajout possibilité surcharge 'returnStateTime' & 'returnStateValue'.
+
+220923-BETA-1
+-------------
+
+- Interne: Suppression cmde obsolete 'luminositeHue.json'.
+- Interne: Normalisation de qq icones Philips.
+- Interne: Normalisation de qq icones Iluminize.
+- Tuya vibration sensor TS0210: Ajout support préliminaire (2452).
+- Interne: DB config: Nettoyage clefs obsoletes.
+- Interne: Suppression erreurs PHP sur 'AbeilleEQ-xxx.php'
+- Commandes JSON: Suppression cmde obsolete 'PuissanceLegrandPrise' => 'zb-0B04-ActivePower'.
+- Assistant modèle: Mise-à-jour pour cluster 0500/IAS zone.
+- Assistant modèle: Correction génération 'category'.
+- Interne: DB config: 'preventLQIRequest' => 'ab::preventLQIAutoUpdate'.
+
+220922-BETA-1
+-------------
+
+- Page EQ/avancé: Affichage code fabricant.
+- Interne: Ajout fabricant dans qq modeles JSON.
+- Livarno Home: Ajout modele préliminaire (2448).
+- Philips SML004: Ajout 'Sensitivity' (2437).
+- Interne: Parser: Support cluster 1000 cmd 41 & 42.
+- Tuya PIR & illuminance: Mise-à-jour du modele (2409).
+- Interne: DB config: 'AbeilleIEEEX' => 'ab::zgIeeeAddrX'
+- Interne: DB config: 'AbeilleIEEE_OkX' => 'ab::zgIeeeAddrOkX'
+- Interne: Parser: isDuplicated() timeout = 2sec au lieu de 10sec.
+- Tuya PIR+illuminance: Mise-à-jour modèle pour 'Illuminance' (2409).
+
+220916-BETA-1
+-------------
+
+- Interne: Liste des 'end points' enregistrée dans DB eqLogic.
+- Interne: 'manufCode' enregistré dans DB eqLogic.
+- Page EQ/avancé: Ajout possibilité d'envoyer une 'Node descriptor request'.
+
+220916-STABLE-1
+---------------
+
+  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible (v3.21 à ce jour).
+  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal mais la dernière en date (3.21) est fortement recommandée.
+
+220914-BETA-1
+-------------
+
+- Philips SML003 motion sensor: Support préliminaire (2440).
+- Tuya smart plug: Support préliminaire (2443).
+- Interne: Normalisation du nom de qq icones.
+- Tuya iHSW02/WHD02 mini smart plug: Ajout modele (2438).
+- Electrovanne Saswell SAS980SWT: Correction modele (2388).
+- Silvercrest motion sensor: Support préliminaire (2445).
+
+220906-BETA-1
+-------------
+
+- Moes smart dimmer MS105Z: Mise-à-jour modèle pour partie dimmer (2363).
+- Interne: Parser: Ajout info msg 8139.
+- Interne: Abeille.class: Correction mise-à-jour cmde info (duplicate entry).
+- Thermostat Schneider Wiser: Support préliminaire (2436).
+- Philips HUE Smart plug LOM008: Mise-à-jour du modèle (2431).
+- Interne: Suppression ancienne syntaxe 'tuyaEF00' dans modèles JSON.
+- OSRAM Classic A60 TW: Support préliminaire (2435).
+- OSRAM Classic B40 TW: Mise-à-jour modèle (2023).
+- Philips SML004: Support préliminaire (2437).
+- Assistant modèle EQ: Ajout support cluster 0406 (Occupancy) + amélioration 0400.
+- Interne: Parser: Cluster 0406 supporté par decode8002() et non plus 8102().
+
+220901-BETA-1
+-------------
+
+- Interne: Suppression queue obsolete 'parserToAbeille'.
+- Interne: Optimisation queues 'xmlToAbeille'/'cmdToAbeille'/'abeilleToAbeille' => 'xToAbeille'.
+- Page config: Test de port: Amélioration mineure.
+- Interne: Optimisation queues dans deamon(): 'parserToAbeille2' => 'xToAbeille'.
+- Page santé: Affichage du type d'équipement au lieu de son icone.
+- Interne: Ajout type 'Zigate' à l'équipement 'Ruche'.
+- Interne: Format JSON eq: Mise-à-jour 'Identify' & 'Groups'.
+- Interne: Support Tuya: Amélioration 'transId' + 'setPercent1000'.
+
+220829-BETA-1
+-------------
+
+- Page maintenance: Récupération fantomes préliminaire, pour les eq sur secteur (mode dev).
+- Philips HUE Smart plug LOM008: Support préliminaire (2431).
+- Interne: Nettoyage images: 'LOM001'/'LOM002' => 'PhilipsSignify-Plug'
+
+220824-BETA-1
+-------------
+
+- Interne: Mise-à-jour page maintenance.
+- Aeotec Multi purpose sensor: Mise-à-jour du modèle pour 'vibration' (2376).
+- Page support: Remplacée par page 'maintenance' + améliorations.
+- Volet Profalux: Ajout cmde info 'Not Closed' (2429).
+- Ikea on/off switch: Correction modele pour batterie à mi valeur (2056).
+- JSON équipement: Ajout possibilité surcharge 'calculValueOffset'.
+- Interne: 'AbeilleLQI_MapDataAbeilleX.json.lock' => 'AbeilleLQI-AbeilleX.json.lock'.
+- Interne: Arret generation ancien format 'AbeilleLQI_MapDataAbeilleX.json'.
+- Interne: Recup équipements fantomes.
+
+220817-BETA-1
+-------------
+
+- Interne: Boutons 'vider' & 'supprimer' page support.
+- Interne: Modifications clefs DB 'config'
+
+  - 'AbeilleActiverX' => 'ab::zgEnabledX'.
+  - 'AbeilleTypeX' => 'ab::zgTypeX'.
+  - 'AbeilleSerialPortX' => 'ab::zgPortX'.
+  - 'IpWifiZigateX' => 'ab::zgIpAddrX'.
+  - 'AbeilleParentId' => 'ab::defaultParent'
+- Gledopto GL-C-008P: Mise-à-jour icone.
+- Aubess detecteur de fumée: Ajout support préliminaire (2426).
+- Interne: Parser: Read Attributes Response, correction crash cluster ID 0005.
+
+220810-BETA-2
+-------------
+
+- Interne: Correction regression DB eqLogic pour 'icone' => 'ab::icon'.
+- Zlinky: Amélioration modèle.
+
+220810-BETA-1
+-------------
+
+- Orvibo ST30: Correction modèle pour humidité (2193).
+- Page de config: Changements mineurs.
+- Page zigate/avancé: Choix du canal Zigbee amélioré.
+- Page équipement/avancé: Améliorations visuelles mineures.
+- Aeotec Multi purpose sensor: Mise-à-jour du modèle pour 'vibration' (2376).
+- Gledopto GL-C-007P: Support préliminaire.
+- Interne: Nettoyage entrées 'Polling' + 'RefreshData' sur mise-à-jour d'une commande.
+- Zlinky: Mise-à-jour modèle (2418).
+- Interne: msg_send()/msg_receive() avec json_encode()/json_decode() partout.
+- Interne: DB eqLogic, 'icone' => 'ab::icon'.
+- INNR RC250: Support préliminaire (2420).
+
+220714-STABLE-1
+---------------
+
+  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible (3.21 à ce jour).
+  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal mais la dernière en date (3.21) est fortement recommandée.
+
+220713-BETA-1
+-------------
+
+- Profalux: Ajout support volet MOT-C1Z06F (2411).
+- Interne: Exclusion de 'resources/archives' des signatures MD5 (2413).
+
+220707-BETA-1
+-------------
+
+- Interne: Parser: Amélioration msg monitor si équipement Tuya.
+- Ampoule E27 Ledvance white: Mise-à-jour modèle (2400).
+
+220628-BETA-1
+-------------
+
+- Mhcozy ZG-0005-RF: Ajout support préliminaire (2408).
+- Gledopto GL-C-008P: Ajout support préliminaire (2402).
+- Tuya PIR+illuminance: Ajout support préliminaire (2409).
+
+220625-BETA-1
+-------------
+
+- Interne: Parser: Fix mineur msg debug.
+- Modèles d'équipements: Possibilité de surcharger 'historizeRound'.
+- Interne: Parser: Ajout support msg '8001/Log message'.
+
+220622-BETA-1
+-------------
+
+- Interne: 'Device Announce' filtré pour Zigate v2 seulement (2404).
+
+220619-STABLE-1
+---------------
+
+- Interne: Support Tuya amélioré (ajout 'rcvValueMult').
+- Tuya TV02: Mise-à-jour du modèle.
+- Page EQ: Suppression des boutons 'Recharger' & 'Reconfigurer' pour ne garder que 'Reinitialiser'.
+- Ampoule E27 Ledvance couleur: Ajout support préliminaire (2400).
+- Smart Air Box: Modèle revu pour utilisation commandes internes génériques (2329).
+
+220606-BETA-1
+-------------
+
+- Interne: Parser: Amélioration mineure.
+- Nom d'un nouvel équipement = type issu du modèle + Jeedom ID (ex: 'Tuya smoke sensor - 12') (2393).
+- Interne: Support Tuya amélioré.
+- Moes smart dimmer MS105Z: Mise-à-jour modèle pour partie dimmer (2363).
+- Interne: Ajout support préliminaire 'usbreset'.
+- Blitzwolf SHP13: Ajout support signature TS011F _TZ3000_amdymr7l (2396).
+
+220531-BETA-1
+-------------
+
+- Interne: Suppression code obsolete (xmlhttpConfChange).
+- Page santé: Amélioration mineure.
+- Mise-à-jour OTA: Amélioration mineure & correction pour support FW Legrand.
+- Electrovanne Saswell SAS980SWT: Support préliminaire (2388).
+- Ikea Tredanson rideau occultant: Ajout support préliminaire (2392).
+- Nom d'un nouvel équipement = type issu du modèle + Jeedom ID (ex: 'Tuya smoke sensor - 12') (2393).
+- Réseau: Changement visuel mineur table des liens + utilisation 'AbeilleLQI-AbeilleX.json'.
+
+220518-BETA-1
+-------------
+
+- E27 RGB Eglo/Awox (id = TLSR82xx, AwoX): Mise-à-jour du modèle (2384).
+- Images: Nettoyage & standardisation des noms (ex: node_Generic-BulbXXX.png).
+- Page EQ/avancé: Ajout possibilité de changer la couleur (cluster 0300, move to color).
+- Interne: Support Tuya amélioré pour plus de flexibilité.
+- Moes smart dimmer MS105Z: Mise-à-jour modèle (2363).
+- Aeotec Multi purpose sensor: Mise-à-jour du modèle (2376).
+- Page des équipements: Affichage grisé si équipement désactivé.
+- Support OTA: Correction regression.
+- Page EQ/commandes: Amélioration mineure (2178).
+
+220515-BETA-1
+-------------
+
+- Legrand Cable outlet: Mise-à-jour du modèle (850).
+- Interne: Cmd: Revue 'commandLegrand'.
+- Moes smart dimmer MS105Z: Mise-à-jour modèle (2363).
+- Nom d'un nouvel équipement = type issu du modèle (ex: 'Tuya smoke sensor') plutot que 'AbeilleX-Y'.
+- Interne: Corrections utilisation obsolete de 'RxOnWhenIdle'.
+- E27 RGB Eglo/Awox (id = TLSR82xx, AwoX): Ajout support préliminaire (2384).
+- Lidl Dimmable HG07878C: Ajout support préliminaire (2383).
+- Interne: Parser: Support revu pour 8002/'configure reporting response'. 8120 n'est plus utilisé.
+- Interne: Constantes zigbee. Ajout clusters privés EF00, FC01 & FC40.
+- Images: Nettoyage & standardisation des noms (ex: node_Generic-BulbXXX.png).
+- Interne: Abeille.class: Optimisation.
+- Interne: AbeilleCmd: Ajout support 'manufId' pour 'configureReporting'.
+- Page EQ/avancé: 'Configure reporting': Ajout support code fabricant (manufId).
+- Page EQ/avancé: Affichage des groupes Zigbee auxquels l'équipement appartient (1713).
+- Woox controleur d'arrosage: Ajout support préliminaire (2385).
+- Interne: Parser: FC01/FC02 supporté par decode8002.
+- Interne: AbeilleCmd: Correction readAttribute() pour 'manufId' renseigné.
+- Page EQ/avancé: 'Read attribute': Ajout support code fabricant (manufId).
+
+220509-BETA-1
+-------------
+
+- Tuya smoke detector: Support préliminaire (2380).
+- Heiman COSensor EF-3.0: Mise-à-jour modèle (2312).
+- Interne: Parser: Support cmd 01 générée par cluster 0500 (#EP#-0500-cmd01).
+- Aeotec Multi purpose sensor: Mise-à-jour modèle pour vibration (2376).
+- Nettoyage cmdes JSON obsolètes:
+
+  - 'etatSwitchLivolo' => 'zb-0006-OnOff'
+  - 'etatVolet' => 'zb-0006-OnOff'
+- Interne: Nettoyage partiel du répertoire 'Network'.
+- Interne: Nettoyage 'Abeille.class'.
+- Reseau/bruit: Corrections.
+- Interne: Optimisation AbeilleCmd autour de 'managementNetworkUpdateRequest'.
+- Interne: Parser: Support type 'array'.
+- Interne: Parser: Decode 'write attribute response' pour cluster 'private'.
+
+220428-BETA-1
+-------------
+
+- Interne: check_json: Améliorations.
+- Aeotec Multi purpose sensor: Mise-à-jour modèle (2376) & correction cmde 'zb-0500-ZoneStatus'.
+- Modèles de commandes JSON: Mise-à-jour cosmetique.
+- Interne: Ajout date derniere mise-à-jour à partir du modèle (ab::eqModel['lastUpdate']).
+- Interne: Parser: Optimisation lecture DB 'config'.
+- Interne: Parser: Mise-à-jour support cluster 0005/scenes (peut etre cassé).
+- Interne: Parser: Corrections regressions.
+- Owon multi-sensor THS317-ET: Ajout support.
+- Xiaomi sqare sensor: Mise-à-jour modèle pour ne garder qu'une info 'Pressure' = '0403-01-0000' (2370).
+- Moes smart dimmer MS105Z: Mise-à-jour modèle (2363).
+- Interne: Parser: Correction 'read attribute' pour 'Time cluster'.
+
+220425-BETA-1
+-------------
+
+- Interne: Mise-à-jour DB eqLogic
+
+  - 'ab::jsonId' + 'ab::jsonLocation' => 'ab::eqModel['id'/'location]'
+  - 'MACCapa' => 'ab::zigbee['macCapa']'
+  - 'RxOnWhenIdle' => 'ab::zigbee['rxOnWhenIdle']'
+  - 'AC_Power' => 'ab::zigbee['mainsPowered']'
+- Interne: Parser: decode8002() monitoring migré en fin de fonction.
+- Interne: Parser: Suppression fonction obsolete msgToAbeille().
+- Page EQ/avancé: Correction regressions.
+- Aeotec Multi purpose sensor: Ajout support préliminaire (2376).
+- Page EQ/avancé: Corrections 'Réinitialiser'.
+- Assistant EQ/modèle: Améliorations pour clusters 0402, 0405 & 0500.
+
+220421-BETA-1
+-------------
+
+- Interne: Version DB, date = 20220407.
+- Analyse/santé: Correction affichage ports utilisés.
+- Interne: Nettoyage fonctions obsolètes.
+- Interne: Suppression de plusieurs commandes obsolètes (dispos sur page avancée) 'Ruche':
+
+  - 'replaceEquipement'
+  - 'Get Time'
+  - 'SystemMessage' (provoque mise à jour erronnée date de communication Zigate)
+- Interne: Page EQ/avancé. Qq optimisations.
+- Interne: Mise-à-jour controle/redémarrage des démons.
+- Zigate v2/apparition équipements inconnus: Ajout verrue (2368).
+- Interne: Plus qu'une seule queue d'entrée au parser.
+- Interne: Tuya: Support préliminaire TV02.
+- Interne: Grosse mise-à-jour pour meilleur support des équipements Tuya.
+- Philips LOM007 smart plug: Ajout support (2374).
+- JSON commandes: 'forceReturnLineAfter/Before' is obsolete. Replaced by 'nextLine' = 'after/before'.
+- Interne: Sauvegarde des infos du modele dans la DB eqLogic => 'ab::eqModel'.
+- Page EQ: Ajout affichage type d'équipement.
+
+220407-BETA-1
+-------------
+
+- Parser: Amélioration decode routing table.
+- WarningDevice-EL-3.0: Mise-à-jour modèle + merge 'WarningDevice'.
+- SML002: Mise-à-jour modèle (2309).
+- Affichage 'Humidity': Suppression du chiffre apres la virgule.
+- Page EQ/avancé: Amélioration (mineure) affichage modèle
+- Commande interne IAS WD ('cmd-0502') revue pour flash seul.
+- Interne: Constantes Zigbee: Ajout support cluster 0402.
+- Nettoyage cmdes JSON obsolètes:
+
+  - 'etatEpXXout' => 'zb-0006-OnOff' + 'ep=XX'
+  - 'etatEpXXin' => 'zb-0006-OnOff' + 'ep=XX'
+  - 'etatEp08' => 'zb-0006-OnOff' + 'ep=08'
+
+220406-STABLE-1
+---------------
+
+- Moes MS105Z: Ajout support préliminaire (2363).
+- Legrand switch 067723: Mise-à-jour modèle (2361).
+- Lidl ampoule livarno lux led gu10 HG08131A: Mise-à-jour modèle (2356).
+- Tuya TS011F__TZ3000_cphmq0q7: Mise-à-jour modèle pour support autres signatures.
+- Page des équipements: Changement icone si non définie.
+- Interne: Mise-à-jour des commandes suite reinclusion/reinit revue.
+- Page équipement: Choix icone revu. Affichage du nom du PNG selectionné et non plus une interprétation de ce que c'est.
+- Interne: Grosse mise-à-jour des commandes, et suppression des 'info' en doublon.
+- Tuya IH-K009: Ajout image.
+- Modèles équipement: Correction regression config reporting 0008-0000 (mauvais type).
+
+220329-BETA-2
+-------------
+
+- Legrand switch 067723: Mise-à-jour modèle (2361).
+- Page EQ/avancé: Amélioration mineure affichage ID Zigbee.
+- Interne: Amélioration récupération équipements fantomes.
+- Interne: Timeout n'est plus écrasé si réannonce de l'équipement.
+- Package de logs: Masquage de la clef 'api' de la table 'config'.
+- Package de logs: Masquage des URL.
+
+220324-BETA-1
+-------------
+
+- Network graph: Corrections diverses (1820).
+- Page de gestion: Suppression du 'Changement de zigate' en double.
+- Interne: Cmd 00 cluster 0502/IAS-WD: corrections.
+- Frient smoke alarm (SMSZB-120, frientAS): Mise-à-jour modèle (2242).
+- Interne: Mise-à-jour à partir du modèle revu pour éviter de créer des cmdes orphelines.
+- Interne: Collecte LQI génère nouveau format (AbeilleLQI-AbeilleX.json).
+- Réseau/graph des liens: Revu et utilise nouveau format interne + ajout icone équipement.
+- Interne: Parser: Amélioration filtrage mauvais paquets LQI/804E.
+- Page support: Affiche tout fichier JSON du repertoire temporaire.
+- Interne: network.js => AbeilleNetwork.js
+
+220320-BETA-1
+-------------
+
+- Interne: Mise-à-jour script de generation de la liste des eq supportés.
+- Interne: Mise-à-jour support Tuya EF00 cmd 01.
+- Lidl ampoule livarno lux led gu10 HG08131A: Ajout support (2356).
+- Interne: Ajout support cmde 00 cluster 0502/IAS WD pour controle sirene.
+- Frient smoke alarm (SMSZB-120, frientAS): Mise-à-jour modele (2242).
+
+220316-BETA-1
+-------------
+
+- Interne: AbeilleCmdPrepare: nettoyage code obsolete.
+- Interne: AbeilleCmdQueue: Timeout étendu à 3sec.
+- Philips RWL021: Mise-à-jour modèle pour report battery (1243).
+- Evology 4 buttons (3450-Geu_CentraLite): Mise-à-jour modèle (2318).
+- Tuya Smart Air Box: Ajout support préliminaire (2329).
+- Interne: Parser: Suppression car '/' pour identifiant fabricant (ex 'frient A/S', 2242).
+- Correction DB pour erreur getPlugVAW, mauvaise taille d'attribut (508 au lieu de 0508).
+- Interne: Ajout support cluster EF00/cmd 02 pour Smart Air Box.
+- Frient smoke alarm (SMSZB-120, frientAS): Ajout support (2242).
+- JSON équipements: Suppression mots clef obsoletes: 'lastCommunicationTimeOut' & 'type'
+- Interne: AbeilleCmd: Akout support cmd 00 pour cluster 0502/IAS WD.
+- Interne: Code specifique Tuya isolé.
+- Interne: Qq fixes.
+
+220310-BETA-3
+-------------
+
+- Interne: SerialRead: Suppression warning fopen().
+- JSON équipements: Suppression cmdes obsoletes
+
+  - 'etatLight' => 'zb-0006-OnOff'
+  - 'WindowsCoveringUp' => 'zbCmd-0102-UpOpen'
+  - 'WindowsCoveringDown' => 'zbCmd-0102-DownClose'
+  - 'WindowsCoveringStop' => 'zbCmd-0102-Stop'
+- Philips RWL021: Mise-à-jour modèle (1243).
+- Evology 4 buttons (3450-Geu_CentraLite): Ajout support (2318).
+- Interne: Parser: Clust 0007 supporté par decode8002().
+- Tradfri GU10 340lm White, LED2005R5: Ajout support (2344).
+- Ampoule Lexman Gu10 460lm (ZBEK-4, Adeo): Ajout support (2348).
+- Interne: AbeilleCmd: Corrections & améliorations.
+- Page EQ/avancé: Configurer le reporting: Ajout type attribut.
+
+220307-BETA-1
+-------------
+
+- Interne: AbeilleCmd: Mises-à-jour, corrections, améliorations (dont vitesse) & nettoyage.
+- Interne: AbeilleCmd: Gestion mode ACK etendu aux commandes internes suivantes:
+
+  - bind0030
+  - configureReporting
+  - getActiveEnpoints
+  - writeAttibute
+  - writeAttribute0530
+  - sendReadAttributesResponse
+  - readReportingConfig
+- Legrand double switch (NLIS-Doublelightswitch_Legrand): Ajout support (2343).
+- Interne: AbeilleCmd: Suppression cmds obsoletes 'ReadAttributeRequestXX'.
+- JSON équipements: Suppression cmdes obsoletes
+
+  - 'getBattery' => 'readAttribute' + 'attrId=0021'
+  - 'getBatteryVolt' => 'readAttribute' + 'attrId=0020'
+  - 'getPlugA' => 'poll-0B04-0508'
+  - 'getPlugPower' => 'poll-0B04-050B'
+  - 'getPlugV' => 'poll-0B04-0505'
+- Interne: AbeilleCmd: Correction génération SQN pour cmds 0530.
+- Liste compatibilité: Correction pour suppression affichage 'discovery'.
+- Mise à jour OTA: Correction queue.
+- Hue outdoor motion sensor SML002: Mise-à-jour modèle (2309).
+- Volets Profalux: Correction types génériques pour appli mobiles.
+- Analyse équipements/niveau batterie: Correction regression (2345).
+- Interne: Parser->Abeille: optimisation msg
+
+  - attributeReport => attributesReportN.
+  - reportAttributes => attributesReportN.
+  - readAttributesResponse => readAttributesResponseN.
+
+220228-BETA-2
+-------------
+
+- Remplacement d'équipements: Nouvelle mise-à-jour + doc (2337).
+- Interne: Parser: Certains messages dupliqués sont ignorés.
+- Récupération des fantômes: Amélioration.
+- Interne: Migration codes obsoletes vers 'archives': LqiStorage.x, RouteRecord.x, Jennic binary.
+- Mini smart socket (TS011F__TZ3000_5f43h46b): Mise-à-jour modèle (2334).
+- Interne: Amélioration analyse réseau (collecte LQI).
+- Remplacement d'équipements: Correction fonctionalité (2337).
+
+220223-BETA-1
+-------------
+
+- Interne: Parser: Correction erreur PHP decode8043().
+- Moes 4 boutons, scene switch, TS004F__TZ3000_xabckq1v: Mise-à-jour modèle (2278).
+- Mini smart socket (TS011F__TZ3000_5f43h46b): Ajout support préliminaire (2334).
+- JSON équipements: Suppression cmdes obsoletes
+
+  - 'etatSW1', 'etatSW2', 'etatSW3'
+  - 'etatSwitch'
+  - 'etatSwitchKonke'
+- JSON équipements: Mise-à-jour 'zb-0702-CurrentSummationDelivered'.
+- Aqara TVOC moniteur d'air AAQS-S01 (airmonitor.acn01): Mise-à-jour modele (2279).
+
+220223-STABLE-1
+---------------
+
+- Page EQ/avancé: Ajout bouton 'leave request'.
+- JSON commandes: Remplacement 'ReadAttributeRequest' => 'readAttribute'.
+- Interne: AbeilleCmd/readAttribute(): Ajout support 'manufId'.
+- Tuya capteur rond temp & humidité (TS0201__TZ3000_dowj6gyi): Ajout support.
+- Ikea E27 bulb (TRADFRIbulbE27CWS806lm): Ajout support (2328).
+- Migration d'équipements: Mise-à-jour séquence + ajout doc.
+- Réseau/routes: Correction regression fonctionnement.
+
+220215-BETA-1
+-------------
+
+- Interne: Amélioration msg debug.
+- Interne: Changement gestion cas nouvelle zigate/échange de port.
+- Interne: Lecture version zigate (bouton tester) améliorée.
+- Mise-à-jour FW zigate: Effacement automatique PDM si passage 'legacy' vers 'OPDM'.
+- Page gestion: Mise-à-jour remplacement de zigate suite Jeedom 2.4.X.
+- Page zigate/avancé: Selection du canal/masque revue (1683).
+- Interne: AbeilleCmd: setChannelMask => setZgChannelMask + améliorations.
+
+220211-BETA-1
+-------------
+
+- Profalux v2: Amélioration support.
+- Auto-découverte équipement inconnu: Correction format json & améliorations.
+- Lexman E27 RGB bulb: Ajout support préliminaire (2295).
+- Heiman COSensor EF-3.0: Ajout support (2312).
+- Suppression des repertoires vides au démarrage dans 'devices_local'.
+- Erreur sur 'exclusion' d'équipement: Nouvelle correction (2305)
+- Interne: SerialRead: Message corrompu (err CRC) n'est plus transmis au parser.
+- Page équipements/migration: Revu & corrigé pour Jeedom 4.2.x (2322).
+
 220206-BETA-1
 -------------
 
@@ -16,17 +1111,6 @@ ChangeLog
 
 220202-BETA-1
 -------------
-
-  .. important:: Pour les zigates v1, l'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
-
-      - Toute nouvelle installation.
-      - Dès lors qu'un réappairage complet est nécéssaire.
-      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-      - Les firmwares avant 3.1e sont forcement 'legacy'.
-      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
-
-  .. important:: Les zigates v1 doivent avoir un firmware >= 3.1e pour un fonctionnement optimal.
-  .. important:: Les zigates v2 doivent être à jour du dernier firmware disponible.
 
 - Page config: Changement mineur. Type 'WIFI' => 'WIFI/ETH'.
 - Page config: Liste des ports revue + info 'Orange Pi Zero'.
@@ -941,23 +2025,6 @@ Secours
 * Transférer l'historique des commandes avec le bouton "Copier l'historique de cette commande sur une autre commande"
 * Vous testez le nouvel équipement
 * si ok vous pouvez supprimer l'ancien.
-
-Bugs
-----
-
-Il est fort probable que des bugs soient découverts.
-
-Dans ce cas aller voir le forum: `FORUM <https://community.jeedom.com/tag/plugin-abeille>`_
-
-ou issue dans GitHub: `ISSUE <https://github.com/KiwiHC16/Abeille/issues?utf8=✓&q=is%3Aissue+>`_
-
-Changelog
----------
-
-En fait le ChangeLog est dans GitHub alors je perds mon temps a essayer de la mettre a jour dans cette doc. Je ne fais plus de mise à jour ou que des principales choses quand j'ai le temps.
-
-Voir directement dans `GitHub <https://github.com/KiwiHC16/Abeille/commits/master>`_
-
 
 2019-11-25
 ----------

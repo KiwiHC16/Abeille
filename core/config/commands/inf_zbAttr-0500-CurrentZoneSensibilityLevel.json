@@ -1,0 +1,10 @@
+{
+    "inf_zbAttr-0500-CurrentZoneSensibilityLevel": {
+        "comment": "0500/IAS Zone cluster, attrib 0013/CurrentZoneSensitivityLevel, type uint8",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": [],
+        "type": "info",
+        "logicalId": "0500-#EP#-0013"
+    }
+}

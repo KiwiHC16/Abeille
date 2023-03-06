@@ -1,6 +1,6 @@
 {
     "eTRV0100": {
-        "comment": "Dansfoss Ally Radiator Thermostat 014G2461 ( https:\/\/assets.danfoss.com\/documents\/DOC353849556547\/DOC353849556547.pdf ) ",
+        "comment": "Dansfoss Ally Radiator Thermostat 014G2461 ( https://assets.danfoss.com/documents/DOC353849556547/DOC353849556547.pdf ) ",
         "timeout": "0",
         "configuration": {
             "mainEP": "01",
@@ -13,54 +13,96 @@
         },
         "type": "Dansfoss Ally Radiator Thermostat 014G2461",
         "commands": {
-            "include1 1 - Ok": "danfossTemperatureConsigneValue",
-            "include1 2 - Ok": "danfossTemperatureConsigneGet",
-            "include1 3 - Ok": "danfossTemperatureConsigneSet",
+            "Consigne": {
+                "use": "danfossTemperatureConsigneValue"
+            },
+            "Consigne Get": {
+                "use": "danfossTemperatureConsigneGet"
+            },
+            "Consigne Set": {
+                "use": "danfossTemperatureConsigneSet"
+            },
             "Battery-Percent": {
-                "use": "zb-0001-BatteryPercent",
+                "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
-            "include2 2 - Ok": "getBattery",
-            "include3 1 - Ok": "Batterie-Volt-Konke",
-            "include3 2 - Ok": "getBatteryVolt",
-            "include4 1 - Ok": "spiritTemperature",
-            "include4 2 - Ok": "spiritTemperatureGet",
-            "include5 1 - Ok": "danfossSystemeModeValue",
-            "include5 2 - Ok": "danfossSystemeModeGet",
-            "include6 1 - Ok": "spiritPiHeatingDemand",
-            "include6 2 - Ok": "spiritPiHeatingDemandGet",
-            "include7 1 - Ok": "danfossUIDisplayModeValue",
-            "include7 2 - Ok": "danfossUIDisplayModeGet",
-            "include7 3 - Refused by rad Head": "danfossUIDisplayModeSet",
-            "include8 1 - Ok": "danfossUIKeyLockValue",
-            "include8 2 - Ok": "danfossUIKeyLockGet",
-            "include8 3 - Ok (0 ou 1)": "danfossUIKeyLockSet",
+            "Get Battery-Percent": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0001&attrId=0021"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
+            "Get Battery-Volt": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0001&attrId=0020"
+            },
+            "Temp\u00e9rature": {
+                "use": "spiritTemperature"
+            },
+            "getTemperature": {
+                "use": "spiritTemperatureGet"
+            },
+            "Mode": {
+                "use": "danfossSystemeModeValue"
+            },
+            "Mode Get": {
+                "use": "danfossSystemeModeGet"
+            },
+            "Pi Heating Demand": {
+                "use": "spiritPiHeatingDemand"
+            },
+            "Get Pi Heating Demand": {
+                "use": "spiritPiHeatingDemandGet"
+            },
+            "Display Mode": {
+                "use": "danfossUIDisplayModeValue"
+            },
+            "Display Mode Get": {
+                "use": "danfossUIDisplayModeGet"
+            },
+            "Set Deg Mode": {
+                "use": "danfossUIDisplayModeSet"
+            },
+            "Key Lock": {
+                "use": "danfossUIKeyLockValue"
+            },
+            "Key Lock Get": {
+                "use": "danfossUIKeyLockGet"
+            },
+            "Set Key Lock": {
+                "use": "danfossUIKeyLockSet"
+            },
             "Bind-0001-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0001",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
             "SetReporting-0001-0021": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },
             "SetReporting-0001-0020": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
                 "execAtCreationDelay": 12,
                 "execAtCreation": "Yes"
             },
             "Bind-0201-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0201",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 10
             },
-            "include10 2 - Ok": "setReportRadiateurLocalTemperature",
-            "include10 3 - Ok": "setReportRadiateurConsigneTemperature"
+            "setReportRadiateurLocalTemperature": {
+                "use": "setReportRadiateurLocalTemperature"
+            },
+            "setReportRadiateurConsigneTemperature": {
+                "use": "setReportRadiateurConsigneTemperature"
+            }
         }
     }
 }

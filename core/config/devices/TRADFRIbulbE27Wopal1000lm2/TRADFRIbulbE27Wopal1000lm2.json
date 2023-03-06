@@ -1,48 +1,57 @@
 {
     "TRADFRIbulbE27Wopal1000lm2": {
         "manufacturer": "Ikea",
+        "model": "E27 opal 1000lm",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "IkeaTradfriBulbE27WOpal1000lm2"
+            "icon": "Ikea-BulbE27"
         },
         "category": {
             "light": "1"
         },
-        "type": "IKEA Ampoule TRADFRI bulb E27 opal 1000lm2",
+        "type": "IKEA bulb E27 opal",
         "commands": {
-            "include4": "etatLight",
-            "CurrentLevel-0008": {
-                "use": "zb-0008-CurrentLevel",
+            "etat": {
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
-            "include24": "Identify",
-            "include11": "setLevel",
+            "CurrentLevel-0008": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "isVisible": 1
+            },
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "setLevel": {
+                "use": "setLevel"
+            },
             "On": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "isVisible": 1
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "isVisible": 1
             },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "Get-CurrentLevel": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "Toggle": {
-                "use": "zbCmd-0006-Toggle",
+                "use": "act_zbCmdG-0006-Toggle",
                 "nextLine": "after"
             }
         }

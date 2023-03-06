@@ -2,23 +2,24 @@
     require_once __DIR__.'/../../core/config/Abeille.config.php';
     include_once __DIR__.'/../../core/php/AbeilleOTA.php';
 
-    echo '<script>var js_queueKeyXmlToCmd = "'.queueKeyXmlToCmd.'";</script>'; // PHP to JS
     echo '<script>var js_otaDir = "'.otaDir.'";</script>'; // PHP to JS
     $abQueues = $GLOBALS['abQueues'];
-    echo '<script>var js_queueCtrlToParser = "'.$abQueues['ctrlToParser']['id'].'";</script>'; // PHP to JS
-    echo '<script>var js_queueCtrlToCmd = "'.$abQueues['ctrlToCmd']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToCmd = "'.$abQueues['xToCmd']['id'].'";</script>'; // PHP to JS
+    echo '<script>var js_queueXToParser = "'.$abQueues['xToParser']['id'].'";</script>'; // PHP to JS
+    // echo '<script>var js_queueCtrlToCmd = "'.$abQueues['ctrlToCmd']['id'].'";</script>'; // PHP to JS
 ?>
-    <div class="col-sm-8">
-        Mise-à-jour des équipements "Over-The-Air".
-        <?php
-        echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/OTA.html"><i class="fas fa-book"></i> {{Documentation}}</a>';
-        ?>
-        <br>
-        <h3>Firmwares disponibles</h3>
-        <button type="button" onclick="uploadOta()" class="btn btn-secondary" title="Ajouter un fichier OTA local"><i class="fas fa-plus"></i> Ajouter</button>
+<div class="col-sm-8">
+    Mise-à-jour des équipements "Over-The-Air".
+    <?php
+    echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/OTA.html"><i class="fas fa-book"></i> {{Documentation}}</a>';
+    ?>
+    <br>
+    <h3>Firmwares disponibles</h3>
+    <button type="button" onclick="uploadOta()" class="btn btn-secondary" title="Ajouter un fichier OTA local"><i class="fas fa-plus"></i> Ajouter</button>
 
-        <?php
+    <?php
         // Reading available OTA firmwares
+        logSetConf('Abeille');
         otaReadFirmwares();
         echo '<table id="idFwTable">';
         echo '<tbody>';
@@ -108,7 +109,7 @@
         payload = "manufCode="+manufCode+"_imgType="+imgType;
         // topic = "Cmd"+eqLogicId+"_cmd-0019";
         // payload = "ep="+ep+"_cmd=00_manufCode="+manufCode+"_imgType="+imgType;
-        xhr.open("GET", url+"?action=sendMsg&queueId="+js_queueKeyXmlToCmd+"&topic="+topic+"&payload="+payload, true);
+        xhr.open("GET", url+"?action=sendMsg&queueId="+js_queueXToCmd+"&topic="+topic+"&payload="+payload, true);
         xhr.send();
         xhr.onreadystatechange = function() { //Appelle une fonction au changement d'état.
           if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
@@ -116,7 +117,7 @@
             topic = "Cmd"+eqLogicId+"_otaImageNotify";
             payload = "ep="+ep+"_manufCode="+manufCode+"_imgType="+imgType;
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", url+"?action=sendMsg&queueId="+js_queueKeyXmlToCmd+"&topic="+topic+"&payload="+payload, true);
+            xhr.open("GET", url+"?action=sendMsg&queueId="+js_queueXToCmd+"&topic="+topic+"&payload="+payload, true);
             xhr.send();
           }
         }
@@ -128,7 +129,7 @@
 
         var input = document.createElement('input');
         input.type = 'file';
-        input.accept = '.ota, .ota.signed';
+        input.accept = '.zigbee, .ota, .ota.signed';
         input.onchange = e => {
 
             var file = e.target.files[0];
@@ -245,13 +246,11 @@
 
                 /* Asking parser to refresh its firmwares list */
                 var xhr = new XMLHttpRequest();
-                xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueCtrlToParser+"&msg=type:readOtaFirmwares", true);
+                xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueXToParser+"&msg=type:readOtaFirmwares", true);
                 xhr.onload = function () {
                     /* Asking cmd to refresh its firmwares list */
                     var xhr = new XMLHttpRequest();
-                    topic = "CmdAbeille1_readOtaFirmwares";
-                    payload = "";
-                    xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueCtrlToCmd+"&msg=type:readOtaFirmwares", true);
+                    xhr.open("GET", "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueXToCmd+"&msg=type:readOtaFirmwares", true);
                     xhr.send();
                 };
                 xhr.send();

@@ -12,9 +12,7 @@
             "maxValue": "1",
             "visibilityCategory": "All"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
-        "type": "action"
+        "type": "action",
+        "nextLine": "after"
     }
 }

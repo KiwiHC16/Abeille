@@ -10,16 +10,27 @@
         },
         "type": "KADRILJ roller blind",
         "commands": {
-            "include4": "zb-0000-ZCLVersion",
-            "include9": "WindowsCoveringUp",
-            "include10": "WindowsCoveringDown",
-            "include10 2": "WindowsCoveringStop",
-            "include25": "Group-Membership",
+            "ZCL Version": {
+                "use": "inf_zbAttr-0000-ZCLVersion"
+            },
+            "Up": {
+                "use": "act_zbCmdG-0102-UpOpen"
+            },
+            "Down": {
+                "use": "act_zbCmdG-0102-DownClose"
+            },
+            "Stop": {
+                "use": "act_zbCmdG-0102-Stop"
+            },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
         },

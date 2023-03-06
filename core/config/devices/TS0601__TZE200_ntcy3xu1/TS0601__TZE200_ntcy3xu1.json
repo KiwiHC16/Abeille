@@ -1,0 +1,50 @@
+{
+    "TS0601__TZE200_ntcy3xu1": {
+        "manufacturer": "Tuya",
+        "model": "?",
+        "type": "Tuya smoke detector",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-SmokeDetector",
+            "mainEP": "01",
+            "batteryType": "2x1.5V AAA/LR03"
+        },
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Smoke alarm": {
+                "use": "attr-Smoke-Alarm",
+                "isVisible": 1
+            },
+            "Battery-Low": {
+                "use": "attr-Battery-Low",
+                "isVisible": 1
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "comment": "Battery percent seems not reported by this device",
+                "isVisible": 1
+            }
+        },
+        "tuyaEF00": {
+            "fromDevice": {
+                "01": {
+                    "function": "rcvValue0Is1",
+                    "info": "01-smokeAlarm"
+                },
+                "0E": {
+                    "function": "rcvValue0Is1",
+                    "info": "01-batteryLow"
+                },
+                "0F": {
+                    "function": "rcvValue",
+                    "info": "0001-01-0021"
+                }
+            }
+        }
+    }
+}

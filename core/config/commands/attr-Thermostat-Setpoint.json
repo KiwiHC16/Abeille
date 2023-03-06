@@ -1,0 +1,15 @@
+{
+    "attr-Thermostat-Setpoint": {
+        "comment": "Received Setpoint from thermostat",
+        "comment2": "Tcharp38: Can we map on a Zigbee standard attribute ?",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": {
+            "historizeRound": "1"
+        },
+        "type": "info",
+        "logicalId": "#EP#-setpoint",
+        "unit": "\u00b0C",
+        "genericType": "THERMOSTAT_SETPOINT"
+    }
+}

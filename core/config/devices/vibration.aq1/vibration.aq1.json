@@ -11,19 +11,35 @@
         },
         "type": "Xiaomi Vibration",
         "commands": {
-            "include3": "vibrationType",
-            "include4": "vibrationAngle",
-            "include5": "setVibrationSensivityLow",
-            "include6": "setVibrationSensivityMedium",
-            "include7": "setVibrationSensivityHigh",
-            "include8": "Batterie-Volt",
-            "include9": "Batterie-Pourcent",
-            "include10": "Xiaomi-ff01",
+            "Evenement": {
+                "use": "vibrationType"
+            },
+            "Angle": {
+                "use": "vibrationAngle"
+            },
+            "Low": {
+                "use": "setVibrationSensivityLow"
+            },
+            "Medium": {
+                "use": "setVibrationSensivityMedium"
+            },
+            "High": {
+                "use": "setVibrationSensivityHigh"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             }
         }

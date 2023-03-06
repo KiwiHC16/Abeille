@@ -37,6 +37,8 @@
      * @return none
      */
     function Abeille_install() {
+        log::add('Abeille', 'debug', 'Abeille_install() starting');
+
         $cron = cron::byClassAndFunction('Abeille', 'deamon');
         if (!is_object($cron)) {
             $cron = new cron();
@@ -50,15 +52,42 @@
         }
     }
 
+    // Config DB: replace 'oldKey' by 'newKey'
+    function replaceConfigDB($oldKey, $newKey) {
+        $val = config::byKey($oldKey, 'Abeille', 'nada', true);
+        if ($val != 'nada') {
+            config::save($newKey, $val, 'Abeille');
+            log::add('Abeille', 'debug', "  config DB: '".$oldKey."' changed to '".$newKey."'");
+        }
+        // Note: If old key is defined to null then can't detect it so force remove anyway.
+        config::remove($oldKey, 'Abeille');
+    }
+
+    // Remove log files listed in '$obsolete'
+    function removeLogs($obsolete) {
+        foreach ($obsolete as $file) {
+            $path = __DIR__."/../../../log/".$file;
+            if (!file_exists($path))
+                continue;
+            log::add('Abeille', 'debug', "  Removing obsolete log '".$file."'");
+            unlink($path);
+        }
+    }
+
     /* Check and update configuration DB if required.
        This function can update other informations in Jeedom DB.
        Note: This function can be called before daemons startup. Useful for
              GIT users & developpers. */
     function updateConfigDB() {
 
+        $dbVersion = config::byKey('ab::dbVersion', 'Abeille', '');
+        if ($dbVersion == '')
+            $dbVersion = config::byKey('DbVersion', 'Abeille', '');
+
         /* Version 20200225 changes:
-        - Added multi-zigate support */
-        if (config::byKey('DbVersion', 'Abeille', '') == '') {
+           - Added multi-zigate support
+         */
+        if ($dbVersion == '') {
 
             // ******************************************************************************************************************
             // Update Abeille instance from previous version from Abeille/ to Abeille1/
@@ -113,13 +142,14 @@
             else {
                 config::save('AbeilleSerialPort1', $port1, 'Abeille');
             }
-            config::save('DbVersion', '20200225', 'Abeille');
+            config::save('ab::dbVersion', '20200225', 'Abeille');
+            $dbVersion = '20200225';
         }
 
         /* Version 20200510 changes:
-        Added 'AbeilleTypeX' (X=1 to 10): 'USB', 'WIFI', or 'PI' */
-        $dbVersion = config::byKey('DbVersion', 'Abeille', '');
-        if (($dbVersion == '') || (intval($dbVersion) < 20200510)) {
+           - Added 'AbeilleTypeX' (X=1 to 10): 'USB', 'WIFI', or 'PI'
+         */
+        if (intval($dbVersion) < 20200510) {
             for ($i = 1; $i <= 10; $i++) {
                 if (config::byKey('AbeilleActiver'.$i, 'Abeille', '') != "Y")
                     continue; // Disabled or undefined
@@ -132,11 +162,13 @@
                 else
                     config::save('AbeilleType'.$i, 'USB', 'Abeille');
             }
-            config::save('DbVersion', '20200510', 'Abeille');
+            config::save('ab::dbVersion', '20200510', 'Abeille');
+            $dbVersion = '20200510';
         }
 
         /* Version 20201025 changes:
-        All hexa values are now UPPER-CASE */
+           - All hexa values are now UPPER-CASE
+         */
         if (intval($dbVersion) < 20201025) {
             /* Updating addresses in config */
             for ($i = 1; $i <= 10; $i++) {
@@ -183,35 +215,40 @@
                 }
             }
 
-            config::save('DbVersion', '20201025', 'Abeille');
+            config::save('ab::dbVersion', '20201025', 'Abeille');
+            $dbVersion = '20201025';
         }
 
-        /* Version 20201122 changes:
-           - blocageTraitementAnnonce defaulted to "Non"
-           - agressifTraitementAnnonce defaulted to 4
+        /* Version 20220407 changes:
+           - Config DB: blocageTraitementAnnonce defaulted to "Non"
+           - Config DB: agressifTraitementAnnonce defaulted to 4
            - Rename all eq names that use short addr to use Jeedom ID instead.
-           - LogicalId 'AbeilleX/Ruche' updated to 'AbeilleX/0000'
-           - Topic 'AbeilleX/Ruche' updated to 'AbeilleX/0000'
-           - Removing obsolete entries in config table.
+           - Eq DB: LogicalId 'AbeilleX/Ruche' updated to 'AbeilleX/0000'
+           - Eq DB: Topic 'AbeilleX/Ruche' updated to 'AbeilleX/0000'
+           - Config DB: Removing obsolete entries.
            - 'mainEP' fix: '#EP#' => '01'
            - Removing several zigate cmds now handled directly in equipement advanced page.
-           - Eq config: 'modeleJson' => 'ab::jsonId'
-           - Removing 'zigateNb' (obsolete) from config DB.
+           - Eq DB: 'modeleJson' => 'ab::jsonId'
+           - Config DB: Removing 'zigateNb' (obsolete) from config DB.
            - Updating WIFI serial port (/dev/zigateX => constant wifiLink)
            - AbeilleDebug.log moved to /tmp/jeedom
            - Cmd DB: 'ab::trig' => 'ab::trigOut'
            - Cmd DB: 'ab::trigOffset' => 'ab::trigOutOffset'
+           - Cmd DB: 'ReadAttributeRequest' => 'readAttribute'
+           - Cmd DB: Correcting wrong attribute size for 'getPlugVAW' (attrId=0505,508,050B)
+           - Eq DB: Removing obsolete 'lastCommunicationTimeOut', 'type'.
          */
-        if (intval($dbVersion) < 20201122) {
-            if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
-                config::save('blocageTraitementAnnonce', 'Non', 'Abeille');
-            }
-            if (config::byKey('blocageRecuperationEquipement', 'Abeille', 'none', 1) == "none") {
-                config::save('blocageRecuperationEquipement', 'Oui', 'Abeille');
-            }
-            if (config::byKey('agressifTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
-                config::save('agressifTraitementAnnonce', '4', 'Abeille');
-            }
+        if (intval($dbVersion) < 20220407) {
+            // The following is now obsolete
+            // if (config::byKey('blocageTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
+            //     config::save('blocageTraitementAnnonce', 'Non', 'Abeille');
+            // }
+            // if (config::byKey('blocageRecuperationEquipement', 'Abeille', 'none', 1) == "none") {
+            //     config::save('blocageRecuperationEquipement', 'Oui', 'Abeille');
+            // }
+            // if (config::byKey('agressifTraitementAnnonce', 'Abeille', 'none', 1) == "none") {
+            //     config::save('agressifTraitementAnnonce', '4', 'Abeille');
+            // }
 
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
@@ -275,6 +312,20 @@
                     $saveEq = true;
                 }
 
+                // Removing obsolete 'lastCommunicationTimeOut' & 'type'
+                $obsolete = $eqLogic->getConfiguration('lastCommunicationTimeOut', '');
+                if ($obsolete != '') {
+                    $eqLogic->setConfiguration('lastCommunicationTimeOut', null);
+                    log::add('Abeille', 'debug', '  '.$eqName.": 'lastCommunicationTimeOut' removed");
+                    $saveEq = true;
+                }
+                $obsolete = $eqLogic->getConfiguration('type', '');
+                if ($obsolete != '') {
+                    $eqLogic->setConfiguration('type', null);
+                    log::add('Abeille', 'debug', '  '.$eqName.": 'type' removed");
+                    $saveEq = true;
+                }
+
                 $cmds = Cmd::byEqLogicId($eqLogic->getId());
                 $saveCmd = false;
                 foreach ($cmds as $cmdLogic) {
@@ -292,6 +343,27 @@
                         $cmdLogic->setConfiguration('ab::trigOutOffset', $confVal);
                         $cmdLogic->setConfiguration('ab::trigOffset', null);
                         log::add('Abeille', 'debug', '  '.$eqName.": 'ab::trigOffset' updated to 'ab::trigOutOffset'");
+                        $saveCmd = true;
+                    }
+                    $topic = $cmdLogic->getConfiguration('topic', '');
+                    $request = $cmdLogic->getConfiguration('request', '');
+                    // Updating ReadAttributeRequest to readAttribute
+                    if ($topic == "ReadAttributeRequest") {
+                        $cmdLogic->setConfiguration('topic', 'readAttribute');
+                        $request = str_replace("clusterId=", "clustId=", $request);
+                        $request = str_replace("attributeId=", "attrId=", $request);
+                        $request = str_replace("EP=", "ep=", $request);
+                        $request = str_replace("Proprio=", "manufId=", $request);
+                        $cmdLogic->setConfiguration('request', $request);
+                        log::add('Abeille', 'debug', '  '.$eqName.": 'ReadAttributeRequest' updated to 'readAttribute'");
+                        $saveCmd = true;
+                    }
+                    // Correcting wrong attribute size for 'getPlugVAW' (attrId=0505,508,050B)
+                    $cmdLogicalId = $cmdLogic->getLogicalId();
+                    if (($cmdLogicalId == "getPlugVAW") && (strpos($request, "attrId=0505,508,050B") !== false)) {
+                        $request = str_replace("attrId=0505,508,050B", "attrId=0505,0508,050B", $request);
+                        $cmdLogic->setConfiguration('request', $request);
+                        log::add('Abeille', 'debug', '  '.$eqName.": 'getPlugVAW' updated for wrong attr 508 size");
                         $saveCmd = true;
                     }
                     if ($saveCmd)
@@ -318,18 +390,12 @@
             config::remove('zigateNb', 'Abeille');
 
             // Remove obsolete log files
-            $obsolete = ['AbeilleCmd', 'AbeilleMQTTCmd', 'AbeilleMQTTCmdTimer', 'AbeilleSocat', 'AbeilleSerialRead', 'AbeilleParser', 'AbeilleDebug.log'];
+            $obsolete = ['AbeilleCmd', 'AbeilleMQTTCmd', 'AbeilleMQTTCmdTimer', 'AbeilleSocat', 'AbeilleSerialRead', 'AbeilleParser', 'AbeilleDebug.log', 'AbeilleConfig'];
             for ($z = 1; $z <= 10; $z++) {
                 $obsolete[] = 'AbeilleSocat'.$z;
                 $obsolete[] = 'AbeilleSerialRead'.$z;
             }
-            foreach ($obsolete as $file) {
-                $path = __DIR__."/../../../log/".$file;
-                if (!file_exists($path))
-                    continue;
-                log::add('Abeille', 'debug', "  Removing obsolete log '".$file."'");
-                unlink($path);
-            }
+            removeLogs($obsolete);
 
             // Removing obsolete commands from existing Zigates (now handled in equipement advanced page)
             // Tcharp38: No longer required. Obsolete cmds are removed at daemon startup in 'Abeille.class'.
@@ -360,7 +426,390 @@
                 log::add('Abeille', 'debug', '  Zigate '.$zgId.": Updated 'AbeilleSerialPort".$zgId."'");
             }
 
-            //    config::save('DbVersion', '20201122', 'Abeille');
+            config::save('ab::dbVersion', '20220407', 'Abeille');
+            $dbVersion = '20220407';
+        } // End 'intval($dbVersion) < 20220407'
+
+        /* Version 20220421 changes:
+           - eqLogic DB: 'ab::jsonId' + 'ab::jsonLocation' => 'ab::eqModel['id'/'location]'
+           - eqLogic DB: 'MACCapa' => 'ab::zigbee['macCapa']'
+           - eqLogic DB: 'RxOnWhenIdle' => 'ab::zigbee['rxOnWhenIdle']'
+           - eqLogic DB: 'AC_Power' => 'ab::zigbee['mainsPowered']'
+           - eqLogic DB: 'icone' => 'ab::icon'
+           - eqLogic DB: 'positionX' => 'ab::settings[physLocationX]'
+           - eqLogic DB: 'positionY' => 'ab::settings[physLocationY]'
+           - eqLogic DB: 'uniqId' is obsolete
+           - eqLogic DB: 'routingTable' is obsolete
+           - config DB: 'AbeilleActiverX' => 'ab::zgEnabledX'
+           - config DB: 'AbeilleTypeX' => 'ab::zgTypeX'
+           - config DB: 'AbeilleSerialPortX' => 'ab::zgPortX'
+           - config DB: 'IpWifiZigateX' => 'ab::zgIpAddrX'
+           - config DB: 'AbeilleParentId' => 'ab::defaultParent'
+           - config DB: 'AbeilleIEEEX' => 'ab::zgIeeeAddrX'
+           - config DB: 'AbeilleIEEE_OkX' => 'ab::zgIeeeAddrOkX'
+           - config DB: 'preventLQIRequest' => 'ab::preventLQIAutoUpdate'
+           - config DB: 'monitor' => 'ab::monitorId'
+           - config DB: Removed obsolete 'agressifTraitementAnnonce'.
+           - config DB: Removed obsolete 'blocageRecuperationEquipement'.
+           - config DB: Removed obsolete 'blocageTraitementAnnonce'.
+           - config DB: 'DbVersion' => 'ab::dbVersion'.
+           - config DB: Added 'ab::zgChan' for Zigbee channel.
+           - cmd DB: 0405-XX-0000: Removed 'calculValueOffset'.
+           - cmd DB: 0402-XX-0000: Removed 'calculValueOffset'.
+           - cmd DB: 0400-XX-0000: Removed 'calculValueOffset'.
+           - cmd DB: '0001-#EP#-0020': Updating trigOutOffset: '#value#*100/30' => '#value#*100/3'
+           - cmd DB: 'Batterie-Pourcent' => '0001-01-0021'
+           - cmd DB: 'WindowsCovering' => 'cmd-0102' + 'cmd=XX'
+           - Removing 'AbeilleDebug.log'. Moved to Jeedom tmp dir.
+           - Forcing some models reload (Xiaomi devices).
+         */
+        if (intval($dbVersion) < 20220421) {
+            // 'eqLogic' DB updates
+            $eqLogics = eqLogic::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                $saveEq = false; // true if EQ has been updated and therefore must be saved
+                $eqHName = $eqLogic->getHumanName();
+                $toRemove = []; // eqLogic 'configuration' keys to remove
+
+                // Updating 'ab::eqModel'
+                // 'ab::jsonId' + 'ab::jsonLocation' => 'ab::eqModel['id'/'location]'
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                $newEqModel = $eqModel;
+                if (!isset($eqModel['id']))
+                    $newEqModel['id'] = $eqLogic->getConfiguration('ab::jsonId', '');
+                else if ($eqModel['id'] == 'RC110') // Model 'RC110' => 'RC110_innr'
+                    $newEqModel['id'] = 'RC110_innr';
+                if (!isset($eqModel['location']))
+                    $newEqModel['location'] = $eqLogic->getConfiguration('ab::jsonLocation', '');
+                if ($newEqModel != $eqModel) {
+                    $eqLogic->setConfiguration('ab::eqModel', $newEqModel);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": Updated configuration key 'ab::eqModel'");
+                    $saveEq = true;
+                }
+                array_push($toRemove, 'ab::jsonId', 'ab::jsonLocation');
+
+                // Updating 'ab::zigbee'
+                // - 'MACCapa' => 'ab::zigbee['macCapa']'
+                // - 'RxOnWhenIdle' => 'ab::zigbee['rxOnWhenIdle']'
+                // - 'AC_Power' => 'ab::zigbee['mainsPowered']'
+                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                $newZigbee = $zigbee;
+                if (!isset($zigbee['macCapa']))
+                    $newZigbee['macCapa'] = $eqLogic->getConfiguration('MACCapa', '');
+                if (!isset($zigbee['rxOnWhenIdle']))
+                    $newZigbee['rxOnWhenIdle'] = $eqLogic->getConfiguration('RxOnWhenIdle', '');
+                if (!isset($zigbee['mainsPowered']))
+                    $newZigbee['mainsPowered'] = $eqLogic->getConfiguration('AC_Power', '');
+                if ($newZigbee != $zigbee) {
+                    $eqLogic->setConfiguration('ab::zigbee', $newZigbee);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": Updated configuration key 'ab::zigbee'");
+                    $saveEq = true;
+                }
+                array_push($toRemove, 'MACCapa', 'RxOnWhenIdle', 'AC_Power');
+
+                // 'icone' => 'ab::icon'
+                $icone = $eqLogic->getConfiguration('icone', null);
+                $icon = $eqLogic->getConfiguration('ab::icon', null);
+                if (!$icon && $icone) {
+                    $eqLogic->setConfiguration('ab::icon', $icone);
+                    $eqLogic->setConfiguration('icone', null);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'icone' key renamed to 'ab::icon'");
+                    $saveEq = true;
+                }
+
+                // 'positionX' => 'ab::settings[physLocationX]'
+                // 'positionY' => 'ab::settings[physLocationY]'
+                $settings = $eqLogic->getConfiguration('ab::settings', []);
+                $saveSettings = false;
+                $posX = $eqLogic->getConfiguration('positionX', 'nada');
+                if ($posX !== 'nada') {
+                    $settings['physLocationX'] = $posX;
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'positionX' key renamed to 'ab::settings[physLocationX]'");
+                    $saveSettings = true;
+                }
+                $posY = $eqLogic->getConfiguration('positionY', 'nada');
+                if ($posY !== 'nada') {
+                    $settings['physLocationY'] = $posY;
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'positionY' key renamed to 'ab::settings[physLocationY]'");
+                    $saveSettings = true;
+                }
+                if ($saveSettings) {
+                    $eqLogic->setConfiguration('ab::settings', $settings);
+                    $saveEq = true;
+                }
+                array_push($toRemove, 'positionX', 'positionY');
+                array_push($toRemove, 'uniqId', 'routingTable');
+
+                // Removing obsolete configuration keys
+                foreach ($toRemove as $key) {
+                    // if ($eqLogic->getConfiguration($key, 'nada') === 'nada')
+                    //     continue; // Really undefined ??
+                    // No way to detect all obsolete keys. If set to empty it is the same as does not exist.
+                    $eqLogic->setConfiguration($key, null);
+                    // log::add('Abeille', 'debug', '  '.$eqHName.": Removed configuration key '".$key."'");
+                    $saveEq = true;
+                }
+
+                // Renaming icons if required
+                $iList = array(
+                    "Blitzwolf-BW-SHP13" => "Blitzwolf-SmartPlug",
+
+                    "BulbE27" => "Generic-BulbE27",
+                    "Generic-E14" => "Generic-BulbE14",
+                    "Generic-E27-Color" => "Generic-BulbE27-Color",
+                    "Generic-E27" => "Generic-BulbE27",
+                    "Generic-GU10" => "Generic-BulbGU10",
+
+                    "JR-ZDS01" => "Girier-JR-ZDS01",
+
+                    "GL-C-008" => "Gledopto-RGBCCTLedController",
+                    "GL-S-003Z" => "Gledopto-BulbGU10-Color",
+                    "GL-S-004Z" => "Gledopto-BulbGU10",
+                    "GLEDOPTO" => "Gledopto-BulbGU10",
+
+                    "Ikea-GU10" => "Ikea-BulbGU10",
+                    "Ikea-E27" => "Ikea-BulbE27",
+                    "IkeaTradfriBulbE27Opal1000lm" => "Ikea-BulbE27",
+                    "IkeaTradfriBulbE27WOpal1000lm2" => "Ikea-BulbE27",
+                    "IkeaTRADFRIbulbE27WSopal980lm" => "Ikea-BulbE27",
+                    "TRADFRItransformer10W" => "Ikea-Transformer",
+                    "TRADFRItransformer30W" => "Ikea-Transformer",
+                    "TRADFRIsignalrepeater" => "Ikea-SignalRepeater",
+                    "IkeaTradfri5BtnRond" => "Ikea-Remote-5buttons",
+
+                    "511.201" => "Iluminize-511201",
+                    "511.202" => "Iluminize-511202",
+
+                    "RC110" => "Innr-RC110",
+
+                    "PlugZ3" => "Ledvance-PlugZ3",
+                    "A60TWZ3" => "Ledvance-SmartP-E27Bulb",
+
+                    "LegrandRemoteSwitch" => "Legrand-RemoteSwitch",
+                    "Contactor" => "Legrand-Contactor",
+                    "Connectedoutlet" => "Legrand-Connectedoutlet",
+                    "Micromoduleswitch" => "Legrand-MicromoduleSwitch",
+
+                    "Moes-ZSS-ZK-THL" => "Moes-Thermometer",
+
+                    "MR16TWOSRAM" => "Osram-SmartP-MR16Bulb",
+                    "OsramLightify" => "Osram-SmartP-Plug",
+                    "PAR1650TW" => "Osram-Lightify-GU10Bulb",
+
+                    "LOM001" => "PhilipsSignify-Plug",
+                    "LOM002" => "PhilipsSignify-Plug",
+                    "LTW001" => "Philips-Bulb-E27-White",
+                    "Philips-MotionSensor-SML003" => "Philips-MotionSensor-1",
+                    "SML001" => "Philips-MotionSensor-1",
+                    "Philips-OutdoorSensor" => "Philips-MotionSensor-2",
+                    "RB285C" => "Innr-E27Bulb-Colour",
+
+                    "ProfaluxTelecommande" => "Profalux-Remote",
+                    "voletProFalux" => "Profalux-Shutter",
+                    "bsoProFalux" => "Profalux-BSO",
+
+                    "BASICZBR3" => "Sonoff-BASICZBR3",
+                    "SNZB-01" => "Sonoff-SNZB-01",
+                    "SNZB-02" => "Sonoff-SNZB-02",
+                    "SNZB-03" => "Sonoff-SNZB-03",
+                    "SNZB-04" => "Sonoff-SNZB-04",
+                    "01MINIZB" => "Sonoff-01MINIZB",
+
+                    "TuyaSmartSocket" => "Tuya-SmartSocket",
+                    "Tuya-TS011F" => "Tuya-SmartSocket-2",
+                    "Tuya4ButtonsSceneSwitch" => "Tuya-4ButtonsSwitch-Gray",
+                    "Tuya4ButtonsSwitch" => "Tuya-4ButtonsSwitch-White",
+
+                    "XiaomiPorte" => "Xiaomi-DoorSensor",
+                    "XiaomiPorte1" => "Xiaomi-DoorSensor-2",
+                    "XiaomiTemperatureCarre" => "Xiaomi-TempSensor-2",
+                    "XiaomiTemperatureRond" => "Xiaomi-TempSensor-1",
+                    "XiaomiPriseEU" => "Xiaomi-Plug-EU",
+                    "sen_ill_mgl01" => "Xiaomi-LightSensor-1",
+                    "XiaomiInfraRouge" => "Xiaomi-MotionSensor",
+                    "XiaomiInfraRouge2" => "Xiaomi-MotionSensor",
+                    "sensor_cube" => "Xiaomi-Cube",
+
+                    "LXX60-CS27LX1.0" => "Zemismart-LXX60-CS27LX1.0",
+                );
+                $curIcon = $eqLogic->getConfiguration('ab::icon', '');
+                if (($curIcon != '') && isset($iList[$curIcon])) {
+                    $newIcon = $iList[$curIcon];
+                    $eqLogic->setConfiguration('ab::icon', $newIcon);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": Icon '".$curIcon."' changed to '".$newIcon."'");
+                    $saveEq = true;
+                }
+
+                if ($saveEq)
+                    $eqLogic->save();
+            } // End 'eqLogic' updates
+
+            // 'config' DB updates
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                replaceConfigDB('AbeilleActiver'.$zgId, 'ab::zgEnabled'.$zgId);
+                replaceConfigDB('AbeilleType'.$zgId, 'ab::zgType'.$zgId);
+                replaceConfigDB('AbeilleSerialPort'.$zgId, 'ab::zgPort'.$zgId);
+                replaceConfigDB('IpWifiZigate'.$zgId, 'ab::zgIpAddr'.$zgId);
+                replaceConfigDB('AbeilleIEEE'.$zgId, 'ab::zgIeeeAddr'.$zgId);
+                replaceConfigDB('AbeilleIEEE_Ok'.$zgId, 'ab::zgIeeeAddrOk'.$zgId);
+            }
+            replaceConfigDB('AbeilleParentId', 'ab::defaultParent');
+            replaceConfigDB('preventLQIRequest', 'ab::preventLQIAutoUpdate');
+            replaceConfigDB('monitor', 'ab::monitorId');
+            config::remove('agressifTraitementAnnonce', 'Abeille');
+            config::remove('blocageRecuperationEquipement', 'Abeille');
+            config::remove('blocageTraitementAnnonce', 'Abeille');
+            replaceConfigDB('DbVersion', 'ab::dbVersion');
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
+                    continue;
+                if (config::byKey('ab::zgChan'.$zgId, 'Abeille', 0) != 0)
+                    continue; // Channel already defined
+
+                // What was last used channel ?
+                $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+                $chan = 11; // Defaulting to channel 11
+                if (is_object($eqLogic)) {
+                    $cmdLogic = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'Network-Channel');
+                    if (is_object($cmdLogic))
+                        $chan = $cmdLogic->execCmd();
+                }
+                config::save('ab::zgChan'.$zgId, $chan, 'Abeille');
+                log::add('Abeille', 'debug', '  Zigate '.$zgId.": Set 'ab::zgChan' to ".$chan);
+            }
+
+            // 'cmd' DB updates
+            foreach ($eqLogics as $eqLogic) {
+                $eqId = $eqLogic->getId();
+                $cmds = Cmd::byEqLogicId($eqId);
+                foreach ($cmds as $cmdLogic) {
+                    $saveCmd = false;
+                    $cmdLogicId = $cmdLogic->getLogicalId();
+                    $cmdTopic = $cmdLogic->getConfiguration('topic', '');
+
+                    // Removing 'calculValueOffset' for cmds '0402-XX-0000' (temperature)
+                    // Removing 'calculValueOffset' for cmds '0405-XX-0000' (humidity)
+                    if (preg_match("/^0402-[0-9A-F]*-0000/", $cmdLogicId) ||
+                        preg_match("/^0405-[0-9A-F]*-0000/", $cmdLogicId)) {
+                        $confVal = $cmdLogic->getConfiguration('calculValueOffset', '');
+                        if (($confVal == "#value#\/100") || ($confVal == "#value#/100")) {
+                            $cmdLogic->setConfiguration('calculValueOffset', null);
+                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Removed 'calculValueOffset'");
+                            $saveCmd = true;
+                        }
+                    }
+                    // Removing 'calculValueOffset' for cmds '0400-XX-0000' (illuminance)
+                    if (preg_match("/^0400-[0-9A-F]*-0000/", $cmdLogicId)) {
+                        $confVal = $cmdLogic->getConfiguration('calculValueOffset', 'nada');
+                        if ($confVal != 'nada') {
+                            $cmdLogic->setConfiguration('calculValueOffset', null);
+                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Removed 'calculValueOffset'");
+                            $saveCmd = true;
+                        }
+                    }
+                    // 'Batterie-Volt' => '0001-01-0020'
+                    else if ($cmdLogicId == 'Batterie-Volt') {
+                        $cmdLogic->setConfiguration('calculValueOffset', null);
+                        $cmdLogic->setConfiguration('minValue', null);
+                        $cmdLogic->setConfiguration('maxValue', null);
+                        $cmdLogic->setConfiguration('visibilityCategory', 'All');
+                        $cmdLogic->setLogicalId('0001-01-0020');
+                        log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Updated to '0001-01-0020'");
+                        $saveCmd = true;
+                    }
+                    // 'Batterie-Pourcent' => '0001-01-0021'
+                    else if ($cmdLogicId == 'Batterie-Pourcent') {
+                        $cmdLogic->setConfiguration('calculValueOffset', null);
+                        $cmdLogic->setConfiguration('minValue', null);
+                        $cmdLogic->setConfiguration('maxValue', null);
+                        $cmdLogic->setConfiguration('visibilityCategory', 'All');
+                        $cmdLogic->setLogicalId('0001-01-0021');
+                        log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Updated to '0001-01-0021'");
+                        $saveCmd = true;
+                    }
+                    // '0001-#EP#-0020': Updating trigOutOffset: '#value#*100\/30' => '#value#*100\/3'
+                    else if (preg_match("/^0001-[0-9A-F]*-0020/", $cmdLogicId)) {
+                        $cmdLogic->setConfiguration('calculValueOffset', null);
+                        $trigOutOffset = $cmdLogic->getConfiguration('trigOutOffset', '');
+                        if (($trigOutOffset != '') && ($trigOutOffset != '#value#*100/3')) {
+                            $trigOutOffset = $cmdLogic->setConfiguration('trigOutOffset', '#value#*100/3');
+                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Updated trigOutOffset to '#value#*100/3'");
+                            $saveCmd = true;
+                        }
+                    }
+                    // 'setLevelStop' => 'cmd-0008'
+                    else if ($cmdTopic == 'setLevelStop') {
+                        $cmdLogic->setConfiguration('topic', 'cmd-0008');
+                        $cmdLogic->setConfiguration('request', 'ep=01&cmd=07');
+                        log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": 'setLevelStop' => 'cmd-0008'");
+                        $saveCmd = true;
+                    }
+                    // 'WindowsCovering' => 'cmd-0102' + 'cmd=XX'
+                    else if ($cmdTopic == 'WindowsCovering') {
+                        $cmdLogic->setConfiguration('topic', 'cmd-0102');
+                        $c = $cmdLogic->setConfiguration('request', ''); // Expecting something like 'clusterCommand=02'
+                        if ($c != '') {
+                            $c = substr($c, 15); // Removing 'clusterCommand='
+                            $cmdLogic->setConfiguration('request', 'ep=01&cmd='.$c);
+                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": 'WindowsCovering' => 'cmd-0102' + 'cmd='".$c);
+                            $saveCmd = true;
+                        }
+                    }
+
+                    if ($saveCmd)
+                        $cmdLogic->save();
+                }
+            } // End 'cmd' DB updates
+
+            // Remove obsolete log files
+            $obsolete = ['AbeilleDebug.log'];
+            removeLogs($obsolete);
+
+            // Force some equipments update if model has changed.
+            // Some Xiaomi devices are now managed thru 'xiaomi' JSON model structure.
+            $toReload = array(
+                'sensor_magnet.aq2' => '2023-01-25 14:00:00',
+                'sensor_motion.aq2' => '2023-01-25 14:00:00',
+                'weather' => '2023-01-25 14:00:00',
+                'motion.ac02' => '2023-01-25 14:00:00',
+                'switch.n0agl1' => '2023-01-25 14:00:00',
+                'sensor_wleak.aq1' => '2023-01-25 14:00:00',
+                'sensor_switch' => '2023-01-26 11:18:00',
+                "sensor_cube" => '2023-01-30 12:38:00',
+                "sensor_cube.aqgl01" => '2023-01-30 12:38:00',
+                "relay.c2acn01" => '2023-02-07 12:29:00',
+                "RC110_innr" => '2023-02-25 16:47:00',
+            );
+            foreach ($eqLogics as $eqLogic) {
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                if (!isset($eqModel['id']))
+                    continue; // Unexpected or too old
+                if (!array_key_exists($eqModel['id'], $toReload))
+                    continue;
+
+                // Check last update from model
+                $modelTime = $toReload[$eqModel['id']];
+                $updateTime = $eqLogic->getConfiguration('updatetime', "");
+                log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": modelTime=".$modelTime.", updateTime=".$updateTime);
+                if ($updateTime != '') {
+                    if (strtotime($updateTime) > strtotime($modelTime))
+                        continue;
+                }
+
+                list($net, $addr) = explode("/", $eqLogic->getLogicalId());
+                $dev = array(
+                    'net' => $net,
+                    'addr' => $addr,
+                    'jsonId' => $eqModel['id'],
+                    'jsonLocation' => 'Abeille',
+                    'ieee' => $eqLogic->getConfiguration('IEEE'),
+                );
+                Abeille::createDevice("update", $dev);
+                log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Updating Jeedom equipment from model");
+            }
+
+            // config::save('ab::dbVersion', '20220421', 'Abeille'); // NOT FROZEN YET
+            // $dbVersion = '20220421';
         }
     }
 
@@ -372,9 +821,9 @@
      * @return none
      */
     function Abeille_update() {
+        log::add('Abeille', 'debug', 'Abeille_update() starting');
 
         $error = false;
-
         if (validMd5Exists($version)) {
             if (checkIntegrity() != true) {
                 message::add('Abeille', 'Fichiers corrompus detectés ! La version \''.$version.'\' est mal installée. Problème de place ?', null, null);
@@ -400,6 +849,8 @@
      * @return none
      */
     function Abeille_remove() {
+        log::add('Abeille', 'debug', 'Abeille_remove() starting');
+
         $cron = cron::byClassAndFunction('Abeille', 'deamon');
         if (is_object($cron)) {
             $cron->stop();

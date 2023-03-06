@@ -11,7 +11,7 @@
     $logFile = ''; // Log file name (ex: 'AbeilleSerialRead1', configured thru logSetConf())
     $logMaxLines = 2000; // Default max number of lines before Jeedom one is taken
     $logNbOfLines = 0; // Current number of lines
-    $hideLevel = FALSE; // Display log level if FALSE (configured thru logSetConf())
+    $hideLevel = false; // Display log level if false (configured thru logSetConf())
     $GLOBALS['tmpDir'] = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
 
     /* Get Abeille current log level as a number:
@@ -58,8 +58,7 @@
          If not absolut path, log dir = Jeedom default (/var/www/html/log)
          If absolut path, this is the taken destination.
        'hideLevel' = Allows to disable display of log level if TRUE. */
-    function logSetConf($lFile = '', $hideLevel = FALSE)
-    {
+    function logSetConf($lFile = '', $hideLevel = false) {
         $GLOBALS["curLogLevelNb"] = logGetPluginLevel();
         $GLOBALS["logDir"] = "";
         $GLOBALS["logFile"] = "";
@@ -82,7 +81,7 @@
 
         /* What is number of lines in current log ? */
         $logPath = $GLOBALS["logDir"]."/".$GLOBALS["logFile"];
-        if (file_exists($logPath) == FALSE)
+        if (file_exists($logPath) == false)
             return;
         $cmd = "wc -l ".$logPath." | awk '{print $1}'";
         exec($cmd, $out, $status);
@@ -91,14 +90,15 @@
             return;
         }
         $GLOBALS["logNbOfLines"] = intval($out[0]);
-   }
+    }
 
     /* Log given message to '$logFile' defined thru 'logSetConf()'.
        '\n' is automatically added at end of line.
        If 'logLevel' is empty, always log and do not print log level.
        WARNING: A call to 'logSetConf()' is expected once prior to 'logMessage()'. */
-    function logMessage($logLevel, $msg)
-    {
+    function logMessage($logLevel, $msg) {
+        global $tmpDir;
+
         if ($logLevel != "") {
             if (!isset($GLOBALS["curLogLevelNb"]))
                 $GLOBALS["curLogLevelNb"] = 0;
@@ -128,10 +128,10 @@
                 file_put_contents($lFile, $prefix.$msg."\n", FILE_APPEND);
             $GLOBALS["logNbOfLines"]++;
             if (strcasecmp($logLevel, "error") == 0)
+                // Tcharp38: Trim may be required to remove spaces before (log indent)
                 message::add("Abeille", "ERREUR: ".$msg, '');
 
             if ($GLOBALS["logNbOfLines"] > $GLOBALS["logMaxLines"]) {
-                $tmpDir = jeedom::getTmpFolder("Abeille"); // Jeedom temp directory
                 $tmpLogFile = $GLOBALS["logFile"];
                 if (substr($tmpLogFile, -4) == ".log")
                     $tmpLogFile = substr($tmpLogFile, 0, -4); // Removing extension
@@ -139,18 +139,17 @@
                 $lFileTmp = $tmpDir."/".$tmpLogFile;
                 rename($lFile, $lFileTmp);
 
-                file_put_contents($lFile, $prefix."Max reached (".$GLOBALS["logMaxLines"]." lignes) Previous log saved as '".$tmpDir."/".$tmpLogFile."'\n", FILE_APPEND);
+                file_put_contents($lFile, $prefix."Log max reached (".$GLOBALS["logMaxLines"]." lines). Previous log saved as '".$tmpDir."/".$tmpLogFile."'\n", FILE_APPEND);
                 $GLOBALS["logNbOfLines"] = 1;
             }
         }
     }
 
     /* Log function for development purposes.
-       Output message to "AbeilleDebug.log" */
-    function logDebug($msg = "")
-    {
+       Output message to <JeedomTempDir>"/Abeille/AbeilleDebug.log" */
+    function logDebug($msg = "") {
         global $tmpDir;
-        // $logDir = __DIR__.'/../../../../log/';
+
         $logFile = "AbeilleDebug.log";
         file_put_contents($tmpDir.'/'.$logFile, '['.date('Y-m-d H:i:s').'] '.$msg."\n", FILE_APPEND);
     }

@@ -72,7 +72,7 @@ int iVerbosity = 1;
 #ifndef VERSION
 #error Version is not defined!
 #else
-const char *Version = "0.7(r" VERSION ")";
+const char *Version = "0.7(r" VERSION ")-Abeille";
 #endif
 
 
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
     tsFW_Info sFW_Info;
     // int iVerify = 0; // Tcharp38: unused
 	int iErase = 0;
-    printf("JennicModuleProgrammer Version: %s+\n", Version);
+    printf("JennicModuleProgrammer Version: %s\n", Version);
 
     {
         static struct option long_options[] =

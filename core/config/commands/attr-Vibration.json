@@ -1,0 +1,11 @@
+{
+    "attr-Vibration": {
+        "comment": "Vibration (shock) attribute",
+        "type": "info",
+        "subType": "binary",
+        "template": "default",
+        "logicalId": "toBeFilledByDevice",
+        "unit": "",
+        "genericType": "SHOCK"
+    }
+}

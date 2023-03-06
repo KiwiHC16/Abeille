@@ -1,0 +1,11 @@
+{
+    "attr-Valve-LastOpenDuration": {
+        "comment": "Received Last Open Duration from valve",
+        "subType": "numeric",
+        "template": "badge",
+        "type": "info",
+        "logicalId": "#EP#-lastOpenDuration",
+        "unit": "s",
+        "genericType": "VALVE_LASTOPENDURATION"
+    }
+}

@@ -4,13 +4,16 @@
 <hr>
 
 <?php
-    if ($dbgDeveloperMode) echo __FILE__;
+    if (isset($dbgDeveloperMode)) echo __FILE__;
 ?>
 
 <div class="form-group">
     <div class="col-sm-3">
     </div>
-    <h3 class="col-sm-5" style="text-align:left">{{Interrogation de l'équipement. Sortie dans 'AbeilleParser.log'}}</h3>
+    <h3 class="col-sm-9" style="text-align:left">{{Interrogation de l'équipement.}}</h3>
+    <div class="col-sm-3">
+    </div>
+    <h4 class="col-sm-9" style="text-align:left">{{Sortie dans 'AbeilleParser.log' si mode 'debug' actif.}}</h4>
 </div>
 
 <!-- Zigbee standard commands -->
@@ -57,11 +60,29 @@
     </div>
 </div>
 <div class="form-group">
+    <label class="col-sm-3 control-label" title="getNodeDescriptor (Node_Desc_req)">{{Descripteur de noeud}}</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-warning" onclick="interrogate(\'getNodeDescriptor\', \''.$eqId.'\')">{{Interroger}}</a>';
+        ?>
+    </div>
+</div>
+<div class="form-group">
     <label class="col-sm-3 control-label" title="getIeeeAddress (IEEE_addr_req)">Adresse IEEE</label>
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-warning" onclick="interrogate(\'getIeeeAddress\', \''.$eqId.'\')">{{Interroger}}</a>';
         ?>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Mgmt_NWK_Update_req">Mgmt network update request</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-warning" onclick="interrogate(\'mgmtNetworkUpdateReq\', \''.$eqId.'\')">{{Interroger}}</a>';
+        ?>
+        <input id="idMgmtNwkUpdReqSC" title="{{Scanned channels mask (ex: all=07FFF800)}}" />
+        <input id="idMgmtNwkUpdReqSD" title="{{Scan duration (01-05, FE=channel change, or FF)}}" />
     </div>
 </div>
 <div class="form-group">
@@ -73,7 +94,7 @@
             addClusterButton("idClustIdE");
             // <input id="idIeeeE" title="{{Adresse IEEE de destination (ex: 5C0272FFFE2857A3)}}" />
             echo ' TO';
-            addIeeeListButton("idIeeeE");
+            addIeeeListButton("idIeeeE", true);
         ?>
         <?php addEpButton("idEpE2", $mainEP); ?>
     </div>
@@ -90,6 +111,18 @@
         <input id="idGroupF" title="{{Adresse du groupe de destination (ex: 0001)}}" />
     </div>
 </div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Leave request">Leave request</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-danger" onclick="interrogate(\'leaveRequest\', \''.$eqId.'\')">{{Leave}}</a>';
+            // addIeeeListButton("idIeeeLR");
+            // addClusterButton("idClustIdF");
+            // echo ' TO';
+        ?>
+        <!-- <input id="idGroupF" title="{{Adresse du groupe de destination (ex: 0001)}}" /> -->
+    </div>
+</div>
 
 <!-- ZCL commands -->
 <br>
@@ -102,6 +135,7 @@
             addEpButton("idEpA", $mainEP);
             addClusterButton("idClustIdA");
             addAttrInput("idAttrIdA");
+            addManufCodeInput("idManufIdRA"); // Optional
         ?>
     </div>
 </div>
@@ -112,12 +146,15 @@
             echo '<a class="btn btn-danger" onclick="interrogate(\'writeAttribute\', \''.$eqId.'\')">{{Ecrire}}</a>';
             addEpButton("idEpWA", $mainEP);
             addClusterButton("idClustIdWA");
-            addDirInput("idDirWA");
-            addManufIdInput("idManufIdWA");
             addAttrInput("idAttrIdWA");
+            addTypeList("idAttrTypeWA");
         ?>
-        <input id="idAttrTypeWA" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" />
         <input id="idValueWA" title="{{Valeur à écrire. Format hex string}}"  placeholder="{{Data}}" />
+        <?php
+            addDirInput("idDirWA");
+            addManufCodeInput("idManufIdWA");
+        ?>
+        <!-- <input id="idAttrTypeWA" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" /> -->
     </div>
 </div>
         <div class="form-group">
@@ -129,8 +166,9 @@
                     addClusterButton("idClustIdWA2");
                     addDirInput("idDirWA2");
                     addAttrInput("idAttrIdWA2");
+                    addTypeList("idAttrTypeWA2");
                 ?>
-                <input id="idAttrTypeWA2" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" />
+                <!-- <input id="idAttrTypeWA2" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" /> -->
                 <input id="idValueWA2" title="{{Valeur à écrire. Format hex string}}"  placeholder="{{Data}}" />
             </div>
         </div>
@@ -184,7 +222,10 @@
             addEpButton("idEpCR", $mainEP);
             addClusterButton("idClustIdCR");
             addAttrInput("idAttrIdCR");
+            addTypeList("idAttrTypeCR");
         ?>
+        <input id="idManufIdCR" title="{{Code fabricant. Format hex string 4 car (ex: 1241)}}" placeholder="{{Manuf code (ex: 1241)}}" />
+        <!-- <input id="idAttrTypeCR" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" /> -->
         <input id="idMinCR" title="{{Interval min. Format hex string 4 car}}" placeholder="{{Min}}" style="width:60px" />
         <input id="idMaxCR" title="{{Interval max. Format hex string 4 car}}" placeholder="{{Max}}" style="width:60px" />
         <input id="idChangeCR" title="{{Change. Format hex string dépendant de l'attribut}}" placeholder="{{Change}}" />
@@ -210,6 +251,28 @@
             addEpButton("idEpC0201-00", $mainEP);
         ?>
         <input id="idAmountC0201-00" title="{{Step: format hex 2 car}}" placeholder="{{Amount}}" style="width:60px" />
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0300, Mote to color (cmd 07)">ZCL: 0300 - Move to color</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-danger" onclick="interrogate(\'0300-MoveToColor\', \''.$eqId.'\')">{{Appliquer}}</a>';
+            addEpButton("idEp-MTC", $mainEP);
+        ?>
+        <input id="idX-MTC" title="{{X: format hex 4 car}}" placeholder="{{X}}" style="width:60px" />
+        <input id="idY-MTC" title="{{Y: format hex 4 car}}" placeholder="{{Y}}" style="width:60px" />
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0502/IAS WD, Start warning (cmd 00)">ZCL: 0502 - Start warning</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-danger" onclick="interrogate(\'0502-StartWarning\', \''.$eqId.'\')">{{Appliquer}}</a>';
+            addEpButton("idEp-SW", $mainEP);
+            addWarningModesList("idMode-SW");
+            addCheckbox("idStrobe-SW", "Strobe");
+        ?>
     </div>
 </div>
 <div class="form-group">

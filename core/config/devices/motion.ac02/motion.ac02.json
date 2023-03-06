@@ -1,0 +1,157 @@
+{
+    "motion.ac02": {
+        "manufacturer": "Xiaomi",
+        "model": "RTCGQ14LM/MS-S02",
+        "type": "Xiaomi Aqara motion sensor P1",
+        "genericType": "Environment",
+        "timeout": "60",
+        "category": {
+            "security": "1"
+        },
+        "configuration": {
+            "icon": "Xiaomi-MotionSensorP1",
+            "mainEP": "01",
+            "batteryType": "2x3V CR2450"
+        },
+        "commands": {
+            "Config 0": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0001&attrId=0020",
+                "execAtCreation": "Yes"
+            },
+            "Config 1": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=FCC0&attrId=0102&manufId=115F",
+                "execAtCreation": "Yes"
+            },
+            "Config 2": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=FCC0&attrId=010C&manufId=115F",
+                "execAtCreation": "Yes"
+            },
+            "Config 3": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=FCC0&attrId=0152&manufId=115F",
+                "execAtCreation": "Yes"
+            },
+            "Battery-Volt": {
+                "use": "inf_batteryVoltAndPercent-285-300"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Illuminance": {
+                "use": "inf_zbAttr-0400-MeasuredValue",
+                "isVisible": "1"
+            },
+            "Bind 0400-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0400",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting 0400-0000": {
+                "use": "act_zbConfigureReporting",
+                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=0000",
+                "comment": "Reporting every 5 to 10mins",
+                "execAtCreation": "Yes"
+            },
+            "Temperature": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "isVisible": "1"
+            },
+            "Occupancy": {
+                "use": "inf_zbAttr-0406-Occupancy",
+                "returnStateValue": 0,
+                "returnStateTime": 1,
+                "isVisible": "1"
+            },
+            "Illuminance & presence": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-illumAndPresence",
+                "calculValueOffset": "#value#>130536?0:#value#-65536",
+                "trigOut": "0406-01-0000",
+                "trigOutOffset": "1"
+            },
+            "Set detection interval": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FCC0&attrId=0102&attrType=20&manufId=115F",
+                "listValue": "2|2s;10|10s;30|30s;60|1m;120|2m;180|3m",
+                "isVisible": 1,
+                "comment": "Detection Interval, 2 secondes a 3 minutes"
+            },
+            "Detection interval": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-detectionInterval",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Set Sensitivity": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FCC0&attrId=010C&attrType=20&manufId=115F",
+                "listValue": "1|low;2|medium;3|high",
+                "isVisible": 1,
+                "comment": "Motion sensitivity, 1=low, 2=medium, 3=high"
+            },
+            "Motion sensitivity": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-motionSensitivity",
+                "isVisible": "1"
+            },
+            "Set Indicator": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FCC0&attrId=0152&attrType=20&manufId=115F",
+                "listValue": "0|Off;1|On",
+                "isVisible": 1,
+                "comment": "Led enable or disabled"
+            },
+            "Indicator": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-indicator",
+                "isVisible": "1"
+            }
+        },
+        "xiaomi": {
+            "fromDevice": {
+                "FCC0-0112": {
+                    "info": "01-illumAndPresence",
+                    "comment": "Illuminance + motion detection"
+                },
+                "FCC0-00F7": {
+                    "01-21": {
+                        "func": "numberDiv",
+                        "div": 1000,
+                        "info": "0001-01-0020",
+                        "comment": "Battery volt"
+                    },
+                    "08-21": {
+                        "func": "numberDiv",
+                        "div": 10,
+                        "info": "0402-01-0000",
+                        "comment": "Device temp"
+                    },
+                    "65-21": {
+                        "func": "number",
+                        "info": "0400-01-0000",
+                        "comment": "Illuminance"
+                    },
+                    "69-20": {
+                        "func": "number",
+                        "info": "01-detectionInterval",
+                        "comment": "Detection interval"
+                    },
+                    "6A-20": {
+                        "func": "number",
+                        "info": "01-motionSensitivity",
+                        "comment": "Motion sensitivity, 1=low, 2=medium, 3=high"
+                    },
+                    "6B-20": {
+                        "func": "number",
+                        "info": "01-indicator",
+                        "comment": "LED indicator"
+                    }
+
+                }
+            }
+        }
+    }
+}

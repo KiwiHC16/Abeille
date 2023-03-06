@@ -1,0 +1,50 @@
+{
+    "TS0044__TZ3000_wkai4ga5": {
+        "manufacturer": "Aubess",
+        "model": "ESW-0ZAA-EU",
+        "type": "Aubess 4 buttons switch",
+        "timeout": "60",
+        "category": {
+            "light": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-4ButtonsSwitch-White",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "SetReporting 0001-00021": {
+                "use": "act_zbConfigureReporting",
+                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "execAtCreation": "yes"
+            },
+            "Bind 0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Click 1": {
+                "use": "click",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Click 2": {
+                "use": "click",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Click 3": {
+                "use": "click",
+                "params": "ep=03",
+                "isVisible": 1
+            },
+            "Click 4": {
+                "use": "click",
+                "params": "ep=04",
+                "isVisible": 1
+            }
+        }
+    }
+}

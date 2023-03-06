@@ -1,7 +1,7 @@
 {
     "remote.b186acn02": {
         "timeout": "60",
-        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1808",
+        "comment": "https://github.com/KiwiHC16/Abeille/issues/1808",
         "configuration": {
             "mainEP": "01",
             "icon": "defaultUnknown",
@@ -12,13 +12,23 @@
         },
         "type": "Xiaomi Interrupteur Mural Carr\u00e9 Simple",
         "commands": {
-            "include4": "etatSwitchDoubleb286acn01_1",
-            "include4 3": "etatSwitchDoubleb286acn01_2",
-            "include4 3 2": "etatSwitchDoubleb286acn01_3",
-            "include4 2": "Batterie-Volt",
-            "include5": "Batterie-Pourcent",
+            "etat1": {
+                "use": "etatSwitchDoubleb286acn01_1"
+            },
+            "etat2": {
+                "use": "etatSwitchDoubleb286acn01_2"
+            },
+            "etat3": {
+                "use": "etatSwitchDoubleb286acn01_3"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

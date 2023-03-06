@@ -1,0 +1,32 @@
+Cluster 0004
+    La cmde 'addGroup' devrait sauver le groupe qq part => ab::groups ?
+    ab::groups={'01': '1001', '02': '2002'}
+
+Support OTA
+    Qui renvoi "Query Next Image Response" ? Zigate ou le plugin ?
+
+Lorsqu'un equipement quitte le réseau
+    il doit etre désactivé
+    plus aucun envoi ne doit lui etre fait
+    parser doit prevenir cmd sur leave, ou abeille => cmd ?
+
+switch branch & update
+    Les demons ne sont pas arretes pendant la mise à jour.
+    Qqch n'est pas propre
+
+Canal Zigbee: memoriser choix user pour reappliquer redemarrage => 'ab::zgChanX'
+    Ajouter choix du canal sur page de config => ok pour visu only
+    Par defaut = 11
+
+Page support/logs: Mise a  jour en temps reel sur selection courante
+
+Inclusion device: ajouter readAttribute sur toutes les cmdes infos
+
+Retour d'état
+    Trouver solution pour supporter retour d'état < 1min (ex: 30sec).
+    Pas supporté par Jeedom/returnStateTime.
+
+Doc: Améliorer support de nouveau equipements
+    Demander image PNG SANS arriere plan
+    Demander type et nomber de batteries
+    Demander ref/modele fabricant

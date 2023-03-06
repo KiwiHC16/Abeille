@@ -11,10 +11,14 @@
         },
         "type": "zigbeeIASZone",
         "commands": {
-            "include3": "presence",
-            "include5": "Batterie-Volt",
+            "etat": {
+                "use": "presence"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

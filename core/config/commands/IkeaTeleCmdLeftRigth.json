@@ -1,13 +1,10 @@
 {
     "IkeaTeleCmdLeftRigth": {
-        "isVisible": 1,
-        "name": "LeftRight",
-        "isHistorized": "0",
         "subType": "numeric",
-        "invertBinary": "0",
         "template": "badge",
         "configuration": {
             "minValue": "0",
+            "repeatEventManagement": "always",
             "visibilityCategory": "All"
         },
         "type": "info",

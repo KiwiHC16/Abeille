@@ -8,10 +8,8 @@
             "repeatEventManagement": "always",
             "visibilityCategory": "All"
         },
-        "display": {
-            "forceReturnLineAfter": "1"
-        },
         "type": "info",
-        "logicalId": "0101-#EP#-0503"
+        "logicalId": "0101-#EP#-0503",
+        "nextLine": "after"
     }
 }

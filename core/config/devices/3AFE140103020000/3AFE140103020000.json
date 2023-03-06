@@ -1,8 +1,9 @@
 {
     "3AFE140103020000": {
+        "manufacturer": "Konke",
+        "model": "?",
         "timeout": "60",
         "configuration": {
-            "lastCommunicationTimeOut": "-1",
             "mainEP": "01",
             "icon": "3AFE140103020000",
             "batteryType": "1x3V CR2450"
@@ -13,14 +14,19 @@
         "type": "Konke Temperature Humidit\u00e9 Rond",
         "commands": {
             "Temperature": {
-                "use": "zb-0402-MeasuredValue",
+                "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1,
                 "isHistorized": 1
             },
-            "Humidity": { "use": "zb-0405-MeasuredValue", "isVisible": 1 },
-            "include4 2": "Batterie-Volt-Konke",
+            "Humidity": {
+                "use": "inf_zbAttr-0405-MeasuredValue",
+                "isVisible": 1
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

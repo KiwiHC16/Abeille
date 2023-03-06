@@ -1,5 +1,9 @@
 {
     "relay.c2acn01": {
+        "manufacturer": "Xiaomi",
+        "model": "LLKZMK11LM",
+        "type": "Xiaomi Aqara 2 way control module",
+        "genericType": "Outlet",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -8,55 +12,106 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Xiaomi Module Double Switch Aqara",
         "commands": {
-            "etat": {
-                "use": "zb-0006-OnOff",
+            "Status 1": {
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
-            "etat charge 1": {
-                "use": "zb-0006-OnOff",
+            "Status 2": {
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=02",
                 "genericType": "LIGHT_STATE",
                 "isVisible": 1
             },
-            "On": {
-                "use": "zbCmd-0006-On",
+            "On 1": {
+                "use": "act_zbCmdG-0006-On",
                 "params": "ep=01",
                 "isVisible": 1
             },
-            "On1": {
-                "use": "zbCmd-0006-On",
+            "On 2": {
+                "use": "act_zbCmdG-0006-On",
                 "params": "ep=02",
                 "isVisible": 1
             },
-            "Off": {
-                "use": "zbCmd-0006-Off",
+            "Off 1": {
+                "use": "act_zbCmdG-0006-Off",
                 "params": "ep=01",
                 "isVisible": 1
             },
-            "Off1": {
-                "use": "zbCmd-0006-Off",
+            "Off 2": {
+                "use": "act_zbCmdG-0006-Off",
                 "params": "ep=02",
                 "isVisible": 1
             },
             "Toggle 1": {
-                "use": "zbCmd-0006-Toggle",
+                "use": "act_zbCmdG-0006-Toggle",
                 "params": "ep=01"
             },
             "Toggle 2": {
-                "use": "zbCmd-0006-Toggle",
+                "use": "act_zbCmdG-0006-Toggle",
                 "params": "ep=02"
             },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "include11": "conso",
-            "include12": "Xiaomi-ff01",
-            "include13": "puissance1",
-            "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+            "Active Power": {
+                "use": "inf_zbAttr-0B04-ActivePower",
+                "params": "mult=1&div=1",
+                "isHistorized": "1",
+                "isVisible": 1
+            },
+            "Voltage": {
+                "use": "inf_zbAttr-0B04-RMSVoltage",
+                "params": "mult=1&div=1",
+                "isVisible": 0
+            },
+            "Current": {
+                "use": "inf_zbAttr-0B04-RMSCurrent",
+                "params": "mult=1&div=1",
+                "isVisible": 1
+            },
+            "Total power": {
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "params": "mult=1&div=1",
+                "isVisible": 1
+            }
+        },
+        "xiaomi": {
+            "fromDevice": {
+                "0000-FF01": {
+                    "64-10": {
+                        "func": "number",
+                        "info": "0006-01-0000",
+                        "comment": "On/off state 1"
+                    },
+                    "65-10": {
+                        "func": "number",
+                        "info": "0006-02-0000",
+                        "comment": "On/off state 2"
+                    },
+                    "95-39": {
+                        "func": "number",
+                        "info": "0702-01-0000",
+                        "comment": "Total power"
+                    },
+                    "96-39": {
+                        "func": "numberDiv",
+                        "div": 10,
+                        "info": "0B04-01-0505",
+                        "comment": "Voltage"
+                    },
+                    "97-39": {
+                        "func": "number",
+                        "info": "0B04-01-0508",
+                        "comment": "Current"
+                    },
+                    "98-39": {
+                        "func": "number",
+                        "info": "0B04-01-050B",
+                        "comment": "Power"
+                    }
+                }
             }
         }
     }

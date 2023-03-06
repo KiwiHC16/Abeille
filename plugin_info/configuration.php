@@ -61,19 +61,7 @@
             return "";
         return $cmd->getId();
     }
-?>
 
-<style>
-    .confs1 {
-        width: 300px;
-        margin-right: 4px;
-    }
-    .ml4px {
-        margin-left: 4px;
-    }
-</style>
-
-<?php
     function displayZigate($zgId) {
         $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
         if ($eqLogic) {
@@ -97,19 +85,19 @@
                 } else {
                     $zgName = "";
                 }
-                echo '<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="'.$zgName.'" disabled title="{{Nom de la zigate; N\'est modifiable que via la page de gestion d\'Abeille après sauvegarde.}}">';
+                echo '<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="'.$zgName.'" readonly title="{{Nom de la zigate; N\'est modifiable que via la page de gestion d\'Abeille après sauvegarde.}}">';
             echo '</div>';
         echo '</div>';
 
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Type : }}</label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelZgType'.$zgId.'" class="configKey form-control" data-l1key="AbeilleType'.$zgId.'" onchange="checkZigateType('.$zgId.')"  title="{{Type de zigate}}">';
+                echo '<select id="idSelZgType'.$zgId.'" class="configKey form-control" data-l1key="ab::zgType'.$zgId.'" onchange="checkZigateType('.$zgId.')"  title="{{Type de zigate}}">';
                     echo '<option value="USB" selected>{{USB v1}}</option>';
                     echo '<option value="WIFI">{{WIFI/Ethernet}}</option>';
                     echo '<option value="PI">{{PI v1}}</option>';
                     echo '<option value="DIN">{{DIN v1}}</option>';
-                    echo '<option value="USBv2" selected>{{USB +/v2}}</option>';
+                    echo '<option value="USBv2">{{USB +/v2}}</option>';
                     echo '<option value="PIv2">{{PI +/v2}}</option>';
                     echo '<option value="DINv2">{{DIN +/v2}}</option>';
                 echo '</select>';
@@ -119,7 +107,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Port série}} : </label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelSP'.$zgId.'" class="configKey form-control" data-l1key="AbeilleSerialPort'.$zgId.'" title="{{Port série si zigate USB, Pi ou DIN.}}" disabled>';
+                echo '<select id="idSelSP'.$zgId.'" class="configKey form-control" data-l1key="ab::zgPort'.$zgId.'" title="{{Port série si zigate USB, Pi ou DIN.}}" disabled>';
                     echo '<option value="none" selected>{{Aucun}}</option>';
                     echo '<option value="'.wifiLink.$zgId.'" >{{WIFI'.$zgId.'}}</option>';
                     echo '<option value="/dev/monitZigate'.$zgId.'" >{{Monit'.$zgId.'}}</option>';
@@ -149,7 +137,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Adresse IP (IP:Port) : }}</label>';
             echo '<div class="col-lg-4">';
-                echo '<input id="idWifiAddr'.$zgId.'" class="configKey form-control" data-l1key="IpWifiZigate'.$zgId.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
+                echo '<input id="idWifiAddr'.$zgId.'" class="configKey form-control" data-l1key="ab::zgIpAddr'.$zgId.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
             echo '</div>';
         echo '</div>';
 
@@ -198,9 +186,20 @@
         echo '</div>';
 
         echo '<div class="form-group">';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Canal Zigbee}} : </label>';
+            echo '<div class="col-lg-4">';
+                echo '<select id="idSelChan'.$zgId.'" class="configKey form-control" data-l1key="ab::zgChan'.$zgId.'" title="{{Canal Zigbee}}" disabled>';
+                    for ($i = 11; $i < 27; $i++) {
+                        echo '<option value='.$i.'>'.$i.'</option>';
+                    }
+                    echo '</select>';
+            echo '</div>';
+        echo '</div>';
+
+        echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Status : }}</label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelZgStatus'.$zgId.'" class="configKey form-control" data-l1key="AbeilleActiver'.$zgId.'" onchange="statusChange('.$zgId.')" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';
+                echo '<select id="idSelZgStatus'.$zgId.'" class="configKey form-control" data-l1key="ab::zgEnabled'.$zgId.'" onchange="statusChange('.$zgId.')" title="{{Activer ou désactiver l\'utilisation de cette zigate.}}">';
                     echo '<option value="N" selected>{{Désactivée}}</option>';
                     echo '<option value="Y">{{Activée}}</option>';
                 echo '</select>';
@@ -209,72 +208,101 @@
     }
 ?>
 
+<style>
+    .confs1 {
+        width: 300px;
+        margin-right: 4px;
+    }
+    .ml4px {
+        margin-left: 4px;
+    }
+</style>
+
 <form class="form-horizontal">
     <fieldset>
         <legend><i class="fa fa-list-alt"></i><strong> {{Général}}</strong></legend>
         <div>
             <p><i> Suivez toutes les dernieres informations <a href="https://community.jeedom.com/t/news-de-la-ruche-par-abeille-plugin-abeille/26524"><strong>sur ce forum</strong> </a>.</i></p>
             <p><i> Les discussions et questions se feront via <a href="https://community.jeedom.com/tags/plugin-abeille"><strong>ce forum</strong> </a>. Pensez à mettre le flag "plugin-abeille" dans tous vos posts.</i></p>
-            <p><i> Note: si vous souhaitez de l aide, ne passez pas par les fonctions integrées de jeedom car je recois les requetes sans pouvoir contacter les personnes en retour. Passez par le forum.</i></p>
+            <p><i> Note: si vous souhaitez de l'aide, ne passez pas par les fonctions integrées de jeedom car je recois les requetes sans pouvoir contacter les personnes en retour. Passez par le forum.</i></p>
             <p><i> Note: Jeedom propose une fonction de Heartbeat dans la tuile "Logs et surveillance". Cette fonction n'est pas implémentée dans Abeille. Ne pas l'activer pour l'instant.</i></p>
         </div>
         <div class="form-group">
-            <label class="col-lg-4 control-label" data-toggle="tooltip">{{Version Abeille : }}</label>
-            <div class="col-lg-4 confs1" title="{{Version du plugin Abeille.}}">
-                <?php echo $abeilleVersion; ?>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="col-lg-3 control-label" data-toggle="tooltip" title="{{Version interne du plugin Abeille}}">{{Version interne : }}</label>
+                    <div class="col-lg-4">
+                        <?php
+                        echo '<input type="text" class="form-control" title="{{Version interne du plugin Abeille}}" value="'.$abeilleVersion.'" readonly>';
+                        ?>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-4">
-                <?php
-                    /* Developers only: display current branch & allows to switch to another one */
-                    if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == true)) {
-                        /* TODO: Check if GIT repo & GIT present */
-                        if (gitIsRepo() == FALSE) {
-                            echo "Pas sous GIT";
-                        } else {
-                            $localChanges = gitHasLocalChanges();
-                            if ($localChanges == true)
-                                echo '<div title="Branche courante. Contient des MODIFICATIONS LOCALES !!" class="label label-danger" style="font-size:1em">';
-                            else
-                                echo '<div title="Branche courante" class="label label-success" style="font-size:1em">';
-                            $localBranch = gitGetCurrentBranch();
-                            echo '<script>var js_curBranch = "'.$localBranch.'";</script>'; // PHP to JS
-                            echo $localBranch;
-                            echo '</div>';
-                            /* List branches */
-                            gitFetchAll(1);
-                            $Branches = gitGetAllBranches();
-                            echo '<select id="idBranch" class="ml4px" style="width:140px" title="{{Branches dispos}}">';
-                            foreach ($Branches as $b) {
-                                if ($b == '')
-                                    continue;
-                                $b = substr($b, 2);
-                                if (substr($b, 0, 8) == "remotes/")
-                                    $b2 = substr($b, 8); // Remove 'remotes/'
+            <div class="col-lg-6">
+                <div class="form-group">
+                <!-- <div class="col-lg-5"> -->
+                    <?php
+                        /* Developers only: display current branch & allows to switch to another one */
+                        if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == true)) {
+                            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{GIT : }}</label>';
+                            /* TODO: Check if GIT repo & GIT present */
+                            if (gitIsRepo() == FALSE) {
+                                echo "Pas sous GIT";
+                            } else {
+                                $localChanges = gitHasLocalChanges();
+                                if ($localChanges == true)
+                                    echo '<div title="Branche courante. Contient des MODIFICATIONS LOCALES !!" class="label label-danger" style="font-size:1em">';
                                 else
-                                    $b2 = $b;
-                                echo '<script>console.log("branch='.$b.'")</script>';
-                                if ($b == $localBranch)
-                                    echo '<option value="'.$b.'" selected>'.$b2.'</option>';
-                                else
-                                    echo '<option value="'.$b.'">'.$b2.'</option>';
+                                    echo '<div title="Branche courante" class="label label-success" style="font-size:1em">';
+                                $localBranch = gitGetCurrentBranch();
+                                echo '<script>var js_curBranch = "'.$localBranch.'";</script>'; // PHP to JS
+                                echo $localBranch;
+                                echo '</div>';
+                                /* List branches */
+                                gitFetchAll(1);
+                                $Branches = gitGetAllBranches();
+                                echo '<select id="idBranch" class="ml4px" style="width:140px" title="{{Branches dispos}}">';
+                                foreach ($Branches as $b) {
+                                    if ($b == '')
+                                        continue;
+                                    $b = substr($b, 2);
+                                    if (substr($b, 0, 8) == "remotes/")
+                                        $b2 = substr($b, 8); // Remove 'remotes/'
+                                    else
+                                        $b2 = $b;
+                                    echo '<script>console.log("branch='.$b.'")</script>';
+                                    if ($b == $localBranch)
+                                        echo '<option value="'.$b.'" selected>'.$b2.'</option>';
+                                    else
+                                        echo '<option value="'.$b.'">'.$b2.'</option>';
+                                }
+                                echo '</select>';
+                                echo '<a id="idSwitchBranch" class="btn btn-warning ml4px" title="{{Suppression des modifs locales, basculement sur la branche selectionnée, et redémarrage.}}">{{Mettre-à-jour}}</a>';
                             }
-                            echo '</select>';
-                            echo '<a id="idSwitchBranch" class="btn btn-warning ml4px" title="{{Suppression des modifs locales, basculement sur la branche selectionnée, et redémarrage.}}">{{Mettre-à-jour}}</a>';
                         }
-                    }
-                ?>
+                    ?>
+                <!-- </div> -->
+                </div>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-lg-4 control-label" data-toggle="tooltip" >{{Objet Parent : }}</label>
-            <div class="col-lg-4 confs1" title="{{Objet parent (ex: une pièce de la maison) par défaut pour toute nouvelle zigate. Peut être changé plus tard via la page de gestion d'Abeille en cliquant sur la ruche correspondante}}.">
-                <select class="configKey form-control" data-l1key="AbeilleParentId">
-                    <?php
-                        foreach (jeeObject::all() as $object) {
-                            echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
-                        }
-                    ?>
-                </select>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Objet Parent : }}</label>
+                    <div class="col-lg-4" title="{{Objet parent (ex: une pièce de la maison) par défaut pour toute nouvelle zigate. Peut être changé plus tard via la page de gestion d'Abeille en cliquant sur la ruche correspondante}}.">
+                        <select class="configKey form-control" data-l1key="ab::defaultParent">
+                            <?php
+                                foreach (jeeObject::all() as $object) {
+                                    echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="col-lg-5">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
             </div>
         </div>
 
@@ -285,19 +313,10 @@
             ?>
         </legend>
         <div id="idZigates">
-            <!-- <div>
-                <p><i>{{Ce plugin supporte 4 types de Zigates: USB, Wifi, "PI" ou DIN}}</i></p>
-                <p><i>{{- Si USB, Pi ou DIN, le champ 'Port série' doit indiquer le port correspondant (ex: ttyUSB0 ou ttyS1)}}</i></p>
-                <p><i>{{- Si Wifi, le champ 'Adresse IP' doit indiquer l'adresse de la Zigate et son port (ex: 192.168.4.1:9999)}}</i></p>
-                <p><i>{{Les zigates non utilisées doivent être désactivées.}}</i></p>
-            </div> -->
-
             <!-- Display dependancies -->
             <div class="form-group">
                 <div class="col-lg-3">
-                    <h4>
-                        Dépendances
-                    </h4>
+                    <h4>Dépendances optionnelles</h4>
                 </div>
                 <div class="col-lg-9">
                 </div>
@@ -306,9 +325,9 @@
             <div class="form-group">
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label class="col-lg-3 control-label" data-toggle="tooltip" title="Wiring PI est nécéssaire pour les Zigate PI">{{Wiring Pi}} : </label>
+                        <label class="col-lg-3 control-label" data-toggle="tooltip" title="Wiring PI est nécéssaire pour les Zigates de type PI">{{Wiring Pi}} : </label>
                         <div id="idWiringPi" class="col-lg-4">
-                            <input id="idWiringPiStatus" type="text" class="form-control" title="{{Status d'installation du package Wiring PI}}" disabled>
+                            <input id="idWiringPiStatus" type="text" class="form-control" title="{{Status d'installation du package Wiring PI}}" readonly>
                             <!-- <a class="WiringPiStatus" title="">
                                 <span class="label label-success" style="font-size:1em;">-?-</span>
                             </a> -->
@@ -321,9 +340,9 @@
 
                 <div class="col-lg-6">
                     <div class="form-group">
-                        <label class="col-lg-3 control-label" data-toggle="tooltip">{{Socat}} : </label>
+                        <label class="col-lg-3 control-label" data-toggle="tooltip" title="Socat est nécéssaire pour les Zigates de type Wifi/Eth">{{Socat}} : </label>
                         <div class="col-lg-4">
-                            <input id="idSocatStatus" type="text" class="form-control" title="{{Status d'installation du package socat}}" disabled>
+                            <input id="idSocatStatus" type="text" class="form-control" title="{{Status d'installation du package socat}}" readonly>
                         </div>
                         <!-- <div id="idSocat'.$zgId.'" class="col-lg-6">
                             <a class="socatStatus" title="Status d'installation du package socat">
@@ -342,7 +361,7 @@
             // How many zigates to display ? (check if enabled or not)
             $maxId = 1;
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                $status = config::byKey('AbeilleActiver'.$zgId, 'Abeille', 'N');
+                $status = config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N');
                 if ($status == "Y")
                     $maxId = $zgId;
             }
@@ -410,7 +429,7 @@
             </div>
             <?php } ?>
 
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage du de la récuperation d'équipements inconnus. Par défaut le laisser sur 'Oui'.}}">{{Blocage récuperation équipement inconnu : }}</label>
                 <div class="col-lg-5">
                     <select class="configKey form-control" data-l1key="blocageRecuperationEquipement" style="width:150px" data-toggle="tooltip" title="{{Si un equipement se manifeste mais n est pas connu par Abeille, Abeille peut essayer de le recuperer. Dans certaine situation cela peut rendre Abeille instalble.}}">
@@ -418,41 +437,17 @@
                         <option value="Non">{{Non}}</option>
                     </select>
                 </div>
-            </div>
+            </div> -->
 
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage interrogation LQI à minuit.}}">{{Blocage interrogation LQI à minuit : }}</label>
                 <div class="col-lg-5">
-                    <select class="configKey form-control" data-l1key="preventLQIRequest" style="width:150px" data-toggle="tooltip" title="{{Si 'oui', empeche l'interrogation du réseau tout les jours à minuit}}">
+                    <select class="configKey form-control" data-l1key="ab::preventLQIAutoUpdate" style="width:150px" data-toggle="tooltip" title="{{Si 'oui', empeche l'interrogation du réseau tout les jours à minuit}}">
                         <option value="yes">{{Oui}}</option>
                         <option value="no" selected>{{Non}}</option>
                     </select>
                 </div>
             </div>
-
-            <!-- Tcharp38: dev announce can no longer be ignored even if not in inclusion mode. -->
-            <!-- <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage du traitement des annonces, par defaut le laisser sur Non.}}">{{Blocage traitement Annonces : }}</label>
-                <div class="col-lg-5">
-                    <select class="configKey form-control" data-l1key="blocageTraitementAnnonce" style="width:150px" data-toggle="tooltip" title="{{Bloque le traitement des annonces. Peut être necessaire pour certains equipements. Ce rapporter à la documentation Abeille de l'équipement pour voir si cela est nécessaire.}}">
-                        <option value="Non">{{Non}}</option>
-                        <option value="Oui">{{Oui}}</option>
-                    </select>
-                </div>
-            </div> -->
-
-            <!-- Tcharp38: dev announce can no longer be ignored even if not in inclusion mode. -->
-            <!-- <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Agressivité du traitement des annonces, par defaut le laisser sur 4.}}">{{Agressivité traitement Annonces : }}</label>
-                <div class="col-lg-5">
-                    <select class="configKey form-control" data-l1key="agressifTraitementAnnonce" style="width:150px" data-toggle="tooltip" title="{{Agressivité sur le traitement des annonces venant des équipements. Nombre de fois qu'Abeille interroge un équipement.}}">
-                        <option value="4">{{4}}</option>
-                        <option value="3">{{3}}</option>
-                        <option value="2">{{2}}</option>
-                        <option value="1">{{1}}</option>
-                    </select>
-                </div>
-            </div> -->
 
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Mode dédié aux développeurs}}">{{Mode developpeur : }}</label>
@@ -907,6 +902,7 @@
         msg += '<br> - type: '+zgType+'<br> - port: '+zgPort+'<br> - firmware: '+zgFW+'<br><br>';
         let curIsLegacy = true;
         let newIsOpdm = false;
+        erasePdm = false;
         if (curFw != '') {
             // Format XXXX-YYYY: where XXXX=0003, 4 (OPDMv1), ou 5 (OPDMv2)
             v = curFw.substr(3, 1);
@@ -917,8 +913,9 @@
             newIsOpdm = true;
         if (curIsLegacy) {
             if (newIsOpdm) {
-                msg += "{{Vous allez passer d'une version 'legacy' à 'OPDM'. Un effacement de la PDM + réapparairage complet est requis.}}<br><br>";
+                msg += "{{Vous allez passer d'une version 'legacy' à 'OPDM'. La table des équipements connus de la Zigate doit être éffacée et vous allez devoir faire une réassocitaion complète.}}<br><br>";
                 msg += '{{Etes vous sur de vouloir continuer ?}}';
+                erasePdm = true;
             } else
                 msg += '{{Attention !! La version Optimized PDM est FORTEMENT recommandée.}}<br><br>';
         } else {
@@ -931,7 +928,10 @@
         bootbox.confirm(msg, function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Mise-à-jour du FW de la Zigate}}"});
-                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateFW&zgtype=\"'+zgType+'\"&zgport=\"'+zgPort+'\"&fwfile=\"'+zgFW+'\"').dialog('open');
+                url = 'index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateFW&zgtype=\"'+zgType+'\"&zgport=\"'+zgPort+'\"&fwfile=\"'+zgFW+'\"';
+                if (erasePdm)
+                    url += '&erasePdm=true&zgId='+zgId;
+                $('#md_modal2').load(url).dialog('open');
             }
         });
     }

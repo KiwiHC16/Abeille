@@ -1,0 +1,16 @@
+{
+    "inf_zbAttr-0405-MeasuredValue": {
+        "comment": "0405/Humidity measurement cluster, attrib 0000/MeasuredValue",
+        "name": "MeasuredValue",
+        "subType": "numeric",
+        "template": "badge",
+        "isHistorized": "1",
+        "configuration": {
+            "historizeRound": "0"
+        },
+        "type": "info",
+        "logicalId": "0405-#EP#-0000",
+        "unit": "%",
+        "genericType": "HUMIDITY"
+    }
+}

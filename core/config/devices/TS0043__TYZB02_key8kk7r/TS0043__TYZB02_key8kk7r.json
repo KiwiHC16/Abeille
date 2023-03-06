@@ -11,24 +11,24 @@
         "type": "Switch Zemismart TS0043 3 boutons sur piles",
         "commands": {
             "etat inter 0": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
                 "subType": "numeric",
                 "isVisible": 1
             },
             "etat inter 1": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=02",
                 "subType": "numeric",
                 "isVisible": 1
             },
             "etat inter 2": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=03",
                 "subType": "numeric",
                 "isVisible": 1
             }
         },
-        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1185"
+        "comment": "https://github.com/KiwiHC16/Abeille/issues/1185"
     }
 }

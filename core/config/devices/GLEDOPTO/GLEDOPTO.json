@@ -4,54 +4,64 @@
         "configuration": {
             "mainEP": "0B",
             "poll": "1",
-            "icon": "GLEDOPTO"
+            "icon": "Gledopto-BulbGU10"
         },
         "category": {
             "light": "1"
         },
-        "type": "GLEDOPTO",
+        "type": "Gledopto GU10 bulb",
         "commands": {
             "etat": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "CurrentLevel-0008": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "On": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "isVisible": 1
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "isVisible": 1
             },
             "CurrentLevel": {
-                "use": "zb-0008-CurrentLevel",
+                "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "Get-Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "Get-CurrentLevel": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
-            "include16": "Identify",
-            "include26": "setLevel",
-            "include27": "Group-Membership",
-            "include27 2": "Scene-Membership",
+            "Identify": {
+                "use": "Identify",
+                "isVisible": 1
+            },
+            "setLevel": {
+                "use": "setLevel"
+            },
+            "Groups": {
+                "use": "Group-Membership",
+                "isVisible": 1
+            },
+            "Scenes": {
+                "use": "Scene-Membership"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
             "Toggle": {
-                "use": "zbCmd-0006-Toggle",
+                "use": "act_zbCmdG-0006-Toggle",
                 "nextLine": "after"
             }
         },

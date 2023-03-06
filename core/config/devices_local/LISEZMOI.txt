@@ -25,9 +25,17 @@ Exemple: BASICZBR3.json
 
   {
     "BASICZBR3": {
-      "type": "Sonoff BASICZBR3 smart switch",
+      "type": "Sonoff smart switch",
       "manufacturer": "Sonoff",
       "model": "BASICZBR3",
+      "alternateIds": {
+        "BASICZBR30": {
+          "manufacturer": "if-different-from-top",
+          "model": "if-different-from-top",
+          "icon": "if-different-from-top",
+          "type": "if-different-from-top"
+        }
+      },
       "timeout": "60",
       "category": {
         "automatism": "1"
@@ -53,7 +61,8 @@ Exemple: BASICZBR3.json
   Il est recommandé de combiner l'identifiant zigbee 'modele' avec celui du 'fabricant' => '<zbModelId>_<zbManufId>'
 
 * alternateIds: optionnel
-  Permet de définir un autre identifiant pour le même type d'équipement (ex: TRAFRISignalRepeater & TRAFRIsignalrepeater).
+  Permet d'identifier le même équipement avec une signature differente ou vendu sous une autre marque
+  ex: 'TRAFRISignalRepeater' & 'TRAFRIsignalrepeater'
 
 * type: OBLIGATOIRE, courte description du type d'équipement
   Anciennement "nameJeedom".
@@ -104,6 +113,10 @@ Exemple: BASICZBR3.json
         Ex: "Get-OPTARIF": { "use": "zbReadAttribute", "params": "clustId=FF66&attrId=0000", "subType": "string" },
     minValue, maxValue:
         Permet de changer les limites d'une commande action, en particulier de type "slider".
+    genericType: Surcharge du type generique par defaut.
+        ?
+    unit: Surcharge de l'unité par defaut.
+        Permet de définir l'unité affichée avec l'information (cmde 'info').
 
   Exemples de nouvelle syntaxe:
     "Status 1": { "use": "zb-0006-OnOff", "params": "ep=01", "isVisible": 1, "nextLine": "after" },

@@ -1,5 +1,7 @@
 {
     "3AFE14010402000D": {
+        "manufacturer": "Konke",
+        "model": "?",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -11,10 +13,14 @@
         },
         "type": "Konke IR INfra Rouge Presence",
         "commands": {
-            "include3": "etatIR_Alarme",
-            "include4 2": "Batterie-Volt-Konke",
+            "etat": {
+                "use": "etatIR_Alarme"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

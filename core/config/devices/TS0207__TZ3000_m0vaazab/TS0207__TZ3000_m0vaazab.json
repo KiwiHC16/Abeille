@@ -4,6 +4,13 @@
         "zbManufacturer": "_TZ3000_m0vaazab",
         "model": "RP280",
         "timeout": "60",
+        "type": "Tuya RP280 zigbee repeater",
+        "alternateIds": {
+            "TS0207__TZ3000_gszjt2xx": {
+                "manufacturer": "Loratap",
+                "type": "Loratap repeater"
+            }
+        },
         "configuration": {
             "mainEP": "01",
             "icon": "Tuya-Repeater-RP280"
@@ -11,7 +18,6 @@
         "category": {
             "other": "1"
         },
-        "type": "Tuya RP280 zigbee repeater",
         "commands": {
         }
     }

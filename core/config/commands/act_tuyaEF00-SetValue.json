@@ -1,0 +1,12 @@
+{
+    "act_tuyaEF00-SetValue": {
+        "subType": "other",
+        "template": "",
+        "configuration": {
+            "topic": "cmd-tuyaEF00",
+            "request": "ep=#EP#&cmd=setValue&data=#data#"
+        },
+        "type": "action",
+        "genericType": "GENERIC_ACTION"
+    }
+}

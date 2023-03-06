@@ -40,30 +40,38 @@
             while (($dirEntry = readdir($dh)) !== false) {
                 if (in_array($dirEntry, array(".", "..")))
                     continue;
-                if ((substr($dirEntry, -4) != ".ota") && (substr($dirEntry, -11) != ".ota.signed"))
-                    continue;
+                // if ((substr($dirEntry, -4) != ".ota") && (substr($dirEntry, -11) != ".ota.signed"))
+                //     continue;
 
+                logMessage('debug', 'OTA FW: '.$dirEntry);
                 $fullPath = $otaDir."/".$dirEntry;
                 $fh = fopen($fullPath, "rb");
                 $fc = fread($fh, 69); // fc = File content
-                // fclose($fh);
 
-                logMessage('debug', 'OTA FW: '.$dirEntry);
                 if (substr($fc, 0, 4) == "NGIS") {
                     logMessage('debug', '  Ikea style SIGNED image');
                     $arr = unpack('VstartOfHeader', substr($fc, 0x10));
                     // logMessage('debug', '  arr='.json_encode($arr));
-                    $startOfHeader = $arr['startOfHeader'];
-                    logMessage('debug', '  startOfHeader='.$startOfHeader);
-                    fseek($fh, $startOfHeader, SEEK_SET);
-                    $fc = fread($fh, 69); // fc = File content
-                    fclose($fh);
-                    $startIdx = $startOfHeader;
+                    $startIdx = $arr['startOfHeader'];
                 } else {
                     // logMessage('debug', '  UNsigned image');
-                    fclose($fh);
-                    $startIdx = 0;
+                    // Looking for header 0x0BEEF11E signature
+                    for($i = 0; $i < (69 - 4); $i++) {
+                        $format = 'VotaUpgradeFileId'; // Expecting 0x0BEEF11E
+                        $header = unpack($format, substr($fc, $i));
+                        if ($header['otaUpgradeFileId'] == 0x0BEEF11E) {
+                            $startIdx = $i;
+                            break;
+                        }
+                    }
                 }
+
+                logMessage('debug', '  startIdx='.$startIdx);
+                if ($startIdx != 0) {
+                    fseek($fh, $startIdx, SEEK_SET);
+                    $fc = fread($fh, 69); // fc = File content
+                }
+                fclose($fh);
 
                 // otaHeaderString: replacing 00 by space
                 for ($i = 20; $i < 52; $i++)
@@ -82,7 +90,7 @@
                     .'/VtotalSize';
                 $header = unpack($format, $fc);
                 if ($header['otaUpgradeFileId'] != 0x0BEEF11E) {
-                    parserLog('debug', 'ERROR: Invalid OTA file: '.$dirEntry);
+                    logMessage('error', 'Fichier OTA invalide: '.$dirEntry);
                     continue;
                 }
                 $header['otaUpgradeFileId'] = sprintf("%08X", $header['otaUpgradeFileId']);
@@ -113,7 +121,7 @@
     //     // JSON file associated to signed OTA file
     //     $fc = json_decode(file_get_contents($fullPath), true);
     //     if ($fc === false) {
-    //         parserLog('debug', 'ERROR: Corrupted JSON file: '.$dirEntry);
+    //         logMessage('debug', 'ERROR: Corrupted JSON file: '.$dirEntry);
     //         continue;
     //     }
     //     // Expecting the following fields
@@ -126,14 +134,14 @@
     //         $missingParam = true;
     //     }
     //     if ($missingParam) {
-    //         parserLog('debug', 'ERROR: Invalid JSON file (missing fields): '.$dirEntry);
+    //         logMessage('debug', 'ERROR: Invalid JSON file (missing fields): '.$dirEntry);
     //         continue;
     //     }
 
     //     $fileName = $fc['fw_binary_url'];
     //     $fileName = basename($fileName);
     //     if (!file_exists(otaDir.'/'.$fileName)) {
-    //         parserLog('debug', 'ERROR: No binary file associated: '.$dirEntry);
+    //         logMessage('debug', 'ERROR: No binary file associated: '.$dirEntry);
     //         continue;
     //     }
     //     $manufCode = sprintf("%04X", $fc['fw_manufacturer_id']);

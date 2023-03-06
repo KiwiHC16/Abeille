@@ -10,10 +10,10 @@
             "visibilityCategory": "additionalCommand"
         },
         "display": {
-            "forceReturnLineAfter": "1",
             "title_placeholder": "RRGGBB",
             "message_placeholder": "na"
         },
-        "type": "action"
+        "type": "action",
+        "nextLine": "after"
     }
 }

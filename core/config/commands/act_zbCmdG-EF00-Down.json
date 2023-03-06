@@ -1,0 +1,16 @@
+{
+    "act_zbCmdG-EF00-Down": {
+        "isVisible": 1,
+        "name": "Down",
+        "isHistorized": 0,
+        "subType": "other",
+        "invertBinary": "0",
+        "template": "",
+        "configuration": {
+            "topic": "cmd-EF00",
+            "request": "cmd=01&param=02"
+        },
+        "type": "action",
+        "genericType": ""
+    }
+}

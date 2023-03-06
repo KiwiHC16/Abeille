@@ -1,0 +1,9 @@
+{
+    "inf_zbCmdC-0501-Arm-String": {
+        "comment": "Cluster 0501/IAS_ACE, ARM cmd received from CLIENT side",
+        "type": "info",
+        "subType": "string",
+        "logicalId": "#EP#-0501-cmd00C-str",
+        "genericType": "ALARM_MODE"
+    }
+}

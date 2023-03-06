@@ -9,18 +9,22 @@
     }
 
     /* Add network display & refresh buttons for all active zigates */
-    function displayButtons($nbOfZigates, $what="linksTable") {
+    function displayNetworks($nbOfZigates, $what="linksTable", $mode="") {
         echo 'Réseau :';
-        for ($i = 1; $i <= $nbOfZigates; $i++) {
-            if (config::byKey('AbeilleActiver'.$i, 'Abeille', 'N') != 'Y')
+        if ($mode == "column")
+            echo '<br>';
+        for ($zgId = 1; $zgId <= $nbOfZigates; $zgId++) {
+            if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
                 continue; // Disabled
 
             if ($what == "linksTable")
-                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksTable('.$i.')">Abeille'.$i.'</a>';
+                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksTable('.$zgId.')">Abeille'.$zgId.'</a>';
             else // "linksGraph"
-                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksGraph('.$i.')">Abeille'.$i.'</a>';
-            echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLQICache('.$i.')"><i class="fas fa-sync"></i></a>';
+                echo '<a class="btn btn-success" style="margin-left:4px" onclick="displayLinksGraph('.$zgId.')">Abeille'.$zgId.'</a>';
+            echo '<a class="btn btn-warning" title="Forçe la réinterrogation du réseau. Peut prendre plusieurs minutes en fonction du nombre d\'équipements." onclick="refreshLqiTable('.$zgId.', \''.$what.'\')"><i class="fas fa-sync"></i></a>';
             echo '&nbsp;&nbsp;';
+            if ($mode == "column")
+                echo '<br>';
         }
     }
 
@@ -65,7 +69,7 @@
         position: absolute;
     }
 
-    #idLinksGraphTab > svg {
+    #idLinksGraphTabSVG >svg {
         height: 100%;
         width: 100%
     }
@@ -158,7 +162,7 @@
                     <br />
                     <div id="div_routingTable">
                         <?php
-                            displayButtons(maxNbOfZigate, "linksTable");
+                            displayNetworks(maxNbOfZigate, "linksTable");
                         ?>
                         <br />
                         <hr>
@@ -183,13 +187,13 @@
                                     <th class="header" data-toggle="tooltip" colspan=3>{{Relation}}</th>
                                 </tr>
                                 <tr>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Nom}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Objet}}</th>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{ID}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Nom}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Adresse}}</th>
 
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Nom}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Objet}}</th>
-                                    <th class="header" data-toggle="tooltip" title="Trier par">{{ID}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Nom}}</th>
+                                    <th class="header" data-toggle="tooltip" title="Trier par">{{Adresse}}</th>
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Type}}</th>
 
                                     <th class="header" data-toggle="tooltip" title="Trier par">{{Relation}}</th>
@@ -207,27 +211,12 @@
                 <!-- Links graph -->
                 <div id="idLinksGraphTab" class="tab-pane">
 
-                    <br />
-                    <?php
-                        displayButtons(maxNbOfZigate, "linksGraph");
-                    ?>
-                    <br />
-                    <hr>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <td>Actuel :</td>
-                                <td><span id="idCurrentNetworkLG" style="width:150px; font-weight:bold">-</span>, collecte du <span id="idCurrentDateLG" style="width:150px; font-weight:bold">-</span></td>
-                            </tr>
-                            <tr>
-                                <td>Afficher :</td>
-                                <td><label class="checkbox-inline"><input type="checkbox" id="idShowObject" checked/>Objet parent</label></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <table class="table table-bordered table-condensed"
-                           style="width: 150px;position:fixed;margin-top : 25px;">
+                    <div class="col-lg-2" style="height:inherit;overflow-y:auto;overflow-x:hidden;">
+                        <?php
+                            displayNetworks(maxNbOfZigate, "linksGraph", "column");
+                        ?>
+                        <table class="table table-bordered table-condensed"
+                        style="width: 150px;position:fixed;margin-top : 25px;">
                         <thead>
                         <tr>
                             <th colspan="2">{{Légende}}</th>
@@ -239,22 +228,28 @@
                             <td>{{Coordinateur}}</td>
                         </tr>
                         <tr>
-                            <td class="typeEndDevice-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
-                            <td>{{Bout de chaine}}</td>
-                        </tr>
-                        <tr>
                             <td class="typeRouter-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
                             <td>{{Routeur}}</td>
+                        </tr>
+                        <tr>
+                            <td class="typeEndDevice-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
+                            <td>{{Bout de chaine}}</td>
                         </tr>
                         <tr>
                             <td class="typeUndefined-color" style="width: 35px"><i class="fas fa-square fa-2x"></i></td>
                             <td>{{Inconnu}}</td>
                         </tr>
-
                         </tbody>
-                    </table>
+                        </table>
+                    </div>
 
-                    <!-- <span id="graph-node-name" style="width: 100%;height: 100%"></span> -->
+                    <div class="col-lg-10" style="height:100%;overflow-y:auto;overflow-x:hidden;">
+                        Actuel :<span id="idCurrentNetworkLG" style="width:150px; font-weight:bold">-</span>, collecte du <span id="idCurrentDateLG" style="width:150px; font-weight:bold">-</span>
+                        <br />
+                        Afficher :<label class="checkbox-inline"><input type="checkbox" id="idShowObject" checked/>Objet parent</label>
+                        <div id="idLinksGraphTabSVG" style="height:inherit">
+                        </div>
+                    </div>
                 </div>
 
                 <!-- tab Route -->
@@ -414,7 +409,7 @@
     <?php
         // for ( $i=1; $i<=config::byKey('zigateNb', 'Abeille', '1'); $i++ ) {
         //     echo '$(".btn.displayLinksTable'.$i.'")       .off("click").on("click", function () { displayLinksTable('.$i.'); });'."\n";
-        //     echo '$(".btn.refreshNetworkCache'.$i.'").off("click").on("click", function () { refreshLQICache('.$i.'); displayLinksTable('.$i.'); });'."\n";
+        //     echo '$(".btn.refreshNetworkCache'.$i.'").off("click").on("click", function () { refreshLqiTable('.$i.'); displayLinksTable('.$i.'); });'."\n";
         // }
 
         $eqLogics = Abeille::byType('Abeille');
@@ -435,4 +430,4 @@
     ?>
 </script>
 
-<?php include_file('desktop', 'network', 'js', 'Abeille'); ?>
+<?php include_file('desktop', 'AbeilleNetwork', 'js', 'Abeille'); ?>

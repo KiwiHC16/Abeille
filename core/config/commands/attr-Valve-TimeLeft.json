@@ -1,0 +1,11 @@
+{
+    "attr-Valve-TimeLeft": {
+        "comment": "Received Time Left from valve",
+        "subType": "numeric",
+        "template": "badge",
+        "type": "info",
+        "logicalId": "#EP#-timeleft",
+        "unit": "s",
+        "genericType": "VALVE_TIMELEFT"
+    }
+}

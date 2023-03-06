@@ -2,19 +2,113 @@
     "TS0601__TZE200_hue3yfsn": {
         "manufacturer": "Tuya",
         "model": "TV02",
-        "comment": "Empty model. Need to understand how to use cluster EF00",
-        "timeout": "60",
+        "alternateIds": {
+            "TS0601__TZE200_e9ba97vf": [],
+            "TS0601__TZE200_husqqvux": [],
+            "TS0601__TZE200_lllliz3p": []
+        },
+        "comment": "Alternate Ids from https://github.com/Koenkk/zigbee-herdsman-converters/blob/master/devices/tuya.js",
+        "comment2": "No timeout so far. Can't tell how frequent is done reporting, nor how to change its freq",
+        "timeout": "",
         "configuration": {
             "mainEP": "01",
             "icon": "Tuya-TV02",
-            "batteryType": "To be defined"
+            "batteryType": "2x1.5V AA"
         },
         "category": {
             "heating": "1"
         },
         "type": "Tuya TV02",
         "commands": {
-            "Groups": { "use": "Group-Membership" }
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Temperature": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "isVisible": 1
+            },
+            "Window-Detection": {
+                "use": "attr-Door-Status",
+                "logicalId": "01-windowDetectionStatus",
+                "nextLine": "after",
+                "isVisible": 1
+            },
+            "Set Setpoint": {
+                "use": "act_tuyaEF00-Set-Setpoint-Mult",
+                "params": "dpId=10&mult=10",
+                "isVisible": 1
+            },
+            "Setpoint": {
+                "use": "attr-Thermostat-Setpoint",
+                "isVisible": 1
+            },
+            "Manual": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=02&data=01",
+                "isVisible": 1
+            },
+            "Auto": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=02&data=00",
+                "isVisible": 1
+            },
+            "Mode": {
+                "use": "attr-Thermostat-Mode",
+                "nextLine": "after",
+                "isVisible": 1
+            },
+            "Check ON": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=73&data=01",
+                "comment": "Device sends infos when ON",
+                "trigOut": "check-off",
+                "Polling": "cron10",
+                "comment 2": "Exec every 10 minutes",
+                "isVisible": 0
+            },
+            "Check OFF": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=73&data=00",
+                "logicalId": "check-off",
+                "isVisible": 0
+            },
+            "Check status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 0
+            }
+        },
+        "tuyaEF00": {
+            "fromDevice": {
+                "02": {
+                    "function": "rcvThermostat-Mode"
+                },
+                "08": {
+                    "function": "rcvValue",
+                    "info": "01-windowDetectionStatus"
+                },
+                "10": {
+                    "function": "rcvValueDiv",
+                    "div": 10,
+                    "info": "01-setPoint"
+                },
+                "18": {
+                    "function": "rcvValueDiv",
+                    "div": 10,
+                    "info": "0402-01-0000"
+                },
+                "23": {
+                    "function": "rcvValue",
+                    "info": "0001-01-0021"
+                },
+                "73": {
+                    "function": "rcvValue",
+                    "info": "0006-01-0000",
+                    "comment": "Check status"
+                }
+            }
         }
     }
 }

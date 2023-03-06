@@ -7,8 +7,8 @@
         "invertBinary": "0",
         "template": "",
         "configuration": {
-            "topic": "ReadAttributeRequest",
-            "request": "EP=#EP#&clusterId=0102&attributeId=0008",
+            "topic": "readAttribute",
+            "request": "ep=#EP#&clustId=0102&attrId=0008",
             "visibilityCategory": "additionalCommand"
         },
         "type": "action"

@@ -13,16 +13,32 @@
         },
         "type": "Xiaomi Smoke Sensor",
         "commands": {
-            "include3": "securitySafetySmoke",
-            "include4": "Batterie-Volt",
-            "include5": "Batterie-Pourcent",
-            "include6": "Xiaomi-ff01",
-            "include7": "setSmokeSensivityLow",
-            "include8": "setSmokeSensivityMedium",
-            "include9": "setSmokeSensivityHigh",
-            "include10": "testSmoke",
+            "Etat": {
+                "use": "securitySafetySmoke"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Specific": {
+                "use": "Xiaomi-ff01"
+            },
+            "Low": {
+                "use": "setSmokeSensivityLow"
+            },
+            "Medium": {
+                "use": "setSmokeSensivityMedium"
+            },
+            "High": {
+                "use": "setSmokeSensivityHigh"
+            },
+            "Test": {
+                "use": "testSmoke"
+            },
             "SWBuildID": {
-                "use": "zb-0000-SWBuildID"
+                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

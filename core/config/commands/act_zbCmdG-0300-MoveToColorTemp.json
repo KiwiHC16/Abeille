@@ -1,0 +1,16 @@
+{
+    "act_zbCmdG-0300-MoveToColorTemp": {
+        "comment": "Cluster 0300, move to color temp",
+        "name": "MoveToColorTemp",
+        "subType": "slider",
+        "template": "",
+        "configuration": {
+            "topic": "setTemperature",
+            "request": "EP=#EP#&slider=#slider#",
+            "visibilityCategory": "All"
+        },
+        "type": "action",
+        "unit": "K",
+        "genericType": "LIGHT_SET_COLOR_TEMP"
+    }
+}

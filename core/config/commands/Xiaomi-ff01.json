@@ -1,6 +1,5 @@
 {
     "Xiaomi-ff01": {
-        "Comment": "changed ff01 to ff01removed to avoid homebridge to crash as Hex data are in this command info.",
         "isVisible": 0,
         "name": "Specific",
         "isHistorized": "0",
@@ -11,6 +10,7 @@
             "visibilityCategory": "additionalCommand"
         },
         "type": "info",
-        "logicalId": "0000-#EP#-ff01-removed"
+        "logicalId": "0000-#EP#-ff01-removed",
+        "comment": "changed ff01 to ff01removed to avoid homebridge to crash as Hex data are in this command info."
     }
 }

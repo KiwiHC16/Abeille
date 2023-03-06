@@ -182,10 +182,29 @@
             $jlogsDir = __DIR__."/../../../../log"; // Jeedom logs dir
             $cmd = "cd ".$jlogsDir."; sudo cp Abeille* ".$logsDir;
             $cmd .= "; sudo cp http.error ".$logsDir;
-            $cmd .= "; sudo cp update ".$logsDir;
+            // $cmd .= "; sudo cp update ".$logsDir;
             $cmd .= "; sudo cp ".$tmpDir."/*.log ".$logsDir;
             // $cmd .= "; sudo rm -f tmp/AbeilleLogs.*";
             exec($cmd, $out, $status);
+
+            // Special case for 'update': filtering out 'http://' or 'https://'
+            if ($fileIn = fopen($jlogsDir."/update", "r")) {
+                $fileOut = fopen($logsDir.'/update', 'w');
+                while(!feof($fileIn)) {
+                    $line = fgets($fileIn);
+                    $pos = strpos($line, "http");
+                    if ($pos !== false) {
+                        if (substr($line, $pos, 8) == "https://")
+                            $pos += 8;
+                        else
+                            $pos += 7;
+                        $start = substr($line, 0, $pos);
+                        fwrite($fileOut, $start." FILTERED\n");
+                    } else
+                        fwrite($fileOut, $line);
+                }
+                fclose($fileIn);
+            }
 
             /* Searching for available compression tool */
             // TODO: Tcharp38. Select tool according to what's available.
@@ -267,6 +286,37 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        /* Clear file content.
+           'file' = file name.
+           'location' = 'JEEDOM-LOG' (default, default log dir) or 'JEEDOM-TMP' (temp Abeille log dir)
+           Returns: status=0 if ok, 1=not found, -1=other error */
+        if (init('action') == 'clearFile') {
+            $file = init('file');
+            $location = init('location');
+
+            if (($location == '') || ($location == 'JEEDOM-LOG'))
+                $path = __DIR__."/../../../../log/".$file;
+            else if ($location == "JEEDOM-TMP")
+                $path = jeedom::getTmpFolder("Abeille").'/'.$file;
+            else {
+                ajax::error(json_encode(array('status' => -1, 'error' => "clearFile: Invalid 'location'")));
+            }
+
+            logDebug("action=clearFile, path=".$path);
+            $status = 0;
+            $error = "";
+
+            if (!file_exists($path)) {
+                $status = 1;
+                $error = "Le fichier '".$file."' n'existe pas.";
+            }
+            if ($status == 0) {
+                com_shell::execute(system::getCmdSudo().'chmod 664 '.$path.'>/dev/null 2>&1; cat /dev/null >'.$path);
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
         /* Check if a file exists.
            'path' is relative to plugin root dir (/var/www/html/plugins/Abeille).
            Returns: status=0 if found, -1 else */
@@ -316,7 +366,7 @@
                 $status = -1;
                 $error = "Le fichier '".$jsonId."' n'existe pas dans '".$jsonLocation."'";
             } else {
-                $devConfig = AbeilleTools::getDeviceConfig($jsonId, $jsonLocation, $mode);
+                $devConfig = AbeilleTools::getDeviceModel($jsonId, $jsonLocation, $mode);
                 $content = json_encode($devConfig);
             }
 

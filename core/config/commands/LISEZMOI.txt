@@ -11,12 +11,17 @@ Attention !! Toute modification de ce répertoire sera écrasée lors des mises-
 Nom des commandes
 =================
 En dehors des commandes "historiques" en passe d'être normalisées, les noms de fichiers doivent suivre les regles suivantes:
-- Toute commande specifique Zigbee (issu de la spec) commence par "zb"
-- Le nom des commandes commence par une minuscule (ex: click.json)
-- zbCmd-<cluster>-<cmdName>.json : une commande du 'cluster' (ex: zbCmd-0006-On). Donc forcement commande Jeedom ACTION.
-- zb-<cluster>-<attribName>.json: un attribut du 'cluster' (ex: zb-0001-BatteryPercent) = Command Jeedom du type INFO.
-  Ces commandes Jeedom sont mises à jour par un "attribute report" ou "read attribute response".
-- zbConfigureReporting, zbReadAttribute... actions du standard Zigbee.
+- Toute commande 'action' commande par 'act_'.
+- Toute commande 'info' commande par 'inf_'.
+
+- Les commandes specifiques Zigbee (issues du standard Zigbee) sont ensuite prefixées par "zb"
+  Ex: inf_zbXXX ou act_zbXXX
+  Commandes 'générées': act_zbCmdG-xxxx.
+  Commandes reçues du SERVEUR: inf_zbCmdS-xxxx (anciennement inf_zbCmdR-xxxx)
+  Commandes reçues du CLIENT: inf_zbCmdC-xxxx.
+  Attributs: inf_zbAttr-xxx
+  Commandes génériques Zigbee: act_zbXXX
+    Ex: act_zbConfigureReporting, act_zbReadAttribute... actions du standard Zigbee.
 
 Format de fichier
 =================
@@ -24,7 +29,7 @@ Format de fichier
 Exemple de commande 'info'
 
     {
-      "Status": {
+      "inf_status": {
         "logicalId": "0006-#EP#-0000",
         "type": "info",
         "subType": "binary",
@@ -41,7 +46,7 @@ Exemple de commande 'info'
 Exemple de commande 'action'
 
     {
-      "getStatus": {
+      "act_getStatus": {
         "type": "action",
         "subType": "other",
         "configuration": {
@@ -73,18 +78,19 @@ Exemple de commande 'action'
 * unit: optionnel
   Permet de préciser l'unité de l'information remontée (cmd 'info').
   Ex: "unit": "%"
-  
+
 * isVisible: EVITER.
   Indique si la commande est visible dans le widget.
   Invisible par défaut ("isVisible":0).
-  Ce parametre est à mettre dans la modele d'équipement pour personnaliser la commande.
+  Ce parametre est à mettre dans le modele d'équipement pour personnaliser la commande.
 
 * isHistorized: EVITER.
   Indique si la commande INFO (pas de sens pour une commande 'action') doit être historisée.
   Non par défaut ("isHistorized":0).
-  Ce parametre est à mettre dans la modele d'équipement pour personnaliser la commande.
+  Ce parametre est à mettre dans le modele d'équipement pour personnaliser la commande.
 
-* genericType: ??
+* genericType: RECOMMANDE
+  Permet d'associer un widget représentatif de la commande.
 
 * invertBinary: optionnel.
   Utile uniquement pour une commande 'info' de subType 'binary'.
@@ -94,6 +100,9 @@ Exemple de commande 'action'
   Permet de définir le widget qui sera utilisé pour l'affichage de la commande.
 
 * value: ??
+
+* nextLine: after/before
+  Impacte l'affichage du widget. Permet de forcer un saut de ligne apres ou avant le widget de la commande.
 
 * configuration:
 
@@ -114,6 +123,9 @@ Exemple de commande 'action'
     Exemple:
         Certains équipements remontent l'info "click" et non pas "bouton appuyé, bouton relaché".
         Dans ce cas 'repeatEventManagement' doit être mis sur 'always'.
+        "configuration": {
+            "repeatEventManagement": "always"
+        },
 
   * execAtCreation: optionnel
     Précise que cette commande doit être exécutée lors de l'appairage de l'équipement.
@@ -130,6 +142,14 @@ Exemple de commande 'action'
   * trigOutOffset: optionnel
     Permet, si 'trigOut' est utilisé, de modifier la valeur reçue avant de l'appliquer à la commande pointée par 'trigOut'.
 
+  * calculValueOffset: optionnel (pour cmde info)
+    Permet de modifier la valeur d'une cmde info.
+
+  * valueOffset: optionnel (pour cmde action)
+    Permet de modifier la valeur d'une cmde action avant de l'executer (equivalent à 'calculValueOffset' d'une cmde info).
+        // Ex: "valueOffset": "#value#*10"
+        // Ex: "valueOffset": "#value#*#logicid0102-01-F003#/100"
+
   * Polling: optionnel
     Défini si cette commande 'action' doit etre executée regulierement.
     Valeurs: 'cron', 'cron5', 'cron10', 'cron15', 'cron30', 'cronHourly', 'cronDaily'
@@ -141,3 +161,19 @@ Exemple de commande 'action'
   * PollingOnCmdChangeDelay: optionnel
     ?
 
+  * listValue: optionnel
+    Dans le cas d'une commande action du type 'select', permet de définir la liste des cas.
+    Ex:
+            "Set Sensitivity": {
+                "use": "act_zbWriteAttribute-list",
+                "params": "clustId=FCC0&attrId=010C&attrType=20&manufId=115F",
+                "listValue": "1|low;2|medium;3|high",
+                "isVisible": 1,
+                "comment": "Motion sensitivity, 1=low, 2=medium, 3=high"
+            },
+
+  * returnStateTime: X
+    Permet d'indiquer à Jeedom de changer automatique la valeur au bout de X sec à celle de 'returnStateValue'
+
+  * returnStateValue: Y
+    Valeur de retour automatique pour une commande info.

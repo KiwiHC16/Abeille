@@ -1,5 +1,21 @@
 {
     "TS011F__TZ3000_cphmq0q7": {
+        "comment": "Smart Plug 16A EU, TS011F by Tuya found under different brands",
+        "alternateIds": {
+            "TS011F__TZ3000_ew3ldmgx": [],
+            "TS011F__TZ3000_dpo1ysak": [],
+            "TS011F__TZ3000_gjnozsaz": [],
+            "TS011F__TZ3000_ksw8qtmt": [],
+            "TS011F__TZ3000_hdopuwv6": [],
+            "TS011F__TZ3000_typdpbpg": [],
+            "TS011F__TZ3000_0zfrhq4i": [],
+            "TS011F__TZ3000_gznh2xla": [],
+            "TS011F__TZ3000_ss98ec5d": [],
+            "TS011F__TZ3000_2putqrmw": {
+                "manufacturer": "Nous",
+                "model": "A1Z"
+            }
+        },
         "manufacturer": "Sixwgh",
         "model": "WH025",
         "type": "Sixwgh WH025 plug",
@@ -9,7 +25,7 @@
         },
         "configuration": {
             "mainEP": "01",
-            "icon": "Tuya-TS011F"
+            "icon": "Tuya-SmartSocket-2"
         },
         "commands": {
             "Identify": {
@@ -19,86 +35,91 @@
                 "use": "Group-Membership"
             },
             "Status": {
-                "use": "zb-0006-OnOff",
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": "1"
             },
             "Get Status": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "On": {
-                "use": "zbCmd-0006-On",
+                "use": "act_zbCmdG-0006-On",
                 "isVisible": "1"
             },
             "Off": {
-                "use": "zbCmd-0006-Off",
+                "use": "act_zbCmdG-0006-Off",
                 "nextLine": "after",
                 "isVisible": "1"
             },
             "Toggle": {
-                "use": "zbCmd-0006-Toggle"
+                "use": "act_zbCmdG-0006-Toggle"
             },
             "Bind-0006-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "yes"
             },
             "SetReporting-0006": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-            "Poll 0006": { "use": "poll-0006-0000" },
-            
+            "Poll 0006": {
+                "use": "poll-0006-0000"
+            },
             "Total power": {
-                "use": "zb-0702-CurrentSummationDelivered",
-                "params": "unit=KWh&div=1",
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "params": "div=1",
+                "unit": "KWh",
                 "isVisible": "1"
             },
             "Get Total power": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0702&attrId=0000"
             },
             "Bind-0702-ToZigate": {
-                "use": "zbBindToZigate",
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0702",
                 "execAtCreation": "yes"
             },
             "SetReporting-0702-TotalPower": {
-                "use": "zbConfigureReporting",
+                "use": "act_zbConfigureReporting",
                 "params": "clustId=0702&attrType=25&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
             },
-            "Poll 0702": { "use": "poll-0702-0000" },
-
+            "Poll 0702": {
+                "use": "poll-0702-0000"
+            },
             "RMS Voltage": {
-                "use": "zb-0B04-RMSVoltage",
+                "use": "inf_zbAttr-0B04-RMSVoltage",
                 "params": "mult=1&div=1",
                 "isVisible": "0"
             },
             "Get RMS Voltage": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0B04&attrId=0505"
             },
             "RMS Current": {
-                "use": "zb-0B04-RMSCurrent",
+                "use": "inf_zbAttr-0B04-RMSCurrent",
                 "params": "mult=1&div=1",
                 "isVisible": "1"
             },
             "Get RMS Current": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0B04&attrId=0508"
             },
             "Active Power": {
-                "use": "zb-0B04-ActivePower",
+                "use": "inf_zbAttr-0B04-ActivePower",
                 "params": "mult=1&div=1",
                 "isVisible": "1"
             },
             "Get Active Power": {
-                "use": "zbReadAttribute",
+                "use": "act_zbReadAttribute",
                 "params": "clustId=0B04&attrId=050B"
             },
-            "Poll 0B04": { "use": "poll-0B04-0505-0508-050B" }
+            "Poll 0B04": {
+                "use": "poll-0B04-0505-0508-050B"
+            }
         }
     }
 }

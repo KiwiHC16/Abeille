@@ -1,0 +1,160 @@
+{
+    "endPoints": {
+        "01": {
+            "servClusters": {
+                "0020": {
+                    "attributes": {
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        },
+                        "0000": {
+                            "dataType": "23",
+                            "value": 943718400
+                        },
+                        "0001": {
+                            "dataType": "23",
+                            "value": 1310720
+                        },
+                        "0002": {
+                            "dataType": "21",
+                            "value": 2
+                        },
+                        "0003": {
+                            "dataType": "21",
+                            "value": 40
+                        }
+                    }
+                },
+                "FC01": {
+                    "attributes": []
+                },
+                "0000": {
+                    "attributes": {
+                        "FFFD": {
+                            "value": 1
+                        },
+                        "0000": {
+                            "value": 2
+                        },
+                        "0001": {
+                            "value": 0
+                        },
+                        "0002": {
+                            "value": 66
+                        },
+                        "0003": {
+                            "value": 3
+                        },
+                        "0004": {
+                            "value": "Legrand"
+                        },
+                        "0005": {
+                            "value": "Doublegangsremoteswitch"
+                        },
+                        "0006": [],
+                        "0007": {
+                            "value": 3
+                        },
+                        "F000": {
+                            "value": 0
+                        },
+                        "0008": {
+                            "value": 0
+                        },
+                        "0009": {
+                            "value": 225
+                        },
+                        "000A": [],
+                        "000B": [],
+                        "4000": []
+                    }
+                },
+                "0003": {
+                    "attributes": {
+                        "0000": {
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "value": 1
+                        }
+                    }
+                },
+                "0001": {
+                    "attributes": {
+                        "0020": {
+                            "value": 29
+                        },
+                        "FFFD": {
+                            "value": 1
+                        }
+                    }
+                },
+                "000F": {
+                    "attributes": {
+                        "0051": [],
+                        "0055": [],
+                        "006F": [],
+                        "FFFD": []
+                    }
+                }
+            },
+            "cliClusters": {
+                "0006": {
+                    "attributes": {
+                        "FFFD": []
+                    }
+                },
+                "0008": {
+                    "attributes": {
+                        "FFFD": []
+                    }
+                },
+                "0019": {
+                    "attributes": {
+                        "0000": [],
+                        "0006": [],
+                        "0009": [],
+                        "FFFD": []
+                    }
+                },
+                "0003": {
+                    "attributes": {
+                        "FFFD": []
+                    }
+                },
+                "0000": {
+                    "attributes": {
+                        "FFFD": []
+                    }
+                },
+                "FC01": {
+                    "attributes": []
+                }
+            },
+            "status": "00"
+        },
+        "02": {
+            "status": "00",
+            "servClusters": {
+                "0003": {
+                    "attributes": []
+                },
+                "000F": {
+                    "attributes": []
+                }
+            },
+            "cliClusters": {
+                "0003": {
+                    "attributes": []
+                },
+                "0006": {
+                    "attributes": []
+                },
+                "0008": {
+                    "attributes": []
+                }
+            }
+        }
+    }
+}

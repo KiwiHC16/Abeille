@@ -55,19 +55,26 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Conso": {
-                "use": "conso"
+            "Active Power": {
+                "use": "inf_zbAttr-0B04-ActivePower",
+                "params": "mult=1&div=1",
+                "isHistorized": "1",
+                "isVisible": 1
             },
-            "Specific": {
-                "use": "Xiaomi-ff01"
+            "Voltage": {
+                "use": "inf_zbAttr-0B04-RMSVoltage",
+                "params": "mult=1&div=1",
+                "isVisible": 0
             },
-            "Puissance Inst": {
-                "use": "inf_zbAttr-000C-PresentValue",
-                "params": "ep=01",
-                "isHistorized": "1"
+            "Current": {
+                "use": "inf_zbAttr-0B04-RMSCurrent",
+                "params": "mult=1&div=1",
+                "isVisible": 1
             },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
+            "Total power": {
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "params": "mult=1&div=1",
+                "isVisible": 1
             }
         },
         "xiaomi": {
@@ -83,10 +90,26 @@
                         "info": "0006-02-0000",
                         "comment": "On/off state 2"
                     },
+                    "95-39": {
+                        "func": "number",
+                        "info": "0702-01-0000",
+                        "comment": "Total power"
+                    },
+                    "96-39": {
+                        "func": "numberDiv",
+                        "div": 10,
+                        "info": "0B04-01-0505",
+                        "comment": "Voltage"
+                    },
+                    "97-39": {
+                        "func": "number",
+                        "info": "0B04-01-0508",
+                        "comment": "Current"
+                    },
                     "98-39": {
                         "func": "number",
-                        "info": "000C-01-0055",
-                        "comment": "Power ?"
+                        "info": "0B04-01-050B",
+                        "comment": "Power"
                     }
                 }
             }

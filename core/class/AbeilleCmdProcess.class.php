@@ -4549,9 +4549,9 @@
                         $duration = isset($Command['duration']) ? $Command['duration'] : 10; // Default=10sec
 
                         cmdLog('debug', "    Start warning: Using mode=".$mode.", strobe=".$strobe.", slevel=".$sl.", duration=".$duration);
-                        // $map8 = ($mode << 4) | ($strobe << 2) | $sl;
-                        $map8 = ($mode << 0) | ($strobe << 4) | ($sl << 6);
+                        $map8 = ($mode << 4) | ($strobe << 2) | $sl;
                         $map8 = sprintf("%02X", $map8); // Convert to hex string
+                        cmdLog('debug', "   map8=".$map8);
                         $duration = sprintf("%04X", $duration); // Convert to hex string
                         $duration = AbeilleTools::reverseHex($duration);
                         $data2 = $fcf.$sqn.$cmdId.$map8.$duration."05"."03";

@@ -650,8 +650,12 @@
             topic = "Cmd"+logicalId+"_cmd-0502";
             ep = document.getElementById("idEp-SW").value;
             mode = document.getElementById("idMode-SW").value;
-            // Y = document.getElementById("idX-MTC").value;
-            payload = "ep="+ep+"_cmd=00_mode="+mode;
+            strobe = document.getElementById("idStrobe-SW").checked;
+            if (strobe)
+                strobe = 'on';
+            else
+                strobe = 'off';
+            payload = "ep="+ep+"_cmd=00_mode="+mode+"_strobe="+strobe;
         } else if (request == "1000-GetGroups") {
             topic = "Cmd"+logicalId+"_cmd-1000";
             ep = document.getElementById("idEpC1000-41").value;
@@ -667,6 +671,7 @@
             return;
         }
 
+        console.log("topic="+topic+", pl="+payload);
         var xhttp = new XMLHttpRequest();
         xhttp.open("GET", "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId="+js_queueXToCmd+"&topic="+topic+"&payload="+payload, false);
         xhttp.send();

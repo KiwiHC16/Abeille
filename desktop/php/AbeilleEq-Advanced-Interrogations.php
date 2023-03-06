@@ -271,9 +271,8 @@
             echo '<a class="btn btn-danger" onclick="interrogate(\'0502-StartWarning\', \''.$eqId.'\')">{{Appliquer}}</a>';
             addEpButton("idEp-SW", $mainEP);
             addWarningModesList("idMode-SW");
+            addCheckbox("idStrobe-SW", "Strobe");
         ?>
-        <!-- <input id="idX-MTC" title="{{X: format hex 4 car}}" placeholder="{{X}}" style="width:60px" />
-        <input id="idY-MTC" title="{{Y: format hex 4 car}}" placeholder="{{Y}}" style="width:60px" /> -->
     </div>
 </div>
 <div class="form-group">

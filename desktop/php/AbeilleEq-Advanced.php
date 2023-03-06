@@ -97,6 +97,11 @@
         echo '</select>';
     }
 
+    function addCheckbox($id, $title = '', $ph = '') {
+        // Note: CHECKED by default
+        echo '<input type="checkbox" id="'.$id.'" checked style="width:120px; margin-left: 8px" title="'.$title.'" placeholder="'.$ph.'"/>';
+    }
+
     function addJsUpdateFunction($eqId, $cmdLogicId, $spanId, $isInput = false) {
         echo "<script>";
         echo "jeedom.cmd.update['".getCmdIdByLogicId($eqId, $cmdLogicId)."'] = function(_options) {";

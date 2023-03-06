@@ -5,7 +5,7 @@ ChangeLog
 - Affichage groupes: Petite mise-à-jour.
 - Interne: Cmd: Correction 'cmd-0502'.
 - Interne: Parser: Msg 8095 désactivé pour support mode 'raw'.
-- Page avancé: Support préliminaire 'cluster 0502/IAS WD, cmd 00'.
+- Page avancé: Support 'cluster 0502/IAS WD, cmd 00/Start warning'.
 - Xiaomi Aqara 2 way control module: Mise-à-jour modèle (2551).
 
 230301-BETA-1

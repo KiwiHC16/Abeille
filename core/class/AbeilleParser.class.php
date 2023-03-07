@@ -1612,10 +1612,12 @@
             if ($single) {
                 $s = ($v >> 31) & 1; // Sign
                 $e = ($v >> 23) & 0xff; // Exponent, 8 bits
+                $bias = 127;
                 $m = ($v >> 0) & 0x7fffff; // Mantissa, 23 bits
             } else { // Double
                 $s = ($v >> 63) & 1; // Sign
                 $e = ($v >> 52) & 0x7ff; // Exponent, 11 bits
+                $bias = 1023;
                 $m = ($v >> 0) & 0xfffffffffffff; // Mantissa, 52 bits
             }
 
@@ -1626,9 +1628,7 @@
                 $s = -1;
             else
                 $s = 1;
-            $exp = $e - 127; // Exponent = – 126 to 127
-            $x = $m + (1 << 23);
-            return $s * $x * pow(2, $exp - 23);
+            return $s * (1 + $m) * pow(2, $e - $bias);
         }
 
         /* Convert hex string to proper data type.

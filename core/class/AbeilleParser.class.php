@@ -1596,11 +1596,39 @@
         //     return $num;
         // }
 
-        static function hexTo32Float($strHex) {
-            $v = hexdec($strHex);
-            $x = ($v & ((1 << 23) - 1)) + (1 << 23) * ($v >> 31 | 1);
-            $exp = ($v >> 23 & 0xFF) - 127;
-            return $x * pow(2, $exp - 23);
+        // static function hexTo32Float($strHex) {
+        //     $v = hexdec($strHex);
+        //     $x = ($v & ((1 << 23) - 1)) + (1 << 23) * ($v >> 31 | 1);
+        //     $exp = ($v >> 23 & 0xFF) - 127;
+        //     return $x * pow(2, $exp - 23);
+        // }
+
+        // Convert hex string to single or double precision
+        // Useful: https://www.h-schmidt.net/FloatConverter/IEEE754.html
+        // Useful: https://cs.lmu.edu/~ray/demos/ieee754.html
+        static function hexValueToFloat($valueHex, $single = true) {
+            $v = hexdec($valueHex);
+
+            if ($single) {
+                $s = ($v >> 31) & 1; // Sign
+                $e = ($v >> 23) & 0xff; // Exponent, 8 bits
+                $m = ($v >> 0) & 0x7fffff; // Mantissa, 23 bits
+            } else { // Double
+                $s = ($v >> 63) & 1; // Sign
+                $e = ($v >> 52) & 0x7ff; // Exponent, 11 bits
+                $m = ($v >> 0) & 0xfffffffffffff; // Mantissa, 52 bits
+            }
+
+            if (($e == 0) && ($m == 0)) // Zero coding ?
+                return 0;
+
+            if ($s)
+                $s = -1;
+            else
+                $s = 1;
+            $exp = $e - 127; // Exponent = – 126 to 127
+            $x = $m + (1 << 23);
+            return $s * $x * pow(2, $exp - 23);
         }
 
         /* Convert hex string to proper data type.
@@ -1656,6 +1684,7 @@
                 break;
             case "27": // Uint64
             case "2F": // Int64
+            case "3A": // Double precision
             case "F0": // IEEE addr
                 $dataSize = 8;
                 break;
@@ -1735,7 +1764,10 @@
                     $value -= 0x100000000;
                 break;
             case "39": // Single precision
-                $value =  AbeilleParser::hexTo32Float($hs);
+                $value =  AbeilleParser::hexValueToFloat($hs);
+                break;
+            case "3A": // Double precision
+                $value =  AbeilleParser::hexValueToFloat($hs, true);
                 break;
             case "41": // String discrete: octstr
             case "F0": // IEEE addr

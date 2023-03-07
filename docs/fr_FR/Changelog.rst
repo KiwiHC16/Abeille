@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: Décodage single/double precision revu.
+
 230306-BETA-1
 -------------
 

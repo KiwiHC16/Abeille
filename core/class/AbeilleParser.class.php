@@ -1607,28 +1607,14 @@
         // Useful: https://www.h-schmidt.net/FloatConverter/IEEE754.html
         // Useful: https://cs.lmu.edu/~ray/demos/ieee754.html
         static function hexValueToFloat($valueHex, $single = true) {
-            $v = hexdec($valueHex);
-
-            if ($single) {
-                $s = ($v >> 31) & 1; // Sign
-                $e = ($v >> 23) & 0xff; // Exponent, 8 bits
-                $bias = 127;
-                $m = ($v >> 0) & 0x7fffff; // Mantissa, 23 bits
-            } else { // Double
-                $s = ($v >> 63) & 1; // Sign
-                $e = ($v >> 52) & 0x7ff; // Exponent, 11 bits
-                $bias = 1023;
-                $m = ($v >> 0) & 0xfffffffffffff; // Mantissa, 52 bits
-            }
-
-            if (($e == 0) && ($m == 0)) // Zero coding ?
-                return 0;
-
-            if ($s)
-                $s = -1;
+            // Don't try to use own function. Better to use PHP implementation for efficiency
+            $v = pack('H*', $valueHex);
+            if ($single)
+                $val = unpack('G', $v);
             else
-                $s = 1;
-            return $s * (1 + $m) * pow(2, $e - $bias);
+                $val = unpack('E', $v);
+
+            return $val[1];
         }
 
         /* Convert hex string to proper data type.

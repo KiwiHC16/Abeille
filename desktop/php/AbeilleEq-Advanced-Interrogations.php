@@ -272,6 +272,7 @@
             addEpButton("idEp-SW", $mainEP);
             addWarningModesList("idMode-SW");
             addCheckbox("idStrobe-SW", "Strobe");
+            addInput("idDuration-SW", "Duration in sec", "Duration");
         ?>
     </div>
 </div>

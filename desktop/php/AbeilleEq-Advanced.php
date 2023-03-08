@@ -102,6 +102,10 @@
         echo '<input type="checkbox" id="'.$id.'" checked style="width:120px; margin-left: 8px" title="'.$title.'" placeholder="'.$ph.'"/>';
     }
 
+    function addInput($id, $title = '', $ph = '') {
+        echo '<input id="'.$id.'" title="'.$title.'" placeholder="'.$ph.'" style="width:60px" />';
+    }
+
     function addJsUpdateFunction($eqId, $cmdLogicId, $spanId, $isInput = false) {
         echo "<script>";
         echo "jeedom.cmd.update['".getCmdIdByLogicId($eqId, $cmdLogicId)."'] = function(_options) {";

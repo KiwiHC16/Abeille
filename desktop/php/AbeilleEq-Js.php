@@ -655,7 +655,10 @@
                 strobe = 'on';
             else
                 strobe = 'off';
+            duration = document.getElementById("idDuration-SW").value;
             payload = "ep="+ep+"_cmd=00_mode="+mode+"_strobe="+strobe;
+            if (duration != '')
+                payload += "_duration="+duration;
         } else if (request == "1000-GetGroups") {
             topic = "Cmd"+logicalId+"_cmd-1000";
             ep = document.getElementById("idEpC1000-41").value;

@@ -4,6 +4,7 @@ ChangeLog
 - Interne: Parser: Décodage single/double precision revu.
 - WarningDevice: Modèle supprimé. Supporté via 'WarningDevice-EF-3.0'.
 - Interne: AbeilleTools: Suppression des 'commentX'.
+- Page avancé: Cluster 0502/IAS WD, cmd 00/Start warning: Ajout 'duration'.
 
 230306-BETA-1
 -------------

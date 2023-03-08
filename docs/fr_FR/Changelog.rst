@@ -3,6 +3,7 @@ ChangeLog
 
 - Interne: Parser: Décodage single/double precision revu.
 - WarningDevice: Modèle supprimé. Supporté via 'WarningDevice-EF-3.0'.
+- Interne: AbeilleTools: Suppression des 'commentX'.
 
 230306-BETA-1
 -------------

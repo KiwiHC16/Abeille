@@ -324,6 +324,15 @@
                 unset($cmd[$cmdFName]);
             }
 
+            // Removing any 'commentX'
+            foreach ($cmd as $cmd1Key => $cmd1) {
+                foreach ($cmd[$cmd1Key] as $cmd2Key => $cmd2) {
+                    if (substr($cmd2Key, 0, 7) == 'comment') {
+                        unset($cmd[$cmd1Key][$cmd2Key]);
+                    }
+                }
+            }
+
             return $cmd;
         }
 

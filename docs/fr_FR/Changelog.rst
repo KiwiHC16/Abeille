@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Xiaomi Aqara 2 way control module: Mise-à-jour modèle (2551).
+- Page avancé/Mise-à-jour: Amélioration correction icone si invalide.
 
 230308-BETA-1
 -------------

@@ -2768,15 +2768,23 @@ class Abeille extends eqLogic {
             $eqLogic->setConfiguration('ab::signature', $sig);
         }
 
-        // Update only if new device (missing info) or reinit
+        // Icon updated if no-longer-exists/reset/undefined/defaultUnknown
         $curIcon = $eqLogic->getConfiguration('ab::icon', '');
-        if (($action == 'reset') || ($curIcon == '')) {
+        if ($curIcon != '') {
+            $iconPath = __DIR__.'/../../images/node_'.$curIcon.'.png';
+            $iconExists = file_exists($iconPath);
+        } else
+            $iconExists = false;
+        log::add('Abeille', 'debug', 'LA iconExists='.$iconExists.', path='.$iconPath);
+        if (!$iconExists || ($action == 'reset') || ($curIcon == '') || ($curIcon == 'defaultUnknown')) {
             if (isset($modelConf["icon"]))
                 $icon = $modelConf["icon"];
             else
                 $icon = '';
             $eqLogic->setConfiguration('ab::icon', $icon);
         }
+
+        // Update only if new device (missing info) or reinit
         $curTimeout = $eqLogic->getTimeout(null);
         if (($action == 'reset') || ($curTimeout === null)) {
             if (isset($model["timeout"]))

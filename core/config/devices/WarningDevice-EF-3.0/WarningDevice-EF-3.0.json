@@ -7,7 +7,8 @@
         },
         "manufacturer": "Heiman",
         "model": "HS2WD",
-        "type": "Heiman HS2WD warning device",
+        "type": "Heiman warning device",
+        "genericType": "Security",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -17,8 +18,12 @@
             "automatism": "1"
         },
         "commands": {
-            "ZCL Version": {
-                "use": "inf_zbAttr-0000-ZCLVersion"
+            "SWBuildID": {
+                "use": "inf_zbAttr-0000-SWBuildID"
+            },
+            "Get-SWBuildID": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
             },
             "Identify": {
                 "use": "Identify",
@@ -48,26 +53,19 @@
             "FlashSound": {
                 "use": "writeAttributeRequestIAS_WD_FlashSound"
             },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
-            "Test SOUND & FLASH": {
+            "Test": {
                 "use": "act_zbCmdG-0502-StartWarning",
                 "params": "ep=01&mode=burglar",
-                "isVisible": "1"
-            },
-            "Test SOUND only": {
-                "use": "act_zbCmdG-0502-StartWarning",
-                "params": "ep=01&mode=burglar&strobe=off",
                 "isVisible": "1"
             },
             "Test FLASH only": {
                 "use": "act_zbCmdG-0502-StartWarning",
                 "params": "ep=01&mode=stop&strobe=on",
+                "isVisible": "1"
+            },
+            "Stop": {
+                "use": "act_zbCmdG-0502-StartWarning",
+                "params": "ep=01&mode=stop&strobe=off",
                 "isVisible": "1"
             }
         }

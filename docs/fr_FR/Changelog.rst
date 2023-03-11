@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230311-BETA-1
+-------------
+
 - Xiaomi Aqara 2 way control module: Mise-à-jour modèle (2551).
 - Page avancé/Mise-à-jour: Amélioration correction icone si invalide.
 - Sirène M0L0-HS2WD-TY: Mise-à-jour modèle (2550).

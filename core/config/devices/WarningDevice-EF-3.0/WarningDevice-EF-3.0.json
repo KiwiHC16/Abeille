@@ -3,7 +3,10 @@
         "alternateIds": {
             "WarningDevice": [],
             "SRHMP-I1": [],
-            "TS0216__TYZB01_8scntis1": []
+            "TS0216__TYZB01_8scntis1": {
+                "manufacturer": "M0L0",
+                "model": "M0L0-HS2WD-TY"
+            }
         },
         "manufacturer": "Heiman",
         "model": "HS2WD",

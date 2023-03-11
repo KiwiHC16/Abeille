@@ -5,7 +5,8 @@
             "SRHMP-I1": [],
             "TS0216__TYZB01_8scntis1": {
                 "manufacturer": "M0L0",
-                "model": "M0L0-HS2WD-TY"
+                "model": "HS2WD-TY",
+                "type": "M0L0 smart indoor siren"
             }
         },
         "manufacturer": "Heiman",
@@ -15,7 +16,7 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "HS2WD"
+            "icon": "Heiman-IndoorSiren"
         },
         "category": {
             "automatism": "1"

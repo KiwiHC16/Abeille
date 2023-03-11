@@ -567,6 +567,8 @@
                     "GL-S-004Z" => "Gledopto-BulbGU10",
                     "GLEDOPTO" => "Gledopto-BulbGU10",
 
+                    "HS2WD" => "Heinman-IndoorSiren",
+
                     "Ikea-GU10" => "Ikea-BulbGU10",
                     "Ikea-E27" => "Ikea-BulbE27",
                     "IkeaTradfriBulbE27Opal1000lm" => "Ikea-BulbE27",

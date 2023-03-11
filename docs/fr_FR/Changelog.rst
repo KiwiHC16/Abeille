@@ -5,6 +5,7 @@ ChangeLog
 - Page avancé/Mise-à-jour: Amélioration correction icone si invalide.
 - Sirène M0L0-HS2WD-TY: Mise-à-jour modèle (2550).
 - Interne: parser: correction crash decode8002_MgmtRtgRsp().
+- Image: Renommage 'HS2WD' => 'Heinman-IndoorSiren'.
 
 230308-BETA-1
 -------------

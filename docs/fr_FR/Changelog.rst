@@ -4,6 +4,7 @@ ChangeLog
 - Xiaomi Aqara 2 way control module: Mise-à-jour modèle (2551).
 - Page avancé/Mise-à-jour: Amélioration correction icone si invalide.
 - Sirène M0L0-HS2WD-TY: Mise-à-jour modèle (2550).
+- Interne: parser: correction crash decode8002_MgmtRtgRsp().
 
 230308-BETA-1
 -------------

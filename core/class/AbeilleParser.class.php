@@ -2541,7 +2541,7 @@
             $tableListCount = hexdec(substr($pl, 8, 2));
 
             // Duplicated message ?
-            if ($this->isDuplicated($net, $srcAddr, $sqn))
+            if ($this->isDuplicated($net, $srcAddr, '', $sqn))
                 return;
 
             $m = '  Routing table response'

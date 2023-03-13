@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Loratap shutter: Nouveau modele: TS130F, _TZ3000_femsaaua (2552)
+
 230311-BETA-1
 -------------
 

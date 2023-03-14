@@ -4516,7 +4516,7 @@
                     $fcf        = "11"; // Frame Control Field
                     $sqn        = $this->genSqn();
 
-                    // Use case = #2242
+                    // Use cases: #2242, #2550
                     $cmdId      = $Command['cmd'];
                     if ($cmdId == "00") { // Start warning
                         $mode = isset($Command['mode']) ? $Command['mode'] : 'emergency'; // Warning mode: Emergency

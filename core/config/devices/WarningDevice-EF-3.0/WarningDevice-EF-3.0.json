@@ -41,12 +41,13 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "SIREN and FLASH": {
+            "SIREN": {
                 "use": "act_zbCmdG-0502-StartWarning",
                 "params": "ep=01&mode=burglar&sirenl=#slider#",
                 "subType": "slider",
                 "minValue": 0,
                 "maxValue": 3,
+                "comment": "slider to select siren level from 0 to 3",
                 "isVisible": "1"
             },
             "FLASH only": {

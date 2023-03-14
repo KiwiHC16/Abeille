@@ -4481,7 +4481,7 @@
                 //      'mode' (string, 'stop'/'burglar'/'fire'/'emergency' (default)/'policepanic'/'firepanic'/'emergencypanic')
                 //      'strobe' (string, 'on'/'off', default=depends on 'mode')
                 //      'duration' (number, in sec, default=10sec)
-                //      'sirenl' (siren level: 'low', 'medium', 'high' (default), 'veryhigh')
+                //      'sirenl' (siren level: 'low', 'medium', 'high' (default), 'veryhigh'). Note: '0' to '3' accepted too.
                 else if ($cmdName == 'cmd-0502') {
                     $required = ['addr', 'ep', 'cmd']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))

@@ -22,13 +22,6 @@
             "automatism": "1"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "Identify": {
                 "use": "Identify",
                 "isVisible": 1
@@ -48,21 +41,15 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "Flash": {
-                "use": "writeAttributeRequestIAS_WD_Flash"
-            },
-            "Sound": {
-                "use": "writeAttributeRequestIAS_WD_Sound"
-            },
-            "FlashSound": {
-                "use": "writeAttributeRequestIAS_WD_FlashSound"
-            },
-            "Test": {
+            "SIREN and FLASH": {
                 "use": "act_zbCmdG-0502-StartWarning",
-                "params": "ep=01&mode=burglar",
+                "params": "ep=01&mode=burglar&sirenl=#slider#",
+                "subType": "slider",
+                "minValue": 0,
+                "maxValue": 3,
                 "isVisible": "1"
             },
-            "Test FLASH only": {
+            "FLASH only": {
                 "use": "act_zbCmdG-0502-StartWarning",
                 "params": "ep=01&mode=stop&strobe=on",
                 "isVisible": "1"

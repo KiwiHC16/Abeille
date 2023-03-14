@@ -4478,9 +4478,10 @@
                 // ZCL cluster 0502/IAS Warning Device commands
                 // Mantatory params: 'addr', 'ep', 'cmd' (00 or 01)
                 // Optional params for cmd 00:
-                //      'mode' (string, 'stop'/'burglar'/'fire'/'emergency'/'policepanic'/'firepanic'/'emergencypanic')
+                //      'mode' (string, 'stop'/'burglar'/'fire'/'emergency' (default)/'policepanic'/'firepanic'/'emergencypanic')
                 //      'strobe' (string, 'on'/'off', default=depends on 'mode')
                 //      'duration' (number, in sec, default=10sec)
+                //      'sirenl' (siren level: 'low', 'medium', 'high' (default), 'veryhigh')
                 else if ($cmdName == 'cmd-0502') {
                     $required = ['addr', 'ep', 'cmd']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
@@ -4545,13 +4546,33 @@
                             else
                                 $strobe = 1; // Strobe ON
                         }
-                        $sl = 3; // Siren level = max
+                        $sirenl = isset($Command['sirenl']) ? $Command['sirenl'] : 'high'; // Siren level
+                        $sirenl = strtolower($sirenl);
+                        switch ($sirenl) {
+                        case 'low':
+                        case '0':
+                            $sirenl = 0;
+                            break;
+                        case 'medium':
+                        case '1':
+                            $sirenl = 1;
+                            break;
+                        case 'veryhigh':
+                        case '3':
+                            $sirenl = 3;
+                            break;
+                        case 'high':
+                        case '2':
+                        default:
+                            $sirenl = 2;
+                            break;
+                        }
                         $duration = isset($Command['duration']) ? $Command['duration'] : 10; // Default=10sec
 
-                        cmdLog('debug', "    Start warning: Using mode=".$mode.", strobe=".$strobe.", slevel=".$sl.", duration=".$duration);
-                        $map8 = ($mode << 4) | ($strobe << 2) | $sl;
+                        cmdLog('debug', "    Start warning: Using mode=".$mode.", strobe=".$strobe.", sirenl=".$sirenl.", duration=".$duration);
+                        $map8 = ($mode << 4) | ($strobe << 2) | $sirenl;
                         $map8 = sprintf("%02X", $map8); // Convert to hex string
-                        cmdLog('debug', "   map8=".$map8);
+                        // cmdLog('debug', "   map8=".$map8);
                         $duration = sprintf("%04X", $duration); // Convert to hex string
                         $duration = AbeilleTools::reverseHex($duration);
                         $data2 = $fcf.$sqn.$cmdId.$map8.$duration."05"."03";
@@ -4565,7 +4586,7 @@
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     return;
-                }
+                } // End $cmdName == 'cmd-0502'
 
                 // ZCL cluster 1000 specific: (received) commands
                 else if ($cmdName == 'cmd-1000') {

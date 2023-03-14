@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Loratap shutter: Nouveau modele: TS130F, _TZ3000_femsaaua (2552)
+- MOES ZK-FR16M-WH: Mise-à-jour modèle 'TS011F__TZ3000_cphmq0q7' (2554).
 
 230311-BETA-1
 -------------

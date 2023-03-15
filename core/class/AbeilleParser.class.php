@@ -3852,12 +3852,9 @@
                             return;
                         }
 
-                        $unknown = $this->deviceUpdates($dest, $srcAddr, $srcEp);
-                        if ($unknown)
-                            return; // So far unknown to Jeedom
-
                         $attrId = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
                         $eq = getDevice($dest, $srcAddr); // Corresponding device
+                        $updates = [];
 
                         if ($manufCode == '115F') { // Xiaomi specific
                             // New code
@@ -3908,6 +3905,8 @@
                                         $attr['value'] = $this->cleanManufId($attr['value']);
                                         $attr['comment'] = "cleaned manuf";
                                     }
+                                    if (($attr == '0004') || ($attr == '0005') || ($attr == '0010'))
+                                        $updates[$clustId.'-'.$attrId] = $attr['value'];
                                 }
 
                                 // Log
@@ -3958,6 +3957,10 @@
                                 );
                             }
                         }
+
+                        $unknown = $this->deviceUpdates($dest, $srcAddr, $srcEp, $updates);
+                        if ($unknown)
+                            return; // So far unknown to Jeedom
                     } // End 'Report attributes'
 
                     else if ($cmd == "0B") { // Default Response

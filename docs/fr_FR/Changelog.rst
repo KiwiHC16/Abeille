@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: Correction regression inclusion.
+
 230314-BETA-1
 -------------
 

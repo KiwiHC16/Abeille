@@ -142,10 +142,10 @@ class Abeille extends eqLogic {
     //  * @return              Does not return anything as all action are triggered by sending messages in queues
     //  */
     // public static function getIEEE($address) {
-    //     if (strlen(self::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none')) == 16) {
-    //         return self::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none');
+    //     if (strlen(eqLogic::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none')) == 16) {
+    //         return eqLogic::byLogicalId($address, 'Abeille')->getConfiguration('IEEE', 'none');
     //     } else {
-    //         return AbeilleCmd::byEqLogicIdAndLogicalId(self::byLogicalId($address, 'Abeille')->getId(), 'IEEE-Addr')->execCmd();
+    //         return AbeilleCmd::byEqLogicIdAndLogicalId(eqLogic::byLogicalId($address, 'Abeille')->getId(), 'IEEE-Addr')->execCmd();
     //     }
     // }
 
@@ -1445,7 +1445,7 @@ class Abeille extends eqLogic {
 
         /*-----------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
         // Cherche l objet par sa ref short Address et la commande
-        $eqLogic = self::byLogicalId($nodeid, 'Abeille');
+        $eqLogic = eqLogic::byLogicalId($nodeid, 'Abeille');
         if (is_object($eqLogic)) {
             $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $cmdId);
         }
@@ -1462,7 +1462,7 @@ class Abeille extends eqLogic {
         //     log::add('Abeille', 'debug', 'message(), !objet & IEEE: Trouvé='.$ShortFound);
         //     if ((strlen($ShortFound) == 4) && ($addr != "0000")) {
 
-        //         $eqLogic = self::byLogicalId($dest."/".$ShortFound, 'Abeille');
+        //         $eqLogic = eqLogic::byLogicalId($dest."/".$ShortFound, 'Abeille');
         //         if (!is_object($eqLogic)) {
         //             log::add('Abeille', 'debug', 'message(), !objet & IEEE: L\'équipement ne semble pas sur la bonne zigate. Abeille ne fait rien automatiquement. L\'utilisateur doit résoudre la situation.');
         //             return;
@@ -1704,6 +1704,8 @@ class Abeille extends eqLogic {
             $addr = $msg['addr'];
         if (isset($msg['ep']))
             $ep = $msg['ep'];
+        else
+            $ep = '';
 
         /* Parser has found a new device. Basic Jeedom entry to be created. */
         if ($msg['type'] == "newDevice") {
@@ -1716,21 +1718,23 @@ class Abeille extends eqLogic {
 
         /* Parser has found device infos to update. */
         if ($msg['type'] == "deviceUpdates") {
-            log::add('Abeille', 'debug', "msgFromParser(): ".$net.'/'.$addr.", Device updates, ".json_encode($msg));
+            log::add('Abeille', 'debug', "msgFromParser(): ".$net.'/'.$addr.'/'.$ep.", Device updates, ".json_encode($msg, JSON_UNESCAPED_SLASHES));
 
-            $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
+            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             $eqChanged = false;
             foreach ($msg['updates'] as $updKey => $updVal) {
                 if ($updKey == 'ieee') {
                     if (!is_object($eqLogic)) {
-                        $all = self::byType('Abeille');
+                        $all = eqLogic::byType('Abeille');
                         foreach ($all as $eqLogic) {
                             $ieee2 = $eqLogic->getConfiguration('IEEE', '');
                             if ($ieee2 != $updVal)
                                 continue;
                             $eqLogic->setLogicalId($net.'/'.$addr);
                             log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'addr' updated to ".$addr);
+                            $eqLogic->setIsEnable(1);
                             $eqChanged = true;
+                            break;
                         }
                     }
                 } else if ($updKey == 'macCapa') {
@@ -1804,7 +1808,7 @@ class Abeille extends eqLogic {
 
             $ieee = $msg['ieee'];
 
-            $eqLogic = self::byLogicalId($logicalId, 'Abeille');
+            $eqLogic = eqLogic::byLogicalId($logicalId, 'Abeille');
             if (!is_object($eqLogic)) {
                 /* Unknown device with net/addr logicalId.
                    Probably due to addr change on 'dev announce'. Looking for EQ based on its IEEE address */
@@ -1846,7 +1850,7 @@ class Abeille extends eqLogic {
             );
             Abeille::createDevice("update", $dev);
 
-            $eqLogic = self::byLogicalId($logicalId, 'Abeille');
+            $eqLogic = eqLogic::byLogicalId($logicalId, 'Abeille');
             $eqId = $eqLogic->getId();
 
             // /* MAC capa from 004D/Device announce message */
@@ -2000,7 +2004,7 @@ class Abeille extends eqLogic {
             else
                 log::add('Abeille', 'debug', "msgFromParser(): Read attributes response by name from '".$net."/".$addr."/".$ep);
 
-            $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
+            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!is_object($eqLogic)) {
                 log::add('Abeille', 'debug', "  Unknown device '".$net."/".$addr."'");
                 return; // Unknown device
@@ -2048,7 +2052,7 @@ class Abeille extends eqLogic {
             ); */
 
             log::add('Abeille', 'debug', "msgFromParser(): ".$net.", Zigate version ".$msg['major']."-".$msg['minor']);
-            $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
+            $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
                 log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
                 return;
@@ -2085,7 +2089,7 @@ class Abeille extends eqLogic {
             Abeille::updateTimestamp($eqLogic, $msg['time']);
 
             return;
-        }
+        } // End 'zigateVersion'
 
         /* Zigate time (8017 response) */
         if ($msg['type'] == "zigateTime") {
@@ -2098,7 +2102,7 @@ class Abeille extends eqLogic {
              */
 
             log::add('Abeille', 'debug', "msgFromParser(): ".$net.", Zigate timeServer ".$msg['time']);
-            $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
+            $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
                 log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
                 return;
@@ -2110,7 +2114,7 @@ class Abeille extends eqLogic {
             Abeille::updateTimestamp($eqLogic, $msg['time']);
 
             return;
-        }
+        } // End 'zigateTime'
 
         /* Zigate TX power (8806/8807 responses) */
         if ($msg['type'] == "zigatePower") {
@@ -2123,7 +2127,7 @@ class Abeille extends eqLogic {
              */
 
             log::add('Abeille', 'debug', "msgFromParser(): ".$net.", Zigate power ".$msg['power']);
-            $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
+            $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
                 log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
                 return;
@@ -2135,7 +2139,7 @@ class Abeille extends eqLogic {
             Abeille::updateTimestamp($eqLogic, $msg['time']);
 
             return;
-        }
+        } // End 'zigatePower'
 
         /* Network state (8009 response) */
         if ($msg['type'] == "networkState") {
@@ -2156,7 +2160,7 @@ class Abeille extends eqLogic {
 
             Abeille::checkZgIeee($net, $msg['ieee']);
 
-            $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
+            $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
                 log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
                 return;
@@ -2186,7 +2190,7 @@ class Abeille extends eqLogic {
             Abeille::updateTimestamp($eqLogic, $msg['time']);
 
             return;
-        }
+        } // End 'networkState'
 
         /* Network started (8024 response) */
         if ($msg['type'] == "networkStarted") {
@@ -2207,7 +2211,7 @@ class Abeille extends eqLogic {
 
             Abeille::checkZgIeee($net, $msg['ieee']);
 
-            $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
+            $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
                 log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
                 return;
@@ -2228,7 +2232,7 @@ class Abeille extends eqLogic {
             Abeille::updateTimestamp($eqLogic, $msg['time']);
 
             return;
-        }
+        } // End 'networkStarted'
 
         /* Permit join status (8014 response) */
         if ($msg['type'] == "permitJoin") {
@@ -2241,7 +2245,7 @@ class Abeille extends eqLogic {
             ); */
 
             log::add('Abeille', 'debug', "msgFromParser(): ".$net.", permit join, status=".$msg['status']);
-            $eqLogic = self::byLogicalId($net."/0000", 'Abeille');
+            $eqLogic = eqLogic::byLogicalId($net."/0000", 'Abeille');
             if (!is_object($eqLogic)) {
                 log::add('Abeille', 'debug', "  ERROR: No zigate for network ".$net);
                 return;
@@ -2253,7 +2257,7 @@ class Abeille extends eqLogic {
             Abeille::updateTimestamp($eqLogic, $msg['time']);
 
             return;
-        }
+        } // End 'permitJoin'
 
         /* Bind response (8030 response) */
         if ($msg['type'] == "bindResponse") {
@@ -2266,12 +2270,12 @@ class Abeille extends eqLogic {
             // 'lqi' => $lqi,
             log::add('Abeille', 'debug', "msgFromParser(): ".$net."/".$addr.", Bind response, status=".$msg['status']);
 
-            $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
+            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if ($eqLogic)
                 Abeille::updateTimestamp($eqLogic, $msg['time'], $msg['lqi']);
 
             return;
-        }
+        } // End 'bindResponse'
 
         /* IEEE address response (8041 response) */
         if ($msg['type'] == "ieeeAddrResponse") {
@@ -2283,7 +2287,7 @@ class Abeille extends eqLogic {
             // 'lqi' => $lqi,
             log::add('Abeille', 'debug', "msgFromParser(): ".$net."/".$addr.", IEEE addr response, ieee=".$msg['ieee']);
 
-            $eqLogic = self::byLogicalId($net.'/'.$addr, 'Abeille');
+            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (!$eqLogic) {
                 log::add('Abeille', 'debug', "  WARNING: Unknown device");
                 return;
@@ -2309,14 +2313,14 @@ class Abeille extends eqLogic {
             // 'net' => $dest,
             // 'addr' => $srcAddr,
             // 'ep' => $srcEp,
-            // 'group' => $grp
+            // 'groups' => $grp
             // 'time' => time(),
             // 'lqi' => $lqi
-            log::add('Abeille', 'debug', "msgFromParser(): ".$net."/".$addr."/".$ep.", ".$msg['type'].", group=".$msg['group']);
+            log::add('Abeille', 'debug', "msgFromParser(): ".$net."/".$addr."/".$ep.", ".$msg['type'].", groups=".$msg['groups']);
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
-            if (!$eqLogic) {
-                log::add('Abeille', 'debug', "  WARNING: Unknown device");
-                return;
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'debug', "  Unknown device '".$net."/".$addr."'");
+                return; // Unknown device
             }
 
             $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
@@ -2327,16 +2331,16 @@ class Abeille extends eqLogic {
                 $newZigbee['groups'][$ep] = '';
             $groups = $newZigbee['groups'][$ep];
             if ($msg['type'] == 'getGroupMembershipResponse') {
-                $groups = $msg['group'];
+                $groups = $msg['groups'];
             } else if ($msg['type'] == 'addGroupResponse') {
                 if ($groups == '')
-                    $groups = $msg['group'];
+                    $groups = $msg['groups'];
                 else
-                    $groups .= '/'.$msg['group'];
-            } else {
+                    $groups .= '/'.$msg['groups'];
+            } else { // removeGroupResponse
                 $groupsArr = explode("/", $groups);
                 foreach ($groupsArr as $gIdx => $g) {
-                    if ($g == $msg['group'])
+                    if ($g == $msg['groups'])
                         unset($groupsArr[$gIdx]);
                 }
                 $groups = implode("/", $groupsArr);
@@ -2440,7 +2444,7 @@ class Abeille extends eqLogic {
 
     // Beehive creation/update function. Called on daemon startup or new beehive creation.
     public static function createRuche($dest) {
-        $eqLogic = self::byLogicalId($dest."/0000", 'Abeille');
+        $eqLogic = eqLogic::byLogicalId($dest."/0000", 'Abeille');
         if (!is_object($eqLogic)) {
             message::add("Abeille", "Création de l'équipement 'Ruche' en cours. Rafraichissez votre dashboard dans qq secondes.", '');
             log::add('Abeille', 'info', 'Ruche: Création de '.$dest."/0000");
@@ -2658,7 +2662,7 @@ class Abeille extends eqLogic {
         }
 
         $eqLogicId = $dev['net'].'/'.$dev['addr'];
-        $eqLogic = self::byLogicalId($eqLogicId, 'Abeille');
+        $eqLogic = eqLogic::byLogicalId($eqLogicId, 'Abeille');
         if (!is_object($eqLogic)) {
             $newEq = true;
 

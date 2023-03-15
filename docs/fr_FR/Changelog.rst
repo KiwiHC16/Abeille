@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Interne: Parser: Correction regression inclusion.
+- Interne: Plusieurs correctifs 'deviceUpdates'.
 
 230314-BETA-1
 -------------

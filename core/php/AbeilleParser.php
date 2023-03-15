@@ -241,7 +241,7 @@
 
                 // Informing Abeille about short addr change
                 $msg = array(
-                    'type' => 'updateDevice',
+                    'type' => 'deviceUpdates',
                     'net' => $net,
                     'addr' => $addr,
                     'updates' => array(

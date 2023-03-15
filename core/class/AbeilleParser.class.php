@@ -843,7 +843,7 @@
                         $eq['groups'] = [];
                     if (!isset($eq['groups'][$ep])) {
                         $eq['groups'][$ep] = $value;
-                        // getGroupMembership alsp sent to Abeille
+                        // getGroupMembership also sent to Abeille
                     }
                 } else if ($updType == 'macCapa') { // MAC capa flags
                     if (!isset($eq['macCapa']) || ($eq['macCapa'] != $value)) {
@@ -887,7 +887,7 @@
             } // End foreach($updates)
 
             if ($updates != [])
-                parserLog('debug', '  Updated eq='.json_encode($eq));
+                parserLog('debug', '  Updated eq='.json_encode($eq, JSON_UNESCAPED_SLASHES));
 
             // Any new info for Abeille.class ?
             if (count($abUpdates) != 0) {
@@ -895,6 +895,7 @@
                     'type' => 'deviceUpdates',
                     'net' => $net,
                     'addr' => $addr,
+                    'ep' => $ep,
                     'updates' => $abUpdates
                 );
                 msgToAbeille2($msg);
@@ -937,74 +938,38 @@
             // Endpoints list is available
 
             // What about server clusters & groups ?
-            foreach ($eq['endPoints'] as $epId => $ep) {
-                if (!isset($ep['servClusters'])) {
-                    parserLog('debug', '  Requesting simple descriptor for EP '.$epId);
-                    $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getSimpleDescriptor", "ep=".$epId);
-                } else if (strpos($ep['servClusters'], '0004')) {
-                    if (!isset($eq['groups']) || !isset($eq['groups'][$epId])) {
-                        parserLog('debug', '  Requesting groups membership for EP '.$epId);
-                        $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getGroupMembership", "ep=".$epId);
+            foreach ($eq['endPoints'] as $epId2 => $ep2) {
+                if (!isset($ep2['servClusters'])) {
+                    parserLog('debug', '  Requesting simple descriptor for EP '.$epId2);
+                    $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getSimpleDescriptor", "ep=".$epId2);
+                    break; // To reduce requests on first missing descriptor
+                } else if (strpos($ep2['servClusters'], '0004')) {
+                    if (isset($ep2['groups']))
+                        parserLog('debug', '  Groups='.json_encode($ep2['groups']));
+                    if (!isset($eq['groups']) || !isset($eq['groups'][$epId2])) {
+                        parserLog('debug', '  Requesting groups membership for EP '.$epId2);
+                        $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getGroupMembership", "ep=".$epId2);
+                        break; // To reduce requests on first missing groups membership
                     }
                 }
             }
 
+            // TODO: Do not request modelId/manuf.. if there is no cluster 0000 server
+
             // IEEE & EP list are available. Any missing info to identify device ?
             if (($eq['modelId'] === null) || ($eq['manufId'] === null) || ($eq['location'] === null)) {
-                // // Note: Grouped requests to improve efficiency
-                // $missing = '';
-                // $missingTxt = '';
-                // if (($eq['modelId'] !== false) && ($eq['manufId'] === null)) {
-                //     $missing = '0004';
-                //     $missingTxt = 'manufId';
-                //     // $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
-                // }
-                // if ($eq['modelId'] === null) {
-                //     if ($missing != '') {
-                //         $missing .= ',';
-                //         $missingTxt .= '/';
-                //     }
-                //     $missing .= '0005';
-                //     $missingTxt .= 'modelId';
-                //     // $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
-                // }
-                // /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
-                // if ((($eq['modelId'] === null) || ($eq['modelId'] === false)) && ($eq['location'] === null)) {
-                //     if ($missing != '') {
-                //         $missing .= ',';
-                //         $missingTxt .= '/';
-                //     }
-                //     $missing .= '0010';
-                //     $missingTxt .= 'location';
-                //     // $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
-                // }
-                // if ($missing != '') {
-                //     parserLog('debug', '  Requesting '.$missingTxt.' from EP '.$eq['epFirst']);
-                //     $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=".$missing);
-
-                //     // jbromain: we check if EP '01' exists BUT is not the first EP
-                //     // If so, we will request model and/or manufacturer from both EPs (the first one AND 01)
-                //     // Use case: Sonoff smart plug S26R2ZB (several EPs but the first one does not support model nor manufacturer)
-                //     // TODO We should maybe query ALL end points ? For now I try to limit requests
-                //     $epArr = explode('/', $eq['epList']);
-                //     if ($eq['epFirst'] != '01' && in_array('01', $epArr)) {
-                //         parserLog('debug', '  Requesting '.$missingTxt.' from EP 01 too (not the first but exists)');
-                //         $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=01&clustId=0000&attrId=".$missing);
-                //     }
-                // }
-
                 // Interrogating all EP
                 // Note: in most of the cases interrogating either first EP or EP 01 is ok but sometimes
                 //   the device does not support cluster 0000 in these cases.
                 //   Ex: Sonoff smart plug S26R2ZB (several EPs but the first one does not support modelId nor manufId)
-                foreach ($eq['endPoints'] as $epId => $ep) {
+                foreach ($eq['endPoints'] as $epId2 => $ep2) {
                     $missing = '';
                     $missingTxt = '';
-                    if ((!isset($ep['modelId']) || ($ep['modelId'] !== false)) && !isset($ep['manufId'])) {
+                    if ((!isset($ep2['modelId']) || ($ep2['modelId'] !== false)) && !isset($ep2['manufId'])) {
                         $missing = '0004';
                         $missingTxt = 'manufId';
                     }
-                    if (!isset($ep['modelId']) || ($ep['modelId'] === null)) {
+                    if (!isset($ep2['modelId']) || ($ep2['modelId'] === null)) {
                         if ($missing != '') {
                             $missing .= ',';
                             $missingTxt .= '/';
@@ -1013,7 +978,7 @@
                         $missingTxt .= 'modelId';
                     }
                     /* Location might be required (ex: First Profalux Zigbee) where modelId is not supported */
-                    if (!isset($ep['modelId']) || (($ep['modelId'] === false) && !isset($ep['location']))) {
+                    if (!isset($ep2['modelId']) || (($ep2['modelId'] === false) && !isset($ep2['location']))) {
                         if ($missing != '') {
                             $missing .= ',';
                             $missingTxt .= '/';
@@ -1022,8 +987,9 @@
                         $missingTxt .= 'location';
                     }
                     if ($missing != '') {
-                        parserLog('debug', '  Requesting '.$missingTxt.' from EP '.$epId);
-                        $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId."&clustId=0000&attrId=".$missing);
+                        parserLog('debug', '  Requesting '.$missingTxt.' from EP '.$epId2);
+                        $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
+                        break; // Reducing requests on first missing stuff
                     }
                 }
             }
@@ -2826,7 +2792,7 @@
                     'net' => $net,
                     'addr' => $srcAddr,
                     'ep' => $ep,
-                    'group' => $grp,
+                    'groups' => $grp,
                     'time' => time(),
                     'lqi' => $lqi
                 );
@@ -2889,7 +2855,7 @@
                 'net' => $net,
                 'addr' => $srcAddr,
                 'ep' => $ep,
-                'group' => $groups,
+                'groups' => $groups,
                 'time' => time(),
                 'lqi' => $lqi
             );
@@ -2912,7 +2878,7 @@
                     'net' => $net,
                     'addr' => $srcAddr,
                     'ep' => $ep,
-                    'group' => $grp,
+                    'groups' => $grp,
                     'time' => time(),
                     'lqi' => $lqi
                 );

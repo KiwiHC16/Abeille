@@ -942,7 +942,7 @@
                     parserLog('debug', '  Requesting simple descriptor for EP '.$epId);
                     $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getSimpleDescriptor", "ep=".$epId);
                 } else if (strpos($ep['servClusters'], '0004')) {
-                    if (!isset($eq['groups']) || !isset($eq['groups'][$ep])) {
+                    if (!isset($eq['groups']) || !isset($eq['groups'][$epId])) {
                         parserLog('debug', '  Requesting groups membership for EP '.$epId);
                         $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getGroupMembership", "ep=".$epId);
                     }

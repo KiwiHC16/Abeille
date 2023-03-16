@@ -87,13 +87,13 @@
     // Create drop down list of 'Warning modes' (cluster 0502/Start Warning)
     function addWarningModesList($id) {
         echo '<select id="'.$id.'" style="width:90px; margin-left: 8px" title="{{Warning mode}}" />';
-        echo '<option value="Stop">Stop</option>';
-        echo '<option value="Burglar">Burglar</option>';
-        echo '<option value="Fire">Fire</option>';
-        echo '<option value="Emergency" selected>Emergency</option>';
-        echo '<option value="PolicePanic">Police panic</option>';
-        echo '<option value="FirePanic">Fire panic</option>';
-        echo '<option value="EmergencyPanic">Emergency panic</option>';
+        echo '<option value="stop">Stop</option>';
+        echo '<option value="burglar">Burglar</option>';
+        echo '<option value="fire">Fire</option>';
+        echo '<option value="emergency" selected>Emergency</option>';
+        echo '<option value="policepanic">Police panic</option>';
+        echo '<option value="firepanic">Fire panic</option>';
+        echo '<option value="emergencypanic">Emergency panic</option>';
         echo '</select>';
     }
 
@@ -113,7 +113,7 @@
     }
 
     function addInput($id, $title = '', $ph = '') {
-        echo '<input id="'.$id.'" title="'.$title.'" placeholder="'.$ph.'" style="width:60px" />';
+        echo '<input id="'.$id.'" title="'.$title.'" placeholder="'.$ph.'" style="width:60px; margin-left:8px" />';
     }
 
     function addJsUpdateFunction($eqId, $cmdLogicId, $spanId, $isInput = false) {

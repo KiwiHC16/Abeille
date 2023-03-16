@@ -4,6 +4,7 @@ ChangeLog
 - Interne: Parser: Correction regression inclusion.
 - Interne: Plusieurs correctifs 'deviceUpdates'.
 - Page avancé: Ajout 'siren level' pour cmde 'Start Warning' (cluster 0502).
+- Sirène M0L0-HS2WD-TY: Ajout info pourcentage batterie (2550).
 
 230314-BETA-1
 -------------

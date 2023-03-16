@@ -22,6 +22,9 @@
             "automatism": "1"
         },
         "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
             "Identify": {
                 "use": "Identify",
                 "isVisible": 1

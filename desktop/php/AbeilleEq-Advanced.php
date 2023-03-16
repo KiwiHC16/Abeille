@@ -84,7 +84,7 @@
         echo '</select>';
     }
 
-    // Create drop down list of 'Warning modes' (cluster 0502)
+    // Create drop down list of 'Warning modes' (cluster 0502/Start Warning)
     function addWarningModesList($id) {
         echo '<select id="'.$id.'" style="width:90px; margin-left: 8px" title="{{Warning mode}}" />';
         echo '<option value="Stop">Stop</option>';
@@ -94,6 +94,16 @@
         echo '<option value="PolicePanic">Police panic</option>';
         echo '<option value="FirePanic">Fire panic</option>';
         echo '<option value="EmergencyPanic">Emergency panic</option>';
+        echo '</select>';
+    }
+
+    // Create drop down list of 'Siren levels' (cluster 0502/Start Warning)
+    function addSirenLevelList($id) {
+        echo '<select id="'.$id.'" style="width:90px; margin-left: 8px" title="{{Siren level}}" />';
+        echo '<option value="low">Low</option>';
+        echo '<option value="medium">Medium</option>';
+        echo '<option value="high" selected>High</option>';
+        echo '<option value="veryhigh">Very high</option>';
         echo '</select>';
     }
 

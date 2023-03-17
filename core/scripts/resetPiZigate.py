@@ -14,19 +14,29 @@ print("= Ok")
 
 print("Redemarrage de la PiZiGate")
 
+# https://zigate.fr/documentation/parametrer-la-pizigate/
 # Memo connexion PiZiGate
 # port 0 = RESET
 # port 2 = FLASH
 # Mode production: FLASH=1, RESET=0 puis 1
 # Mode flash: FLASH=0, RESET=0 puis 1
 
-pi.set_mode( 0, pigpio.OUTPUT) # GPIO 17 as output
-pi.set_mode( 2, pigpio.OUTPUT) # GPIO 17 as output
+# GPIO 14 TXD
+# GPIO 15 RXD
 
-pi.write( 2, 1)
-pi.write( 0, 0)
+
+portReset = 17
+portFlash = 27
+
+pi.set_mode( portReset, pigpio.OUTPUT) 
+pi.set_mode( portFlash, pigpio.OUTPUT) 
+
+pi.write( portReset, 1)
+pi.write( portFlash, 1)
 time.sleep(1)
-pi.write( 0, 1)
+pi.write( portReset, 0)
+time.sleep(1)
+pi.write( portReset, 1)
 
 print("= Ok. Vous pouvez fermer cette fenetre de log.")
 exit(0)

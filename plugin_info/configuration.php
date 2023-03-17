@@ -359,7 +359,7 @@
                     <div class="form-group">
                         <label class="col-lg-3 control-label" data-toggle="tooltip" title="PiGpio est nécéssaire pour les Zigates de type PI">{{PiGpio}} : </label>
                         <div id="idPiGpio" class="col-lg-4">
-                            <input id="idWPiGpioStatus" type="text" class="form-control" title="{{Status d'installation du package PiGpio}}" readonly>
+                            <input id="idPiGpioStatus" type="text" class="form-control" title="{{Status d'installation du package PiGpio}}" readonly>
                             <!-- <a class="PiGpioStatus" title="">
                                 <span class="label label-success" style="font-size:1em;">-?-</span>
                             </a> -->
@@ -630,6 +630,7 @@
             if ((zgType == "PI") || (zgType == "PIv2")) {
                 // $("#idWiringPi"+zgId).show();
                 checkWiringPi(); // Force WiringPi check
+                checkPiGpio();
             }
             //     $("#idUpdFw"+zgId).show();
             // } else if (zgType == "DIN") {
@@ -828,6 +829,35 @@
                     document.getElementById("idWiringPiStatus").value = "NOK";
                 }
                 window.checkWiringPiOngoing = false;
+            }
+        });
+    }
+
+    function checkPiGpio() {
+        if (window.checkPiGpioOngoing)
+            return;
+        window.checkPiGpioOngoing = true;
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'checkPiGpio',
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                bootbox.alert("ERREUR 'checkPiGpio' !<br>Votre installation semble corrompue.");
+                window.checkPiGpioOngoing = false;
+            },
+            success: function (res) {
+                if (res.result == 0) {
+                    // $('.WiringPiStatus').empty().append('<span class="label label-success" style="font-size:1em;">OK</span>');
+                    document.getElementById("idPiGpioStatus").value = "OK";
+                } else {
+                    // $('.WiringPiStatus').empty().append('<span class="label label-danger" style="font-size:1em;">NOK</span>');
+                    document.getElementById("idPiGpioStatus").value = "NOK";
+                }
+                window.checkPiGpioOngoing = false;
             }
         });
     }

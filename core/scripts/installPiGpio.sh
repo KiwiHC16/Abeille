@@ -17,7 +17,7 @@ if [ $? -ne 0 ]; then
 fi
 echo "= Ok"
 
-echo "Installation du package 'WiringPi'"
+echo "Installation du package 'PiGpio'"
 sudo apt-get -y install python-pigpio python3-pigpio python-setuptools python3-setuptools
 if [ $? -ne 0 ]; then
     echo "= ERREUR: L'installation n'a pas aboutie."

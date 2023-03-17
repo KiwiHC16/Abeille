@@ -3,6 +3,7 @@
         "manufacturer": "eWeLink",
         "model": "ZB-SW01",
         "type": "eWeLink ZB-SW01 smart light switch",
+        "comment": "WARNING: Could also be a zigbee repeater with same signature: https://zigbee.blakadder.com/easyiot_ZB-Router.html",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",

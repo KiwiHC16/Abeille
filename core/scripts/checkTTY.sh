@@ -10,7 +10,7 @@
 # checkTTY.sh <portname> <zigatetype> [prefix]
 # ex: checkTTY.sh /dev/ttyS1 PI "[2021-03-18 12:44:09] "
 
-PREFIX=$3
+PREFIX=$4
 
 # NOW=`date +"%Y-%m-%d %H:%M:%S"`
 # echo "[${NOW}] Démarrage de '$(basename $0)'"
@@ -23,7 +23,7 @@ fi
 PORT=$1
 TYPE=$2
 
-echo "${PREFIX}Vérifications du port '${PORT}'"
+echo "${PREFIX} Vérifications du port '${PORT}'"
 
 # Port exists ?
 if [ ! -e ${PORT} ]; then

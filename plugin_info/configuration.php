@@ -375,7 +375,7 @@
                         <div class="form-group">
                             <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Lib GPIO à utiliser : }}</label>
                             <div class="col-lg-4" title="{{Choisissez la libraiie qui va piloter les PIN GPIO de la PiZigate.}}">
-                                <select class="configKey form-control" data-l1key="ab::defaultGpioLib">
+                                <select id="idZgGpioLib" class="configKey form-control" data-l1key="ab::defaultGpioLib">
                                     <option value="WiringPi">WiringPi</option>
                                     <option value="PiGpio">PiGpio</option>
                                 </select>
@@ -891,6 +891,7 @@
                 action: 'checkTTY',
                 zgport: $("#idSelSP" + zgId).val(),
                 zgtype: $("#idSelZgType" + zgId).val(),
+                zgGpioLib: $("#idZgGpioLib").val(),
             },
             dataType: 'json',
             global: false,

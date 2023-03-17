@@ -150,18 +150,32 @@
             ajax::success();
         }
 
+        if (init('action') == 'checkPiGpio') {
+            $prefix = logGetPrefix(""); // Get log prefix
+            $cmd = '/bin/bash python '.__DIR__."/../scripts/checkPiGpio.py | sed -e 's/^/".$prefix."/' >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            exec($cmd, $out, $status);
+            ajax::success(json_encode($status));
+        }
+
+        if (init('action') == 'installPiGpio') {
+            $cmd = '/bin/bash '.__DIR__.'/../scripts/installPiGpio.sh >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
+            exec($cmd, $out, $status);
+            ajax::success();
+        }
+
         if (init('action') == 'checkTTY') {
             $zgPort = init('zgport');
             $zgType = init('zgtype');
+            $zgGpioLib = init("zgGpioLib");
 
             logSetConf('AbeilleConfig.log', true);
-            logMessage('info', 'Test de communication avec la Zigate; type='.$zgType.', port='.$zgPort);
+            logMessage('info', 'Test de communication avec la Zigate; type='.$zgType.', port='.$zgPort.', GpioLib='.$zgGpioLib);
 
             Abeille::pauseDaemons(1);
 
             /* Checks port exists and is not already used */
             $prefix = logGetPrefix(""); // Get log prefix
-            $cmdToExec = "checkTTY.sh ".$zgPort." ".$zgType.' "'.$prefix.'"';
+            $cmdToExec = "checkTTY.sh ".$zgPort." ".$zgType." ".$zgGpioLib.' "'.$prefix.'"';
             $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec." >>".log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
 

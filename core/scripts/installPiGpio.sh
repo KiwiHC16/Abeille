@@ -17,17 +17,6 @@ if [ $? -ne 0 ]; then
 fi
 echo "= Ok"
 
-# sudo apt-get -y upgrade
-
-# echo "installation de git"
-# sudo apt-get -y install git-core
-
-# echo "installation de make"
-# sudo apt-get -y install make
-
-# echo "installation de gcc"
-# sudo apt-get -y install gcc
-
 echo "Installation du package 'WiringPi'"
 sudo apt-get -y install python-pigpio python3-pigpio python-setuptools python3-setuptools
 if [ $? -ne 0 ]; then

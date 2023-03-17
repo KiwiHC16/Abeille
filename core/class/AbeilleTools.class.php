@@ -1354,12 +1354,12 @@
          * Returns: true if ok, false if error
          */
         public static function setPIGpio() {
-            exec("command gpio -v", $out, $ret);
-            if ($ret != 0) {
-                log::add('Abeille', 'error', 'WiringPi semble mal installé.');
-                log::add('Abeille', 'debug', 'setPIGpio(): command gpio -v => '.json_encode($out));
-                return false;
-            }
+            // exec("command gpio -v", $out, $ret);
+            // if ($ret != 0) {
+            //     log::add('Abeille', 'error', 'WiringPi semble mal installé.');
+            //     log::add('Abeille', 'debug', 'setPIGpio(): command gpio -v => '.json_encode($out));
+            //     return false;
+            // }
 
             /* Configuring GPIO for PiZigate if one active found.
                 PiZigate reminder (using 'WiringPi'):
@@ -1367,7 +1367,8 @@
                 - port 2 = FLASH
                 - Production mode: FLASH=1, RESET=0 then 1 */
             log::add('Abeille', 'debug', 'AbeilleTools:setPIGpio(): Active PiZigate found => configuring GPIOs');
-            exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
+            // exec("gpio mode 0 out; gpio mode 2 out; gpio write 2 1; gpio write 0 0; sleep 0.2; gpio write 0 1 &");
+            exec("python /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py");
             return true;
         }
 

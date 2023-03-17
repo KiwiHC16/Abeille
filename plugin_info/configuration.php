@@ -354,6 +354,39 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label" data-toggle="tooltip" title="PiGpio est nécéssaire pour les Zigates de type PI">{{PiGpio}} : </label>
+                        <div id="idPiGpio" class="col-lg-4">
+                            <input id="idWPiGpioStatus" type="text" class="form-control" title="{{Status d'installation du package PiGpio}}" readonly>
+                            <!-- <a class="PiGpioStatus" title="">
+                                <span class="label label-success" style="font-size:1em;">-?-</span>
+                            </a> -->
+                        </div>
+                        <div class="col-lg-5">
+                            <a class="btn btn-default" id="bt_installPiGpio" title="{{Installation du package}}"><i class="fas fa-sync"></i> {{Installer}}</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-lg-6">
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Lib GPIO à utiliser : }}</label>
+                            <div class="col-lg-4" title="{{Choisissez la libraiie qui va piloter les PIN GPIO de la PiZigate.}}">
+                                <select class="configKey form-control" data-l1key="ab::defaultGpioLib">
+                                    <option value="WiringPi">WiringPi</option>
+                                    <option value="PiGpio">PiGpio</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-5">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                    </div>
+                </div>
             </div>
 
             <!-- Display zigates 2 per line -->

@@ -841,6 +841,15 @@
         });
     })
 
+    $('#bt_installPiGpio').on('click', function() {
+        bootbox.confirm('{{Vous êtes sur le point d installer PiGpio (http://abyz.me.uk/rpi/pigpio/) et cela peut provoquer des conflits avec d\'autres gestionnaires de GPIO.<br> Voulez vous continuer ?}}', function (result) {
+            if (result) {
+                $('#md_modal2').dialog({title: "{{Installation de PiGpio}}"});
+                $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=installPiGpio.abeille').dialog('open');
+            }
+        });
+    })
+
     $('#bt_checkTTY').on('click', function() {
         $.ajax({
             type: 'POST',

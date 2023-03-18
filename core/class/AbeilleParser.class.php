@@ -4328,8 +4328,55 @@
 
                     // 0008/Level control cluster specific
                     else if ($clustId == "0008") {
-                        if ($cmd == "04") {
+                        if (($cmd == "00") || ($cmd == "04")) { // Move to Level (without/with On/Off)
+                            $level = substr($pl, 0, 2);
+                            $transition = AbeilleTools::reverseHex(substr($pl, 2, 4));
+                            $optMask = substr($pl, 6, 2);
+                            $optOverride = substr($pl, 8, 2);
+                            $m = "  Move to level";
+                            if ($cmd == "04")
+                                $m .= " with On/Off";
+                            $m .= ": level=".$level.", transition=".$transition.", optMask=".$optMask.", optOverride=".$optOverride;
+                            parserLog('debug', $m);
                             parserLog('debug', "  Handled by decode8085");
+                            return;
+                        } else if (($cmd == "01") || ($cmd == "05")) { // Move (without/with On/Off)
+                            $mode = substr($pl, 0, 2);
+                            $rate = substr($pl, 2, 2);
+                            $optMask = substr($pl, 4, 2);
+                            $optOverride = substr($pl, 6, 2);
+                            $m = "  Move";
+                            if ($cmd == "05")
+                                $m .= " with On/Off";
+                            $m .= ": mode=".$mode.", rate=".$rate.", optMask=".$optMask.", optOverride=".$optOverride;
+                            parserLog('debug', $m);
+                            parserLog('debug', "  Handled by decode8085");
+                            return;
+                        } else if (($cmd == "02") || ($cmd == "06")) { // Step (without/with On/Off)
+                            $mode = substr($pl, 0, 2);
+                            $size = substr($pl, 2, 2);
+                            $transition = AbeilleTools::reverseHex(substr($pl, 4, 4));
+                            $optMask = substr($pl, 8, 2);
+                            $optOverride = substr($pl, 10, 2);
+                            $m = "  Step";
+                            if ($cmd == "06")
+                                $m .= " with On/Off";
+                            $m .= ": mode=".$mode.", size=".$rate.", transition=".$transition.", optMask=".$optMask.", optOverride=".$optOverride;
+                            parserLog('debug', $m);
+                            parserLog('debug', "  Handled by decode8085");
+                            return;
+                        } else if (($cmd == "03") || ($cmd == "07")) { // Stop (without/with On/Off)
+                            $optMask = substr($pl, 0, 2);
+                            $optOverride = substr($pl, 2, 2);
+                            $m = "  Stop";
+                            if ($cmd == "07")
+                                $m .= " with On/Off";
+                            $m .= ": optMask=".$optMask.", optOverride=".$optOverride;
+                            parserLog('debug', $m);
+                            parserLog('debug', "  Handled by decode8085");
+                            return;
+                        } else {
+                            parserLog('debug', "  Unsupported cluster 0008 specific cmd ".$cmd);
                             return;
                         }
                     } // End clustId == "0008"

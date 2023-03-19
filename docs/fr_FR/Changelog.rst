@@ -8,6 +8,7 @@ ChangeLog
 - Support préliminaire 'pigiod' pour Pi-Zigates.
 - Interne: Parser: Amélioration support cmdes specifiques cluster 0008.
 - Modele TS201 renommé => TS0201__TYZB01_hjsgdkfl.
+- Aubess prise TS011F: Ajout support préliminaire (2558).
 
 230314-BETA-1
 -------------

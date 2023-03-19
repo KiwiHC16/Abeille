@@ -2777,8 +2777,10 @@ class Abeille extends eqLogic {
         if ($curIcon != '') {
             $iconPath = __DIR__.'/../../images/node_'.$curIcon.'.png';
             $iconExists = file_exists($iconPath);
-        } else
+        } else {
+            $iconPath = '';
             $iconExists = false;
+        }
         log::add('Abeille', 'debug', 'LA iconExists='.$iconExists.', path='.$iconPath);
         if (!$iconExists || ($action == 'reset') || ($curIcon == '') || ($curIcon == 'defaultUnknown')) {
             if (isset($modelConf["icon"]))

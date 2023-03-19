@@ -3,6 +3,7 @@
         "manufacturer": "Girier",
         "model": "Curtain",
         "type": "Girier curtain module",
+        "genericType": "Opening",
         "timeout": "60",
         "category": {
             "opening": "1"

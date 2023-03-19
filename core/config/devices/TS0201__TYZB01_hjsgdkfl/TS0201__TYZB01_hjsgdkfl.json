@@ -1,8 +1,9 @@
 {
-    "TS0201": {
+    "TS0201__TYZB01_hjsgdkfl": {
         "manufacturer": "Blitzwolf",
         "model": "BW-IS4",
-        "type": "Blitzwolf Temperature and Humidity sensor & display",
+        "type": "Blitzwolf temperature/humidity sensor/display",
+        "genericType": "Environment",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",

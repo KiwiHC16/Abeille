@@ -7,6 +7,7 @@ ChangeLog
 - Sirène M0L0-HS2WD-TY: Ajout info pourcentage batterie (2550).
 - Support préliminaire 'pigiod' pour Pi-Zigates.
 - Interne: Parser: Amélioration support cmdes specifiques cluster 0008.
+- Modele TS201 renommé => TS0201__TYZB01_hjsgdkfl.
 
 230314-BETA-1
 -------------

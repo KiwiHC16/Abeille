@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230319-BETA-1
+-------------
+
 - Interne: Parser: Correction regression inclusion.
 - Interne: Plusieurs correctifs 'deviceUpdates'.
 - Page avancé: Ajout 'siren level' pour cmde 'Start Warning' (cluster 0502).

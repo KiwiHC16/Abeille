@@ -632,6 +632,7 @@
                     "XiaomiInfraRouge2" => "Xiaomi-MotionSensor",
                     "sensor_cube" => "Xiaomi-Cube",
                     "XiaomiPrise" => "Xiaomi-Plug",
+                    "Xiaomiwleak_aq1" => "Xiaomi-LeakSensor",
 
                     "LXX60-CS27LX1.0" => "Zemismart-LXX60-CS27LX1.0",
                 );

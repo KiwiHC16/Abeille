@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- 'sensor_wleak.aq1':Mise-à-jour du modèle.
+
 230320-BETA-1
 -------------
 

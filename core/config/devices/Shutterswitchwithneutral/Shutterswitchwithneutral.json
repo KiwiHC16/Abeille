@@ -3,10 +3,11 @@
         "manufacturer": "Legrand",
         "model": "067726",
         "type": "C\u00e9liane Wired Roller Shutter Switch",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "Shutterswitchwithneutral"
+            "icon": "Legrand-ShutterSwitch"
         },
         "category": {
             "automatism": "1"

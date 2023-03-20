@@ -1,14 +1,14 @@
 ChangeLog
 =========
 
+- Image: 'Shutterswitchwithneutral' => 'Legrand-ShutterSwitch'.
+- Image: 'Xiaomiwleak_aq1' => 'Xiaomi-LeakSensor'.
+- Interne: Amélioration remplacement '#addrIEEE#', '#IEEE#' ou '#ZigateIEEE#'.
+
 230320-BETA-2
 -------------
 
-- 'sensor_wleak.aq1':Mise-à-jour du modèle.
-
-230320-BETA-1
--------------
-
+- 'sensor_wleak.aq1': Mise-à-jour du modèle.
 - Page maintenance: Amélioration infos clefs.
 - Package de logs: Ajout log 'event'.
 - Aqara Motion Sensor P1 RTCGQ14LM/MS-S02: Mise-à-jour modèle (2463).

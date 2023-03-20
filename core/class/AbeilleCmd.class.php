@@ -29,25 +29,24 @@
             }
             // logMessage('debug', 'request - onTime: '.$request2);
 
-            if (strpos($request2, '#addrIEEE#') > 0) {
-                $commandIEEE = $eqLogic->getConfiguration("IEEE",'none');
-                if (strlen($commandIEEE)!=16) {
-                    // logMessage('debug', 'Adresse IEEE de l equipement '.$cmd->getEqLogic()->getHumanName().' inconnue');
-                    return true;
-                }
-                $request2 = str_replace('#addrIEEE#', $commandIEEE, $request2);
+            if (stripos($request2, '#addrIEEE#') !== false)  {
+                $commandIEEE = $eqLogic->getConfiguration("IEEE", '');
+                if ($commandIEEE != '')
+                    $request2 = str_ireplace('#addrIEEE#', $commandIEEE, $request2);
+            }
+            if (stripos($request2, '#IEEE#') !== false)  {
+                $commandIEEE = $eqLogic->getConfiguration("IEEE", '');
+                if ($commandIEEE != '')
+                    $request2 = str_ireplace('#IEEE#', $commandIEEE, $request2);
             }
             // logMessage('debug', 'request - addrIEEE: '.$request);
 
-            if (strpos($request2, '#ZiGateIEEE#') > 0) {
+            if (stripos($request2, '#ZiGateIEEE#') !== false) {
                 // Logical Id ruche de la forme: Abeille1/0000
-                $rucheIEEE = Abeille::byLogicalId($dest.'/0000', 'Abeille')->getConfiguration("IEEE",'none');
+                $rucheIEEE = Abeille::byLogicalId($dest.'/0000', 'Abeille')->getConfiguration("IEEE", '');
                 // logMessage('debug', 'Adresse IEEE de la ruche '.$rucheIEEE);
-                if (strlen($rucheIEEE) != 16) {
-                    // logMessage('debug', 'Adresse IEEE de la ruche '.$cmd->getEqLogic()->getHumanName().' inconnue');
-                    // return true;
-                } else
-                    $request2 = str_replace('#ZiGateIEEE#', $rucheIEEE, $request2);
+                if ($rucheIEEE != '')
+                    $request2 = str_ireplace('#ZiGateIEEE#', $rucheIEEE, $request2);
             }
             // logMessage('debug', 'request - ZigateIEEE: '.$request2);
 

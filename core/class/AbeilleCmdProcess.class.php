@@ -2821,7 +2821,7 @@
                         return;
                     // If 'destAddr' == IEEE then need 'destEp' too.
                     if ((strlen($Command['destAddr']) == 16) && !isset($Command['destEp'])) {
-                        cmdLog('debug', "    ERROR: Missing 'destEp'");
+                        cmdLog('error', "    bind0030: Missing 'destEp'");
                         return;
                     }
 
@@ -2837,7 +2837,7 @@
                     // Source
                     $addr = $Command['addr'];
                     if (strlen($addr) != 16) {
-                        cmdLog('error', "    ERROR: Invalid addr length");
+                        cmdLog('error', "    bind0030: Invalid addr length (".$addr.")");
                         return;
                     }
                     $ep = $Command['ep'];
@@ -2852,11 +2852,11 @@
                     else if (strlen($dstAddr) == 16)
                         $dstAddrMode = "03";
                     else {
-                        cmdLog('error', "    ERROR: Invalid dest addr length");
+                        cmdLog('error', "    bind0030: Invalid dest addr length (".$dstAddr.")");
                         return;
                     }
                     $dstEp = isset($Command['destEp']) ? $Command['destEp'] : "00"; // destEp ignored if group address
-                    cmdLog('debug', '    Bind0030: '.$addr.'/EP'.$ep.'/Clust'.$clustId.' to '.$dstAddr.'/EP'.$dstEp);
+                    cmdLog('debug', '    bind0030: '.$addr.'/EP'.$ep.'/Clust'.$clustId.' to '.$dstAddr.'/EP'.$dstEp);
                     $data = $addr.$ep.$clustId.$dstAddrMode.$dstAddr.$dstEp;
 
                     // Note: Bind is sent with ACK request

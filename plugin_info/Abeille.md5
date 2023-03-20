@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230320-BETA-1"
+# VERSION="230320-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -230,6 +230,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/etatEp07out.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/etatEp08.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/etatEp08in.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/etatEp08out.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/etatFlood.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/etatInter0.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/etatInter1.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/etatInter2.json
@@ -426,7 +427,6 @@ d8781940a7422d1623e9b21fd1264bcf *core/config/commands/danfossUIDisplayModeValue
 30b69c17e867b5a1918995655edb7893 *core/config/commands/danfossUIKeyLockValue.json
 3d7ee213ef50a12fc7bf4572de46547a *core/config/commands/downGroup.json
 c397bb5a7935369dba599101cf13a56c *core/config/commands/etatDoorAlarme.json
-7aae090062f4a0f9aad7bf9a9813c57e *core/config/commands/etatFlood.json
 a621f4b6ea8e98b3bbc1e06a423e4765 *core/config/commands/etatIR_Alarme.json
 c0389a2ca87d39e6d19ae80280249310 *core/config/commands/etatSonOffIR.json
 1936d6f044d67de152c707563c1f4314 *core/config/commands/etatSonoff.json
@@ -476,6 +476,7 @@ c072328f388a06c4bcac585e07f0744f *core/config/commands/inf_zbAttr-0400-MeasuredV
 e79ce71eb689f9ef5f81171d51fc8f6f *core/config/commands/inf_zbAttr-0405-MeasuredValue.json
 24eafcd3c6271b09e959cfc307456252 *core/config/commands/inf_zbAttr-0406-Occupancy.json
 f4aa1a5f09778cea58d60ad70756006f *core/config/commands/inf_zbAttr-0500-CurrentZoneSensibilityLevel.json
+b01e98dda0fd4a203098c7da035e9c91 *core/config/commands/inf_zbAttr-0500-ZoneState.json
 06a497a256d71c376e51035b5cd96e00 *core/config/commands/inf_zbAttr-0500-ZoneStatus-Alarm1.json
 f983f80c7281a11b71aa19a24c840a23 *core/config/commands/inf_zbAttr-0500-ZoneStatus-Tamper.json
 1be57cd42c50f3c9f77f7505b96c5825 *core/config/commands/inf_zbAttr-0500-ZoneStatus.json
@@ -1093,7 +1094,7 @@ afc3b90fa888faa25ff46317080c8778 *core/config/devices/sensor_smoke/sensor_smoke.
 c9be1cb5edd10435d73529c9bdd1ad03 *core/config/devices/sensor_switch.aq2/sensor_switch.aq2.json
 8ec2b78429fddb3d6d3b1f378b51890a *core/config/devices/sensor_switch.aq3/sensor_switch.aq3.json
 9a7135de9f7ef5080af202d4ac727f39 *core/config/devices/sensor_switch/sensor_switch.json
-4f0ed5df038248306420120c7b940ae9 *core/config/devices/sensor_wleak.aq1/sensor_wleak.aq1.json
+4cd6d07696655f3204418a43fceb3977 *core/config/devices/sensor_wleak.aq1/sensor_wleak.aq1.json
 c690597daf65833111e1c5d5167d1fc4 *core/config/devices/siren-pni-s002/siren-pni-s002.json
 610de46ac0fcf2251cd6c971d7db9c16 *core/config/devices/switch.b1lacn02/discovery.json
 141d4c792da766d94484fbe25a01e500 *core/config/devices/switch.b1lacn02/switch.b1lacn02.json
@@ -1229,7 +1230,7 @@ a1d870cadad75bcd9878aaafe90a3f09 *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-d227933f49a343c011c95a5547a65d35 *docs/fr_FR/Changelog.rst
+52dd247213d202ffa09df8b9470c30e4 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1474,6 +1475,7 @@ ab200b22615d9a280c96501e327dbd6f *images/node_Xiaomi-D1Wall-Single.png
 ad4e834508273853a60a8c3e763c9350 *images/node_Xiaomi-DoorSensor-2.png
 6a1218f0f78f5adc16b2ab91f0a2fc2d *images/node_Xiaomi-DoorSensor.png
 7d64cdcb6b0915a5c4d4a97afec8f9cb *images/node_Xiaomi-H1WallSwitch-Dual.png
+5cd4fd4bc594236eaaaa41b7b5688fd6 *images/node_Xiaomi-LeakSensor.png
 671d6a8236f3e2e029a81d0625c7a74e *images/node_Xiaomi-LightSensor-1.png
 164ad6c758086a583987eec6daac96ca *images/node_Xiaomi-MotionSensor.png
 4e17fa495f052a381c0d05709667e147 *images/node_Xiaomi-MotionSensorP1.png
@@ -1498,7 +1500,6 @@ d86b3b56a02aadf08291b41278946057 *images/node_XiaomiButtonb286acn01.png
 69399d8715cde574822c29bdbc49c716 *images/node_XiaomiSensorGaz.png
 80389ff65c75b2fd2ffce003ff5192b9 *images/node_XiaomiSensorSmoke.png
 66c02fb8d40bbe5d838c672e821ea7ff *images/node_XiaomiVibration.png
-5cd4fd4bc594236eaaaa41b7b5688fd6 *images/node_Xiaomiwleak_aq1.png
 08ea6acec9d16720032f81a7643ad7cb *images/node_ZB-CL01.png
 df4a7515cb2b3d2d5d69c3031a64252c *images/node_ZLL-DimmableLigh.png
 08924cbaefb69e5a5450dadb7a7cb63f *images/node_ZLO-DimmableLight.png
@@ -1538,11 +1539,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-afa4ecc5c37b3ae7b3f85fd7577a7233 *plugin_info/Abeille.version
+08c805cbb5811d65068c1014382e4bb8 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 655bfb896945e3f40030f48c7fd01c51 *plugin_info/configuration.php
-ede66230376ace44f9ec247fbfa7193d *plugin_info/info.json
-493adc43fea92b155fb7b39aee66c276 *plugin_info/install.php
+e6d9d0028634133c9fd5782f304f56c5 *plugin_info/info.json
+01c83ebc784a89e10fe34f612df28fe5 *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 4d1e64cfeef3737228cc3cc708ca42c5 *resources/AbeilleDeamon/Debug/getLastMessageInQueue.php

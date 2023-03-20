@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230320-BETA-1
+-------------
+
 - Page maintenance: Amélioration infos clefs.
 - Package de logs: Ajout log 'event'.
 - Aqara Motion Sensor P1 RTCGQ14LM/MS-S02: Mise-à-jour modèle (2463).

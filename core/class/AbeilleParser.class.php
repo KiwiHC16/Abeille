@@ -6539,21 +6539,22 @@
 
                 // Xiaomi Wall Plug (Kiwi: ZNCZ02LM, rvitch: )
                 else if (($attrId == "FF01") && (($attrSize == "0031") || ($attrSize == "002B"))) {
-                    parserLog('debug', "  Xiaomi proprietary (Wall Plug)");
+                    parserLog('debug', "  Xiaomi proprietary (Wall Plug) => Handled by xiaomi section");
+                    return;
 
-                    // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
-                    // For info until activation
+                    // // For info until activation
+                    // xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
+                    // // For info until activation
 
-                    $onOff = hexdec(substr($payload, 24 + 2 * 2, 2));
-                    $puissance = unpack('f', pack('H*', substr($payload, 24 + 8 * 2, 8)));
-                    $puissanceValue = $puissance[1];
-                    $conso = unpack('f', pack('H*', substr($payload, 24 + 14 * 2, 8)));
-                    $consoValue = $conso[1];
-                    parserLog('debug', '  OnOff='.$onOff.', Puissance='.$puissanceValue.', Consommation='.$consoValue);
-                    $attrReportN = [
-                        array( "name" => '0006-01-0000', "value" => $onOff ),
-                    ];
+                    // $onOff = hexdec(substr($payload, 24 + 2 * 2, 2));
+                    // $puissance = unpack('f', pack('H*', substr($payload, 24 + 8 * 2, 8)));
+                    // $puissanceValue = $puissance[1];
+                    // $conso = unpack('f', pack('H*', substr($payload, 24 + 14 * 2, 8)));
+                    // $consoValue = $conso[1];
+                    // parserLog('debug', '  OnOff='.$onOff.', Puissance='.$puissanceValue.', Consommation='.$consoValue);
+                    // $attrReportN = [
+                    //     array( "name" => '0006-01-0000', "value" => $onOff ),
+                    // ];
                 }
 
                 // Xiaomi Double Relay (ref ?)

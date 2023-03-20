@@ -2,6 +2,8 @@
     "plug.maeu01": {
         "manufacturer": "Xiaomi",
         "model": "SP-EUC01 ?",
+        "type": "Aqara SmartPlug",
+        "genericType": "Outlet",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -11,7 +13,6 @@
             "automatism": "1",
             "energy": "1"
         },
-        "type": "Aqara SmartPlug",
         "commands": {
             "On": {
                 "use": "act_zbCmdG-0006-On",

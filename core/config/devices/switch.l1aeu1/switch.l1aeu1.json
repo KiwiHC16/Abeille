@@ -2,15 +2,16 @@
     "switch.l1aeu1": {
         "manufacturer": "Xiaomi",
         "model": "WS-EUK01",
+        "type": "Aqara H1 smart wall switch",
+        "genericType": "Outlet",
         "timeout": "",
         "category": {
             "automatism": "1"
         },
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiPrise"
+            "icon": "Xiaomi-Plug"
         },
-        "type": "Aqara H1 smart wall switch",
         "commands": {
             "Groups": {
                 "use": "Group-Membership",

@@ -61,6 +61,7 @@
             },
             "Occupancy": {
                 "use": "inf_zbAttr-0406-Occupancy",
+                "repeatEventManagement": "always",
                 "returnStateValue": 0,
                 "returnStateTime": 1,
                 "isVisible": "1"

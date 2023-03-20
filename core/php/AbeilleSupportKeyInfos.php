@@ -155,13 +155,16 @@
             $eqHName = $eqLogic->getHumanName();
             $eqId = $eqLogic->getId();
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            $eqModelId = isset($eqModel['id']) ? $eqModel['id'] : '';
             $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
             if ($eqLogic->getStatus('timeout') == 1) {
                 $lastComm = $eqLogic->getStatus('lastCommunication');
                 $timeoutS = "TIMEOUT (".$lastComm.")";
             } else
                 $timeoutS = "ok";
-            logIt(" - Z".$zgId.": ".$eqHName.", id=".$eqId.", addr=".$addr.", type='".$eqType."': ".$timeoutS."\n");
+
+            logIt(" - Z".$zgId.": ".$eqHName.", id=".$eqId.": ".$timeoutS."\n");
+            logIt("       addr=".$addr.", type='".$eqType."', model='".$eqModelId."'\n");
         }
         logIt("\n");
     }

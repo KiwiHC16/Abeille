@@ -181,7 +181,7 @@
             /* Copie all logs to 'AbeilleLogs' & remove previous compressed file. */
             $jlogsDir = __DIR__."/../../../../log"; // Jeedom logs dir
             $cmd = "cd ".$jlogsDir."; sudo cp Abeille* ".$logsDir;
-            $cmd .= "; sudo cp http.error ".$logsDir;
+            $cmd .= "; sudo cp http.error event ".$logsDir;
             // $cmd .= "; sudo cp update ".$logsDir;
             $cmd .= "; sudo cp ".$tmpDir."/*.log ".$logsDir;
             // $cmd .= "; sudo rm -f tmp/AbeilleLogs.*";

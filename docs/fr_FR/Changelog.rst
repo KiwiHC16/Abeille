@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230320-BETA-3
+-------------
+
 - Image: 'Shutterswitchwithneutral' => 'Legrand-ShutterSwitch'.
 - Image: 'Xiaomiwleak_aq1' => 'Xiaomi-LeakSensor'.
 - Interne: Amélioration remplacement '#addrIEEE#', '#IEEE#' ou '#ZigateIEEE#'.

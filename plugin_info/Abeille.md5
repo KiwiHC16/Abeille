@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230320-BETA-2"
+# VERSION="230320-BETA-3"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -43,10 +43,10 @@ b01724fc9b23be86f3d465a639ab6c95 *core/ajax/AbeilleEqAssist.ajax.php
 e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 8290855d0e5ee94968a6fb01ba8d5a7b *core/ajax/AbeilleZigate.ajax.php
 8a95d9cdf6725465aa31a7891532eeab *core/class/Abeille.class.php
-b9650cf3fe0dc8dcfdd532e3fc1252b5 *core/class/AbeilleCmd.class.php
+473bd5057c27f6285d6d2500f29de9cc *core/class/AbeilleCmd.class.php
 c7450fe523a97275542895f2770b71f5 *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
-260ab77c1f7869545c04336fbad1785e *core/class/AbeilleCmdProcess.class.php
+62e7cd2baa23315c483e30312ccfb2e4 *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
 2c45688e5b9784693a598dacb42de27f *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
@@ -816,7 +816,7 @@ a4efc29598fe651291e66980419c2a1f *core/config/devices/SMSZB-120_frientAS/SMSZB-1
 d1e817884059d7491d70d7912c89f26a *core/config/devices/SPLZB-132/SPLZB-132.json
 5e3b1b9baa3c27102fd036f6b4e7ef7a *core/config/devices/SPLZB-132/discovery.json
 967d9dfdf69f67d4e07324555d41e619 *core/config/devices/SPZB0001/SPZB0001.json
-c7e4d9ab515155ecce5c548e17789eb0 *core/config/devices/Shutterswitchwithneutral/Shutterswitchwithneutral.json
+bda0b995d63cf4d0af7df4b33eb11dbc *core/config/devices/Shutterswitchwithneutral/Shutterswitchwithneutral.json
 0b78bc1a62a1bf7bbaec55f0d8e43daf *core/config/devices/SmokeSensor-EF-3.0/SmokeSensor-EF-3.0.json
 eb3c81c16d13cefd61368792519707dd *core/config/devices/SmokeSensor-EM/SmokeSensor-EM.json
 d139ac11ccdf5cf6072e4cf7bc5ad390 *core/config/devices/SmokeSensor-N-3.0/SmokeSensor-N-3.0.json
@@ -1230,7 +1230,7 @@ a1d870cadad75bcd9878aaafe90a3f09 *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-52dd247213d202ffa09df8b9470c30e4 *docs/fr_FR/Changelog.rst
+349bfac083048a3b44e0a944489853c7 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1341,6 +1341,7 @@ ac2e6e5cbc781b0b17c8451030005d57 *images/node_Legrand-Connectedoutlet-2.png
 0d219890595c018adc282bae28526edc *images/node_Legrand-Contactor.png
 722042e09d4a9542917f03cd4d5ede0c *images/node_Legrand-MicromoduleSwitch.png
 d2971679b1a853a60739cddbd5c3eccc *images/node_Legrand-RemoteSwitch.png
+0896324400d30a5051200fc36f1b0845 *images/node_Legrand-ShutterSwitch.png
 3ca71e70712149a8420995548e6a262c *images/node_Legrand-Teleruptor.png
 a8713f2bb9f9186baae8f71b6e5d73c4 *images/node_Lexman-SmartPlug.png
 b5623a23e7ff29a671faa4c7f8f5358c *images/node_Linky.png
@@ -1397,7 +1398,6 @@ bbb236b12dbe2d3b97ee97c5edb2990a *images/node_SML002.png
 93e88b4f3913e434c149ca673340f43f *images/node_SP220.png
 fb7d711d6845fe71e1068401ffca7017 *images/node_SPZB0001.png
 eb08c53a2108caf722abbd9aba88187a *images/node_Saswell-SAS980SWT.png
-0896324400d30a5051200fc36f1b0845 *images/node_Shutterswitchwithneutral.png
 f5199051586048acbbb22b00fcaa9d9f *images/node_Silvercrest-HG06106C.png
 79e3815a5e7afc4bca48ec1d0d4250e8 *images/node_Silvercrest-HG06337-FR.png
 7929393537a26d69062b8df51579bc09 *images/node_Silvercrest-MotionSensor-1.png
@@ -1539,11 +1539,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-08c805cbb5811d65068c1014382e4bb8 *plugin_info/Abeille.version
+823be22049869e2c5cf183b68a0e49df *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 655bfb896945e3f40030f48c7fd01c51 *plugin_info/configuration.php
-e6d9d0028634133c9fd5782f304f56c5 *plugin_info/info.json
-01c83ebc784a89e10fe34f612df28fe5 *plugin_info/install.php
+d48b354a2d9fcfd7a8f274624dd56cc6 *plugin_info/info.json
+1c200686d9031638fedcc17a5650fe8c *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
 4d1e64cfeef3737228cc3cc708ca42c5 *resources/AbeilleDeamon/Debug/getLastMessageInQueue.php

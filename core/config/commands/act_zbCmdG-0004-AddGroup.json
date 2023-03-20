@@ -2,6 +2,7 @@
     "act_zbCmdG-0004-AddGroup": {
         "type": "action",
         "subType": "other",
+        "logicalId": "#EP#-0008-CmdAddGroup",
         "template": "",
         "configuration": {
             "topic": "addGroup",

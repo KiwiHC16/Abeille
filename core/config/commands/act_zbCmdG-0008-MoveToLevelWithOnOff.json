@@ -2,6 +2,7 @@
     "act_zbCmdG-0008-MoveToLevelWithOnOff": {
         "comment": "Cluster 0008, Move to level with OnOff cmd 04",
         "subType": "slider",
+        "logicalId": "#EP#-0008-CmdMoveToLevelWithOnOff",
         "template": "default",
         "configuration": {
             "topic": "cmd-0008",

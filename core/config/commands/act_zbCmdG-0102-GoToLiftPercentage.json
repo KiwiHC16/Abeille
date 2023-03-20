@@ -1,8 +1,7 @@
 {
     "act_zbCmdG-0102-GoToLiftPercentage": {
-        "isHistorized": 0,
         "subType": "slider",
-        "invertBinary": "0",
+        "logicalId": "#EP#-0102-CmdGoToLiftPercent",
         "template": "",
         "configuration": {
             "topic": "cmd-0102",

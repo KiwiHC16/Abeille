@@ -2,6 +2,7 @@
     "act_zbCmdG-0008-StopWithOnOff": {
         "comment": "Cluster 0008, stop with OnOff cmd",
         "subType": "other",
+        "logicalId": "#EP#-0008-CmdStopWithOnOff",
         "template": "default",
         "configuration": {
             "topic": "cmd-0008",

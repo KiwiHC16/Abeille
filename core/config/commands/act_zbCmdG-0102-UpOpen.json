@@ -1,10 +1,7 @@
 {
     "act_zbCmdG-0102-UpOpen": {
-        "isVisible": 0,
-        "name": "Up",
-        "isHistorized": 0,
         "subType": "other",
-        "invertBinary": "0",
+        "logicalId": "#EP#-0102-CmdUpOpen",
         "template": "",
         "configuration": {
             "topic": "cmd-0102",

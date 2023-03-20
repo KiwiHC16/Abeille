@@ -3,6 +3,7 @@
         "comment": "Generic configure reporting command",
         "name": "Configure reporting",
         "subType": "other",
+        "logicalId": "configReport-#EP#-#CLUSTID#-#ATTRID#",
         "configuration": {
             "topic": "configureReporting",
             "request": "ep=#EP#&clustId=#CLUSTID#&attrType=#ATTRTYPE#&attrId=#ATTRID#&minInterval=#MININTERVAL#&maxInterval=#MAXINTERVAL#&changeVal=#CHANGEVAL#"

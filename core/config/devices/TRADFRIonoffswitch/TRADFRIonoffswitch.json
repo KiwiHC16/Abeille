@@ -8,6 +8,7 @@
         "timeout": "60",
         "configuration": {
             "paramType": "telecommande",
+            "remoteType": "bindToGroup",
             "mainEP": "01",
             "icon": "TRADFRIonoffswitch",
             "batteryType": "1x3V CR2032"
@@ -21,7 +22,8 @@
             },
             "Get-SWBuild": {
                 "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
+                "params": "clustId=0000&attrId=4000",
+                "execAtCreation": "Yes"
             },
             "Off": {
                 "use": "offGroup"

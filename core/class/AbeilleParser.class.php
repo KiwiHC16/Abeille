@@ -3007,16 +3007,16 @@
                     $index      = hexdec(substr($pl, 6, 2));
                     $tableCount = hexdec(substr($pl, 8, 2));
 
+                    // Duplicated message ?
+                    if ($this->isDuplicated($dest, $srcAddr, '', $sqn))
+                        return;
+
                     parserLog('debug', '  Binding table response'
                             .', SQN='.$sqn
                             .', Status='.$status
                             .', TableSize='.$tableSize
                             .', Idx='.$index
                             .', TableCount='.$tableCount, "8002");
-
-                    // Duplicated message ?
-                    if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
-                        return;
 
                     $pl = substr($pl, 10);
                     for ($i = 0; $i < $tableCount; $i++) {
@@ -6218,7 +6218,7 @@
             // $accepted = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
             $accepted = ['0000', 'FC00'];
             if (!in_array($clustId, $accepted)) {
-                parserLog('debug', "  Handled by decode8002");
+                parserLog('debug', "  ".$clustId."-".$attrId." => Handled by decode8002");
                 return;
             }
 
@@ -6320,7 +6320,7 @@
                 // 0010: Location => Used for Profalux 1st gen
                 if (($attrId == "0004") || ($attrId == "0005") || ($attrId == "0010")) {
                     // Assuming $dataType == "42"
-                    parserLog('debug', '  Clust 0000, attr 0004/5/10 => Handled by decode8002()');
+                    parserLog('debug', "  ".$clustId."-".$attrId." => Handled by decode8002");
                     return;
 
                     // $trimmedValue = pack('H*', $Attribut);
@@ -6610,6 +6610,10 @@
                 //     $this->msgToAbeille($dest."/".$srcAddr, 'Batterie', 'Pourcent', $this->volt2pourcent($voltage));
                 // }
 
+                else {
+                    parserLog('debug', "  ".$clustId."-".$attrId." => Handled by decode8002");
+                    return;
+                }
             } // End cluster 0000
 
             // else if ($clustId == "0001") { // Power configuration cluster

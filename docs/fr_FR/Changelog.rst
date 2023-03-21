@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Girier curtain module: Mise-à-jour du modèle (2526).
+
 230320-BETA-3
 -------------
 

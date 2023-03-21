@@ -3,6 +3,7 @@ ChangeLog
 
 - Girier curtain module: Mise-à-jour du modèle (2526).
 - Interne: Parser: Correction warning PHP 'Binding table response'.
+- Modele TS201 renommage automatique vers 'TS0201__TYZB01_hjsgdkfl'.
 
 230320-BETA-3
 -------------

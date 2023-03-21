@@ -479,6 +479,8 @@
                     $newEqModel['id'] = $eqLogic->getConfiguration('ab::jsonId', '');
                 else if ($eqModel['id'] == 'RC110') // Model 'RC110' => 'RC110_innr'
                     $newEqModel['id'] = 'RC110_innr';
+                else if ($eqModel['id'] == 'TS0201') // Model 'TS0201' => 'TS0201__TYZB01_hjsgdkfl'
+                    $newEqModel['id'] = 'TS0201__TYZB01_hjsgdkfl';
                 if (!isset($eqModel['location']))
                     $newEqModel['location'] = $eqLogic->getConfiguration('ab::jsonLocation', '');
                 if ($newEqModel != $eqModel) {

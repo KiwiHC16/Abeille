@@ -85,6 +85,7 @@
         <input id="idMgmtNwkUpdReqSD" title="{{Scan duration (01-05, FE=channel change, or FF)}}" />
     </div>
 </div>
+
 <div class="form-group">
     <label class="col-sm-3 control-label" title="Bind cet équipement vers un autre (Bind_req)">Bind to device</label>
     <div class="col-sm-5">
@@ -95,10 +96,25 @@
             // <input id="idIeeeE" title="{{Adresse IEEE de destination (ex: 5C0272FFFE2857A3)}}" />
             echo ' TO';
             addIeeeListButton("idIeeeE", true);
+            addEpButton("idEpE2", $mainEP);
         ?>
-        <?php addEpButton("idEpE2", $mainEP); ?>
     </div>
 </div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Unbind to device (Unbind_req)">Remove binding to device</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-danger" onclick="interrogate(\'unbindToDevice\', \''.$eqId.'\')">{{Unbind}}</a>';
+            addEpButton("idEpSrc-UBD", $mainEP);
+            addClusterButton("idClustId-UBD");
+            echo ' TO';
+            addIeeeListButton("idAddr-UBD", true);
+            addEpButton("idEpDst-UBD", $mainEP);
+        ?>
+    </div>
+</div>
+
 <div class="form-group">
     <label class="col-sm-3 control-label" title="Bind cet équipement vers un groupe (Bind_req)">Bind to group</label>
     <div class="col-sm-5">
@@ -108,9 +124,23 @@
             addClusterButton("idClustIdF");
             echo ' TO';
         ?>
-        <input id="idGroupF" title="{{Adresse du groupe de destination (ex: 0001)}}" />
+        <input id="idGroupF" title="{{Destination group (ex: 0001)}}" />
     </div>
 </div>
+
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Unbind to group (Unbind_req)">Remove binding to group</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-danger" onclick="interrogate(\'unbindToGroup\', \''.$eqId.'\')">{{Unbind}}</a>';
+            addEpButton("idEpSrc-UBG", $mainEP);
+            addClusterButton("idClustId-UBG");
+            echo ' TO';
+            echo '<input id="idGroup-UBG" title="{{Destination group (ex: 0001)}}" />';
+        ?>
+    </div>
+</div>
+
 <div class="form-group">
     <label class="col-sm-3 control-label" title="Leave request">Leave request</label>
     <div class="col-sm-5">

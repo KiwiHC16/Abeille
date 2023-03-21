@@ -599,11 +599,24 @@
             destIeee = document.getElementById("idIeeeE").value;
             destEp = document.getElementById("idEpE2").value;
             payload = "addr="+js_eqIeee+"_ep="+ep+"_clustId="+clustId+"_destAddr="+destIeee+"_destEp="+destEp;
+        } else if (request == "unbindToDevice") {
+            topic = "Cmd"+logicalId+"_unbind0031";
+            ep = document.getElementById("idEpSrc-UBD").value;
+            clustId = document.getElementById("idClustId-UBD").value;
+            destIeee = document.getElementById("idAddr-UBD").value;
+            destEp = document.getElementById("idEpDst-UBD").value;
+            payload = "addr="+js_eqIeee+"_ep="+ep+"_clustId="+clustId+"_destAddr="+destIeee+"_destEp="+destEp;
         } else if (request == "bindToGroup") {
             topic = "Cmd"+logicalId+"_bind0030";
             ep = document.getElementById("idEpF").value;
             clustId = document.getElementById("idClustIdF").value;
             destGroup = document.getElementById("idGroupF").value;
+            payload = "addr="+js_eqIeee+"_ep="+ep+"_clustId="+clustId+"_destAddr="+destGroup;
+        } else if (request == "unbindToGroup") {
+            topic = "Cmd"+logicalId+"_unbind0031";
+            ep = document.getElementById("idEpSrc-UBG").value;
+            clustId = document.getElementById("idClustId-UBG").value;
+            destGroup = document.getElementById("idGroup-UBG").value;
             payload = "addr="+js_eqIeee+"_ep="+ep+"_clustId="+clustId+"_destAddr="+destGroup;
         } else if (request == "configureReporting") {
             topic = "Cmd"+logicalId+"_configureReporting";

@@ -2862,7 +2862,64 @@
                     // Note: Bind is sent with ACK request
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, "02");
                     return;
-                }
+                } // End $cmdName == 'bind0030'
+
+                // Zigbee command: Unbind
+                // Unbind, thru command 0031 => generates 'Unbind_req' / cluster 0022
+                // Mandatory params: addr, clustId, attrType, attrId
+                // Optional params: destEp required if destAddr = device ieee addr
+                else if ($cmdName == 'unbind0031') {
+
+                    $required = ['addr', 'ep', 'clustId', 'destAddr'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+                    // If 'destAddr' == IEEE then need 'destEp' too.
+                    if ((strlen($Command['destAddr']) == 16) && !isset($Command['destEp'])) {
+                        cmdLog('error', "    unbind0031: Missing 'destEp'");
+                        return;
+                    }
+
+                    $cmd = "0031";
+
+                    // <target extended address: uint64_t>
+                    // <target endpoint: uint8_t>
+                    // <cluster ID: uint16_t>
+                    // <destination address mode: uint8_t>
+                    // <destination address:uint16_t or uint64_t>
+                    // <destination endpoint (value ignored for group address): uint8_t>
+
+                    // Source
+                    $addr = $Command['addr'];
+                    if (strlen($addr) != 16) {
+                        cmdLog('error', "    unbind0031: Invalid addr length (".$addr.")");
+                        return;
+                    }
+                    $ep = $Command['ep'];
+                    $clustId = $Command['clustId'];
+
+                    // Dest
+                    // $dstAddr: 01=16bit group addr, destEp ignored
+                    // $dstAddr: 03=64bit ext addr, destEp required
+                    $dstAddr = $Command['destAddr'];
+                    if (strlen($dstAddr) == 4) {
+                        $dstAddrMode = "01";
+                        $dstEp = '';
+                        $dstTxt = 'group '.$dstAddr;
+                    } else if (strlen($dstAddr) == 16) {
+                        $dstAddrMode = "03";
+                        $dstEp = $Command['destEp'];
+                        $dstTxt = 'device '.$dstAddr.'/EP'.$dstEp;
+                    } else {
+                        cmdLog('error', "    unbind0031: Invalid dest addr length (".$dstAddr.")");
+                        return;
+                    }
+                    cmdLog('debug', '    unbind0031: '.$addr.'/EP'.$ep.'/Clust'.$clustId.' to '.$dstTxt);
+                    $data = $addr.$ep.$clustId.$dstAddrMode.$dstAddr.$dstEp;
+
+                    // Note: Unbind is sent with ACK request
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, "02");
+                    return;
+                } // End $cmdName == 'unbind0031'
 
                 // Zigbee command: IEEE address request (IEEE_addr_req)
                 else if ($cmdName == 'getIeeeAddress') { // IEEE_addr_req + IEEE_addr_rsp

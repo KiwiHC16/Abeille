@@ -1,11 +1,6 @@
 ChangeLog
 =========
 
-- Prise Aubess TS011F, _TZ3000_gvn91tmx: Mise-à-jour du modèle (2558).
-
-230322-BETA-2
--------------
-
 - Girier curtain module: Mise-à-jour du modèle (2526).
 - Interne: Parser: Correction warning PHP 'Binding table response'.
 - Modele TS201 renommage automatique vers 'TS0201__TYZB01_hjsgdkfl'.
@@ -14,6 +9,7 @@ ChangeLog
 - Interne: Cmd: Ajout support 'remove all groups'.
 - Gestion des groupes: Amélioration affichage mineure.
 - Groupes de la Zigate: Correction regression.
+- Prise Aubess TS011F, _TZ3000_gvn91tmx: Mise-à-jour du modèle (2558).
 
 230320-BETA-3
 -------------

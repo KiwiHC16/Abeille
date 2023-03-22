@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Prise Aubess TS011F, _TZ3000_gvn91tmx: Mise-à-jour du modèle (2558).
+
 230322-BETA-2
 -------------
 

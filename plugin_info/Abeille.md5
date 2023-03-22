@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230322-BETA-1"
+# VERSION="230322-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -42,7 +42,7 @@ b01724fc9b23be86f3d465a639ab6c95 *core/ajax/AbeilleEqAssist.ajax.php
 74db0fe09d08fe737a1bb478bed52d24 *core/ajax/AbeilleFiles.ajax.php
 e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 8290855d0e5ee94968a6fb01ba8d5a7b *core/ajax/AbeilleZigate.ajax.php
-a038d1c978faaa196600b9743a9e8d49 *core/class/Abeille.class.php
+77634605e60b8b4daa4aef2fd89ab220 *core/class/Abeille.class.php
 473bd5057c27f6285d6d2500f29de9cc *core/class/AbeilleCmd.class.php
 c7450fe523a97275542895f2770b71f5 *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
@@ -1230,7 +1230,7 @@ a1d870cadad75bcd9878aaafe90a3f09 *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-d8f158ba34984a3a5851efac7c324654 *docs/fr_FR/Changelog.rst
+999470fe3b55bece597d1d0c73111581 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1539,10 +1539,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-10fb4a5eacde7da520dc758fae12b929 *plugin_info/Abeille.version
+474f59c79120cad09453bb2d17271009 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 655bfb896945e3f40030f48c7fd01c51 *plugin_info/configuration.php
-f82a7a83ce81ec8a998a1e2fb5c44f68 *plugin_info/info.json
+84f3ee0d37fe89aa3cdf7ddc856adda1 *plugin_info/info.json
 97bdb0cc89520708646f4a0b55aeb02c *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

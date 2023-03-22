@@ -6,6 +6,9 @@ ChangeLog
 - Modele TS201 renommage automatique vers 'TS0201__TYZB01_hjsgdkfl'.
 - Page avancé: Support préliminaire 'unbind'.
 - Interne: Cmd: Support préliminaire 'unbind0031'.
+- Interne: Cmd: Ajout support 'remove all groups'.
+- Gestion des groupes: Amélioration affichage mineure.
+- Groupes de la Zigate: Correction regression.
 
 230320-BETA-3
 -------------

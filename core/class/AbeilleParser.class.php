@@ -2780,7 +2780,7 @@
             $status = substr($pl, 0, 2);
             $grp = AbeilleTools::reverseHex(substr($pl, 2, 4));
             $m = '  Add a group response'
-                .', Status='.$status.'/'.zbGetZCLStatus($status)
+                .': Status='.$status.'/'.zbGetZCLStatus($status)
                 .', GroupID='.$grp;
             parserLog('debug', $m);
             $toMon[] = $m;
@@ -2811,7 +2811,7 @@
             // 0xff It is unknown if any further groups MAY be added
 
             $m = '  Get group membership response'
-               .', Capacity='.$capa
+               .': Capacity='.$capa
                .', GroupCount='.$grpCount;
             parserLog('debug', $m);
             $toMon[] = $m;
@@ -2866,7 +2866,7 @@
             $status = substr($pl, 0, 2);
             $grp = AbeilleTools::reverseHex(substr($pl, 2, 4));
             $m = '  Remove a group response'
-                .', Status='.$status.'/'.zbGetZCLStatus($status)
+                .': Status='.$status.'/'.zbGetZCLStatus($status)
                 .', GroupID='.$grp;
             parserLog('debug', $m);
             $toMon[] = $m;

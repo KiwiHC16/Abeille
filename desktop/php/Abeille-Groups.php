@@ -28,8 +28,8 @@
 			$eqLogic = eqLogic::byId($eqId);
 
 			// $name= "";
-			$groupServ = "";
-			$groupCli = "";
+			// $groupServ = "";
+			// $groupCli = "";
 			// $print=0;
 			$eqHName = $eqLogic->getHumanName(true);
 
@@ -67,7 +67,7 @@
 				// }
 				echo '<tr><td>'.$eqHName.'</td>';
 				echo '<td >'.$epId.'</td>';
-				echo '<td >'.$grps.'</td></tr>';
+				echo '<td ><a class="btn btn-default" onclick="sendToCmd(\'getGroups2\', \''.$zgId.'\', \''.$eq['addr'].'\', \''.$epId.'\')" title="{{Raffraichissement des groupes}}"><i class="fas fa-sync"></i></a> '.$grps.'</td></tr>';
 			}
 		} // For each eqPerZigate[]
 		echo '</tbody>';

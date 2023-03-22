@@ -96,7 +96,7 @@
     }
 
     // Send msg to AbeilleCmd
-    function sendToCmd(action, params = '') {
+    function sendToCmd(action, param1 = '', param2 = '', param3 = '') {
         console.log("sendToCmd("+action+")");
 
         selected = getSelected();
@@ -126,6 +126,17 @@
                     1000
                 );
             });
+            break;
+        case "getGroups2":
+            zgId = param1;
+            addr = param2;
+            ep = param3;
+            sendCmd('CmdAbeille'+zgId+'/'+addr+'/getGroupMembership', 'ep='+ep);
+            setTimeout(function () {
+                location.reload(true);
+                },
+                1000
+            );
             break;
         case "addGroup":
             if (selected.length == 0)
@@ -196,13 +207,13 @@
             });
             break;
         case "startPermitJoin":
-            zgId = params;
+            zgId = param1;
             sendCmd('CmdAbeille'+zgId+'/0000/setZgPermitMode', 'mode=start');
             location.reload(true);
             $('#div_alert').showAlert({message: '{{Mode inclusion demandé. La zigate '+zgId+' clignoter pendant 4 minutes.}}', level: 'success'});
             break;
         case "stopPermitJoin":
-            zgId = params;
+            zgId = param1;
             sendCmd('CmdAbeille'+zgId+'/0000/setZgPermitMode', 'mode=stop');
             location.reload(true);
             $('#div_alert').showAlert({message: '{{Arret mode inclusion demandé. La zigate '+zgId+' doit arreter de clignoter.}}', level: 'success'});

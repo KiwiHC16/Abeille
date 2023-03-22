@@ -474,6 +474,10 @@ class Abeille extends eqLogic {
 
             // Checking that Zigate is still alive
             $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
+            if (!is_object($eqLogic)) {
+                log::add('Abeille', 'error', "La ruche ".$zgId." a été détruite. Veuillez redémarrer Abeille.");
+                continue;
+            }
             $lastComm = $eqLogic->getStatus('lastCommunication', '');
             // log::add('Abeille', 'info', "lastComm1=".$lastComm);
             if ($lastComm == '')
@@ -2471,6 +2475,8 @@ class Abeille extends eqLogic {
             log::add('Abeille', 'debug', "createRuche(): '".$eqLogic->getLogicalId()."' already exists");
         }
 
+        $eqLogic->setConfiguration('mainEP', '01');
+
         // JSON model infos
         $eqModelInfos = array(
             'id' => 'rucheCommand', // Equipment model id
@@ -2479,6 +2485,14 @@ class Abeille extends eqLogic {
             'lastUpdate' => time() // Store last update from model
         );
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
+
+        // Note: initializing 'groups' support. Simple descriptor response does not show cluster 0004 for EP01 (see https://github.com/fairecasoimeme/ZiGate/issues/409)
+        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+        if (!isset($zigbee['groups']))
+            $zigbee['groups'] = [];
+        if (!isset($zigbee['groups']['01']))
+                $zigbee['groups']['01'] = '';
+        $eqLogic->setConfiguration('ab::zigbee', $zigbee);
 
         $eqLogic->setStatus('lastCommunication', date('Y-m-d H:i:s'));
         $eqLogic->save();

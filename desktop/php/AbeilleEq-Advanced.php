@@ -25,7 +25,8 @@
     //     return $cmd->getId();
     // }
 
-    function addEpButton($id, $defEp) {
+    // Add end point input
+    function addEpInput($id, $defEp) {
         echo '<input id="'.$id.'" title="{{End Point, format hexa (ex: 01)}}" value="'.$defEp.'"  style="width:30px; margin-left: 8px" />';
     }
 
@@ -68,6 +69,11 @@
 
     function addAttrInput($id) {
         echo '<input id="'.$id.'" style="width:120px; margin-left: 8px" placeholder="{{Attrib (ex: 0021)}}" title="Attribut, format hex 4 caracteres (ex: 0508)"/>';
+    }
+
+    // Add a group address input
+    function addGroupInput($id, $title = 'Group') {
+        echo '<input id="'.$id.'" style="width:60px; margin-left: 8px" placeholder="{{Group}}" title="{{'.$title.' (4 chars hex, ex: 0001)}}" />';
     }
 
     // Create drop down list of Zigbee possible attribute types

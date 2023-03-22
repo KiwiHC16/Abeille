@@ -55,7 +55,7 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-warning" onclick="interrogate(\'getSimpleDescriptor\', \''.$eqId.'\')">{{Interroger}}</a>';
-            addEpButton("idEpSDR", $mainEP);
+            addEpInput("idEpSDR", $mainEP);
         ?>
     </div>
 </div>
@@ -91,12 +91,12 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-danger" onclick="interrogate(\'bindToDevice\', \''.$eqId.'\')">{{Bind}}</a>';
-            addEpButton("idEpE", $mainEP);
+            addEpInput("idEpE", $mainEP);
             addClusterButton("idClustIdE");
             // <input id="idIeeeE" title="{{Adresse IEEE de destination (ex: 5C0272FFFE2857A3)}}" />
             echo ' TO';
             addIeeeListButton("idIeeeE", true);
-            addEpButton("idEpE2", $mainEP);
+            addEpInput("idEpE2", $mainEP);
         ?>
     </div>
 </div>
@@ -106,11 +106,11 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-danger" onclick="interrogate(\'unbindToDevice\', \''.$eqId.'\')">{{Unbind}}</a>';
-            addEpButton("idEpSrc-UBD", $mainEP);
+            addEpInput("idEpSrc-UBD", $mainEP);
             addClusterButton("idClustId-UBD");
             echo ' TO';
             addIeeeListButton("idAddr-UBD", true);
-            addEpButton("idEpDst-UBD", $mainEP);
+            addEpInput("idEpDst-UBD", $mainEP);
         ?>
     </div>
 </div>
@@ -120,11 +120,11 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-danger" onclick="interrogate(\'bindToGroup\', \''.$eqId.'\')">{{Bind}}</a>';
-            addEpButton("idEpF", $mainEP);
+            addEpInput("idEpF", $mainEP);
             addClusterButton("idClustIdF");
             echo ' TO';
+            addGroupInput('idGroupF', 'Destination group');
         ?>
-        <input id="idGroupF" title="{{Destination group (ex: 0001)}}" />
     </div>
 </div>
 
@@ -133,10 +133,10 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-danger" onclick="interrogate(\'unbindToGroup\', \''.$eqId.'\')">{{Unbind}}</a>';
-            addEpButton("idEpSrc-UBG", $mainEP);
+            addEpInput("idEpSrc-UBG", $mainEP);
             addClusterButton("idClustId-UBG");
             echo ' TO';
-            echo '<input id="idGroup-UBG" title="{{Destination group (ex: 0001)}}" />';
+            addGroupInput('idGroup-UBG', 'Destination group');
         ?>
     </div>
 </div>
@@ -162,7 +162,7 @@
         <?php
             echo '<a class="btn btn-warning" onclick="interrogate(\'readAttribute\', \''.$eqId.'\')">{{Lire}}</a>';
             // echo '<input id="idEpA" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
-            addEpButton("idEpA", $mainEP);
+            addEpInput("idEpA", $mainEP);
             addClusterButton("idClustIdA");
             addAttrInput("idAttrIdA");
             addManufCodeInput("idManufIdRA"); // Optional
@@ -174,7 +174,7 @@
     <div class="col-sm-9">
         <?php
             echo '<a class="btn btn-danger" onclick="interrogate(\'writeAttribute\', \''.$eqId.'\')">{{Ecrire}}</a>';
-            addEpButton("idEpWA", $mainEP);
+            addEpInput("idEpWA", $mainEP);
             addClusterButton("idClustIdWA");
             addAttrInput("idAttrIdWA");
             addTypeList("idAttrTypeWA");
@@ -192,7 +192,7 @@
             <div class="col-sm-9">
                 <?php
                     echo '<a class="btn btn-danger" onclick="interrogate(\'writeAttribute0530\', \''.$eqId.'\')">{{Ecrire}}</a>';
-                    addEpButton("idEpWA2", $mainEP);
+                    addEpInput("idEpWA2", $mainEP);
                     addClusterButton("idClustIdWA2");
                     addDirInput("idDirWA2");
                     addAttrInput("idAttrIdWA2");
@@ -208,7 +208,7 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-warning" onclick="interrogate(\'readReportingConfig\', \''.$eqId.'\')">{{Interroger}}</a>';
-            addEpButton("idEp", $mainEP);
+            addEpInput("idEp", $mainEP);
             addClusterButton("idClustId");
             addAttrInput("idAttrId");
         ?>
@@ -219,7 +219,7 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-warning" onclick="interrogate(\'discoverCommandsReceived\', \''.$eqId.'\')">{{Interroger}}</a>';
-            addEpButton("idEpB", $mainEP);
+            addEpInput("idEpB", $mainEP);
             addClusterButton("idClustIdB");
         ?>
     </div>
@@ -229,7 +229,7 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-warning" onclick="interrogate(\'discoverAttributes\', \''.$eqId.'\')">{{Interroger}}</a>';
-            addEpButton("idEpD", $mainEP);
+            addEpInput("idEpD", $mainEP);
             addClusterButton("idClustIdD");
         ?>
     </div>
@@ -239,7 +239,7 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-warning" onclick="interrogate(\'discoverAttributesExt\', \''.$eqId.'\')">{{Interroger}}</a>';
-            addEpButton("idEpC", $mainEP);
+            addEpInput("idEpC", $mainEP);
             addClusterButton("idClustIdC");
         ?>
     </div>
@@ -249,7 +249,7 @@
     <div class="col-sm-9">
         <?php
             echo '<a class="btn btn-danger" onclick="interrogate(\'configureReporting\', \''.$eqId.'\')">{{Configurer}}</a>';
-            addEpButton("idEpCR", $mainEP);
+            addEpInput("idEpCR", $mainEP);
             addClusterButton("idClustIdCR");
             addAttrInput("idAttrIdCR");
             addTypeList("idAttrTypeCR");
@@ -269,7 +269,37 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-danger" onclick="interrogate(\'0000-ResetToFactory\', \''.$eqId.'\')">{{Reset}}</a>';
-            addEpButton("idEpG", $mainEP);
+            addEpInput("idEpG", $mainEP);
+        ?>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0004/addGroup">ZCL: 0004 - Add group</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-danger" onclick="interrogate(\'0004-AddGroup\', \''.$eqId.'\')">{{Add}}</a>';
+            addEpInput("idEp-AG", $mainEP);
+            addGroupInput('idGroup-AG', 'Destination group');
+        ?>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0004/Get group membership">ZCL: 0004 - Get group membership</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-danger" onclick="interrogate(\'0004-GetGroupMembership\', \''.$eqId.'\')">{{Get}}</a>';
+            addEpInput("idEp-GGM", $mainEP);
+            // addGroupInput('idGroup-AG', 'Destination group');
+        ?>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0004/Remove all groups">ZCL: 0004 - Remove all groups</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-danger" onclick="interrogate(\'0004-RemoveAllGroups\', \''.$eqId.'\')">{{Remove}}</a>';
+            addEpInput("idEp-RAG", $mainEP);
+            // addGroupInput('idGroup-AG', 'Destination group');
         ?>
     </div>
 </div>
@@ -278,7 +308,7 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-danger" onclick="interrogate(\'0201-SetPoint\', \''.$eqId.'\')">{{Modifier}}</a>';
-            addEpButton("idEpC0201-00", $mainEP);
+            addEpInput("idEpC0201-00", $mainEP);
         ?>
         <input id="idAmountC0201-00" title="{{Step: format hex 2 car}}" placeholder="{{Amount}}" style="width:60px" />
     </div>
@@ -288,7 +318,7 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-danger" onclick="interrogate(\'0300-MoveToColor\', \''.$eqId.'\')">{{Appliquer}}</a>';
-            addEpButton("idEp-MTC", $mainEP);
+            addEpInput("idEp-MTC", $mainEP);
         ?>
         <input id="idX-MTC" title="{{X: format hex 4 car}}" placeholder="{{X}}" style="width:60px" />
         <input id="idY-MTC" title="{{Y: format hex 4 car}}" placeholder="{{Y}}" style="width:60px" />
@@ -299,7 +329,7 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-danger" onclick="interrogate(\'0502-StartWarning\', \''.$eqId.'\')">{{Appliquer}}</a>';
-            addEpButton("idEp-SW", $mainEP);
+            addEpInput("idEp-SW", $mainEP);
             addWarningModesList("idMode-SW");
             addCheckbox("idStrobe-SW", "Strobe");
             addSirenLevelList("idSirenL-SW");
@@ -312,7 +342,7 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-warning" onclick="interrogate(\'1000-GetGroups\', \''.$eqId.'\')">{{Interroger}}</a>';
-            addEpButton("idEpC1000-41", $mainEP);
+            addEpInput("idEpC1000-41", $mainEP);
         ?>
     </div>
 </div>
@@ -321,7 +351,7 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-warning" onclick="interrogate(\'1000-GetEndpoints\', \''.$eqId.'\')">{{Interroger}}</a>';
-            addEpButton("idEpC1000-42", $mainEP);
+            addEpInput("idEpC1000-42", $mainEP);
         ?>
     </div>
 </div>

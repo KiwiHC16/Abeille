@@ -646,6 +646,19 @@
             topic = "Cmd"+logicalId+"_cmd-0000";
             ep = document.getElementById("idEpG").value;
             payload = "ep="+ep+"_cmd=00";
+        } else if (request == "0004-AddGroup") {
+            topic = "Cmd"+logicalId+"_addGroup";
+            ep = document.getElementById("idEp-AG").value;
+            group = document.getElementById("idGroup-AG").value;
+            payload = "ep="+ep+"_group="+group;
+        } else if (request == "0004-GetGroupMembership") {
+            topic = "Cmd"+logicalId+"_getGroupMembership";
+            ep = document.getElementById("idEp-GGM").value;
+            payload = "ep="+ep;
+        } else if (request == "0004-RemoveAllGroups") {
+            topic = "Cmd"+logicalId+"_removeAllGroups";
+            ep = document.getElementById("idEp-RAG").value;
+            payload = "ep="+ep;
         } else if (request == "0201-SetPoint") {
             topic = "Cmd"+logicalId+"_cmd-0201";
             ep = document.getElementById("idEpC0201-00").value;

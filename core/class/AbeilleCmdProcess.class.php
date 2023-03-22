@@ -3728,6 +3728,7 @@
                     $dstEp      = $Command['ep'];
                     $group      = $Command['group'];
 
+                    cmdLog('debug', '  addGroup: ep='.$ep.', group='.$group);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$group;
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
@@ -3767,6 +3768,40 @@
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     return;
                 } // End cluster 0004, $cmdName == 'getGroupMembership'
+
+                // ZCL cluster 0004 specific: removeAllGroups, sent to server
+                // Mandatory params: 'addr', 'ep'
+                else if ($cmdName == 'removeAllGroups') {
+                    $required = ['addr', 'ep']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $cmd = "0064";
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <group count: uint8_t>
+                    // <group list:data>
+
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $ep         = $Command['ep'];
+                    $groupCount = "00";
+                    $groupList  = "";
+
+                    /* Correcting EP size if required (ex "1" => "01") */
+                    if (strlen($ep) != 2) {
+                        $EP = hexdec($ep);
+                        $ep = sprintf("%02X", hexdec($EP));
+                    }
+
+                    $data = $addrMode.$addr.$srcEp.$ep;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    return;
+                } // End cluster 0004, $cmdName == 'removeAllGroups'
 
                 // ZCL cluster 0008/Level control specific: (received) commands
                 // Mandatory params: addr, EP, Level (in dec, %), duration (dec)

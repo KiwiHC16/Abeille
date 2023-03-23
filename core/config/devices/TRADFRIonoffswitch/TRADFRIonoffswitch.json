@@ -10,7 +10,7 @@
         "timeout": "60",
         "configuration": {
             "paramType": "telecommande",
-            "remoteType": "bindToGroup",
+            "remote": { "type": "bindToDev" },
             "mainEP": "01",
             "icon": "TRADFRIonoffswitch",
             "batteryType": "1x3V CR2032"

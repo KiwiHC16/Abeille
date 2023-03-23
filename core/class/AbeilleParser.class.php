@@ -2293,7 +2293,7 @@
 
             // Log
             $m = '  IEEE address response'
-                    .', SQN='.$sqn
+                    .': SQN='.$sqn
                     .', Status='.$status
                     .', ExtAddr='.$ieee
                     .', Addr='.$addr;
@@ -2341,7 +2341,7 @@
             $sqn = substr($pl, 0, 2);
             $status = substr($pl, 2, 2);
             $addr = substr($pl, 4, 4);
-            $m = '  Node Descriptor Response, SQN='.$sqn.', Status='.$status;
+            $m = '  Node Descriptor Response: SQN='.$sqn.', Status='.$status;
             parserLog('debug', $m);
             $toMon[] = $m;
 
@@ -2382,7 +2382,7 @@
             $status = substr($pl, 2, 2);
 
             $m = '  Bind response'
-                .', SQN='.$sqn
+                .': SQN='.$sqn
                 .', Status='.$status;
             parserLog('debug', $m);
             $toMon[] = $m;
@@ -2397,7 +2397,30 @@
                 'lqi' => $lqi,
             );
             msgToAbeille2($msg);
-        }
+        } // End decode8002_BindRsp()
+
+        /* Called from decode8002() to decode "Unbind response" message (Unbind_rsp, cluster 8022) */
+        function decode8002_UnbindRsp($net, $srcAddr, $pl, $lqi, &$toMon) {
+            $sqn = substr($pl, 0, 2);
+            $status = substr($pl, 2, 2);
+
+            $m = '  Unbind response'
+                .': SQN='.$sqn
+                .', Status='.$status.'/'.zbGetZCLStatus($status);
+            parserLog('debug', $m);
+            $toMon[] = $m;
+
+            $msg = array(
+                // 'src' => 'parser',
+                'type' => 'unbindResponse',
+                'net' => $net,
+                'addr' => $srcAddr,
+                'status' => $status,
+                'time' => time(),
+                'lqi' => $lqi,
+            );
+            msgToAbeille2($msg);
+        } // End decode8002_UnbindRsp()
 
         /* Called from decode8002() to decode "Mgmt_lqi_rsp" message */
         function decode8002_MgmtLqiRsp($dest, $srcAddr, $pl, &$toMon) {
@@ -2412,7 +2435,7 @@
             $pl = substr($pl, 10);
 
             $m = '  Management LQI response';
-            $m = $m.', SQN='.$sqn.', Status='.$status.', NTableEntries='.$nTableEntries.', startIdx='.$startIdx.', nTableListCount='.$nTableListCount;
+            $m = $m.': SQN='.$sqn.', Status='.$status.', NTableEntries='.$nTableEntries.', startIdx='.$startIdx.', nTableListCount='.$nTableListCount;
             parserLog('debug', $m);
             $toMon[] = $m;
 
@@ -2511,7 +2534,7 @@
                 return;
 
             $m = '  Routing table response'
-                    .', SQN='.$sqn
+                    .': SQN='.$sqn
                     .', Status='.$status
                     .', TableEntries='.$tableEntries
                     .', StartIdx='.$startIdx
@@ -2578,7 +2601,7 @@
             $ScannedChannelsCount = substr($pl, 20, 2);
 
             $m = '  Management network update response'
-               .', SQN='.$sqn
+               .': SQN='.$sqn
                .', Status='.$status
                .', TotTx='.$TotalTransmission
                .', TxFailures='.$TransmFailures
@@ -2626,7 +2649,7 @@
             $profId     = substr($pl, 14, 2).substr($pl, 12, 2);
             $deviceId   = substr($pl, 18, 2).substr($pl, 16, 2);
             $m = '  Simple descriptor response'
-                .', SQN='.$sqn
+                .': SQN='.$sqn
                 .', Status='.$status
                 .', Addr='.$srcAddr
                 .', Len='.$len
@@ -2725,7 +2748,7 @@
             $status     = substr($pl, 2, 2);
             $srcAddr    = substr($pl, 6, 2).substr($pl, 4, 2);
             $m = '  Active endpoints response'
-               .', SQN='.$sqn
+               .': SQN='.$sqn
                .', Status='.$status
                .', Addr='.$srcAddr;
 
@@ -2981,6 +3004,11 @@
                     $this->decode8002_BindRsp($dest, $srcAddr, $pl, $lqi, $toMon);
                 }
 
+                // Bind Response (Unbind_rsp, cluster=8022)
+                else if ($clustId == "8022") {
+                    $this->decode8002_UnbindRsp($dest, $srcAddr, $pl, $lqi, $toMon);
+                }
+
                 // Management LQI Response (Mgmt_Lqi_rsp)
                 // No longer handled by decode804E() due to lack of reliability (see https://github.com/fairecasoimeme/ZiGate/issues/407)
                 else if ($clustId == "8031") {
@@ -3012,7 +3040,7 @@
                         return;
 
                     parserLog('debug', '  Binding table response'
-                            .', SQN='.$sqn
+                            .': SQN='.$sqn
                             .', Status='.$status
                             .', TableSize='.$tableSize
                             .', Idx='.$index
@@ -5206,12 +5234,6 @@
         //         'lqi' => $lqi,
         //     );
         //     msgToAbeille2($msg);
-        // }
-
-        // // 8042/Node descriptor response
-        // function decode8042($dest, $payload, $lqi)
-        // {
-        //     parserLog('debug', $dest.', Type=8042/Node descriptor response => Handled by decode8002', "8042");
         // }
 
         // /**

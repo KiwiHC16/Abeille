@@ -6,7 +6,9 @@
         "type": "info",
         "logicalId": "#EP#-0006-cmd00",
         "configuration": {
-            "repeatEventManagement": "always"
+            "repeatEventManagement": "always",
+            "returnStateValue": 0,
+            "returnStateTime": 1
         }
     }
 }

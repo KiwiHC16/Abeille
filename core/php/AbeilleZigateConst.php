@@ -197,7 +197,7 @@
             "name" => "Unbind response", // Unused by Abeille
         ),
         "8034" => array(
-            "name" => "Complex descriptor response",
+            "name" => "Complex descriptor response", // Unused by Abeille
         ),
         "8035" => array(
             "name" => "PDM event code",
@@ -206,22 +206,22 @@
             "name" => "IEEE address response", // Unused by Abeille
         ),
         "8042" => array(
-            "name" => "Node descriptor response",
+            "name" => "Node descriptor response", // Unused by Abeille
         ),
         "8043" => array(
             "name" => "Simple descriptor response", // Unused by Abeille
         ),
         "8044" => array(
-            "name" => "Power descriptor response",
+            "name" => "Power descriptor response", // Unused by Abeille
         ),
         "8045" => array(
             "name" => "Active endpoints response", // Unused by Abeille
         ),
         "8046" => array(
-            "name" => "Match descriptor response",
+            "name" => "Match descriptor response", // Unused by Abeille
         ),
         "8047" => array(
-            "name" => "Management leave response",
+            "name" => "Management leave response", // Unused by Abeille
         ),
         "8048" => array(
             "name" => "Leave indication",

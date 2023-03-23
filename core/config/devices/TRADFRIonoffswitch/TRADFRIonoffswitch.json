@@ -5,6 +5,8 @@
         "model": "E1743",
         "type": "TRADFRI on/off switch",
         "genericType": "Light",
+        "comment": "Ref. FR 704.085.95",
+        "comment2": "below 2.3.075: suppports binding to groups only, 2.3.075 and greater: supports binding to devices only",
         "timeout": "60",
         "configuration": {
             "paramType": "telecommande",
@@ -25,12 +27,6 @@
                 "params": "clustId=0000&attrId=4000",
                 "execAtCreation": "Yes"
             },
-            "Off": {
-                "use": "offGroup"
-            },
-            "On": {
-                "use": "onGroup"
-            },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "calculValueOffset": "#value#*2",
@@ -47,13 +43,14 @@
                 "comment": "Reporting every 55mins max",
                 "execAtCreation": "Yes"
             },
-            "Up-Down": {
-                "use": "Up-Down"
+            "On": {
+                "use": "inf_zbCmdR-0006-On",
+                "isVisible": 1
             },
-            "Click-Middle": {
-                "use": "Click-Middle"
+            "Off": {
+                "use": "inf_zbCmdR-0006-Off",
+                "isVisible": 1
             }
-        },
-        "comment": "Ref. FR 704.085.95"
+        }
     }
 }

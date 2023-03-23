@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Legrand shutter switch: Correction modèle (2559).
+- Interne: Constantes Zigbee, amélioration support cluster 0102.
+
 230322-BETA-3
 -------------
 

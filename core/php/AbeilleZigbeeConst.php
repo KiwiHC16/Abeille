@@ -506,16 +506,16 @@
             "name" => "Window Covering",
             "attributes" => array(
                 // Information attributes
-                "0000" => array( "name" => "WindowCoveringType", "access" => "R" ),
-                "0001" => array( "name" => "PhysClosedLimitLift", "access" => "R" ),
-                "0002" => array( "name" => "PhysClosedLimitTilt", "access" => "R" ),
-                "0003" => array( "name" => "CurPosLift", "access" => "R" ),
-                "0004" => array( "name" => "CurPosTilt", "access" => "R" ),
-                "0005" => array( "name" => "NbOfActuationsLift", "access" => "R" ),
-                "0006" => array( "name" => "NbOfActuationsTilt", "access" => "R" ),
-                "0007" => array( "name" => "ConfigStatus", "access" => "R" ),
-                "0008" => array( "name" => "CurPosLiftPercent", "access" => "R" ),
-                "0009" => array( "name" => "CurPosTiltPercent", "access" => "R" ),
+                "0000" => array( "name" => "WindowCoveringType", "access" => "R", "dataType" => 0x30 ), // enum8
+                "0001" => array( "name" => "PhysClosedLimitLift", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0002" => array( "name" => "PhysClosedLimitTilt", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0003" => array( "name" => "CurPosLift", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0004" => array( "name" => "CurPosTilt", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0005" => array( "name" => "NbOfActuationsLift", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0006" => array( "name" => "NbOfActuationsTilt", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0007" => array( "name" => "ConfigStatus", "access" => "R", "dataType" => 0x18 ), // map8
+                "0008" => array( "name" => "CurPosLiftPercent", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0009" => array( "name" => "CurPosTiltPercent", "access" => "R", "dataType" => 0x20 ), // uint8
                 // Settings attributes
                 "0010" => array( "name" => "InstalledOpenLimitLift", "access" => "R" ),
                 "0011" => array( "name" => "InstalledClosedLimitLift", "access" => "R" ),

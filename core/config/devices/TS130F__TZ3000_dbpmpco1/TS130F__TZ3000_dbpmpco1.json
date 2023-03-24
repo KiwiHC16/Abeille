@@ -1,7 +1,7 @@
 {
     "TS130F__TZ3000_dbpmpco1": {
         "manufacturer": "Loratap",
-        "model": "SC400ZB-EU",
+        "model": "SC400ZB-EU v2",
         "type": "Loratap roller shutter touch switch v2",
         "genericType": "Shutter",
         "timeout": "60",

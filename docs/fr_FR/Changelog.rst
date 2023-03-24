@@ -1,9 +1,6 @@
 ChangeLog
 =========
 
-230324-BETA-1
--------------
-
 - Legrand shutter switch: Correction modèle (2559).
 - Interne: Constantes Zigbee, amélioration support cluster 0102.
 - Interne: Parser: Ajout support 'unbind response'.
@@ -16,6 +13,7 @@ ChangeLog
 - Interne: Cmd: Changement msg debug.
 - Interne: Parser: Correction support 'Node Descriptor Response'.
 - Interne: Parser: Amélioration inclusion (ajout lecture 'manufCode').
+- Loratap roller shutter touch switch v2: Support préliminaire (2561).
 
 230322-BETA-3
 -------------

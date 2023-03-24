@@ -1,0 +1,55 @@
+{
+    "TS130F__TZ3000_dbpmpco1": {
+        "manufacturer": "Loratap",
+        "model": "SC400ZB-EU",
+        "type": "Loratap roller shutter touch switch v2",
+        "genericType": "Shutter",
+        "timeout": "60",
+        "category": {
+            "opening": "1"
+        },
+        "configuration": {
+            "icon": "Loratap-RollerShutterTouchSwitch-v2",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Up": {
+                "use": "act_zbCmdG-0102-UpOpen",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Stop": {
+                "use": "act_zbCmdG-0102-Stop",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Down": {
+                "use": "act_zbCmdG-0102-DownClose",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Level": {
+                "use": "inf_zbAttr-0102-CurPosLiftPercent",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0102&attrId=0008"
+            },
+            "Bind 01-0102-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0102",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0102-0008": {
+                "use": "act_zbConfigureReporting",
+                "params": "ep=01&clustId=0102&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

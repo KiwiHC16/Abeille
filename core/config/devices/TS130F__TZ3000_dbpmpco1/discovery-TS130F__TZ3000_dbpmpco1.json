@@ -1,0 +1,234 @@
+{
+    "endPoints": {
+        "01": {
+            "servClusters": {
+                "0000": {
+                    "attributes": {
+                        "0005": {
+                            "value": "TS130F"
+                        },
+                        "0000": {
+                            "value": 3
+                        },
+                        "0001": {
+                            "value": 70
+                        },
+                        "0002": {
+                            "value": 0
+                        },
+                        "0003": {
+                            "value": 1
+                        },
+                        "0004": {
+                            "value": "_TZ3000_dbpmpco1"
+                        },
+                        "0006": {
+                            "value": ""
+                        },
+                        "0007": {
+                            "value": 1
+                        },
+                        "FFDE": {
+                            "value": 13
+                        },
+                        "FFFD": {
+                            "value": 2
+                        },
+                        "FFFE": {
+                            "value": 0
+                        },
+                        "FFE2": {
+                            "value": 54
+                        },
+                        "FFE3": {
+                            "value": ""
+                        }
+                    }
+                },
+                "0004": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "18",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 2
+                        }
+                    }
+                },
+                "0005": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "20",
+                            "value": 0
+                        },
+                        "0001": {
+                            "dataType": "20",
+                            "value": 0
+                        },
+                        "0002": {
+                            "dataType": "21",
+                            "value": 0
+                        },
+                        "0003": {
+                            "dataType": "10",
+                            "value": 0
+                        },
+                        "0004": {
+                            "dataType": "18",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 2
+                        }
+                    }
+                },
+                "0006": {
+                    "attributes": {
+                        "5000": {
+                            "dataType": "30",
+                            "value": 1
+                        },
+                        "8001": {
+                            "dataType": "30",
+                            "value": 0
+                        },
+                        "4001": {
+                            "dataType": "21",
+                            "value": 0
+                        },
+                        "4002": {
+                            "dataType": "21",
+                            "value": 0
+                        }
+                    }
+                },
+                "0102": {
+                    "attributes": {
+                        "0008": {
+                            "dataType": "20",
+                            "value": 63
+                        },
+                        "F000": {
+                            "dataType": "30",
+                            "value": 1
+                        },
+                        "F001": {
+                            "dataType": "30",
+                            "value": 1
+                        },
+                        "F002": {
+                            "dataType": "30",
+                            "value": 0
+                        },
+                        "F003": {
+                            "dataType": "21",
+                            "value": 600
+                        },
+                        "8000": {
+                            "dataType": "30",
+                            "value": 0
+                        }
+                    }
+                },
+                "E001": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "48",
+                            "value": "00"
+                        }
+                    }
+                },
+                "0019": {
+                    "attributes": {
+                        "0000": {
+                            "dataType": "F0",
+                            "value": "FFFFFFFFFFFFFFFF"
+                        },
+                        "0001": {
+                            "dataType": "23",
+                            "value": 4294967295
+                        },
+                        "0002": {
+                            "dataType": "23",
+                            "value": 70
+                        },
+                        "0003": {
+                            "dataType": "21",
+                            "value": 2
+                        },
+                        "0004": {
+                            "dataType": "23",
+                            "value": 4294967295
+                        },
+                        "0005": {
+                            "dataType": "21",
+                            "value": 65535
+                        },
+                        "0006": {
+                            "dataType": "30",
+                            "value": 0
+                        },
+                        "0007": {
+                            "dataType": "21",
+                            "value": 4417
+                        },
+                        "0008": {
+                            "dataType": "21",
+                            "value": 65535
+                        },
+                        "0009": {
+                            "dataType": "21",
+                            "value": 0
+                        },
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 3
+                        }
+                    }
+                },
+                "000A": {
+                    "attributes": {
+                        "FFFD": {
+                            "dataType": "21",
+                            "value": 1
+                        }
+                    }
+                }
+            },
+            "status": "00",
+            "cliClusters": {
+                "0019": {
+                    "attributes": {
+                        "0000": [],
+                        "0001": [],
+                        "0002": [],
+                        "0003": [],
+                        "0004": [],
+                        "0005": [],
+                        "0006": [],
+                        "0007": [],
+                        "0008": [],
+                        "0009": [],
+                        "FFFD": []
+                    }
+                },
+                "000A": {
+                    "attributes": {
+                        "FFFD": []
+                    }
+                }
+            }
+        },
+        "F2": {
+            "status": "00",
+            "cliClusters": {
+                "0021": {
+                    "attributes": []
+                }
+            }
+        }
+    }
+}

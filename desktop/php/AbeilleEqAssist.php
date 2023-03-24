@@ -971,9 +971,9 @@
                     cmds["Level"] = newCmd("inf_zbAttr-0102-CurPosLiftPercent", "ep="+epId);
                     cmds["Level"]["isVisible"] = 1;
                     cmds["Get Level"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0102&attrId=0008");
+                    cmds["SetReporting "+epId+"-0102-0008"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0102&attrId=0008&attrType=20&minInterval=0000&maxInterval=0000&changeVal=", "yes");
                 }
                 cmds["Bind "+epId+"-0102-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0102", "yes");
-                cmds["SetReporting "+epId+"-0102-0000"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0102&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
             }
 
             /* 0300/Color cluster */

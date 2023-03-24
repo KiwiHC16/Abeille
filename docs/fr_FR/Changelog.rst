@@ -6,6 +6,10 @@ ChangeLog
 - Interne: Parser: Ajout support 'unbind response'.
 - Interne: createDevice(): Mise-à-jour pour éviter conflit de commandes.
 - TRADFRIonoffswitch: Mise-à-jour du modèle.
+- Modele de commandes: Suppression de cmde obsoletes.
+
+  - current_position_lift_percentage
+  - getcurrent_position_lift_percentage
 
 230322-BETA-3
 -------------

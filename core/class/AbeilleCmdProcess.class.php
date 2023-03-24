@@ -3605,7 +3605,9 @@
                     // $change = AbeilleTools::reverseHex($changeVal); // Reportable change.
                     // $timeout = "0000";
 
-                    cmdLog('debug', "    Using manufId=".$manufId.", attrType='".$attrType."', min='".$minInterval."', max='".$maxInterval."', changeVal='".$changeVal."'", $this->debug['processCmd']);
+                    // TODO: changeVal should be set to some default, in the proper format
+
+                    cmdLog('debug', "    configureReporting: manufId=".$manufId.", attrType='".$attrType."', min='".$minInterval."', max='".$maxInterval."', changeVal='".$changeVal."'", $this->debug['processCmd']);
                     $manufId = AbeilleTools::reverseHex($manufId);
                     $minInterval = AbeilleTools::reverseHex($minInterval);
                     $maxInterval = AbeilleTools::reverseHex($maxInterval);

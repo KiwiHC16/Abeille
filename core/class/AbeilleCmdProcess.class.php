@@ -4287,7 +4287,7 @@
                     $cmdId = $Command['cmd'];
                     if ($cmdId == '04' || $cmdId == '05' || $cmdId == '06' || $cmdId == '07')
                         if (!isset($Command['value'])) {
-                            cmdLog('error', "cmd-0102: Champ 'value' non renseigné");
+                            cmdLog('error', "    cmd-0102: Champ 'value' non renseigné");
                             return;
                         }
 
@@ -4313,7 +4313,7 @@
                     else if ($cmdId == "05" || $cmdId == "07")
                         $extra = sprintf("%02X", $value); // uint8
 
-                    cmdLog('debug', '    Using cmdId='.$cmdId.', extra='.$extra);
+                    cmdLog('debug', '    cmd-0102: cmdId='.$cmdId.', extra='.$extra);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$cmdId.$extra;
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
@@ -4371,7 +4371,7 @@
                         $amount = $Command['amount'];
                         $data2 = $fcf.$sqn.$cmdId.$mode.$amount;
                     } else {
-                        cmdLog('debug', "    ERROR: Unsupported cluster 0201 command ".$cmdId);
+                        cmdLog('error', "    cmd-0201: Commande ".$cmdId." non supportée");
                         return;
                     }
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);

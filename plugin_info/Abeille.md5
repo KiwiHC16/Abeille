@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230324-BETA-1"
+# VERSION="230324-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -46,7 +46,7 @@ e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 473bd5057c27f6285d6d2500f29de9cc *core/class/AbeilleCmd.class.php
 c7450fe523a97275542895f2770b71f5 *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
-2ef2453ff18e10cfb6fb017faf557fb0 *core/class/AbeilleCmdProcess.class.php
+e006a9ee5d2f8759dd6cf788f0b8fe06 *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
 e5800350ecb9b21ca1007f84c697217b *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
@@ -1007,6 +1007,8 @@ afb10c266d421e29badea1c7038f63cc *core/config/devices/TS0601__TZE200_yvx5lh6k/TS
 0bbef1f26b77c36711b630350d5afba8 *core/config/devices/TS130F__TZ3000_1dd0d5yi/discovery.json
 be2fdcb3e49b22bea74cd908b85b89d3 *core/config/devices/TS130F__TZ3000_4uuaja4a/TS130F__TZ3000_4uuaja4a.json
 52222e51ee6ce4f97c8a3b3abe400eda *core/config/devices/TS130F__TZ3000_4uuaja4a/discovery.json
+66595da40a0a6e585c25477c8a60c6df *core/config/devices/TS130F__TZ3000_dbpmpco1/TS130F__TZ3000_dbpmpco1.json
+d33028baff507fe066689b97abd0c016 *core/config/devices/TS130F__TZ3000_dbpmpco1/discovery-TS130F__TZ3000_dbpmpco1.json
 69040f72a92c85904de60d435ace1c45 *core/config/devices/TS130F__TZ3000_e3vhyirx/TS130F__TZ3000_e3vhyirx.json
 061e6495767191ec7a5e24d632301a54 *core/config/devices/TS130F__TZ3000_e3vhyirx/discovery-TS130F._TZ3000_femsaaua.json
 2b2d8fe7be35aecb08ad70d654d11c1d *core/config/devices/TS130F__TZ3000_e3vhyirx/discovery-TS130F__TZ3000_e3vhyirx.json
@@ -1226,14 +1228,14 @@ be4358fb4827e4c8ea8fe85f50779a80 *desktop/php/AbeilleEq-Main-Generic.php
 7b3a9f5844771049dc1552c74f604301 *desktop/php/AbeilleEq-Main-Icon.php
 03315c52e16fbf4a4d8bb967c1977c37 *desktop/php/AbeilleEq-Main.php
 a1d870cadad75bcd9878aaafe90a3f09 *desktop/php/AbeilleEq.php
-273b34beb7e93023160680672569139f *desktop/php/AbeilleEqAssist.php
+ad7c87cc911f313e24dedccb13b6774b *desktop/php/AbeilleEqAssist.php
 36806ce175dc9f0d2495c90b904c33bc *desktop/php/AbeilleFormAction.php
 049be0afc8e0ae0caa7f7c8865e4201e *desktop/php/AbeilleGraph.php
 91ec0d41e5f01239f808d5dfdcf7f0c1 *desktop/php/AbeilleMaintenance-Logs.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-262fb08d0091486fe145d885086ffbbf *docs/fr_FR/Changelog.rst
+1b32d8a791951ea8fd73ce745f9639ba *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1352,6 +1354,7 @@ aa0b6fbb1dc25bb92343a1bfd1b43169 *images/node_LivarnoHome-Bulb-E14Color.png
 1d12e2eeb80910851e094cad894b0c43 *images/node_LivarnoLux-HG06701B.png
 14efe6ba9f33aa1d91c704f46438c3d6 *images/node_LoraTap3GangRemote.png
 fd449d50278ae2911f3d0b4201784f5c *images/node_Loratap-RollerShutterModule.png
+f701ff90efad6fd1ca9007f0faa6adbf *images/node_Loratap-RollerShutterTouchSwitch-v2.png
 fb68dd5bd8411941e61fd9b8b26bfb81 *images/node_Mhcozy-ZG-0005-RF.png
 7d686a21a3e5fca537952b382557e8dd *images/node_Moes-CurtainModule.png
 524c2093bcd5648a5c86142e37018c6f *images/node_Moes-DimmerModule.png
@@ -1542,10 +1545,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-c75ec8efc9e3b7207a9f783131c4a58d *plugin_info/Abeille.version
+a6cbad6fa64eccba2ac9bcb1db5fae56 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 655bfb896945e3f40030f48c7fd01c51 *plugin_info/configuration.php
-3b012de06a04c6d2a272698cb429da4b *plugin_info/info.json
+8e2a88ff69f96320a38fb94ca67caa5c *plugin_info/info.json
 97bdb0cc89520708646f4a0b55aeb02c *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

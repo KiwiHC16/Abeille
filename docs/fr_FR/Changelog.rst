@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230324-BETA-2
+-------------
+
 - Legrand shutter switch: Correction modèle (2559).
 - Interne: Constantes Zigbee, amélioration support cluster 0102.
 - Interne: Parser: Ajout support 'unbind response'.

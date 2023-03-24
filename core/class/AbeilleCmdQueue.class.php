@@ -520,8 +520,8 @@
                     $mt = microtime(true);
                     if (isset($zg['tp_time']) && ($zg['tp_time'] > $mt)) {
                         // cmdLog('debug', "  Throughput limitation for Zigate ".$zgId." (tp_time=".$zg['tp_time'].", mt=".$mt.")");
-                        cmdLog('debug', "  Throughput limitation for Zigate ".$zgId);
-                        break; // This ziaget is not yet available
+                        cmdLog('debug', "processCmdQueues(): zigate=".$zgId.", pri=".$priority.", count=".$count." => Throughput limitation");
+                        break; // This zigate is not yet available
                     }
 
                     cmdLog('debug', "processCmdQueues(): zigate=".$zgId.", pri=".$priority.", NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);

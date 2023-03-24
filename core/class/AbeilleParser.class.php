@@ -816,9 +816,8 @@
             foreach ($updates as $updType => $value) {
                 // Log only if relevant
                 if ($updType && ($eq['status'] != 'idle')) {
-                    $u = ($updType) ? $updType : '';
                     $v = ($value === false) ? 'false' : $value;
-                    parserLog('debug', "  deviceUpdates('".$u."', '".$v."'): Status=".$eq['status']);
+                    parserLog('debug', "  deviceUpdates('".$updType."', '".$v."'): Status=".$eq['status']);
                 }
 
                 /* Updating entry: 'epList', 'manufId', 'modelId' or 'location', 'ieee', 'bindingTableSize' */
@@ -886,11 +885,9 @@
                     $eq[$updType] = $value;
             } // End foreach($updates)
 
-            if ($updates != [])
-                parserLog('debug', '  Updated eq='.json_encode($eq, JSON_UNESCAPED_SLASHES));
-
             // Any new info for Abeille.class ?
             if (count($abUpdates) != 0) {
+                parserLog('debug', '  Updated eq='.json_encode($eq, JSON_UNESCAPED_SLASHES));
                 $msg = array(
                     'type' => 'deviceUpdates',
                     'net' => $net,
@@ -952,6 +949,10 @@
                         break; // To reduce requests on first missing groups membership
                     }
                 }
+            }
+            if (!isset($eq['manufCode']) || ($eq['manufCode'] === null)) {
+                parserLog('debug', '  Requesting node descriptor');
+                $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getNodeDescriptor");
             }
 
             // TODO: Do not request modelId/manuf.. if there is no cluster 0000 server
@@ -2337,10 +2338,10 @@
         } // End decode8002_IeeeAddrRsp()
 
         /* Called from decode8002() to decode "Node descriptor response" message */
-        function decode8002_NodeDescRsp($dest, $srcAddr, $pl, &$toMon) {
+        function decode8002_NodeDescRsp($net, $srcAddr, $pl, &$toMon) {
             $sqn = substr($pl, 0, 2);
             $status = substr($pl, 2, 2);
-            $addr = substr($pl, 4, 4);
+            $addr = AbeilleTools::reverseHex(substr($pl, 4, 4));
             $m = '  Node Descriptor Response: SQN='.$sqn.', Status='.$status;
             parserLog('debug', $m);
             $toMon[] = $m;
@@ -2354,7 +2355,7 @@
             parserLog('debug', '  MacCapa='.$macCapa.', ManufCode='.$manufCode);
 
             // 2 infos to store: macCapa & manufCode
-            $eq = getDevice($dest, $srcAddr, '');
+            $eq = getDevice($net, $srcAddr, '');
             // WARNING: macCapa can be overloaded by customization
             if (isset($eq['customization']) && isset($eq['customization']['macCapa'])) {
                 $macCapa = $eq['customization']['macCapa'];

@@ -2492,7 +2492,7 @@
                'name' field contains command name. */
             if (isset($Command['name'])) {
                 $cmdName = $Command['name'];
-                cmdLog('debug', '    '.$cmdName.' cmd', $this->debug['processCmd']);
+                // cmdLog('debug', '    '.$cmdName.' cmd', $this->debug['processCmd']);
 
                 /* Note: commands are described in the following order:
                    - Zigate specific commands
@@ -2847,16 +2847,18 @@
                     // $dstAddr: 01=16bit group addr, destEp ignored
                     // $dstAddr: 03=64bit ext addr, destEp required
                     $dstAddr = $Command['destAddr'];
-                    if (strlen($dstAddr) == 4)
+                    $dstEp = isset($Command['destEp']) ? $Command['destEp'] : "00"; // destEp ignored if group address
+                    if (strlen($dstAddr) == 4) {
                         $dstAddrMode = "01";
-                    else if (strlen($dstAddr) == 16)
+                        $dstTxt = "group ".$dstAddr;
+                    } else if (strlen($dstAddr) == 16) {
                         $dstAddrMode = "03";
-                    else {
+                        $dstTxt = "device ".$dstAddr."/EP-".$dstEp;
+                    } else {
                         cmdLog('error', "    bind0030: Invalid dest addr length (".$dstAddr.")");
                         return;
                     }
-                    $dstEp = isset($Command['destEp']) ? $Command['destEp'] : "00"; // destEp ignored if group address
-                    cmdLog('debug', '    bind0030: '.$addr.'/EP'.$ep.'/Clust'.$clustId.' to '.$dstAddr.'/EP'.$dstEp);
+                    cmdLog('debug', '    bind0030: '.$addr.'/EP-'.$ep.'/Clust-'.$clustId.' to '.$dstTxt);
                     $data = $addr.$ep.$clustId.$dstAddrMode.$dstAddr.$dstEp;
 
                     // Note: Bind is sent with ACK request
@@ -2908,12 +2910,12 @@
                     } else if (strlen($dstAddr) == 16) {
                         $dstAddrMode = "03";
                         $dstEp = $Command['destEp'];
-                        $dstTxt = 'device '.$dstAddr.'/EP'.$dstEp;
+                        $dstTxt = 'device '.$dstAddr.'/EP-'.$dstEp;
                     } else {
                         cmdLog('error', "    unbind0031: Invalid dest addr length (".$dstAddr.")");
                         return;
                     }
-                    cmdLog('debug', '    unbind0031: '.$addr.'/EP'.$ep.'/Clust'.$clustId.' to '.$dstTxt);
+                    cmdLog('debug', '    unbind0031: '.$addr.'/EP-'.$ep.'/Clust-'.$clustId.' to '.$dstTxt);
                     $data = $addr.$ep.$clustId.$dstAddrMode.$dstAddr.$dstEp;
 
                     // Note: Unbind is sent with ACK request
@@ -3730,7 +3732,7 @@
                     $dstEp      = $Command['ep'];
                     $group      = $Command['group'];
 
-                    cmdLog('debug', '  addGroup: ep='.$ep.', group='.$group);
+                    cmdLog('debug', '  addGroup: ep='.$dstEp.', group='.$group);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$group;
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);

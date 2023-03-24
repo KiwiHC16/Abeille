@@ -10,6 +10,9 @@ ChangeLog
 
   - current_position_lift_percentage
   - getcurrent_position_lift_percentage
+- Interne: Cmd: Changement msg debug.
+- Interne: Parser: Correction support 'Node Descriptor Response'.
+- Interne: Parser: Amélioration inclusion (ajout lecture 'manufCode').
 
 230322-BETA-3
 -------------

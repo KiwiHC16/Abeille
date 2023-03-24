@@ -3,6 +3,7 @@
         "name": "Bind device to Zigate",
         "comment": "Simplified version of zbBind",
         "subType": "other",
+        "logicalId": "bind-#EP#-#CLUSTID#-ToZigate",
         "template": "",
         "configuration": {
             "topic": "bind0030",

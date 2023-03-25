@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Legefirm repeteur zigbee: Ajout support (2560).
+
 230324-BETA-2
 -------------
 

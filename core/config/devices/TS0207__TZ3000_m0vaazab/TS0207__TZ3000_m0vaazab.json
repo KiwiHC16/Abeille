@@ -4,11 +4,20 @@
         "zbManufacturer": "_TZ3000_m0vaazab",
         "model": "RP280",
         "timeout": "60",
-        "type": "Tuya RP280 zigbee repeater",
+        "type": "Tuya zigbee 3.0 repeater",
         "alternateIds": {
+            "TS0207__TZ3000_ufttklsz": {
+            },
+            "TS0207__TZ3000_5k5vh43t": {
+            },
             "TS0207__TZ3000_gszjt2xx": {
                 "manufacturer": "Loratap",
                 "type": "Loratap repeater"
+            },
+            "TS0207__TZ3000_nkkl7uzv": {
+                "manufacturer": "Legefirm",
+                "type": "Legefirm zigbee repeater",
+                "icon": "Tuya-Repeater-2"
             }
         },
         "configuration": {

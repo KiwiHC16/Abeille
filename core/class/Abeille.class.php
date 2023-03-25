@@ -1782,6 +1782,39 @@ class Abeille extends eqLogic {
                         $eqChanged = true;
                     } else
                         log::add('Abeille', 'debug', '  ERROR: Unknown '.$net.'/'.$addr." device");
+                } else if ($updKey == 'manufId') {
+                    if (is_object($eqLogic)) {
+                        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                        if (!isset($zigbee['endPoints'][$ep]['manufId'])) {
+                            $zigbee['endPoints'][$ep]['manufId'] = $updVal;
+                            $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                            log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]['.$ep.']['manufId']' updated to ".json_encode($updVal));
+                            $eqChanged = true;
+                        }
+                    } else
+                        log::add('Abeille', 'debug', '  ERROR: Unknown '.$net.'/'.$addr." device");
+                } else if ($updKey == 'modelId') {
+                    if (is_object($eqLogic)) {
+                        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                        if (!isset($zigbee['endPoints'][$ep]['modelId'])) {
+                            $zigbee['endPoints'][$ep]['modelId'] = $updVal;
+                            $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                            log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]['.$ep.']['modelId']' updated to ".json_encode($updVal));
+                            $eqChanged = true;
+                        }
+                    } else
+                        log::add('Abeille', 'debug', '  ERROR: Unknown '.$net.'/'.$addr." device");
+                } else if ($updKey == 'location') {
+                    if (is_object($eqLogic)) {
+                        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                        if (!isset($zigbee['endPoints'][$ep]['location'])) {
+                            $zigbee['endPoints'][$ep]['location'] = $updVal;
+                            $eqLogic->setConfiguration('ab::zigbee', $zigbee);
+                            log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'ab::zigbee[endPoints]['.$ep.']['location']' updated to ".json_encode($updVal));
+                            $eqChanged = true;
+                        }
+                    } else
+                        log::add('Abeille', 'debug', '  ERROR: Unknown '.$net.'/'.$addr." device");
                 } else if ($updKey == 'manufCode') {
                     if (is_object($eqLogic)) {
                         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);

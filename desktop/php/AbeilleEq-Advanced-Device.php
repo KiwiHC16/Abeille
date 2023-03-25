@@ -8,20 +8,16 @@
 ?>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">Identifiant Zigbee (modelId, manufId)</label>
+    <label class="col-sm-3 control-label">Identifiant Zigbee</label>
     <div class="col-sm-5">
         <?php
-            $sig = $eqLogic->getConfiguration('ab::signature');
-            if ($sig) {
-                $model = $sig['modelId'];
-                $manuf = $sig['manufId'];
-                // echo '<span>'.$model.', '.$manuf.'</span>';
-            } else {
-                $model = '';
-                $manuf = '';
-            }
-            echo '<input readonly title="{{Identifiant Zigbee du modèle}}" value="'.$model.'" />';
-            echo '<input readonly style="margin-left: 8px" title="{{Identifiant Zigbee du fabricant}}" value="'.$manuf.'" />';
+            $sig = $eqLogic->getConfiguration('ab::signature', []);
+            $model = isset($sig['modelId']) ? $sig['modelId'] : '';
+            $manuf = isset($sig['manufId']) ? $sig['manufId'] : '';
+            $location = isset($sig['location']) ? $sig['location'] : '';
+            echo '<input readonly title="{{Modèle}}" value="'.$model.'" />';
+            echo '<input readonly style="margin-left: 8px" title="{{Fabricant}}" value="'.$manuf.'" />';
+            echo '<input readonly style="margin-left: 8px" title="{{Localisation}}" value="'.$location.'" />';
     ?>
     </div>
 </div>
@@ -139,3 +135,13 @@
     ?>
 </div>
 
+<?php if (isset($dbgDeveloperMode)) { ?>
+<div class="form-group">
+    <label class="col-sm-3 control-label">Informations de l'équipement</label>
+    <div class="col-sm-5">
+        <?php
+            echo '<a class="btn btn-warning" onclick="repair('.$eqId.')">{{Réparer}}</a>';
+        ?>
+    </div>
+</div>
+<?php } ?>

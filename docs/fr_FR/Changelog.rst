@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- Interne: Parser: Correction detection support de groupes.
+- Page avancé/réparation: Support préliminaire.
+- Page avancé: Ajout 'localisation' pour identifiant Zigbee (cas Profalux).
+
 230325-BETA-2
 -------------
 

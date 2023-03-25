@@ -861,24 +861,30 @@
                         $abUpdates["manufCode"] = $value;
                     }
                 } else if (($updType == 'modelId') || ($updType == '0000-0005')) { // Model identifier
-                    if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['modelId']))
+                    if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['modelId'])) {
                         $eq['endPoints'][$ep]['modelId'] = $value;
+                        $abUpdates["modelId"] = $value;
+                    }
                     if (($eq['modelId'] === null) || ($eq['modelId'] === false)) {
                         $eq['modelId'] = $value;
                         if ($eq['mainEp'] == '')
                             $eq['mainEp'] = $ep;
                     }
                 } else if (($updType == 'manufId') || ($updType == '0000-0004')) { // Manufacturer name
-                    if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['manufId']))
+                    if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['manufId'])) {
                         $eq['endPoints'][$ep]['manufId'] = $value;
+                        $abUpdates["manufId"] = $value;
+                    }
                     if (($eq['manufId'] === null) || ($eq['manufId'] === false)) {
                         $eq['manufId'] = $value;
                         if ($eq['mainEp'] == '')
                             $eq['mainEp'] = $ep;
                     }
                 } else if (($updType == "location") || ($updType == "0000-0010")) { // Location
-                    if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['location']))
+                    if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['location'])) {
                         $eq['endPoints'][$ep]['location'] = $value;
+                        $abUpdates["location"] = $value;
+                    }
                     if (($eq['location'] === null) || ($eq['location'] === false))
                         $eq['location'] = $value;
                 } else // 'ieee' or 'bindingTableSize'
@@ -940,7 +946,7 @@
                     parserLog('debug', '  Requesting simple descriptor for EP '.$epId2);
                     $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getSimpleDescriptor", "ep=".$epId2);
                     break; // To reduce requests on first missing descriptor
-                } else if (strpos($ep2['servClusters'], '0004')) {
+                } else if (strpos($ep2['servClusters'], '0004') !== false) {
                     if (isset($ep2['groups']))
                         parserLog('debug', '  Groups='.json_encode($ep2['groups']));
                     if (!isset($eq['groups']) || !isset($eq['groups'][$epId2])) {

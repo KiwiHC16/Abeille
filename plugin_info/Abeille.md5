@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230324-BETA-2"
+# VERSION="230325-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -947,7 +947,8 @@ af1f178e6c85d7c5cc833b89749edc2d *core/config/devices/TS0201__TYZB01_hjsgdkfl/TS
 f1e93658b039b5c13583b353401927ea *core/config/devices/TS0203__TYZB01_xph99wvr/TS0203__TYZB01_xph99wvr.json
 4d0ad8c7361376788cb5ede6a3a006fb *core/config/devices/TS0203__TZ3000_f1hmoyj4/TS0203__TZ3000_f1hmoyj4.json
 4fd13e1246a575965ffecc793427c22c *core/config/devices/TS0203__TZ3000_f1hmoyj4/discovery.json
-0674ac114ba911385d60572e37b56216 *core/config/devices/TS0207__TZ3000_m0vaazab/TS0207__TZ3000_m0vaazab.json
+3ba2484022fa94b97b252ca38240188a *core/config/devices/TS0207__TZ3000_m0vaazab/TS0207__TZ3000_m0vaazab.json
+cc140462fd39d209e1052d0fe661c1c0 *core/config/devices/TS0207__TZ3000_m0vaazab/discovery-TS0207__TZ3000_nkkl7uzv.json
 d17feac58de5e98ee29611181aa76ab7 *core/config/devices/TS0207__TZ3000_m0vaazab/discovery.json
 04645879420c0c200bbdd1dbe94ba23e *core/config/devices/TS0210__TZ3000_bmfw9ykl/TS0210__TZ3000_bmfw9ykl.json
 aefad1cd77e5f77cad0e04b41002ffa6 *core/config/devices/TS0210__TZ3000_bmfw9ykl/discovery.json
@@ -1007,7 +1008,7 @@ afb10c266d421e29badea1c7038f63cc *core/config/devices/TS0601__TZE200_yvx5lh6k/TS
 0bbef1f26b77c36711b630350d5afba8 *core/config/devices/TS130F__TZ3000_1dd0d5yi/discovery.json
 be2fdcb3e49b22bea74cd908b85b89d3 *core/config/devices/TS130F__TZ3000_4uuaja4a/TS130F__TZ3000_4uuaja4a.json
 52222e51ee6ce4f97c8a3b3abe400eda *core/config/devices/TS130F__TZ3000_4uuaja4a/discovery.json
-66595da40a0a6e585c25477c8a60c6df *core/config/devices/TS130F__TZ3000_dbpmpco1/TS130F__TZ3000_dbpmpco1.json
+e11f09e102f1f3b93d8dc7c2a2ed4f9a *core/config/devices/TS130F__TZ3000_dbpmpco1/TS130F__TZ3000_dbpmpco1.json
 d33028baff507fe066689b97abd0c016 *core/config/devices/TS130F__TZ3000_dbpmpco1/discovery-TS130F__TZ3000_dbpmpco1.json
 69040f72a92c85904de60d435ace1c45 *core/config/devices/TS130F__TZ3000_e3vhyirx/TS130F__TZ3000_e3vhyirx.json
 061e6495767191ec7a5e24d632301a54 *core/config/devices/TS130F__TZ3000_e3vhyirx/discovery-TS130F._TZ3000_femsaaua.json
@@ -1235,7 +1236,7 @@ ad7c87cc911f313e24dedccb13b6774b *desktop/php/AbeilleEqAssist.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-1b32d8a791951ea8fd73ce745f9639ba *docs/fr_FR/Changelog.rst
+1d429a7625a92bf7160aab22cc01536f *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1464,6 +1465,7 @@ f79d94a53a4cd8cdde13ab68ac29f734 *images/node_Tuya-PIR-Illuminance.png
 74da263788e961a846235adeaf35dd61 *images/node_Tuya-QS-Zigbee-C01.png
 25f286104433ff4733c42e6cb3b29b97 *images/node_Tuya-RH3040.png
 0c478189431d7286d8ada4d286c31a65 *images/node_Tuya-RSH-AirBox01.png
+eaa45f6100901779a42083899525fc67 *images/node_Tuya-Repeater-2.jpg
 50635ac5b6e9ba2b7fc309a3a3de9dfa *images/node_Tuya-Repeater-RP280.png
 931659b93b273278ebaefd213d0e0b6d *images/node_Tuya-SmartSocket-2.png
 7e7eeb04494731689b1728561f55b5e8 *images/node_Tuya-SmartSocket-3.png
@@ -1545,10 +1547,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-a6cbad6fa64eccba2ac9bcb1db5fae56 *plugin_info/Abeille.version
+d7b0e6fa0b624a7442797f2d74165c44 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 655bfb896945e3f40030f48c7fd01c51 *plugin_info/configuration.php
-8e2a88ff69f96320a38fb94ca67caa5c *plugin_info/info.json
+eb6fbba10708b1e0bef471bae84a55b6 *plugin_info/info.json
 97bdb0cc89520708646f4a0b55aeb02c *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

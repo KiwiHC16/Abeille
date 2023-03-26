@@ -4373,8 +4373,6 @@
                                 $m .= " with On/Off";
                             $m .= ": level=".$level.", transition=".$transition.", optMask=".$optMask.", optOverride=".$optOverride;
                             parserLog('debug', $m);
-                            parserLog('debug', "  Handled by decode8085");
-                            return;
                         } else if (($cmd == "01") || ($cmd == "05")) { // Move (without/with On/Off)
                             $mode = substr($pl, 0, 2);
                             $rate = substr($pl, 2, 2);
@@ -4385,8 +4383,6 @@
                                 $m .= " with On/Off";
                             $m .= ": mode=".$mode.", rate=".$rate.", optMask=".$optMask.", optOverride=".$optOverride;
                             parserLog('debug', $m);
-                            parserLog('debug', "  Handled by decode8085");
-                            return;
                         } else if (($cmd == "02") || ($cmd == "06")) { // Step (without/with On/Off)
                             $mode = substr($pl, 0, 2);
                             $size = substr($pl, 2, 2);
@@ -4398,8 +4394,6 @@
                                 $m .= " with On/Off";
                             $m .= ": mode=".$mode.", size=".$rate.", transition=".$transition.", optMask=".$optMask.", optOverride=".$optOverride;
                             parserLog('debug', $m);
-                            parserLog('debug', "  Handled by decode8085");
-                            return;
                         } else if (($cmd == "03") || ($cmd == "07")) { // Stop (without/with On/Off)
                             $optMask = substr($pl, 0, 2);
                             $optOverride = substr($pl, 2, 2);
@@ -4408,12 +4402,23 @@
                                 $m .= " with On/Off";
                             $m .= ": optMask=".$optMask.", optOverride=".$optOverride;
                             parserLog('debug', $m);
-                            parserLog('debug', "  Handled by decode8085");
-                            return;
                         } else {
                             parserLog('debug', "  Unsupported cluster 0008 specific cmd ".$cmd);
                             return;
                         }
+
+                        // Legacy code support. To be removed at some point.
+                        $attrReportN[] = array(
+                            'name' => 'Up-Down', // OBSOLETE: Do not use !!
+                            'value' => $cmd,
+                        );
+
+                        // Tcharp38: New way of handling this event (Level cluster cmd coming from a device)
+                        $attrReportN[] = array(
+                            'name' => $ep.'-0008-cmd'.$cmd,
+                            'value' => 1, // Equivalent to a click. No special value
+                        );
+                        // Tcharp38: Where is the data associated to cmd ? May need to decode that with 8002 instead.
                     } // End clustId == "0008"
 
                     // 0019/OTA cluster specific
@@ -5799,64 +5804,64 @@
         // Remote won't tell which button was released left or right, but it will be same button that was last hold.
         // Remote is unable to send other button commands at least when left or right is hold down.
 
-        /* Level cluster command coming from a device (broadcast or unicast to Zigate) */
-        function decode8085($dest, $payload, $lqi) {
-            // <Sequence number: uin8_t>    -> 2
-            // <endpoint: uint8_t>          -> 2
-            // <Cluster id: uint16_t>       -> 4
-            // <address_mode: uint8_t>      -> 2
-            // <addr: uint16_t>             -> 4
-            // <cmd: uint8>                 -> 2
-            //  2: 'click', 1: 'hold', 3: 'release'
+        // /* Level cluster command coming from a device (broadcast or unicast to Zigate) */
+        // function decode8085($dest, $payload, $lqi) {
+        //     // <Sequence number: uin8_t>    -> 2
+        //     // <endpoint: uint8_t>          -> 2
+        //     // <Cluster id: uint16_t>       -> 4
+        //     // <address_mode: uint8_t>      -> 2
+        //     // <addr: uint16_t>             -> 4
+        //     // <cmd: uint8>                 -> 2
+        //     //  2: 'click', 1: 'hold', 3: 'release'
 
-            $ep = substr($payload, 2, 2);
-            $clustId = substr($payload, 4, 4);
-            $srcAddr = substr($payload, 10, 4); // Assuming short addr mode
-            $cmd = substr($payload, 14, 2);
+        //     $ep = substr($payload, 2, 2);
+        //     $clustId = substr($payload, 4, 4);
+        //     $srcAddr = substr($payload, 10, 4); // Assuming short addr mode
+        //     $cmd = substr($payload, 14, 2);
 
-            $decoded = '8085/Level update'
-                .', SQN='.substr($payload, 0, 2)
-                .', EP='.$ep
-                .', ClustId='.$clustId
-                .', AddrMode='.substr($payload, 8, 2)
-                .', SrcAddr='.$srcAddr
-                .', Cmd='.$cmd;
-            parserLog('debug', $dest.', Type='.$decoded);
+        //     $decoded = '8085/Level update'
+        //         .', SQN='.substr($payload, 0, 2)
+        //         .', EP='.$ep
+        //         .', ClustId='.$clustId
+        //         .', AddrMode='.substr($payload, 8, 2)
+        //         .', SrcAddr='.$srcAddr
+        //         .', Cmd='.$cmd;
+        //     parserLog('debug', $dest.', Type='.$decoded);
 
-            // Monitor if required
-            if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr)) {
-                monMsgFromZigate($decoded); // Send message to monitor
-            }
+        //     // Monitor if required
+        //     if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr)) {
+        //         monMsgFromZigate($decoded); // Send message to monitor
+        //     }
 
-            $this->whoTalked[] = $dest.'/'.$srcAddr;
+        //     $this->whoTalked[] = $dest.'/'.$srcAddr;
 
-            // Legacy code support. To be removed at some point.
-            $attributes = [];
-            $attributes[] = array(
-                'name' => 'Up-Down', // OBSOLETE: Do not use !!
-                'value' => $cmd,
-            );
+        //     // Legacy code support. To be removed at some point.
+        //     $attributes = [];
+        //     $attributes[] = array(
+        //         'name' => 'Up-Down', // OBSOLETE: Do not use !!
+        //         'value' => $cmd,
+        //     );
 
-            // Tcharp38: New way of handling this event (Level cluster cmd coming from a device)
-            $attributes[] = array(
-                'name' => $ep.'-0008-cmd'.$cmd,
-                'value' => 1, // Equivalent to a click. No special value
-            );
-            // Tcharp38: Where is the data associated to cmd ? May need to decode that with 8002 instead.
+        //     // Tcharp38: New way of handling this event (Level cluster cmd coming from a device)
+        //     $attributes[] = array(
+        //         'name' => $ep.'-0008-cmd'.$cmd,
+        //         'value' => 1, // Equivalent to a click. No special value
+        //     );
+        //     // Tcharp38: Where is the data associated to cmd ? May need to decode that with 8002 instead.
 
-            $msg = array(
-                // 'src' => 'parser',
-                'type' => 'attributesReportN',
-                'net' => $dest,
-                'addr' => $srcAddr,
-                'ep' => $ep,
-                'clustId' => $clustId,
-                'attributes' => $attributes,
-                'time' => time(),
-                'lqi' => $lqi
-            );
-            msgToAbeille2($msg);
-        }
+        //     $msg = array(
+        //         // 'src' => 'parser',
+        //         'type' => 'attributesReportN',
+        //         'net' => $dest,
+        //         'addr' => $srcAddr,
+        //         'ep' => $ep,
+        //         'clustId' => $clustId,
+        //         'attributes' => $attributes,
+        //         'time' => time(),
+        //         'lqi' => $lqi
+        //     );
+        //     msgToAbeille2($msg);
+        // }
 
         // /* OnOff cluster command coming from a device (broadcast or unicast to Zigate) */
         // function decode8095($dest, $payload, $lqi) {

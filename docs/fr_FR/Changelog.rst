@@ -4,6 +4,7 @@ ChangeLog
 - Interne: Parser: Correction detection support de groupes.
 - Page avancé/réparation: Support préliminaire.
 - Page avancé: Ajout 'localisation' pour identifiant Zigbee (cas Profalux).
+- Interne: Parser: Suppression support 8085/Level update pour compatibilité mode raw.
 
 230326-STABLE-1
 ---------------

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230326-STABLE-1
+---------------
+
   .. important:: Zigates v2
 
     - Doivent être à jour du dernier firmware disponible (v3.A0 à ce jour).

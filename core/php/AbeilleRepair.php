@@ -62,14 +62,14 @@
         if (!isset($zigbee['endPoints'])) {
             logMessage('debug', '  Requesting active endpoints list');
             msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
-            return $ret;
+            return;
         }
 
         foreach ($zigbee['endPoints'] as $epId2 => $ep2) {
             if (!isset($ep2['servClusters'])) {
                 logMessage('debug', '  Requesting simple descriptor for EP '.$epId2);
                 msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getSimpleDescriptor", "ep=".$epId2);
-                break; // To reduce requests on first missing descriptor
+                return; // To reduce requests on first missing descriptor
             } else {
                 logMessage('debug', "  ep2['servClusters']=".json_encode($ep2['servClusters']));
                 if (strpos($ep2['servClusters'], '0000') !== false) {
@@ -107,14 +107,31 @@
                     if (!isset($zigbee['groups']) || !isset($zigbee['groups'][$epId2])) {
                         logMessage('debug', '  Requesting groups membership for EP '.$epId2);
                         msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getGroupMembership", "ep=".$epId2);
-                        break; // To reduce requests on first missing groups membership
+                        return; // To reduce requests on first missing groups membership
                     }
                 }
             }
         }
 
-        // Zigbee signature: modelId & manufId defined ?
+        // Zigbee signature correct ?
         $sig = $eqLogic->getConfiguration('ab::signature', []);
+        foreach ($zigbee['endPoints'] as $epId2 => $ep2) {
+            if (strpos($ep2['servClusters'], '0000') === false)
+                continue; // No basic cluster for this EP
+
+            if ($ep2['modelId'] != '') {
+                $id1 = $ep2['modelId'].'_'.$ep2['manufId'];
+                $id2 = $ep2['modelId'];
+            } else if ((substr($ieee, 0, 6) == '20918A') && ($ep2['location'] != '')) {
+                if (!isset($sig['modelId']) || ($ep2['location'] != $sig['modelId'])) {
+                    // TODO: Before update we must check that corresponding model exists.
+                    $sig['modelId'] = $ep2['location'];
+                    logMessage('debug', '  signature[modelId] updated to '.$sig['modelId']);
+                    $eqLogic->setConfiguration('ab::signature', $sig);
+                    $eqLogic->save();
+                }
+            }
+        }
 
         logMessage('debug', '  Device OK');
     }

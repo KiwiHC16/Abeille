@@ -5,6 +5,7 @@ ChangeLog
 - Page avancé/réparation: Support préliminaire.
 - Page avancé: Ajout 'localisation' pour identifiant Zigbee (cas Profalux).
 - Interne: Parser: Suppression support 8085/Level update pour compatibilité mode raw.
+- Page avancé: Affichage des differents identifiants Zigbee si plusieurs.
 
 230326-STABLE-1
 ---------------

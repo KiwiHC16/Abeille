@@ -7,7 +7,36 @@
     if (isset($dbgDeveloperMode)) echo __FILE__;
 ?>
 
-<div class="form-group">
+<?php
+    // Tcharp38 note: Most of the devices have only 1 signature but some have several
+    $endPoints = $eqZigbee['endPoints'];
+    $manuf = '';
+    $model = '';
+    $location = '';
+    foreach ($endPoints as $epId2 => $ep2) {
+        echo '<div class="form-group">';
+        echo '<label class="col-sm-3 control-label">Identifiant Zigbee EP '.$epId2.'</label>';
+        echo '<div class="col-sm-5">';
+
+            $model2 = isset($ep2['modelId']) ? $ep2['modelId'] : '';
+            $manuf2 = isset($ep2['manufId']) ? $ep2['manufId'] : '';
+            $location2 = isset($ep2['location']) ? $ep2['location'] : '';
+            if (($manuf2 != $manuf) || ($model2 != $model) || ($location2 != $location) ) {
+                echo '<input readonly title="{{Modèle}}" value="'.$model2.'" />';
+                echo '<input readonly style="margin-left: 8px" title="{{Fabricant}}" value="'.$manuf2.'" />';
+                echo '<input readonly style="margin-left: 8px" title="{{Localisation}}" value="'.$location2.'" />';
+                if ($manuf == '')
+                    $manuf = $manuf2; // Saving 1st
+                if ($model == '')
+                    $model = $model2; // Saving 1st
+                if ($location == '')
+                    $location = $location2; // Saving 1st
+            }
+
+        echo '</div>';
+        echo '</div>';    }
+?>
+<!-- <div class="form-group">
     <label class="col-sm-3 control-label">Identifiant Zigbee</label>
     <div class="col-sm-5">
         <?php
@@ -20,7 +49,7 @@
             echo '<input readonly style="margin-left: 8px" title="{{Localisation}}" value="'.$location.'" />';
     ?>
     </div>
-</div>
+</div> -->
 
 <div class="form-group">
     <label class="col-sm-3 control-label">Modèle d'équipement</label>

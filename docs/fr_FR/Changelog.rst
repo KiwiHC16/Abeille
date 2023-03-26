@@ -1,6 +1,21 @@
 ChangeLog
 =========
 
+  .. important:: Zigates v2
+
+    - Doivent être à jour du dernier firmware disponible (v3.A0 à ce jour).
+  .. important:: Zigates v1
+
+    - Doivent avoir un firmware >= 3.1e
+    - FW v3.23 recommandé.
+    - L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
 230325-BETA-2
 -------------
 

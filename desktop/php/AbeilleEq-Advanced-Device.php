@@ -7,6 +7,21 @@
     if (isset($dbgDeveloperMode)) echo __FILE__;
 ?>
 
+<div class="form-group">
+    <label class="col-sm-3 control-label">Identifiant Zigbee</label>
+    <div class="col-sm-5">
+    <?php
+            $sig = $eqLogic->getConfiguration('ab::signature', []);
+            $model = isset($sig['modelId']) ? $sig['modelId'] : '';
+            $manuf = isset($sig['manufId']) ? $sig['manufId'] : '';
+            $location = isset($sig['location']) ? $sig['location'] : '';
+            echo '<input readonly title="{{Modèle}}" value="'.$model.'" />';
+            echo '<input readonly style="margin-left: 8px" title="{{Fabricant}}" value="'.$manuf.'" />';
+            echo '<input readonly style="margin-left: 8px" title="{{Localisation}}" value="'.$location.'" />';
+    ?>
+    </div>
+</div>
+
 <?php
     // Tcharp38 note: Most of the devices have only 1 signature but some have several
     $endPoints = $eqZigbee['endPoints'];
@@ -14,6 +29,11 @@
     $model = '';
     $location = '';
     foreach ($endPoints as $epId2 => $ep2) {
+        if (!isset($ep2['servClusters']))
+            continue;
+        if (strpos($ep2['servClusters'], '0000') === false)
+            continue; // Basic cluster not supported
+
         echo '<div class="form-group">';
         echo '<label class="col-sm-3 control-label">Identifiant Zigbee EP '.$epId2.'</label>';
         echo '<div class="col-sm-5">';
@@ -36,20 +56,6 @@
         echo '</div>';
         echo '</div>';    }
 ?>
-<!-- <div class="form-group">
-    <label class="col-sm-3 control-label">Identifiant Zigbee</label>
-    <div class="col-sm-5">
-        <?php
-            $sig = $eqLogic->getConfiguration('ab::signature', []);
-            $model = isset($sig['modelId']) ? $sig['modelId'] : '';
-            $manuf = isset($sig['manufId']) ? $sig['manufId'] : '';
-            $location = isset($sig['location']) ? $sig['location'] : '';
-            echo '<input readonly title="{{Modèle}}" value="'.$model.'" />';
-            echo '<input readonly style="margin-left: 8px" title="{{Fabricant}}" value="'.$manuf.'" />';
-            echo '<input readonly style="margin-left: 8px" title="{{Localisation}}" value="'.$location.'" />';
-    ?>
-    </div>
-</div> -->
 
 <div class="form-group">
     <label class="col-sm-3 control-label">Modèle d'équipement</label>
@@ -104,7 +110,7 @@
     <div class="col-sm-5">
         <?php
             echo '<a class="btn btn-warning" onclick="update(\''.$eqId.'\')" title="Mise-à-jour à partir de son modèle et reconfiguration">Mise-à-jour</a>';
-            echo '<a class="btn btn-warning" onclick="reinit(\''.$eqId.'\')" style="margin-left:8px" title="Réinitlialise les paramètres par défaut et reconfigure l\'équipement comme s\'il s\'agissait d\'une nouvelle inclusion">Réinitialiser</a>';
+            echo '<a class="btn btn-danger" onclick="reinit(\''.$eqId.'\')" style="margin-left:8px" title="Réinitlialise les paramètres par défaut et reconfigure l\'équipement comme s\'il s\'agissait d\'une nouvelle inclusion">Réinitialiser</a>';
             // Tcharp38: Simplifcation for end users. Moreover no sense to do commands updates without device config since might be closely linked.
             // echo ' OU ';
             // echo '<a class="btn btn-warning" onclick="updateFromJSON(\''.$eqNet.'\', \''.$eqAddr.'\')" title="Mets à jour les commandes Jeedom">Recharger</a>';
@@ -169,7 +175,7 @@
     <label class="col-sm-3 control-label">Informations de l'équipement</label>
     <div class="col-sm-5">
         <?php
-            echo '<a class="btn btn-warning" onclick="repair('.$eqId.')">{{Réparer}}</a>';
+            echo '<a class="btn btn-danger" onclick="repair('.$eqId.')">{{Réparer}}</a>';
         ?>
     </div>
 </div>

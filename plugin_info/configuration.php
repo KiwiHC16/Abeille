@@ -970,9 +970,10 @@
         }
         var zgPort = $("#idSelSP"+zgId).val();
         var zgFW = $("#idFW"+zgId).val();
+        var zgGpioLib = $("#idZgGpioLib").val();
         let curFw = document.getElementById("idFwVersion"+zgId).value;
         msg = '{{Vous êtes sur le point de mettre à jour le firmware de la Zigate}}';
-        msg += '<br> - type: '+zgType+'<br> - port: '+zgPort+'<br> - firmware: '+zgFW+'<br><br>';
+        msg += '<br> - type: '+zgType+'<br> - port: '+zgPort+'<br> - Gpio Lib: '+zgGpioLib+'<br> - firmware: '+zgFW+'<br><br>';
         let curIsLegacy = true;
         let newIsOpdm = false;
         erasePdm = false;
@@ -1001,7 +1002,7 @@
         bootbox.confirm(msg, function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Mise-à-jour du FW de la Zigate}}"});
-                url = 'index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateFW&zgtype=\"'+zgType+'\"&zgport=\"'+zgPort+'\"&fwfile=\"'+zgFW+'\"';
+                url = 'index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateFW&zgtype=\"'+zgType+'\"&zgport=\"'+zgPort+'\"&zgGpioLib=\"'+zgGpioLib+'\"&fwfile=\"'+zgFW+'\"';
                 if (erasePdm)
                     url += '&erasePdm=true&zgId='+zgId;
                 $('#md_modal2').load(url).dialog('open');

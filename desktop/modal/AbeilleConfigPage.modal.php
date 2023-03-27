@@ -31,6 +31,10 @@ Lancement des operations.
             echo 'var zgport = '.$_GET['zgport'].';';
         else
             echo 'var zgport = "";';
+        if (isset($_GET['zgGpioLib']))
+            echo 'var zgGpioLib = '.$_GET['zgGpioLib'].';';
+        else
+            echo 'var zgGpioLib = "";';
         if (isset($_GET['fwfile']))
             echo 'var fwfile = '.$_GET['fwfile'].';';
         else
@@ -52,6 +56,7 @@ Lancement des operations.
                 action: action,
                 zgtype: zgtype,
                 zgport: zgport,
+                zgGpioLib: zgGpioLib,
                 fwfile: fwfile,
                 erasePdm: erasePdm,
                 zgId: zgId,

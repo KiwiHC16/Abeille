@@ -1,10 +1,14 @@
 #! /bin/bash
 # PiZigate flash programmation script
-# updateFirmware.sh <action> <zigateport> [fwfile]
+# updateFirmware.sh <action> <zigateport> <lib> [fwfile]
 #   where action = flash, check, eraseeeprom
+
+# ./updateFirmware.sh flash /dev/ttyS0 PiGpio ZiGate_v3.23-OPDM.bin
+# ./updateFirmware.sh eraseeeprom /dev/ttyS0 PiGpio ZiGate_v3.23-OPDM.bin
 
 # NOW=`date +"%Y-%m-%d %H:%M:%S"`
 # echo "[${NOW}] Démarrage de '$(basename $0)' $@"
+echo "---------------------------------"
 echo "Démarrage de '$(basename $0)' $@"
 
 # Note: Startup directory is the one from the caller (ajax)
@@ -16,6 +20,7 @@ FW_DIR=${PWD}/../../resources/fw_zigate
 
 # Qq tests preliminaires
 echo "Vérifications préliminaires"
+echo ${PWD}
 error=0
 if [ $# -lt 3 ]; then
     echo "= ERREUR: Argument(s) manquant(s) !"
@@ -26,13 +31,14 @@ ACTION=$1
 ZGPORT=$2
 LIBGPIO=$3
 FW=""
+
 if [ ${ACTION} != "flash" ] && [ ${ACTION} != "check" ] && [ ${ACTION} != "eraseeeprom" ]; then
     echo "= ERREUR: Action '${ACTION}' non supportée."
     echo "=         Choix=flash/check/eraseeeprom"
     error=1
 else
     if [ ${ACTION} == "flash" ]; then
-        FW=$3
+        FW=$4
         if [ ! -e ${FW_DIR}/${FW} ]; then
             echo "= ERREUR: le FW choisi n'existe pas !"
             echo "=         FW: ${FW}"
@@ -44,7 +50,7 @@ else
         echo "=         Port: ${ZGPORT}"
         error=1
     fi
-    if [ ${LIBGPIO} == "WiringPi" ]
+    if [ ${LIBGPIO} == "WiringPi" ]; then
         command -v gpio >/dev/null
         if [ $? -ne 0 ]; then
             echo "= ERREUR: Commande 'gpio' manquante ou non exécutable !"
@@ -100,7 +106,7 @@ fi
 # Mode flash: FLASH=0, RESET=0 puis 1
 
 
-if [ ${LIBGPIO} == "WiringPi" ]
+if [ ${LIBGPIO} == "WiringPi" ]; then
     gpio mode 0 out
     gpio mode 2 out
 
@@ -115,12 +121,13 @@ if [ ${LIBGPIO} == "WiringPi" ]
     gpio write 2 1
     sleep 1
 fi
-if [ ${LIBGPIO} == "PiGpio" ]
-    python pizigateModeFlash.py
+if [ ${LIBGPIO} == "PiGpio" ]; then
+    python /var/www/html/plugins/Abeille/core/scripts/pizigateModeFlash.py
 fi
 
 if [ ${ACTION} == "eraseeeprom" ]; then
-    sudo ${PROG} -V 6 -P 115200 -v --eraseeeprom -s ${ZGPORT} 2>&1
+    # sudo ${PROG} -V 6 -P 115200 -v --eraseeeprom -s ${ZGPORT} 2>&1
+    sudo ${PROG} -V 6 -P 115200 -v --erase -s ${ZGPORT} 2>&1
     if [ $? != 0 ]; then
         echo "= ERREUR: Effacement impossible"
         status=2
@@ -142,15 +149,15 @@ else
 fi
 
 # Passage en mode 'prod'
-if [ ${LIBGPIO} == "WiringPi" ]
+if [ ${LIBGPIO} == "WiringPi" ]; then
     gpio write 2 1
     sleep 1
     gpio write 0 0
     sleep 1
 gpio write 0 1
 fi
-if [ ${LIBGPIO} == "PiGpio" ]
-    python resetPiZigate.py
+if [ ${LIBGPIO} == "PiGpio" ]; then
+    python /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py
 fi
 
 if [ $status  -eq 0 ]; then

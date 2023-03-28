@@ -70,8 +70,9 @@
                 "use": "inf_zbAttr-0300-CurrentY",
                 "isVisible": 1
             },
-            "setLevel": {
-                "use": "setLevel"
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
             },
             "Colour": {
                 "use": "Colour"

@@ -8,6 +8,12 @@ ChangeLog
 - Page avancé: Affichage des differents identifiants Zigbee si plusieurs.
 - Loratap roller shutter touch switch v2: Mise-à-jour du modèle (2561).
 - Mise-à-jour modèle TS130F__TZ3000_1dd0d5yi.
+- Interne: Cmd: Amélioration mesg d'erreurs.
+- Modèles:
+
+  - Ajout 'act_setLevel-Light' pour remplacer 'setLevel'.
+  - Remplacement 'setLevel' => 'act_setLevel-Light'
+- Ikea Trafri 470lm E27: Ajout support (2564).
 
 230326-STABLE-1
 ---------------

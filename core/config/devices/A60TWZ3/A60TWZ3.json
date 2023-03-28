@@ -30,8 +30,9 @@
                 "use": "act_zbCmdG-0006-Off",
                 "isVisible": 1
             },
-            "setLevel": {
-                "use": "setLevel"
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
             },
             "Set 2700K": {
                 "use": "act_zbCmdG-0300-MoveToColorTemp",

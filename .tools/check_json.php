@@ -287,7 +287,7 @@
 
             /* Checking supported 'configuration' keywords */
             $supportedConfKeys = ['topic', 'request', 'historizeRound', 'execAtCreation', 'execAtCreationDelay', 'trigOut', 'trigOutOffset', 'repeatEventManagement', 'visibilityCategory'];
-            array_push($supportedConfKeys, 'minValue', 'maxValue', 'calculValueOffset', 'AbeilleRejectValue', 'Polling', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'visibiltyTemplate');
+            array_push($supportedConfKeys, 'minValue', 'maxValue', 'calculValueOffset', 'valueOffset', 'AbeilleRejectValue', 'Polling', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'visibiltyTemplate');
             array_push($supportedConfKeys, 'returnStateTime', 'returnStateValue');
             foreach ($conf as $key => $value) {
                 if (in_array($key, $supportedConfKeys))

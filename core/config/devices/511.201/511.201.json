@@ -62,8 +62,9 @@
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
-            "setLevel": {
-                "use": "setLevel"
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
             },
             "Get-CurrentLevel": {
                 "use": "act_zbReadAttribute",

@@ -67,8 +67,9 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "setLevel": {
-                "use": "setLevel"
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
             },
             "CurrentLevel-0008": {
                 "use": "inf_zbAttr-0008-CurrentLevel",

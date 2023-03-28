@@ -43,8 +43,9 @@
                 "use": "Identify",
                 "isVisible": 1
             },
-            "setLevel": {
-                "use": "setLevel"
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
             },
             "Groups": {
                 "use": "Group-Membership",

@@ -3815,7 +3815,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
                     if (($Command['Level'] < 0) || ($Command['Level'] > 100)) {
-                        cmdLog('debug', '  ERROR: Level outside 0->100 range');
+                        cmdLog('error', "    setLevel: 'Level' en dehors de la plage 0->100");
                         return;
                     }
                     $cmd = "0081"; // Move to level with/without on/off
@@ -3832,12 +3832,13 @@
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
                     $dstEp      = $Command['EP'];
-                    $onoff      = "01";
-                    $l = intval($Command['Level'] * 255 / 100);
+                    $onOff      = "01";
+                    $l          = intval($Command['Level'] * 255 / 100);
                     $level      = sprintf("%02X", $l);
                     $duration   = isset($Command['duration']) ? sprintf("%04X", $Command['duration']) : "0001";
+                    cmdLog('debug', "    setLevel: onOff=".$onOff.", level=".$level.", duration=".$duration);
 
-                    $data = $addrMode.$addr.$srcEp.$dstEp.$onoff.$level.$duration;
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$onOff.$level.$duration;
 
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
 
@@ -3922,7 +3923,7 @@
                             $onOff = "01";
                         $level      = sprintf("%02X", intval($Command['level']));
                         $duration   = isset($Command['duration']) ? sprintf("%04X", $Command['duration']) : "0001";
-                        cmdLog('debug', '    Using onOff='.$onOff.', level='.$level.', duration='.$duration);
+                        cmdLog('debug', '    cmd-0008: onOff='.$onOff.', level='.$level.', duration='.$duration);
 
                         $data       = $addrMode.$addr.$srcEp.$dstEp.$onOff.$level.$duration;
 
@@ -3938,7 +3939,7 @@
 
                         $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     } else {
-                        cmdLog('error', "  Unsupported cluster 0008 command ".$cmdId);
+                        cmdLog('error', "    cmd-0008: Unsupported cluster 0008 command ".$cmdId);
                     }
 
                     return;
@@ -4228,7 +4229,7 @@
                     if ($cmdId == "00") { // Check-in Response
                         $data2 .= '00'.'0000';
                     } else {
-                        cmdLog('debug', "    ERROR: Unsupported cmdId ".$cmdId, $this->debug['processCmd']);
+                        cmdLog('error', "    cmd-0020: Unsupported cmdId ".$cmdId, $this->debug['processCmd']);
                         return;
                     }
 

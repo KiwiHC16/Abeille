@@ -922,8 +922,10 @@
             /* 0008/Level cluster */
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
-                cmds["Set Level"] = newCmd("setLevel", "ep="+epId);
+                // Note: If device is a light bulb, need to use 'act_setLevel-Light'
+                cmds["Set Level"] = newCmd("act_setLevel-Light", "ep="+epId);
                 cmds["Set Level"]["isVisible"] = 1;
+
                 cmds["Level"] = newCmd("inf_zbAttr-0008-CurrentLevel", "ep="+epId);
                 cmds["Level"]["isVisible"] = 1;
                 cmds["Level"]["nextLine"] = "after";

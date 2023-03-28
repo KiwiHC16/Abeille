@@ -24,8 +24,9 @@
                 "use": "Identify",
                 "isVisible": 1
             },
-            "setLevel": {
-                "use": "setLevel"
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
             },
             "On": {
                 "use": "act_zbCmdG-0006-On",

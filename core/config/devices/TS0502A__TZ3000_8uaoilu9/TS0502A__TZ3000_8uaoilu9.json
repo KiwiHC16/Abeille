@@ -53,9 +53,8 @@
                 "execAtCreation": "yes"
             },
             "Set Level": {
-                "use": "setLevel",
-                "params": "ep=01",
-                "isVisible": "1"
+                "use": "act_setLevel-Light",
+                "isVisible": 1
             },
             "Level": {
                 "use": "inf_zbAttr-0008-CurrentLevel",

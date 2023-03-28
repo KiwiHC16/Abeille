@@ -59,9 +59,9 @@
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": "1"
             },
-            "Set-Level": {
-                "use": "setLevel",
-                "isVisible": "1"
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
             },
             "Bind-0008-ToZigate": {
                 "use": "act_zbBindToZigate",

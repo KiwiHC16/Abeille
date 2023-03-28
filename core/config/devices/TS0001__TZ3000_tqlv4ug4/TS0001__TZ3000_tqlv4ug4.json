@@ -4,7 +4,7 @@
         "model": "1ch switch",
         "type": "Tuya 1ch switch module",
         "alternateIds": {
-            "TS0001__TZ3000_gjrubzje": {}
+            "TS0001__TZ3000_gjrubzje": []
         },
         "timeout": "60",
         "category": {
@@ -53,7 +53,14 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 6
             },
-
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
+            },
+            "setLevel-NEW": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
+            },
             "Identify": {
                 "use": "Identify"
             },

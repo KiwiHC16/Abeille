@@ -39,8 +39,9 @@
                 "use": "act_zbCmdG-0006-Toggle",
                 "nextLine": "after"
             },
-            "setLevel": {
-                "use": "setLevel"
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
             },
             "Get-Status": {
                 "use": "act_zbReadAttribute",

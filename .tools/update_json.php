@@ -509,6 +509,14 @@
                     );
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ($cmdFName == "setLevel") {
+                    $commands2["Set Level"] = Array(
+                        "use" => "act_setLevel-Light",
+                        // "params" => "clustId=0008&attrId=0000",
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
 
                 // Cluster 0102 updates

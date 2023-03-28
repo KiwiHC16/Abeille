@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230328-BETA-1"
+# VERSION="230328-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -61,8 +61,6 @@ f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 0055fd31d027d69a736381f5cc77ebf9 *core/class/AbeilleTestDB.class.php
 40afc0d57081306eb6b12bdf30bf7cca *core/class/AbeilleTools.class.php
 347116fa8a6260bbf4cc09cafdedfc99 *core/config/Abeille.config.php
-96b14488adfe25210ff0b340be3f531d *core/config/HueCatalogue.json
-5373985868d2b6309d47fe0eaf784f00 *core/config/IAS ACE Cluster  IAS Zone & Diagnostics Only_ZHA.xml
 b384b53ae1ee38a51fbf6e1f948b40cf *core/config/commands/BindToGroupLevelEP03.json
 e6d0a54b43b9abb37e7a22291ba98723 *core/config/commands/BindToGroupLevelEP04.json
 ff0b67571f95a09b6cfdbca9ef6882b1 *core/config/commands/BindToGroupLevelEP05.json
@@ -1142,7 +1140,7 @@ a03262b18f2d6fe7f9e99bb72ae4c38b *core/config/devices_local/README.txt
 97503c4e99da6f3ea72a6514fd2f3781 *core/config/rucheCommand.json
 77f39f0d2b19ae5e02dca515e89f43cc *core/config/setAffichage.php
 bae2dd0e8f01fe8b019010f5c69f9bb4 *core/config/sortCommand.php
-d6c238244f9c013900173241106e8b95 *core/i18n/en_US.json
+a7325433f93092a0ff286bca46b551d3 *core/i18n/en_US.json
 fe99369b88ceb7cae45f3453c63f485b *core/i18n/fr_FR.json
 ee2838067c872d2bd4beef33f8f05148 *core/php/AbeilleCliToQueue.php
 2be0efa8e9b0a63d0fde958041851dc8 *core/php/AbeilleCmd-Tuya.php
@@ -1240,7 +1238,7 @@ a1d870cadad75bcd9878aaafe90a3f09 *desktop/php/AbeilleEq.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 4ede9a06a2a6cc9010f069fb1512f3c2 *desktop/php/AbeilleNetworkGraph.php
-0c0f2748aedabe499b0047f05e1b327b *docs/fr_FR/Changelog.rst
+c78d4b6d64cbf9b9c9c6ed3736120089 *docs/fr_FR/Changelog.rst
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
 63861942fcfdede940cbcd64efe1b0dd *images/inclusion.png
 9240bc5e33637fec60671e98230f78bb *images/node_1-digital-input.png
@@ -1552,10 +1550,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-1e436337c066eb8e22c870b42deadf6c *plugin_info/Abeille.version
+968370d346329483fdbd23409173d785 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
-f170cf0f2bb2300c57571cb7a4856ebb *plugin_info/configuration.php
-a848191ed724f4a4120e43c29385e231 *plugin_info/info.json
+402d5fd18fdf191c77f7b400ada1f975 *plugin_info/configuration.php
+ce9f477da63c180f0ea49c907b5945b0 *plugin_info/info.json
 97bdb0cc89520708646f4a0b55aeb02c *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php
@@ -1572,6 +1570,8 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/AbeilleRoutes.ajax.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/AbeilleSupport.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/CheckAlive.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/CheckBattery.php
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/HueCatalogue.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/IAS ACE Cluster  IAS Zone & Diagnostics Only_ZHA.xml
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/LqiStorage.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/NetworkDefinition.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/RadioTraffic.php

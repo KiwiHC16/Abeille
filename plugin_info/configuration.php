@@ -78,7 +78,7 @@
         echo '</div>';
 
         echo '<div class="form-group">';
-            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Nom : }}</label>';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Nom}} : </label>';
             echo '<div class="col-lg-4">';
                 if (Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille')) {
                     $zgName = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille')->getName();
@@ -90,7 +90,7 @@
         echo '</div>';
 
         echo '<div class="form-group">';
-            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Type : }}</label>';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Type}} : </label>';
             echo '<div class="col-lg-4">';
                 echo '<select id="idSelZgType'.$zgId.'" class="configKey form-control" data-l1key="ab::zgType'.$zgId.'" onchange="checkZigateType('.$zgId.')"  title="{{Type de zigate}}">';
                     echo '<option value="USB" selected>{{USB v1}}</option>';
@@ -135,7 +135,7 @@
         echo '</div>';
 
         echo '<div class="form-group">';
-            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Adresse IP (IP:Port) : }}</label>';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Adresse IP (IP:Port)}} : </label>';
             echo '<div class="col-lg-4">';
                 echo '<input id="idWifiAddr'.$zgId.'" class="configKey form-control" data-l1key="ab::zgIpAddr'.$zgId.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
             echo '</div>';
@@ -230,7 +230,7 @@
         <div class="form-group">
             <div class="col-lg-6">
                 <div class="form-group">
-                    <label class="col-lg-3 control-label" data-toggle="tooltip" title="{{Version interne du plugin Abeille}}">{{Version interne : }}</label>
+                    <label class="col-lg-3 control-label" data-toggle="tooltip" title="{{Version interne du plugin Abeille}}">{{Version interne}} : </label>
                     <div class="col-lg-4">
                         <?php
                         echo '<input type="text" class="form-control" title="{{Version interne du plugin Abeille}}" value="'.$abeilleVersion.'" readonly>';
@@ -288,7 +288,7 @@
         <div class="form-group">
             <div class="col-lg-6">
                 <div class="form-group">
-                    <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Objet Parent : }}</label>
+                    <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Objet Parent}} : </label>
                     <div class="col-lg-4" title="{{Objet parent (ex: une pièce de la maison) par défaut pour toute nouvelle zigate. Peut être changé plus tard via la page de gestion d'Abeille en cliquant sur la ruche correspondante}}.">
                         <select class="configKey form-control" data-l1key="ab::defaultParent">
                             <?php
@@ -316,7 +316,7 @@
             <!-- Display dependancies -->
             <div class="form-group">
                 <div class="col-lg-3">
-                    <h4>Dépendances optionnelles</h4>
+                    <h4>{{Dépendances optionnelles}}</h4>
                 </div>
                 <div class="col-lg-9">
                 </div>
@@ -373,7 +373,7 @@
                 <div class="form-group">
                     <div class="col-lg-6">
                         <div class="form-group">
-                            <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Lib GPIO à utiliser : }}</label>
+                            <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Lib GPIO à utiliser}} : </label>
                             <div class="col-lg-4" title="{{Choisissez la libraiie qui va piloter les PIN GPIO de la PiZigate.}}">
                                 <select id="idZgGpioLib" class="configKey form-control" data-l1key="ab::defaultGpioLib">
                                     <option value="WiringPi">WiringPi</option>

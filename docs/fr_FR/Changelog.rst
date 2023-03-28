@@ -1,9 +1,6 @@
 ChangeLog
 =========
 
-230328-BETA-1
--------------
-
 - Interne: Parser: Correction detection support de groupes.
 - Page avancé/réparation: Support préliminaire.
 - Page avancé: Ajout 'localisation' pour identifiant Zigbee (cas Profalux).
@@ -19,6 +16,7 @@ ChangeLog
   - Suppression des cmdes info 'Groups'
 - Ikea Trafri 470lm E27: Ajout support (2564).
 - Groupes: Amélioration pour suppression d'un groupe.
+- Page de config: Mise-à-jour des traductions anglaise.
 
 230326-STABLE-1
 ---------------

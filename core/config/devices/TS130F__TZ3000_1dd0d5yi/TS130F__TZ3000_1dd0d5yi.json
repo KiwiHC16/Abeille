@@ -43,10 +43,11 @@
                 "params": "clustId=0102&attrId=0008"
             },
             "Set calibration time": {
-                "comment": "0 to 30s, multiplied by 10",
+                "comment": "0 to 60s, multiplied by 10",
                 "use": "act_zbWriteAttribute",
                 "subType": "slider",
-                "maxValue": 30,
+                "maxValue": 10,
+                "maxValue": 60,
                 "valueOffset": "#value#*10",
                 "unit": "s",
                 "comment2": "F003 is uint16/x21",
@@ -54,11 +55,10 @@
                 "isVisible": "1"
             },
             "Calibration time": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "logicalId": "0102-01-F003",
                 "unit": "s",
                 "calculValueOffset": "#value#/10",
-                "template": "badge",
                 "isVisible": "1"
             },
             "Bind 0102-ToZigate": {

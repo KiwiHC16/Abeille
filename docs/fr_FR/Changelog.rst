@@ -6,6 +6,8 @@ ChangeLog
 - Page avancé: Ajout 'localisation' pour identifiant Zigbee (cas Profalux).
 - Interne: Parser: Suppression support 8085/Level update pour compatibilité mode raw.
 - Page avancé: Affichage des differents identifiants Zigbee si plusieurs.
+- Loratap roller shutter touch switch v2: Mise-à-jour du modèle (2561).
+- Mise-à-jour modèle TS130F__TZ3000_1dd0d5yi.
 
 230326-STABLE-1
 ---------------

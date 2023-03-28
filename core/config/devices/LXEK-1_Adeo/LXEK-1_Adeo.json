@@ -22,9 +22,6 @@
             "Identify": {
                 "use": "Identify"
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Color Mode": {
                 "use": "inf_zbAttr-0300-ColorMode"
             },

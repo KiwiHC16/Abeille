@@ -43,10 +43,6 @@
                 "params": "mult=1&div=1",
                 "isHistorized": "1",
                 "isVisible": 1
-            },
-            "Groups": {
-                "use": "Group-Membership",
-                "isVisible": 1
             }
         },
         "xiaomi": {

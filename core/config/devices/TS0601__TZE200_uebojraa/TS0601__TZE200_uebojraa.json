@@ -15,10 +15,6 @@
             "mainEP": "01",
             "batteryType": "?"
         },
-        "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            }
-        }
+        "commands": []
     }
 }

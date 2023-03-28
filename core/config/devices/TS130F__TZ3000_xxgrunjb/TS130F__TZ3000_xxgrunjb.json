@@ -12,9 +12,6 @@
             "icon": "dOOWifi-DWF-0205ZB-PN"
         },
         "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Current Level": {
                 "use": "inf_zbAttr-0102-CurPosLiftPercent",
                 "isVisible": "1"

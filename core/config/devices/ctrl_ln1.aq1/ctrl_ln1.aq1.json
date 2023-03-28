@@ -45,10 +45,6 @@
                 "use": "Identify",
                 "isVisible": 1
             },
-            "Groups": {
-                "use": "Group-Membership",
-                "isVisible": 1
-            },
             "SWBuildID": {
                 "use": "inf_zbAttr-0000-SWBuildID"
             },

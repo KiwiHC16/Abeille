@@ -12,10 +12,6 @@
             "icon": "Aqara-WallSwitchH1-Double"
         },
         "commands": {
-            "Groups": {
-                "use": "Group-Membership",
-                "isVisible": 1
-            },
             "Status 1": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",

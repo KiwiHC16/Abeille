@@ -4,7 +4,7 @@
         "model": "SC500ZB",
         "type": "Loratap roller shutter module",
         "alternateIds": {
-            "TS130F__TZ3000_femsaaua": {}
+            "TS130F__TZ3000_femsaaua": []
         },
         "genericType": "Shutter",
         "timeout": "60",
@@ -16,9 +16,6 @@
             "mainEP": "01"
         },
         "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Up": {
                 "use": "act_zbCmdG-0102-UpOpen",
                 "params": "ep=01",

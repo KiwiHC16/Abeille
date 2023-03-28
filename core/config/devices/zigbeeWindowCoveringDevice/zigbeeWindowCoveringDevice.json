@@ -22,9 +22,6 @@
             "Stop": {
                 "use": "act_zbCmdG-0102-Stop"
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "SWBuildID": {
                 "use": "inf_zbAttr-0000-SWBuildID"
             },

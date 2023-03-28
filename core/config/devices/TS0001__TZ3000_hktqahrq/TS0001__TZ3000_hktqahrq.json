@@ -12,9 +12,6 @@
             "icon": "Girier-JR-ZDS01"
         },
         "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "etat": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1

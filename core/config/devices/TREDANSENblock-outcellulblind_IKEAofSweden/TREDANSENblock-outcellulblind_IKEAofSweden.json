@@ -35,9 +35,6 @@
             "Identify": {
                 "use": "Identify"
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Up": {
                 "use": "act_zbCmdG-0102-UpOpen",
                 "isVisible": "1"

@@ -82,9 +82,6 @@
                 "use": "Identify",
                 "isVisible": 1
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0008",

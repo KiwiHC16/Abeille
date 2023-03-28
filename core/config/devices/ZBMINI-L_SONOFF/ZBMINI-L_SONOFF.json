@@ -22,9 +22,6 @@
             "Identify": {
                 "use": "Identify"
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "On": {
                 "use": "act_zbCmdG-0006-On",
                 "params": "ep=01",

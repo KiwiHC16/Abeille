@@ -28,10 +28,6 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Groups": {
-                "use": "Group-Membership",
-                "isVisible": 1
-            },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0006",

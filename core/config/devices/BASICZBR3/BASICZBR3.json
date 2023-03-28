@@ -19,9 +19,6 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "etat": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1

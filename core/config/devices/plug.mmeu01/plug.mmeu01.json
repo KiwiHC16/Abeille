@@ -42,10 +42,6 @@
             "Temperature": {
                 "use": "temperaturePrise"
             },
-            "Groups": {
-                "use": "Group-Membership",
-                "isVisible": 1
-            },
             "SWBuildID": {
                 "use": "inf_zbAttr-0000-SWBuildID"
             },

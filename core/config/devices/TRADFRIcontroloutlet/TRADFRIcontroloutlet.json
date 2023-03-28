@@ -22,9 +22,6 @@
             "Identify": {
                 "use": "Identify"
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1,

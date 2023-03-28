@@ -19,10 +19,6 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "Groups": {
-                "use": "Group-Membership",
-                "isVisible": 1
-            },
             "Identify": {
                 "use": "Identify",
                 "isVisible": 1

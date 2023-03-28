@@ -17,9 +17,6 @@
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Open": {
                 "use": "cmdG-TuyaEF00-Set-OpenClose",
                 "params": "openClose=1",

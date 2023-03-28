@@ -12,9 +12,6 @@
             "mainEP": "01"
         },
         "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "On": {
                 "use": "cmdG-TuyaEF00-Set-OnOff",
                 "params": "onOff=01&dpId=01",

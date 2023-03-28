@@ -14,9 +14,6 @@
             "batteryType": "2x1.5 AA"
         },
         "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Battery percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },

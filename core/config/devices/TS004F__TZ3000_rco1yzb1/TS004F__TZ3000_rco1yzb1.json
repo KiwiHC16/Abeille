@@ -29,9 +29,6 @@
             "Identify": {
                 "use": "Identify"
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Click": {
                 "use": "inf_zbCmdR-0006-On",
                 "calculValueOffset": 1

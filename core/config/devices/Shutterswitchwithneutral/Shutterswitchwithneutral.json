@@ -24,10 +24,6 @@
                 "use": "Identify",
                 "isVisible": 1
             },
-            "Groups": {
-                "use": "Group-Membership",
-                "isVisible": 1
-            },
             "Up": {
                 "use": "act_zbCmdG-0102-UpOpen",
                 "isVisible": 1

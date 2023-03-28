@@ -26,10 +26,6 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Groups": {
-                "use": "Group-Membership",
-                "isVisible": 1
-            },
             "SWBuildID": {
                 "use": "inf_zbAttr-0000-SWBuildID"
             },

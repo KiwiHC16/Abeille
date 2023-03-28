@@ -17,10 +17,6 @@
                 "use": "Identify",
                 "isVisible": 1
             },
-            "Groups": {
-                "use": "Group-Membership",
-                "isVisible": 1
-            },
             "Scenes": {
                 "use": "Scene-Membership"
             },

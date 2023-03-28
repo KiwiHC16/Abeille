@@ -25,9 +25,6 @@
                 "params": "clustId=0001",
                 "execAtCreation": "yes"
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "On": {
                 "use": "act_zbCmdG-0006-On",
                 "isVisible": "1"

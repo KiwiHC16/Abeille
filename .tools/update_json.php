@@ -270,6 +270,9 @@
                     $commands2["Groups"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ($cmdFName == "Group-Membership") {
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' REMOVED.\n";
                 }
 
                 // Cluster 0006 updates

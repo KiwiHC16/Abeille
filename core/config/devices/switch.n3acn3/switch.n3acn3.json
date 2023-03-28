@@ -16,9 +16,6 @@
             "Identify": {
                 "use": "Identify"
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Status 1": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",

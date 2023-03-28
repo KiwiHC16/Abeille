@@ -4,7 +4,7 @@
         "model": "Plug",
         "type": "Aubess smart plug",
         "alternateIds": {
-            "TS011F__TZ3000_dksbtrzs": {}
+            "TS011F__TZ3000_dksbtrzs": []
         },
         "genericType": "Environment",
         "timeout": "60",
@@ -18,9 +18,6 @@
         "commands": {
             "Identify": {
                 "use": "Identify"
-            },
-            "Groups": {
-                "use": "Group-Membership"
             },
             "On": {
                 "use": "act_zbCmdG-0006-On",

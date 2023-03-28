@@ -18,9 +18,6 @@
             "mainEP": "01"
         },
         "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1

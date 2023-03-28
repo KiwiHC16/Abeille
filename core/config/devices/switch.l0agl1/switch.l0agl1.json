@@ -12,9 +12,6 @@
         },
         "type": "Xiaomi Single Switch Module T1 (No Neutral)",
         "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1

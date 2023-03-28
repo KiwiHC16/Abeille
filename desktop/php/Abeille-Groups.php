@@ -15,6 +15,7 @@
 		echo '<tr style="background-color: grey !important; color: white !important;">';
 		echo '<th align="left" style="width:400px">{{Module}}</th>';
 		echo '<th align="left" style="width:100px">{{End point}}</th>';
+		echo '<th align="left"></th>';
 		echo '<th align="left">{{Groupes}}</th>';
 		echo '</tr>';
 		echo '</thead>';
@@ -57,17 +58,17 @@
 
 			$groups = $zigbee['groups'];
 			foreach ($groups as $epId => $grps) {
-				// if ($grps != '') {
-				// 	$gArr = explode("/", $grps);
-				// 	foreach ($gArr as $grp) {
-				// 		if ($groupServ != '')
-				// 			$groupServ .= '/';
-				// 		$groupServ .= $grp;
-				// 	}
-				// }
 				echo '<tr><td>'.$eqHName.'</td>';
 				echo '<td >'.$epId.'</td>';
-				echo '<td ><a class="btn btn-default" onclick="sendToCmd(\'getGroups2\', \''.$zgId.'\', \''.$eq['addr'].'\', \''.$epId.'\')" title="{{Raffraichissement des groupes}}"><i class="fas fa-sync"></i></a> '.$grps.'</td></tr>';
+				echo '<td ><a class="btn btn-default" onclick="sendToCmd(\'getGroups2\', \''.$zgId.'\', \''.$eq['addr'].'\', \''.$epId.'\')" title="{{Raffraichissement des groupes}}"><i class="fas fa-sync"></i></a> </td>';
+				echo '<td >';
+				if ($grps != '') {
+					$gArr = explode("/", $grps);
+					foreach ($gArr as $grp) {
+						echo '<a class="btn btn-default" onclick="sendToCmd(\'removeGroup2\', \''.$zgId.'\', \''.$eq['addr'].'\', \''.$epId.'\', \''.$grp.'\')" title="{{Suppression du groupe}}"><i class="fas fa-trash-alt"></i></a>'.$grp;
+					}
+				}
+				echo '</td></tr>';
 			}
 		} // For each eqPerZigate[]
 		echo '</tbody>';

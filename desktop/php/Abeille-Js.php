@@ -96,7 +96,7 @@
     }
 
     // Send msg to AbeilleCmd
-    function sendToCmd(action, param1 = '', param2 = '', param3 = '') {
+    function sendToCmd(action, param1 = '', param2 = '', param3 = '', param4 = '') {
         console.log("sendToCmd("+action+")");
 
         selected = getSelected();
@@ -126,17 +126,6 @@
                     1000
                 );
             });
-            break;
-        case "getGroups2":
-            zgId = param1;
-            addr = param2;
-            ep = param3;
-            sendCmd('CmdAbeille'+zgId+'/'+addr+'/getGroupMembership', 'ep='+ep);
-            setTimeout(function () {
-                location.reload(true);
-                },
-                1000
-            );
             break;
         case "addGroup":
             if (selected.length == 0)
@@ -171,6 +160,29 @@
                     1000
                 );
             });
+            break;
+        case "getGroups2":
+            zgId = param1;
+            addr = param2;
+            ep = param3;
+            sendCmd('CmdAbeille'+zgId+'/'+addr+'/getGroupMembership', 'ep='+ep);
+            setTimeout(function () {
+                location.reload(true);
+                },
+                1000
+            );
+            break;
+        case "removeGroup2":
+            zgId = param1;
+            addr = param2;
+            ep = param3;
+            group = param4;
+            sendCmd('CmdAbeille'+zgId+'/'+addr+'/removeGroup', 'address='+addr+'&DestinationEndPoint='+ep+'&groupAddress='+group);
+            setTimeout(function () {
+                location.reload(true);
+                },
+                1000
+            );
             break;
         case "setGroupRemote":
             if (selected.length == 0)

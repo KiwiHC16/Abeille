@@ -15,6 +15,7 @@ ChangeLog
   - Remplacement 'setLevel' => 'act_setLevel-Light'
   - Suppression des cmdes info 'Groups'
 - Ikea Trafri 470lm E27: Ajout support (2564).
+- Groupes: Amélioration pour suppression d'un groupe.
 
 230326-STABLE-1
 ---------------

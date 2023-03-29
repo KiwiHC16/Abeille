@@ -184,6 +184,18 @@
                 1000
             );
             break;
+        case "removeAllGroups":
+            zgId = param1;
+            addr = param2;
+            ep = param3;
+            sendCmd('CmdAbeille'+zgId+'/'+addr+'/removeAllGroups', 'ep='+ep);
+            sendCmd('CmdAbeille'+zgId+'/'+addr+'/getGroupMembership', 'ep='+ep);
+            setTimeout(function () {
+                location.reload(true);
+                },
+                1000
+            );
+            break;
         case "setGroupRemote":
             if (selected.length == 0)
                 return alert("Aucun équipement sélectionné");

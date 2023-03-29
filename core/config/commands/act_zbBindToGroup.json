@@ -3,11 +3,11 @@
         "comment": "Bind device to group",
         "comment2": "Missing args: destAddr (4 chars group addr)",
         "subType": "other",
-        "logicalId": "bind-#EP#-#CLUSTID#-ToGroup#DESTADDR#",
+        "logicalId": "bind-#EP#-#CLUSTID#-ToGroup#GROUP#",
         "template": "",
         "configuration": {
             "topic": "bind0030",
-            "request": "addr=#IEEE#&ep=#EP#&clustId=#CLUSTID#&destAddr=#DESTADDR#",
+            "request": "addr=#IEEE#&ep=#EP#&clustId=#CLUSTID#&destAddr=#GROUP#",
             "execAtCreation": "Yes"
         },
         "type": "action"

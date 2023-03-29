@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Groupes: Ajout 'suppression de tous les groupes'.
+- Image: 'node_TRADFRIonoffswitch.png' => 'node_Ikea-OnOffSwitch.png'
+
 230328-BETA-2
 -------------
 

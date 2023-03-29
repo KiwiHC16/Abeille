@@ -65,6 +65,13 @@
             return;
         }
 
+        // Zigbee manufCode defined ?
+        if (!isset($zigbee['manufCode'])) {
+            logMessage('debug', '  Requesting node descriptor');
+            msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getNodeDescriptor");
+            return;
+        }
+
         foreach ($zigbee['endPoints'] as $epId2 => $ep2) {
             if (!isset($ep2['servClusters'])) {
                 logMessage('debug', '  Requesting simple descriptor for EP '.$epId2);
@@ -119,13 +126,16 @@
             if (strpos($ep2['servClusters'], '0000') === false)
                 continue; // No basic cluster for this EP
 
-            if ($ep2['modelId'] != '') {
-                $id1 = $ep2['modelId'].'_'.$ep2['manufId'];
-                $id2 = $ep2['modelId'];
-            } else if ((substr($ieee, 0, 6) == '20918A') && ($ep2['location'] != '')) {
-                if (!isset($sig['modelId']) || ($ep2['location'] != $sig['modelId'])) {
+            $modelId = isset($ep2['modelId']) ? $ep2['modelId'] : '';
+            $manufId = isset($ep2['manufId']) ? $ep2['manufId'] : '';
+            $location = isset($ep2['location']) ? $ep2['location'] : '';
+            if ($modelId != '') {
+                $id1 = $modelId.'_'.$manufId;
+                $id2 = $modelId;
+            } else if ((substr($ieee, 0, 6) == '20918A') && ($location != '')) {
+                if (!isset($sig['modelId']) || ($location != $sig['modelId'])) {
                     // TODO: Before update we must check that corresponding model exists.
-                    $sig['modelId'] = $ep2['location'];
+                    $sig['modelId'] = $location;
                     logMessage('debug', '  signature[modelId] updated to '.$sig['modelId']);
                     $eqLogic->setConfiguration('ab::signature', $sig);
                     $eqLogic->save();

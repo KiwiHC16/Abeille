@@ -14,10 +14,10 @@
             $sig = $eqLogic->getConfiguration('ab::signature', []);
             $model = isset($sig['modelId']) ? $sig['modelId'] : '';
             $manuf = isset($sig['manufId']) ? $sig['manufId'] : '';
-            $location = isset($sig['location']) ? $sig['location'] : '';
+            // $location = isset($sig['location']) ? $sig['location'] : '';
             echo '<input readonly title="{{Modèle}}" value="'.$model.'" />';
             echo '<input readonly style="margin-left: 8px" title="{{Fabricant}}" value="'.$manuf.'" />';
-            echo '<input readonly style="margin-left: 8px" title="{{Localisation}}" value="'.$location.'" />';
+            // echo '<input readonly style="margin-left: 8px" title="{{Localisation}}" value="'.$location.'" />';
     ?>
     </div>
 </div>

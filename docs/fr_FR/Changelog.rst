@@ -6,6 +6,7 @@ ChangeLog
 - Loratap roller shutter touch switch v2: Mise-à-jour image (2561).
 - Interne: Amélioration process de réparation.
 - RDM001: Mise-à-jour du modèle (2185).
+- Xiaomi vibration: Mise-à-jour du modèle.
 
 230328-BETA-2
 -------------

@@ -1,16 +1,26 @@
 {
     "vibration.aq1": {
+        "manufacturer": "Xiaomi",
+        "model": "?",
+        "type": "Xiaomi Vibration",
+        "genericType": "Security",
+
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiVibration",
+            "icon": "Xiaomi-Vibration",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "security": "1"
         },
-        "type": "Xiaomi Vibration",
         "commands": {
+            "Battery-Volt": {
+                "use": "inf_batteryVoltAndPercent-285-300"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
             "Evenement": {
                 "use": "vibrationType"
             },
@@ -26,21 +36,24 @@
             "High": {
                 "use": "setVibrationSensivityHigh"
             },
-            "Battery-Volt": {
-                "use": "inf_zbAttr-0001-BatteryVolt"
-            },
-            "Battery-Percent": {
-                "use": "inf_zbAttr-0001-BatteryPercent"
-            },
-            "Specific": {
-                "use": "Xiaomi-ff01"
-            },
             "SWBuildID": {
                 "use": "inf_zbAttr-0000-SWBuildID"
             },
             "Get-SWBuildID": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
+            }
+        },
+        "xiaomi": {
+            "fromDevice": {
+                "0000-FF01": {
+                    "01-21": {
+                        "func": "numberDiv",
+                        "div": 1000,
+                        "info": "0001-01-0020",
+                        "comment": "Battery volt"
+                    }
+                }
             }
         }
     }

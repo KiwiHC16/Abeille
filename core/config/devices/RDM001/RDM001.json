@@ -49,16 +49,16 @@
                 "execAtCreationDelay": 3
             },
             "Button event 1": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=FC00&attrId=0001"
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "FC00-01-0001"
             },
             "Button event 2": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=FC00&attrId=0002"
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "FC00-01-0002"
             },
             "Set DualRocker": {
                 "use": "act_zbWriteAttribute",
-                "params": "clustId=0000&attrId=0034&attrType=30&attrVal=02",
+                "params": "clustId=0000&attrId=0034&attrType=30&attrVal=02&manufId=100B",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 4
             },

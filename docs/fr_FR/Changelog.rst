@@ -5,6 +5,7 @@ ChangeLog
 - Image: 'node_TRADFRIonoffswitch.png' => 'node_Ikea-OnOffSwitch.png'
 - Loratap roller shutter touch switch v2: Mise-à-jour image (2561).
 - Interne: Amélioration process de réparation.
+- RDM001: Mise-à-jour du modèle (2185).
 
 230328-BETA-2
 -------------

@@ -1,5 +1,16 @@
-UNBIND
-    Ajouter support via page avancé
+Ajouter support attr 4C
+    [2023-04-02 11:33:19] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0000, SrcEP=01, DstEP=01, SrcAddrMode=02, SrcAddr=B4B8, DstAddrMode=02, DstAddr=0000
+    [2023-04-02 11:33:19]   FCF=1C/General/Serv->Cli/ManufCode=1234, SQN=47, cmd=0A/Report attributes
+    [2023-04-02 11:33:19]   WARNING: attrSize is unknown for type 4C
+    [2023-04-02 11:33:19]   AttrId=FF02, AttrType=4C
+
+    0600 => 6
+    10 01
+    21 BA0B
+    21 A843
+    24 0100000000
+    21 2B01
+    20 61
 
 Cluster 0004
     La cmde 'addGroup' devrait sauver le groupe qq part => ab::groups ?

@@ -2,6 +2,8 @@
     "sensor_ht": {
         "manufacturer": "Xiaomi",
         "model": "Temp",
+        "type": "Xiaomi temp sensor",
+        "genericType": "Environment",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -11,7 +13,6 @@
         "category": {
             "heating": "1"
         },
-        "type": "Xiaomi temp sensor",
         "commands": {
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
@@ -27,12 +28,6 @@
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
-            },
-            "Specific": {
-                "use": "Xiaomi-ff01"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
             }
         }
     }

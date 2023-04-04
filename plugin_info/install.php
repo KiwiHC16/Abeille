@@ -638,6 +638,7 @@
                     "XiaomiPrise" => "Xiaomi-Plug",
                     "Xiaomiwleak_aq1" => "Xiaomi-LeakSensor",
                     "XiaomiVibration" => "Xiaomi-Vibration",
+                    'XiaomiSensorSmoke' => 'Xiaomi-SmokeSensor',
 
                     "LXX60-CS27LX1.0" => "Zemismart-LXX60-CS27LX1.0",
                 );
@@ -790,6 +791,7 @@
                 "RC110_innr" => '2023-02-25 16:47:00',
                 "plug" => '2023-02-20 15:41:00',
                 "vibration.aq1" => '2023-03-31 14:10:00',
+                "sensor_smoke" => '2023-04-04 23:07:00',
             );
             foreach ($eqLogics as $eqLogic) {
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);

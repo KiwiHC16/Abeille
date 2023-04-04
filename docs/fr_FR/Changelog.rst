@@ -7,6 +7,7 @@ ChangeLog
 - Interne: Amélioration process de réparation.
 - RDM001: Mise-à-jour du modèle (2185).
 - Xiaomi vibration: Mise-à-jour du modèle.
+- Xiaomi smoke (sensor_smoke): Modele géré par section 'xiaomi'.
 
 230328-BETA-2
 -------------

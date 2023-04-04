@@ -2,16 +2,17 @@
     "sensor_smoke": {
         "manufacturer": "Xiaomi",
         "model": "?",
+        "type": "Xiaomi Smoke Sensor",
+        "genericType": "Environment",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiSensorSmoke",
+            "icon": "Xiaomi-SmokeSensor",
             "batteryType": "1x3V CR17345"
         },
         "category": {
             "security": "1"
         },
-        "type": "Xiaomi Smoke Sensor",
         "commands": {
             "Etat": {
                 "use": "securitySafetySmoke"
@@ -21,9 +22,6 @@
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
-            },
-            "Specific": {
-                "use": "Xiaomi-ff01"
             },
             "Low": {
                 "use": "setSmokeSensivityLow"
@@ -36,9 +34,17 @@
             },
             "Test": {
                 "use": "testSmoke"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
+            }
+        },
+        "xiaomi": {
+            "fromDevice": {
+                "0000-FF01": {
+                    "01-21": {
+                        "func": "numberDiv",
+                        "div": 1000,
+                        "info": "0001-01-0020"
+                    }
+                }
             }
         }
     }

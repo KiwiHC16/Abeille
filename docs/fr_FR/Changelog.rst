@@ -8,6 +8,8 @@ ChangeLog
 - RDM001: Mise-à-jour du modèle (2185).
 - Xiaomi vibration: Mise-à-jour du modèle.
 - Xiaomi smoke (sensor_smoke): Modele géré par section 'xiaomi'.
+- Interne: Parser: decodeDataType() ne s'arrete plus si erreur de taille.
+- Prise Aubess TS011F, _TZ3000_gvn91tmx: Mise-à-jour du modèle (2558).
 
 230328-BETA-2
 -------------

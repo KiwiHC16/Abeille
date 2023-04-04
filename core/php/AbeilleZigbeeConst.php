@@ -333,6 +333,7 @@
                 "4000" => array( "name" => "GlobalSceneControl", "access" => "R", "dataType" => 0x10 ),
                 "4001" => array( "name" => "OnTime", "access" => "RW", "dataType" => 0x21 ),
                 "4002" => array( "name" => "OffWaitTime", "access" => "RW", "dataType" => 0x21 ),
+                "4003" => array( "name" => "StartUpOnOff", "access" => "RW", "dataType" => 0x30 ), // enum8
             ),
             "commandsR" => array(
                 "00" => array( "name" => "Off" ),

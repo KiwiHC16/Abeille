@@ -1669,8 +1669,8 @@
             // Checking size
             $l = strlen($iHs);
             if ($l < (2 * $dataSize)) {
-                parserLog('debug', "  decodeDataType() ERROR: Data too short (got=".($l/2)."B, exp=".$dataSize."B)");
-                return false;
+                parserLog('debug', "  decodeDataType(type=".$dataType.") ERROR: Data too short (got=".($l/2)." B, exp=".$dataSize." B)");
+                // return false;
             }
 
             // 'hs' is now reduced to proper size

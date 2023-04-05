@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230405-BETA-1
+-------------
+
 - Groupes: Ajout 'suppression de tous les groupes'.
 - Image: 'node_TRADFRIonoffswitch.png' => 'node_Ikea-OnOffSwitch.png'
 - Loratap roller shutter touch switch v2: Mise-à-jour image (2561).

@@ -13,6 +13,7 @@ ChangeLog
 - TS201: Ajout signature TS0201__TZ3000_ywagc4rj (2567).
 - Assistant modele: Mise-à-jour.
 - Bouton IP55 Moes: Ajout support préliminaire (2562).
+- Fonction 'réparation' préliminaire accessible à tous.
 
 230328-BETA-2
 -------------

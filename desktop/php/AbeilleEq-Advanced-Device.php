@@ -104,11 +104,13 @@
                         echo '<a class="btn btn-warning" onclick="removeLocalJSON(\''.$jsonId.'\')" title="Supprime la version locale du fichier de config JSON">Supprimer version locale</a>';
                 }
             }
+            echo '<a class="btn btn-warning" onclick="update(\''.$eqId.'\')" style="margin-left:8px" title="{{Mise-à-jour à partir de son modèle et reconfiguration}}">{{Mise-à-jour}}</a>';
+            echo '<a class="btn btn-danger" onclick="reinit(\''.$eqId.'\')" style="margin-left:8px" title="{{Réinitlialise les paramètres par défaut et reconfigure l\'équipement comme s\'il s\'agissait d\'une nouvelle inclusion}}">{{Réinitialiser}}</a>';
         ?>
     </div>
 </div>
 
-<div class="form-group">
+<!-- <div class="form-group">
     <label class="col-sm-3 control-label">Configuration</label>
     <div class="col-sm-5">
         <?php
@@ -121,7 +123,7 @@
             // echo '<a class="btn btn-warning" onclick="reconfigure(\''.$eqId.'\')" title="Reconfigure l\'équipement">Reconfigurer</a>';
         ?>
     </div>
-</div>
+</div> -->
 
 <?php
     if ($sig) {
@@ -173,13 +175,13 @@
     ?>
 </div>
 
-<?php if (isset($dbgDeveloperMode)) { ?>
+<!-- <?php if (isset($dbgDeveloperMode)) { ?> -->
 <div class="form-group">
-    <label class="col-sm-3 control-label">Informations de l'équipement</label>
+    <label class="col-sm-3 control-label">{{Données de l'équipement}} (BETA)</label>
     <div class="col-sm-5">
         <?php
-            echo '<a class="btn btn-danger" onclick="repair('.$eqId.')">{{Réparer}}</a>';
+            echo '<a class="btn btn-danger" title="{{Tente de récupérer et corriger les données}}" onclick="repair('.$eqId.')">{{Réparer}}</a>';
         ?>
     </div>
 </div>
-<?php } ?>
+<!-- <?php } ?> -->

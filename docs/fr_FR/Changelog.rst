@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230405-BETA-1
+230405-BETA-2
 -------------
 
 - Groupes: Ajout 'suppression de tous les groupes'.

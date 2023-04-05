@@ -90,11 +90,11 @@
                     if (file_exists($customP.$id1."/".$id1.".json") ||
                         file_exists($customP.$id2."/".$id2.".json")) {
                         echo '<span style="background-color:red;color:black" title=""> INFO: Modèle local/custom disponible.</span>';
-                        echo '<a class="btn btn-warning" onclick="reinit(\''.$eqId.'\')" title="Réinitlialisation avec le modèle officiel commme s\'il s\'agissait d\'une nouvelle inclusion">Utiliser</a>';
+                        // echo '<a class="btn btn-warning" onclick="reinit(\''.$eqId.'\')" title="Réinitlialisation avec le modèle officiel commme s\'il s\'agissait d\'une nouvelle inclusion">Utiliser</a>';
                     } else if (file_exists($officialP.$id1."/".$id1.".json") ||
                         file_exists($officialP.$id2."/".$id2.".json")) {
                         echo '<span style="background-color:red;color:black" title=""> INFO: Modèle officiel disponible.</span>';
-                        echo '<a class="btn btn-warning" onclick="reinit(\''.$eqId.'\')" title="Réinitlialisation avec le modèle officiel commme s\'il s\'agissait d\'une nouvelle inclusion">Utiliser</a>';
+                        // echo '<a class="btn btn-warning" onclick="reinit(\''.$eqId.'\')" title="Réinitlialisation avec le modèle officiel commme s\'il s\'agissait d\'une nouvelle inclusion">Utiliser</a>';
                     }
                 }
             } else {
@@ -104,6 +104,7 @@
                         echo '<a class="btn btn-warning" onclick="removeLocalJSON(\''.$jsonId.'\')" title="Supprime la version locale du fichier de config JSON">Supprimer version locale</a>';
                 }
             }
+
             echo '<a class="btn btn-warning" onclick="update(\''.$eqId.'\')" style="margin-left:8px" title="{{Mise-à-jour à partir de son modèle et reconfiguration}}">{{Mise-à-jour}}</a>';
             echo '<a class="btn btn-danger" onclick="reinit(\''.$eqId.'\')" style="margin-left:8px" title="{{Réinitlialise les paramètres par défaut et reconfigure l\'équipement comme s\'il s\'agissait d\'une nouvelle inclusion}}">{{Réinitialiser}}</a>';
         ?>

@@ -11,6 +11,8 @@ ChangeLog
 - Interne: Parser: decodeDataType() ne s'arrete plus si erreur de taille.
 - Prise Aubess TS011F, _TZ3000_gvn91tmx: Mise-à-jour du modèle (2558).
 - TS201: Ajout signature TS0201__TZ3000_ywagc4rj (2567).
+- Assistant modele: Mise-à-jour.
+- Bouton IP55 Moes: Ajout support préliminaire (2562).
 
 230328-BETA-2
 -------------

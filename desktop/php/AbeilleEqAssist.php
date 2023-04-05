@@ -895,7 +895,8 @@
 
             /* 0004/Groups cluster */
             if (typeof ep.servClusters["0004"] !== "undefined") {
-                cmds["Groups"] = newCmd("Group-Membership");
+                // Cmd info 'Grousp' no longer required
+                // cmds["Groups"] = newCmd("Group-Membership");
             }
 
             /* 0006/OnOff cluster */

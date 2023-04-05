@@ -555,6 +555,8 @@
                 // Renaming icons if required
                 $iList = array(
                     "Blitzwolf-BW-SHP13" => "Blitzwolf-SmartPlug",
+                    "TS0201" => "Blitzwolf-Display",
+                    "FNB54-THM17ML1.1" => "Blitzwolf-Display",
 
                     "BulbE27" => "Generic-BulbE27",
                     "Generic-E14" => "Generic-BulbE14",

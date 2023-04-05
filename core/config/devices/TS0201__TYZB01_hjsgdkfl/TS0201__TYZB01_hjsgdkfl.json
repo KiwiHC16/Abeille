@@ -4,10 +4,17 @@
         "model": "BW-IS4",
         "type": "Blitzwolf temperature/humidity sensor/display",
         "genericType": "Environment",
+        "alternateIds": {
+            "TS0201__TZ3000_ywagc4rj": {
+                "manufacturer": "NIKJEBDF",
+                "model": "?"
+            },
+            "TS0201__TZ3000_itnrsufe": {}
+        },
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "TS0201"
+            "icon": "Blitzwolf-Display"
         },
         "category": {
             "automatism": "1"

@@ -6388,18 +6388,19 @@
                 // Xiaomi Bouton V2 Carré
                 else if (($attrId == "FF01") && ($attrSize == "001A")) {
                     // Assuming $dataType == "42"
-                    parserLog("debug", "  Xiaomi proprietary (Square button)" );
+                    parserLog("debug", '  Xiaomi proprietary (Square button) => Handled by xiaomi section');
+                    return;
 
-                    // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
-                    // For info until activation
+                    // // For info until activation
+                    // xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
+                    // // For info until activation
 
-                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    parserLog('debug', '  Voltage='.$voltage.' Voltage%='.$this->volt2pourcent($voltage));
-                    $attrReportN = [
-                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                    ];
+                    // $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    // parserLog('debug', '  Voltage='.$voltage.' Voltage%='.$this->volt2pourcent($voltage));
+                    // $attrReportN = [
+                    //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
+                    //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
+                    // ];
                 }
 
                 // Xiaomi lumi.sensor_86sw1 (Wall 1 Switch sur batterie)

@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Bouton IP55 Moes: Mise-à-jour du modèle (2562).
+- Xiaomi sensor_switch.aq2/remote.b1acn01: Mise-à-jour des modèles.
 
 230405-BETA-2
 -------------

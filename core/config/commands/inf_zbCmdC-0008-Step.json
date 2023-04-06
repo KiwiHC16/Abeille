@@ -1,9 +1,9 @@
 {
-    "inf_zbCmdR-0008-Stop": {
-        "comment": "Cluster 0008/Stop cmd, received from device",
+    "inf_zbCmdC-0008-Step": {
+        "comment": "Cluster 0008/Step cmd, received from CLIENT side",
         "subType": "binary",
         "type": "info",
-        "logicalId": "#EP#-0008-cmd03",
+        "logicalId": "#EP#-0008-cmd02",
         "configuration": {
             "repeatEventManagement": "always"
         }

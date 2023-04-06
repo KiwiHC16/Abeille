@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Bouton IP55 Moes: Mise-à-jour du modèle (2562).
+
 230405-BETA-2
 -------------
 

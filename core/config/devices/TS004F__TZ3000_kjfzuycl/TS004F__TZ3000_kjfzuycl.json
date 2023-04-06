@@ -55,6 +55,14 @@
                 "use": "act_zbConfigureReporting",
                 "params": "ep=01&clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"
+            },
+            "Step": {
+                "use": "inf_zbCmdC-0008-Step",
+                "isVisible": 1
+            },
+            "Stop": {
+                "use": "inf_zbCmdR-0008-Stop",
+                "isVisible": 1
             }
         }
     }

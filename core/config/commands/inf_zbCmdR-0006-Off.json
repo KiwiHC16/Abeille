@@ -1,6 +1,5 @@
 {
     "inf_zbCmdR-0006-Off": {
-        "name": "0006-cmd00",
         "comment": "Cluster 0006/OFF cmd, received from device",
         "subType": "binary",
         "type": "info",

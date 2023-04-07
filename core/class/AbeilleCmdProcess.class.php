@@ -3282,6 +3282,9 @@
                     // <manufacturer id: uint16_t>
                     // <Max number of identifiers: uint8_t>
 
+                    // TODO: Might be required to generate proper cmd allowing to enable default response.
+                    //       Some devices may not answer at all if disabled. To be confirmed.
+
                     $cmd            = "0140";
                     $addrMode       = "02";
                     $addr           = $Command['addr'];
@@ -3296,7 +3299,7 @@
                     $manufSpec      = "00"; //  1 – Yes	 0 – No
                     $manufId        = "0000";
                     $maxAttrId      = isset($Command['maxAttrId']) ? $Command['maxAttrId'] : "FF";
-                    cmdLog('debug','    Using dir='.$dir.', startAttrId='.$attrId.", maxAttr=".$maxAttrId, $this->debug['processCmd']);
+                    cmdLog('debug','    discoverAttributes: dir='.$dir.', startAttrId='.$attrId.", maxAttr=".$maxAttrId, $this->debug['processCmd']);
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$attrId.$dir.$manufSpec.$manufId.$maxAttrId;
 

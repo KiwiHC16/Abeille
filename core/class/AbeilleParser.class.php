@@ -3520,7 +3520,7 @@
                 $fcf = substr($payload, 26, 2); // Frame Control Field
                 $frameType = hexdec($fcf) & 3; // Bits 0 & 1: 00=global, 01=cluster specific
                 $manufSpecific = (hexdec($fcf) >> 2) & 1;
-                $dir = (hexdec($fcf) >> 3) & 1; // 1=sent from server side to cluster, 0=sent from client side to server
+                $dir = (hexdec($fcf) >> 3) & 1; // 1=sent from server side, 0=sent from client side
                 if ($frameType == 0)
                     $fcfTxt = "General";
                 else
@@ -3986,6 +3986,7 @@
                             'addr' => $srcAddr,
                             'ep' => $srcEp,
                             'clustId' => $clustId,
+                            'fromServer' => $dir,
                             'cmd' => $cmdId,
                             'status' => $status
                         );

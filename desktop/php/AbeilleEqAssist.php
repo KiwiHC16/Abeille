@@ -1625,16 +1625,18 @@ console.log(zEndPoints);
 
     /* Treat async infos received from server to display them. */
     function receiveInfos() {
-        console.log("receiveInfos()");
-        console.log("Got='"+this.responseText+"'");
+        // console.log("receiveInfos()");
+        // console.log("Got='"+this.responseText+"'");
         if (this.responseText == '') {
+            console.log("receiveInfos() => EMPTY");
             openReturnChannel();
             return;
         }
 
         res = JSON.parse(this.responseText);
+        console.log("receiveInfos()=", res);
         for (const [idx, msg] of Object.entries(res)) {
-            console.log("msg="+msg.type);
+            // console.log("msg="+msg.type);
 
             if (msg.type == "activeEndpoints") {
                 // 'src' => 'parser',
@@ -1705,8 +1707,10 @@ console.log(zEndPoints);
                     var newCell = newRow.insertCell(0);
                     newCell.innerHTML = clustId;
                     // newCell.setAttribute('title', 'toto'); // Tcharp38 TODO: How to retrive cluster name ?
-                    newCell.innerHTML += '<a id="idServClust'+sEp+'-'+clustId+'RBEx" class="btn btn-warning" title="Découverte étendue des attributs" onclick="requestInfos(\'attribExtList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
-                    newCell.innerHTML += '<a id="idServClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
+                    // newCell.innerHTML += '<a id="idServClust'+sEp+'-'+clustId+'RBEx" class="btn btn-warning" title="{{Découverte étendue des attributs}}" onclick="requestInfos(\'attribExtList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
+                    newCell.innerHTML += '<a id="id'+sEp+'-S'+clustId+'-DAE" class="btn btn-warning" title="{{Découverte étendue des attributs}}" onclick="requestInfos(\'attribExtList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
+                    // newCell.innerHTML += '<a id="idServClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="{{Découverte des attributs}}" onclick="requestInfos(\'attribList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
+                    newCell.innerHTML += '<a id="id'+sEp+'-S'+clustId+'-DA" class="btn btn-warning" title="{{Découverte des attributs}}" onclick="requestInfos(\'attribList\', \''+msg.ep+'\', \''+clustId+'\', \'00\')"><i class="fas fa-sync"></i></a>';
                     if (clustId == "0000") { // Basic cluster supported on this EP
                         requestInfos('manufacturer', sEp, clustId);
                         requestInfos('modelId', sEp, clustId);
@@ -1720,7 +1724,7 @@ console.log(zEndPoints);
                     var newRow = cliClustTable.insertRow(-1);
                     var newCell = newRow.insertCell(0);
                     newCell.innerHTML = clustId;
-                    newCell.innerHTML += '<a id="idCliClust'+sEp+'-'+clustId+'RB" class="btn btn-warning" title="Découverte des attributs" onclick="requestInfos(\'attribList\', \''+msg.ep+'\', \''+clustId+'\', \'01\')"><i class="fas fa-sync"></i></a>';
+                    newCell.innerHTML += '<a id="id'+sEp+'-C'+clustId+'-DA" class="btn btn-warning" title="{{Découverte des attributs}}" onclick="requestInfos(\'attribList\', \''+msg.ep+'\', \''+clustId+'\', \'01\')"><i class="fas fa-sync"></i></a>';
                     requestInfos('attribList', sEp, clustId, '01');
                 });
 
@@ -1843,10 +1847,13 @@ console.log(zEndPoints);
                     }
                     requestInfos('discoverCommandsReceived', sEp, sClustId);
                     requestInfos('discoverCommandsGenerated', sEp, sClustId);
-                    changeClass("idServClust"+sEp+"-"+sClustId+"RBEx", "btn-warning", "btn-success");
-                    changeClass("idServClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
-                } else
-                    changeClass("idCliClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
+                    // changeClass("idServClust"+sEp+"-"+sClustId+"RBEx", "btn-warning", "btn-success");
+                    changeClass("id"+sEp+"-S"+sClustId+"-DAE", "btn-warning", "btn-success");
+                    // changeClass("idServClust"+sEp+"-"+sClustId+"RB", "btn-warning", "btn-success");
+                    changeClass("id"+sEp+"-S"+sClustId+"-DA", "btn-warning", "btn-success");
+                } else {
+                    changeClass("id"+sEp+"-C"+sClustId+"-DA", "btn-warning", "btn-success");
+                }
             } else if (msg.type == "attributeReport") {
                 // 'src' => 'parser',
                 // 'type' => 'attributeReport', // 8100 or 8102
@@ -2130,6 +2137,28 @@ console.log(zEndPoints);
                     clust.commandsGenerated = "UNSUPPORTED";
 
                     id='idEP'+sEp+'-Serv'+sClustId+'-RB5';
+                    changeClass(id, "btn-warning", "btn-success");
+                    button = document.getElementById(id);
+                    if (button)
+                        button.setAttribute('disabled', true);
+                } else if (sCmd == "15") { // Discover Attributes Extended
+                    // From server or client ?
+                    if (msg.fromServer)
+                        id = 'id'+sEp+'-S'+sClustId+'-DAE';
+                    else
+                        id = 'id'+sEp+'-C'+sClustId+'-DAE';
+
+                    changeClass(id, "btn-warning", "btn-success");
+                    button = document.getElementById(id);
+                    if (button)
+                        button.setAttribute('disabled', true);
+                } else if (sCmd == "0C") { // Discover Attributes
+                    // From server or client ?
+                    if (msg.fromServer)
+                        id = 'id'+sEp+'-S'+sClustId+'-DA';
+                    else
+                        id = 'id'+sEp+'-C'+sClustId+'-DA';
+
                     changeClass(id, "btn-warning", "btn-success");
                     button = document.getElementById(id);
                     if (button)

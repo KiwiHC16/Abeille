@@ -1,7 +1,7 @@
 {
     "plug": {
         "manufacturer": "Xiaomi",
-        "type": "Plug",
+        "type": "Xiaomi plug",
         "genericType": "Outlet",
         "timeout": "60",
         "configuration": {

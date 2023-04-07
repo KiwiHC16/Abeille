@@ -5,6 +5,7 @@ ChangeLog
 - Xiaomi sensor_switch.aq2/remote.b1acn01: Mise-à-jour des modèles.
 - Interne: Parser: Suppression decodeFF01().
 - Assistant découverte: Améliorations.
+- Xiomi plug: Mise-à-jour du modèle.
 
 230405-BETA-2
 -------------

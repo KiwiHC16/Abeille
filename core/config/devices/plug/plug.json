@@ -1,6 +1,7 @@
 {
     "plug": {
         "manufacturer": "Xiaomi",
+        "model": "ZNCZ02LM",
         "type": "Xiaomi plug",
         "genericType": "Outlet",
         "timeout": "60",
@@ -39,8 +40,8 @@
                 "isVisible": 1
             },
             "Active Power": {
-                "use": "inf_zbAttr-0B04-ActivePower",
-                "params": "mult=1&div=1",
+                "use": "inf_zbAttr-000C-PresentValue",
+                "params": "ep=02",
                 "isHistorized": "1",
                 "isVisible": 1
             }
@@ -65,8 +66,9 @@
                     },
                     "98-39": {
                         "func": "number",
-                        "info": "0B04-01-050B",
-                        "comment": "Power"
+                        "info": "000C-02-0055",
+                        "comment": "Power",
+                        "comment2": "Also returned by EP02 cluster 000C attrib 0000"
                     }
                 }
             }

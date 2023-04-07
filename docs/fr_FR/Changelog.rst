@@ -6,6 +6,7 @@ ChangeLog
 - Interne: Parser: Suppression decodeFF01().
 - Assistant découverte: Améliorations.
 - Xiomi plug: Mise-à-jour du modèle.
+- Sonoff ZBMINIL2: Ajout support préliminaire (2569).
 
 230405-BETA-2
 -------------

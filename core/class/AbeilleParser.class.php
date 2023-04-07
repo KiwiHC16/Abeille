@@ -21,91 +21,91 @@
         public $wakeUpQueue; // queue of command to be sent when the device wakes up.
         public $whoTalked;   // store the source of messages to see if any message are waiting for them in wakeUpQueue
 
-        // ZigBee Cluster Library - Document 075123r02ZB - Page 79 - Table 2.15
-        // Data Type -> Description, # octets
-        public $zbDataTypes = array(
-                                 '00' => array( 'Null', 0 ),
-                                 // 01-07: reserved
-                                 '08' => array( 'General Data', 1),
-                                 '09' => array( 'General Data', 2),
-                                 '0A' => array( 'General Data', 3),
-                                 '0B' => array( 'General Data', 4),
-                                 '0C' => array( 'General Data', 5),
-                                 '0D' => array( 'General Data', 6),
-                                 '0E' => array( 'General Data', 7),
-                                 '0F' => array( 'General Data', 8),
+        // // ZigBee Cluster Library - Document 075123r02ZB - Page 79 - Table 2.15
+        // // Data Type -> Description, # octets
+        // public $zbDataTypes = array(
+        //                          '00' => array( 'Null', 0 ),
+        //                          // 01-07: reserved
+        //                          '08' => array( 'General Data', 1),
+        //                          '09' => array( 'General Data', 2),
+        //                          '0A' => array( 'General Data', 3),
+        //                          '0B' => array( 'General Data', 4),
+        //                          '0C' => array( 'General Data', 5),
+        //                          '0D' => array( 'General Data', 6),
+        //                          '0E' => array( 'General Data', 7),
+        //                          '0F' => array( 'General Data', 8),
 
-                                 '10' => array( 'Bool', 1 ), // Boolean
-                                 // 0x11-0x17 Reserved
-                                 '18' => array( 'Bitmap', 1 ),
-                                 '19' => array( 'Bitmap', 2 ),
-                                 '1A' => array( 'Bitmap', 3 ),
-                                 '1B' => array( 'Bitmap', 4 ),
-                                 '1C' => array( 'Bitmap', 5 ),
-                                 '1D' => array( 'Bitmap', 6 ),
-                                 '1E' => array( 'Bitmap', 7 ),
-                                 '1F' => array( 'Bitmap', 8 ),
+        //                          '10' => array( 'Bool', 1 ), // Boolean
+        //                          // 0x11-0x17 Reserved
+        //                          '18' => array( 'Bitmap', 1 ),
+        //                          '19' => array( 'Bitmap', 2 ),
+        //                          '1A' => array( 'Bitmap', 3 ),
+        //                          '1B' => array( 'Bitmap', 4 ),
+        //                          '1C' => array( 'Bitmap', 5 ),
+        //                          '1D' => array( 'Bitmap', 6 ),
+        //                          '1E' => array( 'Bitmap', 7 ),
+        //                          '1F' => array( 'Bitmap', 8 ),
 
-                                 '20' => array( 'Uint8',  1 ), // Unsigned 8-bit int
-                                 '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
-                                 '22' => array( 'Uint24', 3 ), // Unsigned 24-bit int
-                                 '23' => array( 'Uint32', 4 ), // Unsigned 32-bit int
-                                 '24' => array( 'Uint40', 5 ), // Unsigned 40-bit int
-                                 '25' => array( 'Uint48', 6 ), // Unsigned 48-bit int
-                                 '26' => array( 'Uint56', 7 ), // Unsigned 56-bit int
-                                 '27' => array( 'Uint64', 8 ), // Unsigned 64-bit int
+        //                          '20' => array( 'Uint8',  1 ), // Unsigned 8-bit int
+        //                          '21' => array( 'Uint16', 2 ), // Unsigned 16-bit int
+        //                          '22' => array( 'Uint24', 3 ), // Unsigned 24-bit int
+        //                          '23' => array( 'Uint32', 4 ), // Unsigned 32-bit int
+        //                          '24' => array( 'Uint40', 5 ), // Unsigned 40-bit int
+        //                          '25' => array( 'Uint48', 6 ), // Unsigned 48-bit int
+        //                          '26' => array( 'Uint56', 7 ), // Unsigned 56-bit int
+        //                          '27' => array( 'Uint64', 8 ), // Unsigned 64-bit int
 
-                                 '28' => array( 'Int8',  1 ), // Signed 8-bit int
-                                 '29' => array( 'Int16', 2 ), // Signed 16-bit int
-                                 '2A' => array( 'Int24', 3 ), // Signed 24-bit int
-                                 '2B' => array( 'Int32', 4 ), // Signed 32-bit int
-                                 '2C' => array( 'Int40', 5 ), // Signed 40-bit int
-                                 '2D' => array( 'Int48', 6 ), // Signed 48-bit int
-                                 '2E' => array( 'Int56', 7 ), // Signed 56-bit int
-                                 '2F' => array( 'Int64', 8 ), // Signed 64-bit int
+        //                          '28' => array( 'Int8',  1 ), // Signed 8-bit int
+        //                          '29' => array( 'Int16', 2 ), // Signed 16-bit int
+        //                          '2A' => array( 'Int24', 3 ), // Signed 24-bit int
+        //                          '2B' => array( 'Int32', 4 ), // Signed 32-bit int
+        //                          '2C' => array( 'Int40', 5 ), // Signed 40-bit int
+        //                          '2D' => array( 'Int48', 6 ), // Signed 48-bit int
+        //                          '2E' => array( 'Int56', 7 ), // Signed 56-bit int
+        //                          '2F' => array( 'Int64', 8 ), // Signed 64-bit int
 
-                                 '30' => array( 'Enumeration', 1 ),
-                                 '31' => array( 'Enumeration', 2 ),
-                                 // 0x32-0x37 Reserved
+        //                          '30' => array( 'Enumeration', 1 ),
+        //                          '31' => array( 'Enumeration', 2 ),
+        //                          // 0x32-0x37 Reserved
 
-                                 '38' => array( 'SemiPrecision',   2 ),
-                                 '39' => array( 'Single', 4 ), // Single precision
-                                 '3A' => array( 'DoublePrecision', 8 ),
-                                 // 0x3b-0x3f
-                                 // 0x40 Reserved
-                                 '41' => array( 'String - Octet string',             'Defined in first octet' ),
-                                 '42' => array( 'String - Charactere string',        'Defined in first octet' ),
-                                 '43' => array( 'String - Long octet string',        'Defined in first two octets' ),
-                                 '44' => array( 'String - Long charactere string',   'Defined in first two octets' ),
-                                 // 0x45-0x47 Reserved
-                                 '48' => array( 'Ordered sequence - Array',          '2+sum of lengths of contents' ),
-                                 // 0x49-0x4b Reserved
-                                 '4C' => array( 'Ordered sequence - Structure',      '2+sum of lengths of contents' ),
-                                 // 0x4d-0x4f Reserved
-                                 '50' => array( 'Collection - Set',      'Sum of lengths of contents' ),
-                                 '51' => array( 'Collection - Bag',      'Sum of lengths of contents' ),
-                                 //0x52-0x57 Reserved
-                                 // 0x58-0xdf Reserved
-                                 'E0' => array( 'Time - Time of day', 4 ),
-                                 'E1' => array( 'Time - Date', 4 ),
-                                 'E2' => array( 'Time - UTCTime', 4 ),
-                                 // 0xe3 - 0xe7 Reserved
-                                 'E8' => array( 'Identifier - Cluster ID', 2 ),
-                                 'E9' => array( 'Identifier - Attribute ID', 2 ),
-                                 'EA' => array( 'Identifier - BACnet OID', 4 ),
-                                 // 0xeb-0xef Reserved
-                                 'F0' => array( 'Miscellaneous - IEEE address', 8 ),
-                                 'F1' => array( 'Miscellaneous - 128 bit security key', 16 ),
-                                 // 0xF2-0xFe Reserved
-                                 'FF' => array( 'Unknown', 0 ),
-        );
+        //                          '38' => array( 'SemiPrecision',   2 ),
+        //                          '39' => array( 'Single', 4 ), // Single precision
+        //                          '3A' => array( 'DoublePrecision', 8 ),
+        //                          // 0x3b-0x3f
+        //                          // 0x40 Reserved
+        //                          '41' => array( 'String - Octet string',             'Defined in first octet' ),
+        //                          '42' => array( 'String - Charactere string',        'Defined in first octet' ),
+        //                          '43' => array( 'String - Long octet string',        'Defined in first two octets' ),
+        //                          '44' => array( 'String - Long charactere string',   'Defined in first two octets' ),
+        //                          // 0x45-0x47 Reserved
+        //                          '48' => array( 'Ordered sequence - Array',          '2+sum of lengths of contents' ),
+        //                          // 0x49-0x4b Reserved
+        //                          '4C' => array( 'Ordered sequence - Structure',      '2+sum of lengths of contents' ),
+        //                          // 0x4d-0x4f Reserved
+        //                          '50' => array( 'Collection - Set',      'Sum of lengths of contents' ),
+        //                          '51' => array( 'Collection - Bag',      'Sum of lengths of contents' ),
+        //                          //0x52-0x57 Reserved
+        //                          // 0x58-0xdf Reserved
+        //                          'E0' => array( 'Time - Time of day', 4 ),
+        //                          'E1' => array( 'Time - Date', 4 ),
+        //                          'E2' => array( 'Time - UTCTime', 4 ),
+        //                          // 0xe3 - 0xe7 Reserved
+        //                          'E8' => array( 'Identifier - Cluster ID', 2 ),
+        //                          'E9' => array( 'Identifier - Attribute ID', 2 ),
+        //                          'EA' => array( 'Identifier - BACnet OID', 4 ),
+        //                          // 0xeb-0xef Reserved
+        //                          'F0' => array( 'Miscellaneous - IEEE address', 8 ),
+        //                          'F1' => array( 'Miscellaneous - 128 bit security key', 16 ),
+        //                          // 0xF2-0xFe Reserved
+        //                          'FF' => array( 'Unknown', 0 ),
+        // );
 
-        /* Returns ZigBee data type or array('?'.$type.'?', 0) if unknown */
-        function getZbDataType($type) {
-            if (array_key_exists($type, $this->zbDataTypes))
-                return $this->zbDataTypes[$type];
-            return array('?'.$type.'?', 0);
-        }
+        // /* Returns ZigBee data type or array('?'.$type.'?', 0) if unknown */
+        // function getZbDataType($type) {
+        //     if (array_key_exists($type, $this->zbDataTypes))
+        //         return $this->zbDataTypes[$type];
+        //     return array('?'.$type.'?', 0);
+        // }
 
         function __construct() {
             global $argv;
@@ -1780,49 +1780,49 @@
             return '?'.$id.'?';
         }
 
-        /* Decode FF01 attribut payload */
-        function decodeFF01($data) {
-            parserLog("debug", "  decodeFF01(".$data.")");
+        // /* Decode FF01 attribut payload */
+        // function decodeFF01($data) {
+        //     parserLog("debug", "  decodeFF01(".$data.")");
 
-            $fields = array();
-            $dataLen = strlen($data);
-            while ($dataLen != 0) {
-                if ($dataLen < 4) {
-                    parserLog('debug', 'decodeFF01(): Longueur incorrecte ('.$dataLen.'). Analyse FF01 interrompue.');
-                    break;
-                }
+        //     $fields = array();
+        //     $dataLen = strlen($data);
+        //     while ($dataLen != 0) {
+        //         if ($dataLen < 4) {
+        //             parserLog('debug', 'decodeFF01(): Longueur incorrecte ('.$dataLen.'). Analyse FF01 interrompue.');
+        //             break;
+        //         }
 
-                $id = $data[0].$data[1];
-                $type = $data[2].$data[3];
-                $dt_arr = $this->getZbDataType($type);
-                $len = $dt_arr[1] * 2;
-                if ($len == 0) {
-                    /* If length is unknown we can't continue since we don't known where is next good position */
-                    parserLog('warning', 'decodeFF01(): Type de données '.$type.' non supporté. Analyse FF01 interrompue.');
-                    break;
-                }
-                $value = substr($data, 4, $len );
-                $fct = 'conv'.$dt_arr[0].'ToString';
-                if (method_exists($this, $fct)) {
-                    $valueConverted = $this->$fct($value);
-                    // parserLog('debug', 'decodeFF01(): Conversion du type '.$type.' (val='.$value.')');
-                } else {
-                    parserLog('debug', 'decodeFF01(): Conversion du type '.$type.' non supporté');
-                    $valueConverted = "";
-                }
+        //         $id = $data[0].$data[1];
+        //         $type = $data[2].$data[3];
+        //         $dt_arr = $this->getZbDataType($type);
+        //         $len = $dt_arr[1] * 2;
+        //         if ($len == 0) {
+        //             /* If length is unknown we can't continue since we don't known where is next good position */
+        //             parserLog('warning', 'decodeFF01(): Type de données '.$type.' non supporté. Analyse FF01 interrompue.');
+        //             break;
+        //         }
+        //         $value = substr($data, 4, $len );
+        //         $fct = 'conv'.$dt_arr[0].'ToString';
+        //         if (method_exists($this, $fct)) {
+        //             $valueConverted = $this->$fct($value);
+        //             // parserLog('debug', 'decodeFF01(): Conversion du type '.$type.' (val='.$value.')');
+        //         } else {
+        //             parserLog('debug', 'decodeFF01(): Conversion du type '.$type.' non supporté');
+        //             $valueConverted = "";
+        //         }
 
-                $fields[$this->getFF01IdName($id)] = array(
-                    'id' => $id,
-                    'type' => $type,
-                    'typename' => $dt_arr[0],
-                    'value' => $value,
-                    'valueConverted' => $valueConverted,
-                );
-                $data = substr($data, 4 + $len);
-                $dataLen = strlen($data);
-            }
-            return $fields;
-        }
+        //         $fields[$this->getFF01IdName($id)] = array(
+        //             'id' => $id,
+        //             'type' => $type,
+        //             'typename' => $dt_arr[0],
+        //             'value' => $value,
+        //             'valueConverted' => $valueConverted,
+        //         );
+        //         $data = substr($data, 4 + $len);
+        //         $dataLen = strlen($data);
+        //     }
+        //     return $fields;
+        // }
 
          /**
          * protocolDatas: Treat messages received from AbeilleSerialRead, check CRC, and if Ok execute proper decode function.
@@ -3862,19 +3862,19 @@
                             $attrReportN = [];
                             xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN, $toMon);
 
-                            // Legacy code to be removed at some point
-                            $a = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
-                            $t = substr($pl, 4, 2); // Type
-                            if (($a == '00F7') && ($t == "41")) {
-                                $dataLength = hexdec(substr($pl, 6, 2));
-                                $fcc0 = $this->decodeFF01(substr($pl, 8, $dataLength*2));
-                                // $attrReportN[] = array( "name" => '0006-01-0000', "value" => $fcc0["Etat SW 1 Binaire"]["valueConverted"] );
-                                // $attrReportN[] = array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] / 100 );
-                                if (isset($fcc0["Puissance"])) {
-                                    parserLog('debug', "  Legacy 'Puissance'");
-                                    $attrReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
-                                }
-                            }
+                            // // Legacy code to be removed at some point
+                            // $a = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
+                            // $t = substr($pl, 4, 2); // Type
+                            // if (($a == '00F7') && ($t == "41")) {
+                            //     $dataLength = hexdec(substr($pl, 6, 2));
+                            //     $fcc0 = $this->decodeFF01(substr($pl, 8, $dataLength*2));
+                            //     // $attrReportN[] = array( "name" => '0006-01-0000', "value" => $fcc0["Etat SW 1 Binaire"]["valueConverted"] );
+                            //     // $attrReportN[] = array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] / 100 );
+                            //     if (isset($fcc0["Puissance"])) {
+                            //         parserLog('debug', "  Legacy 'Puissance'");
+                            //         $attrReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
+                            //     }
+                            // }
                         }
 
                         else if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode

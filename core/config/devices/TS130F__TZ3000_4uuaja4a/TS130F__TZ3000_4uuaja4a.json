@@ -3,6 +3,9 @@
         "manufacturer": "Girier",
         "model": "Curtain",
         "type": "Girier curtain module",
+        "alternateIds": {
+            "TS130F__TZ3210_dwytrmda": {}
+        },
         "genericType": "Opening",
         "timeout": "60",
         "category": {

@@ -13,6 +13,8 @@ ChangeLog
 - Interne: Parser: Extension support attribut non standard.
 - TS201 (TS0201__TZ3000_ywagc4rj): Modele specifique pour '%' non standard (2567).
 - Curtain module (TS130F__TZ3210_dwytrmda): Ajout support (2568).
+- Modele cmd 'click' renommé en 'inf_click'.
+- Bouton IP55 Moes: Mise-à-jour (2562).
 
 230405-BETA-2
 -------------

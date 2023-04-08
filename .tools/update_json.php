@@ -120,32 +120,11 @@
             $commands = $dev[$devName]['commands'];
             $commands2 = [];
             foreach ($commands as $key => $value) {
-                if (substr($key, 0, 7) == "include") {
-                    // Old syntax: "includeXX": "<filename>"
-                    $cmdFName = $value;
-                    $oldSyntax = true;
-                } else {
-                    // New syntax: "<cmdJName>": { "use": "<fileName>" }
-                    $cmdFName = $value['use'];
-                    $oldSyntax = false;
-                }
+                // New syntax: "<cmdJName>": { "use": "<fileName>" }
+                $cmdFName = $value['use'];
+                $oldSyntax = false;
 
-                // Updating old syntax to new syntax
-                if ($oldSyntax) {
-                    $cmdPath = commandsDir.'/'.$cmdFName.'.json';
-                    $jsonCmd = file_get_contents($cmdPath);
-                    $cmd = json_decode($jsonCmd, true);
-                    $cmdJName = $cmd[$cmdFName]['name'];
-
-                    $commands2[$cmdJName] = Array(
-                        "use"=> $cmdFName
-                    );
-
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                }
-
-                else if (preg_match('/^zb-[a-zA-Z0-9]{4}-/', $cmdFName)) {
+                if (preg_match('/^zb-[a-zA-Z0-9]{4}-/', $cmdFName)) {
                     $new = "inf_zbAttr-".substr($cmdFName, 3);
                     $commands2[$key] = $value;
                     $commands2[$key]["use"] = $new;
@@ -662,6 +641,15 @@
                         "use"=> "poll-0B04-0505",
                     );
                     $commands2["Poll 0B04-0505"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                }
+
+                // Misc updates
+                // use click => use inf_click
+                else if ($value['use'] == "click") {
+                    $value['use'] = "inf_click";
+                    $commands2[$key] = $value;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }

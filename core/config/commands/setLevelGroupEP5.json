@@ -1,10 +1,8 @@
 {
     "setLevelGroupEP5": {
-        "name": "setLevel Gp5",
         "isVisible": 1,
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetLevelGroup5",
         "subType": "slider",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#GROUPEP5#\/setLevelGroup",

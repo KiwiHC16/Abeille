@@ -26,6 +26,7 @@
             "Set Setpoint": {
                 "use": "act_tuyaEF00-Set-Setpoint",
                 "params": "dpId=02",
+                "logicalId": "#EP#-SetSetpoint",
                 "isVisible": 1
             },
             "Setpoint": {
@@ -42,6 +43,7 @@
             "Set ECO temp": {
                 "use": "act_tuyaEF00-Set-Setpoint",
                 "params": "dpId=6B",
+                "logicalId": "#EP#-SetEcoTemp",
                 "isVisible": 1
             },
             "ECO temp": {

@@ -1,9 +1,7 @@
 {
     "Colour": {
-        "isVisible": 0,
-        "name": "Colour",
-        "isHistorized": "0",
         "subType": "message",
+        "logicalId": "#EP#-SetColour",
         "configuration": {
             "topic": "setColour",
             "request": "X=#title#&Y=#message#",

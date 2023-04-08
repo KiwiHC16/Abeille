@@ -15,6 +15,7 @@ ChangeLog
 - Curtain module (TS130F__TZ3210_dwytrmda): Ajout support (2568).
 - Modele cmd 'click' renommé en 'inf_click'.
 - Livolo TI0001: Correction modele (cmds logicalId).
+- Modeles: Ajout/correction 'logicalId'.
 
 230405-BETA-2
 -------------

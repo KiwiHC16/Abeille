@@ -1,10 +1,8 @@
 {
     "act_zbCmdG-EF00-Forward": {
         "isVisible": 1,
-        "name": "Forward",
-        "isHistorized": 0,
+        "logicalId": "#EP#-zbCmdG-EF00-Forward",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "cmd-EF00",

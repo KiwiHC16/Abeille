@@ -1,10 +1,7 @@
 {
     "Identify": {
-        "isVisible": 0,
-        "name": "Identify",
-        "isHistorized": "0",
         "subType": "other",
-        "invertBinary": "0",
+        "logicalId": "identify",
         "template": "",
         "configuration": {
             "topic": "identifySend",

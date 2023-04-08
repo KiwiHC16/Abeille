@@ -1,9 +1,7 @@
 {
     "act_zbCmdG-0300-MoveToColor": {
-        "name": "zbCmd-0300-MoveToColor",
+        "logicalId": "#EP#-0300-cmdMoveToColor",
         "comment": "X/Y mode, move to color command (0x07)",
-        "isHistorized": "0",
-        "isVisible": "0",
         "subType": "other",
         "configuration": {
             "topic": "setColour",

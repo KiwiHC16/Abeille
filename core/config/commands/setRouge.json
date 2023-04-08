@@ -1,11 +1,8 @@
 {
     "setRouge": {
-        "isVisible": 0,
-        "name": "setRouge",
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetRed",
         "subType": "slider",
         "value": "colorRouge",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "setRouge",
@@ -13,7 +10,6 @@
             "visibilityCategory": "additionalCommand"
         },
         "type": "action",
-        "genericType": "DONT",
-        "nextLine": "after"
+        "genericType": "DONT"
     }
 }

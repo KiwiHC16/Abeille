@@ -2,6 +2,7 @@
     "act_tuyaEF00-SetValue": {
         "subType": "other",
         "template": "",
+        "logicalId": "#EP#-TuyaEF00-SetValue",
         "configuration": {
             "topic": "cmd-tuyaEF00",
             "request": "ep=#EP#&cmd=setValue&data=#data#"

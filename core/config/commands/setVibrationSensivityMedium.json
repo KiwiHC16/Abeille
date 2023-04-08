@@ -1,8 +1,7 @@
 {
     "setVibrationSensivityMedium": {
         "isVisible": 1,
-        "name": "Medium",
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetVibrationSensivityMedium",
         "subType": "other",
         "configuration": {
             "topic": "WriteAttributeRequestVibration",

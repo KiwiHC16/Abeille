@@ -1,7 +1,7 @@
 {
     "spiritHostFlagsDefaultSet": {
         "isVisible": 0,
-        "name": "Default",
+        "logicalId": "#EP#-spiritHostFlagsDefaultSet",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

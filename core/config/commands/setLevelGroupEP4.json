@@ -1,10 +1,8 @@
 {
     "setLevelGroupEP4": {
-        "name": "setLevel Gp4",
         "isVisible": 1,
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetLevelGroup4",
         "subType": "slider",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#GROUPEP4#\/setLevelGroup",

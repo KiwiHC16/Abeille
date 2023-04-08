@@ -20,11 +20,13 @@
             "Open": {
                 "use": "cmdG-TuyaEF00-Set-OpenClose",
                 "params": "openClose=1",
+                "logicalId": "#EP#-Open",
                 "isVisible": 1
             },
             "Close": {
                 "use": "cmdG-TuyaEF00-Set-OpenClose",
                 "params": "openClose=0",
+                "logicalId": "#EP#-Close",
                 "isVisible": 1
             },
             "Status": {

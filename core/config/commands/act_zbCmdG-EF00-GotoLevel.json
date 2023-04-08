@@ -1,10 +1,8 @@
 {
     "act_zbCmdG-EF00-GotoLevel": {
         "isVisible": 1,
-        "name": "GotoLevel",
-        "isHistorized": 0,
+        "logicalId": "#EP#-zbCmdG-EF00-GotoLevel",
         "subType": "slider",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "cmd-EF00",

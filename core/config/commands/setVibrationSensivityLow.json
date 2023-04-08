@@ -1,8 +1,7 @@
 {
     "setVibrationSensivityLow": {
         "isVisible": 1,
-        "name": "Low",
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetVibrationSensivityLow",
         "subType": "other",
         "configuration": {
             "topic": "WriteAttributeRequestVibration",

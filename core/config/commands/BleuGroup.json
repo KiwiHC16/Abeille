@@ -1,7 +1,5 @@
 {
     "BleuGroup": {
-        "name": "Bleu Group",
-        "isHistorized": "0",
         "isVisible": "1",
         "subType": "other",
         "configuration": {

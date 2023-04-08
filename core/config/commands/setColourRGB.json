@@ -1,8 +1,6 @@
 {
     "setColourRGB": {
-        "isVisible": 0,
-        "name": "RGB",
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetColourRGB",
         "subType": "message",
         "configuration": {
             "topic": "setColourRGB",
@@ -13,7 +11,6 @@
             "title_placeholder": "RRGGBB",
             "message_placeholder": "na"
         },
-        "type": "action",
-        "nextLine": "after"
+        "type": "action"
     }
 }

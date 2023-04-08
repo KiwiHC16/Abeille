@@ -1,11 +1,9 @@
 {
     "moveToLiftAndTiltBSO_Lift": {
         "isVisible": 1,
-        "name": "Set Lift",
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetBSOLift",
         "subType": "slider",
         "value": "Lift",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "minValue": "1",

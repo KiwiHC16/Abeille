@@ -1,10 +1,8 @@
 {
     "act_zbCmdG-EF00-Up": {
         "isVisible": 1,
-        "name": "Up",
-        "isHistorized": 0,
+        "logicalId": "#EP#-zbCmdG-EF00-Up",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "cmd-EF00",

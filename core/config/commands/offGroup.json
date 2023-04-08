@@ -1,10 +1,8 @@
 {
     "offGroup": {
-        "name": "Off",
         "isVisible": 1,
-        "isHistorized": "0",
+        "logicalId": "#EP#-OffGroup",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#addrGroup#\/OnOffGroup",

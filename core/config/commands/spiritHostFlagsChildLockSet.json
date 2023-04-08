@@ -1,7 +1,7 @@
 {
     "spiritHostFlagsChildLockSet": {
         "isVisible": 0,
-        "name": "Child Lock",
+        "logicalId": "#EP#-spiritHostFlagsChildLockSet",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

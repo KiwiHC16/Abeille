@@ -45,12 +45,14 @@
             "Manual": {
                 "use": "act_tuyaEF00-SetBool",
                 "params": "dpId=02&data=01",
+                "logicalId": "#EP#-SetManual",
                 "isVisible": 1
             },
             "Auto": {
                 "use": "act_tuyaEF00-SetBool",
                 "params": "dpId=02&data=00",
-                "isVisible": 1
+                "logicalId": "#EP#-SetAuto",
+               "isVisible": 1
             },
             "Mode": {
                 "use": "attr-Thermostat-Mode",

@@ -1,8 +1,7 @@
 {
     "setSmokeSensivityHigh": {
         "isVisible": 1,
-        "name": "High",
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetSmokeSensivityHigh",
         "subType": "other",
         "configuration": {
             "topic": "WriteAttributeRequestVibration",

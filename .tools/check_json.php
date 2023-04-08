@@ -150,22 +150,27 @@
         } else {
             $commands = $dev[$devName]['commands'];
             // echo "commands=".json_encode($commands)."\n";
-            foreach ($commands as $key => $value) {
-                // New syntax: "<jCmdName>": { "use": "<fileName>" }
-                $cmdFName = $value['use'];
-
-                $path = commandsDir."/".$cmdFName.".json";
+            $logicIds = [];
+            foreach ($commands as $cmdJName => $cmd) {
+                // New syntax: "<cmdJName>": { "use": "<fileName>" }
+                $cmdModel = $cmd['use'];
+                $path = commandsDir."/".$cmdModel.".json";
                 if (!file_exists($path)) {
-                    $error = newDevError($devName, "ERROR", "Unknown command JSON ".$cmdFName.".json");
+                    $error = newDevError($devName, "ERROR", "Unknown command JSON ".$cmdModel.".json");
                     $missingCmds++;
                 }
+
+                /* Updating list of unused commands models */
+                $i = array_search($cmdModel, $unusedCmds, true);
+                if ($i !== false)
+                    unset($unusedCmds[$i]); // $cmdModel is used
 
                 // List of supported command keys
                 $validCmdKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
                 array_push($validCmdKeys, 'repeatEventManagement', 'listValue');
                 array_push($validCmdKeys, 'returnStateTime', 'returnStateValue', 'Polling');
                 array_push($validCmdKeys, 'trigOut', 'trigOutOffset', 'notStandard', 'valueOffset');
-                foreach ($value as $key2 => $value2) {
+                foreach ($cmd as $key2 => $value2) {
                     if (in_array($key2, $validCmdKeys)) {
                         // if ($key2 == 'subType') {
                         //     // TODO: How to know cmd type ?
@@ -178,11 +183,6 @@
                         continue;
                     $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key for '".$key."' Jeedom command");
                 }
-
-                /* Updating list of unused commands */
-                $i = array_search($cmdFName, $unusedCmds, true);
-                if ($i !== false)
-                    unset($unusedCmds[$i]); // $cmdFName is used
             }
 
             if ($error)
@@ -387,7 +387,7 @@
     }
 
     /* Check use of commands */
-    function checkDevicecommands($devName, $fullPath) {
+    function checkDeviceCommands($devName, $fullPath) {
         $jsonContent = file_get_contents($fullPath);
         if ($jsonContent === false) {
             step('E');
@@ -405,39 +405,38 @@
             return;
         }
 
-        $jsonCmds = $device['commands'];
+        $cmds = $device['commands'];
         $error = false;
-        // echo "jsonCmds=".json_encode($jsonCmds)."\n";
-        foreach ($jsonCmds as $cmd1 => $cmd2) {
-            if (substr($cmd1, 0, 7) == "include") {
-                /* Old command JSON commands syntax: "includeX": "json_cmd_name" */
-                $newCmd = getCommandModel($cmd2);
-                if ($newCmd === false)
-                    continue; // Cmd does not exist.
-                $cmdJName = $cmd2;
-                $newCmdText = json_encode($newCmd);
-            } else {
-                /* New command JSON format:
-                   "jeedom_cmd_name": {
-                       "use": "json_cmd_name",
-                       "params": "xxx"...
-                    } */
-                $cmdFName = $cmd2['use']; // File name without '.json'
-                $newCmd = getCommandModel($cmdFName, $cmd1);
-                if ($newCmd === false)
-                    continue; // Cmd does not exist.
-                $cmdJName = $cmd1;
-                $newCmdText = json_encode($newCmd);
-                if (isset($cmd2['params']) && (trim($cmd2['params']) != '')) {
-                    // Overwritting default settings with 'params' content
-                    $params = explode('&', $cmd2['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
-                    foreach ($params as $p) {
-                        list($pName, $pVal) = explode("=", $p);
-                        $pName = strtoupper($pName);
-                        $newCmdText = str_replace('#'.$pName.'#', $pVal, $newCmdText);
-                    }
-                    $newCmd = json_decode($newCmdText, true);
+        $logicIds = [];
+        // echo "cmds=".json_encode($cmds)."\n";
+        foreach ($cmds as $cmdJName => $devCmd) {
+            /* New command JSON format:
+                "jeedom_cmd_name": {
+                    "use": "json_cmd_name",
+                    "params": "xxx"...
+                } */
+            $cmdFName = $devCmd['use']; // File name without '.json'
+            $newCmd = getCommandModel($cmdFName, $cmdJName);
+            if ($newCmd === false)
+                continue; // Cmd does not exist.
+            $newCmd = $newCmd[$cmdJName]; // Remove top key
+
+            // Overload from device model
+            // echo "devCmd=".json_encode($devCmd)."\n";
+            if (isset($devCmd['logicalId']))
+                $newCmd['logicalId'] = $devCmd['logicalId'];
+
+            $newCmdText = json_encode($newCmd);
+            // echo "newCmdText=".$newCmdText."\n";
+            if (isset($devCmd['params']) && (trim($devCmd['params']) != '')) {
+                // Overwritting default settings with 'params' content
+                $params = explode('&', $devCmd['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
+                foreach ($params as $p) {
+                    list($pName, $pVal) = explode("=", $p);
+                    // $pName = strtoupper($pName);
+                    $newCmdText = str_ireplace('#'.$pName.'#', $pVal, $newCmdText);
                 }
+                $newCmd = json_decode($newCmdText, true);
             }
 
             // echo "newCmdText=".$newCmdText."\n";
@@ -473,7 +472,15 @@
 
                 $newCmdText = substr($newCmdText, $start + $len);
             }
-            // break;
+
+            // Checking uniquness of logicalId
+            $logicId = isset($newCmd['logicalId']) ? $newCmd['logicalId']: '';
+            if ($logicId == '')
+                $error = newDevError($devName, "ERROR", "Undefined logical ID for '".$cmdJName."' cmd (model ".$cmdFName.")");
+            else if (in_array($logicId, $logicIds))
+                $error = newDevError($devName, "ERROR", "Duplicated logical ID '".$logicId."' (cmd ".$cmdJName.")");
+            else
+                $logicIds[] = $logicId;
         }
         if ($error)
             step('E');
@@ -483,8 +490,29 @@
 
     /* TODO: If JSON name not given on cmd line, parsing all
        devices & commands */
-    buildDevicesList();
-    buildAllCommandsList();
+    for ($i = 1; $i < $argc; $i++) {
+        $modName = $argv[$i];
+        $fullPath = devicesDir.'/'.$modName;
+        if (!is_dir($fullPath)) {
+            echo "- ".$modName.": path access ERROR\n";
+            echo "  ".$fullPath."\n";
+            exit;
+        }
+
+        $fullPath = devicesDir.'/'.$modName.'/'.$modName.".json";
+        if (!file_exists($fullPath)) {
+            echo "- ".$modName.": path access ERROR\n";
+            echo "  ".$fullPath."\n";
+            exit;
+        }
+
+        $devicesList[$modName] = $fullPath;
+        break;
+    }
+    if (count($devicesList) == 0) {
+        buildDevicesList();
+        buildAllCommandsList();
+    }
 
     // echo "devl=".json_encode($devicesList)."\n";
     echo "Checking devices models syntax\n- ";
@@ -499,6 +527,7 @@
             checkDevice($devName, $content);
     }
 
+    // TODO: Should be USED cmds only
     echo "\nChecking ALL commands syntax\n- ";
     $idx = 2;
     foreach ($allCommandsList as $entry => $fullPath) {
@@ -518,22 +547,8 @@
         checkDeviceCommands($devName, $fullPath);
     }
 
-    $nbErrors = sizeof($devErrors);
-    echo "\n\nDevices errors summary (".$nbErrors." errors)\n";
-    if ($nbErrors != 0 ) {
-        $f = "";
-        foreach ($devErrors as $e) {
-            if ($f != $e['file']) {
-                echo "- ".$e['file']."\n";
-                $f = $e['file'];
-            }
-            echo "  ".$e['type'].": ".$e['msg']."\n";
-        }
-    } else
-        echo "= None\n";
-
     $nbErrors = sizeof($cmdErrors);
-    echo "\nCommands errors summary (".$nbErrors." errors)\n";
+    echo "\n\nCommands errors summary (".$nbErrors." errors)\n";
     if ($nbErrors != 0 ) {
         $f = "";
         foreach ($cmdErrors as $e) {
@@ -543,6 +558,21 @@
             }
             echo "  ".$e['type'].": ".$e['msg']."\n";
         }
+    } else
+        echo "= None\n";
+
+    $nbErrors = sizeof($devErrors);
+    echo "\nDevices errors summary (".$nbErrors." errors)\n";
+    if ($nbErrors != 0 ) {
+        $f = "";
+        foreach ($devErrors as $e) {
+            if ($f != $e['file']) {
+                echo "- ".$e['file']."\n";
+                $f = $e['file'];
+            }
+            echo "  ".$e['type'].": ".$e['msg']."\n";
+        }
+        echo "= ".$nbErrors." errors\n";
     } else
         echo "= None\n";
 

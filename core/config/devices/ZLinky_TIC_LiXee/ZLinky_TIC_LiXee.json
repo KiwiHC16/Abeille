@@ -14,9 +14,8 @@
         },
         "commands": {
             "OPTARIF": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "params": "clustId=FF66&attrId=0000",
-                "template": "badge",
                 "subType": "string",
                 "isVisible": 1
             },
@@ -26,10 +25,10 @@
                 "execAtCreation": 1
             },
             "ISOUSC": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "params": "clustId=0B01&attrId=000D",
-                "template": "badge",
                 "unit": "A",
+                "logicalId": "ISOUSC",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -49,10 +48,10 @@
                 "execAtCreation": 1
             },
             "BASE": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0000",
                 "unit": "Wh",
-                "template": "badge",
+                "logicalId": "BASE",
                 "isVisible": 1
             },
             "Get BASE": {
@@ -61,15 +60,15 @@
                 "execAtCreation": 1
             },
             "HCHC": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0102",
-                "template": "badge",
+                "logicalId": "HCHC",
                 "isVisible": 1
             },
             "HCHP": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0100",
-                "template": "badge",
+                "logicalId": "HCHP",
                 "isVisible": 1
             },
             "EJPHN": {
@@ -82,19 +81,23 @@
             },
             "BBRHCJB": {
                 "use": "zb-CustomInfo",
-                "params": "clustId=0702&attrId=0100"
+                "params": "clustId=0702&attrId=0100",
+                "logicalId": "BBRHCJB"
             },
             "BBRHPJB": {
                 "use": "zb-CustomInfo",
-                "params": "clustId=0702&attrId=0102"
+                "params": "clustId=0702&attrId=0102",
+                "logicalId": "BBRHPJB"
             },
             "BBRHCJW": {
                 "use": "zb-CustomInfo",
-                "params": "clustId=0702&attrId=0104"
+                "params": "clustId=0702&attrId=0104",
+                "logicalId": "BBRHCJW"
             },
             "BBRHPJW": {
                 "use": "zb-CustomInfo",
-                "params": "clustId=0702&attrId=0106"
+                "params": "clustId=0702&attrId=0106",
+                "logicalId": "BBRHPJW"
             },
             "BBRHCJR": {
                 "use": "zb-CustomInfo",
@@ -120,7 +123,8 @@
             },
             "IINST1": {
                 "use": "zb-CustomInfo",
-                "params": "clustId=0B04&attrId=0508"
+                "params": "clustId=0B04&attrId=0508",
+                "logicalId": "IINST1"
             },
             "IINST2": {
                 "use": "zb-CustomInfo",
@@ -141,7 +145,8 @@
             },
             "IMAX1": {
                 "use": "zb-CustomInfo",
-                "params": "clustId=0B04&attrId=050A"
+                "params": "clustId=0B04&attrId=050A",
+                "logicalId": "IMAX1"
             },
             "IMAX2": {
                 "use": "zb-CustomInfo",

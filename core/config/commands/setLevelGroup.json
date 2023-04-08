@@ -1,10 +1,8 @@
 {
     "setLevelGroup": {
-        "name": "setLevel",
         "isVisible": 1,
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetLevelGroup",
         "subType": "slider",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#addrGroup#\/setLevelGroup",

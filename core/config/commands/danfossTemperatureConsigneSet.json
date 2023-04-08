@@ -1,7 +1,7 @@
 {
     "danfossTemperatureConsigneSet": {
         "isVisible": 1,
-        "name": "Consigne Set",
+        "logicalId": "#EP#-danfossTemperatureConsigneSet",
         "isHistorized": "0",
         "subType": "slider",
         "invertBinary": "0",

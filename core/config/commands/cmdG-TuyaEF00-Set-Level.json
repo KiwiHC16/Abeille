@@ -1,6 +1,6 @@
 {
     "cmdG-TuyaEF00-Set-Level": {
-        "isVisible": 0,
+        "logicalId": "#EP#-tuyaEF00-Set-Level",
         "subType": "slider",
         "template": "",
         "configuration": {

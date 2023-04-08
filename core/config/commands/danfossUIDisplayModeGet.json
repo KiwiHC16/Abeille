@@ -1,7 +1,7 @@
 {
     "danfossUIDisplayModeGet": {
         "isVisible": 0,
-        "name": "Display Mode Get",
+        "logicalId": "#EP#-danfossUIDisplayModeGet",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

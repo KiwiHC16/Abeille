@@ -1,7 +1,7 @@
 {
     "spiritHostFlagsOffSet": {
         "isVisible": 0,
-        "name": "Off",
+        "logicalId": "#EP#-spiritHostFlagsOffSet",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

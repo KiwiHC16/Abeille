@@ -10,7 +10,7 @@
         },
         "type": "ZLO-ExtendedColor Test for Dev",
         "commands": {
-            "etat": {
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
@@ -44,21 +44,25 @@
             "Set White": {
                 "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=6000&Y=6000",
+                "logicalId": "SetWhite",
                 "isVisible": 1
             },
             "Set Blue": {
                 "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=228F&Y=228F",
+                "logicalId": "SetBlue",
                 "isVisible": 1
             },
             "Set Red": {
                 "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=AE13&Y=51EB",
+                "logicalId": "SetRed",
                 "isVisible": 1
             },
             "Set Green": {
                 "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=147A&Y=D709",
+                "logicalId": "SetGreen",
                 "isVisible": 1
             },
             "Get-ColorX": {

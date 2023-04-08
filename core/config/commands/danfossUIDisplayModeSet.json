@@ -1,7 +1,7 @@
 {
     "danfossUIDisplayModeSet": {
         "isVisible": 0,
-        "name": "Set Deg Mode",
+        "logicalId": "#EP#-danfossUIDisplayModeSet",
         "isHistorized": "0",
         "subType": "slider",
         "template": "",

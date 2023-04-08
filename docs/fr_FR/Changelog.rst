@@ -8,6 +8,7 @@ ChangeLog
 - Xiomi plug: Mise-à-jour du modèle.
 - Sonoff ZBMINIL2: Ajout support préliminaire (2569).
 - Interne: Parser: Extension support attribut non standard.
+- TS201 (TS0201__TZ3000_ywagc4rj): Modele specifique pour '%' non standard (2567).
 
 230405-BETA-2
 -------------

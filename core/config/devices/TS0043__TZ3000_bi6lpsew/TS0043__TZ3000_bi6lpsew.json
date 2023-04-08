@@ -4,7 +4,7 @@
         "model": "SS600ZB",
         "type": "LoraTap 3 gang remote",
         "alternateIds": {
-            "TS0043__TZ3000_famkxci2": {}
+            "TS0043__TZ3000_famkxci2": []
         },
         "timeout": "250",
         "configuration": {
@@ -15,11 +15,23 @@
             "automatism": "1"
         },
         "commands": {
-            "Click 1": { "use": "click", "params": "ep=01", "isVisible": 1 },
-            "Click 2": { "use": "click", "params": "ep=02", "isVisible": 1 },
-            "Click 3": { "use": "click", "params": "ep=03", "isVisible": 1 }
+            "Click 1": {
+                "use": "inf_click",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Click 2": {
+                "use": "inf_click",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Click 3": {
+                "use": "inf_click",
+                "params": "ep=03",
+                "isVisible": 1
+            }
         },
-        "comment": "https:\/\/github.com\/KiwiHC16\/Abeille\/issues\/1406",
+        "comment": "https://github.com/KiwiHC16/Abeille/issues/1406",
         "comment2": "https://github.com/KiwiHC16/Abeille/issues/2138#"
     }
 }

@@ -1,0 +1,14 @@
+{
+    "inf_click": {
+        "comment": "value = single, double or long",
+        "isHistorized": "0",
+        "subType": "string",
+        "invertBinary": "0",
+        "template": "badge",
+        "type": "info",
+        "logicalId": "#EP#-click",
+        "configuration": {
+            "repeatEventManagement": "always"
+        }
+    }
+}

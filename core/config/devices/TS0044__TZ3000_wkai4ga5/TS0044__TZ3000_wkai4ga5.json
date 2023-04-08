@@ -26,22 +26,22 @@
                 "execAtCreation": "yes"
             },
             "Click 1": {
-                "use": "click",
+                "use": "inf_click",
                 "params": "ep=01",
                 "isVisible": 1
             },
             "Click 2": {
-                "use": "click",
+                "use": "inf_click",
                 "params": "ep=02",
                 "isVisible": 1
             },
             "Click 3": {
-                "use": "click",
+                "use": "inf_click",
                 "params": "ep=03",
                 "isVisible": 1
             },
             "Click 4": {
-                "use": "click",
+                "use": "inf_click",
                 "params": "ep=04",
                 "isVisible": 1
             }

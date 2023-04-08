@@ -7,6 +7,7 @@ ChangeLog
 - Assistant découverte: Améliorations.
 - Xiomi plug: Mise-à-jour du modèle.
 - Sonoff ZBMINIL2: Ajout support préliminaire (2569).
+- Interne: Parser: Extension support attribut non standard.
 
 230405-BETA-2
 -------------

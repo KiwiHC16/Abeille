@@ -435,8 +435,11 @@
             foreach ($cmds as $cmdLogic) {
                 $notStandard = $cmdLogic->getConfiguration('ab::notStandard', 0);
                 if ($notStandard != 0) {
-                    $eq['notStandard-0400-0000'] = 1; // Only 'notStandard' supported case
-                    logMessage('debug', "'".$eqLogicId."' has non standard 0400-0000 attribute");
+                    if (!isset($eq['notStandard']))
+                        $eq['notStandard'] = [];
+                    $cmdLogicId = $cmdLogic->getLogicalId();
+                    $eq['notStandard'][$cmdLogicId] = 1; // Only 'notStandard' supported case
+                    logMessage('debug', "'".$eqLogicId."' has non standard ".$cmdLogicId." attribute");
                 }
             }
             // if (($jsonId != '') && ($jsonId != 'rucheCommand')) {

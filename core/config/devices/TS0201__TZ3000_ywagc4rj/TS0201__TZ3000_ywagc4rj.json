@@ -1,11 +1,10 @@
 {
-    "TS0201__TYZB01_hjsgdkfl": {
-        "manufacturer": "Blitzwolf",
-        "model": "BW-IS4",
-        "type": "Blitzwolf temperature/humidity sensor/display",
+    "TS0201__TZ3000_ywagc4rj": {
+        "manufacturer": "NIKJEBDF",
+        "model": "?",
+        "type": "NIKJEBDF temperature/humidity sensor/display",
         "genericType": "Environment",
         "alternateIds": {
-            "TS0201__TZ3000_itnrsufe": {}
         },
         "timeout": "60",
         "configuration": {
@@ -33,6 +32,8 @@
             "Humidity": {
                 "use": "inf_zbAttr-0405-MeasuredValue",
                 "params": "ep=01",
+                "calculValueOffset": "#value#/10",
+                "notStandard": 1,
                 "historizeRound": 1,
                 "isVisible": 1
             }

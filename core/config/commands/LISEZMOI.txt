@@ -177,3 +177,6 @@ Exemple de commande 'action'
 
   * returnStateValue: Y
     Valeur de retour automatique pour une commande info.
+
+  * notStandard: 1
+    Permet d'indiquer que l'attribut ne doit pas etre traité comme un attribut ZCL.

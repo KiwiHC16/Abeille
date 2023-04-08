@@ -2194,39 +2194,41 @@
         // Some attributs defined in ZCL spec have a predefined formula to apply.
         // Ex: Cluster 0402, attr 0000 = temperature to be devided by 100.
         // 'attr' is passed by ref as it could be updated.
-        function decode8002_ZCLCorrectAttrValue($clustId, $eq, &$attr) {
+        function decode8002_ZCLCorrectAttrValue($ep, $clustId, $eq, &$attr) {
             $newVal = $attr['value'];
             $attrId  = $attr['id'];
 
-            if ($clustId == "0001") {
-                if ($attrId == "0020") {
-                    $newVal = $newVal / 10; // Battery voltage
-                } else if ($attrId == "0021") {
-                    $newVal = $newVal / 2; // Battery percent
-                }
-            } else if ($clustId == "0400") {
-                if ($attrId == "0000") {
-                    if (!isset($eq['notStandard-0400-0000']))
+            if (isset($eq['notStandard']) && isset($eq['notStandard'][$clustId.'-'.$ep.'-'.$attrId])) {
+                $attr['comment'] = 'NOT STANDARD value';
+            } else {
+                if ($clustId == "0001") {
+                    if ($attrId == "0020") {
+                        $newVal = $newVal / 10; // Battery voltage
+                    } else if ($attrId == "0021") {
+                        $newVal = $newVal / 2; // Battery percent
+                    }
+                } else if ($clustId == "0400") {
+                    if ($attrId == "0000") {
                         $newVal = ($newVal == 0 ? 0 : pow(10, ($newVal - 1) / 10000)); // Illuminance
-                    else
-                        $comment = 'NOT STANDARD value';
+                    }
+                } else if ($clustId == "0402") {
+                    if ($attrId == "0000") {
+                        $newVal /= 100; // Temperature
+                    }
+                } else if ($clustId == "0403") {
+                    if ($attrId == "0000") {
+                        $newVal /= 10; // Pressure (in kPa)
+                    }
+                } else if ($clustId == "0405") {
+                    if ($attrId == "0000") {
+                        $newVal /= 100; // Humidity
+                    }
                 }
-            } else if ($clustId == "0402") {
-                if ($attrId == "0000") {
-                    $newVal /= 100; // Temperature
+
+                if ($newVal != $attr['value']) {
+                    $attr['value'] = $newVal;
+                    $attr['comment'] = "ZCL corrected value";
                 }
-            } else if ($clustId == "0403") {
-                if ($attrId == "0000") {
-                    $newVal /= 10; // Pressure (in kPa)
-                }
-            } else if ($clustId == "0405") {
-                if ($attrId == "0000") {
-                    $newVal /= 100; // Humidity
-                }
-            }
-            if ($newVal != $attr['value']) {
-                $attr['value'] = $newVal;
-                $attr['comment'] = isset($comment) ? $comment : "ZCL corrected value";
             }
         }
 
@@ -3651,7 +3653,7 @@
                             // Attribute value post correction according to ZCL spec
                             $correct = ['0001-0020', '0001-0021', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
                             if (in_array($clustId.'-'.$attr['id'], $correct))
-                                $this->decode8002_ZCLCorrectAttrValue($clustId, $eq, $attr);
+                                $this->decode8002_ZCLCorrectAttrValue($srcEp, $clustId, $eq, $attr);
 
                             // If cluster 0000, attributes manufId/modelId or location.. need to clean string
                             if ($clustId == "0000") {
@@ -3895,7 +3897,7 @@
                                 // Attribute value post correction according to ZCL spec
                                 $correct = ['0001-0020', '0001-0021', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
                                 if (in_array($clustId.'-'.$attr['id'], $correct))
-                                    $this->decode8002_ZCLCorrectAttrValue($clustId, $eq, $attr);
+                                    $this->decode8002_ZCLCorrectAttrValue($srcEp, $clustId, $eq, $attr);
 
                                 // If cluster 0000, attributes manufId/modelId or location.. need to clean string
                                 if ($clustId == "0000") {

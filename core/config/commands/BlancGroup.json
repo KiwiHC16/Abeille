@@ -2,6 +2,7 @@
     "BlancGroup": {
         "isVisible": "1",
         "subType": "other",
+        "logicalId": "#EP#-BlancGroup",
         "configuration": {
             "topic": "CmdAbeille\/#addrGroup#\/setColourGroup",
             "request": "X=6000&Y=6000",

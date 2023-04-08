@@ -1,10 +1,8 @@
 {
     "WindowsCoveringStopGroup": {
         "isVisible": 1,
-        "name": "Stop",
-        "isHistorized": "0",
+        "logicalId": "#EP#-WindowsCoveringStopGroup",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#addrGroup#\/WindowsCoveringGroup",

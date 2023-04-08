@@ -1,10 +1,8 @@
 {
     "onGroupEP8": {
-        "name": "On Gp8",
+        "logicalId": "#EP#-onGroupEP8",
         "isVisible": 1,
-        "isHistorized": "0",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#GROUPEP8#\/OnOffGroup",

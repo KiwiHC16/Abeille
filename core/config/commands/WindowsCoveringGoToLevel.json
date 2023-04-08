@@ -1,10 +1,8 @@
 {
     "WindowsCoveringGoToLevel": {
         "isVisible": 1,
-        "name": "GoToLevel",
-        "isHistorized": "0",
+        "logicalId": "#EP#-WindowsCoveringGoToLevel",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "WindowsCoveringLevel",

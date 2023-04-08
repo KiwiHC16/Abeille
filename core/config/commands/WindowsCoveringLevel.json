@@ -1,11 +1,10 @@
 {
     "WindowsCoveringLevel": {
         "isVisible": 1,
-        "name": "Level",
+        "logicalId": "#EP#-WindowsCoveringLevel",
         "isHistorized": "1",
         "subType": "numeric",
-        "invertBinary": "0",
-        "template": "",
+       "template": "",
         "configuration": {
             "repeatEventManagement": "always",
             "visibilityCategory": "All"

@@ -89,21 +89,25 @@
             "Set White": {
                 "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=6000&Y=6000",
+                "logicalId": "#EP#-Set-White",
                 "isVisible": 1
             },
             "Set Blue": {
                 "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=228F&Y=228F",
+                "logicalId": "#EP#-Set-Blue",
                 "isVisible": 1
             },
             "Set Red": {
                 "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=AE13&Y=51EB",
+                "logicalId": "#EP#-Set-Red",
                 "isVisible": 1
             },
             "Set Green": {
                 "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=147A&Y=D709",
+                "logicalId": "#EP#-Set-Green",
                 "isVisible": 1
             },
             "Get-ColorX": {
@@ -144,11 +148,13 @@
             "Set 2700K": {
                 "use": "act_zbCmdG-0300-MoveToColorTemp",
                 "params": "slider=2700",
+                "logicalId": "#EP#-Set-2700K",
                 "isVisible": 1
             },
             "Set 5000K": {
                 "use": "act_zbCmdG-0300-MoveToColorTemp",
                 "params": "slider=5000",
+                "logicalId": "#EP#-Set-5000K",
                 "isVisible": 1
             },
             "temperatureLight": {

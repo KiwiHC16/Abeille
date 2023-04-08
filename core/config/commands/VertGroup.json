@@ -2,6 +2,7 @@
     "VertGroup": {
         "isVisible": "1",
         "subType": "other",
+        "logicalId": "#EP#-VertGroup",
         "configuration": {
             "topic": "CmdAbeille\/#addrGroup#\/setColourGroup",
             "request": "X=147A&Y=D709",

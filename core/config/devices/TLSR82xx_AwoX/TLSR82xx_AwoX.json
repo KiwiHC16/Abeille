@@ -114,30 +114,36 @@
                 "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=4F6E&Y=5391",
                 "comment": "XY values from @ValFaure",
+                "logicalId": "#EP#-Set-White",
                 "isVisible": "1"
             },
             "Blue": {
                 "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=228F&Y=228F",
+                "logicalId": "#EP#-Set-Blue",
                 "isVisible": "1"
             },
             "Red": {
                 "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=AE13&Y=51EB",
+                "logicalId": "#EP#-Set-Red",
                 "isVisible": "1"
             },
             "Green": {
                 "use": "act_zbCmdG-0300-MoveToColor",
                 "params": "X=147A&Y=D709",
+                "logicalId": "#EP#-Set-Green",
                 "isVisible": "1"
             },
             "Set 2700K": {
                 "use": "act_zbCmdG-0300-MoveToColorTemp",
-                "params": "slider=2700"
+                "params": "slider=2700",
+                "logicalId": "#EP#-Set-2700K"
             },
             "Set 4000K": {
                 "use": "act_zbCmdG-0300-MoveToColorTemp",
-                "params": "slider=4000"
+                "params": "slider=4000",
+                "logicalId": "#EP#-Set-4000K"
             },
             "ColorTemperature": {
                 "use": "inf_zbAttr-0300-ColorTemperatureMireds"

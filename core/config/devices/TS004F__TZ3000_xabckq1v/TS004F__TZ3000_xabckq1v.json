@@ -23,18 +23,21 @@
             "Init1": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=8004",
+                "logicalId": "Init1",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 2
             },
             "Init2": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=E001&attrId=D011",
+                "logicalId": "Init2",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 4
             },
             "Init3": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=8004",
+                "logicalId": "Init3",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 8
             },

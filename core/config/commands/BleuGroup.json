@@ -2,6 +2,7 @@
     "BleuGroup": {
         "isVisible": "1",
         "subType": "other",
+        "logicalId": "#EP#-BleuGroup",
         "configuration": {
             "topic": "CmdAbeille\/#addrGroup#\/setColourGroup",
             "request": "X=228F&Y=228F",

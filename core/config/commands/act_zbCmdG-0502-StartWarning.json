@@ -1,12 +1,10 @@
 {
     "act_zbCmdG-0502-StartWarning": {
-        "name": "zbCmd-0502-StartWarning",
+        "logicalId": "#EP#-0502-StartWarning",
         "comment": "clust 0502, start warning cmd (00)",
         "comment2": "Mantatory params: 'addr', 'ep'",
         "comment3": "Optional params: 'duration' (number, in sec, default=10sec)",
         "comment4": "Optional params: 'mode' (string, 'stop'/'burglar'/'fire'/'emergency'/'policepanic'/'firepanic'/'emergencypanic')",
-        "isHistorized": "0",
-        "isVisible": "0",
         "subType": "other",
         "configuration": {
             "topic": "cmd-0502",

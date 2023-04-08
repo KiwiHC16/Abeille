@@ -1,7 +1,7 @@
 {
     "spiritValvePosition": {
         "isVisible": 0,
-        "name": "Valve Position",
+        "logicalId": "#EP#-spiritValvePosition",
         "isHistorized": "0",
         "subType": "numeric",
         "invertBinary": "0",

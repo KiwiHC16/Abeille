@@ -1,7 +1,7 @@
 {
     "spiritPiHeatingDemandGet": {
         "isVisible": 0,
-        "name": "Get Pi Heating Demand",
+        "logicalId": "#EP#-spiritPiHeatingDemandGet",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

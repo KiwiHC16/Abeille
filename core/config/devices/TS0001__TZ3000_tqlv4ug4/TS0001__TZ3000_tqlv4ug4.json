@@ -57,10 +57,6 @@
                 "use": "act_setLevel-Light",
                 "isVisible": 1
             },
-            "setLevel-NEW": {
-                "use": "act_setLevel-Light",
-                "isVisible": 1
-            },
             "Identify": {
                 "use": "Identify"
             },

@@ -1,10 +1,8 @@
 {
     "onGroupEP1": {
-        "name": "On Gp1",
+        "logicalId": "#EP#-onGroupEP1",
         "isVisible": 1,
-        "isHistorized": "0",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#GROUPEP1#\/OnOffGroup",

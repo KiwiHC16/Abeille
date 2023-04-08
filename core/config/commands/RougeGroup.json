@@ -1,16 +1,12 @@
 {
     "RougeGroup": {
-        "name": "Rouge Group",
-        "isHistorized": "0",
+        "logicalId": "#EP#-RougeGroup",
         "isVisible": "1",
         "subType": "other",
         "configuration": {
             "topic": "CmdAbeille\/#addrGroup#\/setColourGroup",
             "request": "X=AE13&Y=51EB",
             "visibilityCategory": "All"
-        },
-        "display": {
-            "forceReturnLineAfter": "0"
         },
         "type": "action"
     }

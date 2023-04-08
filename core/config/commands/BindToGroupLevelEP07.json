@@ -1,7 +1,7 @@
 {
     "BindToGroupLevelEP07": {
         "subType": "other",
-        "invertBinary": "0",
+        "logicalId": "#EP#-BindToGroupLevelEP07",
         "template": "",
         "configuration": {
             "topic": "BindToGroup",

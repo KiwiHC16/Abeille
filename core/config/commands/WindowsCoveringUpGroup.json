@@ -1,10 +1,8 @@
 {
     "WindowsCoveringUpGroup": {
         "isVisible": 1,
-        "name": "Up",
-        "isHistorized": "0",
+        "logicalId": "#EP#-WindowsCoveringUpGroup",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#addrGroup#\/WindowsCoveringGroup",

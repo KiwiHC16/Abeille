@@ -1,7 +1,7 @@
 {
     "poll-0B04-0505": {
         "isVisible": 0,
-        "name": "poll-0B04-0505",
+        "logicalId": "#EP#-poll-0B04-0505",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

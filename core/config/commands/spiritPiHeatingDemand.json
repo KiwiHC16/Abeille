@@ -1,6 +1,5 @@
 {
     "spiritPiHeatingDemand": {
-        "isVisible": 0,
         "logicalId": "#EP#-spiritPiHeatingDemand",
         "isHistorized": "0",
         "subType": "numeric",

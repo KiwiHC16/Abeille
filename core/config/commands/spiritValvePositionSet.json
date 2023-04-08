@@ -1,7 +1,7 @@
 {
     "spiritValvePositionSet": {
         "isVisible": 0,
-        "name": "Set Valve",
+        "logicalId": "#EP#-spiritValvePositionSet",
         "isHistorized": "0",
         "subType": "slider",
         "invertBinary": "0",

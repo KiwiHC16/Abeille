@@ -1,11 +1,8 @@
 {
     "LivoloSwitchTrick2": {
-        "isVisible": 0,
-        "name": "LivoloSwitchTrick2",
-        "isHistorized": "0",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
+        "logicalId": "LivoloSwitchTrick2",
         "configuration": {
             "topic": "OnOff",
             "request": "Action=On&EP=#EP#",

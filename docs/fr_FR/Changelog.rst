@@ -14,6 +14,7 @@ ChangeLog
 - TS201 (TS0201__TZ3000_ywagc4rj): Modele specifique pour '%' non standard (2567).
 - Curtain module (TS130F__TZ3210_dwytrmda): Ajout support (2568).
 - Modele cmd 'click' renommé en 'inf_click'.
+- Livolo TI0001: Correction modele (cmds logicalId).
 
 230405-BETA-2
 -------------

@@ -3,6 +3,7 @@
         "manufacturer": "Livolo",
         "model": "TI0001",
         "type": "Livolo switch",
+        "genericType": "Outlet",
         "comment": "Needs to be paired on Channel 26! Then you can eventually switch the channel to 11 and Livolo devices will be switching automatically",
         "timeout": "80",
         "configuration": {
@@ -27,6 +28,7 @@
                 "params": "slider=108&duration=01",
                 "subType": "other",
                 "genericType": "LIGHT_ON",
+                "logicalId": "on-1",
                 "isVisible": 1
             },
             "Off 1": {
@@ -35,6 +37,7 @@
                 "subType": "other",
                 "genericType": "LIGHT_OFF",
                 "isVisible": 1,
+                "logicalId": "off-1",
                 "nextLine": "after"
             },
             "On 2": {
@@ -42,6 +45,7 @@
                 "params": "slider=108&duration=02",
                 "subType": "other",
                 "genericType": "LIGHT_ON",
+                "logicalId": "on-2",
                 "isVisible": 1
             },
             "Off 2": {
@@ -50,9 +54,10 @@
                 "subType": "other",
                 "genericType": "LIGHT_OFF",
                 "isVisible": 1,
+                "logicalId": "off-2",
                 "nextLine": "after"
             },
-            "etat": {
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },

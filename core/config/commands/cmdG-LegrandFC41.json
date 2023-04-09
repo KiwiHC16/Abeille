@@ -1,6 +1,7 @@
 {
     "cmdG-LegrandFC41": {
         "subType": "other",
+        "logicalId": "#EP#-LegrandFC41-#MODE#",
         "template": "",
         "configuration": {
             "topic": "commandLegrand",

@@ -1,8 +1,6 @@
 {
     "setLegrandLEDOn": {
-        "isVisible": 0,
-        "name": "LedOn",
-        "isHistorized": "0",
+        "logicalId": "#EP#-LedOn",
         "type": "action",
         "subType": "other",
         "configuration": {

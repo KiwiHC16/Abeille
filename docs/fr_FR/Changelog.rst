@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Modeles: Ajout/correction 'logicalId'.
+- Sonoff ZBMINIL2: Mise-à-jour du modèle & image (2569).
+
 230408-BETA-5
 -------------
 

@@ -2,10 +2,14 @@
     "TS0201__TYZB01_hjsgdkfl": {
         "manufacturer": "Blitzwolf",
         "model": "BW-IS4",
-        "type": "Blitzwolf temperature/humidity sensor/display",
+        "type": "Blitzwolf temp/humidity display",
         "genericType": "Environment",
         "alternateIds": {
-            "TS0201__TZ3000_itnrsufe": {}
+            "TS0201__TZ3000_itnrsufe": {
+                "manufacturer": "Tuya",
+                "model": "Display",
+                "type": "Tuya temp/humidity display"
+            }
         },
         "timeout": "62",
         "configuration": {

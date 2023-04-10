@@ -7,10 +7,11 @@
         "alternateIds": {
             "TS0201__TZ3000_itnrsufe": {}
         },
-        "timeout": "60",
+        "timeout": "62",
         "configuration": {
             "mainEP": "01",
-            "icon": "Blitzwolf-Display"
+            "icon": "Blitzwolf-Display",
+            "batteryType": "2x1.5V AAA"
         },
         "category": {
             "automatism": "1"

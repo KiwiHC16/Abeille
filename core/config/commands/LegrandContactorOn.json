@@ -1,10 +1,8 @@
 {
     "LegrandContactorOn": {
         "isVisible": 1,
-        "name": "On",
-        "isHistorized": "0",
+        "logicalId": "#EP#-LegrandContactorOn",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "commandLegrand",

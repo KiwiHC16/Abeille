@@ -79,11 +79,13 @@
             },
             "Fil pilote ON": {
                 "use": "act_zbWriteAttribute",
-                "params": "clustId=FC01&attrId=0000&attrType=09&attrVal=0200"
+                "params": "clustId=FC01&attrId=0000&attrType=09&attrVal=0200",
+                "logicalId": "#EP#-Fil-pilote-ON"
             },
             "Fil pilote OFF": {
                 "use": "act_zbWriteAttribute",
-                "params": "clustId=FC01&attrId=0000&attrType=09&attrVal=0100"
+                "params": "clustId=FC01&attrId=0000&attrType=09&attrVal=0100",
+                "logicalId": "#EP#-Fil-pilote-OFF"
             },
             "Comfort": {
                 "use": "cmdG-LegrandFC41",

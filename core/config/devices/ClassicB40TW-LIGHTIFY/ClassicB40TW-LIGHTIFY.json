@@ -65,11 +65,13 @@
             "Set 2000K": {
                 "use": "act_zbCmdG-0300-MoveToColorTemp",
                 "params": "slider=2000",
+                "logicalId": "#EP#-Set-2000K",
                 "isVisible": 1
             },
             "Set 6500K": {
                 "use": "act_zbCmdG-0300-MoveToColorTemp",
                 "params": "slider=6500",
+                "logicalId": "#EP#-Set-6500K",
                 "isVisible": 1
             },
             "SWBuildID": {

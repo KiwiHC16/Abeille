@@ -439,11 +439,15 @@
                 $newCmd = json_decode($newCmdText, true);
             }
 
+            // Checking all remaining #var# cases
+            //  #EP# => replaced at during pairing
+            //  #select# => dynamic variable, replaced at run time
             // echo "newCmdText=".$newCmdText."\n";
             while (true) {
                 $start = strpos($newCmdText, "#"); // Start
                 if ($start === false)
                     break;
+
                 $len = strpos(substr($newCmdText, $start + 1), "#"); // Length
                 if ($len === false) {
                     newDevError($devName, "ERROR", "No closing dash (#) for cmd '".$cmdJName."'");
@@ -457,6 +461,11 @@
                 if ($var == "#EP#") {
                     if (!isset($device['configuration']['mainEP'])) {
                         newDevError($devName, "ERROR", "'#EP#' found but NO 'mainEP'");
+                        $error = true;
+                    }
+                } else if ($var == "#select#") {
+                    if (!isset($devCmd['listValue']) && !isset($newCmd['listValue'])) {
+                        newDevError($devName, "ERROR", "Undefined 'listValue' for '#select#'");
                         $error = true;
                     }
                 } else {

@@ -1,10 +1,7 @@
 {
     "getColorTemperature": {
-        "isVisible": 0,
-        "name": "getColorTemperature",
-        "isHistorized": "0",
+        "logicalId": "#EP#-getColorTemperature",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "readAttribute",

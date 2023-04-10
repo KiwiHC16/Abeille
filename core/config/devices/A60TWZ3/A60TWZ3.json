@@ -37,16 +37,19 @@
             "Set 2700K": {
                 "use": "act_zbCmdG-0300-MoveToColorTemp",
                 "params": "slider=2700",
+                "logicalId": "#EP#-Set-2700K",
                 "isVisible": 1
             },
             "Set 4000K": {
                 "use": "act_zbCmdG-0300-MoveToColorTemp",
                 "params": "slider=4000",
+                "logicalId": "#EP#-Set-4000K",
                 "isVisible": 1
             },
             "Set 6000K": {
                 "use": "act_zbCmdG-0300-MoveToColorTemp",
                 "params": "slider=6000",
+                "logicalId": "#EP#-Set-6000K",
                 "isVisible": 1
             },
             "TemperatureLight": {

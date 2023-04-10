@@ -1,10 +1,8 @@
 {
     "onVolet": {
         "isVisible": 1,
-        "name": "Monter",
-        "isHistorized": "0",
+        "logicalId": "#EP#-onVolet",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "OnOff",

@@ -1,10 +1,8 @@
 {
     "LegrandContactorOff": {
         "isVisible": 1,
-        "name": "Off",
-        "isHistorized": "0",
+        "logicalId": "#EP#-LegrandContactorOff",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "commandLegrand",

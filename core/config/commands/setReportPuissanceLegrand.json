@@ -1,10 +1,7 @@
 {
     "setReportPuissanceLegrand": {
-        "isVisible": 0,
-        "name": "setReportPuissanceLegrand",
-        "isHistorized": "0",
+        "logicalId": "#EP#-setReportPuissanceLegrand",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "setReport",

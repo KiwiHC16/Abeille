@@ -6,6 +6,7 @@ ChangeLog
 - Blitzwolf BW-IS4: Correction type batterie & timeout.
 - Tuya temp & humidity display: Ajout support 'TS0201__TZ2000_a476raq2' (2570).
 - Interne: Cmd: moveToLiftAndTiltBSO(), correction PHP warning.
+- Interne: Parser: Support type 4C pour Xiaomi.
 
 230408-BETA-5
 -------------

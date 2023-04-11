@@ -221,7 +221,12 @@
                         .', AttrType='.$attrType;
                     parserLog('debug', $m);
                     $toMon[] = $m;
-                    xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
+                    if ($attrType == '4C') {
+                        // 4C/Struct specific support => treating like 42
+                        $a = substr($attrData, 4); // Skipping len
+                        xiaomiDecodeTags($net, $addr, $clustId, $attrId, $a, $attrReportN, $toMon);
+                    } else
+                        xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
                 }
                 continue;
             }

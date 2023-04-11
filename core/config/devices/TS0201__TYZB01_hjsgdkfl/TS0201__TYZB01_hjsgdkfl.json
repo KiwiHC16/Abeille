@@ -9,6 +9,11 @@
                 "manufacturer": "Tuya",
                 "model": "Display",
                 "type": "Tuya temp/humidity display"
+            },
+            "TS0201__TZ2000_a476raq2": {
+                "manufacturer": "Tuya",
+                "model": "Display",
+                "type": "Tuya temp/humidity display"
             }
         },
         "timeout": "62",

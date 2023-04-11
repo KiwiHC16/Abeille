@@ -4,6 +4,7 @@ ChangeLog
 - Modeles: Ajout/correction 'logicalId'.
 - Sonoff ZBMINIL2: Mise-à-jour du modèle & image (2569).
 - Blitzwolf BW-IS4: Correction type batterie & timeout.
+- Tuya temp & humidity display: Ajout support 'TS0201__TZ2000_a476raq2' (2570).
 
 230408-BETA-5
 -------------

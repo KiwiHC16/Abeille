@@ -1854,19 +1854,15 @@
                 $transitionTime         = sprintf( "%04s",dechex($Command['duration']));
 
                 $data2 = $zclControlField.$ManfufacturerCode.$transactionSequence.$cmdId.$option.$Lift.$Tilt.$transitionTime ;
-
-                $dataLength = sprintf( "%02s",dechex(strlen( $data2 )/2));
-
+                $dataLength = sprintf("%02X", strlen($data2) / 2);
                 $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
 
-                cmdLog('debug', "    Data1: ".$addrMode."-".$addr."-".$srcEp."-".$dstEp."-".$clustId."-".$profId."-".$secMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
-                cmdLog('debug', "    Data2: ".$zclControlField."-".$ManfufacturerCode."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd']);
+                // cmdLog('debug', "    Data1: ".$addrMode."-".$addr."-".$srcEp."-".$dstEp."-".$clustId."-".$profId."-".$secMode."-".$radius."-".$dataLength." len: ".sprintf("%04s",dechex(strlen( $data1 )/2)) , $this->debug['processCmd']);
+                // cmdLog('debug', "    Data2: ".$zclControlField."-".$ManfufacturerCode."-".$targetExtendedAddress." len: ".sprintf("%04s",dechex(strlen( $data2 )/2)) , $this->debug['processCmd']);
 
                 $data = $data1.$data2;
 
-                // $length = sprintf("%04s", dechex(strlen($data) / 2));
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                 return;
             }
 

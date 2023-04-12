@@ -8,6 +8,7 @@ ChangeLog
 - Interne: Cmd: moveToLiftAndTiltBSO(), correction PHP warning.
 - Interne: Parser: Support type 4C pour Xiaomi.
 - PaulmannLichtGmbH 500.44: Ajout image. Modele non confirmé (2516).
+- Network graph: Modifications internes préliminaires.
 
 230408-BETA-5
 -------------

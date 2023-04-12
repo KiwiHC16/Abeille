@@ -11,6 +11,122 @@
     require_once __DIR__.'/../../../../core/php/core.inc.php';
 ?>
 
+<html>
+<head>
+    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+</head>
+
+<body>
+    <div style="background: #e9e9e9; font-weight: bold; padding: .4em 1em;">
+        Placement réseau
+    </div>
+    <?php
+    // Reading URL parameter: "...?zigate=X", where X is zigate number
+    if (isset($_GET['zigate']))
+        $zgId = $_GET['zigate'];
+    else
+        $zgId = 1; // Default = zigate1
+    echo "<script>console.log(\"zgId=" . $zgId . "\")</script>";
+    ?>
+    <style>
+    td {
+        border: 1px solid black;
+    }
+    </style>
+
+    <!-- <table>
+        <tr>
+            <td>
+            Zigate
+            </td>
+            <td> -->
+                <!-- Select 1st Zigate if none passed as argument (zigate=X) -->
+                <!-- <?php
+                for ($i=1; $i<=maxNbOfZigate; $i++) {
+                    if (config::byKey('ab::zgEnabled'.$i, 'Abeille', 'N') != 'Y')
+                        continue;
+
+                    if ($i == $zgId)
+                        echo "<input id=\"btntest\" type=\"button\" checked value=\"Zigate " . $i . "\" onclick=\"refreshNetwork(".$i.")\" />";
+                    else
+                        echo "<input id=\"btntest\" type=\"button\" value=\"Zigate " . $i . "\" onclick=\"refreshNetwork(".$i.")\" />";
+                }
+                ?>
+            </td>
+        </tr>
+            <td>
+            Filtre
+            </td>
+            <td>
+                <table><tr>
+                    <td>Source</td><td>Destination</td><td>Paramètre</td><td>Relation</td></tr>
+                    <td>   <script>filtreSource(); </script>        </td>
+                    <td>   <script>filtreDestination();</script>    </td>
+                    <td>   <script>filtreDetails();  </script>      </td>
+                    <td>   <script>filtreParent();  </script>       </td>
+                </tr></table>
+            </td>
+        <tr>
+            <td>
+            Actions
+            </td>
+            <td>
+                <button id="ReLoadThePage" onclick="ReLoad()">Rafraichir</button>
+                <button id="Refresh" onclick="refreshNetworkInformation()">Réinterroger le réseau</button>
+                <input id="refreshInformation" type="text" value="" readonly size=40 />
+                <button id="rucheCentered" onclick="rucheCentered()"   >Centrer ruche</button>
+                <button id="placementAuto" onclick="placementAuto()"   >Placement auto</button>
+            </td>
+        <tr>
+        <tr>
+            <td>
+            Image
+            </td>
+            <td>
+                <form action="upload.php" method="post" enctype="multipart/form-data">
+                    <table><tr><td>
+                    Image (format PNG)<br>
+                    </td><td>
+                    <input type="file" name="fileToUpload" id="fileToUpload" accept=".png"/>
+                    </td><td>
+                    <input type="submit" value="Installer" name="submit"/>
+                    </td>
+                    </tr></table>
+                </form>
+            </td>
+        <tr>
+    </table> -->
+
+    <svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">
+        <?php
+            if (file_exists(__DIR__."/../../Network/TestSVG/images/AbeilleLQI_MapData_Perso.png")) {
+                echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData_Perso.png" ></image>';
+            } else {
+                // echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png"></image>';
+                echo '<image x="0" y="0" width="100%" xlink:href="/plugins/Abeille/images/Abeille_background.png"></image>';
+            }
+        ?>
+        <script>
+        <!-- document.write( drawLegend(true) );
+        document.write( dessineLesVoisinesV2(0,"Yes") );
+        document.write( dessineLesTextes(10,"Yes") );
+        document.write( dessineLesAbeillesText(myObjNew, 22, "Yes") );
+        document.write( dessineLesAbeilles("Yes") ); -->
+        </script>
+        <svg id="devices">
+        </svg>
+    </svg>
+    </br>
+
+    <!-- <table><tr><td>
+    <button id="save"          onclick="save()"            >local save</button>
+    <button id="restore"       onclick="restore()"         >local restore</button>
+    <button id="save"          onclick="saveAbeilles()"    >save</button>
+    </td></tr></table> -->
+
+</body>
+</html>
+
 <script type="text/javascript">
     // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
 
@@ -192,7 +308,7 @@
                 // setTimeout(function () { $('#div_networkZigbeeAlert').hide(); }, 10000);
             },
             success: function (json_res) {
-console.log("json_res=", json_res);
+                console.log("json_res=", json_res);
                 res = JSON.parse(json_res.result); // res.status, res.error, res.content
                 if (res.status != 0) {
                     // var msg = "ERREUR ! Quelque chose s'est mal passé ("+res.error+")";
@@ -776,6 +892,78 @@ console.log("json_res=", json_res);
         setTopoJSON(JSON.stringify(myObjNew));
     }
 
+    function refreshNetwork(newZgId) {
+        // window.open("index.php?v=d&m=Abeille&p=AbeilleSupport");
+        // window.open("plugins/Abeille/desktop/php/AbeilleNetworkGraph.php?zigate="+zgId);
+
+        var url = window.location.href;
+        console.log("url="+url);
+        idx = url.indexOf('zigate='+zgId);
+        if (idx === -1) {
+            url += '&zigate='+newZgId
+        } else {
+            console.log("idx="+idx);
+            url = url.replace('zigate='+zgId, 'zigate='+newZgId);
+            // url += '?param=1'
+        }
+        // location.reload(true);
+        window.location.href = url;
+    };
+
+    function refreshDevList() {
+        console.log("refreshDevList()");
+
+        if (typeof lqiTable === "undefined") {
+            console.log("NO LQI table");
+            return;
+        }
+
+        devListNb = 0;
+        for (rLogicId in lqiTable.routers) {
+            router = lqiTable.routers[rLogicId];
+            console.log("router " + rLogicId + "=", router);
+            if (typeof devList[rLogicId] !== "undefined")
+                continue; // Already registered
+
+            dev = new Object();
+            dev['addr'] = router['addr'];
+            dev['name'] = router['name'];
+            dev['icon'] = router['icon'];
+            if ( dev.type == "End Device" ) { dev['color'] = "Green"; }
+            if ( dev.type == "Router" ) { dev['color'] = "Orange"; }
+            if ( dev.type == "Coordinator" ) { dev['color'] = "Red"; }
+            if (typeof jeedomDevices[rLogicId] !== "undefined") {
+                dev['posX'] = jeedomDevices[rLogicId].X;
+                dev['posY'] = jeedomDevices[rLogicId].Y;
+                dev['jeedomId'] = jeedomDevices[rLogicId].id;
+            }
+
+            devList[rLogicId] = dev;
+            devListNb++;
+            for (nLogicId in router.neighbors) {
+                neighbor = router.neighbors[nLogicId];
+                console.log("neighbor=", neighbor);
+                if (typeof devList[nLogicId] !== "undefined")
+                    continue; // Already registered
+
+                dev = new Object();
+                dev['addr'] = neighbor['addr'];
+                dev['name'] = neighbor['name'];
+                dev['icon'] = neighbor['icon'];
+                if ( dev.type == "End Device" ) { dev['color'] = "Green"; }
+                if ( dev.type == "Router" ) { dev['color'] = "Orange"; }
+                if ( dev.type == "Coordinator" ) { dev['color'] = "Red"; }
+                if (typeof jeedomDevices[nLogicId] !== "undefined") {
+                    dev['posX'] = jeedomDevices[nLogicId].X;
+                    dev['posY'] = jeedomDevices[nLogicId].Y;
+                    dev['jeedomId'] = jeedomDevices[nLogicId].id;
+               }
+                devList[nLogicId] = dev;
+                devListNb++;
+            }
+        }
+    }
+
     //-----------------------------------------------------------------------
     // MAIN
     //-----------------------------------------------------------------------
@@ -805,120 +993,6 @@ console.log("json_res=", json_res);
     setPosition("Auto");
 </script>
 
-<html>
-<head>
-    <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-</head>
-
-<body>
-    <div style="background: #e9e9e9; font-weight: bold; padding: .4em 1em;">
-        Placement réseau
-    </div>
-    <?php
-    // Reading URL parameter: "...?zigate=X", where X is zigate number
-    if (isset($_GET['zigate']))
-        $zgId = $_GET['zigate'];
-    else
-        $zgId = 1; // Default = zigate1
-    echo "<script>console.log(\"zgId=" . $zgId . "\")</script>";
-    ?>
-    <style>
-    td {
-        border: 1px solid black;
-    }
-    </style>
-    <table>
-        <tr>
-            <td>
-            Zigate
-            </td>
-            <td>
-                <!-- Select 1st Zigate if none passed as argument (zigate=X) -->
-                <?php
-                for ($i=1; $i<=maxNbOfZigate; $i++) {
-                    if (config::byKey('ab::zgEnabled'.$i, 'Abeille', 'N') != 'Y')
-                        continue;
-
-                    if ($i == $zgId)
-                        echo "<input id=\"btntest\" type=\"button\" checked value=\"Zigate " . $i . "\" onclick=\"refreshNetwork(".$i.")\" />";
-                    else
-                        echo "<input id=\"btntest\" type=\"button\" value=\"Zigate " . $i . "\" onclick=\"refreshNetwork(".$i.")\" />";
-                }
-                ?>
-            </td>
-        </tr>
-            <td>
-            Filtre
-            </td>
-            <td>
-                <table><tr>
-                    <td>Source</td><td>Destination</td><td>Paramètre</td><td>Relation</td></tr>
-                    <td>   <script>filtreSource(); </script>        </td>
-                    <td>   <script>filtreDestination();</script>    </td>
-                    <td>   <script>filtreDetails();  </script>      </td>
-                    <td>   <script>filtreParent();  </script>       </td>
-                </tr></table>
-            </td>
-        <tr>
-            <td>
-            Actions
-            </td>
-            <td>
-                <button id="ReLoadThePage" onclick="ReLoad()">Rafraichir</button>
-                <button id="Refresh" onclick="refreshNetworkInformation()">Réinterroger le réseau</button>
-                <input id="refreshInformation" type="text" value="" readonly size=40 />
-                <button id="rucheCentered" onclick="rucheCentered()"   >Centrer ruche</button>
-                <button id="placementAuto" onclick="placementAuto()"   >Placement auto</button>
-            </td>
-        <tr>
-        <tr>
-            <td>
-            Image
-            </td>
-            <td>
-                <form action="upload.php" method="post" enctype="multipart/form-data">
-                    <table><tr><td>
-                    Image (format PNG)<br>
-                    </td><td>
-                    <input type="file" name="fileToUpload" id="fileToUpload" accept=".png"/>
-                    </td><td>
-                    <input type="submit" value="Installer" name="submit"/>
-                    </td>
-                    </tr></table>
-                </form>
-            </td>
-        <tr>
-    </table>
-
-    <svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">
-        <?php
-            if (file_exists(__DIR__."/../../Network/TestSVG/images/AbeilleLQI_MapData_Perso.png")) {
-                echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData_Perso.png" ></image>';
-            } else {
-                echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png"></image>';
-            }
-        ?>
-        <script>
-        <!-- document.write( drawLegend(true) );
-        document.write( dessineLesVoisinesV2(0,"Yes") );
-        document.write( dessineLesTextes(10,"Yes") );
-        document.write( dessineLesAbeillesText(myObjNew, 22, "Yes") );
-        document.write( dessineLesAbeilles("Yes") ); -->
-        </script>
-        <svg id="devices">
-        </svg>
-    </svg>
-    </br>
-
-    <table><tr><td>
-    <button id="save"          onclick="save()"            >local save</button>
-    <button id="restore"       onclick="restore()"         >local restore</button>
-    <button id="save"          onclick="saveAbeilles()"    >save</button>
-    </td></tr></table>
-
-</body>
-</html>
-
 <script>
 // FCh temp disable
     // refreshStatus = setInterval(
@@ -932,78 +1006,11 @@ console.log("json_res=", json_res);
     // console.log("Name list: "+JSON.stringify(jeedomDevices));
     // console.log("Name 1: " + JSON.stringify(jeedomDevices["0000"]));
 
-    function refreshNetwork(newZgId) {
-        // window.open("index.php?v=d&m=Abeille&p=AbeilleSupport");
-        // window.open("plugins/Abeille/desktop/php/AbeilleNetworkGraph.php?zigate="+zgId);
-
-        var url = window.location.href;
-        console.log("url="+url);
-        idx = url.indexOf('zigate='+zgId);
-        if (idx === -1) {
-            url += '&zigate='+newZgId
-        } else {
-            console.log("idx="+idx);
-            url = url.replace('zigate='+zgId, 'zigate='+newZgId);
-            // url += '?param=1'
-        }
-        // location.reload(true);
-        window.location.href = url;
-    };
-
     // Combine LQI infos + Jeedom
     devList = new Object();
     devListNb = 0;
     // devList[logicId]: 'addr', 'name', 'posX', 'posY'
-    function refreshDevList() {
-        console.log("refreshDevList()");
 
-        if (typeof lqiTable === "undefined") {
-            console.log("NO LQI table");
-            return;
-        }
-
-        devListNb = 0;
-        for (rLogicId in lqiTable.routers) {
-            router = lqiTable.routers[rLogicId];
-            console.log("router " + rLogicId + "=", router);
-            if (typeof devList[rLogicId] !== "undefined")
-                continue; // Already registered
-
-            dev = new Object();
-            dev['addr'] = router['addr'];
-            dev['name'] = router['name'];
-            if ( dev.type == "End Device" ) { dev['color'] = "Green"; }
-            if ( dev.type == "Router" ) { dev['color'] = "Orange"; }
-            if ( dev.type == "Coordinator" ) { dev['color'] = "Red"; }
-            if (typeof jeedomDevices[rLogicId] !== "undefined") {
-                dev['posX'] = jeedomDevices[rLogicId].X;
-                dev['posY'] = jeedomDevices[rLogicId].Y;
-                dev['jeedomId'] = jeedomDevices[rLogicId].id;
-            }
-            devList[rLogicId] = dev;
-            devListNb++;
-            for (nLogicId in router.neighbors) {
-                neighbor = router.neighbors[nLogicId];
-                console.log("neighbor=", neighbor);
-                if (typeof devList[nLogicId] !== "undefined")
-                    continue; // Already registered
-
-                dev = new Object();
-                dev['addr'] = neighbor['addr'];
-                dev['name'] = neighbor['name'];
-                if ( dev.type == "End Device" ) { dev['color'] = "Green"; }
-                if ( dev.type == "Router" ) { dev['color'] = "Orange"; }
-                if ( dev.type == "Coordinator" ) { dev['color'] = "Red"; }
-                if (typeof jeedomDevices[nLogicId] !== "undefined") {
-                    dev['posX'] = jeedomDevices[nLogicId].X;
-                    dev['posY'] = jeedomDevices[nLogicId].Y;
-                    dev['jeedomId'] = jeedomDevices[nLogicId].id;
-               }
-                devList[nLogicId] = dev;
-                devListNb++;
-            }
-        }
-    }
     refreshDevList();
     console.log("devList=", devList);
     console.log("jeedomDevices=", jeedomDevices);
@@ -1035,6 +1042,8 @@ console.log("json_res=", json_res);
     function drawDevice(devLogicId) {
         console.log("drawDevice("+devLogicId+")");
         dev = devList[devLogicId];
+        console.log("dev=", dev);
+
         addr = dev['addr'];
         if (addr == '0000')
             zigate = true;
@@ -1049,8 +1058,13 @@ console.log("json_res=", json_res);
             posY = setAutoY(zigate);
         txtY = posY + 0;
 
+        // newG = '<image x="'+posX+'" y="'+posY+'" width="40" height="40" src="/plugins/Abeille/images/node_' + dev['icon'] + '.png">';
+        // return newG;
+
         newG = '<g id="'+devLogicId+'" class="draggable">';
-        newG += '<circle cx="'+posX+'" cy="'+posY+'" r="10" fill="'+dev['color']+'" transform="translate(0, 0)"></circle>';
+        // newG += '<circle cx="'+posX+'" cy="'+posY+'" r="10" fill="'+dev['color']+'" transform="translate(0, 0)"></circle>';
+        // newG += '<img x="'+posX+'" y="'+posY+'" width="40" height="40" src="/plugins/Abeille/images/node_' + dev['icon'] + '.png">';
+        newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+posX+'" y="'+posY+'" height="40" width="40" />';
         // if( (typeof jeedomDevices[shortAddress] === "object") && (jeedomDevices[shortAddress] !== null) ) {
         //     lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+jeedomDevices[shortAddress].id+'" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].objectName+' - '+myObj[shortAddress].name+' - '+' ('+shortAddress+')</text> </a>';
         // }
@@ -1061,6 +1075,7 @@ console.log("json_res=", json_res);
         console.log("newG=", newG);
         return newG;
     }
+
     lesAbeilles = "";
     for (dev in devList) {
         lesAbeilles += drawDevice(dev);

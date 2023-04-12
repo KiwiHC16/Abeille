@@ -991,10 +991,8 @@
     // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
 
     setPosition("Auto");
-</script>
 
-<script>
-// FCh temp disable
+    // FCh temp disable
     // refreshStatus = setInterval(
     //     function() {
     //         refreshNetworkCollectionProgress();
@@ -1081,5 +1079,4 @@
         lesAbeilles += drawDevice(dev);
     }
     document.getElementById("devices").innerHTML = lesAbeilles;
-    // console.log("devListNb=", devListNb);
 </script>

@@ -4,11 +4,12 @@
         "model": "500.44",
         "type": "Paulmann Licht dimmable",
         "timeout": "60",
+        "genericType": "Light",
         "category": {
             "light": "1"
         },
         "configuration": {
-            "icon": "PaulmannLicht-DimmableLED",
+            "icon": "PaulmannLicht-DimmingController",
             "mainEP": "01"
         },
         "commands": {

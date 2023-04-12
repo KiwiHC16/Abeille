@@ -1,7 +1,6 @@
 {
     "multi": {
         "isVisible": 1,
-        "name": "multi",
         "isHistorized": "1",
         "subType": "numeric",
         "invertBinary": "0",

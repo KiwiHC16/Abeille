@@ -2981,7 +2981,7 @@ class Abeille extends eqLogic {
             }
         }
 
-        /* Creating current list of Jeedom commands.
+        /* Creating list of current Jeedom commands.
            jeedomCmds[jCmdId] = array(
                 'name' =>
                 'logicalId' =>
@@ -2989,10 +2989,8 @@ class Abeille extends eqLogic {
                 'request' =>
                 'obsolete' =>
            )
-           Note: DO NOT split commands. It's key to be sure that both name & logicalId are UNIQUE */
+           Note: DO NOT split commands by info/action. It's key to be sure that both name & logicalId are UNIQUE */
         $jCmds = Cmd::byEqLogicId($eqId);
-        // $jeedomCmdsInf = [];
-        // $jeedomCmdsAct = [];
         $jeedomCmds = []; // List of current Jeedom commands
         foreach ($jCmds as $cmdLogic) {
             $cmdType = $cmdLogic->getType();
@@ -3006,18 +3004,12 @@ class Abeille extends eqLogic {
             else
                 log::add('Abeille', 'debug', "  Jeedom ".$cmdType.": name='".$cmdName."' ('.$cmdLogicId.'), id=".$cmdId.", topic=".$cmdTopic.", req=".$cmdReq);
             $c = array(
-                // 'cmdLogic' => $cmdLogic,
                 'name' => $cmdName,
-                // 'type' => $cmdType,
                 'logicalId' => $cmdLogicId,
                 'topic' => $cmdTopic, // action only
                 'request' => $cmdReq, // action only
                 'obsolete' => True
             );
-            // if ($cmdType == 'info')
-            //     $jeedomCmdsInf[$cmdLogic->getId()] = $c;
-            // else
-            //     $jeedomCmdsAct[$cmdLogic->getId()] = $c;
             $jeedomCmds[$cmdId] = $c;
         }
 
@@ -3100,7 +3092,7 @@ class Abeille extends eqLogic {
                 }
             }
 
-            if ($cmdId === null) {
+            if ($cmdId === null) { // Not found => new command
                 $newCmd = true;
                 if ($mCmdType == 'info')
                     log::add('Abeille', 'debug', "  Adding ".$mCmdType." '".$mCmdName."' (".$mCmdLogicId.")");

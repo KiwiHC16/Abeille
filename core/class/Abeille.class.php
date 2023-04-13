@@ -2985,7 +2985,8 @@ class Abeille extends eqLogic {
            jeedomCmds[jCmdId] = array(
                 'name' =>
                 'logicalId' =>
-                'cmdLogic' =>
+                'topic' =>
+                'request' =>
                 'obsolete' =>
            )
            Note: DO NOT split commands. It's key to be sure that both name & logicalId are UNIQUE */
@@ -2994,22 +2995,30 @@ class Abeille extends eqLogic {
         // $jeedomCmdsAct = [];
         $jeedomCmds = []; // List of current Jeedom commands
         foreach ($jCmds as $cmdLogic) {
-            $type = $cmdLogic->getType();
-            log::add('Abeille', 'debug', "  Jeedom ".$type.": name='".$cmdLogic->getName()."', id=".$cmdLogic->getId());
+            $cmdType = $cmdLogic->getType();
+            $cmdName = $cmdLogic->getName(); // == jCmdName (Jeedom cmd name)
+            $cmdLogicId = $cmdLogic->getLogicalId('');
+            $cmdId = $cmdLogic->getId();
+            $cmdTopic = $cmdLogic->getConfiguration('topic', '');
+            $cmdReq = $cmdLogic->getConfiguration('request', '');
+            if ($cmdType == 'info')
+                log::add('Abeille', 'debug', "  Jeedom ".$cmdType.": name='".$cmdName."' ('.$cmdLogicId.'), id=".$cmdId);
+            else
+                log::add('Abeille', 'debug', "  Jeedom ".$cmdType.": name='".$cmdName."' ('.$cmdLogicId.'), id=".$cmdId.", topic=".$cmdTopic.", req=".$cmdReq);
             $c = array(
                 // 'cmdLogic' => $cmdLogic,
-                'name' => $cmdLogic->getName(),
-                // 'type' => $type,
-                'logicalId' => $cmdLogic->getLogicalId(''),
-                'topic' => $cmdLogic->getConfiguration('topic', ''), // action
-                'request' => $cmdLogic->getConfiguration('request', ''), // action
+                'name' => $cmdName,
+                // 'type' => $cmdType,
+                'logicalId' => $cmdLogicId,
+                'topic' => $cmdTopic, // action only
+                'request' => $cmdReq, // action only
                 'obsolete' => True
             );
-            // if ($type == 'info')
+            // if ($cmdType == 'info')
             //     $jeedomCmdsInf[$cmdLogic->getId()] = $c;
             // else
             //     $jeedomCmdsAct[$cmdLogic->getId()] = $c;
-            $jeedomCmds[$cmdLogic->getId()] = $c;
+            $jeedomCmds[$cmdId] = $c;
         }
 
         // Creating or updating commands based on model content.
@@ -3155,9 +3164,9 @@ class Abeille extends eqLogic {
             }
 
             $cmdLogic->setType($mCmdType); // 'info' or 'action': Always updated in case type change for same name
+            $cmdLogic->setSubType($mCmd["subType"]);
             $cmdLogic->setOrder($order++);
             $cmdLogic->setLogicalId($mCmdLogicId);
-            $cmdLogic->setSubType($mCmd["subType"]);
 
             // Updates only if reset or new command
             if (($action == 'reset') || $newCmd) {

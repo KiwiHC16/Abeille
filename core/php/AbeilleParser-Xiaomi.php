@@ -228,19 +228,20 @@
                     //      t2 d2 = Type 2 (1 B) followed by data 2 (size depends on t2)
                     //      ...
                     while (strlen($attrData) > 0) {
-                        $t = substr($attrData, 2);
-                        $attrData = substr($attrData, 2); // Skipping type
-                        $m = '    SubType='.$t.', ValueHex='.$valueHex;
-                        $value = AbeilleParser::decodeDataType($attrData, $t, true, 0, $s, $valueHex);
-                        if (isset($fromDev[$t]))
-                            xiaomiDecodeFunction($valueHex, $value, $m, $fromDev[$t], $attrReportN, $toMon);
+                        parserLog('debug', '  attrData='.$attrData);
+                        $subType = substr($attrData, 0, 2);
+                        $subData = substr($attrData, 2); // Skipping type (1B)
+                        $value = AbeilleParser::decodeDataType($subData, $subType, true, 0, $subSize, $valueHex);
+                        $m = '    SubType='.$subType.', ValueHex='.$valueHex;
+                        if (isset($fromDev[$subType]))
+                            xiaomiDecodeFunction($valueHex, $value, $m, $fromDev[$subType], $attrReportN, $toMon);
                         else {
                             $m .= ' => '.$value.' (ignored)';
                             parserLog('debug', $m);
                             $toMon[] = $m;
                         }
 
-                        $attrData = substr($attrData, $s * 2); // Skipping data
+                        $attrData = substr($attrData, $subSize * 2); // Skipping data
                     }
                 }
                 continue;

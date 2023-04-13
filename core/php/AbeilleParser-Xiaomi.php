@@ -166,7 +166,7 @@
             // - Attribute
             // - Attribute including tags
             // - Attribute type 4C/struct
-            
+
             /* "xiaomi": {
                    "fromDevice": {
                         "FCC0-0112": {
@@ -229,6 +229,7 @@
                     //      ...
                     while (strlen($attrData) > 0) {
                         parserLog('debug', '  attrData='.$attrData);
+
                         $subType = substr($attrData, 0, 2);
                         $subData = substr($attrData, 2); // Skipping type (1B)
                         $value = AbeilleParser::decodeDataType($subData, $subType, true, 0, $subSize, $valueHex);
@@ -241,7 +242,7 @@
                             $toMon[] = $m;
                         }
 
-                        $attrData = substr($attrData, $subSize * 2); // Skipping data
+                        $attrData = substr($attrData, 2 + ($subSize * 2)); // Skipping sub-type + sub-data
                     }
                 }
                 continue;

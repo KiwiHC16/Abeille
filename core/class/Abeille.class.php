@@ -3044,16 +3044,11 @@ class Abeille extends eqLogic {
                 continue;
             }
 
-            if ($mCmdType == "info") {
-                $cmdAName = $mCmd["logicalId"]; // Abeille command name
-            } else {
-                $cmdAName = $mCmd["configuration"]['topic']; // Abeille command name
+            if ($mCmdType == "action") {
+                $mCmdTopic = isset($mCmd["configuration"]['topic']) ? $mCmd["configuration"]['topic'] : ''; // Abeille command name
+                $mCmdReq = isset($mCmd["configuration"]['request']) ? $mCmd["configuration"]['request'] : ''; // Abeille command parameters
             }
             $mCmdLogicId = isset($mCmd["logicalId"]) ? $mCmd["logicalId"] : '';
-            if (isset($mCmd["configuration"]['request']))
-                $cmdAParams = $mCmd["configuration"]['request']; // Abeille command params
-            else
-                $cmdAParams = '';
 
             /* Looking for corresponding cmd in Jeedom.
                New or existing cmd ?
@@ -3063,82 +3058,45 @@ class Abeille extends eqLogic {
              */
             // $cmdLogic = null;
             $cmdId = null;
-            if ($mCmdType == 'info') {
-                // Search by logical ID
-                log::add('Abeille', 'debug', "  Searching by logical ID: '".$mCmdLogicId."'");
-                // foreach ($jeedomCmdsInf as $jCmdId => $jCmd) {
+
+            // Search by logical ID
+            log::add('Abeille', 'debug', "  Searching by logical ID: '".$mCmdLogicId."'");
+            foreach ($jeedomCmds as $jCmdId => $jCmd) {
+                // Note: Cmd logical ID & names have to be unique
+                // if (($jCmd['logicalId'] != $mCmdLogicId) && ($jCmd['name'] != $mCmdName))
+                //     continue;
+                if ($jCmd['logicalId'] != $mCmdLogicId)
+                    continue;
+                $cmdId = $jCmdId;
+                $jeedomCmds[$jCmdId]['obsolete'] = False;
+                break; // Found
+            }
+
+            // Search by name if still not found
+            if ($cmdId === null) {
+                log::add('Abeille', 'debug', "  Searching by name: '".$mCmdName."'");
                 foreach ($jeedomCmds as $jCmdId => $jCmd) {
-                    // Note: Cmd logical ID & names have to be unique
-                    // if (($jCmd['logicalId'] != $mCmdLogicId) && ($jCmd['name'] != $mCmdName))
-                    //     continue;
-                    if ($jCmd['logicalId'] != $mCmdLogicId)
+                    if (($jCmd['name'] != '') && ($jCmd['name'] != $mCmdName))
                         continue;
-                    // $cmdLogic = $jCmd['cmdLogic'];
                     $cmdId = $jCmdId;
-                    // $jeedomCmdsInf[$jCmdId]['obsolete'] = False;
                     $jeedomCmds[$jCmdId]['obsolete'] = False;
                     break; // Found
                 }
-                if ($cmdId === null) {
-                    // Search by name
-                    log::add('Abeille', 'debug', "  Searching by name: '".$mCmdName."'");
-                    // foreach ($jeedomCmdsInf as $jCmdId => $jCmd) {
-                    foreach ($jeedomCmds as $jCmdId => $jCmd) {
-                        if (($jCmd['name'] != '') && ($jCmd['name'] != $mCmdName))
-                            continue;
-                        // $cmdLogic = $jCmd['cmdLogic'];
-                        $cmdId = $jCmdId;
-                        // $jeedomCmdsInf[$jCmdId]['obsolete'] = False;
-                        $jeedomCmds[$jCmdId]['obsolete'] = False;
-                        break; // Found
-                    }
-                }
-            } else {
-                // Search by logical ID
-                if ($mCmdLogicId != '') {
-                    log::add('Abeille', 'debug', "  Searching by logical ID: '".$mCmdLogicId."'");
-                    // foreach ($jeedomCmdsAct as $jCmdId => $jCmd) {
-                    foreach ($jeedomCmds as $jCmdId => $jCmd) {
-                        if (($jCmd['logicalId'] == '') || ($jCmd['logicalId'] != $mCmdLogicId))
-                            continue;
-                        // $cmdLogic = $jCmd['cmdLogic'];
-                        $cmdId = $jCmdId;
-                        // $jeedomCmdsAct[$jCmdId]['obsolete'] = False;
-                        $jeedomCmds[$jCmdId]['obsolete'] = False;
-                        break;
-                    }
-                }
-                if ($cmdId === null) {
-                    // Search by name
-                    log::add('Abeille', 'debug', "  Searching by name: '".$mCmdName."'");
-                    // foreach ($jeedomCmdsAct as $jCmdId => $jCmd) {
-                    foreach ($jeedomCmds as $jCmdId => $jCmd) {
-                        if ($jCmd['name'] != $mCmdName)
-                            continue;
-                        // $cmdLogic = $jCmd['cmdLogic'];
-                        $cmdId = $jCmdId;
-                        // $jeedomCmdsAct[$jCmdId]['obsolete'] = False;
-                        $jeedomCmds[$jCmdId]['obsolete'] = False;
-                        break;
-                    }
-                }
-                if ($cmdId === null) {
-                    // Search by topic/request
-                    $mTopic = $mCmd["configuration"]['topic'];
-                    $mRequest = $mCmd["configuration"]['request'];
-                    log::add('Abeille', 'debug', "  Searching by topic/request='".$mTopic."/".$mRequest."'");
-                    // foreach ($jeedomCmdsAct as $jCmdId => $jCmd) {
-                    foreach ($jeedomCmds as $jCmdId => $jCmd) {
-                        if ($jCmd['topic'] != $mTopic)
-                            continue;
-                        if ($jCmd['request'] != $mRequest)
-                            continue;
-                        // $cmdLogic = $jCmd['cmdLogic'];
-                        $cmdId = $jCmdId;
-                        // $jeedomCmdsAct[$jCmdId]['obsolete'] = False;
-                        $jeedomCmds[$jCmdId]['obsolete'] = False;
-                        break;
-                    }
+            }
+
+            // Search by topic/request if still not found & 'action'
+            if (($cmdId === null) && ($mCmdType == 'action')) {
+                $mTopic = $mCmd["configuration"]['topic'];
+                $mRequest = $mCmd["configuration"]['request'];
+                log::add('Abeille', 'debug', "  Searching by topic/request='".$mTopic."/".$mRequest."'");
+                foreach ($jeedomCmds as $jCmdId => $jCmd) {
+                    if ($jCmd['topic'] != $mTopic)
+                        continue;
+                    if ($jCmd['request'] != $mRequest)
+                        continue;
+                    $cmdId = $jCmdId;
+                    $jeedomCmds[$jCmdId]['obsolete'] = False;
+                    break;
                 }
             }
 
@@ -3147,7 +3105,7 @@ class Abeille extends eqLogic {
                 if ($mCmdType == 'info')
                     log::add('Abeille', 'debug', "  Adding ".$mCmdType." '".$mCmdName."' (".$mCmdLogicId.")");
                 else
-                    log::add('Abeille', 'debug', "  Adding ".$mCmdType." '".$mCmdName."' (".$mCmdLogicId.") => '".$cmdAName."', '".$cmdAParams."'");
+                    log::add('Abeille', 'debug', "  Adding ".$mCmdType." '".$mCmdName."' (".$mCmdLogicId."), topic='".$mCmdTopic."', request='".$mCmdReq."'");
                 $cmdLogic = new cmd();
                 $cmdLogic->setEqLogic_id($eqId);
                 $cmdLogic->setEqType('Abeille');
@@ -3159,8 +3117,11 @@ class Abeille extends eqLogic {
                 $jCmdLogicId = $cmdLogic->getLogicalId();
                 if ($mCmdType == 'info')
                     log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$jCmdName."' (".$jCmdLogicId.")");
-                else
-                    log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$jCmdName."' (".$jCmdLogicId.") => logicId='".$mCmdLogicId."' topic='".$cmdAName."', request='".$cmdAParams."'");
+                else {
+                    log::add('Abeille', 'debug', "  Updating ".$mCmdType." '".$jCmdName."' (".$jCmdLogicId.") => logicId='".$mCmdLogicId."', topic='".$mCmdTopic."', request='".$mCmdReq."'");
+                    $jeedomCmds[$cmdId]['topic'] = $mCmdTopic;
+                    $jeedomCmds[$cmdId]['request'] = $mCmdReq;
+                }
             }
 
             $cmdLogic->setType($mCmdType); // 'info' or 'action': Always updated in case type change for same name

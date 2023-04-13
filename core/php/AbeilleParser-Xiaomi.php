@@ -161,9 +161,12 @@
 
             //
             // Flexible decoding according to 'xiaomi' model's section
+            //
+            // Format:
             // - Attribute
             // - Attribute including tags
-            // - Attribute type struct 4C
+            // - Attribute type 4C/struct
+            
             /* "xiaomi": {
                    "fromDevice": {
                         "FCC0-0112": {
@@ -193,16 +196,17 @@
                 if (isset($fromDev['info'])) {
                     // 'CLUSTER-ATTRIB' + 'info' syntax
                     $value = AbeilleParser::decodeDataType($pl2, $attrType, true, 0, $attrSize, $valueHex);
-                    $attrReportN[] = array(
-                        'name' => $fromDev['info'],
-                        'value' => $value
-                    );
 
                     $m = '  AttrId='.$attrId
                         .', AttrType='.$attrType
                         .', ValueHex='.$valueHex.' => '.$value.' ==> '.$fromDev['info'].'='.$value;
                     parserLog('debug', $m);
                     $toMon[] = $m;
+
+                    $attrReportN[] = array(
+                        'name' => $fromDev['info'],
+                        'value' => $value
+                    );
                 } else if (strlen(array_key_first($fromDev)) == 5) { // Idx format 'TA-TY', TA=tagId, TY=typeId
                     // 'CLUSTER-ATTRIB' + 'TAG-TYPE' syntax
                     $m = '  AttrId='.$attrId
@@ -218,6 +222,11 @@
                     $toMon[] = $m;
 
                     // Note: 4B count already skipped
+                    // 4C/struct format reminder
+                    //      xxxx = 2 Bytes for count (ignored)
+                    //      t1 d1 = Type 1 (1 B) followed by data 1 (size depends on t1)
+                    //      t2 d2 = Type 2 (1 B) followed by data 2 (size depends on t2)
+                    //      ...
                     while (strlen($attrData) > 0) {
                         $t = substr($attrData, 2);
                         $attrData = substr($attrData, 2); // Skipping type

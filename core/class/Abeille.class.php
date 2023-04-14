@@ -3000,9 +3000,9 @@ class Abeille extends eqLogic {
             $cmdTopic = $cmdLogic->getConfiguration('topic', '');
             $cmdReq = $cmdLogic->getConfiguration('request', '');
             if ($cmdType == 'info')
-                log::add('Abeille', 'debug', "  Jeedom ".$cmdType.": name='".$cmdName."' ('.$cmdLogicId.'), id=".$cmdId);
+                log::add('Abeille', 'debug', "  Jeedom ".$cmdType.": name='".$cmdName."' ('".$cmdLogicId."'), id=".$cmdId);
             else
-                log::add('Abeille', 'debug', "  Jeedom ".$cmdType.": name='".$cmdName."' ('.$cmdLogicId.'), id=".$cmdId.", topic=".$cmdTopic.", req=".$cmdReq);
+                log::add('Abeille', 'debug', "  Jeedom ".$cmdType.": name='".$cmdName."' ('".$cmdLogicId."'), id=".$cmdId.", topic='".$cmdTopic."', req='".$cmdReq."'");
             $c = array(
                 'name' => $cmdName,
                 'logicalId' => $cmdLogicId,
@@ -3120,6 +3120,8 @@ class Abeille extends eqLogic {
             $cmdLogic->setSubType($mCmd["subType"]);
             $cmdLogic->setOrder($order++);
             $cmdLogic->setLogicalId($mCmdLogicId);
+            if ($cmdId !== null)
+                $jeedomCmds[$cmdId]['logicalId'] = $mCmdLogicId;
 
             // Updates only if reset or new command
             if (($action == 'reset') || $newCmd) {

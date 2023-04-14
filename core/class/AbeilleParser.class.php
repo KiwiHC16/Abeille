@@ -1655,7 +1655,6 @@
                 // parserLog('debug', "  iHs=".$iHs);
                 if ($raw) {
                     $dataSize = hexdec(substr($iHs, 0, 2));
-                    $oSize = $dataSize + 1;
                     $iHs = substr($iHs, 2); // Skip header byte
                     $raw = false; // Seems no reordering required.
                 } // else $dataSize provided from caller
@@ -1665,6 +1664,12 @@
                 $dataSize = strlen($iHs) / 2;
                 break;
             }
+
+            // Updating oSize
+            if ((($dataType == '41') || ($dataType == '42')) && $raw)
+                $oSize = $dataSize + 1;
+            else
+                $oSize = $dataSize;
 
             // Checking size
             $l = strlen($iHs);
@@ -1679,6 +1684,7 @@
             if ($raw && ($dataSize > 1))
                 $hs = AbeilleTools::reverseHex($hs);
             // parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexString." => hs=".$hs);
+            $oHs = $hs;
 
             // Computing value
             switch ($dataType) {
@@ -1747,9 +1753,6 @@
                 break;
             }
 
-            $oHs = $hs;
-            if (!isset($oSize))
-                $oSize = $dataSize;
             return $value;
         }
 

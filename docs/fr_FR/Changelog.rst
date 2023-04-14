@@ -10,6 +10,7 @@ ChangeLog
 - PaulmannLichtGmbH 500.44: Ajout image. Modele non confirmé (2516).
 - Network graph: Modifications internes préliminaires.
 - Interne: Correction perte de cmdes lors de la mise-à-jour.
+- Interne: Parser: Correction decodeDataType().
 
 230408-BETA-5
 -------------

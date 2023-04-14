@@ -6121,7 +6121,7 @@
                 );
                 msgToAbeille2($toAbeille);
             }
-        }
+        } // End decode80A6()
 
         // Telecommande Ikea
         // https://github.com/fairecasoimeme/ZiGate/issues/6
@@ -6212,7 +6212,7 @@
             msgToAbeille2($toAbeille);
 
             $this->whoTalked[] = $dest.'/'.$source;
-        }
+        } // End decode80A7()
 
         /* Common function for 8100 & 8102 messages */
         function decode8100_8102($type, $dest, $payload, $lqi) {

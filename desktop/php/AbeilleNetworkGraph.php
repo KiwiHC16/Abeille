@@ -385,6 +385,17 @@
                 var coord = getMousePosition(evt);
                 // On change les valeurs de Translation mais on ne touche pas aux coordonnées.
                 transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+
+                devLogicId = selectedElement.id;
+                dev = devList[devLogicId];
+                if (typeof dev['lineTo'] !== 'undefined') {
+                    lineTo = dev['lineTo'];
+                    linksTo.forEach(function(item, index, array) {
+                        var line = document.getElementById("idLine"+item)
+                        line.x1.baseVal.value = coord.x;
+                        line.y1.baseVal.value = coord.y;
+                    });
+                }
             }
         }
 
@@ -925,48 +936,52 @@
             if (typeof devList[rLogicId] !== "undefined")
                 continue; // Already registered
 
-            dev = new Object();
-            dev['addr'] = router['addr'];
-            dev['name'] = router['name'];
-            dev['icon'] = router['icon'];
-            if (dev['addr'] == '0000')
-                dev['color'] = "Red"; // Coordinator
+            devR = new Object();
+            devR['addr'] = router['addr'];
+            devR['name'] = router['name'];
+            devR['icon'] = router['icon'];
+            if (devR['addr'] == '0000')
+                devR['color'] = "Red"; // Coordinator
             else
-                dev['color'] = "Blue"; // Router
+                devR['color'] = "Blue"; // Router
             if (typeof jeedomDevices[rLogicId] !== "undefined") {
-                dev['posX'] = jeedomDevices[rLogicId].X;
-                dev['posY'] = jeedomDevices[rLogicId].Y;
-                dev['jeedomId'] = jeedomDevices[rLogicId].id;
+                devR['posX'] = jeedomDevices[rLogicId].X;
+                devR['posY'] = jeedomDevices[rLogicId].Y;
+                devR['jeedomId'] = jeedomDevices[rLogicId].id;
             }
+            devR['linesTo'] = [];
+            devR['linesFrom'] = [];
 
-            links = [];
+            linksTo = [];
             for (nLogicId in router.neighbors) {
                 neighbor = router.neighbors[nLogicId];
                 console.log("neighbor=", neighbor);
                 if (typeof devList[nLogicId] !== "undefined")
                     continue; // Already registered
 
-                dev = new Object();
-                dev['addr'] = neighbor['addr'];
-                dev['name'] = neighbor['name'];
-                dev['icon'] = neighbor['icon'];
-                if ( neighbor['type'] == "End Device" ) { dev['color'] = "Green"; }
-                else if ( neighbor['type'] == "Router" ) { dev['color'] = "Blue"; }
-                else if ( neighbor['type'] == "Coordinator" ) { dev['color'] = "Red"; }
-                else dev['color'] = "Yellow";
+                devN = new Object();
+                devN['addr'] = neighbor['addr'];
+                devN['name'] = neighbor['name'];
+                devN['icon'] = neighbor['icon'];
+                if ( neighbor['type'] == "End Device" ) { devN['color'] = "Green"; }
+                else if ( neighbor['type'] == "Router" ) { devN['color'] = "Blue"; }
+                else if ( neighbor['type'] == "Coordinator" ) { devN['color'] = "Red"; }
+                else devN['color'] = "Yellow";
                 if (typeof jeedomDevices[nLogicId] !== "undefined") {
-                    dev['posX'] = jeedomDevices[nLogicId].X;
-                    dev['posY'] = jeedomDevices[nLogicId].Y;
-                    dev['jeedomId'] = jeedomDevices[nLogicId].id;
+                    devN['posX'] = jeedomDevices[nLogicId].X;
+                    devN['posY'] = jeedomDevices[nLogicId].Y;
+                    devN['jeedomId'] = jeedomDevices[nLogicId].id;
                 }
-                links.push(nLogicId);
+                devN['linesTo'] = [];
+                devN['linesFrom'] = [];
+                linksTo.push(nLogicId);
 
-                devList[nLogicId] = dev;
+                devList[nLogicId] = devN;
                 devListNb++;
             }
-            dev['links'] = links;
 
-            devList[rLogicId] = dev;
+            devR['linksTo'] = linksTo;
+            devList[rLogicId] = devR;
             devListNb++;
         }
     }
@@ -1105,15 +1120,17 @@
     }
 
     function drawLinks() {
+        lineId = 0;
         for (devLogicId in devList) {
             dev = devList[devLogicId];
-            if (typeof dev['links'] === 'undefined')
+            if (typeof dev['linksTo'] === 'undefined')
                 continue; // No links
 
             X1 = dev['posX'];
             Y1 = dev['posY'];
-            links = dev['links'];
-            links.forEach(function(item, index, array) {
+            linksTo = dev['linksTo'];
+            linesTo = dev['linesTo'];
+            linksTo.forEach(function(item, index, array) {
                 // console.log(item, index);
                 dev2 = devList[item];
                 console.log("dev2=", dev2);
@@ -1122,8 +1139,16 @@
                 // if ( lqiTable.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
                 // if ( lqiTable.data[voisines].LinkQualityDec <  50 ) { color = "red";}
                 color = "green";
-                lesAbeilles += '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:'+color+';stroke-width:1"/>';
+
+                lesAbeilles += '<line id=idLine"'+lineId+'" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:'+color+';stroke-width:1"/>';
+                linesTo.push(lineId);
+                linesFrom = dev['linesFrom'];
+                linesFrom.push(lineId);
+                dev2['linesFrom'] = linesFrom;
+
+                lineId++;
             });
+            dev['linesTo'] = linesTo;
         }
     }
 

@@ -243,7 +243,8 @@
                         $subData = substr($attrData, 2); // Skipping type (1B)
                         $value = AbeilleParser::decodeDataType($subData, $subType, true, 0, $subSize, $valueHex);
                         $m = '    Idx='.$subIdx.', SubType='.$subType.', ValueHex='.$valueHex;
-                        $idx = $subIdx.'-'.$subType;
+                        $idx = sprintf("%02X", $subIdx);
+                        $idx .= '-'.$subType;
                         if (isset($fromDev[$idx]))
                             xiaomiDecodeFunction($valueHex, $value, $m, $fromDev[$idx], $attrReportN, $toMon);
                         else {

@@ -378,23 +378,47 @@
 
         // 'mousemove'
         function drag(evt) {
-            if (selectedElement) {
-                console.log("drag(), evt=", evt);
+            if (!selectedElement)
+                return;
 
-                evt.preventDefault();
-                var coord = getMousePosition(evt);
-                // On change les valeurs de Translation mais on ne touche pas aux coordonnées.
-                transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+            console.log("drag(), evt=", evt);
 
-                devLogicId = selectedElement.id;
-                dev = devList[devLogicId];
-                if (typeof dev['lineTo'] !== 'undefined') {
-                    lineTo = dev['lineTo'];
-                    linksTo.forEach(function(item, index, array) {
-                        var line = document.getElementById("idLine"+item)
-                        line.x1.baseVal.value = coord.x;
-                        line.y1.baseVal.value = coord.y;
-                    });
+            evt.preventDefault();
+            var coord = getMousePosition(evt);
+            // On change les valeurs de Translation mais on ne touche pas aux coordonnées.
+            transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+
+            devLogicId = selectedElement.id;
+            dev = devList[devLogicId];
+            console.log("drag(), dev=", dev);
+            // if (typeof dev['linesTo'] !== 'undefined') {
+            //     linesTo = dev['linesTo'];
+            //     linesTo.forEach(function(item, index, array) {
+            //         console.log("Updating linesTo "+item);
+            //         var line = document.getElementById("idLine"+item)
+            //         line.x1.baseVal.value = coord.x;
+            //         line.y1.baseVal.value = coord.y;
+            //     });
+            // }
+            // if (typeof dev['linesFrom'] !== 'undefined') {
+            //     linesFrom = dev['linesFrom'];
+            //     linesFrom.forEach(function(item, index, array) {
+            //         console.log("Updating linesFrom "+item);
+            //         var line = document.getElementById("idLine"+item)
+            //         console.log("line=", line);
+            //         line.x2.baseVal.value = coord.x;
+            //         line.y2.baseVal.value = coord.y;
+            //     });
+            // }
+            for (linkId in dev['links']) {
+                link = linksList[linkId];
+                var line = document.getElementById("idLine"+linkId);
+                if (devLogicId == link.src) {
+                    line.x1.baseVal.value = coord.x;
+                    line.y1.baseVal.value = coord.y;
+                } else {
+                    line.x2.baseVal.value = coord.x;
+                    line.y2.baseVal.value = coord.y;
                 }
             }
         }
@@ -638,105 +662,105 @@
         document.getElementById("refreshInformation").value = networkInformationProgress;
     }
 
-    function myJSON_AddAbeillesFromJeedom() {
-        // console.log("jeedomDevices: "+JSON.stringify(jeedomDevices));
-        for (logicalId in jeedomDevices) {
-            console.log("logicalId: "+logicalId);
+    // function myJSON_AddAbeillesFromJeedom() {
+    //     // console.log("jeedomDevices: "+JSON.stringify(jeedomDevices));
+    //     for (logicalId in jeedomDevices) {
+    //         console.log("logicalId: "+logicalId);
 
-            myObjOrg[logicalId] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
-            myObjNew[logicalId] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
+    //         myObjOrg[logicalId] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
+    //         myObjNew[logicalId] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
 
-            console.log("logicalId: "+logicalId+" -> "+JSON.stringify(jeedomDevices[logicalId]));
-            myObjOrg[logicalId].objectName = jeedomDevices[logicalId].objectName;
-            myObjNew[logicalId].objectName = jeedomDevices[logicalId].objectName;
+    //         console.log("logicalId: "+logicalId+" -> "+JSON.stringify(jeedomDevices[logicalId]));
+    //         myObjOrg[logicalId].objectName = jeedomDevices[logicalId].objectName;
+    //         myObjNew[logicalId].objectName = jeedomDevices[logicalId].objectName;
 
-            myObjOrg[logicalId].name = jeedomDevices[logicalId].name;
-            myObjNew[logicalId].name = jeedomDevices[logicalId].name;
+    //         myObjOrg[logicalId].name = jeedomDevices[logicalId].name;
+    //         myObjNew[logicalId].name = jeedomDevices[logicalId].name;
 
-            console.log("logicalId: "+logicalId+" -> x: "+jeedomDevices[logicalId].X);
-            myObjOrg[logicalId].x = jeedomDevices[logicalId].X;
-            myObjNew[logicalId].x = jeedomDevices[logicalId].X;
+    //         console.log("logicalId: "+logicalId+" -> x: "+jeedomDevices[logicalId].X);
+    //         myObjOrg[logicalId].x = jeedomDevices[logicalId].X;
+    //         myObjNew[logicalId].x = jeedomDevices[logicalId].X;
 
-            myObjOrg[logicalId].y = jeedomDevices[logicalId].Y;
-            myObjNew[logicalId].y = jeedomDevices[logicalId].Y;
+    //         myObjOrg[logicalId].y = jeedomDevices[logicalId].Y;
+    //         myObjNew[logicalId].y = jeedomDevices[logicalId].Y;
 
-            if ( (jeedomDevices[logicalId].X>0) && (jeedomDevices[logicalId].Y>0) ) {
-                myObjOrg[logicalId].positionDefined = "Yes";
-                myObjNew[logicalId].positionDefined = "Yes";
-            } else {
-                myObjOrg[logicalId].positionDefined = "No";
-                myObjNew[logicalId].positionDefined = "No";
-            }
-        }
+    //         if ( (jeedomDevices[logicalId].X>0) && (jeedomDevices[logicalId].Y>0) ) {
+    //             myObjOrg[logicalId].positionDefined = "Yes";
+    //             myObjNew[logicalId].positionDefined = "Yes";
+    //         } else {
+    //             myObjOrg[logicalId].positionDefined = "No";
+    //             myObjNew[logicalId].positionDefined = "No";
+    //         }
+    //     }
 
-        console.log("myObjOrg: "+JSON.stringify(myObjOrg));
-    }
+    //     console.log("myObjOrg: "+JSON.stringify(myObjOrg));
+    // }
 
-    function myJSON_AddMissing() {
-        console.log("myJSON_AddMissing()");
+    // function myJSON_AddMissing() {
+    //     console.log("myJSON_AddMissing()");
 
-        if (typeof lqiTable === "undefined") {
-            console.log("=> lqiTable is UNDEFINED")
-            return;
-        }
+    //     if (typeof lqiTable === "undefined") {
+    //         console.log("=> lqiTable is UNDEFINED")
+    //         return;
+    //     }
 
-        var color = "";
+    //     var color = "";
 
-        console.log("lqiTableLA2="+lqiTable);
-        for (voisines in lqiTable.data) {
-            // console.log("Voisine: "+lqiTable.data[voisines].NE+"->"+lqiTable.data[voisines].Voisine);
+    //     console.log("lqiTableLA2="+lqiTable);
+    //     for (voisines in lqiTable.data) {
+    //         // console.log("Voisine: "+lqiTable.data[voisines].NE+"->"+lqiTable.data[voisines].Voisine);
 
-            if ( typeof myObjOrg[lqiTable.data[voisines].NE] === "undefined" ) {
+    //         if ( typeof myObjOrg[lqiTable.data[voisines].NE] === "undefined" ) {
 
-                myObjOrg[lqiTable.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
-                myObjNew[lqiTable.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
+    //             myObjOrg[lqiTable.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
+    //             myObjNew[lqiTable.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
 
-                if ( typeof jeedomDevices[lqiTable.data[voisines].NE] === "undefined" ) {
-                    myObjOrg[lqiTable.data[voisines].NE].name = "Pas dans Jeedom";
-                    myObjOrg[lqiTable.data[voisines].NE].name = "Pas dans Jeedom";
-                } else {
-                    myObjOrg[lqiTable.data[voisines].NE].name = jeedomDevices[lqiTable.data[voisines].NE].name;
-                    myObjNew[lqiTable.data[voisines].NE].name = jeedomDevices[lqiTable.data[voisines].NE].name;
-                }
-            }
+    //             if ( typeof jeedomDevices[lqiTable.data[voisines].NE] === "undefined" ) {
+    //                 myObjOrg[lqiTable.data[voisines].NE].name = "Pas dans Jeedom";
+    //                 myObjOrg[lqiTable.data[voisines].NE].name = "Pas dans Jeedom";
+    //             } else {
+    //                 myObjOrg[lqiTable.data[voisines].NE].name = jeedomDevices[lqiTable.data[voisines].NE].name;
+    //                 myObjNew[lqiTable.data[voisines].NE].name = jeedomDevices[lqiTable.data[voisines].NE].name;
+    //             }
+    //         }
 
-            if ( typeof myObjOrg[lqiTable.data[voisines].Voisine] === "undefined" ) {
+    //         if ( typeof myObjOrg[lqiTable.data[voisines].Voisine] === "undefined" ) {
 
-                myObjOrg[lqiTable.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
-                myObjNew[lqiTable.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
+    //             myObjOrg[lqiTable.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
+    //             myObjNew[lqiTable.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
 
-                if ( lqiTable.data[voisines].Type == "End Device" ) { color="Green"; }
-                if ( lqiTable.data[voisines].Type == "Router" ) { color="Orange"; }
-                if ( lqiTable.data[voisines].Type == "Coordinator" ) { color="Red"; }
-                myObjOrg[lqiTable.data[voisines].Voisine].color = color;
-                myObjNew[lqiTable.data[voisines].Voisine].color = color;
+    //             if ( lqiTable.data[voisines].Type == "End Device" ) { color="Green"; }
+    //             if ( lqiTable.data[voisines].Type == "Router" ) { color="Orange"; }
+    //             if ( lqiTable.data[voisines].Type == "Coordinator" ) { color="Red"; }
+    //             myObjOrg[lqiTable.data[voisines].Voisine].color = color;
+    //             myObjNew[lqiTable.data[voisines].Voisine].color = color;
 
-                if ( typeof jeedomDevices[lqiTable.data[voisines].Voisine] === "undefined" ) {
-                    myObjOrg[lqiTable.data[voisines].Voisine].name = "Pas dans Jeedom";
-                    myObjNew[lqiTable.data[voisines].Voisine].name = "Pas dans Jeedom";
-                }
-                else {
-                    myObjOrg[lqiTable.data[voisines].Voisine].name = jeedomDevices[lqiTable.data[voisines].Voisine].name;
-                    myObjNew[lqiTable.data[voisines].Voisine].name = jeedomDevices[lqiTable.data[voisines].Voisine].name;
-                }
-            } else {
-                if ( lqiTable.data[voisines].Type == "End Device" ) { color="Green"; }
-                if ( lqiTable.data[voisines].Type == "Router" ) { color="Orange"; }
-                if ( lqiTable.data[voisines].Type == "Coordinator" ) { color="Red"; }
-                myObjOrg[lqiTable.data[voisines].Voisine].color = color;
-                myObjNew[lqiTable.data[voisines].Voisine].color = color;
+    //             if ( typeof jeedomDevices[lqiTable.data[voisines].Voisine] === "undefined" ) {
+    //                 myObjOrg[lqiTable.data[voisines].Voisine].name = "Pas dans Jeedom";
+    //                 myObjNew[lqiTable.data[voisines].Voisine].name = "Pas dans Jeedom";
+    //             }
+    //             else {
+    //                 myObjOrg[lqiTable.data[voisines].Voisine].name = jeedomDevices[lqiTable.data[voisines].Voisine].name;
+    //                 myObjNew[lqiTable.data[voisines].Voisine].name = jeedomDevices[lqiTable.data[voisines].Voisine].name;
+    //             }
+    //         } else {
+    //             if ( lqiTable.data[voisines].Type == "End Device" ) { color="Green"; }
+    //             if ( lqiTable.data[voisines].Type == "Router" ) { color="Orange"; }
+    //             if ( lqiTable.data[voisines].Type == "Coordinator" ) { color="Red"; }
+    //             myObjOrg[lqiTable.data[voisines].Voisine].color = color;
+    //             myObjNew[lqiTable.data[voisines].Voisine].color = color;
 
-                if ( typeof jeedomDevices[lqiTable.data[voisines].Voisine] === "undefined" ) {
-                    myObjOrg[lqiTable.data[voisines].Voisine].name = "Pas dans Jeedom";
-                    myObjNew[lqiTable.data[voisines].Voisine].name = "Pas dans Jeedom";
-                }
-                else {
-                    myObjOrg[lqiTable.data[voisines].Voisine].name = jeedomDevices[lqiTable.data[voisines].Voisine].name;
-                    myObjNew[lqiTable.data[voisines].Voisine].name = jeedomDevices[lqiTable.data[voisines].Voisine].name;
-                }
-            }
-        }
-    }
+    //             if ( typeof jeedomDevices[lqiTable.data[voisines].Voisine] === "undefined" ) {
+    //                 myObjOrg[lqiTable.data[voisines].Voisine].name = "Pas dans Jeedom";
+    //                 myObjNew[lqiTable.data[voisines].Voisine].name = "Pas dans Jeedom";
+    //             }
+    //             else {
+    //                 myObjOrg[lqiTable.data[voisines].Voisine].name = jeedomDevices[lqiTable.data[voisines].Voisine].name;
+    //                 myObjNew[lqiTable.data[voisines].Voisine].name = jeedomDevices[lqiTable.data[voisines].Voisine].name;
+    //             }
+    //         }
+    //     }
+    // }
 
     function refreshAll(mode) {
         console.log("function refreshAll: "+ mode );
@@ -929,67 +953,88 @@
             return;
         }
 
+        devList = new Object();
         devListNb = 0;
+        linksList = new Object();
+        lineId = 0; // To identify lines connecting nodes
         for (rLogicId in lqiTable.routers) {
             router = lqiTable.routers[rLogicId];
-            console.log("router " + rLogicId + "=", router);
-            if (typeof devList[rLogicId] !== "undefined")
-                continue; // Already registered
-
-            devR = new Object();
-            devR['addr'] = router['addr'];
-            devR['name'] = router['name'];
-            devR['icon'] = router['icon'];
-            if (devR['addr'] == '0000')
-                devR['color'] = "Red"; // Coordinator
-            else
-                devR['color'] = "Blue"; // Router
-            if (typeof jeedomDevices[rLogicId] !== "undefined") {
-                devR['posX'] = jeedomDevices[rLogicId].X;
-                devR['posY'] = jeedomDevices[rLogicId].Y;
-                devR['jeedomId'] = jeedomDevices[rLogicId].id;
-            }
-            devR['linesTo'] = [];
-            devR['linesFrom'] = [];
-
-            linksTo = [];
-            for (nLogicId in router.neighbors) {
-                neighbor = router.neighbors[nLogicId];
-                console.log("neighbor=", neighbor);
-                if (typeof devList[nLogicId] !== "undefined")
-                    continue; // Already registered
-
-                devN = new Object();
-                devN['addr'] = neighbor['addr'];
-                devN['name'] = neighbor['name'];
-                devN['icon'] = neighbor['icon'];
-                if ( neighbor['type'] == "End Device" ) { devN['color'] = "Green"; }
-                else if ( neighbor['type'] == "Router" ) { devN['color'] = "Blue"; }
-                else if ( neighbor['type'] == "Coordinator" ) { devN['color'] = "Red"; }
-                else devN['color'] = "Yellow";
-                if (typeof jeedomDevices[nLogicId] !== "undefined") {
-                    devN['posX'] = jeedomDevices[nLogicId].X;
-                    devN['posY'] = jeedomDevices[nLogicId].Y;
-                    devN['jeedomId'] = jeedomDevices[nLogicId].id;
+            // console.log("router " + rLogicId + "=", router);
+            if (typeof devList[rLogicId] !== "undefined") {
+                // Already registered
+                devR = devList[rLogicId];
+                // rLinks = devR['links']; // Array of object (logicId + lineId)
+            } else {
+                devR = new Object();
+                devR['addr'] = router['addr'];
+                devR['name'] = router['name'];
+                devR['icon'] = router['icon'];
+                if (devR['addr'] == '0000')
+                    devR['color'] = "Red"; // Coordinator
+                else
+                    devR['color'] = "Blue"; // Router
+                if (typeof jeedomDevices[rLogicId] !== "undefined") {
+                    devR['posX'] = jeedomDevices[rLogicId].X;
+                    devR['posY'] = jeedomDevices[rLogicId].Y;
+                    devR['jeedomId'] = jeedomDevices[rLogicId].id;
                 }
-                devN['linesTo'] = [];
-                devN['linesFrom'] = [];
-                linksTo.push(nLogicId);
+                // devR['linesTo'] = [];
+                // devR['linesFrom'] = [];
+                // rLinks = []; // Array of object (logicId + lineId)
+                devR['links'] = new Object();
 
-                devList[nLogicId] = devN;
+                devList[rLogicId] = devR;
                 devListNb++;
             }
 
-            devR['linksTo'] = linksTo;
-            devList[rLogicId] = devR;
-            devListNb++;
+            // linksTo = [];
+            for (nLogicId in router.neighbors) {
+                neighbor = router.neighbors[nLogicId];
+                // console.log("neighbor=", neighbor);
+                if (typeof devList[nLogicId] !== "undefined") {
+                    // Already registered
+                    devN = devList[nLogicId];
+                    // nLinks = devN['links'];
+                } else {
+                    devN = new Object();
+                    devN['addr'] = neighbor['addr'];
+                    devN['name'] = neighbor['name'];
+                    devN['icon'] = neighbor['icon'];
+                    if ( neighbor['type'] == "End Device" ) { devN['color'] = "Green"; }
+                    else if ( neighbor['type'] == "Router" ) { devN['color'] = "Blue"; }
+                    else if ( neighbor['type'] == "Coordinator" ) { devN['color'] = "Red"; }
+                    else devN['color'] = "Yellow";
+                    if (typeof jeedomDevices[nLogicId] !== "undefined") {
+                        devN['posX'] = jeedomDevices[nLogicId].X;
+                        devN['posY'] = jeedomDevices[nLogicId].Y;
+                        devN['jeedomId'] = jeedomDevices[nLogicId].id;
+                    }
+                    // devN['linesTo'] = [];
+                    // devN['linesFrom'] = [];
+                    devN['links'] = new Object();
+                    // nLinks = [];
+
+                    devList[nLogicId] = devN;
+                    devListNb++;
+                } // End for (nLogicId in router.neighbors)
+
+                // linksTo.push(nLogicId);
+                // nLinks.push({ "logicId": rLogicId, "lineId": lineId });
+                // rLinks.push({ "logicId": nLogicId, "lineId": lineId });
+                devN['links'][lineId] = rLogicId;
+                devR['links'][lineId] = nLogicId;
+                linksList[lineId] = { 'src': rLogicId, 'dst': nLogicId };
+                lineId++;
+            }
+
+            // devR['linksTo'] = linksTo;
+            // devR['links'][nLogicId] = lineId;
         }
     }
 
     //-----------------------------------------------------------------------
     // MAIN
     //-----------------------------------------------------------------------
-
 
     const queryString = window.location.search;
     console.log("URL params=" + queryString);
@@ -1032,7 +1077,6 @@
     // console.log("Name 1: " + JSON.stringify(jeedomDevices["0000"]));
 
     // Combine LQI + Jeedom infos
-    devList = new Object();
     refreshDevList();
     console.log("devList=", devList);
 
@@ -1041,8 +1085,8 @@
     setPosition("Auto");
 
     var selectedElement, offset, transform;
-    var positionX = "Position: X=";
-    var positionY = " Y=";
+    // var positionX = "Position: X=";
+    // var positionY = " Y=";
     var X = 0;
     var Y = 0;
 
@@ -1120,35 +1164,28 @@
     }
 
     function drawLinks() {
-        lineId = 0;
-        for (devLogicId in devList) {
-            dev = devList[devLogicId];
-            if (typeof dev['linksTo'] === 'undefined')
-                continue; // No links
+        console.log("drawLinks()");
 
-            X1 = dev['posX'];
-            Y1 = dev['posY'];
-            linksTo = dev['linksTo'];
-            linesTo = dev['linesTo'];
-            linksTo.forEach(function(item, index, array) {
-                // console.log(item, index);
-                dev2 = devList[item];
-                console.log("dev2=", dev2);
-                X2 = dev2['posX'];
-                Y2 = dev2['posY'];
-                // if ( lqiTable.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
-                // if ( lqiTable.data[voisines].LinkQualityDec <  50 ) { color = "red";}
-                color = "green";
+        // console.log('linksList=', linksList);
+        for (linkId in linksList) {
+            // Reminder: linksList[linkId] = { "src": ss, "dst": ddd }
+            link = linksList[linkId];
+            console.log('link['+linkId+']=', link);
+            // linkId = link.id;
 
-                lesAbeilles += '<line id=idLine"'+lineId+'" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:'+color+';stroke-width:1"/>';
-                linesTo.push(lineId);
-                linesFrom = dev['linesFrom'];
-                linesFrom.push(lineId);
-                dev2['linesFrom'] = linesFrom;
+            srcDev = devList[link.src];
+            x1 = srcDev['posX'];
+            y1 = srcDev['posY'];
 
-                lineId++;
-            });
-            dev['linesTo'] = linesTo;
+            dstDev = devList[link.dst];
+            x2 = dstDev['posX'];
+            y2 = dstDev['posY'];
+
+            // if ( lqiTable.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
+            // if ( lqiTable.data[voisines].LinkQualityDec <  50 ) { color = "red";}
+            color = "green";
+
+            lesAbeilles += '<line id="idLine'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" style="stroke:'+color+';stroke-width:1"/>';
         }
     }
 

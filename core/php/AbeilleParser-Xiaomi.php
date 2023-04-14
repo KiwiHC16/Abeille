@@ -162,10 +162,17 @@
             //
             // Flexible decoding according to 'xiaomi' model's section
             //
-            // Format:
+            // Section format:
             // - Attribute
             // - Attribute including tags
             // - Attribute type 4C/struct
+            //      "struct": 1, => indicates 4C/structure
+            //      "01-21": { => <idx>-<type>
+            //          "func": "numberDiv",
+            //          "div": 1000,
+            //          "info": "0001-01-0020",
+            //          "comment": "Battery volt"
+            //      }
 
             /* "xiaomi": {
                    "fromDevice": {
@@ -181,7 +188,8 @@
                             }
                         },
                         "FCC0-00F7": {
-                            "10": {
+                            "struct": 1,
+                            "01-21": {
                                 "func": "numberDiv",
                                 "div": 1000,
                                 "info": "0001-01-0020",
@@ -207,7 +215,7 @@
                         'name' => $fromDev['info'],
                         'value' => $value
                     );
-                } else if (strlen(array_key_first($fromDev)) == 5) { // Idx format 'TA-TY', TA=tagId, TY=typeId
+                } else if (!isset($fromDev['struct'])) { // Idx format 'TA-TY', TA=tagId, TY=typeId
                     // 'CLUSTER-ATTRIB' + 'TAG-TYPE' syntax
                     $m = '  AttrId='.$attrId
                         .', AttrType='.$attrType;
@@ -221,21 +229,23 @@
                     parserLog('debug', $m);
                     $toMon[] = $m;
 
-                    // Note: 4B count already skipped
+                    // Note: 2B count already skipped
                     // 4C/struct format reminder
                     //      xxxx = 2 Bytes for count (ignored)
                     //      t1 d1 = Type 1 (1 B) followed by data 1 (size depends on t1)
                     //      t2 d2 = Type 2 (1 B) followed by data 2 (size depends on t2)
                     //      ...
+                    $subIdx = 0;
                     while (strlen($attrData) > 0) {
                         parserLog('debug', '  attrData='.$attrData);
 
                         $subType = substr($attrData, 0, 2);
                         $subData = substr($attrData, 2); // Skipping type (1B)
                         $value = AbeilleParser::decodeDataType($subData, $subType, true, 0, $subSize, $valueHex);
-                        $m = '    SubType='.$subType.', ValueHex='.$valueHex;
-                        if (isset($fromDev[$subType]))
-                            xiaomiDecodeFunction($valueHex, $value, $m, $fromDev[$subType], $attrReportN, $toMon);
+                        $m = '    Idx='.$subIdx.', SubType='.$subType.', ValueHex='.$valueHex;
+                        $idx = $subIdx.'-'.$subType;
+                        if (isset($fromDev[$idx]))
+                            xiaomiDecodeFunction($valueHex, $value, $m, $fromDev[$idx], $attrReportN, $toMon);
                         else {
                             $m .= ' => '.$value.' (ignored)';
                             parserLog('debug', $m);
@@ -243,6 +253,7 @@
                         }
 
                         $attrData = substr($attrData, 2 + ($subSize * 2)); // Skipping sub-type + sub-data
+                        $subIdx++;
                     }
                 }
                 continue;

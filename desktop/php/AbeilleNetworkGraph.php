@@ -128,14 +128,6 @@
 </html>
 
 <script type="text/javascript">
-    // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
-
-    //-----------------------------------------------------------------------
-    // Global Variables
-    //-----------------------------------------------------------------------
-    var lqiTable; // Network topology coming from LQI collect.
-    var jeedomDevices; // Jeedom known devices
-
     var networkInformation = "";
     var networkInformationProgress = "Processing";
     var TopoSetReply = "";
@@ -334,12 +326,14 @@
         });
     }
 
+
+    // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
     function makeDraggable(evt) {
         var svg = evt.target;
-        svg.addEventListener('mousedown',   startDrag, false);
-        svg.addEventListener('mousemove',   drag, false);
-        svg.addEventListener('mouseup',     endDrag, false);
-        svg.addEventListener('mouseleave',  endDrag);
+        svg.addEventListener('mousedown', startDrag, false);
+        svg.addEventListener('mousemove', drag, false);
+        svg.addEventListener('mouseup', endDrag, false);
+        svg.addEventListener('mouseleave', endDrag);
 
         function getMousePosition(evt) {
             var CTM = svg.getScreenCTM();
@@ -349,28 +343,25 @@
             };
         }
 
-        var selectedElement, offset, transform;
-        var positionX = "Position: X=";
-        var positionY = " Y=";
-        var X = 0;
-        var Y = 0;
-
+        // Called on 'mousedown' event
         function startDrag(evt) {
 
-            console.log("Debug - Selection de : " + evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id ); // circle, svg
+            // console.log("startDrag(): " + evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id ); // circle, svg
+            console.log("startDrag(), evt=", evt);
 
-            if (evt.target.classList.contains('draggable')) {
-                selectedElement = evt.target;
+            parentG = evt.target.parentNode;
+            if (parentG.classList.contains('draggable')) {
                 offset = getMousePosition(evt); // Position du clic de souris dans les coordonnées SVG.
-                console.log("Debug - offset: "+JSON.stringify(offset));
+                console.log("Current position: "+JSON.stringify(offset));
 
                 // Make sure the first transform on the element is a translate transform
                 // Should not be needed as Abeille have a Translate
+                selectedElement = parentG;
                 var transforms = selectedElement.transform.baseVal;
 
                 if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
                     // Create an transform that translates by (0, 0)
-                    console.log("Debug - Need a TRANSLATE - NOT expected");
+                    console.log("ERROR: Need a TRANSLATE - NOT expected");
                     var translate = svg.createSVGTransform();
                     translate.setTranslate(0, 0);
                     selectedElement.transform.baseVal.insertItemBefore(translate, 0);
@@ -381,12 +372,15 @@
                 offset.x -= transform.matrix.e;
                 offset.y -= transform.matrix.f;
 
-                console.log("Debug - offset with transform: "+JSON.stringify(offset));
+                console.log("New position: "+JSON.stringify(offset));
             }
         }
 
+        // 'mousemove'
         function drag(evt) {
             if (selectedElement) {
+                console.log("drag(), evt=", evt);
+
                 evt.preventDefault();
                 var coord = getMousePosition(evt);
                 // On change les valeurs de Translation mais on ne touche pas aux coordonnées.
@@ -394,32 +388,37 @@
             }
         }
 
+        // 'mouseup' or 'mouseleave'
         function endDrag(evt) {
-
             if (selectedElement) {
                 evt.preventDefault();
                 var coord = getMousePosition(evt);
-                console.log("Debug - endDrag - coord (arrivée): "+JSON.stringify(coord));
                 // Ne change pas les coordonnées de l objet mais sa translation
                 transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
-                console.log("Debug - endDrag - offset (depart): "+JSON.stringify(offset));
-                X = coord.x - offset.x;
-                Y = coord.y - offset.y;
-                console.log("Debug - endDrag - Dx: "+X+" Dy: "+Y);
+                console.log("endDrag(): from "+JSON.stringify(coord)+" to "+JSON.stringify(offset));
+                // console.log("Debug - endDrag - offset (depart): "+JSON.stringify(offset));
+                // X = coord.x - offset.x;
+                // Y = coord.y - offset.y;
+                // console.log("Debug - endDrag - Dx: "+X+" Dy: "+Y);
 
                 // var myJSONOrg = JSON.stringify(myObjOrg);
 
-                if ( typeof myObjOrg[evt.target.id].x == "undefined" ) {
-                }
-                else {
-                    myObjNew[evt.target.id].x = myObjOrg[evt.target.id].x + X;
-                    myObjNew[evt.target.id].y = myObjOrg[evt.target.id].y + Y;
-                }
-                // var myJSONNew = JSON.stringify(myObjNew);
+                // if ( typeof myObjOrg[evt.target.id].x == "undefined" ) {
+                // }
+                // else {
+                //     myObjNew[evt.target.id].x = myObjOrg[evt.target.id].x + X;
+                //     myObjNew[evt.target.id].y = myObjOrg[evt.target.id].y + Y;
+                // }
+                // // var myJSONNew = JSON.stringify(myObjNew);
 
-                document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,"No");
-                document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,"No");
-                document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 22, "No");
+                // Update coordinates
+                devLogicId = selectedElement.id;
+                devList[devLogicId]['posX'] =  offset.x;
+                devList[devLogicId]['posY'] =  offset.y;
+
+                // document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,"No");
+                // document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,"No");
+                // document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 22, "No");
             }
             selectedElement = false;
         }
@@ -629,7 +628,7 @@
     }
 
     function myJSON_AddAbeillesFromJeedom() {
-        console.log("jeedomDevices: "+JSON.stringify(jeedomDevices));
+        // console.log("jeedomDevices: "+JSON.stringify(jeedomDevices));
         for (logicalId in jeedomDevices) {
             console.log("logicalId: "+logicalId);
 
@@ -910,6 +909,7 @@
         window.location.href = url;
     };
 
+    // Combine LQI + Jeedom infos
     function refreshDevList() {
         console.log("refreshDevList()");
 
@@ -929,17 +929,17 @@
             dev['addr'] = router['addr'];
             dev['name'] = router['name'];
             dev['icon'] = router['icon'];
-            if ( dev.type == "End Device" ) { dev['color'] = "Green"; }
-            if ( dev.type == "Router" ) { dev['color'] = "Orange"; }
-            if ( dev.type == "Coordinator" ) { dev['color'] = "Red"; }
+            if (dev['addr'] == '0000')
+                dev['color'] = "Red"; // Coordinator
+            else
+                dev['color'] = "Blue"; // Router
             if (typeof jeedomDevices[rLogicId] !== "undefined") {
                 dev['posX'] = jeedomDevices[rLogicId].X;
                 dev['posY'] = jeedomDevices[rLogicId].Y;
                 dev['jeedomId'] = jeedomDevices[rLogicId].id;
             }
 
-            devList[rLogicId] = dev;
-            devListNb++;
+            links = [];
             for (nLogicId in router.neighbors) {
                 neighbor = router.neighbors[nLogicId];
                 console.log("neighbor=", neighbor);
@@ -950,23 +950,31 @@
                 dev['addr'] = neighbor['addr'];
                 dev['name'] = neighbor['name'];
                 dev['icon'] = neighbor['icon'];
-                if ( dev.type == "End Device" ) { dev['color'] = "Green"; }
-                if ( dev.type == "Router" ) { dev['color'] = "Orange"; }
-                if ( dev.type == "Coordinator" ) { dev['color'] = "Red"; }
+                if ( neighbor['type'] == "End Device" ) { dev['color'] = "Green"; }
+                else if ( neighbor['type'] == "Router" ) { dev['color'] = "Blue"; }
+                else if ( neighbor['type'] == "Coordinator" ) { dev['color'] = "Red"; }
+                else dev['color'] = "Yellow";
                 if (typeof jeedomDevices[nLogicId] !== "undefined") {
                     dev['posX'] = jeedomDevices[nLogicId].X;
                     dev['posY'] = jeedomDevices[nLogicId].Y;
                     dev['jeedomId'] = jeedomDevices[nLogicId].id;
-               }
+                }
+                links.push(nLogicId);
+
                 devList[nLogicId] = dev;
                 devListNb++;
             }
+            dev['links'] = links;
+
+            devList[rLogicId] = dev;
+            devListNb++;
         }
     }
 
     //-----------------------------------------------------------------------
     // MAIN
     //-----------------------------------------------------------------------
+
 
     const queryString = window.location.search;
     console.log("URL params=" + queryString);
@@ -983,14 +991,18 @@
     // if (res.length > 2) Ruche = res;
     // console.log("Ruche=" + Ruche);
 
+    var lqiTable; // Network topology coming from LQI collect.
+    var jeedomDevices; // Jeedom known devices
+    var devList; // List of devices with combined infos from LQI + Jeedom
+    var devListNb;
+
     getLqiTable();
     getJeedomDevices();
-    myJSON_AddAbeillesFromJeedom();
+    // myJSON_AddAbeillesFromJeedom();
     // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
-    myJSON_AddMissing();
+    // myJSON_AddMissing();
     // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
 
-    setPosition("Auto");
 
     // FCh temp disable
     // refreshStatus = setInterval(
@@ -1004,33 +1016,41 @@
     // console.log("Name list: "+JSON.stringify(jeedomDevices));
     // console.log("Name 1: " + JSON.stringify(jeedomDevices["0000"]));
 
-    // Combine LQI infos + Jeedom
+    // Combine LQI + Jeedom infos
     devList = new Object();
-    devListNb = 0;
-    // devList[logicId]: 'addr', 'name', 'posX', 'posY'
-
     refreshDevList();
     console.log("devList=", devList);
-    console.log("jeedomDevices=", jeedomDevices);
+
+
+
+    setPosition("Auto");
+
+    var selectedElement, offset, transform;
+    var positionX = "Position: X=";
+    var positionY = " Y=";
+    var X = 0;
+    var Y = 0;
 
     // Compute auto-placement when position is undefined
-    // If 'zigate' is true, it is placed at center.
+    // If 'isZigate' is true, it is placed at center.
     centerX = 500;
     centerY = 500;
     centerR = 400; // Radius
     autoXIdx = 0;
     autoYIdx = 0;
+
     // X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille)');
     // Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille)');
-    function setAutoX(zigate) {
-        if (zigate == true)
+    function setAutoX(isZigate) {
+        if (isZigate == true)
             return centerX;
         posX = centerX + centerR * Math.cos(2 * Math.PI * autoXIdx / (devListNb - 1));
         autoXIdx++;
         return posX;
     }
-    function setAutoY(zigate) {
-        if (zigate == true)
+
+    function setAutoY(isZigate) {
+        if (isZigate == true)
             return centerY;
         posY = centerY + centerR * Math.sin(2 * Math.PI * autoYIdx / (devListNb - 1));
         autoYIdx++;
@@ -1044,39 +1064,73 @@
 
         addr = dev['addr'];
         if (addr == '0000')
-            zigate = true;
+            isZigate = true;
         else
-            zigate = false;
-        posX = dev['posX'];
-        if (posX == 0)
-            posX = setAutoX(zigate);
-        txtX = posX + 22;
-        posY = dev['posY'];
-        if (posY == 0)
-            posY = setAutoY(zigate);
-        txtY = posY + 0;
+            isZigate = false;
+        if (dev['posX'] == 0)
+            dev['posX'] = setAutoX(isZigate);
+        if (dev['posY'] == 0)
+            dev['posY'] = setAutoY(isZigate);
+        nodeColor = dev['color'];
 
-        // newG = '<image x="'+posX+'" y="'+posY+'" width="40" height="40" src="/plugins/Abeille/images/node_' + dev['icon'] + '.png">';
-        // return newG;
+        // Computing positions based on node central coordinates
+        posX = dev['posX'];
+        posY = dev['posY'];
+        txtX = posX + 22;
+        txtY = posY + 0;
+        rectX = posX - 25;
+        rectY = posY - 25;
+        imgX = posX - 20;
+        imgY = posY - 20;
 
         newG = '<g id="'+devLogicId+'" class="draggable">';
+        newG += '<rect x="'+rectX+'" y="'+rectY+'" rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
+        newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
+        newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 8px;">'+dev['name']+'</text></a>';
+
+        // Adding a top rect for selection purposes
+        // newG += '<rect x="'+rectX+'" y="'+rectY+'" rx="10" ry="10" width="50" height="50" style="opacity:0" />';
+        newG += '</g>';
+
         // newG += '<circle cx="'+posX+'" cy="'+posY+'" r="10" fill="'+dev['color']+'" transform="translate(0, 0)"></circle>';
         // newG += '<img x="'+posX+'" y="'+posY+'" width="40" height="40" src="/plugins/Abeille/images/node_' + dev['icon'] + '.png">';
-        newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+posX+'" y="'+posY+'" height="40" width="40" />';
         // if( (typeof jeedomDevices[shortAddress] === "object") && (jeedomDevices[shortAddress] !== null) ) {
         //     lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+jeedomDevices[shortAddress].id+'" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].objectName+' - '+myObj[shortAddress].name+' - '+' ('+shortAddress+')</text> </a>';
         // }
         // else {
         //     lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].name+' ('+shortAddress+')</text> </a>';
-        newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 8px;">'+dev['name']+'</text></a>';
-        newG += '</g>';
+
         console.log("newG=", newG);
         return newG;
     }
 
-    lesAbeilles = "";
-    for (dev in devList) {
-        lesAbeilles += drawDevice(dev);
+    function drawLinks() {
+        for (devLogicId in devList) {
+            dev = devList[devLogicId];
+            if (typeof dev['links'] === 'undefined')
+                continue; // No links
+
+            X1 = dev['posX'];
+            Y1 = dev['posY'];
+            links = dev['links'];
+            links.forEach(function(item, index, array) {
+                // console.log(item, index);
+                dev2 = devList[item];
+                console.log("dev2=", dev2);
+                X2 = dev2['posX'];
+                Y2 = dev2['posY'];
+                // if ( lqiTable.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
+                // if ( lqiTable.data[voisines].LinkQualityDec <  50 ) { color = "red";}
+                color = "green";
+                lesAbeilles += '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:'+color+';stroke-width:1"/>';
+            });
+        }
     }
+
+    lesAbeilles = "";
+    for (devLogicId in devList) {
+        lesAbeilles += drawDevice(devLogicId);
+    }
+    drawLinks();
     document.getElementById("devices").innerHTML = lesAbeilles;
 </script>

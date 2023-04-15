@@ -9,6 +9,32 @@
     }
 
     require_once __DIR__.'/../../../../core/php/core.inc.php';
+
+    // Reading URL parameter: "...?zigate=X", where X is zigate number
+    if (isset($_GET['zigate']))
+        $zgId = $_GET['zigate'];
+    else
+        $zgId = 1; // Default = zigate1
+    echo "<script>console.log(\"zgId=" . $zgId . "\")</script>";
+
+    function selectMapImage() {
+        if (file_exists(__DIR__."/../../"."Network/TestSVG/images/AbeilleLQI_MapData_Perso.png")) {
+            $path = "Network/TestSVG/images/AbeilleLQI_MapData_Perso.png";
+        } else {
+            // echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png"></image>';
+            $path = "images/Abeille_background.png";
+        }
+        $iSize = getimagesize(__DIR__."/../../".$path);
+        $width = $iSize[0];
+        $height = $iSize[1];
+
+        $image = Array(
+            "path" => $path, // Path relative to Abeille's root
+            "width" => $width,
+            "height" => $height
+        );
+        return $image;
+    }
 ?>
 
 <html>
@@ -20,19 +46,44 @@
     <div style="background: #e9e9e9; font-weight: bold; padding: .4em 1em;">
         Placement réseau
     </div>
-    <?php
-    // Reading URL parameter: "...?zigate=X", where X is zigate number
-    if (isset($_GET['zigate']))
-        $zgId = $_GET['zigate'];
-    else
-        $zgId = 1; // Default = zigate1
-    echo "<script>console.log(\"zgId=" . $zgId . "\")</script>";
-    ?>
-    <style>
+
+    <!-- <style>
     td {
         border: 1px solid black;
     }
+    </style> -->
+
+    <div id="idLeftBar" style="width:100px">
+        <!-- Drop down list to select Zigate -->
+        <select name="idZigate">
+        <?php
+            for ($z = 1; $z <= maxNbOfZigate; $z++ ) {
+                if (config::byKey('ab::zgEnabled'.$z, 'Abeille', 'N') != 'Y')
+                    continue;
+
+                $selected = '';
+                echo '<option value="'.$z.'" '.$selected.'>Zigate '.$z.'</option>'."\n";
+            }
+        ?>
+        </select>
+    </div>
+
+    <style>
+        #idGraph {
+        <?php
+            $image = selectMapImage();
+            echo 'background-image: url("/plugins/Abeille/'.$image['path'].'");';
+            echo 'width: '.$image['width'].'px;';
+            echo 'height: '.$image['height'].'px;';
+        ?>
+            background-size: contain;
+        }
     </style>
+
+    <div id="idGraph">
+        <svg id="devices" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" onload="makeDraggable(evt)">
+        </svg>
+    </div>
 
     <!-- <table>
         <tr>
@@ -97,25 +148,6 @@
         <tr>
     </table> -->
 
-    <svg id="dessin" xmlns="http://www.w3.org/2000/svg" width="1100px" height="1100px" onload="makeDraggable(evt)">
-        <?php
-            if (file_exists(__DIR__."/../../Network/TestSVG/images/AbeilleLQI_MapData_Perso.png")) {
-                echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData_Perso.png" ></image>';
-            } else {
-                // echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png"></image>';
-                echo '<image x="0" y="0" width="100%" xlink:href="/plugins/Abeille/images/Abeille_background.png"></image>';
-            }
-        ?>
-        <script>
-        <!-- document.write( drawLegend(true) );
-        document.write( dessineLesVoisinesV2(0,"Yes") );
-        document.write( dessineLesTextes(10,"Yes") );
-        document.write( dessineLesAbeillesText(myObjNew, 22, "Yes") );
-        document.write( dessineLesAbeilles("Yes") ); -->
-        </script>
-        <svg id="devices">
-        </svg>
-    </svg>
     </br>
 
     <!-- <table><tr><td>
@@ -335,6 +367,7 @@
         svg.addEventListener('mouseup', endDrag, false);
         svg.addEventListener('mouseleave', endDrag);
 
+        // Get mouse coordinates relative to the svg viewport and not the screen
         function getMousePosition(evt) {
             var CTM = svg.getScreenCTM();
             return {
@@ -346,34 +379,81 @@
         // Called on 'mousedown' event
         function startDrag(evt) {
 
-            // console.log("startDrag(): " + evt.target.nodeName + " - " + evt.target.classList + " - " + evt.target.id ); // circle, svg
+            parentG = evt.target.parentNode;
+            if (!parentG.classList.contains('draggable'))
+                return;
+
             console.log("startDrag(), evt=", evt);
 
-            parentG = evt.target.parentNode;
-            if (parentG.classList.contains('draggable')) {
-                offset = getMousePosition(evt); // Position du clic de souris dans les coordonnées SVG.
-                console.log("Current position: "+JSON.stringify(offset));
+            selectedElement = parentG;
+            console.log("  selectedElement= ", selectedElement);
 
-                // Make sure the first transform on the element is a translate transform
-                // Should not be needed as Abeille have a Translate
-                selectedElement = parentG;
-                var transforms = selectedElement.transform.baseVal;
+            // offset = getMousePosition(evt);
+            // console.log("  Mouse pos: "+JSON.stringify(offset));
+            // elmCoord = selectedElement.getBoundingClientRect();
+            // console.log("  elmCoord=", elmCoord);
+            // offset.x -= elmCoord.x;
+            // offset.y -= elmCoord.y;
+            // console.log("  Mouse offset: "+JSON.stringify(offset));
 
-                if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
-                    // Create an transform that translates by (0, 0)
-                    console.log("ERROR: Need a TRANSLATE - NOT expected");
-                    var translate = svg.createSVGTransform();
-                    translate.setTranslate(0, 0);
-                    selectedElement.transform.baseVal.insertItemBefore(translate, 0);
-                }
-
-                // Get initial translation from Abeille Object
-                transform = transforms.getItem(0);
-                offset.x -= transform.matrix.e;
-                offset.y -= transform.matrix.f;
-
-                console.log("New position: "+JSON.stringify(offset));
+            // Get all the transforms currently on this element
+            var transforms = selectedElement.transform.baseVal;
+            // console.log("  transforms=", transforms);
+            // Ensure the first transform is a translate transform
+            if (transforms.length === 0 ||
+                transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+                // Create an transform that translates by (0, 0)
+                var translate = svg.createSVGTransform();
+                translate.setTranslate(0, 0);
+                // Add the translation to the front of the transforms list
+                selectedElement.transform.baseVal.insertItemBefore(translate, 0);
+                // console.log("  transforms bis=", transforms);
             }
+
+            // Get initial translation amount
+            transform = transforms.getItem(0);
+            console.log("  transform=", transform);
+            offset = getMousePosition(evt);
+            console.log("  Mouse pos: "+JSON.stringify(offset));
+            offset.x -= transform.matrix.e;
+            offset.y -= transform.matrix.f;
+            // offset.x -= 10;
+            // offset.y -= 10;
+            // elmCoord = selectedElement.getBoundingClientRect();
+            // console.log("  elmCoord=", elmCoord);
+            // offset.x -= elmCoord.x;
+            // offset.y -= elmCoord.y;
+            console.log("  Mouse offset: "+JSON.stringify(offset));
+
+            // mouseCoord = getMousePosition(evt);
+            // offset.x = mouseCoord.x - parseFloat(selectedElement.getAttributeNS(null, "x"));
+            // offset.y = mouseCoord.y - parseFloat(selectedElement.getAttributeNS(null, "y"));
+
+            // parentG = evt.target.parentNode;
+            // if (parentG.classList.contains('draggable')) {
+            //     offset = getMousePosition(evt); // Position du clic de souris dans les coordonnées SVG.
+            //     console.log("Current position: "+JSON.stringify(offset));
+
+            //     // Make sure the first transform on the element is a translate transform
+            //     // Should not be needed as Abeille have a Translate
+            //     selectedElement = parentG;
+            //     var transforms = selectedElement.transform.baseVal;
+
+            //     if (transforms.length === 0 || transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
+            //         // Create an transform that translates by (0, 0)
+            //         console.log("ERROR: Need a TRANSLATE - NOT expected");
+            //         var translate = svg.createSVGTransform();
+            //         translate.setTranslate(0, 0);
+            //         selectedElement.transform.baseVal.insertItemBefore(translate, 0);
+            //     }
+
+            //     // Get initial translation from Abeille Object
+            //     transform = transforms.getItem(0);
+            //     offset.x -= transform.matrix.e;
+            //     offset.y -= transform.matrix.f;
+
+            //     console.log("New position: "+JSON.stringify(offset));
+            // }
         }
 
         // 'mousemove'
@@ -383,78 +463,72 @@
 
             console.log("drag(), evt=", evt);
 
+            // var coord = getMousePosition(evt);
+            // selectedElement.setAttributeNS(null, "x", coord.x - offset.x);
+            // selectedElement.setAttributeNS(null, "y", coord.y - offset.y);
+            elmCoord = selectedElement.getBoundingClientRect();
+            console.log("drag(), elmCoord=", elmCoord);
+
             evt.preventDefault();
+            // Updates the translation transform to the mouse position minus the offset
             var coord = getMousePosition(evt);
-            // On change les valeurs de Translation mais on ne touche pas aux coordonnées.
-            transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
+            grpX = coord.x - offset.x;
+            grpY = coord.y - offset.y;
+            transform.setTranslate(grpX, grpY);
 
             devLogicId = selectedElement.id;
             dev = devList[devLogicId];
             console.log("drag(), dev=", dev);
-            // if (typeof dev['linesTo'] !== 'undefined') {
-            //     linesTo = dev['linesTo'];
-            //     linesTo.forEach(function(item, index, array) {
-            //         console.log("Updating linesTo "+item);
-            //         var line = document.getElementById("idLine"+item)
-            //         line.x1.baseVal.value = coord.x;
-            //         line.y1.baseVal.value = coord.y;
-            //     });
-            // }
-            // if (typeof dev['linesFrom'] !== 'undefined') {
-            //     linesFrom = dev['linesFrom'];
-            //     linesFrom.forEach(function(item, index, array) {
-            //         console.log("Updating linesFrom "+item);
-            //         var line = document.getElementById("idLine"+item)
-            //         console.log("line=", line);
-            //         line.x2.baseVal.value = coord.x;
-            //         line.y2.baseVal.value = coord.y;
-            //     });
-            // }
+            lineX = grpX + 25; // Center in 50x50 square
+            lineY = grpY + 25; // Center in 50x50 square
             for (linkId in dev['links']) {
                 link = linksList[linkId];
                 var line = document.getElementById("idLine"+linkId);
                 if (devLogicId == link.src) {
-                    line.x1.baseVal.value = coord.x;
-                    line.y1.baseVal.value = coord.y;
+                    line.x1.baseVal.value = lineX;
+                    line.y1.baseVal.value = lineY;
                 } else {
-                    line.x2.baseVal.value = coord.x;
-                    line.y2.baseVal.value = coord.y;
+                    line.x2.baseVal.value = lineX;
+                    line.y2.baseVal.value = lineY;
                 }
             }
         }
 
         // 'mouseup' or 'mouseleave'
         function endDrag(evt) {
-            if (selectedElement) {
-                evt.preventDefault();
-                var coord = getMousePosition(evt);
-                // Ne change pas les coordonnées de l objet mais sa translation
-                transform.setTranslate(coord.x - offset.x, coord.y - offset.y);
-                console.log("endDrag(): from "+JSON.stringify(coord)+" to "+JSON.stringify(offset));
-                // console.log("Debug - endDrag - offset (depart): "+JSON.stringify(offset));
-                // X = coord.x - offset.x;
-                // Y = coord.y - offset.y;
-                // console.log("Debug - endDrag - Dx: "+X+" Dy: "+Y);
+            if (!selectedElement)
+                return;
 
-                // var myJSONOrg = JSON.stringify(myObjOrg);
+            evt.preventDefault();
+            var coord = getMousePosition(evt);
+            grpX = coord.x - offset.x;
+            grpY = coord.y - offset.y;
+            transform.setTranslate(grpX, grpY);
+            console.log("endDrag(): grpX="+JSON.stringify(grpX)+", grpY="+JSON.stringify(grpY));
+            // console.log("Debug - endDrag - offset (depart): "+JSON.stringify(offset));
+            // X = coord.x - offset.x;
+            // Y = coord.y - offset.y;
+            // console.log("Debug - endDrag - Dx: "+X+" Dy: "+Y);
 
-                // if ( typeof myObjOrg[evt.target.id].x == "undefined" ) {
-                // }
-                // else {
-                //     myObjNew[evt.target.id].x = myObjOrg[evt.target.id].x + X;
-                //     myObjNew[evt.target.id].y = myObjOrg[evt.target.id].y + Y;
-                // }
-                // // var myJSONNew = JSON.stringify(myObjNew);
+            // var myJSONOrg = JSON.stringify(myObjOrg);
 
-                // Update coordinates
-                devLogicId = selectedElement.id;
-                devList[devLogicId]['posX'] =  offset.x;
-                devList[devLogicId]['posY'] =  offset.y;
+            // if ( typeof myObjOrg[evt.target.id].x == "undefined" ) {
+            // }
+            // else {
+            //     myObjNew[evt.target.id].x = myObjOrg[evt.target.id].x + X;
+            //     myObjNew[evt.target.id].y = myObjOrg[evt.target.id].y + Y;
+            // }
+            // // var myJSONNew = JSON.stringify(myObjNew);
 
-                // document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,"No");
-                // document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,"No");
-                // document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 22, "No");
-            }
+            // Update coordinates
+            devLogicId = selectedElement.id;
+            devList[devLogicId]['posX'] = grpX + 25;
+            devList[devLogicId]['posY'] = grpY + 25;
+
+            // document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,"No");
+            // document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,"No");
+            // document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 22, "No");
+
             selectedElement = false;
         }
     }
@@ -1084,7 +1158,8 @@
 
     setPosition("Auto");
 
-    var selectedElement, offset, transform;
+    var selectedElement, transform;
+    var offset; // Mouse offset vs rect top left corner
     // var positionX = "Position: X=";
     // var positionY = " Y=";
     var X = 0;
@@ -1142,13 +1217,16 @@
         imgX = posX - 20;
         imgY = posY - 20;
 
+        // newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+rectX+', '+rectY+')">';
+        // newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
+        // newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
+        // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 8px;">'+dev['name']+'</text></a>';
+        // newG += '</g>';
+
         newG = '<g id="'+devLogicId+'" class="draggable">';
         newG += '<rect x="'+rectX+'" y="'+rectY+'" rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
         newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
         newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 8px;">'+dev['name']+'</text></a>';
-
-        // Adding a top rect for selection purposes
-        // newG += '<rect x="'+rectX+'" y="'+rectY+'" rx="10" ry="10" width="50" height="50" style="opacity:0" />';
         newG += '</g>';
 
         // newG += '<circle cx="'+posX+'" cy="'+posY+'" r="10" fill="'+dev['color']+'" transform="translate(0, 0)"></circle>';

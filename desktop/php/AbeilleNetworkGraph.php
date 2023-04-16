@@ -53,21 +53,6 @@
     }
     </style> -->
 
-    <div id="idLeftBar" style="width:100px">
-        <!-- Drop down list to select Zigate -->
-        <select name="idZigate">
-        <?php
-            for ($z = 1; $z <= maxNbOfZigate; $z++ ) {
-                if (config::byKey('ab::zgEnabled'.$z, 'Abeille', 'N') != 'Y')
-                    continue;
-
-                $selected = '';
-                echo '<option value="'.$z.'" '.$selected.'>Zigate '.$z.'</option>'."\n";
-            }
-        ?>
-        </select>
-    </div>
-
     <style>
         #idGraph {
         <?php
@@ -78,11 +63,32 @@
         ?>
             background-size: contain;
         }
+        .column {
+            float: left;
+            width: 50%;
+        }
     </style>
 
-    <div id="idGraph">
-        <svg id="devices" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" onload="makeDraggable(evt)">
-        </svg>
+    <div class="row">
+        <div id="idLeftBar" class="column" style="width:100px">
+            <!-- Drop down list to select Zigate -->
+            <select name="idZigate">
+            <?php
+                for ($z = 1; $z <= maxNbOfZigate; $z++ ) {
+                    if (config::byKey('ab::zgEnabled'.$z, 'Abeille', 'N') != 'Y')
+                        continue;
+
+                    $selected = '';
+                    echo '<option value="'.$z.'" '.$selected.'>Zigate '.$z.'</option>'."\n";
+                }
+            ?>
+            </select>
+        </div>
+
+        <div id="idGraph" class="column">
+            <svg id="devices" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" onload="makeDraggable(evt)">
+            </svg>
+        </div>
     </div>
 
     <!-- <table>
@@ -388,6 +394,12 @@
             selectedElement = parentG;
             console.log("  selectedElement= ", selectedElement);
 
+            mousePos = getMousePosition(evt);
+            console.log("  Mouse pos: "+JSON.stringify(mousePos));
+            // rect = selectedElement.childNodes.rect;
+            // rectCoord = selectedElement.getBoundingClientRect();
+            // console.log("  rectCoord=", rectCoord);
+
             // offset = getMousePosition(evt);
             // console.log("  Mouse pos: "+JSON.stringify(offset));
             // elmCoord = selectedElement.getBoundingClientRect();
@@ -398,7 +410,7 @@
 
             // Get all the transforms currently on this element
             var transforms = selectedElement.transform.baseVal;
-            // console.log("  transforms=", transforms);
+            console.log("  transforms=", transforms);
             // Ensure the first transform is a translate transform
             if (transforms.length === 0 ||
                 transforms.getItem(0).type !== SVGTransform.SVG_TRANSFORM_TRANSLATE) {
@@ -411,7 +423,7 @@
             }
 
             // Get initial translation amount
-            transform = transforms.getItem(0);
+            transform = transforms.getItem(0); // Note: 1st item is supposed to be 'translate'
             console.log("  transform=", transform);
             offset = getMousePosition(evt);
             console.log("  Mouse pos: "+JSON.stringify(offset));
@@ -458,22 +470,33 @@
 
         // 'mousemove'
         function drag(evt) {
+            // console.log("drag(), evt=", evt);
+            // var coord = getMousePosition(evt);
+            // console.log("  Mouse pos=", coord);
+            // elmCoord = selectedElement.getBoundingClientRect();
+            // console.log("drag(), elmCoord=", elmCoord);
+
+            // return;
+
             if (!selectedElement)
                 return;
 
             console.log("drag(), evt=", evt);
 
-            // var coord = getMousePosition(evt);
-            // selectedElement.setAttributeNS(null, "x", coord.x - offset.x);
-            // selectedElement.setAttributeNS(null, "y", coord.y - offset.y);
-            elmCoord = selectedElement.getBoundingClientRect();
-            console.log("drag(), elmCoord=", elmCoord);
+            // rect = selectedElement.target.parentNode.childNodes.rect;
+            // rectCoord = selectedElement.getBoundingClientRect();
+            // console.log("  rectCoord=", elmCoord);
 
             evt.preventDefault();
             // Updates the translation transform to the mouse position minus the offset
             var coord = getMousePosition(evt);
+            console.log("  Mouse pos=", coord);
             grpX = coord.x - offset.x;
+            if (grpX < 0) grpX = 0;
+            // TODO: Check max
             grpY = coord.y - offset.y;
+            if (grpY < 0) grpY = 0;
+            // TODO: Check max
             transform.setTranslate(grpX, grpY);
 
             devLogicId = selectedElement.id;
@@ -502,7 +525,11 @@
             evt.preventDefault();
             var coord = getMousePosition(evt);
             grpX = coord.x - offset.x;
+            if (grpX < 0) grpX = 0;
+            // TODO: Check max
             grpY = coord.y - offset.y;
+            if (grpY < 0) grpY = 0;
+            // TODO: Check max
             transform.setTranslate(grpX, grpY);
             console.log("endDrag(): grpX="+JSON.stringify(grpX)+", grpY="+JSON.stringify(grpY));
             // console.log("Debug - endDrag - offset (depart): "+JSON.stringify(offset));
@@ -1061,6 +1088,8 @@
                 devListNb++;
             }
 
+            // break; // TEMP
+
             // linksTo = [];
             for (nLogicId in router.neighbors) {
                 neighbor = router.neighbors[nLogicId];
@@ -1207,27 +1236,34 @@
             dev['posY'] = setAutoY(isZigate);
         nodeColor = dev['color'];
 
+        // dev['posX'] = 25;
+        // dev['posY'] = 25; // TEMP
+
         // Computing positions based on node central coordinates
         posX = dev['posX'];
         posY = dev['posY'];
-        txtX = posX + 22;
-        txtY = posY + 0;
+        // txtX = posX + 22;
+        // txtY = posY + 0;
+        txtX = 25;
+        txtY = -5; // Placed on top of group
         rectX = posX - 25;
         rectY = posY - 25;
-        imgX = posX - 20;
-        imgY = posY - 20;
+        // imgX = posX - 20;
+        // imgY = posY - 20;
+        imgX = 5;
+        imgY = 5;
 
-        // newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+rectX+', '+rectY+')">';
-        // newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
-        // newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
-        // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 8px;">'+dev['name']+'</text></a>';
-        // newG += '</g>';
-
-        newG = '<g id="'+devLogicId+'" class="draggable">';
-        newG += '<rect x="'+rectX+'" y="'+rectY+'" rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
+        newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+rectX+', '+rectY+')">';
+        newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
         newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
         newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 8px;">'+dev['name']+'</text></a>';
         newG += '</g>';
+
+        // newG = '<g id="'+devLogicId+'" class="draggable">';
+        // newG += '<rect x="'+rectX+'" y="'+rectY+'" rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
+        // newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
+        // newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 8px;">'+dev['name']+'</text></a>';
+        // newG += '</g>';
 
         // newG += '<circle cx="'+posX+'" cy="'+posY+'" r="10" fill="'+dev['color']+'" transform="translate(0, 0)"></circle>';
         // newG += '<img x="'+posX+'" y="'+posY+'" width="40" height="40" src="/plugins/Abeille/images/node_' + dev['icon'] + '.png">';

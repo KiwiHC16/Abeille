@@ -11,6 +11,7 @@ ChangeLog
 - Network graph: Modifications internes préliminaires.
 - Interne: Correction perte de cmdes lors de la mise-à-jour.
 - Interne: Parser: Correction decodeDataType().
+- Interne: Parser: Correction pour inclusion.
 
 230408-BETA-5
 -------------

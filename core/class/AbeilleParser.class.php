@@ -961,6 +961,23 @@
                 $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getNodeDescriptor");
             }
 
+            // Check if main signature is missing but available in EP
+            // Note that this is unexpected. Some bug somewhere else leads to that.
+            // TODO: Better to include this part in next 'if' code block
+            if (($eq['modelId'] === null) || ($eq['manufId'] === null) || ($eq['location'] === null)) {
+                foreach ($eq['endPoints'] as $epId2 => $ep2) {
+                    if (($eq['modelId'] === null) && isset($ep2['modelId']))
+                        $eq['modelId'] = $ep2['modelId'];
+                    if (($eq['manufId'] === null) && isset($ep2['manufId']))
+                        $eq['manufId'] = $ep2['manufId'];
+                    if (($eq['location'] === null) && isset($ep2['location']))
+                        $eq['location'] = $ep2['location'];
+
+                    if (($eq['modelId'] !== null) || ($eq['manufId'] !== null) || ($eq['location'] !== null))
+                        break;
+                }
+            }
+
             // TODO: Do not request modelId/manuf.. if there is no cluster 0000 server
 
             // IEEE & EP list are available. Any missing info to identify device ?

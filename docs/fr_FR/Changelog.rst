@@ -12,6 +12,8 @@ ChangeLog
 - Interne: Correction perte de cmdes lors de la mise-à-jour.
 - Interne: Parser: Correction decodeDataType().
 - Interne: Parser: Correction pour inclusion.
+- Interne: Suppression des 'comment' durant mise-à-jour des cmdes.
+- Interne: Correction 'ep manquant'.
 
 230408-BETA-5
 -------------

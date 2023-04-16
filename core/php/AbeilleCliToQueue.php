@@ -132,7 +132,7 @@
         $eqId = $_GET['eqId'];
         $eqLogic = eqLogic::byId($eqId);
         if (!is_object($eqLogic)) {
-            logDebug("CliToQueue: ERROR: Unkown device with ID ".$eqId);
+            logDebug("CliToQueue: ERROR: Unknown device with ID ".$eqId);
             return; // ERROR
         }
         list($eqNet, $eqAddr) = explode("/", $eqLogic->getLogicalId());
@@ -147,7 +147,7 @@
         else
             $jsonLocation = 'Abeille';
         if ($jsonId == '') {
-            logDebug("CliToQueue: ERROR: jsonId empty");
+            logDebug("CliToQueue: ERROR: jsonId empty for device ".$eqId);
             return; // ERROR
         }
 
@@ -203,7 +203,10 @@
         $queue = msg_get_queue($abQueues['xToAbeille']['id']);
         $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
         if (isset($dbgTcharp38)) logDebug("CliToQueue: '".$action."' msg to Abeille: ".$msgJson);
-        msg_send($queue, 1, $msgJson, false, false);
+        if (msg_send($queue, 1, $msgJson, false, false) !== true) {
+            logDebug("CliToQueue: ERROR: msg_send(xToAbeille) failed for device ".$eqId);
+            return; // ERROR
+        }
         sleep(2); // To let Abeille.class time to update DB
 
         // Inform parser that EQ config has changed => done at end of createDevice()

@@ -324,6 +324,13 @@
                 unset($cmd[$cmdFName]);
             }
 
+            // Removing all comments
+            foreach ($cmd[$cmdJName] as $cmdKey => $cmdVal) {
+                if (substr($cmdKey, 0, 7) != "comment")
+                    continue;
+                unset($cmd[$cmdJName][$cmdKey]);
+            }
+
             return $cmd;
         }
 
@@ -419,17 +426,6 @@
                             // log::add('Abeille', 'debug', 'newCmd AFTER='.json_encode($newCmd));
                         }
 
-                        // Temp '#GROUPEPx#' support
-                        $newCmdTxt = json_encode($newCmd);
-                        for ($g = 1; $g <= 8; $g++) {
-                            if (isset($device['configuration']["groupEP".$g])) {
-                                // Case insensitive #xxx# replacement
-                                $gVal = $device['configuration']["groupEP".$g];
-                                $newCmdTxt = str_ireplace('#GROUPEP'.$g.'#', $gVal, $newCmdTxt);
-                            }
-                        }
-                        $newCmd = json_decode($newCmdTxt, true);
-
                         if (isset($cmd2['isVisible'])) {
                             $value = $cmd2['isVisible'];
                             if ($value === "yes")
@@ -492,6 +488,21 @@
                             $newCmd[$cmd1]['configuration']['listValue'] = $cmd2['listValue'];
                         if (isset($cmd2['Polling']))
                             $newCmd[$cmd1]['configuration']['Polling'] = $cmd2['Polling'];
+
+                        // All overloads done. Let's check if any remaining variable
+                        // #EP# => replaced by ['configuration']['mainEP']
+                        $newCmdTxt = json_encode($newCmd);
+                        $mainEP = $device['configuration']['mainEP'];
+                        $newCmdTxt = str_ireplace('#EP#', $mainEP, $newCmdTxt);
+                        // Temp '#GROUPEPx#' support
+                        for ($g = 1; $g <= 8; $g++) {
+                            if (isset($device['configuration']["groupEP".$g])) {
+                                // Case insensitive #xxx# replacement
+                                $gVal = $device['configuration']["groupEP".$g];
+                                $newCmdTxt = str_ireplace('#GROUPEP'.$g.'#', $gVal, $newCmdTxt);
+                            }
+                        }
+                        $newCmd = json_decode($newCmdTxt, true);
 
                         // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
                         $deviceCmds += $newCmd;

@@ -22,7 +22,7 @@
             $path = "Network/TestSVG/images/AbeilleLQI_MapData_Perso.png";
         } else {
             // echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png"></image>';
-            $path = "images/Abeille_background.png";
+            $path = "images/Abeille_background-1200.png";
         }
         $iSize = getimagesize(__DIR__."/../../".$path);
         $width = $iSize[0];
@@ -44,7 +44,7 @@
 
 <body>
     <div style="background: #e9e9e9; font-weight: bold; padding: .4em 1em;">
-        Placement réseau
+        Placement réseau (BETA)
     </div>
 
     <!-- <style>

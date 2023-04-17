@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Network graph: Possibilité de sauver la position d'un équipement.
+- Network graph: Renommé en 'Placement réseau'.
 
 230416-BETA-1
 -------------

@@ -63,9 +63,8 @@ $("#bt_network").on("click", function () {
         .dialog("open");
 });
 
-$("#bt_networkAbeille").on("click", function () {
-    // window.open("plugins/Abeille/Network/TestSVG/NetworkGraph.php");
-    window.open("index.php?v=d&m=Abeille&p=AbeilleNetworkGraph");
+$("#bt_networkMap").on("click", function () {
+    window.open("index.php?v=d&m=Abeille&p=AbeilleNetworkMap");
 });
 
 $("#bt_graph").on("click", function () {
@@ -93,7 +92,7 @@ $("#bt_Ota").on("click", function () {
         .dialog("open");
 });
 
-$("#bt_networkAbeilleNew").on("click", function () {
+$("#bt_networkMapNew").on("click", function () {
     $("#md_modal").dialog({ title: "{{Graph Abeille}}" });
     // $('#md_modal').load('plugins/Abeille/Network/TestSVG/NetworkGraph.html').dialog('open');
     $("#md_modal")

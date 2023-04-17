@@ -358,7 +358,7 @@
                 // log::add('Abeille', 'error', 'Modèle \''.$modelName.'\' inconnu. Utilisation du modèle par défaut.');
                 // $modelName = 'defaultUnknown';
                 // $modelPath = devicesDir.$modelName.'/'.$modelName.'.json';
-                log::add('Abeille', 'error', 'Modèle \''.$modelName.'\' inconnu.');
+                log::add('Abeille', 'error', 'getDeviceModel(): Modèle \''.$modelName.'\' inconnu.');
                 return false;
             }
 

@@ -366,8 +366,12 @@
                 $status = -1;
                 $error = "Le fichier '".$jsonId."' n'existe pas dans '".$jsonLocation."'";
             } else {
-                $devConfig = AbeilleTools::getDeviceModel($jsonId, $jsonLocation, $mode);
-                $content = json_encode($devConfig);
+                $devModel = AbeilleTools::getDeviceModel($jsonId, $jsonLocation, $mode);
+                if ($devModel === false) {
+                    $status = -1;
+                    $error = "Le modèle '".$jsonId."' n'existe pas dans '".$jsonLocation."'";
+                } else
+                    $content = json_encode($devModel);
             }
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'content' => $content)));

@@ -559,19 +559,25 @@
         }
 
         // Change 'ab::settings' content
+        // Param: eqId = Equipment Jeedom ID
+        // Param: settings = associative array of settings to change
         if (init('action') == 'saveSettings') {
             $status = 0;
             $error = "";
 
             $eqId = init('eqId');
-            $settings = init('settings');
-            $settings = json_decode($settings, true);
+            $newSettings = init('settings');
+            $newSettings = json_decode($newSettings, true);
 
             $eqLogic = Abeille::byId($eqId);
             if (!is_object($eqLogic)) {
                 $error = "Invalid device ID ".$eqId;
                 $status = -1;
             } else {
+                $settings = $eqLogic->getConfiguration('ab::settings', []);
+                foreach ($newSettings as $setKey => $setVal) {
+                    $settings[$setKey] = $setVal;
+                }
                 $eqLogic->setConfiguration('ab::settings', $settings);
                 $eqLogic->save();
             }

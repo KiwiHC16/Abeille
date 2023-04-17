@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Network graph: Possibilité de sauver la position d'un équipement.
+
 230416-BETA-1
 -------------
 

@@ -83,6 +83,8 @@
                 }
             ?>
             </select>
+
+            <button id="save" onclick="saveSettings()" style="width:100%;margin-top:4px">{{Sauver}}</button>
         </div>
 
         <div id="idGraph" class="column">
@@ -194,95 +196,38 @@
     // Functions
     //-----------------------------------------------------------------------
 
-    function getLqiTable() {
-        console.log("getLqiTable("+Ruche+")");
+    // function setTopoJSON(Topo) {
+    //     // console.log("Coucou");
+    //     // var requestTopo = "/plugins/Abeille/Network/TestSVG/TopoSet.php?TopoJSON=";
+    //     var requestTopoURL = "/plugins/Abeille/core/php/AbeilleSetEq.php";
+    //     // var param = encodeURIComponent(Topo);
+    //     var param = "TopoJSON="+Topo;
+    //     // console.log(param);
+    //     // console.log(Topo);
+    //     // console.log(requestTopo+Topo);
+    //     var xhr = new XMLHttpRequest();
 
-        // var xmlhttp = new XMLHttpRequest();
-        // xmlhttp.onreadystatechange = function() {
-        //     if (this.readyState == 4 && this.status == 200) {
-        //         lqiTable = JSON.parse(this.responseText);
-        //     }
-        // };
+    //     xhr.onreadystatechange = function() {
+    //         if (this.readyState == 4 && this.status == 200 ) {
+    //             TopoSetReply = this.responseText;
+    //             console.log(TopoSetReply);
+    //         }
+    //     }
 
-        // xmlhttp.open("GET", "/plugins/Abeille/tmp/AbeilleLQI_MapData"+Ruche+".json", false); // False pour bloquer sur la recuperation du fichier
-        // xmlhttp.send();
+    //     xhr.open("POST", requestTopoURL, true );
 
-        $.ajax({
-            type: 'POST',
-            url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
-            data: {
-                action: 'getTmpFile',
-                file : "AbeilleLQI-"+Ruche+".json",
-            },
-            dataType: "json",
-            global: false,
-            cache: false,
-            async: false,
-            error: function (request, status, error) {
-                console.log("ERROR: Call to getTmpFile failed ("+error+").");
-            },
-            success: function (json_res) {
-                res = JSON.parse(json_res.result);
-                if (res.status != 0) {
-                    // var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
-                    // $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
-                    console.log("ERROR: returned status="+res.status);
-                } else if (res.content == "") {
-                    // $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide. Rien à traiter}}', level: 'danger'});
-                    console.log("ERROR: empty content");
-                } else {
-                    lqiTable = JSON.parse(res.content);
-                    console.log("lqiTable=", lqiTable);
-                }
-            },
-        });
-    }
+    //     // xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-    function getJeedomDevices() {
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                jeedomDevices = JSON.parse(this.responseText);
-                console.log("jeedomDevices=", jeedomDevices);
-            }
-        };
+    //     // console.log(requestTopo+Topo);
+    //     // xhr.setRequestHeader('Content-Type: application/json; charset=utf-8');
+    //     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-        xhr.open("GET", "/plugins/Abeille/core/php/AbeilleGetEq.php", false); // False pour bloquer sur la recuperation du fichier
-        xhr.send();
-    }
+    //     // xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded;charset=utf-8');
 
-    function setTopoJSON(Topo) {
-        // console.log("Coucou");
-        // var requestTopo = "/plugins/Abeille/Network/TestSVG/TopoSet.php?TopoJSON=";
-        var requestTopoURL = "/plugins/Abeille/core/php/AbeilleSetEq.php";
-        // var param = encodeURIComponent(Topo);
-        var param = "TopoJSON="+Topo;
-        // console.log(param);
-        // console.log(Topo);
-        // console.log(requestTopo+Topo);
-        var xhr = new XMLHttpRequest();
-
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200 ) {
-                TopoSetReply = this.responseText;
-                console.log(TopoSetReply);
-            }
-        }
-
-        xhr.open("POST", requestTopoURL, true );
-
-        // xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-        // console.log(requestTopo+Topo);
-        // xhr.setRequestHeader('Content-Type: application/json; charset=utf-8');
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-        // xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded;charset=utf-8');
-
-        xhr.send(encodeURI(param));
-        // xhr.send(encodeURI("TopoJSON=toto"));
-        console.log("Params sent->"+param);
-    }
+    //     xhr.send(encodeURI(param));
+    //     // xhr.send(encodeURI("TopoJSON=toto"));
+    //     console.log("Params sent->"+param);
+    // }
 
     /* Launch network scan for current Zigate */
     function refreshNetworkInformation() {
@@ -468,21 +413,7 @@
             // }
         }
 
-        // 'mousemove'
-        function drag(evt) {
-            // console.log("drag(), evt=", evt);
-            // var coord = getMousePosition(evt);
-            // console.log("  Mouse pos=", coord);
-            // elmCoord = selectedElement.getBoundingClientRect();
-            // console.log("drag(), elmCoord=", elmCoord);
-
-            // return;
-
-            if (!selectedElement)
-                return;
-
-            console.log("drag(), evt=", evt);
-
+        function moveIt(evt, itsEnd) {
             // rect = selectedElement.target.parentNode.childNodes.rect;
             // rectCoord = selectedElement.getBoundingClientRect();
             // console.log("  rectCoord=", elmCoord);
@@ -515,6 +446,37 @@
                     line.y2.baseVal.value = lineY;
                 }
             }
+
+            if (itsEnd) {
+                // Update coordinates
+                devLogicId = selectedElement.id;
+                devList[devLogicId]['posX'] = grpX + 25;
+                devList[devLogicId]['posY'] = grpY + 25;
+                devList[devLogicId]['posChanged'] = true;
+
+                // document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,"No");
+                // document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,"No");
+                // document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 22, "No");
+
+                selectedElement = false;
+            }
+        }
+
+        // 'mousemove'
+        function drag(evt) {
+            // console.log("drag(), evt=", evt);
+            // var coord = getMousePosition(evt);
+            // console.log("  Mouse pos=", coord);
+            // elmCoord = selectedElement.getBoundingClientRect();
+            // console.log("drag(), elmCoord=", elmCoord);
+
+            // return;
+
+            if (!selectedElement)
+                return;
+
+            console.log("drag(), evt=", evt);
+            moveIt(evt, false);
         }
 
         // 'mouseup' or 'mouseleave'
@@ -522,41 +484,8 @@
             if (!selectedElement)
                 return;
 
-            evt.preventDefault();
-            var coord = getMousePosition(evt);
-            grpX = coord.x - offset.x;
-            if (grpX < 0) grpX = 0;
-            // TODO: Check max
-            grpY = coord.y - offset.y;
-            if (grpY < 0) grpY = 0;
-            // TODO: Check max
-            transform.setTranslate(grpX, grpY);
-            console.log("endDrag(): grpX="+JSON.stringify(grpX)+", grpY="+JSON.stringify(grpY));
-            // console.log("Debug - endDrag - offset (depart): "+JSON.stringify(offset));
-            // X = coord.x - offset.x;
-            // Y = coord.y - offset.y;
-            // console.log("Debug - endDrag - Dx: "+X+" Dy: "+Y);
-
-            // var myJSONOrg = JSON.stringify(myObjOrg);
-
-            // if ( typeof myObjOrg[evt.target.id].x == "undefined" ) {
-            // }
-            // else {
-            //     myObjNew[evt.target.id].x = myObjOrg[evt.target.id].x + X;
-            //     myObjNew[evt.target.id].y = myObjOrg[evt.target.id].y + Y;
-            // }
-            // // var myJSONNew = JSON.stringify(myObjNew);
-
-            // Update coordinates
-            devLogicId = selectedElement.id;
-            devList[devLogicId]['posX'] = grpX + 25;
-            devList[devLogicId]['posY'] = grpY + 25;
-
-            // document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,"No");
-            // document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,"No");
-            // document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 22, "No");
-
-            selectedElement = false;
+            console.log("endDrag(), evt=", evt);
+            moveIt(evt, true);
         }
     }
 
@@ -1022,10 +951,10 @@
         location.reload(true);
     }
 
-    function saveAbeilles() {
-        // console.log("Debug - saveAbeilles function - "+JSON.stringify(myObjNew));
-        setTopoJSON(JSON.stringify(myObjNew));
-    }
+    // function saveAbeilles() {
+    //     // console.log("Debug - saveAbeilles function - "+JSON.stringify(myObjNew));
+    //     setTopoJSON(JSON.stringify(myObjNew));
+    // }
 
     function refreshNetwork(newZgId) {
         // window.open("index.php?v=d&m=Abeille&p=AbeilleSupport");
@@ -1044,6 +973,97 @@
         // location.reload(true);
         window.location.href = url;
     };
+
+    function getLqiTable() {
+        console.log("getLqiTable("+Ruche+")");
+
+        // var xmlhttp = new XMLHttpRequest();
+        // xmlhttp.onreadystatechange = function() {
+        //     if (this.readyState == 4 && this.status == 200) {
+        //         lqiTable = JSON.parse(this.responseText);
+        //     }
+        // };
+
+        // xmlhttp.open("GET", "/plugins/Abeille/tmp/AbeilleLQI_MapData"+Ruche+".json", false); // False pour bloquer sur la recuperation du fichier
+        // xmlhttp.send();
+
+        $.ajax({
+            type: 'POST',
+            url: "/plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+            data: {
+                action: 'getTmpFile',
+                file : "AbeilleLQI-"+Ruche+".json",
+            },
+            dataType: "json",
+            global: false,
+            cache: false,
+            async: false,
+            error: function (request, status, error) {
+                console.log("ERROR: Call to getTmpFile failed ("+error+").");
+            },
+            success: function (json_res) {
+                res = JSON.parse(json_res.result);
+                if (res.status != 0) {
+                    // var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
+                    // $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
+                    console.log("ERROR: returned status="+res.status);
+                } else if (res.content == "") {
+                    // $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide. Rien à traiter}}', level: 'danger'});
+                    console.log("ERROR: empty content");
+                } else {
+                    lqiTable = JSON.parse(res.content);
+                    console.log("lqiTable=", lqiTable);
+                }
+            },
+        });
+    }
+
+    function getJeedomDevices() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                jeedomDevices = JSON.parse(this.responseText);
+                console.log("jeedomDevices=", jeedomDevices);
+            }
+        };
+
+        xhr.open("GET", "/plugins/Abeille/core/php/AbeilleGetEq.php", false); // False pour bloquer sur la recuperation du fichier
+        xhr.send();
+    }
+
+    /* eqLogic/configuration settings (ab::settings) update */
+    function saveSettings() {
+        console.log("saveSettings()");
+
+        for (devLogicId in devList) {
+            dev = devList[devLogicId];
+            if (typeof dev['posChanged'] === "undefined")
+                continue; // Unknown to Jeedom
+
+            if (!dev['posChanged'])
+                continue; // No change
+
+            console.log("Saving "+dev['name']+" positions");
+            eqId = dev['jeedomId'];
+            settings = {
+                physLocationX: dev['posX'],
+                physLocationY: dev['posY'],
+            };
+            $.ajax({
+                type: 'POST',
+                url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+                data: {
+                    action: 'saveSettings',
+                    eqId: eqId,
+                    settings: JSON.stringify(settings)
+                },
+                dataType: 'json',
+                global: false,
+                success: function (json_res) {
+                }
+            });
+        }
+    }
 
     // Combine LQI + Jeedom infos
     function refreshDevList() {
@@ -1064,7 +1084,6 @@
             if (typeof devList[rLogicId] !== "undefined") {
                 // Already registered
                 devR = devList[rLogicId];
-                // rLinks = devR['links']; // Array of object (logicId + lineId)
             } else {
                 devR = new Object();
                 devR['addr'] = router['addr'];
@@ -1078,26 +1097,20 @@
                     devR['posX'] = jeedomDevices[rLogicId].X;
                     devR['posY'] = jeedomDevices[rLogicId].Y;
                     devR['jeedomId'] = jeedomDevices[rLogicId].id;
+                    devR['posChanged'] = false;
                 }
-                // devR['linesTo'] = [];
-                // devR['linesFrom'] = [];
-                // rLinks = []; // Array of object (logicId + lineId)
                 devR['links'] = new Object();
 
                 devList[rLogicId] = devR;
                 devListNb++;
             }
 
-            // break; // TEMP
-
-            // linksTo = [];
             for (nLogicId in router.neighbors) {
                 neighbor = router.neighbors[nLogicId];
                 // console.log("neighbor=", neighbor);
                 if (typeof devList[nLogicId] !== "undefined") {
                     // Already registered
                     devN = devList[nLogicId];
-                    // nLinks = devN['links'];
                 } else {
                     devN = new Object();
                     devN['addr'] = neighbor['addr'];
@@ -1111,28 +1124,20 @@
                         devN['posX'] = jeedomDevices[nLogicId].X;
                         devN['posY'] = jeedomDevices[nLogicId].Y;
                         devN['jeedomId'] = jeedomDevices[nLogicId].id;
+                        devN['posChanged'] = false;
                     }
-                    // devN['linesTo'] = [];
-                    // devN['linesFrom'] = [];
                     devN['links'] = new Object();
-                    // nLinks = [];
 
                     devList[nLogicId] = devN;
                     devListNb++;
                 } // End for (nLogicId in router.neighbors)
 
-                // linksTo.push(nLogicId);
-                // nLinks.push({ "logicId": rLogicId, "lineId": lineId });
-                // rLinks.push({ "logicId": nLogicId, "lineId": lineId });
                 devN['links'][lineId] = rLogicId;
                 devR['links'][lineId] = nLogicId;
                 linksList[lineId] = { 'src': rLogicId, 'dst': nLogicId };
                 lineId++;
             }
-
-            // devR['linksTo'] = linksTo;
-            // devR['links'][nLogicId] = lineId;
-        }
+        } // End 'for (rLogicId in lqiTable.routers)'
     }
 
     //-----------------------------------------------------------------------

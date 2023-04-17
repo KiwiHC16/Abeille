@@ -17,24 +17,25 @@
         $zgId = 1; // Default = zigate1
     echo "<script>console.log(\"zgId=" . $zgId . "\")</script>";
 
-    function selectMapImage() {
-        // ab::userMap => path to user map, relative to Abeille's root
-        $userMap = config::byKey('ab::userMap', 'Abeille', '', true);
-        if (($userMap == '') && !file_exists(__DIR__."/../../".$userMap)) {
-            // echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png"></image>';
-            $userMap = "images/AbeilleNetworkMap-1200.png";
-        }
-        $iSize = getimagesize(__DIR__."/../../".$userMap);
-        $width = $iSize[0];
-        $height = $iSize[1];
-
-        $image = Array(
-            "path" => $userMap, // Path relative to Abeille's root
-            "width" => $width,
-            "height" => $height
-        );
-        return $image;
+    // Selecting background map
+    // ab::userMap => path to user map, relative to Abeille's root
+    $userMap = config::byKey('ab::userMap', 'Abeille', '', true);
+    echo "<script>console.log(\"userMap=" . $userMap . "\")</script>";
+    if (($userMap == '') || !file_exists(__DIR__."/../../".$userMap)) {
+        // echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png"></image>';
+        $userMap = "images/AbeilleNetworkMap-1200.png";
     }
+    echo "<script>console.log(\"userMap2=" . $userMap . "\")</script>";
+    $iSize = getimagesize(__DIR__."/../../".$userMap);
+    $width = $iSize[0];
+    $height = $iSize[1];
+    $image = Array(
+        "path" => $userMap, // Path relative to Abeille's root
+        "width" => $width,
+        "height" => $height
+    );
+    sendVarToJS('maxX', $width);
+    sendVarToJS('maxY', $height);
 ?>
 
 <html>
@@ -56,7 +57,6 @@
     <style>
         #idGraph {
         <?php
-            $image = selectMapImage();
             echo 'background-image: url("/plugins/Abeille/'.$image['path'].'");';
             echo 'width: '.$image['width'].'px;';
             echo 'height: '.$image['height'].'px;';
@@ -85,6 +85,7 @@
             </select>
 
             <button id="save" onclick="saveSettings()" style="width:100%;margin-top:4px">{{Sauver}}</button>
+            <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->
         </div>
 
         <div id="idGraph" class="column">
@@ -183,14 +184,14 @@
     var Parameter = "LinkQualityDec";
     var Hierarchy = "All";
 
-    var myJSON = '{}';
+    // var myJSON = '{}';
 
     // myObjOrg et myObjNew ne contiennent que la ruche au chargement du script
     // On parcourt les abeilles de jeedom on l'ajoute à myObjOrg et myObjNew
     // On affecte une position stupide, qu'on mettre à jour une fois les info disponibles.
     // Idem pour la couleur
-    var myObjOrg = JSON.parse(myJSON);
-    var myObjNew = JSON.parse(myJSON);
+    // var myObjOrg = JSON.parse(myJSON);
+    // var myObjNew = JSON.parse(myJSON);
 
     //-----------------------------------------------------------------------
     // Functions
@@ -309,6 +310,23 @@
         });
     }
 
+    // Ensure that device coordinates are within background map size
+    function checkLimits(grpX, grpY) {
+        if (grpX < 0) grpX = 0;
+            // console.log("  maxX=", maxX);
+        if ((grpX + 50) > maxX)
+            grpX = maxX - 50;
+        if (grpY < 0) grpY = 0;
+        // console.log("  maxY=", maxY);
+        if ((grpY + 50) > maxY)
+            grpY = maxY - 50;
+        // console.log("  maxY2=", maxY);
+
+        return {
+            x: grpX,
+            y: grpY
+        };
+    }
 
     // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
     function makeDraggable(evt) {
@@ -413,26 +431,24 @@
             // }
         }
 
-        function moveIt(evt, itsEnd) {
+        function moveIt(evt, dragEnd) {
             // rect = selectedElement.target.parentNode.childNodes.rect;
             // rectCoord = selectedElement.getBoundingClientRect();
             // console.log("  rectCoord=", elmCoord);
 
             evt.preventDefault();
             // Updates the translation transform to the mouse position minus the offset
-            var coord = getMousePosition(evt);
-            console.log("  Mouse pos=", coord);
-            grpX = coord.x - offset.x;
-            if (grpX < 0) grpX = 0;
-            // TODO: Check max
-            grpY = coord.y - offset.y;
-            if (grpY < 0) grpY = 0;
-            // TODO: Check max
-            transform.setTranslate(grpX, grpY);
+            var mousePos = getMousePosition(evt);
+            console.log("  Mouse pos=", mousePos);
+            grpX = mousePos.x - offset.x;
+            grpY = mousePos.y - offset.y;
+            // Check limits
+            grpCoord = checkLimits(grpX, grpY);
+            transform.setTranslate(grpCoord['x'], grpCoord['y']);
 
+            // Moving connected lines
             devLogicId = selectedElement.id;
             dev = devList[devLogicId];
-            console.log("drag(), dev=", dev);
             lineX = grpX + 25; // Center in 50x50 square
             lineY = grpY + 25; // Center in 50x50 square
             for (linkId in dev['links']) {
@@ -447,7 +463,7 @@
                 }
             }
 
-            if (itsEnd) {
+            if (dragEnd) {
                 // Update coordinates
                 devLogicId = selectedElement.id;
                 devList[devLogicId]['posX'] = grpX + 25;
@@ -650,38 +666,38 @@
         return lesAbeillesText;
     }
 
-    function setPosition(mode) {
-        var iAbeille = 0;
-        var nbAbeille = Object.keys(myObjNew).length
-        for (abeille in myObjNew) {
-            if ( (myObjNew[abeille].positionDefined == "No") && (mode=="Auto") ) {
-                X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
-                Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
+    // function setPosition(mode) {
+    //     var iAbeille = 0;
+    //     var nbAbeille = Object.keys(myObjNew).length
+    //     for (abeille in myObjNew) {
+    //         if ( (myObjNew[abeille].positionDefined == "No") && (mode=="Auto") ) {
+    //             X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
+    //             Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
 
-                myObjOrg[abeille].x = X;
-                myObjOrg[abeille].y = Y;
-                myObjNew[abeille].x = X;
-                myObjNew[abeille].y = Y;
+    //             myObjOrg[abeille].x = X;
+    //             myObjOrg[abeille].y = Y;
+    //             myObjNew[abeille].x = X;
+    //             myObjNew[abeille].y = Y;
 
-                myObjNew[abeille].positionDefined = "Yes";
+    //             myObjNew[abeille].positionDefined = "Yes";
 
-                iAbeille++;
-            }
-            if ( mode=="AutoForce" ) {
-                X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
-                Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
+    //             iAbeille++;
+    //         }
+    //         if ( mode=="AutoForce" ) {
+    //             X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
+    //             Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
 
-                myObjOrg[abeille].x = X;
-                myObjOrg[abeille].y = Y;
-                myObjNew[abeille].x = X;
-                myObjNew[abeille].y = Y;
+    //             myObjOrg[abeille].x = X;
+    //             myObjOrg[abeille].y = Y;
+    //             myObjNew[abeille].x = X;
+    //             myObjNew[abeille].y = Y;
 
-                myObjNew[abeille].positionDefined = "Yes";
+    //             myObjNew[abeille].positionDefined = "Yes";
 
-                iAbeille++;
-            }
-        }
-    }
+    //             iAbeille++;
+    //         }
+    //     }
+    // }
 
     /* Refresh status of ongoing network scan */
     function refreshNetworkCollectionProgress() {
@@ -823,7 +839,7 @@
     }
 
     function placementAuto() {
-        setPosition("AutoForce");
+        // setPosition("AutoForce");
         refreshAll();
     }
 
@@ -1007,6 +1023,7 @@
                     // var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
                     // $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
                     console.log("ERROR: returned status="+res.status);
+                    bootbox.alert("Pas de données du réseau.<br>La box a probablement redémarré depuis hier.<br><br>Veuillez interroger le réseau pour corriger.")
                 } else if (res.content == "") {
                     // $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide. Rien à traiter}}', level: 'danger'});
                     console.log("ERROR: empty content");
@@ -1140,6 +1157,45 @@
         } // End 'for (rLogicId in lqiTable.routers)'
     }
 
+    /* Upload a user map */
+    function uploadMap() {
+        console.log("v()");
+
+        var input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.png';
+        input.onchange = e => {
+
+            var file = e.target.files[0];
+            // file.name = the file's name including extension
+            // file.size = the size in bytes
+            // file.type = file type ex. 'application/pdf'
+            console.log("file=", file);
+
+            var formData = new FormData();
+            formData.append("file", file);
+            // TODO: How to use common AbeilleUpload but choose different location & name ?
+            // TODO: NOT WORKING
+            formData.append("destDir", "toto"); // OTA dest dir
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "plugins/Abeille/core/php/AbeilleUpload.php", true);
+            xhr.onload = function (oEvent) {
+                console.log("oEvent=", oEvent);
+                if (xhr.status != 200) {
+                    console.log("Error " + xhr.status + " occurred when trying to upload your file.");
+                    return;
+                }
+                console.log("Uploaded !");
+                // refreshFirmwareTable();
+                // TODO: Update config with ab::userMap
+                // TODO: Reload page
+            };
+            xhr.send(formData);
+        }
+        input.click();
+    }
+
     //-----------------------------------------------------------------------
     // MAIN
     //-----------------------------------------------------------------------
@@ -1163,6 +1219,7 @@
     var jeedomDevices; // Jeedom known devices
     var devList; // List of devices with combined infos from LQI + Jeedom
     var devListNb;
+    var linksList;
 
     getLqiTable();
     getJeedomDevices();
@@ -1190,7 +1247,7 @@
 
 
 
-    setPosition("Auto");
+    // setPosition("Auto");
 
     var selectedElement, transform;
     var offset; // Mouse offset vs rect top left corner
@@ -1251,21 +1308,19 @@
         // txtY = posY + 0;
         txtX = 25;
         txtY = -5; // Placed on top of group
-        rectX = posX - 25;
-        rectY = posY - 25;
+        grpX = posX - 25;
+        grpY = posY - 25;
         // imgX = posX - 20;
         // imgY = posY - 20;
         imgX = 5;
         imgY = 5;
 
         // Checking limits
-        if (rectX < 0)
-            rectX = 0;
-        if (rectY < 0)
-            rectY = 0;
-        // TODO: Check max
-        
-        newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+rectX+', '+rectY+')">';
+        grpCoord = checkLimits(grpX, grpY);
+        grpX = grpCoord['x'];
+        grpY = grpCoord['y'];
+
+        newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+grpX+', '+grpY+')">';
         newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
         newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
         newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 8px;">'+dev['name']+'</text></a>';

@@ -4,6 +4,7 @@ ChangeLog
 - Network graph: Possibilité de sauver la position d'un équipement.
 - Network graph: Renommé en 'Placement réseau'.
 - Interne: Placement réseau: Ajout config 'ab::userMap'.
+- Plaement réseau: Limitation aux dimensions du plan.
 
 230416-BETA-1
 -------------

@@ -136,8 +136,7 @@
             // file.name = the file's name including extension
             // file.size = the size in bytes
             // file.type = file type ex. 'application/pdf'
-            console.log("file="+file.name);
-            console.log(file);
+            console.log("file=", file);
 
             var formData = new FormData();
             formData.append("file", file);

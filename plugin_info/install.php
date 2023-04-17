@@ -454,6 +454,7 @@
            - config DB: Removed obsolete 'blocageTraitementAnnonce'.
            - config DB: 'DbVersion' => 'ab::dbVersion'.
            - config DB: Added 'ab::zgChan' for Zigbee channel.
+           - config DB: Added 'ab::userMap' for user map (Network map).
            - cmd DB: 0405-XX-0000: Removed 'calculValueOffset'.
            - cmd DB: 0402-XX-0000: Removed 'calculValueOffset'.
            - cmd DB: 0400-XX-0000: Removed 'calculValueOffset'.
@@ -689,6 +690,14 @@
                 }
                 config::save('ab::zgChan'.$zgId, $chan, 'Abeille');
                 log::add('Abeille', 'debug', '  Zigate '.$zgId.": Set 'ab::zgChan' to ".$chan);
+            }
+            // Moving user 'Network map' background image
+            $from = __DIR__."/../Network/TestSVG/images/AbeilleLQI_MapData_Perso.png";
+            if (file_exists($from)) {
+                $to = __DIR__."/../tmp/userMap.png";
+                rename($from, $to);
+                log::add('Abeille', 'debug', '  Renamed '.$from." to ".$to);
+                config::save('ab::userMap', "tmp/userMap.png", 'Abeille');
             }
 
             // 'cmd' DB updates

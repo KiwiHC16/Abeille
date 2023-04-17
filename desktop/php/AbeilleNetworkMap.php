@@ -18,18 +18,18 @@
     echo "<script>console.log(\"zgId=" . $zgId . "\")</script>";
 
     function selectMapImage() {
-        if (file_exists(__DIR__."/../../"."Network/TestSVG/images/AbeilleLQI_MapData_Perso.png")) {
-            $path = "Network/TestSVG/images/AbeilleLQI_MapData_Perso.png";
-        } else {
+        // ab::userMap => path to user map, relative to Abeille's root
+        $userMap = config::byKey('ab::userMap', 'Abeille', '', true);
+        if (($userMap == '') && !file_exists(__DIR__."/../../".$userMap)) {
             // echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png"></image>';
-            $path = "images/Abeille_background-1200.png";
+            $userMap = "images/AbeilleNetworkMap-1200.png";
         }
-        $iSize = getimagesize(__DIR__."/../../".$path);
+        $iSize = getimagesize(__DIR__."/../../".$userMap);
         $width = $iSize[0];
         $height = $iSize[1];
 
         $image = Array(
-            "path" => $path, // Path relative to Abeille's root
+            "path" => $userMap, // Path relative to Abeille's root
             "width" => $width,
             "height" => $height
         );
@@ -1235,9 +1235,9 @@
             isZigate = true;
         else
             isZigate = false;
-        if (dev['posX'] == 0)
+        if (dev['posX'] == 0) // 0 is forbidden
             dev['posX'] = setAutoX(isZigate);
-        if (dev['posY'] == 0)
+        if (dev['posY'] == 0) // 0 is forbidden
             dev['posY'] = setAutoY(isZigate);
         nodeColor = dev['color'];
 
@@ -1258,6 +1258,13 @@
         imgX = 5;
         imgY = 5;
 
+        // Checking limits
+        if (rectX < 0)
+            rectX = 0;
+        if (rectY < 0)
+            rectY = 0;
+        // TODO: Check max
+        
         newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+rectX+', '+rectY+')">';
         newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
         newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';

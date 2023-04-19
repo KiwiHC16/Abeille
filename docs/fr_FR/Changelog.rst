@@ -5,7 +5,8 @@ ChangeLog
 - Network graph: Renommé en 'Placement réseau'.
 - Interne: Placement réseau: Ajout config 'ab::userMap'.
 - Plaement réseau: Limitation aux dimensions du plan.
-- Interne: Parser: Correction message cluster 0006 dupliqué ().
+- Interne: Parser: Correction message cluster 0006 dupliqué (2574).
+- Placement réseau: Couleur de lien fonction du LQI.
 
 230416-BETA-1
 -------------

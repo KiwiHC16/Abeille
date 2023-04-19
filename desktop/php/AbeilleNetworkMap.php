@@ -1151,7 +1151,7 @@
 
                 devN['links'][lineId] = rLogicId;
                 devR['links'][lineId] = nLogicId;
-                linksList[lineId] = { 'src': rLogicId, 'dst': nLogicId };
+                linksList[lineId] = { 'src': rLogicId, 'dst': nLogicId, 'lqi': devN['lqi'] };
                 lineId++;
             }
         } // End 'for (rLogicId in lqiTable.routers)'
@@ -1362,11 +1362,16 @@
             x2 = dstDev['posX'];
             y2 = dstDev['posY'];
 
-            // if ( lqiTable.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
-            // if ( lqiTable.data[voisines].LinkQualityDec <  50 ) { color = "red";}
-            color = "green";
+            if (typeof link['lqi'] === 'undefined')
+                linkColor = "green";
+            else if (link['lqi'] > 150)
+                linkColor = "green";
+            else if (link['lqi'] > 50)
+                linkColor = "orange";
+            else
+                linkColor = "red";
 
-            lesAbeilles += '<line id="idLine'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" style="stroke:'+color+';stroke-width:1"/>';
+            lesAbeilles += '<line id="idLine'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" style="stroke:'+linkColor+';stroke-width:2"/>';
         }
     }
 

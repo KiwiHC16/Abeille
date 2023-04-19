@@ -4360,6 +4360,10 @@
 
                     // 0006/On/Off cluster specific
                     else if ($clustId == "0006") {
+                        // Duplicated message ?
+                        if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
+                            return;
+
                         if (($cmd == "00") || ($cmd == "01")) { // Off=00, On=01
                             /* Forwarding to Abeille */
                             // Tcharp38: The 'Click-Middle' must be avoided. Can't define EP so the source of this "click".

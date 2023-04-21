@@ -4196,8 +4196,9 @@
 
                     // 0005/Scenes cluster specific
                     else if ($clustId == "0005") {
-                        // $sqn = substr($payload,28, 2);
-                        // $cmd = substr($payload,30, 2);
+                        // Duplicated message ?
+                        if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
+                            return;
 
                         // Add Scene Response
                         // if ( $cmd == "00" ) {
@@ -4331,30 +4332,21 @@
 
                         // Ikea specific ?
                         else if (($cmd == "07") && ($manufCode == '117C')) {
-                            // $manufCode = substr($payload,30, 2).substr($payload,28, 2);
-                            // if (  ) {
-                                // $sqn                    = substr($payload,32, 2);
-                                // $cmd                    = substr($payload,34, 2);
-                                // if ( $cmd != "07" ) {
-                                //     parserLog("debug", '  Message can t be decoded. Looks like Telecommande Ikea Ronde but not completely.');
-                                //     return;
-                                // }
-                                // $remainingData = substr($payload,36, 8);
-                                $value = substr($pl, 0, 2);
+                            // Ikea specific
+                            $value = substr($pl, 0, 2);
 
-                                parserLog("debug", '  Ikea 5 buttons remote'
-                                               .', FCF='.$frameCtrlField
-                                               .', ManufCode='.$manufCode
-                                               .', SQN='.$sqn
-                                               .', Cmd='.$cmd
-                                               .', Value='.$value
-                                                );
+                            parserLog("debug", '  Ikea 5 buttons remote'
+                                            .': Cmd='.$cmd
+                                            .', Value='.$value
+                                            );
 
-                                $attrReportN[] = [
-                                    array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
-                                ];
-                                // return;
-                            // }
+                            // $attrReportN[] = [
+                            //     array( "name" => $clustId.'-'.$srcEp.'-0000', "value" => $value ),
+                            // ];
+                            $attrReportN[] = array(
+                                'name' => $srcEp.'-0005-cmd07',
+                                'value' => $value,
+                            );
                         }
                     } // End $clustId == "0005"
 

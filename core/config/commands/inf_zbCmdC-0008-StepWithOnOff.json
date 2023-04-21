@@ -1,0 +1,11 @@
+{
+    "inf_zbCmdC-0008-StepWithOnOff": {
+        "comment": "Cluster 0008/StepWithOnOff cmd, received from CLIENT side",
+        "subType": "binary",
+        "type": "info",
+        "logicalId": "#EP#-0008-cmd06",
+        "configuration": {
+            "repeatEventManagement": "always"
+        }
+    }
+}

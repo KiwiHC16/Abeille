@@ -7,6 +7,7 @@ ChangeLog
 - Plaement réseau: Limitation aux dimensions du plan.
 - Interne: Parser: Correction message cluster 0006 dupliqué (2574).
 - Placement réseau: Couleur de lien fonction du LQI.
+- Interne: Parser: Cmd Ikea cluster 0005 cmd 07 revue.
 
 230416-BETA-1
 -------------

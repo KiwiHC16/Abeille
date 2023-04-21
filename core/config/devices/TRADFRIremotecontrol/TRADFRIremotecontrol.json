@@ -60,17 +60,22 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },
-            "Up-Down": {
-                "use": "Up-Down"
+            "Up": {
+                "use": "inf_zbCmdC-0008-StepWithOnOff",
+                "isVisible": 1
+            },
+            "Down": {
+                "use": "inf_zbCmdC-0008-Step",
+                "isVisible": 1
+            },
+            "Left-right": {
+                "use": "inf_zbCmdC-0005-Ikea07",
+                "comment": "value=1 => left, 0 => right",
+                "isVisible": 1
             },
             "Click-Middle": {
-                "use": "Click-Middle"
-            },
-            "Left-Right-Cmd": {
-                "use": "Left-Right-Cmd"
-            },
-            "Left-Right-Direction": {
-                "use": "Left-Right-Direction"
+                "use": "inf_zbCmdC-0006-Toggle",
+                "isVisible": 1
             },
             "Blanc Group": {
                 "use": "BlancGroup"
@@ -83,10 +88,6 @@
             },
             "Vert Group": {
                 "use": "VertGroup"
-            },
-            "LeftRight": {
-                "use": "IkeaTeleCmdLeftRigth",
-                "isVisible": 1
             }
         }
     }

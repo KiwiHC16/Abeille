@@ -1616,6 +1616,8 @@
            'oHs' is the extracted & reordered hex string value
            Returns value according to type or false if error. */
         static function decodeDataType($iHs, $dataType, $raw, $dataSize, &$oSize = null, &$oHs = null) {
+            $reorder = $raw; // Data reverse required if raw input mode (decode8002)
+
             // Compute value size according to data type
             switch ($dataType) {
             case "10": // Boolean
@@ -1673,7 +1675,7 @@
                 if ($raw) {
                     $dataSize = hexdec(substr($iHs, 0, 2));
                     $iHs = substr($iHs, 2); // Skip header byte
-                    $raw = false; // Seems no reordering required.
+                    $reorder = false; // Seems no reordering required.
                 } // else $dataSize provided from caller
                 break;
             default: // All other types, copy input to output as hex string.
@@ -1698,7 +1700,7 @@
             // 'hs' is now reduced to proper size
             $hs = substr($iHs, 0, $dataSize * 2); // Truncate in case something unexpected after
             // Reordering raw bytes
-            if ($raw && ($dataSize > 1))
+            if ($reorder && ($dataSize > 1))
                 $hs = AbeilleTools::reverseHex($hs);
             // parserLog('debug', "  decodeDataType(): size=".$dataSize.", hexString=".$hexString." => hs=".$hs);
             $oHs = $hs;

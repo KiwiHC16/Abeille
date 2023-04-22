@@ -11,6 +11,7 @@ ChangeLog
 - Trafri remote control: Mise-à-jour modele (2576).
 - Interne: Parser: Correction 'decodeDataType()' pour type 41/42.
 - Interne: Parser: Correction 'Attribut report'.
+- Ikea E14 WS globe 470lm: Support préliminaire (2578).
 
 230416-BETA-1
 -------------

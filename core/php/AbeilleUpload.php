@@ -14,8 +14,6 @@
      */
     logDebug('AbeilleUpload: _FILES='.json_encode($_FILES));
 
-    exit(12);
-
     $tmpFile = $_FILES['file']['tmp_name'];
     logDebug('AbeilleUpload: tmpFile='.$tmpFile);
 

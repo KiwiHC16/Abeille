@@ -148,7 +148,7 @@
             xhr.onload = function (oEvent) {
                 console.log(oEvent);
                 if (xhr.status != 200) {
-                    console.log("Error " + xhr.status + " occurred when trying to upload your file.");
+                    console.log("ERROR " + xhr.status + " occurred when trying to upload your file.");
                     return;
                 }
                 console.log("Uploaded !");

@@ -30,6 +30,8 @@
 
     /* Check available firmwares and fills $GLOBALS['ota_fw'] */
     function otaReadFirmwares() {
+        logMessage('debug', 'otaReadFirmwares()');
+
         // Reading available OTA firmwares
         $otaDir = __DIR__.'/../../'.otaDir;
         if (is_dir($otaDir))
@@ -43,7 +45,7 @@
                 // if ((substr($dirEntry, -4) != ".ota") && (substr($dirEntry, -11) != ".ota.signed"))
                 //     continue;
 
-                logMessage('debug', 'OTA FW: '.$dirEntry);
+                logMessage('debug', '  OTA FW: '.$dirEntry);
                 $fullPath = $otaDir."/".$dirEntry;
                 $fh = fopen($fullPath, "rb");
                 $fc = fread($fh, 69); // fc = File content
@@ -66,7 +68,7 @@
                     }
                 }
 
-                logMessage('debug', '  startIdx='.$startIdx);
+                logMessage('debug', '  StartIdx='.$startIdx);
                 if ($startIdx != 0) {
                     fseek($fh, $startIdx, SEEK_SET);
                     $fc = fread($fh, 69); // fc = File content
@@ -90,7 +92,7 @@
                     .'/VtotalSize';
                 $header = unpack($format, $fc);
                 if ($header['otaUpgradeFileId'] != 0x0BEEF11E) {
-                    logMessage('error', 'Fichier OTA invalide: '.$dirEntry);
+                    logMessage('error', '  Fichier OTA invalide: '.$dirEntry);
                     continue;
                 }
                 $header['otaUpgradeFileId'] = sprintf("%08X", $header['otaUpgradeFileId']);

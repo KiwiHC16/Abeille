@@ -9,7 +9,8 @@ ChangeLog
 - Placement réseau: Couleur de lien fonction du LQI.
 - Interne: Parser: Cmd Ikea cluster 0005 cmd 07 revue.
 - Trafri remote control: Mise-à-jour modele (2576).
-- Interne: Parser: Correction decodeDataType() pour type 41/42.
+- Interne: Parser: Correction 'decodeDataType()' pour type 41/42.
+- Interne: Parser: Correction 'Attribut report'.
 
 230416-BETA-1
 -------------

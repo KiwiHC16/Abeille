@@ -3930,8 +3930,8 @@
                                         $attr['value'] = $this->cleanManufId($attr['value']);
                                         $attr['comment'] = "cleaned manuf";
                                     }
-                                    if (($attr == '0004') || ($attr == '0005') || ($attr == '0010'))
-                                        $updates[$clustId.'-'.$attrId] = $attr['value'];
+                                    if (($attr['id'] == '0004') || ($attr['id'] == '0005') || ($attr['id'] == '0010'))
+                                        $updates[$clustId.'-'.$attr['id']] = $attr['value'];
                                 }
 
                                 // Log
@@ -3946,36 +3946,6 @@
                                 parserLog('debug', $m, "8002");
                                 $toMon[] = $m; // For monitor
 
-                                // // Attribute value post correction according to ZCL spec
-                                // if ($clustId == "0001") {
-                                //     if ($attr['id'] == "0020") {
-                                //         $attr['value'] = $attr['value'] / 10; // Battery voltage
-                                //     } else if ($attr['id'] == "0021") {
-                                //         $attr['value'] = $attr['value'] / 2; // Battery percent
-                                //     }
-                                // } else if ($clustId == "0400") {
-                                //     if ($attr['id'] == "0000") {
-                                //         $val = $attr['value'];
-                                //         if (!isset($eq['notStandard-0400-0000']))
-                                //             $val = ($val == 0 ? 0 : pow(10, ($val - 1) / 10000)); // Illuminance
-                                //         else
-                                //             parserLog('debug', '  NOT STANDARD attribute value');
-                                //         $attr['value'] = $val;
-                                //     }
-                                // } else if ($clustId == "0402") {
-                                //     if ($attr['id'] == "0000") {
-                                //         $attr['value'] /= 100; // Temperature
-                                //     }
-                                // } else if ($clustId == "0403") {
-                                //     if ($attr['id'] == "0000") {
-                                //         $attr['value'] /= 10; // Pressure (in kPa)
-                                //     }
-                                // } else if ($clustId == "0405") {
-                                //     if ($attr['id'] == "0000") {
-                                //         $attr['value'] /= 100; // Humidity
-                                //     }
-                                // }
-
                                 $attrReportN[] = array(
                                     'name' => $clustId.'-'.$srcEp.'-'.$attr['id'],
                                     'value' => $attr['value'],
@@ -3983,7 +3953,9 @@
                             }
                         }
 
-                        $unknown = $this->deviceUpdates($dest, $srcAddr, $srcEp, $updates);
+                        $unknown = false;
+                        if (count($updates) != 0)
+                            $unknown = $this->deviceUpdates($dest, $srcAddr, $srcEp, $updates);
                         if ($unknown)
                             return; // So far unknown to Jeedom
                     } // End 'Report attributes'

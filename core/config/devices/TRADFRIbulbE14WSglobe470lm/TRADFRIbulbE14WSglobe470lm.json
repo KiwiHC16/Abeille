@@ -1,14 +1,14 @@
 {
     "TRADFRIbulbE14WSglobe470lm": {
         "manufacturer": "Ikea",
-        "model": "?",
+        "model": "LED2101G4",
         "type": "Ikea E14 WS bulb",
         "timeout": "60",
         "category": {
             "light": "1"
         },
         "configuration": {
-            "icon": "?",
+            "icon": "Ikea-BulbE14-Globe",
             "mainEP": "01"
         },
         "commands": {

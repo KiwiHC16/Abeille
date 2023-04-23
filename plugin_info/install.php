@@ -806,6 +806,7 @@
                 "sensor_smoke" => '2023-04-04 23:07:00',
                 "sensor_switch.aq2" => '2023-04-06 22:14:00',
                 "remote.b1acn01" => '2023-04-06 22:14:00',
+                "sensor_ht" => '2023-04-23 18:30:00',
             );
             foreach ($eqLogics as $eqLogic) {
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);

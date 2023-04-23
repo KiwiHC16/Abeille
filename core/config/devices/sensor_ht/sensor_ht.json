@@ -13,6 +13,7 @@
         "category": {
             "heating": "1"
         },
+        "comment": "Cmds 402 & 405 seem already sent by proper cluster",
         "commands": {
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
@@ -24,10 +25,32 @@
                 "isVisible": 1
             },
             "Battery-Volt": {
-                "use": "inf_zbAttr-0001-BatteryVolt"
+                "use": "inf_batteryVoltAndPercent-285-300"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
+            }
+        },
+        "xiaomi": {
+            "fromDevice": {
+                "0000-FF01": {
+                    "01-21": {
+                        "func": "numberDiv",
+                        "div": 1000,
+                        "info": "0001-01-0020",
+                        "comment": "voltage"
+                    },
+                    "64-29": {
+                        "func": "numberDiv",
+                        "div": 100,
+                        "info": "0402-01-0000"
+                    },
+                    "65-21": {
+                        "func": "numberDiv",
+                        "div": 100,
+                        "info": "0405-01-0000"
+                    }
+                }
             }
         }
     }

@@ -6423,22 +6423,23 @@
 
                 // Xiaomi capteur temperature rond V1 / lumi.sensor_86sw2 (Wall 2 Switches sur batterie)
                 else if (($attrId == "FF01") && ($attrSize == "001F")) {
-                    parserLog("debug","  Xiaomi proprietary (Capteur Temperature Rond/Wall 2 Switch)");
+                    parserLog("debug","  Xiaomi proprietary (Round temperature/Wall 2 Switch) => Handled by xiaomi section");
+                    return;
 
-                    // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
-                    // For info until activation
+                    // // For info until activation
+                    // xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
+                    // // For info until activation
 
-                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
-                    $humidity = hexdec( substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2) );
-                    parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity );
-                    $attrReportN = [
-                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                        array( "name" => "0402-01-0000", "value" => $temperature / 100 ),
-                        array( "name" => "0405-01-0000", "value" => $humidity / 100 ),
-                    ];
+                    // $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                    // $temperature = unpack("s", pack("s", hexdec( substr($payload, 24 + 21 * 2 + 2, 2).substr($payload, 24 + 21 * 2, 2) )))[1];
+                    // $humidity = hexdec( substr($payload, 24 + 25 * 2 + 2, 2).substr($payload, 24 + 25 * 2, 2) );
+                    // parserLog('debug', '  Volt='.$voltage.', Volt%='.$this->volt2pourcent($voltage).', Temp='.$temperature.', Humidity='.$humidity );
+                    // $attrReportN = [
+                    //     // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
+                    //     array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
+                    //     array( "name" => "0402-01-0000", "value" => $temperature / 100 ),
+                    //     array( "name" => "0405-01-0000", "value" => $humidity / 100 ),
+                    // ];
                 }
 
                 // Xiaomi capteur Presence V2

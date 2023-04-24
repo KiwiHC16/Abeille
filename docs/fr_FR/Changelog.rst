@@ -3,6 +3,7 @@ ChangeLog
 
 - Ikea E14 WS globe 470lm: Mise-à-jour modèle (2578).
 - Xiaomi 'sensor_ht': Modification modele pour ajout section 'xiaomi'.
+- Module volet roulant LoraTap SC500ZB-v2: Mise-à-jour modèle (2552).
 
 230422-BETA-1
 -------------

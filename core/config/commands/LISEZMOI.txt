@@ -180,3 +180,6 @@ Exemple de commande 'action'
 
   * notStandard: 1
     Permet d'indiquer que l'attribut ne doit pas etre traité comme un attribut ZCL.
+
+  * RefreshData: ??
+    Ex: "RefreshData": "1"

@@ -216,27 +216,27 @@
                 'msg' => $msg
             );
             cmdLog('debug', 'addTempoCmdAbeille - tempoMessageQueue: '.json_encode($this->tempoMessageQueue), $this->debug['tempo']);
-            if (count($this->tempoMessageQueue) > 50 ) {
-                cmdLog('info', 'Il y a plus de 50 messages dans le queue tempo.' );
+            if (count($this->tempoMessageQueue) > 50) {
+                cmdLog('info', 'Il y a plus de 50 messages dans le queue tempo.');
             }
         }
 
         public function execTempoCmdAbeille() {
             global $abQueues;
 
-            if (count($this->tempoMessageQueue) < 1) {
+            if (count($this->tempoMessageQueue) == 0)
                 return;
-            }
 
             $now = time();
             foreach ($this->tempoMessageQueue as $key => $mqttMessage) {
                 // deamonlog('debug', 'execTempoCmdAbeille - tempoMessageQueue - 0: '.$mqttMessage[0] );
-                if ($mqttMessage['time']<$now) {
-                    $this->publishMosquitto($abQueues['xToCmd']['id'], $mqttMessage['priority'], $mqttMessage['topic'], $mqttMessage['msg']);
-                    cmdLog('debug', 'execTempoCmdAbeille - tempoMessageQueue - one less: -> '.json_encode($this->tempoMessageQueue[$key]), $this->debug['tempo']);
-                    unset($this->tempoMessageQueue[$key]);
-                    cmdLog('debug', 'execTempoCmdAbeille - tempoMessageQueue : '.json_encode($this->tempoMessageQueue), $this->debug['tempo']);
-                }
+                if ($mqttMessage['time'] > $now)
+                    continue;
+
+                $this->publishMosquitto($abQueues['xToCmd']['id'], $mqttMessage['priority'], $mqttMessage['topic'], $mqttMessage['msg']);
+                cmdLog('debug', 'execTempoCmdAbeille(): tempoMessageQueue='.json_encode($this->tempoMessageQueue[$key]), $this->debug['tempo']);
+                unset($this->tempoMessageQueue[$key]);
+                // cmdLog('debug', 'execTempoCmdAbeille - tempoMessageQueue : '.json_encode($this->tempoMessageQueue), $this->debug['tempo']);
             }
         }
 

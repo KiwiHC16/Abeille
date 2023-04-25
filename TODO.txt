@@ -1,3 +1,12 @@
+RefreshData
+    Supprimer ce support ? Voir #2580 => ERROR bind0030
+    En lien avec le point suivant (updateField)
+
+Voir ou/quand faire updateField
+    cas Jeedom vers Abeille (donc execute())
+    cas configure (venant de parser)
+    cas autre ?
+
 Ajouter support attr 4C
     [2023-04-02 11:33:19] Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=0000, SrcEP=01, DstEP=01, SrcAddrMode=02, SrcAddr=B4B8, DstAddrMode=02, DstAddr=0000
     [2023-04-02 11:33:19]   FCF=1C/General/Serv->Cli/ManufCode=1234, SQN=47, cmd=0A/Report attributes

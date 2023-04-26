@@ -64,8 +64,16 @@
                 "use": "inf_zbCmdC-0008-StepWithOnOff",
                 "isVisible": 1
             },
+            "Up Long": {
+                "use": "inf_zbCmdC-0008-MoveWithOnOff",
+                "isVisible": 1
+            },
             "Down": {
                 "use": "inf_zbCmdC-0008-Step",
+                "isVisible": 1
+            },
+          	"Down Long": {
+                "use": "inf_zbCmdC-0008-Move",
                 "isVisible": 1
             },
             "Left-right": {

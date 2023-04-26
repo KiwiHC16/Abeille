@@ -4330,9 +4330,11 @@
                         if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                             return;
 
-                        if (($cmd == "00") || ($cmd == "01")) { // Off=00, On=01
+                        $cmdInt = hexdec($cmd);
+                        if ((($cmdInt >= 0) && ($cmdInt <= 2)) || // Off=00, On=01, Toggle=02
+                            (($cmdInt >= 0x40) && ($cmdInt <= 0x42))) {
                             /* Forwarding to Abeille */
-                            // Tcharp38: The 'Click-Middle' must be avoided. Can't define EP so the source of this "click".
+                            // Tcharp38: The 'Click-Middle' is OBSOLETE. Can't define EP so the source of this "click".
                             //           Moreover no sense since there may have no link with "middle". It's is just a OnOff cmd FROM a device to Zigate.
                             $attrReportN[] = array(
                                 'name' => 'Click-Middle', // OBSOLETE: Do not use !!
@@ -4408,7 +4410,7 @@
 
                         // Tcharp38: New way of handling this event (Level cluster cmd coming from a device)
                         $attrReportN[] = array(
-                            'name' => $ep.'-0008-cmd'.$cmd,
+                            'name' => $srcEp.'-0008-cmd'.$cmd,
                             'value' => 1, // Equivalent to a click. No special value
                         );
                         // Tcharp38: Where is the data associated to cmd ? May need to decode that with 8002 instead.
@@ -4680,7 +4682,7 @@
                     } // End $clustId == "EF00"
 
                     else {
-                        parserLog("debug", "  Ignored cluster specific command ".$clustId."-".$cmd, "8002");
+                        parserLog("debug", "  WARNING: Ignored cluster specific command ".$clustId."-".$cmd, "8002");
                         return;
                     }
                 } // End cluster specific commands

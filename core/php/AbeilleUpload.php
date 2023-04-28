@@ -11,8 +11,13 @@
             $_FILES['file']['name']: Destination file name
             $_FILES['file']['tmp_name']: Source tmp file name
             $_FILES['destDir']: Dest dir relative to Abeille's root
+        $_POST['destDir'] => OPTIONAL
+            /xxx => absolut path for destination directory
+            xxx/yy => relative path to Abeille's root
+        $_POST['destName'] => OPTIONAL
      */
     logDebug('AbeilleUpload: _FILES='.json_encode($_FILES));
+    logDebug('AbeilleUpload: _POST='.json_encode($_POST));
 
     $tmpFile = $_FILES['file']['tmp_name'];
     logDebug('AbeilleUpload: tmpFile='.$tmpFile);
@@ -22,11 +27,19 @@
         return;
     }
 
-    /* Checking if destination dir exists */
-    if (!isset($_FILES['destDir']))
+    if (!isset($_POST['destDir']))
         $destDir = __DIR__.'/../../'.otaDir; // Defaulting to OTA dir
+    else if (substr($_POST['destDir'], 0, 1) == '/') // Absolut path ?
+        $destDir = $_POST['destDir'];
+    else // Relative to Abeille's root path
+        $destDir = __DIR__.'/../../'.$_POST['destDir'];
+
+    if (!isset($_POST['destName']))
+        $destName = $_FILES['file']['name'];
     else
-        $destDir = __DIR__.'/../../'.$_FILES['destDir'];
+        $destName = $_POST['destName'];
+
+    /* Checking if destination dir exists */
     if (!file_exists($destDir)) {
         mkdir($destDir, 0744);
         if (!file_exists($destDir)) {
@@ -39,7 +52,7 @@
         exec($cmd);
     }
 
-    $destFile = $destDir.'/'.$_FILES['file']['name'];
+    $destFile = $destDir.'/'.$destName;
     logDebug('AbeilleUpload: destFile='.$destFile);
     logDebug('AbeilleUpload: tmp file size='.filesize($tmpFile));
     if (move_uploaded_file($tmpFile, $destFile)) {

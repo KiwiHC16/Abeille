@@ -26,6 +26,8 @@
         $userMap = "images/AbeilleNetworkMap-1200.png";
     }
     echo "<script>console.log(\"userMap2=" . $userMap . "\")</script>";
+    sendVarToJS('userMap', $userMap);
+
     $iSize = getimagesize(__DIR__."/../../".$userMap);
     $width = $iSize[0];
     $height = $iSize[1];
@@ -69,7 +71,8 @@
         }
     </style>
 
-    <div class="row">
+    <!-- <div class="row"> -->
+    <div>
         <div id="idLeftBar" class="column" style="width:100px">
             <!-- Drop down list to select Zigate -->
             <select name="idZigate">
@@ -85,7 +88,14 @@
             </select>
 
             <button id="save" onclick="saveSettings()" style="width:100%;margin-top:4px">{{Sauver}}</button>
-            <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->
+            <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button>
+
+            </br>
+            </br>
+
+            <!-- View options -->
+            <input type="checkbox" id="idViewLinks" checked>{{Liens}}
+            <!-- TODO: Text size (to be stored in DB) -->
         </div>
 
         <div id="idGraph" class="column">
@@ -93,78 +103,6 @@
             </svg>
         </div>
     </div>
-
-    <!-- <table>
-        <tr>
-            <td>
-            Zigate
-            </td>
-            <td> -->
-                <!-- Select 1st Zigate if none passed as argument (zigate=X) -->
-                <!-- <?php
-                for ($i=1; $i<=maxNbOfZigate; $i++) {
-                    if (config::byKey('ab::zgEnabled'.$i, 'Abeille', 'N') != 'Y')
-                        continue;
-
-                    if ($i == $zgId)
-                        echo "<input id=\"btntest\" type=\"button\" checked value=\"Zigate " . $i . "\" onclick=\"refreshNetwork(".$i.")\" />";
-                    else
-                        echo "<input id=\"btntest\" type=\"button\" value=\"Zigate " . $i . "\" onclick=\"refreshNetwork(".$i.")\" />";
-                }
-                ?>
-            </td>
-        </tr>
-            <td>
-            Filtre
-            </td>
-            <td>
-                <table><tr>
-                    <td>Source</td><td>Destination</td><td>Paramètre</td><td>Relation</td></tr>
-                    <td>   <script>filtreSource(); </script>        </td>
-                    <td>   <script>filtreDestination();</script>    </td>
-                    <td>   <script>filtreDetails();  </script>      </td>
-                    <td>   <script>filtreParent();  </script>       </td>
-                </tr></table>
-            </td>
-        <tr>
-            <td>
-            Actions
-            </td>
-            <td>
-                <button id="ReLoadThePage" onclick="ReLoad()">Rafraichir</button>
-                <button id="Refresh" onclick="refreshNetworkInformation()">Réinterroger le réseau</button>
-                <input id="refreshInformation" type="text" value="" readonly size=40 />
-                <button id="rucheCentered" onclick="rucheCentered()"   >Centrer ruche</button>
-                <button id="placementAuto" onclick="placementAuto()"   >Placement auto</button>
-            </td>
-        <tr>
-        <tr>
-            <td>
-            Image
-            </td>
-            <td>
-                <form action="upload.php" method="post" enctype="multipart/form-data">
-                    <table><tr><td>
-                    Image (format PNG)<br>
-                    </td><td>
-                    <input type="file" name="fileToUpload" id="fileToUpload" accept=".png"/>
-                    </td><td>
-                    <input type="submit" value="Installer" name="submit"/>
-                    </td>
-                    </tr></table>
-                </form>
-            </td>
-        <tr>
-    </table> -->
-
-    </br>
-
-    <!-- <table><tr><td>
-    <button id="save"          onclick="save()"            >local save</button>
-    <button id="restore"       onclick="restore()"         >local restore</button>
-    <button id="save"          onclick="saveAbeilles()"    >save</button>
-    </td></tr></table> -->
-
 </body>
 </html>
 
@@ -528,143 +466,143 @@
         return legend;
     }
 
-    function dessineLesTextes(offsetX, includeGroup) {
-        console.log("dessineLesTextes()");
+    // function dessineLesTextes(offsetX, includeGroup) {
+    //     console.log("dessineLesTextes()");
 
-        if (typeof lqiTable === "undefined") {
-            console.log("=> lqiTable is UNDEFINED")
-            return;
-        }
+    //     if (typeof lqiTable === "undefined") {
+    //         console.log("=> lqiTable is UNDEFINED")
+    //         return;
+    //     }
 
-        var lesTextes = "";
-        var info = "";
+    //     var lesTextes = "";
+    //     var info = "";
 
-        if ( includeGroup=="Yes" ) { lesTextes = lesTextes + '<g id="lesTextes">'; }
+    //     if ( includeGroup=="Yes" ) { lesTextes = lesTextes + '<g id="lesTextes">'; }
 
-        for (voisines in lqiTable.data) {
+    //     for (voisines in lqiTable.data) {
 
-            // lesTextes = lesTextes + lqiTable.data[voisines].NE + "->" + lqiTable.data[voisines].Voisine + " / ";
-            var NE = lqiTable.data[voisines].NE; var voisine = lqiTable.data[voisines].Voisine;
-            var X1=0; var X2=0; var Y1=0; var Y2=0; var midX=0; var midY=0;
+    //         // lesTextes = lesTextes + lqiTable.data[voisines].NE + "->" + lqiTable.data[voisines].Voisine + " / ";
+    //         var NE = lqiTable.data[voisines].NE; var voisine = lqiTable.data[voisines].Voisine;
+    //         var X1=0; var X2=0; var Y1=0; var Y2=0; var midX=0; var midY=0;
 
-            if ( ( (Source=="All") || (Source==NE) || (Destination=="All")|| (Destination==voisine) ) && ( (Hierarchy==lqiTable.data[voisines].Relationship) || (Hierarchy=="All") ) ) {
-                if ( typeof myObjNew[NE] == "undefined" ) {
+    //         if ( ( (Source=="All") || (Source==NE) || (Destination=="All")|| (Destination==voisine) ) && ( (Hierarchy==lqiTable.data[voisines].Relationship) || (Hierarchy=="All") ) ) {
+    //             if ( typeof myObjNew[NE] == "undefined" ) {
 
-                }
-                else {
-                    if ( typeof myObjNew[NE].x == "undefined" )      {X1=0;} else { X1 = myObjNew[NE].x + offsetX; }
-                    if ( typeof myObjNew[NE].y == "undefined" )      {Y1=0;} else { Y1 = myObjNew[NE].y; }
-                }
-                if ( typeof myObjNew[voisine] == "undefined" ) {
-                }
-                else {
-                    if ( typeof myObjNew[voisine].x == "undefined" ) {X2=0;} else { X2 = myObjNew[voisine].x + offsetX; }
-                    if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
-                }
+    //             }
+    //             else {
+    //                 if ( typeof myObjNew[NE].x == "undefined" )      {X1=0;} else { X1 = myObjNew[NE].x + offsetX; }
+    //                 if ( typeof myObjNew[NE].y == "undefined" )      {Y1=0;} else { Y1 = myObjNew[NE].y; }
+    //             }
+    //             if ( typeof myObjNew[voisine] == "undefined" ) {
+    //             }
+    //             else {
+    //                 if ( typeof myObjNew[voisine].x == "undefined" ) {X2=0;} else { X2 = myObjNew[voisine].x + offsetX; }
+    //                 if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
+    //             }
 
-                midX=(X1+X2)/2; midY=(Y1+Y2)/2;
+    //             midX=(X1+X2)/2; midY=(Y1+Y2)/2;
 
-                if ( Parameter == "LinkQualityDec" )    { info = lqiTable.data[voisines].LinkQualityDec;   }
-                if ( Parameter == "Depth" )             { info = lqiTable.data[voisines].Depth;            }
-                if ( Parameter == "Voisine" )           { info = lqiTable.data[voisines].Voisine;          }
-                if ( Parameter == "IEEE_Address" )      { info = lqiTable.data[voisines].IEEE_Address;     }
-                if ( Parameter == "Type" )              { info = lqiTable.data[voisines].Type;             }
-                if ( Parameter == "Relationship" )      { info = lqiTable.data[voisines].Relationship;     }
-                if ( Parameter == "Rx" )                { info = lqiTable.data[voisines].Rx;               }
+    //             if ( Parameter == "LinkQualityDec" )    { info = lqiTable.data[voisines].LinkQualityDec;   }
+    //             if ( Parameter == "Depth" )             { info = lqiTable.data[voisines].Depth;            }
+    //             if ( Parameter == "Voisine" )           { info = lqiTable.data[voisines].Voisine;          }
+    //             if ( Parameter == "IEEE_Address" )      { info = lqiTable.data[voisines].IEEE_Address;     }
+    //             if ( Parameter == "Type" )              { info = lqiTable.data[voisines].Type;             }
+    //             if ( Parameter == "Relationship" )      { info = lqiTable.data[voisines].Relationship;     }
+    //             if ( Parameter == "Rx" )                { info = lqiTable.data[voisines].Rx;               }
 
-                // console.log("dessineLesTextes function: Parameter: " + Parameter );
+    //             // console.log("dessineLesTextes function: Parameter: " + Parameter );
 
-                lesTextes = lesTextes + '<text x="'+midX+'" y="'+midY+'" fill="purple" style="font-size: 8px;">'+info+'</text>';
-            }
-        }
+    //             lesTextes = lesTextes + '<text x="'+midX+'" y="'+midY+'" fill="purple" style="font-size: 8px;">'+info+'</text>';
+    //         }
+    //     }
 
-        if ( includeGroup=="Yes" ) { lesTextes = lesTextes + '</g>'; }
+    //     if ( includeGroup=="Yes" ) { lesTextes = lesTextes + '</g>'; }
 
-        return lesTextes;
-    }
+    //     return lesTextes;
+    // }
 
-    function dessineLesVoisinesV2(offsetX, includeGroup) {
-        console.log("dessineLesVoisinesV2()");
+    // function dessineLesVoisinesV2(offsetX, includeGroup) {
+    //     console.log("dessineLesVoisinesV2()");
 
-        if (typeof lqiTable === "undefined") {
-            console.log("=> lqiTable is UNDEFINED")
-            return;
-        }
+    //     if (typeof lqiTable === "undefined") {
+    //         console.log("=> lqiTable is UNDEFINED")
+    //         return;
+    //     }
 
-        var lesVoisines = "";
+    //     var lesVoisines = "";
 
-        if ( includeGroup=="Yes" ) { lesVoisines = lesVoisines + '<g id="lesVoisines">'; }
+    //     if ( includeGroup=="Yes" ) { lesVoisines = lesVoisines + '<g id="lesVoisines">'; }
 
-        for (voisines in lqiTable.data) {
+    //     for (voisines in lqiTable.data) {
 
-            //var NE = lqiTable.data[voisines].NE;
-            var NE = lqiTable.data[voisines].NE;
-            var voisine = lqiTable.data[voisines].Voisine;
+    //         //var NE = lqiTable.data[voisines].NE;
+    //         var NE = lqiTable.data[voisines].NE;
+    //         var voisine = lqiTable.data[voisines].Voisine;
 
-            if ( ( (Source=="All") || (Source==NE) || (Destination=="All")|| (Destination==voisine) ) && ( (Hierarchy==lqiTable.data[voisines].Relationship) || (Hierarchy=="All") ) ) {
-                var X1=0; var X2=0; var Y1=0; var Y2=0;
-                var color="orange";
+    //         if ( ( (Source=="All") || (Source==NE) || (Destination=="All")|| (Destination==voisine) ) && ( (Hierarchy==lqiTable.data[voisines].Relationship) || (Hierarchy=="All") ) ) {
+    //             var X1=0; var X2=0; var Y1=0; var Y2=0;
+    //             var color="orange";
 
-                if ( typeof myObjNew[NE] == "undefined" ) {
+    //             if ( typeof myObjNew[NE] == "undefined" ) {
 
-                }
-                else {
-                    if ( typeof myObjNew[NE].x == "undefined" )      {X1=0;} else { X1 = myObjNew[NE].x + offsetX; }
-                    if ( typeof myObjNew[NE].y == "undefined" )      {Y1=0;} else { Y1 = myObjNew[NE].y; }
-                }
-                if ( typeof myObjNew[voisine] == "undefined" ) {
-                }
-                else {
-                    if ( typeof myObjNew[voisine].x == "undefined" ) {X2=0;} else { X2 = myObjNew[voisine].x + offsetX; }
-                    if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
-                }
+    //             }
+    //             else {
+    //                 if ( typeof myObjNew[NE].x == "undefined" )      {X1=0;} else { X1 = myObjNew[NE].x + offsetX; }
+    //                 if ( typeof myObjNew[NE].y == "undefined" )      {Y1=0;} else { Y1 = myObjNew[NE].y; }
+    //             }
+    //             if ( typeof myObjNew[voisine] == "undefined" ) {
+    //             }
+    //             else {
+    //                 if ( typeof myObjNew[voisine].x == "undefined" ) {X2=0;} else { X2 = myObjNew[voisine].x + offsetX; }
+    //                 if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
+    //             }
 
-                if ( lqiTable.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
-                if ( lqiTable.data[voisines].LinkQualityDec <  50 ) { color = "red";}
+    //             if ( lqiTable.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
+    //             if ( lqiTable.data[voisines].LinkQualityDec <  50 ) { color = "red";}
 
-                lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:'+color+';stroke-width:1"/>';
-            }
-        }
+    //             lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:'+color+';stroke-width:1"/>';
+    //         }
+    //     }
 
-        if ( includeGroup=="Yes" ) { lesVoisines = lesVoisines + '</g>'; }
+    //     if ( includeGroup=="Yes" ) { lesVoisines = lesVoisines + '</g>'; }
 
-        return lesVoisines;
-    }
+    //     return lesVoisines;
+    // }
 
-    function dessineLesAbeilles(includeGroup) {
-        var lesAbeilles = "";
+    // function dessineLesAbeilles(includeGroup) {
+    //     var lesAbeilles = "";
 
-        if ( includeGroup=="Yes" ) { lesAbeilles = lesAbeilles + '<g id="lesAbeilles">'; }
-        for (shortAddress in myObjNew) {
-            myObjOrg[shortAddress].x = myObjNew[shortAddress].x;
-            myObjOrg[shortAddress].y = myObjNew[shortAddress].y;
-            lesAbeilles = lesAbeilles + '<circle class="draggable" id="'+shortAddress+'"   cx="'+myObjNew[shortAddress].x+'"  cy="'+myObjNew[shortAddress].y+'"              r="10"           fill="'+myObjNew[shortAddress].color+'"  transform="translate(0, 0)"></circle>';
-        }
-        if ( includeGroup=="Yes" ) { lesAbeilles = lesAbeilles + '</g>'; }
-        return lesAbeilles;
-    }
+    //     if ( includeGroup=="Yes" ) { lesAbeilles = lesAbeilles + '<g id="lesAbeilles">'; }
+    //     for (shortAddress in myObjNew) {
+    //         myObjOrg[shortAddress].x = myObjNew[shortAddress].x;
+    //         myObjOrg[shortAddress].y = myObjNew[shortAddress].y;
+    //         lesAbeilles = lesAbeilles + '<circle class="draggable" id="'+shortAddress+'"   cx="'+myObjNew[shortAddress].x+'"  cy="'+myObjNew[shortAddress].y+'"              r="10"           fill="'+myObjNew[shortAddress].color+'"  transform="translate(0, 0)"></circle>';
+    //     }
+    //     if ( includeGroup=="Yes" ) { lesAbeilles = lesAbeilles + '</g>'; }
+    //     return lesAbeilles;
+    // }
 
-    function dessineLesAbeillesText(myObj,offsetX,includeGroup) {
-        var lesAbeillesText = "";
-        var X = 0;
-        var Y = 0;
+    // function dessineLesAbeillesText(myObj,offsetX,includeGroup) {
+    //     var lesAbeillesText = "";
+    //     var X = 0;
+    //     var Y = 0;
 
-        if ( includeGroup=="Yes" ) { lesAbeillesText = lesAbeillesText + '<g id="lesAbeillesText">'; }
+    //     if ( includeGroup=="Yes" ) { lesAbeillesText = lesAbeillesText + '<g id="lesAbeillesText">'; }
 
-        // console.log( JSON.stringify(myObj) );
-        for (shortAddress in myObj) {
-            X = myObj[shortAddress].x + offsetX;
-            Y = myObj[shortAddress].y;
-            if( (typeof jeedomDevices[shortAddress] === "object") && (jeedomDevices[shortAddress] !== null) ) {
-                lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+jeedomDevices[shortAddress].id+'" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].objectName+' - '+myObj[shortAddress].name+' - '+' ('+shortAddress+')</text> </a>';
-            }
-            else {
-                lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].name+' ('+shortAddress+')</text> </a>';
-            }
-        }
-        if ( includeGroup=="Yes" ) { lesAbeillesText = lesAbeillesText + '</g>'; }
-        return lesAbeillesText;
-    }
+    //     // console.log( JSON.stringify(myObj) );
+    //     for (shortAddress in myObj) {
+    //         X = myObj[shortAddress].x + offsetX;
+    //         Y = myObj[shortAddress].y;
+    //         if( (typeof jeedomDevices[shortAddress] === "object") && (jeedomDevices[shortAddress] !== null) ) {
+    //             lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+jeedomDevices[shortAddress].id+'" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].objectName+' - '+myObj[shortAddress].name+' - '+' ('+shortAddress+')</text> </a>';
+    //         }
+    //         else {
+    //             lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].name+' ('+shortAddress+')</text> </a>';
+    //         }
+    //     }
+    //     if ( includeGroup=="Yes" ) { lesAbeillesText = lesAbeillesText + '</g>'; }
+    //     return lesAbeillesText;
+    // }
 
     // function setPosition(mode) {
     //     var iAbeille = 0;
@@ -808,78 +746,78 @@
     //     }
     // }
 
-    function refreshAll(mode) {
-        console.log("function refreshAll: "+ mode );
+    // function refreshAll(mode) {
+    //     console.log("function refreshAll: "+ mode );
 
-        if ( mode == "All" ) {
-            getLqiTable();
-            getJeedomDevices();
+    //     if ( mode == "All" ) {
+    //         getLqiTable();
+    //         getJeedomDevices();
 
-            myJSON_AddAbeillesFromJeedom();
-            // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
-            myJSON_AddMissing();
-            // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
-        }
+    //         myJSON_AddAbeillesFromJeedom();
+    //         // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
+    //         myJSON_AddMissing();
+    //         // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
+    //     }
 
-        document.getElementById("legend").innerHTML = drawLegend(false);
-        document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,"No");
-        document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,"No");
-        document.getElementById("lesAbeillesText").innerHTML = dessineLesAbeillesText(myObjNew, 22,"No");
-        document.getElementById("lesAbeilles").innerHTML = dessineLesAbeilles("No");
-        // Je ne peux pas redessiner les abeilles car l'objet graphique contient la Transklation et les x, y d'origine
-        // alors que dans myObjNew j'ai les nouvelles coordonnées mais pas la translation.
-    }
+    //     document.getElementById("legend").innerHTML = drawLegend(false);
+    //     document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,"No");
+    //     document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,"No");
+    //     document.getElementById("lesAbeillesText").innerHTML = dessineLesAbeillesText(myObjNew, 22,"No");
+    //     document.getElementById("lesAbeilles").innerHTML = dessineLesAbeilles("No");
+    //     // Je ne peux pas redessiner les abeilles car l'objet graphique contient la Transklation et les x, y d'origine
+    //     // alors que dans myObjNew j'ai les nouvelles coordonnées mais pas la translation.
+    // }
 
-    function rucheCentered() {
-        console.log("rucheCentered("+Ruche+", X="+center.X+", Y="+center.Y+")");
+    // function rucheCentered() {
+    //     console.log("rucheCentered("+Ruche+", X="+center.X+", Y="+center.Y+")");
 
-        myObjNew[Ruche+"/0000"].x = center.X;
-        myObjNew[Ruche+"/0000"].y = center.Y;
-        refreshAll();
-    }
+    //     myObjNew[Ruche+"/0000"].x = center.X;
+    //     myObjNew[Ruche+"/0000"].y = center.Y;
+    //     refreshAll();
+    // }
 
-    function placementAuto() {
-        // setPosition("AutoForce");
-        refreshAll();
-    }
+    // function placementAuto() {
+    //     // setPosition("AutoForce");
+    //     refreshAll();
+    // }
 
-    function save() {
-        // Thanks to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-        localStorage.setItem('myObjNew', JSON.stringify(myObjNew));
-    }
+    // function save() {
+    //     // Thanks to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+    //     localStorage.setItem('myObjNew', JSON.stringify(myObjNew));
+    // }
 
-    function restore() {
-        // Thanks to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-        myObjOld = JSON.parse( localStorage.getItem('myObjNew') );
-        myObjNew = JSON.parse( localStorage.getItem('myObjNew') );
-        refreshAll();
-    }
+    // function restore() {
+    //     // Thanks to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
+    //     myObjOld = JSON.parse( localStorage.getItem('myObjNew') );
+    //     myObjNew = JSON.parse( localStorage.getItem('myObjNew') );
+    //     refreshAll();
+    // }
 
     // function selectRuche(form) {
     //     Ruche = form.list.value;
     //     refreshAll("All");
     // }
 
-    function selectSource(form) {
-        Source = form.list.value;
-        refreshAll();
-    }
+    // function selectSource(form) {
+    //     Source = form.list.value;
+    //     refreshAll();
+    // }
 
-    function selectDestination(form) {
-        Destination = form.list.value;
-        refreshAll();
-    }
+    // function selectDestination(form) {
+    //     Destination = form.list.value;
+    //     refreshAll();
+    // }
 
-    function selectDetails(form) {
-        Parameter = form.list.value;
-        // console.log("selectDetails function: Parameter: " + Parameter );
-        refreshAll();
-    }
+    // function selectDetails(form) {
+    //     Parameter = form.list.value;
+    //     // console.log("selectDetails function: Parameter: " + Parameter );
+    //     refreshAll();
+    // }
 
-    function selectParent(form) {
-        Hierarchy = form.list.value;
-        refreshAll();
-    }
+    // function selectParent(form) {
+    //     Hierarchy = form.list.value;
+    //     refreshAll();
+    // }
 
     /* Really used ?
     function filtreRuche() {
@@ -896,76 +834,76 @@
     }
     */
 
-    function filtreSource() {
-        document.write( '<FORM NAME="myformSource" ACTION="" METHOD="GET">');
-        document.write( '<SELECT NAME="list" >');
-        document.write( '<OPTION value="All" selected>All</OPTION>');
-        document.write( '<OPTION value="None" >None</OPTION>');
+    // function filtreSource() {
+    //     document.write( '<FORM NAME="myformSource" ACTION="" METHOD="GET">');
+    //     document.write( '<SELECT NAME="list" >');
+    //     document.write( '<OPTION value="All" selected>All</OPTION>');
+    //     document.write( '<OPTION value="None" >None</OPTION>');
 
-        for (shortAddress in jeedomDevices) {
-            document.write( '<OPTION value="'+shortAddress+'" >'+jeedomDevices[shortAddress].name+'</OPTION>');
-        }
+    //     for (shortAddress in jeedomDevices) {
+    //         document.write( '<OPTION value="'+shortAddress+'" >'+jeedomDevices[shortAddress].name+'</OPTION>');
+    //     }
 
-        document.write( '</SELECT>');
-        // document.write( '</br>');
-        document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectSource(this.form)"/>');
-        document.write( '</FORM>');
-    }
+    //     document.write( '</SELECT>');
+    //     // document.write( '</br>');
+    //     document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectSource(this.form)"/>');
+    //     document.write( '</FORM>');
+    // }
 
-    function filtreDestination() {
-        document.write( '<FORM NAME="myformDestination" ACTION="" METHOD="GET">');
-        document.write( '<SELECT NAME="list" >');
-        document.write( '<OPTION value="All" selected>All</OPTION>');
-        document.write( '<OPTION value="None" >None</OPTION>');
+    // function filtreDestination() {
+    //     document.write( '<FORM NAME="myformDestination" ACTION="" METHOD="GET">');
+    //     document.write( '<SELECT NAME="list" >');
+    //     document.write( '<OPTION value="All" selected>All</OPTION>');
+    //     document.write( '<OPTION value="None" >None</OPTION>');
 
-        for (shortAddress in jeedomDevices) {
-            // console.log("Name: " + JSON.stringify(shortAddress));
-            document.write( '<OPTION value="'+shortAddress+'" >'+jeedomDevices[shortAddress].name+'</OPTION>');
-        }
+    //     for (shortAddress in jeedomDevices) {
+    //         // console.log("Name: " + JSON.stringify(shortAddress));
+    //         document.write( '<OPTION value="'+shortAddress+'" >'+jeedomDevices[shortAddress].name+'</OPTION>');
+    //     }
 
-        document.write( '</SELECT>');
-        // document.write( '</br>');
-        document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectDestination(this.form)"/>');
-        document.write( '</FORM>');
-    }
+    //     document.write( '</SELECT>');
+    //     // document.write( '</br>');
+    //     document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectDestination(this.form)"/>');
+    //     document.write( '</FORM>');
+    // }
 
-    function filtreDetails() {
-        var dataList = [ "LinkQualityDec", "Depth", "Voisine", "IEEE_Address", "Type", "Relationship", "Rx" ];
+    // function filtreDetails() {
+    //     var dataList = [ "LinkQualityDec", "Depth", "Voisine", "IEEE_Address", "Type", "Relationship", "Rx" ];
 
-        document.write( '<FORM NAME="myformDetails" ACTION="" METHOD="GET">');
-        document.write( '<SELECT NAME="list" >');
+    //     document.write( '<FORM NAME="myformDetails" ACTION="" METHOD="GET">');
+    //     document.write( '<SELECT NAME="list" >');
 
-        for (data in dataList) {
-            document.write( '<option value="'+dataList[data]+'">'+dataList[data]+'</option>');
-        }
+    //     for (data in dataList) {
+    //         document.write( '<option value="'+dataList[data]+'">'+dataList[data]+'</option>');
+    //     }
 
-        document.write( '</SELECT>');
-        // document.write( '</br>');
-        document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectDetails(this.form)"/>');
-        document.write( '</FORM>');
-    }
+    //     document.write( '</SELECT>');
+    //     // document.write( '</br>');
+    //     document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectDetails(this.form)"/>');
+    //     document.write( '</FORM>');
+    // }
 
-    function filtreParent() {
-        var dataList = [ "All", "Sibling", "Child" ];
+    // function filtreParent() {
+    //     var dataList = [ "All", "Sibling", "Child" ];
 
-        document.write( '<FORM NAME="myformParent" ACTION="" METHOD="GET">');
-        document.write( '<SELECT NAME="list" >');
+    //     document.write( '<FORM NAME="myformParent" ACTION="" METHOD="GET">');
+    //     document.write( '<SELECT NAME="list" >');
 
-        for (data in dataList) {
-            // if ( $Data==$item ) { $selected = " selected "; } else { $selected = " "; }
-            document.write( '<option value="'+dataList[data]+'">'+dataList[data]+'</option>');
-        }
+    //     for (data in dataList) {
+    //         // if ( $Data==$item ) { $selected = " selected "; } else { $selected = " "; }
+    //         document.write( '<option value="'+dataList[data]+'">'+dataList[data]+'</option>');
+    //     }
 
-        document.write( '</SELECT>');
-        // document.write( '</br>');
-        document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectParent(this.form)">');
-        document.write( '</FORM>');
-    }
+    //     document.write( '</SELECT>');
+    //     // document.write( '</br>');
+    //     document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectParent(this.form)">');
+    //     document.write( '</FORM>');
+    // }
 
-    function ReLoad() {
-        // to be implemented
-        location.reload(true);
-    }
+    // function ReLoad() {
+    //     // to be implemented
+    //     location.reload(true);
+    // }
 
     // function saveAbeilles() {
     //     // console.log("Debug - saveAbeilles function - "+JSON.stringify(myObjNew));
@@ -1060,7 +998,7 @@
             if (!dev['posChanged'])
                 continue; // No change
 
-            console.log("Saving "+dev['name']+" positions");
+            console.log("Saving coordinates for '"+dev['name']+"'");
             eqId = dev['jeedomId'];
             settings = {
                 physLocationX: dev['posX'],
@@ -1082,9 +1020,30 @@
         }
     }
 
+    /* 'config' DB update */
+    function saveConfig() {
+        console.log("saveConfig()");
+
+        config = new Object();
+        config['ab::userMap'] =  userMap;
+
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'saveConfig',
+                config: JSON.stringify(config)
+            },
+            dataType: 'json',
+            global: false,
+            success: function (json_res) {
+            }
+        });
+    }
+
     // Combine LQI + Jeedom infos
-    function refreshDevList() {
-        console.log("refreshDevList()");
+    function buildDevList() {
+        console.log("buildDevList()");
 
         if (typeof lqiTable === "undefined") {
             console.log("NO LQI table");
@@ -1159,7 +1118,7 @@
 
     /* Upload a user map */
     function uploadMap() {
-        console.log("v()");
+        console.log("uploadMap()");
 
         var input = document.createElement('input');
         input.type = 'file';
@@ -1174,9 +1133,8 @@
 
             var formData = new FormData();
             formData.append("file", file);
-            // TODO: How to use common AbeilleUpload but choose different location & name ?
-            // TODO: NOT WORKING
-            formData.append("destDir", "toto"); // OTA dest dir
+            formData.append("destDir", "tmp/network_maps"); // Maps are stored in local 'tmp/network_maps' dir
+            formData.append("destName", "Level0.png");
 
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "plugins/Abeille/core/php/AbeilleUpload.php", true);
@@ -1187,14 +1145,34 @@
                     return;
                 }
                 console.log("Uploaded !");
-                // refreshFirmwareTable();
-                // TODO: Update config with ab::userMap
-                // TODO: Reload page
+                // Updating config with ab::userMap
+                userMap = "tmp/network_maps/" + "Level0.png";
+                saveConfig();
+                location.reload(true);
             };
             xhr.send(formData);
         }
         input.click();
     }
+
+    // Redraw full page
+    function refreshPage() {
+
+        lesAbeilles = "";
+        for (devLogicId in devList) {
+            lesAbeilles += drawDevice(devLogicId);
+        }
+        if (viewLinks)
+            drawLinks();
+        document.getElementById("devices").innerHTML = lesAbeilles;
+    }
+
+    /* Refresh display if node name changed */
+    $("#idViewLinks").on("change", function (event) {
+        console.log("idViewLinks click");
+        viewLinks = document.getElementById("idViewLinks").checked;
+        refreshPage();
+    });
 
     //-----------------------------------------------------------------------
     // MAIN
@@ -1242,10 +1220,13 @@
     // console.log("Name 1: " + JSON.stringify(jeedomDevices["0000"]));
 
     // Combine LQI + Jeedom infos
-    refreshDevList();
+    buildDevList();
     console.log("devList=", devList);
 
 
+
+    // Display options
+    var viewLinks = true; // Set to false to hide links
 
     // setPosition("Auto");
 
@@ -1323,7 +1304,7 @@
         newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+grpX+', '+grpY+')">';
         newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
         newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
-        newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 8px;">'+dev['name']+'</text></a>';
+        newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
         newG += '</g>';
 
         // newG = '<g id="'+devLogicId+'" class="draggable">';
@@ -1375,10 +1356,5 @@
         }
     }
 
-    lesAbeilles = "";
-    for (devLogicId in devList) {
-        lesAbeilles += drawDevice(devLogicId);
-    }
-    drawLinks();
-    document.getElementById("devices").innerHTML = lesAbeilles;
+    refreshPage();
 </script>

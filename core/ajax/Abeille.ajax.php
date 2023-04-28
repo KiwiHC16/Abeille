@@ -558,7 +558,7 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'settings' => $settings)));
         }
 
-        // Change 'ab::settings' content
+        // Change eqLogic 'ab::settings' content
         // Param: eqId = Equipment Jeedom ID
         // Param: settings = associative array of settings to change
         if (init('action') == 'saveSettings') {

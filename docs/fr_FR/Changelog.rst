@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+- Placement réseau:
+
+ - Taille du texte passée à 12px.
+ - Possibilité de ne pas afficher les liens pour faciliter le positionnement des équipements.
+ - Les cartes sont stockées en interne dans 'Abeille/tmp/network_maps'.
+
 230426-BETA-1
 -------------
 

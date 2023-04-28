@@ -14,8 +14,8 @@
     if (isset($_GET['zigate']))
         $zgId = $_GET['zigate'];
     else
-        $zgId = 1; // Default = zigate1
-    echo "<script>console.log(\"zgId=" . $zgId . "\")</script>";
+        $zgId = 1; // Default = zigate1. TODO: Should be the 1st enabled, not the 1
+    sendVarToJS('zgId', $zgId);
 
     // Selecting background map
     // ab::userMap => path to user map, relative to Abeille's root
@@ -27,6 +27,14 @@
     }
     echo "<script>console.log(\"userMap2=" . $userMap . "\")</script>";
     sendVarToJS('userMap', $userMap);
+
+    // eqLogic/configuration/ab::settings reminder
+    // networkMap[zgId] = array(
+    //     "level0" => "map-level0.png",
+    //     "levelX" => "map-levelX.png"
+    // )
+    $networkMap = config::byKey('ab::networkMap', 'Abeille', [], true);
+    sendVarToJS('networkMap', $networkMap);
 
     $iSize = getimagesize(__DIR__."/../../".$userMap);
     $width = $iSize[0];
@@ -87,8 +95,9 @@
             ?>
             </select>
 
-            <button id="save" onclick="saveSettings()" style="width:100%;margin-top:4px">{{Sauver}}</button>
-            <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button>
+            <!-- <button id="save" onclick="saveCoordinates()" style="width:100%;margin-top:4px">{{Sauver}}</button> -->
+            <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->
+            <button id="idMap" style="width:100%;margin-top:4px">{{Plan}}</button>
 
             </br>
             </br>
@@ -408,9 +417,7 @@
                 devList[devLogicId]['posY'] = grpY + 25;
                 devList[devLogicId]['posChanged'] = true;
 
-                // document.getElementById("lesVoisines").innerHTML = dessineLesVoisinesV2(0,"No");
-                // document.getElementById("lesTextes").innerHTML = dessineLesTextes(10,"No");
-                // document.getElementById("lesAbeillesText").innerHTML =  dessineLesAbeillesText(myObjNew, 22, "No");
+                saveCoordinates(devLogicId);
 
                 selectedElement = false;
             }
@@ -987,37 +994,35 @@
     }
 
     /* eqLogic/configuration settings (ab::settings) update */
-    function saveSettings() {
-        console.log("saveSettings()");
+    function saveCoordinates(devLogicId) {
+        console.log("saveCoordinates("+devLogicId+")");
 
-        for (devLogicId in devList) {
-            dev = devList[devLogicId];
-            if (typeof dev['posChanged'] === "undefined")
-                continue; // Unknown to Jeedom
+        dev = devList[devLogicId];
+        if (typeof dev['posChanged'] === "undefined")
+            return; // Unknown to Jeedom
 
-            if (!dev['posChanged'])
-                continue; // No change
+        if (!dev['posChanged'])
+            return; // No change
 
-            console.log("Saving coordinates for '"+dev['name']+"'");
-            eqId = dev['jeedomId'];
-            settings = {
-                physLocationX: dev['posX'],
-                physLocationY: dev['posY'],
-            };
-            $.ajax({
-                type: 'POST',
-                url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
-                data: {
-                    action: 'saveSettings',
-                    eqId: eqId,
-                    settings: JSON.stringify(settings)
-                },
-                dataType: 'json',
-                global: false,
-                success: function (json_res) {
-                }
-            });
-        }
+        console.log("Saving coordinates for '"+dev['name']+"'");
+        eqId = dev['jeedomId'];
+        settings = {
+            physLocationX: dev['posX'],
+            physLocationY: dev['posY'],
+        };
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'saveSettings',
+                eqId: eqId,
+                settings: JSON.stringify(settings)
+            },
+            dataType: 'json',
+            global: false,
+            success: function (json_res) {
+            }
+        });
     }
 
     /* 'config' DB update */
@@ -1172,6 +1177,13 @@
         console.log("idViewLinks click");
         viewLinks = document.getElementById("idViewLinks").checked;
         refreshPage();
+    });
+
+    $("#idMap").on("click", function () {
+        $("#md_modal").dialog({ title: "{{Plan par niveau}}" });
+        $("#md_modal")
+            .load("index.php?v=d&plugin=Abeille&modal=AbeilleNetworkMap.modal")
+            .dialog("open");
     });
 
     //-----------------------------------------------------------------------

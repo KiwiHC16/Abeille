@@ -577,6 +577,7 @@
                 $settings = $eqLogic->getConfiguration('ab::settings', []);
                 foreach ($newSettings as $setKey => $setVal) {
                     $settings[$setKey] = $setVal;
+                    logDebug('  settings['.$setKey.']='.$setVal);
                 }
                 $eqLogic->setConfiguration('ab::settings', $settings);
                 $eqLogic->save();

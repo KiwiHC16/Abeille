@@ -25,14 +25,17 @@
 ?>
 {{Cette page vous permet de définir un plan et le nom (niveau) associé}}.<br><br>
 
-Plan: <button id="map" onclick="uploadMap()">{{Plan}}</button>
-<br>
-
 Niveau:
 <!-- Drop down list to select Zigate -->
-<select id="idLevel" onchange="levelChanged()">
+<select id="idLevel" onchange="levelChanged()" style="width:100px">
 </select>
+<button id="idLevelMin" class="btn btn-danger btn-sm" onclick="levelRemove()">-</button>
+<input id="idLevelNew" type="text" value="">
+<button id="idLevelPlus" class="btn btn-success btn-sm" onclick="levelAdd()">+</button>
+<br>
+<!-- class="fas fa-plus-circle" -->
 
+Plan: <button id="map" onclick="uploadMap()">{{Plan}}</button>
 <script>
     // TEMP
     networkMap = {
@@ -62,8 +65,31 @@ Niveau:
     }
 
     function levelChanged() {
-        console.log("levelChanged click");
+        console.log("levelChanged())");
         level = $("#idLevel").val();
         console.log("level=", level);
+    }
+
+    // Remove current selected level
+    function levelRemove() {
+        select = document.getElementById("idLevel");
+        index = select.selectedIndex;
+        console.log("levelRemove(index="+index+")");
+        if (index < 0)
+            return;
+        select.remove(index);
+    }
+
+    // Add a new level
+    function levelAdd() {
+        value = document.getElementById("idLevelNew").value;
+        console.log("levelAdd(value="+value+")");
+        if (value == '')
+            return;
+
+        var el = document.createElement("option");
+        el.textContent = value;
+        el.value = value;
+        select.appendChild(el);
     }
 </script>

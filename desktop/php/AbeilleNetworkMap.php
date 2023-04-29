@@ -94,17 +94,17 @@
                 }
             ?>
             </select>
+            <!-- View options -->
+            <input type="checkbox" id="idViewLinks" checked>{{Liens}}
+            <!-- TODO: Text size (to be stored in DB) -->
+
+            </br>
+            </br>
+            Configuration</br>
 
             <!-- <button id="save" onclick="saveCoordinates()" style="width:100%;margin-top:4px">{{Sauver}}</button> -->
             <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->
             <button id="idMap" style="width:100%;margin-top:4px">{{Plan}}</button>
-
-            </br>
-            </br>
-
-            <!-- View options -->
-            <input type="checkbox" id="idViewLinks" checked>{{Liens}}
-            <!-- TODO: Text size (to be stored in DB) -->
         </div>
 
         <div id="idGraph" class="column">

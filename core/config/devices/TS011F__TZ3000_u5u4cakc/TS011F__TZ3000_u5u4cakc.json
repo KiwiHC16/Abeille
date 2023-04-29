@@ -1,7 +1,7 @@
 {
     "TS011F__TZ3000_u5u4cakc": {
         "manufacturer": "Blitzwolf",
-        "model": "SHP15",
+        "model": "BW-SHP15",
         "type": "Blitzwolf SHP15",
         "timeout": "60",
         "category": {
@@ -12,6 +12,11 @@
             "mainEP": "01"
         },
         "commands": {
+            "TuyaInit0": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0005,0000,0001,0007,FFFE",
+                "execAtCreation": "Yes"
+            },
             "Identify": {
                 "use": "Identify"
             },

@@ -8,6 +8,7 @@ ChangeLog
  - Les cartes sont stockées en interne dans 'Abeille/tmp/network_maps'.
  - Sauvegarde automatique de la position d'un équipement.
  - Support préliminaire d'un plan par étage.
+- Blitzwolf SHP15: Mise à jour modèle.
 
 230426-BETA-1
 -------------

@@ -9,6 +9,7 @@ ChangeLog
  - Sauvegarde automatique de la position d'un équipement.
  - Support préliminaire d'un plan par étage.
 - Blitzwolf SHP15: Mise à jour modèle.
+- Zigate: Canal Zigbee configuré à chaque démarrage.
 
 230426-BETA-1
 -------------

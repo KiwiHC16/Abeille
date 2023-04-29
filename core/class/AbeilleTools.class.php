@@ -704,6 +704,9 @@
                 $config['ab::zgEnabled'.$zgId] = config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N', 1);
                 $config['ab::zgIeeeAddrOk'.$zgId] = config::byKey('ab::zgIeeeAddrOk'.$zgId, 'Abeille', 0);
                 $config['ab::zgIeeeAddr'.$zgId] = config::byKey('ab::zgIeeeAddr'.$zgId, 'Abeille', '');
+                $chan = config::byKey('ab::zgChan'.$zgId, 'Abeille', 'niet');
+                if ($chan != 'niet')
+                    $config['ab::zgChan'.$zgId] = $chan;
             }
             $config['ab::monitorId'] = config::byKey('ab::monitorId', 'Abeille', false);
             $config['ab::defaultParent'] = config::byKey('ab::defaultParent', 'Abeille', '1', 1);

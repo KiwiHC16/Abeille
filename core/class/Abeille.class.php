@@ -909,6 +909,16 @@ class Abeille extends eqLogic {
             self::createRuche("Abeille".$zgId);
 
             // Configuring zigate: TODO: This should be done on Abeille startup or on new beehive creation.
+            if (isset($config['ab::zgChan'.$zgId])) {
+                $chan = $config['ab::zgChan'.$zgId];
+                if ($chan == 0)
+                    $mask = 0x7fff800; // All channels = auto
+                else
+                    $mask = 1 << $chan;
+                $mask = sprintf("%08X", $mask);
+                log::add('Abeille', 'debug', "deamon(): Settings chan ".$chan." (mask=".$mask.") for zigate ".$zgId);
+                Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgChannelMask", "mask=".$mask);
+            }
             Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/resetZg", "");
             Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/startZgNetwork", "");
             Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgTimeServer", "");

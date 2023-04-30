@@ -34,27 +34,13 @@ $("#in_searchEqlogicB")
         $(".eqLogicThumbnailContainer").packery();
     });
 
+
 $("#bt_healthAbeille").on("click", function () {
     $("#md_modal").dialog({ title: "{{Santé Abeille}}" });
     $("#md_modal")
         .load("index.php?v=d&plugin=Abeille&modal=AbeilleHealth.modal")
         .dialog("open");
 });
-
-// $("#bt_supportPage").on("click", function () {
-//     window.open("index.php?v=d&m=Abeille&p=AbeilleSupport");
-// });
-
-$("#bt_maintenancePage").on("click", function () {
-    window.open("index.php?v=d&m=Abeille&p=AbeilleMaintenance");
-});
-
-// $("#bt_template").on("click", function () {
-//     $("#md_modal").dialog({ title: "{{Modeles}}" });
-//     $("#md_modal")
-//         .load("index.php?v=d&plugin=Abeille&modal=modelesPage&testToRun=104")
-//         .dialog("open");
-// });
 
 $("#bt_network").on("click", function () {
     $("#md_modal").dialog({ title: "{{Réseau Abeille}}" });
@@ -67,23 +53,12 @@ $("#bt_networkMap").on("click", function () {
     window.open("index.php?v=d&m=Abeille&p=AbeilleNetworkMap");
 });
 
-$("#bt_graph").on("click", function () {
-    window.open(
-        "plugins/Abeille/desktop/php/AbeilleGraph.php?GraphType=LqiPerMeter&NE=All&NE2=None&Center=none&Cache=Cache&Data=LinkQualityDec&Hierarchy=All"
-    );
-});
-
 $("#bt_supportedEqList").on("click", function () {
     $("#md_modal").dialog({ title: "{{Liste de compatibilité}}" });
     $("#md_modal")
         .load("index.php?v=d&plugin=Abeille&modal=AbeilleCompatibility.modal")
         .dialog("open");
 });
-
-// $('#bt_Inconnu').on('click', function () {
-//                         $('#md_modal').dialog({title: "{{Inconnu}}"});
-//                         $('#md_modal').load('index.php?v=d&plugin=Abeille&modal=inconnu').dialog('open');
-//                           });
 
 $("#bt_Ota").on("click", function () {
     $("#md_modal").dialog({ title: "{{Mises-à-jour OTA}}" });
@@ -92,12 +67,14 @@ $("#bt_Ota").on("click", function () {
         .dialog("open");
 });
 
-$("#bt_networkMapNew").on("click", function () {
-    $("#md_modal").dialog({ title: "{{Graph Abeille}}" });
-    // $('#md_modal').load('plugins/Abeille/Network/TestSVG/NetworkGraph.html').dialog('open');
-    $("#md_modal")
-        .load("index.php?v=d&plugin=Abeille&modal=NetworkGraph")
-        .dialog("open");
+$("#bt_maintenancePage").on("click", function () {
+    window.open("index.php?v=d&m=Abeille&p=AbeilleMaintenance");
+});
+
+$("#bt_graph").on("click", function () {
+    window.open(
+        "plugins/Abeille/desktop/php/AbeilleGraph.php?GraphType=LqiPerMeter&NE=All&NE2=None&Center=none&Cache=Cache&Data=LinkQualityDec&Hierarchy=All"
+    );
 });
 
 /* Add a virtual remote control to given zigate number */

@@ -17,8 +17,8 @@
 			'support'   => array( 'bouton'=>'bt_maintenancePage',	'icon'=>'fa-medkit',        'text'=>'{{Maintenance}}' ),
 		);
 		if (isset($dbgDeveloperMode)) {
-			// $tools['net'] = array( 'bouton'=>'bt_networkMap', 'icon'=>'fa-map', 'text'=>'{{Network Graph}}' );
-			$tools['graph'] = array( 'bouton'=>'bt_graph', 'icon'=>'fa-flask', 'text'=>'{{Graph}}' );
+			// No time to spent on next subject. No longer functional
+			// $tools['graph'] = array( 'bouton'=>'bt_graph', 'icon'=>'fa-flask', 'text'=>'{{Graph}}' );
 		}
 
 		foreach ($tools as $key => $tool) {

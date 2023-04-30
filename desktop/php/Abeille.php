@@ -3,14 +3,14 @@
        - list of equipements (Abeille.php)
        - equipement detail (main/advanced/commands => AbeilleEQ)
        For this reason redirection is required to 'AbeilleEQ' if equipment detail is requested */
-    if (isset($_GET['id']) && is_numeric($_GET['id'])) { // If 'id' is set to number, let's redirect to 'AbeilleEq' page
-        $uri = parse_url($_SERVER['REQUEST_URI']);
-        // Replace "p=Abeille" by "p=AbeilleEq"
-        $newuri = str_replace("p=Abeille", "p=AbeilleEq", $uri['query']);
-        // $newuri = str_replace("&ajax=1", "", $newuri); // Required since core v4.1
-        header("Location: index.php?".$newuri);
-        exit;
-    }
+    // if (isset($_GET['id']) && is_numeric($_GET['id'])) { // If 'id' is set to number, let's redirect to 'AbeilleEq' page
+    //     $uri = parse_url($_SERVER['REQUEST_URI']);
+    //     // Replace "p=Abeille" by "p=AbeilleEq"
+    //     $newuri = str_replace("p=Abeille", "p=AbeilleEq", $uri['query']);
+    //     // $newuri = str_replace("&ajax=1", "", $newuri); // Required since core v4.1
+    //     header("Location: index.php?".$newuri);
+    //     exit;
+    // }
 
     /*
      * The following part is executed only if no equipment selected (no id)
@@ -78,40 +78,43 @@
 </div>
 
 <div class="row row-overflow">
-	<form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
+	<!-- <form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post"> -->
 
 		<div class="col-xs-12 eqLogicThumbnailDisplay">
 
             <!-- Top level buttons  -->
-            <?php include 'Abeille-Buttons.php'; ?>
+            <?php include 'Abeille-ToolsButtons.php'; ?>
 
             <!-- Equipements -->
             <?php include 'Abeille-Bees.php'; ?>
 
-        </div>
+            <!-- Groups management  -->
+            <?php include 'Abeille-Groups.php'; ?>
 
-        <!-- Groups management  -->
-        <?php include 'Abeille-Groups.php'; ?>
+            <!-- Replace equipment on Jeedom side -->
+            <?php include 'Abeille-ReplaceEq.php'; ?>
 
-        <!-- Replace equipment on Jeedom side -->
-        <?php include 'Abeille-ReplaceEq.php'; ?>
+            <!-- Gestion des ReHome / migration d equipements  -->
+            <?php include 'Abeille-MigrateEq.php'; ?>
 
-        <!-- Gestion des ReHome / migration d equipements  -->
-        <?php include 'Abeille-MigrateEq.php'; ?>
+            <?php include 'Abeille-NewZigate.php'; ?>
 
-        <?php include 'Abeille-NewZigate.php'; ?>
+            <?php if (isset($dbgDeveloperMode)) { ?>
+            <legend><i class="fa fa-cogs"></i> {{Visible en MODE DEV UNIQUEMENT}}</legend>
+            <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
 
-        <?php if (isset($dbgDeveloperMode)) { ?>
-        <legend><i class="fa fa-cogs"></i> {{Visible en MODE DEV UNIQUEMENT}}</legend>
-        <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
+                <!-- Gestion des scenes  -->
+                <?php include 'Abeille-Scenes.php'; ?>
 
-            <!-- Gestion des scenes  -->
-            <?php include 'Abeille-Scenes.php'; ?>
+            </div>
+            <?php } ?>
 
-        </div>
-        <?php } ?>
+        </div> <!-- End eqLogicThumbnailDisplay -->
 
-	</form>
+        <!-- Hidden equipment detail page -->
+        <?php include 'Abeille-Eq.php'; ?>
+
+	<!-- </form> -->
 </div>
 
 <!-- Scripts -->

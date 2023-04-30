@@ -1,0 +1,42 @@
+{
+    "TS0601__TZE200_nklqjk62": {
+        "manufacturer": "Dongguan",
+        "model": "PJ-ZGD01",
+        "type": "Tuya Garage Door Controller with Sensor",
+        "comment": "whiteLabel: [{vendor: 'MatSee Plus', model: 'PJ-ZGD01'}]",
+        "timeout": "60",
+        "category": {
+            "opening": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-GarageDoorController",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Door trigger": {
+                "use": "inf_generic-Binary",
+                "logicalId": "01-doorTrigger",
+                "isVisible": 1
+            },
+            "Door contact": {
+                "use": "inf_generic-Binary",
+                "logicalId": "01-doorContact",
+                "isVisible": 1
+            }
+        },
+        "tuyaEF00": {
+            "fromDevice": {
+                "01": {
+                    "function": "rcvValue",
+                    "info": "01-doorTrigger",
+                    "comment": "Door trigger"
+                },
+                "03": {
+                    "function": "rcvValue",
+                    "info": "01-doorContact",
+                    "comment": "Door contact"
+                }
+            }
+        }
+    }
+}

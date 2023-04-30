@@ -1,0 +1,11 @@
+{
+    "inf_generic-Binary": {
+        "comment": "A generic info cmd",
+        "subType": "binary",
+        "template": "default",
+        "type": "info",
+        "logicalId": "#EP#-GenericBinary",
+        "unit": "",
+        "genericType": "ALARM_STATE"
+    }
+}

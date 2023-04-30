@@ -10,6 +10,7 @@ ChangeLog
  - Support préliminaire d'un plan par étage.
 - Blitzwolf SHP15: Mise à jour modèle.
 - Zigate: Canal Zigbee configuré à chaque démarrage.
+- Garage door controller: Support préliminaire (2581).
 
 230426-BETA-1
 -------------

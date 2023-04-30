@@ -42,24 +42,6 @@
         document.icon_visu.src = text;
     });
 
-    <?php
-    for ($zgId = 1; $zgId <= 10; $zgId++) {
-    ?>
-    $('#bt_include<?php echo $zgId;?>').on('click', function ()  {
-        console.log("bt_include<?php echo $zgId;?>");
-        sendToCmd("startPermitJoin", <?php echo $zgId;?>);
-    });
-    <?php } ?>
-
-    <?php
-    for ($zgId = 1; $zgId <= 10; $zgId++) {
-    ?>
-    $('#bt_include_stop<?php echo $zgId;?>').on('click', function () {
-        console.log("bt_include_stop<?php echo $zgId;?>");
-        sendToCmd("stopPermitJoin", <?php echo $zgId;?>);
-    });
-    <?php } ?>
-
     /* Check which equipements are selected.
         Returns: array of objects {zgId, addr} */
     function getSelected() {

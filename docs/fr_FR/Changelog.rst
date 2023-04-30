@@ -11,6 +11,7 @@ ChangeLog
 - Blitzwolf SHP15: Mise à jour modèle.
 - Zigate: Canal Zigbee configuré à chaque démarrage.
 - Garage door controller: Support préliminaire (2581).
+- Disjoncteur intelligent: Support préliminaire (2583).
 
 230426-BETA-1
 -------------

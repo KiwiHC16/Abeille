@@ -71,18 +71,6 @@
     // logDebug("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
     // $parametersAbeille = AbeilleTools::getParameters();
 
-    $outils = array(
-        'health'    => array( 'bouton'=>'bt_healthAbeille',         'icon'=>'fa-medkit',        'text'=>'{{Santé}}' ),
-        'netList'   => array( 'bouton'=>'bt_network',               'icon'=>'fa-sitemap',       'text'=>'{{Réseau}}' ),
-        'net'       => array( 'bouton'=>'bt_networkMap',        'icon'=>'fa-map',           'text'=>'{{Placement réseau (BETA)}}' ),
-        'compat'    => array( 'bouton'=>'bt_supportedEqList',       'icon'=>'fa-align-left',    'text'=>'{{Compatibilite}}' ),
-        'ota'       => array( 'bouton'=>'bt_Ota',                   'icon'=>'fa-paperclip',     'text'=>'{{Mises-à-jour OTA}}' ),
-        'support'   => array( 'bouton'=>'bt_maintenancePage',       'icon'=>'fa-medkit',        'text'=>'{{Maintenance}}' ),
-    );
-    if (isset($dbgDeveloperMode)) {
-        // $outils['net'] = array( 'bouton'=>'bt_networkMap', 'icon'=>'fa-map', 'text'=>'{{Network Graph}}' );
-        $outils['graph'] = array( 'bouton'=>'bt_graph', 'icon'=>'fa-flask', 'text'=>'{{Graph}}' );
-    }
 ?>
 
 <!-- For all modals on 'Abeille' page. -->
@@ -92,14 +80,15 @@
 <div class="row row-overflow">
 	<form action="plugins/Abeille/desktop/php/AbeilleFormAction.php" method="post">
 
-        <!-- Barre d outils horizontale  -->
 		<div class="col-xs-12 eqLogicThumbnailDisplay">
 
-        <!-- Icones de toutes les modales  -->
-        <?php include '010_AbeilleGestionPart.php'; ?>
+            <!-- Top level buttons  -->
+            <?php include 'Abeille-Buttons.php'; ?>
 
-        <!-- Icones de toutes les abeilles  -->
-        <?php include '020_AbeilleMesAbeillesPart.php'; ?>
+            <!-- Equipements -->
+            <?php include 'Abeille-Bees.php'; ?>
+
+        </div>
 
         <!-- Groups management  -->
         <?php include 'Abeille-Groups.php'; ?>
@@ -121,8 +110,6 @@
 
         </div>
         <?php } ?>
-
-    </div> <!-- Fin - Barre d outils horizontale  -->
 
 	</form>
 </div>

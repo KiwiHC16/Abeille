@@ -17,6 +17,7 @@ ChangeLog
 - Disjoncteur intelligent: Support préliminaire (2583).
 - Interne: Prelim. Organisation page 'desktop' revue + nettoyage pour compatibilité core v4.4.
 - Interne: Merge 'SW-SDK' + 'SW-Application' => 'FW-Version'.
+- Prise murale Tuya: Support préliminaire (2584).
 
 230426-BETA-1
 -------------

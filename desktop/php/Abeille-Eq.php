@@ -32,9 +32,9 @@
 
     <ul class="nav nav-tabs" role="tablist">
         <li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fas fa-arrow-circle-left"></i></a></li>
-        <li role="presentation" class="active"><a href="#idMain">                                                <i class="fas fa-home">             </i> {{Equipement}} </a></li>
-        <li role="presentation"               ><a href="#idAdvanced">                                            <i class="fas fa-list-alt">         </i> {{Avancé}}     </a></li>
-        <li role="presentation"               ><a href="#idCommands">                                            <i class="fas fa-align-left">       </i> {{Commandes}}  </a></li>
+        <li role="presentation" class="active"><a href="#idMain" aria-controls="home" role="tab" data-toggle="tab">                                                <i class="fas fa-home">             </i> {{Equipement}} </a></li>
+        <li role="presentation"               ><a href="#idAdvanced" aria-controls="home" role="tab" data-toggle="tab">                                            <i class="fas fa-list-alt">         </i> {{Avancé}}     </a></li>
+        <li role="presentation"               ><a href="#idCommands" aria-controls="home" role="tab" data-toggle="tab">                                            <i class="fas fa-align-left">       </i> {{Commandes}}  </a></li>
     </ul>
 
     <!-- <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;"> -->

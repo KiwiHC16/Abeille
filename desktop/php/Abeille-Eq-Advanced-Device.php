@@ -167,13 +167,9 @@
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Version SW}} (SWBuildID)</label>
-    <?php
-    $cmdLogicId = "0000-01-4000";
-    echo '<div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, $cmdLogicId).'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-        echo '<input type="text" id="idSwBuild" value="'.getCmdValueByLogicId($eqId, $cmdLogicId).'" readonly>';
-        addJsUpdateFunction($eqId, $cmdLogicId, 'idSwBuild', true);
-    echo '</div>';
-    ?>
+    <div class="col-sm-5" advInfo="0000-01-4000">
+        <input type="text" id="" value="" readonly>
+    </div>
 </div>
 
 <!-- <?php if (isset($dbgDeveloperMode)) { ?> -->

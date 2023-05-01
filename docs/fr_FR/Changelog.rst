@@ -12,7 +12,7 @@ ChangeLog
 - Zigate: Canal Zigbee configuré à chaque démarrage.
 - Garage door controller: Support préliminaire (2581).
 - Disjoncteur intelligent: Support préliminaire (2583).
-- Interne: Organisation page 'desktop' revue + nettoyage.
+- Interne: Prelim. Organisation page 'desktop' revue + nettoyage pour compatibilité core v4.4.
 
 230426-BETA-1
 -------------

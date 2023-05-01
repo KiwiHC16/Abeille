@@ -10,7 +10,8 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Nom}}</label>
     <div class="col-sm-5">
-    <span><?php echo $eqName; ?></span>
+    <!-- <span>< ?php echo $eqName; ?></span> -->
+    <input id="idEqName" type="text" value="" readonly>
     </div>
 </div>
 
@@ -18,17 +19,18 @@
     <label class="col-sm-3 control-label">{{Id Jeedom}}</label>
     <div class="col-sm-5">
         <!-- 'eqLogicAttr' with data-l1key="id" must not be declared twice in same page -->
-        <?php echo '<input type="text" value="'.$eqId.'" readonly>'; ?>
+        <!-- < ? php echo '<input type="text" value="'.$eqId.'" readonly>'; ?> -->
+        <input id="idEqId" type="text" value="" readonly>
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Dernière comm.}}</label>
-    <?php
-    echo '<div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, "Time-Time").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-        echo '<input type="text" id="idLastComm" value="'.getCmdValueByLogicId($eqId, "Time-Time").'" readonly>';
-        addJsUpdateFunction($eqId, 'Time-Time', 'idLastComm');
-    ?>
+    <!-- <div class="col-sm-5 cmd" data-type="info" data-subtype="string" data-version="dashboard" data-eqlogic_id="tofill" data-cmd_id="tofill" advInfo="Time-Time"> -->
+    <!-- <div advInfo="Time-Time" class="col-sm-5 cmdX" data-type="info" data-subtype="string" data-version="dashboard" data-eqlogic_id="320" data-cmd_id="3222">
+    </div> -->
+    <div advInfo="Time-Time" class="col-sm-5">
+        <input type="text" id="tofill" value="tofill" readonly>
     </div>
 </div>
 
@@ -42,16 +44,17 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Adresse (courte/IEEE)}}</label>
     <div class="col-sm-5">
-        <span><?php echo $eqAddr; ?></span>
+        <!-- <span>< ?php echo $eqAddr; ?></span> -->
+        <input id="idEqAddr" type="text" value="" readonly>
         /
         <span class="eqLogicAttr" data-l1key="configuration" data-l2key="IEEE"></span>
     </div>
 </div>
 
-<div class="form-group">
+<!-- <div class="form-group">
     <label class="col-sm-3 control-label">{{Documentation}}</label>
     <div class="col-sm-5">
-        <?php
+        < ?php
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
             $jsonId = $eqModel ? $eqModel['id'] : '';
             if ($jsonId != '') {
@@ -59,12 +62,12 @@
             }
         ?>
     </div>
-</div>
+</div> -->
 
-<div class="form-group">
+<!-- <div class="form-group">
     <label class="col-sm-3 control-label" title="{{Groupes Zigbee auquels l'équipement appartient}}">{{Groupes}}</label>
     <div class="col-sm-5">
-        <?php
+        < ?php
             $cmd = AbeilleCmd::byEqLogicIdAndLogicalId($eqId, 'Group-Membership');
             if (is_object($cmd))
                 $groups = $cmd->execCmd();
@@ -73,4 +76,4 @@
             echo '<span>'.$groups.'</span>';
         ?>
     </div>
-</div>
+</div> -->

@@ -540,6 +540,47 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        // Get 'eqLogic' content for given 'eqId'
+        if (init('action') == 'getEq') {
+            $eqId = init('eqId');
+
+            $status = 0;
+            $error = "";
+            $eq = [];
+
+            $eqLogic = eqLogic::byId($eqId);
+            if (!is_object($eqLogic)) {
+                $error = "Equipement inconnu (id ".$eqId.")";
+                $status = -1;
+            } else {
+                $eq['id'] = $eqId;
+                $eq['name'] = $eqLogic->getName();
+                $eq['logicId'] = $eqLogic->getLogicalId();
+                list($eqNet, $eqAddr) = explode("/", $eq['logicId']);
+                $eq['zgId'] = substr($eqNet, 7);
+                $eq['zgType'] = config::byKey('ab::zgType'.$eq['zgId'], 'Abeille', '', 1);
+                $eq['zgChan'] = config::byKey('ab::zgChan'.$eq['zgId'], 'Abeille', '', 1);
+                $eq['addr'] = $eqAddr;
+                $eq['defaultEp'] = $eqLogic->getConfiguration('mainEP', '');
+                $jCmds = Cmd::byEqLogicId($eqId);
+                $eq['cmds'] = [];
+                foreach ($jCmds as $cmdLogic) {
+                    $cmdId = $cmdLogic->getId();
+                    $cmdLogicId = $cmdLogic->getLogicalId('');
+                    if ($cmdLogic->getType() == 'info')
+                        $cmdVal = $cmdLogic->execCmd();
+                    else
+                        $cmdVal = '';
+                    $eq['cmds'][$cmdLogicId] = array(
+                        'id' => $cmdId,
+                        'val' => $cmdVal
+                    );
+                }
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'eq' => $eq)));
+        }
+
         // Read 'ab::settings' content
         // Params: eqId = Equipment Jeedom ID
         if (init('action') == 'getSettings') {

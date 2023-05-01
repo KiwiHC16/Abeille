@@ -2,8 +2,6 @@
      Included by 'Abeille-Eq.php' -->
 
 <?php
-    echo 'ADVANCED PAGE\n';
-
     if (isset($dbgDeveloperMode)) echo __FILE__;
 
     function addDocButton($chapter) {
@@ -11,9 +9,13 @@
         echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/'.$chapter.'"><i class="fas fa-book"></i> ?</a>';
     }
 
+    function addButton($name, $class, $interrogate) {
+        echo '<a class="btn '.$class.'" style="width:80px" onclick="interrogate(\''.$interrogate.'\')">'.$name.'</a>';
+    }
+
     // Add end point input
-    function addEpInput($id, $defEp) {
-        echo '<input id="'.$id.'" title="{{End Point, format hexa (ex: 01)}}" value="'.$defEp.'"  style="width:30px; margin-left: 8px" />';
+    function addEpInput($id) {
+        echo '<input id="'.$id.'" class="advEp" title="{{End Point, format hexa (ex: 01)}}" value="XX" style="width:30px; margin-left: 8px" />';
     }
 
     function addClusterButton($id) {
@@ -108,20 +110,20 @@
         echo '<input id="'.$id.'" title="'.$title.'" placeholder="'.$ph.'" style="width:60px; margin-left:8px" />';
     }
 
-    function addJsUpdateFunction($eqId, $cmdLogicId, $spanId, $isInput = false) {
-        echo "<script>";
-        echo "jeedom.cmd.update['".getCmdIdByLogicId($eqId, $cmdLogicId)."'] = function(_options) {";
-            echo "console.log('jeedom.cmd.update[".$cmdLogicId."] <= ' + _options.display_value);";
-            // console.log(_options);
-            echo "var element = document.getElementById('".$spanId."');";
-            echo "console.log('element=', element);";
-            if ($isInput)
-                echo "element.value = _options.display_value;";
-            else // Not <input>. Assuming <span>
-                echo "element.textContent = _options.display_value;";
-        echo "}";
-        echo "</script>";
-    }
+    // function addJsUpdateFunction($eqId, $cmdLogicId, $spanId, $isInput = false) {
+    //     echo "<script>";
+    //     echo "jeedom.cmd.update['".getCmdIdByLogicId($eqId, $cmdLogicId)."'] = function(_options) {";
+    //         echo "console.log('jeedom.cmd.update[".$cmdLogicId."] <= ' + _options.display_value);";
+    //         // console.log(_options);
+    //         echo "var element = document.getElementById('".$spanId."');";
+    //         echo "console.log('element=', element);";
+    //         if ($isInput)
+    //             echo "element.value = _options.display_value;";
+    //         else // Not <input>. Assuming <span>
+    //             echo "element.textContent = _options.display_value;";
+    //     echo "}";
+    //     echo "</script>";
+    // }
 ?>
 
 <form class="form-horizontal">
@@ -129,13 +131,15 @@
         require_once __DIR__.'/../../core/php/AbeilleZigbeeConst.php';
         include 'Abeille-Eq-Advanced-Common.php';
 
-        // if ($eqAddr == "0000") { // Zigate
-        //     include 'Abeille-Eq-Advanced-Zigate.php';
-        // } else {
-        //     include 'Abeille-Eq-Advanced-Device.php';
-        //     include 'Abeille-Eq-Advanced-Specific.php';
-        // }
+        echo '<div id="idAdvZigate" style="display:none;">';
+        include 'Abeille-Eq-Advanced-Zigate.php'; // Hidden by default
+        echo '</div>';
 
-        // include 'Abeille-Eq-Advanced-Interrogations.php';
+        echo '<div id="idAdvDevices" style="display:none;">';
+        include 'Abeille-Eq-Advanced-Device.php';
+        include 'Abeille-Eq-Advanced-Specific.php';
+        echo '</div>';
+
+        include 'Abeille-Eq-Advanced-Interrogations.php';
     ?>
 </form>

@@ -46,15 +46,12 @@
                     include 'Abeille-Eq-MainGeneric.php';
                     include 'Abeille-Eq-MainIcon.php';
                 ?>
-                </div>
             </form>
         </div>
 
         <!-- Displays advanced & Zigbee specifics  -->
         <div role="tabpanel" class="tab-pane" id="idAdvanced">
-            <div id="idToto">
-            </div>
-            <!-- < ? php include 'Abeille-Eq-Advanced.php'; ?> -->
+            <?php include 'Abeille-Eq-Advanced.php'; ?>
         </div>
 
         <!-- Displays Jeedom commands  -->

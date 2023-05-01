@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230501-BETA-1
+230501-BETA-2
 -------------
 
 - Placement réseau:

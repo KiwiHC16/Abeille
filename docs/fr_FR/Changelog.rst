@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230501-BETA-1
+-------------
+
 - Placement réseau:
 
  - Taille du texte passée à 12px.

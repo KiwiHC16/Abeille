@@ -2,19 +2,12 @@
 <?php include_file('core', 'plugin.template', 'js'); ?>
 
 <script>
-    /* Remove default Jeedom 'onclick' event for 'eqLogicDisplayCard' class
-       and replace it by a new one. */
-    // $(".eqLogicDisplayCard").off("click");
-    // $(".eqLogicDisplayCard").on('click', function () {
-    //     console.log("eqLogicDisplayCard click");
-    //     if (!isset($(this).attr('data-eqLogic_id'))) {
-    //       console.log("ERROR: 'data-eqLogic_id' is not defined");
-    //       return;
-    //     }
-    //     var eqId = $(this).attr('data-eqLogic_id');
-    //     console.log("eqId="+eqId);
-    //     window.location.href = "index.php?v=d&m=Abeille&p=AbeilleEq&id="+eqId;
-    // });
+    if (window.location.href.indexOf("id=") > -1) {
+        let params = (new URL(document.location)).searchParams;
+        let eqId = params.get("id");
+        refreshEq(eqId);
+    }
+
     $(".eqLogicDisplayCard").on('click', function () {
         console.log("eqLogicDisplayCard click");
         if (!isset($(this).attr('data-eqLogic_id'))) {
@@ -23,6 +16,11 @@
         }
         var eqId = $(this).attr('data-eqLogic_id');
         console.log("eqId="+eqId);
+        refreshEq(eqId);
+    });
+
+    function refreshEq(eqId) {
+        console.log("refreshEq("+eqId+")");
 
         // Collect eq & update advanced infos
         $.ajax({
@@ -110,7 +108,7 @@
                 }
             }
         });
-    });
+    }
 
     // This function is called each time a corresponding info cmd has a value update.
     // Reminder: jeedom.cmd.update[cmdId] = updateInfoCmd()

@@ -237,7 +237,6 @@ class Abeille extends eqLogic {
 //             message::add("Abeille", "Danger il y a trop de message a envoyer dans le cron 1 heure.", "Contactez KiwiHC16 sur le Forum.");
 //         }
 //     }
-        //--------------------------------------------------------
         // Poll Cmd
         self::executePollCmds("cronHourly");
 
@@ -904,7 +903,7 @@ class Abeille extends eqLogic {
                 continue; // Undefined or disabled
 
             // Create/update beehive equipment on Jeedom side
-            // Note: This will reset SW-SDK to '----' to mark FW version invalid.
+            // Note: This will reset 'FW-Version' to '---------' to mark FW version invalid.
             // Abeille::publishMosquitto($abQueues["xToAbeille"]["id"], priorityInterrogation, "CmdRuche/0000/CreateRuche", "Abeille".$zgId);
             self::createRuche("Abeille".$zgId);
 
@@ -2116,15 +2115,13 @@ class Abeille extends eqLogic {
                 return;
             }
 
-            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'SW-Application');
-            if ($cmdLogic)
-                $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['major']);
-            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'SW-SDK');
+            $cmdLogic = AbeilleCmd::byEqLogicIdAndLogicalId($eqLogic->getId(), 'FW-Version');
             if ($cmdLogic) {
-                $curVersion = $cmdLogic->execCmd();
-                if ($curVersion != $msg['minor'])
-                    log::add('Abeille', 'debug', '  FW cur version: '.$curVersion);
-                if ($curVersion == '----') {
+                $savedVersion = $cmdLogic->execCmd(); // MMMM-mmmm
+                $version = $msg['major'].'-'.$msg['minor'];
+                if ($savedVersion != $version)
+                    log::add('Abeille', 'debug', '  FW saved version: '.$savedVersion);
+                if ($savedVersion == '---------') {
                     $zgId = substr($net, 7);
                     if (hexdec($msg['minor']) >= 0x031D) {
                         log::add('Abeille', 'debug', '  FW version >= 3.1D => Configuring zigate '.$zgId.' in hybrid mode');
@@ -2141,7 +2138,7 @@ class Abeille extends eqLogic {
                             message::add('Abeille', "Il est recommandé de mettre à jour votre Zigate avec la version '3.21'.");
                     }
                 }
-                $eqLogic->checkAndUpdateCmd($cmdLogic, $msg['minor']);
+                $eqLogic->checkAndUpdateCmd($cmdLogic, $version);
             }
 
             Abeille::updateTimestamp($eqLogic, $msg['time']);
@@ -2666,9 +2663,9 @@ class Abeille extends eqLogic {
             }
 
             // Whatever existing or new beehive, it is key to reset the following points
-            if ($cmdLogicId == 'SW-SDK')
+            if ($cmdLogicId == 'FW-Version')
                 // $cmdLogic->setValue('----'); // Indicate FW version is invalid
-                $cmdLogic->setCache('value', '----'); // Indicate FW version is invalid
+                $cmdLogic->setCache('value', '---------'); // Indicate FW version is invalid
 
             $cmdLogic->save();
         }

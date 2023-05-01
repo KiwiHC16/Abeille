@@ -16,6 +16,7 @@ ChangeLog
 - Garage door controller: Support préliminaire (2581).
 - Disjoncteur intelligent: Support préliminaire (2583).
 - Interne: Prelim. Organisation page 'desktop' revue + nettoyage pour compatibilité core v4.4.
+- Interne: Merge 'SW-SDK' + 'SW-Application' => 'FW-Version'.
 
 230426-BETA-1
 -------------

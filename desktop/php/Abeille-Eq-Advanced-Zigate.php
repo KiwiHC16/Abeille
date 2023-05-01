@@ -25,33 +25,8 @@
 
 <div class="form-group">
     <label class="col-sm-3 control-label">Firmware</label>
-    <div class="col-sm-5">
-        <?php
-        $fwVersion = getCmdValueByLogicId($eqId, "SW-Application").'-'.getCmdValueByLogicId($eqId, "SW-SDK");
-        // TODO: Currently updated only if SW-SDK change. Better to merge major & minor and have only 1 jeedom info.
-        echo '<div class="cmd" data-type="info" data-subtype="string" data-cmd_id="'.getCmdIdByLogicId($eqId, "SW-SDK").'" data-version="dashboard" data-eqlogic_id="'.$eqId.'">';
-            echo '<input type="text" id="idFWVersion" value="'.$fwVersion.'" readonly>';
-            echo "<script>";
-            $spanId = 'idFWVersion';
-            $cmdLogicId = 'SW-Application';
-            echo "jeedom.cmd.update['".getCmdIdByLogicId($eqId, $cmdLogicId)."'] = function(_options) {";
-                echo "console.log('jeedom.cmd.update[".$cmdLogicId."]');";
-                // console.log(_options);
-                echo "var element = document.getElementById('".$spanId."');";
-                echo "minor = element.textContent.substr(5, 4);";
-                echo "element.textContent = _options.display_value+minor;";
-            echo "};";
-            $cmdLogicId = 'SW-SDK';
-            echo "jeedom.cmd.update['".getCmdIdByLogicId($eqId, $cmdLogicId)."'] = function(_options) {";
-                echo "console.log('jeedom.cmd.update[".$cmdLogicId."]');";
-                // console.log(_options);
-                echo "var element = document.getElementById('".$spanId."');";
-                echo "major = element.textContent.substr(0, 5);";
-                echo "element.textContent = major+_options.display_value;";
-            echo "};";
-            echo "</script>";
-        echo '</div>';
-        ?>
+    <div class="col-sm-5" advInfo="FW-Version">
+        <input type="text" value="" readonly>
     </div>
 </div>
 

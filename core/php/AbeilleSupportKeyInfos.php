@@ -118,15 +118,11 @@
             if (is_object($eqLogic)) {
                 $beehiveId = $eqLogic->getId();
 
-                $major = '????';
-                $minor = '????';
+                $fwVersion = '????-????';
                 $channel = "?";
-                $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'SW-Application');
+                $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'FW-Version');
                 if ($cmdLogic)
-                    $major = $cmdLogic->execCmd();
-                $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'SW-SDK');
-                if ($cmdLogic)
-                    $minor = $cmdLogic->execCmd();
+                    $fwVersion = $cmdLogic->execCmd();
                 $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'Network-Channel');
                 if ($cmdLogic)
                     $channel = $cmdLogic->execCmd();
@@ -134,7 +130,6 @@
                 $zgType = config::byKey('ab::zgType'.$zgId, 'Abeille', '?');
 
                 logIt("Zigate ".$zgId."\n");
-                $fwVersion = $major.'-'.$minor;
                 logIt(" - FW version: ".$fwVersion."\n");
                 logIt(" - Channel   : ".$channel."\n");
                 logIt(" - Type      : ".$zgType."\n");

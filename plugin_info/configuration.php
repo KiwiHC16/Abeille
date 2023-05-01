@@ -146,7 +146,7 @@
             echo '<div class="col-lg-2">';
                 // echo '<input id="idFwVersion'.$zgId.'" type="text" title="{{Version actuelle du firmware}}" disabled>';
                 if (isset($eqId))
-                    $fwVersion = getCmdValueByLogicId($eqId, "SW-Application").'-'.getCmdValueByLogicId($eqId, "SW-SDK");
+                    $fwVersion = getCmdValueByLogicId($eqId, "FW-Version");
                 else
                     $fwVersion = "";
                 echo '<input id="idFwVersion'.$zgId.'" value="'.$fwVersion.'" type="text" class="cmd" data-type="info" data-subtype="string" data-cmd_id="" title="{{Version actuelle du firmware}}" readonly="readonly">';

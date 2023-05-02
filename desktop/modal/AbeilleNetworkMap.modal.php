@@ -24,23 +24,40 @@
     // )
 
     define('maxLevels', 10); // Number of levels
+    sendVarToJS('maxLevels', maxLevels);
+
+    function addSelect() {
+        echo '<select>';
+        echo '</select>';
+    }
 ?>
 {{Cette page vous permet de définir les niveaux et plans associés}}.<br><br>
 
-<table>
-    <tr>
-        <th>{{Niveau}}</th>
-        <th>{{Plan}}</th>
-    </tr>
-    <?php
-    for ($t = 0; $t < maxLevels; $t++) {
-        echo "<tr>";
-        echo "<td>Niv".$t."</td>";
-        echo "<td>Plan".$t."</td>";
-        echo "</tr>";
-    }
-    ?>
-</table>
+<form>
+    <div class="col-sm-6">
+        <table>
+            <tr>
+                <th style="width:150px">{{Niveau}}</th>
+                <th style="width:300px">{{Plan}}</th>
+            </tr>
+            <?php
+            for ($t = 0; $t < maxLevels; $t++) {
+                echo "<tr>";
+                echo "<td>";
+                addSelect("idSelect".$t);
+                echo "</td>";
+                echo "<td></td>";
+                echo "</tr>";
+            }
+            ?>
+        </table>
+    </div>
+    <div class="col-sm-6">
+        {{Ajouter niveau}}:
+        <input id="idLevelNew" type="text" value="">
+        <button id="idLevelPlus" class="btn btn-success btn-sm" onclick="levelAdd()">+</button>
+    </div>
+</form>
 
 <form>
     <div class="form-group">
@@ -62,10 +79,6 @@
     </div>
 </form>
 
-{{Ajouter niveau}}:
-<input id="idLevelNew" type="text" value="">
-<button id="idLevelPlus" class="btn btn-success btn-sm" onclick="levelAdd()">+</button>
-
 <script>
     // TEMP
     networkMap = {
@@ -76,21 +89,23 @@
     };
     // END TEMP
 
-    buildLevelsList();
+    refreshSelects();
 
-    function buildLevelsList() {
-        console.log("buildLevelsList(). networkMap=", networkMap);
+    function refreshSelects() {
+        console.log("refreshSelects(). networkMap=", networkMap);
         if (typeof networkMap[zgId] === 'undefined')
             return;
 
         nm = networkMap[zgId];
         console.log("nm=", nm);
-        select = document.getElementById("idLevel");
-        for (const [level, map] of Object.entries(nm)) {
-            var el = document.createElement("option");
-            el.textContent = level;
-            el.value = map;
-            select.appendChild(el);
+        for (s = 0; s < maxLevels; s++) {
+            select = document.getElementById("idSelect"+s);
+            for (const [level, map] of Object.entries(nm)) {
+                var el = document.createElement("option");
+                el.textContent = level;
+                el.value = map;
+                select.appendChild(el);
+            }
         }
     }
 

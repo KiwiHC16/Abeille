@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- OTA: Fichier non FW ignoré.
+
 230502-BETA-1
 -------------
 

@@ -67,6 +67,10 @@
                         }
                     }
                 }
+                if (!isset($startIdx)) {
+                    logMessage('debug', "  ERROR: Can't find 'startIdx' for '".$dirEntry."'");
+                    continue;
+                }
 
                 logMessage('debug', '  StartIdx='.$startIdx);
                 if ($startIdx != 0) {

@@ -34,7 +34,6 @@ $("#in_searchEqlogicB")
         $(".eqLogicThumbnailContainer").packery();
     });
 
-
 $("#bt_healthAbeille").on("click", function () {
     $("#md_modal").dialog({ title: "{{Santé Abeille}}" });
     $("#md_modal")
@@ -506,4 +505,32 @@ function acceptNewZigate() {
             }
         },
     });
+}
+
+/* Launch AbeilleRepair */
+function repair(eqId) {
+    console.log("repair(eqId=" + eqId + ")");
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.open(
+        "GET",
+        "/plugins/Abeille/core/php/AbeilleRepair.php?eqId=" + eqId,
+        false
+    );
+    xhttp.send();
+
+    xhttp.onreadystatechange = function () {};
+
+    // $.ajax({
+    //     url: "/plugins/Abeille/core/php/AbeilleRepair.php?eqId=" + eqId,
+    //     async: true,
+    //     error: function (jqXHR, status, error) {
+    //         console.log("repair() error status: " + status);
+    //         console.log("repair() error msg: " + error);
+    //     },
+    //     success: function (data, status, jqhr) {
+    //         //console.log("refreshLqiTable success status: " + status);
+    //         //console.log("refreshLqiTable success msg: " + data);
+    //     },
+    // });
 }

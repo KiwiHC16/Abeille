@@ -1,8 +1,8 @@
 <?php
-    /* Abeille plugin has splitted code for
-       - list of equipements (Abeille.php)
-       - equipement detail (main/advanced/commands => AbeilleEQ)
-       For this reason redirection is required to 'AbeilleEQ' if equipment detail is requested */
+    // /* Abeille plugin has splitted code for
+    //    - list of equipements (Abeille.php)
+    //    - equipement detail (main/advanced/commands => AbeilleEQ)
+    //    For this reason redirection is required to 'AbeilleEQ' if equipment detail is requested */
     // if (isset($_GET['id']) && is_numeric($_GET['id'])) { // If 'id' is set to number, let's redirect to 'AbeilleEq' page
     //     $uri = parse_url($_SERVER['REQUEST_URI']);
     //     // Replace "p=Abeille" by "p=AbeilleEq"
@@ -11,10 +11,6 @@
     //     header("Location: index.php?".$newuri);
     //     exit;
     // }
-
-    /*
-     * The following part is executed only if no equipment selected (no id)
-     */
 
     /* Developers debug features & PHP errors */
     require_once __DIR__.'/../../core/config/Abeille.config.php';

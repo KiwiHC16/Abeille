@@ -174,10 +174,10 @@
 
 <!-- <?php if (isset($dbgDeveloperMode)) { ?> -->
 <div class="form-group">
-    <label class="col-sm-3 control-label">{{Données de l'équipement}} (BETA)</label>
+    <label class="col-sm-3 control-label">{{Etat de l'équipement}} (BETA)</label>
     <div class="col-sm-5">
         <?php
-            echo '<a class="btn btn-danger" title="{{Tente de récupérer et corriger les données}}" onclick="repair('.$eqId.')">{{Réparer}}</a>';
+            echo '<a class="btn btn-danger" title="{{Tente de corriger l\'état de l\'équipement}}" onclick="repair('.$eqId.')">{{Réparer}}</a>';
         ?>
     </div>
 </div>

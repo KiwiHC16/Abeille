@@ -18,10 +18,7 @@
     // $eqLogics = Abeille::byType('Abeille');
 
     // eqLogic/configuration/ab::settings reminder
-    // networkMap[zgId] = array(
-    //     "level0" => "map-level0.png",
-    //     "levelX" => "map-levelX.png"
-    // )
+    // networkMap[levelX] = "mapX.png"
 
     define('maxLevels', 10); // Number of levels
     sendVarToJS('maxLevels', maxLevels);
@@ -51,47 +48,24 @@
 <br>
 <button onclick="saveLevels()">{{Sauvegarder}}</button>
 
-<!-- <form>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">{{Niveau}}</label>
-        <div class="col-sm-9">
-            <! -- Drop down list to select Zigate -- >
-            <select id="idLevel" onchange="levelChanged()" style="width:100px">
-            </select>
-            <button id="idLevelMin" class="btn btn-danger btn-sm" onclick="levelRemove()">-</button>
-            <br>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="col-sm-2 control-label">{{Plan}}</label>
-        <div class="col-sm-9">
-            <button id="map" onclick="uploadMap()">{{Plan}}</button>
-        </div>
-    </div>
-</form> -->
-
 <script>
     // TEMP
-    networkMap = {
-        1: {
-            rdc: 'map-rdc.png',
-            premier: 'map-1er.png'
-        }
-    };
+    // networkMap = {
+    //     rdc: 'map-rdc.png',
+    //     premier: 'map-1er.png'
+    // };
     // END TEMP
 
     refreshLevels();
 
     function refreshLevels() {
         console.log("refreshLevels(). networkMap=", networkMap);
-        if (typeof networkMap[zgId] === 'undefined')
+        if (typeof networkMap === 'undefined')
             return;
 
-        nm = networkMap[zgId];
-        console.log("nm=", nm);
+        console.log("networkMap=", networkMap);
         s = 0
-        for (const [level, map] of Object.entries(nm)) {
+        for (const [level, map] of Object.entries(networkMap)) {
             elm = document.getElementById("idLevel-"+s);
             elm.value = level;
             elm = document.getElementById("idMap-"+s);

@@ -18,22 +18,13 @@
     sendVarToJS('zgId', $zgId);
 
     // Selecting background map
-    // ab::userMap => path to user map, relative to Abeille's root
-    $userMap = config::byKey('ab::userMap', 'Abeille', '', true);
-    echo "<script>console.log(\"userMap=" . $userMap . "\")</script>";
-    if (($userMap == '') || !file_exists(__DIR__."/../../".$userMap)) {
-        // echo '<image x="0" y="0" width="1100px" height="1100px" xlink:href="/plugins/Abeille/Network/TestSVG/images/AbeilleLQI_MapData.png"></image>';
-        $userMap = "images/AbeilleNetworkMap-1200.png";
-    }
-    echo "<script>console.log(\"userMap2=" . $userMap . "\")</script>";
-    sendVarToJS('userMap', $userMap);
-
-    // eqLogic/configuration/ab::settings reminder
-    // networkMap[zgId] = array(
-    //     "level0" => "map-level0.png",
-    //     "levelX" => "map-levelX.png"
-    // )
+    // ab::networkMap[level] = map path relative to Abeille's root
     $networkMap = config::byKey('ab::networkMap', 'Abeille', [], true);
+    if ($networkMap == []) {
+        $userMap = "images/AbeilleNetworkMap-1200.png";
+        $networkMap['level 0'] = $userMap;
+    } else
+        $userMap = array_key_first($networkMap);
     sendVarToJS('networkMap', $networkMap);
 
     $iSize = getimagesize(__DIR__."/../../".$userMap);
@@ -1088,7 +1079,7 @@
 
             for (nLogicId in router.neighbors) {
                 neighbor = router.neighbors[nLogicId];
-                console.log("neighbor=", neighbor);
+                // console.log("neighbor=", neighbor);
                 if (typeof devList[nLogicId] !== "undefined") {
                     // Already registered
                     devN = devList[nLogicId];
@@ -1122,43 +1113,43 @@
     }
 
     /* Upload a user map */
-    function uploadMap() {
-        console.log("uploadMap()");
+    // function uploadMap() {
+    //     console.log("uploadMap()");
 
-        var input = document.createElement('input');
-        input.type = 'file';
-        input.accept = '.png';
-        input.onchange = e => {
+    //     var input = document.createElement('input');
+    //     input.type = 'file';
+    //     input.accept = '.png';
+    //     input.onchange = e => {
 
-            var file = e.target.files[0];
-            // file.name = the file's name including extension
-            // file.size = the size in bytes
-            // file.type = file type ex. 'application/pdf'
-            console.log("file=", file);
+    //         var file = e.target.files[0];
+    //         // file.name = the file's name including extension
+    //         // file.size = the size in bytes
+    //         // file.type = file type ex. 'application/pdf'
+    //         console.log("file=", file);
 
-            var formData = new FormData();
-            formData.append("file", file);
-            formData.append("destDir", "tmp/network_maps"); // Maps are stored in local 'tmp/network_maps' dir
-            formData.append("destName", "Level0.png");
+    //         var formData = new FormData();
+    //         formData.append("file", file);
+    //         formData.append("destDir", "tmp/network_maps"); // Maps are stored in local 'tmp/network_maps' dir
+    //         formData.append("destName", "Level0.png");
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "plugins/Abeille/core/php/AbeilleUpload.php", true);
-            xhr.onload = function (oEvent) {
-                console.log("oEvent=", oEvent);
-                if (xhr.status != 200) {
-                    console.log("Error " + xhr.status + " occurred when trying to upload your file.");
-                    return;
-                }
-                console.log("Uploaded !");
-                // Updating config with ab::userMap
-                userMap = "tmp/network_maps/" + "Level0.png";
-                saveConfig();
-                location.reload(true);
-            };
-            xhr.send(formData);
-        }
-        input.click();
-    }
+    //         var xhr = new XMLHttpRequest();
+    //         xhr.open("POST", "plugins/Abeille/core/php/AbeilleUpload.php", true);
+    //         xhr.onload = function (oEvent) {
+    //             console.log("oEvent=", oEvent);
+    //             if (xhr.status != 200) {
+    //                 console.log("Error " + xhr.status + " occurred when trying to upload your file.");
+    //                 return;
+    //             }
+    //             console.log("Uploaded !");
+    //             // Updating config with ab::userMap
+    //             userMap = "tmp/network_maps/" + "Level0.png";
+    //             saveConfig();
+    //             location.reload(true);
+    //         };
+    //         xhr.send(formData);
+    //     }
+    //     input.click();
+    // }
 
     // Redraw full page
     function refreshPage() {
@@ -1344,7 +1335,7 @@
         for (linkId in linksList) {
             // Reminder: linksList[linkId] = { "src": ss, "dst": ddd }
             link = linksList[linkId];
-            console.log('link['+linkId+']=', link);
+            // console.log('link['+linkId+']=', link);
             // linkId = link.id;
 
             srcDev = devList[link.src];

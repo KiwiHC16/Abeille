@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230503-BETA-1
+-------------
+
 - OTA: Fichier non FW ignoré.
 - OTA: Amélioration msg de debug.
 - Page équipement: Correction absence boutons 'sauvegarder'...

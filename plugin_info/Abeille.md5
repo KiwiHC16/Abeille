@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230502-BETA-1"
+# VERSION="230503-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1173,7 +1173,7 @@ cab580c801233aee55ed5492556506a4 *core/php/AbeilleInstall.php
 35f9564138e86d37f0379324063c4b49 *core/php/AbeilleLQI.php
 255a3cc9c2c67bf09cd584ffb2287b62 *core/php/AbeilleLog.php
 f9f0b5c7171e4a3c962b7c7008a4aef1 *core/php/AbeilleMonitor.php
-e4565671d6e8a11edaf815827e95f94b *core/php/AbeilleOTA.php
+9ab85f33787d42bdae75985d3e3b4d69 *core/php/AbeilleOTA.php
 51c8ee5d4d340642d4dcbe8acab3f84b *core/php/AbeilleParser-Tuya.php
 40209352f75efcabed5ddb0023da1576 *core/php/AbeilleParser-Xiaomi.php
 b5090da2ffe5f92d018db417d2e9c56f *core/php/AbeilleParser.php
@@ -1185,7 +1185,7 @@ da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
 4248d134eef07e173183af90cb770da8 *core/php/AbeilleSocat.php
 2526780bcfc9f87f898d0c31b76d29f6 *core/php/AbeilleSupportKeyInfos.php
 e4ccac3cb9401f1b2b54e068e55a3c4b *core/php/AbeilleTest.php
-2e83a3e9d8ede0307dd4a4c8e8db02ca *core/php/AbeilleUpload.php
+f05bdde84ebb0b6e1121275719b997bf *core/php/AbeilleUpload.php
 b55a6ba4c0110b8a29a3c30f4aee6ce1 *core/php/AbeilleZigate.php
 08683ba4c6245753a807bb0a801272e2 *core/php/AbeilleZigateConst.php
 8f1ac729caf39c17115172d0e824107e *core/php/AbeilleZigbeeConst.php
@@ -1212,7 +1212,7 @@ b853ae2c1cf0e48b938ce1abd5698952 *core/scripts/resetPiZigate.sh
 1c3ccc169b2e4f4cf0368804b601960e *core/scripts/updateFirmware.sh
 8152b9a95c1e174c3246ea4176c6325a *core/scripts/updateFirmwareDIN.sh
 f43f8f808ea001dff6f5f3a8677c09c8 *core/scripts/waitPortFree.sh
-a9533489ade9b5d0527367d03e86b766 *desktop/js/Abeille.js
+64231c3183d042a28e82b4db446b7b65 *desktop/js/Abeille.js
 a7e3df9d843218181446fb43cf914cfd *desktop/js/AbeilleNetwork.js
 f702906f38781759747c1bbcf6aa0715 *desktop/js/health.js
 e003c73a5c9c65b7e323e53a80348a9a *desktop/modal/Abeille-OTA.modal.php
@@ -1221,7 +1221,7 @@ e003c73a5c9c65b7e323e53a80348a9a *desktop/modal/Abeille-OTA.modal.php
 338923641f06d8923d849005c411e7f9 *desktop/modal/AbeilleHealth.modal.php
 066eb590e69ec549df11007e773aaf63 *desktop/modal/AbeilleLoadJsonCmd.modal.php
 10e9d0299ac5303031e7e40341c8af63 *desktop/modal/AbeilleNetwork.modal.php
-a8923954c65404668e637462ff0887d0 *desktop/modal/AbeilleNetworkMap.modal.php
+0e333e1ba52b3f0b346832d67375fcef *desktop/modal/AbeilleNetworkMap.modal.php
 6b00578f611f5fa81d811c882c0284dc *desktop/modal/healthShort.php
 6751162df1530c93e749729ea65f4e7a *desktop/modal/inconnu.php
 4615ed0aa641629d18fc1a66a2d0f86b *desktop/modal/installPiGpio.abeille.php
@@ -1232,7 +1232,7 @@ d473a259cb9defac634d93cd184438d6 *desktop/modal/setBeesTimeout.abeille.php
 41c414cacd161f892c9748152464a965 *desktop/modal/updateConfig.abeille.php
 4b33291a837b1f564c468a7cbaae7604 *desktop/php/Abeille-Bees.php
 03da062094898cd8b23007ad05f47df3 *desktop/php/Abeille-Eq-Advanced-Common.php
-ad295264d24e3005c74b8c4f327598ed *desktop/php/Abeille-Eq-Advanced-Device.php
+cc8f4975dfd15bae82bb4af8285e96b2 *desktop/php/Abeille-Eq-Advanced-Device.php
 1420a2d96f226ce3c5d3c59cf6bd1b0d *desktop/php/Abeille-Eq-Advanced-Interrogations.php
 64296e829eccd2c3d92eb7676ba89f99 *desktop/php/Abeille-Eq-Advanced-Specific.php
 3be321da2c804686fefd853488c48602 *desktop/php/Abeille-Eq-Advanced-Zigate.php
@@ -1240,15 +1240,15 @@ d99036f1ad8a7d1f51ec12a9d21e19b9 *desktop/php/Abeille-Eq-Advanced.php
 48054c02306fbbfd313a0250ecf3f51b *desktop/php/Abeille-Eq-Cmds.php
 84c6d1725c79c8d336cac281ade6acde *desktop/php/Abeille-Eq-MainGeneric.php
 39215e0504a8378a807a81f1a52dfa34 *desktop/php/Abeille-Eq-MainIcon.php
-644e990b24270b7c74e90edfab81c184 *desktop/php/Abeille-Eq.php
+d1b388411382d89042aeb02c44bd678b *desktop/php/Abeille-Eq.php
 70ad5c50a1b12481516039074333a343 *desktop/php/Abeille-Groups.php
-107eb9cd02c49426a105f1d757d6dcd6 *desktop/php/Abeille-Js.php
+2021b3b20e7b88ed1e832cb51a9836a6 *desktop/php/Abeille-Js.php
 13396c7ab3b74c60393c395b69f631a3 *desktop/php/Abeille-MigrateEq.php
 a2fd6e2845336b84ae202472aee71946 *desktop/php/Abeille-NewZigate.php
 16f78e0a9b6450c1ea81a355567e0d63 *desktop/php/Abeille-ReplaceEq.php
 6a738c201f387c91b3a051053888c08b *desktop/php/Abeille-Scenes.php
 0bb30a3c718796246f9e1b0a1ad1c3bb *desktop/php/Abeille-ToolsButtons.php
-5852bf3eac7d7991902f14831bb912e3 *desktop/php/Abeille.php
+1680e4e03207b4d7391cb0b84415b8cf *desktop/php/Abeille.php
 04da880011ef060c4f1de38d930b9a9d *desktop/php/AbeilleEqAssist.php
 36806ce175dc9f0d2495c90b904c33bc *desktop/php/AbeilleFormAction.php
 049be0afc8e0ae0caa7f7c8865e4201e *desktop/php/AbeilleGraph.php
@@ -1256,7 +1256,7 @@ a2fd6e2845336b84ae202472aee71946 *desktop/php/Abeille-NewZigate.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 10bfefd0de01ace7d0f639810b9b14cf *desktop/php/AbeilleNetworkMap.php
-dbc5922e3f3e0deae7c0ec1ce81802b5 *docs/fr_FR/Changelog.rst
+18610959e35f45b261ecf30af63387a8 *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1576,10 +1576,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-2d8540e244ffabb1c7880e2619f99590 *plugin_info/Abeille.version
+6fc09d5469550baf9ccca3e7dec97bfc *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 81725d63e54cf19089e15d66c34890d4 *plugin_info/configuration.php
-611a3bf78bbc222fe8ce76fae471fcdd *plugin_info/info.json
+dd0c478e266a0eb16518642f906749aa *plugin_info/info.json
 77ea2ec32d42bf5af976fe8b24d2e15c *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

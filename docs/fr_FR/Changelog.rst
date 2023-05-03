@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230503-BETA-1
+230503-BETA-2
 -------------
 
 - OTA: Fichier non FW ignoré.

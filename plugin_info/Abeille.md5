@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230503-BETA-1"
+# VERSION="230503-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1221,7 +1221,7 @@ e003c73a5c9c65b7e323e53a80348a9a *desktop/modal/Abeille-OTA.modal.php
 338923641f06d8923d849005c411e7f9 *desktop/modal/AbeilleHealth.modal.php
 066eb590e69ec549df11007e773aaf63 *desktop/modal/AbeilleLoadJsonCmd.modal.php
 10e9d0299ac5303031e7e40341c8af63 *desktop/modal/AbeilleNetwork.modal.php
-0e333e1ba52b3f0b346832d67375fcef *desktop/modal/AbeilleNetworkMap.modal.php
+472a4a2f729ca61610198d2b38f22b0a *desktop/modal/AbeilleNetworkMap.modal.php
 6b00578f611f5fa81d811c882c0284dc *desktop/modal/healthShort.php
 6751162df1530c93e749729ea65f4e7a *desktop/modal/inconnu.php
 4615ed0aa641629d18fc1a66a2d0f86b *desktop/modal/installPiGpio.abeille.php
@@ -1255,8 +1255,8 @@ a2fd6e2845336b84ae202472aee71946 *desktop/php/Abeille-NewZigate.php
 91ec0d41e5f01239f808d5dfdcf7f0c1 *desktop/php/AbeilleMaintenance-Logs.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
-10bfefd0de01ace7d0f639810b9b14cf *desktop/php/AbeilleNetworkMap.php
-18610959e35f45b261ecf30af63387a8 *docs/fr_FR/Changelog.rst
+99ef7c70d9803685222ab98b8b6a11a3 *desktop/php/AbeilleNetworkMap.php
+a7e1977e35aae10cb8782a0ae3e188bb *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1576,10 +1576,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-6fc09d5469550baf9ccca3e7dec97bfc *plugin_info/Abeille.version
+fcbe7315f0e1d8bec7d3b58cf631a0c5 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 81725d63e54cf19089e15d66c34890d4 *plugin_info/configuration.php
-dd0c478e266a0eb16518642f906749aa *plugin_info/info.json
+e223d881b3b9dbc4d8714ec73fcb4469 *plugin_info/info.json
 77ea2ec32d42bf5af976fe8b24d2e15c *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

@@ -3,6 +3,7 @@ ChangeLog
 
 - OTA: Fichier non FW ignoré.
 - OTA: Amélioration msg de debug.
+- Page équipement: Correction absence boutons 'sauvegarder'...
 
 230502-BETA-1
 -------------

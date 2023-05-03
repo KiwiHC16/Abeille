@@ -104,7 +104,7 @@
 
             <!-- <button id="save" onclick="saveCoordinates()" style="width:100%;margin-top:4px">{{Sauver}}</button> -->
             <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->
-            <button id="idMap" style="width:100%;margin-top:4px">{{Plan}}</button>
+            <button id="idMap" style="width:100%;margin-top:4px">{{Plans}}</button>
         </div>
 
         <div id="idGraph" class="column">
@@ -1088,7 +1088,7 @@
 
             for (nLogicId in router.neighbors) {
                 neighbor = router.neighbors[nLogicId];
-                // console.log("neighbor=", neighbor);
+                console.log("neighbor=", neighbor);
                 if (typeof devList[nLogicId] !== "undefined") {
                     // Already registered
                     devN = devList[nLogicId];
@@ -1115,7 +1115,7 @@
 
                 devN['links'][lineId] = rLogicId;
                 devR['links'][lineId] = nLogicId;
-                linksList[lineId] = { 'src': rLogicId, 'dst': nLogicId, 'lqi': devN['lqi'] };
+                linksList[lineId] = { 'src': rLogicId, 'dst': nLogicId, 'lqi': neighbor['lqi'] };
                 lineId++;
             }
         } // End 'for (rLogicId in lqiTable.routers)'
@@ -1340,7 +1340,7 @@
     function drawLinks() {
         console.log("drawLinks()");
 
-        // console.log('linksList=', linksList);
+        console.log('linksList=', linksList);
         for (linkId in linksList) {
             // Reminder: linksList[linkId] = { "src": ss, "dst": ddd }
             link = linksList[linkId];

@@ -7,6 +7,10 @@ ChangeLog
 - OTA: Fichier non FW ignoré.
 - OTA: Amélioration msg de debug.
 - Page équipement: Correction absence boutons 'sauvegarder'...
+- Placement réseau:
+
+  - Améliorations choix de niveaux.
+  - Couleur des liens en fonction du LQI.
 
 230502-BETA-1
 -------------

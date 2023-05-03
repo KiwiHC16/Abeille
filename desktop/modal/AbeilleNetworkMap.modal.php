@@ -50,7 +50,6 @@
 
 <br>
 <button onclick="saveLevels()">{{Sauvegarder}}</button>
-<button onclick="addNewMap('.$t.')">+</button>
 
 <!-- <form>
     <div class="form-group">
@@ -106,6 +105,19 @@
     // Check & save config
     function saveLevels() {
         console.log("saveLevels()");
+
+        for (s = 0; s < maxLevels; s++) {
+            elm = document.getElementById("idLevel-"+s);
+            level = elm.value;
+            elm = document.getElementById("idMap-"+s);
+            map = elm.value;
+            if ((level == '') && (map == ''))
+                continue; // Empty line
+            if ((level == '') || (map == '')) {
+                alert("{{Ligne}} "+s+" {{invalide}}: {{Niveau ou plan vide}}");
+                continue;
+            }
+        }
     }
 
     // Add new map to index 'idx'
@@ -122,8 +134,30 @@
             // file.size = the size in bytes
             // file.type = file type ex. 'application/pdf'
             console.log("file=", file);
-            elm = document.getElementById("idMap-"+idx);
-            elm.value = file.name;
+
+            var formData = new FormData();
+            formData.append("file", file);
+            formData.append("destDir", "tmp/network_maps"); // Maps are stored in local 'tmp/network_maps' dir
+            // formData.append("destName", "Level0.png");
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "plugins/Abeille/core/php/AbeilleUpload.php", true);
+            xhr.onload = function (oEvent) {
+                console.log("oEvent=", oEvent);
+                if (xhr.status != 200) {
+                    console.log("Error " + xhr.status + " occurred when trying to upload your file.");
+                    return;
+                }
+                console.log("Uploaded !");
+                // Updating config with ab::userMap
+                userMap = "tmp/network_maps/" + file.name;
+                // saveConfig();
+                // location.reload(true);
+
+                elm = document.getElementById("idMap-"+idx);
+                elm.value = file.name;
+            };
+            xhr.send(formData);
         }
         input.click();
     }

@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - OTA: Fichier non FW ignoré.
+- OTA: Amélioration msg de debug.
 
 230502-BETA-1
 -------------

@@ -40,9 +40,9 @@
         $destName = $_POST['destName'];
 
     /* Checking if destination dir exists */
+    logDebug("AbeilleUpload: destDir='".$destDir."'");
     if (!file_exists($destDir)) {
-        mkdir($destDir, 0744);
-        if (!file_exists($destDir)) {
+        if (mkdir($destDir, 0744) == false) {
             logDebug('AbeilleUpload: ERROR: Can\'t create destination dir');
             return;
         }

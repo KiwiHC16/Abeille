@@ -42,7 +42,7 @@
     /* Checking if destination dir exists */
     logDebug("AbeilleUpload: destDir='".$destDir."'");
     if (!file_exists($destDir)) {
-        if (mkdir($destDir, 0744) == false) {
+        if (mkdir($destDir, 0744, true) == false) { // Create all missing hierarchy
             logDebug('AbeilleUpload: ERROR: Can\'t create destination dir');
             return;
         }

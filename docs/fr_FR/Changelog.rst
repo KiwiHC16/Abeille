@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230505-BETA-1
+230505-BETA-2
 -------------
 
 - Interne: AbeilleUpload: Crée toute la hierarchie de destination.

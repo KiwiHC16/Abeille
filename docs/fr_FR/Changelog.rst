@@ -6,6 +6,7 @@ ChangeLog
 
 - Interne: AbeilleUpload: Crée toute la hierarchie de destination.
 - Placement réseau: Possibilité de charger nouveau plan + divers.
+- Matsee Plus single phase power meter: Modèle préliminaire (2588).
 
 230503-BETA-2
 -------------

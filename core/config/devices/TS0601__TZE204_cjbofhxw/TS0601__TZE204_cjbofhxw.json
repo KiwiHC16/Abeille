@@ -1,0 +1,17 @@
+{
+    "TS0601__TZE204_cjbofhxw": {
+        "manufacturer": "MatSee Plus",
+        "model": "Digital meter",
+        "type": "MatSee Plus single phase power meter",
+        "timeout": "60",
+        "category": {
+            "energy": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-DigitalMeter",
+            "mainEP": "01"
+        },
+        "commands": {
+        }
+    }
+}

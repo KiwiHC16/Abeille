@@ -18,14 +18,28 @@
     sendVarToJS('zgId', $zgId);
 
     // Selecting background map
-    // ab::networkMap[level] = map path relative to Abeille's root
+    // config/ab::networkMap reminder
+    // networkMap[idx] = array(
+    //     "level" =>
+    //     "mapDir" =>
+    //     "mapFile" => "mapX.png"
+    // )
     $networkMap = config::byKey('ab::networkMap', 'Abeille', [], true);
     if ($networkMap == []) {
-        $userMap = "images/AbeilleNetworkMap-1200.png";
-        $networkMap['level 0'] = $userMap;
-    } else
-        $userMap = array_key_first($networkMap);
+        $networkMap = [];
+        $networkMap[] = array(
+            'level' => 'Level 0',
+            'mapDir' => 'images',
+            'mapFile' => 'AbeilleNetworkMap-1200.png'
+        );
+    }
     sendVarToJS('networkMap', $networkMap);
+
+    require_once __DIR__.'/../../core/php/AbeilleLog.php'; // logDebug()
+    logDebug('networkMap='.json_encode($networkMap));
+    $first = $networkMap[0];
+    logDebug('first='.json_encode($first));
+    $userMap = $first['mapDir'].'/'.$first['mapFile'];
 
     $iSize = getimagesize(__DIR__."/../../".$userMap);
     $width = $iSize[0];
@@ -35,6 +49,7 @@
         "width" => $width,
         "height" => $height
     );
+    logDebug('image='.json_encode($image));
     sendVarToJS('maxX', $width);
     sendVarToJS('maxY', $height);
 ?>
@@ -107,21 +122,6 @@
 </html>
 
 <script type="text/javascript">
-    var networkInformation = "";
-    var networkInformationProgress = "Processing";
-    var TopoSetReply = "";
-    var refreshStatus; // Result of setInterval()
-
-    var a = 10;
-    var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
-    var center = JSON.parse(centerJSON);
-
-    var Ruche = "Abeille1";
-    var Source = "All";
-    var Destination = "All";
-    var Parameter = "LinkQualityDec";
-    var Hierarchy = "All";
-
     // var myJSON = '{}';
 
     // myObjOrg et myObjNew ne contiennent que la ruche au chargement du script
@@ -249,21 +249,43 @@
     }
 
     // Ensure that device coordinates are within background map size
-    function checkLimits(grpX, grpY) {
+    function checkGrpLimits(grpX, grpY) {
         if (grpX < 0) grpX = 0;
-            // console.log("  maxX=", maxX);
+        // console.log("  maxX=", maxX);
         if ((grpX + 50) > maxX)
             grpX = maxX - 50;
         if (grpY < 0) grpY = 0;
         // console.log("  maxY=", maxY);
         if ((grpY + 50) > maxY)
             grpY = maxY - 50;
-        // console.log("  maxY2=", maxY);
 
+        console.log("  grpX="+grpX+", grpY="+grpY);
         return {
             x: grpX,
             y: grpY
         };
+    }
+
+    // Ensure that device coordinates are within background map size
+    function checkPosLimits(devLogicId) {
+        dev = devList[devLogicId];
+        posX = dev['posX'];
+        posY = dev['posY'];
+        grpX = posX - 25;
+        grpY = posY - 25;
+
+        if (grpX < 0) grpX = 0;
+        // console.log("  maxX=", maxX);
+        if ((grpX + 50) > maxX)
+            grpX = maxX - 50;
+        if (grpY < 0) grpY = 0;
+        // console.log("  maxY=", maxY);
+        if ((grpY + 50) > maxY)
+            grpY = maxY - 50;
+
+        console.log("  grpX="+grpX+", grpY="+grpY);
+        dev['posX'] = grpX + 25;
+        dev['posY'] = grpY + 25;
     }
 
     // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
@@ -381,7 +403,7 @@
             grpX = mousePos.x - offset.x;
             grpY = mousePos.y - offset.y;
             // Check limits
-            grpCoord = checkLimits(grpX, grpY);
+            grpCoord = checkGrpLimits(grpX, grpY);
             transform.setTranslate(grpCoord['x'], grpCoord['y']);
 
             // Moving connected lines
@@ -959,7 +981,7 @@
                     // var msg = "ERREUR ! Qqch s'est mal passé.\n"+res.error;
                     // $('#div_networkZigbeeAlert').showAlert({message: msg, level: 'danger'});
                     console.log("ERROR: returned status="+res.status);
-                    bootbox.alert("Pas de données du réseau.<br>La box a probablement redémarré depuis hier.<br><br>Veuillez interroger le réseau pour corriger.")
+                    bootbox.alert("Pas de données du réseau.<br>Votre boxe a probablement redémarré depuis hier.<br><br>Veuillez forcer l'analyse du réseau.")
                 } else if (res.content == "") {
                     // $('#div_networkZigbeeAlert').showAlert({message: '{{Fichier vide. Rien à traiter}}', level: 'danger'});
                     console.log("ERROR: empty content");
@@ -980,7 +1002,7 @@
             }
         };
 
-        xhr.open("GET", "/plugins/Abeille/core/php/AbeilleGetEq.php", false); // False pour bloquer sur la recuperation du fichier
+        xhr.open("GET", "/plugins/Abeille/core/php/AbeilleGetEq.php", false);
         xhr.send();
     }
 
@@ -1008,27 +1030,6 @@
                 action: 'saveSettings',
                 eqId: eqId,
                 settings: JSON.stringify(settings)
-            },
-            dataType: 'json',
-            global: false,
-            success: function (json_res) {
-            }
-        });
-    }
-
-    /* 'config' DB update */
-    function saveConfig() {
-        console.log("saveConfig()");
-
-        config = new Object();
-        config['ab::userMap'] =  userMap;
-
-        $.ajax({
-            type: 'POST',
-            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
-            data: {
-                action: 'saveConfig',
-                config: JSON.stringify(config)
             },
             dataType: 'json',
             global: false,
@@ -1110,49 +1111,16 @@
                 lineId++;
             }
         } // End 'for (rLogicId in lqiTable.routers)'
+        console.log("devList=", devList);
     }
-
-    /* Upload a user map */
-    // function uploadMap() {
-    //     console.log("uploadMap()");
-
-    //     var input = document.createElement('input');
-    //     input.type = 'file';
-    //     input.accept = '.png';
-    //     input.onchange = e => {
-
-    //         var file = e.target.files[0];
-    //         // file.name = the file's name including extension
-    //         // file.size = the size in bytes
-    //         // file.type = file type ex. 'application/pdf'
-    //         console.log("file=", file);
-
-    //         var formData = new FormData();
-    //         formData.append("file", file);
-    //         formData.append("destDir", "tmp/network_maps"); // Maps are stored in local 'tmp/network_maps' dir
-    //         formData.append("destName", "Level0.png");
-
-    //         var xhr = new XMLHttpRequest();
-    //         xhr.open("POST", "plugins/Abeille/core/php/AbeilleUpload.php", true);
-    //         xhr.onload = function (oEvent) {
-    //             console.log("oEvent=", oEvent);
-    //             if (xhr.status != 200) {
-    //                 console.log("Error " + xhr.status + " occurred when trying to upload your file.");
-    //                 return;
-    //             }
-    //             console.log("Uploaded !");
-    //             // Updating config with ab::userMap
-    //             userMap = "tmp/network_maps/" + "Level0.png";
-    //             saveConfig();
-    //             location.reload(true);
-    //         };
-    //         xhr.send(formData);
-    //     }
-    //     input.click();
-    // }
 
     // Redraw full page
     function refreshPage() {
+
+        if (typeof devList === "undefined") {
+            console.log("UNDEFINED devList");
+            return;
+        }
 
         lesAbeilles = "";
         for (devLogicId in devList) {
@@ -1174,79 +1142,10 @@
         $("#md_modal").dialog({ title: "{{Plan par niveau}}" });
         $("#md_modal")
             .load("index.php?v=d&plugin=Abeille&modal=AbeilleNetworkMap.modal")
-            .dialog("open");
+            .dialog("open")
+            .dialog("option", "width", 700)
+            .dialog("option", "height", 500);
     });
-
-    //-----------------------------------------------------------------------
-    // MAIN
-    //-----------------------------------------------------------------------
-
-    const queryString = window.location.search;
-    console.log("URL params=" + queryString);
-    const urlParams = new URLSearchParams(queryString);
-    if (urlParams.has('zigate')) {
-        zgId = urlParams.get('zigate');
-        Ruche = "Abeille" + zgId;
-    } else {
-        zgId = 1;
-        Ruche = "Abeille1";
-    }
-    // res = queryString.substr(1);
-    // console.log("res=" + res);
-    // if (res.length > 2) Ruche = res;
-    // console.log("Ruche=" + Ruche);
-
-    var lqiTable; // Network topology coming from LQI collect.
-    var jeedomDevices; // Jeedom known devices
-    var devList; // List of devices with combined infos from LQI + Jeedom
-    var devListNb;
-    var linksList;
-
-    getLqiTable();
-    getJeedomDevices();
-    // myJSON_AddAbeillesFromJeedom();
-    // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
-    // myJSON_AddMissing();
-    // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
-
-
-    // FCh temp disable
-    // refreshStatus = setInterval(
-    //     function() {
-    //         refreshNetworkCollectionProgress();
-    //     },
-    //     1000  // ms
-    // );
-
-    // console.log("Name list: "+JSON.stringify(lqiTable));
-    // console.log("Name list: "+JSON.stringify(jeedomDevices));
-    // console.log("Name 1: " + JSON.stringify(jeedomDevices["0000"]));
-
-    // Combine LQI + Jeedom infos
-    buildDevList();
-    console.log("devList=", devList);
-
-
-
-    // Display options
-    var viewLinks = true; // Set to false to hide links
-
-    // setPosition("Auto");
-
-    var selectedElement, transform;
-    var offset; // Mouse offset vs rect top left corner
-    // var positionX = "Position: X=";
-    // var positionY = " Y=";
-    var X = 0;
-    var Y = 0;
-
-    // Compute auto-placement when position is undefined
-    // If 'isZigate' is true, it is placed at center.
-    centerX = 500;
-    centerY = 500;
-    centerR = 400; // Radius
-    autoXIdx = 0;
-    autoYIdx = 0;
 
     // X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille)');
     // Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille)');
@@ -1285,6 +1184,9 @@
         // dev['posX'] = 25;
         // dev['posY'] = 25; // TEMP
 
+        // Checking limits vs map size
+        checkPosLimits(devLogicId);
+
         // Computing positions based on node central coordinates
         posX = dev['posX'];
         posY = dev['posY'];
@@ -1298,11 +1200,6 @@
         // imgY = posY - 20;
         imgX = 5;
         imgY = 5;
-
-        // Checking limits
-        grpCoord = checkLimits(grpX, grpY);
-        grpX = grpCoord['x'];
-        grpY = grpCoord['y'];
 
         newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+grpX+', '+grpY+')">';
         newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
@@ -1359,5 +1256,89 @@
         }
     }
 
+    //-----------------------------------------------------------------------
+    // MAIN
+    //-----------------------------------------------------------------------
+
+    var networkInformation = "";
+    var networkInformationProgress = "Processing";
+    var TopoSetReply = "";
+    var refreshStatus; // Result of setInterval()
+
+    var a = 10;
+    var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
+    var center = JSON.parse(centerJSON);
+
+    var Ruche = "Abeille1";
+    var Source = "All";
+    var Destination = "All";
+    var Parameter = "LinkQualityDec";
+    var Hierarchy = "All";
+
+    const queryString = window.location.search;
+    console.log("URL params=" + queryString);
+    const urlParams = new URLSearchParams(queryString);
+    if (urlParams.has('zigate')) {
+        zgId = urlParams.get('zigate');
+        Ruche = "Abeille" + zgId;
+    } else {
+        zgId = 1;
+        Ruche = "Abeille1";
+    }
+    // res = queryString.substr(1);
+    // console.log("res=" + res);
+    // if (res.length > 2) Ruche = res;
+    // console.log("Ruche=" + Ruche);
+
+    var lqiTable; // Network topology coming from LQI collect.
+    var jeedomDevices; // Jeedom known devices
+    var devList; // List of devices with combined infos from LQI + Jeedom
+    var devListNb;
+    var linksList;
+
+    getLqiTable();
+    getJeedomDevices();
+    // myJSON_AddAbeillesFromJeedom();
+    // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
+    // myJSON_AddMissing();
+    // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
+
+
+    // FCh temp disable
+    // refreshStatus = setInterval(
+    //     function() {
+    //         refreshNetworkCollectionProgress();
+    //     },
+    //     1000  // ms
+    // );
+
+    // console.log("Name list: "+JSON.stringify(lqiTable));
+    // console.log("Name list: "+JSON.stringify(jeedomDevices));
+    // console.log("Name 1: " + JSON.stringify(jeedomDevices["0000"]));
+
+    // Combine LQI + Jeedom infos
+    buildDevList();
+
+    // Display options
+    var viewLinks = true; // Set to false to hide links
+
+    // setPosition("Auto");
+
+    var selectedElement, transform;
+    var offset; // Mouse offset vs rect top left corner
+    // var positionX = "Position: X=";
+    // var positionY = " Y=";
+    var X = 0;
+    var Y = 0;
+
+    // Compute auto-placement when position is undefined
+    // If 'isZigate' is true, it is placed at center.
+    centerX = 500;
+    centerY = 500;
+    centerR = 400; // Radius
+    autoXIdx = 0;
+    autoYIdx = 0;
+
     refreshPage();
+    console.log("End of script");
 </script>

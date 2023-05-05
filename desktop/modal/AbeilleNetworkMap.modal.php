@@ -17,45 +17,45 @@
 
     // $eqLogics = Abeille::byType('Abeille');
 
-    // eqLogic/configuration/ab::settings reminder
-    // networkMap[levelX] = "mapX.png"
+    // config/ab::networkMap reminder
+    // networkMap[idx] = array(
+    //     "level" =>
+    //     "mapDir" =>
+    //     "mapFile" => "mapX.png"
+    // )
 
     define('maxLevels', 10); // Number of levels
     sendVarToJS('maxLevels', maxLevels);
 ?>
 {{Cette page vous permet de définir les niveaux et plans associés}}.<br><br>
 
-<table>
-    <tr>
-        <th style="width:150px">{{Niveau}}</th>
-        <th style="width:300px">{{Plan}}</th>
-    </tr>
-    <?php
-    for ($t = 0; $t < maxLevels; $t++) {
-        echo "<tr>";
-        echo "<td>";
-        echo '<input id="idLevel-'.$t.'" type="text" value="">';
-        echo "</td>";
-        echo "<td>";
-        echo '<input id="idMap-'.$t.'" type="text" value="">';
-        echo '<button onclick="addNewMap('.$t.')">+</button>';
-        echo "</td>";
-        echo "</tr>";
-    }
-    ?>
-</table>
+<div class="center">
+    <table>
+        <tr>
+            <th style="width:150px">{{Niveau}}</th>
+            <th style="width:300px">{{Plan}}</th>
+        </tr>
+        <?php
+        for ($t = 0; $t < maxLevels; $t++) {
+            echo "<tr>";
+            echo "<td>";
+            echo '<input id="idLevel-'.$t.'" type="text" value="">';
+            echo "</td>";
+            echo "<td>";
+            echo '<input id="idMap-'.$t.'" style="width:90%" type="text" value="">';
+            echo '<button onclick="addNewMap('.$t.')">+</button>';
+            echo "</td>";
+            echo "</tr>";
+        }
+        ?>
+    </table>
+</div>
 
+<br>
 <br>
 <button onclick="saveLevels()">{{Sauvegarder}}</button>
 
 <script>
-    // TEMP
-    // networkMap = {
-    //     rdc: 'map-rdc.png',
-    //     premier: 'map-1er.png'
-    // };
-    // END TEMP
-
     refreshLevels();
 
     function refreshLevels() {
@@ -65,33 +65,64 @@
 
         console.log("networkMap=", networkMap);
         s = 0
-        for (const [level, map] of Object.entries(networkMap)) {
+        for (const [idx, nm] of Object.entries(networkMap)) {
             elm = document.getElementById("idLevel-"+s);
-            elm.value = level;
+            elm.value = nm.level;
             elm = document.getElementById("idMap-"+s);
-            elm.value = map;
+            elm.value = nm.mapFile;
             s++;
             if (s == maxLevels)
                 break;
         }
+        newNetworkMap = Object.assign({}, networkMap); // Clone networkMap
     }
 
     // Check & save config
     function saveLevels() {
         console.log("saveLevels()");
 
-        for (s = 0; s < maxLevels; s++) {
-            elm = document.getElementById("idLevel-"+s);
+        // Checks
+        for (idx = 0; idx < maxLevels; idx++) {
+            elm = document.getElementById("idLevel-"+idx);
             level = elm.value;
-            elm = document.getElementById("idMap-"+s);
+            elm = document.getElementById("idMap-"+idx);
             map = elm.value;
             if ((level == '') && (map == ''))
                 continue; // Empty line
             if ((level == '') || (map == '')) {
-                alert("{{Ligne}} "+s+" {{invalide}}: {{Niveau ou plan vide}}");
-                continue;
+                l = idx + 1;
+                alert("{{Ligne}} "+l+" {{invalide}}: {{Niveau ou plan vide}}");
+                return;
             }
+            newNetworkMap[idx].level = level; // Updating level in case changed
         }
+        console.log("newNetworkMap=", newNetworkMap);
+        if (newNetworkMap != networkMap) {
+            console.log("Saving new networkMap=", newNetworkMap);
+            config = new Object();
+            config['ab::networkMap'] =  newNetworkMap;
+            saveConfig(config);
+            networkMap = Object.assign(networkMap, newNetworkMap); // Update networkMap
+        }
+        $('#md_modal').dialog('close')
+    }
+
+    /* 'config' DB update */
+    function saveConfig() {
+        console.log("saveConfig()");
+
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'saveConfig',
+                config: JSON.stringify(config)
+            },
+            dataType: 'json',
+            global: false,
+            success: function (json_res) {
+            }
+        });
     }
 
     // Add new map to index 'idx'
@@ -123,13 +154,26 @@
                     return;
                 }
                 console.log("Uploaded !");
-                // Updating config with ab::userMap
-                userMap = "tmp/network_maps/" + file.name;
                 // saveConfig();
                 // location.reload(true);
 
                 elm = document.getElementById("idMap-"+idx);
                 elm.value = file.name;
+
+                // Updating config with ab::userMap
+
+                // userMap = "tmp/network_maps/" + file.name;
+                elm = document.getElementById("idLevel-"+idx);
+                level = elm.value;
+                if (level == '') {
+                    level = 'Level ' + idx;
+                    elm.value = level;
+                }
+                newNetworkMap[idx] = {
+                    level: level,
+                    mapDir: "tmp/network_maps",
+                    mapFile: file.name
+                };
             };
             xhr.send(formData);
         }

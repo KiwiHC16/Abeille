@@ -692,13 +692,37 @@
                 log::add('Abeille', 'debug', '  Zigate '.$zgId.": Set 'ab::zgChan' to ".$chan);
             }
             // Moving user 'Network map' background image
-            $from = __DIR__."/../Network/TestSVG/images/AbeilleLQI_MapData_Perso.png";
-            if (file_exists($from)) {
-                $to = __DIR__."/../tmp/userMap.png";
-                rename($from, $to);
-                log::add('Abeille', 'debug', '  Renamed '.$from." to ".$to);
-                config::save('ab::userMap', "tmp/userMap.png", 'Abeille');
+            $nm = config::byKey('ab::networkMap', 'Abeille', 'nada');
+            if ($nm == 'nada') {
+                // ab::userMap=tmp/network_maps/Level0.png => ab::networkMap
+                $um = config::byKey('ab::userMap', 'Abeille', 'nada');
+                if ($um != 'nada') {
+                    $networkMap = [];
+                    $networkMap[] = array(
+                        'level' => 'Level 0',
+                        'mapDir' => dirname($um),
+                        'mapFile' => basename($um)
+                    );
+                    config::save('ab::networkMap', $networkMap, 'Abeille');
+                    log::add('Abeille', 'debug', '  Updated ab::userMap to ab::networkMap');
+                } else {
+                    // Neither ab::networkMap nor ab::userMap
+                    $from = __DIR__."/../Network/TestSVG/images/AbeilleLQI_MapData_Perso.png";
+                    if (file_exists($from)) {
+                        $to = __DIR__."/../tmp/network_maps/userMap.png";
+                        rename($from, $to);
+                        log::add('Abeille', 'debug', '  Renamed '.$from." to ".$to);
+                        $networkMap = [];
+                        $networkMap[] = array(
+                            'level' => 'Level 0',
+                            'mapDir' => 'tmp/network_maps',
+                            'mapFile' => 'userMap.png'
+                        );
+                        config::save('ab::networkMap', $networkMap, 'Abeille');
+                    }
+                }
             }
+            config::remove('ab::userMap', 'Abeille');
 
             // 'cmd' DB updates
             foreach ($eqLogics as $eqLogic) {

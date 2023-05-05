@@ -38,7 +38,7 @@
     require_once __DIR__.'/../../core/php/AbeilleLog.php'; // logDebug()
     logDebug('networkMap='.json_encode($networkMap));
     $first = $networkMap[0];
-    logDebug('first='.json_encode($first));
+    // logDebug('first='.json_encode($first));
     $userMap = $first['mapDir'].'/'.$first['mapFile'];
 
     $iSize = getimagesize(__DIR__."/../../".$userMap);
@@ -49,7 +49,7 @@
         "width" => $width,
         "height" => $height
     );
-    logDebug('image='.json_encode($image));
+    // logDebug('image='.json_encode($image));
     sendVarToJS('maxX', $width);
     sendVarToJS('maxY', $height);
 ?>
@@ -88,25 +88,32 @@
     <!-- <div class="row"> -->
     <div>
         <div id="idLeftBar" class="column" style="width:100px">
+            {{Affichage}}<br>
             <!-- Drop down list to select Zigate -->
-            <select name="idZigate">
+            <!-- <select name="idZigate"> -->
             <?php
+                // for ($z = 1; $z <= maxNbOfZigate; $z++ ) {
+                //     if (config::byKey('ab::zgEnabled'.$z, 'Abeille', 'N') != 'Y')
+                //         continue;
+
+                //     $selected = '';
+                //     echo '<option value="'.$z.'" '.$selected.'>Zigate '.$z.'</option>'."\n";
+                // }
                 for ($z = 1; $z <= maxNbOfZigate; $z++ ) {
                     if (config::byKey('ab::zgEnabled'.$z, 'Abeille', 'N') != 'Y')
                         continue;
 
-                    $selected = '';
-                    echo '<option value="'.$z.'" '.$selected.'>Zigate '.$z.'</option>'."\n";
+                    echo '<input type="checkbox" id="idViewZg"'.$z.' checked>{{Abeille '.$z.'}}';
                 }
             ?>
-            </select>
+            <!-- </select> -->
             <!-- View options -->
             <input type="checkbox" id="idViewLinks" checked>{{Liens}}
             <!-- TODO: Text size (to be stored in DB) -->
 
             </br>
             </br>
-            Configuration</br>
+            {{Configuration}}</br>
 
             <!-- <button id="save" onclick="saveCoordinates()" style="width:100%;margin-top:4px">{{Sauver}}</button> -->
             <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->

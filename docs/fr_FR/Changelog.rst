@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230505-BETA-1
+-------------
+
 - Interne: AbeilleUpload: Crée toute la hierarchie de destination.
 - Placement réseau: Possibilité de charger nouveau plan + divers.
 

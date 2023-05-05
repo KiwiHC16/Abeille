@@ -12,6 +12,12 @@
             "mainEP": "01"
         },
         "commands": {
+            "TuyaInit0": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0005,0000,0001,0007,FFFE",
+                "logicalId": "TuyaInit0",
+                "execAtCreation": "Yes"
+            }
         }
     }
 }

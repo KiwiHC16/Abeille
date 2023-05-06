@@ -914,4 +914,33 @@
         });
     }
 
+    $("#bt_addAbeilleAction").on('click', function(event) {
+        var _cmd = {type: 'action'};
+        addCmdToTable(_cmd);
+        $('.cmd:last .cmdAttr[data-l1key=type]').trigger('change')
+        $('#div_alert').showAlert({message: 'Nouvelle commande action ajoutée en fin de tableau. A compléter et sauvegarder.', level: 'success'});
+    });
+
+    $("#bt_addAbeilleInfo").on('click', function(event) {
+        var _cmd = {type: 'info'};
+        addCmdToTable(_cmd);
+        $('.cmd:last .cmdAttr[data-l1key=type]').trigger('change')
+        $('#div_alert').showAlert({message: 'Nouvelle commande info ajoutée en fin de tableau. A compléter et sauvegarder.', level: 'success'});
+    });
+
+    /* Allows to select of cmd Json file & load it as a new command */
+    $("#bt_loadCmdFromJson").on('click', function(event) {
+        console.log("loadCmdFromJson()");
+
+        $("#abeilleModal").dialog({
+            title: "{{Charge cmd JSON}}",
+            autoOpen: false,
+            resizable: false,
+            modal: true,
+            height: 250,
+            width: 400,
+        });
+        $('#abeilleModal').load('index.php?v=d&plugin=Abeille&modal=AbeilleLoadJsonCmd.modal').dialog('open');
+    });
+
 </script>

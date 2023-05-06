@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Page EQ/cmdes: Correction boutons ajouter cmde (mode dev).
+
 230505-BETA-2
 -------------
 

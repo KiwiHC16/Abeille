@@ -89,16 +89,7 @@
     <div>
         <div id="idLeftBar" class="column" style="width:100px">
             {{Affichage}}<br>
-            <!-- Drop down list to select Zigate -->
-            <!-- <select name="idZigate"> -->
             <?php
-                // for ($z = 1; $z <= maxNbOfZigate; $z++ ) {
-                //     if (config::byKey('ab::zgEnabled'.$z, 'Abeille', 'N') != 'Y')
-                //         continue;
-
-                //     $selected = '';
-                //     echo '<option value="'.$z.'" '.$selected.'>Zigate '.$z.'</option>'."\n";
-                // }
                 for ($z = 1; $z <= maxNbOfZigate; $z++ ) {
                     if (config::byKey('ab::zgEnabled'.$z, 'Abeille', 'N') != 'Y')
                         continue;
@@ -106,19 +97,19 @@
                     echo '<input type="checkbox" id="idViewZg"'.$z.' checked>{{Abeille '.$z.'}}';
                 }
             ?>
-            <!-- </select> -->
+
             <!-- View options -->
             <input type="checkbox" id="idViewLinks" checked>{{Liens}}
-            <!-- TODO: Text size (to be stored in DB) -->
+            <button id="idRefreshLqi" style="width:100%;margin-right:7px">{{Analyser}}</button>
 
             </br>
             </br>
             {{Configuration}}</br>
-
             <!-- <button id="save" onclick="saveCoordinates()" style="width:100%;margin-top:4px">{{Sauver}}</button> -->
             <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->
-            <button id="idMap" style="width:100%;margin-top:4px">{{Plans}}</button>
-        </div>
+            <button id="idMap" style="width:100%;margin-top:4px;margin-right:7px">{{Plans}}</button>
+            <!-- TODO: Text size (to be stored in DB) -->
+            </div>
 
         <div id="idGraph" class="column">
             <svg id="devices" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" onload="makeDraggable(evt)">
@@ -129,72 +120,37 @@
 </html>
 
 <script type="text/javascript">
-    // var myJSON = '{}';
-
-    // myObjOrg et myObjNew ne contiennent que la ruche au chargement du script
-    // On parcourt les abeilles de jeedom on l'ajoute à myObjOrg et myObjNew
-    // On affecte une position stupide, qu'on mettre à jour une fois les info disponibles.
-    // Idem pour la couleur
-    // var myObjOrg = JSON.parse(myJSON);
-    // var myObjNew = JSON.parse(myJSON);
-
-    //-----------------------------------------------------------------------
-    // Functions
-    //-----------------------------------------------------------------------
-
-    // function setTopoJSON(Topo) {
-    //     // console.log("Coucou");
-    //     // var requestTopo = "/plugins/Abeille/Network/TestSVG/TopoSet.php?TopoJSON=";
-    //     var requestTopoURL = "/plugins/Abeille/core/php/AbeilleSetEq.php";
-    //     // var param = encodeURIComponent(Topo);
-    //     var param = "TopoJSON="+Topo;
-    //     // console.log(param);
-    //     // console.log(Topo);
-    //     // console.log(requestTopo+Topo);
-    //     var xhr = new XMLHttpRequest();
-
-    //     xhr.onreadystatechange = function() {
-    //         if (this.readyState == 4 && this.status == 200 ) {
-    //             TopoSetReply = this.responseText;
-    //             console.log(TopoSetReply);
-    //         }
-    //     }
-
-    //     xhr.open("POST", requestTopoURL, true );
-
-    //     // xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    //     // console.log(requestTopo+Topo);
-    //     // xhr.setRequestHeader('Content-Type: application/json; charset=utf-8');
-    //     xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-    //     // xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded;charset=utf-8');
-
-    //     xhr.send(encodeURI(param));
-    //     // xhr.send(encodeURI("TopoJSON=toto"));
-    //     console.log("Params sent->"+param);
-    // }
+    $("#idRefreshLqi").on("click", refreshLqi);
 
     /* Launch network scan for current Zigate */
-    function refreshNetworkInformation() {
-        console.log("refreshNetworkInformation("+Ruche+")");
+    function refreshLqi() {
+        console.log("refreshLqi("+Ruche+")");
 
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 networkInformation = this.responseText;
-                console.log("refreshNetworkInformation(): " + networkInformation);
+                console.log("refreshLqi() ended: ", networkInformation);
+                clearInterval(refreshLqiStatus);
+
+                getLqiTable();
+                buildDevList();
+                button = document.getElementById("idRefreshLqi");
+                button.removeAttribute('disabled'); // Reenable button
+                refreshPage();
             }
         };
         xhr.open("GET", "/plugins/Abeille/core/php/AbeilleLQI.php?zigate="+zgId, true);
         xhr.send();
+        button = document.getElementById("idRefreshLqi");
+        button.setAttribute('disabled', true); // Disable button. Value is don't care
 
         /* Start refresh status every 1sec */
-        refreshStatus = setInterval(function() { refreshNetworkCollectionProgress(); }, 1000);  // ms
+        refreshLqiStatus = setInterval(function() { refreshLqiProgress(); }, 1000);  // ms
     }
 
-    function refreshNetworkInformationProgress() {
-        console.log("refreshNetworkInformationProgress("+Ruche+")");
+    function refreshLqiProgress() {
+        console.log("refreshLqiProgress("+Ruche+")");
 
         // var d = new Date();
         // var xhrProgress = new XMLHttpRequest();
@@ -246,7 +202,7 @@
                         // Reminder: done/<timestamp>/<status
                         // networkInformationProgress = "Collecte terminée";
                         document.getElementById("refreshInformation").value = "Collecte terminée";
-                        clearInterval(refreshStatus);
+                        clearInterval(refreshLqiStatus);
                     } else
                         networkInformationProgress = data;
                         // document.getElementById("refreshInformation").value = data;
@@ -664,113 +620,13 @@
     //     }
     // }
 
-    /* Refresh status of ongoing network scan */
-    function refreshNetworkCollectionProgress() {
-        refreshNetworkInformationProgress();
+    // /* Refresh status of ongoing network scan */
+    // function refreshNetworkCollectionProgress() {
+    //     refreshNetworkInformationProgress();
 
-        console.log("refreshNetworkCollectionProgress(): " + networkInformationProgress);
-        // document.getElementById("refreshInformation").innerHTML = networkInformationProgress;
-        document.getElementById("refreshInformation").value = networkInformationProgress;
-    }
-
-    // function myJSON_AddAbeillesFromJeedom() {
-    //     // console.log("jeedomDevices: "+JSON.stringify(jeedomDevices));
-    //     for (logicalId in jeedomDevices) {
-    //         console.log("logicalId: "+logicalId);
-
-    //         myObjOrg[logicalId] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
-    //         myObjNew[logicalId] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
-
-    //         console.log("logicalId: "+logicalId+" -> "+JSON.stringify(jeedomDevices[logicalId]));
-    //         myObjOrg[logicalId].objectName = jeedomDevices[logicalId].objectName;
-    //         myObjNew[logicalId].objectName = jeedomDevices[logicalId].objectName;
-
-    //         myObjOrg[logicalId].name = jeedomDevices[logicalId].name;
-    //         myObjNew[logicalId].name = jeedomDevices[logicalId].name;
-
-    //         console.log("logicalId: "+logicalId+" -> x: "+jeedomDevices[logicalId].X);
-    //         myObjOrg[logicalId].x = jeedomDevices[logicalId].X;
-    //         myObjNew[logicalId].x = jeedomDevices[logicalId].X;
-
-    //         myObjOrg[logicalId].y = jeedomDevices[logicalId].Y;
-    //         myObjNew[logicalId].y = jeedomDevices[logicalId].Y;
-
-    //         if ( (jeedomDevices[logicalId].X>0) && (jeedomDevices[logicalId].Y>0) ) {
-    //             myObjOrg[logicalId].positionDefined = "Yes";
-    //             myObjNew[logicalId].positionDefined = "Yes";
-    //         } else {
-    //             myObjOrg[logicalId].positionDefined = "No";
-    //             myObjNew[logicalId].positionDefined = "No";
-    //         }
-    //     }
-
-    //     console.log("myObjOrg: "+JSON.stringify(myObjOrg));
-    // }
-
-    // function myJSON_AddMissing() {
-    //     console.log("myJSON_AddMissing()");
-
-    //     if (typeof lqiTable === "undefined") {
-    //         console.log("=> lqiTable is UNDEFINED")
-    //         return;
-    //     }
-
-    //     var color = "";
-
-    //     console.log("lqiTableLA2="+lqiTable);
-    //     for (voisines in lqiTable.data) {
-    //         // console.log("Voisine: "+lqiTable.data[voisines].NE+"->"+lqiTable.data[voisines].Voisine);
-
-    //         if ( typeof myObjOrg[lqiTable.data[voisines].NE] === "undefined" ) {
-
-    //             myObjOrg[lqiTable.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
-    //             myObjNew[lqiTable.data[voisines].NE] = { "name": "NoName", "x": 50, "y": 150, "color": "grey", "positionDefined":"No", "Type":"Inconnu" };
-
-    //             if ( typeof jeedomDevices[lqiTable.data[voisines].NE] === "undefined" ) {
-    //                 myObjOrg[lqiTable.data[voisines].NE].name = "Pas dans Jeedom";
-    //                 myObjOrg[lqiTable.data[voisines].NE].name = "Pas dans Jeedom";
-    //             } else {
-    //                 myObjOrg[lqiTable.data[voisines].NE].name = jeedomDevices[lqiTable.data[voisines].NE].name;
-    //                 myObjNew[lqiTable.data[voisines].NE].name = jeedomDevices[lqiTable.data[voisines].NE].name;
-    //             }
-    //         }
-
-    //         if ( typeof myObjOrg[lqiTable.data[voisines].Voisine] === "undefined" ) {
-
-    //             myObjOrg[lqiTable.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
-    //             myObjNew[lqiTable.data[voisines].Voisine] = { "name": "NoName", "x": 50, "y": 150, "color": "black", "positionDefined":"No", "Type":"Inconnu" };
-
-    //             if ( lqiTable.data[voisines].Type == "End Device" ) { color="Green"; }
-    //             if ( lqiTable.data[voisines].Type == "Router" ) { color="Orange"; }
-    //             if ( lqiTable.data[voisines].Type == "Coordinator" ) { color="Red"; }
-    //             myObjOrg[lqiTable.data[voisines].Voisine].color = color;
-    //             myObjNew[lqiTable.data[voisines].Voisine].color = color;
-
-    //             if ( typeof jeedomDevices[lqiTable.data[voisines].Voisine] === "undefined" ) {
-    //                 myObjOrg[lqiTable.data[voisines].Voisine].name = "Pas dans Jeedom";
-    //                 myObjNew[lqiTable.data[voisines].Voisine].name = "Pas dans Jeedom";
-    //             }
-    //             else {
-    //                 myObjOrg[lqiTable.data[voisines].Voisine].name = jeedomDevices[lqiTable.data[voisines].Voisine].name;
-    //                 myObjNew[lqiTable.data[voisines].Voisine].name = jeedomDevices[lqiTable.data[voisines].Voisine].name;
-    //             }
-    //         } else {
-    //             if ( lqiTable.data[voisines].Type == "End Device" ) { color="Green"; }
-    //             if ( lqiTable.data[voisines].Type == "Router" ) { color="Orange"; }
-    //             if ( lqiTable.data[voisines].Type == "Coordinator" ) { color="Red"; }
-    //             myObjOrg[lqiTable.data[voisines].Voisine].color = color;
-    //             myObjNew[lqiTable.data[voisines].Voisine].color = color;
-
-    //             if ( typeof jeedomDevices[lqiTable.data[voisines].Voisine] === "undefined" ) {
-    //                 myObjOrg[lqiTable.data[voisines].Voisine].name = "Pas dans Jeedom";
-    //                 myObjNew[lqiTable.data[voisines].Voisine].name = "Pas dans Jeedom";
-    //             }
-    //             else {
-    //                 myObjOrg[lqiTable.data[voisines].Voisine].name = jeedomDevices[lqiTable.data[voisines].Voisine].name;
-    //                 myObjNew[lqiTable.data[voisines].Voisine].name = jeedomDevices[lqiTable.data[voisines].Voisine].name;
-    //             }
-    //         }
-    //     }
+    //     console.log("refreshNetworkCollectionProgress(): " + networkInformationProgress);
+    //     // document.getElementById("refreshInformation").innerHTML = networkInformationProgress;
+    //     document.getElementById("refreshInformation").value = networkInformationProgress;
     // }
 
     // function refreshAll(mode) {
@@ -930,11 +786,6 @@
     // function ReLoad() {
     //     // to be implemented
     //     location.reload(true);
-    // }
-
-    // function saveAbeilles() {
-    //     // console.log("Debug - saveAbeilles function - "+JSON.stringify(myObjNew));
-    //     setTopoJSON(JSON.stringify(myObjNew));
     // }
 
     function refreshNetwork(newZgId) {
@@ -1125,7 +976,7 @@
     function refreshPage() {
 
         if (typeof devList === "undefined") {
-            console.log("UNDEFINED devList");
+            console.log("refreshPage(): UNDEFINED devList");
             return;
         }
 
@@ -1270,7 +1121,7 @@
     var networkInformation = "";
     var networkInformationProgress = "Processing";
     var TopoSetReply = "";
-    var refreshStatus; // Result of setInterval()
+    var refreshLqiStatus; // Result of setInterval()
 
     var a = 10;
     var centerJSON = '{ "X": 500, "Y": 500, "rayon": "400" }';
@@ -1305,23 +1156,14 @@
 
     getLqiTable();
     getJeedomDevices();
-    // myJSON_AddAbeillesFromJeedom();
-    // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
-    // myJSON_AddMissing();
-    // console.log("myObjOrg: "+JSON.stringify(myObjOrg));
-
 
     // FCh temp disable
-    // refreshStatus = setInterval(
+    // refreshLqiStatus = setInterval(
     //     function() {
     //         refreshNetworkCollectionProgress();
     //     },
     //     1000  // ms
     // );
-
-    // console.log("Name list: "+JSON.stringify(lqiTable));
-    // console.log("Name list: "+JSON.stringify(jeedomDevices));
-    // console.log("Name 1: " + JSON.stringify(jeedomDevices["0000"]));
 
     // Combine LQI + Jeedom infos
     buildDevList();

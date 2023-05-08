@@ -4,6 +4,7 @@ ChangeLog
 - Page EQ/cmdes: Correction boutons ajouter cmde (mode dev).
 - Placement réseau: Ajout bouton d'analyse réseau.
 - Placement réseau: Choix du niveau à afficher.
+- Garage door controller: Mise-à-jour du modèle (2581).
 
 230505-BETA-2
 -------------

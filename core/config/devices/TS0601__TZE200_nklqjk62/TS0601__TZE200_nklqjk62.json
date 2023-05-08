@@ -13,6 +13,18 @@
             "mainEP": "01"
         },
         "commands": {
+            "Open": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=01&data=01",
+                "logicalId": "01-open",
+                "isVisible": 1
+            },
+            "Close": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=01&data=00",
+                "logicalId": "01-close",
+                "isVisible": 1
+            },
             "Door trigger": {
                 "use": "inf_generic-Binary",
                 "logicalId": "01-doorTrigger",

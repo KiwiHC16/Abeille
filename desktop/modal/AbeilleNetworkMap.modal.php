@@ -81,7 +81,8 @@
     function saveLevels() {
         console.log("saveLevels()");
 
-        // Checks
+        // Checks & save
+        levels = [];
         for (idx = 0; idx < maxLevels; idx++) {
             elm = document.getElementById("idLevel-"+idx);
             level = elm.value;
@@ -94,8 +95,9 @@
                 alert("{{Ligne}} "+l+" {{invalide}}: {{Niveau ou plan vide}}");
                 return;
             }
-            newNetworkMap[idx].level = level; // Updating level in case changed
+            levels[idx] = level; // Updating level in case changed
         }
+        newNetworkMap.levels = levels;
         console.log("newNetworkMap=", newNetworkMap);
         if (newNetworkMap != networkMap) {
             console.log("Saving new networkMap=", newNetworkMap);
@@ -105,24 +107,6 @@
             networkMap = Object.assign(networkMap, newNetworkMap); // Update networkMap
         }
         $('#md_modal').dialog('close')
-    }
-
-    /* 'config' DB update */
-    function saveConfig() {
-        console.log("saveConfig()");
-
-        $.ajax({
-            type: 'POST',
-            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
-            data: {
-                action: 'saveConfig',
-                config: JSON.stringify(config)
-            },
-            dataType: 'json',
-            global: false,
-            success: function (json_res) {
-            }
-        });
     }
 
     // Add new map to index 'idx'

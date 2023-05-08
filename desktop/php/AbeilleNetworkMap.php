@@ -19,27 +19,40 @@
 
     // Selecting background map
     // config/ab::networkMap reminder
-    // networkMap[idx] = array(
-    //     "level" =>
-    //     "mapDir" =>
-    //     "mapFile" => "mapX.png"
+    // networkMap = array(
+    //     'levels' => [], array(
+    //         "level" =>
+    //         "mapDir" =>
+    //         "mapFile" => "mapX.png"
+    //     ),
+    //     'levelChoice' => idx
     // )
     $networkMap = config::byKey('ab::networkMap', 'Abeille', [], true);
     if ($networkMap == []) {
         $networkMap = [];
-        $networkMap[] = array(
+        $networkMap['levels'] = [];
+        $networkMap['levels'][] = array(
             'level' => 'Level 0',
             'mapDir' => 'images',
             'mapFile' => 'AbeilleNetworkMap-1200.png'
         );
+        $networkMap['levelChoice'] = 0;
+    } else {
+        if (!isset($networkMap['levels'])) { // Old format
+            $networkMap2['levels'] = $networkMap;
+            $networkMap2['levelChoice'] = 0;
+            $networkMap = $networkMap2;
+        }
     }
+    logDebug('networkMap='.json_encode($networkMap));
     sendVarToJS('networkMap', $networkMap);
+    $levelChoice = $networkMap['levelChoice'];
+    sendVarToJS('levelChoice', $levelChoice);
 
     require_once __DIR__.'/../../core/php/AbeilleLog.php'; // logDebug()
-    logDebug('networkMap='.json_encode($networkMap));
-    $first = $networkMap[0];
-    // logDebug('first='.json_encode($first));
-    $userMap = $first['mapDir'].'/'.$first['mapFile'];
+    $choice = $networkMap['levels'][$levelChoice];
+    logDebug('choice='.json_encode($choice));
+    $userMap = $choice['mapDir'].'/'.$choice['mapFile'];
 
     $iSize = getimagesize(__DIR__."/../../".$userMap);
     $width = $iSize[0];
@@ -61,7 +74,7 @@
 
 <body>
     <div style="background: #e9e9e9; font-weight: bold; padding: .4em 1em;">
-        Placement réseau (BETA)
+        Placement réseau (BETA, dev en cours)
     </div>
 
     <!-- <style>
@@ -89,7 +102,22 @@
     <div>
         <div id="idLeftBar" class="column" style="width:100px">
             {{Affichage}}<br>
+            <!-- Level choice if more than 1 level -->
             <?php
+                $count = count($networkMap['levels']);
+                if ($count > 1) {
+                    echo '<select id="idSelectLevel">';
+                    for ($l = 0; $l <= $count; $l++ ) {
+                        $level = $networkMap['levels'][$l];
+                        if ($l == $levelChoice)
+                            $selected = "selected";
+                        else
+                            $selected = "";
+                        echo '<option value="'.$l.'" '.$selected.'>'.$level['level'].'</option>'."\n";
+                    }
+                    echo '</select>';
+                }
+
                 for ($z = 1; $z <= maxNbOfZigate; $z++ ) {
                     if (config::byKey('ab::zgEnabled'.$z, 'Abeille', 'N') != 'Y')
                         continue;
@@ -99,8 +127,8 @@
             ?>
 
             <!-- View options -->
-            <input type="checkbox" id="idViewLinks" checked>{{Liens}}
-            <button id="idRefreshLqi" style="width:100%;margin-right:7px">{{Analyser}}</button>
+            <input type="checkbox" id="idViewLinks" checked title="{{Affiche les liens entre équipements}}">{{Liens}}
+            <button id="idRefreshLqi" style="width:100%;margin-right:7px" title="{{Force l'analyse du réseau}}">{{Analyser}}</button>
 
             </br>
             </br>
@@ -120,6 +148,19 @@
 </html>
 
 <script type="text/javascript">
+    // Level to display has changed
+    $("#idSelectLevel").on("change", function() {
+        console.log("Level change");
+        levelChoice = document.getElementById("idSelectLevel").value;
+        console.log("level choice="+levelChoice);
+
+        networkMap.levelChoice = levelChoice;
+        config = new Object();
+        config['ab::networkMap'] =  networkMap;
+        saveConfig(config);
+    });
+
+    // Click on 'Refesh LQI' button
     $("#idRefreshLqi").on("click", refreshLqi);
 
     /* Launch network scan for current Zigate */
@@ -426,28 +467,28 @@
         }
     }
 
-    /* Draw 'legend' area */
-    function drawLegend(includeGroup) {
-        var legend = "";
+    // /* Draw 'legend' area */
+    // function drawLegend(includeGroup) {
+    //     var legend = "";
 
-        if ( includeGroup ) { legend = legend + '<g id="legend">'; }
+    //     if ( includeGroup ) { legend = legend + '<g id="legend">'; }
 
-        legend = legend + '<circle cx="100" cy="875" r="10" fill="red" />\n';
-        legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="875" fill="black" style="font-size: 8px;">Coordinator</text> </a>\n';
+    //     legend = legend + '<circle cx="100" cy="875" r="10" fill="red" />\n';
+    //     legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="875" fill="black" style="font-size: 8px;">Coordinator</text> </a>\n';
 
-        legend = legend + '<circle cx="100" cy="900" r="10" fill="blue" />\n';
-        legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="black" style="font-size: 8px;">Routeur</a>\n';
+    //     legend = legend + '<circle cx="100" cy="900" r="10" fill="blue" />\n';
+    //     legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="900" fill="black" style="font-size: 8px;">Routeur</a>\n';
 
-        legend = legend + '<circle cx="100" cy="925" r="10" fill="green" />\n';
-        legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="black" style="font-size: 8px;">End Equipment</text> </a>\n';
+    //     legend = legend + '<circle cx="100" cy="925" r="10" fill="green" />\n';
+    //     legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="925" fill="black" style="font-size: 8px;">End Equipment</text> </a>\n';
 
-        legend = legend + '<circle cx="100" cy="950" r="10" fill="yellow" />\n';
-        legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="black" style="font-size: 8px;">Dans Jeedom mais pas dans l audit du reseau</text> </a>\n';
+    //     legend = legend + '<circle cx="100" cy="950" r="10" fill="yellow" />\n';
+    //     legend = legend + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="110" y="950" fill="black" style="font-size: 8px;">Dans Jeedom mais pas dans l audit du reseau</text> </a>\n';
 
-        if ( includeGroup ) { legend = legend + '</g>'; }
+    //     if ( includeGroup ) { legend = legend + '</g>'; }
 
-        return legend;
-    }
+    //     return legend;
+    // }
 
     // function dessineLesTextes(offsetX, includeGroup) {
     //     console.log("dessineLesTextes()");
@@ -504,122 +545,6 @@
     //     return lesTextes;
     // }
 
-    // function dessineLesVoisinesV2(offsetX, includeGroup) {
-    //     console.log("dessineLesVoisinesV2()");
-
-    //     if (typeof lqiTable === "undefined") {
-    //         console.log("=> lqiTable is UNDEFINED")
-    //         return;
-    //     }
-
-    //     var lesVoisines = "";
-
-    //     if ( includeGroup=="Yes" ) { lesVoisines = lesVoisines + '<g id="lesVoisines">'; }
-
-    //     for (voisines in lqiTable.data) {
-
-    //         //var NE = lqiTable.data[voisines].NE;
-    //         var NE = lqiTable.data[voisines].NE;
-    //         var voisine = lqiTable.data[voisines].Voisine;
-
-    //         if ( ( (Source=="All") || (Source==NE) || (Destination=="All")|| (Destination==voisine) ) && ( (Hierarchy==lqiTable.data[voisines].Relationship) || (Hierarchy=="All") ) ) {
-    //             var X1=0; var X2=0; var Y1=0; var Y2=0;
-    //             var color="orange";
-
-    //             if ( typeof myObjNew[NE] == "undefined" ) {
-
-    //             }
-    //             else {
-    //                 if ( typeof myObjNew[NE].x == "undefined" )      {X1=0;} else { X1 = myObjNew[NE].x + offsetX; }
-    //                 if ( typeof myObjNew[NE].y == "undefined" )      {Y1=0;} else { Y1 = myObjNew[NE].y; }
-    //             }
-    //             if ( typeof myObjNew[voisine] == "undefined" ) {
-    //             }
-    //             else {
-    //                 if ( typeof myObjNew[voisine].x == "undefined" ) {X2=0;} else { X2 = myObjNew[voisine].x + offsetX; }
-    //                 if ( typeof myObjNew[voisine].y == "undefined" ) {Y2=0;} else { Y2 = myObjNew[voisine].y; }
-    //             }
-
-    //             if ( lqiTable.data[voisines].LinkQualityDec > 150 ) { color = "green"; }
-    //             if ( lqiTable.data[voisines].LinkQualityDec <  50 ) { color = "red";}
-
-    //             lesVoisines = lesVoisines + '<line class="zozo" x1="'+X1+'" y1="'+Y1+'" x2="'+X2+'" y2="'+Y2+'" style="stroke:'+color+';stroke-width:1"/>';
-    //         }
-    //     }
-
-    //     if ( includeGroup=="Yes" ) { lesVoisines = lesVoisines + '</g>'; }
-
-    //     return lesVoisines;
-    // }
-
-    // function dessineLesAbeilles(includeGroup) {
-    //     var lesAbeilles = "";
-
-    //     if ( includeGroup=="Yes" ) { lesAbeilles = lesAbeilles + '<g id="lesAbeilles">'; }
-    //     for (shortAddress in myObjNew) {
-    //         myObjOrg[shortAddress].x = myObjNew[shortAddress].x;
-    //         myObjOrg[shortAddress].y = myObjNew[shortAddress].y;
-    //         lesAbeilles = lesAbeilles + '<circle class="draggable" id="'+shortAddress+'"   cx="'+myObjNew[shortAddress].x+'"  cy="'+myObjNew[shortAddress].y+'"              r="10"           fill="'+myObjNew[shortAddress].color+'"  transform="translate(0, 0)"></circle>';
-    //     }
-    //     if ( includeGroup=="Yes" ) { lesAbeilles = lesAbeilles + '</g>'; }
-    //     return lesAbeilles;
-    // }
-
-    // function dessineLesAbeillesText(myObj,offsetX,includeGroup) {
-    //     var lesAbeillesText = "";
-    //     var X = 0;
-    //     var Y = 0;
-
-    //     if ( includeGroup=="Yes" ) { lesAbeillesText = lesAbeillesText + '<g id="lesAbeillesText">'; }
-
-    //     // console.log( JSON.stringify(myObj) );
-    //     for (shortAddress in myObj) {
-    //         X = myObj[shortAddress].x + offsetX;
-    //         Y = myObj[shortAddress].y;
-    //         if( (typeof jeedomDevices[shortAddress] === "object") && (jeedomDevices[shortAddress] !== null) ) {
-    //             lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+jeedomDevices[shortAddress].id+'" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].objectName+' - '+myObj[shortAddress].name+' - '+' ('+shortAddress+')</text> </a>';
-    //         }
-    //         else {
-    //             lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].name+' ('+shortAddress+')</text> </a>';
-    //         }
-    //     }
-    //     if ( includeGroup=="Yes" ) { lesAbeillesText = lesAbeillesText + '</g>'; }
-    //     return lesAbeillesText;
-    // }
-
-    // function setPosition(mode) {
-    //     var iAbeille = 0;
-    //     var nbAbeille = Object.keys(myObjNew).length
-    //     for (abeille in myObjNew) {
-    //         if ( (myObjNew[abeille].positionDefined == "No") && (mode=="Auto") ) {
-    //             X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
-    //             Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
-
-    //             myObjOrg[abeille].x = X;
-    //             myObjOrg[abeille].y = Y;
-    //             myObjNew[abeille].x = X;
-    //             myObjNew[abeille].y = Y;
-
-    //             myObjNew[abeille].positionDefined = "Yes";
-
-    //             iAbeille++;
-    //         }
-    //         if ( mode=="AutoForce" ) {
-    //             X = eval('center.X + center.rayon * Math.cos(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
-    //             Y = eval('center.Y + center.rayon * Math.sin(2*Math.PI*iAbeille/nbAbeille)');   // je passe par eval car le char '/' met la pagaille dans l indentation du fichier.
-
-    //             myObjOrg[abeille].x = X;
-    //             myObjOrg[abeille].y = Y;
-    //             myObjNew[abeille].x = X;
-    //             myObjNew[abeille].y = Y;
-
-    //             myObjNew[abeille].positionDefined = "Yes";
-
-    //             iAbeille++;
-    //         }
-    //     }
-    // }
-
     // /* Refresh status of ongoing network scan */
     // function refreshNetworkCollectionProgress() {
     //     refreshNetworkInformationProgress();
@@ -659,28 +584,6 @@
     //     refreshAll();
     // }
 
-    // function placementAuto() {
-    //     // setPosition("AutoForce");
-    //     refreshAll();
-    // }
-
-    // function save() {
-    //     // Thanks to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-    //     localStorage.setItem('myObjNew', JSON.stringify(myObjNew));
-    // }
-
-    // function restore() {
-    //     // Thanks to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
-    //     myObjOld = JSON.parse( localStorage.getItem('myObjNew') );
-    //     myObjNew = JSON.parse( localStorage.getItem('myObjNew') );
-    //     refreshAll();
-    // }
-
-    // function selectRuche(form) {
-    //     Ruche = form.list.value;
-    //     refreshAll("All");
-    // }
-
     // function selectSource(form) {
     //     Source = form.list.value;
     //     refreshAll();
@@ -701,21 +604,6 @@
     //     Hierarchy = form.list.value;
     //     refreshAll();
     // }
-
-    /* Really used ?
-    function filtreRuche() {
-        document.write( '<FORM NAME="myformRuche" ACTION="" METHOD="GET">');
-        document.write( '<SELECT NAME="list" >');
-
-        document.write( '<OPTION value="Abeille1" >Ruche 1</OPTION>');
-        document.write( '<OPTION value="Abeille2" >Ruche 2</OPTION>');
-
-        document.write( '</SELECT>');
-        document.write( '</br>');
-        document.write( '<INPUT TYPE="button" NAME="button" Value="Test" onClick="selectRuche(this.form)"/>');
-        document.write( '</FORM>');
-    }
-    */
 
     // function filtreSource() {
     //     document.write( '<FORM NAME="myformSource" ACTION="" METHOD="GET">');
@@ -788,23 +676,23 @@
     //     location.reload(true);
     // }
 
-    function refreshNetwork(newZgId) {
-        // window.open("index.php?v=d&m=Abeille&p=AbeilleSupport");
-        // window.open("plugins/Abeille/desktop/php/AbeilleNetworkGraph.php?zigate="+zgId);
+    // function refreshNetwork(newZgId) {
+    //     // window.open("index.php?v=d&m=Abeille&p=AbeilleSupport");
+    //     // window.open("plugins/Abeille/desktop/php/AbeilleNetworkGraph.php?zigate="+zgId);
 
-        var url = window.location.href;
-        console.log("url="+url);
-        idx = url.indexOf('zigate='+zgId);
-        if (idx === -1) {
-            url += '&zigate='+newZgId
-        } else {
-            console.log("idx="+idx);
-            url = url.replace('zigate='+zgId, 'zigate='+newZgId);
-            // url += '?param=1'
-        }
-        // location.reload(true);
-        window.location.href = url;
-    };
+    //     var url = window.location.href;
+    //     console.log("url="+url);
+    //     idx = url.indexOf('zigate='+zgId);
+    //     if (idx === -1) {
+    //         url += '&zigate='+newZgId
+    //     } else {
+    //         console.log("idx="+idx);
+    //         url = url.replace('zigate='+zgId, 'zigate='+newZgId);
+    //         // url += '?param=1'
+    //     }
+    //     // location.reload(true);
+    //     window.location.href = url;
+    // };
 
     function getLqiTable() {
         console.log("getLqiTable("+Ruche+")");
@@ -880,6 +768,7 @@
         settings = {
             physLocationX: dev['posX'],
             physLocationY: dev['posY'],
+            physLocationZ: dev['posZ'], // Level index
         };
         $.ajax({
             type: 'POST',
@@ -888,6 +777,24 @@
                 action: 'saveSettings',
                 eqId: eqId,
                 settings: JSON.stringify(settings)
+            },
+            dataType: 'json',
+            global: false,
+            success: function (json_res) {
+            }
+        });
+    }
+
+    /* 'config' DB update */
+    function saveConfig() {
+        console.log("saveConfig()");
+
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'saveConfig',
+                config: JSON.stringify(config)
             },
             dataType: 'json',
             global: false,
@@ -925,8 +832,9 @@
                 else
                     devR['color'] = "Blue"; // Router
                 if (typeof jeedomDevices[rLogicId] !== "undefined") {
-                    devR['posX'] = jeedomDevices[rLogicId].X;
-                    devR['posY'] = jeedomDevices[rLogicId].Y;
+                    devR['posX'] = jeedomDevices[rLogicId].x;
+                    devR['posY'] = jeedomDevices[rLogicId].y;
+                    devR['posZ'] = jeedomDevices[rLogicId].z;
                     devR['jeedomId'] = jeedomDevices[rLogicId].id;
                     devR['posChanged'] = false;
                 }
@@ -1128,10 +1036,10 @@
     var center = JSON.parse(centerJSON);
 
     var Ruche = "Abeille1";
-    var Source = "All";
-    var Destination = "All";
-    var Parameter = "LinkQualityDec";
-    var Hierarchy = "All";
+    // var Source = "All";
+    // var Destination = "All";
+    // var Parameter = "LinkQualityDec";
+    // var Hierarchy = "All";
 
     const queryString = window.location.search;
     console.log("URL params=" + queryString);
@@ -1170,8 +1078,6 @@
 
     // Display options
     var viewLinks = true; // Set to false to hide links
-
-    // setPosition("Auto");
 
     var selectedElement, transform;
     var offset; // Mouse offset vs rect top left corner

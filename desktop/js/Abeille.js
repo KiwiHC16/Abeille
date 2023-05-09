@@ -14,6 +14,137 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
+console.log("LA1 eqId=", eqId);
+
+if (window.location.href.indexOf("id=") > -1) {
+    let params = new URL(document.location).searchParams;
+    var eqId = params.get("id");
+    refreshAdvEq(eqId);
+}
+
+$(".eqLogicDisplayCard").on("click", function () {
+    console.log("eqLogicDisplayCard click");
+    if (!isset($(this).attr("data-eqLogic_id"))) {
+        console.log("ERROR: 'data-eqLogic_id' is not defined");
+        return;
+    }
+    var eqId = $(this).attr("data-eqLogic_id");
+    console.log("eqId=" + eqId);
+    refreshAdvEq(eqId);
+});
+
+function refreshAdvEq(eqId) {
+    console.log("refreshAdvEq(" + eqId + ")");
+
+    // Collect eq & update advanced infos
+    $.ajax({
+        type: "POST",
+        url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+        data: {
+            action: "getEq",
+            eqId: eqId,
+        },
+        dataType: "json",
+        global: false,
+        error: function (request, status, error) {
+            bootbox.alert("ERREUR 'getEq' !");
+        },
+        success: function (json_res) {
+            console.log("json_res=", json_res);
+            res = JSON.parse(json_res.result);
+            eq = res.eq;
+
+            zgId = eq.zgId;
+            eqAddr = eq.addr;
+
+            // Updating advanced common infos
+            document.getElementById("idEqName").value = eq.name;
+            document.getElementById("idEqId").value = eqId;
+            document.getElementById("idEqAddr").value = eq.addr;
+            document.getElementById("idZgType").value = eq.zgType;
+
+            // Show/hide zigate or devices part
+            zgPart = document.getElementById("idAdvZigate");
+            devPart = document.getElementById("idAdvDevices");
+            if (eq.addr == "0000") {
+                zgPart.style.display = "block";
+                devPart.style.display = "none";
+            } else {
+                zgPart.style.display = "none";
+                devPart.style.display = "block";
+            }
+
+            // Updating info cmds
+            const advInfoCmds = document.querySelectorAll("[advInfo]"); // All with attribute named "advInfo"
+            for (let i = 0; i < advInfoCmds.length; i++) {
+                elm = advInfoCmds[i];
+                console.log("advInfoCmd=", advInfoCmds[i]);
+                // elm.classList.add('col-sm-5');
+                // elm.classList.add('cmd');
+                // elm.setAttribute('data-eqlogic_id', eqId);
+                cmdLogicId = elm.getAttribute("advInfo");
+                console.log("cmdLogicId=", cmdLogicId);
+                if (typeof eq.cmds[cmdLogicId] != "undefined") {
+                    cmd = eq.cmds[cmdLogicId];
+                    console.log("cmd=", cmd);
+                    cmdId = cmd.id;
+                    cmdVal = cmd.val;
+                    console.log("cmdVal=", cmdVal);
+                    // elm.setAttribute('data-cmd_id', cmdId);
+                    child = elm.firstElementChild;
+                    if (child != null) {
+                        console.log("child=", child);
+                        child.id = "cmdId-" + cmdId;
+                        child.setAttribute("value", cmdVal);
+                    }
+
+                    // jeedom.cmd.addUpdateFunction(cmdId, updateInfoCmd);
+                    // Warning: addUpdateFunction() seems only available since v4.4 core
+                    if (!isset(jeedom.cmd.update)) jeedom.cmd.update = [];
+                    jeedom.cmd.update[cmdId] = updateInfoCmd;
+                    console.log("jeedom.cmd.update=", jeedom.cmd.update);
+                }
+            }
+
+            // Settings default EP
+            var items = document.getElementsByClassName("advEp");
+            for (var i = 0; i < items.length; i++) {
+                items[i].value = eq.defaultEp;
+            }
+
+            // Reset HW visible is type "PI"
+            if (eq.zgType == "PI" || eq.zgType == "PIv2") {
+                resetHw = document.getElementById("idAdvResetHw");
+                resetHw.style.display = "block";
+            }
+
+            // Zigbee channel user choice
+            if (eq.zgChan != "") {
+                select = document.getElementById("idZgChan");
+                select.value = eq.zgChan;
+            }
+        },
+    });
+}
+
+// This function is called each time a corresponding info cmd has a value update.
+// Reminder: jeedom.cmd.update[cmdId] = updateInfoCmd()
+function updateInfoCmd(_options) {
+    console.log("updateInfoCmd(): options=", _options);
+    cmdId = _options.cmd_id;
+    // var elm2 = document.getElementById('cmdId-9999');
+    // console.log('elm2=', elm2);
+    var elm = document.getElementById("cmdId-" + cmdId);
+    if (elm == null) {
+        console.log("ERROR: Cannot find elm 'cmdId-" + cmdId + "'");
+        return;
+    }
+    console.log("elm=", elm);
+    if (true /*$isInput*/) elm.value = _options.display_value;
+    // Not <input>. Assuming <span>
+    else elm.textContent = _options.display_value;
+}
+
 $("#in_searchEqlogicB")
     .off("keyup")
     .keyup(function () {
@@ -111,7 +242,7 @@ function getSelectedEqs(zgId) {
     selected["ids"] = new Array(); // Array of eq IDs
     selected["addrs"] = new Array(); // Array of eq short addresses
     eval("var eqZigate = JSON.parse(js_eqZigate" + zgId + ");"); // List of eq IDs for current zigate
-    for (const [eqId, eq] of Object.entries(eqZigate)) {
+    for (const [eqId2, eq] of Object.entries(eqZigate)) {
         var checked = document.getElementById(
             "idBeeChecked" + zgId + "-" + eq.id
         ).checked;
@@ -286,7 +417,7 @@ function monitorIt(zgId, zgPort) {
         alert("Un seul équipement peut être surveillé à la fois !");
         return;
     }
-    var eqId = sel["ids"][0];
+    let eqId = sel["ids"][0];
     console.log("idToMonitor=" + eqId);
 
     $.ajax({
@@ -404,7 +535,7 @@ function migrateEq() {
 
     const selectedEq = document.querySelector("#idEq");
     index = selectedEq.selectedIndex;
-    var eqId = $("#idEq").val();
+    let eqId = $("#idEq").val();
     let selectedOption = selectedEq.options[index];
     const selectedText = selectedOption.text;
     txtArr = selectedText.split(":");
@@ -507,8 +638,12 @@ function acceptNewZigate() {
     });
 }
 
+$("#idEqAssistBtn").on("click", function () {
+    window.open("index.php?v=d&m=Abeille&p=AbeilleEqAssist&id=" + eqId);
+});
+
 /* Launch AbeilleRepair */
-function repair(eqId) {
+$("#idRepairBtn").on("click", function () {
     console.log("repair(eqId=" + eqId + ")");
 
     var xhttp = new XMLHttpRequest();
@@ -533,4 +668,64 @@ function repair(eqId) {
     //         //console.log("refreshLqiTable success msg: " + data);
     //     },
     // });
-}
+});
+
+// Update Jeedom equipement from model
+$("#idUpdateBtn").on("click", function () {
+    console.log("update(" + eqId + ")");
+
+    var msg = "{{Vous êtes sur le point de:<br>";
+    msg += "- Mettre à jour l'équipement Jeedom à partir de son modèle<br>";
+    msg += "- Et reconfigurer l'équipement<br>";
+    msg += "<br>Les noms et ID sont conservés, ainsi que vos customisations.}}";
+    if (js_batteryType != "") {
+        msg +=
+            "<br><br>{{ATTENTION! Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.}}";
+    }
+    msg += "<br><br>{{Cliquez 'Ok' continuer}}";
+    bootbox.confirm(msg, function (result) {
+        if (result == false) return;
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open(
+            "GET",
+            "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=update&eqId=" +
+                eqId,
+            false
+        );
+        xhttp.send();
+    });
+});
+
+/* Reinit Jeedom device & reconfigure.
+    WARNING: If battery powered, device must be wake up. */
+$("#idReinitBtn").on("click", function () {
+    console.log("reinit(" + eqId + ")");
+
+    var msg = "{{Vous êtes sur le point de:}}<br>";
+    msg +=
+        "- Réinitialiser cet équipement (équivalent à une nouvelle inclusion).<br>";
+    msg += "- Et le reconfigurer.<br>";
+    msg +=
+        "<br>Tout sera remis à jour à partir du modèle JSON excepté le nom, l'ID Jeedom ainsi que ses adresses.<br>";
+    msg +=
+        "Le nom des commandes peut avoir changé et vous serez obligé de revoir les scénaris utilisant cet équipement.<br>";
+
+    if (js_batteryType != "") {
+        msg +=
+            "<br>{{ATTENTION! Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.}}<br>";
+    }
+    msg += "<br>{{Etes vous sur de vouloir continuer ?}}";
+    bootbox.confirm(msg, function (result) {
+        if (result == false) return;
+
+        var xhttp = new XMLHttpRequest();
+        xhttp.open(
+            "GET",
+            "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reinit&eqId=" +
+                eqId,
+            false
+        );
+        xhttp.send();
+    });
+});

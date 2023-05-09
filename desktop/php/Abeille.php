@@ -1,17 +1,4 @@
 <?php
-    // /* Abeille plugin has splitted code for
-    //    - list of equipements (Abeille.php)
-    //    - equipement detail (main/advanced/commands => AbeilleEQ)
-    //    For this reason redirection is required to 'AbeilleEQ' if equipment detail is requested */
-    // if (isset($_GET['id']) && is_numeric($_GET['id'])) { // If 'id' is set to number, let's redirect to 'AbeilleEq' page
-    //     $uri = parse_url($_SERVER['REQUEST_URI']);
-    //     // Replace "p=Abeille" by "p=AbeilleEq"
-    //     $newuri = str_replace("p=Abeille", "p=AbeilleEq", $uri['query']);
-    //     // $newuri = str_replace("&ajax=1", "", $newuri); // Required since core v4.1
-    //     header("Location: index.php?".$newuri);
-    //     exit;
-    // }
-
     /* Developers debug features & PHP errors */
     require_once __DIR__.'/../../core/config/Abeille.config.php';
     if (file_exists(dbgFile)) {
@@ -66,7 +53,6 @@
 
     // logDebug("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
     // $parametersAbeille = AbeilleTools::getParameters();
-
 ?>
 
 <!-- For all modals on 'Abeille' page. -->

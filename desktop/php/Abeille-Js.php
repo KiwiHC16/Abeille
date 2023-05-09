@@ -2,136 +2,7 @@
 <?php include_file('core', 'plugin.template', 'js'); ?>
 
 <script>
-    if (window.location.href.indexOf("id=") > -1) {
-        let params = (new URL(document.location)).searchParams;
-        let eqId = params.get("id");
-        refreshAdvEq(eqId);
-    }
-
-    $(".eqLogicDisplayCard").on('click', function () {
-        console.log("eqLogicDisplayCard click");
-        if (!isset($(this).attr('data-eqLogic_id'))) {
-          console.log("ERROR: 'data-eqLogic_id' is not defined");
-          return;
-        }
-        var eqId = $(this).attr('data-eqLogic_id');
-        console.log("eqId="+eqId);
-        refreshAdvEq(eqId);
-    });
-
-    function refreshAdvEq(eqId) {
-        console.log("refreshAdvEq("+eqId+")");
-
-        // Collect eq & update advanced infos
-        $.ajax({
-            type: "POST",
-            url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
-            data: {
-                action: "getEq",
-                eqId: eqId,
-            },
-            dataType: "json",
-            global: false,
-            error: function (request, status, error) {
-                bootbox.alert("ERREUR 'getEq' !");
-            },
-            success: function (json_res) {
-                console.log("json_res=", json_res);
-                res = JSON.parse(json_res.result);
-                eq = res.eq;
-
-                zgId = eq.zgId;
-                eqAddr = eq.addr;
-
-                // Updating advanced common infos
-                document.getElementById('idEqName').value = eq.name;
-                document.getElementById('idEqId').value = eqId;
-                document.getElementById('idEqAddr').value = eq.addr;
-                document.getElementById('idZgType').value = eq.zgType;
-
-                // Show/hide zigate or devices part
-                zgPart = document.getElementById('idAdvZigate');
-                devPart = document.getElementById('idAdvDevices');
-                if (eq.addr == "0000") {
-                    zgPart.style.display = "block";
-                    devPart.style.display = "none";
-                } else {
-                    zgPart.style.display = "none";
-                    devPart.style.display = "block";
-                }
-
-                // Updating info cmds
-                const advInfoCmds = document.querySelectorAll('[advInfo]'); // All with attribute named "advInfo"
-                for (let i = 0; i < advInfoCmds.length; i++) {
-                    elm = advInfoCmds[i];
-                    console.log("advInfoCmd=", advInfoCmds[i]);
-                    // elm.classList.add('col-sm-5');
-                    // elm.classList.add('cmd');
-                    // elm.setAttribute('data-eqlogic_id', eqId);
-                    cmdLogicId = elm.getAttribute('advInfo');
-                    console.log("cmdLogicId=", cmdLogicId);
-                    if (typeof eq.cmds[cmdLogicId] != 'undefined') {
-                        cmd = eq.cmds[cmdLogicId];
-                        console.log("cmd=", cmd);
-                        cmdId = cmd.id;
-                        cmdVal = cmd.val;
-                        console.log("cmdVal=", cmdVal);
-                        // elm.setAttribute('data-cmd_id', cmdId);
-                        child = elm.firstElementChild;
-                        if (child != null) {
-                            console.log("child=", child);
-                            child.id = 'cmdId-'+cmdId;
-                            child.setAttribute('value', cmdVal);
-                        }
-
-                        // jeedom.cmd.addUpdateFunction(cmdId, updateInfoCmd);
-                        // Warning: addUpdateFunction() seems only available since v4.4 core
-                        if (!isset(jeedom.cmd.update))
-                            jeedom.cmd.update = []
-                        jeedom.cmd.update[cmdId] = updateInfoCmd;
-                        console.log("jeedom.cmd.update=", jeedom.cmd.update);
-                    }
-                }
-
-                // Settings default EP
-                var items = document.getElementsByClassName("advEp");
-                for (var i=0; i < items.length; i++) {
-                    items[i].value = eq.defaultEp;
-                }
-
-                // Reset HW visible is type "PI"
-                if ((eq.zgType == "PI") || (eq.zgType == "PIv2")) {
-                    resetHw = document.getElementById('idAdvResetHw');
-                    resetHw.style.display = "block";
-                }
-
-                // Zigbee channel user choice
-                if (eq.zgChan != '') {
-                    select = document.getElementById('idZgChan');
-                    select.value = eq.zgChan;
-                }
-            }
-        });
-    }
-
-    // This function is called each time a corresponding info cmd has a value update.
-    // Reminder: jeedom.cmd.update[cmdId] = updateInfoCmd()
-    function updateInfoCmd(_options) {
-        console.log("updateInfoCmd(): options=", _options);
-        cmdId = _options.cmd_id;
-        // var elm2 = document.getElementById('cmdId-9999');
-        // console.log('elm2=', elm2);
-        var elm = document.getElementById('cmdId-'+cmdId);
-        if (elm == null) {
-            console.log("ERROR: Cannot find elm 'cmdId-"+cmdId+"'");
-            return;
-        }
-        console.log('elm=', elm);
-        if (true /*$isInput*/)
-            elm.value = _options.display_value;
-        else // Not <input>. Assuming <span>
-            elm.textContent = _options.display_value;
-    }
+    console.log("LA2 eqId=", eqId);
 
     // /* Show or hide developer area.
     //    If developer mode is enabled, default is to always expand this area. */
@@ -169,7 +40,8 @@
         console.log("eqPerZigate=", eqPerZigate);
 
         var selected = new Array();
-        var list = document.querySelectorAll('input[type=checkbox]');
+        // var list = document.querySelectorAll('input[type=checkbox]');
+        var list = document.querySelectorAll('beeChecked'); // class="beeChecked" on each Jeedom equipement
         for (i = 0; i < list.length; i++) {
             item = list[i];
             // console.log("item.id=", item.id);
@@ -177,7 +49,7 @@
                 continue;
 
             // console.log(item.id+" CHECKED");
-            // console.log("item=", item);
+            console.log("CHECKED item=", item);
             idSplit = item.id.split('-'); // idBeeCheckedX-Y => [idBeeCheckedX, Y]
             id = idSplit[1];
             // console.log("id=", id);

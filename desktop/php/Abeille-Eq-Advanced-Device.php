@@ -105,16 +105,16 @@
                 }
             }
 
-            echo '<a class="btn btn-warning" onclick="update(\''.$eqId.'\')" style="margin-left:8px" title="{{Mise-à-jour à partir de son modèle et reconfiguration}}">{{Mise-à-jour}}</a>';
-            echo '<a class="btn btn-danger" onclick="reinit(\''.$eqId.'\')" style="margin-left:8px" title="{{Réinitlialise les paramètres par défaut et reconfigure l\'équipement comme s\'il s\'agissait d\'une nouvelle inclusion}}">{{Réinitialiser}}</a>';
-        ?>
+            ?>
+            <a class="btn btn-warning" id="idUpdateBtn" style="margin-left:8px" title="{{Mise-à-jour à partir de son modèle et reconfiguration}}">{{Mise-à-jour}}</a>
+            <a class="btn btn-danger" id="idReinitBtn" style="margin-left:8px" title="{{Réinitlialise les paramètres par défaut et reconfigure l\'équipement comme s\'il s\'agissait d\'une nouvelle inclusion}}">{{Réinitialiser}}</a>
     </div>
 </div>
 
 <!-- <div class="form-group">
     <label class="col-sm-3 control-label">Configuration</label>
     <div class="col-sm-5">
-        <?php
+        < ?php
             echo '<a class="btn btn-warning" onclick="update(\''.$eqId.'\')" title="Mise-à-jour à partir de son modèle et reconfiguration">Mise-à-jour</a>';
             echo '<a class="btn btn-danger" onclick="reinit(\''.$eqId.'\')" style="margin-left:8px" title="Réinitlialise les paramètres par défaut et reconfigure l\'équipement comme s\'il s\'agissait d\'une nouvelle inclusion">Réinitialiser</a>';
             // Tcharp38: Simplifcation for end users. Moreover no sense to do commands updates without device config since might be closely linked.
@@ -146,9 +146,7 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">Assistant de découverte</label>
     <div class="col-sm-5">
-        <?php
-            echo '<a class="btn btn-warning" onclick="window.location.href=\'index.php?v=d&m=Abeille&p=AbeilleEqAssist&id='.$eqId.'\'">Ouvrir</a>';
-        ?>
+        <a class="btn btn-warning" id="idEqAssistBtn">{{Ouvrir}}</a>
     </div>
 </div>
 
@@ -172,13 +170,9 @@
     </div>
 </div>
 
-<!-- <?php if (isset($dbgDeveloperMode)) { ?> -->
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Etat de l'équipement}} (BETA)</label>
     <div class="col-sm-5">
-        <?php
-            echo '<a class="btn btn-danger" title="{{Tente de corriger l\'état de l\'équipement}}" onclick="repair('.$eqId.')">{{Réparer}}</a>';
-        ?>
+        <a class="btn btn-danger" id="idRepairBtn" title="{{Tente de corriger l\'état de l\'équipement}}">{{Réparer}}</a>
     </div>
 </div>
-<!-- <?php } ?> -->

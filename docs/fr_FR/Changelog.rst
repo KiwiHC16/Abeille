@@ -6,6 +6,8 @@ ChangeLog
 - Placement réseau: Choix du niveau à afficher.
 - Garage door controller: Mise-à-jour du modèle (2581).
 - Support Tuya: Ajout support message 0x25/INTERNET_STATUS.
+- Page de gestion: Correction regression passage en mode inclusion non fonctionnel.
+- Page avancé: Correction regression boutons 'Réparer'/'Mise-à-jour'/'Réinit'/'Assistant'.
 
 230505-BETA-2
 -------------

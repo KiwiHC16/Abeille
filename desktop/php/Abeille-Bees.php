@@ -47,7 +47,7 @@
         // Affichage
         $id = $eqLogic->getId();
         echo '<div>';
-        echo    '<input id="idBeeChecked'.$zgId.'-'.$id.'" type="checkbox" name="eqSelected-'.$id.'" />';
+        echo    '<input id="idBeeChecked'.$zgId.'-'.$id.'" class="beeChecked" type="checkbox" name="eqSelected-'.$id.'" />';
         echo 	'<br/>';
         echo 	'<div class="eqLogicDisplayCard cursor '.$opacity.'" style="width: 130px" data-eqLogic_id="'.$id.'">';
         echo 		'<img src="plugins/Abeille/images/'.$icon.'" />';

@@ -60,8 +60,3 @@
         </div>
     </div>
 </div>
-
-<?php
-    // include 'AbeilleEq-Js.php';
-    // include 'AbeilleEq-Js-Cmds.php';
-?>

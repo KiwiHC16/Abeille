@@ -14,27 +14,33 @@
  * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
  */
 
-console.log("LA1 eqId=", eqId);
+// Note: 'eqId' seems overwritten somewhere.
+var curEqId = -1;
 
-if (window.location.href.indexOf("id=") > -1) {
-    let params = new URL(document.location).searchParams;
-    var eqId = params.get("id");
-    refreshAdvEq(eqId);
-}
+// console.log("LA1 eqId=", eqId);
 
+// if (window.location.href.indexOf("id=") > -1) {
+//     let params = new URL(document.location).searchParams;
+//     eqId = params.get("id");
+//     eqId2 = eqId;
+//     refreshAdvEq();
+// }
+
+// Click generate on page reload too.
 $(".eqLogicDisplayCard").on("click", function () {
     console.log("eqLogicDisplayCard click");
     if (!isset($(this).attr("data-eqLogic_id"))) {
         console.log("ERROR: 'data-eqLogic_id' is not defined");
         return;
     }
-    var eqId = $(this).attr("data-eqLogic_id");
-    console.log("eqId=" + eqId);
-    refreshAdvEq(eqId);
+    curEqId = $(this).attr("data-eqLogic_id");
+    console.log("curEqId=" + curEqId);
+    refreshAdvEq();
 });
 
-function refreshAdvEq(eqId) {
-    console.log("refreshAdvEq(" + eqId + ")");
+function refreshAdvEq() {
+    console.log("refreshAdvEq(" + curEqId + ")");
+    eqId = curEqId;
 
     // Collect eq & update advanced infos
     $.ajax({
@@ -56,6 +62,11 @@ function refreshAdvEq(eqId) {
 
             zgId = eq.zgId;
             eqAddr = eq.addr;
+            eqBatteryType = eq.batteryType;
+
+            // console.log("eq=", eq);
+            // console.log("idEqName=", document.getElementById("idEqName"));
+            // console.log("idEqId=", document.getElementById("idEqId"));
 
             // Updating advanced common infos
             document.getElementById("idEqName").value = eq.name;
@@ -123,6 +134,7 @@ function refreshAdvEq(eqId) {
                 select = document.getElementById("idZgChan");
                 select.value = eq.zgChan;
             }
+            console.log("LA3 eqId=", eqId);
         },
     });
 }
@@ -639,7 +651,7 @@ function acceptNewZigate() {
 }
 
 $("#idEqAssistBtn").on("click", function () {
-    window.open("index.php?v=d&m=Abeille&p=AbeilleEqAssist&id=" + eqId);
+    window.open("index.php?v=d&m=Abeille&p=AbeilleEqAssist&id=" + curEqId);
 });
 
 /* Launch AbeilleRepair */
@@ -649,7 +661,7 @@ $("#idRepairBtn").on("click", function () {
     var xhttp = new XMLHttpRequest();
     xhttp.open(
         "GET",
-        "/plugins/Abeille/core/php/AbeilleRepair.php?eqId=" + eqId,
+        "/plugins/Abeille/core/php/AbeilleRepair.php?eqId=" + curEqId,
         false
     );
     xhttp.send();
@@ -672,13 +684,14 @@ $("#idRepairBtn").on("click", function () {
 
 // Update Jeedom equipement from model
 $("#idUpdateBtn").on("click", function () {
-    console.log("update(" + eqId + ")");
+    console.log("update(" + curEqId + ")");
+    eqId = curEqId;
 
     var msg = "{{Vous êtes sur le point de:<br>";
     msg += "- Mettre à jour l'équipement Jeedom à partir de son modèle<br>";
     msg += "- Et reconfigurer l'équipement<br>";
     msg += "<br>Les noms et ID sont conservés, ainsi que vos customisations.}}";
-    if (js_batteryType != "") {
+    if (eqBatteryType != "") {
         msg +=
             "<br><br>{{ATTENTION! Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.}}";
     }
@@ -700,7 +713,8 @@ $("#idUpdateBtn").on("click", function () {
 /* Reinit Jeedom device & reconfigure.
     WARNING: If battery powered, device must be wake up. */
 $("#idReinitBtn").on("click", function () {
-    console.log("reinit(" + eqId + ")");
+    console.log("reinit(" + curEqId + ")");
+    eqId = curEqId;
 
     var msg = "{{Vous êtes sur le point de:}}<br>";
     msg +=
@@ -711,7 +725,7 @@ $("#idReinitBtn").on("click", function () {
     msg +=
         "Le nom des commandes peut avoir changé et vous serez obligé de revoir les scénaris utilisant cet équipement.<br>";
 
-    if (js_batteryType != "") {
+    if (eqBatteryType != "") {
         msg +=
             "<br>{{ATTENTION! Comme il fonctionne sur batterie, il vous faut le réveiller immédiatement après avoir cliqué sur 'Ok'.}}<br>";
     }

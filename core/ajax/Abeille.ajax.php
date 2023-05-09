@@ -562,6 +562,7 @@
                 $eq['zgChan'] = config::byKey('ab::zgChan'.$eq['zgId'], 'Abeille', '', 1);
                 $eq['addr'] = $eqAddr;
                 $eq['defaultEp'] = $eqLogic->getConfiguration('mainEP', '');
+                $eq['batteryType'] = $eqLogic->getConfiguration('battery_type', '');
                 $jCmds = Cmd::byEqLogicId($eqId);
                 $eq['cmds'] = [];
                 foreach ($jCmds as $cmdLogic) {

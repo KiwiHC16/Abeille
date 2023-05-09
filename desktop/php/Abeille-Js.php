@@ -2,28 +2,6 @@
 <?php include_file('core', 'plugin.template', 'js'); ?>
 
 <script>
-    console.log("LA2 eqId=", eqId);
-
-    // /* Show or hide developer area.
-    //    If developer mode is enabled, default is to always expand this area. */
-    // $('#idDevGrpShowHide').on('click', function () {
-    //     console.log("idDevGrpShowHide() click");
-    //     var Label = document.getElementById("idDevGrpShowHide").innerText;
-    //     if (Label == "Montrer") {
-    //         document.getElementById("idDevGrpShowHide").innerText = "Cacher";
-    //         document.getElementById("idDevGrpShowHide").className = "btn btn-danger";
-    //         $("#idDevGrp").show();
-    //     } else {
-    //         document.getElementById("idDevGrpShowHide").innerText = "Montrer";
-    //         document.getElementById("idDevGrpShowHide").className = "btn btn-success";
-    //         $("#idDevGrp").hide();
-    //     }
-    // });
-    // if ((typeof js_dbgDeveloperMode != 'undefined') && (js_dbgDeveloperMode == 1)) {
-    //     var Label = document.getElementById("idDevGrpShowHide").innerText;
-    //     document.querySelector('#idDevGrpShowHide').click();
-    // }
-
     $("#sel_icon").change(function () {
         var text = 'plugins/Abeille/images/node_' + $("#sel_icon").val() + '.png';
         //$("#icon_visu").attr('src',text);

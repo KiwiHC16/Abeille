@@ -260,27 +260,20 @@
             "14" => array("name" => "TUYA_OTA_BLOCK_DATA_RSP", "desc" => "Gw->Zigbee gateway returns the requested upgrade package"),
             "15" => array("name" => "TUYA_MCU_OTA_RESULT", "desc" => "Zigbee->Gw returns the upgrade result for the mcu"),
             "24" => array("name" => "TUYA_MCU_SYNC_TIME", "desc" => "Time synchronization (bidirectional)"),
+            "25" => array("name" => "TUYA_INTERNET_STATUS", "desc" => "MCU request gateway connection status"),
         );
-        if (($cmdId != "01") && ($cmdId != "02")) {
-            if (isset($tCmds[$cmdId]))
-                $cmdName = $tCmds[$cmdId]['name'];
-            else
-                $cmdName = $cmdId."/?";
-            parserLog("debug", "  Unsupported Tuya cmd ".$cmdName." => ignored", "8002");
-            return [];
-        }
-
-        $eq = &getDevice($net, $addr); // By ref
-        // parserLog('debug', 'eq='.json_encode($eq));
-        if (!isset($eq['tuyaEF00']) || !isset($eq['tuyaEF00']['fromDevice'])) {
-            parserLog('debug', "  No defined Tuya mapping => ignoring (msg=".$msg.")");
-            return [];
-        }
-        $mapping = $eq['tuyaEF00']['fromDevice'];
-        // parserLog('debug', '  Tuya mapping='.json_encode($mapping));
 
         $attributesN = [];
         if (($cmdId == "01") || ($cmdId == "02")) {
+            $eq = &getDevice($net, $addr); // By ref
+            // parserLog('debug', 'eq='.json_encode($eq));
+            if (!isset($eq['tuyaEF00']) || !isset($eq['tuyaEF00']['fromDevice'])) {
+                parserLog('debug', "  No defined Tuya mapping => ignoring (msg=".$msg.")");
+                return [];
+            }
+            $mapping = $eq['tuyaEF00']['fromDevice'];
+            // parserLog('debug', '  Tuya mapping='.json_encode($mapping));
+
             $tSqn = substr($msg, 0, 4); // uint16
             $msg = substr($msg, 4); // Skip tSqn
             parserLog("debug", "  Tuya EF00 specific cmd ".$cmdId." (tSQN=".$tSqn.")", "8002");
@@ -299,7 +292,20 @@
                 $s = 8 + (hexdec($dp['dataLen']) * 2);
                 $msg = substr($msg, $s);
             }
+        } else if ($cmdId == "25") { // TUYA_INTERNET_STATUS
+            parserLog('debug', "  Internet access status request => Answering 'connected'");
+            $tSqn = substr($msg, 0, 4); // uint16
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-tuyaEF00", "ep=".$ep."&cmd=internetStatus&tuyaSqn=".$tSqn."&data=01");
+            return [];
+        } else {
+            if (isset($tCmds[$cmdId]))
+                $cmdName = $tCmds[$cmdId]['name'];
+            else
+                $cmdName = $cmdId."/?";
+            parserLog("debug", "  Unsupported Tuya cmd ".$cmdName." => ignored", "8002");
+            return [];
         }
+
 // TODO: How to store unknown DP in discovery.json ?
 // Should not store "on the fly" as file accesses are time consuming
 

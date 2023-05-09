@@ -115,13 +115,13 @@
         return $dp;
     }
 
-    // Returns Tuya specific transaction ID
-    function tuyaGetTransId() {
+    // Returns Tuya specific transaction ID (4 bytes)
+    function tuyaGenSqn() {
         global $tuyaTransId;
         $tuyaTransId++;
         if ($tuyaTransId > 255)
             $tuyaTransId = 0;
-        $tId = sprintf("%02X", $tuyaTransId);
+        $tId = sprintf("%04X", $tuyaTransId);
         return $tId;
     }
 ?>

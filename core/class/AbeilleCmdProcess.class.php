@@ -4802,11 +4802,13 @@
 
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
                     return;
-                }
+                } // End cmdName == 'cmd-EF00'
 
                 // Tuya private cluster EF00
                 // Mandatory params: 'addr', 'ep', 'cmd', and 'data'
-                // Optional params: 'dpId'
+                //      cmd/00: setBool/setValue/setValueMult/setValueDiv/setPercent1000
+                //      cmd/25: internetStatus
+                // Optional params: 'dpId', 'tuyaSqn' (4B hex string)
                 else if ($cmdName == 'cmd-tuyaEF00') {
                     $required = ['addr', 'ep', 'cmd', 'data']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
@@ -4826,26 +4828,39 @@
                     // ZCL header
                     $fcf        = "11"; // Frame Control Field
                     $sqn        = $this->genSqn();
-                    $cmdId      = "00";
 
                     // Tuya fields
                     // Command sent to device and its format fully depends on device himself.
-                    $dp = tuyaCmd2Dp($Command);
-                    if ($dp === false) {
-                        return;
-                    }
+                    if ($Command['cmd'] == 'internetStatus') {
+                        $cmdId      = "25"; // Response to internet status request
+                        $tuyaSqn    = isset($Command['tuyaSqn']) ? $Command['tuyaSqn'] : tuyaGenSqn(); // Tuya transaction ID
+                        $dpData     = $dp['data']; // Supposed to be 00 (NOT connected), 01 (connected) or 02 (timeout)
+                        $dpLen      = sprintf("%04X", strlen($dpData) / 2);
 
-                    $transId = tuyaGetTransId(); // Transaction ID
-                    $dpId = $dp['id'];
-                    $dpType = $dp['type'];
-                    $dpData = $dp['data'];
-                    cmdLog('debug', '    Using transId='.$transId.', dpId='.$dpId.', dpType='.$dpType.', dpData='.$dpData);
-                    $len = sprintf("%02X", strlen($dpData) / 2);
-                    if (($dpType == "02") && ($len > 4)) {
-                        cmdLog('error', '    Wrong dpData size (max=4B for type 02)');
-                        return;
+                        cmdLog('debug', '    Using tuyaSqn='.$tuyaSqn.', dpLen='.$dpLen.', dpData='.$dpData);
+                        $data2 = $fcf.$sqn.$cmdId.$tuyaSqn.$dpLen.$dpData;
+                    } else {
+                        $cmdId      = "00"; // TY_DATA_REQUEST, 0x00, The gateway sends data to the Zigbee module.
+
+                        $dp = tuyaCmd2Dp($Command);
+                        if ($dp === false) {
+                            return;
+                        }
+                        $dpType = $dp['type'];
+                        $dpData = $dp['data'];
+                        $dpLen = strlen($dpData) / 2;
+                        if (($dpType == "02") && ($dpLen > 4)) {
+                            cmdLog('error', '    Wrong dpData size (max=4B for type 02)');
+                            return;
+                        }
+
+                        $tuyaSqn = isset($Command['tuyaSqn']) ? $Command['tuyaSqn'] : tuyaGenSqn(); // Tuya transaction ID
+                        $dpId = $dp['id'];
+                        $dpLen = sprintf("%04X", $dpLen);
+
+                        cmdLog('debug', '    Using tuyaSqn='.$tuyaSqn.', dpId='.$dpId.', dpType='.$dpType.', dpData='.$dpData);
+                        $data2 = $fcf.$sqn.$cmdId.$tuyaSqn.$dpId.$dpType.$dpLen.$dpData;
                     }
-                    $data2 = $fcf.$sqn.$cmdId."00".$transId.$dpId.$dpType."00".$len.$dpData;
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);
 
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;

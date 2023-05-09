@@ -153,24 +153,24 @@
                 return; // NPDU stable since less than 3 mins.
 
             parserLog('warning', '  Ndpu stuck at '.$curNpdu.' for more than 4mins => SW reset.');
-            $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/0000/resetZg");
+            msgToCmd(PRIO_HIGH, "Cmd".$net."/0000/resetZg");
             $GLOBALS['zigate'.$zgId]['nPduTime'] = time(); // Reset timer
             // message::add("Abeille", "Erreur lors du changement de mode de la Zigate.", "");
         }
 
-        /* Send message to 'AbeilleCmd' thru 'xToCmd' queue */
-        function msgToCmd($prio, $topic, $payload = '') {
-            $msg = array(
-                'priority' => $prio,
-                'topic' => $topic,
-                'payload' => $payload
-            );
+        // /* Send message to 'AbeilleCmd' thru 'xToCmd' queue */
+        // function msgToCmd($prio, $topic, $payload = '') {
+        //     $msg = array(
+        //         'priority' => $prio,
+        //         'topic' => $topic,
+        //         'payload' => $payload
+        //     );
 
-            $errCode = 0;
-            if (msg_send($this->queueXToCmd, 1, json_encode($msg), false, false, $errCode) == false) {
-                parserLog("debug", "  ERROR: msgToCmd(): Can't write to 'queueXToCmd', error=".$errCode);
-            }
-        }
+        //     $errCode = 0;
+        //     if (msg_send($this->queueXToCmd, 1, json_encode($msg), false, false, $errCode) == false) {
+        //         parserLog("debug", "  ERROR: msgToCmd(): Can't write to 'queueXToCmd', error=".$errCode);
+        //     }
+        // }
 
         /* Send message to 'AbeilleCmd' thru 'xToCmd' queue */
         function msgToCmd2($prio, $msg) {
@@ -467,7 +467,7 @@
             /* Default identification: need EP list.
                Tcharp38 note: Some devices may not answer to active endpoints request at all. */
             parserLog('debug', '  Requesting active end points list');
-            $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getActiveEndpoints");
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getActiveEndpoints");
 
             /* Special trick for NXP based devices.
                - Note: 00158D=Jennic Ltd.
@@ -477,7 +477,7 @@
             $nxp = (substr($ieee, 0, 9) == "00158D000") ? true : false;
             if ($nxp) {
                 parserLog('debug', '  NXP based device. Requesting modelIdentifier from EP 01');
-                $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=01&clustId=0000&attrId=0005");
+                msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=01&clustId=0000&attrId=0005");
             }
         }
 
@@ -642,14 +642,14 @@
 
         //     if (!$eq['ieee']) {
         //         parserLog('debug', '  Requesting IEEE');
-        //         $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
+        //         msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
         //         return $ret;
         //     }
 
         //     // IEEE is available
         //     if (!$eq['endPoints']) {
         //         parserLog('debug', '  Requesting active endpoints list');
-        //         $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
+        //         msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
         //         return $ret;
         //     }
 
@@ -661,7 +661,7 @@
         //         // if (($eq['modelId'] !== false) && ($eq['manufId'] === null)) {
         //         //     $missing = '0004';
         //         //     $missingTxt = 'manufId';
-        //         //     // $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
+        //         //     // msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
         //         // }
         //         // if ($eq['modelId'] === null) {
         //         //     if ($missing != '') {
@@ -670,7 +670,7 @@
         //         //     }
         //         //     $missing .= '0005';
         //         //     $missingTxt .= 'modelId';
-        //         //     // $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
+        //         //     // msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
         //         // }
         //         // /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
         //         // if ((($eq['modelId'] === null) || ($eq['modelId'] === false)) && ($eq['location'] === null)) {
@@ -680,11 +680,11 @@
         //         //     }
         //         //     $missing .= '0010';
         //         //     $missingTxt .= 'location';
-        //         //     // $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
+        //         //     // msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
         //         // }
         //         // if ($missing != '') {
         //         //     parserLog('debug', '  Requesting '.$missingTxt.' from EP '.$eq['epFirst']);
-        //         //     $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=".$missing);
+        //         //     msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=".$missing);
 
         //         //     // jbromain: we check if EP '01' exists BUT is not the first EP
         //         //     // If so, we will request model and/or manufacturer from both EPs (the first one AND 01)
@@ -693,7 +693,7 @@
         //         //     $epArr = explode('/', $eq['epList']);
         //         //     if ($eq['epFirst'] != '01' && in_array('01', $epArr)) {
         //         //         parserLog('debug', '  Requesting '.$missingTxt.' from EP 01 too (not the first but exists)');
-        //         //         $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=01&clustId=0000&attrId=".$missing);
+        //         //         msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=01&clustId=0000&attrId=".$missing);
         //         //     }
         //         // }
 
@@ -727,7 +727,7 @@
         //             }
         //             if ($missing != '') {
         //                 parserLog('debug', '  Requesting '.$missingTxt.' from EP '.$epId);
-        //                 $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId."&clustId=0000&attrId=".$missing);
+        //                 msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId."&clustId=0000&attrId=".$missing);
         //             }
         //         }
         //     }
@@ -785,12 +785,12 @@
         //         if ($profalux && ($eq['modelId'] !== false) && ($eq['modelId'] !== 'MAI-ZTS')) {
         //             if (!isset($eq['bindingTableSize'])) {
         //                 parserLog('debug', '  Profalux v2: Requesting binding table size.');
-        //                 $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
+        //                 msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
         //                 return false; // Remote still not binded with curtain
         //             }
         //             if ($eq['bindingTableSize'] == 0) {
         //                 parserLog('debug', '  Profalux v2: Waiting remote to be binded.');
-        //                 $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
+        //                 msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
         //                 return false; // Remote still not binded with curtain
         //             }
         //             parserLog('debug', '  Profalux v2: Remote binded. Let\'s configure.');
@@ -928,14 +928,14 @@
 
             if (!$eq['ieee']) {
                 parserLog('debug', '  Requesting IEEE');
-                $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
+                msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
                 return $ret;
             }
             // IEEE is available
 
             if (!$eq['endPoints']) {
                 parserLog('debug', '  Requesting active endpoints list');
-                $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
+                msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
                 return $ret;
             }
             // Endpoints list is available
@@ -944,21 +944,21 @@
             foreach ($eq['endPoints'] as $epId2 => $ep2) {
                 if (!isset($ep2['servClusters'])) {
                     parserLog('debug', '  Requesting simple descriptor for EP '.$epId2);
-                    $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getSimpleDescriptor", "ep=".$epId2);
+                    msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getSimpleDescriptor", "ep=".$epId2);
                     break; // To reduce requests on first missing descriptor
                 } else if (strpos($ep2['servClusters'], '0004') !== false) {
                     if (isset($ep2['groups']))
                         parserLog('debug', '  Groups='.json_encode($ep2['groups']));
                     if (!isset($eq['groups']) || !isset($eq['groups'][$epId2])) {
                         parserLog('debug', '  Requesting groups membership for EP '.$epId2);
-                        $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getGroupMembership", "ep=".$epId2);
+                        msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getGroupMembership", "ep=".$epId2);
                         break; // To reduce requests on first missing groups membership
                     }
                 }
             }
             if (!isset($eq['manufCode']) || ($eq['manufCode'] === null)) {
                 parserLog('debug', '  Requesting node descriptor');
-                $this->msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getNodeDescriptor");
+                msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getNodeDescriptor");
             }
 
             // Check if main signature is missing but available in EP
@@ -1012,7 +1012,7 @@
                     }
                     if ($missing != '') {
                         parserLog('debug', '  Requesting '.$missingTxt.' from EP '.$epId2);
-                        $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
+                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
                         break; // Reducing requests on first missing stuff
                     }
                 }
@@ -1071,12 +1071,12 @@
                 if ($profalux && ($eq['modelId'] !== false) && ($eq['modelId'] !== 'MAI-ZTS')) {
                     if (!isset($eq['bindingTableSize'])) {
                         parserLog('debug', '  Profalux v2: Requesting binding table size.');
-                        $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
+                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
                         return false; // Remote still not binded with curtain
                     }
                     if ($eq['bindingTableSize'] == 0) {
                         parserLog('debug', '  Profalux v2: Waiting remote to be binded.');
-                        $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
+                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
                         return false; // Remote still not binded with curtain
                     }
                     parserLog('debug', '  Profalux v2: Remote binded. Let\'s configure.');
@@ -1170,10 +1170,10 @@
                     $request = str_ireplace('#ZiGateIEEE#', $GLOBALS['zigate'.$zgId]['ieee'], $request);
                     parserLog('debug', '      topic='.$topic.", request='".$request."'");
                     if ($delay == 0)
-                        $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/".$topic, $request);
+                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/".$topic, $request);
                     else {
                         $delay = time() + $delay;
-                        $this->msgToCmd(PRIO_NORM, "TempoCmd".$net."/".$addr."/".$topic.'&time='.$delay, $request);
+                        msgToCmd(PRIO_NORM, "TempoCmd".$net."/".$addr."/".$topic.'&time='.$delay, $request);
                     }
                 }
 
@@ -1234,12 +1234,12 @@
             // foreach ($epArr as $epId) {
             //     $eq['zigbee']['endPoints'][$epId] = [];
             //     parserLog('debug', '  Requesting simple descriptor for EP '.$epId);
-            //     $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getSimpleDescriptor", 'ep='.$epId);
+            //     msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getSimpleDescriptor", 'ep='.$epId);
             // }
             foreach ($eq['endPoints'] as $epId => $ep) {
                 $eq['discovery']['endPoints'][$epId] = [];
                 parserLog('debug', '  Requesting simple descriptor for EP '.$epId);
-                $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getSimpleDescriptor", 'ep='.$epId);
+                msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getSimpleDescriptor", 'ep='.$epId);
             }
 
             /* Discover ongoing. Informing Abeille for EQ creation/update */
@@ -1296,10 +1296,10 @@
 
                     /* Requesting list of supported attributes */
                     foreach ($val2['servClusters'] as $clustId => $clust) {
-                        $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=00&startAttrId=0000&maxAttrId=FF');
+                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=00&startAttrId=0000&maxAttrId=FF');
                     }
                     foreach ($val2['cliClusters'] as $clustId => $clust) {
-                        $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=01&startAttrId=0000&maxAttrId=FF');
+                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/discoverAttributes", "ep=".$ep.'&clustId='.$clustId.'&dir=01&startAttrId=0000&maxAttrId=FF');
                     }
                 }
             }
@@ -1328,12 +1328,12 @@
                     if ($missingAttrNb < 4)
                         continue;
 
-                    $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
+                    msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
                     $missingAttr = '';
                     $missingAttrNb = 0;
                 }
                 if ($missingAttrNb != 0)
-                    $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
+                    msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$missingAttr);
             }
 
             // discoverUpdate($dest, $srcAddr, $srcEp, 'DiscoverAttributesExtResponse', $clustId, $isServer, $attributes);
@@ -1353,7 +1353,7 @@
                     if (isset($attr['access']))
                         $clust['attributes'][$attrId]['access'] = $attr['access'];
                     if (!isset($clust['attributes'][$attrId]['value']))
-                        $this->msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$attrId);
+                        msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$ep."&clustId=".$clustId."&attrId=".$attrId);
                 }
             }
 
@@ -1930,7 +1930,7 @@
                     $GLOBALS['zigate'.$zgId]['ieeeStatus'] = $ieeeStatus; // Updating local status
 
                     if ($ieeeStatus == 0) {
-                        $this->msgToCmd(PRIO_HIGH, "CmdAbeille".$zgId."/0000/getNetworkStatus");
+                        msgToCmd(PRIO_HIGH, "CmdAbeille".$zgId."/0000/getNetworkStatus");
 
                         $acceptedBeforeZigateIdentified = array("0208", "0300", "8009", "8010", "8024");
                         if (!in_array($type, $acceptedBeforeZigateIdentified)) {
@@ -2118,7 +2118,7 @@
 
         //     parserLog('debug', $dest.', Type=0208/E_SL_MSG_PDM_EXISTENCE_REQUEST : PDM Exist for id : '.$id.' ?');
 
-        //     $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/PDM", "req=E_SL_MSG_PDM_EXISTENCE_RESPONSE&recordId=".$id);
+        //     msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/PDM", "req=E_SL_MSG_PDM_EXISTENCE_RESPONSE&recordId=".$id);
         // }
 
         // function decode0300($dest, $payload, $lqi) {
@@ -2126,7 +2126,7 @@
         //     // E_SL_MSG_PDM_HOST_AVAILABLE = 0x0300
         //     parserLog('debug', $dest.', Type=0300/E_SL_MSG_PDM_HOST_AVAILABLE : PDM Host Available ?');
 
-        //     $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/PDM", "req=E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE");
+        //     msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/PDM", "req=E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE");
         // }
 
         // function decode0302($dest, $payload, $lqi) {
@@ -2190,7 +2190,7 @@
             // See https://github.com/KiwiHC16/Abeille/issues/2490#top
             if ($status == "06") {
                 parserLog("debug", "  Error 06 => SW reset in 20sec");
-                $this->msgToCmd(PRIO_HIGH, "TempoCmd".$net."/0000/resetZg&delay=20");
+                msgToCmd(PRIO_HIGH, "TempoCmd".$net."/0000/resetZg&delay=20");
             }
 
             // Saving NPDU+APDU & checking NDPU. If stuck too long Zigate SW reset is required
@@ -3624,7 +3624,7 @@
                                     $localTime = mktime($lt['tm_hour'], $lt['tm_min'], $lt['tm_sec'], $lt['tm_mon'], $lt['tm_mday'], $lt['tm_year']);
                                     $localTime -= mktime(0, 0, 0, 1, 1, 2000); // PHP to Zigbee shift
                                     $localTime = sprintf("%04X", $localTime);
-                                    $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/sendReadAttributesResponse", 'ep='.$srcEp.'&clustId='.$clustId.'&attrId='.$attrId.'&status=00&attrType=23&attrVal='.$localTime);
+                                    msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/sendReadAttributesResponse", 'ep='.$srcEp.'&clustId='.$clustId.'&attrId='.$attrId.'&status=00&attrType=23&attrVal='.$localTime);
                                     parserLog('debug', "  Attribute 0007/LocalTime: Answering to device");
                                 } else {
                                     parserLog('debug', "  WARNING: Unsupported time cluster attribute ".$attrId);
@@ -4446,7 +4446,7 @@
                             $imgVers = $fw['fileVersion'];
                             $imgSize = $fw['fileSize'];
                             parserLog('debug', "  FW version ".$imgVers." available. Response handled by Zigate server.");
-                            // $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
+                            // msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
                         } else if ($cmd == "03") { // Image Block Request
                             $fieldControl = substr($msg, 0, 2);
                             $manufCode = AbeilleTools::reverseHex(substr($pl, 2, 4));
@@ -4455,8 +4455,8 @@
                             $fileOffset = AbeilleTools::reverseHex(substr($pl, 18, 8));
                             $maxDataSize = AbeilleTools::reverseHex(substr($pl, 26, 2));
 
-                            $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/otaImageBlockResponse", 'ep='.$srcEp.'&sqn='.$sqn.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
-                            // $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
+                            msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/otaImageBlockResponse", 'ep='.$srcEp.'&sqn='.$sqn.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
+                            // msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0019", 'ep='.$srcEp.'&cmd=05&manufCode='.$manufCode.'&imgType='.$imgType.'&imgOffset='.$fileOffset.'&maxData='.$maxDataSize);
 
                             $m = "  fieldCtrl=".$fieldControl.", manufCode=".$manufCode.", imgType=".$imgType.", fileVers=".$fileVersion.", fileOffset=".$fileOffset.", maxData=".$maxDataSize;
                             parserLog('debug', $m);
@@ -4475,7 +4475,7 @@
                             parserLog('debug', $m);
                             $toMon[] = $m;
 
-                            // $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$addr."/otaUpgradeEndResponse", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
+                            // msgToCmd(PRIO_NORM, "Cmd".$dest."/".$addr."/otaUpgradeEndResponse", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
                             $eqLogic = Abeille::byLogicalId($dest.'/'.$srcAddr, 'Abeille');
                             $eqHName = $eqLogic->getHumanName();
                             switch ($status) {
@@ -4503,7 +4503,7 @@
 
                         if ($cmd == "00") {
                             parserLog('debug', '  Check-in cmd');
-                            $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0020", 'ep='.$srcEp.'&cmd=00');
+                            msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0020", 'ep='.$srcEp.'&cmd=00');
                         } else {
                             parserLog('debug', '  Unsupported Poll control cluster cmd '.$cmd);
                         }
@@ -4549,7 +4549,7 @@
                             $manufCode = AbeilleTools::reverseHex(substr($pl, 4, 4));
                             $m = '  Zone enroll request: ZoneType='.$zoneType.', ManufCode='.$manufCode.' => Answering ZoneId=12';
                             // TODO: Where to get Zone ID from ? Defaulting to '12' for now.
-                            $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0500", 'ep='.$srcEp.'&cmd=00&zoneId=12');
+                            msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0500", 'ep='.$srcEp.'&cmd=00&zoneId=12');
                             // $attrReportN[] = array(
                             //     'name' => $srcEp.'-0500-cmd01',
                             //     'value' => $zoneType.'-'.$manufCode,
@@ -4624,7 +4624,7 @@
                         } else if (($cmd == "07") && ($dir == 0)) { // Client to server: Get Panel Status
                             $m = "  Get Panel Status Response command";
                             // Generate a 'Get Panel Status Response command'
-                            $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0501", 'ep='.$srcEp.'&cmd=05');
+                            msgToCmd(PRIO_NORM, "Cmd".$dest."/".$srcAddr."/cmd-0501", 'ep='.$srcEp.'&cmd=05');
                         } else {
                             parserLog("debug", "  Ignored 0501/IAS_ACE cluster specific command ".$cmd, "8002");
                             return;
@@ -5665,9 +5665,9 @@
         //         //     } else {
         //         //         parserLog('debug', '  Eq addr '.$N['addr']." is unknown. Trying to interrogate.");
 
-        //         //         $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=01");
-        //         //         $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=03");
-        //         //         $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=0B");
+        //         //         msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=01");
+        //         //         msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=03");
+        //         //         msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/getName", "address=".$N['addr']."&destinationEndPoint=0B");
         //         //     }
         //         // }
 
@@ -7162,7 +7162,7 @@
         //     if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
         //         monMsgFromZigate($decoded); // Send message to monitor
 
-        //     // $this->msgToCmd(PRIO_NORM, "Cmd".$dest."/".$addr."/otaUpgradeEndResponse", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
+        //     // msgToCmd(PRIO_NORM, "Cmd".$dest."/".$addr."/otaUpgradeEndResponse", 'ep='.$srcEp.'&cmd=02&status=00&manufCode='.$manufCode.'&imgType='.$imgType.'&imgVersion='.$imgVers.'&imgSize='.$imgSize);
         //     $eqLogic = Abeille::byLogicalId($dest.'/'.$addr, 'Abeille');
         //     $eqPath = $eqLogic->getHumanName();
         //     switch ($status) {

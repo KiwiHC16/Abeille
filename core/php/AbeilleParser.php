@@ -184,13 +184,24 @@
         Msg format is now flexible and can transport a bunch of infos coming from zigbee event instead of splitting them
         into several messages to Abeille. */
     function msgToAbeille2($msg) {
-        // global $queueParserToAbeille2;
-        // if (msg_send($queueParserToAbeille2, 1, json_encode($msg), false, false, $errCode) == false) {
-        //     parserLog("debug", "msgToAbeille2(): ERROR ".$errCode);
-        // }
         global $queueXToAbeille;
         if (msg_send($queueXToAbeille, 1, json_encode($msg), false, false, $errCode) == false) {
             parserLog("debug", "msgToAbeille2(): ERROR ".$errCode);
+        }
+    }
+
+    /* Send message to 'AbeilleCmd' thru 'xToCmd' queue */
+    function msgToCmd($prio, $topic, $payload = '') {
+        $msg = array(
+            'priority' => $prio,
+            'topic' => $topic,
+            'payload' => $payload
+        );
+
+        global $queueXToCmd;
+        $errCode = 0;
+        if (msg_send($queueXToCmd, 1, json_encode($msg), false, false, $errCode) == false) {
+            parserLog("debug", "  ERROR: msgToCmd(): Can't write to 'queueXToCmd', error=".$errCode);
         }
     }
 
@@ -342,6 +353,7 @@
     // Inits
     // $queueParserToAbeille2 = msg_get_queue($abQueues["parserToAbeille2"]["id"]);
     $queueXToAbeille = msg_get_queue($abQueues["xToAbeille"]["id"]);
+    $queueXToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
 
     /* Any device to monitor ?
        It is indicated by 'ab::monitorId' key in Jeedom 'config' table. */

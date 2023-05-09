@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230509-BETA-1
+-------------
+
 - Page EQ/cmdes: Correction boutons ajouter cmde (mode dev).
 - Placement réseau: Ajout bouton d'analyse réseau.
 - Placement réseau: Choix du niveau à afficher.

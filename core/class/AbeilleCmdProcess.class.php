@@ -4834,10 +4834,10 @@
                     if ($Command['cmd'] == 'internetStatus') {
                         $cmdId      = "25"; // Response to internet status request
                         $tuyaSqn    = isset($Command['tuyaSqn']) ? $Command['tuyaSqn'] : tuyaGenSqn(); // Tuya transaction ID
-                        $dpData     = $dp['data']; // Supposed to be 00 (NOT connected), 01 (connected) or 02 (timeout)
+                        $dpData     = $Command['data']; // Supposed to be 00 (NOT connected), 01 (connected) or 02 (timeout)
                         $dpLen      = sprintf("%04X", strlen($dpData) / 2);
 
-                        cmdLog('debug', '    Using tuyaSqn='.$tuyaSqn.', dpLen='.$dpLen.', dpData='.$dpData);
+                        cmdLog('debug', '    internetStatus: tuyaSqn='.$tuyaSqn.', dpLen='.$dpLen.', dpData='.$dpData);
                         $data2 = $fcf.$sqn.$cmdId.$tuyaSqn.$dpLen.$dpData;
                     } else {
                         $cmdId      = "00"; // TY_DATA_REQUEST, 0x00, The gateway sends data to the Zigbee module.
@@ -4858,7 +4858,7 @@
                         $dpId = $dp['id'];
                         $dpLen = sprintf("%04X", $dpLen);
 
-                        cmdLog('debug', '    Using tuyaSqn='.$tuyaSqn.', dpId='.$dpId.', dpType='.$dpType.', dpData='.$dpData);
+                        cmdLog('debug', '    '.$Command['cmd'].': tuyaSqn='.$tuyaSqn.', dpId='.$dpId.', dpType='.$dpType.', dpData='.$dpData);
                         $data2 = $fcf.$sqn.$cmdId.$tuyaSqn.$dpId.$dpType.$dpLen.$dpData;
                     }
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);

@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Loratap telecommande 3 boutons: Ajout support (2589).
+
 230509-BETA-1
 -------------
 

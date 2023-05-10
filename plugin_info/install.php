@@ -583,7 +583,8 @@
                     "TRADFRItransformer30W" => "Ikea-Transformer",
                     "TRADFRIsignalrepeater" => "Ikea-SignalRepeater",
                     "IkeaTradfri5BtnRond" => "Ikea-Remote-5buttons",
-                    "TRADFRIonoffswitch" => "node_Ikea-OnOffSwitch",
+                    "TRADFRIonoffswitch" => "Ikea-OnOffSwitch",
+                    "node_Ikea-OnOffSwitch" => "Ikea-OnOffSwitch",
 
                     "511.201" => "Iluminize-511201",
                     "511.202" => "Iluminize-511202",
@@ -598,6 +599,8 @@
                     "Connectedoutlet" => "Legrand-Connectedoutlet",
                     "Micromoduleswitch" => "Legrand-MicromoduleSwitch",
                     "Shutterswitchwithneutral" => "Legrand-ShutterSwitch",
+
+                    "LoraTap3GangRemote" => "LoraTap-3GangRemote",
 
                     "Moes-ZSS-ZK-THL" => "Moes-Thermometer",
 

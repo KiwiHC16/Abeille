@@ -292,18 +292,18 @@
                 $s = 8 + (hexdec($dp['dataLen']) * 2);
                 $msg = substr($msg, $s);
             }
+        } else if ($cmdId == "11") { // TUYA_MCU_VERSION_RSP
+            parserLog('debug', "  TUYA_MCU_VERSION_RSP: ".$msg);
         } else if ($cmdId == "25") { // TUYA_INTERNET_STATUS
             parserLog('debug', "  Internet access status request => Answering 'connected'");
             $tSqn = substr($msg, 0, 4); // uint16
             msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-tuyaEF00", "ep=".$ep."&cmd=internetStatus&tuyaSqn=".$tSqn."&data=01");
-            return [];
         } else {
             if (isset($tCmds[$cmdId]))
                 $cmdName = $tCmds[$cmdId]['name'];
             else
                 $cmdName = $cmdId."/?";
             parserLog("debug", "  Unsupported Tuya cmd ".$cmdName." => ignored", "8002");
-            return [];
         }
 
 // TODO: How to store unknown DP in discovery.json ?

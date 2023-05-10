@@ -96,7 +96,9 @@
                     $missing .= '0005';
                     $missingTxt .= 'modelId';
                 }
-                if (!isset($ep2['location']) && (substr($ieee, 0, 6) == '20918A')) { // Location is useful for Profalux 1st gen
+                // Profalux specific: Need 'location' to identify device
+                // Note: IEEE address is Profalux (20918A) or sometimes Ember corp (00:0D:6F)
+                if (isset($ep2['modelId']) && ($ep2['modelId'] == '') && !isset($ep2['location'])) { // Location is useful for Profalux 1st gen
                     if ($missing != '') {
                         $missing .= ',';
                         $missingTxt .= '/';
@@ -142,16 +144,11 @@
             if (!isset($newSig['modelId']) && ($ep2['modelId'] != ''))
                 $newSig['modelId'] = $ep2['modelId'];
 
-            if (!isset($newSig['modelId']) && (substr($ieee, 0, 6) == '20918A')) {
-                // Model id is still unknown. Profalux 1st gen case ?
-                if (!isset($ep2['location'])) {
-                    logMessage('debug', '  Missing location (Profalux 1st gen) for EP '.$epId2);
-                    return; // To reduce requests on first missing stuff
-                }
-                if ($ep2['location'] != '') {
-                    $newSig['modelId'] = $ep2['location'];
-                    $newSig['manufId'] = '';
-                }
+            // Profalux specific case: using 'location' to get identifier
+            if (!isset($newSig['modelId']) && isset($ep2['location']) && ($ep2['location'] != '')) {
+                logMessage('debug', "  Profalux case: Using 'location'=".$ep2['location']);
+                $newSig['modelId'] = $ep2['location'];
+                $newSig['manufId'] = '';
             }
         }
         if ($newSig != $sig) {

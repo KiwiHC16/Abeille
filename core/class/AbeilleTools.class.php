@@ -551,6 +551,55 @@
             return $device;
         }
 
+        // Attempt to find corresponding model based on given zigbee signature.
+        // Returns: associative array('jsonId', 'jsonLocation') or false
+        public static function findModel($zbModelId, $zbManufId) {
+
+            $identifier1 = $zbModelId.'_'.$zbManufId;
+            $identifier2 = $zbModelId;
+
+            // Search by <zbModelId>_<zbManufId>, starting from local models list
+            $localModels = AbeilleTools::getDevicesList('local');
+            foreach ($localModels as $modelId => $model) {
+                if ($modelId == $identifier1) {
+                    $identifier = $identifier1;
+                    break;
+                }
+            }
+            if (!isset($identifier)) {
+                // Search by <zbModelId>_<zbManufId>, starting from offical models list
+                $officialModels = AbeilleTools::getDevicesList('Abeille');
+                foreach ($officialModels as $modelId => $model) {
+                    if ($modelId == $identifier1) {
+                        $identifier = $identifier1;
+                        break;
+                    }
+                }
+            }
+            if (!isset($identifier)) {
+                // Search by <zbModelId> in local models
+                foreach ($localModels as $modelId => $model) {
+                    if ($modelId == $identifier2) {
+                        $identifier = $identifier2;
+                        break;
+                    }
+                }
+            }
+            if (!isset($identifier)) {
+                // Search by <zbModelId> in offical models
+                foreach ($officialModels as $modelId => $model) {
+                    if ($modelId == $identifier2) {
+                        $identifier = $identifier2;
+                        break;
+                    }
+                }
+            }
+            if (!isset($identifier))
+                return false; // No model found
+
+            return $model;
+        }
+
         /**
          * return the config list from a file located in core/config directory
          *

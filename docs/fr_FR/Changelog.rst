@@ -7,6 +7,7 @@ ChangeLog
 - Tuya: Support message 0x11.
 - Tuya garage door controller: Mise-à-jour du modèle (2581).
 - Page EQ avancé: Corrections affichage identifiant & modele.
+- Placement réseau: Corrections regressions.
 
 230509-BETA-1
 -------------

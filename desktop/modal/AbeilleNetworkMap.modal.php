@@ -63,15 +63,22 @@
         if (typeof networkMap === 'undefined')
             return;
 
+        // config/ab::networkMap reminder
+        // networkMap = array(
+        //     'levels' => [], array(
+        //         "level" =>
+        //         "mapDir" =>
+        //         "mapFile" => "mapX.png"
+        //     ),
+        //     'levelChoice' => idx
+        // )
         console.log("networkMap=", networkMap);
-        s = 0
-        for (const [idx, nm] of Object.entries(networkMap)) {
-            elm = document.getElementById("idLevel-"+s);
-            elm.value = nm.level;
-            elm = document.getElementById("idMap-"+s);
-            elm.value = nm.mapFile;
-            s++;
-            if (s == maxLevels)
+        for (const [idx, level] of Object.entries(networkMap.levels)) {
+            elm = document.getElementById("idLevel-"+idx);
+            elm.value = level.level;
+            elm = document.getElementById("idMap-"+idx);
+            elm.value = level.mapFile;
+            if (idx == maxLevels)
                 break;
         }
         newNetworkMap = Object.assign({}, networkMap); // Clone networkMap

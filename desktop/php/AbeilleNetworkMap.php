@@ -860,8 +860,9 @@
                     else if ( neighbor['type'] == "Coordinator" ) { devN['color'] = "Red"; }
                     else devN['color'] = "Yellow";
                     if (typeof jeedomDevices[nLogicId] !== "undefined") {
-                        devN['posX'] = jeedomDevices[nLogicId].X;
-                        devN['posY'] = jeedomDevices[nLogicId].Y;
+                        devN['posX'] = jeedomDevices[nLogicId].x;
+                        devN['posY'] = jeedomDevices[nLogicId].y;
+                        devR['posZ'] = jeedomDevices[rLogicId].z;
                         devN['jeedomId'] = jeedomDevices[nLogicId].id;
                         devN['posChanged'] = false;
                     }
@@ -934,8 +935,9 @@
     function drawDevice(devLogicId) {
         console.log("drawDevice("+devLogicId+")");
         dev = devList[devLogicId];
-        console.log("dev=", dev);
+        // console.log("dev=", dev);
 
+        nodeColor = dev['color'];
         addr = dev['addr'];
         if (addr == '0000')
             isZigate = true;
@@ -945,7 +947,6 @@
             dev['posX'] = setAutoX(isZigate);
         if (dev['posY'] == 0) // 0 is forbidden
             dev['posY'] = setAutoY(isZigate);
-        nodeColor = dev['color'];
 
         // dev['posX'] = 25;
         // dev['posY'] = 25; // TEMP
@@ -972,6 +973,7 @@
         newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
         newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';
         newG += '</g>';
+        // console.log("newG=", newG);
 
         // newG = '<g id="'+devLogicId+'" class="draggable">';
         // newG += '<rect x="'+rectX+'" y="'+rectY+'" rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
@@ -987,7 +989,6 @@
         // else {
         //     lesAbeillesText = lesAbeillesText + '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille" target="_blank"> <text x="'+X+'" y="'+Y+'" fill="black" style="font-size: 8px;">'+myObj[shortAddress].name+' ('+shortAddress+')</text> </a>';
 
-        console.log("newG=", newG);
         return newG;
     }
 

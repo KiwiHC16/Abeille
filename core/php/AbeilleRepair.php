@@ -171,13 +171,22 @@
         $model = $eqLogic->getConfiguration('ab::eqModel', []);
         logMessage('debug', '  ab::eqModel='.json_encode($model));
         if (!isset($model['id']) || ($model['id'] == 'defaultUnknown')) {
-            logMessage('debug', "  Model is undefined or 'defaultUnknown'");
+            logMessage('debug', "  Model is 'defaultUnknown' or undefined.");
             $m = AbeilleTools::findModel($sig['modelId'], $sig['manufId']);
             if ($m !== false) {
                 $model['id'] = $m['jsonId'];
                 $model['location'] = $m['location'];
+                $model['type'] = $m['type'];
                 $eqLogic->setConfiguration('ab::eqModel', $model);
-                logMessage('debug', "  mab::eqModel updated to ".json_encode($model));
+                $eqLogic->save();
+                logMessage('debug', "  ab::eqModel updated to ".json_encode($model));
+            } else if (!isset($model['id'])) {
+                $model['id'] = 'defaultUnknown';
+                $model['location'] = 'Abeille';
+                $model['type'] = 'Unknown device';
+                $eqLogic->setConfiguration('ab::eqModel', $model);
+                $eqLogic->save();
+                logMessage('debug', "  ab::eqModel updated to ".json_encode($model));
             }
         }
 

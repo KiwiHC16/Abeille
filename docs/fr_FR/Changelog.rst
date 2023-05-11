@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230511-BETA-1
+-------------
+
 - Loratap telecommande 3 boutons: Ajout support (2589).
 - Réparation (beta): Améliorations.
 - Disjoncteur intelligent Tongou: Mise-à-jour image (2583).

@@ -3,6 +3,7 @@
         "manufacturer": "Dongguan",
         "model": "PJ-ZGD01",
         "type": "Tuya Garage Door Controller with Sensor",
+        "genericType": "Opening",
         "comment": "whiteLabel: [{vendor: 'MatSee Plus', model: 'PJ-ZGD01'}]",
         "timeout": "60",
         "category": {
@@ -28,6 +29,9 @@
             "Door trigger": {
                 "use": "inf_generic-Binary",
                 "logicalId": "01-doorTrigger",
+                "template": "door",
+                "genericType": "OPENING",
+                "invertBinary": "1",
                 "isVisible": 1
             },
             "Door contact": {

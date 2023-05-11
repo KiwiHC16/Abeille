@@ -5,6 +5,7 @@ ChangeLog
 - Réparation (beta): Améliorations.
 - Disjoncteur intelligent Tongou: Mise-à-jour image (2583).
 - Tuya: Support message 0x11.
+- Tuya garage door controller: Mise-à-jour du modèle (2581).
 
 230509-BETA-1
 -------------

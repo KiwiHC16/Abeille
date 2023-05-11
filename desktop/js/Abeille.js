@@ -64,7 +64,7 @@ function refreshAdvEq() {
             eqAddr = eq.addr;
             eqBatteryType = eq.batteryType;
 
-            // console.log("eq=", eq);
+            console.log("eq=", eq);
             // console.log("idEqName=", document.getElementById("idEqName"));
             // console.log("idEqId=", document.getElementById("idEqId"));
 
@@ -73,6 +73,13 @@ function refreshAdvEq() {
             document.getElementById("idEqId").value = eqId;
             document.getElementById("idEqAddr").value = eq.addr;
             document.getElementById("idZgType").value = eq.zgType;
+            document.getElementById("idZbModel").value = eq.zbModel;
+            document.getElementById("idZbManuf").value = eq.zbManuf;
+            document.getElementById("idModelName").value = eq.modelName;
+            document.getElementById("idModelSource").value = eq.modelSource;
+            if (typeof eq.zigbee.manufCode != "undefined")
+                document.getElementById("idManufCode").value =
+                    eq.zigbee.manufCode;
 
             // Show/hide zigate or devices part
             zgPart = document.getElementById("idAdvZigate");
@@ -134,7 +141,6 @@ function refreshAdvEq() {
                 select = document.getElementById("idZgChan");
                 select.value = eq.zgChan;
             }
-            console.log("LA3 eqId=", eqId);
         },
     });
 }

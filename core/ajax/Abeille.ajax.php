@@ -563,6 +563,17 @@
                 $eq['addr'] = $eqAddr;
                 $eq['defaultEp'] = $eqLogic->getConfiguration('mainEP', '');
                 $eq['batteryType'] = $eqLogic->getConfiguration('battery_type', '');
+
+                $sig = $eqLogic->getConfiguration('ab::signature', []);
+                $eq['zbModel'] = isset($sig['modelId']) ? $sig['modelId'] : '';
+                $eq['zbManuf'] = isset($sig['manufId']) ? $sig['manufId'] : '';
+
+                $model = $eqLogic->getConfiguration('ab::eqModel', []);
+                $eq['modelName'] = isset($model['id']) ? $model['id'] : '';
+                $eq['modelSource'] = isset($model['location']) ? $model['location'] : 'Abeille';
+
+                $eq['zigbee'] = $eqLogic->getConfiguration('ab::zigbee', []);
+
                 $jCmds = Cmd::byEqLogicId($eqId);
                 $eq['cmds'] = [];
                 foreach ($jCmds as $cmdLogic) {

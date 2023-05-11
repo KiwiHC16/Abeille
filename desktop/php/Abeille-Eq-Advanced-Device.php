@@ -10,19 +10,12 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">Identifiant Zigbee</label>
     <div class="col-sm-5">
-    <?php
-            $sig = $eqLogic->getConfiguration('ab::signature', []);
-            $model = isset($sig['modelId']) ? $sig['modelId'] : '';
-            $manuf = isset($sig['manufId']) ? $sig['manufId'] : '';
-            // $location = isset($sig['location']) ? $sig['location'] : '';
-            echo '<input readonly title="{{Modèle}}" value="'.$model.'" />';
-            echo '<input readonly style="margin-left: 8px" title="{{Fabricant}}" value="'.$manuf.'" />';
-            // echo '<input readonly style="margin-left: 8px" title="{{Localisation}}" value="'.$location.'" />';
-    ?>
+        <input id="idZbModel" readonly title="{{Modèle}}" value="" />
+        <input id="idZbManuf" readonly style="margin-left: 8px" title="{{Fabricant}}" value="" />
     </div>
 </div>
 
-<?php
+<!-- < ?php   TODO: MUST NE IMPLEMENTED in javascript
     // Tcharp38 note: Most of the devices have only 1 signature but some have several
     if (isset($eqZigbee['endPoints'])) {
         $endPoints = $eqZigbee['endPoints'];
@@ -58,12 +51,12 @@
             echo '</div>';
         }
     }
-?>
+?> -->
 
 <div class="form-group">
     <label class="col-sm-3 control-label">Modèle d'équipement</label>
     <div class="col-sm-5">
-        <?php
+        <!-- < ?php
             if (isset($eqModel['id']))
                 $jsonId = $eqModel['id'];
             else
@@ -105,7 +98,9 @@
                 }
             }
 
-            ?>
+            ?> -->
+            <input id="idModelName" readonly style="width: 200px" title="{{Nom du modèle utilisé}}" value="" />
+            <input id="idModelSource" readonly style="width:86px" title="{{Origine du modèle}}" value="" />
             <a class="btn btn-warning" id="idUpdateBtn" style="margin-left:8px" title="{{Mise-à-jour à partir de son modèle et reconfiguration}}">{{Mise-à-jour}}</a>
             <a class="btn btn-danger" id="idReinitBtn" style="margin-left:8px" title="{{Réinitlialise les paramètres par défaut et reconfigure l\'équipement comme s\'il s\'agissait d\'une nouvelle inclusion}}">{{Réinitialiser}}</a>
     </div>
@@ -126,7 +121,7 @@
     </div>
 </div> -->
 
-<?php
+<!-- < ?php
     if ($sig) {
         $path = __DIR__.'/../../core/config/devices_local/'.$sig['modelId'].'_'.$sig['manufId'].'/discovery.json';
         if (file_exists($path)) {
@@ -134,14 +129,14 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">'Discovery' local</label>
     <div class="col-sm-5">
-        <?php
+        < ?php
         $model = $sig['modelId'];
         $manuf = $sig['manufId'];
         echo '<a class="btn btn-success" title="Télécharge le \'discovery.json\' local" onclick="downloadLocalDiscovery(\''.$model.'\', \''.$manuf.'\')"><i class="fas fa-cloud-download-alt"></i> Télécharger</a>';
         ?>
     </div>
 </div>
-<?php } } ?>
+< ?php } } ?> -->
 
 <div class="form-group">
     <label class="col-sm-3 control-label">Assistant de découverte</label>
@@ -153,13 +148,14 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">Code fabricant (manufCode)</label>
     <div class="col-sm-5">
-        <?php
+        <!-- < ?php
             if (isset($eqZigbee['manufCode']))
                 $manufCode = $eqZigbee['manufCode'];
             else
                 $manufCode = '';
             echo '<input readonly title="{{Code fabricant}}" value="'.$manufCode.'" />';
-        ?>
+        ?> -->
+        <input id="idManufCode" readonly title="{{Code fabricant}}" value="" />
     </div>
 </div>
 

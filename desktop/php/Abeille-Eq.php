@@ -41,12 +41,9 @@
     <div class="tab-content">
         <!-- Displays Jeedom specifics  -->
         <div role="tabpanel" class="tab-pane active" id="idMain">
-            <form class="form-horizontal">
-                <?php
-                    include 'Abeille-Eq-MainGeneric.php';
-                    include 'Abeille-Eq-MainIcon.php';
-                ?>
-            </form>
+            <?php
+                include 'Abeille-Eq-Main.php';
+            ?>
         </div>
 
         <!-- Displays advanced & Zigbee specifics  -->

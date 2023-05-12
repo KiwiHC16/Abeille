@@ -24,7 +24,7 @@
     //     "mapFile" => "mapX.png"
     // )
 
-    define('maxLevels', 10); // Number of levels
+    define('maxLevels', 5); // Number of levels
     sendVarToJS('maxLevels', maxLevels);
 ?>
 {{Cette page vous permet de définir les niveaux et plans associés}}.<br><br>
@@ -32,12 +32,16 @@
 <div class="center">
     <table>
         <tr>
+            <!-- <th style="width:20px">{{Index}}</th> -->
             <th style="width:150px">{{Niveau}}</th>
             <th style="width:300px">{{Plan}}</th>
         </tr>
         <?php
-        for ($t = 0; $t < maxLevels; $t++) {
+        for ($t = maxLevels - 1; $t >= 0; $t--) {
             echo "<tr>";
+            // echo "<td>";
+            // echo '<input id="idLevelIdx-'.$t.'" type="text" value="">';
+            // echo "</td>";
             echo "<td>";
             echo '<input id="idLevel-'.$t.'" type="text" value="">';
             echo "</td>";
@@ -74,8 +78,10 @@
         // )
         console.log("networkMap=", networkMap);
         for (const [idx, level] of Object.entries(networkMap.levels)) {
+            // elm = document.getElementById("idLevelIdx-"+idx);
+            // elm.value = idx;
             elm = document.getElementById("idLevel-"+idx);
-            elm.value = level.level;
+            elm.value = level.levelName;
             elm = document.getElementById("idMap-"+idx);
             elm.value = level.mapFile;
             if (idx == maxLevels)
@@ -89,7 +95,9 @@
         console.log("saveLevels()");
 
         // Checks & save
-        levels = [];
+        console.log("newNetworkMap=", newNetworkMap);
+        levels = newNetworkMap.levels;
+        console.log("levels=", levels);
         for (idx = 0; idx < maxLevels; idx++) {
             elm = document.getElementById("idLevel-"+idx);
             level = elm.value;
@@ -102,7 +110,10 @@
                 alert("{{Ligne}} "+l+" {{invalide}}: {{Niveau ou plan vide}}");
                 return;
             }
-            levels[idx] = level; // Updating level in case changed
+
+            if (typeof levels[idx] == 'undefined')
+                levels[idx] = new Object();
+            levels[idx].levelName = level; // Updating level in case changed
         }
         newNetworkMap.levels = levels;
         console.log("newNetworkMap=", newNetworkMap);
@@ -155,13 +166,13 @@
 
                 // userMap = "tmp/network_maps/" + file.name;
                 elm = document.getElementById("idLevel-"+idx);
-                level = elm.value;
-                if (level == '') {
+                levelName = elm.value;
+                if (levelName == '') {
                     level = 'Level ' + idx;
-                    elm.value = level;
+                    elm.value = levelName;
                 }
-                newNetworkMap[idx] = {
-                    level: level,
+                newNetworkMap.levels[idx] = {
+                    levelName: levelName,
                     mapDir: "tmp/network_maps",
                     mapFile: file.name
                 };

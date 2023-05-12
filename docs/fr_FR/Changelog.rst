@@ -1,6 +1,10 @@
 ChangeLog
 =========
 
+- Placement réseau:
+  - Affichage de tous les réseaux avec possibilité de masquer
+  - Corrections
+
 230511-BETA-1
 -------------
 

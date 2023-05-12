@@ -701,26 +701,31 @@
                 $um = config::byKey('ab::userMap', 'Abeille', 'nada');
                 if ($um != 'nada') {
                     $networkMap = [];
-                    $networkMap[] = array(
-                        'level' => 'Level 0',
+                    $networkMap['levels'] = [];
+                    $networkMap['levels'][] = array(
+                        'levelName' => 'Level 0',
                         'mapDir' => dirname($um),
                         'mapFile' => basename($um)
                     );
+                    $networkMap['levelChoice'] = 0;
                     config::save('ab::networkMap', $networkMap, 'Abeille');
                     log::add('Abeille', 'debug', '  Updated ab::userMap to ab::networkMap');
                 } else {
                     // Neither ab::networkMap nor ab::userMap
                     $from = __DIR__."/../Network/TestSVG/images/AbeilleLQI_MapData_Perso.png";
                     if (file_exists($from)) {
+                        mkdir(__DIR__."/../tmp/network_maps", 0744, true);
                         $to = __DIR__."/../tmp/network_maps/userMap.png";
                         rename($from, $to);
                         log::add('Abeille', 'debug', '  Renamed '.$from." to ".$to);
                         $networkMap = [];
-                        $networkMap[] = array(
-                            'level' => 'Level 0',
+                        $networkMap['levels'] = [];
+                        $networkMap['levels'][] = array(
+                            'levelName' => 'Level 0',
                             'mapDir' => 'tmp/network_maps',
                             'mapFile' => 'userMap.png'
                         );
+                        $networkMap['levelChoice'] = 0;
                         config::save('ab::networkMap', $networkMap, 'Abeille');
                     }
                 }

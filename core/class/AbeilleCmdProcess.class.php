@@ -26,6 +26,7 @@
         }
 
         // Generate an APS SQN, auto-incremented
+        // OBSOLETE: To be included in genZclHeader().
         function genSqn() {
             $sqn = sprintf("%02X", $this->lastSqn);
             if ($this->lastSqn == 255)
@@ -33,6 +34,47 @@
             else
                 $this->lastSqn++;
             return $sqn;
+        }
+
+        // Generate ZCL header
+        // hParams = array(
+        //     'clustSpecific' => false,
+        //     'manufSpecific' => false,
+        //     'manufCode' => '',
+        //     'toCli' => false, // Direction
+        //     'disableDefaultRsp' => true,
+        //     'zclSqn' => 'xx',
+        //     'cmdId' => 'xx'
+        // )
+        function genZclHeader($hParams) {
+            // cmdLog('debug', '    genZclHeader(): hParams='.json_encode($hParams));
+
+            $clustSpecific = isset($hParams['clustSpecific']) ? $hParams['clustSpecific'] : false;
+            // cmdLog('debug', '    genZclHeader(): clustSpecific='.json_encode($clustSpecific));
+            $manufSpecific = isset($hParams['manufSpecific']) ? $hParams['manufSpecific'] : false;
+            $manufCode = isset($hParams['manufCode']) ? $hParams['manufCode'] : '';
+            $toCli = isset($hParams['toCli']) ? $hParams['toCli'] : false;
+            $disableDefaultRsp = isset($hParams['disableDefaultRsp']) ? $hParams['disableDefaultRsp'] : true;
+            $cmdId = isset($hParams['cmdId']) ? $hParams['cmdId'] : '';
+            $zclSqn = isset($hParams['zclSqn']) ? $hParams['zclSqn'] : $this->genSqn();
+
+            $frameType = $clustSpecific ? 1 : 0;
+            // cmdLog('debug', '    genZclHeader(): frameType='.json_encode($frameType));
+            $manufSpecific = $manufSpecific ? 1 : 0;
+            if ($manufSpecific && ($manufCode == '')) {
+                $manufSpecific = 0;
+                $manufCode = '';
+            }
+            $toCli = $toCli ? 1 : 0;
+            $disableDefaultRsp = $disableDefaultRsp ? 1 : 0;
+
+            $fcf = ($disableDefaultRsp << 4) | ($toCli << 3) | ($manufSpecific << 2) | $frameType;
+            // cmdLog('debug', '    genZclHeader(): fcf='.$fcf);
+            $fcf = sprintf("%02X", $fcf);
+
+            $zclHeader = $fcf.$manufCode.$zclSqn.$cmdId;
+            cmdLog('debug','    zclHeader='.$zclHeader);
+            return $zclHeader;
         }
 
         /**
@@ -3339,16 +3381,22 @@
                     $radius     = "1E";
 
                     /* ZCL header */
-                    $fcf        = "10"; // Frame Control Field
-                    $sqn        = $this->genSqn();
-                    $cmdId      = "11"; // Discover Commands Received
+                    // $fcf        = "10"; // Frame Control Field
+                    // $sqn        = $this->genSqn();
+                    // $cmdId      = "11"; // Discover Commands Received
+                    // cmdLog('debug','    fcf='.$fcf.', sqn='.$sqn.", cmdId=".$cmdId);
+                    $hParams = array(
+                        'cmdId' => '11', // Discover Commands Received
+                    );
+                    $zclHeader = $this->genZclHeader($hParams);
 
                     $startId    = isset($Command['startId']) ? $Command['startId'] : "00";
                     $max        = isset($Command['max']) ? $Command['max'] : "FF";
 
-                    $data2 = $fcf.$sqn.$cmdId.$startId.$max;
-                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
+                    // $data2 = $fcf.$sqn.$cmdId.$startId.$max;
+                    $data2 = $zclHeader.$startId.$max;
 
+                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
@@ -3392,16 +3440,20 @@
                     $radius     = "1E";
 
                     /* ZCL header */
-                    $fcf        = "10"; // Frame Control Field
-                    $sqn        = $this->genSqn();
-                    $cmdId      = "13"; // Discover Commands Generated
+                    // $fcf        = "10"; // Frame Control Field
+                    // $sqn        = $this->genSqn();
+                    // $cmdId      = "13"; // Discover Commands Generated
+                    $hParams = array(
+                        'cmdId' => '13', // Discover Commands Generated
+                    );
+                    $zclHeader = $this->genZclHeader($hParams);
 
                     $startId    = isset($Command['startId']) ? $Command['startId'] : "00";
                     $max        = isset($Command['max']) ? $Command['max'] : "FF";
+                    // $data2 = $fcf.$sqn.$cmdId.$startId.$max;
+                    $data2 = $zclHeader.$startId.$max;
 
-                    $data2 = $fcf.$sqn.$cmdId.$startId.$max;
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);
-
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
@@ -3504,22 +3556,26 @@
                     $radius         = "1E";
 
                     /* ZCL header */
-                    $fcf            = "10"; // Frame Control Field
-                    $sqn            = $this->genSqn();
-                    $cmdId          = "15"; // Discover Attributes Extended
+                    // $fcf            = "10"; // Frame Control Field
+                    // $sqn            = $this->genSqn();
+                    // $cmdId          = "15"; // Discover Attributes Extended
+                    $hParams = array(
+                        'cmdId' => '15', // Discover Attributes Extended
+                    );
+                    $zclHeader = $this->genZclHeader($hParams);
 
                     $startId        = isset($Command['startId']) ? $Command['startId'] : "0000";
                     $max            = isset($Command['max']) ? $Command['max'] : "FF";
+                    // $data2 = $fcf.$sqn.$cmdId.$startId.$max;
+                    $data2 = $zclHeader.$startId.$max;
 
-                    $data2 = $fcf.$sqn.$cmdId.$startId.$max;
                     $dataLen2 = sprintf("%02s", dechex(strlen($data2) / 2));
-
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     return;
-                }
+                } // End cmdName == 'discoverAttributesExt'
 
                 // ZCL global: Configure reporting command
                 // Mandatory parameters: addr, clustId, attrId
@@ -4825,21 +4881,27 @@
                     $secMode    = "02";
                     $radius     = "1E";
 
-                    // ZCL header
-                    $fcf        = "11"; // Frame Control Field
-                    $sqn        = $this->genSqn();
-
                     // Tuya fields
                     // Command sent to device and its format fully depends on device himself.
                     if ($Command['cmd'] == 'internetStatus') {
-                        $cmdId      = "25"; // Response to internet status request
-                        $tuyaSqn    = isset($Command['tuyaSqn']) ? $Command['tuyaSqn'] : tuyaGenSqn(); // Tuya transaction ID
-                        $dpData     = $Command['data']; // Supposed to be 00 (NOT connected), 01 (connected) or 02 (timeout)
-                        $dpLen      = sprintf("%04X", strlen($dpData) / 2);
+                        $hParams = array(
+                            'clustSpecific' => true,
+                            'manufSpecific' => true,
+                            'manufCode' => $Command['manufCode'],
+                            'cmdId' => '25' // Response to internet status request
+                        );
+                        $zclHeader = $this->genZclHeader($hParams);
 
-                        cmdLog('debug', '    internetStatus: tuyaSqn='.$tuyaSqn.', dpLen='.$dpLen.', dpData='.$dpData);
-                        $data2 = $fcf.$sqn.$cmdId.$tuyaSqn.$dpLen.$dpData;
+                        $tSqn       = isset($Command['tuyaSqn']) ? $Command['tuyaSqn'] : tuyaGenSqn(); // Tuya transaction ID
+                        $tData      = $Command['data']; // Supposed to be 00 (NOT connected), 01 (connected) or 02 (timeout)
+                        $tLen       = sprintf("%04X", strlen($tData) / 2);
+
+                        cmdLog('debug', '    internetStatus: tSqn='.$tSqn.', tLen='.$tLen.', tData='.$tData);
+                        $data2 = $zclHeader.$tSqn.$tLen.$tData;
                     } else {
+                        // ZCL header
+                        $fcf        = "11"; // Frame Control Field
+                        $sqn        = $this->genSqn();
                         $cmdId      = "00"; // TY_DATA_REQUEST, 0x00, The gateway sends data to the Zigbee module.
 
                         $dp = tuyaCmd2Dp($Command);
@@ -4862,7 +4924,6 @@
                         $data2 = $fcf.$sqn.$cmdId.$tuyaSqn.$dpId.$dpType.$dpLen.$dpData;
                     }
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);
-
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 

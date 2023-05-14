@@ -264,8 +264,8 @@
         );
 
         $attributesN = [];
+        $eq = &getDevice($net, $addr); // By ref
         if (($cmdId == "01") || ($cmdId == "02")) {
-            $eq = &getDevice($net, $addr); // By ref
             // parserLog('debug', 'eq='.json_encode($eq));
             if (!isset($eq['tuyaEF00']) || !isset($eq['tuyaEF00']['fromDevice'])) {
                 parserLog('debug', "  No defined Tuya mapping => ignoring (msg=".$msg.")");
@@ -297,7 +297,8 @@
         } else if ($cmdId == "25") { // TUYA_INTERNET_STATUS
             parserLog('debug', "  Internet access status request => Answering 'connected'");
             $tSqn = substr($msg, 0, 4); // uint16
-            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-tuyaEF00", "ep=".$ep."&cmd=internetStatus&tuyaSqn=".$tSqn."&data=01");
+            $manufCode = isset($eq['manufCode']) ? '&manufCode='.$eq['manufCode'] : '';
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-tuyaEF00", "ep=".$ep."&cmd=internetStatus".$manufCode."&tuyaSqn=".$tSqn."&data=01");
         } else {
             if (isset($tCmds[$cmdId]))
                 $cmdName = $tCmds[$cmdId]['name'];

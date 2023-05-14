@@ -2,8 +2,11 @@ ChangeLog
 =========
 
 - Placement réseau:
+
   - Affichage de tous les réseaux avec possibilité de masquer
   - Corrections
+- Interne: Parser: genZclHeader()
+- Interne: Cmd: genZclHeader() sur 'discoverCommandsReceived'/'discoverCommandsGenerated'/'discoverAttributesExt'.
 
 230511-BETA-1
 -------------

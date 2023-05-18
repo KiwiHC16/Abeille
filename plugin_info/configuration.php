@@ -775,34 +775,32 @@
     })
 
     $('#idUpdateCheckShowHide').on('click', function () {
-            var Label = document.getElementById("idUpdateCheckShowHide").innerText;
-            console.log("idUpdateCheckShowHide click: Label=" + Label);
-            if (Label == "Afficher") {
-                document.getElementById("idUpdateCheckShowHide").innerText = "Cacher";
-                document.getElementById("idUpdateCheckShowHide").className = "btn btn-danger";
-                $("#UpdateCheck").show();
-            } else {
-                document.getElementById("idUpdateCheckShowHide").innerText = "Afficher";
-                document.getElementById("idUpdateCheckShowHide").className = "btn btn-success";
-                $("#UpdateCheck").hide();
-            }
+        var Label = document.getElementById("idUpdateCheckShowHide").innerText;
+        console.log("idUpdateCheckShowHide click: Label=" + Label);
+        if (Label == "Afficher") {
+            document.getElementById("idUpdateCheckShowHide").innerText = "Cacher";
+            document.getElementById("idUpdateCheckShowHide").className = "btn btn-danger";
+            $("#UpdateCheck").show();
+        } else {
+            document.getElementById("idUpdateCheckShowHide").innerText = "Afficher";
+            document.getElementById("idUpdateCheckShowHide").className = "btn btn-success";
+            $("#UpdateCheck").hide();
         }
-    );
+    });
 
     $('#idAdvOptionsShowHide').on('click', function () {
-            var Label = document.getElementById("idAdvOptionsShowHide").innerText;
-            console.log("idAdvOptionsShowHide click: Label=" + Label);
-            if (Label == "Afficher") {
-                document.getElementById("idAdvOptionsShowHide").innerText = "Cacher";
-                document.getElementById("idAdvOptionsShowHide").className = "btn btn-danger";
-                $("#idAdvOptions").show();
-            } else {
-                document.getElementById("idAdvOptionsShowHide").innerText = "Afficher";
-                document.getElementById("idAdvOptionsShowHide").className = "btn btn-success";
-                $("#idAdvOptions").hide();
-            }
+        var Label = document.getElementById("idAdvOptionsShowHide").innerText;
+        console.log("idAdvOptionsShowHide click: Label=" + Label);
+        if (Label == "Afficher") {
+            document.getElementById("idAdvOptionsShowHide").innerText = "Cacher";
+            document.getElementById("idAdvOptionsShowHide").className = "btn btn-danger";
+            $("#idAdvOptions").show();
+        } else {
+            document.getElementById("idAdvOptionsShowHide").innerText = "Afficher";
+            document.getElementById("idAdvOptionsShowHide").className = "btn btn-success";
+            $("#idAdvOptions").hide();
         }
-    );
+    });
 
     function checkWiringPi() {
         if (window.checkWiringPiOngoing)

@@ -3,8 +3,9 @@ ChangeLog
 
 - Placement réseau:
 
-  - Affichage de tous les réseaux avec possibilité de masquer
-  - Corrections
+  - Affichage de tous les réseaux avec possibilité de masquer.
+  - Corrections.
+  - Ajout mode config.
 - Interne: Parser: genZclHeader()
 - Interne: Cmd: genZclHeader() sur 'discoverCommandsReceived'/'discoverCommandsGenerated'/'discoverAttributesExt'.
 - Sonoff SNZB-02D: Support préliminaire (2592).

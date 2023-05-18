@@ -101,7 +101,6 @@
         border: 1px solid black;
     }
     </style> -->
-
     <style>
         #idGraph {
         <?php
@@ -115,50 +114,61 @@
             float: left;
             width: 50%;
         }
-    </style>
+        .disabledDiv {
+            pointer-events: none;
+            opacity: 0.4;
+        }
+   </style>
 
     <!-- <div class="row"> -->
     <div>
         <div id="idLeftBar" class="column" style="width:100px">
-            <label>{{Affichage}}</label><br>
-            <!-- Level choice if more than 1 level -->
-            <?php
-                $count = count($networkMap['levels']);
-                if ($count > 1) {
-                    echo '<select id="idSelectLevel">';
-                    for ($l = 0; $l < $count; $l++ ) {
-                        $level = $networkMap['levels'][$l];
-                        if ($l == $levelChoice)
-                            $selected = "selected";
-                        else
-                            $selected = "";
-                        echo '<option value="'.$l.'" '.$selected.'>'.$level['levelName'].'</option>'."\n";
+            <div id="idDisplayPart">
+                <label>{{Affichage}}</label><br>
+                <!-- Level choice if more than 1 level -->
+                <?php
+                    $count = count($networkMap['levels']);
+                    if ($count > 1) {
+                        echo '<select id="idSelectLevel">';
+                        for ($l = 0; $l < $count; $l++ ) {
+                            $level = $networkMap['levels'][$l];
+                            if ($l == $levelChoice)
+                                $selected = "selected";
+                            else
+                                $selected = "";
+                            echo '<option value="'.$l.'" '.$selected.'>'.$level['levelName'].'</option>'."\n";
+                        }
+                        echo '</select>';
                     }
-                    echo '</select>';
-                }
 
-                for ($n = 0; $n < count($networks); $n++ ) {
-                    $zgId = $networks[$n]['zgId'];
+                    for ($n = 0; $n < count($networks); $n++ ) {
+                        $zgId = $networks[$n]['zgId'];
 
-                    echo '<input type="checkbox" class="viewNet" id="idViewNet-'.$n.'" checked><label>Abeille '.$zgId.'</label><br>';
-                }
-            ?>
+                        echo '<input type="checkbox" class="viewNet" id="idViewNet-'.$n.'" checked><label>Abeille '.$zgId.'</label><br>';
+                    }
+                ?>
 
-            <!-- View options -->
-            <input type="checkbox" id="idViewLinks" checked title="{{Affiche les liens entre équipements}}"><label>{{Liens}}</label>
-            <button id="idRefreshLqi" style="width:100%;margin-right:7px" title="{{Force l'analyse du réseau}}">{{Analyser}}</button>
+                <!-- View options -->
+                <input type="checkbox" id="idViewLinks" checked title="{{Affiche les liens entre équipements}}"><label>{{Liens}}</label>
+                <button id="idRefreshLqi" style="width:100%;margin-right:7px" title="{{Force l'analyse du réseau}}">{{Analyser}}</button>
+            </div>
 
             </br>
             </br>
-            <label>{{Configuration}}</label></br>
-            <!-- <button id="save" onclick="saveCoordinates()" style="width:100%;margin-top:4px">{{Sauver}}</button> -->
-            <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->
-            <button id="idMap" style="width:100%;margin-top:4px;margin-right:7px">{{Plans}}</button>
-            <!-- TODO: Text size (to be stored in DB) -->
+            </br>
+            <button id="idConfigMode" style="width:100%;margin-top:4px;margin-right:7px">{{Edition}}</button>
+            </br>
+            <div id="idConfigPart" class="disabledDiv">
+                <label>{{Configuration}}</label></br>
+                <!-- <button id="save" onclick="saveCoordinates()" style="width:100%;margin-top:4px">{{Sauver}}</button> -->
+                <!-- <button id="map" onclick="uploadMap()" style="width:100%;margin-top:4px">{{Plan}}</button> -->
+                <button id="idMap" style="width:100%;margin-top:4px;margin-right:7px">{{Plans}}</button>
+                <!-- TODO: Text size (to be stored in DB) -->
+            </div>
             </div>
 
         <div id="idGraph" class="column">
-            <svg id="devices" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" onload="makeDraggable(evt)">
+            <svg id="idDevices" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" onload="makeDraggable(evt)">
             </svg>
         </div>
     </div>
@@ -177,8 +187,33 @@
     //     'linksList' => new Object();
     // );
     var jeedomDevices; // Jeedom known devices
+    let configMode = false;
 
-    // Level to display has changed
+    // Edition mode
+    $("#idConfigMode").on("click", function() {
+        console.log("idConfigMode click");
+        displayPart = document.getElementById("idDisplayPart");
+        configPart = document.getElementById("idConfigPart");
+        if (configMode) {
+            displayPart.classList.remove("disabledDiv"); // Reenable display part
+            configPart.classList.add("disabledDiv");
+            viewLinks = document.getElementById("idViewLinks").checked;
+            configMode = false;
+        } else {
+            displayPart.classList.add("disabledDiv");
+            configPart.classList.remove("disabledDiv"); // Reenable config part
+            viewLinks = false;
+            configMode = true;
+        }
+        refreshPage();
+    });
+
+    // $("#idDevices").on("load", function() {
+    //     console.log("idDevices click");
+    //     if (configMode)
+    //         makeDraggable(evt);
+    // });
+
     $("#idSelectLevel").on("change", function() {
         viewLevel = document.getElementById("idSelectLevel").value;
         console.log("Level changed to "+viewLevel);
@@ -349,6 +384,8 @@
 
     // Thanks to http://www.petercollingridge.co.uk/tutorials/svg/interactive/dragging/
     function makeDraggable(evt) {
+        console.log("makeDraggable(), configMode="+configMode);
+
         var svg = evt.target;
         svg.addEventListener('mousedown', startDrag, false);
         svg.addEventListener('mousemove', drag, false);
@@ -899,7 +936,7 @@
                 drawLinks(n);
         }
 
-        document.getElementById("devices").innerHTML = lesAbeilles;
+        document.getElementById("idDevices").innerHTML = lesAbeilles;
     }
 
     $("#idMap").on("click", function () {
@@ -965,7 +1002,10 @@
         imgX = 5;
         imgY = 5;
 
-        newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+grpX+', '+grpY+')">';
+        if (configMode)
+            newG = '<g id="'+devLogicId+'" class="draggable" transform="translate('+grpX+', '+grpY+')">';
+        else
+            newG = '<g id="'+devLogicId+'" transform="translate('+grpX+', '+grpY+')">';
         newG += '<rect rx="10" ry="10" width="50" height="50" style="fill:'+nodeColor+'" />';
         newG += '<image xlink:href="/plugins/Abeille/images/node_' + dev['icon'] + '.png" x="'+imgX+'" y="'+imgY+'" height="40" width="40" />';
         newG += '<a xlink:href="/index.php?v=d&m=Abeille&p=Abeille&id='+dev['jeedomId']+'" target="_blank"><text x="'+txtX+'" y="'+txtY+'" fill="black" style="font-size: 12px;">'+dev['name']+'</text></a>';

@@ -515,28 +515,34 @@
             grpCoord = checkGrpLimits(grpX, grpY);
             transform.setTranslate(grpCoord['x'], grpCoord['y']);
 
-            // Moving connected lines
             devLogicId = selectedElement.id; // Ex: 'AbeilleX/yyyy'
-            console.log("TOTO devLogicId=", devLogicId);
+            // console.log("TOTO devLogicId=", devLogicId);
             netIdx = devLogicId2Net(devLogicId);
-            console.log("TOTO netIdx=", netIdx);
+            // console.log("TOTO netIdx=", netIdx);
             devList = networks[netIdx].devList;
-            console.log("TOTO devList=", devList);
-            dev = devList[devLogicId];
-            console.log("TOTO dev=", dev);
-            lineX = grpX + 25; // Center in 50x50 square
-            lineY = grpY + 25; // Center in 50x50 square
-            for (linkId in dev['links']) {
-                link = linksList[linkId];
-                var line = document.getElementById("idLine"+linkId);
-                if (devLogicId == link.src) {
-                    line.x1.baseVal.value = lineX;
-                    line.y1.baseVal.value = lineY;
-                } else {
-                    line.x2.baseVal.value = lineX;
-                    line.y2.baseVal.value = lineY;
-                }
-            }
+            // console.log("TOTO devList=", devList);
+
+            // Moving connected lines no longer required since not displayed during config mode
+            // // Moving connected lines
+            // dev = devList[devLogicId];
+            // console.log("TOTO dev=", dev);
+            // lineX = grpX + 25; // Center in 50x50 square
+            // lineY = grpY + 25; // Center in 50x50 square
+            // for (linkId in dev['links']) {
+            //     link = linksList[linkId];
+            //     var line = document.getElementById("idLink-"+linkId);
+            //     if (line == null) {
+            //         console.log("INTERNAL ERROR: 'idLink-"+linkId+"' not found.");
+            //         return;
+            //     }
+            //     if (devLogicId == link.src) {
+            //         line.x1.baseVal.value = lineX;
+            //         line.y1.baseVal.value = lineY;
+            //     } else {
+            //         line.x2.baseVal.value = lineX;
+            //         line.y2.baseVal.value = lineY;
+            //     }
+            // }
 
             if (dragEnd) {
                 // Update coordinates
@@ -1060,7 +1066,7 @@
             else
                 linkColor = "red";
 
-            lesAbeilles += '<line id="idLine'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" style="stroke:'+linkColor+';stroke-width:2"/>';
+            lesAbeilles += '<line id="idLink-'+linkId+'" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" style="stroke:'+linkColor+';stroke-width:2"/>';
         }
     }
 

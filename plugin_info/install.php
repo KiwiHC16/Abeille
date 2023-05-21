@@ -464,7 +464,7 @@
            - Removing 'AbeilleDebug.log'. Moved to Jeedom tmp dir.
            - Forcing some models reload (Xiaomi devices).
          */
-        if (intval($dbVersion) < 20220421) {
+        if (intval($dbVersion) < 20230521) {
             // 'eqLogic' DB updates
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
@@ -868,8 +868,7 @@
                 log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Updating Jeedom equipment from model");
             }
 
-            // config::save('ab::dbVersion', '20220421', 'Abeille'); // NOT FROZEN YET
-            // $dbVersion = '20220421';
+            config::save('ab::dbVersion', '20230521', 'Abeille');
         }
     }
 

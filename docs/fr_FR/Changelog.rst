@@ -1,6 +1,21 @@
 ChangeLog
 =========
 
+  .. important:: Zigates v2
+
+    - La maturité de la v2 n'est pas au niveau de la v1. Il est donc recommandé de suivre autant que possible les mises-à-jour du firmware (v3.A0 à ce jour).
+  .. important:: Zigates v1
+
+    - Le dernier FW officiel est le v3.23. Il est recommandé de basculer dessus pour ne pas faire façe à des soucis déja corrigés.
+    - Dans tous les cas un FW >= 3.1e est nécéssaire.
+    - D'autre part si vous n'êtes pas en version OPDM (Optimized PDM), il est fortement recommandé de basculer dessus dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
 - Placement réseau:
 
   - Affichage de tous les réseaux avec possibilité de masquer.
@@ -167,21 +182,6 @@ ChangeLog
 
 230326-STABLE-1
 ---------------
-
-  .. important:: Zigates v2
-
-    - Doivent être à jour du dernier firmware disponible (v3.A0 à ce jour).
-  .. important:: Zigates v1
-
-    - Doivent avoir un firmware >= 3.1e
-    - FW v3.23 recommandé.
-    - L'équipe Zigate recommande FORTEMENT d'utiliser un firmware **Optimized PDM** (OPDM) dans les cas suivants:
-
-      - Toute nouvelle installation.
-      - Dès lors qu'un réappairage complet est nécéssaire.
-      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
-      - Les firmwares avant 3.1e sont forcement 'legacy'.
-      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
 
 230325-BETA-2
 -------------

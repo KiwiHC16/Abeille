@@ -650,11 +650,12 @@ class Abeille extends eqLogic {
 
         /* Check & update configuration DB if required. */
         $dbVersion = config::byKey('ab::dbVersion', 'Abeille', '');
-        $dbVersionLast = 20220421;
+        $dbVersionLast = lastDbVersion;
         if (($dbVersion == '') || (intval($dbVersion) < $dbVersionLast)) {
             log::add('Abeille', 'debug', 'deamon_start_cleanup(): DB config v'.$dbVersion.' < v'.$dbVersionLast.' => Update required.');
             updateConfigDB();
-        }
+        } else
+            log::add('Abeille', 'debug', 'deamon_start_cleanup(): DB config v'.$dbVersion.' is up-to-date.');
 
         // Removing empty dir in "devices_local"
         AbeilleTools::cleanDevices();

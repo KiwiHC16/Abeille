@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230521-BETA-1
+-------------
+
   .. important:: Zigates v2
 
     - La maturité de la v2 n'est pas au niveau de la v1. Il est donc recommandé de suivre autant que possible les mises-à-jour du firmware (v3.A0 à ce jour).

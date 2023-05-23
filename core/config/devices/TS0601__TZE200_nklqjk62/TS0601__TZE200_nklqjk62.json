@@ -29,14 +29,14 @@
             "Door trigger": {
                 "use": "inf_generic-Binary",
                 "logicalId": "01-doorTrigger",
-                "template": "door",
-                "genericType": "OPENING",
-                "invertBinary": "1",
                 "isVisible": 1
             },
             "Door contact": {
                 "use": "inf_generic-Binary",
                 "logicalId": "01-doorContact",
+                "template": "door",
+                "genericType": "OPENING",
+                "invertBinary": "1",
                 "isVisible": 1
             }
         },

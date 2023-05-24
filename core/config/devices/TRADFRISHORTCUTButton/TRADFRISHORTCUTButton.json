@@ -42,7 +42,7 @@
                 "use": "Up-Down"
             },
             "Click-Middle": {
-                "use": "Click-Middle"
+                "use": "inf_zbCmdR-0006-On"
             },
             "SetReporting-0006-0000": {
                 "use": "act_zbConfigureReporting",
@@ -55,7 +55,6 @@
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             }
-        },
-        "comment": "Ref. IKEA E1812"
+        }
     }
 }

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230521-BETA-1"
+# VERSION="230528-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -838,7 +838,7 @@ c97d32d3da31ce6467d979213a90dd50 *core/config/devices/TI0001/TI0001.json
 f4094b090094a25633ea58d271c4ae78 *core/config/devices/TLSR82xx_AwoX/discovery.json
 b3e1d8561e1655f77c038e2894a5c6dc *core/config/devices/TRADFRIDriver10W/TRADFRIDriver10W.json
 9ac1d45e24e3a619a5001764d89ff8e6 *core/config/devices/TRADFRIDriver30W/TRADFRIDriver30W.json
-4e3b801a8fba2a2de958770e899079cf *core/config/devices/TRADFRISHORTCUTButton/TRADFRISHORTCUTButton.json
+5b4cff33bbe3625bd8ed4b4d6ed9441f *core/config/devices/TRADFRISHORTCUTButton/TRADFRISHORTCUTButton.json
 cd62ae21d5acf5a6ce60c7bea38a1bee *core/config/devices/TRADFRIbulbE14CWS470lm/TRADFRIbulbE14CWS470lm.json
 1cfddf7d8ee43ad0e781344097766200 *core/config/devices/TRADFRIbulbE14CWS470lm/discovery.json
 aac18358c49416ef97b9fabf0892e82a *core/config/devices/TRADFRIbulbE14CWSopal600lm/TRADFRIbulbE14CWSopal600lm.json
@@ -1016,7 +1016,7 @@ e8c22eac203f67fcfb4c099afc6e49ec *core/config/devices/TS0601__TZE200_f1pvdgoh/TS
 6717da48df39cc264c515e3a40054d03 *core/config/devices/TS0601__TZE200_hue3yfsn/discovery.json
 53a2d25d6fdc15c0bcdb82e4d0ea0929 *core/config/devices/TS0601__TZE200_la2c2uo9/TS0601__TZE200_la2c2uo9.json
 e84c9a65b59a5922a2e3f0d971dcf3d3 *core/config/devices/TS0601__TZE200_la2c2uo9/discovery.json
-017c6fede5a738e4edc3f075187fa4a4 *core/config/devices/TS0601__TZE200_nklqjk62/TS0601__TZE200_nklqjk62.json
+6b16066eaef0936231c840bc59549955 *core/config/devices/TS0601__TZE200_nklqjk62/TS0601__TZE200_nklqjk62.json
 6e222bf536f98fd143abe7e3968b7f59 *core/config/devices/TS0601__TZE200_nklqjk62/discovery-TS0601__TZE200_nklqjk62.json
 3c617743ee61cbac2c1e876a8ff6ab58 *core/config/devices/TS0601__TZE200_ntcy3xu1/TS0601__TZE200_ntcy3xu1.json
 f687d878a421112aa6cabfe6792abaa4 *core/config/devices/TS0601__TZE200_ntcy3xu1/discovery.json
@@ -1260,7 +1260,7 @@ a2fd6e2845336b84ae202472aee71946 *desktop/php/Abeille-NewZigate.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-e5d50802eace97cc194ad2308359c7f2 *docs/fr_FR/Changelog.rst
+f85b1b60c91f30117234ce2264840ea6 *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1585,10 +1585,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-a5c358a325fb3aece13872d670f99708 *plugin_info/Abeille.version
+aa3521d6a3cb6e7c378d4867baadc946 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 400a4a543c3cf1c32bbe84c77aba2343 *plugin_info/configuration.php
-2f1069bc810d040dba4f12a16191997e *plugin_info/info.json
+d335e3c3f64eb522d4bfc1f1568b563b *plugin_info/info.json
 43bad7db3c74f5def05f1d0694a015ab *plugin_info/install.php
 d18d40575a090260a2099ac61a157f89 *plugin_info/packages.json
 aee062e4561f62e1d24c8864dd185bf5 *plugin_info/pre_install.php

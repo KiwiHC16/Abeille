@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230528-BETA-1
+-------------
+
 - Tuya garage door controller: Mise-à-jour du modèle (2581).
 - Trafri shortcut: Mise-à-jour modèle pour 'Click-Middle'.
 

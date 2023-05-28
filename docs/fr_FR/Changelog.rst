@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230528-BETA-1
+230528-BETA-2
 -------------
 
 - Tuya garage door controller: Mise-à-jour du modèle (2581).

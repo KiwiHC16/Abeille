@@ -457,6 +457,8 @@
                             $newCmd[$cmd1]['logicalId'] = $cmd2['logicalId'];
                         if (isset($cmd2['invertBinary']))
                             $newCmd[$cmd1]['invertBinary'] = $cmd2['invertBinary'];
+                        if (isset($cmd2['value']))
+                            $newCmd[$cmd1]['value'] = $cmd2['value'];
 
                         if (isset($cmd2['execAtCreation']))
                             $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];

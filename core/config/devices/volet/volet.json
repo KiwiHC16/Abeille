@@ -46,6 +46,7 @@
             },
             "Set Level": {
                 "use": "setLevelVolet",
+                "value": "CurrentLevel",
                 "nextLine": "before",
                 "isVisible": 1
             },

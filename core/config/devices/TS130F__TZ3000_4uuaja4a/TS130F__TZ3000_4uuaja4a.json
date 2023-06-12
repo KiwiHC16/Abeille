@@ -33,10 +33,12 @@
             "Set level": {
                 "use": "act_zbCmdG-0102-GoToLiftPercentage",
                 "valueOffset": "#value#*#logicid0102-01-F003#/100",
+                "value": "Level",
                 "isVisible": "1"
             },
             "Level": {
                 "use": "inf_zbAttr-0102-CurPosLiftPercent",
+                "genericType": "FLAP_STATE",
                 "isVisible": "1",
                 "nextLine": "after"
             },
@@ -53,6 +55,7 @@
                 "unit": "s",
                 "comment2": "F003 is uint16/x21",
                 "params": "clustId=0102&attrId=F003&attrType=21&attrVal=#slider#",
+                "value": "Calibration time",
                 "isVisible": "1"
             },
             "Calibration time": {

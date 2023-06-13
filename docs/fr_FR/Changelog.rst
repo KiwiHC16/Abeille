@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230613-BETA-1
+-------------
+
 - Modèle équipement: 'value' peut etre surchargé.
 - Profalux volet: Valeur par défaut 'Set Level' ajustée sur 'CurrentLevel'.
 

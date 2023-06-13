@@ -170,6 +170,7 @@
                 array_push($validCmdKeys, 'repeatEventManagement', 'listValue');
                 array_push($validCmdKeys, 'returnStateTime', 'returnStateValue', 'Polling');
                 array_push($validCmdKeys, 'trigOut', 'trigOutOffset', 'notStandard', 'valueOffset');
+                array_push($validCmdKeys, 'value');
                 foreach ($cmd as $key2 => $value2) {
                     if (in_array($key2, $validCmdKeys)) {
                         // if ($key2 == 'subType') {
@@ -181,7 +182,7 @@
                     }
                     if (substr($key2, 0, 7) == "comment")
                         continue;
-                    $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key for '".$key."' Jeedom command");
+                    $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key for '".$cmdJName."' Jeedom command");
                 }
             }
 

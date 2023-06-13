@@ -11,8 +11,8 @@ Attention !! Toute modification de ce répertoire sera écrasée lors des mises-
 Nom des commandes
 =================
 En dehors des commandes "historiques" en passe d'être normalisées, les noms de fichiers doivent suivre les regles suivantes:
-- Toute commande 'action' commande par 'act_'.
-- Toute commande 'info' commande par 'inf_'.
+- Toute commande 'action' doit commencer par 'act_'.
+- Toute commande 'info' doit commencer par 'inf_'.
 
 - Les commandes specifiques Zigbee (issues du standard Zigbee) sont ensuite prefixées par "zb"
   Ex: inf_zbXXX ou act_zbXXX
@@ -99,7 +99,11 @@ Exemple de commande 'action'
 * template: optionnel.
   Permet de définir le widget qui sera utilisé pour l'affichage de la commande.
 
-* value: ??
+* value: optionnel.
+  Syntaxe: "value": "<nom-cmde-info>"
+  Permet de définir la valeur par défaut. Très utile pour lier une commande action avec une commande info.
+  Par ex, la valeur par défaut d'un "Set Level" peut être alignée sur la valeur de retour de "Level" via
+  "value": "Level"
 
 * nextLine: after/before
   Impacte l'affichage du widget. Permet de forcer un saut de ligne apres ou avant le widget de la commande.

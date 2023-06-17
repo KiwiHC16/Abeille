@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Modeles équipement: Suppression commande 'Xiaomi-ff01'.
+
 230613-BETA-1
 -------------
 

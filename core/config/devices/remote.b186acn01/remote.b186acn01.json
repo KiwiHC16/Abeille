@@ -1,5 +1,6 @@
 {
     "remote.b186acn01": {
+        "manufacturer": "Xiaomi",
         "timeout": "60",
         "comment": "Remonte le nom remote.b186acn01 apres association, equipement similaire a lumi.sensor_86sw2Un",
         "configuration": {
@@ -26,9 +27,6 @@
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
-            },
-            "Specific": {
-                "use": "Xiaomi-ff01"
             },
             "SWBuildID": {
                 "use": "inf_zbAttr-0000-SWBuildID"

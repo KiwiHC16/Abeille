@@ -30,9 +30,6 @@
             "Conso": {
                 "use": "conso"
             },
-            "Specific": {
-                "use": "Xiaomi-ff01"
-            },
             "Puissance Inst": {
                 "use": "inf_zbAttr-000C-PresentValue",
                 "params": "ep=02",

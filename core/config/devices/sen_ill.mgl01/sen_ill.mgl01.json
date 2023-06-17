@@ -39,9 +39,6 @@
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
-            "Specific": {
-                "use": "Xiaomi-ff01"
-            },
             "BindToZigate-Illuminance": {
                 "use": "act_zbBindToZigate",
                 "params": "EP=01&clustId=0400",

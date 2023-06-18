@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Modeles équipement: Suppression commande 'Xiaomi-ff01'.
+- Correction changement de canal Zigate.
 
 230613-BETA-1
 -------------

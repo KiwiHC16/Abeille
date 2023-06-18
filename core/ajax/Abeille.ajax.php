@@ -645,8 +645,9 @@
             $error = "";
 
             $config = init('config');
-            $config = json_decode($config, true);
+            logDebug('config='.$config);
 
+            $config = json_decode($config, true);
             foreach ($config as $key => $value) {
                 config::save($key, $value, 'Abeille');
             }

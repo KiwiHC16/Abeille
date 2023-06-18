@@ -145,10 +145,10 @@
         //     payload = 'mask='+mask;
         //     break;
         case 'setChannel':
-            msg = '{{Vous êtes sur le point de changer le canal Zigbee de la Zigate}} <b>'+zgId+'</b>';
-            msg += '{{<br>Les équipements sur secteur devraient suivre mais pas forcément tous ceux sur batterie.}}'
-            msg += '{{<br>Dans ce cas vous pourriez avoir à refaire une inclusion.}}'
-            msg += '{{<br><br>Etes vous sur de vouloir continuer ?}}'
+            msg = '{{Vous êtes sur le point de changer le canal Zigbee de la Zigate}}<b>'+zgId+'</b>';
+            msg += '<br><br>{{Les équipements sur secteur devraient suivre mais pas forcément tous ceux sur batterie.}}'
+            msg += '<br>{{Dans ce cas vous pourriez avoir à refaire une inclusion de ces équipements uniquement.}}'
+            msg += '<br><br>{{Etes vous sur de vouloir continuer ?}}'
             bootbox.confirm(msg, function (result) {
                 if (result) {
                     var chan = $("#idZgChan").val();
@@ -173,10 +173,10 @@
                     payload = 'mask='+mask;
                     sendToZigate(topic, payload);
 
-                    console.log("config=", js_config);
-                    js_config['ab::zgChan'+zgId] = chan;
-                    console.log("config2=", js_config);
-                    saveConfig();
+                    config = new Object();
+                    config['ab::zgChan'+zgId] = chan;
+                    console.log("config=", config);
+                    saveConfig(config);
 
                     topic = 'CmdAbeille'+zgId+'/0000/startZgNetwork';
                     payload = '';

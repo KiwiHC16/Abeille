@@ -749,3 +749,22 @@ $("#idReinitBtn").on("click", function () {
         xhttp.send();
     });
 });
+
+/* Save given Abeille config (=> 'config' DB) */
+function saveConfig(config) {
+    console.log("saveConfig(): config=", config);
+
+    $.ajax({
+        type: 'POST',
+        url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+        data: {
+            action: 'saveConfig',
+            config: JSON.stringify(config)
+        },
+        dataType: 'json',
+        global: false,
+        success: function (json_res) {
+        }
+    });
+}
+

@@ -314,10 +314,10 @@
         /* Look for a model in official or user/custom devices directories.
            Returns: true if supported, else false */
         function findModel(&$eq, $by='modelId') {
-            $ma = ($eq['manufId'] === false) ? 'false' : $eq['manufId'];
-            $mo = ($eq['modelId'] === false) ? 'false' : $eq['modelId'];
-            $lo = ($eq['location'] === false) ? 'false' : $eq['location'];
-            parserLog('debug', "  findModel(), manufId='".$ma."', modelId='".$mo."', loc='".$lo."'");
+            $ma = ($eq['manufId'] === false) ? 'false' : "'".$eq['manufId']."'";
+            $mo = ($eq['modelId'] === false) ? 'false' : "'".$eq['modelId']."'";
+            $lo = ($eq['location'] === false) ? 'false' : "'".$eq['location']."'";
+            parserLog('debug', "  findModel(), manufId=".$ma.", modelId=".$mo.", loc=".$lo);
 
             /* Looking for corresponding JSON if supported device.
                - Look with '<modelId>_<manufacturer>' identifier
@@ -326,9 +326,10 @@
              */
             $zigbeeId = ''; // Successful identifier (<modelId_manuf> or <modelId> or <location>)
             $jsonLocation = "Abeille"; // Default location
-            if ($by == 'modelId') {
-                /* Search by modelId and manufacturer */
+
+            if (($eq['modelId'] !== false) && ($eq['modelId'] != '')) {
                 if (($eq['manufId'] !== false) && ($eq['manufId'] != '')) {
+                    /* Search by modelId AND manufacturer */
                     $identifier = $eq['modelId'].'_'.$eq['manufId'];
                      if (isset($GLOBALS['customEqList'][$identifier])) {
                         $zigbeeId = $identifier;
@@ -340,6 +341,7 @@
                     }
                 }
                 if ($zigbeeId == '') {
+                    /* Search by modelId */
                     $identifier = $eq['modelId'];
                      if (isset($GLOBALS['customEqList'][$identifier])) {
                         $zigbeeId = $identifier;
@@ -350,7 +352,7 @@
                         parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
                     }
                 }
-            } else {
+            } else if (($eq['location'] !== false) && ($eq['location'] != '')) {
                 /* Search by location */
                 $identifier = $eq['location'];
                  if (isset($GLOBALS['customEqList'][$identifier])) {
@@ -816,8 +818,8 @@
             foreach ($updates as $updType => $value) {
                 // Log only if relevant
                 if ($updType && ($eq['status'] != 'idle')) {
-                    $v = ($value === false) ? 'false' : $value;
-                    parserLog('debug', "  deviceUpdates('".$updType."', '".$v."'): Status=".$eq['status']);
+                    $v = ($value === false) ? "false" : "'".$value."'";
+                    parserLog('debug', "  deviceUpdates('".$updType."', ".$v."): Status=".$eq['status']);
                 }
 
                 /* Updating entry: 'epList', 'manufId', 'modelId' or 'location', 'ieee', 'bindingTableSize' */
@@ -1025,7 +1027,7 @@
                     - search for JSON with 'location'
             */
             if ($eq['modelId'] === null)
-                return false; // Need at least false (unsupported) or a value
+                return false; // 'modelId' must be set to a value or 'false' (unsupported).
             if ($eq['modelId'] !== false) {
                 if (!isset($eq['manufId'])) {
                     /* Checking if device is supported without manufacturer attribute for those who do not respond to such request

@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: Corrections d'identification cas Profalux.
+
 230618-BETA-1
 -------------
 

@@ -13,7 +13,7 @@ ChangeLog
 - Modèle équipement: 'value' peut etre surchargé.
 - Profalux volet: Valeur par défaut 'Set Level' ajustée sur 'CurrentLevel'.
 
-230528-BETA-2
+230528-STABLE-1
 -------------
 
 - Tuya garage door controller: Mise-à-jour du modèle (2581).

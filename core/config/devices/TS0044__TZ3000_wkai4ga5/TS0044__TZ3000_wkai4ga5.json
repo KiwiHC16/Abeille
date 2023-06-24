@@ -15,15 +15,11 @@
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
-            "SetReporting 0001-00021": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
-                "execAtCreation": "yes"
-            },
-            "Bind 0001-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "clustId=0001",
-                "execAtCreation": "yes"
+            "Tuya-ConfigureMagicPacket": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0000,0001,0005,0007,FFFE",
+                "logicalId": "Tuya-ConfigureMagicPacket",
+                "execAtCreation": "Yes"
             },
             "Click 1": {
                 "use": "inf_click",

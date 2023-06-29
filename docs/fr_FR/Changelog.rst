@@ -3,6 +3,7 @@ ChangeLog
 
 - Interne: Parser: Corrections d'identification cas Profalux.
 - Aubess TS044 _TZ3000_wkai4ga5: Mise-à-jour du modèle pour eviter annonces multiples (2594).
+- Controlleur d'arrosage WOX: Mise-à-jour du modèle pour remontée batterie (2599).
 
 230618-BETA-1
 -------------

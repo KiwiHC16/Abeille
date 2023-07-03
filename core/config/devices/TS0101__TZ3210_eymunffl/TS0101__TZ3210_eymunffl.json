@@ -41,6 +41,14 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             }
+        },
+        "tuyaEF00": {
+            "fromDevice": {
+                "65": {
+                    "function": "rcvValue",
+                    "info": "0001-01-0021"
+                }
+            }
         }
     }
 }

@@ -110,6 +110,8 @@
 
     // Display Zigates informations
     function zigatesInfos() {
+        logTitle("Zigates");
+
         for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
             if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
                 continue; // Zigate disabled
@@ -141,7 +143,7 @@
 
     // Display devices status
     function devicesStatus() {
-        logTitle("Devices status");
+        logTitle("Devices");
 
         $eqLogics = Abeille::byType('Abeille');
         foreach ($eqLogics as $eqLogic) {
@@ -159,7 +161,7 @@
                 $timeoutS = "ok";
 
             logIt(" - Z".$zgId.": ".$eqHName.", id=".$eqId.": ".$timeoutS."\n");
-            logIt("       addr=".$addr.", type='".$eqType."', model='".$eqModelId."'\n");
+            logIt("       addr=".$addr."', model='".$eqModelId.", type='".$eqType."'\n");
         }
         logIt("\n");
     }
@@ -186,13 +188,17 @@
     //------------------------------------------------------------------------------------------
     // Main
     //------------------------------------------------------------------------------------------
-    logIt("Informations clefs nécessaires au support.\n\n", 0);
-    logIt('Quand <a href="https://github.com/KiwiHC16/Abeille/issues/new" target="_blank">vous ouvrez une "issue"</a> dans GitHub merci de copier/coller les 3 premiers chapitres ci dessous '."\n");
-    logIt("Pour l'intégration d'un équipement non encore supporté ajoutez le chapitre 4.\n\n");
+    // logIt("Informations clefs nécessaires au support.\n\n", 0);
+    // logIt('Quand <a href="https://github.com/KiwiHC16/Abeille/issues/new" target="_blank">vous ouvrez une "issue"</a> dans GitHub merci de copier/coller les 3 premiers chapitres ci dessous '."\n");
+    // logIt("Pour l'intégration d'un équipement non encore supporté ajoutez le chapitre 4.\n\n");
+
+    logTitle("General");
+    $date = date('Y/m/d H:i:s');
+    logIt("Date: ".$date."\n");
 
     // Plateform infos
     exec('uname -a', $result2);
-    logIt("Kernel: ".json_encode($result2, JSON_UNESCAPED_SLASHES)."\n\n");
+    logIt("Kernel: ".json_encode($result2, JSON_UNESCAPED_SLASHES)."\n");
 
     // Abeille's version
     $file = fopen(__DIR__."/../../plugin_info/Abeille.version", "r");

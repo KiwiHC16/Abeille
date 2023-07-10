@@ -154,7 +154,7 @@
             $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
             if ($eqLogic->getStatus('timeout') == 1) {
                 $lastComm = $eqLogic->getStatus('lastCommunication');
-                $timeoutS = "TIMEOUT (".$lastComm.")";
+                $timeoutS = "TIMEOUT (last comm ".$lastComm.")";
             } else
                 $timeoutS = "ok";
 

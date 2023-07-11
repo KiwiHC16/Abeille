@@ -5,6 +5,7 @@ ChangeLog
 - Aubess TS044 _TZ3000_wkai4ga5: Mise-à-jour du modèle pour eviter annonces multiples (2594).
 - Controlleur d'arrosage WOX: Mise-à-jour du modèle pour remontée batterie (2599).
 - Page maintenance: Mise-à-jour infos clefs.
+- Interne: Parser: Support prélim. EF00 cmd 06/TY_DATA_SEARCH.
 
 230618-BETA-1
 -------------

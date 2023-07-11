@@ -292,6 +292,22 @@
                 $s = 8 + (hexdec($dp['dataLen']) * 2);
                 $msg = substr($msg, $s);
             }
+        } else if ($cmdId == "06") { // TY_DATA_SEARCH
+            parserLog('debug', "  TY_DATA_SEARCH: ".$msg);
+            // status = MsgPayload[6:8]  # uint8
+            // transid = MsgPayload[8:10]  # uint8
+            // dp = int(MsgPayload[10:12], 16)
+            // datatype = int(MsgPayload[12:14], 16)
+            // fn = MsgPayload[14:16]
+            // len_data = MsgPayload[16:18]
+            // data = MsgPayload[18:]
+            $tDpId = substr($msg, 0, 2);
+            $tDataType = substr($msg, 2, 2);
+            $tFunc = substr($msg, 4, 2); // What for ?
+            $tLen = substr($msg, 6, 2);
+            $tData = substr($msg, 8, hexdec($tLen) * 2);
+            $m = "Dp=".$tDpId.", Type=".$tDataType.", Func=".$tFunc.", Len=".$tLen.", ValueHex=".$tData;
+            parserLog('debug', "  TY_DATA_SEARCH: ".$m);
         } else if ($cmdId == "11") { // TUYA_MCU_VERSION_RSP
             parserLog('debug', "  TUYA_MCU_VERSION_RSP: ".$msg);
         } else if ($cmdId == "25") { // TUYA_INTERNET_STATUS

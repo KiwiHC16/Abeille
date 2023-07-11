@@ -6,6 +6,7 @@ ChangeLog
 - Controlleur d'arrosage WOX: Mise-à-jour du modèle pour remontée batterie (2599).
 - Page maintenance: Mise-à-jour infos clefs.
 - Interne: Parser: Support prélim. EF00 cmd 06/TY_DATA_SEARCH.
+- Schneider Wiser plug: Support préliminaire (2601).
 
 230618-BETA-1
 -------------

@@ -57,7 +57,7 @@
     <div class="form-group">
         <label class="col-sm-3 control-label">{{Type}}</label>
         <div class="col-sm-3">
-            <input id="idModelType" readonly style="width:100%" title="{{Type d\'équipemen}}" value="" />
+            <input id="idModelType" readonly style="width:100%" title="{{Type d'équipement}}" value="" />
         </div>
     </div>
 

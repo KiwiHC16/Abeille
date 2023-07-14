@@ -85,9 +85,9 @@ Démons:
             <th class="header" data-toggle="tooltip" title="Trier par">{{IEEE}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Status}}</th>
             <!-- Tcharp38: Unreliable so far & no time to work on it.
-            <?php if (isset($dbgDeveloperMode)) { ?>
+            < ?php if (isset($dbgDeveloperMode)) { ?>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Repond}}</th>
-            <?php } ?> -->
+            < ?php } ?> -->
             <th class="header" data-toggle="tooltip" title="Trier par">{{Dernière comm.}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Depuis (h)}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par dernier LQI">{{LQI}}</th>
@@ -192,13 +192,13 @@ Démons:
                 $lastComm = '<span class="label label-warning" style="font-size: 1em; cursor: default;">No message received !!</span>';
             echo '<td>'.$lastComm.'</td>';
 
-            // Depuis
-            $Depuis = '<span class="label label-info" style="font-size: 1em; cursor: default;">'.(floor((time() - strtotime($eqLogic->getStatus('lastCommunication'))) / 3600)).'</span>';
-             if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol") {
-                 $Depuis = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>';
-             }
-            //if ($eqLogic->getStatus('state') == '-') { $Depuis = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>'; }
-            echo '<td>'.$Depuis.'</td>';
+            // Time in H since last comm.
+            $since = '<span class="label label-info" style="font-size: 1em; cursor: default;">'.(floor((time() - strtotime($eqLogic->getStatus('lastCommunication'))) / 3600)).'</span>';
+            if ($eqLogic->getConfiguration('ab::icon') == "remotecontrol") {
+                $since = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>';
+            }
+            //if ($eqLogic->getStatus('state') == '-') { $since = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>'; }
+            echo '<td>'.$since.'</td>';
 
             // Last LQI
             if ($addr == "0000")

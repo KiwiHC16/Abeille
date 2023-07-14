@@ -5,6 +5,8 @@ ChangeLog
 - Page équipement: Corrections d'affichage 'type' & 'icone'.
 - Blitzwolf temp/humidité/display: Correction signature pour 'TS0201__TZ2000_hjsgdkfl'.
 - Volet Profalux: Changement catégorie => 'ouvrant'.
+- Interne: AbeilleTools::getParameters() => getConfig().
+- Zigate USB/+: Cycle power off/on si sans réponse depuis plus de 2mins.
 
 230711-BETA-1
 -------------

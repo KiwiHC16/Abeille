@@ -741,8 +741,12 @@
          *
          * @return array
          */
-        public static function getParameters() {
-            $config = array();
+        public static function getParameters() { // OBSOLETE: Use getConfig() instead
+            return AbeilleTools::getConfig();
+        }
+
+        public static function getConfig() {
+                $config = array();
 
             // Tcharp38: Should not be there
             $config['parametersCheck'] = 'ok'; // Ces deux variables permettent d'indiquer la validité des données.

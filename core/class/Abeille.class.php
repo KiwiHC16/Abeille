@@ -206,7 +206,7 @@ class Abeille extends eqLogic {
 
         // log::add('Abeille', 'debug', 'Check Zigate Presence');
 
-        // $config = AbeilleTools::getParameters();
+        // $config = AbeilleTools::getConfig();
 // if (0) {
 //         //--------------------------------------------------------
 //         // Refresh Ampoule Ikea Bind et set Report
@@ -275,18 +275,19 @@ class Abeille extends eqLogic {
         log::add('Abeille', 'debug', 'cron15(): Starting --------------------------------');
 
         /* Look every 15 minutes if the kernel driver is not in error */
-        log::add('Abeille', 'debug', 'cron15(): Check USB driver potential crash');
-        $cmd = "egrep 'pl2303' /var/log/syslog | tail -1 | egrep -c 'failed|stopped'";
-        $output = array();
-        exec(system::getCmdSudo().$cmd, $output);
-        $usbZigateStatus = !is_null($output) ? (is_numeric($output[0]) ? $output[0] : '-1') : '-1';
-        if ($usbZigateStatus != '0') {
-            message::add("Abeille", "ERREUR: le pilote pl2303 semble en erreur, impossible de communiquer avec la zigate.", "Il faut débrancher/rebrancher la zigate et relancer le démon.");
-            // log::add('Abeille', 'debug', 'cron15(): Fin --------------------------------');
-        }
+        // Disabled. Now power cycling USB/USBv2 zigate if lastComm > 2mins
+        // log::add('Abeille', 'debug', 'cron15(): Check USB driver potential crash');
+        // $cmd = "egrep 'pl2303' /var/log/syslog | tail -1 | egrep -c 'failed|stopped'";
+        // $output = array();
+        // exec(system::getCmdSudo().$cmd, $output);
+        // $usbZigateStatus = !is_null($output) ? (is_numeric($output[0]) ? $output[0] : '-1') : '-1';
+        // if ($usbZigateStatus != '0') {
+        //     message::add("Abeille", "ERREUR: le pilote pl2303 semble en erreur, impossible de communiquer avec la zigate.", "Il faut débrancher/rebrancher la zigate et relancer le démon.");
+        //     // log::add('Abeille', 'debug', 'cron15(): Fin --------------------------------');
+        // }
 
         log::add('Abeille', 'debug', 'cron15(): Interrogating devices silent for more than 15mins.');
-        $config = AbeilleTools::getParameters();
+        $config = AbeilleTools::getConfig();
         $i = 0;
         for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
             $zigate = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
@@ -427,7 +428,7 @@ class Abeille extends eqLogic {
         }
 
         // log::add( 'Abeille', 'debug', 'cron(): Start ------------------------------------------------------------------------------------------------------------------------' );
-        $config = AbeilleTools::getParameters();
+        $config = AbeilleTools::getConfig();
 
         // Check & restart missing daemons
         $dStatus = AbeilleTools::checkAllDaemons2($config);
@@ -484,9 +485,17 @@ class Abeille extends eqLogic {
             else
                 $lastComm = strtotime($lastComm);
             // log::add('Abeille', 'info', "lastComm2=".$lastComm);
-            if ((time() - $lastComm ) > (2 * 60)) {
-                log::add('Abeille', 'info', "Pas de réponse de la Zigate ".$zgId." depuis plus de 2min => SW RESET");
-                Abeille::msgToCmd(PRIO_NORM, "CmdAbeille".$zgId."/0000/resetZg");
+            if ((time() - $lastComm) > (2 * 60)) {
+                log::add('Abeille', 'info', "Pas de réponse de la Zigate ".$zgId." depuis plus de 2min");
+                $zgType = $config['ab::zgType'.$zgId];
+                $zgPort = $config['ab::zgPort'.$zgId];
+                if (($zgType == "USB") || ($zgType == "USBv2")) {
+                    $dir = __DIR__."/../scripts";
+                    $cmd = "cd ".$dir."; ".system::getCmdSudo()." ./powerCycleUsb.sh ".$zgPort." 1>/tmp/jeedom/Abeille/powerCycleUsb.log 2>&1";
+                    log::add('Abeille', 'debug', 'Power cycling port \''.$zgPort.'\'');
+                    exec($cmd." &"); // Exec in background
+                } else if (($zgType == "PI") || ($zgType == "PIv2"))
+                    Abeille::msgToCmd(PRIO_NORM, "CmdAbeille".$zgId."/0000/resetZg");
             }
         }
 
@@ -603,7 +612,7 @@ class Abeille extends eqLogic {
 
         /* Checking there is no error getting parameters and daemon can be started. */
         // TODO: Tcharp38. Can it be optimized ?. Each deamon_info() call leads to mysql DB interrogation.
-        $config = AbeilleTools::getParameters();
+        $config = AbeilleTools::getConfig();
         if ($config['parametersCheck'] != "ok") {
             $status['launchable'] = $config['parametersCheck'];
             // Tcharp38: Where is reported 'launchable_message' ?
@@ -701,7 +710,7 @@ class Abeille extends eqLogic {
         /* Cleanup */
         self::deamon_start_cleanup();
 
-        $config = AbeilleTools::getParameters();
+        $config = AbeilleTools::getConfig();
 
         /* Checking config */
         // TODO Tcharp38: Should be done during deamon_info() and report proper 'launchable'
@@ -898,7 +907,7 @@ class Abeille extends eqLogic {
 
         // Send a message to Abeille to ask for behive creation/update.
         // Tcharp38: Moved from deamon_start()
-        $config = AbeilleTools::getParameters();
+        $config = AbeilleTools::getConfig();
         for ($zgId = 1; $zgId <= $GLOBALS['maxNbOfZigate']; $zgId++) {
             if (($config['ab::zgPort'.$zgId] == 'none') or ($config['ab::zgEnabled'.$zgId] != 'Y'))
                 continue; // Undefined or disabled
@@ -1158,7 +1167,7 @@ class Abeille extends eqLogic {
     //         return;
     //     }
 
-    //     $config = AbeilleTools::getParameters();
+    //     $config = AbeilleTools::getConfig();
 
     //     $convert = array(
     //         "affichageNetwork" => "Network",
@@ -1298,7 +1307,7 @@ class Abeille extends eqLogic {
             return;
         }
 
-        $config = AbeilleTools::getParameters();
+        $config = AbeilleTools::getConfig();
 
         // if (!preg_match("(Time|Link-Quality)", $topic)) {
         //    log::add('Abeille', 'debug', "fct message Topic: ->".$topic."<- Value ->".$payload."<-");
@@ -2441,7 +2450,7 @@ class Abeille extends eqLogic {
             }
         }
 
-        // $config = AbeilleTools::getParameters();
+        // $config = AbeilleTools::getConfig();
 
         $msg = array();
         $msg['topic'] = $topic;
@@ -2484,7 +2493,7 @@ class Abeille extends eqLogic {
             }
         }
 
-        // $config = AbeilleTools::getParameters();
+        // $config = AbeilleTools::getConfig();
 
         $msg = array();
         $msg['topic'] = $topic;
@@ -2508,7 +2517,7 @@ class Abeille extends eqLogic {
             //id
             $eqLogic->setName("Ruche-".$dest);
             $eqLogic->setLogicalId($dest."/0000");
-            $config = AbeilleTools::getParameters();
+            $config = AbeilleTools::getConfig();
             if ($config['ab::defaultParent'] > 0) {
                 $eqLogic->setObject_id($config['ab::defaultParent']);
             } else {
@@ -2684,7 +2693,7 @@ class Abeille extends eqLogic {
         $eqName = $net."-".$eqLogic->getId(); // Default name (ex: 'Abeille1-12')
         $eqLogic->setName($eqName);
         $eqLogic->setLogicalId($logicalId);
-        $abeilleConfig = AbeilleTools::getParameters();
+        $abeilleConfig = AbeilleTools::getConfig();
         $eqLogic->setObject_id($abeilleConfig['ab::defaultParent']);
         $eqLogic->setConfiguration('IEEE', $ieee);
         $eqLogic->setIsVisible(0); // Hidden by default
@@ -2753,7 +2762,7 @@ class Abeille extends eqLogic {
             $eqName = $modelType." - ".$eqId; // Default name (ex: '<modeltype> - 12')
             $eqLogic->setName($eqName);
             $eqLogic->setLogicalId($eqLogicId);
-            $abeilleConfig = AbeilleTools::getParameters();
+            $abeilleConfig = AbeilleTools::getConfig();
             $eqLogic->setObject_id($abeilleConfig['ab::defaultParent']);
             $eqLogic->setConfiguration('IEEE', $dev['ieee']);
         } else {
@@ -3343,5 +3352,11 @@ class Abeille extends eqLogic {
             else
                 $eqLogic->checkAndUpdateCmd($cmdLogic, $lqi);
         }
+
+        // Updating corresponding Zigate alive status too
+        list($net, $addr) = explode("/", $eqLogicId);
+        $zigate = eqLogic::byLogicalId($net.'/0000', 'Abeille');
+        $zigate->setStatus(array('lastCommunication' => date('Y-m-d H:i:s', $timestamp), 'timeout' => 0));
+        // Warning: lastCommunication update is not transmitted not client as not an info cmd
     }
 }

@@ -5,6 +5,8 @@
 ### Tcharp38
 ###
 
+date
+
 FULLDEV=$1
 echo "FULLDEV=$FULLDEV"
 

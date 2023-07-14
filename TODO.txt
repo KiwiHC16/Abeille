@@ -1,3 +1,9 @@
+time cluster attribute 0002
+    Abeille1, Type=8002/Data indication, Status=00, ProfId=0104, ClustId=000A, SrcEP=01, DstEP=01, SrcAddrMode=02, SrcAddr=6A0C, DstAddrMode=02, DstAddr=0000
+      FCF=10/General/Cli->Serv, SQN=4C, cmd=00/Read Attributes
+      Attribute 0000 handled by Zigate
+      WARNING: Unsupported time cluster attribute 0002
+
 RefreshData
     Supprimer ce support ? Voir #2580 => ERROR bind0030
     En lien avec le point suivant (updateField)

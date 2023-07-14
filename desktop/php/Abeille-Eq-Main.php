@@ -57,13 +57,7 @@
     <div class="form-group">
         <label class="col-sm-3 control-label">{{Type}}</label>
         <div class="col-sm-3">
-            <?php
-                if (isset($eqModel['type']) && ($eqModel['type'] != ''))
-                    $type = $eqModel['type'];
-                else
-                    $type = '';
-                echo '<input type="text" readonly style="width:100%" title="{{Type d\'équipement}}" value="'.$type.'" />';
-            ?>
+            <input id="idModelType" readonly style="width:100%" title="{{Type d\'équipemen}}" value="" />
         </div>
     </div>
 
@@ -84,14 +78,7 @@
     <div class="form-group" >
         <label class="col-sm-3 control-label">{{Source d'alimentation}}</label>
         <div class="col-sm-3">
-            <?php
-            /* If battery powered eq. 'batteryType' is defined in device JSON file */
-            if ($eqLogic->getConfiguration('battery_type', '') != "") {
-                echo '<span>{{Batterie}}  </span>';
-                echo '<input class="eqLogicAttr" data-l1key="configuration" data-l2key="battery_type" />';
-            } else
-                echo '<span>{{Secteur}}</span>';
-            ?>
+            <input id="idBatteryType" readonly style="width:100%" title="{{Source d'alimentation}}" value="" />
         </div>
     </div>
 
@@ -117,41 +104,14 @@
     <div class="form-group">
         <label class="col-sm-3 control-label">{{Icone}}</label>
         <div class="col-sm-3">
-            <select id="sel_icon" class="form-control eqLogicAttr" data-l1key="configuration" data-l2key="ab::icon">
-                <!-- <option value="Abeille">{{Abeille}}</option> -->
+            <select id="idEqIcon" class="form-control eqLogicAttr" data-l1key="configuration" data-l2key="ab::icon">
+                <option value="defaultUnknown">{{Inconnu}}</option>
                 <option value="Ruche">{{Ruche}}</option>
                 <?php
                     $items = AbeilleTools::getImagesList();
                     foreach ($items as $icon) {
                         echo "<option value=\"".$icon."\">{{".$icon."}}</option>";
                     }
-
-                    // require_once __DIR__.'/../../core/class/AbeilleTools.class.php';
-                    // $items = AbeilleTools::getDeviceNameFromJson();
-
-                    // $selectBox = array();
-                    // foreach ($items as $item) {
-                    //     $device = AbeilleTools::getDeviceModel($item, 'Abeille', 2);
-                    //     if (!isset($device['configuration'])) {
-                    //         log::add('Abeille', 'debug', 'WARNING: No configuration section in '.$item);
-                    //         continue; // No 'configuration' in this JSON, so no icon defined
-                    //     }
-                    //     if (!isset($device['configuration']['icon'])) {
-                    //         log::add('Abeille', 'debug', 'WARNING: No icon field in '.$item);
-                    //         continue; // No icon defined
-                    //     }
-                    //     if (!isset($device['type'])) {
-                    //         log::add('Abeille', 'debug', 'WARNING: No type field in '.$item);
-                    //         continue; // No type defined
-                    //     }
-                    //     $icon = $device['configuration']['icon'];
-                    //     $name = $device['type'];
-                    //     $selectBox[ucwords($name)] = $icon;
-                    // }
-                    // ksort($selectBox);
-                    // foreach ($selectBox as $key => $value) {
-                    //     echo "<option value=\"".$value."\">{{".$key."}}</option>";
-                    // }
                 ?>
             </select>
         </div>

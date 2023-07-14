@@ -68,7 +68,7 @@ function refreshAdvEq() {
             // console.log("idEqName=", document.getElementById("idEqName"));
             // console.log("idEqId=", document.getElementById("idEqId"));
 
-            // Updating advanced common infos
+            // Updating device related infos on main and advanced
             document.getElementById("idEqName").value = eq.name;
             document.getElementById("idEqId").value = eqId;
             document.getElementById("idEqAddr").value = eq.addr;
@@ -77,6 +77,12 @@ function refreshAdvEq() {
             document.getElementById("idZbManuf").value = eq.zbManuf;
             document.getElementById("idModelName").value = eq.modelName;
             document.getElementById("idModelSource").value = eq.modelSource;
+            document.getElementById("idModelType").value = eq.modelType;
+            if (eq.batteryType == '')
+                document.getElementById("idBatteryType").value = "{{Secteur}}";
+            else
+                document.getElementById("idBatteryType").value = "{{Batterie}} "+eq.batteryType;
+
             if (typeof eq.zigbee.manufCode != "undefined")
                 document.getElementById("idManufCode").value =
                     eq.zigbee.manufCode;

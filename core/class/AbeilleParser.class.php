@@ -515,295 +515,6 @@
             }
         }
 
-        // /* There is a device info update (manufId + modelId, or location).
-        //    Note: As opposed to 'updateDevice()', info is coming from device itself. */
-        // // OBSOLETE !!! Use deviceUpdates() instead.
-        // function deviceUpdate($net, $addr, $ep, $updType = null, $value = null) {
-        //     if ($updType == 'ieee')
-        //         $ieee = $value;
-        //     else
-        //         $ieee = null;
-        //     $eq = &getDevice($net, $addr, $ieee, $newDev); // By ref
-        //     // 'status' set to 'identifying' if new device
-
-        //     // Log only if relevant
-        //     if ($updType && ($eq['status'] != 'idle')) {
-        //         $u = ($updType) ? $updType : '';
-        //         $v = ($value === false) ? 'false' : $value;
-        //         parserLog('debug', "  deviceUpdate('".$u."', '".$v."'): Status=".$eq['status']);
-        //     }
-
-        //     /* Updating entry: 'epList', 'manufId', 'modelId' or 'location', 'ieee', 'bindingTableSize' */
-        //     if ($updType) {
-        //         if ($updType == 'epList') { // Active end points response
-        //             $epArr = explode('/', $value);
-        //             foreach ($epArr as $epId2) {
-        //                 if (!isset($eq['endPoints'][$epId2])) {
-        //                     $eq['endPoints'][$epId2] = [];
-        //                     $endPointsUpdated = true;
-        //                 }
-        //             }
-        //             if (isset($endPointsUpdated)) {
-        //                 $msg = array(
-        //                     'type' => 'deviceUpdates',
-        //                     'net' => $net,
-        //                     'addr' => $addr,
-        //                     'updates' => array(
-        //                         "endPoints" => $eq['endPoints']
-        //                     ),
-        //                 );
-        //                 msgToAbeille2($msg);
-        //             }
-        //         } else if ($updType == 'macCapa') { // MAC capa flags
-        //             if (!isset($eq['macCapa']) || ($eq['macCapa'] != $value)) {
-        //                 $eq['macCapa'] = $value;
-        //                 $eq['rxOnWhenIdle'] = (hexdec($eq['macCapa']) >> 3) & 0b1;
-        //                 $msg = array(
-        //                     'type' => 'deviceUpdates',
-        //                     'net' => $net,
-        //                     'addr' => $addr,
-        //                     'updates' => array(
-        //                         "macCapa" => $value // Will trig rxOnWhenIdle update too
-        //                     ),
-        //                 );
-        //                 msgToAbeille2($msg);
-        //             }
-        //         } else if ($updType == 'rxOnWhenIdle') { // RX ON when idle flag only
-        //             if (!isset($eq['rxOnWhenIdle']) || ($eq['rxOnWhenIdle'] != $value)) {
-        //                 $eq['rxOnWhenIdle'] = $value;
-        //                 $msg = array(
-        //                     'type' => 'deviceUpdates',
-        //                     'net' => $net,
-        //                     'addr' => $addr,
-        //                     'updates' => array(
-        //                         "rxOnWhenIdle" => $value
-        //                     ),
-        //                 );
-        //                 msgToAbeille2($msg);
-        //             }
-        //         } else if ($updType == 'manufCode') { // Manufacturer code
-        //             if (!isset($eq['manufCode']) || ($eq['manufCode'] != $value)) {
-        //                 $eq['manufCode'] = $value;
-        //                 $msg = array(
-        //                     'type' => 'deviceUpdates',
-        //                     'net' => $net,
-        //                     'addr' => $addr,
-        //                     'updates' => array(
-        //                         "manufCode" => $value
-        //                     ),
-        //                 );
-        //                 msgToAbeille2($msg);
-        //             }
-        //         } else if (($updType == 'modelId') || ($updType == '0000-0005')) { // Model identifier
-        //             if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['modelId']))
-        //                 $eq['endPoints'][$ep]['modelId'] = $value;
-        //             if (($eq['modelId'] === null) || ($eq['modelId'] === false)) {
-        //                 $eq['modelId'] = $value;
-        //                 if ($eq['mainEp'] == '')
-        //                     $eq['mainEp'] = $ep;
-        //             }
-        //         } else if (($updType == 'manufId') || ($updType == '0000-0004')) { // Manufacturer name
-        //             if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['manufId']))
-        //                 $eq['endPoints'][$ep]['manufId'] = $value;
-        //             if (($eq['manufId'] === null) || ($eq['manufId'] === false)) {
-        //                 $eq['manufId'] = $value;
-        //                 if ($eq['mainEp'] == '')
-        //                     $eq['mainEp'] = $ep;
-        //             }
-        //         } else if (($updType == "location") || ($updType == "0000-0010")) { // Location
-        //             if (!isset($eq['endPoints'][$ep]) || !isset($eq['endPoints'][$ep]['location']))
-        //                 $eq['endPoints'][$ep]['location'] = $value;
-        //             if (($eq['location'] === null) || ($eq['location'] === false))
-        //                 $eq['location'] = $value;
-        //         } else // 'ieee' or 'bindingTableSize'
-        //             $eq[$updType] = $value;
-        //         parserLog('debug', '  Updated eq='.json_encode($eq));
-        //     }
-
-        //     if (($eq['status'] != "unknown_ident") && ($eq['status'] != "identifying"))
-        //         return false; // Not in any identification phase
-
-        //     /* Identification phase is key but there are unfortunately several cases:
-        //         - Standard case zigbee compliant:
-        //             - The device respond to "active endpoints request".
-        //             - Then gives 'manufId' and 'modelId'.
-        //         - Special case (ex: old Xiaomi):
-        //             - The device does not respond neither to "active endpoints request" nor to 'manufId' BUT gives its 'modelId'.
-        //         - Special case (ex: old Xiaomi):
-        //             - The device does not respond neither to "active endpoints request" nor to 'manufId' AND DOES NOT send 'modelId'.
-        //             - In that case no choice but read EP 01 attribute 0005 to identify.
-        //         - Special case (ex: old Profalux):
-        //             - The device does not support 'modelId' or 'manufId' attributes but supports 'location'
-        //     */
-
-        //     // TODO: $ret to be revisited vs expected behavior on return
-        //     if ($eq['status'] == "unknown_ident")
-        //         $ret = true; // Dev is unknown to Jeedom
-        //     else
-        //         $ret = false;
-
-        //     if (!$eq['ieee']) {
-        //         parserLog('debug', '  Requesting IEEE');
-        //         msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
-        //         return $ret;
-        //     }
-
-        //     // IEEE is available
-        //     if (!$eq['endPoints']) {
-        //         parserLog('debug', '  Requesting active endpoints list');
-        //         msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
-        //         return $ret;
-        //     }
-
-        //     // IEEE & EP list are available. Any missing info to identify device ?
-        //     if (($eq['modelId'] === null) || ($eq['manufId'] === null) || ($eq['location'] === null)) {
-        //         // // Note: Grouped requests to improve efficiency
-        //         // $missing = '';
-        //         // $missingTxt = '';
-        //         // if (($eq['modelId'] !== false) && ($eq['manufId'] === null)) {
-        //         //     $missing = '0004';
-        //         //     $missingTxt = 'manufId';
-        //         //     // msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0004");
-        //         // }
-        //         // if ($eq['modelId'] === null) {
-        //         //     if ($missing != '') {
-        //         //         $missing .= ',';
-        //         //         $missingTxt .= '/';
-        //         //     }
-        //         //     $missing .= '0005';
-        //         //     $missingTxt .= 'modelId';
-        //         //     // msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0005");
-        //         // }
-        //         // /* Location might be required (ex: First Profalux Zigbee) where modelIdentifier is not supported */
-        //         // if ((($eq['modelId'] === null) || ($eq['modelId'] === false)) && ($eq['location'] === null)) {
-        //         //     if ($missing != '') {
-        //         //         $missing .= ',';
-        //         //         $missingTxt .= '/';
-        //         //     }
-        //         //     $missing .= '0010';
-        //         //     $missingTxt .= 'location';
-        //         //     // msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=0010");
-        //         // }
-        //         // if ($missing != '') {
-        //         //     parserLog('debug', '  Requesting '.$missingTxt.' from EP '.$eq['epFirst']);
-        //         //     msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$eq['epFirst']."&clustId=0000&attrId=".$missing);
-
-        //         //     // jbromain: we check if EP '01' exists BUT is not the first EP
-        //         //     // If so, we will request model and/or manufacturer from both EPs (the first one AND 01)
-        //         //     // Use case: Sonoff smart plug S26R2ZB (several EPs but the first one does not support model nor manufacturer)
-        //         //     // TODO We should maybe query ALL end points ? For now I try to limit requests
-        //         //     $epArr = explode('/', $eq['epList']);
-        //         //     if ($eq['epFirst'] != '01' && in_array('01', $epArr)) {
-        //         //         parserLog('debug', '  Requesting '.$missingTxt.' from EP 01 too (not the first but exists)');
-        //         //         msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=01&clustId=0000&attrId=".$missing);
-        //         //     }
-        //         // }
-
-        //         // Interrogating all EP
-        //         // Note: in most of the cases interrogating either first EP or EP 01 is ok but sometimes
-        //         //   the device does not support cluster 0000 in these cases.
-        //         //   Ex: Sonoff smart plug S26R2ZB (several EPs but the first one does not support modelId nor manufId)
-        //         foreach ($eq['endPoints'] as $epId => $ep) {
-        //             $missing = '';
-        //             $missingTxt = '';
-        //             if ((!isset($ep['modelId']) || ($ep['modelId'] !== false)) && !isset($ep['manufId'])) {
-        //                 $missing = '0004';
-        //                 $missingTxt = 'manufId';
-        //             }
-        //             if (!isset($ep['modelId']) || ($ep['modelId'] === null)) {
-        //                 if ($missing != '') {
-        //                     $missing .= ',';
-        //                     $missingTxt .= '/';
-        //                 }
-        //                 $missing .= '0005';
-        //                 $missingTxt .= 'modelId';
-        //             }
-        //             /* Location might be required (ex: First Profalux Zigbee) where modelId is not supported */
-        //             if (!isset($ep['modelId']) || (($ep['modelId'] === false) && !isset($ep['location']))) {
-        //                 if ($missing != '') {
-        //                     $missing .= ',';
-        //                     $missingTxt .= '/';
-        //                 }
-        //                 $missing .= '0010';
-        //                 $missingTxt .= 'location';
-        //             }
-        //             if ($missing != '') {
-        //                 parserLog('debug', '  Requesting '.$missingTxt.' from EP '.$epId);
-        //                 msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId."&clustId=0000&attrId=".$missing);
-        //             }
-        //         }
-        //     }
-
-        //     /* Trying to identify device with currently known infos:
-        //         - if modelId is supported
-        //             - search for JSON with 'modelId_manuf' then 'modelId'
-        //         - else (modelId is not supported) if location is supported
-        //             - search for JSON with 'location'
-        //     */
-        //     if ($eq['modelId'] === null)
-        //         return false; // Need at least false (unsupported) or a value
-        //     if ($eq['modelId'] !== false) {
-        //         if (!isset($eq['manufId'])) {
-        //             /* Checking if device is supported without manufacturer attribute for those who do not respond to such request
-        //                but if not, default config is not accepted since manufacturer may not be arrived yet.
-        //                For Tuya case (model=TSxxxx), manufacturer is MANDATORY. */
-        //             if ((substr($eq['modelId'], 0, 2) == "TS") && (strlen($eq['modelId']) == 6))
-        //                 return false; // Tuya case. Waiting for manufacturer to return.
-        //             if ($this->findModel($eq, 'modelId') === false) {
-        //                 $eq['jsonId'] = ''; // 'defaultUnknown' case not accepted there
-        //                 return false;
-        //             }
-        //         } else {
-        //             /* Manufacturer & modelId attributes returned */
-        //             $this->findModel($eq, 'modelId');
-        //         }
-        //     } else if ($eq['location'] === null) {
-        //         return false; // Need value or false (unsupported)
-        //     } else if ($eq['location'] !== false) {
-        //         /* ModelId UNsupported. Trying with 'location' */
-        //         $this->findModel($eq, 'location');
-        //     } else { // Neither modelId nor location supported ?! Ouahhh...
-        //         parserLog('debug', "  WARNING: Neither modelId nor location supported => using default config.");
-        //         $eq['jsonId'] = 'defaultUnknown';
-        //         $eq['jsonLocation'] = "Abeille";
-        //     }
-        //     if ($eq['jsonId'] == '') {
-        //         // Still not identified
-        //         if ($eq['status'] == 'unknown_ident')
-        //             return true;
-        //         return false;
-        //     }
-
-        //     /* If device is identified, 'jsonId' + 'jsonLocation' indicates which model to use. */
-        //     // Tcharp38: If new dev announce of already known device, should we reconfigure it anyway ?
-        //     // TODO: No reconfigure if rejoin = 02
-        //     // Note: rejoin seems not reliable as generated by this bad NXP stack.
-        //     if ($eq['jsonId'] == 'defaultUnknown')
-        //         $this->deviceDiscover($net, $addr);
-        //     else if ($eq['status'] == 'identifying') {
-        //         // Special case: Profalux v2: waiting for non empty binding table before binding zigate.
-        //         //   If not, zigate binding would kill 'remote to curtain' binding.
-        //         $profalux = (substr($eq['ieee'], 0, 6) == "20918A") ? true : false;
-        //         if ($profalux && ($eq['modelId'] !== false) && ($eq['modelId'] !== 'MAI-ZTS')) {
-        //             if (!isset($eq['bindingTableSize'])) {
-        //                 parserLog('debug', '  Profalux v2: Requesting binding table size.');
-        //                 msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
-        //                 return false; // Remote still not binded with curtain
-        //             }
-        //             if ($eq['bindingTableSize'] == 0) {
-        //                 parserLog('debug', '  Profalux v2: Waiting remote to be binded.');
-        //                 msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/getBindingTable", "address=".$addr);
-        //                 return false; // Remote still not binded with curtain
-        //             }
-        //             parserLog('debug', '  Profalux v2: Remote binded. Let\'s configure.');
-        //         }
-
-        //         $this->deviceConfigure($net, $addr);
-        //     } else // status==unknown_ident
-        //         $this->deviceCreate($net, $addr);
-        //     return false;
-        // } // End deviceUpdate()
-
         /* There is a device info updates (manufId + modelId, or location).
            Note: As opposed to 'updateDevice()', info is coming from device itself. */
         function deviceUpdates($net, $addr, $ep, $updates = []) {
@@ -815,6 +526,7 @@
             // 'status' set to 'identifying' if new device
 
             $abUpdates = []; // Updates for Abeille.class
+
             foreach ($updates as $updType => $value) {
                 // Log only if relevant
                 if ($updType && ($eq['status'] != 'idle')) {
@@ -2387,7 +2099,7 @@
             parserLog('debug', '  MacCapa='.$macCapa.', ManufCode='.$manufCode);
 
             // 2 infos to store: macCapa & manufCode
-            $eq = getDevice($net, $srcAddr, '');
+            $eq = getDevice($net, $srcAddr);
             // WARNING: macCapa can be overloaded by customization
             if (isset($eq['customization']) && isset($eq['customization']['macCapa'])) {
                 $macCapa = $eq['customization']['macCapa'];
@@ -2541,7 +2253,7 @@
                 $updates = [];
                 if ($eq['ieee'] != $N['extAddr'])
                     $updates['ieee'] = $N['extAddr'];
-                if ($eq['rxOnWhenIdle'] != $rxOn) {
+                if ($eq['rxOnWhenIdle'] && ($eq['rxOnWhenIdle'] != $rxOn)) {
                     parserLog('debug', "  ".$N['addr'].": WARNING, unexpected rxOn difference: rxOnWhenIdle=".$eq['rxOnWhenIdle'].", rxOn=".$rxOn);
                     // $updates['rxOnWhenIdle'] = $rxOn;
                     // Update DISABLED. Seems not reliable or error in bitMap interpretation. See #2532
@@ -3105,8 +2817,7 @@
                     $updates = [];
                     $updates['bindingTableSize'] = $tableSize;
                     $this->deviceUpdates($dest, $srcAddr, $srcEp, $updates);
-                    // return;
-                }
+                } // End Mgmt_Bind_rsp
 
                 // Management network update notify (Mgmt_NWK_Update_notify, cluster=8038)
                 else if ($clustId == "8038") {
@@ -3117,6 +2828,9 @@
                     switch ($clustId) {
                     case "0013": // Device_annce
                         parserLog('debug', '  Device announce => Handled by decode004D');
+                        break;
+                    case "0038": // Mgmt_NWK_Update_req
+                        parserLog('debug', '  Mgmt_NWK_Update_req => Ignored');
                         break;
                     default:
                         parserLog('debug', '  Unsupported/ignored profile 0000, cluster '.$clustId.' message');
@@ -3466,75 +3180,6 @@
                 // return;
             } // End profile 0104 cluster FC41
 
-            // // Prise Xiaomi
-            // // Tcharp38: Seen also as reporting from 'sen_ill_mgl01' during inclusion. There is probably something wrong/not robust there.
-            // else if ($clustId == "FCC0") {
-            //     $fcf = substr($payload, 26, 2); // Frame Control Field
-            //     $frameType = hexdec($fcf) & 3; // Bits 0 & 1: 00=global, 01=cluster specific
-            //     $manufSpecific = (hexdec($fcf) >> 2) & 1;
-            //     $dir = (hexdec($fcf) >> 3) & 1;
-            //     if ($frameType == 0)
-            //         $fcfTxt = "General";
-            //     else
-            //         $fcfTxt = "Cluster-specific";
-            //     if ($dir)
-            //         $fcfTxt .= "/Serv->Cli";
-            //     else
-            //         $fcfTxt .= "/Cli->Serv";
-            //     if ($manufSpecific) {
-            //         $manufCode = AbeilleTools::reverseHex(substr($payload, 28, 4)); // 16bits for manuf specific code
-            //         $fcfTxt .= "/ManufCode=".$manufCode;
-            //         $sqn = substr($payload, 32, 2); // Sequence Number
-            //         $cmd = substr($payload, 34, 2); // Command
-            //         $pl = substr($payload, 36);
-            //     } else {
-            //         $manufCode = '';
-            //         $sqn = substr($payload, 28, 2); // Sequence Number
-            //         $cmd = substr($payload, 30, 2); // Command
-            //         $pl = substr($payload, 32);
-            //     }
-            //     if ($frameType == 0) // General command
-            //         $msgDecoded = "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLGlobalCmdName($cmd);
-            //     else // Cluster specific command
-            //         $msgDecoded = "  FCF=".$fcf."/".$fcfTxt.", SQN=".$sqn.", cmd=".$cmd.'/'.zbGetZCLClusterCmdName($clustId, $cmd);
-            //     parserLog('debug', $msgDecoded);
-
-            //     // if ($fcf == '1C') {
-            //         if ($manufCode == '115F') {
-            //             parserLog('debug', "  Xiaomi FCC0 cluster");
-            //             parserLog('debug', "  PL=".$pl);
-            //             if ($cmd == '0A') { // Report attributes
-            //                 $Attribut = substr($pl, 2, 2).substr($pl, 0, 2);
-            //                 $dataType = substr($pl, 4, 2);
-            //                 if ($Attribut=='00F7') {
-            //                     if ($dataType == "41") { // 0x41 Octet stream
-            //                         // WORK ONGOING
-            //                         xiaomiDecodeTags($dest, $srcAddr, substr($pl, 8));
-            //                         // WORK ONGOING
-
-            //                         $dataLength = hexdec(substr($pl, 6, 2));
-            //                         $fcc0 = $this->decodeFF01(substr($pl, 8, $dataLength*2));
-            //                         // parserLog('debug', "  ".json_encode($fcc0));
-
-            //                         // $this->msgToAbeille($dest."/".$srcAddr, '0006', '01-0000', $fcc0["Etat SW 1 Binaire"]["valueConverted"]);    // On Off Etat
-            //                         // $this->msgToAbeille($dest."/".$srcAddr, '0402', '01-0000', $fcc0["Device Temperature"]["valueConverted"]);    // Device Temperature
-            //                         // $this->msgToAbeille($dest."/".$srcAddr, '000C', '15-0055', $fcc0["Puissance"]["valueConverted"]);    // Puissance
-            //                         // $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--conso--',   $fcc0["Consommation"]["valueConverted"]);    // Consumption
-            //                         // $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--volt--',    $fcc0["Voltage"]["valueConverted"]);    // Voltage
-            //                         // $this->msgToAbeille($dest."/".$srcAddr, 'tbd',  '--current--', $fcc0["Current"]["valueConverted"]);    // Current
-            //                         $attrReportN = [
-            //                             array( "name" => '0006-01-0000', "value" => $fcc0["Etat SW 1 Binaire"]["valueConverted"] ),
-            //                             array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] / 100 ),
-            //                         ];
-            //                         if (isset($fcc0["Puissance"]))
-            //                             $attrReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     // }
-            // } // End profile 0104 cluster FCC0
-
             /* WARNING:
                If execution reached here it is assumed that message is "Zigbee cluster library" compliant
                and NOT treated above.
@@ -3577,6 +3222,8 @@
                 }
                 parserLog('debug', $m);
                 $toMon[] = $m;
+
+                $attrReportN = [];
 
                 if ($frameType == 0) { // General command
                     /*
@@ -3667,7 +3314,7 @@
                         $readAttributesResponseN = []; // Attributes by Jeedom logical name
                         $devUpdates = []; // Any device information update (devUpdates[updId] = updValue)
                         $l = strlen($pl);
-                        $eq = getDevice($dest, $srcAddr, ''); // Corresponding device
+                        $eq = getDevice($dest, $srcAddr); // Corresponding device
                         $size = 0;
                         for ($i = 0; $i < $l; $i += $size) {
                             $attr = $this->decode8002_ReadAttrStatusRecord(substr($pl, $i), $size);
@@ -3706,35 +3353,6 @@
                                     .' => '.zbGetZCLStatus($attr['status']);
                             parserLog('debug', $m, "8002");
                             $toMon[] = $m;
-
-                            // if ($clustId == "0001") {
-                            //     if ($attr['id'] == "0020") {
-                            //         $attr['value'] = $attr['value'] / 10; // Battery voltage
-                            //     } else if ($attr['id'] == "0021") {
-                            //         $attr['value'] = $attr['value'] / 2; // Battery percent
-                            //     }
-                            // } else if ($clustId == "0400") {
-                            //     if ($attr['id'] == "0000") {
-                            //         $val = $attr['value'];
-                            //         if (!isset($eq['notStandard-0400-0000']))
-                            //             $val = ($val == 0 ? 0 : pow(10, ($val - 1) / 10000)); // Illuminance
-                            //         else
-                            //             parserLog('debug', '  NOT STANDARD attribute value');
-                            //         $attr['value'] = $val;
-                            //     }
-                            // } else if ($clustId == "0402") {
-                            //     if ($attr['id'] == "0000") {
-                            //         $attr['value'] /= 100; // Temperature
-                            //     }
-                            // } else if ($clustId == "0403") {
-                            //     if ($attr['id'] == "0000") {
-                            //         $attr['value'] /= 10; // Pressure (in kPa)
-                            //     }
-                            // } else if ($clustId == "0405") {
-                            //     if ($attr['id'] == "0000") {
-                            //         $attr['value'] /= 100; // Humidity
-                            //     }
-                            // }
 
                             $attrId = $attr['id'];
                             unset($attr['id']); // Remove 'id' from object for optimization
@@ -3879,39 +3497,21 @@
                             return;
                         }
 
-                        $attrId = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
                         $eq = getDevice($dest, $srcAddr); // Corresponding device
-                        $updates = [];
 
+                        $attrId = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
+                        $updates = [];
                         if ($manufCode == '115F') { // Xiaomi specific
                             // New code
-                            $attrReportN = [];
                             xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN, $toMon);
-
-                            // // Legacy code to be removed at some point
-                            // $a = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
-                            // $t = substr($pl, 4, 2); // Type
-                            // if (($a == '00F7') && ($t == "41")) {
-                            //     $dataLength = hexdec(substr($pl, 6, 2));
-                            //     $fcc0 = $this->decodeFF01(substr($pl, 8, $dataLength*2));
-                            //     // $attrReportN[] = array( "name" => '0006-01-0000', "value" => $fcc0["Etat SW 1 Binaire"]["valueConverted"] );
-                            //     // $attrReportN[] = array( "name" => '0402-01-0000', "value" => $fcc0["Device Temperature"]["valueConverted"] / 100 );
-                            //     if (isset($fcc0["Puissance"])) {
-                            //         parserLog('debug', "  Legacy 'Puissance'");
-                            //         $attrReportN[] = array( "name" => '000C-15-0055', "value" => $fcc0["Puissance"]["valueConverted"] );
-                            //     }
-                            // }
                         }
 
                         else if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
-                            $attrReportN = [];
-                            xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN);
+                            xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN, $toMon);
                         }
 
                         else {
                             $l = strlen($msg);
-                            $attrReportN = [];
-                            // $eq = getDevice($dest, $srcAddr, ''); // Corresponding device
                             for ($i = 0; $i < $l; $i += $size) {
                                 // Decode attribute
                                 $attr = $this->decode8002_ReportAttribute(substr($msg, $i), $size);
@@ -3958,6 +3558,9 @@
                         $unknown = false;
                         if (count($updates) != 0)
                             $unknown = $this->deviceUpdates($dest, $srcAddr, $srcEp, $updates);
+                        else if ($eq['status'] == "identifying")
+                            // No updates but device still in ident phase. May need infos
+                            $unknown = $this->deviceUpdates($dest, $srcAddr, $srcEp);
                         if ($unknown)
                             return; // So far unknown to Jeedom
                     } // End 'Report attributes'

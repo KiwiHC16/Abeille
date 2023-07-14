@@ -11,7 +11,7 @@
             "icon": "Profalux-Shutter"
         },
         "category": {
-            "automatism": "1"
+            "opening": "1"
         },
         "commands": {
             "Identify": {

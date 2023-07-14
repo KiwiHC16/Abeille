@@ -1,6 +1,11 @@
 ChangeLog
 =========
 
+- Interne: Parser: Améliorations pour reconnaissance fantomes.
+- Page équipement: Corrections d'affichage 'type' & 'icone'.
+- Blitzwolf temp/humidité/display: Correction signature pour 'TS0201__TZ2000_hjsgdkfl'.
+- Volet Profalux: Changement catégorie => 'ouvrant'.
+
 230711-BETA-1
 -------------
 

@@ -571,6 +571,7 @@
                 $model = $eqLogic->getConfiguration('ab::eqModel', []);
                 $eq['modelName'] = isset($model['id']) ? $model['id'] : '';
                 $eq['modelSource'] = isset($model['location']) ? $model['location'] : 'Abeille';
+                $eq['modelType'] = isset($model['type']) ? $model['type'] : '';
 
                 $eq['zigbee'] = $eqLogic->getConfiguration('ab::zigbee', []);
 

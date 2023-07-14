@@ -205,6 +205,17 @@
         }
     }
 
+    // Inform Jeedom to create a new device
+    function addNewJeedomDevice($net, $addr, $ieee) {
+        $msg = array(
+            'type' => 'newDevice',
+            'net' => $net,
+            'addr' => $addr,
+            'ieee' => $ieee,
+        );
+        msgToAbeille2($msg);
+    }
+
     // Create a new device in internal devices list => $GLOBALS['eqList'][$net][$addr]
     function newDevice($net, $addr, $ieee = null) {
         // This is a new device
@@ -225,6 +236,16 @@
             // Optional 'tuyaEF00'
             // Optional 'notStandard-0400-0000'
         );
+
+        // Informing Abeille to create a new (but empty) device.
+        if ($ieee) {
+            parserLog('debug', '  '.$addr.'/'.$ieee.' is a new device.');
+            addNewJeedomDevice($net, $addr, $ieee);
+        } else {
+            // Still not enough infos to create device on Jeedom side
+            parserLog('debug', '  '.$addr.' is a new device but missing IEEE. Requesting ...');
+            msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
+        }
     } // End newDevice()
 
     /* Check if device is already known to parser.
@@ -235,8 +256,10 @@
             $GLOBALS['eqList'][$net] = [];
 
         if (isset($GLOBALS['eqList'][$net][$addr])) {
-            if (($GLOBALS['eqList'][$net][$addr]['ieee'] === null) && ($ieee !== null))
+            if (($GLOBALS['eqList'][$net][$addr]['ieee'] === null) && ($ieee !== null)) {
                 $GLOBALS['eqList'][$net][$addr]['ieee'] = $ieee;
+                addNewJeedomDevice($net, $addr, $ieee);
+            }
             return $GLOBALS['eqList'][$net][$addr];
         }
 
@@ -294,18 +317,6 @@
         // This is a new device
         newDevice($net, $addr, $ieee);
         $new = true; // This is a new device
-
-        // Informing Abeille to create a new (but empty) device.
-        if ($ieee) {
-            $msg = array(
-                'type' => 'newDevice',
-                'net' => $net,
-                'addr' => $addr,
-                'ieee' => $ieee,
-            );
-            msgToAbeille2($msg);
-        }
-
         return $GLOBALS['eqList'][$net][$addr];
     } // End getDevice()
 
@@ -420,16 +431,16 @@
                 $status = 'idle';
             else
                 $status = 'identifying';
-            $zigbee = $eqLogic->getConfiguration('ab::zigbee', null);
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
             $eq = array(
                 'ieee' => $eqLogic->getConfiguration('IEEE', null),
-                'macCapa' => $zigbee ? $zigbee['macCapa'] : '',
-                'rxOnWhenIdle' => $zigbee ? $zigbee['rxOnWhenIdle'] : null,
-                'manufCode' => ($zigbee & isset($zigbee['manufCode'])) ? $zigbee['manufCode'] : null,
+                'macCapa' => isset($zigbee['macCapa']) ? $zigbee['macCapa'] : '',
+                'rxOnWhenIdle' => isset($zigbee['rxOnWhenIdle']) ? $zigbee['rxOnWhenIdle'] : null,
+                'manufCode' => isset($zigbee['manufCode']) ? $zigbee['manufCode'] : null,
                 'rejoin' => '', // Rejoin info from device announce
                 'status' => $status, // identifying, configuring, discovering, idle
                 'time' => time(),
-                'endPoints' => ($zigbee & isset($zigbee['endPoints'])) ? $zigbee['endPoints'] : null, // null(undef)
+                'endPoints' => isset($zigbee['endPoints']) ? $zigbee['endPoints'] : null, // null(undef)
                 'mainEp' => '',
                 'manufId' => null, // null(undef)/false(unsupported)/'xx'
                 'modelId' => null, // null(undef)/false(unsupported)/'xx'

@@ -2,8 +2,8 @@
 <?php include_file('core', 'plugin.template', 'js'); ?>
 
 <script>
-    $("#sel_icon").change(function () {
-        var text = 'plugins/Abeille/images/node_' + $("#sel_icon").val() + '.png';
+    $("#idEqIcon").change(function () {
+        var text = 'plugins/Abeille/images/node_' + $("#idEqIcon").val() + '.png';
         //$("#icon_visu").attr('src',text);
         document.icon_visu.src = text;
     });

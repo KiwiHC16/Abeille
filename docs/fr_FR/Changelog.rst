@@ -7,6 +7,7 @@ ChangeLog
 - Volet Profalux: Changement catégorie => 'ouvrant'.
 - Interne: AbeilleTools::getParameters() => getConfig().
 - Zigate USB/+: Cycle power off/on si sans réponse depuis plus de 2mins.
+- Interne: Supression de qq fichiers obsoletes.
 
 230711-BETA-1
 -------------

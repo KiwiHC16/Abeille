@@ -205,6 +205,16 @@
                 echo '</select>';
             echo '</div>';
         echo '</div>';
+
+        echo '<div class="form-group">';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{PowerCycle : }}</label>';
+            echo '<div class="col-lg-4">';
+                echo '<select id="idSelZgPowerCycle' . $zgId . '" class="configKey form-control" data-l1key="ab::zgPowerCycle' . $zgId . '" onchange="statusChange(' . $zgId . ')" title="{{Activer ou désactiver le reset usb en cas de non communication.}}">';
+                    echo '<option value="Y" selected>{{Activée}}</option>';
+                    echo '<option value="N" selected>{{Désactivée}}</option>';
+                echo '</select>';
+            echo '</div>';
+        echo '</div>';
     }
 ?>
 

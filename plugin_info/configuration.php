@@ -205,16 +205,6 @@
                 echo '</select>';
             echo '</div>';
         echo '</div>';
-
-        echo '<div class="form-group">';
-            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{PowerCycle : }}</label>';
-            echo '<div class="col-lg-4">';
-                echo '<select id="idSelZgPowerCycle' . $zgId . '" class="configKey form-control" data-l1key="ab::zgPowerCycle' . $zgId . '" onchange="statusChange(' . $zgId . ')" title="{{Activer ou désactiver le reset usb en cas de non communication.}}">';
-                    echo '<option value="Y" selected>{{Activée}}</option>';
-                    echo '<option value="N" selected>{{Désactivée}}</option>';
-                echo '</select>';
-            echo '</div>';
-        echo '</div>';
     }
 ?>
 
@@ -440,9 +430,9 @@
             <a id="idUpdateCheckShowHide" class="btn btn-success" >{{Afficher}}</a>
         </legend>
         <div id="UpdateCheck">
-            <?php
+            < ?php
                 Abeille_pre_update_analysis(0, 1);
-            ?>
+            ? >
         </div> -->
 
         <legend>
@@ -456,7 +446,7 @@
 
             <?php if (validMd5Exists()) { ?>
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Vérifie l'integrité du plugin}}">{{Test d'intégrité : }}</label>
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Vérifie l'integrité du plugin}}">{{Test d'intégrité}} : </label>
                 <div class="col-lg-5">
                     <input type="button" onclick="checkIntegrity()" value="Lancer" title="Lance le test d'intégrité">
                     <a class="integrityStatus ml4px" title="{{Status d'intégrité d'Abeille. Voir 'AbeilleConfig.log' si 'NOK'.}}">
@@ -483,9 +473,9 @@
             </div> -->
 
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage interrogation LQI à minuit.}}">{{Blocage interrogation LQI à minuit : }}</label>
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage interrogation LQI à minuit}}">{{Blocage interrogation LQI à minuit}} : </label>
                 <div class="col-lg-5">
-                    <select class="configKey form-control" data-l1key="ab::preventLQIAutoUpdate" style="width:150px" data-toggle="tooltip" title="{{Si 'oui', empeche l'interrogation du réseau tout les jours à minuit}}">
+                    <select class="configKey form-control" data-l1key="ab::preventLQIAutoUpdate" style="width:150px" data-toggle="tooltip" title="{{Si 'oui', empêche l'interrogation du réseau tout les jours à minuit}}">
                         <option value="yes">{{Oui}}</option>
                         <option value="no" selected>{{Non}}</option>
                     </select>
@@ -493,13 +483,23 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Mode dédié aux développeurs}}">{{Mode developpeur : }}</label>
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Empêche un cycle off/on sur les Zigates USB plantées}}">{{Blocage cycle OFF/ON Zigates USB}} : </label>
+                <div class="col-lg-5">
+                    <select class="configKey form-control" data-l1key="ab::preventUsbPowerCycle" style="width:150px" data-toggle="tooltip" title="{{Si 'Oui', empêche un cycle OFF/ON sur les Zigates USB plantées}}">
+                        <option value="Y">{{Oui}}</option>
+                        <option value="N" selected>{{Non}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Mode dédié aux développeurs}}">{{Mode developpeur}} : </label>
                 <div class="col-lg-5">
                     <?php
                         if (file_exists(dbgFile))
-                            echo '<input type="button" onclick="xableDevMode(0)" value="Désactiver" title="Désactive le mode developpeur">';
+                            echo '<input type="button" onclick="xableDevMode(0)" value="Désactiver" title="{{Désactive le mode développeur}}">';
                         else
-                            echo '<input type="button" onclick="xableDevMode(1)" value="Activer" title="Active le mode developpeur">';
+                            echo '<input type="button" onclick="xableDevMode(1)" value="Activer" title="{{Active le mode développeur}}">';
                     ?>
                 </div>
             </div>
@@ -508,7 +508,7 @@
             <?php if (isset($dbgConfig)) { ?>
 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Liste des messages désactivés dans AbeilleParser.log}}">{{Parser. Messages désactivés : }}</label>
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Liste des messages désactivés dans 'AbeilleParser.log'}}">{{Parser; Messages désactivés}} : </label>
                     <div class="col-lg-5">
                     <?php if (isset($dbgConfig['dbgParserLog'])) {
                         $dbgParserLog = implode(" ", $dbgConfig['dbgParserLog']);
@@ -521,7 +521,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Autres defines de dev/debug}}">{{Defines : }}</label>
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Autres defines de dev/debug}}">{{Defines}} : </label>
                     <div class="col-lg-5">
                     <?php if (isset($dbgConfig['defines'])) {
                         $dbgDefines = implode(" ", $dbgConfig['defines']);

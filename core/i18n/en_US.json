@@ -89,6 +89,9 @@
       "Retain flag": "Retain flag"
     },
     "plugins\/Abeille\/plugin_info\/configuration.php": {
+      "Oui": "Yes",
+      "Non": "No",
+
       "Général": "General",
       "En passant votre souris sur les titres des champs, vous pouvez obtenir des informations specifiques sur chaque champs.": "Hover you mouse over each item to get tooltips on their usage",
       "Version interne": "Internal version",
@@ -114,6 +117,15 @@
 
       "Options avancées": "Advanced options",
       "Afficher": "Show",
+      "Blocage interrogation LQI à minuit": "Prevent LQI interrogations at midnight",
+      "Si 'oui', empêche l'interrogation du réseau tout les jours à minuit": "If 'Yes', prevent LQI interrogation everydays at midnight",
+      "Empêche un cycle off/on sur les Zigates USB plantées": "Prevent power cycle of dead USB Zigates",
+      "Blocage cycle OFF/ON Zigates USB": "Prevent USB Zigates power cycle",
+      "Si 'Oui', empêche un cycle OFF/ON sur les Zigates USB plantées": "If 'Yes', prevent power cycle of dead USB Zigates",
+      "Mode dédié aux développeurs": "Dedicated mode for developers", 
+      "Mode developpeur": "Developer mode",
+      "Désactive le mode développeur": "Disable developer mode",
+      "Active le mode développeur": "Enable developer mode",
   },
   "plugins\/Abeille\/desktop\/modal\/health.php": {
     "Module": "Device",

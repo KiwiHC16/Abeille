@@ -486,18 +486,19 @@ class Abeille extends eqLogic {
                 $lastComm = strtotime($lastComm);
             // log::add('Abeille', 'info', "lastComm2=".$lastComm);
             if ((time() - $lastComm) > (2 * 60)) {
-                log::add('Abeille', 'info', "Pas de réponse de la Zigate " . $zgId . " depuis plus de 2min (powerCycle)");
-                $zgType = $config['ab::zgType' . $zgId];
-                $zgPort = $config['ab::zgPort' . $zgId];
-                if ((($zgType == "USB") || ($zgType == "USBv2")) && ($config['ab::zgPowerCycle' . $zgId] == 'Y')) {
-                    $dir = __DIR__ . "/../scripts";
-                    $cmd = "cd " . $dir . "; " . system::getCmdSudo() . " ./powerCycleUsb.sh " . $zgPort . " 1>/tmp/jeedom/Abeille/powerCycleUsb.log 2>&1";
-                    log::add('Abeille', 'debug', 'Power cycling port \'' . $zgPort . '\'');
-                    exec($cmd . " &");
-                } // Exec in background
-                else {
-                    log::add('Abeille', 'Debug', 'Power cycle required but disabled on \'' . $zgId . '\''); }
-            } elseif (($zgType == "PI") || ($zgType == "PIv2")){
+                log::add('Abeille', 'info', "Pas de réponse de la Zigate ".$zgId." depuis plus de 2min");
+                $zgType = $config['ab::zgType'.$zgId];
+                $zgPort = $config['ab::zgPort'.$zgId];
+                if (($zgType == "USB") || ($zgType == "USBv2")) {
+                    if ($config['ab::preventUsbPowerCycle'] == 'Y')
+                        log::add('Abeille', 'Debug', 'Power cycle required for Zigate \'' . $zgId . '\' but disabled');
+                    else {
+                        $dir = __DIR__."/../scripts";
+                        $cmd = "cd ".$dir."; ".system::getCmdSudo()." ./powerCycleUsb.sh ".$zgPort." 1>/tmp/jeedom/Abeille/powerCycleUsb.log 2>&1";
+                        log::add('Abeille', 'debug', 'Power cycling port \''.$zgPort.'\'');
+                        exec($cmd." &"); // Exec in background
+                    }
+                } else if (($zgType == "PI") || ($zgType == "PIv2"))
                     Abeille::msgToCmd(PRIO_NORM, "CmdAbeille".$zgId."/0000/resetZg");
             }
         }

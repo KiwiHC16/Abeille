@@ -484,6 +484,7 @@
 
             <div class="form-group">
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Empêche un cycle off/on sur les Zigates USB plantées}}">{{Blocage cycle OFF/ON Zigates USB}} : </label>
                 <div class="col-lg-5">
                     <select class="configKey form-control" data-l1key="ab::preventUsbPowerCycle" style="width:150px" data-toggle="tooltip" title="{{Si 'Oui', empêche un cycle OFF/ON sur les Zigates USB plantées}}">
@@ -496,16 +497,27 @@
                         <option value="yes">{{Oui}}</option>
                         <option value="no" selected>{{Non}}</option>
 >>>>>>> 3becde2c (Advanced option to disable dead USB Zigate power cycle)
+=======
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Empêche un cycle off/on sur les Zigates USB plantées}}">{{Blocage cycle OFF/ON Zigates USB}} : </label>
+                <div class="col-lg-5">
+                    <select class="configKey form-control" data-l1key="ab::preventUsbPowerCycle" style="width:150px" data-toggle="tooltip" title="{{Si 'Oui', empêche un cycle OFF/ON sur les Zigates USB plantées}}">
+                        <option value="Y">{{Oui}}</option>
+                        <option value="N" selected>{{Non}}</option>
+>>>>>>> 4c736d3c (Config page translations updates + fixes)
                     </select>
                 </div>
             </div>
 
             <div class="form-group">
 <<<<<<< HEAD
+<<<<<<< HEAD
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Mode dédié aux développeurs}}">{{Mode developpeur}} : </label>
 =======
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Mode dédié aux développeurs}}">{{Mode developpeur : }}</label>
 >>>>>>> 3becde2c (Advanced option to disable dead USB Zigate power cycle)
+=======
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Mode dédié aux développeurs}}">{{Mode developpeur}} : </label>
+>>>>>>> 4c736d3c (Config page translations updates + fixes)
                 <div class="col-lg-5">
                     <?php
                         if (file_exists(dbgFile))

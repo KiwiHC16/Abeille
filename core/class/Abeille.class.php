@@ -490,10 +490,6 @@ class Abeille extends eqLogic {
                 $zgType = $config['ab::zgType'.$zgId];
                 $zgPort = $config['ab::zgPort'.$zgId];
                 if (($zgType == "USB") || ($zgType == "USBv2")) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> db98ddaf (Fix)
                     if ($config['ab::preventUsbPowerCycle'] == 'Y')
                         log::add('Abeille', 'Debug', 'Power cycle required for Zigate \'' . $zgId . '\' but disabled');
                     else {
@@ -502,18 +498,6 @@ class Abeille extends eqLogic {
                         log::add('Abeille', 'debug', 'Power cycling port \''.$zgPort.'\'');
                         exec($cmd." &"); // Exec in background
                     }
-<<<<<<< HEAD
-=======
-if ($config['ab::preventUsbPowerCycle'] == 'Y') 
-                    log::add('Abeille', 'Debug', 'Power cycle required but disabled on \'' . $zgId . '\''); }
-
-                    $dir = __DIR__."/../scripts";
-                    $cmd = "cd ".$dir."; ".system::getCmdSudo()." ./powerCycleUsb.sh ".$zgPort." 1>/tmp/jeedom/Abeille/powerCycleUsb.log 2>&1";
-                    log::add('Abeille', 'debug', 'Power cycling port \''.$zgPort.'\'');
-                    exec($cmd." &"); // Exec in background
->>>>>>> 3becde2c (Advanced option to disable dead USB Zigate power cycle)
-=======
->>>>>>> db98ddaf (Fix)
                 } else if (($zgType == "PI") || ($zgType == "PIv2"))
                     Abeille::msgToCmd(PRIO_NORM, "CmdAbeille".$zgId."/0000/resetZg");
             }

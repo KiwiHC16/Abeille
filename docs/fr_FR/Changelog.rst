@@ -8,8 +8,12 @@ ChangeLog
 - Interne: AbeilleTools::getParameters() => getConfig().
 - Zigate USB/+: Cycle power off/on si sans réponse depuis plus de 2mins.
 - Interne: Supression de qq fichiers obsoletes.
+<<<<<<< HEAD
 - Page de config: Ajout option avancée pour empecher cycle power OFF/ON sur Zigates USB plantées.
 - Page de config: Qq améliorations de traductions US.
+=======
+- Ajout option avancée pour empecher cycle power OFF/ON sur Zigates USB plantées.
+>>>>>>> 3becde2c (Advanced option to disable dead USB Zigate power cycle)
 
 230711-BETA-1
 -------------

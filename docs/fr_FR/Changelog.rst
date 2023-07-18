@@ -10,6 +10,8 @@ ChangeLog
 - Interne: Supression de qq fichiers obsoletes.
 - Page de config: Ajout option avancée pour empecher cycle power OFF/ON sur Zigates USB plantées.
 - Page de config: Qq améliorations de traductions US.
+- Interne: Améliorations 'powerCycleUsb.sh'.
+- Zigate PI/+: HW reset si sans réponse depuis plus de 2mins.
 
 230711-BETA-1
 -------------

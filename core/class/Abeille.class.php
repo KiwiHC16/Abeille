@@ -491,15 +491,19 @@ class Abeille extends eqLogic {
                 $zgPort = $config['ab::zgPort'.$zgId];
                 if (($zgType == "USB") || ($zgType == "USBv2")) {
                     if ($config['ab::preventUsbPowerCycle'] == 'Y')
-                        log::add('Abeille', 'Debug', 'Power cycle required for Zigate \'' . $zgId . '\' but disabled');
+                        log::add('Abeille', 'Debug', 'Power cycle required for Zigate '.$zgId.' but disabled');
                     else {
                         $dir = __DIR__."/../scripts";
                         $cmd = "cd ".$dir."; ".system::getCmdSudo()." ./powerCycleUsb.sh ".$zgPort." 1>/tmp/jeedom/Abeille/powerCycleUsb.log 2>&1";
                         log::add('Abeille', 'debug', 'Power cycling port \''.$zgPort.'\'');
-                        exec($cmd." &"); // Exec in background
+                        exec($cmd, $output, $exitCode);
+                        if ($exitCode != 0)
+                            message::add("Abeille", "La Zigate ".$zgId." semble plantée mais impossible de lui faire un cycle OFF/ON.");
                     }
-                } else if (($zgType == "PI") || ($zgType == "PIv2"))
-                    Abeille::msgToCmd(PRIO_NORM, "CmdAbeille".$zgId."/0000/resetZg");
+                } else if (($zgType == "PI") || ($zgType == "PIv2")) {
+                    log::add('Abeille', 'Debug', 'Performaint HW reset on Zigate '.$zgId);
+                    exec("python /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py");
+                }
             }
         }
 

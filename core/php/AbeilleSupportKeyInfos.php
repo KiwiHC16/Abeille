@@ -51,14 +51,11 @@
     /**
      * Print title with underlines
      *
-     * @param   logFile     file where to store the title
      * @param   title       Title to print
      *
      * @return  none
      */
-    function logTitle($title) {
-        global $logFile;
-
+    function logTitle($title, $append = 1) {
         $line = "";
         if (substr($title, 0, 2) == '{{') {
             $title = substr($title, 2);
@@ -69,7 +66,7 @@
             $line .= '=';
 
         // echo $line."\n";
-        logIt($title."\n");
+        logIt($title."\n", $append);
         logIt($line."\n");
     }
 
@@ -192,7 +189,7 @@
     // logIt('Quand <a href="https://github.com/KiwiHC16/Abeille/issues/new" target="_blank">vous ouvrez une "issue"</a> dans GitHub merci de copier/coller les 3 premiers chapitres ci dessous '."\n");
     // logIt("Pour l'intégration d'un équipement non encore supporté ajoutez le chapitre 4.\n\n");
 
-    logTitle("General");
+    logTitle("General", 0);
     $date = date('Y/m/d H:i:s');
     logIt("Date: ".$date."\n");
 

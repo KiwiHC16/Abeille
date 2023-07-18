@@ -157,15 +157,16 @@
     $('.btnKeyInfos').off('click').on('click',function() {
         console.log("btnKeyInfos click");
 
-        var genKeyInfos = new XMLHttpRequest();
-        genKeyInfos.onreadystatechange = function() {
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
                 displayLog("JEEDOM-TMP", "AbeilleKeyInfos.log")
             }
         };
 
-        genKeyInfos.open("GET", "/plugins/Abeille/core/php/AbeilleSupportKeyInfos.php", false);
-        genKeyInfos.send();
+        // xhr.open("GET", "/plugins/Abeille/core/php/AbeilleSupportKeyInfos.php", false);
+        xhr.open("POST", "/plugins/Abeille/core/php/AbeilleSupportKeyInfos.php", false);
+        xhr.send();
     });
 
     var $rawLogCheck = $('#brutlogcheck')

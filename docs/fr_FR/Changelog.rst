@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Page maintenance: Infos clefs: Mise-à-jour.
+
 230718-BETA-1
 -------------
 

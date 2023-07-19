@@ -189,6 +189,7 @@
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Canal Zigbee}} : </label>';
             echo '<div class="col-lg-4">';
                 echo '<select id="idSelChan'.$zgId.'" class="configKey form-control" data-l1key="ab::zgChan'.$zgId.'" title="{{Canal Zigbee}}" disabled>';
+                    echo '<option value=0>?</option>';
                     for ($i = 11; $i < 27; $i++) {
                         echo '<option value='.$i.'>'.$i.'</option>';
                     }

@@ -3119,7 +3119,7 @@
                     $networkUpdateId    = "01";
                     $networkManagerAddr = "0000"; // Useful only if scanDuration==FF
 
-                    cmdLog('debug', "    Using addr=".$addr.", scanChan=".$scanChan.", scanDuration=".$scanDuration.', scanCount='.$scanCount);
+                    cmdLog('debug', "    mgmtNetworkUpdateReq: addr=".$addr.", scanChan=".$scanChan.", scanDuration=".$scanDuration.', scanCount='.$scanCount);
                     $data = $addr.$scanChan.$scanDuration.$scanCount.$networkUpdateId.$networkManagerAddr;
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);

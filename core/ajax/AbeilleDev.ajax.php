@@ -21,9 +21,10 @@
      */
 
     /* Developers debug features */
-    $dbgFile = __DIR__."/../../tmp/debug.json";
-    if (file_exists($dbgFile)) {
-        $dbgConfig = json_decode(file_get_contents($dbgFile), TRUE);
+    require_once __DIR__.'/../config/Abeille.config.php';
+    // $dbgFile = __DIR__."/../../tmp/debug.json";
+    if (file_exists(dbgFile)) {
+        $dbgConfig = json_decode(file_get_contents(dbgFile), TRUE);
         $dbgDeveloperMode = TRUE;
         /* Dev mode: enabling PHP errors logging */
         error_reporting(E_ALL);
@@ -34,20 +35,19 @@
     /* Write/create developer config.
        '$devConfig' = associative array
        Returns: 0=OK, -1=ERROR */
-    function writeDevConfig($devConfig)
-    {
-        global $dbgFile;
+    function writeDevConfig($devConfig) {
+        // global $dbgFile;
 
         $tmp = __DIR__."/../../tmp";
         if (!file_exists($tmp))
             mkdir($tmp);
-        if (file_exists($dbgFile) && !is_writable($dbgFile)) {
+        if (file_exists(dbgFile) && !is_writable(dbgFile)) {
             logMessage('error', "'tmp/debug.json' n'est pas accessible en écriture.");
             return -1;
         }
 
-        file_put_contents($dbgFile, json_encode($devConfig));
-        chmod($dbgFile, 0666); // Allow read & write
+        file_put_contents(dbgFile, json_encode($devConfig));
+        chmod(dbgFile, 0666); // Allow read & write
         return 0;
     }
 
@@ -126,10 +126,10 @@
             $error = "";
             $devConfig = ""; // JSON string
 
-            if (file_exists($dbgFile) == FALSE)
+            if (file_exists(dbgFile) == FALSE)
                 ajax::success(json_encode(array('status' => -1, 'error' => "Not in dev mode", 'config' => $devConfig)));
 
-            $devConfig = file_get_contents($dbgFile);
+            $devConfig = file_get_contents(dbgFile);
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'config' => $devConfig)));
         }
 
@@ -137,10 +137,10 @@
             $status = 0;
             $error = "";
 
-            if (file_exists($dbgFile) == FALSE)
+            if (file_exists(dbgFile) == FALSE)
                 ajax::success(json_encode(array('status' => $status, 'error' => $error)));
 
-            if (unlink($dbgFile) == FALSE) {
+            if (unlink(dbgFile) == FALSE) {
                 $status = -1;
                 $error = "Impossible de détruire le fichier de config.";
             }

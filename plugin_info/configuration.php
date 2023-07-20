@@ -498,9 +498,9 @@
                 <div class="col-lg-5">
                     <?php
                         if (file_exists(dbgFile))
-                            echo '<input type="button" onclick="xableDevMode(0)" value="Désactiver" title="{{Désactive le mode développeur}}">';
+                            echo '<input type="button" onclick="xableDevMode(0)" value="{{Désactiver}}" title="{{Désactive le mode développeur}}">';
                         else
-                            echo '<input type="button" onclick="xableDevMode(1)" value="Activer" title="{{Active le mode développeur}}">';
+                            echo '<input type="button" onclick="xableDevMode(1)" value="{{Activer}}" title="{{Active le mode développeur}}">';
                     ?>
                 </div>
             </div>

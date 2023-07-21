@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230721-BETA-1
+-------------
+
 - Page maintenance: Infos clefs: Mise-à-jour.
 - Interne: Mise-à-jour 'info.json'. Version minimale du core = 4.0.
 - Dependances: Mise-à-jour du code. Unique dépendance de base = python3.

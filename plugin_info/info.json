@@ -14,8 +14,8 @@
     "documentation_beta": "https://kiwihc16.github.io/AbeilleDoc/",
     "languages": ["fr_FR", "en_US"],
     "compatibility": ["docker", "rpi", "diy", "v4"],
-    "hasDependency": "1",
-    "hasOwnDeamon": "1",
+    "hasDependency": true,
+    "hasOwnDeamon": true,
     "maxDependancyInstallTime": "45",
     "issue": "https://github.com/KiwiHC16/Abeille/issues",
     "link": {

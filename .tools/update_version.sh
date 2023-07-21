@@ -54,8 +54,10 @@ rm -f ${FILE_TMP} >/dev/null
 cat ${FILE} |
 while IFS= read -r L
 do
-    if [[ "${L}" == *"changelog"* ]]; then
+    if [[ "${L}" == *"\"changelog\""* ]]; then
         echo "  \"changelog\": \"https://kiwihc16.github.io/AbeilleDoc/Changelog.html#${VERSION_NEW}\"," >> ${FILE_TMP}
+    elif [[ "${L}" == *"changelog_beta"* ]]; then
+        echo "  \"changelog_beta\": \"https://kiwihc16.github.io/AbeilleDoc/Changelog.html#${VERSION_NEW}\"," >> ${FILE_TMP}
     else
         echo "${L}" >> ${FILE_TMP}
     fi

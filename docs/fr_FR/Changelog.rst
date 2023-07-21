@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Page maintenance: Infos clefs: Mise-à-jour.
+- Interne: Mise-à-jour 'info.json'. Version minimale du core = 4.0.
 
 230718-BETA-1
 -------------

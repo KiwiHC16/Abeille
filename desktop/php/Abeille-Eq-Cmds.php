@@ -16,7 +16,7 @@
 <br><br> -->
 
 <div class="table-responsive">
-    <table id="table_cmd" class="table table-bordered table-condensed">
+    <table id="table_cmd" class="table table-bordered table-condensed ui-sortable">
         <thead>
             <tr>
                 <th style="width:  80px;">{{ID}}</th>

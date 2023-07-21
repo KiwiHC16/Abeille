@@ -764,6 +764,8 @@
         });
     }
 
+	$("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
+
     $("#bt_addAbeilleAction").on('click', function(event) {
         var _cmd = {type: 'action'};
         addCmdToTable(_cmd);

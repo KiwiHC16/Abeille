@@ -44,6 +44,6 @@ if [[ `groups www-data | grep -c dialout` -ne 1 ]]; then
 echo 100 > ${PROGRESS_FILE}
 echo $(date)
 echo "***"
-echo "*** Installing ended"
+echo "*** Dependencies installation ended"
 echo "***"
 rm ${PROGRESS_FILE}

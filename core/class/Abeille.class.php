@@ -495,14 +495,17 @@ class Abeille extends eqLogic {
                     else {
                         $dir = __DIR__."/../scripts";
                         $cmd = "cd ".$dir."; ".system::getCmdSudo()." ./powerCycleUsb.sh ".$zgPort." 1>/tmp/jeedom/Abeille/powerCycleUsb.log 2>&1";
-                        log::add('Abeille', 'debug', 'Power cycling port \''.$zgPort.'\'');
+                        log::add('Abeille', 'debug', 'Performing power cycle on port \''.$zgPort.'\'');
                         exec($cmd, $output, $exitCode);
                         if ($exitCode != 0)
                             message::add("Abeille", "La Zigate ".$zgId." semble plantée mais impossible de lui faire un cycle OFF/ON.");
                     }
                 } else if (($zgType == "PI") || ($zgType == "PIv2")) {
-                    log::add('Abeille', 'Debug', 'Performaint HW reset on Zigate '.$zgId);
+                    log::add('Abeille', 'Debug', 'Performing HW reset on Zigate '.$zgId);
                     exec("python /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py");
+                } else { // Wifi zigates
+                    log::add('Abeille', 'Debug', 'Restarting socat for Zigate '.$zgId);
+                    AbeilleTools::restartDaemons($config, "Socat".$zgId." socat".$zgId);
                 }
             }
         }
@@ -917,6 +920,7 @@ class Abeille extends eqLogic {
                 $return['state'] = 'ok';
             }
         }
+        log::add('Abeille', 'debug', 'dependancy_info: '.json_encode($return));
         return $return;
     }
 

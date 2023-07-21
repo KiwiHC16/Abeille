@@ -746,7 +746,7 @@
         }
 
         public static function getConfig() {
-                $config = array();
+            $config = array();
 
             // Tcharp38: Should not be there
             $config['parametersCheck'] = 'ok'; // Ces deux variables permettent d'indiquer la validité des données.
@@ -1341,7 +1341,7 @@
             case 'socat':
             case 'abeillesocat':
                 $daemonPhp = "AbeilleSocat.php";
-                $daemonParams = $config['ab::zgPort'.$nb].' '.$logLevel.' '.$config['ab::zgIpAddr'.$nb];
+                $daemonParams = $config['ab::zgPort'.$nb].' '.$config['ab::zgIpAddr'.$nb].' '.$logLevel;
                 $daemonLog = " >>".$logDir."AbeilleSocat".$nb.'.log 2>&1';
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
                 break;

@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230721-BETA-1
+230721-BETA-2
 -------------
 
 - Page maintenance: Infos clefs: Mise-à-jour.

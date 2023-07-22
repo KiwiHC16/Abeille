@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Correction redémarrage Zigate Wifi.
+
 230721-BETA-2
 -------------
 

@@ -53,6 +53,7 @@
             "CurrentLevel": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "genericType": "FLAP_STATE",
+                "template": "shutter",
                 "isVisible": 1
             },
             "Bind-0008-ToZigate": {

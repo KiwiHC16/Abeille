@@ -6,6 +6,7 @@ ChangeLog
 - Profalux volet: Template par défaut = shutter pour 'Current Level'.
 - Commandes: Suppression 'zb-CustomInfo.json' obsolete.
 - Page de config: Corrections translation 'en_US'.
+- Page de gestion: Corrections translation 'en_US'.
 
 230721-BETA-2
 -------------

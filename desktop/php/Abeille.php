@@ -65,7 +65,7 @@
 		<div class="col-xs-12 eqLogicThumbnailDisplay">
 
             <!-- Top level buttons  -->
-            <?php include 'Abeille-ToolsButtons.php'; ?>
+            <?php include 'Abeille-TopButtons.php'; ?>
 
             <!-- Equipements -->
             <?php include 'Abeille-Bees.php'; ?>

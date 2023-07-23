@@ -71,7 +71,7 @@
 
         $NbOfZigatesON++;
         if ( Abeille::byLogicalId( 'Abeille'.$zgId.'/0000', 'Abeille') ) {
-            echo '<label style="margin: 10px 0px 0px 10px">Réseau Abeille'.$zgId.'</label>';
+            echo '<label style="margin: 10px 0px 0px 10px">{{Réseau Abeille}}'.$zgId.'</label>';
         }
         echo "&nbsp&nbsp&nbsp";
         // echo '<span class="cursor" id="bt_include'.$zgId.'" title="Inclusion: clic sur le plus pour mettre la zigate en inclusion."><i class="fas fa-plus-circle" style="font-size:160%;color:green !important;"></i></span>';
@@ -126,9 +126,9 @@
     if ($NbOfZigatesON == 0) { // No Zigate to display. UNEXPECTED !
         echo "<div style=\"background: #e9e9e9; font-weight: bold; padding: .2em 2em;\"><br>";
             echo "<span style=\"color:red\">";
-                echo "Aucune Zigate n'est activée !";
+                echo "{{Aucune Zigate n'est activée !}}";
             echo "</span><br>";
-            echo "Veuillez aller à la page de configuration pour corriger.<br><br>";
+            echo "{{Veuillez aller à la page de configuration pour corriger.}}<br><br>";
         echo "</div>";
     }
 ?>

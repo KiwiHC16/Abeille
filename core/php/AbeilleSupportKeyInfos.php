@@ -191,18 +191,20 @@
 
     logTitle("General", 0);
     $date = date('Y/m/d H:i:s');
-    logIt("Date: ".$date."\n");
+    logIt("Date   : ".$date."\n");
+    $jLines = log::getConfig('maxLineLog');
+    logIt("Logs   : ".$jLines." lines\n");
 
     // Plateform infos
     exec('uname -a', $result2);
-    logIt("Kernel: ".json_encode($result2, JSON_UNESCAPED_SLASHES)."\n");
+    logIt("Kernel : ".json_encode($result2, JSON_UNESCAPED_SLASHES)."\n");
 
     // Abeille's version
     $file = fopen(__DIR__."/../../plugin_info/Abeille.version", "r");
     $line = fgets($file); // Should be a comment
     $abeilleVersion = trim(fgets($file)); // Should be Abeille's version
     fclose($file);
-    logIt("Version Abeille: ".$abeilleVersion."\n\n");
+    logIt("Abeille: Version ".$abeilleVersion."\n\n");
 
     // Zigate infos
     zigatesInfos();

@@ -223,10 +223,11 @@
     <fieldset>
         <legend><i class="fa fa-list-alt"></i><strong> {{Général}}</strong></legend>
         <div>
-            <p><i> Suivez toutes les dernieres informations <a href="https://community.jeedom.com/t/news-de-la-ruche-par-abeille-plugin-abeille/26524"><strong>sur ce forum</strong> </a>.</i></p>
-            <p><i> Les discussions et questions se feront via <a href="https://community.jeedom.com/tags/plugin-abeille"><strong>ce forum</strong> </a>. Pensez à mettre le flag "plugin-abeille" dans tous vos posts.</i></p>
-            <p><i> Note: si vous souhaitez de l'aide, ne passez pas par les fonctions integrées de jeedom car je recois les requetes sans pouvoir contacter les personnes en retour. Passez par le forum.</i></p>
-            <p><i> Note: Jeedom propose une fonction de Heartbeat dans la tuile "Logs et surveillance". Cette fonction n'est pas implémentée dans Abeille. Ne pas l'activer pour l'instant.</i></p>
+            <!-- <p><i> Suivez toutes les dernieres informations <a href="https://community.jeedom.com/t/news-de-la-ruche-par-abeille-plugin-abeille/26524"><strong>sur ce forum</strong> </a>.</i></p>
+            <p><i> Les discussions et questions se feront via <a href="https://community.jeedom.com/tags/plugin-abeille"><strong>ce forum</strong> </a>. Pensez à mettre le flag "plugin-abeille" dans tous vos posts.</i></p> -->
+            <!-- <p><i> Note: si vous souhaitez de l'aide, ne passez pas par les fonctions integrées de jeedom car je recois les requetes sans pouvoir contacter les personnes en retour. Passez par le forum.</i></p> -->
+            <p><i> {{Note: Pour toute demande de support, passez par ce lien}}: https://github.com/KiwiHC16/Abeille/issues.</i></p>
+            <p><i> {{Note: Ne pas activer la fonction 'Heartbeat' pour l'instant. Pas encore de support.}}</i></p>
         </div>
         <div class="form-group">
             <div class="col-lg-6">
@@ -289,7 +290,7 @@
         <div class="form-group">
             <div class="col-lg-6">
                 <div class="form-group">
-                    <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Objet Parent}} : </label>
+                    <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Objet parent}} : </label>
                     <div class="col-lg-4" title="{{Objet parent (ex: une pièce de la maison) par défaut pour toute nouvelle zigate. Peut être changé plus tard via la page de gestion d'Abeille en cliquant sur la ruche correspondante}}.">
                         <select class="configKey form-control" data-l1key="ab::defaultParent">
                             <?php
@@ -449,7 +450,7 @@
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Vérifie l'integrité du plugin}}">{{Test d'intégrité}} : </label>
                 <div class="col-lg-5">
-                    <input type="button" onclick="checkIntegrity()" value="Lancer" title="Lance le test d'intégrité">
+                    <input type="button" onclick="checkIntegrity()" value="{{Lancer}}" title="Lance le test d'intégrité">
                     <a class="integrityStatus ml4px" title="{{Status d'intégrité d'Abeille. Voir 'AbeilleConfig.log' si 'NOK'.}}">
                         <span class="label label-success" style="font-size:1em">-?-</span>
                     </a>
@@ -458,7 +459,7 @@
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Supprime les fichiers locaux inutiles si test d'intégrité OK}}">{{Nettoyage des fichiers non requis : }}</label>
                 <div class="col-lg-5">
-                    <input id="idCleanUpB" type="button" onclick="cleanUp()" value="Lancer" " title="Lance le nettoyage si le test d'intégrité est OK" disabled>
+                    <input id="idCleanUpB" type="button" onclick="cleanUp()" value="{{Lancer}}" " title="Lance le nettoyage si le test d'intégrité est OK" disabled>
                 </div>
             </div>
             <?php } ?>
@@ -517,7 +518,7 @@
                     } else
                         echo '<input type="text" id="idParserLog" title="AbeilleParser messages type to disable (ex: 8000)" style="width:400px">';
                     ?>
-                    <input type="button" onclick="saveChanges()" value="Sauver" style="margin-left:8px">
+                    <input type="button" onclick="saveChanges()" value="{{Sauver}}" style="margin-left:8px">
                     </div>
                 </div>
 
@@ -530,7 +531,7 @@
                     } else
                         echo '<input type="text" id="idDefines" title="Defines (ex: Tcharp38)" style="width:400px">';
                     ?>
-                    <input type="button" onclick="saveChanges()" value="Sauver" style="margin-left:8px">
+                    <input type="button" onclick="saveChanges()" value="{{Sauver}}" style="margin-left:8px">
                     </div>
                 </div>
             <?php } ?>
@@ -554,12 +555,12 @@
     // $('#idZigatesShowHide').on('click', function () {
     //     var Label = document.getElementById("idZigatesShowHide").innerText;
     //     console.log("ZigatesShowHide click: Label=" + Label);
-    //     if (Label == "Afficher") {
-    //         document.getElementById("idZigatesShowHide").innerText = "Cacher";
+    //     if (Label == "{{Afficher}}") {
+    //         document.getElementById("idZigatesShowHide").innerText = "{{Cacher}}";
     //         document.getElementById("idZigatesShowHide").className = "btn btn-danger";
     //         $("#idZigates").show();
     //     } else {
-    //         document.getElementById("idZigatesShowHide").innerText = "Afficher";
+    //         document.getElementById("idZigatesShowHide").innerText = "{{Afficher}}";
     //         document.getElementById("idZigatesShowHide").className = "btn btn-success";
     //         $("#idZigates").hide();
     //     }
@@ -739,13 +740,13 @@
     // $('#idWifiShowHide').on('click', function () {
     //         var Label = document.getElementById("idWifiShowHide").innerText;
     //         console.log("WifiShowHide click: Label=" + Label);
-    //         if (Label == "Afficher") {
+    //         if (Label == "{{Afficher}}") {
     //             checkSocatInstallation();
-    //             document.getElementById("idWifiShowHide").innerText = "Cacher";
+    //             document.getElementById("idWifiShowHide").innerText = "{{Cacher}}";
     //             document.getElementById("idWifiShowHide").className = "btn btn-danger";
     //             $("#zigatewifi").show();
     //         } else {
-    //             document.getElementById("idWifiShowHide").innerText = "Afficher";
+    //             document.getElementById("idWifiShowHide").innerText = "{{Afficher}}";
     //             document.getElementById("idWifiShowHide").className = "btn btn-success";
     //             $("#zigatewifi").hide();
     //         }
@@ -788,12 +789,12 @@
     $('#idUpdateCheckShowHide').on('click', function () {
         var Label = document.getElementById("idUpdateCheckShowHide").innerText;
         console.log("idUpdateCheckShowHide click: Label=" + Label);
-        if (Label == "Afficher") {
-            document.getElementById("idUpdateCheckShowHide").innerText = "Cacher";
+        if (Label == "{{Afficher}}") {
+            document.getElementById("idUpdateCheckShowHide").innerText = "{{Cacher}}";
             document.getElementById("idUpdateCheckShowHide").className = "btn btn-danger";
             $("#UpdateCheck").show();
         } else {
-            document.getElementById("idUpdateCheckShowHide").innerText = "Afficher";
+            document.getElementById("idUpdateCheckShowHide").innerText = "{{Afficher}}";
             document.getElementById("idUpdateCheckShowHide").className = "btn btn-success";
             $("#UpdateCheck").hide();
         }
@@ -802,12 +803,12 @@
     $('#idAdvOptionsShowHide').on('click', function () {
         var Label = document.getElementById("idAdvOptionsShowHide").innerText;
         console.log("idAdvOptionsShowHide click: Label=" + Label);
-        if (Label == "Afficher") {
-            document.getElementById("idAdvOptionsShowHide").innerText = "Cacher";
+        if (Label == "{{Afficher}}") {
+            document.getElementById("idAdvOptionsShowHide").innerText = "{{Cacher}}";
             document.getElementById("idAdvOptionsShowHide").className = "btn btn-danger";
             $("#idAdvOptions").show();
         } else {
-            document.getElementById("idAdvOptionsShowHide").innerText = "Afficher";
+            document.getElementById("idAdvOptionsShowHide").innerText = "{{Afficher}}";
             document.getElementById("idAdvOptionsShowHide").className = "btn btn-success";
             $("#idAdvOptions").hide();
         }

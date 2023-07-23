@@ -1,5 +1,55 @@
 {
-    "plugins\/Abeille\/desktop\/php\/Abeille.php": {
+    "plugins\/Abeille\/plugin_info\/configuration.php": {
+      "Oui": "Yes",
+      "Non": "No",
+      "Installer": "Install",
+      "Afficher": "Show",
+      "Cacher": "Hide",
+      "Activer": "Enable",
+      "Désactiver": "Disable",
+
+      "Général": "General",
+      "Note: Pour toute demande de support, passez par ce lien": "For any support follow this link",
+      "Note: Ne pas activer la fonction 'Heartbeat' pour l'instant. Pas encore de support.": "Do not enable 'Heartbeat'. It is not supported yet.",
+      "Version interne": "Internal version",
+      "Version interne du plugin Abeille": "Abeille internal version",
+      "Objet parent": "Parent object",
+      "Mettre-à-jour": "Update",
+
+      "Dépendances optionnelles": "Optional dependencies",
+      "Lib GPIO à utiliser": "GPIO lib to use",
+
+      "Nom": "Name",
+      "Nom de la zigate; N'est modifiable que via la page de gestion d'Abeille après sauvegarde.": "Zigate name: Can only be modified via equipment page.",
+      "Port série": "Serial port",
+      "Adresse IP (IP:Port)": "IP address (IP:Port)",
+      "Canal Zigbee": "Zigbee channel",
+      "Activée": "Enabled",
+      "Désactivée": "Disabled",
+      "Libérer": "Free",
+      "<adresse>:<port>": "<addr>:<port>",
+
+      "Plus de zigates": "More zigates",
+      "Moins de zigates": "Less zigates",
+
+      "Options avancées": "Advanced options",
+      "Attention ! Ne touchez des éléments de cette section que si vous savez parfaitement de quoi il en retourne.": "DO NOT touch settings in this section unless you know exactly what you are doing.",
+      "Test d'intégrité": "Integrity test",
+      "Lancer": "Start",
+      "Sauver": "Save",
+      "Nettoyage des fichiers non requis": "Obsolete files cleanup",
+      "Blocage interrogation LQI à minuit": "Prevent LQI interrogations at midnight",
+      "Si 'oui', empêche l'interrogation du réseau tout les jours à minuit": "If 'Yes', prevent LQI interrogation everydays at midnight",
+      "Empêche un cycle off/on sur les Zigates USB plantées": "Prevent power cycle of dead USB Zigates",
+      "Blocage cycle OFF/ON Zigates USB": "Prevent USB Zigates power cycle",
+      "Si 'Oui', empêche un cycle OFF/ON sur les Zigates USB plantées": "If 'Yes', prevent power cycle of dead USB Zigates",
+      "Mode dédié aux développeurs": "Dedicated mode for developers",
+      "Mode developpeur": "Developer mode",
+      "Désactive le mode développeur": "Disable developer mode",
+      "Active le mode développeur": "Enable developer mode",
+      "Parser; Messages désactivés": "Parser; disabled messages"
+  },
+  "plugins\/Abeille\/desktop\/php\/Abeille.php": {
       "401 - Accès non autorisé": "401 - Unauthorized access",
       "Rechercher": "Search",
       "Santé": "Health",
@@ -28,8 +78,8 @@
       "Equipement": "Device",
       "Param": "Config",
       "Commandes": "Commands",
-      "Nom de l\\'équipement": "Device name",
-      "Nom de l\\'équipement Abeille": "Bee device name",
+      "Nom de l'équipement": "Device name",
+      "Nom de l'équipement Abeille": "Bee device name",
       "Objet parent": "Parent object",
       "Aucun": "None",
       "Catégorie": "Category",
@@ -88,45 +138,6 @@
       "Rechercher équipement": "Find device",
       "Retain flag": "Retain flag"
     },
-    "plugins\/Abeille\/plugin_info\/configuration.php": {
-      "Oui": "Yes",
-      "Non": "No",
-
-      "Général": "General",
-      "En passant votre souris sur les titres des champs, vous pouvez obtenir des informations specifiques sur chaque champs.": "Hover you mouse over each item to get tooltips on their usage",
-      "Version interne": "Internal version",
-      "Version interne du plugin Abeille": "Abeille internal version",
-      "Objet parent": "Parent object",
-      "Mettre-à-jour": "Update",
-
-      "Dépendances optionnelles": "Optional dependencies",
-      "Lib GPIO à utiliser": "GPIO lib to use",
-
-      "Nom": "Name",
-      "Nom de la zigate; N'est modifiable que via la page de gestion d'Abeille après sauvegarde.": "Zigate name: Can only be modified via equipment page.",
-      "Port série": "Serial port",
-      "Adresse IP (IP:Port)": "IP address (IP:Port)",
-      "Canal Zigbee": "Zigbee channel",
-      "Activée": "Enabled",
-      "Désactivée": "Disabled",
-      "Libérer": "Free",
-      "<adresse>:<port>": "<addr>:<port>",
-
-      "Plus de zigates": "More zigates",
-      "Moins de zigates": "Less zigates",
-
-      "Options avancées": "Advanced options",
-      "Afficher": "Show",
-      "Blocage interrogation LQI à minuit": "Prevent LQI interrogations at midnight",
-      "Si 'oui', empêche l'interrogation du réseau tout les jours à minuit": "If 'Yes', prevent LQI interrogation everydays at midnight",
-      "Empêche un cycle off/on sur les Zigates USB plantées": "Prevent power cycle of dead USB Zigates",
-      "Blocage cycle OFF/ON Zigates USB": "Prevent USB Zigates power cycle",
-      "Si 'Oui', empêche un cycle OFF/ON sur les Zigates USB plantées": "If 'Yes', prevent power cycle of dead USB Zigates",
-      "Mode dédié aux développeurs": "Dedicated mode for developers", 
-      "Mode developpeur": "Developer mode",
-      "Désactive le mode développeur": "Disable developer mode",
-      "Active le mode développeur": "Enable developer mode",
-  },
   "plugins\/Abeille\/desktop\/modal\/health.php": {
     "Module": "Device",
     "Name": "Name",
@@ -180,9 +191,9 @@
       "Etat": "Status",
       "Etat actuel :": "Actual state",
       "Système": "System",
-      "Chemin du contrôleur Zigbee :": "Zigbee controller path :",
+      "Chemin du contrôleur Zigbee": "Zigbee controller path",
       "Inconnu": "Unknown",
-      "Nombre de démons lancés :": "Number of started deamons :"
+      "Nombre de démons lancés": "Number of started deamons"
   },
   "plugins\/Abeille\/desktop\/modal\/inconnu.php": {
     "Inconnu ...": "Unknown ...",

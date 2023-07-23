@@ -17,6 +17,7 @@
                 "use": "inf_generic-NumericBadge",
                 "params": "clustId=FF66&attrId=0000",
                 "subType": "string",
+                "logicalId": "OPTARIF",
                 "isVisible": 1
             },
             "Get OPTARIF": {
@@ -38,9 +39,10 @@
                 "execAtCreation": 1
             },
             "ADC0": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0308",
-                "subType": "string"
+                "subType": "string",
+                "logicalId": "ADC0"
             },
             "Get ADC0": {
                 "use": "act_zbReadAttribute",
@@ -72,44 +74,49 @@
                 "isVisible": 1
             },
             "EJPHN": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=0702&attrId=0100"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0100",
+                "logicalId": "EJPHN"
             },
             "EJPHPM": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=0702&attrId=0102"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0102",
+                "logicalId": "EJPHPM"
             },
             "BBRHCJB": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0100",
                 "logicalId": "BBRHCJB"
             },
             "BBRHPJB": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0102",
                 "logicalId": "BBRHPJB"
             },
             "BBRHCJW": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0104",
                 "logicalId": "BBRHCJW"
             },
             "BBRHPJW": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "params": "clustId=0702&attrId=0106",
                 "logicalId": "BBRHPJW"
             },
             "BBRHCJR": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=0702&attrId=0108"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0108",
+                "logicalId": "BBRHCJR"
             },
             "BBRHPJR": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=0702&attrId=010A"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=010A",
+                "logicalId": "BBRHPJR"
             },
             "IINST": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=0B04&attrId=0508"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=0508",
+                "logicalId": "IINST"
             },
             "Get IINST": {
                 "use": "act_zbReadAttribute",
@@ -122,21 +129,24 @@
                 "execAtCreation": "yes"
             },
             "IINST1": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "params": "clustId=0B04&attrId=0508",
                 "logicalId": "IINST1"
             },
             "IINST2": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=0B04&attrId=0908"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=0908",
+                "logicalId": "IINST2"
             },
             "IINST3": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=0B04&attrId=0A08"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=0A08",
+                "logicalId": "IINST3"
             },
             "IMAX": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=0B04&attrId=050A"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=050A",
+                "logicalId": "IMAX"
             },
             "Get-IMAX": {
                 "use": "act_zbReadAttribute",
@@ -144,49 +154,59 @@
                 "execAtCreation": 1
             },
             "IMAX1": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "params": "clustId=0B04&attrId=050A",
                 "logicalId": "IMAX1"
             },
             "IMAX2": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=0B04&attrId=090A"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=090A",
+                "logicalId": "IMAX2"
             },
             "IMAX3": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=0B04&attrId=0A0A"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=0A0A",
+                "logicalId": "IMAX3"
             },
             "PMAX": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=0B04&attrId=050D"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=050D",
+                "logicalId": "PMAX"
             },
             "PAPP": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=0B04&attrId=050F"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0B04&attrId=050F",
+                "logicalId": "PAPP"
             },
             "PTEC": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=0702&attrId=0020"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=0702&attrId=0020",
+                "logicalId": "PTEC"
             },
             "DEMAIN": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=FF66&attrId=0001"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=FF66&attrId=0001",
+                "logicalId": "DEMAIN"
             },
             "HHPHC": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=FF66&attrId=0002"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=FF66&attrId=0002",
+                "logicalId": "HHPHC"
             },
             "PPOT": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=FF66&attrId=0003"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=FF66&attrId=0003",
+                "logicalId": "PPOT"
             },
             "PEJP": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=FF66&attrId=0004"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=FF66&attrId=0004",
+                "logicalId": "PEJP"
             },
             "ADPS": {
-                "use": "zb-CustomInfo",
-                "params": "clustId=FF66&attrId=0005"
+                "use": "inf_generic-NumericBadge",
+                "params": "clustId=FF66&attrId=0005",
+                "logicalId": "ADPS"
             }
         }
     }

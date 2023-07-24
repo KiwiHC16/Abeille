@@ -23,12 +23,12 @@
 		</br><br/> -->
 	<!-- </form> -->
 
-	Vous avez remplacé une zigate ou il y a eu changement de port générant ainsi un changement de son adresse IEEE.
+	{{Vous avez remplacé une zigate ou il y a eu changement de port générant ainsi un changement de son adresse IEEE.}}
 	<br/>
-	La zigate est ignorée par mesure de sécurité.
+	{{La Zigate est ignorée par mesure de sécurité.}}
 	<br/>
 	<br/>
-	Selectionnez la nouvelle zigate et confirmez.
+	{{Selectionnez la nouvelle Zigate et confirmez.}}
 	<br/>
 	<select id="idNewZigate" style="width : 40%">
 	<?php

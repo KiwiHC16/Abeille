@@ -50,6 +50,9 @@
       "Parser; Messages désactivés": "Parser; disabled messages"
   },
   "plugins\/Abeille\/desktop\/php\/Abeille.php": {
+      "Confirmer": "Confirm",
+      "Remplacer": "Replace",
+
       "401 - Accès non autorisé": "401 - Unauthorized access",
 
       "Configuration": "Configuration",
@@ -68,6 +71,19 @@
       "Surveiller": "Monitor",
 
       "Groupes": "Groups",
+
+      "Remplacement d'équipements": "Equipments replacement",
+      "Equipement HS à remplacer": "Dead equipment to replace",
+      "Remplacé par": "Replaced by",
+
+      "Migration d'équipements": "Equipments migration",
+      "Equipement à migrer": "Equipement to migrate",
+      "Vers la Zigate": "To Zigate",
+
+      "Changement de Zigate": "Zigate replacement",
+      "Vous avez remplacé une zigate ou il y a eu changement de port générant ainsi un changement de son adresse IEEE.": "Either you replaced a Zigate or you changed Zigate port leading to IEEE addr change.",
+      "La Zigate est ignorée par mesure de sécurité.": "Zigate is ignored for security reasons",
+      "Selectionnez la nouvelle Zigate et confirmez.": "Select new Zigate and confirm",
 
       "Appliquer les commandes sur la selection": "Apply commands to selection",
       "Module": "Module",

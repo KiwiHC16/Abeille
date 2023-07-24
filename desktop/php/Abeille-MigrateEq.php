@@ -7,7 +7,7 @@
 <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
 
 		<br/>
-		<label class="col-sm-2 control-label">{{Equipement à migrer:}}</label>
+		<label class="col-sm-2 control-label">{{Equipement à migrer}}:</label>
     	<div class="col-sm-10">
 			<select id="idEq" style="width : 40%">
 			<?php
@@ -23,7 +23,7 @@
 			?>
 			</select>
 		</div>
-		<label class="col-sm-2 control-label">{{Vers la zigate:}}</label>
+		<label class="col-sm-2 control-label">{{Vers la zigate}}:</label>
     	<div class="col-sm-10">
 			<select id="idDstZg" style="width : 40%">
 			<?php

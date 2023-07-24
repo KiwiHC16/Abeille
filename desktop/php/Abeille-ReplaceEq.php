@@ -23,7 +23,7 @@
 		</select>
 	</div>
 
-	<label class="col-sm-2 control-label">{{Remplacé par:}}</label>
+	<label class="col-sm-2 control-label">{{Remplacé par}}:</label>
     <div class="col-sm-10">
 		<select id="idNewEq" style="width : 40%">
 		<?php

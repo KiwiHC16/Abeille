@@ -4,9 +4,12 @@ ChangeLog
 - Interne: Correction redémarrage Zigate Wifi.
 - Maintenance/infos clefs: Ajout nb lignes de log.
 - Profalux volet: Template par défaut = shutter pour 'Current Level'.
-- Commandes: Suppression 'zb-CustomInfo.json' obsolete.
 - Page de config: Corrections translation 'en_US'.
 - Page de gestion: Corrections translation 'en_US'.
+- Modèles de commandes:
+
+  - Suppression 'zb-CustomInfo.json' obsolete.
+  - Suppresion cmde obsolote 'temperatureLight.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
 
 230721-BETA-2
 -------------

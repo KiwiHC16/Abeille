@@ -49,8 +49,12 @@
                 "logicalId": "#EP#-Set4000K",
                 "isVisible": 1
             },
-            "temperatureLight": {
-                "use": "temperatureLight"
+            "Color temp": {
+                "use": "inf_zbAttr-0300-ColorTemperatureMireds",
+                "minValue": "2000",
+                "maxValue": "6500",
+                "calculValueOffset": "intval(1000000\\/#value#)",
+                "isVisible": 1
             },
             "setTemperatureLight": {
                 "use": "setTemperatureLight"

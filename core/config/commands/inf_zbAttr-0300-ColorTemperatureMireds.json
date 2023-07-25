@@ -7,10 +7,11 @@
         "subType": "numeric",
         "template": "badge",
         "configuration": {
-            "visibilityCategory": "additionalCommand"
+            "visibilityCategory": "All"
         },
         "type": "info",
         "logicalId": "0300-#EP#-0007",
-        "unit": "K"
+        "unit": "K",
+        "genericType": "LIGHT_COLOR_TEMP"
     }
 }

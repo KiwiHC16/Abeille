@@ -606,6 +606,16 @@
                     $commands2["Set Red"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ($cmdFName == "temperatureLight") {
+                    $commands2["Color temp"] = Array(
+                        "use" => "inf_zbAttr-0300-ColorTemperatureMireds",
+                        "minValue" => "2000",
+                        "maxValue" => "6500",
+                        "calculValueOffset" => "intval(1000000\/#value#)",
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
 
                 // Cluster 0500 updates

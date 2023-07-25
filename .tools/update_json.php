@@ -609,9 +609,35 @@
                 } else if ($cmdFName == "temperatureLight") {
                     $commands2["Color temp"] = Array(
                         "use" => "inf_zbAttr-0300-ColorTemperatureMireds",
-                        "minValue" => "2000",
-                        "maxValue" => "6500",
+                        "minValue" => "2000", // What for ?
+                        "maxValue" => "6500", // What for ?
                         "calculValueOffset" => "intval(1000000\/#value#)",
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ($cmdFName == "temperatureLight1") {
+                    $commands2["Color temp"] = Array(
+                        "use" => "inf_zbAttr-0300-ColorTemperatureMireds",
+                        "minValue" => "2700", // What for ?
+                        "maxValue" => "5000", // What for ?
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ($cmdFName == "temperatureLight2") {
+                    $commands2["Color temp"] = Array(
+                        "use" => "inf_zbAttr-0300-ColorTemperatureMireds",
+                        "minValue" => "2000", // What for ?
+                        "maxValue" => "6500", // What for ?
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ($cmdFName == "temperatureLightV2") {
+                    $commands2["Color temp"] = Array(
+                        "use" => "inf_zbAttr-0300-ColorTemperatureMireds",
+                        "historizeRound" => "0",
                         "isVisible" => 1,
                     );
                     $devUpdated = true;

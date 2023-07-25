@@ -52,8 +52,10 @@
                 "logicalId": "#EP#-Set-6000K",
                 "isVisible": 1
             },
-            "TemperatureLight": {
-                "use": "temperatureLightV2"
+            "Color temp": {
+                "use": "inf_zbAttr-0300-ColorTemperatureMireds",
+                "historizeRound": "0",
+                "isVisible": 1
             },
             "setTemperatureLight_2700_6500": {
                 "use": "setTemperatureLight_2700_6500"

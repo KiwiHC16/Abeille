@@ -8,8 +8,11 @@ ChangeLog
 - Page de gestion: Corrections translation 'en_US'.
 - Modèles de commandes:
 
-  - Suppression 'zb-CustomInfo.json' obsolete.
-  - Suppresion cmde obsolote 'temperatureLight.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+  - Suppression 'zb-CustomInfo.json' obsolète.
+  - Suppresion cmde obsolète 'temperatureLight.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+  - Suppresion cmde obsolète 'temperatureLight1.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+  - Suppresion cmde obsolète 'temperatureLight2.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+  - Suppresion cmde obsolète 'temperatureLightV2.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
 
 230721-BETA-2
 -------------

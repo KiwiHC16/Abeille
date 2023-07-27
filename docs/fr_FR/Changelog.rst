@@ -13,6 +13,7 @@ ChangeLog
   - Suppresion cmde obsolète 'temperatureLight1.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
   - Suppresion cmde obsolète 'temperatureLight2.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
   - Suppresion cmde obsolète 'temperatureLightV2.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+- Moes télécommande universelle IR: Support préliminaire (2607).
 
 230721-BETA-2
 -------------

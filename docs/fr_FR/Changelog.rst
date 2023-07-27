@@ -14,6 +14,7 @@ ChangeLog
   - Suppresion cmde obsolète 'temperatureLight2.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
   - Suppresion cmde obsolète 'temperatureLightV2.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
 - Moes télécommande universelle IR: Support préliminaire (2607).
+- Interne: Suppression fichier 'inconnu.php' obsolète.
 
 230721-BETA-2
 -------------

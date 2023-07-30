@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230730-BETA-1
+-------------
+
 - Interne: Correction redémarrage Zigate Wifi.
 - Maintenance/infos clefs: Ajout nb lignes de log.
 - Profalux volet: Template par défaut = shutter pour 'Current Level'.

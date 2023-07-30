@@ -16,7 +16,7 @@
 </div>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">{{Id Jeedom}}</label>
+    <label class="col-sm-3 control-label">{{ID Jeedom}}</label>
     <div class="col-sm-5">
         <!-- 'eqLogicAttr' with data-l1key="id" must not be declared twice in same page -->
         <!-- < ? php echo '<input type="text" value="'.$eqId.'" readonly>'; ?> -->

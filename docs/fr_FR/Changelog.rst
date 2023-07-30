@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Page de l'équipement: Corrections translation 'en_US'.
+
 230730-BETA-1
 -------------
 

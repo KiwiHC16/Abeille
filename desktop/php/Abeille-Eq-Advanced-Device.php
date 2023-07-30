@@ -8,7 +8,7 @@
 ?>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">Identifiant Zigbee</label>
+    <label class="col-sm-3 control-label">{{Identifiant Zigbee}}</label>
     <div class="col-sm-5">
         <input id="idZbModel" readonly title="{{Modèle}}" value="" />
         <input id="idZbManuf" readonly style="margin-left: 8px" title="{{Fabricant}}" value="" />
@@ -54,7 +54,7 @@
 ?> -->
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">Modèle d'équipement</label>
+    <label class="col-sm-3 control-label">{{Modèle d'équipement}}</label>
     <div class="col-sm-5">
         <!-- < ?php
             if (isset($eqModel['id']))
@@ -139,14 +139,14 @@
 < ?php } } ?> -->
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">Assistant de découverte</label>
+    <label class="col-sm-3 control-label">{{Assistant de découverte}}</label>
     <div class="col-sm-5">
         <a class="btn btn-warning" id="idEqAssistBtn">{{Ouvrir}}</a>
     </div>
 </div>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">Code fabricant (manufCode)</label>
+    <label class="col-sm-3 control-label">{{Code fabricant (manufCode)}}</label>
     <div class="col-sm-5">
         <!-- < ?php
             if (isset($eqZigbee['manufCode']))

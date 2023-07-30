@@ -1,5 +1,5 @@
 {
-    "attr-Zone-Alarm1": {
+    "inf_Zone-Alarm1": {
         "comment": "A generic attribut to display a zone status alarm1",
         "subType": "binary",
         "template": "default",

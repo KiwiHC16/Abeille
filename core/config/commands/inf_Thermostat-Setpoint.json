@@ -1,5 +1,5 @@
 {
-    "attr-Thermostat-Setpoint": {
+    "inf_Thermostat-Setpoint": {
         "comment": "Received Setpoint from thermostat",
         "comment2": "Tcharp38: Can we map on a Zigbee standard attribute ?",
         "subType": "numeric",

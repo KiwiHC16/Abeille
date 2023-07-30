@@ -70,7 +70,7 @@
                 $devUpdated = true;
                 echo "  'Categorie' renamed to 'category'.\n";
             }
-        }
+        } // End 'category'
 
         if (!isset($dev[$devName]['configuration'])) {
             newDevError($devName, "ERROR", "No configuration defined");
@@ -120,7 +120,7 @@
             $commands = $dev[$devName]['commands'];
             $commands2 = [];
             foreach ($commands as $key => $value) {
-                // New syntax: "<cmdJName>": { "use": "<fileName>" }
+                // New syntax only: "<cmdJName>": { "use": "<fileName>", "param": "xxx" ... }
                 $cmdFName = $value['use'];
                 $oldSyntax = false;
 
@@ -144,6 +144,15 @@
                 // zbCmdR-XXXX-YYYY => inf_zbCmdR-XXXX-YYYY
                 else if (preg_match('/^zbCmdR-[a-zA-Z0-9]{4}-/', $cmdFName)) {
                     $new = "inf_zbCmdR-".substr($cmdFName, 7);
+                    $commands2[$key] = $value;
+                    $commands2[$key]["use"] = $new;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' RENAMED.\n";
+                }
+
+                // attr-XXXX => inf_XXXX
+                else if (preg_match('/^attr-[a-zA-Z0-9]*/', $cmdFName)) {
+                    $new = "inf_".substr($cmdFName, 5);
                     $commands2[$key] = $value;
                     $commands2[$key]["use"] = $new;
                     $devUpdated = true;
@@ -892,13 +901,14 @@
             //     continue;
             // $new = "act_zbCmdG-".substr($dirEntry, 6);
 
-            // if (!preg_match('/^zbCmdR-[a-zA-Z0-9]{4}-/', $dirEntry))
-            //     continue;
-            // $new = "inf_zbCmdR-".substr($dirEntry, 7);
-
-            if (!in_array($dirEntry, array('zbReadAttribute', 'zbWriteAttribute', 'zbConfigureReporting', 'zbBindToZigate')))
+            // attr-XXXX => inf_XXXX
+            if (!preg_match('/^attr-[a-zA-Z0-9]*/', $dirEntry))
                 continue;
-            $new = "act_zb".substr($dirEntry, 2);
+            $new = "inf_".substr($dirEntry, 5);
+
+            // if (!in_array($dirEntry, array('zbReadAttribute', 'zbWriteAttribute', 'zbConfigureReporting', 'zbBindToZigate')))
+            //     continue;
+            // $new = "act_zb".substr($dirEntry, 2);
 
             $jsonContent = file_get_contents($fullPath);
             $content = json_decode($jsonContent, true);
@@ -914,6 +924,8 @@
     }
 
     renameCmds(); // Ex: zb-xxxx-yyyy => inf_zbAttr-xxxx-yyyy
+
+    // exit(12);
 
     buildDevicesList();
     buildCommandsList();

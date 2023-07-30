@@ -1,5 +1,5 @@
 {
-    "attr-Valve-MeasuredValue": {
+    "inf_Valve-MeasuredValue": {
         "comment": "Received Measured Value from valve",
         "subType": "numeric",
         "template": "badge",

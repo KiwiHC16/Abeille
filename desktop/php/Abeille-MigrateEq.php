@@ -23,7 +23,7 @@
 			?>
 			</select>
 		</div>
-		<label class="col-sm-2 control-label">{{Vers la zigate}}:</label>
+		<label class="col-sm-2 control-label">{{Vers la Zigate}}:</label>
     	<div class="col-sm-10">
 			<select id="idDstZg" style="width : 40%">
 			<?php

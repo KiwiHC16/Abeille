@@ -1,5 +1,5 @@
 {
-    "attr-Sensitivity": {
+    "inf_Sensitivity": {
         "comment": "Motion detector sensitivity info cmd",
         "subType": "numeric",
         "template": "badge",

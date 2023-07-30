@@ -16,11 +16,11 @@
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Occupancy": {
-                "use": "attr-Presence-Detection",
+                "use": "inf_Presence-Detection",
                 "isVisible": 1
             },
             "Illuminance": {
-                "use": "attr-Illuminance",
+                "use": "inf_Illuminance",
                 "nextLine": "after",
                 "isVisible": 1
             }

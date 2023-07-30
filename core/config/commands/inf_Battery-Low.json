@@ -1,5 +1,5 @@
 {
-    "attr-Battery-Low": {
+    "inf_Battery-Low": {
         "comment": "A generic attribut to display a BATTERY LOW alarm",
         "comment3": "Tcharp38: Can we map on a Zigbee standard attribute ?",
         "subType": "binary",

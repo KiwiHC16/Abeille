@@ -8,7 +8,7 @@
 <div class="form-group" style="background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important; padding-left: 10px">
 
 	<br/>
-	<label class="col-sm-2 control-label">{{Equipement HS à remplacer:}}</label>
+	<label class="col-sm-2 control-label">{{Equipement HS à remplacer}}:</label>
     <div class="col-sm-10">
 		<select id="idDeadEq" style="width : 40%">
 		<?php

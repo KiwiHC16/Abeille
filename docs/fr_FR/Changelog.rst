@@ -9,10 +9,11 @@ ChangeLog
 - Modèles de commandes:
 
   - Suppression 'zb-CustomInfo.json' obsolète.
-  - Suppresion cmde obsolète 'temperatureLight.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
-  - Suppresion cmde obsolète 'temperatureLight1.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
-  - Suppresion cmde obsolète 'temperatureLight2.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
-  - Suppresion cmde obsolète 'temperatureLightV2.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+  - Suppression cmde obsolète 'temperatureLight.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+  - Suppression cmde obsolète 'temperatureLight1.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+  - Suppression cmde obsolète 'temperatureLight2.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+  - Suppression cmde obsolète 'temperatureLightV2.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+  - attr-XXXX => inf_XXXX
 - Moes télécommande universelle IR: Support préliminaire (2607).
 - Interne: Suppression fichier 'inconnu.php' obsolète.
 

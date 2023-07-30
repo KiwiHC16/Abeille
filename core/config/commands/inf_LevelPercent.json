@@ -1,5 +1,5 @@
 {
-    "attr-LevelPercent": {
+    "inf_LevelPercent": {
         "comment": "Generic 'Level %' info",
         "name": "Level",
         "subType": "numeric",

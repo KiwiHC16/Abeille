@@ -1,5 +1,5 @@
 {
-    "attr-Smoke-Alarm": {
+    "inf_Smoke-Alarm": {
         "comment": "A generic attribut to display a SMOKE ALARM",
         "comment3": "Tcharp38: Can we map on a Zigbee standard attribute ?",
         "subType": "binary",

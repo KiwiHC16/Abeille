@@ -14,11 +14,11 @@
         },
         "commands": {
             "Smoke alarm": {
-                "use": "attr-Smoke-Alarm",
+                "use": "inf_Smoke-Alarm",
                 "isVisible": 1
             },
             "Battery-Low": {
-                "use": "attr-Battery-Low",
+                "use": "inf_Battery-Low",
                 "isVisible": 1
             },
             "Battery-Percent": {

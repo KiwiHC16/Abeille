@@ -1,5 +1,5 @@
 {
-    "attr-Valve-LastOpenDuration": {
+    "inf_Valve-LastOpenDuration": {
         "comment": "Received Last Open Duration from valve",
         "subType": "numeric",
         "template": "badge",

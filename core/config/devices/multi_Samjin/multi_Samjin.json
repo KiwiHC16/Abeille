@@ -71,7 +71,7 @@
                 "execAtCreation": "yes"
             },
             "Vibration": {
-                "use": "attr-Vibration",
+                "use": "inf_Vibration",
                 "logicalId": "FC02-01-0010",
                 "isVisible": "1"
             },

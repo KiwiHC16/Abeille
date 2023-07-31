@@ -735,7 +735,7 @@
         // } else if (init(_cmd.type) == 'action') {
         //     //$('#table_cmd tbody tr:last').setValues(_cmd, '.cmdAttr');
         //     var tr = $('#table_cmd tbody tr:last');
-        //     jeedom.eqLogic.builSelectCmd({
+        //     jeedom.eqLogic.buildSelectCmd({
         //         id: $(".li_eqLogic.active").attr('data-eqLogic_id'),
         //         filter: {type: 'info'},
         //         error: function (error) {
@@ -750,7 +750,7 @@
         // }
 
         var tr = $('#table_cmd tbody tr').last();
-        jeedom.eqLogic.builSelectCmd({
+        jeedom.eqLogic.buildSelectCmd({
             id: $('.eqLogicAttr[data-l1key=id]').value(),
             filter: {type: 'info'},
             error: function (error) {

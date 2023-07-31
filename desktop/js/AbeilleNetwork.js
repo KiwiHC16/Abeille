@@ -112,12 +112,11 @@ function refreshRoutes(device) {
     });
 }
 
-function refreshBruit(Device) {
-    console.log("refreshBruit start");
+function refreshNoise(Device) {
+    console.log("refreshNoise(${Device})");
     $.ajax({
-        url: "/plugins/Abeille/core/php/refreshBruit.php?device=" + Device,
+        url: "/plugins/Abeille/core/php/AbeilleNoise.php?device=" + Device,
     });
-    console.log("refreshBruit end");
 }
 
 // Tcharp38: Seems unused

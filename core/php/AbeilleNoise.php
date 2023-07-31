@@ -20,8 +20,7 @@
         exit;
     $device = $_GET['device'];
 
-    function sendToCmd($queueId, $priority, $topic, $payload)
-    {
+    function sendToCmd($queueId, $priority, $topic, $payload) {
         $queue = msg_get_queue($queueId);
         if ($queue == false) {
             // log::add('Abeille', 'error', "publishMosquitto(): La queue ".$queueId." n'existe pas. Message ignoré.");
@@ -37,21 +36,31 @@
         $msgJson = json_encode($msg);
 
         if (msg_send($queue, $priority, $msgJson, false, false, $errCode)) {
-            // log::add('Abeille', 'debug', "refreshBruit():(): Envoyé '".$msgJson."' vers queue ".$queueId);
+            // log::add('Abeille', 'debug', "refreshNoise():(): Envoyé '".$msgJson."' vers queue ".$queueId);
         } else
-            log::add('Abeille', 'warning', "refreshBruit(): Impossible d'envoyer '".$msgJson."' vers 'xToCmd'");
+            log::add('Abeille', 'warning', "refreshNoise(): Impossible d'envoyer '".$msgJson."' vers 'xToCmd'");
     }
 
     $eqLogics = Abeille::byType('Abeille');
     $queueId = $abQueues["xToCmd"]['id'];
 
-    foreach ($eqLogics as $eqLogic) {
-        if ( ($device == $eqLogic->getLogicalId()) || ($device == "All") ) {
-            list($dest, $address) = explode('/', $eqLogic->getLogicalId());
-            if ( strlen($address) == 4 ) {
-                sendToCmd($queueId, PRIO_NORM, "Cmd".$dest."/".$address."/mgmtNetworkUpdateReq", "");
-                sleep(5);
-            }
+    if ($device == "All") {
+        foreach ($eqLogics as $eqLogic) {
+            list($net, $addr) = explode('/', $eqLogic->getLogicalId());
+            log::add('Abeille', 'debug', "refreshNoise(): '${net}/${addr}'");
+            sendToCmd($queueId, PRIO_NORM, "Cmd".$net."/".$addr."/mgmtNetworkUpdateReq", "");
         }
+        sleep(5);
+    } else {
+        $eqLogic = eqLogic::byLogicalId($device, 'Abeille');
+        if (!is_object($eqLogic)) {
+            log::add('Abeille', 'error', "refreshNoise(): Invalid device '${device}'");
+            exit(2);
+        }
+
+        list($net, $addr) = explode('/', $eqLogic->getLogicalId());
+        log::add('Abeille', 'debug', "refreshNoise(): '${device}'");
+        sendToCmd($queueId, PRIO_NORM, "Cmd".$net."/".$addr."/mgmtNetworkUpdateReq", "");
+        sleep(5);
     }
 ?>

@@ -3086,7 +3086,7 @@
                 // Zigbee command: Management Network Update request (Mgmt_NWK_Update_req, cluster 0038)
                 // Mandatory params: 'addr'
                 // Optional params:
-                // - 'scanChan' (hex string, default='07FFF800')
+                // - 'scanChan' (hex string, default=All/'07FFF800')
                 // - 'scanDuration' (hex string, default='01', 'FE' for channel change)
                 else if ($cmdName == 'mgmtNetworkUpdateReq') {
                     $required = ['addr'];

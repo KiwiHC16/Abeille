@@ -4,6 +4,7 @@ ChangeLog
 - Page de l'équipement: Corrections translation 'en_US'.
 - Interne: jeedom.eqLogic.builSelectCmd() => buildSelectCmd(). Core v4.0 min.
 - Interne: Mise-à-jour AbeilleNoise.
+- Interne: Ajout cmd 'configureReporting2'.
 
 230730-BETA-1
 -------------

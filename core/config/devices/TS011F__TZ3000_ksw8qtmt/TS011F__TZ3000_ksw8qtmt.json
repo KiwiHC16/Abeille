@@ -92,11 +92,13 @@
                 "execAtCreation": "yes"
             },
             "SetReporting 0B04-0508": {
+                "comment": "RMSCurrent, changeVal set to 50 => 0x0032 (uint16)",
                 "use": "act_zbConfigureReporting",
-                "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=",
+                "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=0032",
                 "execAtCreation": "yes"
             },
             "SetReporting 0B04-050B": {
+                "comment": "ActivePower, changeVal set to 10 => ? (int16)",
                 "use": "act_zbConfigureReporting",
                 "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"

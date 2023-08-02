@@ -1,7 +1,7 @@
 {
     "act_zbConfigureReporting": {
         "comment": "Generic configure reporting command",
-        "name": "Configure reporting",
+        "comment2": "#MININTERVAL#, #MAXINTERVAL# & #CHANGEVAL# are expected in HEXA with proper formatting",
         "subType": "other",
         "logicalId": "configReport-#EP#-#CLUSTID#-#ATTRID#",
         "configuration": {

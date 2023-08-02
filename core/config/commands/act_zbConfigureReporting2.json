@@ -1,0 +1,14 @@
+{
+    "act_zbConfigureReporting2": {
+        "comment": "Generic configure reporting command",
+        "comment2": "#MININTERVAL#, #MAXINTERVAL# & #CHANGEVAL# are expected in decimal, all 3 are optional",
+        "subType": "other",
+        "logicalId": "configReport-#EP#-#CLUSTID#-#ATTRID#",
+        "configuration": {
+            "topic": "configureReporting2",
+            "request": "ep=#EP#&clustId=#CLUSTID#&attrType=#ATTRTYPE#&attrId=#ATTRID#",
+            "comment": "Proper request=ep=#EP#&clustId=#CLUSTID#&attrType=#ATTRTYPE#&attrId=#ATTRID#&minInterval=#MININTERVAL#&maxInterval=#MAXINTERVAL#&changeVal=#CHANGEVAL#"
+        },
+        "type": "action"
+    }
+}

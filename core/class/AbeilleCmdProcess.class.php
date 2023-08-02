@@ -152,7 +152,8 @@
         }
 
         /* Format attribute value.
-           Return hex string formatted value according to its type */
+           Return hex string formatted value according to its type.
+           WARNING: Returned hex string must still be reversed in >= 2B */
         function formatAttribute($valIn, $type) {
             // cmdLog('debug', "formatAttribute(".$valIn.", ".$type.")");
             $valIn2 = $valIn;
@@ -172,7 +173,7 @@
                 break;
             case 'int16':
             case '29':
-                $valOut = $this->signed2Hex($valIn, 2, true);
+                $valOut = $this->signed2Hex($valIn, 2, false);
                 break;
             case '42': // string
                 $len = sprintf("%02X", strlen($valIn2));
@@ -3588,10 +3589,9 @@
                     return;
                 } // End cmdName == 'discoverAttributesExt'
 
-                // ZCL global: Configure reporting command
+                // ZCL global: Configure reporting command (OBSOLETE => use 'configureReporting2')
                 // Mandatory parameters: addr, clustId, attrId
                 // Optional parameters: attrType, minInterval, maxInterval, changeVal, manufId
-                // Tcharp38: Why don't we use 0120 zigate command instead of 0530 ??
                 else if ($cmdName == 'configureReporting') {
                     /* Mandatory infos: addr, clustId, attrId. 'attrType' can be auto-detected */
                     $required = ['addr', 'clustId', 'attrId'];
@@ -3699,7 +3699,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    // attrType is optional and is first guessed according to clustId/attrId
+                    // attrType is optional because guessed according to clustId/attrId
                     $attrType = isset($Command['attrType']) ? $Command['attrType'] : '';
                     if ($attrType == '') {
                         /* Attempting to find attribute type according to its id */
@@ -3768,6 +3768,9 @@
                     if ($changeVal != '') $changeVal = $this->formatAttribute($changeVal, $attrType);
 
                     cmdLog('debug', "    configureReporting2: attrType='".$attrType."', min='".$minInterval."', max='".$maxInterval."', changeVal='".$changeVal."'");
+                    $minInterval = AbeilleTools::reverseHex($minInterval);
+                    $maxInterval = AbeilleTools::reverseHex($maxInterval);
+                    $changeVal = AbeilleTools::reverseHex($changeVal); // Reverse if > 1B
                     $data2 = $zclHeader.$dir.$attrId.$attrType.$minInterval.$maxInterval.$changeVal;
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);
 

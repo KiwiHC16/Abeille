@@ -540,6 +540,28 @@
                 payload += "_attrType="+attrType;
             if (manufId != '')
                 payload += "_manufId="+manufId;
+        } else if (request == "configureReporting2") {
+            // minInterval/maxInterval & changeVal as numeric, no longer hex string
+            topic = "Cmd"+logicalId+"_configureReporting2";
+            ep = document.getElementById("idEpCR2").value;
+            clustId = document.getElementById("idClustIdCR2").value;
+            attrId = document.getElementById("idAttrIdCR2").value;
+            manufCode = document.getElementById("idManufCodeCR2").value;
+            attrType = document.getElementById("idAttrTypeCR2").value;
+            min = document.getElementById("idMinCR2").value;
+            max = document.getElementById("idMaxCR2").value;
+            change = document.getElementById("idChangeCR2").value;
+            payload = "ep="+ep+"_clustId="+clustId+"_attrId="+attrId;
+            if (min != '')
+                payload += "_minInterval="+min;
+            if (max != '')
+                payload += "_maxInterval="+max;
+            if (change != '')
+                payload += "_changeVal="+change;
+            if (attrType != 'FF')
+                payload += "_attrType="+attrType;
+            if (manufCode != '')
+                payload += "_manufCode="+manufCode;
         }
 
         /* Cluster specific commands */

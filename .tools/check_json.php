@@ -384,6 +384,18 @@
             unset($cmd[$cmdFName]);
         }
 
+        // Removing all comments to not treat them
+        foreach ($cmd[$cmdJName] as $key => $data) {
+            if (substr($key, 0, 7) == "comment")
+                unset($cmd[$cmdJName][$key]);
+            if ($key == "configuration") {
+                foreach ($cmd[$cmdJName]['configuration'] as $key2 => $data2) {
+                    if (substr($key2, 0, 7) == "comment")
+                        unset($cmd[$cmdJName]['configuration'][$key2]);
+                }
+            }
+        }
+
         return $cmd;
     }
 
@@ -483,7 +495,7 @@
                 $newCmdText = substr($newCmdText, $start + $len);
             }
 
-            // Checking uniquness of logicalId
+            // Checking uniqness of logicalId
             $logicId = isset($newCmd['logicalId']) ? $newCmd['logicalId']: '';
             if ($logicId == '')
                 $error = newDevError($devName, "ERROR", "Undefined logical ID for '".$cmdJName."' cmd (model ".$cmdFName.")");

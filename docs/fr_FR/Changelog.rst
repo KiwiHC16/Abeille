@@ -4,7 +4,9 @@ ChangeLog
 - Page de l'équipement: Corrections translation 'en_US'.
 - Interne: jeedom.eqLogic.builSelectCmd() => buildSelectCmd(). Core v4.0 min.
 - Interne: Mise-à-jour AbeilleNoise.
-- Interne: Ajout cmd 'configureReporting2'.
+- Interne: Ajout cmd 'configureReporting2' (minInterval/maxInterval/changeVal = nombres).
+- Page EQ/avancé: Ajout support 'configureReporting2'.
+- Nous smart socket A1Z: Mise-à-jour du modèle pour réduire reporting (2460).
 
 230730-BETA-1
 -------------

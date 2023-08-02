@@ -7,7 +7,7 @@
         "configuration": {
             "topic": "configureReporting2",
             "request": "ep=#EP#&clustId=#CLUSTID#&attrType=#ATTRTYPE#&attrId=#ATTRID#",
-            "comment": "Proper request=ep=#EP#&clustId=#CLUSTID#&attrType=#ATTRTYPE#&attrId=#ATTRID#&minInterval=#MININTERVAL#&maxInterval=#MAXINTERVAL#&changeVal=#CHANGEVAL#"
+            "comment": "Full request ex: ep=#EP#&clustId=#CLUSTID#&attrType=#ATTRTYPE#&attrId=#ATTRID#&minInterval=#MININTERVAL#&maxInterval=#MAXINTERVAL#&changeVal=#CHANGEVAL#"
         },
         "type": "action"
     }

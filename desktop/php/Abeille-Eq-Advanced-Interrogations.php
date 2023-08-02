@@ -265,7 +265,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut">ZCL: Configurer le reporting</label>
+    <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut">ZCL:  {{Configurer le reporting}}</label>
     <div class="col-sm-9">
         <?php
             // echo '<a class="btn btn-danger" onclick="interrogate(\'configureReporting\')">{{Configurer}}</a>';
@@ -280,6 +280,22 @@
         <input id="idMinCR" title="{{Interval min. Format hex string 4 car}}" placeholder="{{Min}}" style="width:60px" />
         <input id="idMaxCR" title="{{Interval max. Format hex string 4 car}}" placeholder="{{Max}}" style="width:60px" />
         <input id="idChangeCR" title="{{Change. Format hex string dépendant de l'attribut}}" placeholder="{{Change}}" />
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut (BETA)">ZCL: {{Configurer le reporting (2)}}</label>
+    <div class="col-sm-9">
+        <?php
+            addButton("{{Configurer}}", "btn-danger", "configureReporting2");
+            addEpInput("idEpCR2");
+            addClusterButton("idClustIdCR2");
+            addAttrInput("idAttrIdCR2");
+            addTypeList("idAttrTypeCR2");
+        ?>
+        <input id="idManufCodeCR2" title="{{Code fabricant. Format hex string 4 car (ex: 1241)}}" placeholder="{{Manuf code (ex: 1241)}}" />
+        <input id="idMinCR2" title="{{Interval min. Format numérique}}" placeholder="{{Min}}" style="width:60px" />
+        <input id="idMaxCR2" title="{{Interval max. Format numérique}}" placeholder="{{Max}}" style="width:60px" />
+        <input id="idChangeCR2" title="{{Change. Format numérique dépendant de l'attribut}}" placeholder="{{Change}}" />
     </div>
 </div>
 

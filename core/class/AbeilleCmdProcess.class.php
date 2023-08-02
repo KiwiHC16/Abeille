@@ -166,12 +166,21 @@
 
             $valOut = '';
             switch ($type) {
+            case 'uint16':
+            case '21':
+                $valOut = sprintf("%04X", $valIn);
+                break;
+            case 'int16':
+            case '29':
+                $valOut = $this->signed2Hex($valIn, 2, true);
+                break;
             case '42': // string
                 $len = sprintf("%02X", strlen($valIn2));
                 $valOut = $len.bin2hex($valIn2);
                 // cmdLog('debug', "len=".$len.", valOut=".$valOut);
                 break;
             default:
+                cmdLog('debug', "    formatAttribute(".$valIn.", type=".$type.") => WARNING: May be unsupported type");
                 $valOut = $valIn2;
             }
 
@@ -3680,6 +3689,94 @@
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     return;
                 } // End 'configureReporting'
+
+                // ZCL global: Configure reporting command (2)
+                // Mandatory parameters: addr, clustId, attrId
+                // Optional parameters: attrType (1B hex), minInterval (number), maxInterval (number), changeVal (number), manufCode (2B hex)
+                else if ($cmdName == 'configureReporting2') {
+                    /* Mandatory infos: addr, clustId, attrId. 'attrType' can be auto-detected */
+                    $required = ['addr', 'clustId', 'attrId'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    // attrType is optional and is first guessed according to clustId/attrId
+                    $attrType = isset($Command['attrType']) ? $Command['attrType'] : '';
+                    if ($attrType == '') {
+                        /* Attempting to find attribute type according to its id */
+                        $attr = zbGetZCLAttribute($Command['clustId'], $Command['attrId']);
+                        if (($attr === false) || !isset($attr['dataType'])) {
+                            cmdLog('error', "    command configureReporting2 ERROR: Missing 'attrType'");
+                            return;
+                        }
+                        $attrType = sprintf("%02X", $attr['dataType']);
+                    }
+
+                    $cmd = "0530";
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <profile ID: uint16_t>
+                    // <cluster ID: uint16_t>
+                    // <security mode: uint8_t>
+                    // <radius: uint8_t>
+                    // <data length: uint8_t>
+
+                    // <data: auint8_t>
+                    //  ZCL Control Field
+                    //  ZCL SQN
+                    //  Command Id
+                    //  ....
+
+                    $addrMode       = "02";
+                    $addr           = $Command['addr'];
+                    $srcEp          = "01";
+                    $dstEp          = $Command['ep'];
+                    $profId         = "0104";
+                    $clustId        = $Command['clustId'];
+                    $secMode        = "02";
+                    $radius         = "1E";
+
+                    /* ZCL header */
+                    // if (isset($Command['manufId'])) {
+                    //     $manufId = $Command['manufId'];
+                    //     $fcf = "14"; // Frame Control Field
+                    // } else {
+                    //     $manufId = '';
+                    //     $fcf = "10"; // Frame Control Field
+                    // }
+                    // $sqn            = $this->genSqn();
+                    // $cmdId          = "06";
+                    $hParams = array(
+                        'manufSpecific' => isset($Command['manufCode']) ? true : false,
+                        'manufCode' => isset($Command['manufCode']) ? $Command['manufCode'] : '',
+                        'cmdId' => '06', // Configure reporting
+                    );
+                    $zclHeader = $this->genZclHeader($hParams);
+
+                    /* Attribute Reporting Configuration Record */
+                    $dir            = "00";
+                    $attrId         = AbeilleTools::reverseHex($Command['attrId']);
+                    // $attrType       = $Command['attrType'];
+                    $minInterval    = isset($Command['minInterval']) ? $Command['minInterval'] : 0;
+                    $maxInterval    = isset($Command['maxInterval']) ? $Command['maxInterval'] : 0;
+                    $changeVal      = isset($Command['changeVal']) ? $Command['changeVal'] : '';
+
+                    $minInterval = $this->formatAttribute($minInterval, "uint16");
+                    $maxInterval = $this->formatAttribute($maxInterval, "uint16");
+                    if ($changeVal != '') $changeVal = $this->formatAttribute($changeVal, $attrType);
+
+                    cmdLog('debug', "    configureReporting2: attrType='".$attrType."', min='".$minInterval."', max='".$maxInterval."', changeVal='".$changeVal."'");
+                    $data2 = $zclHeader.$dir.$attrId.$attrType.$minInterval.$maxInterval.$changeVal;
+                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
+
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
+                    $data = $data1.$data2;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    return;
+                } // End 'configureReporting2'
 
                 // ZCL global: Read Reporting Configration command
                 // Mandatory params: 'addr', 'ep', 'clustId', 'attrId'

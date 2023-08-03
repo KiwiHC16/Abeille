@@ -1043,7 +1043,7 @@
                     cmds["RGB"]["nextLine"] = "after";
                 }
 
-                // Color temperature
+                // ColorTemperatureMireds
                 if (isset(attributes['0007'])) {
                     // cmds["Set 2700K"] = newCmd("act_zbCmdG-0300-MoveToColorTemp", "slider=2700");
                     // if (currentMode == 2) // ColorTemperatureMireds
@@ -1051,8 +1051,11 @@
                     // cmds["Set 4000K"] = newCmd("act_zbCmdG-0300-MoveToColorTemp", "slider=4000");
                     // if (currentMode == 2) // ColorTemperatureMireds
                     //     cmds["Set 4000K"]["isVisible"] = 1;
+                    cmds["Set Color Temp"] = newCmd("act_zbCmdG-0300-MoveToColorTemp");
+                    cmds["Set Color Temp"]["isVisible"] = 1;
 
-                    cmds["ColorTemperature"] = newCmd("inf_zbAttr-0300-ColorTemperatureMireds");
+                    cmds["Color Temp"] = newCmd("inf_zbAttr-0300-ColorTemperatureMireds");
+                    cmds["Color Temp"]["isVisible"] = 1;
                     // if (currentMode == 2) // ColorTemperatureMireds
                     //     cmds["ColorTemperature"]["isVisible"] = 1;
                     cmds["Get ColorTemperature"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0007");

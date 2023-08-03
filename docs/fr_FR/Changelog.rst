@@ -7,6 +7,8 @@ ChangeLog
 - Interne: Ajout cmd 'configureReporting2' (minInterval/maxInterval/changeVal = nombres).
 - Page EQ/avancé: Ajout support 'configureReporting2'.
 - Nous smart socket A1Z: Mise-à-jour du modèle pour réduire reporting (2460).
+- Livarno Home floor lamp: Mise-à-jour du modèle (2544).
+- Assistant modèle: Amélioration pour cluster 0300/Color control.
 
 230730-BETA-1
 -------------

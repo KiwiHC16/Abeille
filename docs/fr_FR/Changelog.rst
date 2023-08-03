@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230803-BETA-1
+-------------
+
 - Page de l'équipement: Corrections translation 'en_US'.
 - Interne: jeedom.eqLogic.builSelectCmd() => buildSelectCmd(). Core v4.0 min.
 - Interne: Mise-à-jour AbeilleNoise.

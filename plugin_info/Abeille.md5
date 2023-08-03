@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230803-BETA-1"
+# VERSION="230803-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -981,7 +981,7 @@ dd3a70c6b60a996a44062f18513685d8 *core/config/devices/TS0222__TYZB01_ftdkanlj/di
 e17a03f6a17e54ec659985a69ace4587 *core/config/devices/TS0501B__TZ3210_9q49basr/TS0501B__TZ3210_9q49basr.json
 49c780cc1f6839a54b3c0ee03b7a2525 *core/config/devices/TS0502A__TZ3000_49qchf10/TS0502A__TZ3000_49qchf10.json
 57c40b59bac3950c30a9a9f35f0f3668 *core/config/devices/TS0502A__TZ3000_49qchf10/discovery.json
-74eb2b6fabca6db464f8e9b77648a191 *core/config/devices/TS0502A__TZ3000_8uaoilu9/TS0502A__TZ3000_8uaoilu9.json
+c870b53149954c016b5e50b251c87608 *core/config/devices/TS0502A__TZ3000_8uaoilu9/TS0502A__TZ3000_8uaoilu9.json
 dc9c34411e9bf9a47029b9659348170c *core/config/devices/TS0502A__TZ3000_8uaoilu9/discovery-TS0502A__TZ3000_8uaoilu9.json
 b74de98d8fe612ee0a4c11969e940621 *core/config/devices/TS0502A__TZ3000_el5kt5im/TS0502A__TZ3000_el5kt5im.json
 26aedd7d24e08f07c0118ede6c0d0910 *core/config/devices/TS0502A__TZ3000_el5kt5im/discovery.json
@@ -1266,7 +1266,7 @@ a6263907cb8c5fbafd8c16ec8d45b336 *desktop/php/AbeilleMaintenance-Logs.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-d9447d6ad50ee855a687b1f3b52cd851 *docs/fr_FR/Changelog.rst
+fee2d83c5a7ad78cac03304180353b9d *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1594,10 +1594,10 @@ e86447e0df93fea7b06552fab20ae379 *knowledge_base.txt
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-11cf1d7c2de5ce135ee7ec49f0711962 *plugin_info/Abeille.version
+1c2524bfdbb5f45cc1b58a17fdade4fe *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 1c27e6358ccab7541f77031abb224f94 *plugin_info/configuration.php
-8db46c65006e7e795f7b133034be3864 *plugin_info/info.json
+7c8d32c72cd19a975e2ee8c5df27d218 *plugin_info/info.json
 43bad7db3c74f5def05f1d0694a015ab *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

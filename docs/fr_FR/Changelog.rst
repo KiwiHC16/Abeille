@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230803-BETA-1
+230803-BETA-2
 -------------
 
 - Page de l'équipement: Corrections translation 'en_US'.

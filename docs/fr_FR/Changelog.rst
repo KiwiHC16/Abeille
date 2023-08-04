@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230804-BETA-1
+-------------
+
 - Interne: AbeilleCmd: Ajout support 'cmd-Generic'.
 - Page EQ/avancé: Ajout support 'Commande générique'.
 

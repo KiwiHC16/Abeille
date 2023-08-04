@@ -346,7 +346,7 @@
             // Ok. Checking payload length
             $len = strlen($payload);
             if ($len % 2) {
-                cmdLog("error", "      Odd payload length => cmd IGNORED");
+                cmdLog("error", "      Commande '${cmd}' ignorée: Taille données impaire");
                 return;
             }
 

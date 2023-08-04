@@ -41,7 +41,7 @@
         //     'clustSpecific' => false,
         //     'manufSpecific' => false,
         //     'manufCode' => '',
-        //     'toCli' => false, // Direction
+        //     'toCli' => false, // Default direction: client to server
         //     'disableDefaultRsp' => true,
         //     'zclSqn' => 'xx',
         //     'cmdId' => 'xx'
@@ -59,6 +59,10 @@
             $zclSqn = isset($hParams['zclSqn']) ? $hParams['zclSqn'] : $this->genSqn();
 
             $frameType = $clustSpecific ? 1 : 0;
+            if ($frameType == 0)
+                $zhTxt = "General";
+            else
+                $zhTxt = "Cluster-specific";
             // cmdLog('debug', '    genZclHeader(): frameType='.json_encode($frameType));
             $manufSpecific = $manufSpecific ? 1 : 0;
             if ($manufSpecific && ($manufCode == '')) {
@@ -66,6 +70,10 @@
                 $manufCode = '';
             }
             $toCli = $toCli ? 1 : 0;
+            if ($toCli)
+                $zhTxt .= "/Serv->Cli";
+            else
+                $zhTxt .= "/Cli->Serv";
             $disableDefaultRsp = $disableDefaultRsp ? 1 : 0;
 
             $fcf = ($disableDefaultRsp << 4) | ($toCli << 3) | ($manufSpecific << 2) | $frameType;
@@ -73,7 +81,7 @@
             $fcf = sprintf("%02X", $fcf);
 
             $zclHeader = $fcf.$manufCode.$zclSqn.$cmdId;
-            cmdLog('debug','    zclHeader='.$zclHeader);
+            cmdLog('debug','    zclHeader: '.$zhTxt.', SQN='.$zclSqn.', cmd='.$cmdId);
             return $zclHeader;
         }
 
@@ -5079,6 +5087,45 @@
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     return;
                 } // End 'commandLegrand'
+
+                // Generic cluster specific command
+                // Mandatory params: 'addr', 'ep', 'clustId' (2B hex), 'cmd' (1B hex), and 'data' (hex)
+                // Optional params: 'manufCode'
+                else if ($cmdName == 'cmd-Generic') {
+                    $required = ['addr', 'ep', 'clustId', 'cmd', 'data']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $zgCmd      = "0530";
+
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['ep'];
+                    $profId     = "0104";
+                    $clustId    = $Command['clustId'];
+                    $secMode    = "02";
+                    $radius     = "1E";
+
+                    $hParams = array(
+                        'clustSpecific' => true,
+                        'manufSpecific' => isset($Command['manufCode']) ? true : false,
+                        'manufCode' => isset($Command['manufCode']) ? $Command['manufCode'] : '',
+                        'cmdId' => $Command['cmd']
+                    );
+                    $zclHeader = $this->genZclHeader($hParams);
+                    $data = $Command['data'];
+
+                    cmdLog('debug', "    genericCmd: ep=${dstEp}, clustId=${clustId}, zclHeader=${zclHeader}, data=${data}");
+                    $data2 = $zclHeader.$data;
+                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
+
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
+                    $data = $data1.$data2;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
+                    return;
+                } // End 'cmd-Generic'
 
                 // else {
                 //     cmdLog('debug', "    ERROR: Unexpected command '".$cmdName."'");

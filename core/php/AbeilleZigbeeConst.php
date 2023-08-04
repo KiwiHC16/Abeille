@@ -779,6 +779,12 @@
         "E001" => array(
             "name" => "Tuya private ?",
         ),
+        "E004" => array(
+            "name" => "Tuya private ?", // Used by universal IR
+        ),
+        "ED00" => array(
+            "name" => "Tuya private ?", // Used by universal IR
+        ),
         "EF00" => array(
             "name" => "Tuya private ?",
         ),
@@ -789,6 +795,9 @@
             "name" => "Private", // Used by multi_Samjin
         ),
         "FC40" => array(
+            "name" => "Legrand private ?",
+        ),
+        "FC41" => array(
             "name" => "Legrand private ?",
         ),
     );

@@ -401,3 +401,18 @@
         ?>
     </div>
 </div>
+
+<br>
+<!-- Generic -->
+<div class="form-group">
+    <label class="col-sm-3 control-label" title="{{Commande générique}}">{{Commande générique spécifique cluster}}</label>
+    <div class="col-sm-5">
+        <?php
+            addButton("{{Envoyer}}", "btn-danger", "genericCmd");
+            addEpInput("idEp-GC");
+            addClusterButton("idClustId-GC");
+            addInput("idCmd-GC", "{{Commande (1B hexa)}}", "{{Commande}}");
+            addInput("idData-GC", "{{Données}}", "{{Données}}");
+        ?>
+    </div>
+</div>

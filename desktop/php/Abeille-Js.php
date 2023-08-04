@@ -621,6 +621,16 @@
             payload = "ep="+ep+"_cmd=42_startIdx=00";
         }
 
+        else if (request == "genericCmd") {
+            topic = "Cmd"+logicalId+"_cmd-Generic";
+            ep = document.getElementById("idEp-GC").value;
+            clustId = document.getElementById("idClustId-GC").value;
+            cmd = document.getElementById("idCmd-GC").value;
+            data = document.getElementById("idData-GC").value;
+
+            payload = "ep="+ep+"_clustId="+clustId+"_cmd="+cmd+"_data="+data;
+        }
+
         else {
             console.log("Unknown request "+request);
             return;

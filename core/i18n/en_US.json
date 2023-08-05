@@ -85,7 +85,8 @@
       "La Zigate est ignorée par mesure de sécurité.": "Zigate is ignored for security reasons",
       "Selectionnez la nouvelle Zigate et confirmez.": "Select new Zigate and confirm",
 
-      "Nom de l'équipement": "Equipement name",
+      "Equipement": "Equipment",
+      "Nom de l'équipement": "Equipment name",
       "Objet parent": "Parent object",
       "Catégorie": "Category",
       "Source d'alimentation": "Power source",
@@ -95,21 +96,33 @@
       "Inconnu": "Unknown",
       "Ruche": "Hive",
 
+      "Avancé": "Advanced",
       "Nom": "Name",
       "ID Jeedom": "Jeedom ID",
       "Dernière comm.": "Last comm.",
       "Nom logique": "Logical name",
       "Adresse (courte/IEEE)": "Addr (short/IEEE)",
       "Identifiant Zigbee": "Zigbee ID",
-      "Modèle d'équipement": "Equipement model",
+      "Modèle d'équipement": "Equipment model",
       "Mise-à-jour": "Update",
       "Réinitialiser": "Reset",
       "Assistant de découverte": "Discovery assistant",
       "Ouvrir": "Open",
       "Code fabricant (manufCode)": "Manuf code",
       "Version SW": "SW version",
-      "Etat de l'équipement": "Equipement status",
-      "Réparer": "Repair"
+      "Etat de l'équipement": "Equipment status",
+      "Réparer": "Repair",
+
+      "Interroger": "Request",
+      "Table de routage": "Routing table",
+      "Table de binding": "Binding table",
+      "Table de voisinage": "Neighbor table",
+      "Liste des 'end points'": "Endpoints list",
+      "Descripteur simple": "Simple descriptor",
+      "Descripteur de noeud": "Node descriptor",
+      "Adresse IEEE": "IEEE address",
+
+      "Commandes": "Commands"
     },
     "plugins\/Abeille\/desktop\/js\/Abeille.js": {
       "Santé Abeille": "Bee Health",

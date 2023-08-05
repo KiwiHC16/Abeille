@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Interne: Parser: Nettoyage.
+- Page de l'équipement: Mise-à-jour traductions 'en_US'.
 
 230804-BETA-1
 -------------

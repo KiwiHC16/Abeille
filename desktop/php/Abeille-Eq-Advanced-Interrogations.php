@@ -27,7 +27,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getBindingTable (Mgmt_Bind_req)">Table de binding</label>
+    <label class="col-sm-3 control-label" title="getBindingTable (Mgmt_Bind_req)">{{Table de binding}}</label>
     <div class="col-sm-5">
         <?php
             // echo '<a class="btn btn-warning" onclick="interrogate(\'getBindingTable\')">{{Interroger}}</a>';
@@ -36,7 +36,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getNeighborTable (Mgmt_Lqi_req)">Table de voisinage</label>
+    <label class="col-sm-3 control-label" title="getNeighborTable (Mgmt_Lqi_req)">{{Table de voisinage}}</label>
     <div class="col-sm-5">
         <?php
             // echo '<a class="btn btn-warning" onclick="interrogate(\'getNeighborTable\')">{{Interroger}}</a>';
@@ -46,7 +46,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getActiveEndPoints">Liste des 'end points'</label>
+    <label class="col-sm-3 control-label" title="getActiveEndPoints">{{Liste des 'end points'}}</label>
     <div class="col-sm-5">
         <?php
             // echo '<a class="btn btn-warning" onclick="interrogate(\'getActiveEndPoints\')">{{Interroger}}</a>';
@@ -55,7 +55,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getSimpleDescriptor (Simple_Desc_req)">Simple descriptor request</label>
+    <label class="col-sm-3 control-label" title="getSimpleDescriptor (Simple_Desc_req)">{{Descripteur simple}}</label>
     <div class="col-sm-5">
         <?php
             // echo '<a class="btn btn-warning" onclick="interrogate(\'getSimpleDescriptor\')">{{Interroger}}</a>';
@@ -74,7 +74,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="getIeeeAddress (IEEE_addr_req)">Adresse IEEE</label>
+    <label class="col-sm-3 control-label" title="getIeeeAddress (IEEE_addr_req)">{{Adresse IEEE}}</label>
     <div class="col-sm-5">
         <?php
             // echo '<a class="btn btn-warning" onclick="interrogate(\'getIeeeAddress\')">{{Interroger}}</a>';

@@ -29,8 +29,8 @@
                 "execAtCreation": "Yes"
             },
             "SetReporting-BatteryVolt": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "Yes"
             },
             "Battery-Volt2Percent": {
@@ -45,8 +45,9 @@
                 "execAtCreation": "Yes"
             },
             "SetReporting-Illuminance": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=0258&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0400&attrType=21&attrId=0000&minInterval=600",
+                "comment": "Every 10mins",
                 "execAtCreation": "Yes"
             },
             "Illuminance": {

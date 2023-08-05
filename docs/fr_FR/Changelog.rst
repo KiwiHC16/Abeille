@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: Nettoyage.
+
 230804-BETA-1
 -------------
 

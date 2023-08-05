@@ -729,6 +729,15 @@
                 // "03" => array( "name" => "Request Fast Poll Mode" ),
             // ),
         ),
+        "0708" => array(
+            "name" => "Device Management",
+        ),
+        "0709" => array(
+            "name" => "Events",
+        ),
+        "0B01" => array(
+            "name" => "Meter Identification",
+        ),
         "0B04" => array( // Electrical measurement cluster
             "name" => "Electrical measurement",
             "attributes" => array(

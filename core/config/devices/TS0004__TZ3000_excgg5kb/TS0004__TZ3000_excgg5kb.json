@@ -11,6 +11,13 @@
             "icon": "Mhcozy-ZG-0005-RF",
             "mainEP": "01"
         },
+        "alternateIds": {
+            "TS0004__TZ3000_wkr3jqmr": {
+                "manufacturer": "Smart Switch",
+                "model": "ZG-005-RF",
+                "type": "Smart Switch 4 chan relay"
+            }
+        },
         "commands": {
             "Identify": {
                 "use": "Identify"
@@ -108,7 +115,7 @@
                 "use": "act_zbReadAttribute",
                 "params": "ep=04&clustId=0006&attrId=0000"
             },
-            "Bind 0006-ToZigate": {
+            "Bind 01-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "yes"
@@ -128,7 +135,7 @@
                 "params": "ep=04&clustId=0006",
                 "execAtCreation": "yes"
             },
-            "SetReporting 0006": {
+            "SetReporting 01-0006": {
                 "use": "act_zbConfigureReporting",
                 "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "yes"

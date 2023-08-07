@@ -26,6 +26,7 @@
             "SetReporting 0001-00021": {
                 "use": "act_zbConfigureReporting",
                 "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "comment": "Reporting every 30 to 60mins",
                 "execAtCreation": "yes"
             },
             "Bind 0001-ToZigate": {
@@ -43,8 +44,8 @@
             "SetReporting 0402-0000": {
                 "use": "act_zbConfigureReporting",
                 "params": "clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=",
-                "execAtCreation": "yes",
-                "comment": "Reporting every 5 to 10mins"
+                "comment": "Reporting every 5 to 10mins",
+                "execAtCreation": "yes"
             },
             "Bind 0402-ToZigate": {
                 "use": "act_zbBindToZigate",

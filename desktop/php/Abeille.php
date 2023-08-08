@@ -105,8 +105,6 @@
 <script>
     // TODO: addCmdToTable() to be moved to Abeille.js but need to fix remaining PHP code in it.
     function addCmdToTable(_cmd) {
-        // console.log("addCmdToTable()");
-
         if (!isset(_cmd)) {
             var _cmd = {configuration: {}};
         }
@@ -137,7 +135,7 @@
         tr += '     <span class="subType" subType="' + init(_cmd.subType) + '"></span>';
         tr += '</td>';
 
-        <?php if (isset($dbgDeveloperMode) && ($dbgDeveloperMode == true)) { ?>
+        if (typeof js_dbgDeveloperMode != 'undefined') {
             tr += '<td>'; // Col 4 = Abeille command name
             tr += '     <input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="{{logicalId}}" style="width:100%;">';
             tr += '</td>';
@@ -155,7 +153,7 @@
                 tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="request" style="height : 33px;" placeholder="{{payload}}">';
             }
             tr += '</td>';
-        <?php } ?>
+        }
 
         tr += '<td>'; // Col 6
         if ((init(_cmd.type) == 'info') || (init(_cmd.type) == '')) { // Info/new cmd => Col 6 = Unité

@@ -17,14 +17,16 @@
 // Note: 'eqId' seems overwritten somewhere.
 var curEqId = -1;
 
-// console.log("LA1 eqId=", eqId);
+// console.log("LA1 eqId=", curEqId);
 
-// if (window.location.href.indexOf("id=") > -1) {
-//     let params = new URL(document.location).searchParams;
-//     eqId = params.get("id");
-//     eqId2 = eqId;
-//     refreshAdvEq();
-// }
+// Executed on page load/refresh
+if (window.location.href.indexOf("id=") > -1) {
+    let params = new URL(document.location).searchParams;
+    curEqId = params.get("id");
+    refreshAdvEq();
+}
+
+// console.log("LA2 eqId=", curEqId);
 
 // Click generate on page reload too.
 $(".eqLogicDisplayCard").on("click", function () {
@@ -34,7 +36,6 @@ $(".eqLogicDisplayCard").on("click", function () {
         return;
     }
     curEqId = $(this).attr("data-eqLogic_id");
-    console.log("curEqId=" + curEqId);
     refreshAdvEq();
 });
 
@@ -1466,8 +1467,7 @@ function interrogate(request) {
         if (attrType != "FF") payload += "_attrType=" + attrType;
         if (manufCode != "") payload += "_manufCode=" + manufCode;
     } else if (request == "0000-ResetToFactory") {
-
-    /* Cluster specific commands */
+        /* Cluster specific commands */
         topic = "Cmd" + logicalId + "_cmd-0000";
         ep = document.getElementById("idEpG").value;
         payload = "ep=" + ep + "_cmd=00";

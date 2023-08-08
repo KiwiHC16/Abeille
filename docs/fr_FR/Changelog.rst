@@ -5,6 +5,7 @@ ChangeLog
 - Page de l'équipement: Mise-à-jour traductions 'en_US'.
 - Smart Switch ZG-005-RF: Ajout support (2608).
 - Interne: Suppression 'Abeille-Js.php'
+- Page EQ: Correction mauvais raffraichissement des infos sur recharge de page.
 
 230804-BETA-1
 -------------

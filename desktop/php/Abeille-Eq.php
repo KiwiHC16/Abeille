@@ -26,7 +26,9 @@
 <div class="col-xs-12 eqLogic" style="display: none;">
     <div class="input-group pull-right" style="display:inline-flex">
 		<span class="input-group-btn">
-			<a class="btn btn-success eqLogicAction btn-sm roundedLeft" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}</a><a class="btn btn-danger btn-sm eqLogicAction" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a><a class="btn btn-default eqLogicAction btn-sm roundedRight" data-action="configure"><i class="fas fa-cogs"></i> {{Configuration avancée}}</a>
+			<a class="btn btn-success eqLogicAction btn-sm roundedLeft" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}</a>
+            <a class="btn btn-danger btn-sm eqLogicAction" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>
+            <a class="btn btn-default eqLogicAction btn-sm roundedRight" data-action="configure"><i class="fas fa-cogs"></i> {{Configuration avancée}}</a>
 		</span>
 	</div>
 
@@ -37,7 +39,6 @@
         <li role="presentation"               ><a href="#idCommands" aria-controls="home" role="tab" data-toggle="tab">                                            <i class="fas fa-align-left">       </i> {{Commandes}}  </a></li>
     </ul>
 
-    <!-- <div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;"> -->
     <div class="tab-content">
         <!-- Displays Jeedom specifics  -->
         <div role="tabpanel" class="tab-pane active" id="idMain">

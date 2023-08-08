@@ -4,6 +4,7 @@ ChangeLog
 - Interne: Parser: Nettoyage.
 - Page de l'équipement: Mise-à-jour traductions 'en_US'.
 - Smart Switch ZG-005-RF: Ajout support (2608).
+- Interne: Suppression 'Abeille-Js.php'
 
 230804-BETA-1
 -------------

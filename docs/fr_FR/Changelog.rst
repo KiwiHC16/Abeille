@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230810-BETA-1
+-------------
+
 - Interne: Parser: Nettoyage.
 - Page de l'équipement: Mise-à-jour traductions 'en_US'.
 - Smart Switch ZG-005-RF: Ajout support (2608).

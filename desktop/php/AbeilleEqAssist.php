@@ -879,18 +879,19 @@
                 attributes = ep.servClusters['0001']['attributes'];
                 if (isset(attributes['0021'])) {
                     cmds["Battery-Percent"] = newCmd("inf_zbAttr-0001-BatteryPercent", "ep="+epId);
-                    cmds["SetReporting "+epId+"-0001-00021"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
+                    cmds["SetReporting "+epId+"-0001-00021"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600", "yes");
                 } else if (isset(attributes['0020'])) {
                     cmds["Battery-Volt"] = newCmd("inf_zbAttr-0001-BatteryVolt", "ep="+epId);
                     // cmds["Battery-Volt2Percent"] = newCmd("battery-Volt2Percent-3", "ep="+epId);
-                    cmds["SetReporting "+epId+"-0001-00020"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=", "yes");
+                    cmds["SetReporting "+epId+"-0001-00020"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0001&attrType=20&attrId=0020&minInterval=1800&maxInterval=3600", "yes");
                 }
                 cmds["Bind "+epId+"-0001-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0001", "yes");
             }
 
             /* 0003/Identify cluster */
             if (typeof ep.servClusters["0003"] !== "undefined") {
-                cmds["Identify"] = newCmd("Identify");
+                cmds["Identify"] = newCmd("act_zbCmdC-Identify");
+                cmds["Identify"]["isVisible"] = 1;
             }
 
             /* 0004/Groups cluster */
@@ -904,11 +905,11 @@
                 attributes = ep.servClusters["0006"]['attributes'];
                 if (isset(attributes['0000'])) {
                     // Adding on/off & toggle commands but assuming all supported
-                    cmds["On "+onOffIdx] = newCmd("act_zbCmdG-0006-On", "ep="+epId);
+                    cmds["On "+onOffIdx] = newCmd("act_zbCmdC-0006-On", "ep="+epId);
                     cmds["On "+onOffIdx]["isVisible"] = 1;
-                    cmds["Off "+onOffIdx] = newCmd("act_zbCmdG-0006-Off", "ep="+epId);
+                    cmds["Off "+onOffIdx] = newCmd("act_zbCmdC-0006-Off", "ep="+epId);
                     cmds["Off "+onOffIdx]["isVisible"] = 1;
-                    cmds["Toggle "+onOffIdx] = newCmd("act_zbCmdG-0006-Toggle", "ep="+epId);
+                    cmds["Toggle "+onOffIdx] = newCmd("act_zbCmdC-0006-Toggle", "ep="+epId);
                     cmds["Status "+onOffIdx] = newCmd("inf_zbAttr-0006-OnOff", "ep="+epId);
                     cmds["Status "+onOffIdx]["isVisible"] = 1;
                     cmds["Status "+onOffIdx]["nextLine"] = "after";
@@ -916,7 +917,7 @@
                     onOffIdx++;
                     // Adding bind + configureReporting but assuming supported
                     cmds["Bind "+epId+"-0006-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0006", "yes");
-                    cmds["SetReporting "+epId+"-0006"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                    cmds["SetReporting "+epId+"-0006"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0006&attrType=10&attrId=0000", "yes");
                 }
             }
 
@@ -932,7 +933,7 @@
                 cmds["Level"]["nextLine"] = "after";
                 cmds["Get Level"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
                 cmds["Bind "+epId+"-0008-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0008", "yes");
-                cmds["SetReporting "+epId+"-0008-0000"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                cmds["SetReporting "+epId+"-0008-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0008&attrType=10&attrId=0000", "yes");
             }
 
             /* Analog Input */
@@ -948,7 +949,7 @@
                     cmds["PresentValue"]["isVisible"] = 1;
                     cmds["Get PresentValue"] = newCmd("act_zbReadAttribute", "clustId=000C&attrId=0055");
 
-                    cmds["SetReporting 000C-PresentValue"] = newCmd("act_zbConfigureReporting", "clustId=000C&attrId=0055&attrType=39&minInterval=012C&maxInterval=0258&changeVal=", "yes");
+                    cmds["SetReporting 000C-PresentValue"] = newCmd("act_zbConfigureReporting2", "clustId=000C&attrId=0055&attrType=39&minInterval=300&maxInterval=600", "yes");
                     cmds["SetReporting 000C-PresentValue"]["comment"] = "Reporting every 5 to 10min";
                 }
                 if (isset(attributes['006F'])) {
@@ -963,18 +964,18 @@
             /* 0102/Window covering */
             if (isset(ep.servClusters["0102"]) && isset(ep.servClusters["0102"]['attributes'])) {
                 attributes = ep.servClusters["0102"]['attributes'];
-                cmds["Up"] = newCmd("act_zbCmdG-0102-UpOpen", "ep="+epId);
+                cmds["Up"] = newCmd("act_zbCmdC-0102-UpOpen", "ep="+epId);
                 cmds["Up"]["isVisible"] = 1;
-                cmds["Stop"] = newCmd("act_zbCmdG-0102-Stop", "ep="+epId);
+                cmds["Stop"] = newCmd("act_zbCmdC-0102-Stop", "ep="+epId);
                 cmds["Stop"]["isVisible"] = 1;
-                cmds["Down"] = newCmd("act_zbCmdG-0102-DownClose", "ep="+epId);
+                cmds["Down"] = newCmd("act_zbCmdC-0102-DownClose", "ep="+epId);
                 cmds["Down"]["isVisible"] = 1;
                 if (isset(attributes['0008'])) {
                     // TODO: Take care if 'Level' already used (ex: by cluster 0008)
                     cmds["Level"] = newCmd("inf_zbAttr-0102-CurPosLiftPercent", "ep="+epId);
                     cmds["Level"]["isVisible"] = 1;
                     cmds["Get Level"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0102&attrId=0008");
-                    cmds["SetReporting "+epId+"-0102-0008"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0102&attrId=0008&attrType=20&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                    cmds["SetReporting "+epId+"-0102-0008"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0102&attrId=0008&attrType=20", "yes");
                 }
                 cmds["Bind "+epId+"-0102-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0102", "yes");
             }
@@ -1026,16 +1027,16 @@
                     // Move color (cmd 0x08)
                     // Step color (cmd 0x09)
                     // Stop move step (cmd 0x47)
-                    cmds["White"] = newCmd("act_zbCmdG-0300-MoveToColor", "X=6000&Y=6000");
+                    cmds["White"] = newCmd("act_zbCmdC-0300-MoveToColor", "X=6000&Y=6000");
                     // if (currentMode == 1) // If X + Y
                         cmds["White"]["isVisible"] = 1;
-                    cmds["Blue"] = newCmd("act_zbCmdG-0300-MoveToColor", "X=228F&Y=228F");
+                    cmds["Blue"] = newCmd("act_zbCmdC-0300-MoveToColor", "X=228F&Y=228F");
                     // if (currentMode == 1) // If X + Y
                         cmds["Blue"]["isVisible"] = 1;
-                    cmds["Red"] = newCmd("act_zbCmdG-0300-MoveToColor", "X=AE13&Y=51EB");
+                    cmds["Red"] = newCmd("act_zbCmdC-0300-MoveToColor", "X=AE13&Y=51EB");
                     // if (currentMode == 1) // If X + Y
                         cmds["Red"]["isVisible"] = 1;
-                    cmds["Green"] = newCmd("act_zbCmdG-0300-MoveToColor", "X=147A&Y=D709");
+                    cmds["Green"] = newCmd("act_zbCmdC-0300-MoveToColor", "X=147A&Y=D709");
                     // if (currentMode == 1) // If X + Y
                         cmds["Green"]["isVisible"] = 1;
                     cmds["RGB"] = newCmd("setRGB");
@@ -1045,13 +1046,13 @@
 
                 // ColorTemperatureMireds
                 if (isset(attributes['0007'])) {
-                    // cmds["Set 2700K"] = newCmd("act_zbCmdG-0300-MoveToColorTemp", "slider=2700");
+                    // cmds["Set 2700K"] = newCmd("act_zbCmdC-0300-MoveToColorTemp", "slider=2700");
                     // if (currentMode == 2) // ColorTemperatureMireds
                     //     cmds["Set 2700K"]["isVisible"] = 1;
-                    // cmds["Set 4000K"] = newCmd("act_zbCmdG-0300-MoveToColorTemp", "slider=4000");
+                    // cmds["Set 4000K"] = newCmd("act_zbCmdC-0300-MoveToColorTemp", "slider=4000");
                     // if (currentMode == 2) // ColorTemperatureMireds
                     //     cmds["Set 4000K"]["isVisible"] = 1;
-                    cmds["Set Color Temp"] = newCmd("act_zbCmdG-0300-MoveToColorTemp");
+                    cmds["Set Color Temp"] = newCmd("act_zbCmdC-0300-MoveToColorTemp");
                     cmds["Set Color Temp"]["isVisible"] = 1;
 
                     cmds["Color Temp"] = newCmd("inf_zbAttr-0300-ColorTemperatureMireds");
@@ -1061,7 +1062,7 @@
                     cmds["Get ColorTemperature"] = newCmd("act_zbReadAttribute", "clustId=0300&attrId=0007");
                 }
 
-                cmds["Bind 0300-ToZigate"] = newCmd("act_zbBindToZigate", "clustId=0300", "yes");
+                cmds["Bind "+epId+"-0300-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0300", "yes");
             }
 
             /* 0400/Illuminance cluster */
@@ -1072,7 +1073,7 @@
                     cmds["Illuminance"]["isVisible"] = 1;
                     cmds["Get Illuminance"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0400&attrId=0000");
                     cmds["Bind "+epId+"-0400-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0400", "yes");
-                    cmds["SetReporting "+epId+"-0400-0000"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0400&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=0000", "yes");
+                    cmds["SetReporting "+epId+"-0400-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0400&attrType=21&attrId=0000&minInterval=300&maxInterval=600&changeVal=0", "yes");
                     cmds["SetReporting "+epId+"-0400-0000"]["comment"] = "Reporting every 5 to 10mins";
                 }
             }
@@ -1084,7 +1085,7 @@
                     cmds["Temperature"] = newCmd("inf_zbAttr-0402-MeasuredValue", "ep="+epId);
                     cmds["Temperature"]["isVisible"] = 1;
                     cmds["Get Temperature"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0402&attrId=0000");
-                    cmds["SetReporting "+epId+"-0402-0000"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=", "yes");
+                    cmds["SetReporting "+epId+"-0402-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0402&attrType=29&attrId=0000&minInterval=300&maxInterval=600", "yes");
                     cmds["SetReporting "+epId+"-0402-0000"]["comment"] = "Reporting every 5 to 10mins";
                     cmds["Bind "+epId+"-0402-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0402", "yes");
                     if (minTimeout > 10)
@@ -1099,7 +1100,7 @@
                     cmds["Humidity"] = newCmd("inf_zbAttr-0405-MeasuredValue", "ep="+epId);
                     cmds["Humidity"]["isVisible"] = 1;
                     cmds["Get Humidity"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0405&attrId=0000");
-                    cmds["SetReporting "+epId+"-0405-0000"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0405&attrType=21&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=", "yes");
+                    cmds["SetReporting "+epId+"-0405-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0405&attrType=21&attrId=0000&minInterval=300&maxInterval=600", "yes");
                     cmds["SetReporting "+epId+"-0405-0000"]["comment"] = "Reporting every 5 to 10mins";
                     cmds["Bind "+epId+"-0405-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0405", "yes");
                     if (minTimeout > 10)
@@ -1115,7 +1116,7 @@
                     cmds["Occupancy"]["isVisible"] = 1;
                     // cmds["Get Humidity"] = newCmd("act_zbReadAttribute", "clustId=0405&attrId=0000");
                     cmds["Bind "+epId+"-0406-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0406", "yes");
-                    cmds["SetReporting "+epId+"-0406-0000"] = newCmd("act_zbConfigureReporting", "ep="+epId+"&clustId=0406&attrType=18&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                    cmds["SetReporting "+epId+"-0406-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0406&attrType=18&attrId=0000", "yes");
                     // if (minTimeout > 10)
                     //     minTimeout = 10;
                 }
@@ -1131,7 +1132,7 @@
                 //     cmds["Get Zone Status"] = newCmd("act_zbReadAttribute", "clustId=0500&attrId=0002");
                 //     cmds["Zone Alarm1"] = newCmd("inf_zbAttr-0500-ZoneStatus-Alarm1");
                 //     cmds["Zone Alarm1"]["isVisible"] = 1;
-                //     cmds["SetReporting 0500-0002"] = newCmd("act_zbConfigureReporting", "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                //     cmds["SetReporting 0500-0002"] = newCmd("act_zbConfigureReporting2", "clustId=0500&attrId=0002&attrType=19", "yes");
                 // }
 
                 // Generated cmd 00 seems to be mandatory. Using it by default
@@ -1205,10 +1206,10 @@
                 }
                 cmds["Bind 0B04-ToZigate"] = newCmd("act_zbBindToZigate", "clustId=0B04", "yes");
                 if (isset(attributes['0508'])) { // RMS Current
-                    cmds["SetReporting 0B04-0508"] = newCmd("act_zbConfigureReporting", "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                    cmds["SetReporting 0B04-0508"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrType=21&attrId=0508", "yes");
                 }
                 if (isset(attributes['050B'])) { // Active power
-                    cmds["SetReporting 0B04-050B"] = newCmd("act_zbConfigureReporting", "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=", "yes");
+                    cmds["SetReporting 0B04-050B"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrType=29&attrId=050B", "yes");
                 }
             }
 

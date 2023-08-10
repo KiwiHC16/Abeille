@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Assistant modèle: Mise-à-jour.
+
 230810-BETA-1
 -------------
 

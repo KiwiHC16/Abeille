@@ -14,7 +14,7 @@
         "type": "GLEDOPTO RGT+CCT LED Controller",
         "commands": {
             "Identify": {
-                "use": "Identify",
+                "use": "act_zbCmdC-Identify",
                 "isVisible": 1
             },
             "Scenes": {

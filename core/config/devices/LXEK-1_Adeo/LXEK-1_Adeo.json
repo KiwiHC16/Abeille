@@ -20,7 +20,8 @@
                 "params": "clustId=0000&attrId=4000"
             },
             "Identify": {
-                "use": "Identify"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "Color Mode": {
                 "use": "inf_zbAttr-0300-ColorMode"

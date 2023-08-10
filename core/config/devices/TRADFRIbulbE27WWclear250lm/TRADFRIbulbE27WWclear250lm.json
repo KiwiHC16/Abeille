@@ -31,7 +31,7 @@
                 "isVisible": 1
             },
             "Identify": {
-                "use": "Identify",
+                "use": "act_zbCmdC-Identify",
                 "isVisible": 1
             },
             "Get-Status": {

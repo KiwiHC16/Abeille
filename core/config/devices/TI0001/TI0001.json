@@ -20,8 +20,8 @@
         },
         "commands": {
             "Identify": {
-                "use": "Identify",
-                "isVisible": 0
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "On 1": {
                 "use": "act_zbCmdG-0008-MoveToLevelWithOnOff",

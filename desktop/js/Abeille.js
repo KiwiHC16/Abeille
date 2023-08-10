@@ -1471,6 +1471,10 @@ function interrogate(request) {
         topic = "Cmd" + logicalId + "_cmd-0000";
         ep = document.getElementById("idEpG").value;
         payload = "ep=" + ep + "_cmd=00";
+    } else if (request == "0003-Identify") {
+        topic = "Cmd" + logicalId + "_identifySend";
+        ep = document.getElementById("idEp-IS").value;
+        payload = "address=" + eq["addr"] + "_EP=" + ep;
     } else if (request == "0004-AddGroup") {
         topic = "Cmd" + logicalId + "_addGroup";
         ep = document.getElementById("idEp-AG").value;

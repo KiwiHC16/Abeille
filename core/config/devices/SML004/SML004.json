@@ -34,7 +34,8 @@
                 "execAtCreation": "yes"
             },
             "Identify": {
-                "use": "Identify"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "Illuminance": {
                 "use": "inf_zbAttr-0400-MeasuredValue",

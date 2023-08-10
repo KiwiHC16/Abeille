@@ -36,7 +36,8 @@
                 "execAtCreation": "yes"
             },
             "Identify": {
-                "use": "Identify"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",

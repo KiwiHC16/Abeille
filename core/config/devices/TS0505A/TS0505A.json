@@ -20,7 +20,7 @@
                 "params": "clustId=0000&attrId=4000"
             },
             "Identify": {
-                "use": "Identify",
+                "use": "act_zbCmdC-Identify",
                 "isVisible": 1
             },
             "On": {

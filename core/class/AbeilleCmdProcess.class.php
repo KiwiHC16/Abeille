@@ -1820,43 +1820,6 @@
                 return;
             }
 
-            if (isset($Command['identifySend']) && isset($Command['address']) && isset($Command['duration']) && isset($Command['DestinationEndPoint']))
-            {
-                $cmd = "0070";
-                // Msg Type = 0x0070
-                // Identify Send
-
-                // <address mode: uint8_t>
-                // <target short address: uint16_t>
-                // <source endpoint: uint8_t>
-                // <destination endpoint: uint8_t>
-                // <time: uint16_t> Time: Seconds
-
-                //                 Start  Type         Length           Short       Addr
-                // 17:29:31.398 -> 01     02 10 70     02 10 02 17      10 02    12 6E    1B 02 11 02 11 02 10 10 03
-                // 01: Start
-                // 02 10 70: 00 70 - Msg Type Identify Send
-                // 02 10 02 17 => Length -> 7
-                // 10 02 => Mode 2 -> Short
-                //
-
-                // 17:29:31.461 <- 01 80 00 00 05 FE 00 0B 00 70 00 03
-                // 17:29:31.523 <- 01 81 01 00 07 F5 0B 01 00 03 00 00 7B 03
-
-                $addrMode = "02"; // Short Address -> 2
-                $address = $Command['address']; // -> 4
-                $srcEp = "01"; // -> 2
-                $dstEp = $Command['DestinationEndPoint']; // -> 2
-                $time = $Command['duration']; // -> 4
-                //  2 + 4 + 2 + 2 + 4 = 14/2 => 7
-                // $length = "0007";
-                $data = $addrMode.$address.$srcEp.$dstEp.$time ;
-
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $address);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $address);
-                return;
-            }
-
             // Don't know how to make it works
             if (isset($Command['touchLinkFactoryResetTarget']))
             {
@@ -3868,8 +3831,8 @@
                     $sqn        = $this->genSqn();
                     $cmdId      = "00"; // Reset to Factory Defaults
 
-                    $data2 = $fcf.$sqn.$cmdId;
-                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
+                    $data2      = $fcf.$sqn.$cmdId;
+                    $dataLen2   = sprintf("%02X", strlen($data2) / 2);
 
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
@@ -3877,6 +3840,37 @@
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
                     return;
                 } // Cluster 0000, $cmdName == 'cmd-0000'
+
+                // ZCL cluster 0003 specific: Identify command
+                // Mandatory params: 'address' (hex 2B)  & 'EP' (hex 1B)
+                // Optional: 'duration' (hex 2B, default=0010)
+                else if ($cmdName == 'identifySend') {
+                    $required = ['address', 'EP']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $zgCmd = "0070";
+                    // Msg Type = 0x0070
+                    // Identify Send
+
+                    // <address mode: uint8_t>
+                    // <target short address: uint16_t>
+                    // <source endpoint: uint8_t>
+                    // <destination endpoint: uint8_t>
+                    // <time: uint16_t> Time: Seconds
+
+                    $addrMode   = "02"; // Short Address -> 2
+                    $addr       = $Command['address']; // -> 4
+                    $srcEp      = "01"; // -> 2
+                    $dstEp      = $Command['EP']; // -> 2
+                    $duration   = (isset($Command['duration']) && ($Command['duration'] != '')) ? $Command['duration'] : '0010';
+
+                    cmdLog('debug', '    identifySend: ep='.$dstEp.', duration='.$duration);
+                    $data = $addrMode.$addr.$srcEp.$dstEp.$duration;
+
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
+                    return;
+                } // End cluster 0003/identifySend
 
                 // ZCL cluster 0004 specific: addGroup, sent to server
                 // Mandatory params: 'addr', 'ep', & 'group'
@@ -3890,17 +3884,17 @@
                     //<source endpoint: uint8_t>
                     //<destination endpoint: uint8_t>
                     //<group address: uint16_t>
-                    $cmd        = "0060";
+                    $zgCmd        = "0060";
                     $addrMode   = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
                     $dstEp      = $Command['ep'];
                     $group      = $Command['group'];
 
-                    cmdLog('debug', '  addGroup: ep='.$dstEp.', group='.$group);
+                    cmdLog('debug', '    addGroup: ep='.$dstEp.', group='.$group);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$group;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End cluster 0004, $cmdName == 'addGroup'
 
@@ -3911,7 +3905,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0062";
+                    $zgCmd = "0062";
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
                     // <source endpoint: uint8_t>
@@ -3934,7 +3928,7 @@
 
                     $data = $addrMode.$addr.$srcEp.$ep.$groupCount.$groupList;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End cluster 0004, $cmdName == 'getGroupMembership'
 
@@ -3945,7 +3939,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0064";
+                    $zgCmd = "0064";
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
                     // <source endpoint: uint8_t>
@@ -3968,7 +3962,7 @@
 
                     $data = $addrMode.$addr.$srcEp.$ep;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End cluster 0004, $cmdName == 'removeAllGroups'
 
@@ -3983,7 +3977,7 @@
                         cmdLog('error', "    setLevel: 'Level' en dehors de la plage 0->100");
                         return;
                     }
-                    $cmd = "0081"; // Move to level with/without on/off
+                    $zgCmd = "0081"; // Move to level with/without on/off
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
@@ -4005,7 +3999,7 @@
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$onOff.$level.$duration;
 
-                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
 
                     // if ($addrMode == "02") {
                     //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
@@ -4027,7 +4021,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0081"; // Move to level with/without on/off
+                    $zgCmd = "0081"; // Move to level with/without on/off
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
@@ -4047,7 +4041,7 @@
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$onoff.$level.$duration;
 
-                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
 
                     if ($addrMode == "02") {
                         $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000");
@@ -4077,7 +4071,7 @@
 
                     // TO BE COMPLETED
                     if (($cmdId == '00') || ($cmdId == '04')) { // Move to Level without (00) or with On/Off (04)
-                        $cmd        = "0081";
+                        $zgCmd      = "0081";
                         $addrMode   = "02"; // Assuming short addr
                         $addr       = $Command['addr'];
                         $srcEp      = "01";
@@ -4092,9 +4086,9 @@
 
                         $data       = $addrMode.$addr.$srcEp.$dstEp.$onOff.$level.$duration;
 
-                        $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                        $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     } else if ($cmdId == '07') { // Stop with OnOff
-                        $cmd        = "0084"; // Stop with OnOff = Cluster 0008, cmd 07
+                        $zgCmd      = "0084"; // Stop with OnOff = Cluster 0008, cmd 07
                         $addrMode   = "02"; // Assuming short addr
                         $addr       = $Command['addr'];
                         $srcEp      = "01";
@@ -4102,7 +4096,7 @@
 
                         $data       = $addrMode.$addr.$srcEp.$dstEp;
 
-                        $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                        $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     } else {
                         cmdLog('error', "    cmd-0008: Unsupported cluster 0008 command ".$cmdId);
                     }
@@ -4232,7 +4226,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0530";
+                    $zgCmd = "0530";
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
@@ -4343,7 +4337,7 @@
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
                     return;
                 }
 
@@ -4353,7 +4347,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0530";
+                    $zgCmd = "0530";
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
@@ -4402,7 +4396,7 @@
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
                     return;
                 }
 
@@ -4466,7 +4460,7 @@
                     // 7 = Go To Tilt Value (extra cmd : Value in cm)
                     // 8 = Go To Tilt Percentage (extra cmd : percentage 0-100)
 
-                    $cmd        = "00FA";
+                    $zgCmd        = "00FA";
 
                     $addrMode   = "02"; // 01 pour groupe, 02 pour NE
                     $addr       = $Command['addr'];
@@ -4482,7 +4476,7 @@
                     cmdLog('debug', '    cmd-0102: cmdId='.$cmdId.', extra='.$extra);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$cmdId.$extra;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
                     return;
                 } // End $cmdName == 'cmd-0102'
 
@@ -4496,7 +4490,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0530";
+                    $zgCmd = "0530";
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
@@ -4545,7 +4539,7 @@
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
                     return;
                 } // End 'cmd-0201'
 
@@ -4563,7 +4557,7 @@
                     // <colour Y: uint16_t>
                     // <transition time: uint16_t >
 
-                    $cmd        = "00B7"; // Move to color
+                    $zgCmd        = "00B7"; // Move to color
                     if (isset($Command['addressMode'])) $addrMode = $Command['addressMode']; else $addrMode = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
@@ -4577,7 +4571,7 @@
 
                     $data = $addrMode.$addr.$srcEp.$dstEp.$colourX.$colourY.$duration;
 
-                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 }
 
@@ -4595,7 +4589,7 @@
                     // <colour temperature: uint16_t>       4
                     // <transition time: uint16_t>          4
 
-                    $cmd = "00C0"; // 00C0=Move to colour temperature
+                    $zgCmd = "00C0"; // 00C0=Move to colour temperature
 
                     if (isset($Command['addressMode'])) $addrMode = $Command['addressMode']; else $addrMode = "02";
                     $addr       = $Command['addr'];
@@ -4619,7 +4613,7 @@
                     cmdLog('debug', '    TempK='.$tempK.' => Using tempMireds='.$tempMireds.', transition='.$transition);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$tempMireds.$transition;
 
-                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
 
                     if ($addrMode == "02") {
                         $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0300&attrId=0007" );
@@ -4650,7 +4644,7 @@
                     //  Command Id
                     //  ....
 
-                    $cmd        = "0530";
+                    $zgCmd        = "0530";
                     $addrMode   = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
@@ -4676,7 +4670,7 @@
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End $cmdName == 'cmd-0500'
 
@@ -4703,7 +4697,7 @@
                     //  Command Id
                     //  ....
 
-                    $cmd        = "0530";
+                    $zgCmd        = "0530";
                     $addrMode   = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
@@ -4733,7 +4727,7 @@
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End $cmdName == 'cmd-0501'
 
@@ -4764,7 +4758,7 @@
                     //  Command Id
                     //  ....
 
-                    $cmd        = "0530";
+                    $zgCmd        = "0530";
                     $addrMode   = "02";
                     $addr       = $Command['addr'];
                     $srcEp      = "01";
@@ -4846,7 +4840,7 @@
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End $cmdName == 'cmd-0502'
 
@@ -4856,7 +4850,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0530";
+                    $zgCmd = "0530";
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
@@ -4902,7 +4896,7 @@
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
                     return;
                 }
 
@@ -4912,7 +4906,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd = "0530";
+                    $zgCmd = "0530";
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
@@ -4966,7 +4960,7 @@
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End cmdName == 'cmd-EF00'
 

@@ -12,7 +12,7 @@
         "type": "diy-routeur",
         "commands": {
             "Identify": {
-                "use": "Identify",
+                "use": "act_zbCmdC-Identify",
                 "isVisible": 1
             },
             "SWBuildID": {

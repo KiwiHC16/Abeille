@@ -231,9 +231,9 @@
                 }
 
                 // Cluster 0003/Identify updates
-                else if (($cmdFName == "Identify") && $oldSyntax) {
+                else if ($cmdFName == "Identify") {
                     $cmdArr = Array(
-                        "use" => "Identify",
+                        "use" => "act_zbCmdC-Identify",
                         // "params" => "ep=03",
                         // "subType" => "numeric",
                         // "template" => "door",

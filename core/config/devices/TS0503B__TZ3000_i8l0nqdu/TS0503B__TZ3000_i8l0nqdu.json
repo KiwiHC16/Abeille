@@ -12,7 +12,7 @@
         "type": "Tuya DC5V-24V LED controller",
         "commands": {
             "Identify": {
-                "use": "Identify",
+                "use": "act_zbCmdC-Identify",
                 "isVisible": 1
             },
             "On": {

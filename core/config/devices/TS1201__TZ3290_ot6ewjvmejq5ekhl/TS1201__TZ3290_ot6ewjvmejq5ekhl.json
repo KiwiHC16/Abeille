@@ -5,7 +5,7 @@
         "type": "Moes universal smart IR remote control",
         "timeout": "60",
         "alternateIds": {
-            "TS1201__TZ3290_j37rooaxrcdcqo5n":  {}
+            "TS1201__TZ3290_j37rooaxrcdcqo5n": []
         },
         "category": {
             "automatism": "1"
@@ -31,7 +31,8 @@
                 "execAtCreation": "yes"
             },
             "Identify": {
-                "use": "Identify"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "On": {
                 "use": "act_zbCmdG-0006-On",

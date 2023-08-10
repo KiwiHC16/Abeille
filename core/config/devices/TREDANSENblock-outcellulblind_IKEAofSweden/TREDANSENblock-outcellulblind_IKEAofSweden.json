@@ -33,7 +33,8 @@
                 "execAtCreation": "yes"
             },
             "Identify": {
-                "use": "Identify"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "Up": {
                 "use": "act_zbCmdG-0102-UpOpen",

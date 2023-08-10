@@ -12,7 +12,8 @@
         },
         "commands": {
             "Identify": {
-                "use": "Identify"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "On": {
                 "use": "act_zbCmdG-0006-On",

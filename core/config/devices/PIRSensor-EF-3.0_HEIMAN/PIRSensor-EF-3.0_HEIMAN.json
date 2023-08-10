@@ -28,7 +28,8 @@
                 "execAtCreation": "yes"
             },
             "Identify": {
-                "use": "Identify"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "Zone Alarm1": {
                 "use": "inf_Zone-Alarm1",

@@ -13,7 +13,8 @@
         },
         "commands": {
             "Identify": {
-                "use": "Identify"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",

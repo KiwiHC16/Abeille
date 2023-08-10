@@ -22,7 +22,7 @@
     <div class="col-sm-5">
         <?php
             // echo '<a class="btn btn-warning" onclick="interrogate(\'getRoutingTable\')">{{Interroger}}</a>';
-            addButton("{{Interroger}}", "btn-warning", "getRoutingTable");
+            addButton("{{Interroger}}", "btn-default", "getRoutingTable");
         ?>
     </div>
 </div>
@@ -31,7 +31,7 @@
     <div class="col-sm-5">
         <?php
             // echo '<a class="btn btn-warning" onclick="interrogate(\'getBindingTable\')">{{Interroger}}</a>';
-            addButton("{{Interroger}}", "btn-warning", "getBindingTable");
+            addButton("{{Interroger}}", "btn-default", "getBindingTable");
         ?>
     </div>
 </div>
@@ -40,7 +40,7 @@
     <div class="col-sm-5">
         <?php
             // echo '<a class="btn btn-warning" onclick="interrogate(\'getNeighborTable\')">{{Interroger}}</a>';
-            addButton("{{Interroger}}", "btn-warning", "getNeighborTable");
+            addButton("{{Interroger}}", "btn-default", "getNeighborTable");
         ?>
         <input id="idStartIdx" title="{{Start index (ex: 00)}}" value="00" />
     </div>
@@ -50,7 +50,7 @@
     <div class="col-sm-5">
         <?php
             // echo '<a class="btn btn-warning" onclick="interrogate(\'getActiveEndPoints\')">{{Interroger}}</a>';
-            addButton("{{Interroger}}", "btn-warning", "getActiveEndPoints");
+            addButton("{{Interroger}}", "btn-default", "getActiveEndPoints");
         ?>
     </div>
 </div>
@@ -59,7 +59,7 @@
     <div class="col-sm-5">
         <?php
             // echo '<a class="btn btn-warning" onclick="interrogate(\'getSimpleDescriptor\')">{{Interroger}}</a>';
-            addButton("{{Interroger}}", "btn-warning", "getSimpleDescriptor");
+            addButton("{{Interroger}}", "btn-default", "getSimpleDescriptor");
             addEpInput("idEpSDR");
         ?>
     </div>
@@ -69,7 +69,7 @@
     <div class="col-sm-5">
         <?php
             // echo '<a class="btn btn-warning" onclick="interrogate(\'getNodeDescriptor\')">{{Interroger}}</a>';
-            addButton("{{Interroger}}", "btn-warning", "getNodeDescriptor");
+            addButton("{{Interroger}}", "btn-default", "getNodeDescriptor");
         ?>
     </div>
 </div>
@@ -78,7 +78,7 @@
     <div class="col-sm-5">
         <?php
             // echo '<a class="btn btn-warning" onclick="interrogate(\'getIeeeAddress\')">{{Interroger}}</a>';
-            addButton("{{Interroger}}", "btn-warning", "getIeeeAddress");
+            addButton("{{Interroger}}", "btn-default", "getIeeeAddress");
         ?>
     </div>
 </div>
@@ -173,9 +173,7 @@
     <label class="col-sm-3 control-label">ZCL: Lecture attribut</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'readAttribute\')">{{Lire}}</a>';
-            addButton("{{Lire}}", "btn-warning", "readAttribute");
-            // echo '<input id="idEpA" title="{{End Point (ex: 01)}}" value="'.$mainEP.'"/>';
+            addButton("{{Lire}}", "btn-default", "readAttribute");
             addEpInput("idEpA");
             addClusterButton("idClustIdA");
             addAttrInput("idAttrIdA");
@@ -223,8 +221,7 @@
     <label class="col-sm-3 control-label" title="readReportingConfig">ZCL: Lecture configuration de reporting</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'readReportingConfig\')">{{Interroger}}</a>';
-            addButton("{{Interroger}}", "btn-warning", "readReportingConfig");
+            addButton("{{Interroger}}", "btn-default", "readReportingConfig");
             addEpInput("idEp");
             addClusterButton("idClustId");
             addAttrInput("idAttrId");
@@ -235,8 +232,7 @@
     <label class="col-sm-3 control-label" title="discoverCommandsReceived">ZCL: Découverte des commandes RX</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'discoverCommandsReceived\')">{{Interroger}}</a>';
-            addButton("{{Interroger}}", "btn-warning", "discoverCommandsReceived");
+            addButton("{{Interroger}}", "btn-default", "discoverCommandsReceived");
             addEpInput("idEpB");
             addClusterButton("idClustIdB");
         ?>
@@ -246,8 +242,7 @@
     <label class="col-sm-3 control-label" title="discoverAttributes">ZCL: Découverte des attributs</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'discoverAttributes\')">{{Interroger}}</a>';
-            addButton("{{Interroger}}", "btn-warning", "discoverAttributes");
+            addButton("{{Interroger}}", "btn-default", "discoverAttributes");
             addEpInput("idEpD");
             addClusterButton("idClustIdD");
         ?>
@@ -257,8 +252,7 @@
     <label class="col-sm-3 control-label" title="discoverAttributesExt">ZCL: Découverte des attributs (extended)</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'discoverAttributesExt\')">{{Interroger}}</a>';
-            addButton("{{Interroger}}", "btn-warning", "discoverAttributesExt");
+            addButton("{{Interroger}}", "btn-default", "discoverAttributesExt");
             addEpInput("idEpC");
             addClusterButton("idClustIdC");
         ?>
@@ -268,7 +262,6 @@
     <label class="col-sm-3 control-label" title="Configure le reporting d'un attribut">ZCL:  {{Configurer le reporting}}</label>
     <div class="col-sm-9">
         <?php
-            // echo '<a class="btn btn-danger" onclick="interrogate(\'configureReporting\')">{{Configurer}}</a>';
             addButton("{{Configurer}}", "btn-danger", "configureReporting");
             addEpInput("idEpCR");
             addClusterButton("idClustIdCR");
@@ -312,6 +305,15 @@
     </div>
 </div>
 <div class="form-group">
+    <label class="col-sm-3 control-label" title="Cluster 0003, {{commande Identify}}">ZCL: 0003 - {{Identifier}}</label>
+    <div class="col-sm-5">
+        <?php
+            addButton("{{Identifier}}", "btn-default", "0003-Identify");
+            addEpInput("idEp-IS");
+        ?>
+    </div>
+</div>
+<div class="form-group">
     <label class="col-sm-3 control-label" title="Cluster 0004/addGroup">ZCL: 0004 - Add group</label>
     <div class="col-sm-5">
         <?php
@@ -326,8 +328,7 @@
     <label class="col-sm-3 control-label" title="Cluster 0004/Get group membership">ZCL: 0004 - Get group membership</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-danger" onclick="interrogate(\'0004-GetGroupMembership\')">{{Get}}</a>';
-            addButton("{{Get}}", "btn-danger", "0004-GetGroupMembership");
+            addButton("{{Get}}", "btn-default", "0004-GetGroupMembership");
             addEpInput("idEp-GGM");
             // addGroupInput('idGroup-AG', 'Destination group');
         ?>
@@ -337,7 +338,6 @@
     <label class="col-sm-3 control-label" title="Cluster 0004/Remove all groups">ZCL: 0004 - Remove all groups</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-danger" onclick="interrogate(\'0004-RemoveAllGroups\')">{{Remove}}</a>';
             addButton("{{Remove}}", "btn-danger", "0004-RemoveAllGroups");
             addEpInput("idEp-RAG");
             // addGroupInput('idGroup-AG', 'Destination group');
@@ -348,7 +348,6 @@
     <label class="col-sm-3 control-label" title="Cluster 0201, Setpoint Raise/Lower (cmd 00)">ZCL: 0201 - Raise/lower</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-danger" onclick="interrogate(\'0201-SetPoint\')">{{Modifier}}</a>';
             addButton("{{Modifier}}", "btn-danger", "0201-SetPoint");
             addEpInput("idEpC0201-00");
         ?>
@@ -359,7 +358,6 @@
     <label class="col-sm-3 control-label" title="Cluster 0300, Mote to color (cmd 07)">ZCL: 0300 - Move to color</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-danger" onclick="interrogate(\'0300-MoveToColor\')">{{Appliquer}}</a>';
             addButton("{{Appliquer}}", "btn-danger", "0300-MoveToColor");
             addEpInput("idEp-MTC");
         ?>
@@ -371,7 +369,6 @@
     <label class="col-sm-3 control-label" title="Cluster 0502/IAS WD, Start warning (cmd 00)">ZCL: 0502 - Start warning</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-danger" onclick="interrogate(\'0502-StartWarning\')">{{Appliquer}}</a>';
             addButton("{{Appliquer}}", "btn-danger", "0502-StartWarning");
             addEpInput("idEp-SW");
             addWarningModesList("idMode-SW");
@@ -385,8 +382,7 @@
     <label class="col-sm-3 control-label" title="Cluster 1000, Get group identifiers (cmd 41)">ZCL: 1000 - Groupes</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'1000-GetGroups\')">{{Interroger}}</a>';
-            addButton("{{Interroger}}", "btn-warning", "1000-GetGroups");
+            addButton("{{Interroger}}", "btn-default", "1000-GetGroups");
             addEpInput("idEpC1000-41");
         ?>
     </div>
@@ -395,8 +391,7 @@
     <label class="col-sm-3 control-label" title="Cluster 1000, Get endpont list (cmd 42)">ZCL: 1000 - End points</label>
     <div class="col-sm-5">
         <?php
-            // echo '<a class="btn btn-warning" onclick="interrogate(\'1000-GetEndpoints\')">{{Interroger}}</a>';
-            addButton("{{Interroger}}", "btn-warning", "1000-GetEndpoints");
+            addButton("{{Interroger}}", "btn-default", "1000-GetEndpoints");
             addEpInput("idEpC1000-42");
         ?>
     </div>

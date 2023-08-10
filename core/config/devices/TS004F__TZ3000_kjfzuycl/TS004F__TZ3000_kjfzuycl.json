@@ -5,7 +5,7 @@
         "type": "Moes IP55 smart button",
         "genericType": "Environment",
         "alternateIds": {
-            "TS004F__TZ3000_ja5osu5g": {}
+            "TS004F__TZ3000_ja5osu5g": []
         },
         "timeout": "60",
         "category": {
@@ -56,7 +56,8 @@
                 "execAtCreation": "yes"
             },
             "Identify": {
-                "use": "Identify"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "Set Level": {
                 "use": "act_setLevel-Light",

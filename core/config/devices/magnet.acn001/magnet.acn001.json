@@ -32,7 +32,8 @@
                 "execAtCreation": "yes"
             },
             "Identify": {
-                "use": "Identify"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "Status": {
                 "use": "act_zbCmdG-XXXX-Custom",

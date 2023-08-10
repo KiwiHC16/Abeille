@@ -1031,20 +1031,20 @@
              * Cluster 0001/Identify support
              */
 
-            case "identifySend":
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                }
-                $Command = array(
-                                    "identifySend" => "1",
-                                    "priority" => $priority,
-                                    "dest" => $dest,
-                                    "address" => $address,
-                                    "duration" => $parameters['duration'],
-                                    "DestinationEndPoint" => $parameters['EP'],
-                                    );
-                break;
+            // case "identifySend":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //     }
+            //     $Command = array(
+            //                         "identifySend" => "1",
+            //                         "priority" => $priority,
+            //                         "dest" => $dest,
+            //                         "address" => $address,
+            //                         "duration" => $parameters['duration'],
+            //                         "DestinationEndPoint" => $parameters['EP'],
+            //                         );
+            //     break;
             case "identifySendHue":
                 $keywords = preg_split("/[=&]+/", $msg);
                 $Command = array(
@@ -1060,29 +1060,6 @@
             /*
              * Cluster 0004/Groups support
              */
-
-            // case "getGroupMembership":
-            //     if (!isset($parameters['ep'])) { $parameters['ep'] = "01"; }
-            //     $Command = array(
-            //         "getGroupMembership"    => "1",
-            //         "priority"              => $priority,
-            //         "dest"                  => $dest,
-            //         "addr"                  => $address,
-            //         "ep"                    => $parameters['ep'],
-            //     );
-            //     break;
-
-            // case "addGroup":
-            //     if (strlen($parameters['DestinationEndPoint'])<2 ) { $parameters['DestinationEndPoint'] = "01"; }
-            //     $Command = array(
-            //                         "addGroup"                 => "1",
-            //                         "priority"                 => $priority,
-            //                         "dest"                     => $dest,
-            //                         "address"                  => $parameters['address'],
-            //                         "DestinationEndPoint"      => $parameters['DestinationEndPoint'],
-            //                         "groupAddress"             => $parameters['groupAddress'],
-            //                         );
-            //     break;
 
             case "removeGroup":
                 // if ($parameters['address']=="Ruche" ) { $parameters['address'] = "0000"; }

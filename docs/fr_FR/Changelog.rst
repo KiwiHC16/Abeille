@@ -6,6 +6,9 @@ ChangeLog
 - Smart Switch ZG-005-RF: Ajout support (2608).
 - Interne: Suppression 'Abeille-Js.php'
 - Page EQ: Correction mauvais raffraichissement des infos sur recharge de page.
+- Interne: Cmd 'identifySend' revisité.
+- Page EQ: Ajout support 'identifySend'.
+- Modèle de commande: ' Identify.json' => 'act_zbCmdC-Identify'
 
 230804-BETA-1
 -------------

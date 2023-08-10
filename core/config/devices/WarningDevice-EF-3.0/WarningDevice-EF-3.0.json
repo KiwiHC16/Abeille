@@ -26,7 +26,7 @@
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Identify": {
-                "use": "Identify",
+                "use": "act_zbCmdC-Identify",
                 "isVisible": 1
             },
             "Bind-0006-ToZigate": {

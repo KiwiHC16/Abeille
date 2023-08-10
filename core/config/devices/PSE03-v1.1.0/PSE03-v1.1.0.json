@@ -14,7 +14,7 @@
                 "use": "inf_zbAttr-0000-ZCLVersion"
             },
             "Identify": {
-                "use": "Identify",
+                "use": "act_zbCmdC-Identify",
                 "isVisible": 1
             },
             "Bind-0006-ToZigate": {

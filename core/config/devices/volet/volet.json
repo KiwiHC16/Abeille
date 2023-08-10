@@ -15,7 +15,8 @@
         },
         "commands": {
             "Identify": {
-                "use": "Identify"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "Down": {
                 "use": "act_zbCmdG-0008-DownClose",

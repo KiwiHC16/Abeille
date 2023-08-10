@@ -70,7 +70,7 @@
                 "params": "clustId=0008&attrId=0000"
             },
             "Identify": {
-                "use": "Identify",
+                "use": "act_zbCmdC-Identify",
                 "isVisible": 1
             },
             "Scenes": {

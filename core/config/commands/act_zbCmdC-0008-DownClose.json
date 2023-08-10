@@ -1,5 +1,5 @@
 {
-    "act_zbCmdG-0008-DownClose": {
+    "act_zbCmdC-0008-DownClose": {
         "type": "action",
         "comment": "Cluster 0008, move to level 0%",
         "subType": "other",

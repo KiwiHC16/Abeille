@@ -8,7 +8,10 @@ ChangeLog
 - Page EQ: Correction mauvais raffraichissement des infos sur recharge de page.
 - Interne: Cmd 'identifySend' revisité.
 - Page EQ: Ajout support 'identifySend'.
-- Modèle de commande: ' Identify.json' => 'act_zbCmdC-Identify'
+- Modèle de commande:
+
+  - ' Identify.json' => 'act_zbCmdC-Identify'
+  - 'act_zbCmdG-XXXX-YYYY' => 'act_zbCmdC-XXXX-YYYY'
 
 230804-BETA-1
 -------------

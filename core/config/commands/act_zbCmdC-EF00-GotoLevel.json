@@ -1,5 +1,5 @@
 {
-    "act_zbCmdG-EF00-GotoLevel": {
+    "act_zbCmdC-EF00-GotoLevel": {
         "isVisible": 1,
         "logicalId": "#EP#-zbCmdG-EF00-GotoLevel",
         "subType": "slider",

@@ -1,5 +1,5 @@
 {
-    "act_zbCmdG-0102-GoToLiftPercentage": {
+    "act_zbCmdC-0102-GoToLiftPercentage": {
         "subType": "slider",
         "logicalId": "#EP#-0102-CmdGoToLiftPercent",
         "template": "",

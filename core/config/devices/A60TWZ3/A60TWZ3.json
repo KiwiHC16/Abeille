@@ -24,10 +24,10 @@
                 "use": "getColorTemperature"
             },
             "On": {
-                "use": "act_zbCmdG-0006-On"
+                "use": "act_zbCmdC-0006-On"
             },
             "Off": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
             "Set Level": {
@@ -35,19 +35,19 @@
                 "isVisible": 1
             },
             "Set 2700K": {
-                "use": "act_zbCmdG-0300-MoveToColorTemp",
+                "use": "act_zbCmdC-0300-MoveToColorTemp",
                 "params": "slider=2700",
                 "logicalId": "#EP#-Set-2700K",
                 "isVisible": 1
             },
             "Set 4000K": {
-                "use": "act_zbCmdG-0300-MoveToColorTemp",
+                "use": "act_zbCmdC-0300-MoveToColorTemp",
                 "params": "slider=4000",
                 "logicalId": "#EP#-Set-4000K",
                 "isVisible": 1
             },
             "Set 6000K": {
-                "use": "act_zbCmdG-0300-MoveToColorTemp",
+                "use": "act_zbCmdC-0300-MoveToColorTemp",
                 "params": "slider=6000",
                 "logicalId": "#EP#-Set-6000K",
                 "isVisible": 1
@@ -98,7 +98,7 @@
                 "params": "clustId=0000&attrId=4000"
             },
             "Toggle": {
-                "use": "act_zbCmdG-0006-Toggle",
+                "use": "act_zbCmdC-0006-Toggle",
                 "nextLine": "after"
             }
         },

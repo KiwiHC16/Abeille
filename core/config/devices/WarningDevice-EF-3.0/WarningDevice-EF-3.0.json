@@ -41,7 +41,7 @@
                 "execAtCreationDelay": 11
             },
             "SIREN": {
-                "use": "act_zbCmdG-0502-StartWarning",
+                "use": "act_zbCmdC-0502-StartWarning",
                 "params": "ep=01&mode=burglar&sirenl=#slider#",
                 "logicalId": "#EP#-StartWarning-Siren",
                 "subType": "slider",
@@ -51,13 +51,13 @@
                 "isVisible": "1"
             },
             "FLASH only": {
-                "use": "act_zbCmdG-0502-StartWarning",
+                "use": "act_zbCmdC-0502-StartWarning",
                 "params": "ep=01&mode=stop&strobe=on",
                 "logicalId": "#EP#-StartWarning-FlashOnly",
                 "isVisible": "1"
             },
             "Stop": {
-                "use": "act_zbCmdG-0502-StartWarning",
+                "use": "act_zbCmdC-0502-StartWarning",
                 "params": "ep=01&mode=stop&strobe=off",
                 "logicalId": "#EP#-StartWarning-Stop",
                 "isVisible": "1"

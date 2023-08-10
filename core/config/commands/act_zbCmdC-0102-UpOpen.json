@@ -1,13 +1,13 @@
 {
-    "act_zbCmdG-0102-DownClose": {
+    "act_zbCmdC-0102-UpOpen": {
         "subType": "other",
-        "logicalId": "#EP#-0102-CmdDownClose",
+        "logicalId": "#EP#-0102-CmdUpOpen",
         "template": "",
         "configuration": {
             "topic": "cmd-0102",
-            "request": "ep=#EP#&cmd=01"
+            "request": "ep=#EP#&cmd=00"
         },
         "type": "action",
-        "genericType": "FLAP_DOWN"
+        "genericType": "FLAP_UP"
     }
 }

@@ -4,8 +4,7 @@
         "model": "Curtain",
         "type": "Girier curtain module",
         "alternateIds": {
-            "TS130F__TZ3210_dwytrmda": {
-            }
+            "TS130F__TZ3210_dwytrmda": []
         },
         "genericType": "Opening",
         "timeout": "60",
@@ -18,20 +17,20 @@
         },
         "commands": {
             "Up": {
-                "use": "act_zbCmdG-0102-UpOpen",
+                "use": "act_zbCmdC-0102-UpOpen",
                 "isVisible": "1"
             },
             "Stop": {
-                "use": "act_zbCmdG-0102-Stop",
+                "use": "act_zbCmdC-0102-Stop",
                 "isVisible": "1"
             },
             "Down": {
-                "use": "act_zbCmdG-0102-DownClose",
+                "use": "act_zbCmdC-0102-DownClose",
                 "isVisible": "1",
                 "nextLine": "after"
             },
             "Set level": {
-                "use": "act_zbCmdG-0102-GoToLiftPercentage",
+                "use": "act_zbCmdC-0102-GoToLiftPercentage",
                 "valueOffset": "#value#*#logicid0102-01-F003#/100",
                 "value": "Level",
                 "isVisible": "1"

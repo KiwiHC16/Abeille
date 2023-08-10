@@ -23,18 +23,18 @@
                 "isVisible": 1
             },
             "On 1": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "params": "ep=01",
                 "isVisible": 1
             },
             "Off 1": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "params": "ep=01",
                 "isVisible": 1,
                 "nextLine": "after"
             },
             "Toggle 1": {
-                "use": "act_zbCmdG-0006-Toggle",
+                "use": "act_zbCmdC-0006-Toggle",
                 "params": "ep=01"
             },
             "Get-Status 1": {
@@ -52,18 +52,18 @@
                 "isVisible": 1
             },
             "On 2": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "params": "ep=02",
                 "isVisible": 1
             },
             "Off 2": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "params": "ep=02",
                 "isVisible": 1,
                 "nextLine": "after"
             },
             "Toggle 2": {
-                "use": "act_zbCmdG-0006-Toggle",
+                "use": "act_zbCmdC-0006-Toggle",
                 "params": "ep=02"
             },
             "Get-Status 2": {
@@ -81,18 +81,18 @@
                 "isVisible": 1
             },
             "On 3": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "params": "ep=03",
                 "isVisible": 1
             },
             "Off 3": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "params": "ep=03",
                 "isVisible": 1,
                 "nextLine": "after"
             },
             "Toggle 3": {
-                "use": "act_zbCmdG-0006-Toggle",
+                "use": "act_zbCmdC-0006-Toggle",
                 "params": "ep=03"
             },
             "Get-Status 3": {

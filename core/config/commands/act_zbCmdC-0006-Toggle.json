@@ -1,13 +1,13 @@
 {
-    "act_zbCmdG-0006-On": {
+    "act_zbCmdC-0006-Toggle": {
         "type": "action",
         "subType": "other",
-        "logicalId": "#EP#-0006-CmdOn",
+        "logicalId": "#EP#-0006-CmdToggle",
         "configuration": {
             "topic": "OnOff",
-            "request": "Action=On&EP=#EP#",
+            "request": "Action=Toggle&EP=#EP#",
             "visibilityCategory": "All"
         },
-        "genericType": "LIGHT_ON"
+        "genericType": "LIGHT_TOGGLE"
     }
 }

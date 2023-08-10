@@ -14,13 +14,13 @@
                 "use": "inf_zbAttr-0000-ZCLVersion"
             },
             "Up": {
-                "use": "act_zbCmdG-0102-UpOpen"
+                "use": "act_zbCmdC-0102-UpOpen"
             },
             "Down": {
-                "use": "act_zbCmdG-0102-DownClose"
+                "use": "act_zbCmdC-0102-DownClose"
             },
             "Stop": {
-                "use": "act_zbCmdG-0102-Stop"
+                "use": "act_zbCmdC-0102-Stop"
             },
             "Level": {
                 "use": "WindowsCoveringLevel"

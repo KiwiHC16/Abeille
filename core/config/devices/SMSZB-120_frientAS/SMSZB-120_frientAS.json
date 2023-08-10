@@ -36,7 +36,7 @@
                 "isVisible": 1
             },
             "Alarm 1": {
-                "use": "act_zbCmdG-XXXX-Custom",
+                "use": "act_zbCmdC-XXXX-Custom",
                 "logicalId": "0500-Status",
                 "isVisible": "1"
             },
@@ -76,13 +76,13 @@
                 "execAtCreation": "yes"
             },
             "Start alarm": {
-                "use": "act_zbCmdG-0502-StartWarning",
+                "use": "act_zbCmdC-0502-StartWarning",
                 "params": "ep=23&mode=burglar",
                 "logicalId": "#EP#-StartAlarm",
                 "isVisible": "1"
             },
             "Stop alarm": {
-                "use": "act_zbCmdG-0502-StartWarning",
+                "use": "act_zbCmdC-0502-StartWarning",
                 "params": "ep=23&mode=stop",
                 "logicalId": "#EP#-StopAlarm",
                 "isVisible": "1"

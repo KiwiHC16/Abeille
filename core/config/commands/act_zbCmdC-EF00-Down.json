@@ -1,12 +1,12 @@
 {
-    "act_zbCmdG-EF00-Forward": {
+    "act_zbCmdC-EF00-Down": {
         "isVisible": 1,
-        "logicalId": "#EP#-zbCmdG-EF00-Forward",
+        "logicalId": "#EP#-zbCmdG-EF00-Down",
         "subType": "other",
         "template": "",
         "configuration": {
             "topic": "cmd-EF00",
-            "request": "cmd=05&param=00"
+            "request": "cmd=01&param=02"
         },
         "type": "action",
         "genericType": ""

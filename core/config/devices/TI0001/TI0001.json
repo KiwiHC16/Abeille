@@ -24,7 +24,7 @@
                 "isVisible": 1
             },
             "On 1": {
-                "use": "act_zbCmdG-0008-MoveToLevelWithOnOff",
+                "use": "act_zbCmdC-0008-MoveToLevelWithOnOff",
                 "params": "slider=108&duration=01",
                 "subType": "other",
                 "genericType": "LIGHT_ON",
@@ -32,7 +32,7 @@
                 "isVisible": 1
             },
             "Off 1": {
-                "use": "act_zbCmdG-0008-MoveToLevelWithOnOff",
+                "use": "act_zbCmdC-0008-MoveToLevelWithOnOff",
                 "params": "slider=1&duration=01",
                 "subType": "other",
                 "genericType": "LIGHT_OFF",
@@ -41,7 +41,7 @@
                 "nextLine": "after"
             },
             "On 2": {
-                "use": "act_zbCmdG-0008-MoveToLevelWithOnOff",
+                "use": "act_zbCmdC-0008-MoveToLevelWithOnOff",
                 "params": "slider=108&duration=02",
                 "subType": "other",
                 "genericType": "LIGHT_ON",
@@ -49,7 +49,7 @@
                 "isVisible": 1
             },
             "Off 2": {
-                "use": "act_zbCmdG-0008-MoveToLevelWithOnOff",
+                "use": "act_zbCmdC-0008-MoveToLevelWithOnOff",
                 "params": "slider=1&duration=02",
                 "subType": "other",
                 "genericType": "LIGHT_OFF",

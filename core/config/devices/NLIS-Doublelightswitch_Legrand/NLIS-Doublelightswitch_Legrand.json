@@ -24,15 +24,15 @@
                 "isVisible": 1
             },
             "On 1": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "isVisible": "1"
             },
             "Off 1": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "isVisible": "1"
             },
             "Toggle 1": {
-                "use": "act_zbCmdG-0006-Toggle"
+                "use": "act_zbCmdC-0006-Toggle"
             },
             "Status 1": {
                 "use": "inf_zbAttr-0006-OnOff",
@@ -54,17 +54,17 @@
                 "execAtCreation": "yes"
             },
             "On 2": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "params": "ep=02",
                 "isVisible": "1"
             },
             "Off 2": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "params": "ep=02",
                 "isVisible": "1"
             },
             "Toggle 2": {
-                "use": "act_zbCmdG-0006-Toggle",
+                "use": "act_zbCmdC-0006-Toggle",
                 "params": "ep=02"
             },
             "Status 2": {

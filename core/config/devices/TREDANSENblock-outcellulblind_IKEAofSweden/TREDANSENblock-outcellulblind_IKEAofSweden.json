@@ -37,15 +37,15 @@
                 "isVisible": 1
             },
             "Up": {
-                "use": "act_zbCmdG-0102-UpOpen",
+                "use": "act_zbCmdC-0102-UpOpen",
                 "isVisible": "1"
             },
             "Stop": {
-                "use": "act_zbCmdG-0102-Stop",
+                "use": "act_zbCmdC-0102-Stop",
                 "isVisible": "1"
             },
             "Down": {
-                "use": "act_zbCmdG-0102-DownClose",
+                "use": "act_zbCmdC-0102-DownClose",
                 "isVisible": "1"
             },
             "Current Level": {

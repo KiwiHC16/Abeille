@@ -39,7 +39,7 @@
                 "use": "setLevelVolet"
             },
             "Stop": {
-                "use": "act_zbCmdG-0008-StopWithOnOff",
+                "use": "act_zbCmdC-0008-StopWithOnOff",
                 "isVisible": 1
             },
             "Get-Status": {

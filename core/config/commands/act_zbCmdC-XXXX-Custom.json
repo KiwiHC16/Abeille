@@ -1,5 +1,5 @@
 {
-    "act_zbCmdG-XXXX-Custom": {
+    "act_zbCmdC-XXXX-Custom": {
         "comment": "To be properly configured from device model thru fields overwrite",
         "type": "info",
         "subType": "binary",

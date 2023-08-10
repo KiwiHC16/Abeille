@@ -14,32 +14,32 @@
         "type": "ZigBee Smart Curtains Motor M515EGZT",
         "commands": {
             "Up": {
-                "use": "act_zbCmdG-EF00-Up",
+                "use": "act_zbCmdC-EF00-Up",
                 "params": "ep=01",
                 "isVisible": 1
             },
             "Stop": {
-                "use": "act_zbCmdG-EF00-Stop",
+                "use": "act_zbCmdC-EF00-Stop",
                 "params": "ep=01",
                 "isVisible": 1
             },
             "Down": {
-                "use": "act_zbCmdG-EF00-Down",
+                "use": "act_zbCmdC-EF00-Down",
                 "params": "ep=01",
                 "isVisible": 1
             },
             "Forward": {
-                "use": "act_zbCmdG-EF00-Forward",
+                "use": "act_zbCmdC-EF00-Forward",
                 "params": "ep=01",
                 "isVisible": 0
             },
             "Backward": {
-                "use": "act_zbCmdG-EF00-Backward",
+                "use": "act_zbCmdC-EF00-Backward",
                 "params": "ep=01",
                 "isVisible": 0
             },
             "GotoLevel": {
-                "use": "act_zbCmdG-EF00-GotoLevel",
+                "use": "act_zbCmdC-EF00-GotoLevel",
                 "params": "ep=01",
                 "isVisible": 1
             }

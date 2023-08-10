@@ -1,5 +1,5 @@
 {
-    "act_zbCmdG-0201-Setpoint-Plus05": {
+    "act_zbCmdC-0201-Setpoint-Plus05": {
         "logicalId": "#EP#-0201-Setpoint-Plus05",
         "comment": "Cluster 0201/thermostat, Setpoint raise/lower cmd (00)",
         "subType": "other",

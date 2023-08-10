@@ -36,7 +36,7 @@
                 "isVisible": 1
             },
             "Status": {
-                "use": "act_zbCmdG-XXXX-Custom",
+                "use": "act_zbCmdC-XXXX-Custom",
                 "logicalId": "0500-Status",
                 "isVisible": "1"
             },

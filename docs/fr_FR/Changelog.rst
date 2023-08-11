@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230811-BETA-1
+-------------
+
 - Assistant modèle: Mise-à-jour.
 - Page santé: Revue pour raffraichissement automatique toutes les 2sec.
 - Interne: Suppression 'health.js'.

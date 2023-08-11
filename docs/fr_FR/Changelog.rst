@@ -4,6 +4,7 @@ ChangeLog
 - Assistant modèle: Mise-à-jour.
 - Page santé: Revue pour raffraichissement automatique toutes les 2sec.
 - Interne: Suppression 'health.js'.
+- Interne: Suppression lecture attrib 0006-0000 & 0008-0000 suite à 'setLevelRaw'/'onoff'/'OnOffTimed'.
 
 230810-BETA-1
 -------------

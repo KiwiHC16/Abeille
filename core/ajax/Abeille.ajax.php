@@ -594,6 +594,61 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'eq' => $eq)));
         }
 
+        // Retrieves all informations suitable to fill health page
+        if (init('action') == 'getHealthDatas') {
+            $status = 0;
+            $error = "";
+            $eq = [];
+
+            $eqLogics = eqLogic::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                $eqLogicId = $eqLogic->getLogicalId();
+                list($eqNet, $eqAddr) = explode("/", $eqLogicId);
+
+                $e = [];
+                $e['link'] = $eqLogic->getLinkToConfiguration();
+                $e['hName'] = $eqLogic->getHumanName(true);
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                $type = isset($eqModel['type']) ? $eqModel['type'] : '?';
+                $e['type'] = $type;
+                $e['ieee'] = $eqLogic->getConfiguration('IEEE', '');
+                $e['isEnabled'] = $eqLogic->getIsEnable();
+                $e['timeout'] = $eqLogic->getStatus('timeout');
+                $e['lastComm'] = $eqLogic->getStatus('lastCommunication');
+                if (substr($eqAddr, 0, 2) == "rc") // Remote control ?
+                    $e['since'] = '-';
+                else
+                    $e['since'] = floor((time() - strtotime($e['lastComm'])) / 3600);
+
+                // Last LQI
+                if ($eqAddr == "0000")
+                    $lastLqi = "-";
+                else {
+                    $lqiCmd = $eqLogic->getCmd('info', 'Link-Quality');
+                    if (is_object($lqiCmd))
+                        $lastLqi = $lqiCmd->execCmd();
+                    else
+                        $lastLqi = "?";
+                }
+                $e['lastLqi'] = $lastLqi;
+
+                // Last battery status
+                $bat = $eqLogic->getStatus('battery', '');
+                if ($bat == '')
+                    $bat = '-';
+                else
+                    $bat = $bat.'%';
+                $e['lastBat'] = $bat;
+
+                if (!isset($eq[$eqNet]))
+                    $eq[$eqNet] = [];
+                if (!isset($eq[$eqNet][$eqAddr]))
+                    $eq[$eqNet][$eqAddr] = $e;
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'eq' => $eq)));
+        } // End getHealthDatas
+
         // Read 'ab::settings' content
         // Params: eqId = Equipment Jeedom ID
         if (init('action') == 'getSettings') {

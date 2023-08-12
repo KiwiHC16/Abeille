@@ -2,6 +2,9 @@
     "PlugZ3": {
         "manufacturer": "Ledvance",
         "model": "Plug Z3",
+        "alternateIds":{
+            "PlugValue": {}
+        },
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -12,7 +15,7 @@
         },
         "type": "Ledvance on/off plug",
         "commands": {
-            "etat": {
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
@@ -34,8 +37,8 @@
                 "execAtCreation": "Yes"
             },
             "SetReporting-0006-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },

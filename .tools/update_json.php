@@ -159,6 +159,15 @@
                     echo "  Cmd '".$cmdFName."' RENAMED.\n";
                 }
 
+                // 'inf_zbCmdR-XXXX-Yyyyy' => 'inf_zbCmdC-XXXX-Yyyyy'
+                else if (preg_match('/^inf_zbCmdR-[a-zA-Z0-9]*/', $cmdFName)) {
+                    $new = "inf_zbCmdC-".substr($cmdFName, 11);
+                    $commands2[$key] = $value;
+                    $commands2[$key]["use"] = $new;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' RENAMED.\n";
+                }
+
                 // zbReadAttribute => act_zbReadAttribute
                 else if (in_array($cmdFName, array('zbReadAttribute', 'zbWriteAttribute', 'zbConfigureReporting', 'zbBindToZigate'))) {
                     $new = "act_zb".substr($cmdFName, 2);
@@ -912,6 +921,8 @@
 
             if (preg_match('/^act_zbCmdG-[a-zA-Z0-9]{4}-/', $dirEntry))
                 $new = "act_zbCmdC-".substr($dirEntry, 11);
+            else if (preg_match('/^inf_zbCmdR-[a-zA-Z0-9]{4}-/', $dirEntry))
+                $new = "inf_zbCmdC-".substr($dirEntry, 11);
             else
                 continue;
 

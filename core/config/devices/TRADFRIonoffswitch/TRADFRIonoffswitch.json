@@ -9,7 +9,9 @@
         "comment2": "below 2.3.075: suppports binding to groups only, 2.3.075 and greater: supports binding to DEVICES ONLY",
         "timeout": "60",
         "configuration": {
-            "remote": { "type": "bindToDev" },
+            "remote": {
+                "type": "bindToDev"
+            },
             "mainEP": "01",
             "icon": "Ikea-OnOffSwitch",
             "batteryType": "1x3V CR2032"
@@ -43,11 +45,11 @@
                 "execAtCreation": "Yes"
             },
             "On": {
-                "use": "inf_zbCmdR-0006-On",
+                "use": "inf_zbCmdC-0006-On",
                 "isVisible": 1
             },
             "Off": {
-                "use": "inf_zbCmdR-0006-Off",
+                "use": "inf_zbCmdC-0006-Off",
                 "isVisible": 1
             }
         }

@@ -2,6 +2,9 @@ ChangeLog
 =========
 
 - Ledvance 'PlugValue': Ajout support (2610).
+- Modèle de commande:
+
+  - 'inf_zbCmdR-XXXX-Yyyyy' => 'inf_zbCmdC-XXXX-Yyyyy'
 
 230811-BETA-1
 -------------

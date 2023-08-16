@@ -19,6 +19,12 @@
             }
         },
         "commands": {
+            "Tuya-ConfigureMagicPacket": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0000,0001,0005,0007,FFFE",
+                "logicalId": "Tuya-ConfigureMagicPacket",
+                "execAtCreation": "Yes"
+            },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
                 "isVisible": 1

@@ -5,6 +5,7 @@ ChangeLog
 - Modèle de commande:
 
   - 'inf_zbCmdR-XXXX-Yyyyy' => 'inf_zbCmdC-XXXX-Yyyyy'
+- Smart Switch ZG-005-RF: Mise-à-jour du modèle (2608).
 
 230811-BETA-1
 -------------

@@ -20,6 +20,7 @@
     if (file_exists(dbgFile)) {
         $dbgConfig = json_decode(file_get_contents(dbgFile), true);
         $dbgDeveloperMode = true;
+        $GLOBALS['dbgDeveloperMode'] = true;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
         include_once __DIR__."/../core/php/AbeilleGit.php"; // For 'switchBranch' support
         /* Dev mode: enabling PHP errors logging */
@@ -63,6 +64,8 @@
     }
 
     function displayZigate($zgId) {
+        global $dbgDeveloperMode;
+
         $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
         if ($eqLogic) {
             $eqId = $eqLogic->getId();
@@ -175,11 +178,13 @@
                             $fwVers = substr($fwVers, 0, -4); // Removing ".dev" suffix
                         }
                         $fwVers = substr($fwVers, 8); // Removing "ZiGate_v" prefix
-                        if ($fwVers == "3.21-OPDM")
+                        if ($fwVers == "3.23-OPDM")
                             echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
                         else
                             echo '<option value='.$fwName.'>'.$fwVers.'</option>';
                     }
+                    if (isset($dbgDeveloperMode))
+                        echo '<option value=CUSTOM>{{Autre}}</option>';
                     echo '</select>';
                 echo '</div>';
             echo '</div>';
@@ -973,22 +978,35 @@
         //     console.log("=> DISABLED");
         //     return;
         // }
-        var zgType = $("#idSelZgType"+zgId).val();
+        let zgType = $("#idSelZgType"+zgId).val();
         if ((zgType != "PI") && (zgType != "DIN")) {
             console.log("=> Neither PI nor DIN type. UNEXPECTED !");
             return;
         }
-        var zgPort = $("#idSelSP"+zgId).val();
-        var zgFW = $("#idFW"+zgId).val();
-        var zgGpioLib = $("#idZgGpioLib").val();
+
+        let zgFW = $("#idFW"+zgId).val();
+        if (zgFW == "CUSTOM") {
+            uploadCustomFw().then(response => { console.log("updateFW2 to be called")}, error => console.log(error));
+        } else
+            updateFW2(zgId, zgType, zgFW);
+    }
+
+    // Update FW
+    function updateFW2(zgId, zgType, zgFW) {
+        let zgPort = $("#idSelSP"+zgId).val();
+        let zgGpioLib = $("#idZgGpioLib").val();
         let curFw = document.getElementById("idFwVersion"+zgId).value;
+
         msg = '{{Vous êtes sur le point de mettre à jour le firmware de la Zigate}}';
-        msg += '<br> - type: '+zgType+'<br> - port: '+zgPort+'<br> - Gpio Lib: '+zgGpioLib+'<br> - firmware: '+zgFW+'<br><br>';
+        msg += '<br> - {{Type}}    : '+zgType;
+        msg += '<br> - {{Port}}    : '+zgPort;
+        msg += '<br> - {{Gpio lib}}: '+zgGpioLib;
+        msg += '<br> - {{Firmware}}: '+zgFW+'<br><br>';
         let curIsLegacy = true;
         let newIsOpdm = false;
         erasePdm = false;
         if (curFw != '') {
-            // Format XXXX-YYYY: where XXXX=0003, 4 (OPDMv1), ou 5 (OPDMv2)
+            // Format XXXX-YYYY: where XXXX=0003 (legacy), 0004 (OPDMv1), ou 0005 (OPDMv2)
             v = curFw.substr(3, 1);
             if ((v == 4) || (v == 5))
                 curIsLegacy = false; // Already OPDM
@@ -1017,6 +1035,46 @@
                     url += '&erasePdm=true&zgId='+zgId;
                 $('#md_modal2').load(url).dialog('open');
             }
+        });
+    }
+
+    // Select & upload custom firmware
+    function uploadCustomFw() {
+        console.log("uploadCustomFw()");
+
+        return new Promise((resolve, reject) => {
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.bin';
+            // TODO: How to detect file selector is closed ?
+            input.onchange = e => {
+
+                var file = e.target.files[0];
+                // file.name = the file's name including extension
+                // file.size = the size in bytes
+                // file.type = file type ex. 'application/pdf'
+                console.log("file=", file);
+
+                var formData = new FormData();
+                formData.append("file", file);
+                formData.append("destDir", "/tmp/jeedom/Abeille"); // Temp (non persistent) directory
+                // formData.append("destName", "Level0.png");
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "plugins/Abeille/core/php/AbeilleUpload.php", true);
+                xhr.onload = function (oEvent) {
+                    console.log("oEvent=", oEvent);
+                    if (xhr.status != 200) {
+                        console.log("Error " + xhr.status + " occurred when trying to upload your file.");
+                        reject();
+                    } else {
+                        console.log(file.name + " uploaded !");
+                        resolve(file.name);
+                    }
+                };
+                xhr.send(formData);
+            }
+            input.click();
         });
     }
 
@@ -1063,7 +1121,7 @@
         });
     }
 
-    /* Developpers mode only */
+    /* Developers mode only */
 
     /* Called when 'developer mode' must be enabled or disabled.
     This means creating or deleting "tmp/debug.json" file. */

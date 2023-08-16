@@ -13,12 +13,11 @@ echo "Démarrage de '$(basename $0)' $@"
 
 # Note: Startup directory is the one from the caller (ajax)
 #       It is then '/var/www/html/plugins/Abeille/core/ajax'
-# PROG=${PWD}/../../resources/prog_jennic/JennicModuleProgrammerRPI3
 PROG=${PWD}/../../tmp/JennicModuleProgrammer
 BUILD_DIR=${PWD}/../../resources/prog_jennic-0.7/build
 FW_DIR=${PWD}/../../resources/fw_zigate
 
-# Qq tests preliminaires
+# Checks
 echo "Vérifications préliminaires"
 echo ${PWD}
 error=0
@@ -30,7 +29,7 @@ fi
 ACTION=$1
 ZGPORT=$2
 LIBGPIO=$3
-FW=""
+FW=$4
 
 if [ ${ACTION} != "flash" ] && [ ${ACTION} != "check" ] && [ ${ACTION} != "eraseeeprom" ]; then
     echo "= ERREUR: Action '${ACTION}' non supportée."
@@ -38,10 +37,14 @@ if [ ${ACTION} != "flash" ] && [ ${ACTION} != "check" ] && [ ${ACTION} != "erase
     error=1
 else
     if [ ${ACTION} == "flash" ]; then
-        FW=$4
-        if [ ! -e ${FW_DIR}/${FW} ]; then
+        if [[ "${FW}" == "/"* ]]; then # Absolut path ?
+            FW_PATH="${FW}"
+        else
+            FW_PATH="${FW_DIR}/${FW}"
+        fi
+        if [ ! -e ${FW_PATH} ]; then
             echo "= ERREUR: le FW choisi n'existe pas !"
-            echo "=         FW: ${FW}"
+            echo "=         FW: ${FW_PATH}"
             error=1
         fi
     fi
@@ -96,7 +99,7 @@ elif [ ${ACTION} == "eraseeeprom" ]; then
 else
     echo "Lancement de la programmation du firmware"
     echo "- Port tty: ${ZGPORT}"
-    echo "- Firmware: ${FW}"
+    echo "- Firmware: ${FW_PATH}"
 fi
 
 # Memo connexion PiZiGate
@@ -137,7 +140,7 @@ if [ ${ACTION} == "eraseeeprom" ]; then
         status=0
     fi
 else
-    sudo ${PROG} -V 6 -P 115200 -v -f ${FW_DIR}/${FW} -s ${ZGPORT} 2>&1
+    sudo ${PROG} -V 6 -P 115200 -v -f ${FW_PATH} -s ${ZGPORT} 2>&1
     if [ $? != 0 ]; then
         # echo "= ERREUR: Programmation impossible"
         status=2
@@ -148,7 +151,7 @@ else
     fi
 fi
 
-# Passage en mode 'prod'
+# Switch back to 'prod' mode
 if [ ${LIBGPIO} == "WiringPi" ]; then
     gpio write 2 1
     sleep 1
@@ -160,6 +163,7 @@ if [ ${LIBGPIO} == "PiGpio" ]; then
     python /var/www/html/plugins/Abeille/core/scripts/resetPiZigate.py
 fi
 
+# Final status
 if [ $status  -eq 0 ]; then
     echo "= Tout s'est bien passé. Vous pouvez fermer ce log."
 else

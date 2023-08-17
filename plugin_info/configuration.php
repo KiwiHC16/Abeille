@@ -986,7 +986,7 @@
 
         let zgFW = $("#idFW"+zgId).val();
         if (zgFW == "CUSTOM") {
-            uploadCustomFw().then(response => { console.log("updateFW2 to be called")}, error => console.log(error));
+            uploadCustomFw().then(response => updateFW2(zgId, zgType, "/tmp/jeedom/Abeille/" + response), error => console.log("uploadCustomFw() ERROR", error));
         } else
             updateFW2(zgId, zgType, zgFW);
     }

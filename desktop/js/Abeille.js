@@ -90,7 +90,7 @@ function refreshAdvEq() {
                     eq.zigbee.manufCode;
 
             // Info + lien pour rétablir le fonctionnement normal si l'utilisateur a forcé le model
-            if (eq.isManualModel) {
+            if (eq.modelForced) {
                 var $pRestoreModelAuto = $("<p><stron>{{Vous avez forcé le modèle de cet équipement. }}</strong></p>");
                 var $aRestoreModelAuto = $("<a href=\"#\" id=\"linkRestoreAutoModel\" style=\"text-decoration:underline;\">{{ Rétablir le fonctionnement normal (modèle auto)}}</a>");
                 $pRestoreModelAuto.append($aRestoreModelAuto).insertAfter("#idModelChangeBtn");

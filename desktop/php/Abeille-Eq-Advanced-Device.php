@@ -19,15 +19,14 @@
     <label class="col-sm-3 control-label">{{Modèle d'équipement}}</label>
     <div class="col-sm-9">
         <input id="idModelName" readonly style="width: 200px" title="{{Nom du modèle utilisé}}" value="" />
-        <input id="idModelSource" readonly style="width:86px" title="{{Origine du modèle}}" value="" />
+        <input id="idModelSource" readonly style="width:86px" title="{{Source du modèle}}" value="" />
         <a class="btn btn-warning" id="idUpdateBtn" style="margin-left:8px" title="{{Mise-à-jour à partir de son modèle et reconfiguration}}">{{Mise-à-jour}}</a>
-        <a class="btn btn-danger" id="idReinitBtn" style="margin-left:8px" title="{{Réinitlialise les paramètres par défaut et reconfigure l\'équipement comme s\'il s\'agissait d\'une nouvelle inclusion}}">{{Réinitialiser}}</a>
-        <a class="btn btn-danger" id="idModelChangeBtn" style="margin-left:8px" title="{{Utilisateurs avancés - Choisissez un modèle dans la liste}}">{{Choisir manuellement le modèle}}</a>
+        <a class="btn btn-danger" id="idReinitBtn" style="margin-left:8px" title="{{Réinitlialise les paramètres par défaut et reconfigure l'équipement comme s'il s'agissait d'une nouvelle inclusion}}">{{Réinitialiser}}</a>
+        <a class="btn btn-danger" id="idModelChangeBtn" style="margin-left:8px" title="{{Utilisateurs avancés - Forcer un modèle particulier}}">{{Forcer modèle}}</a>
 
     </div>
 
-    <!-- Ajout JB Romain 16/08/2023 - Choix du modèle -->
-    <!-- Popup de sélection manuelle du modèle - Contenu masqué, sera ouvert en popup -->
+    <!-- Forced model choice popup -->
     <div class="abeille-model-change-popup-content" style="display:none">
         <h3 style="margin-top:0">{{Choix du modèle d'équipement}}</h3>
         <p>{{Lors de l'ajout d'un équipement, Abeille identifie automatiquement le modèle à partir de sa signature Zigbee. L'équipement est ensuite automatiquement configuré.}}</p>
@@ -36,13 +35,13 @@
         <p class="alert alert-warning">{{Cette fonction est destinée aux utilisteurs avancés, ne l'utilisez que si vous comprenez parfaitement ce que vous faites.}}</p>
 
         <p>
-            <label>{{ Modèle actuel de votre équipement: }}</label>
+            <label>{{Modèle actuel de votre équipement}}: </label>
             <br>
             <span class='current-model'>-- Aucun --</span>
         </p>
 
         <p>
-            <label>{{ Choisissez le modèle à appliquer: }}</label>
+            <label>{{Choisissez le modèle à appliquer}}: </label>
             <br>
             <input type="search" style="width:100%; box-sizing:border-box" list="abeille-all-models-list" placeholder="{{ Recherchez par fabricant, modèle, ou nom de fichier JSON }}">
         </p>

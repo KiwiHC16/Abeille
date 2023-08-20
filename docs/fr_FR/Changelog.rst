@@ -6,7 +6,7 @@ ChangeLog
 
   - 'inf_zbCmdR-XXXX-Yyyyy' => 'inf_zbCmdC-XXXX-Yyyyy'
 - Smart Switch ZG-005-RF: Mise-à-jour du modèle (2608).
-- Page EQ/avancé: Possibilité de choisir le modèle d'équipement.
+- Page EQ/avancé: Possibilité de forcer le modèle d'équipement.
 - Page de config: Correction mineure pour mode dev.
 - Page de config: Support préliminaire FW custom (mode dev uniquement).
 - Lexman LDSENK01F: Ajout support (2613).

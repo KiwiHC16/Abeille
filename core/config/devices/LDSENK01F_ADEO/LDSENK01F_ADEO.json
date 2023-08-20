@@ -1,0 +1,88 @@
+{
+    "LDSENK01F_ADEO": {
+        "manufacturer": "Lexman",
+        "model": "LDSENK01F",
+        "type": "Lexman plug",
+        "genericType": "Electricity",
+        "timeout": "60",
+        "category": {
+            "energy": "1"
+        },
+        "configuration": {
+            "icon": "Lexman-SmartPlug",
+            "mainEP": "01"
+        },
+        "commands": {
+            "SWBuildID": {
+                "use": "inf_zbAttr-0000-SWBuildID"
+            },
+            "Get SWBuildID": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "isVisible": "1"
+            },
+            "On": {
+                "use": "act_zbCmdC-0006-On",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Off": {
+                "use": "act_zbCmdC-0006-Off",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "params": "ep=01"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "params": "ep=01",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
+            "Bind 01-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0006": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000",
+                "execAtCreation": "yes"
+            },
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Level": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "params": "ep=01",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0008&attrId=0000"
+            },
+            "Bind 01-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0008-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0008&attrType=10&attrId=0000",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

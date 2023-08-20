@@ -3,6 +3,7 @@
         "manufacturer": "Lexman",
         "model": "LDSENK02F",
         "type": "Lexman smart plug",
+        "genericType": "Electricity",
         "timeout": "60",
         "category": {
             "energy": "1"

@@ -11,14 +11,14 @@
     <label class="col-sm-3 control-label">{{Identifiant Zigbee}}</label>
     <div class="col-sm-5">
         <input id="idZbModel" readonly title="{{Modèle}}" value="" />
-        <input id="idZbManuf" readonly style="margin-left: 8px" title="{{Fabricant}}" value="" />
+        <input id="idZbManuf" readonly style="margin-left:4px;width:200px" title="{{Fabricant}}" value="" />
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Modèle d'équipement}}</label>
     <div class="col-sm-9">
-        <input id="idModelName" readonly style="width: 250px" title="{{Nom du modèle utilisé}}" value="" />
+        <input id="idModelName" readonly style="width:250px" title="{{Nom du modèle utilisé}}" value="" />
         <input id="idModelSource" readonly style="width:86px" title="{{Source du modèle}}" value="" />
         <a class="btn btn-danger" id="idDelLocalBtn" title="{{Supprime la version locale du modèle}}" style="display:none"><i class="far fa-trash-alt"></i></a>
         <a class="btn btn-default" id="idUpdateBtn" style="margin-left:8px" title="{{Mise-à-jour à partir de son modèle et reconfiguration}}">{{Mise-à-jour}}</a>
@@ -62,7 +62,7 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Assistant de découverte}}</label>
     <div class="col-sm-5">
-        <a class="btn btn-warning" id="idEqAssistBtn">{{Ouvrir}}</a>
+        <a class="btn btn-default" id="idEqAssistBtn">{{Ouvrir}}</a>
     </div>
 </div>
 

@@ -182,15 +182,7 @@
 
         /* Send message to 'AbeilleLQI'.
            Returns: true=ok, false=ERROR */
-        function msgToLQICollector($srcAddr, $nTableEntries, $nTableListCount, $startIdx, $nList) {
-            $msg = array(
-                'type' => '804E',
-                'srcAddr' => $srcAddr,
-                'tableEntries' => $nTableEntries,
-                'tableListCount' => $nTableListCount,
-                'startIdx' => $startIdx,
-                'nList' => $nList
-            );
+        function msgToLQICollector($msg) {
             $msgJson = json_encode($msg);
             if (msg_send($this->queueParserToLQI, 1, $msgJson, false, false, $errCode) == true)
                 return true;
@@ -2180,14 +2172,24 @@
             $pl = substr($pl, 10);
 
             $m = '  Management LQI response';
-            $m = $m.': SQN='.$sqn.', Status='.$status.', NTableEntries='.$nTableEntries.', startIdx='.$startIdx.', nTableListCount='.$nTableListCount;
+            $m = $m.': SQN='.$sqn.', Status='.$status.', NTableEntries='.$nTableEntries.', StartIdx='.$startIdx.', NTableListCount='.$nTableListCount;
             parserLog('debug', $m);
             $toMon[] = $m;
+            $toLqiCollector = array(
+                'type' => '804E',
+                'srcAddr' => $srcAddr,
+                'status' => $status,
+                'tableEntries' => $nTableEntries,
+                'tableListCount' => $nTableListCount,
+                'startIdx' => $startIdx,
+                'nList' => []
+            );
 
             if ($status != "00") {
                 $m = "  Status != 00 => Decode canceled";
                 parserLog('debug', $m);
                 $toMon[] = $m;
+                $this->msgToLQICollector($toLqiCollector);
                 return;
             }
 
@@ -2203,6 +2205,8 @@
                 $m = '  WARNING: Corrupted/inconsistent message => ignored';
                 parserLog('debug', $m);
                 $toMon[] = $m;
+                $toLqiCollector['status'] = '12'; // Fake but failed status
+                $this->msgToLQICollector($toLqiCollector);
                 return;
             }
 
@@ -2233,7 +2237,9 @@
                     .', NDepth='.$N['depth']
                     .', NLQI='.$N['lqi']);
             }
-            $this->msgToLQICollector($srcAddr, $nTableEntries, $nTableListCount, $startIdx, $nList);
+            // $this->msgToLQICollector($srcAddr, $nTableEntries, $nTableListCount, $startIdx, $nList);
+            $toLqiCollector['nList'] = $nList;
+            $this->msgToLQICollector($toLqiCollector);
 
             // Foreach neighbor, let's ensure that useful infos are stored
             foreach ($nList as $N) {

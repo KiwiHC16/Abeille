@@ -12,6 +12,7 @@ ChangeLog
 - Lexman LDSENK01F: Ajout support (2613).
 - Ajout support préliminaire pour FW Zigate v1 'Abeille'.
 - Interne: Pas de polling si équipement désactivé.
+- Interne: Amélioration collecte LQI.
 
 230811-BETA-1
 -------------

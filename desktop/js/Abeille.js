@@ -78,6 +78,9 @@ function refreshAdvEq() {
             document.getElementById("idZbManuf").value = eq.zbManuf;
             document.getElementById("idModelName").value = eq.modelName;
             document.getElementById("idModelSource").value = eq.modelSource;
+            if (eq.modelSource == "local") {
+                $("#idDelLocalBtn").show();
+            }
             document.getElementById("idModelType").value = eq.modelType;
             if (eq.batteryType == "")
                 document.getElementById("idBatteryType").value = "{{Secteur}}";
@@ -709,6 +712,33 @@ $("#idRepairBtn").on("click", function () {
     // });
 });
 
+/* Remove given local model from 'devices_local/<model>' */
+$("#idDelLocalBtn").on("click", function () {
+    console.log("idDelLocalBtn click");
+
+    console.log("eq=", eq);
+    jsonId = eq.modelName;
+    path = "core/config/devices_local/" + jsonId + "/" + jsonId + ".json";
+    $.ajax({
+        type: "POST",
+        url: "plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",
+        data: {
+            action: "delFile",
+            file: path,
+        },
+        dataType: "json",
+        global: false,
+        success: function (json_res) {
+            var msg = "{{Le modèle local a été supprimé}}.<br><br>";
+            msg +=
+                "L'équipement ayant été inclu avec ce modèle vous devez refaire une inclusion ou le recharger & reconfigurer pour être à jour.}}";
+            bootbox.confirm(msg, function (result) {
+                window.location.reload();
+            });
+        },
+    });
+});
+
 // Update Jeedom equipement from model
 $("#idUpdateBtn").on("click", function () {
     console.log("update(" + curEqId + ")");
@@ -771,12 +801,9 @@ $("#idReinitBtn").on("click", function () {
     });
 });
 
-/**
- * Changement de modèle (choix manuel du modèle dans la liste des JSON).
- * @author JB Romain 16/08/2023
- */
+// Forced model popup
 $("#idModelChangeBtn").on("click", function () {
-    console.log("Demande changement de modèle", curEqId);
+    console.log("idModelChangeBtn on " + curEqId);
 
     // Ouverture dialog
     var myPopup = jeeDialog.dialog({

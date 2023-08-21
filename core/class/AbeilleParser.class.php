@@ -153,7 +153,7 @@
                 return; // NPDU stable since less than 3 mins.
 
             parserLog('warning', '  Ndpu stuck at '.$curNpdu.' for more than 4mins => SW reset.');
-            msgToCmd(PRIO_HIGH, "Cmd".$net."/0000/resetZg");
+            msgToCmd(PRIO_HIGH, "Cmd".$net."/0000/zgSoftReset");
             $GLOBALS['zigate'.$zgId]['nPduTime'] = time(); // Reset timer
             // message::add("Abeille", "Erreur lors du changement de mode de la Zigate.", "");
         }
@@ -1896,7 +1896,7 @@
             // See https://github.com/KiwiHC16/Abeille/issues/2490#top
             if ($status == "06") {
                 parserLog("debug", "  Error 06 => SW reset in 20sec");
-                msgToCmd(PRIO_HIGH, "TempoCmd".$net."/0000/resetZg&delay=20");
+                msgToCmd(PRIO_HIGH, "TempoCmd".$net."/0000/zgSoftReset&delay=20");
             }
 
             // Saving NPDU+APDU & checking NDPU. If stuck too long Zigate SW reset is required

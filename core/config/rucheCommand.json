@@ -24,7 +24,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-            "topic": "getZgVersion",
+            "topic": "zgGetVersion",
             "request": ""
         }
     },
@@ -113,7 +113,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-            "topic": "setZgPermitMode",
+            "topic": "zgSetPermitMode",
             "request": "mode=start"
         }
     },

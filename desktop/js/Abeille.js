@@ -1050,7 +1050,7 @@ function sendZigate(action, param) {
 
     switch (action) {
         case "setLED":
-            topic = "CmdAbeille" + zgId + "/0000/setZgLed";
+            topic = "CmdAbeille" + zgId + "/0000/zgSetLed";
             if (param == "ON") payload = "value=1";
             else payload = "value=0";
             break;
@@ -1060,19 +1060,19 @@ function sendZigate(action, param) {
             else topic = "CmdAbeille" + zgId + "/0000/setCertificationFCC";
             break;
         case "startNetwork": // Not required for end user but for developper.
-            topic = "CmdAbeille" + zgId + "/0000/startZgNetwork";
+            topic = "CmdAbeille" + zgId + "/0000/zgStartNetwork";
             payload = "";
             break;
         case "startNetworkScan": // Not required for end user but for developper.
-            topic = "CmdAbeille" + zgId + "/0000/startZgNetworkScan";
+            topic = "CmdAbeille" + zgId + "/0000/zgStartNetworkScan";
             payload = "";
             break;
         case "setInclusion":
-            topic = "CmdAbeille" + zgId + "/0000/setZgPermitMode";
+            topic = "CmdAbeille" + zgId + "/0000/zgSetPermitMode";
             payload = "mode=" + param;
             break;
         case "setMode":
-            topic = "CmdAbeille" + zgId + "/0000/setZgMode";
+            topic = "CmdAbeille" + zgId + "/0000/zgSetMode";
             if (param == "Normal") payload = "mode=normal";
             else if (param == "Raw") payload = "mode=raw";
             else payload = "mode=hybrid";
@@ -1140,7 +1140,7 @@ function sendZigate(action, param) {
                     payload = "scanChan=" + mask + "&scanDuration=FE";
                     sendToZigate(topic, payload);
 
-                    topic = "CmdAbeille" + zgId + "/0000/setZgChannelMask";
+                    topic = "CmdAbeille" + zgId + "/0000/zgSetChannelMask";
                     payload = "mask=" + mask;
                     sendToZigate(topic, payload);
 
@@ -1149,7 +1149,7 @@ function sendZigate(action, param) {
                     console.log("config=", config);
                     saveConfig(config);
 
-                    topic = "CmdAbeille" + zgId + "/0000/startZgNetwork";
+                    topic = "CmdAbeille" + zgId + "/0000/zgSstartNetwork";
                     payload = "";
                     sendToZigate(topic, payload);
                 }
@@ -1158,7 +1158,7 @@ function sendZigate(action, param) {
 
             break;
         case "getTXPower":
-            topic = "CmdAbeille" + zgId + "/0000/getZgTxPower";
+            topic = "CmdAbeille" + zgId + "/0000/zgGetTxPower";
             payload = "";
             break;
         case "setTXPower":
@@ -1166,11 +1166,11 @@ function sendZigate(action, param) {
             payload = "ff"; // TODO
             break;
         case "getTime":
-            topic = "CmdAbeille" + zgId + "/0000/getZgTimeServer";
+            topic = "CmdAbeille" + zgId + "/0000/zgGetTimeServer";
             payload = "";
             break;
         case "setTime":
-            topic = "CmdAbeille" + zgId + "/0000/setZgTimeServer";
+            topic = "CmdAbeille" + zgId + "/0000/zgSetTimeServer";
             payload = ""; // Using current time from host.
             break;
         case "erasePersistantDatas": // Erase PDM
@@ -1185,10 +1185,7 @@ function sendZigate(action, param) {
             msg += "{{<br><br>Etes vous sur de vouloir continuer ?}}";
             bootbox.confirm(msg, function (result) {
                 if (result)
-                    sendToZigate(
-                        "CmdAbeille" + zgId + "/0000/ErasePersistentData",
-                        "ErasePersistentData"
-                    );
+                    sendToZigate("CmdAbeille" + zgId + "/0000/zgErasePdm", "");
                 return;
             });
             break;
@@ -1197,7 +1194,7 @@ function sendZigate(action, param) {
             payload = "Status";
             break;
         case "getZgVersion":
-            topic = "CmdAbeille" + zgId + "/0000/getZgVersion";
+            topic = "CmdAbeille" + zgId + "/0000/zgGetVersion";
             payload = "";
             break;
         case "zgSoftReset":

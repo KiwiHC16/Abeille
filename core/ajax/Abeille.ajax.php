@@ -239,7 +239,7 @@
 
                 if ($erasePdm) {
                     logMessage('info', 'Effacement de la PDM');
-                    if (sendToCmd('TempoCmdAbeille'.$zgId.'/0000/ErasePersistentData&time='.(time()+2), 'ErasePersistentData') == false) {
+                    if (sendToCmd('TempoCmdAbeille'.$zgId.'/0000/zgErasePdm&time='.(time()+2), '') == false) {
                         $status = -1;
                         $error = "Can't send erase PDM request";
                     }
@@ -454,7 +454,7 @@
                     // Excluding device from current network
                     // self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$newDestBee."/0000/Remove", "ParentAddressIEEE=".$IEEE."&ChildAddressIEEE=".$IEEE );
                     /* Sending msg to 'AbeilleCmd' */
-                    $topic   = 'CmdAbeille'.$dstZgId.'/0000/setZgPermitMode';
+                    $topic   = 'CmdAbeille'.$dstZgId.'/0000/zgSetPermitMode';
                     $payload = "mode=start";
                     if (sendToCmd($topic, $payload) == false) {
                         $errors = "Could not send msg to 'xToCmd': topic=".$topic;

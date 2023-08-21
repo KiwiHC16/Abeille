@@ -20,14 +20,21 @@
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=01"
             },
-            "SetReporting 01-0001-00021": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+            "Get Volt/percent": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0001&attrId=0020,0021",
+                "comment": "Might be required for init",
+                "logicalId": "readAttr-Volt-Percent",
                 "execAtCreation": "yes"
             },
             "Bind 01-0001-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0001-00021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "yes"
             },
             "Identify": {
@@ -64,8 +71,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting 01-0006": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
             }
         }

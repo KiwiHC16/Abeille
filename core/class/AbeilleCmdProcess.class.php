@@ -2523,7 +2523,7 @@
                  */
 
                 // Zigate specific command
-                if ($cmdName == 'setZgMode') {
+                if (($cmdName == 'zgSetMode') || ($cmdName == 'setZgMode')) {
                     $mode = $Command['mode'];
                     if ($mode == "raw") {
                         $modeVal = "01";
@@ -2538,7 +2538,7 @@
                 }
 
                 // Zigate specific command
-                else if ($cmdName == 'setZgPermitMode') {
+                else if (($cmdName == 'zgSetPermitMode') || ($cmdName == 'setZgPermitMode')) {
                     $mode = $Command['mode'];
                     if ($mode == "start") {
                         $cmd = "0049";
@@ -2618,19 +2618,19 @@
                 }
 
                 // Zigate specific command: Requests FW version
-                else if (($cmdName == 'getZgVersion') || ($cmdName == 'getVersion')) {
+                else if (($cmdName == 'zgGetVersion') || ($cmdName == 'getZgVersion') || ($cmdName == 'getVersion')) {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0010");
                     return;
                 }
 
                 // Zigate specific command: Reset zigate (SW reset)
-                else if (($cmdName == 'zgSoftReset') || ($cmdName == 'resetZg') || ($cmdName == 'resetZigate')) {
+                else if ($cmdName == 'zgSoftReset') {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0011");
                     return;
                 }
 
                 // Zigate specific command: Set Time server (v3.0f)
-                else if (($cmdName == 'setZgTimeServer') || ($cmdName == 'setTimeServer')) {
+                else if (($cmdName == 'zgSetTimeServer') || ($cmdName == 'setZgTimeServer') || ($cmdName == 'setTimeServer')) {
                     if (!isset($Command['time'])) {
                         $zgRef = mktime(0, 0, 0, 1, 1, 2000); // 2000-01-01 00:00:00
                         $Command['time'] = time() - $zgRef;
@@ -2648,7 +2648,7 @@
                 }
 
                 // Zigate specific command
-                else if (($cmdName == 'getZgTimeServer') || ($cmdName == 'getTimeServer')) {
+                else if (($cmdName == 'zgGetTimeServer') || ($cmdName == 'getZgTimeServer') || ($cmdName == 'getTimeServer')) {
                     // $data = "";
                     // $length = sprintf("%04s", dechex(strlen($data) / 2));
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0017");
@@ -2660,32 +2660,32 @@
                 // PHY_PIB_TX_POWER_DEF (default - 0x80)
                 // PHY_PIB_TX_POWER_MIN (minimum - 0)
                 // PHY_PIB_TX_POWER_MAX (maximum - 0xbf)
-                else if ($cmdName == 'getZgTxPower') {
+                else if ($cmdName == 'zgGetTxPower') {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0807");
                     return;
                 }
 
                 // Zigate specific command
-                else if ($cmdName == 'startZgNetwork') {
+                else if (($cmdName == 'zgStartNetwork') || ($cmdName == 'startZgNetwork')) {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0024");
                     return;
                 }
 
                 // Zigate specific command: Start Network Scan
                 // Unsupported cmd on Zigate v1 at least (FW 3.21)
-                // else if ($cmdName == 'startZgNetworkScan') {
+                // else if ($cmdName == 'zgStartNetworkScan') {
                 //     $this->addCmdToQueue2(PRIO_NORM, $dest, "0025");
                 //     return;
                 // }
 
                 // Zigate specific command: Erase PDM
-                else if (($cmdName == 'eraseZgPDM') || ($cmdName == 'ErasePersistentData')) {
+                else if ($cmdName == 'zgErasePDM') {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0012");
                     return;
                 }
 
                 // Zigate specific command: Set LED, ON/1 or OFF/0
-                else if ($cmdName == 'setZgLed') {
+                else if ($cmdName == 'zgSetLed') {
                     if ($Command['value'] == 1)
                         $value = "01";
                     else

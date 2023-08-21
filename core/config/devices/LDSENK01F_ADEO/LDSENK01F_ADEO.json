@@ -57,31 +57,6 @@
                 "use": "act_zbConfigureReporting2",
                 "params": "ep=01&clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
-            },
-            "Set Level": {
-                "use": "act_setLevel-Light",
-                "params": "ep=01",
-                "isVisible": "1"
-            },
-            "Level": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "params": "ep=01",
-                "isVisible": "1",
-                "nextLine": "after"
-            },
-            "Get Level": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0008&attrId=0000"
-            },
-            "Bind 01-0008-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0008",
-                "execAtCreation": "yes"
-            },
-            "SetReporting 01-0008-0000": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0008&attrType=10&attrId=0000",
-                "execAtCreation": "yes"
             }
         }
     }

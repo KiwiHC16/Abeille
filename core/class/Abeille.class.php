@@ -101,8 +101,13 @@ class Abeille extends eqLogic {
                 continue;
             $eqLogic = $cmd->getEqLogic();
             $eqHName = $eqLogic->getHumanName();
-            log::add('Abeille', 'debug', "executePollCmds(".$period."): ".$eqHName.", cmd='".$cmd->getName()."' (".$cmd->getLogicalId().")");
-            $cmd->execute();
+            $cmdName = $cmd->getName();
+            if (!$eqLogic->getIsEnable()) {
+                log::add('Abeille', 'debug', "executePollCmds(".$period."): ".$eqHName.", cmd='".$cmdName."' => IGNORED (device disabled)");
+            } else {
+                log::add('Abeille', 'debug', "executePollCmds(".$period."): ".$eqHName.", cmd='".$cmdName."' (".$cmd->getLogicalId().")");
+                $cmd->execute();
+            }
         }
     }
 

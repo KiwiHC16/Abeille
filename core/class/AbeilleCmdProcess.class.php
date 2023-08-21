@@ -2623,8 +2623,8 @@
                     return;
                 }
 
-                // Zigate specific command: Reset zigate
-                else if (($cmdName == 'resetZg') || ($cmdName == 'resetZigate')) {
+                // Zigate specific command: Reset zigate (SW reset)
+                else if (($cmdName == 'zgSoftReset') || ($cmdName == 'resetZg') || ($cmdName == 'resetZigate')) {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0011");
                     return;
                 }
@@ -2710,6 +2710,13 @@
                     $mask = str_pad($mask, 8, '0', STR_PAD_LEFT); // Add any missing zeros
 
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0021", $mask);
+                    return;
+                }
+
+                // Zigate specific command: Dump/save PDM
+                // WARNING: Only with Abeille's firmwares (ABxxyyyy)
+                else if ($cmdName == 'zgDumpPdm') {
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "0B00", "");
                     return;
                 }
 

@@ -1006,9 +1006,11 @@
         let newIsOpdm = false;
         erasePdm = false;
         if (curFw != '') {
-            // Format XXXX-YYYY: where XXXX=0003 (legacy), 0004 (OPDMv1), ou 0005 (OPDMv2)
-            v = curFw.substr(3, 1);
-            if ((v == 4) || (v == 5))
+            // Format XXXX-YYYY: where
+            // Offical FW => XXXX=0003 (legacy), 0004 (OPDMv1), ou 0005 (OPDMv2)
+            // Abeille FW => AB01=OPDMv1
+            // v = curFw.substr(3, 1);
+            if ((curFw == '0004') || (curFw == '0005') || (curFw == 'AB01'))
                 curIsLegacy = false; // Already OPDM
         }
         if (zgFW.indexOf("OPDM") != -1)

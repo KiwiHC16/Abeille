@@ -91,9 +91,15 @@ function refreshAdvEq() {
 
             // Reset model choice to 'auto' if model has been forced
             if (eq.modelForced) {
-                var $pRestoreModelAuto = $("<p><stron>{{Vous avez forcé le modèle de cet équipement. }}</strong></p>");
-                var $aRestoreModelAuto = $("<a href=\"#\" id=\"linkRestoreAutoModel\" style=\"text-decoration:underline;\">{{ Rétablir le fonctionnement normal (modèle auto)}}</a>");
-                $pRestoreModelAuto.append($aRestoreModelAuto).insertAfter("#idModelChangeBtn");
+                var $pRestoreModelAuto = $(
+                    "<p><stron>{{Vous avez forcé le modèle de cet équipement. }}</strong></p>"
+                );
+                var $aRestoreModelAuto = $(
+                    '<a href="#" id="linkRestoreAutoModel" style="text-decoration:underline;">{{ Rétablir le fonctionnement normal (modèle auto)}}</a>'
+                );
+                $pRestoreModelAuto
+                    .append($aRestoreModelAuto)
+                    .insertAfter("#idModelChangeBtn");
             }
 
             // Show/hide zigate or devices part
@@ -253,8 +259,8 @@ function createRemote(zgId) {
     xmlhttpMQTTSendTimer.open(
         "GET",
         "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&topic=CmdCreateAbeille" +
-        zgId +
-        "_zigate_createRemote",
+            zgId +
+            "_zigate_createRemote",
         false
     ); // False pour bloquer sur la recuperation du fichier
     xmlhttpMQTTSendTimer.send();
@@ -341,11 +347,11 @@ function removeBeesJeedom(zgId) {
                     xhr.open(
                         "GET",
                         "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
-                        js_queueXToParser +
-                        "&msg=type:eqRemoved_net:Abeille" +
-                        zgId +
-                        "_eqList:" +
-                        eqAddrList,
+                            js_queueXToParser +
+                            "&msg=type:eqRemoved_net:Abeille" +
+                            zgId +
+                            "_eqList:" +
+                            eqAddrList,
                         true
                     );
                     xhr.send();
@@ -431,7 +437,7 @@ function setBeesTimeout(zgId) {
     $("#abeilleModal")
         .load(
             "index.php?v=d&plugin=Abeille&modal=setBeesTimeout.abeille&zgId=" +
-            zgId
+                zgId
         )
         .dialog("open");
 }
@@ -466,10 +472,10 @@ function monitorIt(zgId, zgPort) {
         error: function (request, status, error) {
             bootbox.alert(
                 "ERREUR 'monitor' !<br>" +
-                "status=" +
-                status +
-                "<br>error=" +
-                error
+                    "status=" +
+                    status +
+                    "<br>error=" +
+                    error
             );
         },
         success: function (json_res) {
@@ -687,7 +693,7 @@ $("#idRepairBtn").on("click", function () {
     );
     xhttp.send();
 
-    xhttp.onreadystatechange = function () { };
+    xhttp.onreadystatechange = function () {};
 
     // $.ajax({
     //     url: "/plugins/Abeille/core/php/AbeilleRepair.php?eqId=" + eqId,
@@ -724,7 +730,7 @@ $("#idUpdateBtn").on("click", function () {
         xhttp.open(
             "GET",
             "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=update&eqId=" +
-            eqId,
+                eqId,
             false
         );
         xhttp.send();
@@ -758,13 +764,12 @@ $("#idReinitBtn").on("click", function () {
         xhttp.open(
             "GET",
             "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=reinit&eqId=" +
-            eqId,
+                eqId,
             false
         );
         xhttp.send();
     });
 });
-
 
 /**
  * Changement de modèle (choix manuel du modèle dans la liste des JSON).
@@ -775,11 +780,11 @@ $("#idModelChangeBtn").on("click", function () {
 
     // Ouverture dialog
     var myPopup = jeeDialog.dialog({
-        id: 'abeille_modelChangePopup',
-        title: '{{Choisir le modèle de votre équipement}}',
+        id: "abeille_modelChangePopup",
+        title: "{{Choisir le modèle de votre équipement}}",
         width: 500,
-        height: 'auto',
-        contentUrl: ''
+        height: "auto",
+        contentUrl: "",
     });
 
     // Le template de contenu est dans Abeille-Eq-Advanced-Device.php
@@ -793,7 +798,7 @@ $("#idModelChangeBtn").on("click", function () {
         url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",
         data: {
             action: "getModelChoiceList",
-            eqId: curEqId
+            eqId: curEqId,
         },
         dataType: "json",
         global: false,
@@ -802,25 +807,33 @@ $("#idModelChangeBtn").on("click", function () {
 
             // On remplit la liste de choix (datalist html5)
 
-            Object.values(lstModels).forEach(model => {
-                var str = '';
+            Object.values(lstModels).forEach((model) => {
+                var str = "";
                 // Signature Zigbee
-                if (typeof (model.manufacturer) == 'string' && model.manufacturer != '') {
-                    str += '[' + model.manufacturer + '] ';
+                if (
+                    typeof model.manufacturer == "string" &&
+                    model.manufacturer != ""
+                ) {
+                    str += "[" + model.manufacturer + "] ";
                 }
 
-                if (typeof (model.model) == 'string' && model.model != '' && model.model != '?') {
-                    str += model.model + ' ';
+                if (
+                    typeof model.model == "string" &&
+                    model.model != "" &&
+                    model.model != "?"
+                ) {
+                    str += model.model + " ";
                 }
 
                 // Libellé
-                if (str != '') {
-                    str += '> ';
+                if (str != "") {
+                    str += "> ";
                 }
                 str += model.type;
 
                 // Identifiant JSON (incluant l'emplacement)
-                str += ' (' + model.jsonLocation + '/' + model.jsonId + '.json)';
+                str +=
+                    " (" + model.jsonLocation + "/" + model.jsonId + ".json)";
 
                 // Ajout à la liste
                 var $opt = $("<option></option>");
@@ -828,87 +841,93 @@ $("#idModelChangeBtn").on("click", function () {
                 $datalist.append($opt);
 
                 // Remplissage info s'il s'agit du modèle actuellement en vigueur pour l'équipement
-                if (typeof (model.isCurrent) == 'boolean' && model.isCurrent) {
+                if (typeof model.isCurrent == "boolean" && model.isCurrent) {
                     $content.find("span.current-model").html(str);
                 }
-
             });
         },
     });
 
     // Bouton annuler
     $content.find(".btn-secondary").on("click", function () {
-        jeeDialog.get('#abeille_modelChangePopup').destroy();
+        jeeDialog.get("#abeille_modelChangePopup").destroy();
     });
 
     // Bouton enregistrer
     $content.find(".btn-success").on("click", function () {
         // On vérifie que l'utilisateur a bien choisi un modèle à appliquer
         var strSaisie = $content.find("input[type=search]").val();
-        if ($datalist.find("option[value=\"" + strSaisie + "\"]").length == 0) {
-            jeeDialog.alert('{{Erreur: vous devez choisir un modèle dans la liste.}}');
+        if ($datalist.find('option[value="' + strSaisie + '"]').length == 0) {
+            jeeDialog.alert(
+                "{{Erreur: vous devez choisir un modèle dans la liste.}}"
+            );
             return;
         }
 
         // Demande de confirmation (+ injonction à réveiller l'équipement s'il est sur batterie)
-        var strSuppBatterie = '';
-        if (eqBatteryType != '') {
-            strSuppBatterie = "<br><br><strong>Attention: </strong>{{Comme cet équipement fonctionne sur batterie, vous devez le réveiller immédiatement après avoir cliqué sur OK.}}";
+        var strSuppBatterie = "";
+        if (eqBatteryType != "") {
+            strSuppBatterie =
+                "<br><br><strong>Attention: </strong>{{Comme cet équipement fonctionne sur batterie, vous devez le réveiller immédiatement après avoir cliqué sur OK.}}";
         }
-        jeeDialog.confirm("{{L'équipement sera reconfiguré à partir du modèle choisi. Souhaitez-vous vraiment appliquer ce modèle ?}}" + strSuppBatterie, function (result) {
-            if (result) {
-                // On ferme la boite de dialog
-                jeeDialog.get('#abeille_modelChangePopup').destroy();
+        jeeDialog.confirm(
+            "{{L'équipement sera reconfiguré à partir du modèle choisi. Souhaitez-vous vraiment appliquer ce modèle ?}}" +
+                strSuppBatterie,
+            function (result) {
+                if (result) {
+                    // On ferme la boite de dialog
+                    jeeDialog.get("#abeille_modelChangePopup").destroy();
 
-                // Première requête: enregistrer la configuration de l'équipement (choix modèle)
-                $.ajax({
-                    type: "POST",
-                    url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",
-                    data: {
-                        action: "setModelToDevice",
-                        eqId: curEqId,
-                        modelChoice: strSaisie
-                    },
-                    dataType: "json",
-                    global: false,
-                    success: function () {
-                        // Deuxième requête: réinitialisation de l'équipement à partir de son (nouveau) modèle
-                        // (comme si on avait cliqué sur le bouton mise à jour)
-                        console.log("Simulation clic sur Mise à jour...");
-                        $("#idUpdateBtn").trigger("click");
-                    }
-                });
+                    // Première requête: enregistrer la configuration de l'équipement (choix modèle)
+                    $.ajax({
+                        type: "POST",
+                        url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",
+                        data: {
+                            action: "setModelToDevice",
+                            eqId: curEqId,
+                            modelChoice: strSaisie,
+                        },
+                        dataType: "json",
+                        global: false,
+                        success: function () {
+                            // Deuxième requête: réinitialisation de l'équipement à partir de son (nouveau) modèle
+                            // (comme si on avait cliqué sur le bouton mise à jour)
+                            console.log("Simulation clic sur Mise à jour...");
+                            $("#idUpdateBtn").trigger("click");
+                        },
+                    });
+                }
             }
-        })
-
+        );
     });
-
-
 });
 
 /**
  * Lien pour restaurer le modèle "automatique"
  */
 $("body").on("click", "a#linkRestoreAutoModel", function () {
-    jeeDialog.confirm("{{Actuellement, le modèle utilisé pour configuré l'équipement est celui que vous avez choisi manuellement. Cette action permet de rétablir le fonctionnement normal d'Abeille: le modèle prédéfini sera utilisé pour reconfigurer l'équipement la prochaine fois qu'il se réannoncera.<br><br>Cette action, en elle-même, ne modifie pas la configuration de l'équipement: après avoir cliqué sur OK, patientez quelques secondes, puis forcez l'équipement à se réannoncer (en le débranchant/rebranchant par exemple), ou utilisez la fonction 'Mise à jour'.<br><br>Etes-vous sûr de vouloir annuler le choix manuel du modèle ?}}", function (result) {
-        $.ajax({
-            type: "POST",
-            url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",
-            data: {
-                action: "disableManualModelForDevice",
-                eqId: curEqId
-            },
-            dataType: "json",
-            global: false,
-            success: function () {
-                // On laisse le temps à l'utilisateur de lire le message avant d'actualiser la page
-                console.log("disableManualModelForDevice OK");
-                setTimeout(function () {
-                    document.location.reload();
-                }, 3000);
-            }
-        });
-    });
+    jeeDialog.confirm(
+        "{{Actuellement, le modèle utilisé pour configuré l'équipement est celui que vous avez choisi manuellement. Cette action permet de rétablir le fonctionnement normal d'Abeille: le modèle prédéfini sera utilisé pour reconfigurer l'équipement la prochaine fois qu'il se réannoncera.<br><br>Cette action, en elle-même, ne modifie pas la configuration de l'équipement: après avoir cliqué sur OK, patientez quelques secondes, puis forcez l'équipement à se réannoncer (en le débranchant/rebranchant par exemple), ou utilisez la fonction 'Mise à jour'.<br><br>Etes-vous sûr de vouloir annuler le choix manuel du modèle ?}}",
+        function (result) {
+            $.ajax({
+                type: "POST",
+                url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",
+                data: {
+                    action: "disableManualModelForDevice",
+                    eqId: curEqId,
+                },
+                dataType: "json",
+                global: false,
+                success: function () {
+                    // On laisse le temps à l'utilisateur de lire le message avant d'actualiser la page
+                    console.log("disableManualModelForDevice OK");
+                    setTimeout(function () {
+                        document.location.reload();
+                    }, 3000);
+                },
+            });
+        }
+    );
 
     return false; // prevent default
 });
@@ -926,7 +945,7 @@ function saveConfig(config) {
         },
         dataType: "json",
         global: false,
-        success: function (json_res) { },
+        success: function (json_res) {},
     });
 }
 
@@ -1154,8 +1173,13 @@ function sendZigate(action, param) {
             topic = "CmdAbeille" + zgId + "/0000/getZgVersion";
             payload = "";
             break;
-        case "resetZigate":
-            topic = "CmdAbeille" + zgId + "/0000/resetZg";
+        case "zgSoftReset":
+        case "resetZigate": // Obsolete
+            topic = "CmdAbeille" + zgId + "/0000/zgSoftReset";
+            payload = "";
+            break;
+        case "zgDumpPdm":
+            topic = "CmdAbeille" + zgId + "/0000/zgDumpPdm";
             payload = "";
             break;
         default:
@@ -1197,10 +1221,10 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             selected.forEach((eq) => {
                 sendCmd(
                     "CmdAbeille" +
-                    eq["zgId"] +
-                    "/" +
-                    eq["addr"] +
-                    "/getGroupMembership",
+                        eq["zgId"] +
+                        "/" +
+                        eq["addr"] +
+                        "/getGroupMembership",
                     "ep=" + eq["mainEp"]
                 );
                 setTimeout(function () {
@@ -1222,10 +1246,10 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                 setTimeout(function () {
                     sendCmd(
                         "CmdAbeille" +
-                        eq["zgId"] +
-                        "/" +
-                        eq["addr"] +
-                        "/getGroupMembership",
+                            eq["zgId"] +
+                            "/" +
+                            eq["addr"] +
+                            "/getGroupMembership",
                         "ep=" + eq["mainEp"]
                     );
                     location.reload(true);
@@ -1242,19 +1266,19 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                 sendCmd(
                     "CmdAbeille" + eq["zgId"] + "/0000/removeGroup",
                     "address=" +
-                    eq["addr"] +
-                    "&DestinationEndPoint=" +
-                    eq["mainEp"] +
-                    "&groupAddress=" +
-                    group
+                        eq["addr"] +
+                        "&DestinationEndPoint=" +
+                        eq["mainEp"] +
+                        "&groupAddress=" +
+                        group
                 );
                 setTimeout(function () {
                     sendCmd(
                         "CmdAbeille" +
-                        eq["zgId"] +
-                        "/" +
-                        eq["addr"] +
-                        "/getGroupMembership",
+                            eq["zgId"] +
+                            "/" +
+                            eq["addr"] +
+                            "/getGroupMembership",
                         "ep=" + eq["mainEp"]
                     );
                     location.reload(true);
@@ -1281,11 +1305,11 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             sendCmd(
                 "CmdAbeille" + zgId + "/" + addr + "/removeGroup",
                 "address=" +
-                addr +
-                "&DestinationEndPoint=" +
-                ep +
-                "&groupAddress=" +
-                group
+                    addr +
+                    "&DestinationEndPoint=" +
+                    ep +
+                    "&groupAddress=" +
+                    group
             );
             setTimeout(function () {
                 location.reload(true);
@@ -1321,10 +1345,10 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                 setTimeout(function () {
                     sendCmd(
                         "CmdAbeille" +
-                        eq["zgId"] +
-                        "/" +
-                        eq["addr"] +
-                        "/getGroupMembership",
+                            eq["zgId"] +
+                            "/" +
+                            eq["addr"] +
+                            "/getGroupMembership",
                         "ep=" + eq["mainEp"]
                     );
                     location.reload(true);
@@ -1340,17 +1364,17 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
                 console.log("eq=", eq);
                 sendCmd(
                     "CmdAbeille" +
-                    eq["zgId"] +
-                    "/0000/commissioningGroupAPSLegrand",
+                        eq["zgId"] +
+                        "/0000/commissioningGroupAPSLegrand",
                     "address=" + eq["addr"] + "&groupId=" + group
                 );
                 setTimeout(function () {
                     sendCmd(
                         "CmdAbeille" +
-                        eq["zgId"] +
-                        "/" +
-                        eq["addr"] +
-                        "/getGroupMembership",
+                            eq["zgId"] +
+                            "/" +
+                            eq["addr"] +
+                            "/getGroupMembership",
                         "ep=" + eq["mainEp"]
                     );
                     location.reload(true);
@@ -1701,16 +1725,16 @@ function interrogate(request) {
     xhttp.open(
         "GET",
         "/plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
-        js_queueXToCmd +
-        "&topic=" +
-        topic +
-        "&payload=" +
-        payload,
+            js_queueXToCmd +
+            "&topic=" +
+            topic +
+            "&payload=" +
+            payload,
         false
     );
     xhttp.send();
 
-    xhttp.onreadystatechange = function () { };
+    xhttp.onreadystatechange = function () {};
 }
 
 // addCmdToTable() to be moved there when compliant

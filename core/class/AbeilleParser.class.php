@@ -5722,6 +5722,11 @@
             msgToAbeille2($msg);
         }
 
+        // PDM dump response (Abeille's firmware only)
+        function decode8B00($net, $payload, $lqi) {
+            parserLog('debug', $net.', Type=8B00/PDM dump response, Payload='.$payload);
+        }
+
         /* 9999/Extended error */
         function decode9999($net, $payload, $lqi) {
             /* FW >= 3.1e

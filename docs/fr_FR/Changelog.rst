@@ -10,6 +10,7 @@ ChangeLog
 - Page de config: Correction mineure pour mode dev.
 - Page de config: Support préliminaire FW custom (mode dev uniquement).
 - Lexman LDSENK01F: Ajout support (2613).
+- Ajout support préliminaire pour FW Zigate v1 'Abeille'.
 
 230811-BETA-1
 -------------

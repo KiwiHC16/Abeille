@@ -159,12 +159,22 @@
     </div>
 </div>
 
-<!-- Must be visible only if type PI v1/v2 -->
+<!-- HW reset => Must be visible only if type PI v1/v2 -->
 <div class="form-group" id="idAdvResetHw" style="display:none;">
     <label class="col-sm-3 control-label">{{Reset HW}}</label>
     <div class="col-sm-5">
         <a class="btn btn-warning" onclick="resetPiZigate()" title="{{Reset HW de la PiZigate}}"><i class="fas fa-sync"></i> {{Reset}}</a>
     </div>
 </div>
+
+<!-- PDM dump => Only with Abeille firmwares ('ABxxyyyy') and currently in dev mode -->
+<?php if (isset($dbgDeveloperMode)) { ?>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">{{Sauvegarde PDM}}</label>
+        <div class="col-sm-5">
+            <a class="btn btn-warning" onclick="sendZigate('zgDumpPdm', '')" title="{{Sauvegarde le contenu PDM de la Zigate}}"><i class="fas fa-sync"></i> {{Sauve}}</a>
+        </div>
+    </div>
+<?php } ?>
 
 <hr>

@@ -300,17 +300,17 @@
          *  'newJCmdName' = cmd name to replace (coming from 'use')
          * Returns: array() or false if not found.
          */
-        public static function getCommandModel($cmdFName, $newJCmdName = '') {
+        public static function getCommandModel($modelName, $cmdFName, $newJCmdName = '') {
             $fullPath = cmdsDir.$cmdFName.'.json';
             if (!file_exists($fullPath)) {
-                log::add('Abeille', 'error', "Le fichier de commande '".$cmdFName.".json' n'existe pas.");
+                log::add('Abeille', 'error', "Modèle '".$modelName."': Le fichier de commande '".$cmdFName.".json' n'existe pas.");
                 return false;
             }
 
             $jsonContent = file_get_contents($fullPath);
             $cmd = json_decode($jsonContent, true);
             if (json_last_error() != JSON_ERROR_NONE) {
-                log::add('Abeille', 'error', "Fichier de commande '".$cmdFName.".json' corrompu.");
+                log::add('Abeille', 'error', "Modèle '".$modelName."': Fichier de commande '".$cmdFName.".json' corrompu.");
                 return false;
             }
 
@@ -382,7 +382,7 @@
                     foreach ($jsonCmds as $cmd1 => $cmd2) {
                         /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
                         $cmdFName = $cmd2['use']; // File name without '.json'
-                        $newCmd = self::getCommandModel($cmdFName, $cmd1);
+                        $newCmd = self::getCommandModel($modelName, $cmdFName, $cmd1);
                         if ($newCmd === false)
                             continue; // Cmd does not exist.
 
@@ -520,7 +520,7 @@
                         'inf_time-Timestamp' => 'Time-TimeStamp'
                     );
                     foreach ($baseCmds as $cFName => $cJName) {
-                        $c = self::getCommandModel($cFName, $cJName);
+                        $c = self::getCommandModel($modelName, $cFName, $cJName);
                         if ($c !== false)
                             $deviceCmds += $c;
                     }
@@ -538,7 +538,7 @@
                         // } else {
                             /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
                             $cmdFName = $cmd2['use']; // File name without '.json'
-                            $newCmd = self::getCommandModel($cmdFName, $cmd1);
+                            $newCmd = self::getCommandModel($modelName, $cmdFName, $cmd1);
                             if ($newCmd === false)
                                 continue; // Cmd does not exist.
                         // }

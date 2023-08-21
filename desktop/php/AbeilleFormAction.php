@@ -166,22 +166,6 @@
             }
         }
 
-        // Set Time
-        foreach ( $zigateIds as $zigateId ) {
-            if ( $_POST['submitButton'] == 'SetTime Z'.$zigateId ) {
-                echo "SetTime request processing";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setZgTimeServer', "time=".time() );
-            }
-        }
-
-        // Get Time
-        foreach ( $zigateIds as $zigateId ) {
-            if ( $_POST['submitButton'] == 'getTime Z'.$zigateId ) {
-                echo "getTime request processing";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/getZgTimeServer', "");
-            }
-        }
-
         // Set Certification CE
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Certification CE Z'.$zigateId ) {

@@ -340,13 +340,13 @@
 
         if ($test==132) {
             echo "Set Time to Zigate\n";
-            $msg['topic']   = 'CmdAbeille' . $argv[2] . '/0000/setZgTimeServer';
+            $msg['topic']   = 'CmdAbeille' . $argv[2] . '/0000/zgSetTimeServer';
             $msg['payload'] = '';
         }
 
         if ($test==133) {
             echo "Get Time from Zigate\n";
-            $msg['topic']   = 'CmdAbeille' . $argv[2] . '/0000/getZgTimeServer';
+            $msg['topic']   = 'CmdAbeille' . $argv[2] . '/0000/zgGetTimeServer';
             $msg['payload'] = '';
         }
 

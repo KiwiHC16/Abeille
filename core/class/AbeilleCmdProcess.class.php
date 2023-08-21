@@ -2538,7 +2538,7 @@
                 }
 
                 // Zigate specific command
-                else if (($cmdName == 'zgSetPermitMode') || ($cmdName == 'setZgPermitMode')) {
+                else if ($cmdName == 'zgSetPermitMode') {
                     $mode = $Command['mode'];
                     if ($mode == "start") {
                         $cmd = "0049";
@@ -2618,7 +2618,7 @@
                 }
 
                 // Zigate specific command: Requests FW version
-                else if (($cmdName == 'zgGetVersion') || ($cmdName == 'getZgVersion') || ($cmdName == 'getVersion')) {
+                else if ($cmdName == 'zgGetVersion') {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0010");
                     return;
                 }
@@ -2630,12 +2630,12 @@
                 }
 
                 // Zigate specific command: Set Time server (v3.0f)
-                else if (($cmdName == 'zgSetTimeServer') || ($cmdName == 'setZgTimeServer') || ($cmdName == 'setTimeServer')) {
+                else if ($cmdName == 'zgSetTimeServer') {
                     if (!isset($Command['time'])) {
                         $zgRef = mktime(0, 0, 0, 1, 1, 2000); // 2000-01-01 00:00:00
                         $Command['time'] = time() - $zgRef;
                     }
-                    cmdLog('debug', "    setZgTimeServer, time=".$Command['time'], $this->debug['processCmd']);
+                    cmdLog('debug', "    zgSetTimeServer, time=".$Command['time'], $this->debug['processCmd']);
 
                     /* Cmd 0016 reminder
                     payload = <timestamp UTC: uint32_t> from 2000-01-01 00:00:00
@@ -2648,7 +2648,7 @@
                 }
 
                 // Zigate specific command
-                else if (($cmdName == 'zgGetTimeServer') || ($cmdName == 'getZgTimeServer') || ($cmdName == 'getTimeServer')) {
+                else if ($cmdName == 'zgGetTimeServer') {
                     // $data = "";
                     // $length = sprintf("%04s", dechex(strlen($data) / 2));
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0017");
@@ -2666,7 +2666,7 @@
                 }
 
                 // Zigate specific command
-                else if (($cmdName == 'zgStartNetwork') || ($cmdName == 'startZgNetwork')) {
+                else if ($cmdName == 'zgStartNetwork') {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0024");
                     return;
                 }

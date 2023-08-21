@@ -1377,7 +1377,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
         case "startPermitJoin":
             zgId = param1;
             sendCmd(
-                "CmdAbeille" + zgId + "/0000/setZgPermitMode",
+                "CmdAbeille" + zgId + "/0000/zgSetPermitMode",
                 "mode=start"
             );
             location.reload(true);
@@ -1391,7 +1391,7 @@ function sendToCmd(action, param1 = "", param2 = "", param3 = "", param4 = "") {
             break;
         case "stopPermitJoin":
             zgId = param1;
-            sendCmd("CmdAbeille" + zgId + "/0000/setZgPermitMode", "mode=stop");
+            sendCmd("CmdAbeille" + zgId + "/0000/zgSetPermitMode", "mode=stop");
             location.reload(true);
             $("#div_alert").showAlert({
                 message:

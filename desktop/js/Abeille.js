@@ -1081,37 +1081,6 @@ function sendZigate(action, param) {
             topic = "CmdAbeille" + zgId + "/0000/setExtendedPANID";
             payload = "";
             break;
-        // case "setChannelMask":
-        //     mask = document.getElementById("idChannelMask").value;
-        //     console.log("mask="+mask);
-        //     if (mask == "") {
-        //         alert("Masque vide.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).");
-        //         return; // Empty
-        //     }
-        //     if (mask.length > 1)
-        //         mask = mask.replace(/^0+/, ''); // Remove leading zeros
-        //     function isHex(h) {
-        //         // return /^[A-F0-9]+$/i.test(h)
-        //         var a = parseInt(h,16);
-        //         return (a.toString(16) ===h.toLowerCase())
-        //     }
-        //     if (!isHex(mask)) {
-        //         alert("Le masque doit être une valeur hexa");
-        //         return;
-        //     }
-        //     var maskI = parseInt(mask, 16); // Convert hex string to number
-        //     if ((maskI & 0x7fff800) == 0) {
-        //         alert("Aucun canal actif entre 11 et 26.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).")
-        //         return;
-        //     }
-        //     if ((maskI & ~0x7fff800) != 0) {
-        //         alert("Les canaux inférieurs à 11 et supérieurs à 26 sont invalides.\nVeuillez entrer une valeur entre 800 (canal 11) et 07FFF800 (canaux 11 à 26).")
-        //         return;
-        //     }
-        //     mask = mask.toString(16);
-        //     topic = 'CmdAbeille'+zgId+'/0000/setZgChannelMask';
-        //     payload = 'mask='+mask;
-        //     break;
         case "setChannel":
             msg =
                 "{{Vous êtes sur le point de changer le canal Zigbee de la Zigate}}<b>" +

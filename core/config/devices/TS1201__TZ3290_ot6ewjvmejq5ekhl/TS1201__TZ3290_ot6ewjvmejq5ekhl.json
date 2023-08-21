@@ -20,7 +20,7 @@
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=01"
             },
-            "Get Volt/percent": {
+            "Get VoltAndPercent": {
                 "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0001&attrId=0020,0021",
                 "comment": "Might be required for init",
@@ -36,10 +36,6 @@
                 "use": "act_zbConfigureReporting2",
                 "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "yes"
-            },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",

@@ -957,7 +957,7 @@ class Abeille extends eqLogic {
                     $mask = 1 << $chan;
                 $mask = sprintf("%08X", $mask);
                 log::add('Abeille', 'debug', "deamon(): Settings chan ".$chan." (mask=".$mask.") for zigate ".$zgId);
-                Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgChannelMask", "mask=".$mask);
+                Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetChannelMask", "mask=".$mask);
             }
             Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSoftReset", "");
             Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgStartNetwork", "");
@@ -978,10 +978,10 @@ class Abeille extends eqLogic {
             //     log::add('Abeille', 'debug', "deamon(): ERROR: Missing 'Ruche".$zgId."'");
             // if (hexdec($version) >= 0x031D) {
             //     log::add('Abeille', 'debug', 'deamon(): FW version >= 3.1D => Configuring zigate '.$zgId.' in hybrid mode');
-            //     Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgMode", "mode=hybrid");
+            //     Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
             // } else {
             //     log::add('Abeille', 'debug', 'deamon(): Configuring zigate '.$zgId.' in normal mode');
-            //     Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgMode", "mode=normal");
+            //     Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=normal");
             // }
         }
 
@@ -2168,14 +2168,14 @@ class Abeille extends eqLogic {
                     $zgId = substr($net, 7);
                     if ($msg['major'] == 'AB01') { // Abeille's FW for Zigate v1
                         log::add('Abeille', 'debug', '  FW version AB01 => Configuring zigate '.$zgId.' in hybrid mode');
-                        Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgMode", "mode=hybrid");
+                        Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
                     } else {
                         if (hexdec($msg['minor']) >= 0x031D) {
                             log::add('Abeille', 'debug', '  FW version >= 3.1D => Configuring zigate '.$zgId.' in hybrid mode');
-                            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgMode", "mode=hybrid");
+                            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=hybrid");
                         } else {
                             log::add('Abeille', 'debug', '  Old FW. Configuring zigate '.$zgId.' in normal mode');
-                            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/setZgMode", "mode=normal");
+                            Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "CmdAbeille".$zgId."/0000/zgSetMode", "mode=normal");
                         }
                         // TODO: Different msg according to v1 or v2
                         if (hexdec($msg['minor']) < 0x0321) {

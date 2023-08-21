@@ -23,52 +23,6 @@
         }
     }
 
-    // function ApplySettingsToNE($item, $value) {
-    //     $deviceId = substr( $item, strpos($item,"-")+1 );
-    //     log::add('Abeille', 'debug', "deviceId: ".substr( $item, strpos($item,"-")+1 ) );
-    //     $device = Abeille::byId(substr( $item, strpos($item,"-")+1 ));
-    //     list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-    //     log::add('Abeille', 'debug', "NE: ".$device->getName()." - dest: ".$dest." - address: ".$address );
-    //     // $EP = $device->getConfiguration('mainEP');
-    //     // log::add('Abeille', 'debug', 'EP: '.$EP );
-
-    //     foreach ( $device->searchCmdByConfiguration('execAtCreation','action') as $cmd ) {
-    //         log::add('Abeille', 'debug', 'Cmd: '.$cmd->getName() );
-    //         if ($cmd->getConfiguration('execAtCreation','')=='Yes') {
-    //             if ($cmd->getConfiguration('execAtCreationDelay','0')>0) {
-    //                 log::add('Abeille', 'debug', '     Send Cmd: '.$cmd->getName() . ' - ' . $cmd->getConfiguration('topic','') . ' - ' . $cmd->getConfiguration('request','') );
-    //                 $topic = 'Tempo'.'Cmd'.$device->getLogicalId().'/'.$cmd->getConfiguration('topic','').'&time='.(time()+$cmd->getConfiguration('execAtCreationDelay','0'));
-    //                 $topic = AbeilleCmd::updateField($dest, $cmd, $topic);
-    //                 log::add('Abeille', 'debug', '     Send Cmd: topic: '.$topic );
-    //                 $request = $cmd->getConfiguration('request','');
-    //                 $request = AbeilleCmd::updateField($dest, $cmd, $request);
-    //                 log::add('Abeille', 'debug', '     Send Cmd: request: '.$request );
-    //                 sendMessageFromFormToCmd( $topic, $request );
-    //                 // $cmd->execute();
-    //             }
-    //         }
-    //     }
-    // }
-
-    // function getInfosFromNe($item, $value) {
-    //     $deviceId = substr( $item, strpos($item,"-")+1 );
-    //     log::add('Abeille', 'debug', "deviceId: ".substr( $item, strpos($item,"-")+1 ) );
-    //     $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-    //     list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-    //     log::add('Abeille', 'debug', "dest: ".$dest." address: ".$address);
-    //     $EP = $device->getConfiguration('mainEP');
-    //     log::add('Abeille', 'debug', "mainEP: ".$EP);
-
-    //     // Get Name
-    //     sendMessageFromFormToCmd('Cmd'.$dest.'/0000/ActiveEndPoint',           'address='.$address                             );
-    //     sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getSimpleDescriptor', 'ep='.$EP);
-    //     sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getIeeeAddress', '');
-    //     sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getName',                  'address='.$address.'&destinationEndPoint='.$EP );
-    //     sendMessageFromFormToCmd('Cmd'.$dest.'/0000/getLocation',              'address='.$address.'&destinationEndPoint='.$EP );
-    //     sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
-    //     // sendMessageFromFormToCmd('CmdAbeille/0000/getSceneMembership',   'address='.$address.'&DestinationEndPoint='.$EP.'&groupID='.$grouID, 0);
-    // }
-
     try {
 
         // echo "_POST: ".json_encode( $_POST )."<br>\n";
@@ -76,76 +30,6 @@
         // echo "Action: ".$_POST['submitButton']."<br>\n";
 
         switch ($_POST['submitButton']) {
-
-            // Group
-            // case 'Add Group': // OBSOLETE
-            //     foreach ( $_POST as $item=>$Value ) {
-            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
-            //             echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-            //             $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-            //             list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-            //             $EP = $device->getConfiguration('mainEP');
-            //             sendMessageFromFormToCmd('Cmd'.$dest.'/0000/addGroup', 'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
-            //             sleep(1);
-            //             sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
-            //             sleep(1);
-            //         }
-            //     }
-            //     break;
-
-            // case 'Set Group Remote': // OBSOLETE
-            //     foreach ( $_POST as $item=>$Value ) {
-            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
-            //             echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-            //             $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-            //             list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-            //             $EP = $device->getConfiguration('mainEP');
-            //             sendMessageFromFormToCmd('Cmd'.$dest.'/0000/commissioningGroupAPS', 'address='.$address.'&groupId='.$_POST['group'] );
-            //         }
-            //     }
-            //     break;
-
-            // case 'Set Group Remote Legrand': // OBSOLETE
-            //     foreach ( $_POST as $item=>$Value ) {
-            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
-            //             echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-            //             $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-            //             list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-            //             $EP = $device->getConfiguration('mainEP');
-            //             sendMessageFromFormToCmd('Cmd'.$dest.'/0000/commissioningGroupAPSLegrand', 'address='.$address.'&groupId='.$_POST['group'] );
-            //         }
-            //     }
-            //     break;
-
-            // case 'Remove Group': // OBSOLETE
-            //     foreach ( $_POST as $item=>$Value ) {
-            //         if ( strpos("-".$item, "eqSelected") == 1 ) {
-            //             echo "Id: ".substr( $item, strpos($item,"-")+1 )."<br>";
-            //             $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-            //             list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-            //             $EP = $device->getConfiguration('mainEP');
-            //             sendMessageFromFormToCmd('Cmd'.$dest.'/0000/removeGroup',        'address='.$address.'&DestinationEndPoint='.$EP.'&groupAddress='.$_POST['group'] );
-            //             sleep(1);
-            //             sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
-            //             sleep(1);
-            //         }
-            //     }
-            //     break;
-
-            // case 'Get Group': // OBSOLETE
-            //     foreach ( $_POST as $item=>$Value ) {
-            //         if ( strpos( $item, "eqSelected") === 0 ) {
-            //             echo "Id: ->".substr( $item, strpos($item,"-")+1 )."<-<br>\n";
-            //             $device = eqLogic::byId(substr( $item, strpos($item,"-")+1 ));
-            //             list( $dest, $address ) = explode( "/", $device->getLogicalId() );
-            //             echo "Dest: ".$dest."<br>";
-            //             echo "Address: ".$address."<br>";
-            //             $EP = $device->getConfiguration('mainEP');
-            //             echo "Id: ".$EP."<br>";
-            //             sendMessageFromFormToCmd('Cmd'.$dest.'/'.$address.'/getGroupMembership', 'ep='.$EP );
-            //         }
-            //     }
-            //     break;
 
             // Scene
             case 'Get Scene Info':
@@ -274,14 +158,6 @@
             }
         }
 
-        // Set Channel Mask
-        // foreach ( $zigateIds as $zigateId ) {
-        //     if ( $_POST['submitButton'] == 'Set Channel Mask Z'.$zigateId ) {
-        //         echo "Set Channel Mask processing: Zigate Id: ".$zigateId." Channel mask: ".$_POST['channelMask'];
-        //         sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setChannelMask', $_POST['channelMask'] );
-        //     }
-        // }
-
         // Set Extended PANID
         foreach ( $zigateIds as $zigateId ) {
             if ( $_POST['submitButton'] == 'Set Extended PANID Z'.$zigateId ) {
@@ -321,35 +197,6 @@
                 sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setCertificationFCC', "");
             }
         }
-
-        // startNetwork
-        foreach ( $zigateIds as $zigateId ) {
-            if ( $_POST['submitButton'] == 'Start Network Z'.$zigateId ) {
-                echo "Start Network";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/startZgNetwork', "");
-            }
-        }
-
-        // Mode: normal, raw, hybride
-        foreach ( $zigateIds as $zigateId ) {
-            if ( $_POST['submitButton'] == 'Set Normal Mode Z'.$zigateId ) {
-                echo "Set Hybride Mode";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setZgMode', "mode=normal");
-            }
-        }
-        foreach ( $zigateIds as $zigateId ) {
-            if ( $_POST['submitButton'] == 'Set Raw Mode Z'.$zigateId ) {
-                echo "Set Hybride Mode";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setZgMode', "mode=raw");
-            }
-        }
-        foreach ( $zigateIds as $zigateId ) {
-            if ( $_POST['submitButton'] == 'Set Hybride Mode Z'.$zigateId ) {
-                echo "Set Hybride Mode";
-                sendMessageFromFormToCmd('CmdAbeille'.$zigateId.'/0000/setZgMode', "mode=hybrid");
-            }
-        }
-
     } catch (Exception $e) {
         echo '<br>error: '.$e->getMessage();
     }

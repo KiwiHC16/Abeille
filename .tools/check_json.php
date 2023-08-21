@@ -434,6 +434,12 @@
                 continue; // Cmd does not exist.
             $newCmd = $newCmd[$cmdJName]; // Remove top key
 
+            // Checking Jeedom cmd name
+            if (strpos($cmdJName, "/") !== false) {
+                newDevError($devName, "ERROR", "Invalid Jeedom cmd name '".$cmdJName."' ('/' is fordidden)");
+                $error = true;
+            }
+
             // Overload from device model
             // echo "devCmd=".json_encode($devCmd)."\n";
             if (isset($devCmd['logicalId']))

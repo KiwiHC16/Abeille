@@ -2523,7 +2523,7 @@
                  */
 
                 // Zigate specific command
-                if (($cmdName == 'zgSetMode') || ($cmdName == 'setZgMode')) {
+                if ($cmdName == 'zgSetMode') {
                     $mode = $Command['mode'];
                     if ($mode == "raw") {
                         $modeVal = "01";
@@ -2697,7 +2697,7 @@
 
                 // Zigate specific command: Set channel mask
                 // Mandatory params: 'mask' (hexa string)
-                else if ($cmdName == 'setZgChannelMask') {
+                else if ($cmdName == 'zgSetChannelMask') {
                     $required = ['mask'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
@@ -3850,7 +3850,7 @@
                 // Mandatory params: 'address' (hex 2B)  & 'EP' (hex 1B)
                 // Optional: 'duration' (hex 2B, default=0010)
                 else if ($cmdName == 'identifySend') {
-                    $required = ['address', 'EP']; // Mandatory infos
+                    $required = ['addr', 'EP']; // Mandatory infos
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
@@ -3864,10 +3864,10 @@
                     // <destination endpoint: uint8_t>
                     // <time: uint16_t> Time: Seconds
 
-                    $addrMode   = "02"; // Short Address -> 2
-                    $addr       = $Command['address']; // -> 4
-                    $srcEp      = "01"; // -> 2
-                    $dstEp      = $Command['EP']; // -> 2
+                    $addrMode   = "02";
+                    $addr       = $Command['addr'];
+                    $srcEp      = "01";
+                    $dstEp      = $Command['EP'];
                     $duration   = (isset($Command['duration']) && ($Command['duration'] != '')) ? $Command['duration'] : '0010';
 
                     cmdLog('debug', '    identifySend: ep='.$dstEp.', duration='.$duration);

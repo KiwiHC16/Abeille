@@ -15,6 +15,9 @@ ChangeLog
 - Interne: Amélioration collecte LQI.
 - Cmde manquante: Amélioration messages d'erreurs.
 - Page EQ/avancé: Correction regression bouton suppression modèle local.
+- Interne: Commandes Zigates prefixées par 'zg'.
+- Interne: Correction adresse commande 'identifySend'.
+- Interne: 'check_json' amélioré.
 
 230811-BETA-1
 -------------

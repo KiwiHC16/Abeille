@@ -12,9 +12,9 @@ https://kiwihc16.github.io/AbeilleDoc
 
 https://kiwihc16.github.io/AbeilleDoc/devices/CompatibilityList.html
 
-## Cagnotte pour supporter de nouveaux équipements
+<!-- ## Cagnotte pour supporter de nouveaux équipements
 
-https://kiwihc16.github.io/AbeilleDoc/Presentation.html#cagnotte
+https://kiwihc16.github.io/AbeilleDoc/Presentation.html#cagnotte -->
 
 ## Generer une beta (master->beta) ou un stable (beta->stable)
 

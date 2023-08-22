@@ -18,6 +18,7 @@ ChangeLog
 - Interne: Commandes Zigates prefixées par 'zg'.
 - Interne: Correction adresse commande 'identifySend'.
 - Interne: 'check_json' amélioré.
+- Interne: Parser: Correction mineure.
 
 230811-BETA-1
 -------------

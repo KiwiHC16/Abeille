@@ -4001,7 +4001,7 @@
                             $m = "  Step";
                             if ($cmd == "06")
                                 $m .= " with On/Off";
-                            $m .= ": mode=".$mode.", size=".$rate.", transition=".$transition.", optMask=".$optMask.", optOverride=".$optOverride;
+                            $m .= ": mode=".$mode.", size=".$size.", transition=".$transition.", optMask=".$optMask.", optOverride=".$optOverride;
                             parserLog('debug', $m);
                         } else if (($cmd == "03") || ($cmd == "07")) { // Stop (without/with On/Off)
                             $optMask = substr($pl, 0, 2);

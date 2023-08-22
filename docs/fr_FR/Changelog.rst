@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230822-BETA-1
+-------------
+
 - Ledvance 'PlugValue': Ajout support (2610).
 - Modèle de commande:
 

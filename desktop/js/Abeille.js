@@ -993,7 +993,8 @@ function getSelected() {
 
     var selected = new Array();
     // var list = document.querySelectorAll('input[type=checkbox]');
-    var list = document.querySelectorAll("beeChecked"); // class="beeChecked" on each Jeedom equipement
+    var list = document.querySelectorAll(".beeChecked"); // class="beeChecked" on each Jeedom equipement
+    console.log("list=", list);
     for (i = 0; i < list.length; i++) {
         item = list[i];
         // console.log("item.id=", item.id);

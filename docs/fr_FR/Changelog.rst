@@ -19,6 +19,7 @@ ChangeLog
 - Interne: Correction adresse commande 'identifySend'.
 - Interne: 'check_json' amélioré.
 - Interne: Parser: Correction mineure.
+- Page de gestion: Correction pb de selection pour les groupes.
 
 230811-BETA-1
 -------------

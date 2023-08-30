@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230830-BETA-2
+-------------
+
 - Page EQ/avancé: Correction traductions US.
 - Page EQ/avancé: Ajout bouton lecture version FW.
 - FW Zigates v1: Suppression FW officiels autres que 3.23.

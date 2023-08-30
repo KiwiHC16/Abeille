@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230830-BETA-1"
+# VERSION="230830-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1180,7 +1180,7 @@ a03262b18f2d6fe7f9e99bb72ae4c38b *core/config/devices_local/README.txt
 7e2484d4d7b5c97c245578eb53ecd799 *core/config/rucheCommand.json
 77f39f0d2b19ae5e02dca515e89f43cc *core/config/setAffichage.php
 bae2dd0e8f01fe8b019010f5c69f9bb4 *core/config/sortCommand.php
-d0d49a3ee83e6225f4d2e0f85d73630d *core/i18n/en_US.json
+2f35242930d449364e621b560991915e *core/i18n/en_US.json
 fe99369b88ceb7cae45f3453c63f485b *core/i18n/fr_FR.json
 56d8a60606129f1d13ca526760712df7 *core/php/AbeilleCliToQueue.php
 68443eac4dbd956e0fb2c8e305053f47 *core/php/AbeilleCmd-Tuya.php
@@ -1253,7 +1253,7 @@ d473a259cb9defac634d93cd184438d6 *desktop/modal/setBeesTimeout.abeille.php
 65a93b87182610a02fdb715a1bcf75e0 *desktop/php/Abeille-Eq-Advanced-Device.php
 349ef338bb2376917f3f5123a425295f *desktop/php/Abeille-Eq-Advanced-Interrogations.php
 64296e829eccd2c3d92eb7676ba89f99 *desktop/php/Abeille-Eq-Advanced-Specific.php
-b2af97c64cea5ac28176522a674b8d06 *desktop/php/Abeille-Eq-Advanced-Zigate.php
+7f6f6e1a9a7b218892e44bbf95d20593 *desktop/php/Abeille-Eq-Advanced-Zigate.php
 d99036f1ad8a7d1f51ec12a9d21e19b9 *desktop/php/Abeille-Eq-Advanced.php
 6c6a4e60798b69c29de15509059c3c06 *desktop/php/Abeille-Eq-Cmds.php
 968ffcd48dd7a7cfff22255dd515d36a *desktop/php/Abeille-Eq-Main.php
@@ -1272,7 +1272,7 @@ a6263907cb8c5fbafd8c16ec8d45b336 *desktop/php/AbeilleMaintenance-Logs.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-3dfe68c4c69341dc6eda8c4614cf6498 *docs/fr_FR/Changelog.rst
+bb59befdf0acbb702578f92b6c5affd5 *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1600,10 +1600,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-48bf0a1e7e77df28466ad4e9ef030eca *plugin_info/Abeille.version
+394c84d85099fb1e0f817ddca00e6afa *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 ed5f744f543801b700f553acf3ad90d7 *plugin_info/configuration.php
-c254ee074a38f428ea806772c0a9f495 *plugin_info/info.json
+1c91f31dcef0f45aacf3b6c93a94b366 *plugin_info/info.json
 43bad7db3c74f5def05f1d0694a015ab *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
@@ -1655,8 +1655,6 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/xmlhttpConfChange.php
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *resources/archives/xmlhttpMQTTSend.php
 b30943fb5fbe4f4944ac60c06f50cb70 *resources/fw_DIY/DIYRuZRT.zip
 fd690e586457113b24f7ad64d76a915f *resources/fw_zigate/FW_ChangeLog.md
-0186ec0d8fda64cd4e4831e768362cc0 *resources/fw_zigate/ZiGate_v3.21-OPDM.bin
-96ec13ff0a9c96416622a1be0d4809b2 *resources/fw_zigate/ZiGate_v3.21-legacy.bin
 1aa395c7afe456eedb78337044f04724 *resources/fw_zigate/ZiGate_v3.23-OPDM.bin
 ab45dc6fed08407de72aa24a25a17f46 *resources/fw_zigate/ZiGate_v3.23-legacy.bin
 b72399d5a204b159944b19883ea99870 *resources/prog_jennic-0.7/README.md

@@ -24,14 +24,15 @@
 </div>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">Firmware</label>
+    <label class="col-sm-3 control-label">{{Version du firmware}}</label>
     <div class="col-sm-5" advInfo="FW-Version">
         <input type="text" value="" readonly>
+        <a class="btn btn-default" style="margin-left:4px" onclick="sendZigate('getZgVersion', '')">{{Lire}}</a>
     </div>
 </div>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">Status réseau</label>
+    <label class="col-sm-3 control-label">{{Status réseau}}</label>
     <div class="col-sm-5" advInfo="Network-Status">
         <input type="text" value="" readonly>
         <?php
@@ -77,12 +78,12 @@
 
 <div class="form-group">
     <div class="col-sm-3 control-label">
-        <label class="">{{Heure zigate}}</label>
+        <label class="">{{Heure Zigate}}</label>
         <!-- <a class="btn btn-primary btn-xs" target="_blank" href="https://kiwihc16.github.io/AbeilleDoc/Radio.html#zigate-channel-selection"><i class="fas fa-book"></i> ?</a> -->
     </div>
     <div class="col-sm-7" advInfo="ZiGate-Time">
         <input type="text" id="idZgTime" value="" readonly>
-        <a class="btn btn-warning" style="margin-left:4px" onclick="sendZigate('getTime', '')">Lire</a>
+        <a class="btn btn-default" style="margin-left:4px" onclick="sendZigate('getTime', '')">{{Lire}}</a>
         <a class="btn btn-warning" onclick="sendZigate('setTime', '')">Mettre à l'heure</a>
     </div>
 </div>
@@ -113,7 +114,7 @@
     </div>
     <div class="col-sm-5" advInfo="ZiGate-Power">
         <input type="text" value="" readonly>
-        <a class="btn btn-warning" onclick="sendZigate('getTXPower', '')">Lire</a>
+        <a class="btn btn-warning" onclick="sendZigate('getTXPower', '')">{{Lire}}</a>
         <!-- <a class="btn btn-warning" onclick="sendZigate('setTXPower', '')">Modifier</a> -->
     </div>
 </div>
@@ -148,7 +149,7 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">PDM</label>
     <div class="col-sm-5">
-        <a class="btn btn-danger" onclick="sendZigate('erasePersistantDatas', '')" title="{{Efface la PDM. Tous les équipements devront être réinclus}}">Effacer</a>
+        <a class="btn btn-danger" onclick="sendZigate('erasePersistantDatas', '')" title="{{Efface la PDM. Tous les équipements devront être réinclus}}">{{Effacer}}</a>
     </div>
 </div>
 
@@ -167,12 +168,12 @@
     </div>
 </div>
 
-<!-- PDM dump => Only with Abeille firmwares ('ABxxyyyy') and currently in dev mode -->
+<!-- PDM dump => Only with Abeille firmwares (version 'ABxxyyyy') and currently in dev mode -->
 <?php if (isset($dbgDeveloperMode)) { ?>
     <div class="form-group">
         <label class="col-sm-3 control-label">{{Sauvegarde PDM}}</label>
         <div class="col-sm-5">
-            <a class="btn btn-warning" onclick="sendZigate('zgDumpPdm', '')" title="{{Sauvegarde le contenu PDM de la Zigate}}"><i class="fas fa-sync"></i> {{Sauve}}</a>
+            <a class="btn btn-default" onclick="sendZigate('zgDumpPdm', '')" title="{{Sauvegarde le contenu PDM de la Zigate}}"><i class="fas fa-sync"></i> {{Sauver}}</a>
         </div>
     </div>
 <?php } ?>

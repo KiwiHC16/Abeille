@@ -7,10 +7,6 @@ ChangeLog
 - Page EQ/avancé: Correction traductions US.
 - Page EQ/avancé: Ajout bouton lecture version FW.
 - FW Zigates v1: Suppression FW officiels autres que 3.23.
-
-230830-BETA-1
--------------
-
 - Page santé: Correction tri du tableau après raffraichissement.
 - Page santé: Corrections traduction US.
 

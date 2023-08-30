@@ -78,14 +78,14 @@ Démons:
 <table class="table table-condensed tablesorter" id="table_healthAbeille">
     <thead>
         <tr>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Ruche}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Réseau}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Equipement}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Type}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Adresse}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{IEEE}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Status}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par">{{Dernière comm.}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Depuis (h)}}</th>
+            <th class="header" data-toggle="tooltip" title="Trier par">{{Depuis}} (H)</th>
             <th class="header" data-toggle="tooltip" title="Trier par dernier LQI">{{LQI}}</th>
             <th class="header" data-toggle="tooltip" title="Trier par niveau batterie">{{Batterie}}</th>
         </tr>
@@ -298,6 +298,8 @@ Démons:
                 }
 
                 $('#table_healthAbeille tbody').empty().append(tr);
+
+                $("#table_healthAbeille").tablesorter().trigger('update');
             }
         });
     }
@@ -308,8 +310,8 @@ Démons:
         refreshHealth();
     }, 2000);
 
-    $(function() {
-        $("#table_healthAbeille").tablesorter();
-    });
+    // $(function() {
+    //     $("#table_healthAbeille").tablesorter();
+    // });
 
 </script>

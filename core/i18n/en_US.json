@@ -154,18 +154,15 @@
         "Rechercher équipement": "Find device",
         "Retain flag": "Retain flag"
     },
-    "plugins/Abeille/desktop/modal/health.php": {
-        "Module": "Device",
-        "Name": "Name",
-        "ID": "ID",
-        "Ruche": "Hive",
-        "Address": "Address",
-        "IEEE": "IEEE",
-        "Statut": "State",
-        "Dernière communication": "Last communication",
-        "Depuis (h)": "Since (h)",
-        "Date création": "Creation date",
-        "OK": "OK"
+    "plugins/Abeille/desktop/modal/AbeilleHealth.modal.php": {
+        "Démons": "Daemons",
+
+        "Réseau": "Network",
+        "Equipement": "Device",
+        "Adresse": "Address",
+        "Dernière comm.": "Last comm.",
+        "Depuis": "Since",
+        "Batterie": "Battery"
     },
     "plugins/Abeille/desktop/modal/network.php": {
         "401 - Accès non autorisé": "401 - Unauthorized access",

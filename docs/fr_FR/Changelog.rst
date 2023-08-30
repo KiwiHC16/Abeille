@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Page santé: Correction tri du tableau après raffraichissement.
+- Page santé: Corrections traduction US.
+
 230822-BETA-1
 -------------
 

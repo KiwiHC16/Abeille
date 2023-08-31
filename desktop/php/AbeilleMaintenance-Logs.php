@@ -78,6 +78,11 @@
                     $fileName = basename($path);
                     echo '<li class="cursor list-group-item list-group-item-success"><a class="btnDisplayLog" location="JEEDOM-TMP">'.$fileName.'</a></li>';
                 }
+                /* Listing json files from Abeille tmp */
+                foreach (glob(__DIR__."/../../tmp/Abeille*.json") as $path) {
+                    $fileName = basename($path);
+                    echo '<li class="cursor list-group-item list-group-item-success"><a class="btnDisplayLog" location="ABEILLE-TMP">'.$fileName.'</a></li>';
+                }
             ?>
         </ul>
 
@@ -116,9 +121,12 @@
         if (logType == "JEEDOM-LOG") {
             action = "getFile";
             logPath = "../../log/"+logFile;
-        } else {
+        } else if (logType == "JEEDOM-TMP") {
             action = "getTmpFile";
             logPath = logFile;
+        } else {
+            action = "getFile";
+            logPath = "tmp/" + logFile;
         }
 
         $.ajax({
@@ -132,20 +140,21 @@
             global: false,
             cache: false,
             error: function (request, status, error) {
-                $('#idCurrentDisplay').empty().append('{{Log : }}'+logFile+" => ERREUR");
+                $('#idCurrentDisplay').empty().append('{{Log}} : '+logFile+" => ERREUR");
             },
             success: function (json_res) {
                 // console.log(json_res);
                 res = JSON.parse(json_res.result); // res.status, res.error, res.content
                 if (res.status != 0) {
-                    $('#idCurrentDisplay').empty().append('{{Log : }}'+logFile+" => ERREUR");
+                    $('#idCurrentDisplay').empty().append('{{Log}} : '+logFile+" => ERREUR");
                     $('#idPreResults').empty();
                     curDisplay = "";
                 } else {
-                    var log = res.content;
-                    $('#idPreResults').empty();
-                    $('#idCurrentDisplay').empty().append('{{Log : }}'+logFile);
-                    $('#idPreResults').append(log);
+                    let log = res.content;
+                    let jsonPretty = JSON.stringify(JSON.parse(log),null,2);
+                    $('#idCurrentDisplay').empty().append('{{Log}} : '+logFile);
+                    // $('#idPreResults').empty().append(log);
+                    $('#idPreResults').empty().append(jsonPretty);
                     curDisplay = logFile;
                     curDisplayType = logType;
                 }
@@ -171,7 +180,7 @@
 
     var $rawLogCheck = $('#brutlogcheck')
     $('.btnDisplayLog').off('click').on('click',function() {
-        var location = $(this).attr('location'); // "JEEDOM-LOG" or "JEEDOM-TMP"
+        var location = $(this).attr('location'); // "JEEDOM-LOG", "JEEDOM-TMP" or "ABEILLE-TMP"
         var logFile = $(this).text();
         console.log("btnDisplayLog click: File="+logFile+", location="+location);
         $('.btnDisplayLog').parent().removeClass("active")
@@ -287,8 +296,10 @@
             let path;
             if (curDisplayType == "JEEDOM-TMP")
                 path = js_tmpDir+"/"+curDisplay;
-            else // "JEEDOM-LOG"
+            else if (curDisplayType == "JEEDOM-LOG")
                 path = js_pluginDir+"/../../log/"+curDisplay;
+            else // "ABEILLE-TMP"
+                path = js_pluginDir+"/tmp/"+curDisplay;
             window.open('plugins/Abeille/core/php/AbeilleDownload.php?pathfile='+path+'&addext=log', "_blank", null);
         }
     })
@@ -301,7 +312,7 @@
             return;
 
         logFile = curDisplay;
-        logLocation = curDisplayType; // JEEDOM-LOG or JEEDOM-TMP
+        logLocation = curDisplayType; // JEEDOM-LOG, JEEDOM-TMP or ABEILLE-TMP
 
         console.log("lf="+logFile+", loc="+logLocation);
         $.ajax({

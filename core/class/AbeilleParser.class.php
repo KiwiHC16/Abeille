@@ -1814,33 +1814,6 @@
                 monMsgFromZigate($msgDecoded); // Send message to monitor
         }
 
-        // PDM Management
-
-        // function decode0208($dest, $payload, $lqi) {
-        //     // "0208 0003 19001000"
-        //     // E_SL_MSG_PDM_EXISTENCE_REQUEST = 0x0208
-
-        //     $id = substr( $payload, 0  , 4);
-
-        //     parserLog('debug', $dest.', Type=0208/E_SL_MSG_PDM_EXISTENCE_REQUEST : PDM Exist for id : '.$id.' ?');
-
-        //     msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/PDM", "req=E_SL_MSG_PDM_EXISTENCE_RESPONSE&recordId=".$id);
-        // }
-
-        // function decode0300($dest, $payload, $lqi) {
-        //     // "0300 0001DCDE"
-        //     // E_SL_MSG_PDM_HOST_AVAILABLE = 0x0300
-        //     parserLog('debug', $dest.', Type=0300/E_SL_MSG_PDM_HOST_AVAILABLE : PDM Host Available ?');
-
-        //     msgToCmd(PRIO_NORM, "Cmd".$dest."/0000/PDM", "req=E_SL_MSG_PDM_HOST_AVAILABLE_RESPONSE");
-        // }
-
-        // function decode0302($dest, $payload, $lqi) {
-        //     // E_SL_MSG_PDM_LOADED = 0x0302
-        //     // https://zigate.fr/documentation/deplacer-le-pdm-de-la-zigate/
-        //     parserLog('debug', $dest.', Type=0302/E_SL_MSG_PDM_LOADED');
-        // }
-
         // 8000/Zigate Status
         function decode8000($net, $payload, $lqi) {
             $status     = substr($payload, 0, 2);
@@ -5730,7 +5703,42 @@
 
         // PDM dump response (Abeille's firmware only)
         function decode8B00($net, $payload, $lqi) {
-            parserLog('debug', $net.', Type=8B00/PDM dump response, Payload='.$payload);
+            $id = substr($payload, 0, 4);
+            $status = substr($payload, 4, 2); // 00=OK, 01=does not exist, 02=Found but truncated
+            $first = hexdec(substr($payload, 6, 1));
+            $last = hexdec(substr($payload, 7, 1));
+            $size = substr($payload, 8, 4);
+            $data = substr($payload, 12);
+
+            parserLog('debug', $net.', Type=8B00/PDM dump response'
+                .', Id='.$id
+                .', Status='.$status
+                .', First/Last='.$first.'/'.$last
+                .', Size='.$size
+                .', Data='.$data);
+
+            $zgId = substr($net, 7); // AbeilleX => X
+            if (!isset($GLOBALS['zigate'.$zgId]))
+                $GLOBALS['zigate'.$zgId] = [];
+            if ($first)
+                $GLOBALS['zigate'.$zgId]['pdms'] = []; // Clear previous content
+            $GLOBALS['zigate'.$zgId]['pdms'][$id] = array(
+                'status' => $status,
+                'size' => $size,
+                'data' => $data
+            );
+
+            if ($last) {
+                // Dump to file 'tmp/AbeillePdm-AbeilleX.json'
+                $table = [];
+                $table['signature'] = "Abeille PDM tables";
+                $table['net'] = $net;
+                $table['collectTime'] = time();
+                $table['fwVersion'] = $GLOBALS['zigate'.$zgId]['fwVersionMaj'].'-'.$GLOBALS['zigate'.$zgId]['fwVersionMin'];
+                $table['pdms'] = $GLOBALS['zigate'.$zgId]['pdms'];
+                $json = json_encode($table);
+                file_put_contents(__DIR__."/../../tmp/AbeillePdm-".$net.".json", $json);
+            }
         }
 
         /* 9999/Extended error */

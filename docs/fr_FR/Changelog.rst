@@ -3,7 +3,7 @@ ChangeLog
 
 - Page maintenance: Amélioration affichage JSON.
 - Page maintenance: Affichage JSON du répertoire local 'tmp'.
-- Interne: Parser: Support dump/backup tables PDM (msg '8B00' FW 'AB01-0000').
+- Interne: Parser: Support dump/backup tables PDM (msg 'AB00' + 'AB01' with FW 'AB01-0000').
 
 230830-BETA-2
 -------------

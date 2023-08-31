@@ -2678,12 +2678,6 @@
                 //     return;
                 // }
 
-                // Zigate specific command: Erase PDM
-                else if ($cmdName == 'zgErasePDM') {
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, "0012");
-                    return;
-                }
-
                 // Zigate specific command: Set LED, ON/1 or OFF/0
                 else if ($cmdName == 'zgSetLed') {
                     if ($Command['value'] == 1)
@@ -2713,10 +2707,24 @@
                     return;
                 }
 
+                // Zigate specific command: Erase PDM
+                else if ($cmdName == 'zgErasePDM') {
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "0012");
+                    return;
+                }
+
                 // Zigate specific command: Dump/save PDM
-                // WARNING: Only with Abeille's firmwares (ABxxyyyy)
+                // WARNING: Only with Abeille's firmwares (ABxx-yyyy)
                 else if ($cmdName == 'zgDumpPdm') {
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, "0B00", "");
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "AB00", "");
+                    return;
+                }
+
+                // Zigate specific command: Restore PDM
+                // WARNING: Only with Abeille's firmwares (ABxx-yyyy)
+                else if ($cmdName == 'zgRestorePdm') {
+                    // TODO
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, "AB02", "");
                     return;
                 }
 

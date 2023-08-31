@@ -5702,7 +5702,7 @@
         }
 
         // PDM dump response (Abeille's firmware only)
-        function decode8B00($net, $payload, $lqi) {
+        function decodeAB01($net, $payload, $lqi) {
             $id = substr($payload, 0, 4);
             $status = substr($payload, 4, 2); // 00=OK, 01=does not exist, 02=Found but truncated
             $first = hexdec(substr($payload, 6, 1));
@@ -5710,7 +5710,7 @@
             $size = substr($payload, 8, 4);
             $data = substr($payload, 12);
 
-            parserLog('debug', $net.', Type=8B00/PDM dump response'
+            parserLog('debug', $net.', Type=AB01/PDM dump response'
                 .', Id='.$id
                 .', Status='.$status
                 .', First/Last='.$first.'/'.$last
@@ -5739,6 +5739,16 @@
                 $json = json_encode($table);
                 file_put_contents(__DIR__."/../../tmp/AbeillePdm-".$net.".json", $json);
             }
+        }
+
+        // PDM restore response (Abeille's firmware only)
+        function decodeAB03($net, $payload, $lqi) {
+            $id = substr($payload, 0, 4);
+            $status = substr($payload, 4, 2); // ?
+
+            parserLog('debug', $net.', Type=AB03/PDM restore response'
+                .', Id='.$id
+                .', Status='.$status);
         }
 
         /* 9999/Extended error */

@@ -84,7 +84,7 @@
     <div class="col-sm-7" advInfo="ZiGate-Time">
         <input type="text" id="idZgTime" value="" readonly>
         <a class="btn btn-default" style="margin-left:4px" onclick="sendZigate('getTime', '')">{{Lire}}</a>
-        <a class="btn btn-warning" onclick="sendZigate('setTime', '')">Mettre à l'heure</a>
+        <a class="btn btn-warning" onclick="sendZigate('setTime', '')">{{Mettre à l'heure}}</a>
     </div>
 </div>
 
@@ -174,6 +174,12 @@
         <label class="col-sm-3 control-label">{{Sauvegarde PDM}}</label>
         <div class="col-sm-5">
             <a class="btn btn-default" onclick="sendZigate('zgDumpPdm', '')" title="{{Sauvegarde le contenu PDM de la Zigate}}"><i class="fas fa-sync"></i> {{Sauver}}</a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">{{Restoration PDM}}</label>
+        <div class="col-sm-5">
+            <a class="btn btn-danger" onclick="sendZigate('zgRestorePdm', '')" title="{{Restore le contenu PDM de la Zigate}}"><i class="fas fa-sync"></i> {{Restorer}}</a>
         </div>
     </div>
 <?php } ?>

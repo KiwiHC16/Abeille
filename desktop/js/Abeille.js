@@ -1172,9 +1172,24 @@ function sendZigate(action, param) {
             topic = "CmdAbeille" + zgId + "/0000/zgSoftReset";
             payload = "";
             break;
-        case "zgDumpPdm":
+        case "zgDumpPdm": // FW >= AB01-0000
             topic = "CmdAbeille" + zgId + "/0000/zgDumpPdm";
             payload = "";
+            break;
+        case "zgRestorePdm": // FW >= AB01-0000
+            msg =
+                "{{Vous êtes sur le point d'écraser tout le contenu PDM de votre Zigate}}";
+            msg += "{{<br><br>Etes vous sur de vouloir continuer ?}}";
+            bootbox.confirm(msg, function (result) {
+                if (result) {
+                    sendToZigate("CmdAbeille" + zgId + "/0000/zgErasePdm", "");
+                    sendToZigate(
+                        "CmdAbeille" + zgId + "/0000/zgRestorePdm",
+                        ""
+                    );
+                }
+                return;
+            });
             break;
         default:
             console.log("ERROR: Unsupported action '" + action + "'");

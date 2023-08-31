@@ -322,6 +322,14 @@
         "8531" => array(
             "name" => "Complex descriptor response",
         ),
+
+        // Abeille's FW (ABxx-yyyy) specific messages
+        "AB01" => array(
+            "name" => "PDM dump response",
+        ),
+        "AB03" => array(
+            "name" => "PDM restore response",
+        ),
     );
 
     /* Returns Zigate message (array) based on given '$msgType' or [] if unknown */

@@ -136,6 +136,7 @@
         "Sauvegarde PDM": "PDM backup",
         "Sauver": "Save",
         "Effacer": "Clear",
+        "Restorer": "Restore",
 
         "Interrogation de l'équipement.": "Device interrogations",
         "Sortie dans 'AbeilleParser.log' si mode 'debug' actif.": "Outputs in 'AbeilleParser.log' if 'debug' mode is enabled.",
@@ -151,6 +152,8 @@
         "commande Identify": "Identify command",
         "Ecrire": "Write",
         "Configurer": "Configure",
+        "Commande générique spécifique cluster": "Generic cluster specific command",
+        "Envoyer": "Send",
 
         "Commandes": "Commands"
     },

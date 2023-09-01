@@ -137,21 +137,14 @@
 
 <?php if (isset($dbgDeveloperMode)) { ?>
     <div class="form-group">
-        <label class="col-sm-3 control-label">Mode</label>
+        <label class="col-sm-3 control-label">DEV MODE: : {{Mode}}</label>
         <div class="col-sm-5">
-            <a class="btn btn-danger" onclick="sendZigate('setMode', 'Normal')">Normal</a>
-            <a class="btn btn-warning" onclick="sendZigate('setMode', 'Hybride')">Hybride</a>
-            <a class="btn btn-danger" onclick="sendZigate('setMode', 'Raw')">Raw</a>
+            <a class="btn btn-danger" onclick="sendZigate('setMode', 'Normal')">{{Normal}}</a>
+            <a class="btn btn-warning" onclick="sendZigate('setMode', 'Hybride')">{{Hybride}}</a>
+            <a class="btn btn-danger" onclick="sendZigate('setMode', 'Raw')">{{Brut}}</a>
         </div>
     </div>
 <?php } ?>
-
-<div class="form-group">
-    <label class="col-sm-3 control-label">PDM</label>
-    <div class="col-sm-5">
-        <a class="btn btn-danger" onclick="sendZigate('erasePersistantDatas', '')" title="{{Efface la PDM. Tous les équipements devront être réinclus}}">{{Effacer}}</a>
-    </div>
-</div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Reset SW}}</label>
@@ -168,16 +161,23 @@
     </div>
 </div>
 
+<div class="form-group">
+    <label class="col-sm-3 control-label">{{Effacement PDM}}</label>
+    <div class="col-sm-5">
+        <a class="btn btn-danger" onclick="sendZigate('zgErasePdm', '')" title="{{Efface la PDM. Tous les équipements devront être réinclus}}">{{Effacer}}</a>
+    </div>
+</div>
+
 <!-- PDM dump => Only with Abeille firmwares (version 'ABxxyyyy') and currently in dev mode -->
 <?php if (isset($dbgDeveloperMode)) { ?>
     <div class="form-group">
-        <label class="col-sm-3 control-label">{{Sauvegarde PDM}}</label>
+        <label class="col-sm-3 control-label">DEV MODE: {{Sauvegarde PDM}}</label>
         <div class="col-sm-5">
             <a class="btn btn-default" onclick="sendZigate('zgDumpPdm', '')" title="{{Sauvegarde le contenu PDM de la Zigate}}"><i class="fas fa-sync"></i> {{Sauver}}</a>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-3 control-label">{{Restoration PDM}}</label>
+        <label class="col-sm-3 control-label">DEV MODE: {{Restoration PDM}}</label>
         <div class="col-sm-5">
             <a class="btn btn-danger" onclick="sendZigate('zgRestorePdm', '')" title="{{Restore le contenu PDM de la Zigate}}"><i class="fas fa-sync"></i> {{Restorer}}</a>
         </div>

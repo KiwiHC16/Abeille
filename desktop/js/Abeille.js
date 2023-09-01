@@ -1143,7 +1143,20 @@ function sendZigate(action, param) {
             topic = "CmdAbeille" + zgId + "/0000/zgSetTimeServer";
             payload = ""; // Using current time from host.
             break;
-        case "erasePersistantDatas": // Erase PDM
+        case "getInclusionStatus":
+            topic = "CmdAbeille" + zgId + "/0000/permitJoin";
+            payload = "Status";
+            break;
+        case "getZgVersion":
+            topic = "CmdAbeille" + zgId + "/0000/zgGetVersion";
+            payload = "";
+            break;
+        case "zgSoftReset":
+        case "resetZigate": // Obsolete
+            topic = "CmdAbeille" + zgId + "/0000/zgSoftReset";
+            payload = "";
+            break;
+        case "zgErasePdm": // Erase PDM
             msg =
                 "{{Vous êtes sur le point de d'effacer la PDM de la zigate}} <b>" +
                 zgId +
@@ -1159,33 +1172,23 @@ function sendZigate(action, param) {
                 return;
             });
             break;
-        case "getInclusionStatus":
-            topic = "CmdAbeille" + zgId + "/0000/permitJoin";
-            payload = "Status";
-            break;
-        case "getZgVersion":
-            topic = "CmdAbeille" + zgId + "/0000/zgGetVersion";
-            payload = "";
-            break;
-        case "zgSoftReset":
-        case "resetZigate": // Obsolete
-            topic = "CmdAbeille" + zgId + "/0000/zgSoftReset";
-            payload = "";
-            break;
         case "zgDumpPdm": // FW >= AB01-0000
             topic = "CmdAbeille" + zgId + "/0000/zgDumpPdm";
             payload = "";
             break;
         case "zgRestorePdm": // FW >= AB01-0000
+            file = "AbeillePdm-Abeille" + zgId + ".json";
             msg =
-                "{{Vous êtes sur le point d'écraser tout le contenu PDM de votre Zigate}}";
-            msg += "{{<br><br>Etes vous sur de vouloir continuer ?}}";
+                "{{Vous êtes sur le point d'écraser tout le contenu PDM de votre Zigate}}<br>";
+            msg += "{{à partir du fichier:}} '" + file + "'<br>";
+            msg += "<br>{{Etes vous sur de vouloir continuer ?}}";
             bootbox.confirm(msg, function (result) {
                 if (result) {
-                    sendToZigate("CmdAbeille" + zgId + "/0000/zgErasePdm", "");
+                    // sendToZigate("CmdAbeille" + zgId + "/0000/zgErasePdm", "");
+                    // Why this order is not respected ?? Erase is executed AFTER restore
                     sendToZigate(
                         "CmdAbeille" + zgId + "/0000/zgRestorePdm",
-                        ""
+                        "file=" + "tmp/" + file
                     );
                 }
                 return;
@@ -1795,3 +1798,21 @@ $("#bt_loadCmdFromJson").on("click", function (event) {
         .load("index.php?v=d&plugin=Abeille&modal=AbeilleLoadJsonCmd.modal")
         .dialog("open");
 });
+
+/* PiZigate HW reset */
+function resetPiZigate() {
+    console.log("resetPiZigate()");
+
+    // $('#md_modal2').dialog({title: "{{Reset HW de la PiZigate}}"});
+    // $('#md_modal2').load('index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=resetPiZigate').dialog('open');
+    $.ajax({
+        type: "POST",
+        url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+        data: {
+            action: "resetPiZigate",
+        },
+        dataType: "json",
+        global: false,
+        success: function (json_res) {},
+    });
+}

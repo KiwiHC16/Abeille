@@ -2708,7 +2708,7 @@
                 }
 
                 // Zigate specific command: Erase PDM
-                else if ($cmdName == 'zgErasePDM') {
+                else if ($cmdName == 'zgErasePdm') {
                     $this->addCmdToQueue2(PRIO_NORM, $dest, "0012");
                     return;
                 }
@@ -2722,9 +2722,32 @@
 
                 // Zigate specific command: Restore PDM
                 // WARNING: Only with Abeille's firmwares (ABxx-yyyy)
+                // Mandatory params: 'file' (JSON file path relative to Abeille's root)
                 else if ($cmdName == 'zgRestorePdm') {
-                    // TODO
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, "AB02", "");
+                    $required = ['file'];
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $file = $Command['file'];
+                    $path = __DIR__."/../../".$file;
+                    if (!file_exists($path)) {
+                        cmdLog('error', "    Le fichier suivant n'existe pas: '".$file."'");
+                        return;
+                    }
+                    $contentTxt = file_get_contents($path);
+                    cmdLog('debug', "    contentTxt=".$contentTxt);
+                    $content = json_decode($contentTxt, true);
+                    if (!isset($content['signature']) || ($content['signature'] != 'Abeille PDM tables')) {
+                        cmdLog('error', "    Fichier invalide: '".$file."'");
+                        return;
+                    }
+
+                    foreach ($content['pdms'] as $pdmId => $pdm) {
+                        if ($pdm['status'] != '00')
+                            continue;
+                        $pl = $pdmId.$pdm['size'].$pdm['data'];
+                        $this->addCmdToQueue2(PRIO_NORM, $dest, "AB02", $pl);
+                    }
                     return;
                 }
 

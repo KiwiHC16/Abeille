@@ -28,6 +28,10 @@
         "Désactivée": "Disabled",
         "Libérer": "Free",
         "<adresse>:<port>": "<addr>:<port>",
+        "Lecture de la version du firmware": "Read firmware version",
+        "Programmation du FW selectionné": "Upload of seleted firmware",
+        "Firmwares disponibles": "Available firmwares",
+        "Autre": "Other",
 
         "Plus de zigates": "More zigates",
         "Moins de zigates": "Less zigates",

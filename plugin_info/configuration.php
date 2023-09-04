@@ -167,8 +167,8 @@
             echo '</div>';
             echo '<div class="col-lg-5">';
                     echo '<div id="idUpdFw'.$zgId.'">';
-                    echo '<a id="idUpdateFW'.$zgId.'" class="btn btn-danger" onclick="updateFW('.$zgId.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre à jour}}</a>';
-                    echo '<select id="idFW'.$zgId.'" style="width:100px; margin-left:4px" title="{{Firmwares disponibles}}">';
+                    echo '<a id="idUpdateFW'.$zgId.'" class="btn btn-danger" onclick="updateFW('.$zgId.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre-à-jour}}</a>';
+                    echo '<select id="idFW'.$zgId.'" style="width:120px; margin-left:4px" title="{{Firmwares disponibles}}">';
                     foreach (ls(__DIR__.'/../resources/fw_zigate', '*.bin') as $fwName) {
                         $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
                         if (substr($fwVers, -4) == ".dev") {
@@ -177,8 +177,8 @@
                                 continue; // Not in developer mode. Ignoring this FW
                             $fwVers = substr($fwVers, 0, -4); // Removing ".dev" suffix
                         }
-                        $fwVers = substr($fwVers, 8); // Removing "ZiGate_v" prefix
-                        if ($fwVers == "3.23-OPDM")
+                        $fwVers = substr($fwVers, 9); // Removing "zigatevX-" prefix
+                        if ($fwVers == "3.23-opdm")
                             echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
                         else
                             echo '<option value='.$fwName.'>'.$fwVers.'</option>';
@@ -1013,7 +1013,7 @@
             if ((curFw == '0004') || (curFw == '0005') || (curFw == 'AB01'))
                 curIsLegacy = false; // Already OPDM
         }
-        if (zgFW.indexOf("OPDM") != -1)
+        if (zgFW.indexOf("opdm") != -1)
             newIsOpdm = true;
         if (curIsLegacy) {
             if (newIsOpdm) {

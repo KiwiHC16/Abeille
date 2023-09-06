@@ -34,6 +34,9 @@ atlassian-ide-plugin.xml
 # Cursive Clojure plugin
 .idea/replstate.xml
 
+# VSCODE IDE settings
+.vscode/
+
 **/Thumbs.db
 **/COMchmod
 ._*

@@ -2764,6 +2764,22 @@ class Abeille extends eqLogic {
         $jsonLocation = (isset($dev['jsonLocation']) ? $dev['jsonLocation']: '');
         if ($jsonLocation == '')
             $jsonLocation = 'Abeille';
+
+        $eqLogicId = $dev['net'].'/'.$dev['addr'];
+        $eqLogic = eqLogic::byLogicalId($eqLogicId, 'Abeille');
+
+        // Special case: if the equipment already exists, and the user has forced the model, 
+        // we keep the current model and ignore the zigbee signature (case of re-announcement)
+        $isModelForcedByUser = false;
+        if(is_object($eqLogic)){
+            $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
+            if(isset($jEqModel['id']) && isset($jEqModel['location']) && isset($jEqModel['forcedByUser']) && $jEqModel['forcedByUser'] == true){
+                $jsonLocation = $jEqModel['location'];
+                $jsonId = $jEqModel['id'];
+                $isModelForcedByUser = true;
+            }
+        }
+
         if ($jsonId != '' && $jsonLocation != '') {
             $model = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
             if ($model === false) {
@@ -2774,8 +2790,7 @@ class Abeille extends eqLogic {
             $modelType = $model['type'];
         }
 
-        $eqLogicId = $dev['net'].'/'.$dev['addr'];
-        $eqLogic = eqLogic::byLogicalId($eqLogicId, 'Abeille');
+        
         if (!is_object($eqLogic)) {
             $newEq = true;
 
@@ -2809,6 +2824,7 @@ class Abeille extends eqLogic {
             $eqHName = $eqLogic->getHumanName(); // Jeedom hierarchical name
             log::add('Abeille', 'debug', '  Already existing device '.$eqLogicId.' => '.$eqHName);
 
+            // Kept for safety but should already be assigned in 'special case' block
             $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
             $curEqModel = isset($jEqModel['id']) ? $jEqModel['id'] : ''; // Current JSON model
             $ieee = $eqLogic->getConfiguration('IEEE'); // IEEE from Jeedom DB
@@ -3005,7 +3021,8 @@ class Abeille extends eqLogic {
             'id' => $jsonId, // Equipment model id
             'location' => $jsonLocation, // Equipment model location
             'type' => $model['type'],
-            'lastUpdate' => time() // Store last update from model
+            'lastUpdate' => time(), // Store last update from model
+            'forcedByUser' => $isModelForcedByUser
         );
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
 

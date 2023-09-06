@@ -167,6 +167,7 @@
         //     'id' =>
         //     'location' =>
         //     'type' =>
+        //     'forcedByUser' => true|false
         // )
         $model = $eqLogic->getConfiguration('ab::eqModel', []);
         logMessage('debug', '  ab::eqModel='.json_encode($model));
@@ -177,6 +178,7 @@
                 $model['id'] = $m['jsonId'];
                 $model['location'] = $m['location'];
                 $model['type'] = $m['type'];
+                $model['forcedByUser'] = false;
                 $eqLogic->setConfiguration('ab::eqModel', $model);
                 $eqLogic->save();
                 logMessage('debug', "  ab::eqModel updated to ".json_encode($model));
@@ -184,6 +186,7 @@
                 $model['id'] = 'defaultUnknown';
                 $model['location'] = 'Abeille';
                 $model['type'] = 'Unknown device';
+                $model['forcedByUser'] = false;
                 $eqLogic->setConfiguration('ab::eqModel', $model);
                 $eqLogic->save();
                 logMessage('debug', "  ab::eqModel updated to ".json_encode($model));

@@ -17,11 +17,9 @@
 */
 
 /**
- * Ce fichier gère le changement de modèle d'un équipement à l'initiative de l'utilisateur.
- * - Permet d'afficher des JSON existants
- * - Enregistre le choix de l'utilisateur
- * 
- * @author JB Romain 16/08/2023
+ * This file manages the change of equipment model at the user's initiative.
+ * - Display existing JSON models
+ * - Saves user choice
  */
 
 require_once __DIR__ . '/../config/Abeille.config.php'; // dbgFile constant + queues
@@ -32,7 +30,7 @@ if (file_exists(dbgFile)) {
     ini_set('log_errors', 'On');
 }
 
-// Vérification d'authentification
+// Authentication verification
 require_once __DIR__ . '/../../../../core/php/core.inc.php';
 include_file('core', 'authentification', 'php');
 if (!isConnect('admin')) {
@@ -42,7 +40,7 @@ if (!isConnect('admin')) {
 define('devicesDir', __DIR__ . '/../config/devices/'); // Abeille's supported devices
 define('devicesLocalDir', __DIR__ . '/../config/devices_local/'); // Unsupported/user devices
 
-// Exécution de l'action demandée
+// Perform the requested action
 $action = $_POST['action'];
 
 if (function_exists($action)) {
@@ -52,17 +50,17 @@ if (function_exists($action)) {
 }
 
 /**
- * Retourne en JSON la liste des modèles possibles (connus d'abeille).
- * Inclut les modèles d'origine et les modèles locaux s'il en existe.
+ * Returns in JSON the list of existing models (known by Abeille).
+ * Includes built-in models and local models (if any).
  */
 function getModelChoiceList()
 {
-    // On permet le choix des modèles locaux et des modèles officiels
-    // Tableau associatif modelID => model data
+    // We allow the choice of local models and official models
+    // Associative array modelID => model data
     $list = getDevicesList("local");
     $list = array_merge($list, getDevicesList("Abeille"));
 
-    // On récupère le modèle actuel de l'équipement (s'il en a un)
+    // Retrieve the current model of the equipment (if it has one)
     $eqId = (int) $_POST['eqId'];
     $eqLogic = eqLogic::byId($eqId);
     if (!is_object($eqLogic)) {
@@ -74,103 +72,107 @@ function getModelChoiceList()
         $currentModelID = $currentModel['id'];
     }
 
-    // Si on a un modèle actuel, on pourra pré-remplir l'IHM: on passe l'info
+    // If we have a current model, we can pre-fill the HMI: we pass the information
     if ($currentModelID != null && isset($list[$currentModelID])) {
         $list[$currentModelID]['isCurrent'] = true;
     }
 
-    // On envoie la liste
+    // Send the list to browser
     die(json_encode($list));
 }
 
 /**
- * Enregistre le choix de l'utilisateur: change le modèle de l'équipement, et 
- * le force en 'manuel' afin que le modèle ne soit plus modifié automatiquement
- * à partir de la signature zigbee à la prochaine annonce de l'équipement.
+ * Saves the user's choice: changes the equipment model, and
+ * forces it to 'manual' so that the model is no longer modified automatically
+ * from zigbee signature at equipment announcement.
  */
 function setModelToDevice()
 {
-    // Récupération de l'équipement
+    // Retrieving equipment
     $eqId = (int) $_POST['eqId'];
     $eqLogic = eqLogic::byId($eqId);
     if (!is_object($eqLogic)) {
         throw new Exception(__('EqLogic inconnu. Vérifiez l\'ID', __FILE__) . ' ' . $eqId);
     }
 
-    // Récupération du modèle choisi, sous la forme "blabla (Abeille/id.json)" ou "blabla (local/id.json)"
+    // Retrieving chose model, under the form "blabla (Abeille/id.json)" or "blabla (local/id.json)"
     $strSaisie = $_POST['modelChoice'];
 
-    // Extraction du chemin réel du modèle JSON à utiliser
+    // Extracting json pathname
     $tmpPos = strrpos($strSaisie, ' (');
     if ($tmpPos === false) {
         throw new Exception(__('Saisie incorrecte', __FILE__) . ' ' . $eqId);
     }
 
-    $tmpModelPath = mb_substr($strSaisie, $tmpPos + 2); // "Abeille/id.json)" 
-    $tmpModelPath = mb_substr($tmpModelPath, 0, mb_strlen($tmpModelPath) - 1); // "Abeille/id.json"
+    $tmpModelPath = mb_substr($strSaisie, $tmpPos + 2); // like "Abeille/id.json)" 
+    $tmpModelPath = mb_substr($tmpModelPath, 0, mb_strlen($tmpModelPath) - 1); // like "Abeille/id.json"
 
     $tmpNomModel = explode("/", $tmpModelPath);
     if (!is_array($tmpNomModel) || sizeof($tmpNomModel) != 2) {
         throw new Exception(__('Saisie incorrecte', __FILE__) . ' ' . $eqId);
     }
-    $source = $tmpNomModel[0]; // Abeille ou local
-    $json = pathinfo(basename($tmpNomModel[1]), PATHINFO_FILENAME); // retire le .json
+    $source = $tmpNomModel[0]; // Abeille or local
+    $json = pathinfo(basename($tmpNomModel[1]), PATHINFO_FILENAME); // drops .json
 
     $modelPath = '';
     if ($source == 'Abeille') {
         $modelPath = devicesDir . $json . '/' . $json . '.json';
     } else {
         $modelPath = devicesLocalDir . $json . '/' . $json . '.json';
-        $source = 'local'; // normalement c'est déjà le cas
+        $source = 'local'; // should already be ok
     }
 
-    // On vérifie que le fichier modèle existe (sécurité ultime) et on le charge
+    // We check that the model file exists (ultimate control) and we load it
     if (!is_readable($modelPath)) {
         throw new Exception(__('Saisie incorrecte - Fichier modèle introuvable', __FILE__) . ' ' . $eqId);
     }
     $jsonModelData = json_decode(file_get_contents($modelPath), true);
     if (!isset($jsonModelData[$json]['type'])) {
-        // Bizarre, mais il y a peut-être des vieux json mal remplis
+        // Weird, but there may be some old json incorrectly filled in
         $libelleType = '';
     } else {
         $libelleType = $jsonModelData[$json]['type'];
     }
 
-    // Enregistrement de la nouvelle configuration
+    // Save new config
     $eqModelInfos = array(
         'id' => $json, // ID du json
         'location' => $source, // Abeille ou local
         'type' => $libelleType,
-        'lastUpdate' => time() // Store last update from model
+        'lastUpdate' => time(), // Store last update from model
+        'forcedByUser' => true // Prevents the model from being overwritten if the equipment is re-announced
     );
     $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
-
-    // Le modèle a été choisi manuellement, il ne sera pas écrasé en cas de ré-annonce de l'équipement
-    $eqLogic->setConfiguration('ab::isManualModel', true);
 
     $eqLogic->save();
 
     message::add("Abeille", date('d/m/Y H:i:s') . " > Modèle enregistré. L'équipement va maintenant être reconfiguré...", '');
     die("true");
 
-    // (L'IHM enverra une deuxième requête ajax pour reconfigurer l'équipement à partir du nouveau modèle)
+    // (The HMI will send a second ajax request to reconfigure the equipment from the new model)
 }
 
 /**
- * Rétablit le fonctionnement normal de la sélection de modèle pour un équipement.
- * (= le modèle pourra à nouveau être détecté par Abeille à la prochaine annonce de l'équipement)
+ * Restores normal (automatic) model selection for equipment.
+ * (= the model can be detected again by Abeille at the next announcement of the equipment)
  */
 function disableManualModelForDevice()
 {
-    // Récupération de l'équipement
+    // Retrieving equipment
     $eqId = (int) $_POST['eqId'];
     $eqLogic = eqLogic::byId($eqId);
     if (!is_object($eqLogic)) {
         throw new Exception(__('EqLogic inconnu. Vérifiez l\'ID', __FILE__) . ' ' . $eqId);
     }
 
-    // On restaure le fonctionnement normal
-    $eqLogic->setConfiguration('ab::isManualModel', false);
+    // Restores automatic model selection (without actually triggering it for now)
+    $currentModel = $eqLogic->getConfiguration('ab::eqModel', null);
+    if ($currentModel == null || ! isset($currentModel['id'])) {
+        // Should never happen
+        throw new Exception(__('ab::eqModel non défini. Essayez de ré-inclure l\'équipement.', __FILE__) . ' ' . $eqId);
+    }
+    $currentModel['forcedByUser'] = false;
+    $eqLogic->setConfiguration('ab::eqModel', $currentModel);
     $eqLogic->save();
 
     message::add("Abeille", date('d/m/Y H:i:s') . " > Choix automatique du modèle réactivé pour cet équipement. Vous pouvez maintenant le Mettre à jour pour le re-configurer.", '');
@@ -181,8 +183,8 @@ function disableManualModelForDevice()
 
 
 
-/** Code repris de .tools\gen_devices_list.php  */
-
+/** Code from .tools\gen_devices_list.php  */
+// TODO refactor to avoid code duplication
 
 /* Get list of supported devices ($from="Abeille"), or user/custom ones ($from="local")
         Returns: Associative array; $devicesList[$identifier] = array(), or false if error */

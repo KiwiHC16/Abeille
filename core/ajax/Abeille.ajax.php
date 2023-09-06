@@ -572,7 +572,7 @@
                 $eq['modelName'] = isset($model['id']) ? $model['id'] : '';
                 $eq['modelSource'] = isset($model['location']) ? $model['location'] : 'Abeille';
                 $eq['modelType'] = isset($model['type']) ? $model['type'] : '';
-                $eq['modelForced'] = isset($model['forcedByUser']) ? $model['forcedByUser'] : '';
+                $eq['modelForced'] = isset($model['forcedByUser']) ? $model['forcedByUser'] : false;
 
                 $eq['zigbee'] = $eqLogic->getConfiguration('ab::zigbee', []);
 

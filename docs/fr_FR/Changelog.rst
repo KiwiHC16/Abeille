@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-230907-BETA-1
+230907-BETA-2
 -------------
 
 - Page maintenance: Amélioration affichage JSON.

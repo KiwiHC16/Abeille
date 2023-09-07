@@ -10,6 +10,7 @@ ChangeLog
 - Page Zigate/avancé: Correction 'Reset HW'.
 - Interne: Parser: Support restoration tables PDM (msg 'AB02' + 'AB03', FW 'AB01-0000').
 - Interne: Changement nommage firmwares (zigatevX-YY.ZZ-legacy/opdm.bin).
+- Tuya afficheur température & humidité: Support préliminaire (2619).
 
 230830-BETA-2
 -------------

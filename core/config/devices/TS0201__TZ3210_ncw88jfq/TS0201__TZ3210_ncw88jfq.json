@@ -1,0 +1,72 @@
+{
+    "TS0201__TZ3210_ncw88jfq": {
+        "manufacturer": "Tuya",
+        "model": "Display",
+        "type": "Tuya temperature and humdity display sensor",
+        "timeout": "60",
+        "category": {
+            "heating": "1"
+        },
+        "configuration": {
+            "icon": "Tuya-TempHumidityDisplay",
+            "mainEP": "01",
+            "batteryType": "?"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=01"
+            },
+            "SetReporting 01-0001-00021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Temperature": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Get Temperature": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0402&attrId=0000"
+            },
+            "SetReporting 01-0402-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0402&attrType=29&attrId=0000&minInterval=300&maxInterval=600",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 5 to 10mins"
+            },
+            "Bind 01-0402-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0402",
+                "execAtCreation": "yes"
+            },
+            "Humidity": {
+                "use": "inf_zbAttr-0405-MeasuredValue",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Get Humidity": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0405&attrId=0000"
+            },
+            "SetReporting 01-0405-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0405&attrType=21&attrId=0000&minInterval=300&maxInterval=600",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 5 to 10mins"
+            },
+            "Bind 01-0405-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0405",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

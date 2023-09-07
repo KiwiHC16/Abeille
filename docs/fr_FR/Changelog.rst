@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230907-BETA-1
+-------------
+
 - Page maintenance: Amélioration affichage JSON.
 - Page maintenance: Affichage JSON du répertoire local 'tmp'.
 - Interne: Parser: Support dump/backup tables PDM (msg 'AB00' + 'AB01', FW 'AB01-0000').

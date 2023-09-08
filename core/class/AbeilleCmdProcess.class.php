@@ -39,8 +39,7 @@
         // Generate ZCL header
         // hParams = array(
         //     'clustSpecific' => false,
-        //     'manufSpecific' => false,
-        //     'manufCode' => '',
+        //     'manufCode' => '', // Note: if != '' it enabled 'manufSpecific' flag
         //     'toCli' => false, // Default direction: client to server
         //     'disableDefaultRsp' => true,
         //     'zclSqn' => 'xx',
@@ -50,8 +49,6 @@
             // cmdLog('debug', '    genZclHeader(): hParams='.json_encode($hParams));
 
             $clustSpecific = isset($hParams['clustSpecific']) ? $hParams['clustSpecific'] : false;
-            // cmdLog('debug', '    genZclHeader(): clustSpecific='.json_encode($clustSpecific));
-            $manufSpecific = isset($hParams['manufSpecific']) ? $hParams['manufSpecific'] : false;
             $manufCode = isset($hParams['manufCode']) ? $hParams['manufCode'] : '';
             $toCli = isset($hParams['toCli']) ? $hParams['toCli'] : false;
             $disableDefaultRsp = isset($hParams['disableDefaultRsp']) ? $hParams['disableDefaultRsp'] : true;
@@ -63,11 +60,12 @@
                 $zhTxt = "General";
             else
                 $zhTxt = "Cluster-specific";
-            // cmdLog('debug', '    genZclHeader(): frameType='.json_encode($frameType));
-            $manufSpecific = $manufSpecific ? 1 : 0;
-            if ($manufSpecific && ($manufCode == '')) {
+            if ($manufCode == '') {
                 $manufSpecific = 0;
                 $manufCode = '';
+            } else {
+                $manufSpecific = 1;
+                $manufCode = AbeilleTools::reverseHex($manufCode);
             }
             $toCli = $toCli ? 1 : 0;
             if ($toCli)
@@ -81,7 +79,7 @@
             $fcf = sprintf("%02X", $fcf);
 
             $zclHeader = $fcf.$manufCode.$zclSqn.$cmdId;
-            cmdLog('debug','    zclHeader: '.$zhTxt.', SQN='.$zclSqn.', cmd='.$cmdId);
+            cmdLog('debug', '    zclHeader: '.$zhTxt.', SQN='.$zclSqn.', cmd='.$cmdId);
             return $zclHeader;
         }
 
@@ -3756,7 +3754,6 @@
                     // $sqn            = $this->genSqn();
                     // $cmdId          = "06";
                     $hParams = array(
-                        'manufSpecific' => isset($Command['manufCode']) ? true : false,
                         'manufCode' => isset($Command['manufCode']) ? $Command['manufCode'] : '',
                         'cmdId' => '06', // Configure reporting
                     );
@@ -5026,7 +5023,6 @@
                     if ($Command['cmd'] == 'internetStatus') {
                         $hParams = array(
                             'clustSpecific' => true,
-                            'manufSpecific' => true,
                             'manufCode' => $Command['manufCode'],
                             'cmdId' => '25' // Response to internet status request
                         );
@@ -5139,7 +5135,6 @@
 
                     $hParams = array(
                         'clustSpecific' => true,
-                        'manufSpecific' => isset($Command['manufCode']) ? true : false,
                         'manufCode' => isset($Command['manufCode']) ? $Command['manufCode'] : '',
                         'cmdId' => $Command['cmd']
                     );

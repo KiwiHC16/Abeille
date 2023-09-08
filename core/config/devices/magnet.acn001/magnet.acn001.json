@@ -36,7 +36,7 @@
                 "isVisible": 1
             },
             "Status": {
-                "use": "act_zbCmdC-XXXX-Custom",
+                "use": "inf_generic-Binary",
                 "logicalId": "0500-Status",
                 "isVisible": "1"
             },

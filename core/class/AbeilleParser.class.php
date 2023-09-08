@@ -4269,8 +4269,15 @@
                     } // End $clustId == "EF00"
 
                     else {
-                        parserLog("debug", "  WARNING: Ignored cluster specific command ".$clustId."-".$cmd, "8002");
-                        return;
+                        // Duplicated message ?
+                        if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
+                            return;
+
+                        parserLog("debug", "  WARNING: Unknown cluster specific command ".$clustId."-".$cmd, "8002");
+                        $attrReportN[] = array(
+                            'name' => 'inf_'.$srcEp.'-'.$clustId.'-cmd'.$cmd,
+                            'value' => $pl,
+                        );
                     }
                 } // End cluster specific commands
             }

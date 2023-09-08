@@ -1,6 +1,14 @@
 ChangeLog
 =========
 
+- Modèles commandes:
+
+  - Suppresssion 'act_zbCmdC-XXXX-Custom.json'
+  - Ajout 'act_zbCmdC-Generic.json'
+- Interne: Cmd: Correction 'cmd-Generic'/'manufCode'.
+- Interne: Parser: Generation d'une info 'inf_EP-CLUST-cmdXX' pour toute commande inconnue spécifique cluster.
+- Moes télécommande universelle IR: Mise-à-jour du modèle (2607).
+
 230907-BETA-2
 -------------
 

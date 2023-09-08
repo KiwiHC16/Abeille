@@ -56,11 +56,16 @@
         }
     }
 
-        // Configure device
+    // Configure device
     // Returns: true=ok, false=error
     // WORK ONGOING: Not used yet. Currently same function in AbeilleParser.class.php.
     function configureDevice($net, $addr) {
         cmdLog('debug', "  configureDevice(".$net.", ".$addr.")");
+
+        if (!isset($GLOBALS['devices'][$net][$addr])) {
+            cmdLog('debug', "  configureDevice() ERROR: Unknown device");
+            return false; // Unexpected request
+        }
 
         $eq = $GLOBALS['devices'][$net][$addr];
         if (!isset($eq['commands'])) {

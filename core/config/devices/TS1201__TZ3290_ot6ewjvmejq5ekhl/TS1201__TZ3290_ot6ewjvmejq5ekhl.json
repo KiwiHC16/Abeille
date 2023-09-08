@@ -16,25 +16,33 @@
             "batteryType": "2x1.5V AAA"
         },
         "commands": {
-            "Battery-Percent": {
-                "use": "inf_zbAttr-0001-BatteryPercent",
-                "params": "ep=01"
-            },
-            "Get VoltAndPercent": {
+            "Init 0": {
                 "use": "act_zbReadAttribute",
                 "params": "ep=01&clustId=0001&attrId=0020,0021",
                 "comment": "Might be required for init",
                 "logicalId": "readAttr-Volt-Percent",
                 "execAtCreation": "yes"
             },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=01"
+            },
             "Bind 01-0001-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=01&clustId=0001",
+                "execAtCreationDelay": "4",
                 "execAtCreation": "yes"
             },
             "SetReporting 01-0001-00021": {
                 "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+                "params": "ep=01&clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600",
+                "execAtCreationDelay": "5",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0001-00020": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrId=0020&attrType=20&minInterval=1800&maxInterval=3600",
+                "execAtCreationDelay": "6",
                 "execAtCreation": "yes"
             },
             "On": {
@@ -51,25 +59,31 @@
                 "use": "act_zbCmdC-0006-Toggle",
                 "params": "ep=01"
             },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
                 "isVisible": "1",
                 "nextLine": "after"
             },
-            "Get Status": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0006&attrId=0000"
+            "Start learning": {
+                "use": "act_zbCmdC-Generic",
+                "params": "ep=01&clustId=E004&cmd=00&data=7B227374756479223A307D",
+                "comment": "data is JSON of {'study': 0}",
+                "isVisible": "1"
             },
-            "Bind 01-0006-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0006",
-                "execAtCreation": "yes"
+            "Learnt code": {
+                "use": "inf_zbCmd-Generic",
+                "params": "ep=01&clustId=ed00&cmd=00",
+                "isVisible": "1"
             },
-            "SetReporting 01-0006": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0006&attrType=10&attrId=0000",
-                "execAtCreation": "yes"
+            "Code to send": {
+                "use": "act_zbCmdC-Generic",
+                "params": "ep=01&clustId=ed00&cmd=00&data=12",
+                "isVisible": "1"
             }
         }
     }

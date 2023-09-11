@@ -10,6 +10,7 @@ ChangeLog
 - Moes télécommande universelle IR: Mise-à-jour du modèle (2607).
 - Interne: Cmd: Mise-à-jour 'setTemperature'.
 - Interne: Parser: Correction mauvaise interprétation 'ColorTempMired' (2544).
+- Livarno Home floor lamp: Mise-à-jour du modèle (2544).
 
 230907-BETA-2
 -------------

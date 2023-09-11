@@ -85,6 +85,7 @@
                 "use": "inf_zbAttr-0300-ColorTemperatureMireds",
                 "minValue": "3000",
                 "maxValue": "6500",
+                "historizeRound": 0,
                 "isVisible": 1
             },
             "Get ColorTemperature": {

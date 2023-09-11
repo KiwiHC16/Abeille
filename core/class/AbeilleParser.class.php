@@ -1908,6 +1908,11 @@
                     } else if ($attrId == "0021") {
                         $newVal = $newVal / 2; // Battery percent
                     }
+                } else if ($clustId == "0300") {
+                    if ($attrId == "0007") {
+                        // Color temperature in kelvins = 1,000,000 / ColorTemperatureMireds
+                        $newVal = 1000000 / $newVal;
+                    }
                 } else if ($clustId == "0400") {
                     if ($attrId == "0000") {
                         $newVal = ($newVal == 0 ? 0 : pow(10, ($newVal - 1) / 10000)); // Illuminance
@@ -3304,7 +3309,7 @@
                                 break; // Stop decode there
 
                             // Attribute value post correction according to ZCL spec
-                            $correct = ['0001-0020', '0001-0021', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
+                            $correct = ['0001-0020', '0001-0021', '0300-0007', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
                             if (in_array($clustId.'-'.$attr['id'], $correct))
                                 $this->decode8002_ZCLCorrectAttrValue($srcEp, $clustId, $eq, $attr);
 
@@ -3501,7 +3506,7 @@
                                     break;
 
                                 // Attribute value post correction according to ZCL spec
-                                $correct = ['0001-0020', '0001-0021', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
+                                $correct = ['0001-0020', '0001-0021', '0300-0007', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
                                 if (in_array($clustId.'-'.$attr['id'], $correct))
                                     $this->decode8002_ZCLCorrectAttrValue($srcEp, $clustId, $eq, $attr);
 

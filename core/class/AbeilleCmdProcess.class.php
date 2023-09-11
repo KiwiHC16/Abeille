@@ -4631,7 +4631,7 @@
                     // Color temp K = 1,000,000 / ColorTempMireds,
                     // where ColorTempMireds is in the range 1 to 65279 mireds inclusive,
                     // giving a color temp range from 1,000,000 kelvins to 15.32 kelvins.
-                    $tempK = $Command['slider'];
+                    $tempK = intval($Command['slider']);
                     if ($tempK == 0)
                         $tempMireds = "0000";
                     else {
@@ -4639,11 +4639,11 @@
                             $tempK = 15.32;
                         else if ($tempK > 1000000)
                             $tempK = 1000000;
-                        $tempMireds  = sprintf("%04X", intval(1000000/$tempK));
+                        $tempMireds  = sprintf("%04X", 1000000 / $tempK);
                     }
                     $transition = "0001"; // Transition time
 
-                    cmdLog('debug', '    TempK='.$tempK.' => Using tempMireds='.$tempMireds.', transition='.$transition);
+                    cmdLog('debug', '    setTemperature: TempK='.$tempK.' => Using tempMireds='.$tempMireds.', transition='.$transition);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$tempMireds.$transition;
 
                     $this->addCmdToQueue2(priorityUserCmd, $dest, $zgCmd, $data, $addr, $addrMode);

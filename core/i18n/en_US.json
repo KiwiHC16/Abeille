@@ -168,6 +168,10 @@
         "Commandes": "Commands"
     },
     "plugins/Abeille/desktop/js/Abeille.js": {
+        "Mises-à-jour OTA": "OTA upgrades",
+
+        "Tcharp38: does the content of this part really works ?": "toto",
+
         "Santé Abeille": "Bee Health",
         "Support": "Support",
         "Réseau Abeille": "Bee Network",
@@ -198,5 +202,20 @@
         "Dernière comm.": "Last comm.",
         "Depuis": "Since",
         "Batterie": "Battery"
+    },
+    "plugins/Abeille/desktop/modal/Abeille-OTA.modal.php": {
+        "Mise-à-jour des équipements": "Equipments update",
+        "Firmwares disponibles": "Available firmwares",
+        "Ajouter": "Add",
+        "Ajouter un fichier OTA local": "Add a local OTA file",
+        "Fabricant": "Manuf.",
+        "Type image": "Image type",
+        "Version": "Version",
+        "Nom fichier": "File name",
+
+        "Equipements": "Equipments",
+        "Nom": "Name",
+        "Adr": "Addr",
+        "Notifier": "Notify"
     }
 }

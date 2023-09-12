@@ -9,13 +9,13 @@
     // echo '<script>var js_queueCtrlToCmd = "'.$abQueues['ctrlToCmd']['id'].'";</script>'; // PHP to JS
 ?>
 <div class="col-sm-8">
-    Mise-à-jour des équipements "Over-The-Air".
+    {{Mise-à-jour des équipements}} "Over-The-Air".
     <?php
     echo '<a class="btn btn-primary btn-xs" target="_blank" href="'.urlUserMan.'/OTA.html"><i class="fas fa-book"></i> {{Documentation}}</a>';
     ?>
     <br>
-    <h3>Firmwares disponibles</h3>
-    <button type="button" onclick="uploadOta()" class="btn btn-secondary" title="Ajouter un fichier OTA local"><i class="fas fa-plus"></i> Ajouter</button>
+    <h3>{{Firmwares disponibles}}</h3>
+    <button type="button" onclick="uploadOta()" class="btn btn-secondary" title="{{Ajouter un fichier OTA local}}"><i class="fas fa-plus"></i> {{Ajouter}}</button>
 
     <?php
         // Reading available OTA firmwares
@@ -23,7 +23,7 @@
         otaReadFirmwares();
         echo '<table id="idFwTable">';
         echo '<tbody>';
-        echo '<tr><th></th><th>Fabricant</th><th>Type image</th><th>Version</th><th>Nom fichier</th></tr>';
+        echo '<tr><th width="25px"></th><th width="80px">{{Fabricant}}</th><th width="90px">{{Type image}}</th><th width="80px">Version</th><th>{{Nom fichier}}</th></tr>';
         $rawIdx = 1;
         if (isset($GLOBALS['ota_fw'])) {
           foreach ($GLOBALS['ota_fw'] as $manufCode => $fw) {
@@ -48,10 +48,10 @@
 </div>
 
 <div class="col-sm-4">
-    <h3>Equipements</h3>
+    <h3>{{Equipements}}</h3>
     <table>
     <tbody>
-    <tr><th>Nom</th><th>Addr</th></tr>
+    <tr><th>{{Nom}}</th><th width="40px">Addr</th></tr>
     <?php
     $eqLogics = eqLogic::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
@@ -65,7 +65,7 @@
 
       echo '<tr>';
       echo '<td>'.$eqName.'</td><td>'.$eqAddr.'</td>';
-      echo '<td><button type="button" class="btn btn-secondary" onclick="notifyDevice(\''.$eqLogicId.'\', \''.$mainEP.'\')">Notifier</button></td>';
+      echo '<td><button type="button" class="btn btn-secondary" onclick="notifyDevice(\''.$eqLogicId.'\', \''.$mainEP.'\')">{{Notifier}}</button></td>';
       echo '</tr>';
     }
     ?>

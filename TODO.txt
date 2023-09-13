@@ -1,3 +1,6 @@
+Mise à jour FW Zigate
+    Le démon peut etre relancé pendant la programmation. Pas bon => conflit
+
 Mode debug
     Comment savoir quel est le mode effectif ? Il peut etre ok mais les démons pas redemarrés
 
@@ -54,7 +57,7 @@ Canal Zigbee: memoriser choix user pour reappliquer redemarrage => 'ab::zgChanX'
     Ajouter choix du canal sur page de config => ok pour visu only
     Par defaut = 11
 
-Page support/logs: Mise a  jour en temps reel sur selection courante
+Page support/logs: Mise a jour en temps reel sur selection courante
 
 Inclusion device: ajouter readAttribute sur toutes les cmdes infos
 

@@ -150,17 +150,17 @@
            - Added 'AbeilleTypeX' (X=1 to 10): 'USB', 'WIFI', or 'PI'
          */
         if (intval($dbVersion) < 20200510) {
-            for ($i = 1; $i <= 10; $i++) {
-                if (config::byKey('AbeilleActiver'.$i, 'Abeille', '') != "Y")
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                if (config::byKey('AbeilleActiver'.$zgId, 'Abeille', '') != "Y")
                     continue; // Disabled or undefined
 
-                $sp = config::byKey('AbeilleSerialPort'.$i, 'Abeille', '');
-                if ($sp == "/dev/zigate".$i)
-                    config::save('AbeilleType'.$i, 'WIFI', 'Abeille');
+                $sp = config::byKey('AbeilleSerialPort'.$zgId, 'Abeille', '');
+                if ($sp == "/dev/zigate".$zgId)
+                    config::save('AbeilleType'.$zgId, 'WIFI', 'Abeille');
                 else if ((substr($sp, 0, 9) == "/dev/ttyS") || (substr($sp, 0, 11) == "/dev/ttyAMA"))
-                    config::save('AbeilleType'.$i, 'PI', 'Abeille');
+                    config::save('AbeilleType'.$zgId, 'PI', 'Abeille');
                 else
-                    config::save('AbeilleType'.$i, 'USB', 'Abeille');
+                    config::save('AbeilleType'.$zgId, 'USB', 'Abeille');
             }
             config::save('ab::dbVersion', '20200510', 'Abeille');
             $dbVersion = '20200510';
@@ -171,13 +171,13 @@
          */
         if (intval($dbVersion) < 20201025) {
             /* Updating addresses in config */
-            for ($i = 1; $i <= 10; $i++) {
-                $ieee = config::byKey('AbeilleIEEE'.$i, 'Abeille', '');
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                $ieee = config::byKey('AbeilleIEEE'.$zgId, 'Abeille', '');
                 if ($ieee == "")
                     continue; // Undefined
                 $ieee_up = strtoupper($ieee);
                 if ($ieee_up !== $ieee)
-                    config::save('AbeilleIEEE'.$i, $ieee_up, 'Abeille');
+                    config::save('AbeilleIEEE'.$zgId, $ieee_up, 'Abeille');
             }
 
             /* Updating addresses for all equipments Jeedom knows */
@@ -391,9 +391,9 @@
 
             // Remove obsolete log files
             $obsolete = ['AbeilleCmd', 'AbeilleMQTTCmd', 'AbeilleMQTTCmdTimer', 'AbeilleSocat', 'AbeilleSerialRead', 'AbeilleParser', 'AbeilleDebug.log', 'AbeilleConfig'];
-            for ($z = 1; $z <= 10; $z++) {
-                $obsolete[] = 'AbeilleSocat'.$z;
-                $obsolete[] = 'AbeilleSerialRead'.$z;
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                $obsolete[] = 'AbeilleSocat'.$zgId;
+                $obsolete[] = 'AbeilleSerialRead'.$zgId;
             }
             removeLogs($obsolete);
 

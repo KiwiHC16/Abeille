@@ -13,6 +13,8 @@ ChangeLog
 - Livarno Home floor lamp: Mise-à-jour du modèle (2544).
 - Page updates OTA: Améliorations aspect & traductions US.
 - Interne: Cmd+Parser: Améliorations pour support 'restore PDM'.
+- Interne: Install: Correction constante nbre de Zigates.
+- Nbre de Zigates: 6 supportées au max au lieu de 10.
 
 230907-BETA-2
 -------------

@@ -38,7 +38,7 @@
     define('PRIO_NORM', priorityInterrogation); // Normal
     define('PRIO_HIGH', priorityMax); // High priority (ex: parser to cmd to react on wakeup)
 
-    define('maxNbOfZigate', 10); // Number of supported zigates
+    define('maxNbOfZigate', 6); // Number of supported zigates
     $GLOBALS['maxNbOfZigate'] = maxNbOfZigate;
 
     define('maxRetryDefault', 3);

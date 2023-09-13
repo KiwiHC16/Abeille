@@ -12,6 +12,7 @@ ChangeLog
 - Interne: Parser: Correction mauvaise interprétation 'ColorTempMired' (2544).
 - Livarno Home floor lamp: Mise-à-jour du modèle (2544).
 - Page updates OTA: Améliorations aspect & traductions US.
+- Interne: Cmd+Parser: Améliorations pour support 'restore PDM'.
 
 230907-BETA-2
 -------------

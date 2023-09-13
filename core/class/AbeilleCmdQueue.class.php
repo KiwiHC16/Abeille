@@ -293,10 +293,18 @@
                 'status'    => '', // '', 'SENT', '8000', '8012' or '8702', '8011'
                 'try'       => $this->maxRetry + 1, // Number of retries if failed
                 'sentTime'  => 0, // For lost cmds timeout
+                // Timeout: Zigate has 7s internal timeout when ACK
+                'timeout'   => $ackAps ? 8 : 4, // Cmd expiration time
                 'sqn'       => '', // Zigate SQN
                 'sqnAps'    => '', // Network SQN
                 'ackAps'    => $ackAps, // True if ACK, false else
+                'waitFor'   => $ackAps ? "ACK": "8000",
             );
+            // Abeille PDM restore cmd can be slow
+            if ($cmd == "AB02") {
+                $newCmd['timeout'] = 120; // TODO: Should be relative to data size
+                $newCmd['waitFor'] = "AB03";
+            }
             if ($begin) {
                 // cmdLog('debug', 'LA='.json_encode($this->zigates[$zgId]['cmdQueue'][$pri]));
                 array_unshift($this->zigates[$zgId]['cmdQueue'][$pri], $newCmd);
@@ -599,29 +607,6 @@
                 $zgId = substr($msg['net'], 7);
                 $this->zgId = $zgId;
 
-                // cmdLog("debug", "  LA=".json_encode($this->zigates));
-                //$zg = &$this->zigates[$zgId];
-                // cmdLog("debug", "processAcks(): type=".$msg['type'], $this->debug['processAcks']);
-
-                // Tcharp38 TODO: This msg should be not passed thru this queue.
-                if ($msg['type'] == "8010") {
-                    cmdLog("debug", "  8010 msg: FwVersion=".$msg['major']."-".$msg['minor']);
-                    if ($msg['major'] == '0005')
-                        $hw = 2; // Zigate v2
-                    else
-                        $hw = 1;
-                    // $this->setFwVersion($zgId, $hw, hexdec($msg['minor']));
-                    $this->zigates[$zgId]['hw'] = $hw;
-                    $this->zigates[$zgId]['fw'] = hexdec($msg['minor']);
-                    continue;
-                }
-
-                // TODO: To be revisited. Ex: 8000 then 801x ignored
-                // if (!count($zg['cmdQueue']) && !count($zg['cmdQueueHigh'])) {
-                //     cmdLog("debug", $msg['type']." msg but empty cmd queues => ignored");
-                //     continue;
-                // }
-
                 if (isset($msg['sqnAps']))
                     $sqnAps = $msg['sqnAps'];
                 else
@@ -639,6 +624,38 @@
                 } else
                     $aPDU = "?";
 
+                unset($removeCmd); // Unset in case set in previous msg
+                $sentPri = $this->zigates[$zgId]['sentPri'];
+
+                // cmdLog("debug", "  LA=".json_encode($this->zigates));
+                //$zg = &$this->zigates[$zgId];
+                // cmdLog("debug", "processAcks(): type=".$msg['type'], $this->debug['processAcks']);
+
+                // Tcharp38 TODO: This msg should be not passed thru this queue.
+                if ($msg['type'] == "8010") {
+                    cmdLog("debug", "  8010 msg: FwVersion=".$msg['major']."-".$msg['minor']);
+                    if ($msg['major'] == '0005')
+                        $hw = 2; // Zigate v2
+                    else
+                        $hw = 1;
+                    $this->zigates[$zgId]['hw'] = $hw;
+                    $this->zigates[$zgId]['fw'] = hexdec($msg['minor']);
+                    continue;
+                }
+
+                // PDM restore response
+                if ($msg['type'] == "AB03") {
+                    cmdLog("debug", "  AB03 msg: ID=".$msg['id'].", Status=".$msg['status']);
+
+                    $removeCmd = true;
+                }
+
+                // TODO: To be revisited. Ex: 8000 then 801x ignored
+                // if (!count($zg['cmdQueue']) && !count($zg['cmdQueueHigh'])) {
+                //     cmdLog("debug", $msg['type']." msg but empty cmd queues => ignored");
+                //     continue;
+                // }
+
                 /* ACK or no ACK ?
                    In all cases expecting 8000 as first last sent cmd ack.
                    If ackAps is true (addrMode 02 or 03), zigate is released after
@@ -648,9 +665,7 @@
                    If ackAps is false, zigate is released after 8000 msg
                  */
 
-                unset($removeCmd); // Unset in case set in previous msg
-                $sentPri = $this->zigates[$zgId]['sentPri'];
-                if ($msg['type'] == "8000") {
+                else if ($msg['type'] == "8000") {
 
                     // Checking sent cmd vs received ack misalignment
                     if ( !$this->checkCmdToSendInTheQueue($sentPri) ) {
@@ -662,7 +677,7 @@
 
                     // Checking sent cmd vs received ack misalignment
                     if ($msg['packetType'] != $cmd['cmd']) {
-                        cmdLog("debug", "  8000 => ignored as packets are different: packetType: ".$msg['packetType']." cmd: ".$cmd['cmd']);
+                        cmdLog("debug", "  8000 => ignored as packets are different: packetType=".$msg['packetType']." cmd=".$cmd['cmd']);
                         continue;
                     }
 
@@ -673,7 +688,12 @@
 
                     if ($msg['status'] == "00") {
 
-                        if ($cmd['ackAps']) continue; // On this command I m waiting for APS ACK.
+                        if ($cmd['waitFor'] == "ACK")
+                            continue; // On this command I m waiting for APS ACK.
+                        if ($cmd['waitFor'] != "8000")
+                            continue; // Need to wait for something else
+
+                        // if ($cmd['ackAps']) continue; // On this command I m waiting for APS ACK.
                         $removeCmd = true;
                         // Status is: success
                         // $this->zgChangeStatusSentQueueFirstMessage($this->zgGetSentPri(), '8000');
@@ -759,10 +779,8 @@
         } // End processAcks()
 
         // Check zigate status which may be blocked by unacked sent cmd
-        function zigateAckCheck() {
+        function checkZigatesStatus() {
             foreach ($this->zigates as $zgId => $zg) {
-
-                $this->zgId = $zgId;
 
                 if (!$zg['enabled'])
                     continue; // This zigate is disabled/unconfigured
@@ -774,18 +792,20 @@
                 if ($cmd['status'] == '')
                     continue; // Not sent yet
                 // Timeout: At least 4sec to let Zigate do its job but is that enough ?
-                if ($cmd['ackAps'])
-                    $timeout = 8; // Zigate has 7s internal timeout when ACK
-                else
-                    $timeout = 4;
+                // if ($cmd['ackAps'])
+                //     $timeout = 8; // Zigate has 7s internal timeout when ACK
+                // else
+                //     $timeout = 4;
+                $timeout = $cmd['timeout'];
                 if ($cmd['sentTime'] + $timeout > time())
                     continue; // Timeout not reached yet
 
-                cmdLog("debug", "zigateAckCheck(): WARNING: Zigate".$zgId." cmd ".$cmd['cmd']." TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
+                cmdLog("debug", "WARNING: checkZigatesStatus(): Zigate".$zgId." cmd ".$cmd['cmd']." ${timeout}s TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
+                $this->zgId = $zgId;
                 $this->removeFirstCmdFromQueue($sentPri); // Removing blocked cmd
                 $this->zigates[$zgId]['available'] = 1;
             }
-        }
+        } // End checkZigatesStatus()
 
         /* Collect & treat other messages from 'xToCmd' queue. */
         function processXToCmdQueue() {

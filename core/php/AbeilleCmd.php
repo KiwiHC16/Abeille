@@ -227,8 +227,8 @@
             // Treat pending commands for zigate
             $AbeilleCmdQueue->processCmdQueues();
 
-            // Check zigate ACK timeout
-            $AbeilleCmdQueue->zigateAckCheck();
+            // Check zigates status
+            $AbeilleCmdQueue->checkZigatesStatus();
 
             // Check 'xToCmd' queue
             $AbeilleCmdQueue->processXToCmdQueue();

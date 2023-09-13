@@ -5761,6 +5761,15 @@
             parserLog('debug', $net.', Type=AB03/PDM restore response'
                 .', Id='.$id
                 .', Status='.$status);
+
+            // Sending msg to cmd for flow control
+            $msg = array (
+                'type'      => "AB03",
+                'net'       => $net,
+                'id'        => $id,
+                'status'    => $status,
+            );
+            $this->msgToCmdAck($msg);
         }
 
         /* 9999/Extended error */

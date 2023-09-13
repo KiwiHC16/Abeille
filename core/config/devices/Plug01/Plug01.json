@@ -1,7 +1,10 @@
 {
     "Plug01": {
         "manufacturer": "Osram",
+        "model": "Plug",
         "timeout": "60",
+        "type": "Osram Smart+ plug",
+        "genericType": "Electricity",
         "configuration": {
             "mainEP": "03",
             "icon": "Osram-SmartP-Plug"
@@ -9,10 +12,9 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Osram Smart+ plug",
         "commands": {
-            "etat": {
-                "use": "inf_zbAttr-0006-OnOff",
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
                 "isVisible": 1
             },
             "On": {
@@ -23,12 +25,15 @@
                 "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle"
+            },
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "Bind-0006-ToZigate": {
@@ -48,10 +53,6 @@
             "Get-SWBuildID": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
             }
         }
     }

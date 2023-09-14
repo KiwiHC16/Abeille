@@ -21,7 +21,11 @@
 
         "Nom": "Name",
         "Nom de la zigate; N'est modifiable que via la page de gestion d'Abeille après sauvegarde.": "Zigate name: Can only be modified via equipment page.",
+        "Type de zigate": "Zigate type",
         "Port série": "Serial port",
+        "Port série si zigate USB, Pi ou DIN": "Serial port if USB/Pi/DIN Zigate",
+        "Tester": "Test",
+        "Test de lecture de la version du firmware": "FW version read test",
         "Adresse IP (IP:Port)": "IP address (IP:Port)",
         "Canal Zigbee": "Zigbee channel",
         "Activée": "Enabled",
@@ -32,6 +36,10 @@
         "Programmation du FW selectionné": "Upload of seleted firmware",
         "Firmwares disponibles": "Available firmwares",
         "Autre": "Other",
+        "Vous êtes sur le point de mettre à jour le firmware de la Zigate": "You are about to update Zigate firmware",
+        "Mise-à-jour du FW de la Zigate": "FW update",
+        "Lib GPIO": "GPIO lib",
+        "Attention !! La version Optimized PDM est FORTEMENT recommandée": "WARNING ! Optimized PDM version is strongly recommended",
 
         "Plus de zigates": "More zigates",
         "Moins de zigates": "Less zigates",

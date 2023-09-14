@@ -110,7 +110,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Port série}} : </label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelSP'.$zgId.'" class="configKey form-control" data-l1key="ab::zgPort'.$zgId.'" title="{{Port série si zigate USB, Pi ou DIN.}}" disabled>';
+                echo '<select id="idSelSP'.$zgId.'" class="configKey form-control" data-l1key="ab::zgPort'.$zgId.'" title="{{Port série si zigate USB, Pi ou DIN}}" disabled>';
                     echo '<option value="none" selected>{{Aucun}}</option>';
                     echo '<option value="'.wifiLink.$zgId.'" >{{WIFI'.$zgId.'}}</option>';
                     echo '<option value="/dev/monitZigate'.$zgId.'" >{{Monit'.$zgId.'}}</option>';
@@ -128,7 +128,7 @@
             echo '</div>';
             echo '<div class="col-lg-5">';
                 echo '<div id="idCommTest'.$zgId.'" >';
-                    echo '<a id="idCheckSP'.$zgId.'" class="btn btn-default" onclick="checkSerialPort('.$zgId.')" title="{{Test de communication et lecture de la version du firmware.}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
+                    echo '<a id="idCheckSP'.$zgId.'" class="btn btn-default" onclick="checkSerialPort('.$zgId.')" title="{{Test de lecture de la version du firmware}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
                     echo '<a class="serialPortStatus'.$zgId.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
                         echo '<span class="label label-success" style="font-size:1em">-?-</span>';
                     echo '</a>';
@@ -171,11 +171,11 @@
                     echo '<select id="idFW'.$zgId.'" style="width:120px; margin-left:4px" title="{{Firmwares disponibles}}">';
                     foreach (ls(__DIR__.'/../resources/fw_zigate', '*.bin') as $fwName) {
                         $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
-                        if (substr($fwVers, -4) == ".dev") {
+                        if (substr($fwVers, -4) == "-dev") {
                             /* FW for developer mode only */
                             if (!isset($dbgDeveloperMode) || ($dbgDeveloperMode == FALSE))
                                 continue; // Not in developer mode. Ignoring this FW
-                            $fwVers = substr($fwVers, 0, -4); // Removing ".dev" suffix
+                            $fwVers = substr($fwVers, 0, -4); // Removing "-dev" suffix
                         }
                         $fwVers = substr($fwVers, 9); // Removing "zigatevX-" prefix
                         if ($fwVers == "3.23-opdm")
@@ -1000,7 +1000,7 @@
         msg = '{{Vous êtes sur le point de mettre à jour le firmware de la Zigate}}';
         msg += '<br> - {{Type}}    : '+zgType;
         msg += '<br> - {{Port}}    : '+zgPort;
-        msg += '<br> - {{Gpio lib}}: '+zgGpioLib;
+        msg += '<br> - {{Lib GPIO}}: '+zgGpioLib;
         msg += '<br> - {{Firmware}}: '+zgFW+'<br><br>';
         let curIsLegacy = true;
         let newIsOpdm = false;
@@ -1021,7 +1021,7 @@
                 msg += '{{Etes vous sur de vouloir continuer ?}}';
                 erasePdm = true;
             } else
-                msg += '{{Attention !! La version Optimized PDM est FORTEMENT recommandée.}}<br><br>';
+                msg += '{{Attention !! La version Optimized PDM est FORTEMENT recommandée}}.<br><br>';
         } else {
             if (newIsOpdm == false) {
                 msg += "{{Passer d'une version 'OPDM' vers une version 'legacy' n'est pas recommandé. Opération interdite.}}<br><br>";

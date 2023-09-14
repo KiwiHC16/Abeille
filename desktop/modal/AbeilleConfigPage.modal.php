@@ -11,7 +11,6 @@
 <input class="form-control pull-right" id="bt_CPMLogSearch" style="width : 300px;" placeholder="{{Rechercher}}"/>
 <br/><br/><br/>
 <pre id='pre_CPM' style='overflow: auto; height: 90%;with:90%;'>
-Lancement des operations.
 </pre>
 
 <script>

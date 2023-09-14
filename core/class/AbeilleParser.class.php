@@ -1638,7 +1638,7 @@
                     if ($ieeeStatus == 0) {
                         msgToCmd(PRIO_HIGH, "CmdAbeille".$zgId."/0000/getNetworkStatus");
 
-                        $acceptedBeforeZigateIdentified = array("0208", "0300", "8009", "8010", "8024");
+                        $acceptedBeforeZigateIdentified = array("0208", "0300", "8001", "8009", "8010", "8024");
                         if (!in_array($type, $acceptedBeforeZigateIdentified)) {
                             parserLog('debug', $dest.', ab::zgIeeeAddrOk==0 => msg '.$type." ignored. Waiting 8009 or 8024.");
                             return 0;

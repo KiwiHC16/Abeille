@@ -15,6 +15,7 @@ ChangeLog
 - Interne: Cmd+Parser: Améliorations pour support 'restore PDM'.
 - Interne: Install: Correction constante nbre de Zigates.
 - Nbre de Zigates: 6 supportées au max au lieu de 10.
+- Traductions US: Qq corrections concernant la programmation du FW Zigate.
 
 230907-BETA-2
 -------------

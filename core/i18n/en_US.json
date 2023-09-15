@@ -37,6 +37,7 @@
         "Firmwares disponibles": "Available firmwares",
         "Autre": "Other",
         "Vous êtes sur le point de mettre à jour le firmware de la Zigate": "You are about to update Zigate firmware",
+        "Passer d'une version 'OPDM' vers 'legacy' n'est pas recommandé. Opération interdite.": "Switching from 'OPDM' to 'legacy' is obsolete. Operation canceled.",
         "Mise-à-jour du FW de la Zigate": "FW update",
         "Lib GPIO": "GPIO lib",
         "Attention !! La version Optimized PDM est FORTEMENT recommandée": "WARNING ! Optimized PDM version is strongly recommended",

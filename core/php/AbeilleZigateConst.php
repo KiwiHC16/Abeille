@@ -556,7 +556,7 @@
     }
 
     /* Returns zigate 8000 cmd status based on given '$status' value.
-       Tcharp38: Still unclear how to decode such statutes. */
+       Tcharp38: Still unclear how to decode such statuses. */
     function zgGet8000Status($status) {
         $status = strtoupper($status);
 
@@ -567,6 +567,7 @@
             "03" => "Command failed",
             "04" => "Busy", // Node is carrying out a lengthy operation and is currently unable to handle the incoming command
             "05" => "Stack already started", // No new configuration accepted
+            "14" => "No buffer or msg too big", // E_ZCL_ERR_ZBUFFER_FAIL
             "15" => "ZPS_EVENT_ERROR", // Indicates that an error has occurred on the local node. The nature of the error is reported through the structure ZPS_tsAfErrorEvent - see Section 7.2.2.17. JN-UG-3113 v1.5 -> En gros pas de place pour traiter le message
         );
 

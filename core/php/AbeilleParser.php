@@ -327,13 +327,20 @@
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
 
-        $GLOBALS['eqList'][$net][$addr]['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null);
-        parserLog('debug', "  'tuyaEF00' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['tuyaEF00']));
-        $GLOBALS['eqList'][$net][$addr]['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null);
-        parserLog('debug', "  'xiaomi' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['xiaomi']));
+        $GLOBALS['eqList'][$net][$addr]['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null); // OBSOLETE soon. Replaced by 'fromDevice'
+        parserLog('debug', "  'tuyaEF00' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['tuyaEF00'])); // OBSOLETE soon. Replaced by 'fromDevice'
+        $GLOBALS['eqList'][$net][$addr]['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null); // OBSOLETE soon. Replaced by 'fromDevice'
+        parserLog('debug', "  'xiaomi' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['xiaomi'])); // OBSOLETE soon. Replaced by 'fromDevice'
         $GLOBALS['eqList'][$net][$addr]['customization'] = $eqLogic->getConfiguration('ab::customization', null);
         parserLog('debug', "  'customization' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['customization']));
-        // TO BE COMPLETED if any other key info
+        $fromDevice = $eqLogic->getConfiguration('ab::fromDevice', null);
+        if ($fromDevice !== null) {
+            $GLOBALS['eqList'][$net][$addr]['fromDevice'] = $fromDevice;
+            parserLog('debug', "  'fromDevice' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['fromDevice']));
+        } else if (isset($GLOBALS['eqList'][$net][$addr]['fromDevice']))
+            unset($GLOBALS['eqList'][$net][$addr]['fromDevice']);
+
+        // TO BE COMPLETED with any other useful info for parser
     }
 
     // ***********************************************************************************************
@@ -350,7 +357,7 @@
     $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons: '.json_encode($daemons));
     if ($daemons["parser"] > 1) {
-        logMessage('error', "Le démon 'AbeilleParser' est déja lancé ! ");
+        logMessage('error', "Le démon 'AbeilleParser' est déja lancé !");
         exit(3);
     }
 
@@ -447,11 +454,14 @@
                 'location' => null, // null(undef)/false(unsupported)/'xx'
                 'jsonId' => $jsonId,
                 'jsonLocation' => '',
-                'tuyaEF00' => $eqLogic->getConfiguration('ab::tuyaEF00', null),
-                // Optional 'notStandard-0400-0000'
                 'customization' => $eqLogic->getConfiguration('ab::customization', null),
-                'xiaomi' => $eqLogic->getConfiguration('ab::xiaomi', null),
+                //'fromDevice' => // Set if exists
+                'tuyaEF00' => $eqLogic->getConfiguration('ab::tuyaEF00', null), // OBSOLETE soon
+                'xiaomi' => $eqLogic->getConfiguration('ab::xiaomi', null), // OBSOLETE soon
+                // Optional 'notStandard-0400-0000'
             );
+            if (isset($eqModel['fromDevice']))
+                $eq['fromDevice'] = $eqModel['fromDevice'];
 
             // Checking for '0400-0000' not standard attribute
             $cmds = Cmd::byEqLogicId($eqLogic->getId(), 'info');

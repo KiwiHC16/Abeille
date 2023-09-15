@@ -1013,7 +1013,7 @@
             if ((curFw == '0004') || (curFw == '0005') || (curFw == 'AB01'))
                 curIsLegacy = false; // Already OPDM
         }
-        if (zgFW.indexOf("opdm") != -1)
+        if ((zgFW.indexOf("opdm") != -1) && (zgFW.indexOf("AB01-") != -1))
             newIsOpdm = true;
         if (curIsLegacy) {
             if (newIsOpdm) {
@@ -1024,7 +1024,7 @@
                 msg += '{{Attention !! La version Optimized PDM est FORTEMENT recommandée}}.<br><br>';
         } else {
             if (newIsOpdm == false) {
-                msg += "{{Passer d'une version 'OPDM' vers une version 'legacy' n'est pas recommandé. Opération interdite.}}<br><br>";
+                msg += "{{Passer d'une version 'OPDM' vers 'legacy' n'est pas recommandé. Opération interdite.}}<br><br>";
                 bootbox.confirm(msg, function (result) {});
                 return;
             }

@@ -4278,11 +4278,54 @@
                         if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                             return;
 
-                        parserLog("debug", "  WARNING: Unknown cluster specific command ".$clustId."-".$cmd, "8002");
-                        $attrReportN[] = array(
-                            'name' => 'inf_'.$srcEp.'-'.$clustId.'-cmd'.$cmd,
-                            'value' => $pl,
-                        );
+                        // WORK ONGOING !!!
+                        /* Generic format for private clusters/commands reminder
+                        "fromDevice": {
+                            "ED00": {
+                                "type": "tuya-zosung"
+                            },
+                            "0000-FF01": { // CLUSTID-ATTRID
+                                "type": "xiaomi",
+                                "01-21": {
+                                    "func": "numberDiv",
+                                    "div": 1000,
+                                    "info": "0001-01-0020"
+                                }
+                            },
+                            "EF00": {
+                                "type": "tuya",
+                                "05": { // DP
+                                    "function": "rcvValue",
+                                    "info": "01-measuredValue"
+                                },
+                            }
+                        } */
+                        if (isset($eq['fromDevice'])) {
+                            foreach ($eq['fromDevice'] as $fd1 => $fd2) {
+                                $lenFd1 = strlen($fd1);
+                                if (($lenFd1 == 4) && ($clustId != $fd1)) // 'CCCC' (clustId) case
+                                    continue;
+                                // if (($lenFd1 == 9) && ($clustId.'-'.$attrId != $fd1)) // 'CCCC-AAAA' (clustId-attrId) case
+                                //     continue;
+
+                                $supportType = $fd2['type']; // "tuya", "tuya-zosung", "xiaomi"
+                                break;
+                            }
+                        }
+                        if (isset($supportType)) {
+                            if ($supportType == 'tuya')
+                                $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $pl, $toMon);
+                            else if ($supportType == 'tuya-zosung')
+                                $attrReportN = tuyaDecodeZosungCmd($dest, $srcAddr, $srcEp, $cmd, $pl, $toMon);
+                            else
+                                parserLog("error", "  Cluster specific command ".$clustId."-".$cmd.": unsupported type ".$supportType);
+                        } else {
+                            parserLog("debug", "  Unknown cluster specific command ".$clustId."-".$cmd, "8002");
+                            $attrReportN[] = array(
+                                'name' => 'inf_'.$srcEp.'-'.$clustId.'-cmd'.$cmd,
+                                'value' => $pl,
+                            );
+                        }
                     }
                 } // End cluster specific commands
             }

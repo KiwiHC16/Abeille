@@ -686,7 +686,8 @@
                     $this->zigates[$zgId]['cmdQueue'][$sentPri][0]['sqn'] = $msg['sqn']; // Internal SQN
                     $this->zigates[$zgId]['cmdQueue'][$sentPri][0]['sqnAps'] = $sqnAps; // Network SQN
 
-                    if ($msg['status'] == "00") {
+                    $msgStatus = $msg['status'];
+                    if ($msgStatus == "00") {
 
                         if ($cmd['waitFor'] == "ACK")
                             continue; // On this command I m waiting for APS ACK.
@@ -706,10 +707,12 @@
                         //     $removeCmd = true;
                         // }
                     }
-                    else if (in_array($msg['status'], ['01', '02', '03', '05', '06'])) {
+                    else if (in_array($msgStatus, ['01', '02', '03', '05', '06', '14'])) {
                         // Status is: bad param, unhandled, failed (?), stack already started
                         // Status 06 = Unknown EP ? (Zigate v2)
+                        // 14/E_ZCL_ERR_ZBUFFER_FAIL: Msg too big
                         // $cmd['status'] = '8000';
+                        cmdLog("debug", "  WARNING: Zigate cmd failed (status=${msgStatus})");
                         $removeCmd = true;
                     }
                     else {

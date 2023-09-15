@@ -7,7 +7,7 @@ ChangeLog
   - Ajout 'act_zbCmdC-Generic.json'
 - Interne: Cmd: Correction 'cmd-Generic'/'manufCode'.
 - Interne: Parser: Generation d'une info 'inf_EP-CLUST-cmdXX' pour toute commande inconnue spécifique cluster.
-- Moes télécommande universelle IR: Mise-à-jour du modèle (2607).
+- Moes télécommande universelle IR: Mise-à-jour du modèle & code (2607).
 - Interne: Cmd: Mise-à-jour 'setTemperature'.
 - Interne: Parser: Correction mauvaise interprétation 'ColorTempMired' (2544).
 - Livarno Home floor lamp: Mise-à-jour du modèle (2544).
@@ -16,6 +16,8 @@ ChangeLog
 - Interne: Install: Correction constante nbre de Zigates.
 - Nbre de Zigates: 6 supportées au max au lieu de 10.
 - Traductions US: Qq corrections concernant la programmation du FW Zigate.
+- Interne: Modeles & Parser: Support nouveau format cluster privés.
+- Interne: Amélioration support err 14 Zigate.
 
 230907-BETA-2
 -------------

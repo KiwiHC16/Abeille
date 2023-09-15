@@ -75,7 +75,7 @@
                 "comment": "data is JSON of {'study': 0}",
                 "isVisible": "1"
             },
-            "Learnt code": {
+            "Learned IR code": {
                 "use": "inf_zbCmd-Generic",
                 "params": "ep=01&clustId=ed00&cmd=00",
                 "isVisible": "1"
@@ -84,6 +84,11 @@
                 "use": "act_zbCmdC-Generic",
                 "params": "ep=01&clustId=ed00&cmd=00&data=12",
                 "isVisible": "1"
+            }
+        },
+        "fromDevice": {
+            "ED00": {
+                "type": "tuya-zosung"
             }
         }
     }

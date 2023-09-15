@@ -2768,7 +2768,7 @@ class Abeille extends eqLogic {
         $eqLogicId = $dev['net'].'/'.$dev['addr'];
         $eqLogic = eqLogic::byLogicalId($eqLogicId, 'Abeille');
 
-        // Special case: if the equipment already exists, and the user has forced the model, 
+        // Special case: if the equipment already exists, and the user has forced the model,
         // we keep the current model and ignore the zigbee signature (case of re-announcement)
         $isModelForcedByUser = false;
         if(is_object($eqLogic)){
@@ -2790,7 +2790,7 @@ class Abeille extends eqLogic {
             $modelType = $model['type'];
         }
 
-        
+
         if (!is_object($eqLogic)) {
             $newEq = true;
 
@@ -2983,13 +2983,13 @@ class Abeille extends eqLogic {
         else
             $eqLogic->setConfiguration('poll', null);
 
-        // Tuya specific infos
+        // Tuya specific infos: OBSOLETE soon. Replaced by 'fromDevice'
         if (isset($model['tuyaEF00']))
             $eqLogic->setConfiguration('ab::tuyaEF00', $model['tuyaEF00']);
         else
             $eqLogic->setConfiguration('ab::tuyaEF00', null);
 
-        // Xiaomi specific infos
+        // Xiaomi specific infos: OBSOLETE soon. Replaced by 'fromDevice'
         if (isset($model['xiaomi']))
             $eqLogic->setConfiguration('ab::xiaomi', $model['xiaomi']);
         else
@@ -3024,6 +3024,8 @@ class Abeille extends eqLogic {
             'lastUpdate' => time(), // Store last update from model
             'forcedByUser' => $isModelForcedByUser
         );
+        if (isset($model['fromDevice'])) // Private cluster or command specific infos
+            $eqModelInfos['fromDevice'] = $model['fromDevice'];
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
 
         // generic_type

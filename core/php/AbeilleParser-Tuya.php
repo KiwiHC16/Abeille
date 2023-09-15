@@ -328,4 +328,58 @@
 
         return $attributesN;
     }
+
+    // Use cases: ED00 cluster decode (Moes universal remote)
+    function tuyaDecodeZosungCmd($net, $addr, $ep, $cmdId, $pl, &$toMon) {
+        $attrReportN = [];
+        if ($cmdId == "00") {
+            // {name: 'seq', type: DataType.uint16},
+            // {name: 'length', type: DataType.uint32},
+            // {name: 'unk1', type: DataType.uint32},
+            // {name: 'unk2', type: DataType.uint16},
+            // {name: 'unk3', type: DataType.uint8},
+            // {name: 'cmd', type: DataType.uint8},
+            // {name: 'unk4', type: DataType.uint16},
+            $seq = AbeilleTools::reverseHex(substr($pl, 0, 4));
+            $len = AbeilleTools::reverseHex(substr($pl, 4, 8));
+            $unk1 = AbeilleTools::reverseHex(substr($pl, 12, 8));
+            $unk2 = AbeilleTools::reverseHex(substr($pl, 20, 4));
+            $unk3 = substr($pl, 24, 2);
+            $cmd = substr($pl, 26, 2);
+            $unk4 = AbeilleTools::reverseHex(substr($pl, 28, 4));
+            parserLog("debug", "  Tuya-Zosung cmd ${cmdId}: Seq=${seq}, Len=${len}, Cmd=${cmd}");
+
+            $t = array(
+                'zero' => 0,
+                'seq' => hexdec($seq),
+                'length' => hexdec($len),
+                'unk1' => hexdec($unk1),
+                'unk2' => hexdec($unk2),
+                'unk3' => hexdec($unk3),
+                'cmd' => hexdec($cmd),
+                'unk4' => hexdec($unk4)
+            );
+            $data = json_encode($t, JSON_UNESCAPED_SLASHES);
+            $data = bin2hex($data);
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=01&data=${data}");
+            //meta.logger.debug(`"IR-Message-Code00" response sent.`);
+            //Note: This last msg could generate err 14/E_ZCL_ERR_ZBUFFER_FAIL if too big. Size reduced by using hexdec().
+
+            $t = array(
+                'seq' => hexdec($seq),
+                'position' => 0,
+                'maxlen' => 0x38
+            );
+            $data = json_encode($t, JSON_UNESCAPED_SLASHES);
+            $data = bin2hex($data);
+            $time = time() + 2; // 2sec later
+            msgToCmd(PRIO_NORM, "TempoCmd".$net."/".$addr."/cmd-Generic&time=${time}", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
+            // meta.logger.debug(`"IR-Message-Code00" transfer started.`);
+        } else {
+            parserLog("debug", "  Unsupported Tuya-Zosung cmd ".$cmdId." => ignored");
+        }
+
+        return $attrReportN;
+    }
+
 ?>

@@ -3,12 +3,13 @@
         "manufacturer": "Philips",
         "model": "LTE002",
         "type": "Philips Hue Candle E14 White Ambiance",
+        "genericType": "Light",
         "timeout": "60",
         "category": {
             "light": "1"
         },
         "configuration": {
-            "icon": "PhilipsHue-E27Bulb-Candle",
+            "icon": "PhilipsHue-E14Bulb-CandleWA",
             "mainEP": "0B"
         },
         "commands": {
@@ -23,27 +24,27 @@
                 "use": "act_zbCmdC-Identify",
                 "isVisible": "1"
             },
-            "On 1": {
+            "On": {
                 "use": "act_zbCmdC-0006-On",
                 "params": "ep=0B",
                 "isVisible": "1"
             },
-            "Off 1": {
+            "Off": {
                 "use": "act_zbCmdC-0006-Off",
                 "params": "ep=0B",
                 "isVisible": "1"
             },
-            "Toggle 1": {
+            "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",
                 "params": "ep=0B"
             },
-            "Status 1": {
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=0B",
                 "isVisible": "1",
                 "nextLine": "after"
             },
-            "Get Status 1": {
+            "Get Status": {
                 "use": "act_zbReadAttribute",
                 "params": "ep=0B&clustId=0006&attrId=0000"
             },
@@ -81,52 +82,6 @@
                 "use": "act_zbConfigureReporting2",
                 "params": "ep=0B&clustId=0008&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
-            },
-            "Color Mode": {
-                "use": "inf_zbAttr-0300-ColorMode"
-            },
-            "Get Color Mode": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0300&attrId=0008"
-            },
-            "Current X": {
-                "use": "inf_zbAttr-0300-CurrentX"
-            },
-            "Get Current X": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0300&attrId=0003"
-            },
-            "Current Y": {
-                "use": "inf_zbAttr-0300-CurrentY"
-            },
-            "Get Current Y": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0300&attrId=0004"
-            },
-            "White": {
-                "use": "act_zbCmdC-0300-MoveToColor",
-                "params": "X=6000&Y=6000",
-                "isVisible": "1"
-            },
-            "Blue": {
-                "use": "act_zbCmdC-0300-MoveToColor",
-                "params": "X=228F&Y=228F",
-                "isVisible": "1"
-            },
-            "Red": {
-                "use": "act_zbCmdC-0300-MoveToColor",
-                "params": "X=AE13&Y=51EB",
-                "isVisible": "1"
-            },
-            "Green": {
-                "use": "act_zbCmdC-0300-MoveToColor",
-                "params": "X=147A&Y=D709",
-                "isVisible": "1"
-            },
-            "RGB": {
-                "use": "setRGB",
-                "isVisible": "1",
-                "nextLine": "after"
             },
             "Set Color Temp": {
                 "use": "act_zbCmdC-0300-MoveToColorTemp",

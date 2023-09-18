@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="230915-BETA-1"
+# VERSION="230918-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -746,6 +746,8 @@ a0c993e3ea6fd543c1234ae3e787dfcc *core/config/devices/LOM002/LOM002.json
 c923fc62137445b6220b29e0697dc0b7 *core/config/devices/LST001/LST001.json
 0bba12f036730aefb54a8a473af880a9 *core/config/devices/LST002/LST002.json
 a1c2148816aa6b1d5199ad92693b94f1 *core/config/devices/LTA001/LTA001.json
+e4f9ad77e3ac20162cbc71480a329200 *core/config/devices/LTE002_Philips/LTE002_Philips.json
+b9ac69a2c53ab0369648a7195225daa8 *core/config/devices/LTE002_Philips/discovery-LTE002_Philips.json
 7333b1e404c567bc654b031b0f87944f *core/config/devices/LTW001/LTW001.json
 33d40af3f8e217973356b4799816d466 *core/config/devices/LTW010/LTW010.json
 08da15dd8d5b39404c814bb9ee9ab762 *core/config/devices/LTW012/LTW012.json
@@ -1275,7 +1277,7 @@ abac024dd8f0f8db610a3e91df62c055 *desktop/php/AbeilleMaintenance-Logs.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-7fda5d30b0b7bd1b868b303cb8281126 *docs/fr_FR/Changelog.rst
+934ff950771f5e7f6948fc1bc21aa0f3 *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1433,6 +1435,7 @@ c6d0633524dde492fc571404ff9b76d5 *images/node_PSE03-v1.1.0.png
 ae536215e67247fc3aebd2273f3ab115 *images/node_PaulmannLicht-DimmingController.png
 f186dd81fa0dc3eae3841b90259799c7 *images/node_Philips-MotionSensor-1.png
 b3147ce74c5cd569b5fbfcef1e094d98 *images/node_Philips-MotionSensor-2.png
+6c77dc05c5cb6bc0567c640e88da4430 *images/node_PhilipsHue-E14Bulb-CandleWA.png
 3ac21a2ca92e302e65f44d4405ba1212 *images/node_PhilipsHue-E27Bulb-White.png
 2484a7dd57df886d566c3a632b491bd0 *images/node_PhilipsHue-E27Bulb-WhiteAmbiance.png
 fd6aafce12b02f5711b15a28ebcbc23a *images/node_PhilipsSignify-Plug.png
@@ -1603,10 +1606,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-5912f9bf1dabf760efeb50fa37d81a95 *plugin_info/Abeille.version
+4c449ff55c2c70668f7ba945d2b5f16f *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 f12550a9afe0a3ce101b386e1a4c1fcf *plugin_info/configuration.php
-82fe7a2f04b15c76fd4720c60997b47b *plugin_info/info.json
+f4da8e016df7d0a7e876c1fb88fa1dd2 *plugin_info/info.json
 4b68fe04f4313e081129d4099f62400b *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

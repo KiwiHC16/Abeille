@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+230918-BETA-1
+-------------
+
 - Philips Hue Candle WA: Support preliminaire (2622).
 
 230915-BETA-1

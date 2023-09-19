@@ -3114,6 +3114,7 @@
 
             // Remontée etat relai module Legrand 20AX
             // 80020019F4000104 FC41 010102D2B9020000180B0A000030000100100084
+            // Tcharp38: TODO: Move to ZCL global or cluster specific part
             else if ($clustId == "FC41") {
 
                 $frameCtrlField         = substr($payload,26, 2);
@@ -3280,11 +3281,11 @@
 
                         // Some clusters are directly handled by 8100/8102 decode
                         // $refused = ['0000', 'FC00'];
-                        $refused = ['FC00'];
-                        if (in_array($clustId, $refused)) {
-                            parserLog('debug', "  Handled by decode8100_8102");
-                            return;
-                        }
+                        // $refused = ['FC00'];
+                        // if (in_array($clustId, $refused)) {
+                        //     parserLog('debug', "  Handled by decode8100_8102");
+                        //     return;
+                        // }
 
                         /* Command frame format:
                             ZCL header
@@ -3297,116 +3298,142 @@
                             Attr data type = 1B
                             Attr = <according to data type> */
 
-                        $attributes = [];
-                        $readAttributesResponseN = []; // Attributes by Jeedom logical name
-                        $devUpdates = []; // Any device information update (devUpdates[updId] = updValue)
-                        $l = strlen($pl);
-                        // $eq = getDevice($dest, $srcAddr); // Corresponding device
-                        $size = 0;
-                        for ($i = 0; $i < $l; $i += $size) {
-                            $attr = $this->decode8002_ReadAttrStatusRecord(substr($pl, $i), $size);
-                            if ($attr === false)
-                                break; // Stop decode there
-
-                            // Attribute value post correction according to ZCL spec
-                            $correct = ['0001-0020', '0001-0021', '0300-0007', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
-                            if (in_array($clustId.'-'.$attr['id'], $correct))
-                                $this->decode8002_ZCLCorrectAttrValue($srcEp, $clustId, $eq, $attr);
-
-                            // If cluster 0000, attributes manufId/modelId or location.. need to clean string
-                            if ($clustId == "0000") {
-                                if (($attr['id'] == "0005") || ($attr['id'] == "0010")) {
-                                    $attr['value'] = $this->cleanModelId($attr['valueHex']);
-                                    $attr['comment'] = "cleaned model";
-                                } else if ($attr['id'] == "0004") {
-                                    $attr['value'] = $this->cleanManufId($attr['value']);
-                                    $attr['comment'] = "cleaned manuf";
-                                }
-                            }
-
-                            $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
-                            if ($attr['status'] == '00') {
-                                $m = '  AttrId='.$attr['id'].'/'.$attrName
-                                    .', Status='.$attr['status']
-                                    .', AttrType='.$attr['dataType']
-                                    .', ValueHex='.$attr['valueHex'].' => ';
-                                if (isset($attr['comment']))
-                                    $m .= $attr['comment'].', '.$attr['value'];
-                                else
-                                    $m .= $attr['value'];
-                            } else
-                                $m = '  AttrId='.$attr['id'].'/'.$attrName
-                                    .', Status='.$attr['status']
-                                    .' => '.zbGetZCLStatus($attr['status']);
-                            parserLog('debug', $m, "8002");
-                            $toMon[] = $m;
-
-                            $attrId = $attr['id'];
-                            unset($attr['id']); // Remove 'id' from object for optimization
-                            $attributes[$attrId] = $attr;
-
-                            $readAttributesResponseN[] = array(
-                                'name' => $clustId.'-'.$srcEp.'-'.$attrId,
-                                'value' => $attr['value'],
+                        // Philips Hue specific cluster
+                        // Used by RWL021, RDM001
+                        // Tcharp38: Where is the source of this decoding ?
+                        if ($clustId == "FC00") {
+                            $buttonEventTxt = array (
+                                '00' => 'Short press',
+                                '01' => 'Long press',
+                                '02' => 'Release short press',
+                                '03' => 'Release long press',
                             );
+                            $attrId = substr($pl, 2, 2).substr($pl, 0, 2);
+                            $button = $attrId;
+                            // $buttonEvent = substr($payload, 24 + 2, 2);
+                            $buttonEvent = substr($pl, 0 + 2, 2);
+                            // $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
+                            $buttonDuree = hexdec(substr($pl, 0 + 6, 2));
+                            parserLog("debug", "  Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
 
-                            if (in_array($clustId.'-'.$attrId, ['0000-0004', '0000-0005', '0000-0010']))
-                                $devUpdates[$clustId.'-'.$attrId] = $attr['value'];
-                        }
+                            $attrReportN = [
+                                array( "name" => $clustId."-".$ep."-".$attrId."-Event", "value" => $buttonEvent ),
+                                array( "name" => $clustId."-".$ep."-".$attrId."-Duree", "value" => $buttonDuree ),
+                            ];
+                        } // End cluster FC00
 
-                        if (count($devUpdates) != 0) {
-                            $this->deviceUpdates($dest, $srcAddr, $srcEp, $devUpdates);
-                        }
+                        else {
+                            $attributes = [];
+                            $readAttributesResponseN = []; // Attributes by Jeedom logical name
+                            $devUpdates = []; // Any device information update (devUpdates[updId] = updValue)
+                            $l = strlen($pl);
+                            // $eq = getDevice($dest, $srcAddr); // Corresponding device
+                            $size = 0;
+                            for ($i = 0; $i < $l; $i += $size) {
+                                $attr = $this->decode8002_ReadAttrStatusRecord(substr($pl, $i), $size);
+                                if ($attr === false)
+                                    break; // Stop decode there
 
-                        if (count($attributes) != 0) {
-                            // If discovering step, recording infos
-                            $discovering = $this->discoveringState($dest, $srcAddr);
-                            if ($discovering) {
-                                $isServer = (hexdec($fcf) >> 3) & 1;
-                                $this->discoverUpdate($dest, $srcAddr, $srcEp, 'ReadAttributesResponse', $clustId, $isServer, $attributes);
-                            }
+                                // Attribute value post correction according to ZCL spec
+                                $correct = ['0001-0020', '0001-0021', '0300-0007', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
+                                if (in_array($clustId.'-'.$attr['id'], $correct))
+                                    $this->decode8002_ZCLCorrectAttrValue($srcEp, $clustId, $eq, $attr);
 
-                            /* Send to client page if required (ex: EQ page opened) */
-                            $toCli = array(
-                                // 'src' => 'parser',
-                                'type' => 'readAttributesResponse',
-                                'net' => $dest,
-                                'addr' => $srcAddr,
-                                'ep' => $srcEp,
-                                'clustId' => $clustId,
-                                'attributes' => $attributes,
-                                'time' => time(),
-                                'lqi' => $lqi
-                            );
-                        }
-
-                        /* Tcharp38: Cluster 0005 specific case.
-                           TO BE REVISITED to remove DB accesses from parser. */
-                        if ($clustId == "0005") {
-                            $eqLogic = Abeille::byLogicalId($dest."/".$srcAddr, 'Abeille');
-                            if (is_object($eqLogic)) {
-                                $sceneStored = json_decode($eqLogic->getConfiguration('sceneJson', '{}'), true);
-                                foreach ($attributes as $attrId => $attr) {
-                                    if ($attrId == "0000") {
-                                        $sceneCount = $attr['value'];
-                                        $sceneStored["sceneCount"] = $sceneCount - 1; // On ZigLight need to remove one
-                                    } else if ($attrId == "0001") {
-                                        $sceneCurrent = $attr['value'];
-                                        $sceneStored["sceneCurrent"] = $sceneCurrent;
-                                    } else if ($attrId == "0002") {
-                                        $groupCurrent = $attr['value'];
-                                        $sceneStored["groupCurrent"] = $groupCurrent;
-                                    } else if ($attrId == "0003") {
-                                        $sceneActive = $attr['value'];
-                                        $sceneStored["sceneActive"] = $sceneActive;
+                                // If cluster 0000, attributes manufId/modelId or location.. need to clean string
+                                if ($clustId == "0000") {
+                                    if (($attr['id'] == "0005") || ($attr['id'] == "0010")) {
+                                        $attr['value'] = $this->cleanModelId($attr['valueHex']);
+                                        $attr['comment'] = "cleaned model";
+                                    } else if ($attr['id'] == "0004") {
+                                        $attr['value'] = $this->cleanManufId($attr['value']);
+                                        $attr['comment'] = "cleaned manuf";
                                     }
                                 }
-                                $eqLogic->setConfiguration('sceneJson', json_encode($sceneStored));
-                                $eqLogic->save();
-                                // Tcharp38: To be removed. Saving to DB slows down execution time a lot
-                                parserLog("debug", '  TODO: '.json_encode($sceneStored));
+
+                                $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
+                                if ($attr['status'] == '00') {
+                                    $m = '  AttrId='.$attr['id'].'/'.$attrName
+                                        .', Status='.$attr['status']
+                                        .', AttrType='.$attr['dataType']
+                                        .', ValueHex='.$attr['valueHex'].' => ';
+                                    if (isset($attr['comment']))
+                                        $m .= $attr['comment'].', '.$attr['value'];
+                                    else
+                                        $m .= $attr['value'];
+                                } else
+                                    $m = '  AttrId='.$attr['id'].'/'.$attrName
+                                        .', Status='.$attr['status']
+                                        .' => '.zbGetZCLStatus($attr['status']);
+                                parserLog('debug', $m, "8002");
+                                $toMon[] = $m;
+
+                                $attrId = $attr['id'];
+                                unset($attr['id']); // Remove 'id' from object for optimization
+                                $attributes[$attrId] = $attr;
+
+                                $readAttributesResponseN[] = array(
+                                    'name' => $clustId.'-'.$srcEp.'-'.$attrId,
+                                    'value' => $attr['value'],
+                                );
+
+                                if (in_array($clustId.'-'.$attrId, ['0000-0004', '0000-0005', '0000-0010']))
+                                    $devUpdates[$clustId.'-'.$attrId] = $attr['value'];
                             }
-                            // return;
+
+                            if (count($devUpdates) != 0) {
+                                $this->deviceUpdates($dest, $srcAddr, $srcEp, $devUpdates);
+                            }
+
+                            if (count($attributes) != 0) {
+                                // If discovering step, recording infos
+                                $discovering = $this->discoveringState($dest, $srcAddr);
+                                if ($discovering) {
+                                    $isServer = (hexdec($fcf) >> 3) & 1;
+                                    $this->discoverUpdate($dest, $srcAddr, $srcEp, 'ReadAttributesResponse', $clustId, $isServer, $attributes);
+                                }
+
+                                /* Send to client page if required (ex: EQ page opened) */
+                                $toCli = array(
+                                    // 'src' => 'parser',
+                                    'type' => 'readAttributesResponse',
+                                    'net' => $dest,
+                                    'addr' => $srcAddr,
+                                    'ep' => $srcEp,
+                                    'clustId' => $clustId,
+                                    'attributes' => $attributes,
+                                    'time' => time(),
+                                    'lqi' => $lqi
+                                );
+                            }
+
+                            /* Tcharp38: Cluster 0005 specific case.
+                                TO BE REVISITED to remove DB accesses from parser. */
+                            if ($clustId == "0005") {
+                                $eqLogic = Abeille::byLogicalId($dest."/".$srcAddr, 'Abeille');
+                                if (is_object($eqLogic)) {
+                                    $sceneStored = json_decode($eqLogic->getConfiguration('sceneJson', '{}'), true);
+                                    foreach ($attributes as $attrId => $attr) {
+                                        if ($attrId == "0000") {
+                                            $sceneCount = $attr['value'];
+                                            $sceneStored["sceneCount"] = $sceneCount - 1; // On ZigLight need to remove one
+                                        } else if ($attrId == "0001") {
+                                            $sceneCurrent = $attr['value'];
+                                            $sceneStored["sceneCurrent"] = $sceneCurrent;
+                                        } else if ($attrId == "0002") {
+                                            $groupCurrent = $attr['value'];
+                                            $sceneStored["groupCurrent"] = $groupCurrent;
+                                        } else if ($attrId == "0003") {
+                                            $sceneActive = $attr['value'];
+                                            $sceneStored["sceneActive"] = $sceneActive;
+                                        }
+                                    }
+                                    $eqLogic->setConfiguration('sceneJson', json_encode($sceneStored));
+                                    $eqLogic->save();
+                                    // Tcharp38: To be removed. Saving to DB slows down execution time a lot
+                                    parserLog("debug", '  TODO: '.json_encode($sceneStored));
+                                }
+                                // return;
+                            }
                         }
                     } // End '$cmd == "01"'
 
@@ -3478,11 +3505,11 @@
                             return;
 
                         // Some clusters are directly handled by 8100/8102 decode
-                        $refused = ['FC00'];
-                        if (in_array($clustId, $refused)) {
-                            parserLog('debug', "  Handled by decode8100_8102");
-                            return;
-                        }
+                        // $refused = ['FC00'];
+                        // if (in_array($clustId, $refused)) {
+                        //     parserLog('debug', "  Handled by decode8100_8102");
+                        //     return;
+                        // }
 
                         // $eq = getDevice($dest, $srcAddr); // Corresponding device
 
@@ -3496,6 +3523,29 @@
                         else if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
                             xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN, $toMon);
                         }
+
+                        // Philips Hue specific cluster
+                        // Used by RWL021, RDM001
+                        // Tcharp38: Where is the source of this decoding ?
+                        else if ($clustId == "FC00") {
+                            $buttonEventTxt = array (
+                                '00' => 'Short press',
+                                '01' => 'Long press',
+                                '02' => 'Release short press',
+                                '03' => 'Release long press',
+                            );
+                            $button = $attrId;
+                            // $buttonEvent = substr($payload, 24 + 2, 2);
+                            $buttonEvent = substr($pl, 0 + 2, 2);
+                            // $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
+                            $buttonDuree = hexdec(substr($pl, 0 + 6, 2));
+                            parserLog("debug", "  Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
+
+                            $attrReportN = [
+                                array( "name" => $clustId."-".$ep."-".$attrId."-Event", "value" => $buttonEvent ),
+                                array( "name" => $clustId."-".$ep."-".$attrId."-Duree", "value" => $buttonDuree ),
+                            ];
+                        } // End cluster FC00
 
                         else {
                             $l = strlen($msg);
@@ -4320,7 +4370,7 @@
                             else
                                 parserLog("error", "  Cluster specific command ".$clustId."-".$cmd.": unsupported type ".$supportType);
                         } else {
-                            parserLog("debug", "  Unknown cluster specific command ".$clustId."-".$cmd, "8002");
+                            parserLog("debug", "  Unsupported cluster specific command ".$clustId."-".$cmd, "8002");
                             $attrReportN[] = array(
                                 'name' => 'inf_'.$srcEp.'-'.$clustId.'-cmd'.$cmd,
                                 'value' => $pl,
@@ -5298,17 +5348,12 @@
 
             // Checking if decode is handled by 8002 or still there
             // $accepted = ['0000', '0001', '000C', '0400', '0402', '0403', '0405', 'FC00'];
-            $accepted = ['0000', 'FC00'];
+            // $accepted = ['0000', 'FC00'];
+            $accepted = ['0000'];
             if (!in_array($clustId, $accepted)) {
                 parserLog('debug', "  ".$clustId."-".$attrId." => Handled by decode8002");
                 return;
             }
-
-            // Duplicated message ?
-            // if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
-            //     return;
-            // Tcharp38: To be revisited. We can receive several 8100/8102 for the same SQN (diff attributes)
-
 
             $this->whoTalked[] = $dest.'/'.$srcAddr; // Tcharp38: Still useful ?
 
@@ -5399,6 +5444,7 @@
                 // Xiaomi lumi.sensor_86sw1 (Wall 1 Switch sur batterie)
                 if (($attrId == "FF01") && ($attrSize == "001B")) {
                     parserLog("debug","  Xiaomi proprietary (Wall 1 Switch, Gaz Sensor)" );
+                    parserLog("debug","  WARNING !! This support should be moved to decode8002");
 
                     // For info until activation
                     xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
@@ -5419,6 +5465,7 @@
                 else if (($attrId == 'FF01') && ($attrSize == "0026")) {
                     // Assuming $dataType == "42"
                     parserLog('debug', '  Xiaomi proprietary (Aqara Wireless Switch V3)');
+                    parserLog("debug","  WARNING !! This support should be moved to decode8002");
 
                     // For info until activation
                     xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
@@ -5490,29 +5537,29 @@
             // Philips Hue specific cluster
             // Used by RWL021, RDM001
             // Tcharp38: Where is the source of this decoding ?
-            else if ($clustId == "FC00") {
-                $buttonEventTxt = array (
-                    '00' => 'Short press',
-                    '01' => 'Long press',
-                    '02' => 'Release short press',
-                    '03' => 'Release long press',
-                );
-                $button = $attrId;
-                $buttonEvent = substr($payload, 24 + 2, 2);
-                $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
-                parserLog("debug", "  Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
+            // else if ($clustId == "FC00") {
+            //     $buttonEventTxt = array (
+            //         '00' => 'Short press',
+            //         '01' => 'Long press',
+            //         '02' => 'Release short press',
+            //         '03' => 'Release long press',
+            //     );
+            //     $button = $attrId;
+            //     $buttonEvent = substr($payload, 24 + 2, 2);
+            //     $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
+            //     parserLog("debug", "  Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
 
-                // $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId."-Event", $buttonEvent);
-                // $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId."-Duree", $buttonDuree);
+            //     // $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId."-Event", $buttonEvent);
+            //     // $this->msgToAbeille($dest."/".$srcAddr, $clustId."-".$ep, $attrId."-Duree", $buttonDuree);
 
-                // return;
-                // $data = hexdec($buttonEvent);
+            //     // return;
+            //     // $data = hexdec($buttonEvent);
 
-                $attrReportN = [
-                    array( "name" => $clustId."-".$ep."-".$attrId."-Event", "value" => $buttonEvent ),
-                    array( "name" => $clustId."-".$ep."-".$attrId."-Duree", "value" => $buttonDuree ),
-                ];
-            }
+            //     $attrReportN = [
+            //         array( "name" => $clustId."-".$ep."-".$attrId."-Event", "value" => $buttonEvent ),
+            //         array( "name" => $clustId."-".$ep."-".$attrId."-Duree", "value" => $buttonDuree ),
+            //     ];
+            // }
 
             if (!isset($attrReportN) && !isset($data)) {
                 /* Core hereafter is performing default conversion according to data type */
@@ -5610,7 +5657,7 @@
         }
 
         /**
-         * 0x8701/Router Discovery Confirm -  Warning: potential swap between statuses.
+         * 0x8701/Route Discovery Confirm -  Warning: potential swap between statuses.
          *
          * @param $dest     Zigbee network (ex: Abeille1)
          * @param $payload  Parameter sent by the device in the zigbee message

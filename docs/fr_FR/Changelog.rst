@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: Cluster FC00 traité par message 8002 pour future migration mode 'raw'.
+
 230918-BETA-1
 -------------
 

@@ -193,7 +193,7 @@
         }
 
         /* Tuya specific checks */
-        // TODO: To be completed
+        // TODO: To be completed => OBSOLETE soon. Will be replaced by 'fromDevice'
         if (isset($dev[$devName]['tuyaEF00'])) {
             foreach ($dev[$devName]['tuyaEF00'] as $key => $value) {
                 if ($key == 'fromDevice') {
@@ -222,13 +222,40 @@
         }
 
         /* Xiaomi specific checks */
-        // TODO: To be completed
+        // TODO: To be completed => OBSOLETE soon. Will be replaced by 'fromDevice'
         if (isset($dev[$devName]['xiaomi'])) {
+        }
+
+        /* Custom cluster/attribute specific checks */
+        // TODO: To be completed
+        // WORK ONGOING !!!
+        /* Generic format for private clusters/commands reminder
+        "fromDevice": {
+            "ED00": {
+                "type": "tuya-zosung"
+            },
+            "0000-FF01": { // CLUSTID-ATTRID
+                "type": "xiaomi",
+                "01-21": {
+                    "func": "numberDiv",
+                    "div": 1000,
+                    "info": "0001-01-0020"
+                }
+            },
+            "EF00": {
+                "type": "tuya",
+                "05": { // DP
+                    "function": "rcvValue",
+                    "info": "01-measuredValue"
+                },
+            }
+        } */
+        if (isset($dev[$devName]['fromDevice'])) {
         }
 
         /* Checking top level supported keywords */
         $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'tuyaEF00', 'customization', 'xiaomi'];
-        array_push($supportedKeys, 'genericType');
+        array_push($supportedKeys, 'genericType', 'fromDevice');
         foreach ($dev[$devName] as $key => $value) {
             if (in_array($key, $supportedKeys))
                 continue;

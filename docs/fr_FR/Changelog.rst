@@ -2,6 +2,8 @@ ChangeLog
 =========
 
 - Interne: Parser: Cluster FC00 traité par message 8002 pour future migration mode 'raw'.
+- Interne: Ajout surveillance 'NOACK' en plus de 'Timeout'.
+- Page santé: Status amélioré => 'Time-out', ''no-ack' ou 'time-out&no-ack'
 
 230918-BETA-1
 -------------

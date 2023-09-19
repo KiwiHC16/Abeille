@@ -210,7 +210,9 @@
         "Adresse": "Address",
         "Dernière comm.": "Last comm.",
         "Depuis": "Since",
-        "Batterie": "Battery"
+        "Batterie": "Battery",
+        "Cliquez pour trier": "Click to sort",
+        "Désactivé": "Disabled"
     },
     "plugins/Abeille/desktop/modal/Abeille-OTA.modal.php": {
         "Mise-à-jour des équipements": "Equipments update",

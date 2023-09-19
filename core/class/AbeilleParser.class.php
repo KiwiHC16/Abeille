@@ -5735,16 +5735,17 @@
             parserLog('debug', $dest.', Type='.$msgDecoded, "8702");
 
             // Sending msg to cmd for flow control
-            $msg = array (
-                'type'      => "8702",
-                'net'       => $dest,
-                'status'    => $status,
-                'addr'      => $dstAddr,
-                'sqnAps'    => $sqnAps,
-                'nPDU'      => $nPdu,
-                'aPDU'      => $aPdu,
-            );
-            $this->msgToCmdAck($msg);
+            // No longer used on cmd side
+            // $msg = array (
+            //     'type'      => "8702",
+            //     'net'       => $dest,
+            //     'status'    => $status,
+            //     'addr'      => $dstAddr,
+            //     'sqnAps'    => $sqnAps,
+            //     'nPDU'      => $nPdu,
+            //     'aPDU'      => $aPdu,
+            // );
+            // $this->msgToCmdAck($msg);
 
             // Monitor if requested
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))

@@ -30,6 +30,17 @@
         logMessage($loglevel, $message);
     }
 
+    /* Get device infos.
+        Returns: device entry by reference or false */
+    function &getDevice($net, $addr) {
+        if (!isset($GLOBALS['devices'][$net]))
+            return false;
+        if (!isset($GLOBALS['devices'][$net][$addr]))
+            return false;
+
+        return $GLOBALS['devices'][$net][$addr];
+    }
+
     // Reread Jeedom useful infos on eqLogic DB update
     // Note: A delay is required prior to this if DB has to be updated (createDevice() in Abeille.class)
     function updateDeviceFromDB($eqId) {
@@ -37,12 +48,12 @@
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
 
-        // $GLOBALS['eqList'][$net][$addr]['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null);
-        // parserLog('debug', "  'tuyaEF00' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['tuyaEF00']));
-        // $GLOBALS['eqList'][$net][$addr]['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null);
-        // parserLog('debug', "  'xiaomi' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['xiaomi']));
-        // $GLOBALS['eqList'][$net][$addr]['customization'] = $eqLogic->getConfiguration('ab::customization', null);
-        // parserLog('debug', "  'customization' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['customization']));
+        // $GLOBALS['devices'][$net][$addr]['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null);
+        // parserLog('debug', "  'tuyaEF00' updated to ".json_encode($GLOBALS['devices'][$net][$addr]['tuyaEF00']));
+        // $GLOBALS['devices'][$net][$addr]['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null);
+        // parserLog('debug', "  'xiaomi' updated to ".json_encode($GLOBALS['devices'][$net][$addr]['xiaomi']));
+        // $GLOBALS['devices'][$net][$addr]['customization'] = $eqLogic->getConfiguration('ab::customization', null);
+        // parserLog('debug', "  'customization' updated to ".json_encode($GLOBALS['devices'][$net][$addr]['customization']));
         // TO BE COMPLETED if any other key info
     }
 
@@ -52,7 +63,17 @@
 
         $queue = msg_get_queue($abQueues["xToCmd"]["id"]);
         if (msg_send($queue, 1, json_encode($msg), false, false, $errCode) == false) {
-            parserLog("debug", "msgToCmd(): ERROR ".$errCode);
+            cmdLog("debug", "msgToCmd(): ERROR ".$errCode);
+        }
+    }
+
+    /* Send msg to Abeille ('xToAbeille' queue) */
+    function msgToAbeille($msg) {
+        global $abQueues;
+
+        $queue = msg_get_queue($abQueues["xToAbeille"]["id"]);
+        if (msg_send($queue, 1, json_encode($msg), false, false, $errCode) == false) {
+            cmdLog("debug", "msgToAbeille(): ERROR ".$errCode);
         }
     }
 
@@ -125,7 +146,7 @@
     // php AbeilleCmd.php debug
     //check already running
 
-    $abeilleConfig = AbeilleTools::getParameters();
+    $abeilleConfig = AbeilleTools::getConfig();
     $running = AbeilleTools::getRunningDaemons();
     $daemons = AbeilleTools::diffExpectedRunningDaemons($abeilleConfig, $running);
     logMessage('debug', 'Daemons status: '.json_encode($daemons));
@@ -193,11 +214,13 @@
         if (!isset($GLOBALS['devices'][$net]))
             $GLOBALS['devices'][$net] = [];
 
-        $eq = [];
-        $eq['ieee'] = $eqLogic->getConfiguration('IEEE', '');
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-        $eq['jsonId'] = isset($eqModel['id']) ? $eqModel['id'] : '';
-        $eq['jsonLocation'] = isset($eqModel['location']) ? $eqModel['location'] : 'Abeille';
+        $eq = array(
+            'ieee' => $eqLogic->getConfiguration('IEEE', ''),
+            'txStatus' => 'ok', // Transmit status: 'ok' or 'noack'
+            'jsonId' => isset($eqModel['id']) ? $eqModel['id'] : '',
+            'jsonLocation' => isset($eqModel['location']) ? $eqModel['location'] : 'Abeille',
+        );
         if ($eq['jsonId'] != '') {
             // Read JSON to get list of commands to execute
             $model = AbeilleTools::getDeviceModel($eq['jsonId'], $eq['jsonLocation']);

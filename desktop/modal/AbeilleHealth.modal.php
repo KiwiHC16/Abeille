@@ -17,7 +17,7 @@
 
     $eqLogics = Abeille::byType('Abeille');
 ?>
-Démons:
+{{Démons}}:
 <?php
     function displayDaemonStatus($diff, $name, &$oneMissing) {
         $nameLow = strtolower(substr($name, 0, 1)).substr($name, 1); // First char lower case
@@ -48,7 +48,7 @@ Démons:
         echo " Attention: Un ou plusieurs démons ne tournent pas !";
 
     /* Checking if active Zigates are not in timeout */
-    echo "  Zigates: ";
+    echo "    Zigates: ";
     for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
         if ($config['ab::zgEnabled'.$zgId] != "Y")
             continue; // Zigate disabled
@@ -78,16 +78,16 @@ Démons:
 <table class="table table-condensed tablesorter" id="table_healthAbeille">
     <thead>
         <tr>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Réseau}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Equipement}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Type}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Adresse}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{IEEE}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Status}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Dernière comm.}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par">{{Depuis}} (H)</th>
-            <th class="header" data-toggle="tooltip" title="Trier par dernier LQI">{{LQI}}</th>
-            <th class="header" data-toggle="tooltip" title="Trier par niveau batterie">{{Batterie}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Réseau}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Equipement}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Type}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Adresse}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{IEEE}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Status}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Dernière comm.}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Depuis}} (H)</th>
+            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{LQI}}</th>
+            <th class="header" data-toggle="tooltip" title="{{Cliquez pour trier}}">{{Batterie}}</th>
         </tr>
     </thead>
     <tbody>
@@ -272,9 +272,15 @@ Démons:
                             status = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Désactivé}}</span>';
                         else if (addr.substr(2) == "rc") // Remote control ?
                             status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
-                        else if (e.timeout == 1)
-                            status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">{{Time-out}}</span>';
-                        else
+                        else if (e.timeout || e.noack) {
+                            if (e.timeout && !e.noack)
+                                s = "{{Time-out}}";
+                            else if (!e.timeout && e.noack)
+                                s = "{{No-ACK}}";
+                            else
+                                s = "{{Time-out}}&{{No-ACK}}";
+                            status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">' + s + '</span>';
+                        } else
                             status = '<span class="label label-success" style="font-size: 1em; cursor: default;">{{OK}}</span>';
                         tr += '<td>'+status+'</td>';
 

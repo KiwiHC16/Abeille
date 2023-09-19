@@ -620,6 +620,7 @@
                     $e['since'] = '-';
                 else
                     $e['since'] = floor((time() - strtotime($e['lastComm'])) / 3600);
+                $e['noack'] = $eqLogic->getStatus('ab::noack', false);
 
                 // Last LQI
                 if ($eqAddr == "0000")

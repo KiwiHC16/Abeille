@@ -1750,7 +1750,7 @@ class Abeille extends eqLogic {
         }
     }
 
-    /* Deal with messages coming from parser.
+    /* Deal with messages coming from parser or cmd processes.
        Note: this is the new way to handle messages from parser, replacing progressively 'message()' */
     public static function msgFromParser($msg) {
         global $abQueues;
@@ -1771,6 +1771,22 @@ class Abeille extends eqLogic {
             Abeille::newJeedomDevice($net, $addr, $ieee);
             return;
         } // End 'newDevice'
+
+        /* Transmit status has changed. */
+        if ($msg['type'] == "eqTxStatusUpdate") {
+            log::add('Abeille', 'debug', "msgFromParser(): TX status update: ".$net.'/'.$addr.", status=".$msg['txStatus']);
+
+            $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
+            if (is_object($eqLogic)) {
+                $noack = ($msg['txStatus'] == 'ok') ? false : true;
+                $eqLogic->setStatus('ab::noack', $noack);
+                $eqLogic->save();
+            } else {
+                log::add('Abeille', 'error', "msgFromParser(eqTxStatusUpdate): Equipement inconnu: ".$net.'/'.$addr);
+            }
+
+            return;
+        } // End 'eqTxStatusUpdate'
 
         /* Parser has found device infos to update. */
         if ($msg['type'] == "deviceUpdates") {

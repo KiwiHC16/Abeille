@@ -352,7 +352,7 @@
     logMessage("info", ">>> Démarrage d'AbeilleParser");
 
     // Check if already running
-    $config = AbeilleTools::getParameters();
+    $config = AbeilleTools::getConfig();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons: '.json_encode($daemons));

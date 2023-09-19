@@ -64,12 +64,12 @@
         //     }
         // }
 
-        public function removeFirstCmdFromQueue($priority) {
-            if ($this->checkCmdToSendInTheQueue($priority))
-                array_shift($this->zigates[$this->zgId]['cmdQueue'][$priority]);
-            else
-                cmdLog("debug", __FUNCTION__." Trying to remove a cmd in an empty queue.");
-        }
+        // public function removeFirstCmdFromQueue($priority) {
+        //     if ($this->checkCmdToSendInTheQueue($priority))
+        //         array_shift($this->zigates[$this->zgId]['cmdQueue'][$priority]);
+        //     else
+        //         cmdLog("debug", __FUNCTION__." Trying to remove a cmd in an empty queue.");
+        // }
 
         // public function zgGetQueue($priority) {
         //     return $this->zigates[$this->zgId]['cmdQueue'][$priority];
@@ -593,7 +593,7 @@
                 if (msg_receive($this->queueParserToCmdAck, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT, $errCode) == false) {
                     if ($errCode == 7) {
                         msg_receive($this->queueParserToCmdAck, 0, $msgType, $msgMax, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR);
-                        logMessage('debug', 'processAcks() ERROR: msg TOO BIG ignored: '.$msgJson);
+                        logMessage('error', 'processAcks() ERROR: msg TOO BIG ignored: '.$msgJson);
                         continue;
                     } else if ($errCode != 42) // 42 = No message
                         cmdLog("debug", "processAcks() ERROR: msg_receive() err ".$errCode);
@@ -643,7 +643,7 @@
                     continue;
                 }
 
-                // PDM restore response
+                // PDM restore response (Abeille's ABxx-yyyy specific FW)
                 if ($msg['type'] == "AB03") {
                     cmdLog("debug", "  AB03 msg: ID=".$msg['id'].", Status=".$msg['status']);
 
@@ -736,8 +736,39 @@
 
                     // If ACK is requested but failed, removing cmd or it will lead to cmd timeout.
                     // Note: This is done only if cmd == last sent.
-                    if ($cmd['ackAps'] && $lastSent)
+                    // if ($cmd['ackAps'] && $lastSent)
+                    //     $removeCmd = true;
+                    if ($lastSent && ($cmd['waitFor'] == "ACK")) {
                         $removeCmd = true;
+
+                        $eqStatusChanged = '';
+                        $net = $msg['net'];
+                        $addr = $msg['addr'];
+                        $eq = &getDevice($net, $addr); // By ref
+                        if ($eq === false) {
+                            cmdLog('error', "  Unknown device: Net=${net} Addr=${addr}");
+                        } else {
+                            if ($msg['status'] == '00') { // Ok ?
+                                if ($eq['txStatus'] != 'ok')
+                                    $eqStatusChanged = 'ok';
+                            } else { // NO ACK ?
+                                if ($eq['txStatus'] != 'noack')
+                                    $eqStatusChanged = 'noack';
+                            }
+                            if ($eqStatusChanged != '') {
+                                $eq['txStatus'] = $eqStatusChanged;
+                                $msg = array(
+                                    // 'src' => 'cmd',
+                                    'type' => 'eqTxStatusUpdate',
+                                    'net' => $net,
+                                    'addr' => $addr,
+                                    'txStatus' => $eqStatusChanged // 'ok', or 'noack'
+                                );
+                                msgToAbeille($msg);
+                                cmdLog('debug', "  ${net}-${addr} status changed to '${eqStatusChanged}'");
+                            }
+                        }
+                    }
                 }
 
                 /* Tcharp38: 8702 now ignored. Just means message buffered but does not
@@ -762,16 +793,15 @@
                 // }
 
                 // Removing last sent cmd
-                if (isset($removeCmd)) {
-                    if ($removeCmd) {
-                        // cmdLog('debug', '                 queue before='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
+                if (isset($removeCmd) && $removeCmd) {
+                    // cmdLog('debug', '                 queue before='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
 
-                        cmdLog('debug', '  Removing cmd from queue');
-                        $this->removeFirstCmdFromQueue($sentPri);
+                    cmdLog('debug', '  Removing cmd from queue');
+                    // $this->removeFirstCmdFromQueue($sentPri);
+                    array_shift($this->zigates[$zgId]['cmdQueue'][$sentPri]);
 
-                        // cmdLog('debug', '                 queue after='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
-                        $this->zigates[$zgId]['available'] = 1; // Zigate is free again
-                    }
+                    // cmdLog('debug', '                 queue after='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
+                    $this->zigates[$zgId]['available'] = 1; // Zigate is free again
                 }
             }
 
@@ -804,8 +834,9 @@
                     continue; // Timeout not reached yet
 
                 cmdLog("debug", "WARNING: checkZigatesStatus(): Zigate".$zgId." cmd ".$cmd['cmd']." ${timeout}s TIMEOUT (SQN=".$cmd['sqn'].", SQNAPS=".$cmd['sqnAps'].") => Considering zigate available.");
-                $this->zgId = $zgId;
-                $this->removeFirstCmdFromQueue($sentPri); // Removing blocked cmd
+                // $this->zgId = $zgId;
+                // $this->removeFirstCmdFromQueue($sentPri); // Removing blocked cmd
+                array_shift($this->zigates[$zgId]['cmdQueue'][$sentPri]);
                 $this->zigates[$zgId]['available'] = 1;
             }
         } // End checkZigatesStatus()

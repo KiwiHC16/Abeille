@@ -332,6 +332,7 @@
     // Use cases: ED00 cluster decode (Moes universal remote)
     function tuyaDecodeZosungCmd($net, $addr, $ep, $cmdId, $pl, &$toMon) {
         $attrReportN = [];
+        // Assuming cluster ED00
         if ($cmdId == "00") {
             // {name: 'seq', type: DataType.uint16},
             // {name: 'length', type: DataType.uint32},
@@ -340,41 +341,56 @@
             // {name: 'unk3', type: DataType.uint8},
             // {name: 'cmd', type: DataType.uint8},
             // {name: 'unk4', type: DataType.uint16},
-            $seq = AbeilleTools::reverseHex(substr($pl, 0, 4));
-            $len = AbeilleTools::reverseHex(substr($pl, 4, 8));
-            $unk1 = AbeilleTools::reverseHex(substr($pl, 12, 8));
-            $unk2 = AbeilleTools::reverseHex(substr($pl, 20, 4));
+            $seq = substr($pl, 0, 4);
+            $len = substr($pl, 4, 8);
+            $unk1 = substr($pl, 12, 8);
+            $unk2 = substr($pl, 20, 4);
             $unk3 = substr($pl, 24, 2);
             $cmd = substr($pl, 26, 2);
-            $unk4 = AbeilleTools::reverseHex(substr($pl, 28, 4));
-            parserLog("debug", "  Tuya-Zosung cmd ${cmdId}: Seq=${seq}, Len=${len}, Cmd=${cmd}");
+            $unk4 = substr($pl, 28, 4);
 
-            $t = array(
-                'zero' => 0,
-                'seq' => hexdec($seq),
-                'length' => hexdec($len),
-                'unk1' => hexdec($unk1),
-                'unk2' => hexdec($unk2),
-                'unk3' => hexdec($unk3),
-                'cmd' => hexdec($cmd),
-                'unk4' => hexdec($unk4)
-            );
-            $data = json_encode($t, JSON_UNESCAPED_SLASHES);
-            $data = bin2hex($data);
+            $seqR = AbeilleTools::reverseHex($seq);
+            $lenR = AbeilleTools::reverseHex($len);
+            parserLog("debug", "  Tuya-Zosung cmd ED00-${cmdId}: Seq=${seqR}, Len=${lenR}, Cmd=${cmd}");
+
+            $data = '00'.$seq.$len.$unk1.$unk2.$unk3.$cmd.$unk4;
             msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=01&data=${data}");
             //meta.logger.debug(`"IR-Message-Code00" response sent.`);
             //Note: This last msg could generate err 14/E_ZCL_ERR_ZBUFFER_FAIL if too big. Size reduced by using hexdec().
 
-            $t = array(
-                'seq' => hexdec($seq),
-                'position' => 0,
-                'maxlen' => 0x38
-            );
-            $data = json_encode($t, JSON_UNESCAPED_SLASHES);
-            $data = bin2hex($data);
-            $time = time() + 2; // 2sec later
-            msgToCmd(PRIO_NORM, "TempoCmd".$net."/".$addr."/cmd-Generic&time=${time}", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
+            // Cmd 02 reminder
+            // {name: 'seq', type: DataType.uint16},
+            // {name: 'position', type: DataType.uint32},
+            // {name: 'maxlen', type: DataType.uint8},
+            $data = $seq.'00000000'.'38';
+            // $time = time() + 2; // 2sec later
+            // msgToCmd(PRIO_NORM, "TempoCmd".$net."/".$addr."/cmd-Generic&time=${time}", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
             // meta.logger.debug(`"IR-Message-Code00" transfer started.`);
+        } else if ($cmdId == "03") {
+            // {name: 'zero', type: DataType.uint8},
+            // {name: 'seq', type: DataType.uint16},
+            // {name: 'position', type: DataType.uint32},
+            // {name: 'msgpart', type: DataType.octetStr},
+            // {name: 'msgpartcrc', type: DataType.uint8},
+            $zero = substr($pl, 0, 2);
+            $seq = substr($pl, 2, 4);
+            $pos = substr($pl, 6, 8);
+            $msgSize = (strlen(substr($pl, 14)) / 2) - 1; // Rest is msgpart + msgpartcrc
+            $crc = substr($pl, -2);
+
+            $seqR = AbeilleTools::reverseHex($seq);
+            $posR = AbeilleTools::reverseHex($pos);
+            parserLog("debug", "  Tuya-Zosung cmd ED00-${cmdId}: Seq=${seqR}, Pos=${posR}, MsgSize=d${msgSize}, CRC=${crc}");
+
+            // Need more datas
+            $pos = sprintf("%08X", hexdec($posR) + $msgSize);
+            $data = $seq.$pos.'38';
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
+
+            // All data received
+            // $data = '00'.$seq.'0000';
+            // msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=04&data=${data}");
         } else {
             parserLog("debug", "  Unsupported Tuya-Zosung cmd ".$cmdId." => ignored");
         }

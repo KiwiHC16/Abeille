@@ -598,7 +598,8 @@
             } // End foreach($updates)
 
             // Any new info for Abeille.class ?
-            if (count($abUpdates) != 0) {
+            // Note: Updates are transmitted only if IEEE adress is already known
+            if ((count($abUpdates) != 0) && ($eq['ieee'] !== null)) {
                 parserLog('debug', '  Updated eq='.json_encode($eq, JSON_UNESCAPED_SLASHES));
                 $msg = array(
                     'type' => 'deviceUpdates',

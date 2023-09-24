@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Moes télécommande universelle IR: Mise-à-jour du code pour ce support particulier (2607).
+- Interne: Parser: Message 'deviceUpdates' seulement si IEEE connu.
 
 230919-BETA-1
 -------------

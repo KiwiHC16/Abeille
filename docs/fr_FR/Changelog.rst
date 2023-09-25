@@ -5,6 +5,7 @@ ChangeLog
 - Interne: Parser: Message 'deviceUpdates' seulement si IEEE connu.
 - Logs: 'AbeilleSerialReadX.log' déplacé dans '/tmp'.
 - Page maintenance: Correction erreur à l'affichage.
+- Page maintenance: Amélioration infos clefs.
 
 230919-BETA-1
 -------------

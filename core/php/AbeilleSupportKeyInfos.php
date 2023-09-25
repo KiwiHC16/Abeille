@@ -129,9 +129,9 @@
                 $zgType = config::byKey('ab::zgType'.$zgId, 'Abeille', '?');
 
                 logIt("Zigate ".$zgId."\n");
-                logIt(" - FW version: ".$fwVersion."\n");
-                logIt(" - Channel   : ".$channel."\n");
-                logIt(" - Type      : ".$zgType."\n");
+                logIt("- FW version: ".$fwVersion."\n");
+                logIt("- Channel   : ".$channel."\n");
+                logIt("- Type      : ".$zgType."\n");
             } else
                 logIt("Zigate ".$zgId.": ERROR. No Jeedom registered device\n");
         }
@@ -139,26 +139,41 @@
     }
 
     // Display devices status
-    function devicesStatus() {
+    function devicesInfos() {
         logTitle("Devices");
 
-        $eqLogics = Abeille::byType('Abeille');
-        foreach ($eqLogics as $eqLogic) {
-            list($net, $addr) = explode("/", $eqLogic->getLogicalId());
-            $zgId = substr($net, 7); // AbeilleX => X
-            $eqHName = $eqLogic->getHumanName();
-            $eqId = $eqLogic->getId();
-            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-            $eqModelId = isset($eqModel['id']) ? $eqModel['id'] : '';
-            $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
-            if ($eqLogic->getStatus('timeout') == 1) {
-                $lastComm = $eqLogic->getStatus('lastCommunication');
-                $timeoutS = "TIMEOUT (last comm ".$lastComm.")";
-            } else
-                $timeoutS = "ok";
+        for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+            if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
+                continue; // Zigate disabled
 
-            logIt(" - Z".$zgId.": ".$eqHName.", id=".$eqId.": ".$timeoutS."\n");
-            logIt("       addr=".$addr."', model='".$eqModelId.", type='".$eqType."'\n");
+            logIt("Zigate ${zgId}\n");
+
+            $eqLogics = Abeille::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                list($net, $addr) = explode("/", $eqLogic->getLogicalId());
+                $zgId2 = substr($net, 7); // AbeilleX => X
+                if ($zgId2 != $zgId)
+                    continue;
+
+                $eqHName = $eqLogic->getHumanName();
+                $eqId = $eqLogic->getId();
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                $eqModelId = isset($eqModel['id']) ? $eqModel['id'] : '';
+                $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
+                $extra = '';
+                $status = 'ok';
+                if ($eqLogic->getStatus('timeout') == 1) {
+                    $lastComm = $eqLogic->getStatus('lastCommunication');
+                    $extra = ", TIMEOUT (last comm ".$lastComm.")";
+                    $status = "TO";
+                } else if ($eqLogic->getStatus('ab::noack', false) != false) {
+                    $extra = ", NO-ACK";
+                    $status = "NA";
+                }
+
+                logIt("- ${status}: ${eqHName}, id=${eqId}${extra}\n");
+                logIt("      addr=${addr}, model='${eqModelId}', type='${eqType}'\n");
+            }
         }
         logIt("\n");
     }
@@ -210,7 +225,7 @@
     zigatesInfos();
 
     // Devices status
-    devicesStatus();
+    devicesInfos();
 
     jeedomInfos($CONFIG);
 ?>

@@ -95,7 +95,7 @@
     $serial         = $argv[2]; // Zigate port (ex: '/dev/ttyUSB0')
     $requestedlevel = $argv[3]; // Currently unused
     $zgId = (int)substr($net, 7); // Zigate number (ex: 1)
-    logSetConf("AbeilleSerialRead".$zgId.".log", true); // Log to file with line nb check
+    logSetConf(jeedom::getTmpFolder("Abeille")."/AbeilleSerialRead".$zgId.".log", true); // Log to file with line nb check
 
     // Check if already running
     $config = AbeilleTools::getParameters();

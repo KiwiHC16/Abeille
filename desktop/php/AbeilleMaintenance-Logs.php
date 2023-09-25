@@ -115,18 +115,18 @@
 </div>
 
 <script>
-    function displayLog(logType, logFile) {
-        console.log("displayLog("+logType+", "+logFile+")");
+    function displayFile(fileType, fileName) {
+        console.log("displayFile("+fileType+", "+fileName+")");
         let action = "";
-        if (logType == "JEEDOM-LOG") {
+        if (fileType == "JEEDOM-LOG") {
             action = "getFile";
-            logPath = "../../log/"+logFile;
-        } else if (logType == "JEEDOM-TMP") {
+            logPath = "../../log/"+fileName;
+        } else if (fileType == "JEEDOM-TMP") {
             action = "getTmpFile";
-            logPath = logFile;
+            logPath = fileName;
         } else {
             action = "getFile";
-            logPath = "tmp/" + logFile;
+            logPath = "tmp/" + fileName;
         }
 
         $.ajax({
@@ -140,23 +140,26 @@
             global: false,
             cache: false,
             error: function (request, status, error) {
-                $('#idCurrentDisplay').empty().append('{{Log}} : '+logFile+" => ERREUR");
+                $('#idCurrentDisplay').empty().append('{{Log}} : '+fileName+" => ERREUR");
             },
             success: function (json_res) {
-                // console.log(json_res);
+                // console.log("json_res=", json_res);
                 res = JSON.parse(json_res.result); // res.status, res.error, res.content
                 if (res.status != 0) {
-                    $('#idCurrentDisplay').empty().append('{{Log}} : '+logFile+" => ERREUR");
+                    $('#idCurrentDisplay').empty().append('{{Log}} : '+fileName+" => ERREUR");
                     $('#idPreResults').empty();
                     curDisplay = "";
                 } else {
-                    let log = res.content;
-                    let jsonPretty = JSON.stringify(JSON.parse(log),null,2);
-                    $('#idCurrentDisplay').empty().append('{{Log}} : '+logFile);
-                    // $('#idPreResults').empty().append(log);
-                    $('#idPreResults').empty().append(jsonPretty);
-                    curDisplay = logFile;
-                    curDisplayType = logType;
+                    let content = res.content;
+                    // console.log("content=", content);
+                    $('#idCurrentDisplay').empty().append('{{Log}} : '+fileName);
+                    if (fileName.substring(fileName.length - 5) == ".json") {
+                        let jsonPretty = JSON.stringify(JSON.parse(content), null, 2);
+                        $('#idPreResults').empty().append(jsonPretty);
+                    } else
+                        $('#idPreResults').empty().append(content);
+                    curDisplay = fileName;
+                    curDisplayType = fileType;
                 }
             }
         });
@@ -169,7 +172,7 @@
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
-                displayLog("JEEDOM-TMP", "AbeilleKeyInfos.log")
+                displayFile("JEEDOM-TMP", "AbeilleKeyInfos.log")
             }
         };
 
@@ -185,7 +188,7 @@
         console.log("btnDisplayLog click: File="+logFile+", location="+location);
         $('.btnDisplayLog').parent().removeClass("active")
         $(this).parent().addClass("active")
-        displayLog(location, logFile)
+        displayFile(location, logFile)
         // jeedom.log.autoupdate({
         //     log: logFile,
         //     // default_search: log_default_search,

@@ -62,6 +62,10 @@
         "Active le mode développeur": "Enable developer mode",
         "Parser; Messages désactivés": "Parser; disabled messages"
     },
+    "plugins/Abeille/core/php/AbeilleSerialRead.php": {
+        "Arguments manquants": "Missing arguments",
+        "Premier argument incorrect": "First argument is incorrect"
+    },
     "plugins/Abeille/desktop/php/Abeille.php": {
         "Confirmer": "Confirm",
         "Remplacer": "Replace",

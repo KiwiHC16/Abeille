@@ -6,6 +6,7 @@ ChangeLog
 - Logs: 'AbeilleSerialReadX.log' déplacé dans '/tmp'.
 - Page maintenance: Correction erreur à l'affichage.
 - Page maintenance: Amélioration infos clefs.
+- Interne: AbeilleSerialRead: Changements mineurs.
 
 230919-BETA-1
 -------------

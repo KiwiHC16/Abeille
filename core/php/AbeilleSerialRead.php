@@ -47,9 +47,12 @@
 
         while (true) {
             // Wait for port
-            while (true) {
-                if (file_exists($serial))
-                    break;
+            // while (true) {
+            //     if (file_exists($serial))
+            //         break;
+            //     usleep(500000); // Sleep 500ms
+            // }
+            while (!file_exists($serial)) {
                 usleep(500000); // Sleep 500ms
             }
 
@@ -78,16 +81,20 @@
         }
     }
 
-    logSetConf('', true); // Log to STDOUT until log name fully known (need Zigate number)
-    logMessage('info', '>>> Démarrage d\'AbeilleSerialRead sur port '.$argv[2]);
+    // logSetConf('', true); // Log to STDOUT until log name fully known (need Zigate number)
+    // logMessage('info', '>>> Démarrage d\'AbeilleSerialRead sur port '.$argv[2]);
 
     /* Checking parameters */
-    if ($argc < 3) { // Currently expecting <cmdname> <AbeilleX> <ZigatePort>
-        logMessage('error', 'Argument(s) manquant(s)');
+    if ($argc < 3) { // Currently expecting <AbeilleX> <ZigatePort>
+        // logMessage('error', 'Argument(s) manquant(s)');
+        $msg = "AbeilleSerialRead: {{Arguments manquants}}";
+        message::add('Abeille', $msg);
         exit(1);
     }
     if (substr($argv[1], 0, 7) != "Abeille") {
-        logMessage('error', 'Argument 1 incorrect (devrait être \'AbeilleX\')');
+        // logMessage('error', 'Argument 1 incorrect (devrait être \'AbeilleX\')');
+        $msg = "AbeilleSerialRead: {{Premier argument incorrect}}";
+        message::add('Abeille', $msg);
         exit(2);
     }
 
@@ -96,9 +103,10 @@
     $requestedlevel = $argv[3]; // Currently unused
     $zgId = (int)substr($net, 7); // Zigate number (ex: 1)
     logSetConf(jeedom::getTmpFolder("Abeille")."/AbeilleSerialRead".$zgId.".log", true); // Log to file with line nb check
+    logMessage('info', ">>> Démarrage d'AbeilleSerialRead sur port ${serial}");
 
     // Check if already running
-    $config = AbeilleTools::getParameters();
+    $config = AbeilleTools::getConfig();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons='.json_encode($daemons));

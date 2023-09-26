@@ -76,8 +76,8 @@
                 "isVisible": "1"
             },
             "Learned IR code": {
-                "use": "inf_zbCmd-Generic",
-                "params": "ep=01&clustId=ed00&cmd=00",
+                "use": "inf_generic-String",
+                "logicalId": "01-learned-code",
                 "isVisible": "1"
             },
             "Code to send": {

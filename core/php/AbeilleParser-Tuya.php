@@ -329,7 +329,7 @@
         return $attributesN;
     }
 
-    // Use cases: ED00 cluster decode (Moes universal remote)
+    // Use cases: E004+ED00 clusters support (Moes universal remote)
     function tuyaDecodeZosungCmd($net, $addr, $ep, $cmdId, $pl, &$toMon) {
         $attrReportN = [];
         // Assuming cluster ED00
@@ -367,7 +367,14 @@
             // msgToCmd(PRIO_NORM, "TempoCmd".$net."/".$addr."/cmd-Generic&time=${time}", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
             msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
             // meta.logger.debug(`"IR-Message-Code00" transfer started.`);
+
+            $GLOBALS['zosung'] = [];
+            $GLOBALS['zosung'][$seqR] = array(
+                'expSize' => $lenR, // Expected size
+                'data' => []
+            );
         } else if ($cmdId == "03") {
+            // Cmd 03 reminder
             // {name: 'zero', type: DataType.uint8},
             // {name: 'seq', type: DataType.uint16},
             // {name: 'position', type: DataType.uint32},
@@ -376,26 +383,59 @@
             $zero = substr($pl, 0, 2);
             $seq = substr($pl, 2, 4);
             $pos = substr($pl, 6, 8);
-            $msgSize = (strlen(substr($pl, 14)) / 2) - 1; // Rest is msgpart + msgpartcrc
+            $msgPart = substr($pl, 14, -2); // Rest is msgpart + msgpartcrc
+            $msgSize = strlen($msgPart) / 2;
             $crc = substr($pl, -2);
 
             $seqR = AbeilleTools::reverseHex($seq);
             $posR = AbeilleTools::reverseHex($pos);
             parserLog("debug", "  Tuya-Zosung cmd ED00-${cmdId}: Seq=${seqR}, Pos=${posR}, MsgSize=d${msgSize}, CRC=${crc}");
 
-            // Need more datas
-            $pos = sprintf("%08X", hexdec($posR) + $msgSize);
-            $data = $seq.$pos.'38';
-            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
+            if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seqR])) {
+                parserLog("debug", "  Unexpected message => Ignored");
+                return $attrReportN;
+            }
 
-            // All data received
-            // $data = '00'.$seq.'0000';
-            // msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=04&data=${data}");
+            // TODO
+            $GLOBALS['zosung'][$seqR]['data'] = $msgPart;
+
+            $expSize = $GLOBALS['zosung'][$seqR]['expSize'];
+            if (($posR + $msgSize) < $expSize) {
+                // Need more datas
+                $pos = sprintf("%08X", hexdec($posR) + $msgSize);
+                $data = $seq.$pos.'38';
+                msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
+            } else {
+                // All data received
+                $data = '00'.$seq.'0000';
+                msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=04&data=${data}");
+            }
+        } else if ($cmdId == "05") {
+            // Cmd 05 reminder
+            // {name: 'seq', type: DataType.uint16},
+            // {name: 'zero', type: DataType.uint16},
+            $seq = substr($pl, 0, 4);
+            $zero = substr($pl, 4, 4);
+            $seqR = AbeilleTools::reverseHex($seq);
+
+            if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seqR])) {
+                parserLog("debug", "  Unexpected message (seq ${seqR}) => Ignored");
+                return $attrReportN;
+            }
+
+            $data = bin2hex("{'study':1}");
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=E004&cmd=00&data=${data}");
+
+            // Report msgpart as "IR learned"
+            $attrReportN[] = array(
+                'name' => "01-learned-code",
+                'value' => $GLOBALS['zosung'][$seqR]['data'],
+            );
+            unset($GLOBALS['zosung'][$seqR]);
         } else {
             parserLog("debug", "  Unsupported Tuya-Zosung cmd ".$cmdId." => ignored");
         }
 
         return $attrReportN;
     }
-
 ?>

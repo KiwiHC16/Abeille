@@ -870,6 +870,19 @@
 
             config::save('ab::dbVersion', '20230521', 'Abeille');
         }
+        /* Internal changes
+         * - AbeilleSerialReadX logs moved to /tmp/jeedom/Abeille
+         */
+        if (intval($dbVersion) < 20230927) {
+            // Remove obsolete logs
+            $obsolete = [];
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                $obsolete[] = "AbeilleSerialRead${zgId}.log";
+            }
+            removeLogs($obsolete);
+
+            // config::save('ab::dbVersion', '20230927', 'Abeille');
+        }
     }
 
     /**

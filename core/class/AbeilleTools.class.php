@@ -459,6 +459,8 @@
                             $newCmd[$cmd1]['invertBinary'] = $cmd2['invertBinary'];
                         if (isset($cmd2['value']))
                             $newCmd[$cmd1]['value'] = $cmd2['value'];
+                        if (isset($cmd2['disableTitle'])) // Disable title part of a subType 'message'
+                            $newCmd[$cmd1]['disableTitle'] = $cmd2['disableTitle'];
 
                         if (isset($cmd2['execAtCreation']))
                             $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];

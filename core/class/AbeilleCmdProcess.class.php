@@ -4998,6 +4998,7 @@
                 } // End cmdName == 'cmd-EF00'
 
                 // Tuya private cluster EF00
+                // TODO: Should be replaced by 'cmd-Private'
                 // Mandatory params: 'addr', 'ep', 'cmd', and 'data'
                 //      cmd/00: setBool/setValue/setValueMult/setValueDiv/setPercent1000
                 //      cmd/25: internetStatus
@@ -5007,7 +5008,7 @@
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    $cmd        = "0530";
+                    $zgCmd      = "0530";
 
                     $addrMode   = "02";
                     $addr       = $Command['addr'];
@@ -5063,11 +5064,34 @@
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(priorityUserCmd, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End $cmdName == 'cmd-tuyaEF00'
 
+                // Generic way to support private cluster/cmd
+                // Mandatory params: 'addr', 'ep', 'fct', 'cmd' & 'message'
+                else if ($cmdName == 'cmd-Private') {
+                    $required = ['addr', 'ep', 'fct', 'cmd', 'message']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $addr       = $Command['addr'];
+                    $dstEp      = $Command['ep'];
+                    $fctName    = $Command['fct'];
+                    $cmd        = $Command['cmd'];
+                    $message    = $Command['message'];
+                    if (function_exists($fctName)) {
+                        $fctName($dest, $addr, $ep, $cmd, $message);
+                    } else if (method_exists($this, $fctName)) {
+                        $this->$fctName($dest, $addr, $ep, $cmd, $message);
+                    } else {
+                        cmdLog('error', "    Commande privée: Fonction '${fctName}' inconnue");
+                    }
+                    return;
+                } // End 'cmd-Private'
+
                 // Legrand private cluster FC41.
+                // TODO: Should be replaced by 'cmd-Private'
                 // Mandatory params: 'addr', 'Mode'
                 // Optional params: 'priority', 'EP'
                 else if ($cmdName == 'commandLegrand') {

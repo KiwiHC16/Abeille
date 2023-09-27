@@ -71,6 +71,7 @@ Exemple de commande 'action'
 
 * subType: OBLIGATOIRE
   Type d'information: 'binary', 'numeric', 'string'
+  Type d'action: 'other' (pas de paramètre), 'message' (titre + message)
 
 * logicalId: OBLIGATOIRE si commande INFO
   Ex: '0400-01-0000' pour définir l'information 'luminosité'.
@@ -95,6 +96,10 @@ Exemple de commande 'action'
 * invertBinary: optionnel.
   Utile uniquement pour une commande 'info' de subType 'binary'.
   Non inversé par défaut ("invertBinary":0).
+
+* disableTitle: optionnel.
+  Utile uniquement pour une commande 'action' de subType 'message'.
+  Permet de désactiver l'affichage du titre dans le widget.
 
 * template: optionnel.
   Permet de définir le widget qui sera utilisé pour l'affichage de la commande.

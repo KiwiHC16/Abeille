@@ -137,7 +137,7 @@
     } // End configureDevice()
 
     logSetConf("AbeilleCmd.log", true);
-    logMessage('info', '>>> Démarrage d\'AbeilleCmd');
+    logMessage('info', ">>> {{Démarrage d'AbeilleCmd}}");
 
     // ***********************************************************************************************
     // MAIN
@@ -193,7 +193,9 @@
           jsonLocation =>
           commands => from model
        $GLOBALS['zigates'][zgId]
-          ieee =>
+          ieee => '' or IEEE address
+          enabled => true or false
+          ieeeOk => true or false
      */
     $GLOBALS['devices'] = [];
     $GLOBALS['zigates'] = [];
@@ -208,6 +210,9 @@
                 $GLOBALS['zigates'][$zgId] = [];
 
             $GLOBALS['zigates'][$zgId]['ieee'] = $eqLogic->getConfiguration('IEEE', '');
+            $GLOBALS['zigates'][$zgId]['enabled'] = ($config['ab::zgEnabled'.$zgId] == "Y") ? true : false;
+            $GLOBALS['zigates'][$zgId]['ieeeOk'] = ($config['ab::zgIeeeAddrOk'.$zgId] == 1) ? true : false;
+
             continue;
         }
 

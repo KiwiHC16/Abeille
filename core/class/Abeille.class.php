@@ -3337,6 +3337,10 @@ class Abeille extends eqLogic {
                     $cmdLogic->setDisplay('forceReturnLineBefore', null);
                 }
             }
+            if (isset($mCmd["disableTitle"])) // Disable title part of a 'message' action cmd
+                $cmdLogic->setDisplay('title_disable', $mCmd["disableTitle"]);
+            else
+                $cmdLogic->setDisplay('title_disable', null);
 
             // log::add('Abeille', 'debug', '  LA='.$cmdLogic->getName()." - ".$cmdLogic->getLogicalId());
             $cmdLogic->save();

@@ -7,6 +7,7 @@ ChangeLog
 - Page maintenance: Correction erreur à l'affichage.
 - Page maintenance: Amélioration infos clefs.
 - Interne: AbeilleSerialRead: Changements mineurs.
+- Modeles: Ajout support 'disableTitle' pour cmd action de type 'message'.
 
 230919-BETA-1
 -------------

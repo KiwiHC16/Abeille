@@ -334,6 +334,7 @@
         $attrReportN = [];
         // Assuming cluster ED00
         if ($cmdId == "00") {
+            // Cmd 00 reminder
             // {name: 'seq', type: DataType.uint16},
             // {name: 'length', type: DataType.uint32},
             // {name: 'unk1', type: DataType.uint32},

@@ -81,8 +81,8 @@
                 "isVisible": "1"
             },
             "Code to send": {
-                "use": "act_zbCmdC-Generic",
-                "params": "ep=01&clustId=ed00&cmd=00&data=12",
+                "use": "act_cmd-Private",
+                "params": "ep=01&fct=tuyaZosung&cmd=unused",
                 "isVisible": "1"
             }
         },

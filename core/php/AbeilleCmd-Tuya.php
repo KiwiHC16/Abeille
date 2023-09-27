@@ -124,4 +124,46 @@
         $tId = sprintf("%04X", $tuyaTransId);
         return $tId;
     }
+
+    // Use cases: E004+ED00 clusters support (Moes universal remote)
+    function tuyaZosung($net, $addr, $ep, $cmd, $data) {
+        cmdLog('debug', '  tuyaZosung() cmd');
+
+        $irMsg = array(
+            'key_num' => 1,
+            'delay' => 300,
+            'key1' => array (
+                'num' => 1,
+                'freq' => 38000,
+                'type' => 1,
+                'key_code' => $data,
+            ),
+        );
+        $irMsgJson = json_encode($irMsg);
+
+        // Cmd 00 reminder
+        // {name: 'seq', type: DataType.uint16},
+        // {name: 'length', type: DataType.uint32},
+        // {name: 'unk1', type: DataType.uint32},
+        // {name: 'unk2', type: DataType.uint16},
+        // {name: 'unk3', type: DataType.uint8},
+        // {name: 'cmd', type: DataType.uint8},
+        // {name: 'unk4', type: DataType.uint16},
+        $seq = '0012'; // TODO
+        $length = sprintf("%04X", strlen($irMsgJson));
+        $unk1 = '00000000';
+        $unk2 = 'e004';
+        $unk3 = '01';
+        $cmd = '02';
+        $unk4 = '0000';
+
+        $seq = AbeilleTools::reverseHex($seq);
+        $length = AbeilleTools::reverseHex($length);
+        $unk1 = AbeilleTools::reverseHex($unk1);
+        $unk2 = AbeilleTools::reverseHex($unk2);
+        $unk4 = AbeilleTools::reverseHex($unk4);
+        $data = '00'.$seq.$len.$unk1.$unk2.$unk3.$cmd.$unk4;
+        // msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=00&data=${data}");
+
+    }
 ?>

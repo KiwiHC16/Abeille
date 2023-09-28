@@ -142,13 +142,10 @@
     // ***********************************************************************************************
     // MAIN
     // ***********************************************************************************************
-    // exemple d appel
-    // php AbeilleCmd.php debug
-    //check already running
 
-    $abeilleConfig = AbeilleTools::getConfig();
+    $config = AbeilleTools::getConfig();
     $running = AbeilleTools::getRunningDaemons();
-    $daemons = AbeilleTools::diffExpectedRunningDaemons($abeilleConfig, $running);
+    $daemons = AbeilleTools::diffExpectedRunningDaemons($config, $running);
     logMessage('debug', 'Daemons status: '.json_encode($daemons));
     if ($daemons["cmd"] > 1){
         logMessage('error', 'Le démon est déja lancé ! '.json_encode($daemons));
@@ -164,7 +161,7 @@
 
     /* Any device to monitor ?
        It is indicated by 'ab::monitorId' key in Jeedom 'config' table. */
-    $monId = $abeilleConfig['ab::monitorId'];
+    $monId = $config['ab::monitorId'];
     if ($monId !== false) {
         $eqLogic = eqLogic::byId($monId);
         if (!is_object($eqLogic)) {
@@ -196,6 +193,14 @@
           ieee => '' or IEEE address
           enabled => true or false
           ieeeOk => true or false
+          port => '' or serial port (ex: '/dev/ttyS1')
+          available => true or false
+          hw => 1=v1, 2=v2/+, 0=undefined
+          fw =>
+          nPDU =>
+          aPDU =>
+          cmdQueue => array or array, cmdQueue[prio] = []
+          sentPri => Priority of last sent cmd
      */
     $GLOBALS['devices'] = [];
     $GLOBALS['zigates'] = [];
@@ -212,30 +217,39 @@
             $GLOBALS['zigates'][$zgId]['ieee'] = $eqLogic->getConfiguration('IEEE', '');
             $GLOBALS['zigates'][$zgId]['enabled'] = ($config['ab::zgEnabled'.$zgId] == "Y") ? true : false;
             $GLOBALS['zigates'][$zgId]['ieeeOk'] = ($config['ab::zgIeeeAddrOk'.$zgId] == 1) ? true : false;
-
-            continue;
-        }
-
-        if (!isset($GLOBALS['devices'][$net]))
-            $GLOBALS['devices'][$net] = [];
-
-        $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-        $eq = array(
-            'ieee' => $eqLogic->getConfiguration('IEEE', ''),
-            'txStatus' => 'ok', // Transmit status: 'ok' or 'noack'
-            'jsonId' => isset($eqModel['id']) ? $eqModel['id'] : '',
-            'jsonLocation' => isset($eqModel['location']) ? $eqModel['location'] : 'Abeille',
-        );
-        if ($eq['jsonId'] != '') {
-            // Read JSON to get list of commands to execute
-            $model = AbeilleTools::getDeviceModel($eq['jsonId'], $eq['jsonLocation']);
-            if ($model !== false) {
-                $eq['mainEp'] = isset($model['mainEP']) ? $model['mainEP'] : "01";
-                $eq['commands'] = isset($model['commands']) ? $model['commands'] : [];
+            $GLOBALS['zigates'][$zgId]['port'] = $config['ab::zgPort'.$zgId];
+            $GLOBALS['zigates'][$zgId]['available'] = true; // By default we consider the Zigate available to receive commands
+            $GLOBALS['zigates'][$zgId]['hw'] = 0;           // HW version: 1=v1, 2=v2
+            $GLOBALS['zigates'][$zgId]['fw'] = 0;           // FW minor version (ex 0x321)
+            $GLOBALS['zigates'][$zgId]['nPDU'] = 0;         // Last NDPU
+            $GLOBALS['zigates'][$zgId]['aPDU'] = 0;         // Last APDU
+            $GLOBALS['zigates'][$zgId]['cmdQueue'] = [];    // Array of queues. One queue per priority from priorityMin to priorityMax.
+            foreach(range(priorityMin, priorityMax) as $prio) {
+                $GLOBALS['zigates'][$zgId]['cmdQueue'][$prio] = [];
             }
-        }
+            $GLOBALS['zigates'][$zgId]['sentPri'] = 0;      // Priority for last sent cmd for following 8000 ack
+        } else {
+            if (!isset($GLOBALS['devices'][$net]))
+                $GLOBALS['devices'][$net] = [];
 
-        $GLOBALS['devices'][$net][$addr] = $eq;
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            $eq = array(
+                'ieee' => $eqLogic->getConfiguration('IEEE', ''),
+                'txStatus' => 'ok', // Transmit status: 'ok' or 'noack'
+                'jsonId' => isset($eqModel['id']) ? $eqModel['id'] : '',
+                'jsonLocation' => isset($eqModel['location']) ? $eqModel['location'] : 'Abeille',
+            );
+            if ($eq['jsonId'] != '') {
+                // Read JSON to get list of commands to execute
+                $model = AbeilleTools::getDeviceModel($eq['jsonId'], $eq['jsonLocation']);
+                if ($model !== false) {
+                    $eq['mainEp'] = isset($model['mainEP']) ? $model['mainEP'] : "01";
+                    $eq['commands'] = isset($model['commands']) ? $model['commands'] : [];
+                }
+            }
+
+            $GLOBALS['devices'][$net][$addr] = $eq;
+        }
     }
 
     try {

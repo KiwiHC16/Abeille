@@ -49,22 +49,22 @@
         // public function addNewCmdToQueue($priority, $newCmd) {
         //     // if ($priority == PRIO_HIGH) {
         //     //     $GLOBALS['zigates'][$zgId]['cmdQueueHigh'][] = $newCmd;
-        //     //     cmdLog("debug", "      \->Added cmd to Zigate".$zgId." HIGH priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
+        //     //     cmdLog("debug", "    \->Added cmd to Zigate".$zgId." HIGH priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
         //     //     if (count($GLOBALS['zigates'][$zgId]['cmdQueueHigh']) > 50) {
-        //     //         cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
+        //     //         cmdLog('debug', '    WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
         //     //     }
         //     // }
         //     // else {
         //     //     $GLOBALS['zigates'][$zgId]['cmdQueue'][] = $newCmd;
-        //     //     cmdLog("debug", "      \->Added cmd to Zigate".$zgId." normal priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
+        //     //     cmdLog("debug", "    \->Added cmd to Zigate".$zgId." normal priority queue. QueueSize=".$queueSize, $this->debug['addCmdToQueue2']);
         //     //     if (count($GLOBALS['zigates'][$zgId]['cmdQueue']) > 50) {
-        //     //         cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
+        //     //         cmdLog('debug', '    WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue');
         //     //     }
         //     // }
 
         //     $GLOBALS['zigates'][$this->zgId]['cmdQueue'][$priority][] = $newCmd;
         //     if (count($GLOBALS['zigates'][$this->zgId]['cmdQueue'][$priority]) > 50) {
-        //         cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$this->zgId.' cmd queue: '.$priority);
+        //         cmdLog('debug', '    WARNING: More than 50 pending messages in zigate'.$this->zgId.' cmd queue: '.$priority);
         //     }
         // }
 
@@ -172,7 +172,7 @@
             else {
                 $this->statCmd[$cmd]=1;
             }
-            cmdLog('debug', '      incStatCmd(): '.json_encode($this->statCmd) );
+            cmdLog('debug', '    incStatCmd(): '.json_encode($this->statCmd) );
         }
         */
 
@@ -341,24 +341,24 @@
 
             // Checking min parameters
             if (!$GLOBALS['zigates'][$zgId]['enabled']) {
-                cmdLog("debug", "      Zigate disabled => cmd IGNORED");
+                cmdLog("debug", "    Zigate disabled => cmd IGNORED");
                 return;
             }
             if ($GLOBALS['zigates'][$zgId]['ieeeOk'] == '-1') {
-                cmdLog("debug", "      Zigate on wrong port => cmd IGNORED");
+                cmdLog("debug", "    Zigate on wrong port => cmd IGNORED");
                 return;
             }
             if (!ctype_xdigit($zgCmd)) {
-                cmdLog('error', '      Commande Zigate invalide: Pas en hexa ! ('.$zgCmd.')');
+                cmdLog('error', '    Commande Zigate invalide: Pas en hexa ! ('.$zgCmd.')');
                 return;
             }
             if (($payload != '') && !ctype_xdigit($payload)) {
-                cmdLog('error', '      Invalid payload. Not hexa ! ('.$payload.')');
+                cmdLog('error', '    Invalid payload. Not hexa ! ('.$payload.')');
                 return;
             }
             $len = strlen($payload);
             if ($len % 2) { // Checking payload length
-                cmdLog("error", "      Commande Zigate '${zgCmd}' ignorée: Taille données impaire");
+                cmdLog("error", "    Commande Zigate '${zgCmd}' ignorée: Taille données impaire");
                 return;
             }
 
@@ -371,7 +371,7 @@
                 if ($pendCmd['cmd'] != $zgCmd)
                     continue;
                 if ($pendCmd['datas'] == $payload) {
-                    cmdLog('debug', "      Same cmd already pending with priority ${priority} => ignoring");
+                    cmdLog('debug', "    Same cmd already pending with priority ${priority} => ignoring");
                     return;
                 }
             }
@@ -387,9 +387,9 @@
                     $queuesTxt .= ', ';
                 $queuesTxt .= "[".$prio."]=".count($GLOBALS['zigates'][$zgId]['cmdQueue'][$prio]);
             }
-            cmdLog('debug', '      Zg '.$zgId.' queues: '.$queuesTxt);
+            cmdLog('debug', '    Zg '.$zgId.' queues: '.$queuesTxt);
             if (count($GLOBALS['zigates'][$zgId]['cmdQueue'][$priority]) > 50) {
-                cmdLog('debug', '      WARNING: More than 50 pending messages in zigate'.$this->zgId.' cmd queue: '.$priority);
+                cmdLog('debug', '    WARNING: More than 50 pending messages in zigate'.$this->zgId.' cmd queue: '.$priority);
             }
         } // End addCmdToQueue2()
 
@@ -801,13 +801,13 @@
 
                 // Removing last sent cmd
                 if (isset($removeCmd) && $removeCmd) {
-                    // cmdLog('debug', '                 queue before='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
+                    // cmdLog('debug', '               queue before='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
 
                     cmdLog('debug', '  Removing cmd from queue');
                     // $this->removeFirstCmdFromQueue($sentPri);
                     array_shift($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri]);
 
-                    // cmdLog('debug', '                 queue after='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
+                    // cmdLog('debug', '               queue after='.json_encode($this->zgGetQueue($this->zgGetSentPri())));
                     $GLOBALS['zigates'][$zgId]['available'] = 1; // Zigate is free again
                 }
             }

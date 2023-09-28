@@ -58,17 +58,6 @@
             "forceReturnLineAfter": "1"
         }
     },
-    "Get Network Status": {
-        "name": "Get Network Status",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "getNetworkStatus",
-            "request": "getNetworkStatus"
-        }
-    },
     "Short-Addr": {
         "name": "Short Addr",
         "isHistorized": "0",

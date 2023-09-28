@@ -1637,7 +1637,7 @@
                     $GLOBALS['zigate'.$zgId]['ieeeStatus'] = $ieeeStatus; // Updating local status
 
                     if ($ieeeStatus == 0) {
-                        msgToCmd(PRIO_HIGH, "CmdAbeille".$zgId."/0000/getNetworkStatus");
+                        msgToCmd(PRIO_HIGH, "CmdAbeille".$zgId."/0000/zgGetNetworkStatus");
 
                         $acceptedBeforeZigateIdentified = array("0208", "0300", "8001", "8009", "8010", "8024");
                         if (!in_array($type, $acceptedBeforeZigateIdentified)) {

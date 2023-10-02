@@ -1315,6 +1315,7 @@
             $nb = (preg_match('/[0-9]/', $daemonFile, $matches) != true ? "" : $matches[0]);
             $logLevel = log::convertLogLevel(log::getLogLevel('Abeille'));
             $logDir = self::logDir;
+            $tmpDir = jeedom::getTmpFolder("Abeille");
 
             unset($matches);
             $daemonFile = (preg_match('/[a-zA-Z]*/', $daemonFile, $matches) != true ? "" : strtolower($matches[0]));
@@ -1336,7 +1337,7 @@
             case 'abeilleserialread':
                 $daemonPhp = "AbeilleSerialRead.php";
                 $daemonParams = 'Abeille'.$nb.' '.$config['ab::zgPort'.$nb].' ';
-                $daemonLog = $logLevel." >>".$logDir."AbeilleSerialRead".$nb.".log 2>&1";
+                $daemonLog = $logLevel." >>${tmpDir}/AbeilleSerialRead".$nb.".log 2>&1";
                 exec(system::getCmdSudo().'chmod 777 '.$config['ab::zgPort'.$nb].' > /dev/null 2>&1');
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
                 break;

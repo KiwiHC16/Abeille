@@ -79,15 +79,15 @@
         //     return $GLOBALS['zigates'][$this->zgId]['cmdQueue'][$priority];
         // }
 
-        public function zgChangeStatusSentQueueFirstMessage($priority, $status) {
-            // $GLOBALS['zigates'][$this->zgId]['cmdQueue'][$priority][0]['status'] = $status;
-            $GLOBALS['zigates'][$this->zgId]['cmdQueue'][$priority][0]['status'] = $status;
-        }
+        // public function zgChangeStatusSentQueueFirstMessage($priority, $status) {
+        //     // $GLOBALS['zigates'][$this->zgId]['cmdQueue'][$priority][0]['status'] = $status;
+        //     $GLOBALS['zigates'][$this->zgId]['cmdQueue'][$priority][0]['status'] = $status;
+        // }
 
-        public function zgChangesqnApsSentQueueFirstMessage($priority, $sqnAps) {
-            // $GLOBALS['zigates'][$this->zgId]['cmdQueue'][$priority][0]['sqnAps'] = $sqnAps;
-            $GLOBALS['zigates'][$this->zgId]['cmdQueue'][$priority][0]['sqnAps'] = $sqnAps;
-        }
+        // public function zgChangesqnApsSentQueueFirstMessage($priority, $sqnAps) {
+        //     // $GLOBALS['zigates'][$this->zgId]['cmdQueue'][$priority][0]['sqnAps'] = $sqnAps;
+        //     $GLOBALS['zigates'][$this->zgId]['cmdQueue'][$priority][0]['sqnAps'] = $sqnAps;
+        // }
 
         // public function zgGetSentPri() {
         //     return $GLOBALS['zigates'][$this->zgId]['sentPri'];
@@ -106,8 +106,8 @@
         //     return $GLOBALS['zigates'][$this->zgId]['fw'];
         // }
 
-        public function initNewZigateDefault($zgId) {
-            $zg = array();
+        // public function initNewZigateDefault($zgId) {
+        //     $zg = array();
             // cmdLog("debug", __FUNCTION__." Enabled: ".config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N'));
             // if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') == 'Y') {
             //     $zg['enabled'] = 1;
@@ -132,8 +132,8 @@
             // }
             // $zg['sentPri'] = 0;             // Priority for last sent cmd for following 8000 ack
 
-            return $zg;
-        }
+        //     return $zg;
+        // }
 
         function __construct($debugLevel='debug') {
             // cmdLog("debug", "AbeilleCmdQueue constructor start", $this->debug["AbeilleCmdClass"]);
@@ -325,11 +325,11 @@
          * put in the queue the cmd to be put on the serial link to the zigate
          *
          * @param priority  priority of the command in the queue
-         * @param dest      zigate to address the command
-         * @param cmd       cmd in hex format as per zigate API
-         * @param len       len of the cmd
-         * @param data      data of the cmd
-         * @param addr ???
+         * @param net       Network (ex: 'Abeille2')
+         * @param zgCmd     Zigate cmd in hex format as per zigate API
+         * @param payload   Cmd payload
+         * @param addr      Device short addr
+         * @param addrMode  Addressing mode (ACK/no ACK)
          *
          * @return  none
          */
@@ -689,7 +689,6 @@
                     }
 
                     // Storing SQN APS. This is key to identify cmd linked to msg. Might not be last sent except for 8000.
-                    // $pri = $this->zgGetSentPri();
                     $GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri][0]['sqn'] = $msg['sqn']; // Internal SQN
                     $GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri][0]['sqnAps'] = $sqnAps; // Network SQN
 
@@ -753,7 +752,7 @@
                         $addr = $msg['addr'];
                         $eq = &getDevice($net, $addr); // By ref
                         if ($eq === false) {
-                            cmdLog('error', "  Unknown device: Net=${net} Addr=${addr}");
+                            cmdLog('debug', "  WARNING: Unknown device: Net=${net} Addr=${addr}");
                         } else {
                             if ($msg['status'] == '00') { // Ok ?
                                 if ($eq['txStatus'] != 'ok')
@@ -820,7 +819,6 @@
 
         // Check zigate status which may be blocked by unacked sent cmd
         function checkZigatesStatus() {
-            // foreach ($GLOBALS['zigates'] as $zgId => $zg) {
             foreach ($GLOBALS['zigates'] as $zgId => $zg) {
 
                 if (!$zg['enabled'])

@@ -10,6 +10,7 @@ ChangeLog
 - Modeles: Ajout support 'disableTitle' pour cmd action de type 'message'.
 - Interne: AbeilleCmd revisité. Variables 'zigates' sorties de la classe.
 - Interne: Cmd: 'getNetworkStatus' => 'zgGetNetworkStatus'.
+- Interne: Cmd: Suppression message erreur 'Unknown device'.
 
 230919-BETA-1
 -------------

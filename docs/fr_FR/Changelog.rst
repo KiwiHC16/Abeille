@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Aeotec range extender: Ajout support (2627).
+
 231002-BETA-1
 -------------
 

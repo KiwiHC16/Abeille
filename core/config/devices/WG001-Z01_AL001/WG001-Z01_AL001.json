@@ -1,0 +1,53 @@
+{
+    "WG001-Z01_AL001": {
+        "manufacturer": "Aeotec",
+        "model": "ZI",
+        "type": "Aeotec range extender",
+        "timeout": "60",
+        "category": {
+            "default": "1"
+        },
+        "configuration": {
+            "icon": "Aeotec-RangeExtender",
+            "mainEP": "02"
+        },
+        "commands": {
+            "SWBuildID": {
+                "use": "inf_zbAttr-0000-SWBuildID"
+            },
+            "Get SWBuildID": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=4000"
+            },
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "isVisible": "1"
+            },
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "params": "ep=02",
+                "isVisible": "1"
+            },
+            "Level": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "params": "ep=02",
+                "isVisible": "1",
+                "nextLine": "after"
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=02&clustId=0008&attrId=0000"
+            },
+            "Bind 02-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=02&clustId=0008",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 02-0008-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=02&clustId=0008&attrType=10&attrId=0000",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

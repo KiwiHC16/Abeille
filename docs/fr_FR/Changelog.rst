@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231004-BETA-1
+-------------
+
 - Aeotec range extender: Ajout support (2627).
 
 231002-BETA-1

@@ -28,7 +28,7 @@
         public $queueParserToCmdAck;
         public $queueParserToCmdAckMax;
         public $tempoMessageQueue;
-        public $maxRetry = maxRetryDefault; // Abeille will try to send the message max x times
+        // public $maxRetry = maxRetryDefault; // Abeille will try to send the message max x times
         // public $zigates = array(); // All enabled zigates
         // public $statCmd = array();
 
@@ -159,7 +159,7 @@
 
             $this->displayStatus();
 
-            $this->lastSqn = 0;
+            // $this->lastSqn = 0; // Moved as global var
 
             // cmdLog("debug", "AbeilleCmdQueue constructor end", $this->debug["AbeilleCmdClass"]);
         }
@@ -284,7 +284,7 @@
 
         // Push a new zigate cmd to be sent
         // If 'begin' is set to true, cmd is added in front of queue to be the first one
-        function pushZigateCmd($zgId, $pri, $zgCmd, $payload, $addr, $addrMode, $begin = false) {
+        public static function pushZigateCmd($zgId, $pri, $zgCmd, $payload, $addr, $addrMode, $begin = false) {
             if (($addrMode == "02") || ($addrMode == "03"))
                 $ackAps = true;
             else
@@ -297,7 +297,7 @@
                 'datas'     => $payload,
                 'zgOnly'    => zgIsZigateOnly($zgCmd), // Msg for Zigate only if true, not to be transmitted
                 'status'    => '', // '', 'SENT', '8000', '8012' or '8702', '8011'
-                'try'       => $this->maxRetry + 1, // Number of retries if failed
+                'try'       => maxRetryDefault + 1, // Number of retries if failed
                 'sentTime'  => 0, // For lost cmds timeout
                 // Timeout: Zigate has 7s internal timeout when ACK
                 'timeout'   => $ackAps ? 8 : 4, // Cmd expiration time
@@ -333,7 +333,7 @@
          *
          * @return  none
          */
-        function addCmdToQueue2($priority, $net, $zgCmd, $payload = '', $addr = '', $addrMode = null) {
+        public static function addCmdToQueue2($priority, $net, $zgCmd, $payload = '', $addr = '', $addrMode = null) {
             cmdLog("debug", "    addCmdToQueue2(Pri=${priority}, Net=${net}, ZgCmd=${zgCmd}, Payload=${payload}, Addr=${addr}, AddrMode=${addrMode})");
 
             $zgId = substr($net, 7);
@@ -378,7 +378,7 @@
 
             // $this->incStatCmd($cmd);
 
-            $this->pushZigateCmd($zgId, $priority, $zgCmd, $payload, $addr, $addrMode);
+            AbeilleCmdQueue::pushZigateCmd($zgId, $priority, $zgCmd, $payload, $addr, $addrMode);
 
             // Display statistics
             $queuesTxt = '';

@@ -25,27 +25,80 @@
             return true;
         }
 
+        /* Generic RAW cmd function for Zigate (using 0530 msg).
+        Expecting header as follows
+            $header = array(
+                'net' => $net, // Mandatory
+                'addr' => $addr, // Mandatory
+                'ep' => $ep, // Mandatory
+                'clustId' => 'yyyy', // Mandatory
+                'clustSpecific' => true, // Optional: true=cluster specific frame, false=general frame (default)
+                'manufCode' => 'xxxx', // Optional: hex string for manuf code if manuf specific
+                'cmd' => '00' // Mandatory
+            );
+        */
+        public static function sendRawMessage($header, $data) {
+            $required = ['net', 'addr', 'ep', 'clustId', 'cmd'];
+            foreach ($required as $param) {
+                if (!isset($header[$param])) {
+                    cmdLog('error', "    sendRawMessage(): Paramètre '".$param."' manquant.");
+                    return false;
+                }
+            }
+
+            $zgCmd      = "0530";
+            $addrMode   = "02";
+            $addr       = $header['addr'];
+            $srcEp      = "01";
+            $dstEp      = $header['ep'];
+            $profId     = "0104";
+            $clustId    = $header['clustId'];
+            $secMode    = "02"; // ???
+            $radius     = "30"; // ??
+
+            $net            = $header['net'];
+            $clustSpecific  = isset($header['clustSpecific']) ? $header['clustSpecific']: false; // Default = general frame
+            $manufCode      = isset($header['manufCode']) ? $header['manufCode']: '';
+            $cmd            = $header['cmd'];
+
+            $hParams = array(
+                'clustSpecific' => $clustSpecific,
+                'manufCode' => $manufCode,
+                'cmdId' => $cmd
+            );
+            $zclHeader = AbeilleCmdProcess::genZclHeader($hParams);
+
+            $data2 = $zclHeader.$data;
+            $dataLen2 = sprintf("%02X", strlen($data2) / 2);
+
+            $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
+            $data = $data1.$data2;
+
+            AbeilleCmdQueue::addCmdToQueue2(PRIO_NORM, $net, $zgCmd, $data, $addr, $addrMode);
+        }
+
         // Generate an APS SQN, auto-incremented
-        // OBSOLETE: To be included in genZclHeader().
-        function genSqn() {
-            $sqn = sprintf("%02X", $this->lastSqn);
-            if ($this->lastSqn == 255)
-                $this->lastSqn = 0;
+        // OBSOLETE: Use genZclHeader() instead.
+        public static function genSqn() {
+            // Tcharp38: SQN should be treated per zigate
+            $sqn = sprintf("%02X", $GLOBALS['lastSqn']);
+            if ($GLOBALS['lastSqn'] == 255)
+                $GLOBALS['lastSqn'] = 1; // Skipping value 0 (=zigate cmd not transmitted ota)
             else
-                $this->lastSqn++;
+                $GLOBALS['lastSqn']++;
             return $sqn;
         }
 
         // Generate ZCL header
         // hParams = array(
-        //     'clustSpecific' => false,
-        //     'manufCode' => '', // Note: if != '' it enabled 'manufSpecific' flag
-        //     'toCli' => false, // Default direction: client to server
-        //     'disableDefaultRsp' => true,
-        //     'zclSqn' => 'xx',
-        //     'cmdId' => 'xx'
+        //     'clustSpecific' => false, // Optional: Frame type: false=general (default), true=cluster specific
+        //     'manufCode' => '', // Optional: Note: if != '' it enabled 'manufSpecific' flag
+        //     'toCli' => false, // Optional: Default direction = client to server
+        //     'disableDefaultRsp' => true, // Optional
+        //     'zclSqn' => 'xx', // Optional
+        //     'cmdId' => 'xx' // Mandatory
         // )
-        function genZclHeader($hParams) {
+        public static function genZclHeader($hParams) {
             // cmdLog('debug', '  genZclHeader(): hParams='.json_encode($hParams));
 
             $clustSpecific = isset($hParams['clustSpecific']) ? $hParams['clustSpecific'] : false;
@@ -53,7 +106,7 @@
             $toCli = isset($hParams['toCli']) ? $hParams['toCli'] : false;
             $disableDefaultRsp = isset($hParams['disableDefaultRsp']) ? $hParams['disableDefaultRsp'] : true;
             $cmdId = isset($hParams['cmdId']) ? $hParams['cmdId'] : '';
-            $zclSqn = isset($hParams['zclSqn']) ? $hParams['zclSqn'] : $this->genSqn();
+            $zclSqn = isset($hParams['zclSqn']) ? $hParams['zclSqn'] : AbeilleCmdProcess::genSqn();
 
             $frameType = $clustSpecific ? 1 : 0;
             if ($frameType == 0)
@@ -5071,7 +5124,7 @@
                         return;
 
                     $addr       = $Command['addr'];
-                    $dstEp      = $Command['ep'];
+                    $ep         = $Command['ep'];
                     $fctName    = $Command['fct'];
                     $cmd        = $Command['cmd'];
                     $message    = $Command['message'];

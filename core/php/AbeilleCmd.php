@@ -204,6 +204,7 @@
      */
     $GLOBALS['devices'] = [];
     $GLOBALS['zigates'] = [];
+    $GLOBALS['lastSqn'] = 1;
     $eqLogics = eqLogic::byType('Abeille');
     foreach ($eqLogics as $eqLogic) {
         $eqLogicId = $eqLogic->getLogicalId();

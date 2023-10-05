@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: AbeilleCmd: Nouvelles modifs pour support Tuya Zosung (universal remote).
+
 231004-BETA-1
 -------------
 

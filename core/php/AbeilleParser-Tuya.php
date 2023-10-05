@@ -352,7 +352,7 @@
 
             $seqR = AbeilleTools::reverseHex($seq);
             $lenR = AbeilleTools::reverseHex($len);
-            parserLog("debug", "  Tuya-Zosung cmd ED00-${cmdId}: Seq=${seqR}, Len=${lenR}, Cmd=${cmd}");
+            parserLog("debug", "  Tuya-Zosung cmd ED00-00: Seq=${seqR}, Len=${lenR}, Cmd=${cmd}");
 
             $data = '00'.$seq.$len.$unk1.$unk2.$unk3.$cmd.$unk4;
             msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=01&data=${data}");
@@ -374,6 +374,17 @@
                 'expSize' => $lenR, // Expected size
                 'data' => []
             );
+        } else if ($cmdId == "02") {
+            // Cmd 02 reminder
+            // {name: 'seq', type: DataType.uint16},
+            // {name: 'position', type: DataType.uint32},
+            // {name: 'maxlen', type: DataType.uint8},
+            $seq = substr($pl, 0, 4);
+            $position = substr($pl, 4, 8);
+            $maxlen = substr($pl, 12, 2);
+            parserLog("debug", "  Tuya-Zosung cmd ED00-02: Seq=${seqR}, Pos=${position}, MaxLen=${maxLen}");
+
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Private", "ep=".$ep."&fct=tuyaZosung&cmd=03&data=12");
         } else if ($cmdId == "03") {
             // Cmd 03 reminder
             // {name: 'zero', type: DataType.uint8},
@@ -390,7 +401,7 @@
 
             $seqR = AbeilleTools::reverseHex($seq);
             $posR = AbeilleTools::reverseHex($pos);
-            parserLog("debug", "  Tuya-Zosung cmd ED00-${cmdId}: Seq=${seqR}, Pos=${posR}, MsgSize=d${msgSize}, CRC=${crc}");
+            parserLog("debug", "  Tuya-Zosung cmd ED00-03: Seq=${seqR}, Pos=${posR}, MsgSize=d${msgSize}, CRC=${crc}");
 
             if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seqR])) {
                 parserLog("debug", "  Unexpected message => Ignored");

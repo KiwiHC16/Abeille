@@ -82,7 +82,7 @@
             },
             "Code to send": {
                 "use": "act_cmd-Private",
-                "params": "ep=01&fct=tuyaZosung&cmd=unused",
+                "params": "ep=01&fct=tuyaZosung&cmd=00",
                 "isVisible": "1"
             }
         },

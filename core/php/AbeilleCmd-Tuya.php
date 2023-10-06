@@ -127,11 +127,24 @@
 
     require_once __DIR__.'/../class/AbeilleCmdProcess.class.php';
 
+    // Compute CRC for given message
+    function tuyaZosungCrc($message) {
+        $crc = 0;
+        $len = strlen($message) / 2;
+        for($i = 0; $i < $len; $i++) {
+            $c = substr($message, $i * 2, 2);
+            cmdLog('debug', "  c=${c}, crc=".bin2hex($crc));
+            $crc += pack("H*", $c);
+            $crc %= 0x100;
+        }
+        return sprintf("%02X", $crc);
+    }
+
     // Use cases: ED00 cluster support (Moes universal remote)
     function tuyaZosung($net, $addr, $ep, $cmd, $data) {
         cmdLog('debug', "  tuyaZosung(net=${net}, addr=${addr}, ep=${ep}, cmd=${cmd})");
 
-        if ($cmd == '00') {
+        if ($cmd == '00') { // Send IR code
             $irMsg = array(
                 'key_num' => 1,
                 'delay' => 300,
@@ -177,19 +190,44 @@
                 'addr' => $addr,
                 'ep' => $ep,
                 'clustId' => 'ED00',
-                'clustSpecific' => true, // Not a general frame
-                // 'manufCode' => 'xxxx'
+                'clustSpecific' => true, // Cluster specific frame
                 'cmd' => '00'
             );
             AbeilleCmdProcess::sendRawMessage($header, $data);
         } else if ($cmd == '03') {
+            $params = json_decode($data, true);
+            $seq = $params['seq'];
+            $pos = $params['pos'];
+            cmdLog('debug', "  Cmd 03: Seq=${seq}, Pos=${pos}");
+
+            $message = $GLOBALS['zosung_msg']['message'];
+            $msgPart = substr($message, $pos);
+            if ((strlen($msgPart) / 2) > 0x38)
+                $msgPart = substr($msgPart, 0, 0x37 * 2); // Truncate to maxLen
+            $msgPartCrc = tuyaZosungCrc($msgPart);
+            cmdLog('debug', "  MsgPart=${msgPart}, MsgPartCrc=${msgPartCrc}");
+
             // Cmd 03 reminder
             // {name: 'zero', type: DataType.uint8},
             // {name: 'seq', type: DataType.uint16},
             // {name: 'position', type: DataType.uint32},
             // {name: 'msgpart', type: DataType.octetStr},
             // {name: 'msgpartcrc', type: DataType.uint8},
-            // $data = '00'.$seq.$position.$msgpart.$msgpartcrc;
+            $seq = sprintf("%04X", $seq);
+            $pos = sprintf("%08X", $pos);
+            $seqR = AbeilleTools::reverseHex($seq);
+            $posR = AbeilleTools::reverseHex($pos);
+            $data = '00'.$seqR.$posR.$msgPart.$msgPartCrc;
+
+            $header = array(
+                'net' => $net,
+                'addr' => $addr,
+                'ep' => $ep,
+                'clustId' => 'ED00',
+                'clustSpecific' => true, // Cluster specific frame
+                'cmd' => '03'
+            );
+            AbeilleCmdProcess::sendRawMessage($header, $data);
         }
     }
 ?>

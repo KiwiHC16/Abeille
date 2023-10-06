@@ -374,17 +374,25 @@
                 'expSize' => $lenR, // Expected size
                 'data' => []
             );
+        } else if ($cmdId == "01") {
+            parserLog("debug", "  Tuya-Zosung cmd ED00-01");
         } else if ($cmdId == "02") {
             // Cmd 02 reminder
             // {name: 'seq', type: DataType.uint16},
             // {name: 'position', type: DataType.uint32},
             // {name: 'maxlen', type: DataType.uint8},
-            $seq = substr($pl, 0, 4);
-            $position = substr($pl, 4, 8);
-            $maxlen = substr($pl, 12, 2);
-            parserLog("debug", "  Tuya-Zosung cmd ED00-02: Seq=${seqR}, Pos=${position}, MaxLen=${maxLen}");
+            $seqR = AbeilleTools::reverseHex(substr($pl, 0, 4));
+            $positionR = AbeilleTools::reverseHex(substr($pl, 4, 8));
+            $maxLen = substr($pl, 12, 2);
+            parserLog("debug", "  Tuya-Zosung cmd ED00-02: Seq=${seqR}, Pos=${positionR}, MaxLen=${maxLen}");
 
-            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Private", "ep=".$ep."&fct=tuyaZosung&cmd=03&data=12");
+            parserLog("debug", "  Replying with cmd ED00-03");
+            $data = array(
+                'seq' => hexdec($seqR),
+                'pos' => hexdec($positionR),
+            );
+            $dataJson = json_encode($data);
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Private", "ep=".$ep."&fct=tuyaZosung&cmd=03&message=${dataJson}");
         } else if ($cmdId == "03") {
             // Cmd 03 reminder
             // {name: 'zero', type: DataType.uint8},
@@ -414,11 +422,13 @@
             $expSize = $GLOBALS['zosung'][$seqR]['expSize'];
             if (($posR + $msgSize) < $expSize) {
                 // Need more datas
+                parserLog("debug", "  Replying with cmd ED00-02: Need more datas");
                 $pos = sprintf("%08X", hexdec($posR) + $msgSize);
                 $data = $seq.$pos.'38';
                 msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
             } else {
                 // All data received
+                parserLog("debug", "  Replying with cmd ED00-04: All datas received");
                 $data = '00'.$seq.'0000';
                 msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=04&data=${data}");
             }

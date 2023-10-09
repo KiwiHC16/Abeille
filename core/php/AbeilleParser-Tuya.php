@@ -78,12 +78,10 @@
 
     // Receive a datapoint, map it to a specific function an decode it.
     // Mapping is defined "per device" directly in its model (tuyaEF00/fromDevice).
-    function tuyaDecodeDp($ep, $dp, $mapping, &$toMon) {
+    function tuyaDecodeDp($addr, $ep, $dp, $mapping) {
         $dpId = $dp['id'];
         if (!isset($mapping[$dpId])) {
-            $m = "  ".$dp['m'].": Unrecognized DP !";
-            parserLog("debug", $m, "8002");
-            $toMon[] = $m;
+            parserLog2("debug", $addr, "  ".$dp['m'].": Unrecognized DP !", "8002");
             return false;
         }
 
@@ -139,7 +137,7 @@
             else
                 $mode = "?";
             $logMsg = "  ".$dp['m']." => Mode = ".$dp['data']."/".$mode;
-            parserLog("debug", $logMsg, "8002");
+            parserLog2("debug", $addr, $logMsg, "8002");
             $attributeN = array(
                 'name' => $ep.'-mode',
                 'value' => $mode,
@@ -150,7 +148,7 @@
         case "rcvValve-Status":
             $val = hexdec($dp['data']) % 2;
             $st = ($val == 1) ? "ON" : "OFF";
-            parserLog("debug", "  ".$dp['m']." => On/Off=".$val."/".$st, "8002");
+            parserLog2("debug", $addr, "  ".$dp['m']." => On/Off=".$val."/".$st, "8002");
             $attributeN = array(
                 'name' => '0006-'.$ep.'-0000',
                 'value' => $val,
@@ -202,14 +200,13 @@
             break;
 
         default:
-            parserLog("error", "  Unknown Tuya function '".$func."' for dpId=".$dpId);
+            parserLog2("error", $addr, "  Unknown Tuya function '".$func."' for dpId=".$dpId);
             $attributeN = false;
             break;
         }
 
         if (isset($logMsg)) {
-            parserLog("debug", $logMsg, "8002");
-            $toMon[] = $logMsg;
+            parserLog2("debug", $addr, $logMsg, "8002");
         }
         return $attributeN;
     }
@@ -248,7 +245,7 @@
         //     self.log.logging("Tuya", "Debug", "send_timesynchronisation - %s/%s " % (NwkId, srcEp))
     }
 
-    function tuyaDecodeEF00Cmd($net, $addr, $ep, $cmdId, $msg, &$toMon) {
+    function tuyaDecodeEF00Cmd($net, $addr, $ep, $cmdId, $msg) {
         $tCmds = array(
             "00" => array("name" => "TY_DATA_REQUEST", "desc" => "Gateway-side data request"),
             "01" => array("name" => "TY_DATA_RESPONE", "desc" => "Reply to MCU-side data request"),
@@ -270,7 +267,7 @@
         if (($cmdId == "01") || ($cmdId == "02")) {
             // parserLog('debug', 'eq='.json_encode($eq));
             if (!isset($eq['tuyaEF00']) || !isset($eq['tuyaEF00']['fromDevice'])) {
-                parserLog('debug', "  No defined Tuya mapping => ignoring (msg=".$msg.")");
+                parserLog2('debug', $addr, "  No defined Tuya mapping => ignoring (msg=".$msg.")");
                 return [];
             }
             $mapping = $eq['tuyaEF00']['fromDevice'];
@@ -278,11 +275,11 @@
 
             $tSqn = substr($msg, 0, 4); // uint16
             $msg = substr($msg, 4); // Skip tSqn
-            parserLog("debug", "  Tuya EF00 specific cmd ".$cmdId." (tSQN=".$tSqn.")", "8002");
+            parserLog2("debug", $addr, "  Tuya EF00 specific cmd ".$cmdId." (tSQN=".$tSqn.")", "8002");
             while (strlen($msg) != 0) {
                 $dp = tuyaGetDp($msg);
 
-                $a = tuyaDecodeDp($ep, $dp, $mapping, $toMon);
+                $a = tuyaDecodeDp($addr, $ep, $dp, $mapping);
                 if ($a !== false)
                     $attributesN[] = $a;
                 else { // Unknown DP
@@ -295,12 +292,12 @@
                 $msg = substr($msg, $s);
             }
         } else if ($cmdId == "06") { // TY_DATA_SEARCH
-            parserLog('debug', "  TY_DATA_SEARCH: ".$msg);
+            parserLog2('debug', $addr, "  TY_DATA_SEARCH: ".$msg);
             $tSeq = substr($msg, 0, 4);
             $msg = substr($msg, 4); // Skip tSqn
             $dp = tuyaGetDp($msg);
             $mapping = $eq['tuyaEF00']['fromDevice'];
-            $a = tuyaDecodeDp($ep, $dp, $mapping, $toMon);
+            $a = tuyaDecodeDp($addr, $ep, $dp, $mapping);
             if ($a !== false)
                 $attributesN[] = $a;
             // $tSeq = substr($msg, 0, 4);
@@ -311,9 +308,9 @@
             // $m = "Seq=${tSeq}, Dp=${tDpId}, Type=${tDataType}, Len=${tLen}, ValueHex=".$tData;
             // parserLog('debug', "  TY_DATA_SEARCH: ".$m);
         } else if ($cmdId == "11") { // TUYA_MCU_VERSION_RSP
-            parserLog('debug', "  TUYA_MCU_VERSION_RSP: ".$msg);
+            parserLog2('debug', $addr, "  TUYA_MCU_VERSION_RSP: ".$msg);
         } else if ($cmdId == "25") { // TUYA_INTERNET_STATUS
-            parserLog('debug', "  Internet access status request => Answering 'connected'");
+            parserLog2('debug', $addr, "  Internet access status request => Answering 'connected'");
             $tSqn = substr($msg, 0, 4); // uint16
             $manufCode = isset($eq['manufCode']) ? '&manufCode='.$eq['manufCode'] : '';
             msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-tuyaEF00", "ep=".$ep."&cmd=internetStatus".$manufCode."&tuyaSqn=".$tSqn."&data=01");
@@ -322,7 +319,7 @@
                 $cmdName = $tCmds[$cmdId]['name'];
             else
                 $cmdName = $cmdId."/?";
-            parserLog("debug", "  Unsupported Tuya cmd ".$cmdName." => ignored", "8002");
+            parserLog2("debug", $addr, "  Unsupported Tuya cmd ".$cmdName." => ignored", "8002");
         }
 
 // TODO: How to store unknown DP in discovery.json ?
@@ -331,8 +328,23 @@
         return $attributesN;
     }
 
+    // Compute CRC for given message
+    // Use cases: ED00 cluster support (Moes universal remote)
+    function tuyaZosungCrc($message) {
+        $crc = 0;
+        $len = strlen($message) / 2;
+        for($i = 0; $i < $len; $i++) {
+            $c = substr($message, $i * 2, 2);
+            // cmdLog('debug', "  c=${c}, crc=".dechex($crc));
+            $crc += hexdec($c);
+            $crc %= 0x100;
+        }
+        // cmdLog('debug', "  crc=".dechex($crc));
+        return sprintf("%02X", $crc);
+    }
+
     // Use cases: E004+ED00 clusters support (Moes universal remote)
-    function tuyaDecodeZosungCmd($net, $addr, $ep, $cmdId, $pl, &$toMon) {
+    function tuyaDecodeZosungCmd($net, $addr, $ep, $cmdId, $pl) {
         $attrReportN = [];
         // Assuming cluster ED00
         if ($cmdId == "00") {
@@ -354,7 +366,7 @@
 
             $seqR = AbeilleTools::reverseHex($seq);
             $lenR = AbeilleTools::reverseHex($len);
-            parserLog("debug", "  Tuya-Zosung cmd ED00-00: Seq=${seqR}, Len=${lenR}, Cmd=${cmd}");
+            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-00: Seq=${seqR}, Len=${lenR}, Cmd=${cmd} => Replying with ED00-01 & 02.");
 
             $data = '00'.$seq.$len.$unk1.$unk2.$unk3.$cmd.$unk4;
             msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=01&data=${data}");
@@ -373,11 +385,31 @@
 
             $GLOBALS['zosung'] = [];
             $GLOBALS['zosung'][$seqR] = array(
-                'expSize' => $lenR, // Expected size
-                'data' => []
+                'expected' => hexdec($lenR), // Expected size
+                'received' => 0, // Received size
+                'data' => ''
             );
         } else if ($cmdId == "01") {
-            parserLog("debug", "  Tuya-Zosung cmd ED00-01");
+            // Cmd 01 reminder
+            // {name: 'zero', type: DataType.uint8},
+            // {name: 'seq', type: DataType.uint16},
+            // {name: 'length', type: DataType.uint32},
+            // {name: 'unk1', type: DataType.uint32},
+            // {name: 'unk2', type: DataType.uint16},
+            // {name: 'unk3', type: DataType.uint8},
+            // {name: 'cmd', type: DataType.uint8},
+            // {name: 'unk4', type: DataType.uint16},
+            $seq = substr($pl, 2, 4);
+            $len = substr($pl, 6, 8);
+            $unk1 = substr($pl, 14, 8);
+            $unk2 = substr($pl, 22, 4);
+            $unk3 = substr($pl, 26, 2);
+            $cmd = substr($pl, 28, 2);
+            $unk4 = substr($pl, 30, 4);
+
+            $seqR = AbeilleTools::reverseHex($seq);
+            $lenR = AbeilleTools::reverseHex($len);
+            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-01: Seq=${seqR}, Len=${lenR}, Cmd=${cmd}");
         } else if ($cmdId == "02") {
             // Cmd 02 reminder
             // {name: 'seq', type: DataType.uint16},
@@ -386,9 +418,9 @@
             $seqR = AbeilleTools::reverseHex(substr($pl, 0, 4));
             $positionR = AbeilleTools::reverseHex(substr($pl, 4, 8));
             $maxLen = substr($pl, 12, 2);
-            parserLog("debug", "  Tuya-Zosung cmd ED00-02: Seq=${seqR}, Pos=${positionR}, MaxLen=${maxLen}");
+            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-02: Seq=${seqR}, Pos=${positionR}, MaxLen=${maxLen}");
 
-            parserLog("debug", "  Replying with cmd ED00-03");
+            parserLog2("debug", $addr, "  Replying with cmd ED00-03");
             $data = array(
                 'seq' => hexdec($seqR),
                 'pos' => hexdec($positionR),
@@ -402,7 +434,6 @@
             // {name: 'position', type: DataType.uint32},
             // {name: 'msgpart', type: DataType.octetStr},
             // {name: 'msgpartcrc', type: DataType.uint8},
-            $zero = substr($pl, 0, 2);
             $seq = substr($pl, 2, 4);
             $pos = substr($pl, 6, 8);
             $msgPart = substr($pl, 14, -2); // Rest is msgpart + msgpartcrc
@@ -411,26 +442,32 @@
 
             $seqR = AbeilleTools::reverseHex($seq);
             $posR = AbeilleTools::reverseHex($pos);
-            parserLog("debug", "  Tuya-Zosung cmd ED00-03: Seq=${seqR}, Pos=${posR}, MsgSize=d${msgSize}, CRC=${crc}");
+            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-03: Seq=${seqR}, Pos=${posR}, MsgSize=d${msgSize}, CRC=${crc}");
+            $cCrc = tuyaZosungCrc($msgPart);
+            parserLog2("debug", $addr, "  MsgPart=${msgPart}, computedCRC=${cCrc}");
 
             if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seqR])) {
-                parserLog("debug", "  Unexpected message => Ignored");
+                parserLog2("debug", $addr, "  Unexpected message => Ignored");
                 return $attrReportN;
             }
 
-            // TODO
-            $GLOBALS['zosung'][$seqR]['data'] = $msgPart;
+            $GLOBALS['zosung'][$seqR]['data'] .= $msgPart; // Append to end
+            $GLOBALS['zosung'][$seqR]['received'] += $msgSize;
 
-            $expSize = $GLOBALS['zosung'][$seqR]['expSize'];
-            if (($posR + $msgSize) < $expSize) {
+            $recSize = $GLOBALS['zosung'][$seqR]['received'];
+            $expSize = $GLOBALS['zosung'][$seqR]['expected'];
+            parserLog2("debug", $addr, "  recSize=d${recSize}, expSize=d${expSize}, posR=${posR}, msgSize=d${msgSize}");
+            if ($recSize < $expSize) {
                 // Need more datas
-                parserLog("debug", "  Replying with cmd ED00-02: Need more datas");
+                parserLog2("debug", $addr, "  Replying with cmd ED00-02: Need more datas");
+
                 $pos = sprintf("%08X", hexdec($posR) + $msgSize);
                 $data = $seq.$pos.'38';
                 msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
             } else {
                 // All data received
-                parserLog("debug", "  Replying with cmd ED00-04: All datas received");
+                parserLog2("debug", $addr, "  Replying with cmd ED00-04: All datas received");
+
                 $data = '00'.$seq.'0000';
                 msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=04&data=${data}");
             }
@@ -441,7 +478,7 @@
             // {name: 'zero1', type: DataType.uint16},
             $seq = substr($pl, 2, 4);
             $seqR = AbeilleTools::reverseHex($seq);
-            parserLog("debug", "  Tuya-Zosung cmd ED00-04: Seq=${seqR} => Replying with cmd ED00-05");
+            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-04: Seq=${seqR} => Replying with cmd ED00-05");
 
             // Cmd 05 reminder
             // {name: 'seq', type: DataType.uint16},
@@ -453,11 +490,11 @@
             // {name: 'seq', type: DataType.uint16},
             // {name: 'zero', type: DataType.uint16},
             $seq = substr($pl, 0, 4);
-            $zero = substr($pl, 4, 4);
             $seqR = AbeilleTools::reverseHex($seq);
+            parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-05: Seq=${seqR}");
 
             if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seqR])) {
-                parserLog("debug", "  Unexpected message (seq ${seqR}) => Ignored");
+                parserLog2("debug", $addr, "  Unexpected message (seq ${seqR}) => Ignored");
                 return $attrReportN;
             }
 
@@ -471,7 +508,7 @@
             );
             unset($GLOBALS['zosung'][$seqR]);
         } else {
-            parserLog("debug", "  Unsupported Tuya-Zosung cmd ".$cmdId." => ignored");
+            parserLog2("debug", $addr, "  Unsupported Tuya-Zosung cmd ".$cmdId." => ignored");
         }
 
         return $attrReportN;

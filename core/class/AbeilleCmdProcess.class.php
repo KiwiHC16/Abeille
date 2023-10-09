@@ -5081,7 +5081,7 @@
                         $tData      = $Command['data']; // Supposed to be 00 (NOT connected), 01 (connected) or 02 (timeout)
                         $tLen       = sprintf("%04X", strlen($tData) / 2);
 
-                        cmdLog('debug', '  internetStatus: tSqn='.$tSqn.', tLen='.$tLen.', tData='.$tData);
+                        cmdLog2('debug', $addr, '  internetStatus: tSqn='.$tSqn.', tLen='.$tLen.', tData='.$tData);
                         $data2 = $zclHeader.$tSqn.$tLen.$tData;
                     } else {
                         // ZCL header
@@ -5097,16 +5097,16 @@
                         $dpData = $dp['data'];
                         $dpLen = strlen($dpData) / 2;
                         if (($dpType == "02") && ($dpLen > 4)) {
-                            cmdLog('error', '  Wrong dpData size (max=4B for type 02)');
+                            cmdLog2('error', $addr, '  Wrong dpData size (max=4B for type 02)');
                             return;
                         }
 
-                        $tuyaSqn = isset($Command['tuyaSqn']) ? $Command['tuyaSqn'] : tuyaGenSqn(); // Tuya transaction ID
+                        $tSqn = isset($Command['tuyaSqn']) ? $Command['tuyaSqn'] : tuyaGenSqn(); // Tuya transaction ID
                         $dpId = $dp['id'];
                         $dpLen = sprintf("%04X", $dpLen);
 
-                        cmdLog('debug', '  '.$Command['cmd'].': tuyaSqn='.$tuyaSqn.', dpId='.$dpId.', dpType='.$dpType.', dpData='.$dpData);
-                        $data2 = $fcf.$sqn.$cmdId.$tuyaSqn.$dpId.$dpType.$dpLen.$dpData;
+                        cmdLog2('debug', $addr, '  '.$Command['cmd'].': tSqn='.$tSqn.', dpId='.$dpId.', dpType='.$dpType.', dpData='.$dpData);
+                        $data2 = $fcf.$sqn.$cmdId.$tSqn.$dpId.$dpType.$dpLen.$dpData;
                     }
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
@@ -5133,7 +5133,7 @@
                     } else if (method_exists($this, $fctName)) {
                         $this->$fctName($dest, $addr, $ep, $cmd, $message);
                     } else {
-                        cmdLog('error', "  Commande privée: Fonction '${fctName}' inconnue");
+                        cmdLog2('error', $addr, "  Commande privée: Fonction '${fctName}' inconnue");
                     }
                     return;
                 } // End 'cmd-Private'

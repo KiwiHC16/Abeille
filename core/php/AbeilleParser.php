@@ -168,6 +168,7 @@
                      );
 
     $allErrorCode = $event + $zdpCode + $apsCode + $nwkCode + $macCode;
+    $toMon = []; // Monitoring messages from device to monitor only
 
     /* Parser log function.
        If 'dev mode' & 'debug' level: message can be filtered according to "debug.json" */
@@ -178,6 +179,22 @@
                 return; // Log disabled for this type
         }
         logMessage($level, $msg);
+    }
+
+    /* Parser log & monitoring function.
+       If 'dev mode' & 'debug' level: message can be filtered according to "debug.json"
+       Note: Regarding monitoring messages they have to be flushed at some point.
+     */
+    function parserLog2($level, $addr, $msg, $type = '') {
+        if (($type != '') && ($level == "debug")) {
+            global $dbgParserLog;
+            if (isset($dbgParserLog) && isset($dbgParserLog[$type]))
+                return; // Log disabled for this type
+        }
+        logMessage($level, $msg);
+
+        if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $addr))
+            $GLOBALS['toMon'][] = $msg;
     }
 
     /* New function to send msg to Abeille.

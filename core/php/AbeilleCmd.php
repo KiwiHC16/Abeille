@@ -24,10 +24,20 @@
     include_once __DIR__.'/AbeilleCmd-Tuya.php';
     include_once __DIR__.'/AbeilleZigateConst.php';
 
-    function cmdLog($loglevel = 'NONE', $message = "", $isEnable = 1) {
+    // Log if proper log level
+    function cmdLog($level, $message = "", $isEnable = 1) {
         if ($isEnable == 0)
             return;
-        logMessage($loglevel, $message);
+        logMessage($level, $message);
+    }
+
+    // Log if proper log level
+    // & monitor if proper address
+    function cmdLog2($level, $addr, $message) {
+        logMessage($level, $message);
+
+        if (isset($GLOBALS["dbgMonitorAddr"]) && ($GLOBALS["dbgMonitorAddr"] != "") && ($addr == $GLOBALS["dbgMonitorAddr"]))
+            monMsgToZigate($addr, $message);
     }
 
     /* Get device infos.

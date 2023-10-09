@@ -4321,7 +4321,7 @@
                         if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                             return;
 
-                        $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $msg, $toMon);
+                        $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $msg);
                     } // End $clustId == "EF00"
 
                     else {
@@ -4365,9 +4365,9 @@
                         }
                         if (isset($supportType)) {
                             if ($supportType == 'tuya')
-                                $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $pl, $toMon);
+                                $attrReportN = tuyaDecodeEF00Cmd($dest, $srcAddr, $srcEp, $cmd, $pl);
                             else if ($supportType == 'tuya-zosung')
-                                $attrReportN = tuyaDecodeZosungCmd($dest, $srcAddr, $srcEp, $cmd, $pl, $toMon);
+                                $attrReportN = tuyaDecodeZosungCmd($dest, $srcAddr, $srcEp, $cmd, $pl);
                             else
                                 parserLog("error", "  Cluster specific command ".$clustId."-".$cmd.": unsupported type ".$supportType);
                         } else {
@@ -4419,11 +4419,15 @@
 
             $this->whoTalked[] = $dest.'/'.$srcAddr;
 
-            // Monitor if requested
+            // Monitor if requested (OBSOLETE way !! Use parserLog2() instead)
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $srcAddr)) {
                 foreach ($toMon as $monMsg)
                     monMsgFromZigate($monMsg); // Send message to monitor
             }
+            // Flush monitoring messages (if any) from parserLog2()
+            foreach ($GLOBALS['toMon'] as $monMsg)
+                monMsgFromZigate($monMsg); // Send message to monitor
+            $GLOBALS['toMon'] = []; // Clear monitoring queue
         } // End decode8002()
 
         /* 8009/Network State Reponse */

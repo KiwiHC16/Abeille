@@ -115,7 +115,7 @@
         return $dp;
     }
 
-    // Returns Tuya specific transaction ID (4 bytes)
+    // Returns Tuya specific transaction ID (2 bytes)
     function tuyaGenSqn() {
         global $tuyaTransId;
         $tuyaTransId++;
@@ -144,7 +144,7 @@
 
     // Use cases: ED00 cluster support (Moes universal remote)
     function tuyaZosung($net, $addr, $ep, $cmd, $data) {
-        cmdLog('debug', "  tuyaZosung(net=${net}, addr=${addr}, ep=${ep}, cmd=${cmd})");
+        cmdLog2('debug', $addr, "  tuyaZosung(net=${net}, addr=${addr}, ep=${ep}, cmd=${cmd})");
 
         if ($cmd == '00') { // Send IR code
             $irMsg = array(
@@ -172,13 +172,14 @@
             // {name: 'unk3', type: DataType.uint8},
             // {name: 'cmd', type: DataType.uint8},
             // {name: 'unk4', type: DataType.uint16},
-            $seq = '0012'; // TODO
+            $seq = tuyaGenSqn();
             $length = sprintf("%08X", strlen($irMsgJson));
             $unk1 = '00000000';
             $unk2 = 'e004';
             $unk3 = '01';
             $cmd = '02';
             $unk4 = '0000';
+            cmdLog2('debug', $addr, "  Cmd ED00-00: Seq=${seq}, Len=${length}");
 
             $seq = AbeilleTools::reverseHex($seq);
             $len = AbeilleTools::reverseHex($length);
@@ -200,14 +201,14 @@
             $params = json_decode($data, true);
             $seq = $params['seq'];
             $pos = $params['pos'];
-            cmdLog('debug', "  Cmd 03: Seq=${seq}, Pos=${pos}");
+            cmdLog2('debug', $addr, "  Cmd ED00-03: Seq=${seq}, Pos=${pos}");
 
             $message = $GLOBALS['zosung_msg']['message'];
             $msgPart = substr($message, $pos);
             if ((strlen($msgPart) / 2) > 0x38)
                 $msgPart = substr($msgPart, 0, 0x37 * 2); // Truncate to maxLen
             $msgPartCrc = tuyaZosungCrc($msgPart);
-            cmdLog('debug', "  MsgPart=${msgPart}, MsgPartCrc=${msgPartCrc}");
+            cmdLog2('debug', $addr, "  MsgPart=${msgPart}, MsgPartCrc=${msgPartCrc}");
 
             // Cmd 03 reminder
             // {name: 'zero', type: DataType.uint8},

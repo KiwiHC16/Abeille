@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Interne: AbeilleCmd: Nouvelles modifs pour support Tuya Zosung (universal remote).
+- Interne: Tuya parser: Support cmd EF00-06 (TY_DATA_SEARCH ?) revue.
 
 231004-BETA-1
 -------------

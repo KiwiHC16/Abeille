@@ -128,6 +128,7 @@
     require_once __DIR__.'/../class/AbeilleCmdProcess.class.php';
 
     // Compute CRC for given message
+    // Use cases: ED00 cluster support (Moes universal remote)
     function tuyaZosungCrc($message) {
         $crc = 0;
         $len = strlen($message) / 2;

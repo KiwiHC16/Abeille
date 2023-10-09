@@ -51,10 +51,11 @@
     function tuyaGetDp($msg) {
         $tDpId = substr($msg, 0, 2);
         $tDataType = substr($msg, 2, 2);
-        $tFunc = substr($msg, 4, 2); // What for ?
-        $tLen = substr($msg, 6, 2);
+        // $tFunc = substr($msg, 4, 2); // What for ?
+        // $tLen = substr($msg, 6, 2);
+        $tLen = substr($msg, 4, 4);
         $tData = substr($msg, 8, hexdec($tLen) * 2);
-        $m = "Dp=".$tDpId.", Type=".$tDataType.", Func=".$tFunc.", Len=".$tLen.", ValueHex=".$tData;
+        $m = "Dp=${tDpId}, Type=${tDataType}, Len=${tLen}, ValueHex=".$tData;
 
         $dp = array(
             'id' => $tDpId,
@@ -253,6 +254,7 @@
             "01" => array("name" => "TY_DATA_RESPONE", "desc" => "Reply to MCU-side data request"),
             "02" => array("name" => "TY_DATA_REPORT", "desc" => "MCU-side data active upload (bidirectional)"),
             "03" => array("name" => "TY_DATA_QUERY", "desc" => "GW send, trigger MCU side to report all current information, no zcl payload"),
+            "06" => array("name" => "TY_DATA_SEARCH", "desc" => "?"),
             "10" => array("name" => "TUYA_MCU_VERSION_REQ", "desc" => "Gw->Zigbee gateway query MCU version"),
             "11" => array("name" => "TUYA_MCU_VERSION_RSP", "desc" => "Zigbee->Gw MCU return version or actively report version"),
             "12" => array("name" => "TUYA_MCU_OTA_NOTIFY", "desc" => "Gw->Zigbee gateway notifies MCU of upgrade"),
@@ -294,20 +296,20 @@
             }
         } else if ($cmdId == "06") { // TY_DATA_SEARCH
             parserLog('debug', "  TY_DATA_SEARCH: ".$msg);
-            // status = MsgPayload[6:8]  # uint8
-            // transid = MsgPayload[8:10]  # uint8
-            // dp = int(MsgPayload[10:12], 16)
-            // datatype = int(MsgPayload[12:14], 16)
-            // fn = MsgPayload[14:16]
-            // len_data = MsgPayload[16:18]
-            // data = MsgPayload[18:]
-            $tDpId = substr($msg, 0, 2);
-            $tDataType = substr($msg, 2, 2);
-            $tFunc = substr($msg, 4, 2); // What for ?
-            $tLen = substr($msg, 6, 2);
-            $tData = substr($msg, 8, hexdec($tLen) * 2);
-            $m = "Dp=".$tDpId.", Type=".$tDataType.", Func=".$tFunc.", Len=".$tLen.", ValueHex=".$tData;
-            parserLog('debug', "  TY_DATA_SEARCH: ".$m);
+            $tSeq = substr($msg, 0, 4);
+            $msg = substr($msg, 4); // Skip tSqn
+            $dp = tuyaGetDp($msg);
+            $mapping = $eq['tuyaEF00']['fromDevice'];
+            $a = tuyaDecodeDp($ep, $dp, $mapping, $toMon);
+            if ($a !== false)
+                $attributesN[] = $a;
+            // $tSeq = substr($msg, 0, 4);
+            // $tDpId = substr($msg, 4, 2);
+            // $tDataType = substr($msg, 6, 2);
+            // $tLen = substr($msg, 8, 4);
+            // $tData = substr($msg, 12, hexdec($tLen) * 2);
+            // $m = "Seq=${tSeq}, Dp=${tDpId}, Type=${tDataType}, Len=${tLen}, ValueHex=".$tData;
+            // parserLog('debug', "  TY_DATA_SEARCH: ".$m);
         } else if ($cmdId == "11") { // TUYA_MCU_VERSION_RSP
             parserLog('debug', "  TUYA_MCU_VERSION_RSP: ".$msg);
         } else if ($cmdId == "25") { // TUYA_INTERNET_STATUS

@@ -434,6 +434,20 @@
                 $data = '00'.$seq.'0000';
                 msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=04&data=${data}");
             }
+        } else if ($cmdId == "04") {
+            // Cmd 04 reminder
+            // {name: 'zero0', type: DataType.uint8},
+            // {name: 'seq', type: DataType.uint16},
+            // {name: 'zero1', type: DataType.uint16},
+            $seq = substr($pl, 2, 4);
+            $seqR = AbeilleTools::reverseHex($seq);
+            parserLog("debug", "  Tuya-Zosung cmd ED00-04: Seq=${seqR} => Replying with cmd ED00-05");
+
+            // Cmd 05 reminder
+            // {name: 'seq', type: DataType.uint16},
+            // {name: 'zero', type: DataType.uint16},
+            $data = $seq.'0000';
+            msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=05&data=${data}");
         } else if ($cmdId == "05") {
             // Cmd 05 reminder
             // {name: 'seq', type: DataType.uint16},

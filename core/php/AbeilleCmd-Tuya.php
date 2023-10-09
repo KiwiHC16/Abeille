@@ -134,10 +134,11 @@
         $len = strlen($message) / 2;
         for($i = 0; $i < $len; $i++) {
             $c = substr($message, $i * 2, 2);
-            cmdLog('debug', "  c=${c}, crc=".bin2hex($crc));
-            $crc += pack("H*", $c);
+            // cmdLog('debug', "  c=${c}, crc=".dechex($crc));
+            $crc += hexdec($c);
             $crc %= 0x100;
         }
+        // cmdLog('debug', "  crc=".dechex($crc));
         return sprintf("%02X", $crc);
     }
 

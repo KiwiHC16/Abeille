@@ -1028,17 +1028,21 @@
                     // Step color (cmd 0x09)
                     // Stop move step (cmd 0x47)
                     cmds["White"] = newCmd("act_zbCmdC-0300-MoveToColor", "X=6000&Y=6000");
-                    // if (currentMode == 1) // If X + Y
-                        cmds["White"]["isVisible"] = 1;
+                    cmds["White"]["isVisible"] = 1;
+                    cmds["White"]["logicalId"] = "SetWhite";
+
                     cmds["Blue"] = newCmd("act_zbCmdC-0300-MoveToColor", "X=228F&Y=228F");
-                    // if (currentMode == 1) // If X + Y
-                        cmds["Blue"]["isVisible"] = 1;
+                    cmds["Blue"]["isVisible"] = 1;
+                    cmds["Blue"]["logicalId"] = "SetBlue";
+
                     cmds["Red"] = newCmd("act_zbCmdC-0300-MoveToColor", "X=AE13&Y=51EB");
-                    // if (currentMode == 1) // If X + Y
-                        cmds["Red"]["isVisible"] = 1;
+                    cmds["Red"]["isVisible"] = 1;
+                    cmds["Red"]["logicalId"] = "SetRed";
+
                     cmds["Green"] = newCmd("act_zbCmdC-0300-MoveToColor", "X=147A&Y=D709");
-                    // if (currentMode == 1) // If X + Y
-                        cmds["Green"]["isVisible"] = 1;
+                    cmds["Green"]["isVisible"] = 1;
+                    cmds["Green"]["logicalId"] = "SetGreen";
+
                     cmds["RGB"] = newCmd("setRGB");
                     cmds["RGB"]["isVisible"] = 1;
                     cmds["RGB"]["nextLine"] = "after";
@@ -1136,9 +1140,9 @@
                 // }
 
                 // Generated cmd 00 seems to be mandatory. Using it by default
-                cmds["Zone Alarm1"] = newCmd("attr-Zone-Alarm1", "ep="+epId);
+                cmds["Zone Alarm1"] = newCmd("inf_Zone-Alarm1", "ep="+epId);
                 cmds["Zone Alarm1"]["isVisible"] = 1;
-                cmds["Zone Status Changed"] = newCmd("inf_zbAttr-0500-ZoneStatus-ChangeNotification", "ep="+epId);
+                cmds["Zone Status Changed"] = newCmd("inf_zbCmdS-0500-ZoneStatus-ChangeNotification", "ep="+epId);
                 cmds["Zone Status Changed"]["comment"] = "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value";
                 cmds["Zone Status Changed"]["trigOut"] = epId+"-0500-alarm1";
                 cmds["Zone Status Changed"]["trigOutOffset"] = "#value#&1";

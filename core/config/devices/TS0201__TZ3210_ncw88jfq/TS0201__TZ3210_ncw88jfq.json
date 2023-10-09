@@ -10,7 +10,7 @@
         "configuration": {
             "icon": "Tuya-TempHumidityDisplay",
             "mainEP": "01",
-            "batteryType": "?"
+            "batteryType": "2x1.5V AAA"
         },
         "commands": {
             "Battery-Percent": {

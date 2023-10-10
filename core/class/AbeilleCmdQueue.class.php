@@ -344,10 +344,11 @@
                 cmdLog("debug", "    Zigate disabled => cmd IGNORED");
                 return;
             }
-            if ($GLOBALS['zigates'][$zgId]['ieeeOk'] == '-1') {
-                cmdLog("debug", "    Zigate on wrong port => cmd IGNORED");
-                return;
-            }
+            // Temp disabled. 'ieeeOk' should be updated from parser when it is ok. Not the case here.
+            // if ($GLOBALS['zigates'][$zgId]['ieeeOk'] == '-1') {
+            //     cmdLog("debug", "    Zigate on wrong port => cmd IGNORED");
+            //     return;
+            // }
             if (!ctype_xdigit($zgCmd)) {
                 cmdLog('error', '    Commande Zigate invalide: Pas en hexa ! ('.$zgCmd.')');
                 return;

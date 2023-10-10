@@ -739,7 +739,7 @@
                         cmdLog('debug', '  Corresponding cmd not found.');
                         continue;
                     }
-
+cmdLog('debug', "cmd=".json_encode($cmd));
                     // If ACK is requested but failed, removing cmd or it will lead to cmd timeout.
                     // Note: This is done only if cmd == last sent.
                     // if ($cmd['ackAps'] && $lastSent)
@@ -754,11 +754,12 @@
                         if ($eq === false) {
                             cmdLog('debug', "  WARNING: Unknown device: Net=${net} Addr=${addr}");
                         } else {
+cmdLog('debug', "eq=".json_encode($eq));
                             if ($msg['status'] == '00') { // Ok ?
-                                if ($eq['txStatus'] != 'ok')
+                                if ($eq['txStatus'] !== 'ok')
                                     $eqStatusChanged = 'ok';
                             } else { // NO ACK ?
-                                if ($eq['txStatus'] != 'noack')
+                                if ($eq['txStatus'] !== 'noack')
                                     $eqStatusChanged = 'noack';
                             }
                             if ($eqStatusChanged != '') {

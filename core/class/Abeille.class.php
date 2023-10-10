@@ -1778,8 +1778,7 @@ class Abeille extends eqLogic {
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
             if (is_object($eqLogic)) {
-                $noack = ($msg['txStatus'] == 'ok') ? false : true;
-                $eqLogic->setStatus('ab::noack', $noack);
+                $eqLogic->setStatus('ab::txAck', $msg['txStatus']); // ab::txAck == 'ok' or 'noack'
                 $eqLogic->save();
             } else {
                 log::add('Abeille', 'error', "msgFromParser(eqTxStatusUpdate): Equipement inconnu: ".$net.'/'.$addr);

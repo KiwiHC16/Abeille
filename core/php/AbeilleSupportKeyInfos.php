@@ -166,7 +166,7 @@
                     $lastComm = $eqLogic->getStatus('lastCommunication');
                     $extra = ", TIMEOUT (last comm ".$lastComm.")";
                     $status = "TO";
-                } else if ($eqLogic->getStatus('ab::noack', false) != false) {
+                } else if ($eqLogic->getStatus('ab::txAck', 'ok') != 'ok') {
                     $extra = ", NO-ACK";
                     $status = "NA";
                 }

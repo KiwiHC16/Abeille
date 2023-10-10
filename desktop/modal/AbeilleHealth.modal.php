@@ -272,13 +272,13 @@
                             status = '<span class="label label-default" style="font-size: 1em; cursor: default;">{{Désactivé}}</span>';
                         else if (addr.substr(2) == "rc") // Remote control ?
                             status = '<span class="label label-success" style="font-size: 1em; cursor: default;">-</span>';
-                        else if (e.timeout || e.noack) {
+                        else if (e.timeout || (e.txAck == 'noack')) {
                             if (e.timeout && !e.noack)
                                 s = "{{Time-out}}";
-                            else if (!e.timeout && e.noack)
+                            else if (!e.timeout && (e.txAck == 'noack'))
                                 s = "{{No-ACK}}";
                             else
-                                s = "{{Time-out}}&{{No-ACK}}";
+                                s = "{{Time-out}}/{{No-ACK}}";
                             status = '<span class="label label-danger" style="font-size: 1em; cursor: default;">' + s + '</span>';
                         } else
                             status = '<span class="label label-success" style="font-size: 1em; cursor: default;">{{OK}}</span>';

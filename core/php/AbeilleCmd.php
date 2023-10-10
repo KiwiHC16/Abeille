@@ -262,7 +262,7 @@
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
             $eq = array(
                 'ieee' => $eqLogic->getConfiguration('IEEE', ''),
-                'txStatus' => $eqLogic->getStatus('ab::noack', 'ok'), // Transmit status: 'ok' or 'noack'
+                'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
                 'jsonId' => isset($eqModel['id']) ? $eqModel['id'] : '',
                 'jsonLocation' => isset($eqModel['location']) ? $eqModel['location'] : 'Abeille',
             );

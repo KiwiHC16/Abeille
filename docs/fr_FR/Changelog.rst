@@ -3,6 +3,7 @@ ChangeLog
 
 - Interne: Msg 8012 n'est plus transmis à 'AbeilleCmd'.
 - Interne: Cmd: Correction changement adresse lors d'une nouvelle annonce.
+- Interne: Correction status 'NO-ACK'.
 
 231009-BETA-1
 -------------

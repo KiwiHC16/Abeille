@@ -58,6 +58,22 @@
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
 
+        $ieee = $eqLogic->getConfiguration('IEEE', '');
+        if (!isset($GLOBALS['devices'][$net][$addr]) && ($ieee == '')) {
+            logMessage('debug', "  updateDeviceFromDB() WARNING: Unknown addr ${addr} and IEEE is undefined");
+            return;
+        }
+        if (!isset($GLOBALS['devices'][$net][$addr])) {
+            // Address may have changed following new device announce
+            foreach ($GLOBALS['devices'][$net] as $addr2 => $eq2) {
+                if ($eq2['ieee'] == $ieee) {
+                    $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$net][$addr2];
+                    unset($GLOBALS['devices'][$net][$addr2]);
+                    logMessage('debug', "  Device ID ${eqId} address changed from ${addr2} to ${addr}.");
+                }
+            }
+        }
+
         // $GLOBALS['devices'][$net][$addr]['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null);
         // parserLog('debug', "  'tuyaEF00' updated to ".json_encode($GLOBALS['devices'][$net][$addr]['tuyaEF00']));
         // $GLOBALS['devices'][$net][$addr]['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null);

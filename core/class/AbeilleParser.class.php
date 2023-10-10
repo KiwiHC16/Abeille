@@ -4608,17 +4608,17 @@
             // Log
             parserLog('debug', $net.', Type='.$msgDecoded, "8012");
 
-            // Sending msg to cmd for flow control
-            $msg = array (
-                'type'      => "8012",
-                'net'       => $net,
-                'status'    => $status,
-                'addr'      => $dstAddr,
-                'sqnAps'    => $sqnAps,
-                'nPDU'      => $nPdu,
-                'aPDU'      => $aPdu,
-            );
-            $this->msgToCmdAck($msg);
+            // Sending msg to cmd for flow control => Disabled as not used on cmd side
+            // $msg = array (
+            //     'type'      => "8012",
+            //     'net'       => $net,
+            //     'status'    => $status,
+            //     'addr'      => $dstAddr,
+            //     'sqnAps'    => $sqnAps,
+            //     'nPDU'      => $nPdu,
+            //     'aPDU'      => $aPdu,
+            // );
+            // $this->msgToCmdAck($msg);
 
             $zgId = substr($net, 7); // AbeilleX => X
             $GLOBALS['zigate'.$zgId]['nPdu'] = $nPdu;

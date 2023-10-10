@@ -771,7 +771,7 @@
                                     'txStatus' => $eqStatusChanged // 'ok', or 'noack'
                                 );
                                 msgToAbeille($msg);
-                                cmdLog('debug', "  ${net}-${addr} status changed to '${eqStatusChanged}'");
+                                cmdLog2('debug', $addr, "  ${net}-${addr} status changed to '${eqStatusChanged}'");
                             }
                         }
                     }

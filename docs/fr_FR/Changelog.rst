@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-231010-BETA-1
+231010-BETA-2
 -------------
 
 - Interne: Msg 8012 n'est plus transmis à 'AbeilleCmd'.

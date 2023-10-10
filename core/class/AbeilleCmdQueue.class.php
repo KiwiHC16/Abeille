@@ -389,7 +389,7 @@
             }
             cmdLog('debug', '    Zg '.$zgId.' queues: '.$queuesTxt);
             if (count($GLOBALS['zigates'][$zgId]['cmdQueue'][$priority]) > 50) {
-                cmdLog('debug', '    WARNING: More than 50 pending messages in zigate'.$this->zgId.' cmd queue: '.$priority);
+                cmdLog('debug', '    WARNING: More than 50 pending messages in zigate'.$zgId.' cmd queue: '.$priority);
             }
         } // End addCmdToQueue2()
 

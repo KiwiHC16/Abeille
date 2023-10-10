@@ -511,7 +511,7 @@
             $GLOBALS['eqList'][$net][$addr] = $eq;
         }
 
-        logMessage('debug', 'Reading queue');
+        logMessage('debug', 'Reading messages queues');
         while (true) {
 
             // Wait (block) for any input messages

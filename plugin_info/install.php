@@ -878,25 +878,26 @@
          */
         if (intval($dbVersion) < 20231012) {
             // 'eqLogic' DB updates
-            // TO BE UNCOMMENTED WHEN ONLINE CREATION IS OK
-            // $eqLogics = eqLogic::byType('Abeille');
-            // foreach ($eqLogics as $eqLogic) {
-            //     $eqId = $eqLogic->getId();
-            //     $cmds = Cmd::byEqLogicId($eqId);
-            //     foreach ($cmds as $cmdLogic) {
-            //         $saveCmd = false;
-            //         $cmdLogicId = $cmdLogic->getLogicalId();
+            $eqLogics = eqLogic::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                $eqId = $eqLogic->getId();
+                $cmds = Cmd::byEqLogicId($eqId);
+                foreach ($cmds as $cmdLogic) {
+                    $saveCmd = false;
+                    $cmdLogicId = $cmdLogic->getLogicalId();
 
-            //         if ($cmdLogicId == 'online') {
-            //             $cmdLogic->setConfiguration('repeatEventManagement', "always");
-            //             log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Updated");
-            //             $saveCmd = true;
-            //         }
+                    if ($cmdLogicId == 'online') {
+                        if ($cmdLogic->setConfiguration('repeatEventManagement', '') == '') {
+                            $cmdLogic->setConfiguration('repeatEventManagement', "always");
+                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Added 'repeatEventManagement'='always'");
+                            $saveCmd = true;
+                        }
+                    }
 
-            //         if ($saveCmd)
-            //             $cmdLogic->save();
-            //     }
-            // }
+                    if ($saveCmd)
+                        $cmdLogic->save();
+                }
+            }
 
             // 'config' DB updates
             for ($zgId = 7; $zgId <= 10; $zgId++) {

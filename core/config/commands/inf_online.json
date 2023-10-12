@@ -6,6 +6,7 @@
         "configuration": {
             "returnStateValue": "0",
             "returnStateTime": "60",
+            "repeatEventManagement": "always",
             "visibilityCategory": "Network"
         },
         "type": "info",

@@ -874,16 +874,31 @@
         /* Internal changes
          * - Logs: AbeilleSerialReadX logs moved to /tmp/jeedom/Abeille
          * - Config DB: Removing keys for Zigates 7 to 10.
+         * - Cmds DB: For 'Online' adding 'repeatEventManagement=always'
          */
         if (intval($dbVersion) < 20231012) {
-            // Remove obsolete logs
-            $obsolete = [];
-            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
-                $obsolete[] = "AbeilleSerialRead${zgId}.log";
-            }
-            removeLogs($obsolete);
+            // 'eqLogic' DB updates
+            // TO BE UNCOMMENTED WHEN ONLINE CREATION IS OK
+            // $eqLogics = eqLogic::byType('Abeille');
+            // foreach ($eqLogics as $eqLogic) {
+            //     $eqId = $eqLogic->getId();
+            //     $cmds = Cmd::byEqLogicId($eqId);
+            //     foreach ($cmds as $cmdLogic) {
+            //         $saveCmd = false;
+            //         $cmdLogicId = $cmdLogic->getLogicalId();
 
-            // Config DB updates
+            //         if ($cmdLogicId == 'online') {
+            //             $cmdLogic->setConfiguration('repeatEventManagement', "always");
+            //             log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Updated");
+            //             $saveCmd = true;
+            //         }
+
+            //         if ($saveCmd)
+            //             $cmdLogic->save();
+            //     }
+            // }
+
+            // 'config' DB updates
             for ($zgId = 7; $zgId <= 10; $zgId++) {
                 config::remove("ab::zgChan${zgId}", 'Abeille');
                 config::remove("ab::zgEnabled${zgId}", 'Abeille');
@@ -893,6 +908,13 @@
                 config::remove("ab::zgType${zgId}", 'Abeille');
                 config::remove("ab::zgIpAddr${zgId}", 'Abeille');
             }
+
+            // Remove obsolete logs
+            $obsolete = [];
+            for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+                $obsolete[] = "AbeilleSerialRead${zgId}.log";
+            }
+            removeLogs($obsolete);
 
             // config::save('ab::dbVersion', '20230927', 'Abeille');
         }

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="231010-BETA-2"
+# VERSION="231012-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -60,7 +60,7 @@ f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 8c4188be1bbbb03c8d7b4cd600ba3046 *core/class/AbeilleTest.class.php
 0055fd31d027d69a736381f5cc77ebf9 *core/class/AbeilleTestDB.class.php
 59bd27658277899136cb170de65b8930 *core/class/AbeilleTools.class.php
-6f1e3905bb5df7c9448cf3f00a121c0e *core/config/Abeille.config.php
+4b2c1affd7d17bf41a9a25e7851c99c2 *core/config/Abeille.config.php
 d8fe59ba5c734449970615205f5a23cc *core/config/commands/BindToGroupLevelEP03.json
 7d700c97dd32d63675fafce8e5599906 *core/config/commands/BindToGroupLevelEP04.json
 9fd0a2c94ead780fe67c284671b4ca71 *core/config/commands/BindToGroupLevelEP05.json
@@ -267,12 +267,15 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/getSWBuild.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/getcurrent_position_lift_percentage.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/humidite.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/levelLight.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/levelVolet.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/levelVoletStop.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/location.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/luminosite.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/luminositeHue.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/luminositeXiaomi.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/nom.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/offVolet.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/onVolet.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/online.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/present_value.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/pression.json
@@ -457,7 +460,7 @@ da7f974ad7d269e9f89eaf5a29953d57 *core/config/commands/inf_click.json
 4fc4a2b5223d841583dc3ae3d479ba7a *core/config/commands/inf_generic-NumericBadge.json
 2f06cc0f5cd61e46686d9fd2d89a4380 *core/config/commands/inf_generic-String.json
 51f33f5b7b11c972ff3c2b3d6059df46 *core/config/commands/inf_linkQuality.json
-f8e4efb42538875ea96e97ec77399031 *core/config/commands/inf_online.json
+ae84d6a3817d38ff053a390b1beb337f *core/config/commands/inf_online.json
 aed69b2eb9842a538d8d373a1475fe01 *core/config/commands/inf_time-String.json
 564249ad6d8230c2730c54688467e4ac *core/config/commands/inf_time-Timestamp.json
 9248cb7ad77a8f7218b3c0cf2a443bec *core/config/commands/inf_zbAttr-0000-SWBuildID.json
@@ -512,7 +515,6 @@ ea4620f097eb5bd56d166b23bbbf7b1b *core/config/commands/inf_zbCmdC-0501-Arm-Strin
 b4799c21f2192529396b77962dcbbde5 *core/config/commands/inf_zbCmdC-0501-Arm-Value.json
 ab1476c000efb6d68610e702f79cb8ab *core/config/commands/inf_zbCmdS-0500-ZoneStatus-ChangeNotification.json
 3e99eaf761d47554bde5fd7f44936d84 *core/config/commands/inf_zbCmdS-0500-ZoneStatus-ZoneEnrollRequest.json
-2d505be5e6d88557cec425a46f49d249 *core/config/commands/levelVolet.json
 3b82c374b33304d5741a154d79bbc45b *core/config/commands/moveToLiftAndTiltBSO_Lift.json
 26a2083a9cdc89612d7a6c6ff15de432 *core/config/commands/moveToLiftAndTiltBSO_Tilt.json
 8c24f9f574812ad0bf6c859af615059b *core/config/commands/multi.json
@@ -526,7 +528,6 @@ ff66e8bc09989541c20339799a1c9bd6 *core/config/commands/offGroupEP4.json
 2023d9d18352a1d13036aa2ad50de7ad *core/config/commands/offGroupEP7.json
 bbf406afdba0d46c304ed7f98503db26 *core/config/commands/offGroupEP8.json
 e142bce7c03d422a76943924a9e771cc *core/config/commands/offGroupTimed.json
-10f16ead8f4684f07bcde6c7bfa4ffd7 *core/config/commands/offVolet.json
 47f67a0d8d673a0a55b0c341eec9a767 *core/config/commands/onGroup.json
 56853bb0549eaf5f251624e3dd46603d *core/config/commands/onGroupBroadcast.json
 e12a0e70765b2bb61490b5098e850543 *core/config/commands/onGroupEP1.json
@@ -537,7 +538,6 @@ f0a2ab369c3add920d6d0593bd489b66 *core/config/commands/onGroupEP6.json
 25070d3f4cf3b5db90bc47050a449677 *core/config/commands/onGroupEP7.json
 71f0c527ab31aabfeb48b65e538306a1 *core/config/commands/onGroupEP8.json
 b286b08c33c5b1a661b0c5f7a7aab90f *core/config/commands/onGroupTimed.json
-d2dba007404c57d6c28891e321473b6e *core/config/commands/onVolet.json
 f9d99db998cb460954afbd69f04ec806 *core/config/commands/poll-0006-0000.json
 26d22179084fc9636d136696de41ca25 *core/config/commands/poll-0702-0000.json
 c8888f915da4b2210a976bd2f0b618d2 *core/config/commands/poll-0B04-0505-0508-050B.json
@@ -653,7 +653,7 @@ c3871124b2a8c3b7407fa7f5cbf2fb01 *core/config/devices/898ca74409a740b28d5841661e
 69e16281e81c136b76030c5c422dc076 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/ALCANTARA2D1.00P1.02Z1.00.json
 b3de5b2b6933161949c28715effe4536 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/discovery.json
 c7c0f631b72722d1c87e3b4b1ef1774b *core/config/devices/BASICZBR3/BASICZBR3.json
-2e66946b5540ee316cb9b11843ad1d0e *core/config/devices/BSO/BSO.json
+a0802443112715b86aa9072fde748cf1 *core/config/devices/BSO/BSO.json
 60ce37f68f1e79300179e0e98de16172 *core/config/devices/CLA60RGBWOSRAM/CLA60RGBWOSRAM.json
 d2e63d620a14e2cf27f6bb2cbae310d0 *core/config/devices/CLA60TWOSRAM/CLA60TWOSRAM.json
 70f47d5a140700ff1569948ce7ad1abd *core/config/devices/COSensor-EF-3.0/COSensor-EF-3.0.json
@@ -1282,7 +1282,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-79cfbc2043e8ad92e0c712cb915c913b *docs/fr_FR/Changelog.rst
+34ad55a2063c19266dc2d2008b330de3 *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1614,11 +1614,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-f75465170e49b4c483e3250998b386ac *plugin_info/Abeille.version
+3151811b2397cec6ea6bb39712c63907 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 f12550a9afe0a3ce101b386e1a4c1fcf *plugin_info/configuration.php
-d44feb0b780aef1397ceefbc31a5321f *plugin_info/info.json
-b06239df602113a60073e6d83bf50080 *plugin_info/install.php
+572ea778392c116d94c11a4d0abd7109 *plugin_info/info.json
+0f26b16e5d7225abeaf7bbe7190fa427 *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
 9dccf462d245f55ac3e0cdb0e5401f5b *resources/AbeilleDeamon/Debug/verification.php

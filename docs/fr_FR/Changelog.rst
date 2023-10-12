@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231012-BETA-1
+-------------
+
 - Interne: Nettoyage DB 'config' pour clefs zigates 7 à 10.
 - Cmd info 'Online': Correction (passage par 0 inattendu).
 - Profalux BSO: Modèle revisité.

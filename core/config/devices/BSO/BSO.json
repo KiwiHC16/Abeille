@@ -2,53 +2,65 @@
     "BSO": {
         "manufacturer": "Profalux",
         "model": "BSO",
+        "type": "Profalux BSO",
+        "genericType": "Shutter",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
             "icon": "Profalux-BSO"
         },
         "category": {
-            "automatism": "1"
+            "opening": "1"
         },
-        "type": "Profalux BSO",
         "commands": {
-            "Lift": {
-                "use": "Lift"
-            },
-            "Tilt": {
-                "use": "Tilt"
-            },
-            "ZCL Version": {
-                "use": "inf_zbAttr-0000-ZCLVersion"
-            },
-            "etat": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "genericType": "FLAP_STATE",
+            "Down": {
+                "use": "act_zbCmdC-0008-DownClose",
                 "isVisible": 1
             },
-            "Level": {
-                "use": "levelVolet"
-            },
-            "Monter": {
-                "use": "onVolet"
-            },
-            "Descendre": {
-                "use": "offVolet"
-            },
-            "setLevel": {
-                "use": "setLevelVolet"
+            "Up": {
+                "use": "act_zbCmdC-0008-UpOpen",
+                "isVisible": 1
             },
             "Stop": {
                 "use": "act_zbCmdC-0008-StopWithOnOff",
+                "isVisible": 1
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "genericType": "FLAP_STATE",
                 "isVisible": 1
             },
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Get-CurrentLevel": {
+            "Set Level": {
+                "use": "setLevelVolet",
+                "value": "Level",
+                "nextLine": "before",
+                "isVisible": 1
+            },
+            "Level": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "genericType": "FLAP_STATE",
+                "template": "shutter",
+                "isVisible": 1
+            },
+            "Get-Level": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
+            },
+            "Set Lift": {
+                "use": "moveToLiftAndTiltBSO_Lift"
+            },
+            "Lift": {
+                "use": "Lift"
+            },
+            "Set Tilt": {
+                "use": "moveToLiftAndTiltBSO_Tilt"
+            },
+            "Tilt": {
+                "use": "Tilt"
             },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
@@ -71,19 +83,6 @@
                 "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "Set Lift": {
-                "use": "moveToLiftAndTiltBSO_Lift"
-            },
-            "Set Tilt": {
-                "use": "moveToLiftAndTiltBSO_Tilt"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
             }
         }
     }

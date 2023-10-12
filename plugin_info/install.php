@@ -870,16 +870,29 @@
 
             config::save('ab::dbVersion', '20230521', 'Abeille');
         }
+
         /* Internal changes
-         * - AbeilleSerialReadX logs moved to /tmp/jeedom/Abeille
+         * - Logs: AbeilleSerialReadX logs moved to /tmp/jeedom/Abeille
+         * - Config DB: Removing keys for Zigates 7 to 10.
          */
-        if (intval($dbVersion) < 20230927) {
+        if (intval($dbVersion) < 20231012) {
             // Remove obsolete logs
             $obsolete = [];
             for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
                 $obsolete[] = "AbeilleSerialRead${zgId}.log";
             }
             removeLogs($obsolete);
+
+            // Config DB updates
+            for ($zgId = 7; $zgId <= 10; $zgId++) {
+                config::remove("ab::zgChan${zgId}", 'Abeille');
+                config::remove("ab::zgEnabled${zgId}", 'Abeille');
+                config::remove("ab::zgIeeeAddr${zgId}", 'Abeille');
+                config::remove("ab::zgIeeeAddrOk${zgId}", 'Abeille');
+                config::remove("ab::zgPort${zgId}", 'Abeille');
+                config::remove("ab::zgType${zgId}", 'Abeille');
+                config::remove("ab::zgIpAddr${zgId}", 'Abeille');
+            }
 
             // config::save('ab::dbVersion', '20230927', 'Abeille');
         }

@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Nettoyage DB 'config' pour clefs zigates 7 à 10.
+
 231010-BETA-2
 -------------
 

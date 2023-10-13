@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Heiman HS1SA: Mise-à-jour modèle. Ajout de signatures alternatives.
+
 231012-BETA-1
 -------------
 

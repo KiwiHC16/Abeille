@@ -322,18 +322,19 @@
                     continue;
                 if (substr($key, 0, 7) == "comment")
                     continue;
-                    newCmdError($cmdName, "ERROR", "Invalid configuration key '".$key."'");
+                    newCmdError($cmdName, "ERROR", "Invalid command configuration key '".$key."'");
             }
         }
 
         /* Checking supported top level keywords */
         $supportedKeys = ['type', 'subType', 'logicalId', 'configuration', 'name', 'genericType', 'template', 'isVisible', 'isHistorized', 'invertBinary', 'unit', 'display', 'nextLine', 'value'];
+        array_push($supportedKeys, 'disableTitle');
         foreach ($cmd[$cmdName] as $key => $value) {
             if (in_array($key, $supportedKeys))
                 continue;
             if (substr($key, 0, 7) == "comment")
                 continue;
-                newCmdError($cmdName, "ERROR", "Invalid command key '".$key."'");
+                newCmdError($cmdName, "ERROR", "Invalid command top key '".$key."'");
         }
     } // End checkCommand()
 

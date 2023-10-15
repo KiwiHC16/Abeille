@@ -4,6 +4,10 @@
     define('devicesDir', __DIR__.'/../core/config/devices');
     define('commandsDir', __DIR__.'/../core/config/commands');
 
+    // Categories: is it "other" and/or "default" ? Which one is allowed ?
+    // {"heating":"1","security":"0","energy":"0","light":"0","opening":"0","automatism":"0","multimedia":"0","default":"0"}
+    // $categories = [];
+
     $devicesList = [];
     $commandsList = [];
     $allCommandsList = []; // All available commands

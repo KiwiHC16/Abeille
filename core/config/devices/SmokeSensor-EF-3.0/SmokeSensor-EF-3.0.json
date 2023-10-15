@@ -23,8 +23,12 @@
             "security": "1"
         },
         "commands": {
+            "Zone Status": {
+                "use": "inf_zbAttr-0500-ZoneStatus"
+            },
             "Status": {
-                "use": "securitySafetySmokeHeiman2"
+                "use": "inf_zbAttr-0500-ZoneStatus-Alarm1",
+                "isVisible": "1"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent",
@@ -52,8 +56,10 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "setReportSmokeHeiman": {
-                "use": "setReportSmokeHeiman"
+            "SetReporting 0500-0002": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0500&attrId=0002&attrType=19&maxInterval=3500",
+                "execAtCreation": "yes"
             }
         }
     }

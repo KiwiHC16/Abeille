@@ -3,6 +3,7 @@ ChangeLog
 
 - Heiman HS1SA: Mise-à-jour modèle. Ajout de signatures alternatives.
 - Interne: Mises-à-jour support Tuya-Zosung.
+- Sirene iAlarm: Mises-à-jour du modèle (2629).
 
 231012-BETA-1
 -------------

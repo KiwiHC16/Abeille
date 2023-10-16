@@ -1150,6 +1150,11 @@
                 cmds["Bind "+epId+"-0500-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0500", "yes");
             }
 
+            /* 0502/IAS WD */
+            // if (isset(ep.servClusters["0502"]) && isset(ep.servClusters["0502"]['attributes'])) {
+            //     attributes = ep.servClusters["0502"]['attributes'];
+            // }
+
             /* 0702/Metering (Smart Energy) */
             if (isset(ep.servClusters["0702"]) && isset(ep.servClusters["0702"]['attributes'])) {
                 attributes = ep.servClusters["0702"]['attributes'];

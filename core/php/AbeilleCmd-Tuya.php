@@ -143,10 +143,14 @@
     }
 
     // Use cases: ED00 cluster support (Moes universal remote)
+    // Cmd 00: data=hex string or IR code to send
+    // Cmd 03: data=JSON encoded {'seq' => hex string, 'pos' => binary, 'maxLen' => binary}
     function tuyaZosung($net, $addr, $ep, $cmd, $data) {
         cmdLog2('debug', $addr, "  tuyaZosung(net=${net}, addr=${addr}, ep=${ep}, cmd=${cmd})");
 
         if ($cmd == '00') { // Send IR code
+            $dataSize = strlen($data) / 2;
+            $dataSize = sprintf("%02X", $dataSize);
             $irMsg = array(
                 'key_num' => 1,
                 'delay' => 300,
@@ -154,14 +158,20 @@
                     'num' => 1,
                     'freq' => 38000,
                     'type' => 1,
-                    'key_code' => $data,
+                    'key_code' => $dataSize.$data, // dataSize required ?
                 ),
             );
             $irMsgJson = json_encode($irMsg);
+cmdLog2('debug', $addr, '  TEMPORARY: irMsgJson='.$irMsgJson);
+            $message = bin2hex($irMsgJson);
+            $seq = tuyaGenSqn();
 
             // Saving message to send
-            $GLOBALS['zosung_msg'] = array(
-                'message' => $data
+            if (!isset($GLOBALS['zosung']))
+                $GLOBALS['zosung'] = [];
+            $GLOBALS['zosung'][$seq] = array(
+                // 'message' => $data
+                'message' => $message
             );
 
             // Cmd ED00-00 reminder
@@ -172,8 +182,9 @@
             // {name: 'unk3', type: DataType.uint8},
             // {name: 'cmd', type: DataType.uint8},
             // {name: 'unk4', type: DataType.uint16},
-            $seq = tuyaGenSqn();
-            $length = sprintf("%08X", strlen($irMsgJson));
+
+            // $seq = tuyaGenSqn();
+            $length = sprintf("%08X", strlen($message));
             $unk1 = '00000000';
             $unk2 = 'e004';
             $unk3 = '01';
@@ -199,16 +210,32 @@
             AbeilleCmdProcess::sendRawMessage($header, $data);
         } else if ($cmd == '03') {
             $params = json_decode($data, true);
-            $seq = $params['seq'];
-            $pos = $params['pos'];
-            cmdLog2('debug', $addr, "  Cmd ED00-03: Seq=${seq}, Pos=${pos}");
+            $seq = $params['seq']; // Hex string
+            $pos = $params['pos']; // Binary
+            $maxLen = $params['maxLen']; // Binary
+            cmdLog2('debug', $addr, "  Cmd ED00-03: Seq=${seq}, Pos=d${pos}, MaxLen=d${maxLen}");
 
-            $message = $GLOBALS['zosung_msg']['message'];
-            $msgPart = substr($message, $pos);
-            if ((strlen($msgPart) / 2) > 0x38)
-                $msgPart = substr($msgPart, 0, 0x37 * 2); // Truncate to maxLen
+            if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seq])) {
+                cmdLog2('debug', $addr, "  WARNING: No message defined for seq ${seq}");
+                return;
+            }
+
+            $message = $GLOBALS['zosung'][$seq]['message'];
+cmdLog2('debug', $addr, "  TEMPORARY: message=".$message);
+            $msgRemain = substr($message, $pos);
+            $msgSize = strlen($msgRemain) / 2;
+            if ($msgSize == 0) {
+                cmdLog2('debug', $addr, "  WARNING: All datas already sent");
+                return;
+            }
+            if ($msgSize > 0x32) { // Note: 0x32 taken from zigbee-herdsman-converters, zosung.ts
+                $msgSize = 0x32;
+                $msgPart = substr($msgRemain, 0, $msgSize * 2); // Truncate to maxLen
+            } else
+                $msgPart = $msgRemain;
+            $msgSize = sprintf("%02X", $msgSize);
             $msgPartCrc = tuyaZosungCrc($msgPart);
-            cmdLog2('debug', $addr, "  MsgPart=${msgPart}, MsgPartCrc=${msgPartCrc}");
+            cmdLog2('debug', $addr, "  MsgSize=${msgSize}, MsgPart=${msgPart}, MsgPartCrc=${msgPartCrc}");
 
             // Cmd 03 reminder
             // {name: 'zero', type: DataType.uint8},
@@ -220,7 +247,7 @@
             $pos = sprintf("%08X", $pos);
             $seqR = AbeilleTools::reverseHex($seq);
             $posR = AbeilleTools::reverseHex($pos);
-            $data = '00'.$seqR.$posR.$msgPart.$msgPartCrc;
+            $data = '00'.$seqR.$posR.$msgSize.$msgPart.$msgPartCrc;
 
             $header = array(
                 'net' => $net,

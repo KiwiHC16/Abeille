@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Heiman HS1SA: Mise-à-jour modèle. Ajout de signatures alternatives.
+- Interne: Mises-à-jour support Tuya-Zosung.
 
 231012-BETA-1
 -------------

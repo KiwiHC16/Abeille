@@ -422,8 +422,9 @@
 
             parserLog2("debug", $addr, "  Replying with cmd ED00-03");
             $data = array(
-                'seq' => hexdec($seqR),
+                'seq' => $seqR,
                 'pos' => hexdec($positionR),
+                'maxLen' => hexdec($maxLen)
             );
             $dataJson = json_encode($data);
             msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Private", "ep=".$ep."&fct=tuyaZosung&cmd=03&message=${dataJson}");
@@ -436,15 +437,20 @@
             // {name: 'msgpartcrc', type: DataType.uint8},
             $seq = substr($pl, 2, 4);
             $pos = substr($pl, 6, 8);
-            $msgPart = substr($pl, 14, -2); // Rest is msgpart + msgpartcrc
-            $msgSize = strlen($msgPart) / 2;
+            $msgSize = hexdec(substr($pl, 14, 2));
+            $msgPart = substr($pl, 16, -2); // Rest is msgpart + msgpartcrc
+            $msgPartSize = strlen($msgPart) / 2; // For control purposes
+            if ($msgSize != $msgPartSize)
+                parserLog2("debug", $addr, "  WARNING: msgSize (${msgSize}) != len msgPart (${msgPartSize})");
             $crc = substr($pl, -2);
 
             $seqR = AbeilleTools::reverseHex($seq);
             $posR = AbeilleTools::reverseHex($pos);
             parserLog2("debug", $addr, "  Tuya-Zosung cmd ED00-03: Seq=${seqR}, Pos=${posR}, MsgSize=d${msgSize}, CRC=${crc}");
             $cCrc = tuyaZosungCrc($msgPart);
-            parserLog2("debug", $addr, "  MsgPart=${msgPart}, computedCRC=${cCrc}");
+            parserLog2("debug", $addr, "  MsgSize=${msgSize}, MsgPart=${msgPart}, computedCRC=${cCrc}");
+            if ($cCrc != $crc)
+                parserLog2("debug", $addr, "  WARNING: Computed CRC (${cCrc}) != CRC (${crc})");
 
             if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seqR])) {
                 parserLog2("debug", $addr, "  Unexpected message => Ignored");
@@ -456,12 +462,13 @@
 
             $recSize = $GLOBALS['zosung'][$seqR]['received'];
             $expSize = $GLOBALS['zosung'][$seqR]['expected'];
-            parserLog2("debug", $addr, "  recSize=d${recSize}, expSize=d${expSize}, posR=${posR}, msgSize=d${msgSize}");
+            parserLog2("debug", $addr, "  rcvSize=d${recSize}, expSize=d${expSize}, posR=${posR}");
             if ($recSize < $expSize) {
                 // Need more datas
                 parserLog2("debug", $addr, "  Replying with cmd ED00-02: Need more datas");
 
-                $pos = sprintf("%08X", hexdec($posR) + $msgSize);
+                $posR = sprintf("%08X", hexdec($posR) + $msgSize);
+                $pos = AbeilleTools::reverseHex($posR);
                 $data = $seq.$pos.'38';
                 msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=ED00&cmd=02&data=${data}");
             } else {

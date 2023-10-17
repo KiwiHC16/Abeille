@@ -168,8 +168,6 @@
                 return;
             }
 
-            $msgMaxSize = 512;
-
             while (true) {
                 time_nanosleep(0, 10000000); // 10ms
 
@@ -193,23 +191,34 @@
                     if ($statCmdQueue['msg_stime'] > $statParserQueue['msg_stime']) {
                         $msgFromCmd = false;
                     }
-                // } else if ($statCmdQueue['msg_qnum'] != 0)
-                //     $queue = $queueCmdToMon;
-                } else {
+                } else if ($statParserQueue['msg_qnum'] != 0) {
                     $msgFromCmd = false;
                 }
 
-                if ($msgFromCmd)
+                if ($msgFromCmd) {
                     $queue = $queueCmdToMon;
-                else
+                    $queueName = "cmd";
+                    $msgMaxSize = $abQueues['cmdToMon']['max'];
+                } else {
                     $queue = $queueParserToMon;
+                    $queueName = "parser";
+                    $msgMaxSize = $abQueues['parserToMon']['max'];
+                }
                 $status = msg_receive($queue, 0, $msgType, $msgMaxSize, $msgJson, false, MSG_IPC_NOWAIT, $errCode);
                 if ($status === false) {
-                    logMessage("debug", "msg_received() FAILED: ErrCode=${$errCode}");
+                    // Err code 7 = Too big
+                    // Err code 42 = No message
+                    if ($errCode == 7) { // Too big
+                        msg_receive($queue, 0, $msgType, $msgMaxSize, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR); // Purge
+                        logMessage('debug', "msg_receive(queue ${queueName}) ERROR: msg TOO BIG ignored.");
+                    } else if ($errCode != 42) { // 42 = No message
+                        logMessage('debug', "msg_receive(queue ${queueName}) ERROR: ErrCode=${errCode}");
+                    }
+
                     continue;
                 }
                 if ($msgJson == '') {
-                    logMessage("debug", "EMPTY message received: Status=${status}, ErrCode=${$errCode}");
+                    logMessage("debug", "EMPTY message received from queue ${queueName}");
                     continue;
                 }
 

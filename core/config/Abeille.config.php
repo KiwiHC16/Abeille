@@ -19,8 +19,8 @@
     $abQueues["parserToCmdAck"] = array( "id" => 0x3E7, "max" => 512 ); // Parser to cmd for 8000/8012/8702 statuses
     $abQueues["xToCmd"] = array( "id" => 0x4BC, "max" => 512 ); // AbeilleCmd inputs
     $abQueues["cmdToMon"] = array( "id" => 0x82, "max" => 512 ); // Messages to zigate (cmd to monitor)
-    $abQueues["parserToMon"] = array( "id" => 0x83, "max" => 512 ); // Messages from zigate (parser to monitor)
-    $abQueues["monToCmd"] = array( "id" => 0x84, "max" => 512 ); // Messages to cmd (addr update)
+    $abQueues["parserToMon"] = array( "id" => 0x83, "max" => 1024 ); // Messages from zigate (parser to monitor)
+    $abQueues["monToCmd"] = array( "id" => 0x84, "max" => 1024 ); // Messages to cmd (addr update)
     $abQueues["parserToAssist"] = array( "id" => 0x8D, "max" => 512 ); // Parser to EQ assistant
     $abQueues["xToAbeille"] = array( "id" => 0x26D, "max" => 1024 ); // All messages to 'Abeille.class'
     $GLOBALS['abQueues'] = $abQueues;
@@ -59,20 +59,20 @@
     define('daemonSerialRead4', 1 << 5);
     define('daemonSerialRead5', 1 << 6);
     define('daemonSerialRead6', 1 << 7);
-    define('daemonSerialRead7', 1 << 8);
-    define('daemonSerialRead8', 1 << 9);
-    define('daemonSerialRead9', 1 << 10);
-    define('daemonSerialRead10', 1 << 11);
+    // define('daemonSerialRead7', 1 << 8);
+    // define('daemonSerialRead8', 1 << 9);
+    // define('daemonSerialRead9', 1 << 10);
+    // define('daemonSerialRead10', 1 << 11);
     define('daemonSocat1', 1 << 12);
     define('daemonSocat2', 1 << 13);
     define('daemonSocat3', 1 << 14);
     define('daemonSocat4', 1 << 15);
     define('daemonSocat5', 1 << 16);
     define('daemonSocat6', 1 << 17);
-    define('daemonSocat7', 1 << 18);
-    define('daemonSocat8', 1 << 19);
-    define('daemonSocat9', 1 << 20);
-    define('daemonSocat10', 1 << 21);
+    // define('daemonSocat7', 1 << 18);
+    // define('daemonSocat8', 1 << 19);
+    // define('daemonSocat9', 1 << 20);
+    // define('daemonSocat10', 1 << 21);
     define('daemonMonitor', 1 << 22);
 
     define ("daemonStopTimeout", 2000); // 2sec

@@ -509,9 +509,12 @@
             msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Generic", "ep=".$ep."&clustId=E004&cmd=00&data=${data}");
 
             // Report msgpart as "IR learned"
+            $dataBA = hex2bin($GLOBALS['zosung'][$seqR]['data']);
+            $dataB64URL = AbeilleTools::base64url_encode($dataBA);
+
             $attrReportN[] = array(
                 'name' => "01-learned-code",
-                'value' => $GLOBALS['zosung'][$seqR]['data'],
+                'value' => $dataB64URL,
             );
             unset($GLOBALS['zosung'][$seqR]);
         } else {

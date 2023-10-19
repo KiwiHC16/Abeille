@@ -152,8 +152,8 @@
             // Data is base64 URL encoded
             $data = AbeilleTools::base64url2base64($data);
             cmdLog2('debug', $addr, "  Send IR code '${data}'");
-            $dataSize = strlen($data);
-            $dataSize = sprintf("%02X", $dataSize);
+            // $dataSize = strlen($data);
+            // $dataSize = sprintf("%02X", $dataSize);
             $irMsg = array(
                 'key_num' => 1,
                 'delay' => 300,
@@ -161,7 +161,8 @@
                     'num' => 1,
                     'freq' => 38000,
                     'type' => 1,
-                    'key_code' => $dataSize.$data, // dataSize required ?
+                    // 'key_code' => $dataSize.$data, // dataSize required ?
+                    'key_code' => $data,
                 ),
             );
             $irMsgJson = json_encode($irMsg);

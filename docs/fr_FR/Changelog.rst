@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-231020-BETA-1
+231020-BETA-2
 -------------
 
 - Heiman HS1SA: Mise-à-jour modèle. Ajout de signatures alternatives.

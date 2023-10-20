@@ -45,30 +45,6 @@
                 "execAtCreationDelay": "6",
                 "execAtCreation": "yes"
             },
-            "On": {
-                "use": "act_zbCmdC-0006-On",
-                "params": "ep=01",
-                "isVisible": "1"
-            },
-            "Off": {
-                "use": "act_zbCmdC-0006-Off",
-                "params": "ep=01",
-                "isVisible": "1"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "params": "ep=01"
-            },
-            "Get Status": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0006&attrId=0000"
-            },
-            "Status": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "params": "ep=01",
-                "isVisible": "1",
-                "nextLine": "after"
-            },
             "Start learning": {
                 "use": "act_zbCmdC-Generic",
                 "params": "ep=01&clustId=E004&cmd=00&data=7B227374756479223A307D",

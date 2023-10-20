@@ -46,6 +46,7 @@
     fclose($file);
 
     echo '<script>var js_wifiLink = "'.wifiLink.'";</script>'; // PHP to JS
+    echo '<script>var js_maxZigates = "'.maxNbOfZigate.'";</script>'; // PHP to JS
 
     /* Returns current cmd value identified by its Jeedom logical ID name */
     function getCmdValueByLogicId($eqId, $logicId) {
@@ -1393,10 +1394,48 @@
         });
     }
 
-    // Tcharp38: Might be useful. Seems to be called when plugin config has been saved
-    // function Abeille_postSaveConfiguration() {
-    //     console.log("Abeille_postSaveConfiguration()");
-    // }
+    // Called when Abeille plugin config has been saved
+    function Abeille_postSaveConfiguration() {
+        console.log("Abeille_postSaveConfiguration()");
+
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'getConfig'
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                console.log("Ajax error: status=", status);
+            },
+            success: function (json_res) {
+                // console.log("json_res=", json_res);
+                res = JSON.parse(json_res.result);
+                // Assuming status 0
+                config = JSON.parse(res.config);
+                // console.log("config=", config);
+
+                errors = '';
+                for (zgId = 1; zgId < js_maxZigates; zgId++) {
+                    if (config['ab::zgEnabled'+zgId] != 'Y')
+                        continue; // Disabled
+
+                    zgType = config['ab::zgType'+zgId];
+                    // console.log("Zigate "+zgId+" type "+zgType);
+
+                    if (zgType == 'WIFI') {
+                        if (config['ab::zgIpAddr'+zgId] == '') {
+                            errors += "Zigate "+zgId+": {{- Adresse IP manquante}}";
+                        }
+                    }
+                    // TODO: Check type choice vs FW version
+                }
+                if (errors != '')
+                    window.alert(errors);
+            }
+        });
+    }
 
     function statusChange(zgId) {
         console.log("statusChange("+zgId+")")

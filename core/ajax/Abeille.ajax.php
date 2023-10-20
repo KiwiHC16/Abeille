@@ -713,6 +713,18 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        // Returns 'config' DB content
+        if (init('action') == 'getConfig') {
+            $status = 0;
+            $error = "";
+
+            $config = AbeilleTools::getConfig();
+            $configJson = json_encode($config);
+            logDebug('configJson='.$configJson);
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'config' => $configJson)));
+        }
+
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.
             Instead 'success' callback is used. This means that
             - take care of error code returned

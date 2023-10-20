@@ -9,6 +9,7 @@ ChangeLog
 - Sirene iAlarm: Mises-à-jour du modèle (2629).
 - Moniteur: Amélioration interne pour support gros messages.
 - Moes télécommande universelle IR: Mise-à-jour du code pour ce support particulier (2607).
+- Page de config: Vérification adresse IP remplie si type WIFI.
 
 231012-BETA-1
 -------------

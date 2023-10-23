@@ -8,6 +8,11 @@
             },
             "TS0043__TZ3000_yw5tvzsk": {
                 "icon": "LoraTap-3GangRemote-2"
+            },
+            "TS0043__TZ3000_gbm10jnj": {
+                "manufacturer": "Moes",
+                "model": "?",
+                "icon": "Moes-3ButtonsSceneSwitch"
             }
         },
         "timeout": "250",

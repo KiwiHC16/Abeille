@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231023-BETA-1
+-------------
+
 - Loratap télécommande 6 boutons: Support préliminaire (2631).
 - Moes 3 boutons (TS0043__TZ3000_gbm10jnj): Ajout support (2630).
 

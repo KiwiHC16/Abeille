@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-231023-BETA-1
+231023-BETA-2
 -------------
 
 - Loratap télécommande 6 boutons: Support préliminaire (2631).

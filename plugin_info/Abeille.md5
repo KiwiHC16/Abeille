@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="231023-BETA-1"
+# VERSION="231023-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -44,9 +44,9 @@ e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 8290855d0e5ee94968a6fb01ba8d5a7b *core/ajax/AbeilleZigate.ajax.php
 7e1c54a4dc060b960370805b6f4f4f06 *core/class/Abeille.class.php
 473bd5057c27f6285d6d2500f29de9cc *core/class/AbeilleCmd.class.php
-0fddea6df520aee5aa6023a841c8fc0d *core/class/AbeilleCmdPrepare.class.php
+4d2cad8fbeb6167d1797a7e5b66698b3 *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
-2ed481d05dc8407a3e9a745da563ca6d *core/class/AbeilleCmdProcess.class.php
+e228b32434379ce344cf5f0bc324f54d *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
 c285bc680c58788f7c35587e2bee84bb *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
@@ -60,7 +60,7 @@ f022de2eaa3296926cdee16b4038db2d *core/class/AbeilleTemplateCmd.class.php
 8c4188be1bbbb03c8d7b4cd600ba3046 *core/class/AbeilleTest.class.php
 0055fd31d027d69a736381f5cc77ebf9 *core/class/AbeilleTestDB.class.php
 1dcbc4c03e5278d312184bc16f793c70 *core/class/AbeilleTools.class.php
-3048e59a535e2252823ab474f39b31b2 *core/config/Abeille.config.php
+9d35857bb8b8b591fc981a8ca154cc38 *core/config/Abeille.config.php
 d8fe59ba5c734449970615205f5a23cc *core/config/commands/BindToGroupLevelEP03.json
 7d700c97dd32d63675fafce8e5599906 *core/config/commands/BindToGroupLevelEP04.json
 9fd0a2c94ead780fe67c284671b4ca71 *core/config/commands/BindToGroupLevelEP05.json
@@ -83,10 +83,10 @@ b18281e08e9ec6976418f8af07e08553 *core/config/commands/LegrandContactorEtat.json
 9977a6b0d4286dcbb52b63f72495c908 *core/config/commands/LegrandContactorOff.json
 7cd7f45ddcbfc03d4f71ee6a25ffb918 *core/config/commands/LegrandContactorOn.json
 ab3962454f1229a00d4d62dd8ee2dd3e *core/config/commands/Lift.json
-42eaf70ba8b5720ae92e0a9e6b2e23ec *core/config/commands/LivoloSwitchTrick1.json
-dc7affe7b3bfbfda8a1303b6d39ee042 *core/config/commands/LivoloSwitchTrick2.json
-6499ad5acb6e262a196fdb6df578c74c *core/config/commands/LivoloSwitchTrick3.json
-7b01ae0e3a14fa8a745c96ee12741fa1 *core/config/commands/LivoloSwitchTrick4.json
+f0e7b4c77df1e2b381df3af94937eef5 *core/config/commands/LivoloSwitchTrick1.json
+3d665d0fb02f8ecb4d0acd0f5df0dce7 *core/config/commands/LivoloSwitchTrick2.json
+78dd6700ab22f69727cccc6543096b8a *core/config/commands/LivoloSwitchTrick3.json
+625b7a6d204eda73ba7a6254728a9a4c *core/config/commands/LivoloSwitchTrick4.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/1700K.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/2000K.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/2200K.json
@@ -360,9 +360,9 @@ ff4423cdf5d84a5af0ab55d97305223e *core/config/commands/act_tuyaEF00-SetBool.json
 114b3de9a3b4a6a458c18e25123cb645 *core/config/commands/act_zbBindToGroup.json
 8e98048dbc07e26099264fdc4836bc3c *core/config/commands/act_zbBindToZigate.json
 4ff59c803085d4027e07ab6b8a93fdb1 *core/config/commands/act_zbCmdC-0004-AddGroup.json
-c6da2d54f5e91a49a83b793b21da8cb9 *core/config/commands/act_zbCmdC-0006-Off.json
-9cdbb9cb84638b6cdfac8061b65c0775 *core/config/commands/act_zbCmdC-0006-On.json
-76c5be266ec6d570227694bf5b56a360 *core/config/commands/act_zbCmdC-0006-Toggle.json
+adaaea498e72b3027fc7e0747f769031 *core/config/commands/act_zbCmdC-0006-Off.json
+95994c8b5c87f0d8359d37efcb70a06e *core/config/commands/act_zbCmdC-0006-On.json
+6e7dde5744e3df55c179571b1514a2b9 *core/config/commands/act_zbCmdC-0006-Toggle.json
 ae921cd8247833b1d30af291df9691cd *core/config/commands/act_zbCmdC-0008-DownClose.json
 b7bce84899ec9769e533fca1a06e803b *core/config/commands/act_zbCmdC-0008-MoveToLevelWithOnOff.json
 49dc9753d0522db325246885de74c81d *core/config/commands/act_zbCmdC-0008-StopWithOnOff.json
@@ -1285,7 +1285,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-3032522f2724bc5fb55efb5e078302b0 *docs/fr_FR/Changelog.rst
+63f46ca664e24a85ac82a33e0fc70637 *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1619,11 +1619,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-1de2c76992d2dad00dc3447019414f2d *plugin_info/Abeille.version
+b0eea8d9e2e70946608153a1013f5b5e *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 c16154784139bfd2264e4a6409fdc658 *plugin_info/configuration.php
-05fff749b15f430dec1466e1f8b86a06 *plugin_info/info.json
-0f26b16e5d7225abeaf7bbe7190fa427 *plugin_info/install.php
+4f03ad2eb82fd5c8ed27d9520e46affe *plugin_info/info.json
+d2cda632a08b081522bef83b038b98f0 *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
 9dccf462d245f55ac3e0cdb0e5401f5b *resources/AbeilleDeamon/Debug/verification.php

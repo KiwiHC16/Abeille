@@ -2255,98 +2255,98 @@
                 return;
             }
 
-            // ON / OFF with no effects
-            if (isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']))
-            {
-                cmdLog('debug', '  OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
-                // <address mode: uint8_t>
-                // <target short address: uint16_t>
-                // <source endpoint: uint8_t>
-                // <destination endpoint: uint8_t>
-                // <command ID: uint8_t>
-                    // Command Id
-                    // 0 - Off
-                    // 1 - On
-                    // 2 - Toggle
+            // // ON / OFF with no effects
+            // if (isset($Command['onoff']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']))
+            // {
+            //     cmdLog('debug', '  OnOff for: '.$Command['address'].' action (0:Off, 1:On, 2:Toggle): '.$Command['action'], $this->debug['processCmd']);
+            //     // <address mode: uint8_t>
+            //     // <target short address: uint16_t>
+            //     // <source endpoint: uint8_t>
+            //     // <destination endpoint: uint8_t>
+            //     // <command ID: uint8_t>
+            //         // Command Id
+            //         // 0 - Off
+            //         // 1 - On
+            //         // 2 - Toggle
 
-                $zgCmd      = "0092";
+            //     $zgCmd      = "0092";
 
-                $addrMode   = $Command['addressMode']; // 01: Group, 02: device
-                $address    = $Command['address'];
-                $srcEp      = "01";
-                $dstEp      = $Command['destinationEndpoint'];
-                $action     = $Command['action'];
+            //     $addrMode   = $Command['addressMode']; // 01: Group, 02: device
+            //     $address    = $Command['address'];
+            //     $srcEp      = "01";
+            //     $dstEp      = $Command['destinationEndpoint'];
+            //     $action     = $Command['action'];
 
-                $data = $addrMode.$address.$srcEp.$dstEp.$action;
-                $length = sprintf("%04X", strlen($data) / 2);
+            //     $data = $addrMode.$address.$srcEp.$dstEp.$action;
+            //     $length = sprintf("%04X", strlen($data) / 2);
 
-                $priority = $Command['priority'];
+            //     $priority = $Command['priority'];
 
-                $this->addCmdToQueue2($priority, $dest, $zgCmd, $data, $address, $addrMode);
+            //     $this->addCmdToQueue2($priority, $dest, $zgCmd, $data, $address, $addrMode);
 
-                // if ($addrMode == "02" ) {
-                //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000" );
-                //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000" );
-                // }
-                return;
-            }
+            //     // if ($addrMode == "02" ) {
+            //     //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+2), "ep=".$dstEp."&clustId=0006&attrId=0000" );
+            //     //     $this->publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$dest."/".$address."/readAttribute&time=".(time()+3), "ep=".$dstEp."&clustId=0008&attrId=0000" );
+            //     // }
+            //     return;
+            // }
 
-            // ON / OFF with no effects RAW with no APS ACK
-            // Not used as some eq have a strange behavior if the APS ACK is not set (e.g. Xiaomi Plug / should probably test again / bug from the eq ?)
-            if (isset($Command['onoffraw']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']))
-            {
-                cmdLog('debug', "  command setParam4", $this->debug['processCmd']);
+            // // ON / OFF with no effects RAW with no APS ACK
+            // // Not used as some eq have a strange behavior if the APS ACK is not set (e.g. Xiaomi Plug / should probably test again / bug from the eq ?)
+            // if (isset($Command['onoffraw']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']))
+            // {
+            //     cmdLog('debug', "  command setParam4", $this->debug['processCmd']);
 
-                $dest       = $Command['dest'];
-                $priority   = $Command['priority'];
+            //     $dest       = $Command['dest'];
+            //     $priority   = $Command['priority'];
 
-                $cmd = "0530";
+            //     $cmd = "0530";
 
-                // <address mode: uint8_t>              -> 1
-                // <target short address: uint16_t>     -> 2
-                // <source endpoint: uint8_t>           -> 1
-                // <destination endpoint: uint8_t>      -> 1
+            //     // <address mode: uint8_t>              -> 1
+            //     // <target short address: uint16_t>     -> 2
+            //     // <source endpoint: uint8_t>           -> 1
+            //     // <destination endpoint: uint8_t>      -> 1
 
-                // <profile ID: uint16_t>               -> 2
-                // <cluster ID: uint16_t>               -> 2
+            //     // <profile ID: uint16_t>               -> 2
+            //     // <cluster ID: uint16_t>               -> 2
 
-                // <security mode: uint8_t>             -> 1
-                // <radius: uint8_t>                    -> 1
-                // <data length: uint8_t>               -> 1  (22 -> 0x16)
+            //     // <security mode: uint8_t>             -> 1
+            //     // <radius: uint8_t>                    -> 1
+            //     // <data length: uint8_t>               -> 1  (22 -> 0x16)
 
-                // <data: auint8_t> APS Part <= data
+            //     // <data: auint8_t> APS Part <= data
 
-                $addrMode        = $Command['addressMode'];
-                $addr = $Command['address'];
-                $srcEp     = "01";
-                if ($Command['destinationEndpoint']>1 ) { $dstEp = $Command['destinationEndpoint']; } else { $dstEp = "01"; } // $dstEp; // "01";
+            //     $addrMode        = $Command['addressMode'];
+            //     $addr = $Command['address'];
+            //     $srcEp     = "01";
+            //     if ($Command['destinationEndpoint']>1 ) { $dstEp = $Command['destinationEndpoint']; } else { $dstEp = "01"; } // $dstEp; // "01";
 
-                $profId          = "0104";
-                $clustId          = "0006"; // $Command['clusterId'];
+            //     $profId          = "0104";
+            //     $clustId          = "0006"; // $Command['clusterId'];
 
-                $secMode       = "02"; // ???
-                $radius             = "30";
-                // $dataLength <- calculated later
+            //     $secMode       = "02"; // ???
+            //     $radius             = "30";
+            //     // $dataLength <- calculated later
 
-                $frameControl               = "11"; // Ici dans cette commande c est ZCL qu'on control
-                $transqactionSequenceNumber = "1A"; // to be reviewed
-                $commandWriteAttribute      = $Command['action'];
+            //     $frameControl               = "11"; // Ici dans cette commande c est ZCL qu'on control
+            //     $transqactionSequenceNumber = "1A"; // to be reviewed
+            //     $commandWriteAttribute      = $Command['action'];
 
-                $data2 = $frameControl.$transqactionSequenceNumber.$commandWriteAttribute;
-                $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
-                $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
-                $data = $data1.$data2;
+            //     $data2 = $frameControl.$transqactionSequenceNumber.$commandWriteAttribute;
+            //     $dataLength = sprintf("%02s",dechex(strlen( $data2 )/2));
+            //     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
+            //     $data = $data1.$data2;
 
-                $length = sprintf("%04s", dechex(strlen($data) / 2));
+            //     $length = sprintf("%04s", dechex(strlen($data) / 2));
 
-                // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
-                $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
+            //     // $this->addCmdToQueue($priority, $dest, $cmd, $length, $data, $addr);
+            //     $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr);
 
-                if ($addrMode == "02" ) {
-                    $this->publishMosquitto( $abQueues["xToCmd"]['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/ReadAttributeRequestMulti&time=".(time()+2), "EP=".$dstEp."&clusterId=0006&attributeId=0000" );
-                }
-                return;
-            }
+            //     if ($addrMode == "02" ) {
+            //         $this->publishMosquitto( $abQueues["xToCmd"]['id'], priorityInterrogation, "TempoCmd".$dest."/".$addr."/ReadAttributeRequestMulti&time=".(time()+2), "EP=".$dstEp."&clusterId=0006&attributeId=0000" );
+            //     }
+            //     return;
+            // }
 
             // On / Off Timed Send
             if (isset($Command['OnOffTimed']) && isset($Command['addressMode']) && isset($Command['address']) && isset($Command['destinationEndpoint']) && isset($Command['action']) && isset($Command['onTime']) && isset($Command['offWaitTime']))
@@ -4012,6 +4012,35 @@
                     $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End cluster 0004, $cmdName == 'getGroupMembership'
+
+                // ZCL cluster 0006/On off specific.
+                // Mandatory params: addr, ep & cmd (00=off, 01=on, 02=toggle)
+                else if ($cmdName == 'cmd-0006') {
+                    $required = ['addr', 'ep', 'cmd']; // Mandatory infos
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $cmdId = $Command['cmd'];
+
+                    if (($cmdId == '00') || ($cmdId == '01') || ($cmdId == '02')) { // Off, on, or toggle
+                        $zgCmd      = "0092";
+
+                        $addrMode   = "02"; // 01: Group, 02: device
+                        $addr       = $Command['addr'];
+                        $srcEp      = "01";
+                        $dstEp      = $Command['ep'];
+                        $cmdId      = $Command['cmd'];
+
+                        cmdLog('debug', "  cmd-0006: cmd=${cmdId}");
+                        $data = $addrMode.$addr.$srcEp.$dstEp.$cmdId;
+
+                        $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
+                    } else {
+                        cmdLog('error', "  cmd-0006: Unsupported cluster 0006 specific command ".$cmdId);
+                    }
+
+                    return;
+                } // End $cmdName == 'cmd-0006'
 
                 // ZCL cluster 0004 specific: removeAllGroups, sent to server
                 // Mandatory params: 'addr', 'ep'

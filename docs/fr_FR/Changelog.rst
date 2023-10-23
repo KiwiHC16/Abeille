@@ -6,6 +6,8 @@ ChangeLog
 
 - Loratap télécommande 6 boutons: Support préliminaire (2631).
 - Moes 3 boutons (TS0043__TZ3000_gbm10jnj): Ajout support (2630).
+- Interne: Cmd: Ajout 'cmd-0006' pour suppression vieilles commandes 'OnOffX'.
+- Interne: Cmd: Suppression support cmds 'OnOff'/'OnOffRaw'/'OnOff2'/'OnOffOSRAM'/'OnOff3'/'OnOff4'/'OnOffHue'
 
 231020-BETA-2
 -------------

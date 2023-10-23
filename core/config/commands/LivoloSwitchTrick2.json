@@ -4,8 +4,8 @@
         "template": "",
         "logicalId": "LivoloSwitchTrick2",
         "configuration": {
-            "topic": "OnOff",
-            "request": "Action=On&EP=#EP#",
+            "topic": "cmd-0006",
+            "request": "ep=#EP#&cmd=01",
             "visibilityCategory": "All",
             "execAtCreation": "Yes",
             "execAtCreationDelay": 10

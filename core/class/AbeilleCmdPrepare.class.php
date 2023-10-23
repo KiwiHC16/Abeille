@@ -330,93 +330,93 @@
             //         );
             //     }
             //     break;
-            case "OnOffRaw":
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                    $Command = array(
-                        "onoffraw"              => "1",
-                        "dest"                  => $dest,
-                        "priority"              => $priority,
-                        "addressMode"           => "02",
-                        "address"               => $address,
-                        "destinationEndpoint"   => $parameters['EP'],
-                        "action"                => $convertOnOff[$parameters['Action']],
-                    );
-                }
-                break;
-            case "OnOff":
+            // case "OnOffRaw":
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //         $Command = array(
+            //             "onoffraw"              => "1",
+            //             "dest"                  => $dest,
+            //             "priority"              => $priority,
+            //             "addressMode"           => "02",
+            //             "address"               => $address,
+            //             "destinationEndpoint"   => $parameters['EP'],
+            //             "action"                => $convertOnOff[$parameters['Action']],
+            //         );
+            //     }
+            //     break;
+            // case "OnOff": // OBSOLETE: Replaced by 'cmd-0006'
 
-                $fields = preg_split("/[=&]+/", $msg);
-                if (count($fields) > 1) {
-                    $parameters = $this->proper_parse_str($msg);
-                    $Command = array(
-                        "onoff"                 => "1",
-                        "dest"                  => $dest,
-                        "priority"              => priorityUserCmd,
-                        "addressMode"           => "02",
-                        "address"               => $address,
-                        "destinationEndpoint"   => $parameters['EP'],
-                        "action"                => $convertOnOff[$parameters['Action']]
-                    );
-                }
-                else {
-                    $Command = array(
-                        "onoff"                 => "1",
-                        "dest"                  => $dest,
-                        "priority"              => priorityUserCmd,
-                        "addressMode"           => "02",
-                        "address"               => $address,
-                        "destinationEndpoint"   => "01",
-                        "action"                => $convertOnOff[$msg]
-                    );
-                }
-                break;
-            case "OnOff2":
-                $Command = array(
-                    "onoff"                 => "1",
-                    "dest"                  => $dest,
-                    "priority"              => $priority,
-                    "addressMode"           => "02",
-                    "address"               => $address,
-                    "destinationEndpoint"   => "02",
-                    "action"                => $convertOnOff[$msg],
-                );
-                break;
-            case "OnOff3":
-            case "OnOffOSRAM":
-                $Command = array(
-                    "onoff"                 => "1",
-                    "dest"                  => $dest,
-                    "priority"              => $priority,
-                    "addressMode"           => "02",
-                    "address"               => $address,
-                    "destinationEndpoint"   => "03",
-                    "action"                => $convertOnOff[$msg],
-                );
-                break;
-            case "OnOff4":
-                $Command = array(
-                    "onoff"                 => "1",
-                    "dest"                  => $dest,
-                    "priority"              => $priority,
-                    "addressMode"           => "02",
-                    "address"               => $address,
-                    "destinationEndpoint"   => "04",
-                    "action"                => $convertOnOff[$msg],
-                );
-                break;
-            case "OnOffHue":
-                $Command = array(
-                    "onoff"                 => "1",
-                    "dest"                  => $dest,
-                    "priority"              => $priority,
-                    "addressMode"           => "02",
-                    "address"               => $address,
-                    "destinationEndpoint"   => "0B",
-                    "action"                => $convertOnOff[$msg],
-                );
-                break;
+            //     $fields = preg_split("/[=&]+/", $msg);
+            //     if (count($fields) > 1) {
+            //         $parameters = $this->proper_parse_str($msg);
+            //         $Command = array(
+            //             "onoff"                 => "1",
+            //             "dest"                  => $dest,
+            //             "priority"              => priorityUserCmd,
+            //             "addressMode"           => "02",
+            //             "address"               => $address,
+            //             "destinationEndpoint"   => $parameters['EP'],
+            //             "action"                => $convertOnOff[$parameters['Action']]
+            //         );
+            //     }
+            //     else {
+            //         $Command = array(
+            //             "onoff"                 => "1",
+            //             "dest"                  => $dest,
+            //             "priority"              => priorityUserCmd,
+            //             "addressMode"           => "02",
+            //             "address"               => $address,
+            //             "destinationEndpoint"   => "01",
+            //             "action"                => $convertOnOff[$msg]
+            //         );
+            //     }
+            //     break;
+            // case "OnOff2":
+            //     $Command = array(
+            //         "onoff"                 => "1",
+            //         "dest"                  => $dest,
+            //         "priority"              => $priority,
+            //         "addressMode"           => "02",
+            //         "address"               => $address,
+            //         "destinationEndpoint"   => "02",
+            //         "action"                => $convertOnOff[$msg],
+            //     );
+            //     break;
+            // case "OnOff3":
+            // case "OnOffOSRAM":
+            //     $Command = array(
+            //         "onoff"                 => "1",
+            //         "dest"                  => $dest,
+            //         "priority"              => $priority,
+            //         "addressMode"           => "02",
+            //         "address"               => $address,
+            //         "destinationEndpoint"   => "03",
+            //         "action"                => $convertOnOff[$msg],
+            //     );
+            //     break;
+            // case "OnOff4":
+            //     $Command = array(
+            //         "onoff"                 => "1",
+            //         "dest"                  => $dest,
+            //         "priority"              => $priority,
+            //         "addressMode"           => "02",
+            //         "address"               => $address,
+            //         "destinationEndpoint"   => "04",
+            //         "action"                => $convertOnOff[$msg],
+            //     );
+            //     break;
+            // case "OnOffHue":
+            //     $Command = array(
+            //         "onoff"                 => "1",
+            //         "dest"                  => $dest,
+            //         "priority"              => $priority,
+            //         "addressMode"           => "02",
+            //         "address"               => $address,
+            //         "destinationEndpoint"   => "0B",
+            //         "action"                => $convertOnOff[$msg],
+            //     );
+            //     break;
             // case "commandLegrand":
             //     $fields = preg_split("/[=&]+/", $msg);
             //     if (count($fields) > 1) {

@@ -875,8 +875,9 @@
          * - Logs: AbeilleSerialReadX logs moved to /tmp/jeedom/Abeille
          * - Config DB: Removing keys for Zigates 7 to 10.
          * - Cmds DB: For 'Online' adding 'repeatEventManagement=always'
+         * - Cmds DB: 'OnOff' cmd replaced by 'cmd-0006'
          */
-        if (intval($dbVersion) < 20231012) {
+        if (intval($dbVersion) < 20231023) {
             // 'eqLogic' DB updates
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
@@ -885,6 +886,7 @@
                 foreach ($cmds as $cmdLogic) {
                     $saveCmd = false;
                     $cmdLogicId = $cmdLogic->getLogicalId();
+                    $topic = $cmdLogic->getConfiguration('topic', '');
 
                     if ($cmdLogicId == 'online') {
                         if ($cmdLogic->setConfiguration('repeatEventManagement', '') == '') {
@@ -892,6 +894,16 @@
                             log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Added 'repeatEventManagement'='always'");
                             $saveCmd = true;
                         }
+                    } else if ($topic == 'OnOff') {
+                        $request = $cmdLogic->getConfiguration('request', '');
+                        $request = str_replace("Action=Off", "cmd=00", $request);
+                        $request = str_replace("Action=On", "cmd=01", $request);
+                        $request = str_replace("Action=Toggle", "cmd=02", $request);
+                        $request = str_replace("EP=", "ep=", $request);
+                        $cmdLogic->setConfiguration('topic', 'cmd-0006');
+                        $cmdLogic->setConfiguration('request', $request);
+                        log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Replaced 'OnOff' by 'cmd-0006'");
+                        $saveCmd = true;
                     }
 
                     if ($saveCmd)

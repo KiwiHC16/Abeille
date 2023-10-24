@@ -25,7 +25,7 @@
             "icon": "Tuya-Repeater-RP280"
         },
         "category": {
-            "other": "1"
+            "default": "1"
         },
         "commands": {
         }

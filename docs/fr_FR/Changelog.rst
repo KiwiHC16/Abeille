@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Interne: Tools/check_json: Améliorations.
+- Modèles d'équipement: Correction d'erreurs sur qq modèles.
+
 231023-BETA-2
 -------------
 

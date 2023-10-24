@@ -6,14 +6,14 @@
         "configuration": {
             "mainEP": "03",
             "poll": "1",
-            "icon": "Osram-B40Bulb-Lightify-Classic"
+            "icon": "OsramLightify-B40Bulb-Classic"
         },
         "category": {
             "automatism": "1"
         },
         "type": "Osram Lightify classic B40 bulb",
         "commands": {
-            "etat": {
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
@@ -73,17 +73,6 @@
                 "params": "slider=6500",
                 "logicalId": "#EP#-Set-6500K",
                 "isVisible": 1
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
             }
         }
     }

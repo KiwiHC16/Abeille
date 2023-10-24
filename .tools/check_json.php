@@ -4,9 +4,13 @@
     define('devicesDir', __DIR__.'/../core/config/devices');
     define('commandsDir', __DIR__.'/../core/config/commands');
 
-    // Categories: is it "other" and/or "default" ? Which one is allowed ?
+    // eqLogic categories
     // {"heating":"1","security":"0","energy":"0","light":"0","opening":"0","automatism":"0","multimedia":"0","default":"0"}
-    // $categories = [];
+    $eqCategories = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'default'];
+
+    // Cmd 'action' & 'info' subtypes
+    $actSubTypes = ['other', 'slider', 'message', 'color', 'select'];
+    $infSubTypes = ['numeric', 'binary', 'string'];
 
     $devicesList = [];
     $commandsList = [];
@@ -54,14 +58,15 @@
         $cmdErrors[] = $e;
     }
 
-    // Check 'subType'. Returns true if ok, else false
-    function subTypeIsOk($type, $subType) {
+    // Check cmd 'subType'. Returns true if ok, else false
+    function cmdSubTypeIsOk($type, $subType) {
         if ($type == "action") {
-            $actSubTypes = ['other', 'slider', 'message', 'color', 'select'];
+            global $actSubTypes;
+            // $actSubTypes = ['other', 'slider', 'message', 'color', 'select'];
             if (!in_array($subType, $actSubTypes))
                 return false;
         } else {
-            $infSubTypes = ['numeric', 'binary', 'string'];
+            global $infSubTypes;
             if (!in_array($subType, $infSubTypes))
                 return false;
         }
@@ -100,12 +105,13 @@
             $error = newDevError($devName, "ERROR", "No 'category' defined");
         } else {
             $allCats = $dev[$devName]['category'];
-            $allowed = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'other'];
+            // $allowed = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'other'];
+            global $eqCategories;
             foreach($allCats as $cat => $catEn) {
-                if (in_array($cat, $allowed))
+                if (in_array($cat, $eqCategories))
                     continue;
-                    $error = newDevError($devName, "ERROR", "Unexpected '".$cat."' category.");
-                }
+                $error = newDevError($devName, "ERROR", "Unexpected '".$cat."' category.");
+            }
         }
 
         // Checking 'configuration'
@@ -179,7 +185,7 @@
                     if (in_array($key2, $validCmdKeys)) {
                         // if ($key2 == 'subType') {
                         //     // TODO: How to know cmd type ?
-                        //     if (!subTypeIsOk($type, $value2))
+                        //     if (!cmdSubTypeIsOk($type, $value2))
                         //         $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key value for '".$key."' Jeedom command");
                         // }
                         continue;
@@ -293,8 +299,8 @@
 
         // Checking 'subType'
         $subType = $c['subType'];
-        if (!subTypeIsOk($type, $subType)) {
-            newCmdError($cmdName, "ERROR", "Invalid 'subType' value '".$subType."'");
+        if (!cmdSubTypeIsOk($type, $subType)) {
+            newCmdError($cmdName, "ERROR", "Invalid cmd 'subType' value '".$subType."'");
             return;
         }
 

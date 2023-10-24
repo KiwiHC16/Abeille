@@ -12,7 +12,7 @@
             "batteryType": "1x3V CR2032"
         },
         "category": {
-            "other": "1"
+            "default": "1"
         },
         "commands": {
             "Bind-0001-ToZigate": {

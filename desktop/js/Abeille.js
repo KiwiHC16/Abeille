@@ -801,25 +801,23 @@ $("#idReinitBtn").on("click", function () {
     });
 });
 
-// Forced model popup
+// Forced model popup - Bootbox version
 $("#idModelChangeBtn").on("click", function () {
     console.log("idModelChangeBtn on " + curEqId);
 
-    // Ouverture dialog
-    var myPopup = jeeDialog.dialog({
-        id: "abeille_modelChangePopup",
+    // Open empty dialog
+    var myPopup = bootbox.dialog({ 
+        message: '<p></p>', // must not be empty
         title: "{{Choisir le modèle de votre équipement}}",
-        width: 500,
-        height: "auto",
-        contentUrl: "",
+        className: "abeille_modelChangePopup"
     });
 
-    // Le template de contenu est dans Abeille-Eq-Advanced-Device.php
-    var $content = $(myPopup).find(".jeeDialogContent");
-    $content.append($(".abeille-model-change-popup-content").clone().show());
-    var $datalist = $("#abeille-all-models-list");
+    // Content template is defined in Abeille-Eq-Advanced-Device.php
+    var $content = myPopup.find(".bootbox-body");
+    $content.empty().append($(".abeille-model-change-popup-content").clone().show());
+    var $datalist = $("#abeille-all-models-list").empty();
 
-    // Requete ajax pour remplir la liste des options (= liste des modèles connus)
+    // Ajax query to populate datalist options (= list of knwow models)
     $.ajax({
         type: "POST",
         url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",
@@ -830,13 +828,10 @@ $("#idModelChangeBtn").on("click", function () {
         dataType: "json",
         global: false,
         success: function (lstModels) {
-            console.log("réponse ajax getModelChoiceList", lstModels);
-
-            // On remplit la liste de choix (datalist html5)
-
+            // Populate html5 datalist
             Object.values(lstModels).forEach((model) => {
                 var str = "";
-                // Signature Zigbee
+                // Zigbee signature
                 if (
                     typeof model.manufacturer == "string" &&
                     model.manufacturer != ""
@@ -852,22 +847,22 @@ $("#idModelChangeBtn").on("click", function () {
                     str += model.model + " ";
                 }
 
-                // Libellé
+                // Label
                 if (str != "") {
                     str += "> ";
                 }
                 str += model.type;
 
-                // Identifiant JSON (incluant l'emplacement)
+                // JSON id (including location)
                 str +=
                     " (" + model.jsonLocation + "/" + model.jsonId + ".json)";
 
-                // Ajout à la liste
+                // Adding to datalist
                 var $opt = $("<option></option>");
                 $opt.attr("value", str);
                 $datalist.append($opt);
 
-                // Remplissage info s'il s'agit du modèle actuellement en vigueur pour l'équipement
+                // Display if it is current model of equipment
                 if (typeof model.isCurrent == "boolean" && model.isCurrent) {
                     $content.find("span.current-model").html(str);
                 }
@@ -875,84 +870,79 @@ $("#idModelChangeBtn").on("click", function () {
         },
     });
 
-    // Bouton annuler
+    // Cancel button
     $content.find(".btn-secondary").on("click", function () {
-        jeeDialog.get("#abeille_modelChangePopup").destroy();
+        myPopup.find(".bootbox-close-button").trigger("click");
     });
 
-    // Bouton enregistrer
+    // Save button
     $content.find(".btn-success").on("click", function () {
-        // On vérifie que l'utilisateur a bien choisi un modèle à appliquer
+        // Check user input
         var strSaisie = $content.find("input[type=search]").val();
         if ($datalist.find('option[value="' + strSaisie + '"]').length == 0) {
-            jeeDialog.alert(
+            alert(
                 "{{Erreur: vous devez choisir un modèle dans la liste.}}"
             );
             return;
         }
 
-        // Demande de confirmation (+ injonction à réveiller l'équipement s'il est sur batterie)
+        // Ask confirmation (+ ask to wake up the equipment if it is on battery)
         var strSuppBatterie = "";
         if (eqBatteryType != "") {
             strSuppBatterie =
                 "<br><br><strong>Attention: </strong>{{Comme cet équipement fonctionne sur batterie, vous devez le réveiller immédiatement après avoir cliqué sur OK.}}";
         }
-        jeeDialog.confirm(
-            "{{L'équipement sera reconfiguré à partir du modèle choisi. Souhaitez-vous vraiment appliquer ce modèle ?}}" +
-                strSuppBatterie,
-            function (result) {
-                if (result) {
-                    // On ferme la boite de dialog
-                    jeeDialog.get("#abeille_modelChangePopup").destroy();
+        if(confirm("{{L'équipement sera reconfiguré à partir du modèle choisi. Souhaitez-vous vraiment appliquer ce modèle ?}}" + strSuppBatterie)){
+            // Close dialog
+            myPopup.find(".bootbox-close-button").trigger("click");
 
-                    // Première requête: enregistrer la configuration de l'équipement (choix modèle)
-                    $.ajax({
-                        type: "POST",
-                        url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",
-                        data: {
-                            action: "setModelToDevice",
-                            eqId: curEqId,
-                            modelChoice: strSaisie,
-                        },
-                        dataType: "json",
-                        global: false,
-                        success: function () {
-                            // Deuxième requête: réinitialisation de l'équipement à partir de son (nouveau) modèle
-                            // (comme si on avait cliqué sur le bouton mise à jour)
-                            console.log("Simulation clic sur Mise à jour...");
-                            $("#idUpdateBtn").trigger("click");
-                        },
-                    });
-                }
-            }
-        );
-    });
-});
-
-/**
- * Lien pour restaurer le modèle "automatique"
- */
-$("body").on("click", "a#linkRestoreAutoModel", function () {
-    jeeDialog.confirm(
-        "{{Actuellement, le modèle utilisé pour configuré l'équipement est celui que vous avez choisi manuellement. Cette action permet de rétablir le fonctionnement normal d'Abeille: le modèle prédéfini sera utilisé pour reconfigurer l'équipement la prochaine fois qu'il se réannoncera.<br><br>Cette action, en elle-même, ne modifie pas la configuration de l'équipement: après avoir cliqué sur OK, patientez quelques secondes, puis forcez l'équipement à se réannoncer (en le débranchant/rebranchant par exemple), ou utilisez la fonction 'Mise à jour'.<br><br>Etes-vous sûr de vouloir annuler le choix manuel du modèle ?}}",
-        function (result) {
+            // First query: save model configuration
             $.ajax({
                 type: "POST",
                 url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",
                 data: {
-                    action: "disableManualModelForDevice",
+                    action: "setModelToDevice",
                     eqId: curEqId,
+                    modelChoice: strSaisie,
                 },
                 dataType: "json",
                 global: false,
                 success: function () {
-                    // On laisse le temps à l'utilisateur de lire le message avant d'actualiser la page
-                    console.log("disableManualModelForDevice OK");
-                    setTimeout(function () {
-                        document.location.reload();
-                    }, 3000);
+                    // Second query: reset device using its (new) model
+                    console.log("Simulation clic sur Mise à jour...");
+                    $("#idUpdateBtn").trigger("click");
                 },
             });
+        }
+    });
+});
+
+/**
+ * Link to restore automatic model behavior
+ */
+$("body").on("click", "a#linkRestoreAutoModel", function () {
+    bootbox.confirm(
+        "{{Actuellement, le modèle utilisé pour configuré l'équipement est celui que vous avez choisi manuellement. Cette action permet de rétablir le fonctionnement normal d'Abeille: le modèle prédéfini sera utilisé pour reconfigurer l'équipement la prochaine fois qu'il se réannoncera.<br><br>Cette action, en elle-même, ne modifie pas la configuration de l'équipement: après avoir cliqué sur OK, patientez quelques secondes, puis forcez l'équipement à se réannoncer (en le débranchant/rebranchant par exemple), ou utilisez la fonction 'Mise à jour'.<br><br>Etes-vous sûr de vouloir annuler le choix manuel du modèle ?}}",
+        function(result){
+            if(result){
+                $.ajax({
+                    type: "POST",
+                    url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",
+                    data: {
+                        action: "disableManualModelForDevice",
+                        eqId: curEqId,
+                    },
+                    dataType: "json",
+                    global: false,
+                    success: function () {
+                        // Let the user read the message, then refresh the page
+                        console.log("disableManualModelForDevice OK");
+                        setTimeout(function () {
+                            document.location.reload();
+                        }, 3000);
+                    },
+                });
+            }
         }
     );
 

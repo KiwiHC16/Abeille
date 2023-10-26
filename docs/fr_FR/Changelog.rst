@@ -3,6 +3,8 @@ ChangeLog
 
 - Interne: Tools/check_json: Améliorations.
 - Modèles d'équipement: Correction d'erreurs sur qq modèles.
+- Assistant modèles: Améliorations.
+- SilverCrest-HG08673-FR: Support préliminaire (2635).
 
 231023-BETA-2
 -------------

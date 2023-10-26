@@ -1,20 +1,32 @@
 {
-    "TS011F__TZ3000_y4ona9me": {
-        "manufacturer": "Tuya",
-        "model": "Wall plug",
-        "type": "Tuya wall plug",
+    "TS011F__TZ3000_ynmowqk2": {
+        "comment": "Smart plug with total power+rms voltage+rms current+active power auto reporting",
+        "manufacturer": "Silvercrest",
+        "model": "HG08673-FR",
+        "type": "Silvercrest smart plug",
         "timeout": "60",
         "category": {
             "energy": "1"
         },
         "configuration": {
-            "icon": "Tuya-WallPlug",
+            "icon": "Silvercrest-SmartPlug-Power",
             "mainEP": "01"
         },
+        "alternateIds": {
+            "TS011F__TZ3000_j1v25l17": {},
+            "TS011F__TZ3000_3uimvkn6": {}
+        },
         "commands": {
+            "Tuya-ConfigureMagicPacket": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0000,0001,0005,0007,FFFE",
+                "logicalId": "Tuya-ConfigureMagicPacket",
+                "execAtCreation": "Yes"
+            },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "isVisible": "1",
+                "nextLine": "after"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -46,8 +58,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting 01-0006": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
             },
             "Total power": {
@@ -92,14 +104,14 @@
                 "params": "clustId=0B04",
                 "execAtCreation": "yes"
             },
-            "SetReporting 0B04-0508": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=",
+            "SetReporting 0B04-RMSCurrent": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrType=21&attrId=0508",
                 "execAtCreation": "yes"
             },
-            "SetReporting 0B04-050B": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=",
+            "SetReporting 0B04-ActivePower": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrType=29&attrId=050B",
                 "execAtCreation": "yes"
             }
         }

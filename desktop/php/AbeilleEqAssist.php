@@ -818,6 +818,26 @@
         return false;
     }
 
+    /* Check if clustId exists in another EP.
+       Purpose is to give a unique Jeedom command name.
+       Returns: true is exists, else false */
+    function sameClustInOtherEP(epId, clustId) {
+        for (var epIdx = 0; epIdx < zigbee.endPoints.length; epIdx++) {
+            ep = zigbee.endPoints[epIdx];
+            if (ep.id == epId)
+                continue; // Current EP
+            for (var clustIdx = 0; clustIdx < ep.servClustList.length; clustIdx++) {
+                clust = ep.servClustList[clustIdx];
+                if (clust.id != clustId)
+                    continue;
+
+                /* Coresponding cluster in a different EP found. */
+                return true; // FOUND !
+            }
+        }
+        return false;
+    }
+
     function newCmd($use, $params = "", $exec = "") {
         cmd = new Object;
         cmd['use'] = $use;
@@ -844,7 +864,7 @@
         endPoints = zigbee.endPoints;
         mainEp = -1;
         minTimeout = 60; // Min timeout = 60min
-        onOffIdx = 1; // For 0006 cluster
+
         for (var epId in endPoints) {
             // console.log("EP "+epId);
             ep = endPoints[epId];
@@ -873,6 +893,14 @@
                     zigbee.signature['model'] = attributes['0005']['value'];
                 }
             }
+        }
+
+        for (var epId in endPoints) {
+            // console.log("EP "+epId);
+            ep = endPoints[epId];
+
+            if (!isset(ep.servClusters))
+                continue;
 
             /* 0001/Power configuration cluster */
             if (isset(ep.servClusters["0001"]) && isset(ep.servClusters["0001"]['attributes'])) {
@@ -892,6 +920,7 @@
             if (typeof ep.servClusters["0003"] !== "undefined") {
                 cmds["Identify"] = newCmd("act_zbCmdC-Identify");
                 cmds["Identify"]["isVisible"] = 1;
+                cmds["Identify"]["nextLine"] = "after";
             }
 
             /* 0004/Groups cluster */
@@ -899,27 +928,48 @@
                 // Cmd info 'Grousp' no longer required
                 // cmds["Groups"] = newCmd("Group-Membership");
             }
+        }
 
-            /* 0006/OnOff cluster */
+        /* 0006/OnOff cluster on all EP */
+        onOffIdx = 1; // Used if multiple 0006 clusters
+        multipleCluster = sameClustInOtherEP(epId, "0006");
+        clustIdx = '';
+        for (var epId in endPoints) {
+            // console.log("EP "+epId);
+            ep = endPoints[epId];
+
+            if (!isset(ep.servClusters))
+                continue;
+
+            if (multipleCluster)
+                clustIdx = " "+onOffIdx;
             if (isset(ep.servClusters["0006"]) && isset(ep.servClusters["0006"]['attributes'])) {
                 attributes = ep.servClusters["0006"]['attributes'];
                 if (isset(attributes['0000'])) {
                     // Adding on/off & toggle commands but assuming all supported
-                    cmds["On "+onOffIdx] = newCmd("act_zbCmdC-0006-On", "ep="+epId);
-                    cmds["On "+onOffIdx]["isVisible"] = 1;
-                    cmds["Off "+onOffIdx] = newCmd("act_zbCmdC-0006-Off", "ep="+epId);
-                    cmds["Off "+onOffIdx]["isVisible"] = 1;
-                    cmds["Toggle "+onOffIdx] = newCmd("act_zbCmdC-0006-Toggle", "ep="+epId);
-                    cmds["Status "+onOffIdx] = newCmd("inf_zbAttr-0006-OnOff", "ep="+epId);
-                    cmds["Status "+onOffIdx]["isVisible"] = 1;
-                    cmds["Status "+onOffIdx]["nextLine"] = "after";
-                    cmds["Get Status "+onOffIdx] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0006&attrId=0000");
-                    onOffIdx++;
+                    cmds["On"+clustIdx] = newCmd("act_zbCmdC-0006-On", "ep="+epId);
+                    cmds["On"+clustIdx]["isVisible"] = 1;
+                    cmds["Off"+clustIdx] = newCmd("act_zbCmdC-0006-Off", "ep="+epId);
+                    cmds["Off"+clustIdx]["isVisible"] = 1;
+                    cmds["Toggle"+clustIdx] = newCmd("act_zbCmdC-0006-Toggle", "ep="+epId);
+                    cmds["Status"+clustIdx] = newCmd("inf_zbAttr-0006-OnOff", "ep="+epId);
+                    cmds["Status"+clustIdx]["isVisible"] = 1;
+                    cmds["Status"+clustIdx]["nextLine"] = "after";
+                    cmds["Get Status"+clustIdx] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0006&attrId=0000");
                     // Adding bind + configureReporting but assuming supported
                     cmds["Bind "+epId+"-0006-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0006", "yes");
                     cmds["SetReporting "+epId+"-0006"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0006&attrType=10&attrId=0000", "yes");
                 }
             }
+            onOffIdx++;
+        }
+
+        for (var epId in endPoints) {
+            // console.log("EP "+epId);
+            ep = endPoints[epId];
+
+            if (!isset(ep.servClusters))
+                continue;
 
             /* 0008/Level cluster */
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
@@ -935,6 +985,14 @@
                 cmds["Bind "+epId+"-0008-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0008", "yes");
                 cmds["SetReporting "+epId+"-0008-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0008&attrType=10&attrId=0000", "yes");
             }
+        }
+
+        for (var epId in endPoints) {
+            // console.log("EP "+epId);
+            ep = endPoints[epId];
+
+            if (!isset(ep.servClusters))
+                continue;
 
             /* Analog Input */
             if (isset(ep.servClusters["000C"]) && isset(ep.servClusters["000C"]['attributes'])) {
@@ -1215,10 +1273,10 @@
                 }
                 cmds["Bind 0B04-ToZigate"] = newCmd("act_zbBindToZigate", "clustId=0B04", "yes");
                 if (isset(attributes['0508'])) { // RMS Current
-                    cmds["SetReporting 0B04-0508"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrType=21&attrId=0508", "yes");
+                    cmds["SetReporting 0B04-RMSCurrent"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrType=21&attrId=0508", "yes");
                 }
                 if (isset(attributes['050B'])) { // Active power
-                    cmds["SetReporting 0B04-050B"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrType=29&attrId=050B", "yes");
+                    cmds["SetReporting 0B04-ActivePower"] = newCmd("act_zbConfigureReporting2", "clustId=0B04&attrType=29&attrId=050B", "yes");
                 }
             }
 

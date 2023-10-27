@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="231027-BETA-1"
+# VERSION="231027-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1134,6 +1134,8 @@ f95600caa2c6556b210e6ad47a153c15 *core/config/devices/remote.b286acn01/remote.b2
 4a7f03e097d5aa4a20a55e7071fa1001 *core/config/devices/remote.b286acn02/remote.b286acn02.json
 aacc79d181b326cf39068292012a1c78 *core/config/devices/remote.b28ac1/discovery-aqara-wireless-double-rocker-h1.json
 f0b9b3acd589932f85cd985cffa31bd3 *core/config/devices/remote.b28ac1/remote.b28ac1.json
+db5e4208620e427a916f1d0d2fa94b34 *core/config/devices/remote.b486opcn01/discovery-remote.b486opcn01_LUMI.json
+f7210a579de2941264164ead9c300296 *core/config/devices/remote.b486opcn01/remote.b486opcn01.json
 969877fa835c3f7624b7e5b984cb865f *core/config/devices/remote.b686opcn01/notes.txt
 9f333ce3d1caa94464136e4582e90470 *core/config/devices/remote.b686opcn01/remote.b686opcn01.json
 bdc91742ac88eb37c61a51d12c24377f *core/config/devices/remotecontrol/remotecontrol.json
@@ -1287,7 +1289,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-a61fb02404b0bfdb67a92cfb23898cbc *docs/fr_FR/Changelog.rst
+13ef8ebee1a751f3881fa9460ce6bbe3 *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1570,6 +1572,7 @@ c22f70fd2103815987ca316f7bd74fb1 *images/node_Xiaomi-SmartPlug.png
 9b54cfd55c8e746d21eb3add8827ab87 *images/node_Xiaomi-TempSensor-2.png
 66c02fb8d40bbe5d838c672e821ea7ff *images/node_Xiaomi-Vibration.png
 cec943091c6d9b9adfa3ecea4fe5f679 *images/node_XiaomiAqara-AAQS-S01.png
+e5704375e7084b2ee0f32492269e67b5 *images/node_XiaomiAqara-Opple-Remote-4buttons.png
 559ee13277ec81ec87c86758928786d7 *images/node_XiaomiAqara-QBKG26LM.png
 3bd1d0b0c755da5f3166a4c8dea29de2 *images/node_XiaomiAqara-SSM-U01.png
 811402dc549dd68a1afc402be5bdf420 *images/node_XiaomiAqara-SSM-U02.png
@@ -1623,10 +1626,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-b03e390ccbbbe7f5e28d5a02c3e26c18 *plugin_info/Abeille.version
+d8a7f5e2b939123abdca04a491c0df7f *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 c16154784139bfd2264e4a6409fdc658 *plugin_info/configuration.php
-88002e11c49bd5e2fd8e3eb034bd8d62 *plugin_info/info.json
+bcd611ee7c071c2a3192eda33add6f76 *plugin_info/info.json
 d2cda632a08b081522bef83b038b98f0 *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

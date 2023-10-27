@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-231027-BETA-1
+231027-BETA-2
 -------------
 
 - Interne: Tools/check_json: Améliorations.

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231027-BETA-1
+-------------
+
 - Interne: Tools/check_json: Améliorations.
 - Modèles d'équipement: Correction d'erreurs sur qq modèles.
 - Assistant modèles: Améliorations.

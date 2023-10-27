@@ -9,6 +9,7 @@ ChangeLog
 - Assistant modèles: Améliorations.
 - SilverCrest-HG08673-FR: Support préliminaire (2635).
 - Page EQ: Corrections pour forçage de modele.
+- Xiaomi Aqara Opple 4 boutons: Support préliminaire (2636).
 
 231023-BETA-2
 -------------

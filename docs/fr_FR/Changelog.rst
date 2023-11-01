@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Zigbee const: Correction support cluster 0012, 13 & 14.
+
 231027-BETA-2
 -------------
 

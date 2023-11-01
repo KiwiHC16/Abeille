@@ -413,7 +413,13 @@
         "0012" => array(
             "name" => "Multistate Input",
             "attributes" => array(
-                "PresentValue" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x21 ), // uint16
+                "0055" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x21 ), // uint16
+            ),
+        ),
+        "0013" => array(
+            "name" => "Multistate Output",
+            "attributes" => array(
+                "0055" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x21 ), // uint16
             ),
         ),
         "0014" => array(
@@ -421,12 +427,12 @@
             "attributes" => array(
                 "000E" => array( "name" => "StateText", "access" => "RW" ),
                 "001C" => array( "name" => "Description", "access" => "RW" ),
-                "004A" => array( "name" => "NumberOfStates", "access" => "RW" ),
+                "004A" => array( "name" => "NumberOfStates", "access" => "RW", "dataType" => 0x21 ), // uint16
                 "0051" => array( "name" => "OutOfService", "access" => "RW" ),
-                "0055" => array( "name" => "PresentValue", "access" => "RW" ),
+                "0055" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x21 ), // uint16
                 "0057" => array( "name" => "PriorityArray", "access" => "RW" ),
                 "0067" => array( "name" => "Reliability", "access" => "RW" ),
-                "0068" => array( "name" => "RelinquishDefault", "access" => "RW" ),
+                "0068" => array( "name" => "RelinquishDefault", "access" => "RW", "dataType" => 0x21 ), // uint16
                 "006F" => array( "name" => "StatusFlags", "access" => "R" ),
                 "0100" => array( "name" => "ApplicationType", "access" => "R" ),
             ),

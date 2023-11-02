@@ -1,3 +1,6 @@
+
+02/11/2023: backup of JeedomMaison before downloading lated version from GitHub.
+
 # Abeille
 
 ## Plugin pour Jeedom (Gateway ZiGate)

@@ -37,6 +37,7 @@
         "xiaomi": {
             "fromDevice": {
                 "0000-FF02": {
+                    "struct": 1,
                     "01-21": {
                         "func": "numberDiv",
                         "div": 1000,

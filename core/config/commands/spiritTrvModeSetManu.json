@@ -1,7 +1,7 @@
 {
     "spiritTrvModeSetManu": {
         "isVisible": 0,
-        "name": "Set TRV Mode Manu",
+        "logicalId": "#EP#-spiritTrvModeSetManu",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

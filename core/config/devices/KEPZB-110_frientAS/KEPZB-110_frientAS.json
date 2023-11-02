@@ -29,9 +29,9 @@
                 "execAtCreation": "yes"
             },
             "Identify": {
-                "use": "Identify"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
-
             "Arm Value": {
                 "use": "inf_zbCmdC-0501-Arm-Value",
                 "repeatEventManagement": "always",

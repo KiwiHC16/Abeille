@@ -1,0 +1,14 @@
+{
+    "act_zbCmdC-EF00-Stop": {
+        "isVisible": 1,
+        "logicalId": "#EP#-zbCmdG-EF00-Stop",
+        "subType": "other",
+        "template": "",
+        "configuration": {
+            "topic": "cmd-EF00",
+            "request": "cmd=01&param=01"
+        },
+        "type": "action",
+        "genericType": ""
+    }
+}

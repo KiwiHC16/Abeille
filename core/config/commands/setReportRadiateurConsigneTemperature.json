@@ -1,10 +1,7 @@
 {
     "setReportRadiateurConsigneTemperature": {
-        "isVisible": 0,
-        "name": "setReportRadiateurConsigneTemperature",
-        "isHistorized": "0",
+        "logicalId": "#EP#-setReportRadiateurConsigneTemperature",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "setReport",

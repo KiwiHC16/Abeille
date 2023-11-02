@@ -1,7 +1,7 @@
 {
     "spiritHostFlags": {
         "isVisible": 0,
-        "name": "Host Flags",
+        "logicalId": "#EP#-spiritHostFlags",
         "isHistorized": "0",
         "subType": "numeric",
         "invertBinary": "0",

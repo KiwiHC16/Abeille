@@ -1,10 +1,8 @@
 {
     "setLevelGroupEP3": {
-        "name": "setLevel Gp3",
         "isVisible": 1,
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetLevelGroup3",
         "subType": "slider",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#GROUPEP3#\/setLevelGroup",

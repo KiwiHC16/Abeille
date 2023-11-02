@@ -1,10 +1,8 @@
 {
     "LegrandContactorEtat": {
         "isVisible": 1,
-        "name": "Etat",
-        "isHistorized": "1",
+        "logicalId": "#EP#-LegrandContactorEtat",
         "subType": "binary",
-        "invertBinary": "0",
         "template": "default",
         "configuration": {
             "visibilityCategory": "Network"

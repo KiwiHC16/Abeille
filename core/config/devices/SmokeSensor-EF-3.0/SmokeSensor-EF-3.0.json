@@ -1,18 +1,34 @@
 {
     "SmokeSensor-EF-3.0": {
+        "manufacturer": "Heiman",
+        "model": "HS1SA",
+        "type": "Heiman Smoke Sensor",
+        "alternateIds": {
+            "SMOK_V15": {},
+            "SMOK_V16": {},
+            "b5db59bfd81e4f1f95dc57fdbba17931": {},
+            "SMOK_YDLV10": {},
+            "SmokeSensor-N": {},
+            "Smoke": {},
+            "319fa36e7384414a9ea62cba8f6e7626": {},
+            "c3442b4ac59b4ba1a83119d938f283ab": {}
+        },
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
             "icon": "SmokeSensor-EM",
-            "batteryType": "1x3V CR17335 ou 1x3V CR123A"
+            "batteryType": "1x3V CR17335/CR123A"
         },
         "category": {
             "security": "1"
         },
-        "type": "Humein Smoke Sensor HS1SA-E",
         "commands": {
-            "Etat": {
-                "use": "securitySafetySmokeHeiman2"
+            "Zone Status": {
+                "use": "inf_zbAttr-0500-ZoneStatus"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0500-ZoneStatus-Alarm1",
+                "isVisible": "1"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent",
@@ -40,13 +56,11 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "setReportSmokeHeiman": {
-                "use": "setReportSmokeHeiman"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
+            "SetReporting 0500-0002": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0500&attrId=0002&attrType=19&maxInterval=3500",
+                "execAtCreation": "yes"
             }
-        },
-        "comment": "Copy of Heiman Smoke Sensor (SmokeSensor-EM) : Detecteur de fum\u00e9e HEIMAN HS1SA-E\n#1500"
+        }
     }
 }

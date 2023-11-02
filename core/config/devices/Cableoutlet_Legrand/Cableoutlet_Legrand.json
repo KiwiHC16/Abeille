@@ -19,12 +19,8 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "Groups": {
-                "use": "Group-Membership",
-                "isVisible": 1
-            },
             "Identify": {
-                "use": "Identify",
+                "use": "act_zbCmdC-Identify",
                 "isVisible": 1
             },
             "etat": {
@@ -32,7 +28,7 @@
                 "isVisible": 1
             },
             "On": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "isVisible": 1
             },
             "Off": {
@@ -83,11 +79,13 @@
             },
             "Fil pilote ON": {
                 "use": "act_zbWriteAttribute",
-                "params": "clustId=FC01&attrId=0000&attrType=09&attrVal=0200"
+                "params": "clustId=FC01&attrId=0000&attrType=09&attrVal=0200",
+                "logicalId": "#EP#-Fil-pilote-ON"
             },
             "Fil pilote OFF": {
                 "use": "act_zbWriteAttribute",
-                "params": "clustId=FC01&attrId=0000&attrType=09&attrVal=0100"
+                "params": "clustId=FC01&attrId=0000&attrType=09&attrVal=0100",
+                "logicalId": "#EP#-Fil-pilote-OFF"
             },
             "Comfort": {
                 "use": "cmdG-LegrandFC41",

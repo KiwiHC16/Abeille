@@ -1,10 +1,8 @@
 {
     "setLevelGroupEP7": {
-        "name": "setLevel Gp7",
         "isVisible": 1,
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetLevelGroup7",
         "subType": "slider",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#GROUPEP7#\/setLevelGroup",

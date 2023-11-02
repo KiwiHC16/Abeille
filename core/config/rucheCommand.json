@@ -8,17 +8,8 @@
         "invertBinary": "0",
         "template": ""
     },
-    "SW-Application": {
-        "name": "SW",
-        "isHistorized": "0",
-        "isVisible": "1",
-        "Type": "info",
-        "subType": "string",
-        "invertBinary": "0",
-        "template": ""
-    },
-    "SW-SDK": {
-        "name": "SDK",
+    "FW-Version": {
+        "name": "FW version",
         "isHistorized": "0",
         "isVisible": "1",
         "Type": "info",
@@ -33,7 +24,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-            "topic": "getZgVersion",
+            "topic": "zgGetVersion",
             "request": ""
         }
     },
@@ -65,17 +56,6 @@
         "template": "",
         "display": {
             "forceReturnLineAfter": "1"
-        }
-    },
-    "Get Network Status": {
-        "name": "Get Network Status",
-        "isHistorized": "0",
-        "isVisible": "0",
-        "Type": "action",
-        "subType": "other",
-        "configuration": {
-            "topic": "getNetworkStatus",
-            "request": "getNetworkStatus"
         }
     },
     "Short-Addr": {
@@ -122,7 +102,7 @@
         "Type": "action",
         "subType": "other",
         "configuration": {
-            "topic": "setZgPermitMode",
+            "topic": "zgSetPermitMode",
             "request": "mode=start"
         }
     },

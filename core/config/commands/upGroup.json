@@ -1,10 +1,7 @@
 {
     "upGroup": {
-        "name": "Up",
-        "isVisible": 1,
-        "isHistorized": "0",
+        "logicalId": "#EP#-UpGroup",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#addrGroup#\/UpGroup",

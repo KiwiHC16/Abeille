@@ -1,8 +1,6 @@
 {
     "setLegrandDimmerOn": {
-        "isVisible": 0,
-        "name": "DimmerOn",
-        "isHistorized": "0",
+        "logicalId": "#EP#-DimmerOn",
         "subType": "other",
         "configuration": {
             "topic": "WriteAttributeRequestActivateDimmer",

@@ -10,7 +10,7 @@
         },
         "type": "ZLO-ExtendedColor Test for Dev",
         "commands": {
-            "etat": {
+            "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
@@ -27,37 +27,42 @@
                 "isVisible": 1
             },
             "On": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "isVisible": 1
             },
             "Off": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
-            "setLevel": {
-                "use": "setLevel"
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
             },
             "Colour": {
                 "use": "Colour"
             },
             "Set White": {
-                "use": "act_zbCmdG-0300-MoveToColor",
+                "use": "act_zbCmdC-0300-MoveToColor",
                 "params": "X=6000&Y=6000",
+                "logicalId": "SetWhite",
                 "isVisible": 1
             },
             "Set Blue": {
-                "use": "act_zbCmdG-0300-MoveToColor",
+                "use": "act_zbCmdC-0300-MoveToColor",
                 "params": "X=228F&Y=228F",
+                "logicalId": "SetBlue",
                 "isVisible": 1
             },
             "Set Red": {
-                "use": "act_zbCmdG-0300-MoveToColor",
+                "use": "act_zbCmdC-0300-MoveToColor",
                 "params": "X=AE13&Y=51EB",
+                "logicalId": "SetRed",
                 "isVisible": 1
             },
             "Set Green": {
-                "use": "act_zbCmdG-0300-MoveToColor",
+                "use": "act_zbCmdC-0300-MoveToColor",
                 "params": "X=147A&Y=D709",
+                "logicalId": "SetGreen",
                 "isVisible": 1
             },
             "Get-ColorX": {
@@ -77,11 +82,8 @@
                 "params": "clustId=0008&attrId=0000"
             },
             "Identify": {
-                "use": "Identify",
+                "use": "act_zbCmdC-Identify",
                 "isVisible": 1
-            },
-            "Groups": {
-                "use": "Group-Membership"
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -130,7 +132,7 @@
                 "params": "clustId=0000&attrId=4000"
             },
             "Toggle": {
-                "use": "act_zbCmdG-0006-Toggle",
+                "use": "act_zbCmdC-0006-Toggle",
                 "nextLine": "after"
             }
         }

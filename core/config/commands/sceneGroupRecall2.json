@@ -1,10 +1,8 @@
 {
     "sceneGroupRecall2": {
-        "name": "Sc2",
+        "logicalId": "#EP#-sceneGroupRecall2",
         "isVisible": 1,
-        "isHistorized": "0",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/Ruche\/sceneGroupRecall",

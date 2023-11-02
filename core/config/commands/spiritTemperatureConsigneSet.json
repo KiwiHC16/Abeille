@@ -1,7 +1,7 @@
 {
     "spiritTemperatureConsigneSet": {
         "isVisible": 1,
-        "name": "Set Consigne",
+        "logicalId": "#EP#-spiritTemperatureConsigneSet",
         "isHistorized": "0",
         "subType": "slider",
         "invertBinary": "0",

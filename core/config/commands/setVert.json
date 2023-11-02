@@ -1,11 +1,8 @@
 {
     "setVert": {
-        "isVisible": 0,
-        "name": "setVert",
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetGreen",
         "subType": "slider",
         "value": "colorVert",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "setVert",
@@ -13,7 +10,6 @@
             "visibilityCategory": "additionalCommand"
         },
         "type": "action",
-        "genericType": "DONT",
-        "nextLine": "after"
+        "genericType": "DONT"
     }
 }

@@ -1,5 +1,6 @@
 {
     "remote.b286acn02": {
+        "manufacturer": "Xiaomi",
         "timeout": "60",
         "comment": "https://github.com/KiwiHC16/Abeille/issues/1299",
         "configuration": {
@@ -26,9 +27,6 @@
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
-            },
-            "Specific": {
-                "use": "Xiaomi-ff01"
             },
             "SWBuildID": {
                 "use": "inf_zbAttr-0000-SWBuildID"

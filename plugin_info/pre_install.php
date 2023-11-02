@@ -13,11 +13,11 @@
      */
     function Abeille_pre_update() {
 
-        log::add('Abeille', 'debug', 'Launch of Abeille_pre_update()');
+        log::add('Abeille', 'debug', 'Abeille_pre_update() starting');
 
         Abeille_pre_update_analysis(1, 1);
 
-        log::add('Abeille', 'debug', 'End of Abeille_pre_update()');
+        log::add('Abeille', 'debug', 'Abeille_pre_update() ended');
     }
 
     // Cli test

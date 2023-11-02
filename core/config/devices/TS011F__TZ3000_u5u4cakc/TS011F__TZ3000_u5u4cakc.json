@@ -1,7 +1,7 @@
 {
     "TS011F__TZ3000_u5u4cakc": {
         "manufacturer": "Blitzwolf",
-        "model": "SHP15",
+        "model": "BW-SHP15",
         "type": "Blitzwolf SHP15",
         "timeout": "60",
         "category": {
@@ -12,22 +12,25 @@
             "mainEP": "01"
         },
         "commands": {
-            "Identify": {
-                "use": "Identify"
+            "TuyaInit0": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0005,0000,0001,0007,FFFE",
+                "execAtCreation": "Yes"
             },
-            "Groups": {
-                "use": "Group-Membership"
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "On": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "isVisible": "1"
             },
             "Off": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "isVisible": "1"
             },
             "Toggle": {
-                "use": "act_zbCmdG-0006-Toggle"
+                "use": "act_zbCmdC-0006-Toggle"
             },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",

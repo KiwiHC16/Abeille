@@ -24,15 +24,15 @@
 
     logSetConf('', true); // Log to STDOUT until log name fully known (need Zigate number)
     logMessage('info', '>>> Démarrage d\'AbeilleSocat');
-    if ($argc < 1) { // Currently expecting <ZigatePort> <LogLevel> <ip:port>
+    if ($argc < 1) { // Currently expecting <ZigatePort> <ip:port> <LogLevel>
         logMessage('error', 'Port série manquant pour lancement AbeilleSocat => Arret du démon.');
         exit(1);
     }
 
     $serial = $argv[1];
-    $requestedlevel = $argv[2];
-    $requestedlevel = '' ? 'none' : $argv[2];
-    $ip = '' ? '192.168.4.1' : $argv[3];
+    $ip = ($argv[2] != '') ? $argv[2] : '192.168.4.1';
+    $requestedlevel = $argv[3];
+
     $ipArr = explode(':', $ip);
     if (count($ipArr) > 1) {
         $ip = $ipArr[0];
@@ -51,7 +51,7 @@
     logSetConf("AbeilleSocat".$zgId.".log", true); // Log to file with line nb check
 
     //check already running
-    $parameters = AbeilleTools::getParameters();
+    $parameters = AbeilleTools::getConfig();
     $running = AbeilleTools::getRunningDaemons();
     $daemons= AbeilleTools::diffExpectedRunningDaemons($parameters,$running);
     logMessage('debug', 'Daemons: '.json_encode($daemons));

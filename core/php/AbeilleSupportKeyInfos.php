@@ -51,14 +51,11 @@
     /**
      * Print title with underlines
      *
-     * @param   logFile     file where to store the title
      * @param   title       Title to print
      *
      * @return  none
      */
-    function logTitle($title) {
-        global $logFile;
-
+    function logTitle($title, $append = 1) {
         $line = "";
         if (substr($title, 0, 2) == '{{') {
             $title = substr($title, 2);
@@ -69,7 +66,7 @@
             $line .= '=';
 
         // echo $line."\n";
-        logIt($title."\n");
+        logIt($title."\n", $append);
         logIt($line."\n");
     }
 
@@ -110,6 +107,8 @@
 
     // Display Zigates informations
     function zigatesInfos() {
+        logTitle("Zigates");
+
         for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
             if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
                 continue; // Zigate disabled
@@ -118,15 +117,11 @@
             if (is_object($eqLogic)) {
                 $beehiveId = $eqLogic->getId();
 
-                $major = '????';
-                $minor = '????';
+                $fwVersion = '????-????';
                 $channel = "?";
-                $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'SW-Application');
+                $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'FW-Version');
                 if ($cmdLogic)
-                    $major = $cmdLogic->execCmd();
-                $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'SW-SDK');
-                if ($cmdLogic)
-                    $minor = $cmdLogic->execCmd();
+                    $fwVersion = $cmdLogic->execCmd();
                 $cmdLogic = cmd::byEqLogicIdAndLogicalId($beehiveId, 'Network-Channel');
                 if ($cmdLogic)
                     $channel = $cmdLogic->execCmd();
@@ -134,10 +129,9 @@
                 $zgType = config::byKey('ab::zgType'.$zgId, 'Abeille', '?');
 
                 logIt("Zigate ".$zgId."\n");
-                $fwVersion = $major.'-'.$minor;
-                logIt(" - FW version: ".$fwVersion."\n");
-                logIt(" - Channel   : ".$channel."\n");
-                logIt(" - Type      : ".$zgType."\n");
+                logIt("- FW version: ".$fwVersion."\n");
+                logIt("- Channel   : ".$channel."\n");
+                logIt("- Type      : ".$zgType."\n");
             } else
                 logIt("Zigate ".$zgId.": ERROR. No Jeedom registered device\n");
         }
@@ -145,23 +139,41 @@
     }
 
     // Display devices status
-    function devicesStatus() {
-        logTitle("Devices status");
+    function devicesInfos() {
+        logTitle("Devices");
 
-        $eqLogics = Abeille::byType('Abeille');
-        foreach ($eqLogics as $eqLogic) {
-            list($net, $addr) = explode("/", $eqLogic->getLogicalId());
-            $zgId = substr($net, 7); // AbeilleX => X
-            $eqHName = $eqLogic->getHumanName();
-            $eqId = $eqLogic->getId();
-            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-            $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
-            if ($eqLogic->getStatus('timeout') == 1) {
-                $lastComm = $eqLogic->getStatus('lastCommunication');
-                $timeoutS = "TIMEOUT (".$lastComm.")";
-            } else
-                $timeoutS = "ok";
-            logIt(" - Z".$zgId.": ".$eqHName.", id=".$eqId.", addr=".$addr.", type='".$eqType."': ".$timeoutS."\n");
+        for ($zgId = 1; $zgId <= maxNbOfZigate; $zgId++) {
+            if (config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N') != 'Y')
+                continue; // Zigate disabled
+
+            logIt("Zigate ${zgId}\n");
+
+            $eqLogics = Abeille::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                list($net, $addr) = explode("/", $eqLogic->getLogicalId());
+                $zgId2 = substr($net, 7); // AbeilleX => X
+                if ($zgId2 != $zgId)
+                    continue;
+
+                $eqHName = $eqLogic->getHumanName();
+                $eqId = $eqLogic->getId();
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                $eqModelId = isset($eqModel['id']) ? $eqModel['id'] : '';
+                $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
+                $extra = '';
+                $status = 'ok';
+                if ($eqLogic->getStatus('timeout') == 1) {
+                    $lastComm = $eqLogic->getStatus('lastCommunication');
+                    $extra = ", TIMEOUT (last comm ".$lastComm.")";
+                    $status = "TO";
+                } else if ($eqLogic->getStatus('ab::txAck', 'ok') != 'ok') {
+                    $extra = ", NO-ACK";
+                    $status = "NA";
+                }
+
+                logIt("- ${status}: ${eqHName}, id=${eqId}${extra}\n");
+                logIt("      addr=${addr}, model='${eqModelId}', type='${eqType}'\n");
+            }
         }
         logIt("\n");
     }
@@ -188,26 +200,32 @@
     //------------------------------------------------------------------------------------------
     // Main
     //------------------------------------------------------------------------------------------
-    logIt("Informations clefs nécessaires au support.\n\n", 0);
-    logIt('Quand <a href="https://github.com/KiwiHC16/Abeille/issues/new" target="_blank">vous ouvrez une "issue"</a> dans GitHub merci de copier/coller les 3 premiers chapitres ci dessous '."\n");
-    logIt("Pour l'intégration d'un équipement non encore supporté ajoutez le chapitre 4.\n\n");
+    // logIt("Informations clefs nécessaires au support.\n\n", 0);
+    // logIt('Quand <a href="https://github.com/KiwiHC16/Abeille/issues/new" target="_blank">vous ouvrez une "issue"</a> dans GitHub merci de copier/coller les 3 premiers chapitres ci dessous '."\n");
+    // logIt("Pour l'intégration d'un équipement non encore supporté ajoutez le chapitre 4.\n\n");
+
+    logTitle("General", 0);
+    $date = date('Y/m/d H:i:s');
+    logIt("Date   : ".$date."\n");
+    $jLines = log::getConfig('maxLineLog');
+    logIt("Logs   : ".$jLines." lines\n");
 
     // Plateform infos
     exec('uname -a', $result2);
-    logIt("Kernel: ".json_encode($result2, JSON_UNESCAPED_SLASHES)."\n\n");
+    logIt("Kernel : ".json_encode($result2, JSON_UNESCAPED_SLASHES)."\n");
 
     // Abeille's version
     $file = fopen(__DIR__."/../../plugin_info/Abeille.version", "r");
     $line = fgets($file); // Should be a comment
     $abeilleVersion = trim(fgets($file)); // Should be Abeille's version
     fclose($file);
-    logIt("Version Abeille: ".$abeilleVersion."\n\n");
+    logIt("Abeille: Version ".$abeilleVersion."\n\n");
 
     // Zigate infos
     zigatesInfos();
 
     // Devices status
-    devicesStatus();
+    devicesInfos();
 
     jeedomInfos($CONFIG);
 ?>

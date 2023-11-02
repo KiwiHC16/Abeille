@@ -1,7 +1,7 @@
 {
     "danfossSystemeModeGet": {
         "isVisible": 0,
-        "name": "Mode Get",
+        "logicalId": "#EP#-danfossSystemeModeGet",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

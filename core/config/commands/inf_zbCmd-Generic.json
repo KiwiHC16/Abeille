@@ -1,0 +1,10 @@
+{
+    "inf_zbCmd-Generic": {
+        "comment": "Generic cluster specific command",
+        "subType": "string",
+        "type": "info",
+        "logicalId": "inf_#EP#-#CLUSTID#-cmd#CMD#",
+        "configuration": {
+        }
+    }
+}

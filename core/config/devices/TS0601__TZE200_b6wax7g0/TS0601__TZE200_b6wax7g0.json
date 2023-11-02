@@ -14,9 +14,6 @@
             "batteryType": "2x1.5 AA"
         },
         "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Battery percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
@@ -29,10 +26,11 @@
             "Set Setpoint": {
                 "use": "act_tuyaEF00-Set-Setpoint",
                 "params": "dpId=02",
+                "logicalId": "#EP#-SetSetpoint",
                 "isVisible": 1
             },
             "Setpoint": {
-                "use": "attr-Thermostat-Setpoint",
+                "use": "inf_Thermostat-Setpoint",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -45,6 +43,7 @@
             "Set ECO temp": {
                 "use": "act_tuyaEF00-Set-Setpoint",
                 "params": "dpId=6B",
+                "logicalId": "#EP#-SetEcoTemp",
                 "isVisible": 1
             },
             "ECO temp": {
@@ -54,7 +53,7 @@
                 "nextLine": "after"
             },
             "Window-Detection": {
-                "use": "attr-Door-Status",
+                "use": "inf_Door-Status",
                 "logicalId": "01-windowDetectionStatus",
                 "nextLine": "after",
                 "invertBinary": 0,

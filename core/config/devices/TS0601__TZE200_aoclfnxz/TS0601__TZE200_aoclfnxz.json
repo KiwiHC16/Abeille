@@ -17,16 +17,13 @@
             "mainEP": "01"
         },
         "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Local temp": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1,
                 "nextLine": "after"
             },
             "Setpoint": {
-                "use": "attr-Thermostat-Setpoint",
+                "use": "inf_Thermostat-Setpoint",
                 "isVisible": 1,
                 "nextLine": "after"
             }

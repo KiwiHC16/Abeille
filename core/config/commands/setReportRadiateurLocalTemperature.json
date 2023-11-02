@@ -1,10 +1,7 @@
 {
     "setReportRadiateurLocalTemperature": {
-        "isVisible": 0,
-        "name": "setReportRadiateurLocalTemperature",
-        "isHistorized": "0",
+        "logicalId": "#EP#-setReportRadiateurLocalTemperature",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "setReport",

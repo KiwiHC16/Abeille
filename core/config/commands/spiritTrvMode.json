@@ -1,7 +1,7 @@
 {
     "spiritTrvMode": {
         "isVisible": 0,
-        "name": "Trv Mode",
+        "logicalId": "#EP#-spiritTrvMode",
         "isHistorized": "0",
         "subType": "numeric",
         "invertBinary": "0",

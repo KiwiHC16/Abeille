@@ -11,13 +11,13 @@ Attention !! Toute modification de ce répertoire sera écrasée lors des mises-
 Nom des commandes
 =================
 En dehors des commandes "historiques" en passe d'être normalisées, les noms de fichiers doivent suivre les regles suivantes:
-- Toute commande 'action' commande par 'act_'.
-- Toute commande 'info' commande par 'inf_'.
+- Toute commande 'action' doit commencer par 'act_'.
+- Toute commande 'info' doit commencer par 'inf_'.
 
 - Les commandes specifiques Zigbee (issues du standard Zigbee) sont ensuite prefixées par "zb"
   Ex: inf_zbXXX ou act_zbXXX
-  Commandes 'générées': act_zbCmdG-xxxx.
-  Commandes reçues du SERVEUR: inf_zbCmdS-xxxx (anciennement inf_zbCmdR-xxxx)
+  Commandes envoyées du CLIENT vers serveur: act_zbCmdC-xxxx (anciennement act_zbCmdG-xxxx).
+  Commandes reçues du SERVEUR: inf_zbCmdS-xxxx (anciennement inf_zbCmdR-xxxx).
   Commandes reçues du CLIENT: inf_zbCmdC-xxxx.
   Attributs: inf_zbAttr-xxx
   Commandes génériques Zigbee: act_zbXXX
@@ -71,6 +71,7 @@ Exemple de commande 'action'
 
 * subType: OBLIGATOIRE
   Type d'information: 'binary', 'numeric', 'string'
+  Type d'action: 'other' (pas de paramètre), 'message' (titre + message)
 
 * logicalId: OBLIGATOIRE si commande INFO
   Ex: '0400-01-0000' pour définir l'information 'luminosité'.
@@ -96,10 +97,18 @@ Exemple de commande 'action'
   Utile uniquement pour une commande 'info' de subType 'binary'.
   Non inversé par défaut ("invertBinary":0).
 
+* disableTitle: optionnel.
+  Utile uniquement pour une commande 'action' de subType 'message'.
+  Permet de désactiver l'affichage du titre dans le widget.
+
 * template: optionnel.
   Permet de définir le widget qui sera utilisé pour l'affichage de la commande.
 
-* value: ??
+* value: optionnel.
+  Syntaxe: "value": "<nom-cmde-info>"
+  Permet de définir la valeur par défaut. Très utile pour lier une commande action avec une commande info.
+  Par ex, la valeur par défaut d'un "Set Level" peut être alignée sur la valeur de retour de "Level" via
+  "value": "Level"
 
 * nextLine: after/before
   Impacte l'affichage du widget. Permet de forcer un saut de ligne apres ou avant le widget de la commande.
@@ -177,3 +186,9 @@ Exemple de commande 'action'
 
   * returnStateValue: Y
     Valeur de retour automatique pour une commande info.
+
+  * notStandard: 1
+    Permet d'indiquer que l'attribut ne doit pas etre traité comme un attribut ZCL.
+
+  * RefreshData: ??
+    Ex: "RefreshData": "1"

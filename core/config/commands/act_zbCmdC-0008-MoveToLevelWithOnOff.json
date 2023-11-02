@@ -1,0 +1,15 @@
+{
+    "act_zbCmdC-0008-MoveToLevelWithOnOff": {
+        "comment": "Cluster 0008, Move to level with OnOff cmd 04",
+        "subType": "slider",
+        "logicalId": "#EP#-0008-CmdMoveToLevelWithOnOff",
+        "template": "default",
+        "configuration": {
+            "topic": "cmd-0008",
+            "request": "ep=#EP#&cmd=04&level=#slider#",
+            "visibilityCategory": "All"
+        },
+        "type": "action",
+        "genericType": "FLAP_SLIDER"
+    }
+}

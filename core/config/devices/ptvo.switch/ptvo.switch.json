@@ -16,12 +16,12 @@
                 "isVisible": 1
             },
             "On 8": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "params": "ep=08",
                 "isVisible": 1
             },
             "Off 8": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "params": "ep=08",
                 "isVisible": 1
             },

@@ -29,8 +29,7 @@
     /* Called from AbeilleParser to add a message to monitor.
        'addr' is either short address if 2 bytes, or IEEE address if 8 bytes.
        'logSetConf()' must be called first from parser. */
-    function monMsgFromZigate($msgDecoded)
-    {
+    function monMsgFromZigate($msgDecoded) {
         global $abQueues;
 
         // logMessage("debug", "monMsgFromZigate('".$addr."', '".$msgDecoded."')");
@@ -48,8 +47,7 @@
     }
 
     /* Called from AbeilleParser when short address has changed (device announce) */
-    function monAddrHasChanged($addr, $ieee)
-    {
+    function monAddrHasChanged($addr, $ieee) {
         global $abQueues;
 
         /* Check queue */
@@ -66,8 +64,7 @@
 
     /* Called from AbeilleCmd to add a message to monitor.
        'logSetConf()' must be called first from 'AbeilleCmd'. */
-    function monMsgToZigate($addr, $msgDecoded)
-    {
+    function monMsgToZigate($addr, $msgDecoded) {
         global $abQueues;
 
         // logMessage("debug", "monMsgToZigate('".$addr."', '".$msgDecoded."')");
@@ -129,8 +126,7 @@
 
     /* Run AbeilleMonitor daemon.
        Address to monitor is currently extracted from developper config file. */
-    function monRun()
-    {
+    function monRun() {
         global $abQueues;
 
         /* Configuring 'AbeilleLog' library */
@@ -170,46 +166,70 @@
                 return;
             }
 
-            $max_msg_size = 512;
-
             while (true) {
+                time_nanosleep(0, 10000000); // 10ms
+
                 /* Check if one of the queues is not empty */
                 /* Select oldest message then log it and remove it from queue */
 
                 $statCmdQueue = msg_stat_queue($queueCmdToMon);
                 $statParserQueue = msg_stat_queue($queueParserToMon);
+                if (($statCmdQueue === false) || ($statParserQueue === false)) {
+                    logMessage("debug", "msg_stat_queue() FAILED");
+                    continue;
+                }
                 if (($statCmdQueue['msg_qnum'] == 0) && ($statParserQueue['msg_qnum'] == 0)) {
-                    time_nanosleep( 0, 10000000 ); // 1/100s
                     continue;
                 }
 
-                $msgType = NULL;
-                $msg = NULL;
-                $msgSent = true; // Message direction: assuming sent
-                if (($statCmdQueue['msg_qnum'] != 0) && ($statParserQueue['msg_qnum'] != 0)) {
+                $msgType = NULL; // Unused
+                $msgFromCmd = true; // Message direction: assuming sent so coming from 'AbeilleCmd'
+                if (($statCmdQueue['msg_qnum'] != 0) && ($statParserQueue['msg_qnum'] != 0)) { // Message in both queues ?
                     /* Select queue with oldest message */
-                    if ($statCmdQueue['msg_stime'] < $statParserQueue['msg_stime'])
-                        msg_receive($queueCmdToMon, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT);
-                    else {
-                        msg_receive($queueParserToMon, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT);
-                        $msgSent = false;
+                    if ($statCmdQueue['msg_stime'] > $statParserQueue['msg_stime']) {
+                        $msgFromCmd = false;
                     }
-                } else if ($statCmdQueue['msg_qnum'] != 0)
-                    msg_receive($queueCmdToMon, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT);
-                else {
-                    msg_receive($queueParserToMon, 0, $msgType, $max_msg_size, $msgJson, false, MSG_IPC_NOWAIT);
-                    $msgSent = false;
+                } else if ($statParserQueue['msg_qnum'] != 0) {
+                    $msgFromCmd = false;
+                }
+
+                if ($msgFromCmd) {
+                    $queue = $queueCmdToMon;
+                    $queueName = "cmd";
+                    $msgMaxSize = $abQueues['cmdToMon']['max'];
+                } else {
+                    $queue = $queueParserToMon;
+                    $queueName = "parser";
+                    $msgMaxSize = $abQueues['parserToMon']['max'];
+                }
+                $status = msg_receive($queue, 0, $msgType, $msgMaxSize, $msgJson, false, MSG_IPC_NOWAIT, $errCode);
+                if ($status === false) {
+                    // Err code 7 = Too big
+                    // Err code 42 = No message
+                    if ($errCode == 7) { // Too big
+                        msg_receive($queue, 0, $msgType, $msgMaxSize, $msgJson, false, MSG_IPC_NOWAIT | MSG_NOERROR); // Purge
+                        logMessage('debug', "msg_receive(queue ${queueName}) ERROR: msg TOO BIG ignored.");
+                    } else if ($errCode != 42) { // 42 = No message
+                        logMessage('debug', "msg_receive(queue ${queueName}) ERROR: ErrCode=${errCode}");
+                    }
+
+                    continue;
+                }
+                if ($msgJson == '') {
+                    logMessage("debug", "EMPTY message received from queue ${queueName}");
+                    continue;
                 }
 
                 $msg = json_decode($msgJson, true);
                 if ($msg['type'] == 'x2mon') {
                     /* Log message */
-                    if ($msgSent == true)
+                    if ($msgFromCmd == true)
                         logMessage("debug", "=> ".$msg['msg']);
                     else
                         logMessage("debug", "<= ".$msg['msg']);
                 } else {
                     /* Should be 'newaddr' msg type */
+logMessage("debug", "TEMPORARY: msgJson=${msgJson}");
                     logMessage("debug", "<= New short addr for ".$msg['ieee'].": ".$msg['addr']);
 
                     /* Informing 'AbeilleCmd' that addr has changed.

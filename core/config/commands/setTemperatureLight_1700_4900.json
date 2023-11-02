@@ -1,11 +1,9 @@
 {
     "setTemperatureLight_1700_4900": {
         "isVisible": 1,
-        "name": "setTemperatureLight_1700_4900",
-        "isHistorized": "0",
+        "logicalId": "#EP#-setTemperatureLight_1700_4900",
         "type": "action",
         "subType": "slider",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "setTemperature",

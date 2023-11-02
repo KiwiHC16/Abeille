@@ -1,0 +1,15 @@
+{
+    "act_zbCmdC-0008-UpOpen": {
+        "type": "action",
+        "comment": "Cluster 0008, move to level 100%",
+        "subType": "other",
+        "logicalId": "#EP#-0008-CmdUpOpen",
+        "template": "",
+        "genericType": "FLAP_UP",
+        "configuration": {
+            "topic": "setLevel",
+            "request": "Level=100&duration=0000&EP=#EP#",
+            "visibilityCategory": "All"
+        }
+    }
+}

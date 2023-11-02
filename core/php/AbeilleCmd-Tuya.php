@@ -115,13 +115,155 @@
         return $dp;
     }
 
-    // Returns Tuya specific transaction ID
-    function tuyaGetTransId() {
+    // Returns Tuya specific transaction ID (2 bytes)
+    function tuyaGenSqn() {
         global $tuyaTransId;
         $tuyaTransId++;
         if ($tuyaTransId > 255)
             $tuyaTransId = 0;
-        $tId = sprintf("%02X", $tuyaTransId);
+        $tId = sprintf("%04X", $tuyaTransId);
         return $tId;
+    }
+
+    require_once __DIR__.'/../class/AbeilleCmdProcess.class.php';
+
+    // Compute CRC for given message
+    // Use cases: ED00 cluster support (Moes universal remote)
+    function tuyaZosungCrc($message) {
+        $crc = 0;
+        $len = strlen($message) / 2;
+        for($i = 0; $i < $len; $i++) {
+            $c = substr($message, $i * 2, 2);
+            // cmdLog('debug', "  c=${c}, crc=".dechex($crc));
+            $crc += hexdec($c);
+            $crc %= 0x100;
+        }
+        // cmdLog('debug', "  crc=".dechex($crc));
+        return sprintf("%02X", $crc);
+    }
+
+    // Use cases: ED00 cluster support (Moes universal remote)
+    // Cmd 00: data=IR code to send (base64 URL encoded format)
+    // Cmd 03: data=JSON encoded {'seq' => hex string, 'pos' => binary, 'maxLen' => binary}
+    function tuyaZosung($net, $addr, $ep, $cmd, $data) {
+        cmdLog2('debug', $addr, "  tuyaZosung(net=${net}, addr=${addr}, ep=${ep}, cmd=${cmd})");
+
+        if ($cmd == '00') { // Send IR code
+            // Data is base64 URL encoded
+            $data = AbeilleTools::base64url2base64($data);
+            cmdLog2('debug', $addr, "  Send IR code '${data}'");
+            // $dataSize = strlen($data);
+            // $dataSize = sprintf("%02X", $dataSize);
+            $irMsg = array(
+                'key_num' => 1,
+                'delay' => 300,
+                'key1' => array (
+                    'num' => 1,
+                    'freq' => 38000,
+                    'type' => 1,
+                    // 'key_code' => $dataSize.$data, // dataSize required ?
+                    'key_code' => $data,
+                ),
+            );
+            $irMsgJson = json_encode($irMsg);
+cmdLog2('debug', $addr, '  TEMPORARY: irMsgJson='.$irMsgJson);
+            $message = bin2hex($irMsgJson);
+cmdLog2('debug', $addr, '  TEMPORARY: message='.$message);
+            $seq = tuyaGenSqn();
+
+            // Saving message to send
+            if (!isset($GLOBALS['zosung']))
+                $GLOBALS['zosung'] = [];
+            $GLOBALS['zosung'][$seq] = array(
+                // 'message' => $data
+                'message' => $message
+            );
+
+            // Cmd ED00-00 reminder
+            // {name: 'seq', type: DataType.uint16},
+            // {name: 'length', type: DataType.uint32},
+            // {name: 'unk1', type: DataType.uint32},
+            // {name: 'unk2', type: DataType.uint16},
+            // {name: 'unk3', type: DataType.uint8},
+            // {name: 'cmd', type: DataType.uint8},
+            // {name: 'unk4', type: DataType.uint16},
+
+            // $seq = tuyaGenSqn();
+            $length = sprintf("%08X", strlen($message) / 2);
+            $unk1 = '00000000';
+            $unk2 = 'e004';
+            $unk3 = '01';
+            $cmd = '02';
+            $unk4 = '0000';
+            cmdLog2('debug', $addr, "  Cmd ED00-00: Seq=${seq}, Len=${length}");
+
+            $seq = AbeilleTools::reverseHex($seq);
+            $len = AbeilleTools::reverseHex($length);
+            $unk1 = AbeilleTools::reverseHex($unk1);
+            $unk2 = AbeilleTools::reverseHex($unk2);
+            $unk4 = AbeilleTools::reverseHex($unk4);
+            $data = $seq.$len.$unk1.$unk2.$unk3.$cmd.$unk4;
+
+            $header = array(
+                'net' => $net,
+                'addr' => $addr,
+                'ep' => $ep,
+                'clustId' => 'ED00',
+                'clustSpecific' => true, // Cluster specific frame
+                'cmd' => '00'
+            );
+            AbeilleCmdProcess::sendRawMessage($header, $data);
+        } else if ($cmd == '03') {
+            $params = json_decode($data, true);
+            $seq = $params['seq']; // Hex string
+            $pos = $params['pos']; // Binary
+            $maxLen = $params['maxLen']; // Binary
+            cmdLog2('debug', $addr, "  Cmd ED00-03: Seq=${seq}, Pos=d${pos}, MaxLen=d${maxLen}");
+
+            if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seq])) {
+                cmdLog2('debug', $addr, "  WARNING: No message defined for seq ${seq}");
+                return;
+            }
+
+            $message = $GLOBALS['zosung'][$seq]['message'];
+cmdLog2('debug', $addr, "  TEMPORARY: message=".$message);
+            $msgRemain = substr($message, $pos * 2);
+cmdLog2('debug', $addr, "  TEMPORARY: msgRemain=".$msgRemain);
+            $msgSize = strlen($msgRemain) / 2;
+            if ($msgSize == 0) {
+                cmdLog2('debug', $addr, "  WARNING: All datas already sent");
+                return;
+            }
+            if ($msgSize > 0x32) { // Note: 0x32 taken from zigbee-herdsman-converters, zosung.ts
+                $msgSize = 0x32;
+                $msgPart = substr($msgRemain, 0, $msgSize * 2); // Truncate to maxLen
+            } else
+                $msgPart = $msgRemain;
+            $msgSize = sprintf("%02X", $msgSize);
+            $msgPartCrc = tuyaZosungCrc($msgPart);
+            cmdLog2('debug', $addr, "  MsgSize=${msgSize}, MsgPart=${msgPart}, MsgPartCrc=${msgPartCrc}");
+
+            // Cmd 03 reminder
+            // {name: 'zero', type: DataType.uint8},
+            // {name: 'seq', type: DataType.uint16},
+            // {name: 'position', type: DataType.uint32},
+            // {name: 'msgpart', type: DataType.octetStr},
+            // {name: 'msgpartcrc', type: DataType.uint8},
+            $seq = sprintf("%04X", $seq);
+            $pos = sprintf("%08X", $pos);
+            $seqR = AbeilleTools::reverseHex($seq);
+            $posR = AbeilleTools::reverseHex($pos);
+            $data = '00'.$seqR.$posR.$msgSize.$msgPart.$msgPartCrc;
+
+            $header = array(
+                'net' => $net,
+                'addr' => $addr,
+                'ep' => $ep,
+                'clustId' => 'ED00',
+                'clustSpecific' => true, // Cluster specific frame
+                'cmd' => '03'
+            );
+            AbeilleCmdProcess::sendRawMessage($header, $data);
+        }
     }
 ?>

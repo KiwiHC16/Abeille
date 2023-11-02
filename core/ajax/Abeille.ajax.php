@@ -200,12 +200,13 @@
         if (init('action') == 'updateFirmware') {
             $zgType = init('zgtype'); // "PI" or "DIN"
             $zgPort = init('zgport');
+            $zgGpioLib = init('zgGpioLib');
             $zgFwFile = init('fwfile');
             $erasePdm = init('erasePdm');
             $zgId = init('zgId');
 
             logSetConf('AbeilleConfig.log', true);
-            logMessage('debug', 'updateFirmware('.$zgType.', '.$zgFwFile.', '.$zgPort.')');
+            logMessage('debug', 'updateFirmware('.$zgType.', '.$zgFwFile.', '.$zgGpioLib.', '.$zgPort.')');
 
             if ($zgType == "PI")
                 $script = "updateFirmware.sh";
@@ -213,7 +214,7 @@
                 $script = "updateFirmwareDIN.sh";
 
             logMessage('debug', 'Checking parameters');
-            $cmdToExec = $script." check ".$zgPort;
+            $cmdToExec = $script." check ".$zgPort." ".$zgGpioLib;
             $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
             exec($cmd, $out, $status);
 
@@ -222,7 +223,7 @@
                 Abeille::pauseDaemons(1);
 
                 /* Updating FW and reset Zigate */
-                $cmdToExec = $script." flash ".$zgPort." ".$zgFwFile;
+                $cmdToExec = $script." flash ".$zgPort." ".$zgGpioLib." ".$zgFwFile;
                 $cmd = '/bin/bash '.__DIR__.'/../scripts/'.$cmdToExec.' >>'.log::getPathToLog('AbeilleConfig.log').' 2>&1';
                 exec($cmd, $out, $status);
 
@@ -238,7 +239,7 @@
 
                 if ($erasePdm) {
                     logMessage('info', 'Effacement de la PDM');
-                    if (sendToCmd('TempoCmdAbeille'.$zgId.'/0000/ErasePersistentData&time='.(time()+2), 'ErasePersistentData') == false) {
+                    if (sendToCmd('TempoCmdAbeille'.$zgId.'/0000/zgErasePdm&time='.(time()+2), '') == false) {
                         $status = -1;
                         $error = "Can't send erase PDM request";
                     }
@@ -453,7 +454,7 @@
                     // Excluding device from current network
                     // self::publishMosquitto($abQueues['xToCmd']['id'], priorityNeWokeUp, "Cmd".$newDestBee."/0000/Remove", "ParentAddressIEEE=".$IEEE."&ChildAddressIEEE=".$IEEE );
                     /* Sending msg to 'AbeilleCmd' */
-                    $topic   = 'CmdAbeille'.$dstZgId.'/0000/setZgPermitMode';
+                    $topic   = 'CmdAbeille'.$dstZgId.'/0000/zgSetPermitMode';
                     $payload = "mode=start";
                     if (sendToCmd($topic, $payload) == false) {
                         $errors = "Could not send msg to 'xToCmd': topic=".$topic;
@@ -539,6 +540,117 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
         }
 
+        // Get 'eqLogic' content for given 'eqId'
+        if (init('action') == 'getEq') {
+            $eqId = init('eqId');
+
+            $status = 0;
+            $error = "";
+            $eq = [];
+
+            $eqLogic = eqLogic::byId($eqId);
+            if (!is_object($eqLogic)) {
+                $error = "Equipement inconnu (id ".$eqId.")";
+                $status = -1;
+            } else {
+                $eq['id'] = $eqId;
+                $eq['name'] = $eqLogic->getName();
+                $eq['logicId'] = $eqLogic->getLogicalId();
+                list($eqNet, $eqAddr) = explode("/", $eq['logicId']);
+                $eq['zgId'] = substr($eqNet, 7);
+                $eq['zgType'] = config::byKey('ab::zgType'.$eq['zgId'], 'Abeille', '', 1);
+                $eq['zgChan'] = config::byKey('ab::zgChan'.$eq['zgId'], 'Abeille', '', 1);
+                $eq['addr'] = $eqAddr;
+                $eq['defaultEp'] = $eqLogic->getConfiguration('mainEP', '');
+                $eq['batteryType'] = $eqLogic->getConfiguration('battery_type', '');
+
+                $sig = $eqLogic->getConfiguration('ab::signature', []);
+                $eq['zbModel'] = isset($sig['modelId']) ? $sig['modelId'] : '';
+                $eq['zbManuf'] = isset($sig['manufId']) ? $sig['manufId'] : '';
+
+                $model = $eqLogic->getConfiguration('ab::eqModel', []);
+                $eq['modelName'] = isset($model['id']) ? $model['id'] : '';
+                $eq['modelSource'] = isset($model['location']) ? $model['location'] : 'Abeille';
+                $eq['modelType'] = isset($model['type']) ? $model['type'] : '';
+                $eq['modelForced'] = isset($model['forcedByUser']) ? $model['forcedByUser'] : false;
+
+                $eq['zigbee'] = $eqLogic->getConfiguration('ab::zigbee', []);
+
+                $jCmds = Cmd::byEqLogicId($eqId);
+                $eq['cmds'] = [];
+                foreach ($jCmds as $cmdLogic) {
+                    $cmdId = $cmdLogic->getId();
+                    $cmdLogicId = $cmdLogic->getLogicalId('');
+                    if ($cmdLogic->getType() == 'info')
+                        $cmdVal = $cmdLogic->execCmd();
+                    else
+                        $cmdVal = '';
+                    $eq['cmds'][$cmdLogicId] = array(
+                        'id' => $cmdId,
+                        'val' => $cmdVal
+                    );
+                }
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'eq' => $eq)));
+        }
+
+        // Retrieves all informations suitable to fill health page
+        if (init('action') == 'getHealthDatas') {
+            $status = 0;
+            $error = "";
+            $eq = [];
+
+            $eqLogics = eqLogic::byType('Abeille');
+            foreach ($eqLogics as $eqLogic) {
+                $eqLogicId = $eqLogic->getLogicalId();
+                list($eqNet, $eqAddr) = explode("/", $eqLogicId);
+
+                $e = [];
+                $e['link'] = $eqLogic->getLinkToConfiguration();
+                $e['hName'] = $eqLogic->getHumanName(true);
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                $type = isset($eqModel['type']) ? $eqModel['type'] : '?';
+                $e['type'] = $type;
+                $e['ieee'] = $eqLogic->getConfiguration('IEEE', '');
+                $e['isEnabled'] = $eqLogic->getIsEnable();
+                $e['timeout'] = $eqLogic->getStatus('timeout');
+                $e['lastComm'] = $eqLogic->getStatus('lastCommunication');
+                if (substr($eqAddr, 0, 2) == "rc") // Remote control ?
+                    $e['since'] = '-';
+                else
+                    $e['since'] = floor((time() - strtotime($e['lastComm'])) / 3600);
+                $e['txAck'] = $eqLogic->getStatus('ab::txAck', 'ok');
+
+                // Last LQI
+                if ($eqAddr == "0000")
+                    $lastLqi = "-";
+                else {
+                    $lqiCmd = $eqLogic->getCmd('info', 'Link-Quality');
+                    if (is_object($lqiCmd))
+                        $lastLqi = $lqiCmd->execCmd();
+                    else
+                        $lastLqi = "?";
+                }
+                $e['lastLqi'] = $lastLqi;
+
+                // Last battery status
+                $bat = $eqLogic->getStatus('battery', '');
+                if ($bat == '')
+                    $bat = '-';
+                else
+                    $bat = $bat.'%';
+                $e['lastBat'] = $bat;
+
+                if (!isset($eq[$eqNet]))
+                    $eq[$eqNet] = [];
+                if (!isset($eq[$eqNet][$eqAddr]))
+                    $eq[$eqNet][$eqAddr] = $e;
+            }
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'eq' => $eq)));
+        } // End getHealthDatas
+
         // Read 'ab::settings' content
         // Params: eqId = Equipment Jeedom ID
         if (init('action') == 'getSettings') {
@@ -557,20 +669,27 @@
             ajax::success(json_encode(array('status' => $status, 'error' => $error, 'settings' => $settings)));
         }
 
-        // Change 'ab::settings' content
+        // Change eqLogic 'ab::settings' content
+        // Param: eqId = Equipment Jeedom ID
+        // Param: settings = associative array of settings to change
         if (init('action') == 'saveSettings') {
             $status = 0;
             $error = "";
 
             $eqId = init('eqId');
-            $settings = init('settings');
-            $settings = json_decode($settings, true);
+            $newSettings = init('settings');
+            $newSettings = json_decode($newSettings, true);
 
             $eqLogic = Abeille::byId($eqId);
             if (!is_object($eqLogic)) {
                 $error = "Invalid device ID ".$eqId;
                 $status = -1;
             } else {
+                $settings = $eqLogic->getConfiguration('ab::settings', []);
+                foreach ($newSettings as $setKey => $setVal) {
+                    $settings[$setKey] = $setVal;
+                    logDebug('  settings['.$setKey.']='.$setVal);
+                }
                 $eqLogic->setConfiguration('ab::settings', $settings);
                 $eqLogic->save();
             }
@@ -584,13 +703,26 @@
             $error = "";
 
             $config = init('config');
-            $config = json_decode($config, true);
+            logDebug('config='.$config);
 
+            $config = json_decode($config, true);
             foreach ($config as $key => $value) {
                 config::save($key, $value, 'Abeille');
             }
 
             ajax::success(json_encode(array('status' => $status, 'error' => $error)));
+        }
+
+        // Returns 'config' DB content
+        if (init('action') == 'getConfig') {
+            $status = 0;
+            $error = "";
+
+            $config = AbeilleTools::getConfig();
+            $configJson = json_encode($config);
+            logDebug('configJson='.$configJson);
+
+            ajax::success(json_encode(array('status' => $status, 'error' => $error, 'config' => $configJson)));
         }
 
         /* WARNING: ajax::error DOES NOT trig 'error' callback on client side.

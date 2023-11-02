@@ -1,10 +1,7 @@
 {
     "setReportLightColorSpectre": {
-        "isVisible": 0,
-        "name": "setReportLightColorSpectre",
-        "isHistorized": "0",
+        "logicalId": "#EP#-setReportLightColorSpectre",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "setReport",

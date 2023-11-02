@@ -1,0 +1,11 @@
+{
+    "inf_zbCmdC-0008-Stop": {
+        "comment": "Cluster 0008/Stop cmd, received from device",
+        "subType": "binary",
+        "type": "info",
+        "logicalId": "#EP#-0008-cmd03",
+        "configuration": {
+            "repeatEventManagement": "always"
+        }
+    }
+}

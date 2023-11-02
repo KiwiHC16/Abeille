@@ -13,15 +13,12 @@
             "batteryType": "2x1.5V AAA/LR03"
         },
         "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Smoke alarm": {
-                "use": "attr-Smoke-Alarm",
+                "use": "inf_Smoke-Alarm",
                 "isVisible": 1
             },
             "Battery-Low": {
-                "use": "attr-Battery-Low",
+                "use": "inf_Battery-Low",
                 "isVisible": 1
             },
             "Battery-Percent": {

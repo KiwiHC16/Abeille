@@ -337,7 +337,7 @@
                     Attention: Apres un "Collecter" ou "Tout Collecter" il faut rafraichir la page pour mettre a jour les graphiques.<br />
 
                     <?php
-                        echo '<a class="btn btn-success refreshBruitAll"><i class="fas fa-sync" ></i>{{Tout collecter}}</a><br /><br />';
+                        echo '<a class="btn btn-success refreshNoiseAll"><i class="fas fa-sync" ></i>{{Tout collecter}}</a><br /><br />';
 
                         function afficheGraph( $title, $logicalId, $values ) {
                         // Vertical
@@ -376,7 +376,7 @@
                                 }
                                 echo '</svg>';
                                     if ( $logicalId != "" ) {
-                                        echo '<br /><a data-action="refreshBruit_'.str_replace('/','',$logicalId).'" class="btn btn-success refreshBruit_'.str_replace('/','',$logicalId).'"><i class="fas fa-sync" ></i>{{Collecter}}</a><br /><br />';
+                                        echo '<br /><a data-action="refreshNoise_'.str_replace('/','',$logicalId).'" class="btn btn-success refreshNoise_'.str_replace('/','',$logicalId).'"><i class="fas fa-sync" ></i>{{Collecter}}</a><br /><br />';
 
                                     }
                                 echo "<br /><br />";
@@ -414,10 +414,10 @@
 
         $eqLogics = Abeille::byType('Abeille');
 
-        echo '$(".btn.refreshBruitAll").off("click").on("click", function () { refreshBruit("All"); });'."\n";
+        echo '$(".btn.refreshNoiseAll").off("click").on("click", function () { refreshNoise("All"); });'."\n";
         foreach ($eqLogics as $eqLogic) {
             if( $eqLogic->getConfiguration('localZigbeeChannelPower') ) {
-                echo '$(".btn.refreshBruit_'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshBruit("'.$eqLogic->getLogicalId().'"); });'."\n";
+                echo '$(".btn.refreshNoise_'.str_replace('/','',$eqLogic->getLogicalId()).'").off("click").on("click", function () { refreshNoise("'.$eqLogic->getLogicalId().'"); });'."\n";
             }
         }
 

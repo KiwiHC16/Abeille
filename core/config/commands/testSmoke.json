@@ -1,8 +1,7 @@
 {
     "testSmoke": {
         "isVisible": 1,
-        "name": "Test",
-        "isHistorized": "0",
+        "logicalId": "#EP#-testSmoke",
         "subType": "other",
         "configuration": {
             "topic": "WriteAttributeRequestVibration",

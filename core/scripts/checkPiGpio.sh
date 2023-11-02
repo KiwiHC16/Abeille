@@ -4,7 +4,7 @@
 # echo "[${NOW}] Démarrage de '$(basename $0)'"
 echo "Démarrage de '$(basename $0)'"
 
-python /var/www/html/plugins/Abeille/core/scripts/checkGpio.py
+python /var/www/html/plugins/Abeille/core/scripts/checkPiGpio.py
 
 # 'gpio' commands are provided from "WiringPi" package (or equivalent)
 # echo "Vérification de l'installation du package 'WiringPi'"

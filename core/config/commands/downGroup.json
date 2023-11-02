@@ -1,10 +1,9 @@
 {
     "downGroup": {
-        "name": "Down",
         "isVisible": 1,
         "isHistorized": "0",
+        "logicalId": "#EP#-DownGroup",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#addrGroup#\/DownGroup",

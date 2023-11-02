@@ -1,7 +1,7 @@
 {
     "spiritHostFlagsBoostSet": {
         "isVisible": 0,
-        "name": "Boost",
+        "logicalId": "#EP#-spiritHostFlagsBoostSet",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

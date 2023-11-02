@@ -1,7 +1,7 @@
 {
     "spiritTemperatureGet": {
         "isVisible": 0,
-        "name": "getTemperature",
+        "logicalId": "#EP#-spiritTemperatureGet",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

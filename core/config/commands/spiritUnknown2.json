@@ -1,7 +1,7 @@
 {
     "spiritUnknown2": {
         "isVisible": 0,
-        "name": "Unknown2",
+        "logicalId": "#EP#-spiritUnknown2",
         "isHistorized": "0",
         "subType": "numeric",
         "invertBinary": "0",

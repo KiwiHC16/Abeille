@@ -1,0 +1,13 @@
+{
+    "Identify": {
+        "subType": "other",
+        "logicalId": "identify",
+        "template": "",
+        "configuration": {
+            "topic": "identifySend",
+            "request": "EP=#EP#&duration=0010",
+            "visibilityCategory": "additionalCommand"
+        },
+        "type": "action"
+    }
+}

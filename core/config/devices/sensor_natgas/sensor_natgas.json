@@ -11,11 +11,8 @@
         },
         "type": "Xiaomi Gaz Sensor",
         "commands": {
-            "Etat": {
+            "Status": {
                 "use": "securitySafetySmoke"
-            },
-            "Specific": {
-                "use": "Xiaomi-ff01"
             },
             "Low": {
                 "use": "setSmokeSensivityLow"

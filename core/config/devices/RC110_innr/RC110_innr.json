@@ -69,43 +69,43 @@
                 "use": "BindToGroupLevelEP08"
             },
             "Add Group EP1": {
-                "use": "act_zbCmdG-0004-AddGroup",
+                "use": "act_zbCmdC-0004-AddGroup",
                 "params": "ep=01&group=#GROUPEP1#",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 1
             },
             "Add Group EP3": {
-                "use": "act_zbCmdG-0004-AddGroup",
+                "use": "act_zbCmdC-0004-AddGroup",
                 "params": "ep=03&group=#GROUPEP3#",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 1
             },
             "Add Group EP4": {
-                "use": "act_zbCmdG-0004-AddGroup",
+                "use": "act_zbCmdC-0004-AddGroup",
                 "params": "ep=04&group=#GROUPEP4#",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 1
             },
             "Add Group EP5": {
-                "use": "act_zbCmdG-0004-AddGroup",
+                "use": "act_zbCmdC-0004-AddGroup",
                 "params": "ep=05&group=#GROUPEP5#",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 1
             },
             "Add Group EP6": {
-                "use": "act_zbCmdG-0004-AddGroup",
+                "use": "act_zbCmdC-0004-AddGroup",
                 "params": "ep=06&group=#GROUPEP6#",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 1
             },
             "Add Group EP7": {
-                "use": "act_zbCmdG-0004-AddGroup",
+                "use": "act_zbCmdC-0004-AddGroup",
                 "params": "ep=07&group=#GROUPEP7#",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 1
             },
             "Add Group EP8": {
-                "use": "act_zbCmdG-0004-AddGroup",
+                "use": "act_zbCmdC-0004-AddGroup",
                 "params": "ep=08&group=#GROUPEP8#",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 1

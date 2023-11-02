@@ -18,9 +18,6 @@
             "mainEP": "01"
         },
         "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1
@@ -31,14 +28,14 @@
                 "isVisible": 1
             },
             "CO2": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "logicalId": "01-CO2_ppm",
                 "unit": "ppm",
                 "template": "badge",
                 "isVisible": 1
             },
             "VOC": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "logicalId": "01-VOC_ppm",
                 "unit": "ppm",
                 "template": "badge",
@@ -46,7 +43,7 @@
                 "isVisible": 1
             },
             "CH20": {
-                "use": "zb-CustomInfo",
+                "use": "inf_generic-NumericBadge",
                 "logicalId": "01-CH20_ppm",
                 "unit": "ppm",
                 "template": "badge",

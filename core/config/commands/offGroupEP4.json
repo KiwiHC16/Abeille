@@ -1,10 +1,8 @@
 {
     "offGroupEP4": {
-        "name": "Off Gp4",
+        "logicalId": "#EP#-offGroupEP4",
         "isVisible": 1,
-        "isHistorized": "0",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#GROUPEP4#\/OnOffGroup",

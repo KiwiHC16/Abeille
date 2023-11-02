@@ -1,7 +1,7 @@
 {
     "spiritTrvModeGet": {
         "isVisible": 0,
-        "name": "Get Trv Mode",
+        "logicalId": "#EP#-spiritTrvModeGet",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

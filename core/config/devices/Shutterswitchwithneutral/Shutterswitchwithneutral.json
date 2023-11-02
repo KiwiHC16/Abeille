@@ -3,10 +3,11 @@
         "manufacturer": "Legrand",
         "model": "067726",
         "type": "C\u00e9liane Wired Roller Shutter Switch",
+        "genericType": "Shutter",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "Shutterswitchwithneutral"
+            "icon": "Legrand-ShutterSwitch"
         },
         "category": {
             "automatism": "1"
@@ -19,28 +20,29 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "current_position_lift_percentage": {
-                "use": "current_position_lift_percentage"
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "Up": {
-                "use": "act_zbCmdG-0102-UpOpen"
+                "use": "act_zbCmdC-0102-UpOpen",
+                "isVisible": 1
             },
             "Down": {
-                "use": "act_zbCmdG-0102-DownClose"
+                "use": "act_zbCmdC-0102-DownClose",
+                "isVisible": 1
             },
             "Stop": {
-                "use": "act_zbCmdG-0102-Stop"
-            },
-            "getcurrent_position_lift_percentage": {
-                "use": "getcurrent_position_lift_percentage"
-            },
-            "Identify": {
-                "use": "Identify",
+                "use": "act_zbCmdC-0102-Stop",
                 "isVisible": 1
             },
-            "Groups": {
-                "use": "Group-Membership",
+            "Position": {
+                "use": "inf_zbAttr-0102-CurPosLiftPercent",
                 "isVisible": 1
+            },
+            "Get Position": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0102&attrId=0008"
             },
             "Bind 0102-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -49,7 +51,7 @@
             },
             "SetReporting 0102-0008": {
                 "use": "act_zbConfigureReporting",
-                "params": "clustId=0102&attrType=10&attrId=0008&minInterval=0000&maxInterval=0000&changeVal=",
+                "params": "clustId=0102&attrType=20&attrId=0008&minInterval=0000&maxInterval=0000&changeVal=01",
                 "execAtCreation": "yes"
             }
         }

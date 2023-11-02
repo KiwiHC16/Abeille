@@ -1,8 +1,7 @@
 {
     "setSmokeSensivityMedium": {
         "isVisible": 1,
-        "name": "Medium",
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetSmokeSensivityMedium",
         "subType": "other",
         "configuration": {
             "topic": "WriteAttributeRequestVibration",

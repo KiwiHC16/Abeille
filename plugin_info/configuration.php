@@ -20,6 +20,7 @@
     if (file_exists(dbgFile)) {
         $dbgConfig = json_decode(file_get_contents(dbgFile), true);
         $dbgDeveloperMode = true;
+        $GLOBALS['dbgDeveloperMode'] = true;
         echo '<script>var js_dbgDeveloperMode = '.$dbgDeveloperMode.';</script>'; // PHP to JS
         include_once __DIR__."/../core/php/AbeilleGit.php"; // For 'switchBranch' support
         /* Dev mode: enabling PHP errors logging */
@@ -45,6 +46,7 @@
     fclose($file);
 
     echo '<script>var js_wifiLink = "'.wifiLink.'";</script>'; // PHP to JS
+    echo '<script>var js_maxZigates = "'.maxNbOfZigate.'";</script>'; // PHP to JS
 
     /* Returns current cmd value identified by its Jeedom logical ID name */
     function getCmdValueByLogicId($eqId, $logicId) {
@@ -63,6 +65,8 @@
     }
 
     function displayZigate($zgId) {
+        global $dbgDeveloperMode;
+
         $eqLogic = eqLogic::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille');
         if ($eqLogic) {
             $eqId = $eqLogic->getId();
@@ -78,7 +82,7 @@
         echo '</div>';
 
         echo '<div class="form-group">';
-            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Nom : }}</label>';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Nom}} : </label>';
             echo '<div class="col-lg-4">';
                 if (Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille')) {
                     $zgName = Abeille::byLogicalId('Abeille'.$zgId.'/0000', 'Abeille')->getName();
@@ -90,7 +94,7 @@
         echo '</div>';
 
         echo '<div class="form-group">';
-            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Type : }}</label>';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Type}} : </label>';
             echo '<div class="col-lg-4">';
                 echo '<select id="idSelZgType'.$zgId.'" class="configKey form-control" data-l1key="ab::zgType'.$zgId.'" onchange="checkZigateType('.$zgId.')"  title="{{Type de zigate}}">';
                     echo '<option value="USB" selected>{{USB v1}}</option>';
@@ -107,7 +111,7 @@
         echo '<div class="form-group">';
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Port série}} : </label>';
             echo '<div class="col-lg-4">';
-                echo '<select id="idSelSP'.$zgId.'" class="configKey form-control" data-l1key="ab::zgPort'.$zgId.'" title="{{Port série si zigate USB, Pi ou DIN.}}" disabled>';
+                echo '<select id="idSelSP'.$zgId.'" class="configKey form-control" data-l1key="ab::zgPort'.$zgId.'" title="{{Port série si zigate USB, Pi ou DIN}}" disabled>';
                     echo '<option value="none" selected>{{Aucun}}</option>';
                     echo '<option value="'.wifiLink.$zgId.'" >{{WIFI'.$zgId.'}}</option>';
                     echo '<option value="/dev/monitZigate'.$zgId.'" >{{Monit'.$zgId.'}}</option>';
@@ -125,7 +129,7 @@
             echo '</div>';
             echo '<div class="col-lg-5">';
                 echo '<div id="idCommTest'.$zgId.'" >';
-                    echo '<a id="idCheckSP'.$zgId.'" class="btn btn-default" onclick="checkSerialPort('.$zgId.')" title="{{Test de communication et lecture de la version du firmware.}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
+                    echo '<a id="idCheckSP'.$zgId.'" class="btn btn-default" onclick="checkSerialPort('.$zgId.')" title="{{Test de lecture de la version du firmware}}"><i class="fas fa-sync"></i> {{Tester}}</a>';
                     echo '<a class="serialPortStatus'.$zgId.' ml4px" title="{{Status de communication avec la zigate. Voir \'AbeilleConfig.log\' si \'NOK\'.}}">';
                         echo '<span class="label label-success" style="font-size:1em">-?-</span>';
                     echo '</a>';
@@ -135,9 +139,9 @@
         echo '</div>';
 
         echo '<div class="form-group">';
-            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Adresse IP (IP:Port) : }}</label>';
+            echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Adresse IP (IP:Port)}} : </label>';
             echo '<div class="col-lg-4">';
-                echo '<input id="idWifiAddr'.$zgId.'" class="configKey form-control" data-l1key="ab::zgIpAddr'.$zgId.'" placeholder="<adresse>:<port>" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
+                echo '<input id="idWifiAddr'.$zgId.'" class="configKey form-control" data-l1key="ab::zgIpAddr'.$zgId.'" placeholder="{{<adresse>:<port>}}" title="{{Adresse IP:Port si zigate Wifi. 9999 est le port par défaut d\'une Zigate WIFI. Mettre 23 si vous utilisez ESP-Link.}}" />';
             echo '</div>';
         echo '</div>';
 
@@ -146,7 +150,7 @@
             echo '<div class="col-lg-2">';
                 // echo '<input id="idFwVersion'.$zgId.'" type="text" title="{{Version actuelle du firmware}}" disabled>';
                 if (isset($eqId))
-                    $fwVersion = getCmdValueByLogicId($eqId, "SW-Application").'-'.getCmdValueByLogicId($eqId, "SW-SDK");
+                    $fwVersion = getCmdValueByLogicId($eqId, "FW-Version");
                 else
                     $fwVersion = "";
                 echo '<input id="idFwVersion'.$zgId.'" value="'.$fwVersion.'" type="text" class="cmd" data-type="info" data-subtype="string" data-cmd_id="" title="{{Version actuelle du firmware}}" readonly="readonly">';
@@ -164,22 +168,24 @@
             echo '</div>';
             echo '<div class="col-lg-5">';
                     echo '<div id="idUpdFw'.$zgId.'">';
-                    echo '<a id="idUpdateFW'.$zgId.'" class="btn btn-danger" onclick="updateFW('.$zgId.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre à jour}}</a>';
-                    echo '<select id="idFW'.$zgId.'" style="width:100px; margin-left:4px" title="{{Firmwares disponibles}}">';
+                    echo '<a id="idUpdateFW'.$zgId.'" class="btn btn-danger" onclick="updateFW('.$zgId.')" title="{{Programmation du FW selectionné}}"><i class="fas fa-sync"></i> {{Mettre-à-jour}}</a>';
+                    echo '<select id="idFW'.$zgId.'" style="width:120px; margin-left:4px" title="{{Firmwares disponibles}}">';
                     foreach (ls(__DIR__.'/../resources/fw_zigate', '*.bin') as $fwName) {
                         $fwVers = substr($fwName, 0, -4); // Removing ".bin" suffix
-                        if (substr($fwVers, -4) == ".dev") {
+                        if (substr($fwVers, -4) == "-dev") {
                             /* FW for developer mode only */
                             if (!isset($dbgDeveloperMode) || ($dbgDeveloperMode == FALSE))
                                 continue; // Not in developer mode. Ignoring this FW
-                            $fwVers = substr($fwVers, 0, -4); // Removing ".dev" suffix
+                            $fwVers = substr($fwVers, 0, -4); // Removing "-dev" suffix
                         }
-                        $fwVers = substr($fwVers, 8); // Removing "ZiGate_v" prefix
-                        if ($fwVers == "3.21-OPDM")
+                        $fwVers = substr($fwVers, 9); // Removing "zigatevX-" prefix
+                        if ($fwVers == "3.23-opdm")
                             echo '<option value='.$fwName.' selected>'.$fwVers.'</option>'; // Selecting default choice
                         else
                             echo '<option value='.$fwName.'>'.$fwVers.'</option>';
                     }
+                    if (isset($dbgDeveloperMode))
+                        echo '<option value=CUSTOM>{{Autre}}</option>';
                     echo '</select>';
                 echo '</div>';
             echo '</div>';
@@ -189,6 +195,7 @@
             echo '<label class="col-lg-3 control-label" data-toggle="tooltip">{{Canal Zigbee}} : </label>';
             echo '<div class="col-lg-4">';
                 echo '<select id="idSelChan'.$zgId.'" class="configKey form-control" data-l1key="ab::zgChan'.$zgId.'" title="{{Canal Zigbee}}" disabled>';
+                    echo '<option value=0>?</option>';
                     for ($i = 11; $i < 27; $i++) {
                         echo '<option value='.$i.'>'.$i.'</option>';
                     }
@@ -222,15 +229,16 @@
     <fieldset>
         <legend><i class="fa fa-list-alt"></i><strong> {{Général}}</strong></legend>
         <div>
-            <p><i> Suivez toutes les dernieres informations <a href="https://community.jeedom.com/t/news-de-la-ruche-par-abeille-plugin-abeille/26524"><strong>sur ce forum</strong> </a>.</i></p>
-            <p><i> Les discussions et questions se feront via <a href="https://community.jeedom.com/tags/plugin-abeille"><strong>ce forum</strong> </a>. Pensez à mettre le flag "plugin-abeille" dans tous vos posts.</i></p>
-            <p><i> Note: si vous souhaitez de l'aide, ne passez pas par les fonctions integrées de jeedom car je recois les requetes sans pouvoir contacter les personnes en retour. Passez par le forum.</i></p>
-            <p><i> Note: Jeedom propose une fonction de Heartbeat dans la tuile "Logs et surveillance". Cette fonction n'est pas implémentée dans Abeille. Ne pas l'activer pour l'instant.</i></p>
+            <!-- <p><i> Suivez toutes les dernieres informations <a href="https://community.jeedom.com/t/news-de-la-ruche-par-abeille-plugin-abeille/26524"><strong>sur ce forum</strong> </a>.</i></p>
+            <p><i> Les discussions et questions se feront via <a href="https://community.jeedom.com/tags/plugin-abeille"><strong>ce forum</strong> </a>. Pensez à mettre le flag "plugin-abeille" dans tous vos posts.</i></p> -->
+            <!-- <p><i> Note: si vous souhaitez de l'aide, ne passez pas par les fonctions integrées de jeedom car je recois les requetes sans pouvoir contacter les personnes en retour. Passez par le forum.</i></p> -->
+            <p><i> {{Note: Pour toute demande de support, passez par ce lien}}: https://github.com/KiwiHC16/Abeille/issues.</i></p>
+            <p><i> {{Note: Ne pas activer la fonction 'Heartbeat' pour l'instant. Pas encore de support.}}</i></p>
         </div>
         <div class="form-group">
             <div class="col-lg-6">
                 <div class="form-group">
-                    <label class="col-lg-3 control-label" data-toggle="tooltip" title="{{Version interne du plugin Abeille}}">{{Version interne : }}</label>
+                    <label class="col-lg-3 control-label" data-toggle="tooltip" title="{{Version interne du plugin Abeille}}">{{Version interne}} : </label>
                     <div class="col-lg-4">
                         <?php
                         echo '<input type="text" class="form-control" title="{{Version interne du plugin Abeille}}" value="'.$abeilleVersion.'" readonly>';
@@ -288,7 +296,7 @@
         <div class="form-group">
             <div class="col-lg-6">
                 <div class="form-group">
-                    <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Objet Parent : }}</label>
+                    <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Objet parent}} : </label>
                     <div class="col-lg-4" title="{{Objet parent (ex: une pièce de la maison) par défaut pour toute nouvelle zigate. Peut être changé plus tard via la page de gestion d'Abeille en cliquant sur la ruche correspondante}}.">
                         <select class="configKey form-control" data-l1key="ab::defaultParent">
                             <?php
@@ -316,7 +324,7 @@
             <!-- Display dependancies -->
             <div class="form-group">
                 <div class="col-lg-3">
-                    <h4>Dépendances optionnelles</h4>
+                    <h4>{{Dépendances optionnelles}}</h4>
                 </div>
                 <div class="col-lg-9">
                 </div>
@@ -373,7 +381,7 @@
                 <div class="form-group">
                     <div class="col-lg-6">
                         <div class="form-group">
-                            <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Lib GPIO à utiliser : }}</label>
+                            <label class="col-lg-3 control-label" data-toggle="tooltip" >{{Lib GPIO à utiliser}} : </label>
                             <div class="col-lg-4" title="{{Choisissez la libraiie qui va piloter les PIN GPIO de la PiZigate.}}">
                                 <select id="idZgGpioLib" class="configKey form-control" data-l1key="ab::defaultGpioLib">
                                     <option value="WiringPi">WiringPi</option>
@@ -430,9 +438,9 @@
             <a id="idUpdateCheckShowHide" class="btn btn-success" >{{Afficher}}</a>
         </legend>
         <div id="UpdateCheck">
-            <?php
+            < ?php
                 Abeille_pre_update_analysis(0, 1);
-            ?>
+            ? >
         </div> -->
 
         <legend>
@@ -446,9 +454,9 @@
 
             <?php if (validMd5Exists()) { ?>
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Vérifie l'integrité du plugin}}">{{Test d'intégrité : }}</label>
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Vérifie l'integrité du plugin}}">{{Test d'intégrité}} : </label>
                 <div class="col-lg-5">
-                    <input type="button" onclick="checkIntegrity()" value="Lancer" title="Lance le test d'intégrité">
+                    <input type="button" onclick="checkIntegrity()" value="{{Lancer}}" title="Lance le test d'intégrité">
                     <a class="integrityStatus ml4px" title="{{Status d'intégrité d'Abeille. Voir 'AbeilleConfig.log' si 'NOK'.}}">
                         <span class="label label-success" style="font-size:1em">-?-</span>
                     </a>
@@ -457,7 +465,7 @@
             <div class="form-group">
                 <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Supprime les fichiers locaux inutiles si test d'intégrité OK}}">{{Nettoyage des fichiers non requis : }}</label>
                 <div class="col-lg-5">
-                    <input id="idCleanUpB" type="button" onclick="cleanUp()" value="Lancer" " title="Lance le nettoyage si le test d'intégrité est OK" disabled>
+                    <input id="idCleanUpB" type="button" onclick="cleanUp()" value="{{Lancer}}" " title="Lance le nettoyage si le test d'intégrité est OK" disabled>
                 </div>
             </div>
             <?php } ?>
@@ -473,9 +481,9 @@
             </div> -->
 
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage interrogation LQI à minuit.}}">{{Blocage interrogation LQI à minuit : }}</label>
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Blocage interrogation LQI à minuit}}">{{Blocage interrogation LQI à minuit}} : </label>
                 <div class="col-lg-5">
-                    <select class="configKey form-control" data-l1key="ab::preventLQIAutoUpdate" style="width:150px" data-toggle="tooltip" title="{{Si 'oui', empeche l'interrogation du réseau tout les jours à minuit}}">
+                    <select class="configKey form-control" data-l1key="ab::preventLQIAutoUpdate" style="width:150px" data-toggle="tooltip" title="{{Si 'oui', empêche l'interrogation du réseau tout les jours à minuit}}">
                         <option value="yes">{{Oui}}</option>
                         <option value="no" selected>{{Non}}</option>
                     </select>
@@ -483,13 +491,23 @@
             </div>
 
             <div class="form-group">
-                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Mode dédié aux développeurs}}">{{Mode developpeur : }}</label>
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Empêche un cycle off/on sur les Zigates USB plantées}}">{{Blocage cycle OFF/ON Zigates USB}} : </label>
+                <div class="col-lg-5">
+                    <select class="configKey form-control" data-l1key="ab::preventUsbPowerCycle" style="width:150px" data-toggle="tooltip" title="{{Si 'Oui', empêche un cycle OFF/ON sur les Zigates USB plantées}}">
+                        <option value="Y">{{Oui}}</option>
+                        <option value="N" selected>{{Non}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Mode dédié aux développeurs}}">{{Mode developpeur}} : </label>
                 <div class="col-lg-5">
                     <?php
                         if (file_exists(dbgFile))
-                            echo '<input type="button" onclick="xableDevMode(0)" value="Désactiver" title="Désactive le mode developpeur">';
+                            echo '<input type="button" onclick="xableDevMode(0)" value="{{Désactiver}}" title="{{Désactive le mode développeur}}">';
                         else
-                            echo '<input type="button" onclick="xableDevMode(1)" value="Activer" title="Active le mode developpeur">';
+                            echo '<input type="button" onclick="xableDevMode(1)" value="{{Activer}}" title="{{Active le mode développeur}}">';
                     ?>
                 </div>
             </div>
@@ -498,7 +516,7 @@
             <?php if (isset($dbgConfig)) { ?>
 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Liste des messages désactivés dans AbeilleParser.log}}">{{Parser. Messages désactivés : }}</label>
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Liste des messages désactivés dans 'AbeilleParser.log'}}">{{Parser; Messages désactivés}} : </label>
                     <div class="col-lg-5">
                     <?php if (isset($dbgConfig['dbgParserLog'])) {
                         $dbgParserLog = implode(" ", $dbgConfig['dbgParserLog']);
@@ -506,12 +524,12 @@
                     } else
                         echo '<input type="text" id="idParserLog" title="AbeilleParser messages type to disable (ex: 8000)" style="width:400px">';
                     ?>
-                    <input type="button" onclick="saveChanges()" value="Sauver" style="margin-left:8px">
+                    <input type="button" onclick="saveChanges()" value="{{Sauver}}" style="margin-left:8px">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Autres defines de dev/debug}}">{{Defines : }}</label>
+                    <label class="col-lg-4 control-label" data-toggle="tooltip" title="{{Autres defines de dev/debug}}">{{Defines}} : </label>
                     <div class="col-lg-5">
                     <?php if (isset($dbgConfig['defines'])) {
                         $dbgDefines = implode(" ", $dbgConfig['defines']);
@@ -519,7 +537,7 @@
                     } else
                         echo '<input type="text" id="idDefines" title="Defines (ex: Tcharp38)" style="width:400px">';
                     ?>
-                    <input type="button" onclick="saveChanges()" value="Sauver" style="margin-left:8px">
+                    <input type="button" onclick="saveChanges()" value="{{Sauver}}" style="margin-left:8px">
                     </div>
                 </div>
             <?php } ?>
@@ -543,12 +561,12 @@
     // $('#idZigatesShowHide').on('click', function () {
     //     var Label = document.getElementById("idZigatesShowHide").innerText;
     //     console.log("ZigatesShowHide click: Label=" + Label);
-    //     if (Label == "Afficher") {
-    //         document.getElementById("idZigatesShowHide").innerText = "Cacher";
+    //     if (Label == "{{Afficher}}") {
+    //         document.getElementById("idZigatesShowHide").innerText = "{{Cacher}}";
     //         document.getElementById("idZigatesShowHide").className = "btn btn-danger";
     //         $("#idZigates").show();
     //     } else {
-    //         document.getElementById("idZigatesShowHide").innerText = "Afficher";
+    //         document.getElementById("idZigatesShowHide").innerText = "{{Afficher}}";
     //         document.getElementById("idZigatesShowHide").className = "btn btn-success";
     //         $("#idZigates").hide();
     //     }
@@ -728,13 +746,13 @@
     // $('#idWifiShowHide').on('click', function () {
     //         var Label = document.getElementById("idWifiShowHide").innerText;
     //         console.log("WifiShowHide click: Label=" + Label);
-    //         if (Label == "Afficher") {
+    //         if (Label == "{{Afficher}}") {
     //             checkSocatInstallation();
-    //             document.getElementById("idWifiShowHide").innerText = "Cacher";
+    //             document.getElementById("idWifiShowHide").innerText = "{{Cacher}}";
     //             document.getElementById("idWifiShowHide").className = "btn btn-danger";
     //             $("#zigatewifi").show();
     //         } else {
-    //             document.getElementById("idWifiShowHide").innerText = "Afficher";
+    //             document.getElementById("idWifiShowHide").innerText = "{{Afficher}}";
     //             document.getElementById("idWifiShowHide").className = "btn btn-success";
     //             $("#zigatewifi").hide();
     //         }
@@ -775,34 +793,32 @@
     })
 
     $('#idUpdateCheckShowHide').on('click', function () {
-            var Label = document.getElementById("idUpdateCheckShowHide").innerText;
-            console.log("idUpdateCheckShowHide click: Label=" + Label);
-            if (Label == "Afficher") {
-                document.getElementById("idUpdateCheckShowHide").innerText = "Cacher";
-                document.getElementById("idUpdateCheckShowHide").className = "btn btn-danger";
-                $("#UpdateCheck").show();
-            } else {
-                document.getElementById("idUpdateCheckShowHide").innerText = "Afficher";
-                document.getElementById("idUpdateCheckShowHide").className = "btn btn-success";
-                $("#UpdateCheck").hide();
-            }
+        var Label = document.getElementById("idUpdateCheckShowHide").innerText;
+        console.log("idUpdateCheckShowHide click: Label=" + Label);
+        if (Label == "{{Afficher}}") {
+            document.getElementById("idUpdateCheckShowHide").innerText = "{{Cacher}}";
+            document.getElementById("idUpdateCheckShowHide").className = "btn btn-danger";
+            $("#UpdateCheck").show();
+        } else {
+            document.getElementById("idUpdateCheckShowHide").innerText = "{{Afficher}}";
+            document.getElementById("idUpdateCheckShowHide").className = "btn btn-success";
+            $("#UpdateCheck").hide();
         }
-    );
+    });
 
     $('#idAdvOptionsShowHide').on('click', function () {
-            var Label = document.getElementById("idAdvOptionsShowHide").innerText;
-            console.log("idAdvOptionsShowHide click: Label=" + Label);
-            if (Label == "Afficher") {
-                document.getElementById("idAdvOptionsShowHide").innerText = "Cacher";
-                document.getElementById("idAdvOptionsShowHide").className = "btn btn-danger";
-                $("#idAdvOptions").show();
-            } else {
-                document.getElementById("idAdvOptionsShowHide").innerText = "Afficher";
-                document.getElementById("idAdvOptionsShowHide").className = "btn btn-success";
-                $("#idAdvOptions").hide();
-            }
+        var Label = document.getElementById("idAdvOptionsShowHide").innerText;
+        console.log("idAdvOptionsShowHide click: Label=" + Label);
+        if (Label == "{{Afficher}}") {
+            document.getElementById("idAdvOptionsShowHide").innerText = "{{Cacher}}";
+            document.getElementById("idAdvOptionsShowHide").className = "btn btn-danger";
+            $("#idAdvOptions").show();
+        } else {
+            document.getElementById("idAdvOptionsShowHide").innerText = "{{Afficher}}";
+            document.getElementById("idAdvOptionsShowHide").className = "btn btn-success";
+            $("#idAdvOptions").hide();
         }
-    );
+    });
 
     function checkWiringPi() {
         if (window.checkWiringPiOngoing)
@@ -963,26 +979,42 @@
         //     console.log("=> DISABLED");
         //     return;
         // }
-        var zgType = $("#idSelZgType"+zgId).val();
+        let zgType = $("#idSelZgType"+zgId).val();
         if ((zgType != "PI") && (zgType != "DIN")) {
             console.log("=> Neither PI nor DIN type. UNEXPECTED !");
             return;
         }
-        var zgPort = $("#idSelSP"+zgId).val();
-        var zgFW = $("#idFW"+zgId).val();
+
+        let zgFW = $("#idFW"+zgId).val();
+        if (zgFW == "CUSTOM") {
+            uploadCustomFw().then(response => updateFW2(zgId, zgType, "/tmp/jeedom/Abeille/" + response), error => console.log("uploadCustomFw() ERROR", error));
+        } else
+            updateFW2(zgId, zgType, zgFW);
+    }
+
+    // Update FW
+    function updateFW2(zgId, zgType, zgFW) {
+        let zgPort = $("#idSelSP"+zgId).val();
+        let zgGpioLib = $("#idZgGpioLib").val();
         let curFw = document.getElementById("idFwVersion"+zgId).value;
+
         msg = '{{Vous êtes sur le point de mettre à jour le firmware de la Zigate}}';
-        msg += '<br> - type: '+zgType+'<br> - port: '+zgPort+'<br> - firmware: '+zgFW+'<br><br>';
+        msg += '<br> - {{Type}}    : '+zgType;
+        msg += '<br> - {{Port}}    : '+zgPort;
+        msg += '<br> - {{Lib GPIO}}: '+zgGpioLib;
+        msg += '<br> - {{Firmware}}: '+zgFW+'<br><br>';
         let curIsLegacy = true;
         let newIsOpdm = false;
         erasePdm = false;
         if (curFw != '') {
-            // Format XXXX-YYYY: where XXXX=0003, 4 (OPDMv1), ou 5 (OPDMv2)
-            v = curFw.substr(3, 1);
-            if ((v == 4) || (v == 5))
+            // Format XXXX-YYYY: where
+            // Offical FW => XXXX=0003 (legacy), 0004 (OPDMv1), ou 0005 (OPDMv2)
+            // Abeille FW => AB01=OPDMv1
+            // v = curFw.substr(3, 1);
+            if ((curFw == '0004') || (curFw == '0005') || (curFw == 'AB01'))
                 curIsLegacy = false; // Already OPDM
         }
-        if (zgFW.indexOf("OPDM") != -1)
+        if ((zgFW.indexOf("opdm") != -1) && (zgFW.indexOf("AB01-") != -1))
             newIsOpdm = true;
         if (curIsLegacy) {
             if (newIsOpdm) {
@@ -990,10 +1022,10 @@
                 msg += '{{Etes vous sur de vouloir continuer ?}}';
                 erasePdm = true;
             } else
-                msg += '{{Attention !! La version Optimized PDM est FORTEMENT recommandée.}}<br><br>';
+                msg += '{{Attention !! La version Optimized PDM est FORTEMENT recommandée}}.<br><br>';
         } else {
             if (newIsOpdm == false) {
-                msg += "{{Passer d'une version 'OPDM' vers une version 'legacy' n'est pas recommandé. Opération interdite.}}<br><br>";
+                msg += "{{Passer d'une version 'OPDM' vers 'legacy' n'est pas recommandé. Opération interdite.}}<br><br>";
                 bootbox.confirm(msg, function (result) {});
                 return;
             }
@@ -1001,11 +1033,51 @@
         bootbox.confirm(msg, function (result) {
             if (result) {
                 $('#md_modal2').dialog({title: "{{Mise-à-jour du FW de la Zigate}}"});
-                url = 'index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateFW&zgtype=\"'+zgType+'\"&zgport=\"'+zgPort+'\"&fwfile=\"'+zgFW+'\"';
+                url = 'index.php?v=d&plugin=Abeille&modal=AbeilleConfigPage.modal&cmd=updateFW&zgtype=\"'+zgType+'\"&zgport=\"'+zgPort+'\"&zgGpioLib=\"'+zgGpioLib+'\"&fwfile=\"'+zgFW+'\"';
                 if (erasePdm)
                     url += '&erasePdm=true&zgId='+zgId;
                 $('#md_modal2').load(url).dialog('open');
             }
+        });
+    }
+
+    // Select & upload custom firmware
+    function uploadCustomFw() {
+        console.log("uploadCustomFw()");
+
+        return new Promise((resolve, reject) => {
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.bin';
+            // TODO: How to detect file selector is closed ?
+            input.onchange = e => {
+
+                var file = e.target.files[0];
+                // file.name = the file's name including extension
+                // file.size = the size in bytes
+                // file.type = file type ex. 'application/pdf'
+                console.log("file=", file);
+
+                var formData = new FormData();
+                formData.append("file", file);
+                formData.append("destDir", "/tmp/jeedom/Abeille"); // Temp (non persistent) directory
+                // formData.append("destName", "Level0.png");
+
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "plugins/Abeille/core/php/AbeilleUpload.php", true);
+                xhr.onload = function (oEvent) {
+                    console.log("oEvent=", oEvent);
+                    if (xhr.status != 200) {
+                        console.log("Error " + xhr.status + " occurred when trying to upload your file.");
+                        reject();
+                    } else {
+                        console.log(file.name + " uploaded !");
+                        resolve(file.name);
+                    }
+                };
+                xhr.send(formData);
+            }
+            input.click();
         });
     }
 
@@ -1052,7 +1124,7 @@
         });
     }
 
-    /* Developpers mode only */
+    /* Developers mode only */
 
     /* Called when 'developer mode' must be enabled or disabled.
     This means creating or deleting "tmp/debug.json" file. */
@@ -1322,10 +1394,48 @@
         });
     }
 
-    // Tcharp38: Might be useful. Seems to be called when plugin config has been saved
-    // function Abeille_postSaveConfiguration() {
-    //     console.log("Abeille_postSaveConfiguration()");
-    // }
+    // Called when Abeille plugin config has been saved
+    function Abeille_postSaveConfiguration() {
+        console.log("Abeille_postSaveConfiguration()");
+
+        $.ajax({
+            type: 'POST',
+            url: 'plugins/Abeille/core/ajax/Abeille.ajax.php',
+            data: {
+                action: 'getConfig'
+            },
+            dataType: 'json',
+            global: false,
+            error: function (request, status, error) {
+                console.log("Ajax error: status=", status);
+            },
+            success: function (json_res) {
+                // console.log("json_res=", json_res);
+                res = JSON.parse(json_res.result);
+                // Assuming status 0
+                config = JSON.parse(res.config);
+                // console.log("config=", config);
+
+                errors = '';
+                for (zgId = 1; zgId < js_maxZigates; zgId++) {
+                    if (config['ab::zgEnabled'+zgId] != 'Y')
+                        continue; // Disabled
+
+                    zgType = config['ab::zgType'+zgId];
+                    // console.log("Zigate "+zgId+" type "+zgType);
+
+                    if (zgType == 'WIFI') {
+                        if (config['ab::zgIpAddr'+zgId] == '') {
+                            errors += "Zigate "+zgId+": {{- Adresse IP manquante}}";
+                        }
+                    }
+                    // TODO: Check type choice vs FW version
+                }
+                if (errors != '')
+                    window.alert(errors);
+            }
+        });
+    }
 
     function statusChange(zgId) {
         console.log("statusChange("+zgId+")")

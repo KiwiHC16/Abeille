@@ -1,7 +1,7 @@
 {
     "spiritTrvModeSet": {
         "isVisible": 0,
-        "name": "Set TRV Mode",
+        "logicalId": "#EP#-spiritTrvModeSet",
         "isHistorized": "0",
         "subType": "message",
         "invertBinary": "0",

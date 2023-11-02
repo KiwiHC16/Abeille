@@ -1,6 +1,6 @@
 {
     "act_tuyaEF00-Set-Setpoint": {
-        "isVisible": 0,
+        "logicalId": "#EP#-TuyaEF00-Set-Setpoint",
         "subType": "slider",
         "template": "",
         "configuration": {

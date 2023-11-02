@@ -1,0 +1,12 @@
+{
+    "act_zbCmdC-Generic": {
+        "comment": "To use internal 'cmd-Generic'",
+        "type": "action",
+        "subType": "other",
+        "logicalId": "cmd-Generic-#EP#-#CLUSTID#",
+        "configuration": {
+            "topic": "cmd-Generic",
+            "request": "ep=#EP#&clustId=#CLUSTID#&data=#DATA#"
+        }
+    }
+}

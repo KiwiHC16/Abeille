@@ -4,26 +4,25 @@
         "model": "500.44",
         "type": "Paulmann Licht dimmable",
         "timeout": "60",
+        "genericType": "Light",
         "category": {
             "light": "1"
         },
         "configuration": {
-            "icon": "PaulmannLicht-DimmableLED",
+            "icon": "PaulmannLicht-DimmingController",
             "mainEP": "01"
         },
         "commands": {
             "Identify": {
-                "use": "Identify"
-            },
-            "Groups": {
-                "use": "Group-Membership"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "On": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "isVisible": 1
             },
             "Off": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
             "Status": {

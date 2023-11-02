@@ -20,21 +20,19 @@
                 "params": "clustId=0000&attrId=4000"
             },
             "Identify": {
-                "use": "Identify"
-            },
-            "Groups": {
-                "use": "Group-Membership"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "On": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "isVisible": "1"
             },
             "Off": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "isVisible": "1"
             },
             "Toggle": {
-                "use": "act_zbCmdG-0006-Toggle"
+                "use": "act_zbCmdC-0006-Toggle"
             },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",

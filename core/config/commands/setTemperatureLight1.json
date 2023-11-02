@@ -1,10 +1,8 @@
 {
     "setTemperatureLight1": {
         "isVisible": 1,
-        "name": "setTemperatureLight",
-        "isHistorized": "0",
+        "logicalId": "#EP#-setTemperatureLight1",
         "subType": "slider",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "setTemperature",

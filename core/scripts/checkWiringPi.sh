@@ -4,7 +4,7 @@
 # echo "[${NOW}] Démarrage de '$(basename $0)'"
 echo "Démarrage de '$(basename $0)'"
 
-'gpio' commands are provided from "WiringPi" package (or equivalent)
+# 'gpio' commands are provided from "WiringPi" package (or equivalent)
 echo "Vérification de l'installation du package 'WiringPi'"
 command -v gpio >/dev/null
 if [ $? -ne 0 ]; then

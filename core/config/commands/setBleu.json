@@ -1,11 +1,8 @@
 {
     "setBleu": {
-        "isVisible": 0,
-        "name": "setBleu",
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetBlue",
         "subType": "slider",
         "value": "colorBleu",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "setBleu",
@@ -13,7 +10,6 @@
             "visibilityCategory": "additionalCommand"
         },
         "type": "action",
-        "genericType": "DONT",
-        "nextLine": "after"
+        "genericType": "DONT"
     }
 }

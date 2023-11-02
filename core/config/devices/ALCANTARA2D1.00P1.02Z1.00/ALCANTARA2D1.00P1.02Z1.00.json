@@ -13,11 +13,11 @@
         },
         "commands": {
             "Plus": {
-                "use": "act_zbCmdG-0201-Setpoint-Plus05",
+                "use": "act_zbCmdC-0201-Setpoint-Plus05",
                 "isVisible": 1
             },
             "Moins": {
-                "use": "act_zbCmdG-0201-Setpoint-Minus05",
+                "use": "act_zbCmdC-0201-Setpoint-Minus05",
                 "isVisible": 1
             },
             "Local temp": {

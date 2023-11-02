@@ -14,21 +14,19 @@
         },
         "commands": {
             "Identify": {
-                "use": "Identify"
-            },
-            "Groups": {
-                "use": "Group-Membership"
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "On": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "isVisible": "1"
             },
             "Off": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "isVisible": "1"
             },
             "Toggle": {
-                "use": "act_zbCmdG-0006-Toggle"
+                "use": "act_zbCmdC-0006-Toggle"
             },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
@@ -95,13 +93,15 @@
                 "execAtCreation": "yes"
             },
             "SetReporting 0B04-0508": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=",
+                "comment": "RMSCurrent, changeVal set to 50 => 0x0032 (uint16)",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrType=21&attrId=0508&changeVal=50",
                 "execAtCreation": "yes"
             },
             "SetReporting 0B04-050B": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0B04&attrType=29&attrId=050B&minInterval=0000&maxInterval=0000&changeVal=",
+                "comment": "ActivePower, changeVal set to 10 => 0x000A (int16)",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0B04&attrType=29&attrId=050B&changeVal=10",
                 "execAtCreation": "yes"
             }
         }

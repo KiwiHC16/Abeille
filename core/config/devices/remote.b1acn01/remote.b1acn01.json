@@ -2,16 +2,16 @@
     "remote.b1acn01": {
         "manufacturer": "Xiaomi Aqara",
         "model": "WXKG11LM",
+        "type": "Xiaomi Aqara button 2",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "XiaomiBouton",
+            "icon": "Xiaomi-Button-1",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "Xiaomi Bouton Aqara 2 Copy",
         "commands": {
             "etat": {
                 "use": "etatSwitchXiaomiCarre"
@@ -23,18 +23,23 @@
                 "use": "multi"
             },
             "Battery-Volt": {
-                "use": "inf_zbAttr-0001-BatteryVolt"
+                "use": "inf_batteryVoltAndPercent-285-300"
             },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
-            },
-            "Specific": {
-                "use": "Xiaomi-ff01"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
             }
         },
-        "comment": "Bouton Carr\u00e9 V2 qui remonte le nom remote.b1acn01 alors qu il a la meme reference que sensor_switch.aq2"
+        "xiaomi": {
+            "fromDevice": {
+                "0000-FF01": {
+                    "01-21": {
+                        "func": "numberDiv",
+                        "div": 1000,
+                        "info": "0001-01-0020",
+                        "comment": "Battery-Volt"
+                    }
+                }
+            }
+        }
     }
 }

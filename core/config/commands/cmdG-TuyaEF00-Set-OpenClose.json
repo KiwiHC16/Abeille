@@ -2,6 +2,7 @@
     "cmdG-TuyaEF00-Set-OpenClose": {
         "subType": "other",
         "template": "",
+        "logicalId": "#EP#-tuyaEF00-Set-OpenClose",
         "configuration": {
             "topic": "cmd-tuyaEF00",
             "request": "ep=#EP#&cmd=setOpenClose&data=#OPENCLOSE#"

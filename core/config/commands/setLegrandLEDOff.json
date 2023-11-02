@@ -1,8 +1,6 @@
 {
     "setLegrandLEDOff": {
-        "isVisible": 0,
-        "name": "LedOff",
-        "isHistorized": "0",
+        "logicalId": "#EP#-LedOff",
         "type": "action",
         "subType": "other",
         "configuration": {

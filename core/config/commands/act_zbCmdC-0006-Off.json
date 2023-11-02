@@ -1,0 +1,13 @@
+{
+    "act_zbCmdC-0006-Off": {
+        "type": "action",
+        "subType": "other",
+        "logicalId": "#EP#-0006-CmdOff",
+        "configuration": {
+            "topic": "cmd-0006",
+            "request": "ep=#EP#&cmd=00",
+            "visibilityCategory": "All"
+        },
+        "genericType": "LIGHT_OFF"
+    }
+}

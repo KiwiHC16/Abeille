@@ -1,7 +1,7 @@
 {
     "spiritTemperatureConsigneGet": {
         "isVisible": 0,
-        "name": "getConsigne",
+        "logicalId": "#EP#-spiritTemperatureConsigneGet",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

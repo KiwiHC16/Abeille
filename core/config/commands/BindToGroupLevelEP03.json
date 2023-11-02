@@ -1,7 +1,7 @@
 {
     "BindToGroupLevelEP03": {
         "isVisible": 0,
-        "name": "BindToGroupButtonEP3",
+        "logicalId": "#EP#-BindToGroupLevelEP03",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

@@ -1,0 +1,15 @@
+{
+    "onVolet": {
+        "isVisible": 1,
+        "logicalId": "#EP#-onVolet",
+        "subType": "other",
+        "template": "",
+        "configuration": {
+            "topic": "OnOff",
+            "request": "On",
+            "visibilityCategory": "All"
+        },
+        "type": "action",
+        "genericType": "FLAP_UP"
+    }
+}

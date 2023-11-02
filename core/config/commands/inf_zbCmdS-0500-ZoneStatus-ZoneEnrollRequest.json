@@ -1,0 +1,12 @@
+{
+    "inf_zbCmdS-0500-ZoneStatus-ZoneEnrollRequest": {
+        "comment": "Received 0500/IAS Zone cluster, cmd 01 (Zone enroll request) from SERVER",
+        "comment2": "#value# formatted as follows 'zoneType-manufCode'",
+        "subType": "numeric",
+        "configuration": {
+            "repeatEventManagement": "always"
+        },
+        "type": "info",
+        "logicalId": "#EP#-0500-cmd01"
+    }
+}

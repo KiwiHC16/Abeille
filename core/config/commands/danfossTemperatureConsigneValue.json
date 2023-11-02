@@ -1,7 +1,7 @@
 {
     "danfossTemperatureConsigneValue": {
         "isVisible": 1,
-        "name": "Consigne",
+        "logicalId": "#EP#-danfossTemperatureConsigneValue",
         "isHistorized": "1",
         "subType": "numeric",
         "invertBinary": "0",

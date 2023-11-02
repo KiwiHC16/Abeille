@@ -1,14 +1,15 @@
 {
     "FNB54-THM17ML1.1": {
+        "type": "Temperature/humidity sensor",
+        "genericType": "Environment",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "FNB54-THM17ML1.1"
+            "icon": "Blitzwolf-Display"
         },
         "category": {
             "automatism": "1"
         },
-        "type": "thermom\u00e8tre zigbee ewelink",
         "commands": {
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",

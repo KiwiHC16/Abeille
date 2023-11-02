@@ -1,7 +1,7 @@
 {
     "spiritTemperature": {
         "isVisible": 1,
-        "name": "Temp\u00e9rature",
+        "logicalId": "#EP#-spiritTemperature",
         "isHistorized": "1",
         "subType": "numeric",
         "invertBinary": "0",

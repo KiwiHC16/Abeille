@@ -1,10 +1,8 @@
 {
     "onGroupEP7": {
-        "name": "On Gp7",
+        "logicalId": "#EP#-onGroupEP7",
         "isVisible": 1,
-        "isHistorized": "0",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "CmdAbeille\/#GROUPEP7#\/OnOffGroup",

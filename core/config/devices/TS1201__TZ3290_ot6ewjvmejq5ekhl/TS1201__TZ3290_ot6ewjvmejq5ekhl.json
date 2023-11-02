@@ -1,0 +1,71 @@
+{
+    "TS1201__TZ3290_ot6ewjvmejq5ekhl": {
+        "manufacturer": "Moes",
+        "model": "UFO-R11",
+        "type": "Moes universal smart IR remote control",
+        "timeout": "60",
+        "alternateIds": {
+            "TS1201__TZ3290_j37rooaxrcdcqo5n": []
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Moes-UniversalRemote",
+            "mainEP": "01",
+            "batteryType": "2x1.5V AAA"
+        },
+        "commands": {
+            "Init 0": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0001&attrId=0020,0021",
+                "comment": "Might be required for init",
+                "logicalId": "readAttr-Volt-Percent",
+                "execAtCreation": "yes"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=01"
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreationDelay": "4",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0001-00021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600",
+                "execAtCreationDelay": "5",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0001-00020": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrId=0020&attrType=20&minInterval=1800&maxInterval=3600",
+                "execAtCreationDelay": "6",
+                "execAtCreation": "yes"
+            },
+            "Start learning": {
+                "use": "act_zbCmdC-Generic",
+                "params": "ep=01&clustId=E004&cmd=00&data=7B227374756479223A307D",
+                "comment": "data is JSON of {'study': 0}",
+                "isVisible": "1"
+            },
+            "Learned IR code": {
+                "use": "inf_generic-String",
+                "logicalId": "01-learned-code",
+                "isVisible": "1"
+            },
+            "Code to send": {
+                "use": "act_cmd-Private",
+                "params": "ep=01&fct=tuyaZosung&cmd=00",
+                "isVisible": "1"
+            }
+        },
+        "fromDevice": {
+            "ED00": {
+                "type": "tuya-zosung"
+            }
+        }
+    }
+}

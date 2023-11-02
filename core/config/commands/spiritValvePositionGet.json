@@ -1,7 +1,7 @@
 {
     "spiritValvePositionGet": {
         "isVisible": 0,
-        "name": "Get Valve Positon",
+        "logicalId": "#EP#-spiritValvePositionGet",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

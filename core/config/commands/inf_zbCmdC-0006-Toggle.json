@@ -1,0 +1,13 @@
+{
+    "inf_zbCmdC-0006-Toggle": {
+        "comment": "Cluster 0006, cmd 02/toggle, received from CLIENT",
+        "subType": "binary",
+        "type": "info",
+        "logicalId": "#EP#-0006-cmd02",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "returnStateValue": 0,
+            "returnStateTime": 1
+        }
+    }
+}

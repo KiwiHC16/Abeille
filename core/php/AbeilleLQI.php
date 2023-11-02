@@ -91,6 +91,10 @@
                     logMessage("", "  WARNING: Unexpected source addr (".$msg->srcAddr.") => Ignored.");
                     continue;
                 }
+                if ($msg->status != "00"){
+                    logMessage("", "  WARNING: Wrong message status (".$msg->status.") => Ignored.");
+                    continue;
+                }
                 break; // Valid message
             }
 

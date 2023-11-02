@@ -1,0 +1,13 @@
+{
+    "act_zbCmdC-0006-Toggle": {
+        "type": "action",
+        "subType": "other",
+        "logicalId": "#EP#-0006-CmdToggle",
+        "configuration": {
+            "topic": "cmd-0006",
+            "request": "ep=#EP#&cmd=02",
+            "visibilityCategory": "All"
+        },
+        "genericType": "LIGHT_TOGGLE"
+    }
+}

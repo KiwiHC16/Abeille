@@ -300,17 +300,17 @@
          *  'newJCmdName' = cmd name to replace (coming from 'use')
          * Returns: array() or false if not found.
          */
-        public static function getCommandModel($cmdFName, $newJCmdName = '') {
+        public static function getCommandModel($modelName, $cmdFName, $newJCmdName = '') {
             $fullPath = cmdsDir.$cmdFName.'.json';
             if (!file_exists($fullPath)) {
-                log::add('Abeille', 'error', "Le fichier de commande '".$cmdFName.".json' n'existe pas.");
+                log::add('Abeille', 'error', "Modèle '".$modelName."': Le fichier de commande '".$cmdFName.".json' n'existe pas.");
                 return false;
             }
 
             $jsonContent = file_get_contents($fullPath);
             $cmd = json_decode($jsonContent, true);
             if (json_last_error() != JSON_ERROR_NONE) {
-                log::add('Abeille', 'error', "Fichier de commande '".$cmdFName.".json' corrompu.");
+                log::add('Abeille', 'error', "Modèle '".$modelName."': Fichier de commande '".$cmdFName.".json' corrompu.");
                 return false;
             }
 
@@ -322,6 +322,13 @@
             if ($cmdJName != $cmdFName) {
                 $cmd[$cmdJName] = $cmd[$cmdFName];
                 unset($cmd[$cmdFName]);
+            }
+
+            // Removing all comments
+            foreach ($cmd[$cmdJName] as $cmdKey => $cmdVal) {
+                if (substr($cmdKey, 0, 7) != "comment")
+                    continue;
+                unset($cmd[$cmdJName][$cmdKey]);
             }
 
             return $cmd;
@@ -351,7 +358,7 @@
                 // log::add('Abeille', 'error', 'Modèle \''.$modelName.'\' inconnu. Utilisation du modèle par défaut.');
                 // $modelName = 'defaultUnknown';
                 // $modelPath = devicesDir.$modelName.'/'.$modelName.'.json';
-                log::add('Abeille', 'error', 'Modèle \''.$modelName.'\' inconnu.');
+                log::add('Abeille', 'error', 'getDeviceModel(): Modèle \''.$modelName.'\' inconnu.');
                 return false;
             }
 
@@ -375,7 +382,7 @@
                     foreach ($jsonCmds as $cmd1 => $cmd2) {
                         /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
                         $cmdFName = $cmd2['use']; // File name without '.json'
-                        $newCmd = self::getCommandModel($cmdFName, $cmd1);
+                        $newCmd = self::getCommandModel($modelName, $cmdFName, $cmd1);
                         if ($newCmd === false)
                             continue; // Cmd does not exist.
 
@@ -419,17 +426,6 @@
                             // log::add('Abeille', 'debug', 'newCmd AFTER='.json_encode($newCmd));
                         }
 
-                        // Temp '#GROUPEPx#' support
-                        $newCmdTxt = json_encode($newCmd);
-                        for ($g = 1; $g <= 8; $g++) {
-                            if (isset($device['configuration']["groupEP".$g])) {
-                                // Case insensitive #xxx# replacement
-                                $gVal = $device['configuration']["groupEP".$g];
-                                $newCmdTxt = str_ireplace('#GROUPEP'.$g.'#', $gVal, $newCmdTxt);
-                            }
-                        }
-                        $newCmd = json_decode($newCmdTxt, true);
-
                         if (isset($cmd2['isVisible'])) {
                             $value = $cmd2['isVisible'];
                             if ($value === "yes")
@@ -461,6 +457,10 @@
                             $newCmd[$cmd1]['logicalId'] = $cmd2['logicalId'];
                         if (isset($cmd2['invertBinary']))
                             $newCmd[$cmd1]['invertBinary'] = $cmd2['invertBinary'];
+                        if (isset($cmd2['value']))
+                            $newCmd[$cmd1]['value'] = $cmd2['value'];
+                        if (isset($cmd2['disableTitle'])) // Disable title part of a subType 'message'
+                            $newCmd[$cmd1]['disableTitle'] = $cmd2['disableTitle'];
 
                         if (isset($cmd2['execAtCreation']))
                             $newCmd[$cmd1]['configuration']['execAtCreation'] = $cmd2['execAtCreation'];
@@ -493,6 +493,21 @@
                         if (isset($cmd2['Polling']))
                             $newCmd[$cmd1]['configuration']['Polling'] = $cmd2['Polling'];
 
+                        // All overloads done. Let's check if any remaining variable
+                        // #EP# => replaced by ['configuration']['mainEP']
+                        $newCmdTxt = json_encode($newCmd);
+                        $mainEP = $device['configuration']['mainEP'];
+                        $newCmdTxt = str_ireplace('#EP#', $mainEP, $newCmdTxt);
+                        // Temp '#GROUPEPx#' support
+                        for ($g = 1; $g <= 8; $g++) {
+                            if (isset($device['configuration']["groupEP".$g])) {
+                                // Case insensitive #xxx# replacement
+                                $gVal = $device['configuration']["groupEP".$g];
+                                $newCmdTxt = str_ireplace('#GROUPEP'.$g.'#', $gVal, $newCmdTxt);
+                            }
+                        }
+                        $newCmd = json_decode($newCmdTxt, true);
+
                         // log::add('Abeille', 'debug', 'getDeviceModel(): newCmd='.json_encode($newCmd));
                         $deviceCmds += $newCmd;
                     }
@@ -507,7 +522,7 @@
                         'inf_time-Timestamp' => 'Time-TimeStamp'
                     );
                     foreach ($baseCmds as $cFName => $cJName) {
-                        $c = self::getCommandModel($cFName, $cJName);
+                        $c = self::getCommandModel($modelName, $cFName, $cJName);
                         if ($c !== false)
                             $deviceCmds += $c;
                     }
@@ -525,7 +540,7 @@
                         // } else {
                             /* New command JSON format: "jeedom_cmd_name": { "use": "json_cmd_name", "params": "xxx"... } */
                             $cmdFName = $cmd2['use']; // File name without '.json'
-                            $newCmd = self::getCommandModel($cmdFName, $cmd1);
+                            $newCmd = self::getCommandModel($modelName, $cmdFName, $cmd1);
                             if ($newCmd === false)
                                 continue; // Cmd does not exist.
                         // }
@@ -538,6 +553,55 @@
 
             // log::add('Abeille', 'debug', 'getDeviceModel end');
             return $device;
+        }
+
+        // Attempt to find corresponding model based on given zigbee signature.
+        // Returns: associative array('jsonId', 'jsonLocation') or false
+        public static function findModel($zbModelId, $zbManufId) {
+
+            $identifier1 = $zbModelId.'_'.$zbManufId;
+            $identifier2 = $zbModelId;
+
+            // Search by <zbModelId>_<zbManufId>, starting from local models list
+            $localModels = AbeilleTools::getDevicesList('local');
+            foreach ($localModels as $modelId => $model) {
+                if ($modelId == $identifier1) {
+                    $identifier = $identifier1;
+                    break;
+                }
+            }
+            if (!isset($identifier)) {
+                // Search by <zbModelId>_<zbManufId>, starting from offical models list
+                $officialModels = AbeilleTools::getDevicesList('Abeille');
+                foreach ($officialModels as $modelId => $model) {
+                    if ($modelId == $identifier1) {
+                        $identifier = $identifier1;
+                        break;
+                    }
+                }
+            }
+            if (!isset($identifier)) {
+                // Search by <zbModelId> in local models
+                foreach ($localModels as $modelId => $model) {
+                    if ($modelId == $identifier2) {
+                        $identifier = $identifier2;
+                        break;
+                    }
+                }
+            }
+            if (!isset($identifier)) {
+                // Search by <zbModelId> in offical models
+                foreach ($officialModels as $modelId => $model) {
+                    if ($modelId == $identifier2) {
+                        $identifier = $identifier2;
+                        break;
+                    }
+                }
+            }
+            if (!isset($identifier))
+                return false; // No model found
+
+            return $model;
         }
 
         /**
@@ -679,7 +743,11 @@
          *
          * @return array
          */
-        public static function getParameters() {
+        public static function getParameters() { // OBSOLETE: Use getConfig() instead
+            return AbeilleTools::getConfig();
+        }
+
+        public static function getConfig() {
             $config = array();
 
             // Tcharp38: Should not be there
@@ -693,6 +761,10 @@
                 $config['ab::zgEnabled'.$zgId] = config::byKey('ab::zgEnabled'.$zgId, 'Abeille', 'N', 1);
                 $config['ab::zgIeeeAddrOk'.$zgId] = config::byKey('ab::zgIeeeAddrOk'.$zgId, 'Abeille', 0);
                 $config['ab::zgIeeeAddr'.$zgId] = config::byKey('ab::zgIeeeAddr'.$zgId, 'Abeille', '');
+                $chan = config::byKey('ab::zgChan'.$zgId, 'Abeille', 'niet');
+                if ($chan != 'niet')
+                    $config['ab::zgChan'.$zgId] = $chan;
+                $config['ab::preventUsbPowerCycle'] = config::byKey('ab::preventUsbPowerCycle', 'Abeille', 'N');
             }
             $config['ab::monitorId'] = config::byKey('ab::monitorId', 'Abeille', false);
             $config['ab::defaultParent'] = config::byKey('ab::defaultParent', 'Abeille', '1', 1);
@@ -1243,6 +1315,7 @@
             $nb = (preg_match('/[0-9]/', $daemonFile, $matches) != true ? "" : $matches[0]);
             $logLevel = log::convertLogLevel(log::getLogLevel('Abeille'));
             $logDir = self::logDir;
+            $tmpDir = jeedom::getTmpFolder("Abeille");
 
             unset($matches);
             $daemonFile = (preg_match('/[a-zA-Z]*/', $daemonFile, $matches) != true ? "" : strtolower($matches[0]));
@@ -1264,14 +1337,14 @@
             case 'abeilleserialread':
                 $daemonPhp = "AbeilleSerialRead.php";
                 $daemonParams = 'Abeille'.$nb.' '.$config['ab::zgPort'.$nb].' ';
-                $daemonLog = $logLevel." >>".$logDir."AbeilleSerialRead".$nb.".log 2>&1";
+                $daemonLog = $logLevel." >>${tmpDir}/AbeilleSerialRead".$nb.".log 2>&1";
                 exec(system::getCmdSudo().'chmod 777 '.$config['ab::zgPort'.$nb].' > /dev/null 2>&1');
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
                 break;
             case 'socat':
             case 'abeillesocat':
                 $daemonPhp = "AbeilleSocat.php";
-                $daemonParams = $config['ab::zgPort'.$nb].' '.$logLevel.' '.$config['ab::zgIpAddr'.$nb];
+                $daemonParams = $config['ab::zgPort'.$nb].' '.$config['ab::zgIpAddr'.$nb].' '.$logLevel;
                 $daemonLog = " >>".$logDir."AbeilleSocat".$nb.'.log 2>&1';
                 $cmd = $nohup." ".$php." ".corePhpDir.$daemonPhp." ".$daemonParams.$daemonLog;
                 break;
@@ -1411,6 +1484,39 @@
                 $reverse .= $a[$i].$a[$i+1];
             }
             return $reverse;
+        }
+
+        // Base64 URL encode function
+        // Returns false if error, or base64 URL compliant string
+        public static function base64url_encode($data) {
+            // First of all you should encode $data to Base64 string
+            $b64 = base64_encode($data);
+
+            // Make sure you get a valid result, otherwise, return FALSE, as the base64_encode() function do
+            if ($b64 === false) {
+                return false;
+            }
+
+            // Convert Base64 to Base64URL by replacing “+” with “-” and “/” with “_”
+            $url = strtr($b64, '+/', '-_');
+
+            // Remove padding character from the end of line and return the Base64URL result
+            return rtrim($url, '=');
+        }
+
+        // Base64 URL to base64
+        public static function base64url2base64($data) {
+            // Convert Base64URL to Base64 by replacing “-” with “+” and “_” with “/”
+            $b64 = strtr($data, '-_', '+/');
+
+            // Adding padding if required to have length as multiple of 3 bytes
+            $len = strlen($b64) % 3;
+            if ($len)
+                $b64 .= '=';
+            if ($len > 1)
+                $b64 .= '=';
+
+            return $b64;
         }
     }
 ?>

@@ -1,10 +1,8 @@
 {
     "WindowsCoveringGetLevel": {
         "isVisible": 0,
-        "name": "getLevel",
-        "isHistorized": "0",
+        "logicalId": "#EP#-WindowsCoveringGetLevel",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "readAttribute",

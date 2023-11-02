@@ -1,7 +1,7 @@
 {
     "danfossUIKeyLockSet": {
         "isVisible": 0,
-        "name": "Set Key Lock",
+        "logicalId": "#EP#-danfossUIKeyLockSet",
         "isHistorized": "0",
         "subType": "slider",
         "template": "",

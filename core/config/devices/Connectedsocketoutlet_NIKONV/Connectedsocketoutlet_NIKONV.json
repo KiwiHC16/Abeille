@@ -18,15 +18,12 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "On": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "isVisible": 1
             },
             "Off": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
             "Status": {

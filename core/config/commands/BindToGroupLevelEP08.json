@@ -1,5 +1,6 @@
 {
     "BindToGroupLevelEP08": {
+        "logicalId": "#EP#-BindToGroupLevelEP08",
         "subType": "other",
         "invertBinary": "0",
         "template": "",

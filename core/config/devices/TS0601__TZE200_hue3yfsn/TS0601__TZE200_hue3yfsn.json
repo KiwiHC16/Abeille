@@ -23,15 +23,12 @@
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": 1
             },
             "Window-Detection": {
-                "use": "attr-Door-Status",
+                "use": "inf_Door-Status",
                 "logicalId": "01-windowDetectionStatus",
                 "nextLine": "after",
                 "isVisible": 1
@@ -42,21 +39,23 @@
                 "isVisible": 1
             },
             "Setpoint": {
-                "use": "attr-Thermostat-Setpoint",
+                "use": "inf_Thermostat-Setpoint",
                 "isVisible": 1
             },
             "Manual": {
                 "use": "act_tuyaEF00-SetBool",
                 "params": "dpId=02&data=01",
+                "logicalId": "#EP#-SetManual",
                 "isVisible": 1
             },
             "Auto": {
                 "use": "act_tuyaEF00-SetBool",
                 "params": "dpId=02&data=00",
+                "logicalId": "#EP#-SetAuto",
                 "isVisible": 1
             },
             "Mode": {
-                "use": "attr-Thermostat-Mode",
+                "use": "inf_Thermostat-Mode",
                 "nextLine": "after",
                 "isVisible": 1
             },

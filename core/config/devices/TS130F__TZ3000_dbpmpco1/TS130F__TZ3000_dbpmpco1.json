@@ -1,0 +1,70 @@
+{
+    "TS130F__TZ3000_dbpmpco1": {
+        "manufacturer": "Loratap",
+        "model": "SC400ZB-EU v2",
+        "type": "Loratap roller shutter touch switch v2",
+        "genericType": "Shutter",
+        "timeout": "60",
+        "category": {
+            "opening": "1"
+        },
+        "configuration": {
+            "icon": "Loratap-RollerShutterTouchSwitch-v2",
+            "mainEP": "01"
+        },
+        "commands": {
+            "Up": {
+                "use": "act_zbCmdC-0102-UpOpen",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Stop": {
+                "use": "act_zbCmdC-0102-Stop",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Down": {
+                "use": "act_zbCmdC-0102-DownClose",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Level": {
+                "use": "inf_zbAttr-0102-CurPosLiftPercent",
+                "params": "ep=01",
+                "isVisible": "1"
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0102&attrId=0008"
+            },
+            "Set calibration time": {
+                "comment": "0 to 60s, multiplied by 10",
+                "use": "act_zbWriteAttribute",
+                "subType": "slider",
+                "maxValue": 60,
+                "valueOffset": "#value#*10",
+                "unit": "s",
+                "comment2": "F003 is uint16/x21",
+                "params": "clustId=0102&attrId=F003&attrType=21&attrVal=#slider#",
+                "isVisible": "1"
+            },
+            "Calibration time": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "0102-01-F003",
+                "unit": "s",
+                "calculValueOffset": "#value#/10",
+                "isVisible": "1"
+            },
+            "Bind 01-0102-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0102",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 01-0102-0008": {
+                "use": "act_zbConfigureReporting",
+                "params": "ep=01&clustId=0102&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "execAtCreation": "yes"
+            }
+        }
+    }
+}

@@ -7,6 +7,7 @@
             "topic": "writeAttribute",
             "request": "ep=#EP#&clustId=#CLUSTID#&attrId=#ATTRID#&attrVal=#select#"
         },
-        "type": "action"
+        "type": "action",
+        "logicalId": "writeAttr-#EP#-#CLUSTID#-#ATTRID#"
     }
 }

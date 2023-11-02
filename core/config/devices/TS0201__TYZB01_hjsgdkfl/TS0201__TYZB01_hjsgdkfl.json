@@ -1,0 +1,53 @@
+{
+    "TS0201__TYZB01_hjsgdkfl": {
+        "manufacturer": "Blitzwolf",
+        "model": "BW-IS4",
+        "type": "Blitzwolf temp/humidity display",
+        "genericType": "Environment",
+        "alternateIds": {
+            "TS0201__TZ3000_itnrsufe": {
+                "manufacturer": "Tuya",
+                "model": "Display",
+                "type": "Tuya temp/humidity display"
+            },
+            "TS0201__TZ2000_a476raq2": {
+                "manufacturer": "Tuya",
+                "model": "Display",
+                "type": "Tuya temp/humidity display"
+            },
+            "TS0201__TZ2000_hjsgdkfl": {
+            }
+        },
+        "timeout": "62",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "Blitzwolf-Display",
+            "batteryType": "2x1.5V AAA"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "commands": {
+            "SWBuildID": {
+                "use": "inf_zbAttr-0000-SWBuildID"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Temperature": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "isVisible": 1,
+                "isHistorized": 1
+            },
+            "Humidity": {
+                "use": "inf_zbAttr-0405-MeasuredValue",
+                "params": "ep=01",
+                "historizeRound": 1,
+                "isVisible": 1
+            }
+        }
+    }
+}

@@ -4,7 +4,7 @@
         "model": "1ch switch",
         "type": "Tuya 1ch switch module",
         "alternateIds": {
-            "TS0001__TZ3000_gjrubzje": {}
+            "TS0001__TZ3000_gjrubzje": []
         },
         "timeout": "60",
         "category": {
@@ -53,25 +53,26 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 6
             },
-
-            "Identify": {
-                "use": "Identify"
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
             },
-            "Groups": {
-                "use": "Group-Membership"
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1
             },
             "On": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "params": "ep=01",
                 "isVisible": "1"
             },
             "Off": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "params": "ep=01",
                 "isVisible": "1"
             },
             "Toggle": {
-                "use": "act_zbCmdG-0006-Toggle",
+                "use": "act_zbCmdC-0006-Toggle",
                 "params": "ep=01"
             },
             "Status": {

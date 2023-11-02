@@ -1,7 +1,7 @@
 {
     "act_tuyaEF00-Set-Setpoint-Mult": {
         "comment": "Tuya set setpoint with multiply",
-        "isVisible": 0,
+        "logicalId": "#EP#-TuyaEF00-Set-Setpoint-Mult",
         "subType": "slider",
         "template": "",
         "configuration": {

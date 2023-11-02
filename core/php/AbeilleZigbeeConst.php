@@ -333,6 +333,7 @@
                 "4000" => array( "name" => "GlobalSceneControl", "access" => "R", "dataType" => 0x10 ),
                 "4001" => array( "name" => "OnTime", "access" => "RW", "dataType" => 0x21 ),
                 "4002" => array( "name" => "OffWaitTime", "access" => "RW", "dataType" => 0x21 ),
+                "4003" => array( "name" => "StartUpOnOff", "access" => "RW", "dataType" => 0x30 ), // enum8
             ),
             "commandsR" => array(
                 "00" => array( "name" => "Off" ),
@@ -506,16 +507,16 @@
             "name" => "Window Covering",
             "attributes" => array(
                 // Information attributes
-                "0000" => array( "name" => "WindowCoveringType", "access" => "R" ),
-                "0001" => array( "name" => "PhysClosedLimitLift", "access" => "R" ),
-                "0002" => array( "name" => "PhysClosedLimitTilt", "access" => "R" ),
-                "0003" => array( "name" => "CurPosLift", "access" => "R" ),
-                "0004" => array( "name" => "CurPosTilt", "access" => "R" ),
-                "0005" => array( "name" => "NbOfActuationsLift", "access" => "R" ),
-                "0006" => array( "name" => "NbOfActuationsTilt", "access" => "R" ),
-                "0007" => array( "name" => "ConfigStatus", "access" => "R" ),
-                "0008" => array( "name" => "CurPosLiftPercent", "access" => "R" ),
-                "0009" => array( "name" => "CurPosTiltPercent", "access" => "R" ),
+                "0000" => array( "name" => "WindowCoveringType", "access" => "R", "dataType" => 0x30 ), // enum8
+                "0001" => array( "name" => "PhysClosedLimitLift", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0002" => array( "name" => "PhysClosedLimitTilt", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0003" => array( "name" => "CurPosLift", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0004" => array( "name" => "CurPosTilt", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0005" => array( "name" => "NbOfActuationsLift", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0006" => array( "name" => "NbOfActuationsTilt", "access" => "R", "dataType" => 0x21 ), // uint16
+                "0007" => array( "name" => "ConfigStatus", "access" => "R", "dataType" => 0x18 ), // map8
+                "0008" => array( "name" => "CurPosLiftPercent", "access" => "R", "dataType" => 0x20 ), // uint8
+                "0009" => array( "name" => "CurPosTiltPercent", "access" => "R", "dataType" => 0x20 ), // uint8
                 // Settings attributes
                 "0010" => array( "name" => "InstalledOpenLimitLift", "access" => "R" ),
                 "0011" => array( "name" => "InstalledClosedLimitLift", "access" => "R" ),
@@ -728,6 +729,15 @@
                 // "03" => array( "name" => "Request Fast Poll Mode" ),
             // ),
         ),
+        "0708" => array(
+            "name" => "Device Management",
+        ),
+        "0709" => array(
+            "name" => "Events",
+        ),
+        "0B01" => array(
+            "name" => "Meter Identification",
+        ),
         "0B04" => array( // Electrical measurement cluster
             "name" => "Electrical measurement",
             "attributes" => array(
@@ -778,6 +788,12 @@
         "E001" => array(
             "name" => "Tuya private ?",
         ),
+        "E004" => array(
+            "name" => "Tuya private ?", // Used by universal IR
+        ),
+        "ED00" => array(
+            "name" => "Tuya private ?", // Used by universal IR
+        ),
         "EF00" => array(
             "name" => "Tuya private ?",
         ),
@@ -788,6 +804,9 @@
             "name" => "Private", // Used by multi_Samjin
         ),
         "FC40" => array(
+            "name" => "Legrand private ?",
+        ),
+        "FC41" => array(
             "name" => "Legrand private ?",
         ),
     );

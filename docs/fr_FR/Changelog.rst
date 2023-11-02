@@ -1,10 +1,509 @@
 ChangeLog
 =========
 
+231027-BETA-2
+-------------
+
+- Interne: Tools/check_json: Améliorations.
+- Modèles d'équipement: Correction d'erreurs sur qq modèles.
+- Assistant modèles: Améliorations.
+- SilverCrest-HG08673-FR: Support préliminaire (2635).
+- Page EQ: Corrections pour forçage de modele.
+- Xiaomi Aqara Opple 4 boutons: Support préliminaire (2636).
+
+231023-BETA-2
+-------------
+
+- Loratap télécommande 6 boutons: Support préliminaire (2631).
+- Moes 3 boutons (TS0043__TZ3000_gbm10jnj): Ajout support (2630).
+- Interne: Cmd: Ajout 'cmd-0006' pour suppression vieilles commandes 'OnOffX'.
+- Interne: Cmd: Suppression support cmds 'OnOff'/'OnOffRaw'/'OnOff2'/'OnOffOSRAM'/'OnOff3'/'OnOff4'/'OnOffHue'
+
+231020-BETA-2
+-------------
+
+- Heiman HS1SA: Mise-à-jour modèle. Ajout de signatures alternatives.
+- Interne: Mises-à-jour support Tuya-Zosung.
+- Sirene iAlarm: Mises-à-jour du modèle (2629).
+- Moniteur: Amélioration interne pour support gros messages.
+- Moes télécommande universelle IR: Mise-à-jour du code pour ce support particulier (2607).
+- Page de config: Vérification adresse IP remplie si type WIFI.
+
+231012-BETA-1
+-------------
+
+- Interne: Nettoyage DB 'config' pour clefs zigates 7 à 10.
+- Cmd info 'Online': Correction (passage par 0 inattendu).
+- Profalux BSO: Modèle revisité.
+
+231010-BETA-2
+-------------
+
+- Interne: Msg 8012 n'est plus transmis à 'AbeilleCmd'.
+- Interne: Cmd: Correction changement adresse lors d'une nouvelle annonce.
+- Interne: Correction status 'NO-ACK' + 'ab::noack' => 'ab::txAck'.
+- Interne: Cmd: Mise-à-jour 'ieeeOk' à revisiter.
+
+231009-BETA-1
+-------------
+
+- Interne: AbeilleCmd: Nouvelles modifs pour support Tuya Zosung (universal remote).
+- Interne: Tuya parser: Support cmd EF00-06 (TY_DATA_SEARCH ?) revue.
+- Interne: Cmd & parser: Amélioration fonction de 'monitoring.
+- Assistant modèle: Corrections suite changement noms modèles de commandes.
+- Sirene iAlarm: Support préliminaire (2629).
+- Tuya temp/humidité/afficheur: Mise-à-jour du modèle (2619).
+
+231004-BETA-1
+-------------
+
+- Aeotec range extender: Ajout support (2627).
+
+231002-BETA-1
+-------------
+
+- Moes télécommande universelle IR: Mise-à-jour du code pour ce support particulier (2607).
+- Interne: Parser: Message 'deviceUpdates' seulement si IEEE connue.
+- Logs: 'AbeilleSerialReadX.log' déplacé dans '/tmp'.
+- Page maintenance: Correction erreur à l'affichage.
+- Page maintenance: Amélioration infos clefs.
+- Interne: AbeilleSerialRead: Changements mineurs.
+- Modeles: Ajout support 'disableTitle' pour cmd action de type 'message'.
+- Interne: AbeilleCmd revisité. Variables 'zigates' sorties de la classe.
+- Interne: Cmd: 'getNetworkStatus' => 'zgGetNetworkStatus'.
+- Interne: Cmd: Suppression message erreur 'Unknown device'.
+
+230919-BETA-1
+-------------
+
+- Interne: Parser: Cluster FC00 traité par message 8002 pour future migration mode 'raw'.
+- Interne: Ajout surveillance 'NOACK' en plus de 'Timeout'.
+- Page santé: Status amélioré => 'Time-out', ''no-ack' ou 'time-out&no-ack'
+
+230918-BETA-1
+-------------
+
+- Philips Hue Candle WA: Support preliminaire (2622).
+
+230915-BETA-1
+-------------
+
+- Modèles commandes:
+
+  - Suppresssion 'act_zbCmdC-XXXX-Custom.json'
+  - Ajout 'act_zbCmdC-Generic.json'
+- Interne: Cmd: Correction 'cmd-Generic'/'manufCode'.
+- Interne: Parser: Generation d'une info 'inf_EP-CLUST-cmdXX' pour toute commande inconnue spécifique cluster.
+- Moes télécommande universelle IR: Mise-à-jour du modèle & code (2607).
+- Interne: Cmd: Mise-à-jour 'setTemperature'.
+- Interne: Parser: Correction mauvaise interprétation 'ColorTempMired' (2544).
+- Livarno Home floor lamp: Mise-à-jour du modèle (2544).
+- Page updates OTA: Améliorations aspect & traductions US.
+- Interne: Cmd+Parser: Améliorations pour support 'restore PDM'.
+- Interne: Install: Correction constante nbre de Zigates.
+- Nbre de Zigates: 6 supportées au max au lieu de 10.
+- Traductions US: Qq corrections concernant la programmation du FW Zigate.
+- Interne: Modeles & Parser: Support nouveau format cluster privés.
+- Interne: Amélioration support err 14 Zigate.
+
+230907-BETA-2
+-------------
+
+- Page maintenance: Amélioration affichage JSON.
+- Page maintenance: Affichage JSON du répertoire local 'tmp'.
+- Interne: Parser: Support dump/backup tables PDM (msg 'AB00' + 'AB01', FW 'AB01-0000').
+- Page Zigate/avancé: Correction 'Reset HW'.
+- Interne: Parser: Support restoration tables PDM (msg 'AB02' + 'AB03', FW 'AB01-0000').
+- Interne: Changement nommage firmwares (zigatevX-YY.ZZ-legacy/opdm.bin).
+- Tuya afficheur température & humidité: Support préliminaire (2619).
+
+230830-BETA-2
+-------------
+
+- Page EQ/avancé: Correction traductions US.
+- Page EQ/avancé: Ajout bouton lecture version FW.
+- FW Zigates v1: Suppression FW officiels autres que 3.23.
+- Page santé: Correction tri du tableau après raffraichissement.
+- Page santé: Corrections traduction US.
+
+230822-BETA-1
+-------------
+
+- Ledvance 'PlugValue': Ajout support (2610).
+- Modèle de commande:
+
+  - 'inf_zbCmdR-XXXX-Yyyyy' => 'inf_zbCmdC-XXXX-Yyyyy'
+- Smart Switch ZG-005-RF: Mise-à-jour du modèle (2608).
+- Page EQ/avancé: Possibilité de forcer le modèle d'équipement.
+- Page de config: Correction mineure pour mode dev.
+- Page de config: Support préliminaire FW custom (mode dev uniquement).
+- Lexman LDSENK01F: Ajout support (2613).
+- Ajout support préliminaire pour FW Zigate v1 'Abeille'.
+- Interne: Pas de polling si équipement désactivé.
+- Interne: Amélioration collecte LQI.
+- Cmde manquante: Amélioration messages d'erreurs.
+- Page EQ/avancé: Correction regression bouton suppression modèle local.
+- Interne: Commandes Zigates prefixées par 'zg'.
+- Interne: Correction adresse commande 'identifySend'.
+- Interne: 'check_json' amélioré.
+- Interne: Parser: Correction mineure.
+- Page de gestion: Correction pb de selection pour les groupes.
+
+230811-BETA-1
+-------------
+
+- Assistant modèle: Mise-à-jour.
+- Page santé: Revue pour raffraichissement automatique toutes les 2sec.
+- Interne: Suppression 'health.js'.
+- Interne: Suppression lecture attrib 0006-0000 & 0008-0000 suite à 'setLevelRaw'/'onoff'/'OnOffTimed'.
+
+230810-BETA-1
+-------------
+
+- Interne: Parser: Nettoyage.
+- Page de l'équipement: Mise-à-jour traductions 'en_US'.
+- Smart Switch ZG-005-RF: Ajout support (2608).
+- Interne: Suppression 'Abeille-Js.php'
+- Page EQ: Correction mauvais raffraichissement des infos sur recharge de page.
+- Interne: Cmd 'identifySend' revisité.
+- Page EQ: Ajout support 'identifySend'.
+- Modèle de commande:
+
+  - ' Identify.json' => 'act_zbCmdC-Identify'
+  - 'act_zbCmdG-XXXX-YYYY' => 'act_zbCmdC-XXXX-YYYY'
+
+230804-BETA-1
+-------------
+
+- Interne: AbeilleCmd: Ajout support 'cmd-Generic'.
+- Page EQ/avancé: Ajout support 'Commande générique'.
+
+230803-BETA-2
+-------------
+
+- Page de l'équipement: Corrections translation 'en_US'.
+- Interne: jeedom.eqLogic.builSelectCmd() => buildSelectCmd(). Core v4.0 min.
+- Interne: Mise-à-jour AbeilleNoise.
+- Interne: Ajout cmd 'configureReporting2' (minInterval/maxInterval/changeVal = nombres).
+- Page EQ/avancé: Ajout support 'configureReporting2'.
+- Nous smart socket A1Z: Mise-à-jour du modèle pour réduire reporting (2460).
+- Livarno Home floor lamp: Mise-à-jour du modèle (2544).
+- Assistant modèle: Amélioration pour cluster 0300/Color control.
+
+230730-BETA-1
+-------------
+
+- Interne: Correction redémarrage Zigate Wifi.
+- Maintenance/infos clefs: Ajout nb lignes de log.
+- Profalux volet: Template par défaut = shutter pour 'Current Level'.
+- Page de config: Corrections translation 'en_US'.
+- Page de gestion: Corrections translation 'en_US'.
+- Modèles de commandes:
+
+  - Suppression 'zb-CustomInfo.json' obsolète.
+  - Suppression cmde obsolète 'temperatureLight.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+  - Suppression cmde obsolète 'temperatureLight1.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+  - Suppression cmde obsolète 'temperatureLight2.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+  - Suppression cmde obsolète 'temperatureLightV2.json' => 'inf_zbAttr-0300-ColorTemperatureMireds'.
+  - attr-XXXX => inf_XXXX
+- Moes télécommande universelle IR: Support préliminaire (2607).
+- Interne: Suppression fichier 'inconnu.php' obsolète.
+
+230721-BETA-2
+-------------
+
+- Page maintenance: Infos clefs: Mise-à-jour.
+- Interne: Mise-à-jour 'info.json'. Version minimale du core = 4.0.
+- Dependances: Mise-à-jour du code. Unique dépendance de base = python3.
+- Zigate WIFI: Socat relancé au bout de 2 mins si pas de signe de la Zigate.
+- Affichage commandes: Correction possibilité de les réordonner par drag & drop (2602).
+
+230718-BETA-1
+-------------
+
+- Interne: Parser: Améliorations pour reconnaissance fantomes.
+- Page équipement: Corrections d'affichage 'type' & 'icone'.
+- Blitzwolf temp/humidité/display: Correction signature pour 'TS0201__TZ2000_hjsgdkfl'.
+- Volet Profalux: Changement catégorie => 'ouvrant'.
+- Interne: AbeilleTools::getParameters() => getConfig().
+- Zigate USB/+: Cycle power off/on si sans réponse depuis plus de 2mins.
+- Interne: Supression de qq fichiers obsoletes.
+- Page de config: Ajout option avancée pour empecher cycle power OFF/ON sur Zigates USB plantées.
+- Page de config: Qq améliorations de traductions US.
+- Interne: Améliorations 'powerCycleUsb.sh'.
+- Zigate PI/+: HW reset si sans réponse depuis plus de 2mins.
+
+230711-BETA-1
+-------------
+
+- Interne: Parser: Corrections d'identification cas Profalux.
+- Aubess TS044 _TZ3000_wkai4ga5: Mise-à-jour du modèle pour eviter annonces multiples (2594).
+- Controlleur d'arrosage WOX: Mise-à-jour du modèle pour remontée batterie (2599).
+- Page maintenance: Mise-à-jour infos clefs.
+- Interne: Parser: Support prélim. EF00 cmd 06/TY_DATA_SEARCH.
+- Schneider Wiser plug: Support préliminaire (2601).
+
+230618-BETA-1
+-------------
+
+- Modeles équipement: Suppression commande 'Xiaomi-ff01'.
+- Correction changement de canal Zigate.
+
+230613-BETA-1
+-------------
+
+- Modèle équipement: 'value' peut etre surchargé.
+- Profalux volet: Valeur par défaut 'Set Level' ajustée sur 'CurrentLevel'.
+
+230528-STABLE-1
+-------------
+
+- Tuya garage door controller: Mise-à-jour du modèle (2581).
+- Trafri shortcut: Mise-à-jour modèle pour 'Click-Middle'.
+
+230521-BETA-1
+-------------
+
+  .. important:: Zigates v2
+
+    - La maturité de la v2 n'est pas au niveau de la v1. Il est donc recommandé de suivre autant que possible les mises-à-jour du firmware (v3.A0 à ce jour).
+  .. important:: Zigates v1
+
+    - Le dernier FW officiel est le v3.23. Il est recommandé de basculer dessus pour ne pas faire façe à des soucis déja corrigés.
+    - Dans tous les cas un FW >= 3.1e est nécéssaire.
+    - D'autre part si vous n'êtes pas en version OPDM (Optimized PDM), il est fortement recommandé de basculer dessus dans les cas suivants:
+
+      - Toute nouvelle installation.
+      - Dès lors qu'un réappairage complet est nécéssaire.
+      - La version OPDM corrige bon nombre de potentielles corruptions et supporte un plus grand nombre d'équipements.
+      - Les firmwares avant 3.1e sont forcement 'legacy'.
+      - Mais **ATTENTION** si vous migrez d'une version 'legacy' vers 'OPDM' il vous faudra **effacer la PDM et réapparairer tous vos équipements**.
+
+- Placement réseau:
+
+  - Affichage de tous les réseaux avec possibilité de masquer.
+  - Corrections.
+  - Ajout mode config.
+- Interne: Parser: genZclHeader()
+- Interne: Cmd: genZclHeader() sur 'discoverCommandsReceived'/'discoverCommandsGenerated'/'discoverAttributesExt'.
+- Sonoff SNZB-02D: Support préliminaire (2592).
+
+230511-BETA-1
+-------------
+
+- Loratap telecommande 3 boutons: Ajout support (2589).
+- Réparation (beta): Améliorations.
+- Disjoncteur intelligent Tongou: Mise-à-jour image (2583).
+- Tuya: Support message 0x11.
+- Tuya garage door controller: Mise-à-jour du modèle (2581).
+- Page EQ avancé: Corrections affichage identifiant & modele.
+- Placement réseau: Corrections regressions.
+
+230509-BETA-1
+-------------
+
+- Page EQ/cmdes: Correction boutons ajouter cmde (mode dev).
+- Placement réseau: Ajout bouton d'analyse réseau.
+- Placement réseau: Choix du niveau à afficher.
+- Garage door controller: Mise-à-jour du modèle (2581).
+- Support Tuya: Ajout support message 0x25/INTERNET_STATUS.
+- Page de gestion: Correction regression passage en mode inclusion non fonctionnel.
+- Page avancé: Correction regression boutons 'Réparer'/'Mise-à-jour'/'Réinit'/'Assistant'.
+
+230505-BETA-2
+-------------
+
+- Interne: AbeilleUpload: Crée toute la hierarchie de destination.
+- Placement réseau: Possibilité de charger nouveau plan + divers.
+- Matsee Plus single phase power meter: Modèle préliminaire (2588).
+- Capteur temp & humidité: Modèle préliminaire (2579).
+
+230503-BETA-2
+-------------
+
+- OTA: Fichier non FW ignoré.
+- OTA: Amélioration msg de debug.
+- Page équipement: Correction absence boutons 'sauvegarder'...
+- Placement réseau:
+
+  - Améliorations choix de niveaux.
+  - Couleur des liens en fonction du LQI.
+
+230502-BETA-1
+-------------
+
+- Placement réseau:
+
+ - Taille du texte passée à 12px.
+ - Possibilité de ne pas afficher les liens pour faciliter le positionnement des équipements.
+ - Les cartes sont stockées en interne dans 'Abeille/tmp/network_maps'.
+ - Sauvegarde automatique de la position d'un équipement.
+ - Support préliminaire d'un plan par étage.
+- Blitzwolf SHP15: Mise à jour modèle.
+- Zigate: Canal Zigbee configuré à chaque démarrage.
+- Garage door controller: Support préliminaire (2581).
+- Disjoncteur intelligent: Support préliminaire (2583).
+- Interne: Prelim. Organisation page 'desktop' revue + nettoyage pour compatibilité core v4.4.
+- Interne: Merge 'SW-SDK' + 'SW-Application' => 'FW-Version'.
+- Prise murale Tuya: Support préliminaire (2584).
+
+230426-BETA-1
+-------------
+
+- Ikea E14 WS globe 470lm: Mise-à-jour modèle (2578).
+- Xiaomi 'sensor_ht': Modification modele pour ajout section 'xiaomi'.
+- Module volet roulant LoraTap SC500ZB-v2: Mise-à-jour modèle (2552).
+- Trafri remote control: Mise-à-jour modele (2576).
+- Nouvelles commandes pour cluster 0008.
+- Interne: Parser: Correction bugs cluster 0006 & 0008.
+
+230422-BETA-1
+-------------
+
+- Network graph: Possibilité de sauver la position d'un équipement.
+- Network graph: Renommé en 'Placement réseau'.
+- Interne: Placement réseau: Ajout config 'ab::userMap'.
+- Plaement réseau: Limitation aux dimensions du plan.
+- Interne: Parser: Correction message cluster 0006 dupliqué (2574).
+- Placement réseau: Couleur de lien fonction du LQI.
+- Interne: Parser: Cmd Ikea cluster 0005 cmd 07 revue.
+- Trafri remote control: Mise-à-jour modele (2576).
+- Interne: Parser: Correction 'decodeDataType()' pour type 41/42.
+- Interne: Parser: Correction 'Attribut report'.
+- Ikea E14 WS globe 470lm: Support préliminaire (2578).
+- OTA: Correction regression.
+
+230416-BETA-1
+-------------
+
+- Modeles: Ajout/correction 'logicalId'.
+- Sonoff ZBMINIL2: Mise-à-jour du modèle & image (2569).
+- Blitzwolf BW-IS4: Correction type batterie & timeout.
+- Tuya temp & humidity display: Ajout support 'TS0201__TZ2000_a476raq2' (2570).
+- Interne: Cmd: moveToLiftAndTiltBSO(), correction PHP warning.
+- Interne: Parser: Support type 4C pour Xiaomi.
+- PaulmannLichtGmbH 500.44: Ajout image. Modele non confirmé (2516).
+- Network graph: Modifications internes préliminaires.
+- Interne: Correction perte de cmdes lors de la mise-à-jour.
+- Interne: Parser: Correction decodeDataType().
+- Interne: Parser: Correction pour inclusion.
+- Interne: Suppression des 'comment' durant mise-à-jour des cmdes.
+- Interne: Correction 'ep manquant'.
+
+230408-BETA-5
+-------------
+
+- Bouton IP55 Moes: Mise-à-jour du modèle (2562).
+- Xiaomi sensor_switch.aq2/remote.b1acn01: Mise-à-jour des modèles.
+- Interne: Parser: Suppression decodeFF01().
+- Assistant découverte: Améliorations.
+- Xiomi plug: Mise-à-jour du modèle.
+- Sonoff ZBMINIL2: Ajout support préliminaire (2569).
+- Interne: Parser: Extension support attribut non standard.
+- TS201 (TS0201__TZ3000_ywagc4rj): Modele specifique pour '%' non standard (2567).
+- Curtain module (TS130F__TZ3210_dwytrmda): Ajout support (2568).
+- Modele cmd 'click' renommé en 'inf_click'.
+- Livolo TI0001: Correction modele (cmds logicalId).
+- Modeles: Ajout/correction 'logicalId'.
+
+230405-BETA-2
+-------------
+
+- Groupes: Ajout 'suppression de tous les groupes'.
+- Image: 'node_TRADFRIonoffswitch.png' => 'node_Ikea-OnOffSwitch.png'
+- Loratap roller shutter touch switch v2: Mise-à-jour image (2561).
+- Interne: Amélioration process de réparation.
+- RDM001: Mise-à-jour du modèle (2185).
+- Xiaomi vibration: Mise-à-jour du modèle.
+- Xiaomi smoke (sensor_smoke): Modele géré par section 'xiaomi'.
+- Interne: Parser: decodeDataType() ne s'arrete plus si erreur de taille.
+- Prise Aubess TS011F, _TZ3000_gvn91tmx: Mise-à-jour du modèle (2558).
+- TS201: Ajout signature TS0201__TZ3000_ywagc4rj (2567).
+- Assistant modele: Mise-à-jour.
+- Bouton IP55 Moes: Ajout support préliminaire (2562).
+- Fonction 'réparation' préliminaire accessible à tous.
+
+230328-BETA-2
+-------------
+
+- Interne: Parser: Correction detection support de groupes.
+- Page avancé/réparation: Support préliminaire.
+- Page avancé: Ajout 'localisation' pour identifiant Zigbee (cas Profalux).
+- Interne: Parser: Suppression support 8085/Level update pour compatibilité mode raw.
+- Page avancé: Affichage des differents identifiants Zigbee si plusieurs.
+- Loratap roller shutter touch switch v2: Mise-à-jour du modèle (2561).
+- Mise-à-jour modèle TS130F__TZ3000_1dd0d5yi.
+- Interne: Cmd: Amélioration mesg d'erreurs.
+- Modèles:
+
+  - Ajout 'act_setLevel-Light' pour remplacer 'setLevel'.
+  - Remplacement 'setLevel' => 'act_setLevel-Light'
+  - Suppression des cmdes info 'Groups'
+- Ikea Trafri 470lm E27: Ajout support (2564).
+- Groupes: Amélioration pour suppression d'un groupe.
+- Page de config: Mise-à-jour des traductions anglaise.
+
+230326-STABLE-1
+---------------
+
+230325-BETA-2
+-------------
+
+- Legefirm repeteur zigbee: Ajout support (2560).
+
+230324-BETA-2
+-------------
+
+- Legrand shutter switch: Correction modèle (2559).
+- Interne: Constantes Zigbee, amélioration support cluster 0102.
+- Interne: Parser: Ajout support 'unbind response'.
+- Interne: createDevice(): Mise-à-jour pour éviter conflit de commandes.
+- TRADFRIonoffswitch: Mise-à-jour du modèle.
+- Modele de commandes: Suppression de cmde obsoletes.
+
+  - current_position_lift_percentage
+  - getcurrent_position_lift_percentage
+- Interne: Cmd: Changement msg debug.
+- Interne: Parser: Correction support 'Node Descriptor Response'.
+- Interne: Parser: Amélioration inclusion (ajout lecture 'manufCode').
+- Loratap roller shutter touch switch v2: Support préliminaire (2561).
+
+230322-BETA-3
+-------------
+
+- Girier curtain module: Mise-à-jour du modèle (2526).
+- Interne: Parser: Correction warning PHP 'Binding table response'.
+- Modele TS201 renommage automatique vers 'TS0201__TYZB01_hjsgdkfl'.
+- Page avancé: Support préliminaire 'unbind'.
+- Interne: Cmd: Support préliminaire 'unbind0031'.
+- Interne: Cmd: Ajout support 'remove all groups'.
+- Gestion des groupes: Amélioration affichage mineure.
+- Groupes de la Zigate: Correction regression.
+- Prise Aubess TS011F, _TZ3000_gvn91tmx: Mise-à-jour du modèle (2558).
+
+230320-BETA-3
+-------------
+
+- Image: 'Shutterswitchwithneutral' => 'Legrand-ShutterSwitch'.
+- Image: 'Xiaomiwleak_aq1' => 'Xiaomi-LeakSensor'.
+- Interne: Amélioration remplacement '#addrIEEE#', '#IEEE#' ou '#ZigateIEEE#'.
+- 'sensor_wleak.aq1': Mise-à-jour du modèle.
+- Page maintenance: Amélioration infos clefs.
+- Package de logs: Ajout log 'event'.
+- Aqara Motion Sensor P1 RTCGQ14LM/MS-S02: Mise-à-jour modèle (2463).
+- Xiaomi 'plug': Mise-à-jour du modèle.
+
+230319-BETA-1
+-------------
+
 - Interne: Parser: Correction regression inclusion.
 - Interne: Plusieurs correctifs 'deviceUpdates'.
 - Page avancé: Ajout 'siren level' pour cmde 'Start Warning' (cluster 0502).
 - Sirène M0L0-HS2WD-TY: Ajout info pourcentage batterie (2550).
+- Support préliminaire 'pigiod' pour Pi-Zigates.
+- Interne: Parser: Amélioration support cmdes specifiques cluster 0008.
+- Modele TS201 renommé => TS0201__TYZB01_hjsgdkfl.
+- Aubess prise TS011F: Ajout support préliminaire (2558).
 
 230314-BETA-1
 -------------

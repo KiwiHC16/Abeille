@@ -1,7 +1,7 @@
 {
     "danfossSystemeModeValue": {
         "isVisible": 1,
-        "name": "Mode",
+        "logicalId": "#EP#-danfossSystemeModeValue",
         "isHistorized": "1",
         "subType": "string",
         "invertBinary": "0",

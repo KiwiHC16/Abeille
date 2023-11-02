@@ -1,7 +1,7 @@
 {
     "danfossUIKeyLockGet": {
         "isVisible": 0,
-        "name": "Key Lock Get",
+        "logicalId": "#EP#-danfossUIKeyLockGet",
         "isHistorized": "0",
         "subType": "other",
         "invertBinary": "0",

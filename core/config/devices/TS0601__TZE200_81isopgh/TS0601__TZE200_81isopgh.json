@@ -17,17 +17,16 @@
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "isVisible": 1
             },
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Open": {
                 "use": "cmdG-TuyaEF00-Set-OpenClose",
                 "params": "openClose=1",
+                "logicalId": "#EP#-Open",
                 "isVisible": 1
             },
             "Close": {
                 "use": "cmdG-TuyaEF00-Set-OpenClose",
                 "params": "openClose=0",
+                "logicalId": "#EP#-Close",
                 "isVisible": 1
             },
             "Status": {
@@ -36,15 +35,15 @@
                 "isHistorized": 1
             },
             "Last open duration": {
-                "use": "attr-Valve-LastOpenDuration",
+                "use": "inf_Valve-LastOpenDuration",
                 "isVisible": 1
             },
             "Time left": {
-                "use": "attr-Valve-TimeLeft",
+                "use": "inf_Valve-TimeLeft",
                 "isVisible": 1
             },
             "Measured value": {
-                "use": "attr-Valve-MeasuredValue",
+                "use": "inf_Valve-MeasuredValue",
                 "calculValueOffset": "#value#/10",
                 "historizeRound": 1,
                 "isVisible": 1,

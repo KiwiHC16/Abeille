@@ -1,11 +1,9 @@
 {
     "setLevelVolet": {
         "isVisible": 1,
-        "name": "setLevel",
-        "isHistorized": "0",
+        "logicalId": "#EP#-SetLevelVolet",
         "subType": "slider",
         "value": "Level",
-        "invertBinary": "0",
         "template": "",
         "genericType": "FLAP_SLIDER",
         "configuration": {

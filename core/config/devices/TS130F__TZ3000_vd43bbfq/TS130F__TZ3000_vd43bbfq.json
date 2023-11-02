@@ -13,19 +13,16 @@
         },
         "type": "Tuya QS-Zigbee-C01 Curtain Module",
         "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Position": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": 1
             },
             "Up": {
-                "use": "act_zbCmdG-0008-UpOpen",
+                "use": "act_zbCmdC-0008-UpOpen",
                 "isVisible": 1
             },
             "Down": {
-                "use": "act_zbCmdG-0008-DownClose",
+                "use": "act_zbCmdC-0008-DownClose",
                 "isVisible": 1
             }
         }

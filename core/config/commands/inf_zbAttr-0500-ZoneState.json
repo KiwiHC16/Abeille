@@ -1,0 +1,8 @@
+{
+    "inf_zbAttr-0500-ZoneState": {
+        "comment": "0500/IAS Zone cluster, attrib 0000/ZoneState, type enum8",
+        "subType": "numeric",
+        "type": "info",
+        "logicalId": "0500-#EP#-0000"
+    }
+}

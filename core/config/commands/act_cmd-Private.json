@@ -1,0 +1,15 @@
+{
+    "act_cmd-Private": {
+        "comment": "Private cmd code (ex: Moes universal remote support thru cluster E004 & ED00)",
+        "type": "action",
+        "genericType": "GENERIC_ACTION",
+        "subType": "message",
+        "disableTitle": 1,
+        "template": "",
+        "logicalId": "#EP#-cmdPrivate",
+        "configuration": {
+            "topic": "cmd-Private",
+            "request": "ep=#EP#&fct=#FCT#&cmd=#CMD#&message=#message#"
+        }
+    }
+}

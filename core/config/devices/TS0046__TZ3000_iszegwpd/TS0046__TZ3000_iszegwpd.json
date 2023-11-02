@@ -1,0 +1,68 @@
+{
+    "TS0046__TZ3000_iszegwpd": {
+        "manufacturer": "Loratap",
+        "model": "SS9600ZB-YA",
+        "type": "Loratap 6 buttons remote",
+        "timeout": "60",
+        "category": {
+            "automatism": "1"
+        },
+        "configuration": {
+            "icon": "Loratap-6ButtonsRemote",
+            "mainEP": "01",
+            "batteryType": "1x3V CR2032"
+        },
+        "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent",
+                "params": "ep=04"
+            },
+            "SetReporting 01-0001-00021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
+                "execAtCreation": "yes"
+            },
+            "Bind 01-0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "Tuya-ConfigureMagicPacket": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0000,0001,0005,0007,FFFE",
+                "logicalId": "Tuya-ConfigureMagicPacket",
+                "execAtCreation": "Yes"
+            },
+            "Click 1": {
+                "use": "inf_click",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Click 2": {
+                "use": "inf_click",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Click 3": {
+                "use": "inf_click",
+                "params": "ep=03",
+                "isVisible": 1
+            },
+            "Click 4": {
+                "use": "inf_click",
+                "params": "ep=04",
+                "isVisible": 1
+            },
+            "Click 5": {
+                "use": "inf_click",
+                "params": "ep=05",
+                "isVisible": 1
+            },
+            "Click 6": {
+                "use": "inf_click",
+                "params": "ep=06",
+                "isVisible": 1
+            }
+        }
+    }
+}

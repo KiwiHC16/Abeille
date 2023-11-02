@@ -4,6 +4,14 @@
     define('devicesDir', __DIR__.'/../core/config/devices');
     define('commandsDir', __DIR__.'/../core/config/commands');
 
+    // eqLogic categories
+    // {"heating":"1","security":"0","energy":"0","light":"0","opening":"0","automatism":"0","multimedia":"0","default":"0"}
+    $eqCategories = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'default'];
+
+    // Cmd 'action' & 'info' subtypes
+    $actSubTypes = ['other', 'slider', 'message', 'color', 'select'];
+    $infSubTypes = ['numeric', 'binary', 'string'];
+
     $devicesList = [];
     $commandsList = [];
     $allCommandsList = []; // All available commands
@@ -50,14 +58,15 @@
         $cmdErrors[] = $e;
     }
 
-    // Check 'subType'. Returns true if ok, else false
-    function subTypeIsOk($type, $subType) {
+    // Check cmd 'subType'. Returns true if ok, else false
+    function cmdSubTypeIsOk($type, $subType) {
         if ($type == "action") {
-            $actSubTypes = ['other', 'slider', 'message', 'color', 'select'];
+            global $actSubTypes;
+            // $actSubTypes = ['other', 'slider', 'message', 'color', 'select'];
             if (!in_array($subType, $actSubTypes))
                 return false;
         } else {
-            $infSubTypes = ['numeric', 'binary', 'string'];
+            global $infSubTypes;
             if (!in_array($subType, $infSubTypes))
                 return false;
         }
@@ -96,12 +105,13 @@
             $error = newDevError($devName, "ERROR", "No 'category' defined");
         } else {
             $allCats = $dev[$devName]['category'];
-            $allowed = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'other'];
+            // $allowed = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'other'];
+            global $eqCategories;
             foreach($allCats as $cat => $catEn) {
-                if (in_array($cat, $allowed))
+                if (in_array($cat, $eqCategories))
                     continue;
-                    $error = newDevError($devName, "ERROR", "Unexpected '".$cat."' category.");
-                }
+                $error = newDevError($devName, "ERROR", "Unexpected '".$cat."' category.");
+            }
         }
 
         // Checking 'configuration'
@@ -150,39 +160,40 @@
         } else {
             $commands = $dev[$devName]['commands'];
             // echo "commands=".json_encode($commands)."\n";
-            foreach ($commands as $key => $value) {
-                // New syntax: "<jCmdName>": { "use": "<fileName>" }
-                $cmdFName = $value['use'];
-
-                $path = commandsDir."/".$cmdFName.".json";
+            $logicIds = [];
+            foreach ($commands as $cmdJName => $cmd) {
+                // New syntax: "<cmdJName>": { "use": "<fileName>" }
+                $cmdModel = $cmd['use'];
+                $path = commandsDir."/".$cmdModel.".json";
                 if (!file_exists($path)) {
-                    $error = newDevError($devName, "ERROR", "Unknown command JSON ".$cmdFName.".json");
+                    $error = newDevError($devName, "ERROR", "Unknown command JSON ".$cmdModel.".json");
                     $missingCmds++;
                 }
+
+                /* Updating list of unused commands models */
+                $i = array_search($cmdModel, $unusedCmds, true);
+                if ($i !== false)
+                    unset($unusedCmds[$i]); // $cmdModel is used
 
                 // List of supported command keys
                 $validCmdKeys = ['use', 'params', 'isVisible', 'isHistorized', 'execAtCreation', 'execAtCreationDelay', 'nextLine', 'template', 'subType', 'unit', 'minValue', 'maxValue', 'genericType', 'logicalId', 'invertBinary', 'historizeRound', 'calculValueOffset'];
                 array_push($validCmdKeys, 'repeatEventManagement', 'listValue');
                 array_push($validCmdKeys, 'returnStateTime', 'returnStateValue', 'Polling');
                 array_push($validCmdKeys, 'trigOut', 'trigOutOffset', 'notStandard', 'valueOffset');
-                foreach ($value as $key2 => $value2) {
+                array_push($validCmdKeys, 'value');
+                foreach ($cmd as $key2 => $value2) {
                     if (in_array($key2, $validCmdKeys)) {
                         // if ($key2 == 'subType') {
                         //     // TODO: How to know cmd type ?
-                        //     if (!subTypeIsOk($type, $value2))
+                        //     if (!cmdSubTypeIsOk($type, $value2))
                         //         $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key value for '".$key."' Jeedom command");
                         // }
                         continue;
                     }
                     if (substr($key2, 0, 7) == "comment")
                         continue;
-                    $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key for '".$key."' Jeedom command");
+                    $error = newDevError($devName, "ERROR", "Invalid '".$key2."' cmd key for '".$cmdJName."' Jeedom command");
                 }
-
-                /* Updating list of unused commands */
-                $i = array_search($cmdFName, $unusedCmds, true);
-                if ($i !== false)
-                    unset($unusedCmds[$i]); // $cmdFName is used
             }
 
             if ($error)
@@ -192,7 +203,7 @@
         }
 
         /* Tuya specific checks */
-        // TODO: To be completed
+        // TODO: To be completed => OBSOLETE soon. Will be replaced by 'fromDevice'
         if (isset($dev[$devName]['tuyaEF00'])) {
             foreach ($dev[$devName]['tuyaEF00'] as $key => $value) {
                 if ($key == 'fromDevice') {
@@ -221,13 +232,40 @@
         }
 
         /* Xiaomi specific checks */
-        // TODO: To be completed
+        // TODO: To be completed => OBSOLETE soon. Will be replaced by 'fromDevice'
         if (isset($dev[$devName]['xiaomi'])) {
+        }
+
+        /* Custom cluster/attribute specific checks */
+        // TODO: To be completed
+        // WORK ONGOING !!!
+        /* Generic format for private clusters/commands reminder
+        "fromDevice": {
+            "ED00": {
+                "type": "tuya-zosung"
+            },
+            "0000-FF01": { // CLUSTID-ATTRID
+                "type": "xiaomi",
+                "01-21": {
+                    "func": "numberDiv",
+                    "div": 1000,
+                    "info": "0001-01-0020"
+                }
+            },
+            "EF00": {
+                "type": "tuya",
+                "05": { // DP
+                    "function": "rcvValue",
+                    "info": "01-measuredValue"
+                },
+            }
+        } */
+        if (isset($dev[$devName]['fromDevice'])) {
         }
 
         /* Checking top level supported keywords */
         $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'tuyaEF00', 'customization', 'xiaomi'];
-        array_push($supportedKeys, 'genericType');
+        array_push($supportedKeys, 'genericType', 'fromDevice');
         foreach ($dev[$devName] as $key => $value) {
             if (in_array($key, $supportedKeys))
                 continue;
@@ -261,8 +299,8 @@
 
         // Checking 'subType'
         $subType = $c['subType'];
-        if (!subTypeIsOk($type, $subType)) {
-            newCmdError($cmdName, "ERROR", "Invalid 'subType' value '".$subType."'");
+        if (!cmdSubTypeIsOk($type, $subType)) {
+            newCmdError($cmdName, "ERROR", "Invalid cmd 'subType' value '".$subType."'");
             return;
         }
 
@@ -287,25 +325,26 @@
 
             /* Checking supported 'configuration' keywords */
             $supportedConfKeys = ['topic', 'request', 'historizeRound', 'execAtCreation', 'execAtCreationDelay', 'trigOut', 'trigOutOffset', 'repeatEventManagement', 'visibilityCategory'];
-            array_push($supportedConfKeys, 'minValue', 'maxValue', 'calculValueOffset', 'AbeilleRejectValue', 'Polling', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'visibiltyTemplate');
+            array_push($supportedConfKeys, 'minValue', 'maxValue', 'calculValueOffset', 'valueOffset', 'AbeilleRejectValue', 'Polling', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'visibiltyTemplate');
             array_push($supportedConfKeys, 'returnStateTime', 'returnStateValue');
             foreach ($conf as $key => $value) {
                 if (in_array($key, $supportedConfKeys))
                     continue;
                 if (substr($key, 0, 7) == "comment")
                     continue;
-                    newCmdError($cmdName, "ERROR", "Invalid configuration key '".$key."'");
+                    newCmdError($cmdName, "ERROR", "Invalid command configuration key '".$key."'");
             }
         }
 
         /* Checking supported top level keywords */
         $supportedKeys = ['type', 'subType', 'logicalId', 'configuration', 'name', 'genericType', 'template', 'isVisible', 'isHistorized', 'invertBinary', 'unit', 'display', 'nextLine', 'value'];
+        array_push($supportedKeys, 'disableTitle');
         foreach ($cmd[$cmdName] as $key => $value) {
             if (in_array($key, $supportedKeys))
                 continue;
             if (substr($key, 0, 7) == "comment")
                 continue;
-                newCmdError($cmdName, "ERROR", "Invalid command key '".$key."'");
+                newCmdError($cmdName, "ERROR", "Invalid command top key '".$key."'");
         }
     } // End checkCommand()
 
@@ -383,11 +422,23 @@
             unset($cmd[$cmdFName]);
         }
 
+        // Removing all comments to not treat them
+        foreach ($cmd[$cmdJName] as $key => $data) {
+            if (substr($key, 0, 7) == "comment")
+                unset($cmd[$cmdJName][$key]);
+            if ($key == "configuration") {
+                foreach ($cmd[$cmdJName]['configuration'] as $key2 => $data2) {
+                    if (substr($key2, 0, 7) == "comment")
+                        unset($cmd[$cmdJName]['configuration'][$key2]);
+                }
+            }
+        }
+
         return $cmd;
     }
 
     /* Check use of commands */
-    function checkDevicecommands($devName, $fullPath) {
+    function checkDeviceCommands($devName, $fullPath) {
         $jsonContent = file_get_contents($fullPath);
         if ($jsonContent === false) {
             step('E');
@@ -405,46 +456,55 @@
             return;
         }
 
-        $jsonCmds = $device['commands'];
+        $cmds = $device['commands'];
         $error = false;
-        // echo "jsonCmds=".json_encode($jsonCmds)."\n";
-        foreach ($jsonCmds as $cmd1 => $cmd2) {
-            if (substr($cmd1, 0, 7) == "include") {
-                /* Old command JSON commands syntax: "includeX": "json_cmd_name" */
-                $newCmd = getCommandModel($cmd2);
-                if ($newCmd === false)
-                    continue; // Cmd does not exist.
-                $cmdJName = $cmd2;
-                $newCmdText = json_encode($newCmd);
-            } else {
-                /* New command JSON format:
-                   "jeedom_cmd_name": {
-                       "use": "json_cmd_name",
-                       "params": "xxx"...
-                    } */
-                $cmdFName = $cmd2['use']; // File name without '.json'
-                $newCmd = getCommandModel($cmdFName, $cmd1);
-                if ($newCmd === false)
-                    continue; // Cmd does not exist.
-                $cmdJName = $cmd1;
-                $newCmdText = json_encode($newCmd);
-                if (isset($cmd2['params']) && (trim($cmd2['params']) != '')) {
-                    // Overwritting default settings with 'params' content
-                    $params = explode('&', $cmd2['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
-                    foreach ($params as $p) {
-                        list($pName, $pVal) = explode("=", $p);
-                        $pName = strtoupper($pName);
-                        $newCmdText = str_replace('#'.$pName.'#', $pVal, $newCmdText);
-                    }
-                    $newCmd = json_decode($newCmdText, true);
-                }
+        $logicIds = [];
+        // echo "cmds=".json_encode($cmds)."\n";
+        foreach ($cmds as $cmdJName => $devCmd) {
+            /* New command JSON format:
+                "jeedom_cmd_name": {
+                    "use": "json_cmd_name",
+                    "params": "xxx"...
+                } */
+            $cmdFName = $devCmd['use']; // File name without '.json'
+            $newCmd = getCommandModel($cmdFName, $cmdJName);
+            if ($newCmd === false)
+                continue; // Cmd does not exist.
+            $newCmd = $newCmd[$cmdJName]; // Remove top key
+
+            // Checking Jeedom cmd name
+            if (strpos($cmdJName, "/") !== false) {
+                newDevError($devName, "ERROR", "Invalid Jeedom cmd name '".$cmdJName."' ('/' is fordidden)");
+                $error = true;
             }
 
+            // Overload from device model
+            // echo "devCmd=".json_encode($devCmd)."\n";
+            if (isset($devCmd['logicalId']))
+                $newCmd['logicalId'] = $devCmd['logicalId'];
+
+            $newCmdText = json_encode($newCmd);
+            // echo "newCmdText=".$newCmdText."\n";
+            if (isset($devCmd['params']) && (trim($devCmd['params']) != '')) {
+                // Overwritting default settings with 'params' content
+                $params = explode('&', $devCmd['params']); // ep=01&clustId=0000 => ep=01, clustId=0000
+                foreach ($params as $p) {
+                    list($pName, $pVal) = explode("=", $p);
+                    // $pName = strtoupper($pName);
+                    $newCmdText = str_ireplace('#'.$pName.'#', $pVal, $newCmdText);
+                }
+                $newCmd = json_decode($newCmdText, true);
+            }
+
+            // Checking all remaining #var# cases
+            //  #EP# => replaced at during pairing
+            //  #select# => dynamic variable, replaced at run time
             // echo "newCmdText=".$newCmdText."\n";
             while (true) {
                 $start = strpos($newCmdText, "#"); // Start
                 if ($start === false)
                     break;
+
                 $len = strpos(substr($newCmdText, $start + 1), "#"); // Length
                 if ($len === false) {
                     newDevError($devName, "ERROR", "No closing dash (#) for cmd '".$cmdJName."'");
@@ -460,6 +520,11 @@
                         newDevError($devName, "ERROR", "'#EP#' found but NO 'mainEP'");
                         $error = true;
                     }
+                } else if ($var == "#select#") {
+                    if (!isset($devCmd['listValue']) && !isset($newCmd['listValue'])) {
+                        newDevError($devName, "ERROR", "Undefined 'listValue' for '#select#'");
+                        $error = true;
+                    }
                 } else {
                     $allowed = ['#value#', '#slider#', '#title#', '#message#', '#color#', '#onTime#', '#IEEE#', '#addrIEEE#', '#ZigateIEEE#', '#ZiGateIEEE#', '#addrGroup#'];
                     // Tcharp38 note: don't know purpose of slider/title/message/color/onTime/GroupeEPx
@@ -473,7 +538,15 @@
 
                 $newCmdText = substr($newCmdText, $start + $len);
             }
-            // break;
+
+            // Checking uniqness of logicalId
+            $logicId = isset($newCmd['logicalId']) ? $newCmd['logicalId']: '';
+            if ($logicId == '')
+                $error = newDevError($devName, "ERROR", "Undefined logical ID for '".$cmdJName."' cmd (model ".$cmdFName.")");
+            else if (in_array($logicId, $logicIds))
+                $error = newDevError($devName, "ERROR", "Duplicated logical ID '".$logicId."' (cmd ".$cmdJName.")");
+            else
+                $logicIds[] = $logicId;
         }
         if ($error)
             step('E');
@@ -483,8 +556,29 @@
 
     /* TODO: If JSON name not given on cmd line, parsing all
        devices & commands */
-    buildDevicesList();
-    buildAllCommandsList();
+    for ($i = 1; $i < $argc; $i++) {
+        $modName = $argv[$i];
+        $fullPath = devicesDir.'/'.$modName;
+        if (!is_dir($fullPath)) {
+            echo "- ".$modName.": path access ERROR\n";
+            echo "  ".$fullPath."\n";
+            exit;
+        }
+
+        $fullPath = devicesDir.'/'.$modName.'/'.$modName.".json";
+        if (!file_exists($fullPath)) {
+            echo "- ".$modName.": path access ERROR\n";
+            echo "  ".$fullPath."\n";
+            exit;
+        }
+
+        $devicesList[$modName] = $fullPath;
+        break;
+    }
+    if (count($devicesList) == 0) {
+        buildDevicesList();
+        buildAllCommandsList();
+    }
 
     // echo "devl=".json_encode($devicesList)."\n";
     echo "Checking devices models syntax\n- ";
@@ -499,6 +593,7 @@
             checkDevice($devName, $content);
     }
 
+    // TODO: Should be USED cmds only
     echo "\nChecking ALL commands syntax\n- ";
     $idx = 2;
     foreach ($allCommandsList as $entry => $fullPath) {
@@ -518,22 +613,8 @@
         checkDeviceCommands($devName, $fullPath);
     }
 
-    $nbErrors = sizeof($devErrors);
-    echo "\n\nDevices errors summary (".$nbErrors." errors)\n";
-    if ($nbErrors != 0 ) {
-        $f = "";
-        foreach ($devErrors as $e) {
-            if ($f != $e['file']) {
-                echo "- ".$e['file']."\n";
-                $f = $e['file'];
-            }
-            echo "  ".$e['type'].": ".$e['msg']."\n";
-        }
-    } else
-        echo "= None\n";
-
     $nbErrors = sizeof($cmdErrors);
-    echo "\nCommands errors summary (".$nbErrors." errors)\n";
+    echo "\n\nCommands errors summary (".$nbErrors." errors)\n";
     if ($nbErrors != 0 ) {
         $f = "";
         foreach ($cmdErrors as $e) {
@@ -543,6 +624,21 @@
             }
             echo "  ".$e['type'].": ".$e['msg']."\n";
         }
+    } else
+        echo "= None\n";
+
+    $nbErrors = sizeof($devErrors);
+    echo "\nDevices errors summary (".$nbErrors." errors)\n";
+    if ($nbErrors != 0 ) {
+        $f = "";
+        foreach ($devErrors as $e) {
+            if ($f != $e['file']) {
+                echo "- ".$e['file']."\n";
+                $f = $e['file'];
+            }
+            echo "  ".$e['type'].": ".$e['msg']."\n";
+        }
+        echo "= ".$nbErrors." errors\n";
     } else
         echo "= None\n";
 

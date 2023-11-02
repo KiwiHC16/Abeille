@@ -1,0 +1,43 @@
+{
+    "TS0201__TZ3000_xr3htd96": {
+        "manufacturer": "Tuya",
+        "model": "Temp",
+        "type": "Tuya temp and humidity",
+        "genericType": "Environment",
+        "alternateIds": {
+            "TS0201__TZ3000_bguser20": {
+            }
+        },
+        "timeout": "62",
+        "configuration": {
+            "mainEP": "01",
+            "icon": "Tuya-TempHumidity",
+            "batteryType": "2x1.5V AAA"
+        },
+        "category": {
+            "automatism": "1"
+        },
+        "commands": {
+            "SWBuildID": {
+                "use": "inf_zbAttr-0000-SWBuildID"
+            },
+            "Battery-Volt": {
+                "use": "inf_zbAttr-0001-BatteryVolt"
+            },
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Temperature": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "isVisible": 1,
+                "isHistorized": 1
+            },
+            "Humidity": {
+                "use": "inf_zbAttr-0405-MeasuredValue",
+                "params": "ep=01",
+                "historizeRound": 1,
+                "isVisible": 1
+            }
+        }
+    }
+}

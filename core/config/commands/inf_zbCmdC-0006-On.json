@@ -1,0 +1,13 @@
+{
+    "inf_zbCmdC-0006-On": {
+        "comment": "Cluster 0006/ON cmd, received from device",
+        "subType": "binary",
+        "type": "info",
+        "logicalId": "#EP#-0006-cmd01",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "returnStateValue": 0,
+            "returnStateTime": 1
+        }
+    }
+}

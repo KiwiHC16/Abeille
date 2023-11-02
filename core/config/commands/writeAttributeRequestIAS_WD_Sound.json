@@ -1,10 +1,8 @@
 {
     "writeAttributeRequestIAS_WD_Sound": {
         "isVisible": 1,
-        "name": "Sound",
-        "isHistorized": "0",
+        "logicalId": "#EP#-Sound",
         "subType": "slider",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "writeAttributeRequestIAS_WD",

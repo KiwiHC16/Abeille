@@ -5,7 +5,9 @@
         "type": "info",
         "subType": "numeric",
         "template": "badge",
-        "configuration": [],
+        "configuration": {
+            "historizeRound": "1"
+        },
         "logicalId": "000C-#EP#-0055",
         "unit": "W",
         "genericType": "POWER"

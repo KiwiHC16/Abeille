@@ -70,7 +70,7 @@
                 $devUpdated = true;
                 echo "  'Categorie' renamed to 'category'.\n";
             }
-        }
+        } // End 'category'
 
         if (!isset($dev[$devName]['configuration'])) {
             newDevError($devName, "ERROR", "No configuration defined");
@@ -120,32 +120,11 @@
             $commands = $dev[$devName]['commands'];
             $commands2 = [];
             foreach ($commands as $key => $value) {
-                if (substr($key, 0, 7) == "include") {
-                    // Old syntax: "includeXX": "<filename>"
-                    $cmdFName = $value;
-                    $oldSyntax = true;
-                } else {
-                    // New syntax: "<cmdJName>": { "use": "<fileName>" }
-                    $cmdFName = $value['use'];
-                    $oldSyntax = false;
-                }
+                // New syntax only: "<cmdJName>": { "use": "<fileName>", "param": "xxx" ... }
+                $cmdFName = $value['use'];
+                $oldSyntax = false;
 
-                // Updating old syntax to new syntax
-                if ($oldSyntax) {
-                    $cmdPath = commandsDir.'/'.$cmdFName.'.json';
-                    $jsonCmd = file_get_contents($cmdPath);
-                    $cmd = json_decode($jsonCmd, true);
-                    $cmdJName = $cmd[$cmdFName]['name'];
-
-                    $commands2[$cmdJName] = Array(
-                        "use"=> $cmdFName
-                    );
-
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                }
-
-                else if (preg_match('/^zb-[a-zA-Z0-9]{4}-/', $cmdFName)) {
+                if (preg_match('/^zb-[a-zA-Z0-9]{4}-/', $cmdFName)) {
                     $new = "inf_zbAttr-".substr($cmdFName, 3);
                     $commands2[$key] = $value;
                     $commands2[$key]["use"] = $new;
@@ -153,9 +132,9 @@
                     echo "  Cmd '".$cmdFName."' RENAMED.\n";
                 }
 
-                // zbCmd-XXXX-YYYY => act_zbCmdG-XXXX-YYYY
-                else if (preg_match('/^zbCmd-[a-zA-Z0-9]{4}-/', $cmdFName)) {
-                    $new = "act_zbCmdG-".substr($cmdFName, 6);
+                // act_zbCmdG-XXXX-YYYY => act_zbCmdC-XXXX-YYYY
+                else if (preg_match('/^act_zbCmdG-[a-zA-Z0-9]{4}-/', $cmdFName)) {
+                    $new = "act_zbCmdC-".substr($cmdFName, 11);
                     $commands2[$key] = $value;
                     $commands2[$key]["use"] = $new;
                     $devUpdated = true;
@@ -165,6 +144,24 @@
                 // zbCmdR-XXXX-YYYY => inf_zbCmdR-XXXX-YYYY
                 else if (preg_match('/^zbCmdR-[a-zA-Z0-9]{4}-/', $cmdFName)) {
                     $new = "inf_zbCmdR-".substr($cmdFName, 7);
+                    $commands2[$key] = $value;
+                    $commands2[$key]["use"] = $new;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' RENAMED.\n";
+                }
+
+                // attr-XXXX => inf_XXXX
+                else if (preg_match('/^attr-[a-zA-Z0-9]*/', $cmdFName)) {
+                    $new = "inf_".substr($cmdFName, 5);
+                    $commands2[$key] = $value;
+                    $commands2[$key]["use"] = $new;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' RENAMED.\n";
+                }
+
+                // 'inf_zbCmdR-XXXX-Yyyyy' => 'inf_zbCmdC-XXXX-Yyyyy'
+                else if (preg_match('/^inf_zbCmdR-[a-zA-Z0-9]*/', $cmdFName)) {
+                    $new = "inf_zbCmdC-".substr($cmdFName, 11);
                     $commands2[$key] = $value;
                     $commands2[$key]["use"] = $new;
                     $devUpdated = true;
@@ -243,9 +240,9 @@
                 }
 
                 // Cluster 0003/Identify updates
-                else if (($cmdFName == "Identify") && $oldSyntax) {
+                else if ($cmdFName == "Identify") {
                     $cmdArr = Array(
-                        "use" => "Identify",
+                        "use" => "act_zbCmdC-Identify",
                         // "params" => "ep=03",
                         // "subType" => "numeric",
                         // "template" => "door",
@@ -270,6 +267,9 @@
                     $commands2["Groups"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ($cmdFName == "Group-Membership") {
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' REMOVED.\n";
                 }
 
                 // Cluster 0006 updates
@@ -509,6 +509,14 @@
                     );
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ($cmdFName == "setLevel") {
+                    $commands2["Set Level"] = Array(
+                        "use" => "act_setLevel-Light",
+                        // "params" => "clustId=0008&attrId=0000",
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
 
                 // Cluster 0102 updates
@@ -616,6 +624,42 @@
                     $commands2["Set Red"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ($cmdFName == "temperatureLight") {
+                    $commands2["Color temp"] = Array(
+                        "use" => "inf_zbAttr-0300-ColorTemperatureMireds",
+                        "minValue" => "2000", // What for ?
+                        "maxValue" => "6500", // What for ?
+                        "calculValueOffset" => "intval(1000000\/#value#)",
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ($cmdFName == "temperatureLight1") {
+                    $commands2["Color temp"] = Array(
+                        "use" => "inf_zbAttr-0300-ColorTemperatureMireds",
+                        "minValue" => "2700", // What for ?
+                        "maxValue" => "5000", // What for ?
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ($cmdFName == "temperatureLight2") {
+                    $commands2["Color temp"] = Array(
+                        "use" => "inf_zbAttr-0300-ColorTemperatureMireds",
+                        "minValue" => "2000", // What for ?
+                        "maxValue" => "6500", // What for ?
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                } else if ($cmdFName == "temperatureLightV2") {
+                    $commands2["Color temp"] = Array(
+                        "use" => "inf_zbAttr-0300-ColorTemperatureMireds",
+                        "historizeRound" => "0",
+                        "isVisible" => 1,
+                    );
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
 
                 // Cluster 0500 updates
@@ -651,6 +695,15 @@
                         "use"=> "poll-0B04-0505",
                     );
                     $commands2["Poll 0B04-0505"] = $cmdArr;
+                    $devUpdated = true;
+                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
+                }
+
+                // Misc updates
+                // use click => use inf_click
+                else if ($value['use'] == "click") {
+                    $value['use'] = "inf_click";
+                    $commands2[$key] = $value;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
@@ -857,13 +910,21 @@
             //     continue;
             // $new = "act_zbCmdG-".substr($dirEntry, 6);
 
-            // if (!preg_match('/^zbCmdR-[a-zA-Z0-9]{4}-/', $dirEntry))
+            // attr-XXXX => inf_XXXX
+            // if (!preg_match('/^attr-[a-zA-Z0-9]*/', $dirEntry))
             //     continue;
-            // $new = "inf_zbCmdR-".substr($dirEntry, 7);
+            // $new = "inf_".substr($dirEntry, 5);
 
-            if (!in_array($dirEntry, array('zbReadAttribute', 'zbWriteAttribute', 'zbConfigureReporting', 'zbBindToZigate')))
+            // if (!in_array($dirEntry, array('zbReadAttribute', 'zbWriteAttribute', 'zbConfigureReporting', 'zbBindToZigate')))
+            //     continue;
+            // $new = "act_zb".substr($dirEntry, 2);
+
+            if (preg_match('/^act_zbCmdG-[a-zA-Z0-9]{4}-/', $dirEntry))
+                $new = "act_zbCmdC-".substr($dirEntry, 11);
+            else if (preg_match('/^inf_zbCmdR-[a-zA-Z0-9]{4}-/', $dirEntry))
+                $new = "inf_zbCmdC-".substr($dirEntry, 11);
+            else
                 continue;
-            $new = "act_zb".substr($dirEntry, 2);
 
             $jsonContent = file_get_contents($fullPath);
             $content = json_decode($jsonContent, true);
@@ -879,6 +940,8 @@
     }
 
     renameCmds(); // Ex: zb-xxxx-yyyy => inf_zbAttr-xxxx-yyyy
+
+    // exit(12);
 
     buildDevicesList();
     buildCommandsList();

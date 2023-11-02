@@ -1,0 +1,13 @@
+{
+    "inf_zbCmdC-0008-Move": {
+        "comment": "Cluster 0008, 01/Move cmd, received from CLIENT side",
+        "subType": "binary",
+        "type": "info",
+        "logicalId": "#EP#-0008-cmd01",
+        "configuration": {
+            "repeatEventManagement": "always",
+            "returnStateValue": 0,
+            "returnStateTime": 1
+        }
+    }
+}

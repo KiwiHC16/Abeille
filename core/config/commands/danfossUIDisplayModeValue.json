@@ -1,7 +1,7 @@
 {
     "danfossUIDisplayModeValue": {
         "isVisible": 1,
-        "name": "Display Mode",
+        "logicalId": "#EP#-danfossUIDisplayModeValue",
         "isHistorized": "1",
         "subType": "string",
         "invertBinary": "0",

@@ -197,7 +197,7 @@
             "name" => "Unbind response", // Unused by Abeille
         ),
         "8034" => array(
-            "name" => "Complex descriptor response",
+            "name" => "Complex descriptor response", // Unused by Abeille
         ),
         "8035" => array(
             "name" => "PDM event code",
@@ -206,22 +206,22 @@
             "name" => "IEEE address response", // Unused by Abeille
         ),
         "8042" => array(
-            "name" => "Node descriptor response",
+            "name" => "Node descriptor response", // Unused by Abeille
         ),
         "8043" => array(
             "name" => "Simple descriptor response", // Unused by Abeille
         ),
         "8044" => array(
-            "name" => "Power descriptor response",
+            "name" => "Power descriptor response", // Unused by Abeille
         ),
         "8045" => array(
             "name" => "Active endpoints response", // Unused by Abeille
         ),
         "8046" => array(
-            "name" => "Match descriptor response",
+            "name" => "Match descriptor response", // Unused by Abeille
         ),
         "8047" => array(
-            "name" => "Management leave response",
+            "name" => "Management leave response", // Unused by Abeille
         ),
         "8048" => array(
             "name" => "Leave indication",
@@ -321,6 +321,14 @@
         ),
         "8531" => array(
             "name" => "Complex descriptor response",
+        ),
+
+        // Abeille's FW (ABxx-yyyy) specific messages
+        "AB01" => array(
+            "name" => "PDM dump response",
+        ),
+        "AB03" => array(
+            "name" => "PDM restore response",
         ),
     );
 
@@ -548,7 +556,7 @@
     }
 
     /* Returns zigate 8000 cmd status based on given '$status' value.
-       Tcharp38: Still unclear how to decode such statutes. */
+       Tcharp38: Still unclear how to decode such statuses. */
     function zgGet8000Status($status) {
         $status = strtoupper($status);
 
@@ -559,6 +567,7 @@
             "03" => "Command failed",
             "04" => "Busy", // Node is carrying out a lengthy operation and is currently unable to handle the incoming command
             "05" => "Stack already started", // No new configuration accepted
+            "14" => "No buffer or msg too big", // E_ZCL_ERR_ZBUFFER_FAIL
             "15" => "ZPS_EVENT_ERROR", // Indicates that an error has occurred on the local node. The nature of the error is reported through the structure ZPS_tsAfErrorEvent - see Section 7.2.2.17. JN-UG-3113 v1.5 -> En gros pas de place pour traiter le message
         );
 

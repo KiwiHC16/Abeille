@@ -2,6 +2,7 @@
     "cmdG-TuyaEF00-Set-OnOff": {
         "subType": "other",
         "template": "",
+        "logicalId": "#EP#-tuyaEF00-Set-OnOff-#ONOFF#",
         "configuration": {
             "topic": "cmd-tuyaEF00",
             "request": "ep=#EP#&cmd=setBool&data=#ONOFF#"

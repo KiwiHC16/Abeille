@@ -12,19 +12,15 @@
         "type": "Tuya DC5V-24V LED controller",
         "commands": {
             "Identify": {
-                "use": "Identify",
-                "isVisible": 1
-            },
-            "Groups": {
-                "use": "Group-Membership",
+                "use": "act_zbCmdC-Identify",
                 "isVisible": 1
             },
             "On": {
-                "use": "act_zbCmdG-0006-On",
+                "use": "act_zbCmdC-0006-On",
                 "isVisible": 1
             },
             "Off": {
-                "use": "act_zbCmdG-0006-Off",
+                "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
             "etat": {
@@ -47,8 +43,9 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "setLevel": {
-                "use": "setLevel"
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
             },
             "CurrentLevel-0008": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
@@ -76,23 +73,27 @@
                 "use": "Colour"
             },
             "Set White": {
-                "use": "act_zbCmdG-0300-MoveToColor",
+                "use": "act_zbCmdC-0300-MoveToColor",
                 "params": "X=6000&Y=6000",
+                "logicalId": "#EP#-Set-White",
                 "isVisible": 1
             },
             "Set Blue": {
-                "use": "act_zbCmdG-0300-MoveToColor",
+                "use": "act_zbCmdC-0300-MoveToColor",
                 "params": "X=228F&Y=228F",
+                "logicalId": "#EP#-Set-Blue",
                 "isVisible": 1
             },
             "Set Red": {
-                "use": "act_zbCmdG-0300-MoveToColor",
+                "use": "act_zbCmdC-0300-MoveToColor",
                 "params": "X=AE13&Y=51EB",
+                "logicalId": "#EP#-Set-Red",
                 "isVisible": 1
             },
             "Set Green": {
-                "use": "act_zbCmdG-0300-MoveToColor",
+                "use": "act_zbCmdC-0300-MoveToColor",
                 "params": "X=147A&Y=D709",
+                "logicalId": "#EP#-Set-Green",
                 "isVisible": 1
             },
             "Get-ColorX": {
@@ -131,17 +132,23 @@
                 "use": "setBleu"
             },
             "Set 2700K": {
-                "use": "act_zbCmdG-0300-MoveToColorTemp",
+                "use": "act_zbCmdC-0300-MoveToColorTemp",
                 "params": "slider=2700",
+                "logicalId": "#EP#-Set-2700K",
                 "isVisible": 1
             },
             "Set 5000K": {
-                "use": "act_zbCmdG-0300-MoveToColorTemp",
+                "use": "act_zbCmdC-0300-MoveToColorTemp",
                 "params": "slider=5000",
+                "logicalId": "#EP#-Set-5000K",
                 "isVisible": 1
             },
-            "temperatureLight": {
-                "use": "temperatureLight"
+            "Color temp": {
+                "use": "inf_zbAttr-0300-ColorTemperatureMireds",
+                "minValue": "2000",
+                "maxValue": "6500",
+                "calculValueOffset": "intval(1000000\\/#value#)",
+                "isVisible": 1
             },
             "Get-SWBuildID": {
                 "use": "act_zbReadAttribute",

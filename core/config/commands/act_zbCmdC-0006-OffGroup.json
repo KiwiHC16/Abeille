@@ -1,0 +1,13 @@
+{
+    "act_zbCmdC-0006-OffGroup": {
+        "type": "action",
+        "subType": "other",
+        "logicalId": "0006-CmdOffGroup",
+        "configuration": {
+            "topic": "cmd-0006",
+            "request": "cmd=00&addrMode=01&addrGroup=#addrGroup#",
+            "visibilityCategory": "All"
+        },
+        "genericType": "LIGHT_OFF"
+    }
+}

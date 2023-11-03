@@ -1,31 +1,33 @@
 {
     "remotecontrol": {
+        "manufacturer": "Abeille",
+        "model": "Virtual remote",
+        "type": "Virtual remote for groups control",
         "timeout": "",
         "configuration": {
             "mainEP": "01",
             "paramType": "telecommande",
-            "icon": "remotecontrol",
-            "batteryType": ""
+            "icon": "remotecontrol"
         },
         "category": {
             "light": "1"
         },
-        "type": "Virtual remote for groups control",
         "commands": {
-            "Off": {
-                "use": "offGroup"
+            "On group": {
+                "use": "act_zbCmdC-0006-OnGroup",
+                "isVisible": 1
             },
-            "On": {
-                "use": "onGroup"
+            "Off group": {
+                "use": "act_zbCmdC-0006-OffGroup",
+                "isVisible": 1,
+                "nextLine": "after"
             },
-            "On_All": {
+            "On All": {
                 "use": "onGroupBroadcast"
             },
-            "Off_All": {
-                "use": "offGroupBroadcast"
-            },
-            "Toggle": {
-                "use": "toggleGroup"
+            "Off All": {
+                "use": "offGroupBroadcast",
+                "nextLine": "after"
             },
             "OnTimed": {
                 "use": "onGroupTimed"

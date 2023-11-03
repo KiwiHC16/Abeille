@@ -2,6 +2,9 @@ ChangeLog
 =========
 
 - Interne: Zigbee const: Correction support cluster 0012, 13 & 14.
+- Modèles de cmdes: Ajout 'act_zbCmdC-0006-OffGroup' & 'act_zbCmdC-0006-OnGroup'
+- Télécommande virtuelle: revue pour utilisation 'OnOffGroup'.
+- Modèles: Cmde 'OnOffGroup' remplacée (cmd-0006 + addrMode=01).
 
 231027-BETA-2
 -------------

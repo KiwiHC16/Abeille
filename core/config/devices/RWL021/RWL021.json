@@ -43,14 +43,17 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },
-            "Off": {
-                "use": "offGroup"
+            "On group": {
+                "use": "act_zbCmdC-0006-OnGroup",
+                "isVisible": 1
             },
-            "Toggle": {
-                "use": "toggleGroup"
+            "Off group": {
+                "use": "act_zbCmdC-0006-OffGroup",
+                "isVisible": 1
             },
-            "On": {
-                "use": "onGroup"
+            "Toggle group": {
+                "use": "toggleGroup",
+                "nextLine": "after"
             },
             "Down": {
                 "use": "downGroup"

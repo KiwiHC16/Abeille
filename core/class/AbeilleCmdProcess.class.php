@@ -4015,8 +4015,14 @@
 
                 // ZCL cluster 0006/On off specific.
                 // Mandatory params: addr, ep & cmd (00=off, 01=on, 02=toggle)
+                // Mandatory params: addrGroup & cmd if addrMode=01
                 else if ($cmdName == 'cmd-0006') {
-                    $required = ['addr', 'ep', 'cmd']; // Mandatory infos
+                    $required1 = ['addr', 'ep', 'cmd']; // Mandatory infos for dev addr
+                    $required2 = ['addrGroup', 'cmd']; // Mandatory infos for group addr
+                    if (isset($Commnand['addrMode']) && ($Commnand['addrMode'] == '01'))
+                        $required = $required2;
+                    else
+                        $required = $required1;
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
@@ -4025,13 +4031,13 @@
                     if (($cmdId == '00') || ($cmdId == '01') || ($cmdId == '02')) { // Off, on, or toggle
                         $zgCmd      = "0092";
 
-                        $addrMode   = "02"; // 01: Group, 02: device
-                        $addr       = $Command['addr'];
+                        $addrMode   = isset($Command['addrMode']) ? $Command['addrMode'] : "02"; // 01: Group, 02: device
+                        $addr       = ($addrMode == '02') ? $Command['addr'] : $Command['addrGroup'];
                         $srcEp      = "01";
-                        $dstEp      = $Command['ep'];
+                        $dstEp      = ($addrMode == '02') ? $Command['ep'] : '01';
                         $cmdId      = $Command['cmd'];
 
-                        cmdLog('debug', "  cmd-0006: cmd=${cmdId}");
+                        cmdLog('debug', "  cmd-0006: addrMode=${addrMode}, addr=${addr}, cmd=${cmdId}");
                         $data = $addrMode.$addr.$srcEp.$dstEp.$cmdId;
 
                         $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);

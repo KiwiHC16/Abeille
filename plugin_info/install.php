@@ -876,8 +876,9 @@
          * - Config DB: Removing keys for Zigates 7 to 10.
          * - Cmds DB: For 'Online' adding 'repeatEventManagement=always'
          * - Cmds DB: 'OnOff' cmd replaced by 'cmd-0006'
+         * - Cmds DB: 'OnOffGroup' replaced by 'cmd-0006'
          */
-        if (intval($dbVersion) < 20231023) {
+        if (intval($dbVersion) < 20231103) {
             // 'eqLogic' DB updates
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
@@ -903,6 +904,18 @@
                         $cmdLogic->setConfiguration('topic', 'cmd-0006');
                         $cmdLogic->setConfiguration('request', $request);
                         log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Replaced 'OnOff' by 'cmd-0006'");
+                        $saveCmd = true;
+                    } else if (stripos($topic, 'OnOffGroup') !== false) {
+                        $request = $cmdLogic->getConfiguration('request', '');
+                        if ($request == 'Off')
+                            $request = "cmd=00&addrMode=01&addrGroup=#addrGroup#";
+                        else if ($request == 'On')
+                            $request = "cmd=01&addrMode=01&addrGroup=#addrGroup#";
+                        else // assuming toggle
+                            $request = "cmd=02&addrMode=01&addrGroup=#addrGroup#";
+                        $cmdLogic->setConfiguration('topic', 'cmd-0006');
+                        $cmdLogic->setConfiguration('request', $request);
+                        log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Replaced 'OnOffGroup' by 'cmd-0006'");
                         $saveCmd = true;
                     }
 

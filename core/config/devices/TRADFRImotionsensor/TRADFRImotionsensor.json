@@ -23,17 +23,20 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0000&attrId=4000"
             },
-            "Off": {
-                "use": "offGroup"
+            "On group": {
+                "use": "act_zbCmdC-0006-OnGroup",
+                "isVisible": 1
+            },
+            "Off group": {
+                "use": "act_zbCmdC-0006-OffGroup",
+                "isVisible": 1
+            },
+            "Toggle group": {
+                "use": "toggleGroup",
+                "nextLine": "after"
             },
             "OffTimed": {
                 "use": "offGroupTimed"
-            },
-            "Toggle": {
-                "use": "toggleGroup"
-            },
-            "On": {
-                "use": "onGroup"
             },
             "OnTimed": {
                 "use": "onGroupTimed"

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231104-BETA-1
+-------------
+
 - Interne: Cmd: Correction 'cmd-0006'.
 
 231103-BETA-1

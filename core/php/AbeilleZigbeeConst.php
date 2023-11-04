@@ -720,11 +720,11 @@
                 "0200" => array( "name" => "Status", "access" => "R" ),
 
                 // Formatting set
-                "0300" => array( "name" => "UnitofMeasure", "access" => "R" ),
+                "0300" => array( "name" => "UnitofMeasure", "access" => "R", "dataType" => 0x30 ), // enum8
                 "0301" => array( "name" => "Multiplier", "access" => "R" ),
                 "0302" => array( "name" => "Divisor", "access" => "R" ),
-                "0303" => array( "name" => "SummationFormatting", "access" => "R" ),
-                "0306" => array( "name" => "MeteringDeviceType", "access" => "R" ),
+                "0303" => array( "name" => "SummationFormatting", "access" => "R", "dataType" => 0x18 ), // map8
+                "0306" => array( "name" => "MeteringDeviceType", "access" => "R", "dataType" => 0x18 ), // map8
             ),
             // Commands received: none
             // Commands generated

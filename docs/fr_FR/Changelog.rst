@@ -5,6 +5,7 @@ ChangeLog
 -------------
 
 - Interne: Cmd: Correction 'cmd-0006'.
+- Interne: Zigbee const: Améliorations cluster 0702.
 
 231103-BETA-1
 -------------

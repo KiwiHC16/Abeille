@@ -5124,7 +5124,7 @@
                         $fcf        = "11"; // Frame Control Field
                         $sqn        = $this->genSqn();
                         $cmdId      = "00"; // TY_DATA_REQUEST, 0x00, The gateway sends data to the Zigbee module.
-
+                        cmdLog2('debug', $addr, '  BEN: '.json_encode($Command) );
                         $dp = tuyaCmd2Dp($Command);
                         if ($dp === false) {
                             return;
@@ -5140,6 +5140,8 @@
                         $tSqn = isset($Command['tuyaSqn']) ? $Command['tuyaSqn'] : tuyaGenSqn(); // Tuya transaction ID
                         $dpId = $dp['id'];
                         $dpLen = sprintf("%04X", $dpLen);
+
+                        $dpId = "04"; $dpType= "02"; $dpData = $dp['data'];
 
                         cmdLog2('debug', $addr, '  '.$Command['cmd'].': tSqn='.$tSqn.', dpId='.$dpId.', dpType='.$dpType.', dpData='.$dpData);
                         $data2 = $fcf.$sqn.$cmdId.$tSqn.$dpId.$dpType.$dpLen.$dpData;

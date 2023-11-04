@@ -1,0 +1,104 @@
+{
+    "TS0601__TZE200_p3dbf6qs": {
+        "manufacturer": "_TZE200_p3dbf6qs",
+        "model": "TS0601",
+        "type": "Thermostatic head",
+        "genericType": "Thermostat",
+        "timeout": "60",
+        "category": {
+            "heating": "1"
+        },
+        "configuration": {
+            "icon": "KETOTEK-ThermostaticHead",
+            "mainEP": "01",
+            "batteryType": "2x1.5 AA"
+        },
+        "commands": {
+            "Groups": {
+                "use": "Group-Membership"
+            },
+            "Battery percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
+            "Local temp": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "genericType": "THERMOSTAT_TEMPERATURE",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Set Setpoint": {
+                "use": "act_tuyaEF00-Set-Setpoint-Mult",
+                "params": "dpId=04&mult=10",
+                "isVisible": 1
+            },
+            "Setpoint": {
+                "use": "attr-Thermostat-Setpoint",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "ECO mode": {
+                "use": "act_tuyaEF00-SetValue",
+                "params": "dpId=6A&data=1",
+                "genericType": "THERMOSTAT_SET_MODE",
+                "isVisible": 0
+            },
+            "Set ECO temp": {
+                "use": "act_tuyaEF00-Set-Setpoint",
+                "params": "dpId=6B",
+                "isVisible": 0
+            },
+            "ECO temp": {
+                "use": "inf_zbAttr-0402-MeasuredValue",
+                "logicalId": "01-ECO-temp",
+                "isVisible": 0,
+                "nextLine": "after"
+            },
+            "Window-Detection": {
+                "use": "attr-Door-Status",
+                "logicalId": "01-windowDetectionStatus",
+                "nextLine": "after",
+                "invertBinary": 0,
+                "isVisible": 0
+            },
+            "Valve position": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-valvePosition",
+                "minValue": 0,
+                "maxValue": 100,
+                "unit": "%",
+                "isVisible": 0
+            }
+        },
+        "tuyaEF00": {
+            "fromDevice": {
+                "02": {
+                    "function": "rcvValue",
+                    "info": "01-setpoint"
+                },
+                "03": {
+                    "function": "rcvValueDiv",
+                    "div": 10,
+                    "info": "0402-01-0000",
+                    "comment": "Local temp"
+                },
+                "09": {
+                    "function": "rcvValue",
+                    "info": "01-windowDetectionStatus"
+                },
+                "0E": {
+                    "function": "rcvValue",
+                    "info": "0001-01-0021"
+                },
+                "68": {
+                    "function": "rcvValue",
+                    "info": "01-valvePosition",
+                    "comment": "Valve position"
+                },
+                "6B": {
+                    "function": "rcvValue",
+                    "info": "01-ECO-temp"
+                }
+            }
+        }
+    }
+}

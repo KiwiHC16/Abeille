@@ -166,9 +166,9 @@
                 ),
             );
             $irMsgJson = json_encode($irMsg);
-cmdLog2('debug', $addr, '  TEMPORARY: irMsgJson='.$irMsgJson);
+            cmdLog2('debug', $addr, '  TEMPORARY: irMsgJson='.$irMsgJson);
             $message = bin2hex($irMsgJson);
-cmdLog2('debug', $addr, '  TEMPORARY: message='.$message);
+            cmdLog2('debug', $addr, '  TEMPORARY: message='.$message);
             $seq = tuyaGenSqn();
 
             // Saving message to send
@@ -226,9 +226,9 @@ cmdLog2('debug', $addr, '  TEMPORARY: message='.$message);
             }
 
             $message = $GLOBALS['zosung'][$seq]['message'];
-cmdLog2('debug', $addr, "  TEMPORARY: message=".$message);
+            cmdLog2('debug', $addr, "  TEMPORARY: message=".$message);
             $msgRemain = substr($message, $pos * 2);
-cmdLog2('debug', $addr, "  TEMPORARY: msgRemain=".$msgRemain);
+            cmdLog2('debug', $addr, "  TEMPORARY: msgRemain=".$msgRemain);
             $msgSize = strlen($msgRemain) / 2;
             if ($msgSize == 0) {
                 cmdLog2('debug', $addr, "  WARNING: All datas already sent");

@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Cmd: Correction 'cmd-0006'.
+
 231103-BETA-1
 -------------
 

@@ -4019,10 +4019,11 @@
                 else if ($cmdName == 'cmd-0006') {
                     $required1 = ['addr', 'ep', 'cmd']; // Mandatory infos for dev addr
                     $required2 = ['addrGroup', 'cmd']; // Mandatory infos for group addr
-                    if (isset($Commnand['addrMode']) && ($Commnand['addrMode'] == '01'))
-                        $required = $required2;
-                    else
+                    if (isset($Command['addrMode']) && ($Command['addrMode'] == '01')) {
+                        $required = $required2; // Group command
+                    } else {
                         $required = $required1;
+                    }
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 

@@ -90,6 +90,11 @@
                     "div": 10,
                     "info": "01-setpoint"
                 },
+                "05": {
+                    "function": "rcvValueDiv",
+                    "div": 10,
+                    "info": "0402-01-0000"
+                },
                 "09": {
                     "function": "rcvValue",
                     "info": "01-windowDetectionStatus"

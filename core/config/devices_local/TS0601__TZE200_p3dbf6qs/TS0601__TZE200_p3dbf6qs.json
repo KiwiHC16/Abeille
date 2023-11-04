@@ -49,19 +49,19 @@
                 "nextLine": "after" 
             },
             "Auto": {
-                "use": "act_tuyaEF00-SetValue",
+                "use": "act_tuyaEF00-SetThermostatMode",
                 "params": "dpId=02&data=00",
                 "genericType": "THERMOSTAT_SET_MODE",
                 "isVisible": 1
             },
             "Heat": {
-                "use": "act_tuyaEF00-SetValue",
+                "use": "act_tuyaEF00-SetThermostatMode",
                 "params": "dpId=02&data=01",
                 "genericType": "THERMOSTAT_SET_MODE",
                 "isVisible": 1
             },
             "OFF": {
-                "use": "act_tuyaEF00-SetValue",
+                "use": "act_tuyaEF00-SetThermostatMode",
                 "params": "dpId=02&data=02",
                 "genericType": "THERMOSTAT_SET_MODE",
                 "isVisible": 1,

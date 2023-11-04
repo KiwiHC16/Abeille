@@ -907,14 +907,19 @@
                         $saveCmd = true;
                     } else if (stripos($topic, 'OnOffGroup') !== false) {
                         $request = $cmdLogic->getConfiguration('request', '');
-                        if ($request == 'Off')
+                        if ($request == 'Off') {
                             $request = "cmd=00&addrMode=01&addrGroup=#addrGroup#";
-                        else if ($request == 'On')
+                            $lId = "0006-CmdOffGroup";
+                        } else if ($request == 'On') {
                             $request = "cmd=01&addrMode=01&addrGroup=#addrGroup#";
-                        else // assuming toggle
+                            $lId = "0006-CmdOnGroup";
+                        } else { // assuming toggle
                             $request = "cmd=02&addrMode=01&addrGroup=#addrGroup#";
+                            $lId = "0006-CmdToggleGroup";
+                        }
                         $cmdLogic->setConfiguration('topic', 'cmd-0006');
                         $cmdLogic->setConfiguration('request', $request);
+                        $cmdLogic->setLogicalId($lId);
                         log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Replaced 'OnOffGroup' by 'cmd-0006'");
                         $saveCmd = true;
                     }

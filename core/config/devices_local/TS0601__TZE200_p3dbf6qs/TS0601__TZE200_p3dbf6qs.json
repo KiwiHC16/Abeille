@@ -26,13 +26,13 @@
                 "isVisible": 1,
                 "nextLine": "after"
             },
+            "Setpoint": {
+                "use": "inf_Thermostat-Setpoint",
+                "isVisible": 1
+            },
             "Set Setpoint": {
                 "use": "act_tuyaEF00-Set-Setpoint-Mult",
                 "params": "dpId=04&mult=10",
-                "isVisible": 1
-            },
-            "Setpoint": {
-                "use": "inf_Thermostat-Setpoint",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -42,14 +42,14 @@
                 "genericType": "THERMOSTAT_SET_MODE",
                 "isVisible": 0
             },
-            "Set ECO temp": {
-                "use": "act_tuyaEF00-Set-Setpoint",
-                "params": "dpId=6B",
-                "isVisible": 0
-            },
             "ECO temp": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
                 "logicalId": "01-ECO-temp",
+                "isVisible": 0 
+            },
+            "Set ECO temp": {
+                "use": "act_tuyaEF00-Set-Setpoint",
+                "params": "dpId=6B",
                 "isVisible": 0,
                 "nextLine": "after"
             },
@@ -63,19 +63,27 @@
             "Valve position": {
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "01-valvePosition",
+                "nextLine": "after",
                 "minValue": 0,
                 "maxValue": 100,
                 "unit": "%",
                 "isVisible": 0
+            },
+            "Chauffage": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-chauffage",
+                "minValue": 0,
+                "maxValue": 1,
+                "unit": "",
+                "isVisible": 1
             }
         },
         "tuyaEF00": {
             "fromDevice": {
                 "03": {
-                    "function": "rcvValueDiv",
-                    "div": 10,
-                    "info": "0402-01-0000",
-                    "comment": "Local temp"
+                    "function": "rcvValue0Is1",
+                    "info": "01-chauffage",
+                    "comment": "chauffage"
                 },
                 "04": {
                     "function": "rcvValueDiv",

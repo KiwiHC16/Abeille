@@ -6,7 +6,7 @@
         "configuration": {
             "topic": "cmd-tuyaEF00",
             "request": "ep=#EP#&cmd=setValue&data=#slider#",
-            "minValue": 0,
+            "minValue": 5,
             "maxValue": 30
         },
         "type": "action",

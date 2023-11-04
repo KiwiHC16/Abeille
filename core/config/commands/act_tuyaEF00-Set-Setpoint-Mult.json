@@ -7,7 +7,7 @@
         "configuration": {
             "topic": "cmd-tuyaEF00",
             "request": "ep=#EP#&cmd=setValueMult&mult=#mult#&data=#slider#",
-            "minValue": 0,
+            "minValue": 5,
             "maxValue": 30
         },
         "type": "action",

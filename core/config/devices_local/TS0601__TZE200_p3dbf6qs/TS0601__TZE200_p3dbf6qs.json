@@ -32,7 +32,7 @@
                 "isVisible": 1
             },
             "Setpoint": {
-                "use": "attr-Thermostat-Setpoint",
+                "use": "inf_Thermostat-Setpoint",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -71,15 +71,16 @@
         },
         "tuyaEF00": {
             "fromDevice": {
-                "02": {
-                    "function": "rcvValue",
-                    "info": "01-setpoint"
-                },
                 "03": {
                     "function": "rcvValueDiv",
                     "div": 10,
                     "info": "0402-01-0000",
                     "comment": "Local temp"
+                },
+                "04": {
+                    "function": "rcvValueDiv",
+                    "div": 10,
+                    "info": "01-setpoint"
                 },
                 "09": {
                     "function": "rcvValue",

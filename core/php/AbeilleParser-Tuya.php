@@ -262,8 +262,13 @@
             "25" => array("name" => "TUYA_INTERNET_STATUS", "desc" => "MCU request gateway connection status"),
         );
 
+        parserLog2("debug", $addr, "  BEN Tuya EF00 specific cmd (tuyaDecodeEF00Cmd) ".$cmdId." - ".json_encode($msg), "8002");
+
         $attributesN = [];
         $eq = &getDevice($net, $addr); // By ref
+
+        parserLog2("debug", $addr, "  BEN Tuya EF00 specific cmd (tuyaDecodeEF00Cmd) ".$cmdId." - ".json_encode($eq), "8002");
+
         if (($cmdId == "01") || ($cmdId == "02")) {
             // parserLog('debug', 'eq='.json_encode($eq));
             if (!isset($eq['tuyaEF00']) || !isset($eq['tuyaEF00']['fromDevice'])) {

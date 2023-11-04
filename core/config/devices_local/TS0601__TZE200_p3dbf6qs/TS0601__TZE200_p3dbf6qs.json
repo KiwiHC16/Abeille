@@ -17,6 +17,7 @@
             "Battery percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
+
             "Local temp": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
                 "genericType": "THERMOSTAT_TEMPERATURE",
@@ -31,6 +32,7 @@
                 "isVisible": 1,
                 "nextLine": "after"
             },
+
             "Setpoint": {
                 "use": "inf_Thermostat-Setpoint",
                 "isVisible": 1
@@ -43,8 +45,8 @@
             },
 
             "Mode": {
-                "use": "inf_generic-NumericBadge",
-                "logicalId": "01-Mode",
+                "use": "inf_generic-String",
+                "logicalId": "01-mode",
                 "isVisible": 1,
                 "nextLine": "after" 
             },
@@ -54,7 +56,7 @@
                 "genericType": "THERMOSTAT_SET_MODE",
                 "isVisible": 1
             },
-            "Heat": {
+            "Manuel": {
                 "use": "act_tuyaEF00-SetThermostatMode",
                 "params": "dpId=02&data=01",
                 "genericType": "THERMOSTAT_SET_MODE",
@@ -84,37 +86,13 @@
                 "params": "dpId=07&data=00",
                 "isVisible": 1,
                 "nextLine": "after"
-            },
-            
-
-            "Set ECO temp": {
-                "use": "act_tuyaEF00-Set-Setpoint",
-                "params": "dpId=6B",
-                "isVisible": 0,
-                "nextLine": "after"
-            },
-            "Window-Detection": {
-                "use": "inf_Door-Status",
-                "logicalId": "01-windowDetectionStatus",
-                "nextLine": "after",
-                "invertBinary": 0,
-                "isVisible": 0
-            },
-            "Valve position": {
-                "use": "inf_generic-NumericBadge",
-                "logicalId": "01-valvePosition",
-                "nextLine": "after",
-                "minValue": 0,
-                "maxValue": 100,
-                "unit": "%",
-                "isVisible": 0
             }
         },
         "tuyaEF00": {
             "fromDevice": {
                 "02": {
                     "function": "rcvThermostat-Mode",
-                    "info": "01-Mode",
+                    "info": "01-mode",
                     "comment": "Mode"
                 },
                 "03": {
@@ -130,29 +108,13 @@
                 "05": {
                     "function": "rcvValueDiv",
                     "div": 10,
-                    "info": "0402-01-0000"
+                    "info": "0402-01-0000",
+                    "comment":"local temperature" 
                 },
                 "07": {
                     "function": "rcvValue",
                     "info": "01-Lock",
                     "comment": "Kid Lock Status"
-                },
-                "09": {
-                    "function": "rcvValue",
-                    "info": "01-windowDetectionStatus"
-                },
-                "0E": {
-                    "function": "rcvValue",
-                    "info": "0001-01-0021"
-                },
-                "68": {
-                    "function": "rcvValue",
-                    "info": "01-valvePosition",
-                    "comment": "Valve position"
-                },
-                "6B": {
-                    "function": "rcvValue",
-                    "info": "01-ECO-temp"
                 }
             }
         }

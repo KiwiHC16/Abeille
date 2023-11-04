@@ -132,6 +132,8 @@
                 $mode = "auto";
             else if ($mode == "01")
                 $mode = "manual";
+            else if ($mode == "02")
+                $mode = "off";
             else if ($mode == "03")
                 $mode = "holliday";
             else

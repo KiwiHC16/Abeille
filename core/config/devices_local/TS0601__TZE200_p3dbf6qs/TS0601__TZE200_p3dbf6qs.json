@@ -2,27 +2,32 @@
     "TS0601__TZE200_p3dbf6qs": {
         "manufacturer": "_TZE200_p3dbf6qs",
         "model": "TS0601",
-        "type": "Thermostatic head",
+        "type": "TRV06 Thermostatic head",
         "genericType": "Thermostat",
         "timeout": "60",
         "category": {
             "heating": "1"
         },
         "configuration": {
-            "icon": "KETOTEK-ThermostaticHead",
+            "icon": "TRV06-ThermostaticHead",
             "mainEP": "01",
             "batteryType": "2x1.5 AA"
         },
         "commands": {
-            "Groups": {
-                "use": "Group-Membership"
-            },
             "Battery percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Local temp": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
                 "genericType": "THERMOSTAT_TEMPERATURE",
+                "isVisible": 1
+            },
+            "Chauffage": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-chauffage",
+                "minValue": 0,
+                "maxValue": 1,
+                "unit": "",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -36,17 +41,52 @@
                 "isVisible": 1,
                 "nextLine": "after"
             },
-            "ECO mode": {
+
+            "Mode": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-Mode",
+                "isVisible": 1,
+                "nextLine": "after" 
+            },
+            "Auto": {
                 "use": "act_tuyaEF00-SetValue",
-                "params": "dpId=6A&data=1",
+                "params": "dpId=02&data=00",
                 "genericType": "THERMOSTAT_SET_MODE",
-                "isVisible": 0
+                "isVisible": 1
             },
-            "ECO temp": {
-                "use": "inf_zbAttr-0402-MeasuredValue",
-                "logicalId": "01-ECO-temp",
-                "isVisible": 0 
+            "Heat": {
+                "use": "act_tuyaEF00-SetValue",
+                "params": "dpId=02&data=01",
+                "genericType": "THERMOSTAT_SET_MODE",
+                "isVisible": 1
             },
+            "OFF": {
+                "use": "act_tuyaEF00-SetValue",
+                "params": "dpId=02&data=02",
+                "genericType": "THERMOSTAT_SET_MODE",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+
+            "Locked": {
+                "use": "inf_generic-NumericBadge",
+                "logicalId": "01-Lock",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Lock": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=07&data=01",
+                "isVisible": 1
+            },
+            "UnLock": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=07&data=00",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            
+
             "Set ECO temp": {
                 "use": "act_tuyaEF00-Set-Setpoint",
                 "params": "dpId=6B",
@@ -54,7 +94,7 @@
                 "nextLine": "after"
             },
             "Window-Detection": {
-                "use": "attr-Door-Status",
+                "use": "inf_Door-Status",
                 "logicalId": "01-windowDetectionStatus",
                 "nextLine": "after",
                 "invertBinary": 0,
@@ -68,18 +108,15 @@
                 "maxValue": 100,
                 "unit": "%",
                 "isVisible": 0
-            },
-            "Chauffage": {
-                "use": "inf_generic-NumericBadge",
-                "logicalId": "01-chauffage",
-                "minValue": 0,
-                "maxValue": 1,
-                "unit": "",
-                "isVisible": 1
             }
         },
         "tuyaEF00": {
             "fromDevice": {
+                "02": {
+                    "function": "rcvThermostat-Mode",
+                    "info": "01-Mode",
+                    "comment": "Mode"
+                },
                 "03": {
                     "function": "rcvValue0Is1",
                     "info": "01-chauffage",
@@ -94,6 +131,11 @@
                     "function": "rcvValueDiv",
                     "div": 10,
                     "info": "0402-01-0000"
+                },
+                "07": {
+                    "function": "rcvValue",
+                    "info": "01-Lock",
+                    "comment": "Kid Lock Status"
                 },
                 "09": {
                     "function": "rcvValue",

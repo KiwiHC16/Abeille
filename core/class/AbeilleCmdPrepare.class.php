@@ -455,24 +455,24 @@
                     "step" => $msg,
                 );
                 break;
-            case "OnOffGroup":
-                if ($msg == "On") {
-                    $actionId = "01";
-                } elseif ($msg == "Off") {
-                    $actionId = "00";
-                } elseif ($msg == "Toggle") {
-                    $actionId = "02";
-                }
-                $Command = array(
-                    "onoff"                 => "1",
-                    "addressMode"           => "01",
-                    "priority"              => $priority,
-                    "dest"                  => $dest,
-                    "address"               => $address,
-                    "destinationEndpoint"   => "01", // Set but not send on radio
-                    "action"                => $actionId,
-                );
-                break;
+            // case "OnOffGroup": // Obsolete. Replaced by 'cmd-0006'
+            //     if ($msg == "On") {
+            //         $actionId = "01";
+            //     } elseif ($msg == "Off") {
+            //         $actionId = "00";
+            //     } elseif ($msg == "Toggle") {
+            //         $actionId = "02";
+            //     }
+            //     $Command = array(
+            //         "onoff"                 => "1",
+            //         "addressMode"           => "01",
+            //         "priority"              => $priority,
+            //         "dest"                  => $dest,
+            //         "address"               => $address,
+            //         "destinationEndpoint"   => "01", // Set but not send on radio
+            //         "action"                => $actionId,
+            //     );
+            //     break;
             case "OnOffGroupBroadcast":
                 if ($msg == "On") {
                     $actionId = "01";

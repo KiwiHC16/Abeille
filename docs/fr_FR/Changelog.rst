@@ -1,6 +1,20 @@
 ChangeLog
 =========
 
+231104-BETA-2
+-------------
+
+- Interne: Cmd: Correction 'cmd-0006'.
+- Interne: Zigbee const: Améliorations cluster 0702.
+
+231103-BETA-1
+-------------
+
+- Interne: Zigbee const: Correction support cluster 0012, 13 & 14.
+- Modèles de cmdes: Ajout 'act_zbCmdC-0006-OffGroup' & 'act_zbCmdC-0006-OnGroup'
+- Télécommande virtuelle: revue pour utilisation 'OnOffGroup'.
+- Modèles: Cmde 'OnOffGroup' remplacée (cmd-0006 + addrMode=01).
+
 231027-BETA-2
 -------------
 

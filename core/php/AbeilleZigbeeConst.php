@@ -413,7 +413,13 @@
         "0012" => array(
             "name" => "Multistate Input",
             "attributes" => array(
-                "PresentValue" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x21 ), // uint16
+                "0055" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x21 ), // uint16
+            ),
+        ),
+        "0013" => array(
+            "name" => "Multistate Output",
+            "attributes" => array(
+                "0055" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x21 ), // uint16
             ),
         ),
         "0014" => array(
@@ -421,12 +427,12 @@
             "attributes" => array(
                 "000E" => array( "name" => "StateText", "access" => "RW" ),
                 "001C" => array( "name" => "Description", "access" => "RW" ),
-                "004A" => array( "name" => "NumberOfStates", "access" => "RW" ),
+                "004A" => array( "name" => "NumberOfStates", "access" => "RW", "dataType" => 0x21 ), // uint16
                 "0051" => array( "name" => "OutOfService", "access" => "RW" ),
-                "0055" => array( "name" => "PresentValue", "access" => "RW" ),
+                "0055" => array( "name" => "PresentValue", "access" => "RW", "dataType" => 0x21 ), // uint16
                 "0057" => array( "name" => "PriorityArray", "access" => "RW" ),
                 "0067" => array( "name" => "Reliability", "access" => "RW" ),
-                "0068" => array( "name" => "RelinquishDefault", "access" => "RW" ),
+                "0068" => array( "name" => "RelinquishDefault", "access" => "RW", "dataType" => 0x21 ), // uint16
                 "006F" => array( "name" => "StatusFlags", "access" => "R" ),
                 "0100" => array( "name" => "ApplicationType", "access" => "R" ),
             ),
@@ -714,11 +720,11 @@
                 "0200" => array( "name" => "Status", "access" => "R" ),
 
                 // Formatting set
-                "0300" => array( "name" => "UnitofMeasure", "access" => "R" ),
+                "0300" => array( "name" => "UnitofMeasure", "access" => "R", "dataType" => 0x30 ), // enum8
                 "0301" => array( "name" => "Multiplier", "access" => "R" ),
                 "0302" => array( "name" => "Divisor", "access" => "R" ),
-                "0303" => array( "name" => "SummationFormatting", "access" => "R" ),
-                "0306" => array( "name" => "MeteringDeviceType", "access" => "R" ),
+                "0303" => array( "name" => "SummationFormatting", "access" => "R", "dataType" => 0x18 ), // map8
+                "0306" => array( "name" => "MeteringDeviceType", "access" => "R", "dataType" => 0x18 ), // map8
             ),
             // Commands received: none
             // Commands generated

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231106-BETA-1
+-------------
+
 - IKEA TRADFRIbulbE27opal1000lm: Correction modèle (2644).
 - TRV06: Correction modèle.
 - Xiaomi Aqara Opple 4 boutons: Mises-à-jour du modèle (2636).

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="231104-BETA-2"
+# VERSION="231106-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -42,11 +42,11 @@ b01724fc9b23be86f3d465a639ab6c95 *core/ajax/AbeilleEqAssist.ajax.php
 0a346ca371e7f04362ca2c88d7f194a2 *core/ajax/AbeilleModelChange.ajax.php
 e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 8290855d0e5ee94968a6fb01ba8d5a7b *core/ajax/AbeilleZigate.ajax.php
-7e1c54a4dc060b960370805b6f4f4f06 *core/class/Abeille.class.php
+4944d47e1b39ee700f085af2c49f06f7 *core/class/Abeille.class.php
 473bd5057c27f6285d6d2500f29de9cc *core/class/AbeilleCmd.class.php
-b8a8715a8f760e6cee8ed88bfb1a355f *core/class/AbeilleCmdPrepare.class.php
+0b2353f1120d43803789c7e32b4b9004 *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
-5f1e0818d89aabcb87848bd0dd4540da *core/class/AbeilleCmdProcess.class.php
+05ca1670a08f693e24125df6c0de8f5a *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
 c285bc680c58788f7c35587e2bee84bb *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
@@ -275,8 +275,10 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/luminositeHue.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/luminositeXiaomi.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/nom.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/offGroup.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/offGroupBroadcast.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/offVolet.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/onGroup.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/onGroupBroadcast.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/onVolet.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/online.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/present_value.json
@@ -355,16 +357,19 @@ d29aa6245aa3d5c02d33ba59e0824237 *core/config/commands/WindowsCoveringStopGroup.
 8f45e283bf877a6b63e1e23021494f73 *core/config/commands/WindowsCoveringUpGroup.json
 cafe3bee35d35b49488c958df4c2d623 *core/config/commands/act_cmd-Private.json
 781f67a1598899b5a7abc22bb5c42f4a *core/config/commands/act_setLevel-Light.json
-ded0985116ca69363f5dfad5fa50d416 *core/config/commands/act_tuyaEF00-Set-Setpoint-Mult.json
-aeee091548a7d50b263fac9f405a564f *core/config/commands/act_tuyaEF00-Set-Setpoint.json
+19b41456d9bc5436a092715a833ecac1 *core/config/commands/act_tuyaEF00-Set-Setpoint-Mult.json
+bde1571b2b458708d868992c73bacf9d *core/config/commands/act_tuyaEF00-Set-Setpoint.json
 ff4423cdf5d84a5af0ab55d97305223e *core/config/commands/act_tuyaEF00-SetBool.json
+784c552a158322162af77f2d5199c1a6 *core/config/commands/act_tuyaEF00-SetThermostatMode.json
 1f18269b544d378675a649757e24b463 *core/config/commands/act_tuyaEF00-SetValue.json
 114b3de9a3b4a6a458c18e25123cb645 *core/config/commands/act_zbBindToGroup.json
 8e98048dbc07e26099264fdc4836bc3c *core/config/commands/act_zbBindToZigate.json
 4ff59c803085d4027e07ab6b8a93fdb1 *core/config/commands/act_zbCmdC-0004-AddGroup.json
 adaaea498e72b3027fc7e0747f769031 *core/config/commands/act_zbCmdC-0006-Off.json
+ebfcd8fd4becfcd800cc6b41301a9d09 *core/config/commands/act_zbCmdC-0006-OffBroadcast.json
 99c6777ed69dc25d75853f91a0f2096b *core/config/commands/act_zbCmdC-0006-OffGroup.json
 95994c8b5c87f0d8359d37efcb70a06e *core/config/commands/act_zbCmdC-0006-On.json
+f63bb5a79be94db3f5f5a6b12969169f *core/config/commands/act_zbCmdC-0006-OnBroadcast.json
 9c96e5fa91f00bdc08b99e2113c87e58 *core/config/commands/act_zbCmdC-0006-OnGroup.json
 6e7dde5744e3df55c179571b1514a2b9 *core/config/commands/act_zbCmdC-0006-Toggle.json
 ae921cd8247833b1d30af291df9691cd *core/config/commands/act_zbCmdC-0008-DownClose.json
@@ -477,6 +482,7 @@ ecbb95baa7bb47bebe3786fe25de085b *core/config/commands/inf_zbAttr-0001-BatteryPe
 534dc86e2cba4fc5ead60571a45f57f6 *core/config/commands/inf_zbAttr-000C-OutOfService.json
 f98fd2bd216aae336f3db4e3d7c0ac0b *core/config/commands/inf_zbAttr-000C-PresentValue.json
 d5687722c6381912e0f1ce8b4e88fa0a *core/config/commands/inf_zbAttr-000C-StatusFlags.json
+7f37a2fbac7fa37f5e848053247390c1 *core/config/commands/inf_zbAttr-0012-PresentValue.json
 68e6d46c269bcf12f1e921199db5813d *core/config/commands/inf_zbAttr-0102-CurPosLiftPercent.json
 8663660d9a2b05393c0cd7527f99bd22 *core/config/commands/inf_zbAttr-0201-LocalTemperature.json
 99e6bf4c3975acfd4ea4a6896005d2a3 *core/config/commands/inf_zbAttr-0201-Occupancy.json
@@ -522,7 +528,6 @@ ab1476c000efb6d68610e702f79cb8ab *core/config/commands/inf_zbCmdS-0500-ZoneStatu
 3b82c374b33304d5741a154d79bbc45b *core/config/commands/moveToLiftAndTiltBSO_Lift.json
 26a2083a9cdc89612d7a6c6ff15de432 *core/config/commands/moveToLiftAndTiltBSO_Tilt.json
 8c24f9f574812ad0bf6c859af615059b *core/config/commands/multi.json
-b0d4bb63d838375ad1c7dc1db2320bf0 *core/config/commands/offGroupBroadcast.json
 b38024843b13b0f28646fdd397e117fe *core/config/commands/offGroupEP1.json
 58d3deebb4055a065d22917a48f9c688 *core/config/commands/offGroupEP3.json
 ff66e8bc09989541c20339799a1c9bd6 *core/config/commands/offGroupEP4.json
@@ -531,7 +536,6 @@ ff66e8bc09989541c20339799a1c9bd6 *core/config/commands/offGroupEP4.json
 2023d9d18352a1d13036aa2ad50de7ad *core/config/commands/offGroupEP7.json
 bbf406afdba0d46c304ed7f98503db26 *core/config/commands/offGroupEP8.json
 e142bce7c03d422a76943924a9e771cc *core/config/commands/offGroupTimed.json
-56853bb0549eaf5f251624e3dd46603d *core/config/commands/onGroupBroadcast.json
 e12a0e70765b2bb61490b5098e850543 *core/config/commands/onGroupEP1.json
 2b53f82ad12bcb4b0615ae19e6253427 *core/config/commands/onGroupEP3.json
 2aa5ee1db585ac9fc613c03a1c147a09 *core/config/commands/onGroupEP4.json
@@ -878,7 +882,7 @@ c93b9282f4d9b851010117677ee5641c *core/config/devices/TRADFRIbulbE27WSopal1000lm
 9a1ec87e00fb47b5b6de43cc3926676b *core/config/devices/TRADFRIbulbE27WWG95CL470lm_IKEAofSweden/TRADFRIbulbE27WWG95CL470lm_IKEAofSweden.json
 b38c832e3d4171814953727a10924127 *core/config/devices/TRADFRIbulbE27WWG95CL470lm_IKEAofSweden/discovery-TRADFRIbulbE27WWG95CL470lm_IKEAofSweden.json
 81c43da2b8843fc033bffecc4b098e91 *core/config/devices/TRADFRIbulbE27WWclear250lm/TRADFRIbulbE27WWclear250lm.json
-c98c79003dbd2ea1188aef0ca0b8ca2c *core/config/devices/TRADFRIbulbE27Wopal1000lm/TRADFRIbulbE27Wopal1000lm.json
+f8a1adf51db7d8dcf5e9371b7260f5a6 *core/config/devices/TRADFRIbulbE27Wopal1000lm/TRADFRIbulbE27Wopal1000lm.json
 2e1e54aeb96ba5b7af176a397ac88762 *core/config/devices/TRADFRIbulbE27Wopal1000lm2/TRADFRIbulbE27Wopal1000lm2.json
 17ada87415b0d22597497fb58cc84751 *core/config/devices/TRADFRIbulbE27opal1000lm/TRADFRIbulbE27opal1000lm.json
 b1be2f5af9c15742fd97f4d1f5e6cae2 *core/config/devices/TRADFRIbulbGU10CWS345lm/TRADFRIbulbGU10CWS345lm.json
@@ -1047,6 +1051,8 @@ a3a1c0b735a38a5567873e8136bdfeae *core/config/devices/TS0601__TZE200_ntcy3xu1/TS
 f687d878a421112aa6cabfe6792abaa4 *core/config/devices/TS0601__TZE200_ntcy3xu1/discovery.json
 a10d87638202dbfbaae21f71a73e82a8 *core/config/devices/TS0601__TZE200_nueqqe6k/TS0601__TZE200_nueqqe6k.json
 943b2f691bfb45326e10c2bc39ae309e *core/config/devices/TS0601__TZE200_nueqqe6k/discovery.json
+183e975aa0766fe56efcc3fa6521018e *core/config/devices/TS0601__TZE200_p3dbf6qs/TS0601__TZE200_p3dbf6qs.json
+9e93303d98778bda503a829a31b16d5a *core/config/devices/TS0601__TZE200_p3dbf6qs/discovery.json
 fcdc8e4045377eb4354174c752368edf *core/config/devices/TS0601__TZE200_uebojraa/TS0601__TZE200_uebojraa.json
 0a6aaebe638da251e75a7f8943eda386 *core/config/devices/TS0601__TZE200_uebojraa/discovery.json
 e6b6a1ba2c981476a312e78725f5d5cf *core/config/devices/TS0601__TZE200_yvx5lh6k/TS0601__TZE200_yvx5lh6k.json
@@ -1137,10 +1143,10 @@ f95600caa2c6556b210e6ad47a153c15 *core/config/devices/remote.b286acn01/remote.b2
 aacc79d181b326cf39068292012a1c78 *core/config/devices/remote.b28ac1/discovery-aqara-wireless-double-rocker-h1.json
 f0b9b3acd589932f85cd985cffa31bd3 *core/config/devices/remote.b28ac1/remote.b28ac1.json
 db5e4208620e427a916f1d0d2fa94b34 *core/config/devices/remote.b486opcn01/discovery-remote.b486opcn01_LUMI.json
-f7210a579de2941264164ead9c300296 *core/config/devices/remote.b486opcn01/remote.b486opcn01.json
+887afafefdefc156bfb94543e25a4baf *core/config/devices/remote.b486opcn01/remote.b486opcn01.json
 969877fa835c3f7624b7e5b984cb865f *core/config/devices/remote.b686opcn01/notes.txt
 9f333ce3d1caa94464136e4582e90470 *core/config/devices/remote.b686opcn01/remote.b686opcn01.json
-b028f64dedadfc8340b99b0ea049f794 *core/config/devices/remotecontrol/remotecontrol.json
+0a9223d067e2d699a0fc23638d2f8602 *core/config/devices/remotecontrol/remotecontrol.json
 4dc6b808b74f3d45d2a0bcbd169b29ac *core/config/devices/router/router.json
 7e2e47d4f465801f2a7114c07e9b8563 *core/config/devices/sen_ill.mgl01/discovery.json
 7021c47cde524e171ec04c855e924302 *core/config/devices/sen_ill.mgl01/sen_ill.mgl01.json
@@ -1202,7 +1208,7 @@ bae2dd0e8f01fe8b019010f5c69f9bb4 *core/config/sortCommand.php
 2aeb24dc198e8bc126088d6dc16f7739 *core/i18n/en_US.json
 fe99369b88ceb7cae45f3453c63f485b *core/i18n/fr_FR.json
 56d8a60606129f1d13ca526760712df7 *core/php/AbeilleCliToQueue.php
-dde54bbc748708e55c4342c4a0e48e9e *core/php/AbeilleCmd-Tuya.php
+707c07eb008e7c5e6977f03c4f705bbb *core/php/AbeilleCmd-Tuya.php
 d8e311380892d181bd46335e0a99f2d5 *core/php/AbeilleCmd.php
 3a8347a9ea19d1ee67793bc7080ab672 *core/php/AbeilleDownload.php
 e19dfc28fe5aab5966a0dcca176381ff *core/php/AbeilleGetEq.php
@@ -1213,7 +1219,7 @@ cab580c801233aee55ed5492556506a4 *core/php/AbeilleInstall.php
 7ac0ddf81520b8454be774cd6f940e6f *core/php/AbeilleMonitor.php
 3f23e5dbc4f01327d47fd90e2ef88952 *core/php/AbeilleNoise.php
 9ab85f33787d42bdae75985d3e3b4d69 *core/php/AbeilleOTA.php
-01fe96500eb8c334df91f90491551e24 *core/php/AbeilleParser-Tuya.php
+c3b5823beb73cd71def2b3b77a511fc0 *core/php/AbeilleParser-Tuya.php
 40209352f75efcabed5ddb0023da1576 *core/php/AbeilleParser-Xiaomi.php
 c788956ec9cfa954ed0a69aa5e433117 *core/php/AbeilleParser.php
 da4ec92b20849e49848db3f29ab3b8ad *core/php/AbeilleQueueToCli.php
@@ -1291,7 +1297,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-d3ec7d78548fdc8edd9d443af80a978f *docs/fr_FR/Changelog.rst
+a6e3c0f8dc496bf157a0d4be9165ffc3 *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1509,6 +1515,7 @@ f24f9e9592b7ceacc07c32748b0ea5f0 *images/node_TRADFRIbulbE27WW806lm.png
 d3f2afd4c110130f967a4d9bdd6f4898 *images/node_TRADFRImotionsensorE1525.png
 13535edf4005a7585a72ff639b258eee *images/node_TRADFRImotionsensorE1745.png
 d78f3f680490636413b29b17dd62797b *images/node_TRADFRIopencloseremote.png
+0a8f7f6317bd394492fa5e98124e5013 *images/node_TRV06-ThermostaticHead.png
 468a9f40a368b34b9c0ab70e26ebc134 *images/node_TS0001.png
 468a9f40a368b34b9c0ab70e26ebc134 *images/node_TS0002.png
 7672bf70e678890207a811afbd68978c *images/node_TS0003.png
@@ -1628,11 +1635,11 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-09d48432786a15ffff204bb908cd6d03 *plugin_info/Abeille.version
+8560c87ef40e3746e2734c6f574585ee *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 c16154784139bfd2264e4a6409fdc658 *plugin_info/configuration.php
-855683eb620622b01147f8f9556f9d3b *plugin_info/info.json
-67ec283c9e972dad049a441a890480a7 *plugin_info/install.php
+c7f1911f5802a386cff1c7251b8a28e1 *plugin_info/info.json
+34605ec72fe118e0d78d8e22da867bdd *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php
 9dccf462d245f55ac3e0cdb0e5401f5b *resources/AbeilleDeamon/Debug/verification.php

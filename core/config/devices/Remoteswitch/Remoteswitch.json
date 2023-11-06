@@ -13,13 +13,6 @@
         },
         "type": "Legrand remote switch",
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
@@ -45,7 +38,7 @@
                 "isVisible": 1
             },
             "Toggle group": {
-                "use": "toggleGroup",
+                "use": "act_zbCmdC-0006-ToggleGroup",
                 "nextLine": "after"
             },
             "Down": {

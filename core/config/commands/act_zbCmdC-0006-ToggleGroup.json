@@ -1,0 +1,13 @@
+{
+    "act_zbCmdC-0006-ToggleGroup": {
+        "type": "action",
+        "subType": "other",
+        "logicalId": "0006-CmdToggleGroup",
+        "configuration": {
+            "topic": "cmd-0006",
+            "request": "cmd=02&addrMode=01&addrGroup=#addrGroup#",
+            "visibilityCategory": "All"
+        },
+        "genericType": "LIGHT_TOGGLE"
+    }
+}

@@ -13,6 +13,8 @@ ChangeLog
 - Gledopto Spectre Blanc & RGBW GU10: Correction modèles (2646).
 - Profalux volets gen2: Mises-à-jour du modèle MOT-C1Z06C.
 - Profalux BSO gen2: Mises-à-jour du modèle.
+- Trafri remote control: Mises-à-jour du modèle.
+- Modèles: Suppression commande 'toggleGroup' => 'act_zbCmdC-0006-ToggleGroup'.
 
 231104-BETA-2
 -------------

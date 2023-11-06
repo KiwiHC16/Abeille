@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="231106-BETA-1"
+# VERSION="231106-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -974,7 +974,7 @@ cc51a17ea364d6b4e2dc481291768f47 *core/config/devices/TS011F__TZ3000_vzopcetz/TS
 33209afa68ec78180ca083a10239d0d7 *core/config/devices/TS011F__TZ3000_wamqdr3f/discovery.json
 e28b837bd63831e3964f717cca930b07 *core/config/devices/TS011F__TZ3000_y4ona9me/TS011F__TZ3000_y4ona9me.json
 d26c766c5e80e43bfd645d69cd77e093 *core/config/devices/TS011F__TZ3000_y4ona9me/discovery-TS011F__TZ3000_y4ona9me.json
-8df1f0a7e9e8d4e01b3b667c877d076d *core/config/devices/TS011F__TZ3000_ynmowqk2/TS011F__TZ3000_ynmowqk2.json
+cc0467c229118b08485ccb29af4098b6 *core/config/devices/TS011F__TZ3000_ynmowqk2/TS011F__TZ3000_ynmowqk2.json
 b26af83b67736c7bbd1e0ccdcae4e2fb *core/config/devices/TS011F__TZ3000_ynmowqk2/discovery-TS011F__TZ3000_ynmowqk2.json
 62ca2db125f37e87e22116199a48397b *core/config/devices/TS0121/TS0121.json
 d4c5cbeaf5533ec73293b6fb1f4b514a *core/config/devices/TS0121__TYZB01_zanh6v1o/TS0121__TYZB01_zanh6v1o.json
@@ -1146,7 +1146,7 @@ db5e4208620e427a916f1d0d2fa94b34 *core/config/devices/remote.b486opcn01/discover
 887afafefdefc156bfb94543e25a4baf *core/config/devices/remote.b486opcn01/remote.b486opcn01.json
 969877fa835c3f7624b7e5b984cb865f *core/config/devices/remote.b686opcn01/notes.txt
 9f333ce3d1caa94464136e4582e90470 *core/config/devices/remote.b686opcn01/remote.b686opcn01.json
-0a9223d067e2d699a0fc23638d2f8602 *core/config/devices/remotecontrol/remotecontrol.json
+18ae887b7b2a407d3cfd44d66bb66265 *core/config/devices/remotecontrol/remotecontrol.json
 4dc6b808b74f3d45d2a0bcbd169b29ac *core/config/devices/router/router.json
 7e2e47d4f465801f2a7114c07e9b8563 *core/config/devices/sen_ill.mgl01/discovery.json
 7021c47cde524e171ec04c855e924302 *core/config/devices/sen_ill.mgl01/sen_ill.mgl01.json
@@ -1297,7 +1297,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-a6e3c0f8dc496bf157a0d4be9165ffc3 *docs/fr_FR/Changelog.rst
+c1df16adf93d9dc2828aba375a03b1c1 *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1635,10 +1635,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-8560c87ef40e3746e2734c6f574585ee *plugin_info/Abeille.version
+39f848913df29da89cad87ba581e5d51 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 c16154784139bfd2264e4a6409fdc658 *plugin_info/configuration.php
-c7f1911f5802a386cff1c7251b8a28e1 *plugin_info/info.json
+a2bd6d5c12679444fa4c947fe7a40d1f *plugin_info/info.json
 34605ec72fe118e0d78d8e22da867bdd *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

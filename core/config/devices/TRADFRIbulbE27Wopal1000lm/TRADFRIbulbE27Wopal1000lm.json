@@ -2,6 +2,7 @@
     "TRADFRIbulbE27Wopal1000lm": {
         "manufacturer": "Ikea",
         "model": "E27 W opal 1000lm",
+        "type": "IKEA bulb E27 opal",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -10,15 +11,11 @@
         "category": {
             "light": "1"
         },
-        "type": "IKEA bulb E27 opal",
         "commands": {
-            "etat": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1
-            },
-            "CurrentLevel-0008": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": 1
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -28,23 +25,37 @@
                 "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
-            "Set Level": {
-                "use": "act_setLevel-Light",
-                "isVisible": 1
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "nextLine": "after"
             },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1
             },
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Get-CurrentLevel": {
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
+            },
+            "Level": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "isVisible": 1
+            },
+            "Get-Level": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
             "Bind-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "Bind-0008-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
                 "execAtCreation": "Yes",
@@ -61,17 +72,6 @@
                 "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
             }
         }
     }

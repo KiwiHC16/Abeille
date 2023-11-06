@@ -11,6 +11,7 @@ ChangeLog
 - Télécommande virtuelle: Correction pour 'onGroupBroadcast'/'offGroupBroadcast'.
 - SilverCrest-HG08673-FR: Mises-à-jour du modèle (2635).
 - Gledopto Spectre Blanc & RGBW GU10: Correction modèles (2646).
+- Profalux volets gen2: Mises-à-jour du modèle MOT-C1Z06C.
 
 231104-BETA-2
 -------------

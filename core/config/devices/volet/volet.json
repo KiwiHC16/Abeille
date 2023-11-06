@@ -1,8 +1,8 @@
 {
     "volet": {
         "manufacturer": "Profalux",
-        "model": "volets",
-        "type": "Profalux shutter",
+        "model": "Shutter gen 1",
+        "type": "Profalux shutter gen 1",
         "genericType": "Shutter",
         "timeout": "60",
         "configuration": {
@@ -31,47 +31,47 @@
                 "isVisible": 1
             },
             "Not Closed": {
-                "use": "inf_zbAttr-0006-OnOff"
+                "use": "inf_zbAttr-0006-OnOff",
+                "nextLine": "after"
             },
-            "Bind 0006-ToZigate": {
+            "Set Level": {
+                "use": "setLevelVolet",
+                "value": "Level",
+                "isVisible": 1
+            },
+            "Level": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "genericType": "FLAP_STATE",
+                "template": "shutter",
+                "isVisible": 1
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
             "SetReporting 0006-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-            "Set Level": {
-                "use": "setLevelVolet",
-                "value": "CurrentLevel",
-                "nextLine": "before",
-                "isVisible": 1
-            },
-            "CurrentLevel": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "genericType": "FLAP_STATE",
-                "template": "shutter",
-                "isVisible": 1
-            },
-            "Bind-0008-ToZigate": {
+           "Bind-0008-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
             "SetReporting-0008-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0008&attrType=20&attrId=0000",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "Get-CurrentLevel": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
             }
         }
     }

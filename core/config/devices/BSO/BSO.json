@@ -68,7 +68,7 @@
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
-                "params": "clustId=0008",
+                "params": "clustId=0006",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },

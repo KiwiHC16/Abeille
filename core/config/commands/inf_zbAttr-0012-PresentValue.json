@@ -1,0 +1,12 @@
+{
+    "inf_zbAttr-0012-PresentValue": {
+        "comment": "Cluster 0012/Multistate Input, attrib 0055/PresentValue",
+        "type": "info",
+        "subType": "numeric",
+        "template": "badge",
+        "configuration": {
+            "repeatEventManagement": "always"
+        },
+        "logicalId": "0012-#EP#-0055"
+    }
+}

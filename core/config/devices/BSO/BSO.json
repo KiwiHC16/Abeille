@@ -28,25 +28,26 @@
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "genericType": "FLAP_STATE",
+                "nextLine": "after",
                 "isVisible": 1
             },
-            "Get-Status": {
+            "Get Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
             "Set Level": {
                 "use": "setLevelVolet",
                 "value": "Level",
-                "nextLine": "before",
                 "isVisible": 1
             },
             "Level": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "genericType": "FLAP_STATE",
                 "template": "shutter",
+                "nextLine": "after",
                 "isVisible": 1
             },
-            "Get-Level": {
+            "Get Level": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
@@ -73,14 +74,14 @@
                 "execAtCreationDelay": 9
             },
             "SetReporting-0006-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
             "SetReporting-0008-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0008&attrType=20&attrId=0000",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             }

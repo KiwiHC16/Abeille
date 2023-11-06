@@ -9,6 +9,7 @@ ChangeLog
 - Xiaomi Aqara Opple 4 boutons: Mises-à-jour du modèle (2636).
 - Modèles: Cmde 'onGroupBroadcast'/'offGroupBroadcast' remplacée (cmd-0006 + addrMode=04).
 - Télécommande virtuelle: Correction pour 'onGroupBroadcast'/'offGroupBroadcast'.
+- SilverCrest-HG08673-FR: Mises-à-jour du modèle (2635).
 
 231104-BETA-2
 -------------

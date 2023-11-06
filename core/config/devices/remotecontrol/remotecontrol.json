@@ -2,7 +2,7 @@
     "remotecontrol": {
         "manufacturer": "Abeille",
         "model": "Virtual remote",
-        "type": "Virtual remote for groups control",
+        "type": "Abeille's virtual remote",
         "timeout": "",
         "configuration": {
             "mainEP": "01",

@@ -74,10 +74,6 @@
                 "logicalId": "poll-01-0702-0000",
                 "Polling": "cron10"
             },
-            "Get Total power": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0702&attrId=0000"
-            },
             "RMS Voltage": {
                 "use": "inf_zbAttr-0B04-RMSVoltage",
                 "params": "mult=1&div=1",

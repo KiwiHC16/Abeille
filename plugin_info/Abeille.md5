@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="231106-BETA-4"
+# VERSION="231106-BETA-5"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -975,7 +975,7 @@ cc51a17ea364d6b4e2dc481291768f47 *core/config/devices/TS011F__TZ3000_vzopcetz/TS
 33209afa68ec78180ca083a10239d0d7 *core/config/devices/TS011F__TZ3000_wamqdr3f/discovery.json
 e28b837bd63831e3964f717cca930b07 *core/config/devices/TS011F__TZ3000_y4ona9me/TS011F__TZ3000_y4ona9me.json
 d26c766c5e80e43bfd645d69cd77e093 *core/config/devices/TS011F__TZ3000_y4ona9me/discovery-TS011F__TZ3000_y4ona9me.json
-5bf4ef56dfd97b7cc0a73d0a16bcea2a *core/config/devices/TS011F__TZ3000_ynmowqk2/TS011F__TZ3000_ynmowqk2.json
+d7046cf5ab560a76efff0705dc96cb3b *core/config/devices/TS011F__TZ3000_ynmowqk2/TS011F__TZ3000_ynmowqk2.json
 b26af83b67736c7bbd1e0ccdcae4e2fb *core/config/devices/TS011F__TZ3000_ynmowqk2/discovery-TS011F__TZ3000_ynmowqk2.json
 62ca2db125f37e87e22116199a48397b *core/config/devices/TS0121/TS0121.json
 d4c5cbeaf5533ec73293b6fb1f4b514a *core/config/devices/TS0121__TYZB01_zanh6v1o/TS0121__TYZB01_zanh6v1o.json
@@ -1136,11 +1136,11 @@ d03adb6f07c2ef50b6401c7fc1726752 *core/config/devices/plug.maeu01/plug.maeu01.js
 75203dca2579d94f4d03845c7cc5559b *core/config/devices/plug01OutDoor/plug01OutDoor.json
 0dd8b466e134a8245ac4cad51050b379 *core/config/devices/ptvo.switch/ptvo.switch.json
 968330d43f04386849594b175d3fe946 *core/config/devices/relay.c2acn01/relay.c2acn01.json
-e8e9a325773c83068b75bb68bebcd12c *core/config/devices/remote.b186acn01/remote.b186acn01.json
-5021ae375f2212d86e1054fd7dbead7b *core/config/devices/remote.b186acn02/remote.b186acn02.json
+5cd416d53aaca8fde7375378c120a8be *core/config/devices/remote.b186acn01/remote.b186acn01.json
+e88d89bfbc05ffdb93cffa2db507ed3b *core/config/devices/remote.b186acn02/remote.b186acn02.json
 277a68616880ce99c78a2fc3425f6f46 *core/config/devices/remote.b1acn01/remote.b1acn01.json
-f95600caa2c6556b210e6ad47a153c15 *core/config/devices/remote.b286acn01/remote.b286acn01.json
-4a7f03e097d5aa4a20a55e7071fa1001 *core/config/devices/remote.b286acn02/remote.b286acn02.json
+826b1226c40e3110b261c446831f5bc0 *core/config/devices/remote.b286acn01/remote.b286acn01.json
+1e07a5aafc2ed1194a4f1c2d6755dc01 *core/config/devices/remote.b286acn02/remote.b286acn02.json
 aacc79d181b326cf39068292012a1c78 *core/config/devices/remote.b28ac1/discovery-aqara-wireless-double-rocker-h1.json
 f0b9b3acd589932f85cd985cffa31bd3 *core/config/devices/remote.b28ac1/remote.b28ac1.json
 db5e4208620e427a916f1d0d2fa94b34 *core/config/devices/remote.b486opcn01/discovery-remote.b486opcn01_LUMI.json
@@ -1298,7 +1298,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-119f9b80e290cfe9bc6ee48acd4acbae *docs/fr_FR/Changelog.rst
+e5db9a47c500cc40b3bd4337edea288e *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1636,10 +1636,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-1a55304ef3caa2645be86cfaae312065 *plugin_info/Abeille.version
+6e79c08d2bce4648bf6ffc40c10f23fb *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 c16154784139bfd2264e4a6409fdc658 *plugin_info/configuration.php
-107adb94310929f3348b13dce31f5bdc *plugin_info/info.json
+312e13d2a8f398d28336c094649eca50 *plugin_info/info.json
 34605ec72fe118e0d78d8e22da867bdd *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

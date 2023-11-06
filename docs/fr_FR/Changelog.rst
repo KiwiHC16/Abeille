@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-231106-BETA-3
+231106-BETA-4
 -------------
 
 - IKEA TRADFRIbulbE27opal1000lm: Correction modèle (2644).

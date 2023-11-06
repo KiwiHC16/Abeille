@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="231106-BETA-3"
+# VERSION="231106-BETA-4"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -333,6 +333,7 @@ xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/temperatureLight
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/temperatureLight1.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/temperatureLight2.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/temperatureLightV2.json
+xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/toggleGroup.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/toggleVolet.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/zb-CustomInfo.json
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *core/config/commands/OBSOLETE/zbCmdG-TuyaEF00.json
@@ -372,6 +373,7 @@ ebfcd8fd4becfcd800cc6b41301a9d09 *core/config/commands/act_zbCmdC-0006-OffBroadc
 f63bb5a79be94db3f5f5a6b12969169f *core/config/commands/act_zbCmdC-0006-OnBroadcast.json
 9c96e5fa91f00bdc08b99e2113c87e58 *core/config/commands/act_zbCmdC-0006-OnGroup.json
 6e7dde5744e3df55c179571b1514a2b9 *core/config/commands/act_zbCmdC-0006-Toggle.json
+d226d6905cab0e910201607ab247c9d8 *core/config/commands/act_zbCmdC-0006-ToggleGroup.json
 ae921cd8247833b1d30af291df9691cd *core/config/commands/act_zbCmdC-0008-DownClose.json
 b7bce84899ec9769e533fca1a06e803b *core/config/commands/act_zbCmdC-0008-MoveToLevelWithOnOff.json
 49dc9753d0522db325246885de74c81d *core/config/commands/act_zbCmdC-0008-StopWithOnOff.json
@@ -622,7 +624,6 @@ fc27af3306043ef9c527a4de76969c0a *core/config/commands/spiritValvePositionGet.js
 31cf825a9f589d59963ef757bbb939f3 *core/config/commands/spiritValvePositionSet.json
 879431f4a5bfc5d4659ac9bfd7685dc8 *core/config/commands/temperaturePrise.json
 be1933145021cf2fb62a1884f2b86430 *core/config/commands/testSmoke.json
-526606e0b3a097c4dd8428cf8bf3b8db *core/config/commands/toggleGroup.json
 d2e935098727ae8e291918b4ac4eee26 *core/config/commands/upGroup.json
 83d9826de79eae8402f095f080fee2cf *core/config/commands/vibrationAngle.json
 8ab00105bbfa90ba6a7d440aaaba0a92 *core/config/commands/vibrationType.json
@@ -659,7 +660,7 @@ c3871124b2a8c3b7407fa7f5cbf2fb01 *core/config/devices/898ca74409a740b28d5841661e
 69e16281e81c136b76030c5c422dc076 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/ALCANTARA2D1.00P1.02Z1.00.json
 b3de5b2b6933161949c28715effe4536 *core/config/devices/ALCANTARA2D1.00P1.02Z1.00/discovery.json
 c7c0f631b72722d1c87e3b4b1ef1774b *core/config/devices/BASICZBR3/BASICZBR3.json
-a0802443112715b86aa9072fde748cf1 *core/config/devices/BSO/BSO.json
+85ea4007d20d4e577960ef84b8dde32e *core/config/devices/BSO/BSO.json
 60ce37f68f1e79300179e0e98de16172 *core/config/devices/CLA60RGBWOSRAM/CLA60RGBWOSRAM.json
 d2e63d620a14e2cf27f6bb2cbae310d0 *core/config/devices/CLA60TWOSRAM/CLA60TWOSRAM.json
 70f47d5a140700ff1569948ce7ad1abd *core/config/devices/COSensor-EF-3.0/COSensor-EF-3.0.json
@@ -781,7 +782,7 @@ b5022e0de5922262397c4756213022ca *core/config/devices/Lamp_01/Lamp_01.json
 0f851ba6193f0c95885b2d2336557b96 *core/config/devices/LightifySwitchMini_OSRAM/discovery.json
 101e4b37d02d6fd7bf94712d54631c01 *core/config/devices/LightifySwitchMini_OSRAM/notes.txt
 de76629c5c68fb4cfd89c48cf9ca0742 *core/config/devices/MAI-ZTS_Profalux/MAI-ZTS_Profalux.json
-887ae6d00c52971f1a639fd2350a6dda *core/config/devices/MOT-C1Z06C/MOT-C1Z06C.json
+4f6552c751ae6bb60f26acc3a2b1fb93 *core/config/devices/MOT-C1Z06C/MOT-C1Z06C.json
 ec4c365dfbcef22c285caa0cad6a210b *core/config/devices/MOT-C1Z06C/notes.txt
 3a7e1f88e969268a89e5f4f40f0388f7 *core/config/devices/MR16TWOSRAM/MR16TWOSRAM.json
 7c816e8cead00339aa730e675740b6cc *core/config/devices/MS01/MS01.json
@@ -806,7 +807,7 @@ bc27d601a2d026780744d0ba2afcb305 *core/config/devices/PlugZ3/discovery-PlugZ3_LE
 0e719ddc80b17c43a8d0772ecf48474a *core/config/devices/RB165/RB165.json
 5402f4ae9fe24f1d53308994d945b806 *core/config/devices/RB175W/RB175W.json
 df9530d83fad5d3fcbd6b9e0d127b74b *core/config/devices/RB285C/RB285C.json
-2854622c3d98516cf6a05ea065ae3838 *core/config/devices/RC110_innr/RC110_innr.json
+e8c96329161b0c31efee0e4dfe33c2c8 *core/config/devices/RC110_innr/RC110_innr.json
 9d04945aa6fd9918bd5b7595c4189837 *core/config/devices/RC110_innr/discovery-RC110_innr.json
 eca8cdc535ff0bb6887fb2c052a7f867 *core/config/devices/RC250_innr/RC250_innr.json
 64c7e00c7f95fba0a5f09ca440ad3f20 *core/config/devices/RC250_innr/discovery.json
@@ -816,10 +817,10 @@ eca8cdc535ff0bb6887fb2c052a7f867 *core/config/devices/RC250_innr/RC250_innr.json
 a9eb5f2931daefb1eeb2f7028f43a8fa *core/config/devices/RF265/RF265.json
 cd5d4a4e8de6c1583d1957708e4af1ca *core/config/devices/RH3001/RH3001.json
 51b6f61e8b4988db215572fcf542166b *core/config/devices/RH3040/RH3040.json
-f7963b8e448051d2e2e1ab7bd617dab6 *core/config/devices/RWL021/RWL021.json
+df74a1efc3ee9939629c7c4b447ac0e5 *core/config/devices/RWL021/RWL021.json
 a1366186c526b4e7b702c19a880155e3 *core/config/devices/RWL021/discovery.json
 731ceef4aeed5de1e5ab29ac279cff4d *core/config/devices/Remoteswitch/067723_discovery.json
-48becc1dd8b98692ac9421f7b7f3fb19 *core/config/devices/Remoteswitch/Remoteswitch.json
+75a048d0fb41eefab48328b748ab9cfe *core/config/devices/Remoteswitch/Remoteswitch.json
 859f83dade2290f3e57ca82f0a5b63a0 *core/config/devices/S26R2ZB_SONOFF/S26R2ZB_SONOFF.json
 b86eafdc4f3d0e90e01cb5a17f9d5380 *core/config/devices/SA-003-Zigbee/SA-003-Zigbee.json
 6ee40c5168c787c7647d28f4d39ace95 *core/config/devices/SIN-4-2-20_NodOn/SIN-4-2-20_NodOn.json
@@ -850,7 +851,7 @@ eb3c81c16d13cefd61368792519707dd *core/config/devices/SmokeSensor-EM/SmokeSensor
 d139ac11ccdf5cf6072e4cf7bc5ad390 *core/config/devices/SmokeSensor-N-3.0/SmokeSensor-N-3.0.json
 54ec16a02fc9dcbbc76375a045368580 *core/config/devices/Switch4xEU-LIGHTIFY/Switch4xEU-LIGHTIFY.json
 756245d20effda5acda31540368b2476 *core/config/devices/TH01/TH01.json
-ac357e21cc562a8ec07fe2df2a37e362 *core/config/devices/THS317-ET_OWON/THS317-ET_OWON.json
+5b3c738a5001e3f48766215188a2597c *core/config/devices/THS317-ET_OWON/THS317-ET_OWON.json
 d77dccb72789b078761c1df8b1c72fec *core/config/devices/THS317-ET_OWON/discovery.json
 54fd85b91206836e675b2651ee228850 *core/config/devices/TI0001/TI0001.json
 b1dc8331875195bee4a65258e5db7cea *core/config/devices/TLSR82xx_AwoX/TLSR82xx_AwoX.json
@@ -894,18 +895,18 @@ cef4c9ed5a6c28c694ea7ca457bfaeeb *core/config/devices/TRADFRIbulbGU10WS345lm/dis
 ba2c6ab7f9cae0e625fdbc13eb667627 *core/config/devices/TRADFRIbulbGU10WW400lm/TRADFRIbulbGU10WW400lm.json
 e06f7a45114cfef2104ade29f89d98ad *core/config/devices/TRADFRIcontroloutlet/TRADFRIcontroloutlet.json
 b83d092b1b6623060343cdd3aa6690f9 *core/config/devices/TRADFRIcontroloutlet/discovery.json
-cdca8f5a1c1a3cd6a444d86217a70d54 *core/config/devices/TRADFRImotionsensor/TRADFRImotionsensor.json
+43e2c02a0f901dc954e3336136aa0a65 *core/config/devices/TRADFRImotionsensor/TRADFRImotionsensor.json
 9f8c258b42d274763f5927927595a9cc *core/config/devices/TRADFRImotionsensor/notes.txt
-7106bd6eca876bbcec3a70ed4487c9bb *core/config/devices/TRADFRIonoffswitch/TRADFRIonoffswitch.json
+462092a33ca741310e354cf1bd798c44 *core/config/devices/TRADFRIonoffswitch/TRADFRIonoffswitch.json
 b49aa93a5654c799dfc47e504a77ada6 *core/config/devices/TRADFRIonoffswitch/discovery-TRADFRIonoffswitch_IKEAofSweden.json
-2e04758233bac732dadb741849680cf5 *core/config/devices/TRADFRIonoffswitch/notes.txt
+eebd9d7152c1e591f9cdbdaa06567579 *core/config/devices/TRADFRIonoffswitch/notes.txt
 d81ce9ebda7fbacef06607ea9209ffdb *core/config/devices/TRADFRIopencloseremote/TRADFRIopencloseremote.json
-c79a10323b677b907ecb8c84b2f3354c *core/config/devices/TRADFRIremotecontrol/TRADFRIremotecontrol.json
+1fc36a5c8b2f4fd9f6b15091942c9f3c *core/config/devices/TRADFRIremotecontrol/TRADFRIremotecontrol.json
 8a0f5303d57df94dd5617f006985f710 *core/config/devices/TRADFRIsignalrepeater/TRADFRIsignalrepeater.json
 e6143a37a4e003d8c58468a23929463f *core/config/devices/TRADFRIsignalrepeater/discovery.json
 3525c526e75935fe1c1ef5274a4e19c1 *core/config/devices/TRADFRItransformer10W/TRADFRItransformer10W.json
 c5f0256840f9cbf7026f049e9ac892ae *core/config/devices/TRADFRItransformer30W/TRADFRItransformer30W.json
-ee6d7aa65e90a7ebb36d4878ca492dc1 *core/config/devices/TRADFRIwirelessdimmer/TRADFRIwirelessdimmer.json
+c97477933d779ac8a63785eddca484b5 *core/config/devices/TRADFRIwirelessdimmer/TRADFRIwirelessdimmer.json
 5ea3833f904bdeb1808fc0de9ab835a7 *core/config/devices/TREDANSENblock-outcellulblind_IKEAofSweden/TREDANSENblock-outcellulblind_IKEAofSweden.json
 d224519a8d0ee684ad4b5b518c38ab35 *core/config/devices/TREDANSENblock-outcellulblind_IKEAofSweden/discovery.json
 a96ec61fa4d43e5379cb827ed8462676 *core/config/devices/TS/TS.json
@@ -974,7 +975,7 @@ cc51a17ea364d6b4e2dc481291768f47 *core/config/devices/TS011F__TZ3000_vzopcetz/TS
 33209afa68ec78180ca083a10239d0d7 *core/config/devices/TS011F__TZ3000_wamqdr3f/discovery.json
 e28b837bd63831e3964f717cca930b07 *core/config/devices/TS011F__TZ3000_y4ona9me/TS011F__TZ3000_y4ona9me.json
 d26c766c5e80e43bfd645d69cd77e093 *core/config/devices/TS011F__TZ3000_y4ona9me/discovery-TS011F__TZ3000_y4ona9me.json
-cc0467c229118b08485ccb29af4098b6 *core/config/devices/TS011F__TZ3000_ynmowqk2/TS011F__TZ3000_ynmowqk2.json
+5bf4ef56dfd97b7cc0a73d0a16bcea2a *core/config/devices/TS011F__TZ3000_ynmowqk2/TS011F__TZ3000_ynmowqk2.json
 b26af83b67736c7bbd1e0ccdcae4e2fb *core/config/devices/TS011F__TZ3000_ynmowqk2/discovery-TS011F__TZ3000_ynmowqk2.json
 62ca2db125f37e87e22116199a48397b *core/config/devices/TS0121/TS0121.json
 d4c5cbeaf5533ec73293b6fb1f4b514a *core/config/devices/TS0121__TYZB01_zanh6v1o/TS0121__TYZB01_zanh6v1o.json
@@ -1186,7 +1187,7 @@ b82b70aca2b8f524b50a7059a58784a7 *core/config/devices/switch.n2aeu1_LUMI/switch.
 8976cc43c22b4ee4d83acf0d2560807c *core/config/devices/switch.n3acn3/switch.n3acn3.json
 89dde32f535f39636bd144b5c56eabc6 *core/config/devices/vibration.aq1/vibration.aq1.json
 ef2a20b521eeafe97cd57f2b66aa7b39 *core/config/devices/volet/discovery.json
-ad6a15dbc10eacc92d54d1d460118d93 *core/config/devices/volet/volet.json
+ab852395ab3f956a4a9e5bdc109da3f0 *core/config/devices/volet/volet.json
 df46bdabe4a41a675f3edb30eaeab472 *core/config/devices/weather/weather.json
 f9f6fe293d9b840a5e042853b2fdbc81 *core/config/devices/zigbeeColorDimmableLight/zigbeeColorDimmableLight.json
 3f902552226b23479067d3a9cf3f5a8b *core/config/devices/zigbeeColortemperaturelight/zigbeeColortemperaturelight.json
@@ -1194,7 +1195,7 @@ b1522d3af23303bc205f1a3111cd698c *core/config/devices/zigbeeDimmableLight/zigbee
 fce9255e30d5e1a677c8e4f13cd5887d *core/config/devices/zigbeeExtendedcolorlight/zigbeeExtendedcolorlight.json
 aaa84cfdc53e99e1a5f0d630c69e6444 *core/config/devices/zigbeeIASZone/zigbeeIASZone.json
 41a81498b16472aea01baac3f9a47437 *core/config/devices/zigbeeNon-colorscenecontroller/zigbeeNon-colorscenecontroller.json
-5a8222ce83fa6536915a647d1ae8b3bc *core/config/devices/zigbeeNoncolorcontroller/zigbeeNoncolorcontroller.json
+150edeaa9f198d73ab224819f02a98ae *core/config/devices/zigbeeNoncolorcontroller/zigbeeNoncolorcontroller.json
 147c2678d2b4c8691aefeb26de378e20 *core/config/devices/zigbeeOccupencySensor/zigbeeOccupencySensor.json
 5af070dde985579001845779444911f0 *core/config/devices/zigbeeOnOffLight/zigbeeOnOffLight.json
 2d9f717d903d8ae3cfb7390804a1f92c *core/config/devices/zigbeeShade/zigbeeShade.json
@@ -1297,7 +1298,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-dd7b06aaa9b772b2acfc41ed8a2d6b6c *docs/fr_FR/Changelog.rst
+119f9b80e290cfe9bc6ee48acd4acbae *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1635,10 +1636,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-5a19b306be8f06ef09abf5796b680a6f *plugin_info/Abeille.version
+1a55304ef3caa2645be86cfaae312065 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 c16154784139bfd2264e4a6409fdc658 *plugin_info/configuration.php
-e1136bea2df9708b574b61ef29934ab4 *plugin_info/info.json
+107adb94310929f3348b13dce31f5bdc *plugin_info/info.json
 34605ec72fe118e0d78d8e22da867bdd *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

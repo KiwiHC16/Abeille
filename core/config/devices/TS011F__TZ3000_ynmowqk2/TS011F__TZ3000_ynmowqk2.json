@@ -71,7 +71,7 @@
             "Refresh Total power": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0702&attrId=0000",
-                "logicalId": "01-poll-0702-0000",
+                "logicalId": "poll-01-0702-0000",
                 "Polling": "cron10"
             },
             "Get Total power": {

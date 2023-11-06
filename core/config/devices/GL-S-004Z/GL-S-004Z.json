@@ -2,6 +2,7 @@
     "GL-S-004Z": {
         "manufacturer": "Gledopto",
         "model": "GL-C-004Z",
+        "type": "Gledopto Spectre Blanc",
         "timeout": "60",
         "configuration": {
             "mainEP": "0B",
@@ -11,16 +12,7 @@
         "category": {
             "light": "1"
         },
-        "type": "Gledopto Spectre Blanc",
         "commands": {
-            "etat": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1
-            },
-            "CurrentLevel-0008": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": 1
-            },
             "On": {
                 "use": "act_zbCmdC-0006-On",
                 "isVisible": 1
@@ -29,9 +21,30 @@
                 "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Get-Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "Set Level": {
                 "use": "act_setLevel-Light",
                 "isVisible": 1
+            },
+            "Level": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
             },
             "Set 2200K": {
                 "use": "act_zbCmdC-0300-MoveToColorTemp",
@@ -61,14 +74,6 @@
             "setTemperatureLight": {
                 "use": "setTemperatureLight"
             },
-            "Get-Status": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0006&attrId=0000"
-            },
-            "Get-CurrentLevel": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
-            },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
                 "isVisible": 1
@@ -78,7 +83,7 @@
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
-                "params": "clustId=0008",
+                "params": "clustId=0006",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
@@ -88,22 +93,17 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
+            "Bind-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
             "SetReporting-0008-0000": {
                 "use": "act_zbConfigureReporting",
                 "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
             }
         }
     }

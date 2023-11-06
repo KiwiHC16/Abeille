@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - IKEA TRADFRIbulbE27opal1000lm: Correction modèle (2644).
+- TRV06: Correction modèle.
 
 231104-BETA-2
 -------------

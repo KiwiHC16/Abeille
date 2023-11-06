@@ -4015,12 +4015,17 @@
 
                 // ZCL cluster 0006/On off specific.
                 // Mandatory params: addr, ep & cmd (00=off, 01=on, 02=toggle)
-                // Mandatory params: addrGroup & cmd if addrMode=01
+                // Mandatory params: addrGroup & cmd if addrMode=01/group
+                // Mandatory params: cmd if addrMode=04/broadcast
                 else if ($cmdName == 'cmd-0006') {
                     $required1 = ['addr', 'ep', 'cmd']; // Mandatory infos for dev addr
                     $required2 = ['addrGroup', 'cmd']; // Mandatory infos for group addr
-                    if (isset($Command['addrMode']) && ($Command['addrMode'] == '01')) {
+                    $required3 = ['cmd']; // Mandatory infos for broadcast
+                    $addrMode   = isset($Command['addrMode']) ? $Command['addrMode'] : "02"; // 01=Group, 02=device (default), 04=broadcast
+                    if ($Command['addrMode'] == '01') {
                         $required = $required2; // Group command
+                    } else if ($Command['addrMode'] == '04') {
+                        $required = $required3; // Broadcast command
                     } else {
                         $required = $required1;
                     }
@@ -4032,8 +4037,7 @@
                     if (($cmdId == '00') || ($cmdId == '01') || ($cmdId == '02')) { // Off, on, or toggle
                         $zgCmd      = "0092";
 
-                        $addrMode   = isset($Command['addrMode']) ? $Command['addrMode'] : "02"; // 01: Group, 02: device
-                        $addr       = ($addrMode == '02') ? $Command['addr'] : $Command['addrGroup'];
+                        $addr       = ($addrMode == '02') ? $Command['addr'] : ($addrMode == '01') ? $Command['addrGroup'] : 'DEAD';
                         $srcEp      = "01";
                         $dstEp      = ($addrMode == '02') ? $Command['ep'] : '01';
                         $cmdId      = $Command['cmd'];

@@ -23,10 +23,12 @@
                 "nextLine": "after"
             },
             "On All": {
-                "use": "onGroupBroadcast"
+                "use": "act_zbCmdC-0006-OnBroadcast",
+                "isVisible": 1
             },
             "Off All": {
-                "use": "offGroupBroadcast",
+                "use": "act_zbCmdC-0006-OffBroadcast",
+                "isVisible": 1,
                 "nextLine": "after"
             },
             "OnTimed": {

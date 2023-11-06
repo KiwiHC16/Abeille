@@ -4,6 +4,8 @@ ChangeLog
 - IKEA TRADFRIbulbE27opal1000lm: Correction modèle (2644).
 - TRV06: Correction modèle.
 - Xiaomi Aqara Opple 4 boutons: Mises-à-jour du modèle (2636).
+- Modèles: Cmde 'onGroupBroadcast'/'offGroupBroadcast' remplacée (cmd-0006 + addrMode=04).
+- Télécommande virtuelle: Correction pour 'onGroupBroadcast'/'offGroupBroadcast'.
 
 231104-BETA-2
 -------------

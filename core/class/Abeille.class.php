@@ -2832,7 +2832,7 @@ class Abeille extends eqLogic {
             $eqLogic->setLogicalId($eqLogicId);
             $abeilleConfig = AbeilleTools::getConfig();
             $eqLogic->setObject_id($abeilleConfig['ab::defaultParent']);
-            $eqLogic->setConfiguration('IEEE', $dev['ieee']);
+            if (isset($dev['ieee'])) $eqLogic->setConfiguration('IEEE', $dev['ieee']); // No IEEE for virtual remote
         } else {
             $newEq = false;
 

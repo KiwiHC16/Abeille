@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="231106-BETA-5"
+# VERSION="231107-BETA-1"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -46,9 +46,9 @@ e56e2df666472e08c687fd86beb376c8 *core/ajax/AbeilleOTA.ajax.php
 473bd5057c27f6285d6d2500f29de9cc *core/class/AbeilleCmd.class.php
 0b2353f1120d43803789c7e32b4b9004 *core/class/AbeilleCmdPrepare.class.php
 e7bb32c31a98fb0d1ba1991ed1407030 *core/class/AbeilleCmdPrepareTest.class.php
-05ca1670a08f693e24125df6c0de8f5a *core/class/AbeilleCmdProcess.class.php
+35648beb843f004ffcda5c08a0c259c2 *core/class/AbeilleCmdProcess.class.php
 2b7d22f142c9959cd00e3a9bebf476a1 *core/class/AbeilleCmdProcessTest.class.php
-c285bc680c58788f7c35587e2bee84bb *core/class/AbeilleCmdQueue.class.php
+01e851dac01ca74426c8781e4f5aa556 *core/class/AbeilleCmdQueue.class.php
 78bf2bef603ddf7003465fb0a3a6b36a *core/class/AbeilleCmdTest.class.php
 a56eada76ce6dc0ff8765f150235cccf *core/class/AbeilleDebug.class.php
 5069864fee0bc5c42ef36f1440a03c48 *core/class/AbeilleParser.class.php
@@ -1090,7 +1090,7 @@ f86cbebf536f188c4abca7a2ec4b9ac4 *core/config/devices/Thermostat_SchneiderElectr
 b79bb0b0ed80f00c87f745cefde93560 *core/config/devices/WS2812_light_controller/WS2812_light_controller.json
 aaa1cc4964076441005d315489c15187 *core/config/devices/WarningDevice-EF-3.0/WarningDevice-EF-3.0.json
 0c6032d1cca9197f9aec9bae1cdca50c *core/config/devices/WarningDevice-EF-3.0/discovery-TS0216__TYZB01_8scntis1.json
-27c39e930ea305d9c3e50bc1fac51d66 *core/config/devices/WaterSensor-EM_HEIMAN/WaterSensor-EM_HEIMAN.json
+f7e309c4c01beed4ee4d4fa4b87eedc1 *core/config/devices/WaterSensor-EM_HEIMAN/WaterSensor-EM_HEIMAN.json
 405ef47228af60180720503c21762fd4 *core/config/devices/WaterSensor-EM_HEIMAN/discovery-WaterSensor-EM_HEIMAN.json
 6d423f65d1bcdbca6eb4a835db52819e *core/config/devices/ZB-CL01/ZB-CL01.json
 619fccfd5c05efe591da8a744fcc6ad8 *core/config/devices/ZB-RGBCW/ZB-RGBCW.json
@@ -1210,7 +1210,7 @@ bae2dd0e8f01fe8b019010f5c69f9bb4 *core/config/sortCommand.php
 fe99369b88ceb7cae45f3453c63f485b *core/i18n/fr_FR.json
 56d8a60606129f1d13ca526760712df7 *core/php/AbeilleCliToQueue.php
 707c07eb008e7c5e6977f03c4f705bbb *core/php/AbeilleCmd-Tuya.php
-d8e311380892d181bd46335e0a99f2d5 *core/php/AbeilleCmd.php
+2bc3091a904048787b83cabfe67585d1 *core/php/AbeilleCmd.php
 3a8347a9ea19d1ee67793bc7080ab672 *core/php/AbeilleDownload.php
 e19dfc28fe5aab5966a0dcca176381ff *core/php/AbeilleGetEq.php
 da1a4650f0ab63376c629a59366052fc *core/php/AbeilleGit.php
@@ -1298,7 +1298,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 5a69c58cf7927633185ab0be064220ba *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-e5db9a47c500cc40b3bd4337edea288e *docs/fr_FR/Changelog.rst
+76285f9fdd883e7a97b5745288651f1e *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1636,10 +1636,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-6e79c08d2bce4648bf6ffc40c10f23fb *plugin_info/Abeille.version
+7e5d710bf7cd3477a23359664cee45d1 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 c16154784139bfd2264e4a6409fdc658 *plugin_info/configuration.php
-312e13d2a8f398d28336c094649eca50 *plugin_info/info.json
+0cee0b5676c4c54fa5b58535a2047bb1 *plugin_info/info.json
 34605ec72fe118e0d78d8e22da867bdd *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

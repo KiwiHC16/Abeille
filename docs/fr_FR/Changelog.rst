@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231107-BETA-1
+-------------
+
 - Heiman water sensor (WaterSensor-EM): Mises-à-jour mineures du modèle mais toujours pas de retour d'alarme.
 - Interne: AbeilleCmd: Correction regression 'cmd-0006'.
 

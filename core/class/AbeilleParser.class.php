@@ -475,37 +475,37 @@
             }
         }
 
-        /* Update device infos.
-           As opposed to 'deviceUpdate()', info is NOT coming from the device himself. */
-        function updateDevice($net, $addr, $updates) {
-            parserLog('debug', '  updateDevice('.$net.', '.$addr.', '.json_encode($updates).')');
-            if (isset($updates['ieee']))
-                $ieee = $updates['ieee'];
-            else
-                $ieee = null;
-            $eq = &getDevice($net, $addr, $ieee, $newDev); // By ref
+        // /* Update device infos.
+        //    As opposed to 'deviceUpdate()', info is NOT coming from the device himself. */
+        // function updateDevice($net, $addr, $updates) {
+        //     parserLog('debug', '  updateDevice('.$net.', '.$addr.', '.json_encode($updates).')');
+        //     if (isset($updates['ieee']))
+        //         $ieee = $updates['ieee'];
+        //     else
+        //         $ieee = null;
+        //     $eq = &getDevice($net, $addr, $ieee, $newDev); // By ref
 
-            $confirmed = array();
-            foreach ($updates as $updKey => $updVal) {
-                if ($updKey == 'ieee')
-                    continue; // This is already covered
-                if (!isset($eq[$updKey]) || ($eq[$updKey] != $updVal)) {
-                    $eq[$updKey] = $updVal;
-                    $confirmed[$updKey] = $updVal;
-                }
-            }
+        //     $confirmed = array();
+        //     foreach ($updates as $updKey => $updVal) {
+        //         if ($updKey == 'ieee')
+        //             continue; // This is already covered
+        //         if (!isset($eq[$updKey]) || ($eq[$updKey] != $updVal)) {
+        //             $eq[$updKey] = $updVal;
+        //             $confirmed[$updKey] = $updVal;
+        //         }
+        //     }
 
-            // Any changes to report to Abeille ?
-            if (count($confirmed) > 0) {
-                $msg = array(
-                    'type' => 'deviceUpdates',
-                    'net' => $net,
-                    'addr' => $addr,
-                    'updates' => $confirmed,
-                );
-                msgToAbeille2($msg);
-            }
-        }
+        //     // Any changes to report to Abeille ?
+        //     if (count($confirmed) > 0) {
+        //         $msg = array(
+        //             'type' => 'deviceUpdates',
+        //             'net' => $net,
+        //             'addr' => $addr,
+        //             'updates' => $confirmed,
+        //         );
+        //         msgToAbeille2($msg);
+        //     }
+        // }
 
         /* There is a device info updates (manufId + modelId, or location).
            Note: As opposed to 'updateDevice()', info is coming from device itself. */
@@ -2221,33 +2221,42 @@
             $this->msgToLQICollector($toLqiCollector);
 
             // Foreach neighbor, let's ensure that useful infos are stored
+            // Tcharp38: No reliable info to collect thru 'Mgmt_lqi_rsp' except short & IEEE addresses.
+            // foreach ($nList as $N) {
+            //     if ($N['addr'] == "0000")
+            //         continue; // It's a zigate
+
+            //     $eq = getDevice($dest, $N['addr'], $N['extAddr']);
+
+            //     // Any useful infos to update ?
+            //     $bitMap = hexdec($N['bitMap']);
+            //     $rxOn = ($bitMap >> 2) & 0x1; // 01 = RX ON when idle
+            //     if (isset($eq['customization']) && isset($eq['customization']['rxOn'])) {
+            //         $rxOn = $eq['customization']['rxOn'];
+            //         parserLog('debug', "  ".$N['addr'].": 'rxOnWhenIdle' customized to ".$rxOn);
+            //     }
+
+            //     $updates = [];
+            //     if ($eq['ieee'] != $N['extAddr'])
+            //         $updates['ieee'] = $N['extAddr'];
+            //     if ($eq['rxOnWhenIdle'] && ($eq['rxOnWhenIdle'] != $rxOn)) {
+            //         parserLog('debug', "  ".$N['addr'].": WARNING, unexpected rxOn difference: rxOnWhenIdle=".$eq['rxOnWhenIdle'].", rxOn=".$rxOn);
+            //         // $updates['rxOnWhenIdle'] = $rxOn;
+            //         // Update DISABLED. Seems not reliable or error in bitMap interpretation. See #2532
+            //         // >     Du 0020: "addr":"0E9F","bitMap":"0225"
+            //         // >     Du B78D: "addr":"0E9F","bitMap":"0229"
+            //         // >     Du 342B: "addr":"0E9F","bitMap":"0229"
+            //     }
+            //     if ($updates != [])
+            //         $this->updateDevice($dest, $N['addr'], $updates);
+            // }
             foreach ($nList as $N) {
                 if ($N['addr'] == "0000")
                     continue; // It's a zigate
 
-                $eq = getDevice($dest, $N['addr'], $N['extAddr']);
-
-                // Any useful infos to update ?
-                $bitMap = hexdec($N['bitMap']);
-                $rxOn = ($bitMap >> 2) & 0x1; // 01 = RX ON when idle
-                if (isset($eq['customization']) && isset($eq['customization']['rxOn'])) {
-                    $rxOn = $eq['customization']['rxOn'];
-                    parserLog('debug', "  ".$N['addr'].": 'rxOnWhenIdle' customized to ".$rxOn);
-                }
-
                 $updates = [];
-                if ($eq['ieee'] != $N['extAddr'])
-                    $updates['ieee'] = $N['extAddr'];
-                if ($eq['rxOnWhenIdle'] && ($eq['rxOnWhenIdle'] != $rxOn)) {
-                    parserLog('debug', "  ".$N['addr'].": WARNING, unexpected rxOn difference: rxOnWhenIdle=".$eq['rxOnWhenIdle'].", rxOn=".$rxOn);
-                    // $updates['rxOnWhenIdle'] = $rxOn;
-                    // Update DISABLED. Seems not reliable or error in bitMap interpretation. See #2532
-                    // >     Du 0020: "addr":"0E9F","bitMap":"0225"
-                    // >     Du B78D: "addr":"0E9F","bitMap":"0229"
-                    // >     Du 342B: "addr":"0E9F","bitMap":"0229"
-                }
-                if ($updates != [])
-                    $this->updateDevice($dest, $N['addr'], $updates);
+                $updates['ieee'] = $N['extAddr'];
+                $this->deviceUpdates($dest, $N['addr'], '', $updates);
             }
         } // End decode8002_MgmtLqiRsp()
 

@@ -7,6 +7,7 @@ ChangeLog
 - Heiman water sensor (WaterSensor-EM): Mises-à-jour mineures du modèle mais toujours pas de retour d'alarme.
 - Interne: AbeilleCmd: Correction regression 'cmd-0006'.
 - Tuya 1ch switch module: Correction modèle.
+- Découverte d'équipements absents de Jeedom améliorée lors du raffraichissement réseau.
 
 231106-BETA-5
 -------------

@@ -4022,9 +4022,9 @@
                     $required2 = ['addrGroup', 'cmd']; // Mandatory infos for group addr
                     $required3 = ['cmd']; // Mandatory infos for broadcast
                     $addrMode   = isset($Command['addrMode']) ? $Command['addrMode'] : "02"; // 01=Group, 02=device (default), 04=broadcast
-                    if ($Command['addrMode'] == '01') {
+                    if ($addrMode == '01') {
                         $required = $required2; // Group command
-                    } else if ($Command['addrMode'] == '04') {
+                    } else if ($addrMode == '04') {
                         $required = $required3; // Broadcast command
                     } else {
                         $required = $required1;
@@ -4037,7 +4037,7 @@
                     if (($cmdId == '00') || ($cmdId == '01') || ($cmdId == '02')) { // Off, on, or toggle
                         $zgCmd      = "0092";
 
-                        $addr       = ($addrMode == '02') ? $Command['addr'] : ($addrMode == '01') ? $Command['addrGroup'] : 'DEAD';
+                        $addr       = ($addrMode == '02') ? $Command['addr'] : (($addrMode == '01') ? $Command['addrGroup'] : 'DEAD');
                         $srcEp      = "01";
                         $dstEp      = ($addrMode == '02') ? $Command['ep'] : '01';
                         $cmdId      = $Command['cmd'];

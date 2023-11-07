@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Heiman water sensor (WaterSensor-EM): Mises-à-jour mineures du modèle mais toujours pas de retour d'alarme.
+
 231106-BETA-5
 -------------
 

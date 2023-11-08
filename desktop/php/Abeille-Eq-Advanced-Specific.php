@@ -5,13 +5,10 @@
     if (isset($dbgDeveloperMode)) echo __FILE__;
 ?>
 
-
     <!-- telecommande: visible / hidden -->
-    <div class="form-group" id="telecommande" style="visibility: hidden">
-        <hr>
-        <div class="col-sm-3">
-            <h3 class="col-sm-5" style="text-align:center">{{Télécommande}}</h3>
-        </div>
+    <div class="form-group" id="telecommande" style="display: none">
+
+        <label>{{Télécommande}}</label></br>
 
         <div class="form-group">
             <label class="col-sm-3 control-label">{{Adresse groupe}}</label>
@@ -29,14 +26,10 @@
     </div>
 
     <!-- telecommande7groups: visible / hidden -->
-    <div class="form-group" id="telecommande7groups" style="visibility: hidden">
+    <div class="form-group" id="telecommande7groups" style="display: none">
         <hr>
 
-        <div class="form-group">
-            <div class="col-sm-3">
-                <h3 class="col-sm-5" style="text-align:left">{{Télécommande}}</h3>
-            </div>
-        </div>
+        <label>{{Télécommande 7 groupes}}</label></br>
 
         <div class="form-group">
             <label class="col-sm-3 control-label">{{Adresse groupe Tous}}</label>
@@ -90,14 +83,9 @@
 
 
     <!-- paramABC: visible / hidden -->
-    <div class="form-group" id="paramABC" style="visibility: hidden">
-        <hr>
-
-        <div class="form-group">
-            <div class="col-sm-3">
-                <h3 class="col-sm-5" style="text-align:left">{{Calibration (y=ax2+bx+c)}}</h3>
-            </div>
-        </div>
+    <div class="form-group" id="paramABC" style="display: none">
+    
+        <label>{{Calibration (y=ax2+bx+c)}}</label></br>
 
         <div class="form-group">
             <label class="col-sm-3 control-label">{{Paramètre A}}</label>

@@ -118,22 +118,22 @@ function refreshAdvEq() {
 
             console.log("paramType: " + eq.paramType);
             if (eq.paramType == "telecommande") {
-                document.getElementById("telecommande"       ).style.visibility = "visible";
+                document.getElementById("telecommande"       ).style.display = "block";
             }
             else {
-                document.getElementById("telecommande"       ).style.visibility = "hidden";
+                document.getElementById("telecommande"       ).style.display = "none";
             } 
             if (eq.paramType == "telecommande7groups") {
-                document.getElementById("telecommande7groups").style.visibility = "visible";
+                document.getElementById("telecommande7groups").style.display = "block";
             }
             else {
-                document.getElementById("telecommande7groups").style.visibility = "hidden";
+                document.getElementById("telecommande7groups").style.display = "none";
             } 
             if (eq.paramType == "paramABC") {
-                document.getElementById("paramABC"           ).style.visibility = "visible";
+                document.getElementById("paramABC"           ).style.display = "block";
             }
             else {
-                document.getElementById("paramABC"           ).style.visibility = "hidden";
+                document.getElementById("paramABC"           ).style.display = "none";
             } 
             
 

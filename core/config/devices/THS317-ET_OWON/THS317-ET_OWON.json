@@ -4,6 +4,7 @@
         "zbManufacturer": "OWON",
         "model": "THS317-ET",
         "type": "Owon multi-sensor",
+        "genericType": "Environment",
         "timeout": "60",
         "category": {
             "heating": "1"
@@ -13,14 +14,13 @@
             "mainEP": "03"
         },
         "commands": {
-            "Bind 0001-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "clustId=0001",
-                "execAtCreation": "yes"
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
@@ -30,16 +30,27 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0402&attrId=0000"
             },
-            "SetReporting 0402-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0402&attrType=29&attrId=0000&minInterval=012C&maxInterval=0258&changeVal=",
-                "execAtCreation": "yes",
-                "comment": "Reporting every 5 to 10mins"
-            },
             "Bind 0402-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0402",
                 "execAtCreation": "yes"
+            },
+            "Bind 0001-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0001",
+                "execAtCreation": "yes"
+            },
+            "SetReporting 0402-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0402&attrType=29&attrId=0000&minInterval=300&maxInterval=600",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 5 to 10mins"
+            },
+            "SetReporting 0001-0021": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3300",
+                "execAtCreation": "yes",
+                "comment": "Reporting every 30 to 55mins"
             }
         }
     }

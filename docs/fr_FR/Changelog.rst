@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Owon-THS317-ET: Mise-à-jour du modèle (2319).
+
 231107-BETA-2
 -------------
 

@@ -78,6 +78,8 @@ function refreshAdvEq() {
             document.getElementById("idZbManuf").value = eq.zbManuf;
             document.getElementById("idModelName").value = eq.modelName;
             document.getElementById("idModelSource").value = eq.modelSource;
+            docUrl = document.getElementById("idDocUrl");
+            docUrl.setAttribute("href", js_urlProducts + "/" + eq.modelName);
             if (eq.modelSource == "local") {
                 $("#idDelLocalBtn").show();
             }
@@ -118,24 +120,22 @@ function refreshAdvEq() {
 
             console.log("paramType: " + eq.paramType);
             if (eq.paramType == "telecommande") {
-                document.getElementById("telecommande"       ).style.display = "block";
+                document.getElementById("telecommande").style.display = "block";
+            } else {
+                document.getElementById("telecommande").style.display = "none";
             }
-            else {
-                document.getElementById("telecommande"       ).style.display = "none";
-            } 
             if (eq.paramType == "telecommande7groups") {
-                document.getElementById("telecommande7groups").style.display = "block";
+                document.getElementById("telecommande7groups").style.display =
+                    "block";
+            } else {
+                document.getElementById("telecommande7groups").style.display =
+                    "none";
             }
-            else {
-                document.getElementById("telecommande7groups").style.display = "none";
-            } 
             if (eq.paramType == "paramABC") {
-                document.getElementById("paramABC"           ).style.display = "block";
+                document.getElementById("paramABC").style.display = "block";
+            } else {
+                document.getElementById("paramABC").style.display = "none";
             }
-            else {
-                document.getElementById("paramABC"           ).style.display = "none";
-            } 
-            
 
             // Updating info cmds
             const advInfoCmds = document.querySelectorAll("[advInfo]"); // All with attribute named "advInfo"
@@ -827,15 +827,17 @@ $("#idModelChangeBtn").on("click", function () {
     console.log("idModelChangeBtn on " + curEqId);
 
     // Open empty dialog
-    var myPopup = bootbox.dialog({ 
-        message: '<p></p>', // must not be empty
+    var myPopup = bootbox.dialog({
+        message: "<p></p>", // must not be empty
         title: "{{Choisir le modèle de votre équipement}}",
-        className: "abeille_modelChangePopup"
+        className: "abeille_modelChangePopup",
     });
 
     // Content template is defined in Abeille-Eq-Advanced-Device.php
     var $content = myPopup.find(".bootbox-body");
-    $content.empty().append($(".abeille-model-change-popup-content").clone().show());
+    $content
+        .empty()
+        .append($(".abeille-model-change-popup-content").clone().show());
     var $datalist = $("#abeille-all-models-list").empty();
 
     // Ajax query to populate datalist options (= list of knwow models)
@@ -901,9 +903,7 @@ $("#idModelChangeBtn").on("click", function () {
         // Check user input
         var strSaisie = $content.find("input[type=search]").val();
         if ($datalist.find('option[value="' + strSaisie + '"]').length == 0) {
-            alert(
-                "{{Erreur: vous devez choisir un modèle dans la liste.}}"
-            );
+            alert("{{Erreur: vous devez choisir un modèle dans la liste.}}");
             return;
         }
 
@@ -913,7 +913,12 @@ $("#idModelChangeBtn").on("click", function () {
             strSuppBatterie =
                 "<br><br><strong>Attention: </strong>{{Comme cet équipement fonctionne sur batterie, vous devez le réveiller immédiatement après avoir cliqué sur OK.}}";
         }
-        if(confirm("{{L'équipement sera reconfiguré à partir du modèle choisi. Souhaitez-vous vraiment appliquer ce modèle ?}}" + strSuppBatterie)){
+        if (
+            confirm(
+                "{{L'équipement sera reconfiguré à partir du modèle choisi. Souhaitez-vous vraiment appliquer ce modèle ?}}" +
+                    strSuppBatterie
+            )
+        ) {
             // Close dialog
             myPopup.find(".bootbox-close-button").trigger("click");
 
@@ -944,8 +949,8 @@ $("#idModelChangeBtn").on("click", function () {
 $("body").on("click", "a#linkRestoreAutoModel", function () {
     bootbox.confirm(
         "{{Actuellement, le modèle utilisé pour configuré l'équipement est celui que vous avez choisi manuellement. Cette action permet de rétablir le fonctionnement normal d'Abeille: le modèle prédéfini sera utilisé pour reconfigurer l'équipement la prochaine fois qu'il se réannoncera.<br><br>Cette action, en elle-même, ne modifie pas la configuration de l'équipement: après avoir cliqué sur OK, patientez quelques secondes, puis forcez l'équipement à se réannoncer (en le débranchant/rebranchant par exemple), ou utilisez la fonction 'Mise à jour'.<br><br>Etes-vous sûr de vouloir annuler le choix manuel du modèle ?}}",
-        function(result){
-            if(result){
+        function (result) {
+            if (result) {
                 $.ajax({
                     type: "POST",
                     url: "plugins/Abeille/core/ajax/AbeilleModelChange.ajax.php",

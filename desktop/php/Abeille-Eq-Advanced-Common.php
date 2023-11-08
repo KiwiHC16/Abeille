@@ -51,18 +51,12 @@
     </div>
 </div>
 
-<!-- <div class="form-group">
+<div class="form-group">
     <label class="col-sm-3 control-label">{{Documentation}}</label>
     <div class="col-sm-5">
-        < ?php
-            $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-            $jsonId = $eqModel ? $eqModel['id'] : '';
-            if ($jsonId != '') {
-                echo '<a href="'.urlProducts.'/'.$jsonId.'" target="_blank">Voir ici si présente</a>';
-            }
-        ?>
+        <a id="idDocUrl" href="tobefilled" target="_blank">{{Voir ici si présente}}</a>';
     </div>
-</div> -->
+</div>
 
 <!-- <div class="form-group">
     <label class="col-sm-3 control-label" title="{{Groupes Zigbee auquels l'équipement appartient}}">{{Groupes}}</label>

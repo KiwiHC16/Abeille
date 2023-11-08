@@ -16,13 +16,6 @@
         },
         "type": "TRADFRI Detecteur de mouvement",
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "On group": {
                 "use": "act_zbCmdC-0006-OnGroup",
                 "isVisible": 1
@@ -32,7 +25,7 @@
                 "isVisible": 1
             },
             "Toggle group": {
-                "use": "toggleGroup",
+                "use": "act_zbCmdC-0006-ToggleGroup",
                 "nextLine": "after"
             },
             "OffTimed": {

@@ -877,8 +877,9 @@
          * - Cmds DB: For 'Online' adding 'repeatEventManagement=always'
          * - Cmds DB: 'OnOff' cmd replaced by 'cmd-0006'
          * - Cmds DB: 'OnOffGroup' replaced by 'cmd-0006'
+         * - Cmds DB: 'onGroupBroadcast'/'offGroupBroadcast' replaced by 'cmd-0006'
          */
-        if (intval($dbVersion) < 20231103) {
+        if (intval($dbVersion) < 20231106) {
             // 'eqLogic' DB updates
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
@@ -888,6 +889,10 @@
                     $saveCmd = false;
                     $cmdLogicId = $cmdLogic->getLogicalId();
                     $topic = $cmdLogic->getConfiguration('topic', '');
+                    if (substr($topic, 0, 10) == "CmdAbeille") {
+                        $ar = explode("/", $topic);
+                        $topic = $ar[2];
+                    }
 
                     if ($cmdLogicId == 'online') {
                         if ($cmdLogic->setConfiguration('repeatEventManagement', '') == '') {
@@ -905,7 +910,7 @@
                         $cmdLogic->setConfiguration('request', $request);
                         log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Replaced 'OnOff' by 'cmd-0006'");
                         $saveCmd = true;
-                    } else if (stripos($topic, 'OnOffGroup') !== false) {
+                    } else if ($topic == 'OnOffGroup') {
                         $request = $cmdLogic->getConfiguration('request', '');
                         if ($request == 'Off') {
                             $request = "cmd=00&addrMode=01&addrGroup=#addrGroup#";
@@ -921,6 +926,23 @@
                         $cmdLogic->setConfiguration('request', $request);
                         $cmdLogic->setLogicalId($lId);
                         log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Replaced 'OnOffGroup' by 'cmd-0006'");
+                        $saveCmd = true;
+                    } else if (($topic == 'onGroupBroadcast') || ($topic == 'offGroupBroadcast')) {
+                        $request = $cmdLogic->getConfiguration('request', '');
+                        if ($request == 'Off') {
+                            $request = "cmd=00&addrMode=04";
+                            $lId = "0006-CmdOffGroup";
+                        } else if ($request == 'On') {
+                            $request = "cmd=01&addrMode=04";
+                            $lId = "0006-CmdOnGroup";
+                        } else { // assuming toggle
+                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": ERROR: topic=${topic}, req=${request}");
+                            continue;
+                        }
+                        $cmdLogic->setConfiguration('topic', 'cmd-0006');
+                        $cmdLogic->setConfiguration('request', $request);
+                        $cmdLogic->setLogicalId($lId);
+                        log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Replaced '${topic}' by 'cmd-0006'");
                         $saveCmd = true;
                     }
 

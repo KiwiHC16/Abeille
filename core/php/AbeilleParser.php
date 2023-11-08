@@ -552,8 +552,9 @@
                                 logMessage('debug', "  ERROR: Unknown device ".$net."/".$addr);
                                 continue;
                             }
+                            $ieee = $GLOBALS['eqList'][$net][$addr]['ieee'];
                             unset($GLOBALS['eqList'][$net][$addr]);
-                            logMessage('debug', "  Device ".$net."/".$addr." marked as phantom");
+                            logMessage('debug', "  Device ${net}/${addr} (ieee=${ieee}) removed from Jeedom");
                         }
                     } else if ($msg['type'] == 'eqUpdated') {
                         // Note: On model reload/reset, changes may impact parsing (ex: Tuya).

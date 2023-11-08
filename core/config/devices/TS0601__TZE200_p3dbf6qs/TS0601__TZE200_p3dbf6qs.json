@@ -1,7 +1,7 @@
 {
     "TS0601__TZE200_p3dbf6qs": {
-        "manufacturer": "_TZE200_p3dbf6qs",
-        "model": "TS0601",
+        "manufacturer": "Tuya",
+        "model": "TRV06",
         "type": "TRV06 Thermostatic head",
         "genericType": "Thermostat",
         "timeout": "60",
@@ -54,36 +54,41 @@
                 "use": "act_tuyaEF00-SetThermostatMode",
                 "params": "dpId=02&data=00",
                 "genericType": "THERMOSTAT_SET_MODE",
+                "logicalId": "01-mode-auto",
                 "isVisible": 1
             },
             "Manuel": {
                 "use": "act_tuyaEF00-SetThermostatMode",
                 "params": "dpId=02&data=01",
                 "genericType": "THERMOSTAT_SET_MODE",
+                "logicalId": "01-mode-man",
                 "isVisible": 1
             },
             "OFF": {
                 "use": "act_tuyaEF00-SetThermostatMode",
                 "params": "dpId=02&data=02",
                 "genericType": "THERMOSTAT_SET_MODE",
+                "logicalId": "01-mode-off",
                 "isVisible": 1,
                 "nextLine": "after"
             },
 
             "Locked": {
                 "use": "inf_generic-NumericBadge",
-                "logicalId": "01-Lock",
+                "logicalId": "01-Locked",
                 "isVisible": 1,
                 "nextLine": "after"
             },
             "Lock": {
                 "use": "act_tuyaEF00-SetBool",
                 "params": "dpId=07&data=01",
+                "logicalId": "01-lock",
                 "isVisible": 1
             },
             "UnLock": {
                 "use": "act_tuyaEF00-SetBool",
                 "params": "dpId=07&data=00",
+                "logicalId": "01-unlock",
                 "isVisible": 1,
                 "nextLine": "after"
             }
@@ -113,7 +118,7 @@
                 },
                 "07": {
                     "function": "rcvValue",
-                    "info": "01-Lock",
+                    "info": "01-Locked",
                     "comment": "Kid Lock Status"
                 }
             }

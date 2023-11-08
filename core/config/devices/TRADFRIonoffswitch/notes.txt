@@ -43,8 +43,11 @@ The E1743 can be bound to groups using binding. It can only be bound to 1 group 
 By default this remote is bound to the default bind group which you first have to unbind it from.
 Right before executing the commands make sure to wake up the device by pressing a button on it.
 
-Lot's of issues around bind/unbind. 
+Lot's of issues around bind/unbind.
 https://github.com/Koenkk/zigbee2mqtt/issues/2924
+
+WARNING !!!!
+    Below 2.3.075: suppports binding to groups only, 2.3.075 and greater: supports binding to DEVICES ONLY
 
 About configure reporting
 =========================

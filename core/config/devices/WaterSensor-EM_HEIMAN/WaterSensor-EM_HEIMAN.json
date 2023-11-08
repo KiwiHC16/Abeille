@@ -1,10 +1,12 @@
 {
     "WaterSensor-EM_HEIMAN": {
         "manufacturer": "Heiman",
-        "model": "HS1WL",
+        "model": "HS1WL/HS3WL",
         "type": "Heiman water leakage sensor",
         "alternateIds": {
-            "WaterSensor-N-3.0_HEIMAN": []
+            "WaterSensor-N_HEIMAN": [],
+            "WaterSensor-N-3.0_HEIMAN": [],
+            "WaterSensor-EF-3.0_HEIMAN": []
         },
         "timeout": "60",
         "category": {

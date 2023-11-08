@@ -1,6 +1,29 @@
 ChangeLog
 =========
 
+231107-BETA-2
+-------------
+
+- Heiman water sensor (WaterSensor-EM): Mises-à-jour mineures du modèle mais toujours pas de retour d'alarme.
+- Interne: AbeilleCmd: Correction regression 'cmd-0006'.
+- Tuya 1ch switch module: Correction modèle.
+- Découverte d'équipements absents de Jeedom améliorée lors du raffraichissement réseau.
+
+231106-BETA-5
+-------------
+
+- IKEA TRADFRIbulbE27opal1000lm: Correction modèle (2644).
+- TRV06: Correction modèle.
+- Xiaomi Aqara Opple 4 boutons: Mises-à-jour du modèle (2636).
+- Modèles: Cmde 'onGroupBroadcast'/'offGroupBroadcast' remplacée (cmd-0006 + addrMode=04).
+- Télécommande virtuelle: Correction pour 'onGroupBroadcast'/'offGroupBroadcast'.
+- SilverCrest-HG08673-FR: Mises-à-jour du modèle (2635).
+- Gledopto Spectre Blanc & RGBW GU10: Correction modèles (2646).
+- Profalux volets gen2: Mises-à-jour du modèle MOT-C1Z06C.
+- Profalux BSO gen2: Mises-à-jour du modèle.
+- Trafri remote control: Mises-à-jour du modèle.
+- Modèles: Suppression commande 'toggleGroup' => 'act_zbCmdC-0006-ToggleGroup'.
+
 231104-BETA-2
 -------------
 

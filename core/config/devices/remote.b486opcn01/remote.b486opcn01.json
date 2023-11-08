@@ -13,12 +13,10 @@
             "batteryType": "1x3V CR2032"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "isVisible": "1",
+                "nextLine": "after"
             },
             "Battery-Volt": {
                 "use": "inf_zbAttr-0001-BatteryVolt",
@@ -34,9 +32,25 @@
                 "params": "ep=01&clustId=0001",
                 "execAtCreation": "yes"
             },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": "1"
+            "Click 1": {
+                "use": "inf_zbAttr-0012-PresentValue",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Click 2": {
+                "use": "inf_zbAttr-0012-PresentValue",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Click 3": {
+                "use": "inf_zbAttr-0012-PresentValue",
+                "params": "ep=03",
+                "isVisible": 1
+            },
+            "Click 4": {
+                "use": "inf_zbAttr-0012-PresentValue",
+                "params": "ep=04",
+                "isVisible": 1
             }
         }
     }

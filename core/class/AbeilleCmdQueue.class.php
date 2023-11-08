@@ -752,7 +752,7 @@ cmdLog('debug', "cmd=".json_encode($cmd));
                         $net = $msg['net'];
                         $addr = $msg['addr'];
                         $eq = &getDevice($net, $addr); // By ref
-                        if ($eq === false) {
+                        if ($eq === []) {
                             cmdLog('debug', "  WARNING: Unknown device: Net=${net} Addr=${addr}");
                         } else {
 cmdLog('debug', "eq=".json_encode($eq));

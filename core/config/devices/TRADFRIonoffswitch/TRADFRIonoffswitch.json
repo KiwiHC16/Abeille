@@ -6,7 +6,7 @@
         "type": "TRADFRI on/off switch",
         "genericType": "Light",
         "comment": "Ref. FR 704.085.95",
-        "comment2": "below 2.3.075: suppports binding to groups only, 2.3.075 and greater: supports binding to DEVICES ONLY",
+        "comment2": "WARNING: below 2.3.075: suppports binding to groups only, 2.3.075 and greater: supports binding to DEVICES ONLY",
         "timeout": "60",
         "configuration": {
             "remote": {
@@ -20,14 +20,6 @@
             "light": "1"
         },
         "commands": {
-            "SWBuild": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuild": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000",
-                "execAtCreation": "Yes"
-            },
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "calculValueOffset": "#value#*2",

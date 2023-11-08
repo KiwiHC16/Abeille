@@ -53,13 +53,10 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 6
             },
-            "Set Level": {
-                "use": "act_setLevel-Light",
-                "isVisible": 1
-            },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -75,15 +72,15 @@
                 "use": "act_zbCmdC-0006-Toggle",
                 "params": "ep=01"
             },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
                 "isVisible": "1",
                 "nextLine": "after"
-            },
-            "Get Status": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0006&attrId=0000"
             },
             "Bind 01-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -91,8 +88,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting 01-0006": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
             }
         }

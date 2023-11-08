@@ -41,12 +41,13 @@
     }
 
     /* Get device infos.
-        Returns: device entry by reference or false */
+        Returns: device entry by reference or [] if error */
     function &getDevice($net, $addr) {
+        static $error = [];
         if (!isset($GLOBALS['devices'][$net]))
-            return false;
+            return $error;
         if (!isset($GLOBALS['devices'][$net][$addr]))
-            return false;
+            return $error;
 
         return $GLOBALS['devices'][$net][$addr];
     }

@@ -50,6 +50,7 @@
     }
     $GLOBALS['eqPerZigate'] = $eqPerZigate;
     echo '<script>var js_eqPerZigate = \''.json_encode($eqPerZigate).'\';</script>';
+    echo '<script>var js_urlProducts = "'.urlProducts.'";</script>';
 
     // logDebug("eqPerZigate=".json_encode($eqPerZigate)); // In dev mode only
     // $parametersAbeille = AbeilleTools::getParameters();

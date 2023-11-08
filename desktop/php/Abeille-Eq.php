@@ -19,10 +19,6 @@
     }
 ?>
 
-<!-- For all modals on 'Abeille' page. -->
-<div class="row row-overflow" id="abeilleModal">
-</div>
-
 <div class="col-xs-12 eqLogic" style="display: none;">
     <div class="input-group pull-right" style="display:inline-flex">
 		<span class="input-group-btn">
@@ -58,3 +54,8 @@
         </div>
     </div>
 </div>
+
+<!-- For all modals on 'Abeille' page. -->
+<div class="row row-overflow" id="abeilleModal">
+</div>
+

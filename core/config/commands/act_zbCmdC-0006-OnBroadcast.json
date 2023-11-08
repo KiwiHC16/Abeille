@@ -1,0 +1,13 @@
+{
+    "act_zbCmdC-0006-OnBroadcast": {
+        "type": "action",
+        "subType": "other",
+        "logicalId": "0006-CmdOnBroadcast",
+        "configuration": {
+            "topic": "cmd-0006",
+            "request": "cmd=01&addrMode=04",
+            "visibilityCategory": "All"
+        },
+        "genericType": "LIGHT_ON"
+    }
+}

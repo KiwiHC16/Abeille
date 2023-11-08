@@ -12,7 +12,6 @@
         "display": {
             "icon": "<i class=\"icon jeedom-lumiere-on\"><\/i>"
         },
-        "type": "action",
-        "nextLine": "after"
+        "type": "action"
     }
 }

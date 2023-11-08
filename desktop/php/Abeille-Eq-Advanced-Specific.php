@@ -5,36 +5,31 @@
     if (isset($dbgDeveloperMode)) echo __FILE__;
 ?>
 
-<?php
-    /* If device is a remote control. 'paramType' is defined in device JSON file */
-    if ($eqLogic->getConfiguration('paramType', '') == "telecommande") {
-?>
+
+    <!-- telecommande: visible / hidden -->
+    <div class="form-group" id="telecommande" style="visibility: hidden">
         <hr>
+        <div class="col-sm-3">
+            <h3 class="col-sm-5" style="text-align:center">{{Télécommande}}</h3>
+        </div>
 
         <div class="form-group">
-            <div class="col-sm-3">
-                <h3 class="col-sm-5" style="text-align:center">{{Télécommande}}</h3>
-            </div>
-
-            <div class="form-group">
-                <label class="col-sm-3 control-label">{{Adresse groupe}}</label>
-                <div class="col-sm-5">
-                    <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Groupe" placeholder="{{Adresse courte en hex sur 4 digits (ex: AE12)}}"/>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="col-sm-3 control-label">{{Durée (s)}}</label>
-                <div class="col-sm-5">
-                    <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="onTime" placeholder="{{Durée en secondes}}"/>
-                </div>
+            <label class="col-sm-3 control-label">{{Adresse groupe}}</label>
+            <div class="col-sm-5">
+                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="Groupe" placeholder="{{Adresse courte en hex sur 4 digits (ex: AE12)}}"/>
             </div>
         </div>
-<?php
-    }
-            /* If eq is a Innr Tele. 'paramType' is defined in original JSON file */
-    if ($eqLogic->getConfiguration('paramType', '') == "telecommande7groups") {
-?>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label">{{Durée (s)}}</label>
+            <div class="col-sm-5">
+                <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="onTime" placeholder="{{Durée en secondes}}"/>
+            </div>
+        </div>
+    </div>
+
+    <!-- telecommande7groups: visible / hidden -->
+    <div class="form-group" id="telecommande7groups" style="visibility: hidden">
         <hr>
 
         <div class="form-group">
@@ -91,12 +86,11 @@
                 <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="GroupeEP8" placeholder="{{Adresse courte en hex sur 4 digits (ex: AE12)}}"/>
             </div>
         </div>
-<?php
-    }
+    </div>
 
-    /* If eq is ?. 'paramType' is defined in original JSON file */
-    if ($eqLogic->getConfiguration('paramType', '') == "paramABC") {
-?>
+
+    <!-- paramABC: visible / hidden -->
+    <div class="form-group" id="paramABC" style="visibility: hidden">
         <hr>
 
         <div class="form-group">
@@ -125,6 +119,4 @@
                 <input class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="paramC" placeholder="{{nombre}}"/>
             </div>
         </div>
-<?php
-    }
-?>
+    </div>

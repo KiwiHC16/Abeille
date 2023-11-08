@@ -576,6 +576,8 @@
 
                 $eq['zigbee'] = $eqLogic->getConfiguration('ab::zigbee', []);
 
+                $eq['paramType'] = $eqLogic->getConfiguration('paramType', "");
+
                 $jCmds = Cmd::byEqLogicId($eqId);
                 $eq['cmds'] = [];
                 foreach ($jCmds as $cmdLogic) {

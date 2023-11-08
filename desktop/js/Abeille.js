@@ -116,6 +116,27 @@ function refreshAdvEq() {
                 devPart.style.display = "block";
             }
 
+            console.log("paramType: " + eq.paramType);
+            if (eq.paramType == "telecommande") {
+                document.getElementById("telecommande"       ).style.visibility = "visible";
+            }
+            else {
+                document.getElementById("telecommande"       ).style.visibility = "hidden";
+            } 
+            if (eq.paramType == "telecommande7groups") {
+                document.getElementById("telecommande7groups").style.visibility = "visible";
+            }
+            else {
+                document.getElementById("telecommande7groups").style.visibility = "hidden";
+            } 
+            if (eq.paramType == "paramABC") {
+                document.getElementById("paramABC"           ).style.visibility = "visible";
+            }
+            else {
+                document.getElementById("paramABC"           ).style.visibility = "hidden";
+            } 
+            
+
             // Updating info cmds
             const advInfoCmds = document.querySelectorAll("[advInfo]"); // All with attribute named "advInfo"
             for (let i = 0; i < advInfoCmds.length; i++) {

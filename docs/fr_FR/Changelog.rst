@@ -6,6 +6,7 @@ ChangeLog
 - Gledopto GL-SD-001: Mise-à-jour du modèle.
 - Tuya ZS08 télécommande universelle alimentée par USB: Ajout support.
 - Meilleur support des modèles avec signature alternative.
+- Abeille remote control: Commandes 'on all' & 'off all' cachées par défaut. Trop dangereux.
 
 231107-BETA-2
 -------------

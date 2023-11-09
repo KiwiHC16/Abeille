@@ -15,6 +15,7 @@
  */
 
 var currentZigateLG = 1; // Current zigate displayed in links graph
+var prevTrackingMsg = ""; // Previous tracking message
 
 $("#tab_nodes")
     .off("click")
@@ -224,10 +225,14 @@ function trackLQICollectStatus(_autoUpdate, zgId) {
                     data = "Collecte terminée";
                     _autoUpdate = 0; // Stop status refresh
                 }
-                $("#div_networkZigbeeAlert").showAlert({
-                    message: data,
-                    level: alertLevel,
-                });
+
+                if (data != prevTrackingMsg) {
+                    $("#div_networkZigbeeAlert").showAlert({
+                        message: data,
+                        level: alertLevel,
+                    });
+                    prevTrackingMsg = data;
+                }
 
                 /* Collect status display stops when "done" found */
                 // _autoUpdate = data.toLowerCase().includes("done")?0:1;

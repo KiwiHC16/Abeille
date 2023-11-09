@@ -1475,10 +1475,11 @@ class Abeille extends eqLogic {
             // Also rechecking if model is still the correct one (ex: TS011F => TS011F__TZ3000_2putqrmw)
             $eqSig = $eqLogic->getConfiguration('ab::signature', []);
 
-            if ($eqSig != [] && $eqSig['modelId'] != "" && !$isForcedModel) {
+            if (($eqSig != []) && ($eqSig['modelId'] != "") && !$isForcedModel) {
                 // Any user or official model ?
                 $modelInfos = self::findModel($eqSig['modelId'], $eqSig['manufId']);
                 if ($modelInfos !== false) {
+                    $modelSig = $modelInfos['modelSignature'];
                     $jsonId = $modelInfos['jsonId'];
                     $jsonLocation = $modelInfos['location']; // TODO: rename to jsonLocation
                     $eqHName = $eqLogic->getHumanName();
@@ -1490,6 +1491,7 @@ class Abeille extends eqLogic {
             $dev = array(
                 'net' => $dest,
                 'addr' => $addr,
+                'modelSignature' => $modelSig,
                 'jsonId' => $jsonId,
                 'jsonLocation' => $jsonLocation,
                 'ieee' => $eqLogic->getConfiguration('IEEE'),
@@ -2804,7 +2806,6 @@ class Abeille extends eqLogic {
             log::add('Abeille', 'debug', '  Model='.json_encode($model, JSON_UNESCAPED_SLASHES));
             $modelType = $model['type'];
         }
-
 
         if (!is_object($eqLogic)) {
             $newEq = true;

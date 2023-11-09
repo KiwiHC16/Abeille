@@ -316,7 +316,7 @@
                - If not found, look with '<modelId>' identifier
                - And if still not found, use 'defaultUnknown'
              */
-            $zigbeeId = ''; // Successful identifier (<modelId_manuf> or <modelId> or <location>)
+            $modelSignature = ''; // Successful identifier (<modelId_manuf> or <modelId> or <location>)
             $jsonLocation = "Abeille"; // Default location
 
             if (($eq['modelId'] !== false) && ($eq['modelId'] != '')) {
@@ -324,23 +324,23 @@
                     /* Search by modelId AND manufacturer */
                     $identifier = $eq['modelId'].'_'.$eq['manufId'];
                      if (isset($GLOBALS['customEqList'][$identifier])) {
-                        $zigbeeId = $identifier;
+                        $modelSignature = $identifier;
                         $jsonLocation = "local";
                         parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' identifier");
                     } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
-                        $zigbeeId = $identifier;
+                        $modelSignature = $identifier;
                         parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
                     }
                 }
-                if ($zigbeeId == '') {
+                if ($modelSignature == '') {
                     /* Search by modelId */
                     $identifier = $eq['modelId'];
                      if (isset($GLOBALS['customEqList'][$identifier])) {
-                        $zigbeeId = $identifier;
+                        $modelSignature = $identifier;
                         $jsonLocation = "local";
                         parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' identifier");
                     } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
-                        $zigbeeId = $identifier;
+                        $modelSignature = $identifier;
                         parserLog('debug', "  EQ is supported with '".$identifier."' identifier");
                     }
                 }
@@ -348,28 +348,28 @@
                 /* Search by location */
                 $identifier = $eq['location'];
                  if (isset($GLOBALS['customEqList'][$identifier])) {
-                    $zigbeeId = $identifier;
+                    $modelSignature = $identifier;
                     $jsonLocation = "local";
                     parserLog('debug', "  EQ is supported as user/custom config with '".$identifier."' location identifier");
                 } else if (isset($GLOBALS['supportedEqList'][$identifier])) {
-                    $zigbeeId = $identifier;
+                    $modelSignature = $identifier;
                     parserLog('debug', "  EQ is supported with '".$identifier."' location identifier");
                 }
             }
 
-            if ($zigbeeId == '') {
-                $eq['zigbeeId'] = "";
+            if ($modelSignature == '') {
+                $eq['modelSignature'] = "";
                 $eq['jsonId'] = "defaultUnknown";
                 $eq['jsonLocation'] = "Abeille";
                 parserLog('debug', "  EQ is UNsupported. 'defaultUnknown' config will be used");
                 return false;
             }
 
-            $eq['zigbeeId'] = $zigbeeId;
+            $eq['modelSignature'] = $modelSignature;
             if ($jsonLocation == "Abeille")
-                $eq['jsonId'] = $GLOBALS['supportedEqList'][$zigbeeId]['jsonId'];
+                $eq['jsonId'] = $GLOBALS['supportedEqList'][$modelSignature]['jsonId'];
             else
-                $eq['jsonId'] = $GLOBALS['customEqList'][$zigbeeId]['jsonId'];
+                $eq['jsonId'] = $GLOBALS['customEqList'][$modelSignature]['jsonId'];
             $eq['jsonLocation'] = $jsonLocation;
             parserLog('debug', "  JSON id '".$eq['jsonId']."', location '".$jsonLocation."'");
             return true;
@@ -390,7 +390,7 @@
                 'manufId' => null (undef)/false (unsupported)/'xx'
                 'modelId' => null (undef)/false (unsupported)/'xx'
                 'location' => null (undef)/false (unsupported)/'xx'
-                'zigbeeId' => null (undef)/'' (unsupported)
+                'modelSignature' => null (undef)/'' (unsupported)
                 'jsonId' => '', // JSON identifier
                 'jsonLocation' => '', // JSON location ("Abeille"=default, or "local")
             );
@@ -958,8 +958,9 @@
                 'ieee' => $eq['ieee'],
                 // 'ep' => $eq['epFirst'],
                 'ep' => $eq['mainEp'],
-                'modelId' => $eq['modelId'],
-                'manufId' => $eq['manufId'],
+                'modelId' => $eq['modelId'], // Zigbee model id (cluster 0000)
+                'manufId' => $eq['manufId'], // Zigbee manuf id (cluster 0000)
+                'modelSignature' => $eq['modelSignature'], // Signature used for model identification
                 'jsonId' => $eq['jsonId'],
                 'jsonLocation' => $eq['jsonLocation'], // "Abeille" or "local"
                 'macCapa' => $eq['macCapa'],

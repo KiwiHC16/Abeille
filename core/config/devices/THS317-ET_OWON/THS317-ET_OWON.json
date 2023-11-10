@@ -11,7 +11,8 @@
         },
         "configuration": {
             "icon": "Owon-THS317-ET",
-            "mainEP": "03"
+            "mainEP": "03",
+            "batteryType": "2x1.5V AAA"
         },
         "commands": {
             "Battery-Percent": {
@@ -25,10 +26,6 @@
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",
                 "isVisible": "1"
-            },
-            "Get Temperature": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0402&attrId=0000"
             },
             "Bind 0402-ToZigate": {
                 "use": "act_zbBindToZigate",

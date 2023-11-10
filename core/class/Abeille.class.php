@@ -1807,6 +1807,7 @@ class Abeille extends eqLogic {
                             log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'addr' updated to ".$addr);
                             $eqLogic->setIsEnable(1);
                             $eqChanged = true;
+                            $informCmd = true;
                             break;
                         }
                     }
@@ -1897,6 +1898,16 @@ class Abeille extends eqLogic {
             }
             if ($eqChanged)
                 $eqLogic->save();
+
+            if (isset($informCmd)) {
+                // Inform cmd that EQ config has changed
+                $msg = array(
+                    'type' => "eqUpdated",
+                    'id' => $eqLogic->getId()
+                );
+                Abeille::msgToCmd2($msg);
+            }
+
             return;
         } // End 'deviceUpdates'
 
@@ -2031,6 +2042,13 @@ class Abeille extends eqLogic {
             $eqLogic->setIsEnable(1);
             $eqLogic->save();
             message::add("Abeille", $eqLogic->getHumanName().": a migré vers le réseau ".$net, '');
+
+            // Inform cmd that EQ config has changed
+            $msg = array(
+                'type' => "eqUpdated",
+                'id' => $eqLogic->getId()
+            );
+            Abeille::msgToCmd2($msg);
 
             return;
         } // End 'eqMigrated'

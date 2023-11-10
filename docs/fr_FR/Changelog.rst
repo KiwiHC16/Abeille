@@ -11,6 +11,7 @@ ChangeLog
 - Reset de modele: Correction pour signatures alternatives.
 - Suppression d'un équipement: Correction permettant d'afficher comment il est utilisé avant suppression (2652).
 - Page EQ/avancé: Correction interrogations quand adresse IEEE nécessaire (2653).
+- Interne: Correction: AbeilleCmd informé si changement d'adresse via 'device announce' ou migration de réseau.
 
 231107-BETA-2
 -------------

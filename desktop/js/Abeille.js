@@ -320,68 +320,184 @@ function getSelectedEqs(zgId) {
 }
 
 /* Removes selected equipments for given zigate nb from Jeedom DB only. Zigate is untouched. */
-function removeBeesJeedom(zgId) {
-    console.log("removeBeesJeedom(zgId=" + zgId + ")");
+// function removeBeesJeedom(zgId) {
+//     console.log("removeBeesJeedom(zgId=" + zgId + ")");
+
+//     /* Any selected ? */
+//     var sel = getSelectedEqs(zgId);
+//     console.log(sel);
+//     if (sel["nb"] == 0) {
+//         alert("Aucun équipement sélectionné !");
+//         return;
+//     }
+//     var eqIdList = sel["ids"];
+//     console.log("eqIdList=" + eqIdList);
+
+//     var msg =
+//         "{{Vous êtes sur le point de supprimer les équipements selectionnés de Jeedom.";
+//     msg +=
+//         "<br><br>Si ils sont toujours dans le réseau, ils deviendront 'fantomes' et devraient être réinclus automatiquement au fur et à mesure de leur reveil et ce, tant qu'on ne les force pas à quitter le réseau.";
+//     msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
+//     bootbox.confirm(msg, function (result) {
+//         if (result == false) return;
+
+//         // Collecting addresses before EQ is removed
+//         var eqAddrList = sel["addrs"];
+//         console.log("eqAddrList=" + eqAddrList);
+
+//         $.ajax({
+//             type: "POST",
+//             url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
+//             data: {
+//                 action: "removeEqJeedom",
+//                 eqList: eqIdList,
+//             },
+//             dataType: "json",
+//             global: false,
+//             error: function (request, status, error) {
+//                 bootbox.alert("ERREUR 'removeEqJeedom' !");
+//             },
+//             success: function (json_res) {
+//                 window.location.reload();
+//                 res = JSON.parse(json_res.result);
+//                 if (res.status != 0) {
+//                     var msg =
+//                         "ERREUR ! Quelque chose s'est mal passé.\n" +
+//                         res.errors;
+//                     alert(msg);
+//                 } else {
+//                     // Informing parser that some equipements have to be considered "phantom"
+//                     var xhr = new XMLHttpRequest();
+//                     xhr.open(
+//                         "GET",
+//                         "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
+//                             js_queueXToParser +
+//                             "&msg=type:eqRemoved_net:Abeille" +
+//                             zgId +
+//                             "_eqList:" +
+//                             eqAddrList,
+//                         true
+//                     );
+//                     xhr.send();
+//                 }
+//             },
+//         });
+//     });
+// }
+
+/* Removes selected equipments for given zigate nb from Jeedom DB only. Zigate is untouched. */
+function removeSelectedEq(zgId) {
+    console.log("removeSelectedEq(zgId=" + zgId + ")");
 
     /* Any selected ? */
     var sel = getSelectedEqs(zgId);
     console.log(sel);
     if (sel["nb"] == 0) {
-        alert("Aucun équipement sélectionné !");
+        alert("{{Aucun équipement sélectionné !}}");
         return;
     }
     var eqIdList = sel["ids"];
     console.log("eqIdList=" + eqIdList);
 
-    var msg =
-        "{{Vous êtes sur le point de supprimer les équipements selectionnés de Jeedom.";
-    msg +=
-        "<br><br>Si ils sont toujours dans le réseau, ils deviendront 'fantomes' et devraient être réinclus automatiquement au fur et à mesure de leur reveil et ce, tant qu'on ne les force pas à quitter le réseau.";
-    msg += "<br><br>Etes vous sur de vouloir continuer ?}}";
-    bootbox.confirm(msg, function (result) {
-        if (result == false) return;
+    for (const eqId of eqIdList) removeEq(zgId, eqId);
+}
 
-        // Collecting addresses before EQ is removed
-        var eqAddrList = sel["addrs"];
-        console.log("eqAddrList=" + eqAddrList);
+/* Remove from Jeedom eq with ID 'eqId' but list first how it is used and ask confirmation to user */
+function removeEq(zgId, eqId) {
+    console.log("removeEq(" + eqId + ")");
 
-        $.ajax({
-            type: "POST",
-            url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
-            data: {
-                action: "removeEqJeedom",
-                eqList: eqIdList,
-            },
-            dataType: "json",
-            global: false,
-            error: function (request, status, error) {
-                bootbox.alert("ERREUR 'removeEqJeedom' !");
-            },
-            success: function (json_res) {
-                window.location.reload();
-                res = JSON.parse(json_res.result);
-                if (res.status != 0) {
-                    var msg =
-                        "ERREUR ! Quelque chose s'est mal passé.\n" +
-                        res.errors;
-                    alert(msg);
-                } else {
-                    // Informing parser that some equipements have to be considered "phantom"
-                    var xhr = new XMLHttpRequest();
-                    xhr.open(
-                        "GET",
-                        "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
-                            js_queueXToParser +
-                            "&msg=type:eqRemoved_net:Abeille" +
-                            zgId +
-                            "_eqList:" +
-                            eqAddrList,
-                        true
-                    );
-                    xhr.send();
+    eval("var eqPerZigate = JSON.parse(js_eqPerZigate);");
+    eqName = eqPerZigate[zgId][eqId]["name"];
+    eqAddr = eqPerZigate[zgId][eqId]["addr"];
+    eqAddrList = new Array();
+    eqAddrList.push(eqAddr);
+
+    jeedom.eqLogic.getUseBeforeRemove({
+        id: eqId,
+        error: function (error) {
+            $.fn.showAlert({
+                message: error.message,
+                level: "danger",
+            });
+        },
+        success: function (data) {
+            var text =
+                "{{Êtes-vous sûr de vouloir supprimer l'équipement}} Abeille <b>" +
+                eqName +
+                "</b> ?";
+            if (Object.keys(data).length > 0) {
+                text += " </br> {{Il est utilisé par ou utilise :}}</br>";
+                var complement = null;
+                for (var i in data) {
+                    complement = "";
+                    if ("sourceName" in data[i]) {
+                        complement = " (" + data[i].sourceName + ")";
+                    }
+                    text +=
+                        "- " +
+                        '<a href="' +
+                        data[i].url +
+                        '" target="_blank">' +
+                        data[i].type +
+                        "</a> : <b>" +
+                        data[i].name +
+                        "</b>" +
+                        complement +
+                        ' <sup><a href="' +
+                        data[i].url +
+                        '" target="_blank"><i class="fas fa-external-link-alt"></i></a></sup></br>';
                 }
-            },
-        });
+            }
+            text = text.substring(0, text.length - 2);
+            bootbox.confirm(text, function (result) {
+                if (result) {
+                    jeedom.eqLogic.remove({
+                        type: "Abeille",
+                        id: eqId,
+                        error: function (error) {
+                            $.fn.showAlert({
+                                message: error.message,
+                                level: "danger",
+                            });
+                        },
+                        success: function () {
+                            // Inform parser & cmd that this equipement has been removed
+                            var xhr = new XMLHttpRequest();
+                            xhr.open(
+                                "POST",
+                                "plugins/Abeille/core/php/AbeilleCliToQueue.php?action=sendMsg&queueId=" +
+                                    js_queueXToParser +
+                                    "&msg=type:eqRemoved_net:Abeille" +
+                                    zgId +
+                                    "_eqList:" +
+                                    eqAddrList,
+                                true
+                            );
+                            xhr.send();
+
+                            var vars = getUrlVars();
+                            var url = "index.php?";
+                            for (var i in vars) {
+                                if (
+                                    i != "id" &&
+                                    i != "removeSuccessFull" &&
+                                    i != "saveSuccessFull"
+                                ) {
+                                    url +=
+                                        i +
+                                        "=" +
+                                        vars[i].replace("#", "") +
+                                        "&";
+                                }
+                            }
+                            modifyWithoutSave = false;
+                            url += "removeSuccessFull=1";
+                            jeedomUtils.loadPage(url);
+                        },
+                    });
+                }
+            });
+        },
     });
 }
 

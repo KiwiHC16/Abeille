@@ -9,6 +9,7 @@ ChangeLog
 - Abeille remote control: Commandes 'on all' & 'off all' cachées par défaut. Trop dangereux.
 - Interne: Mise-à-jour 'getDevicesList()' + 'getDeviceModel()'.
 - Reset de modele: Correction pour signatures alternatives.
+- Suppression d'un équipement: Correction permettant d'affichage comment il est utilisé avant suppression (2652).
 
 231107-BETA-2
 -------------

@@ -40,6 +40,7 @@
         $eq['mainEp'] = $eqLogic->getConfiguration('mainEP', '');
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
         $eq['jsonId'] = $eqModel ? $eqModel['id'] : '';
+        $eq['name'] = $eqLogic->getName();
         if ($eqAddr == "0000") {
             if (isset($eqPerZigate[$zgId][$eqId]))
                 array_unshift($eqPerZigate[$zgId][$eqId], $eq);

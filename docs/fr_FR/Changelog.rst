@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Owon-THS317-ET: Mise-à-jour du modèle (2319).
+- Page réseau: Amélioration message durant collecte LQI.
+
 231107-BETA-2
 -------------
 

@@ -366,7 +366,7 @@
                 $status = -1;
                 $error = "Le fichier '".$jsonId."' n'existe pas dans '".$jsonLocation."'";
             } else {
-                $devModel = AbeilleTools::getDeviceModel($jsonId, $jsonLocation, $mode);
+                $devModel = AbeilleTools::getDeviceModel('', $jsonId, $jsonLocation, $mode);
                 if ($devModel === false) {
                     $status = -1;
                     $error = "Le modèle '".$jsonId."' n'existe pas dans '".$jsonLocation."'";

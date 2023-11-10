@@ -24,11 +24,11 @@
             },
             "On All": {
                 "use": "act_zbCmdC-0006-OnBroadcast",
-                "isVisible": 1
+                "comment": "Too dangerous to be visible by default"
             },
             "Off All": {
                 "use": "act_zbCmdC-0006-OffBroadcast",
-                "isVisible": 1,
+                "comment": "Too dangerous to be visible by default",
                 "nextLine": "after"
             },
             "OnTimed": {

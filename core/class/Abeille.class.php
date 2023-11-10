@@ -1475,10 +1475,11 @@ class Abeille extends eqLogic {
             // Also rechecking if model is still the correct one (ex: TS011F => TS011F__TZ3000_2putqrmw)
             $eqSig = $eqLogic->getConfiguration('ab::signature', []);
 
-            if ($eqSig != [] && $eqSig['modelId'] != "" && !$isForcedModel) {
+            if (($eqSig != []) && ($eqSig['modelId'] != "") && !$isForcedModel) {
                 // Any user or official model ?
                 $modelInfos = self::findModel($eqSig['modelId'], $eqSig['manufId']);
                 if ($modelInfos !== false) {
+                    $modelSig = $modelInfos['modelSig'];
                     $jsonId = $modelInfos['jsonId'];
                     $jsonLocation = $modelInfos['location']; // TODO: rename to jsonLocation
                     $eqHName = $eqLogic->getHumanName();
@@ -1490,8 +1491,9 @@ class Abeille extends eqLogic {
             $dev = array(
                 'net' => $dest,
                 'addr' => $addr,
-                'jsonId' => $jsonId,
-                'jsonLocation' => $jsonLocation,
+                'modelSig' => $modelSig, // Model signature
+                'jsonId' => $jsonId, // Model file name
+                'jsonLocation' => $jsonLocation, // Model file location
                 'ieee' => $eqLogic->getConfiguration('IEEE'),
             );
             Abeille::createDevice($action, $dev);
@@ -2775,8 +2777,9 @@ class Abeille extends eqLogic {
                 );
          */
 
-        $jsonId = (isset($dev['jsonId']) ? $dev['jsonId']: '');
-        $jsonLocation = (isset($dev['jsonLocation']) ? $dev['jsonLocation']: '');
+        $modelSig = isset($dev['modelSig']) ? $dev['modelSig']: '';
+        $jsonId = isset($dev['jsonId']) ? $dev['jsonId']: '';
+        $jsonLocation = isset($dev['jsonLocation']) ? $dev['jsonLocation']: '';
         if ($jsonLocation == '')
             $jsonLocation = 'Abeille';
 
@@ -2788,7 +2791,7 @@ class Abeille extends eqLogic {
         $isModelForcedByUser = false;
         if(is_object($eqLogic)){
             $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
-            if(isset($jEqModel['id']) && isset($jEqModel['location']) && isset($jEqModel['forcedByUser']) && $jEqModel['forcedByUser'] == true){
+            if(isset($jEqModel['id']) && isset($jEqModel['location']) && isset($jEqModel['forcedByUser']) && ($jEqModel['forcedByUser'] == true)){
                 $jsonLocation = $jEqModel['location'];
                 $jsonId = $jEqModel['id'];
                 $isModelForcedByUser = true;
@@ -2796,7 +2799,7 @@ class Abeille extends eqLogic {
         }
 
         if ($jsonId != '' && $jsonLocation != '') {
-            $model = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
+            $model = AbeilleTools::getDeviceModel($modelSig, $jsonId, $jsonLocation);
             if ($model === false) {
                 // log::add('Abeille', 'error', "  createDevice(jsonId=".$jsonId.", location=".$jsonLocation."): Unknown model");
                 return;
@@ -2804,7 +2807,6 @@ class Abeille extends eqLogic {
             log::add('Abeille', 'debug', '  Model='.json_encode($model, JSON_UNESCAPED_SLASHES));
             $modelType = $model['type'];
         }
-
 
         if (!is_object($eqLogic)) {
             $newEq = true;

@@ -5,7 +5,14 @@
         "type": "Moes universal smart IR remote control",
         "timeout": "60",
         "alternateIds": {
-            "TS1201__TZ3290_j37rooaxrcdcqo5n": []
+            "TS1201__TZ3290_j37rooaxrcdcqo5n": [],
+            "TS1201__TZ3290_7v1k4vufotpowp9z": {
+                "manufacturer": "Tuya",
+                "model": "ZS08",
+                "type": "Tuya universal remote USB powered",
+                "batteryType": "",
+                "icon": "Tuya-UniversalRemote"
+            }
         },
         "category": {
             "automatism": "1"

@@ -3,6 +3,7 @@
         "manufacturer": "Gledopto",
         "model": "GL-SD-001",
         "type": "Gledopto GL-SD-001 AC dimmer",
+        "genericType": "Light",
         "timeout": "60",
         "category": {
             "light": "1"
@@ -12,16 +13,10 @@
             "mainEP": "01"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -49,20 +44,20 @@
                 "execAtCreation": "yes"
             },
             "SetReporting 0006": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
             },
             "Set Level": {
                 "use": "act_setLevel-Light",
                 "isVisible": 1
             },
-            "Current Level": {
+            "Level": {
                 "use": "inf_zbAttr-0008-CurrentLevel",
                 "isVisible": "1",
                 "nextLine": "after"
             },
-            "Get Current Level": {
+            "Get Level": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
@@ -72,8 +67,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting-0008": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0008&attrType=20&attrId=0000",
                 "execAtCreation": "yes"
             }
         }

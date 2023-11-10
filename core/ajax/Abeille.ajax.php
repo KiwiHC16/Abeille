@@ -561,6 +561,7 @@
                 $eq['zgType'] = config::byKey('ab::zgType'.$eq['zgId'], 'Abeille', '', 1);
                 $eq['zgChan'] = config::byKey('ab::zgChan'.$eq['zgId'], 'Abeille', '', 1);
                 $eq['addr'] = $eqAddr;
+                $eq['ieee'] = $eqLogic->getConfiguration('IEEE', '');
                 $eq['defaultEp'] = $eqLogic->getConfiguration('mainEP', '');
                 $eq['batteryType'] = $eqLogic->getConfiguration('battery_type', '');
 

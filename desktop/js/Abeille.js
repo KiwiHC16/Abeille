@@ -61,8 +61,10 @@ function refreshAdvEq() {
             res = JSON.parse(json_res.result);
             eq = res.eq;
 
+            // Updating global infos
             zgId = eq.zgId;
             eqAddr = eq.addr;
+            eqIeee = eq.ieee;
             eqBatteryType = eq.batteryType;
 
             console.log("eq=", eq);
@@ -1616,7 +1618,7 @@ function interrogate(request) {
         }
     } else if (request == "leaveRequest") {
         topic = "Cmd" + logicalId + "_LeaveRequest";
-        payload = "IEEE=" + js_eqIeee;
+        payload = "IEEE=" + eqIeee;
     } else if (request == "readReportingConfig") {
         topic = "Cmd" + logicalId + "_readReportingConfig";
         ep = document.getElementById("idEp").value;
@@ -1724,7 +1726,7 @@ function interrogate(request) {
         destEp = document.getElementById("idEpE2").value;
         payload =
             "addr=" +
-            js_eqIeee +
+            eqIeee +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -1741,7 +1743,7 @@ function interrogate(request) {
         destEp = document.getElementById("idEpDst-UBD").value;
         payload =
             "addr=" +
-            js_eqIeee +
+            eqIeee +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -1757,7 +1759,7 @@ function interrogate(request) {
         destGroup = document.getElementById("idGroupF").value;
         payload =
             "addr=" +
-            js_eqIeee +
+            eqIeee +
             "_ep=" +
             ep +
             "_clustId=" +
@@ -1771,7 +1773,7 @@ function interrogate(request) {
         destGroup = document.getElementById("idGroup-UBG").value;
         payload =
             "addr=" +
-            js_eqIeee +
+            eqIeee +
             "_ep=" +
             ep +
             "_clustId=" +

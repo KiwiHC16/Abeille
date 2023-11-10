@@ -269,7 +269,7 @@
             );
             if ($eq['jsonId'] != '') {
                 // Read JSON to get list of commands to execute
-                $model = AbeilleTools::getDeviceModel($eq['jsonId'], $eq['jsonLocation']);
+                $model = AbeilleTools::getDeviceModel('', $eq['jsonId'], $eq['jsonLocation']);
                 if ($model !== false) {
                     $eq['mainEp'] = isset($model['mainEP']) ? $model['mainEP'] : "01";
                     $eq['commands'] = isset($model['commands']) ? $model['commands'] : [];

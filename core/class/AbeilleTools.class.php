@@ -81,7 +81,12 @@
         }
 
         /* Get list of supported devices ($from="Abeille"), or user/custom ones ($from="local")
-           Returns: Associative array; $devicesList[$identifier] = array(), or false if error */
+           Returns: false if error
+            or associative array $devicesList[$identifier] = array(
+                'modelSig' => model signature
+                'jsonId' => model file
+                'location' => model file location // TODO: rename to jsonLocation
+            ) */
         public static function getDevicesList($from = "Abeille") {
             $devicesList = [];
 
@@ -112,46 +117,50 @@
                     continue; // No local JSON model. Maybe just an auto-discovery ?
 
                 $dev = array(
+                    'modelSig' => $dirEntry,
                     'jsonId' => $dirEntry,
                     'location' => $from
                 );
 
                 /* Check if config is compliant with other device identification */
                 $content = file_get_contents($fullPath);
-                $devConf = json_decode($content, true);
-                $devConf = $devConf[$dirEntry]; // Removing top key
-                $dev['manufacturer'] = isset($devConf['manufacturer']) ? $devConf['manufacturer'] : '';
-                $dev['model'] = isset($devConf['model']) ? $devConf['model']: '';
-                $dev['type'] = $devConf['type'];
-                $dev['icon'] = $devConf['configuration']['icon'];
+                $devMod = json_decode($content, true); // Device model
+                $devMod = $devMod[$dirEntry]; // Removing top key
+                // $dev['manufacturer'] = isset($devMod['manufacturer']) ? $devMod['manufacturer'] : '';
+                // $dev['model'] = isset($devMod['model']) ? $devMod['model']: '';
+                // $dev['type'] = $devMod['type'];
+                // $dev['icon'] = $devMod['configuration']['icon'];
                 $devicesList[$dirEntry] = $dev;
 
-                if (isset($devConf['alternateIds'])) {
-                    $ai = $devConf['alternateIds'];
+                if (isset($devMod['alternateIds'])) {
+                    $ai = $devMod['alternateIds'];
                     /* Reminder:
                        "alternateIds": {
-                          "sigX": {
+                          "alternateSigX": {
                             "manufacturer": "manufX", // Optional
                             "model": "modelX", // Optional
                             "type": "typeX" // Optional
                             "icon": "iconX" // Optional
-                          }
+                          },
+                          "alternateSigY": {},
+                          "alternateSigZ": {}
                        } */
                     foreach ($ai as $aId => $aIdVal) {
                         log::add('Abeille', 'debug', "getDevicesList(): Alternate ID '".$aId."' for '".$dirEntry."'");
                         $dev = array(
+                            'modelSig' => $aId,
                             'jsonId' => $dirEntry,
                             'location' => $from
                         );
                         // manufacturer, model, type or icon overload
-                        if (isset($aIdVal['manufacturer']))
-                            $dev['manufacturer'] = $aIdVal['manufacturer'];
-                        if (isset($aIdVal['model']))
-                            $dev['model'] = $aIdVal['model'];
-                        if (isset($aIdVal['type']))
-                            $dev['type'] = $aIdVal['type'];
-                        if (isset($aIdVal['icon']))
-                            $dev['icon'] = $aIdVal['icon'];
+                        // if (isset($aIdVal['manufacturer']))
+                        //     $dev['manufacturer'] = $aIdVal['manufacturer'];
+                        // if (isset($aIdVal['model']))
+                        //     $dev['model'] = $aIdVal['model'];
+                        // if (isset($aIdVal['type']))
+                        //     $dev['type'] = $aIdVal['type'];
+                        // if (isset($aIdVal['icon']))
+                        //     $dev['icon'] = $aIdVal['icon'];
                         $devicesList[$aId] = $dev;
                     }
                 }
@@ -336,12 +345,13 @@
 
         /*
          * Read given device configuration from JSON file and associated commands.
+         * 'modelSig': Model signature (!= modelName if alternate signature)
          * 'modelName': JSON file name without extension
          * 'from': JSON file location (default=Abeille, or 'local')
          * 'mode': 0/default=load commands too, 1=split cmd call & file
-         * Return: device associative array without top level key (jsonId) or false if error.
+         * Return: device associative array WITHOUT top level key (modelSig) or false if error.
          */
-        public static function getDeviceModel($modelName, $from="Abeille", $mode=0) {
+        public static function getDeviceModel($modelSig, $modelName, $from="Abeille", $mode=0) {
             // log::add('Abeille', 'debug', 'getDeviceModel start, modelName='.$modelName.", from=".$from);
 
             if ($modelName == '') {
@@ -371,8 +381,40 @@
             }
 
             $device = $device[$modelName]; // Removing top key
+            $device['modelSig'] = ($modelSig != '') ? $modelSig : $modelName;
             $device['jsonId'] = $modelName;
             $device['jsonLocation'] = $from; // Official device or local one ?
+
+            /* Alternate signature support */
+            if ($device['modelSig'] != $modelName) {
+                /* Reminder:
+                    "alternateIds": {
+                        "alternateSigX": {
+                            "manufacturer": "manufX", // Optional
+                            "model": "modelX", // Optional
+                            "type": "typeX" // Optional
+                            "icon": "iconX" // Optional
+                        }
+                    } */
+                if (!isset($device['alternateIds'][$modelSig])) {
+                    // Internal error
+                    log::add('Abeille', 'error', "getDeviceModel(): Unexpected alternate sig '${modelSig}'");
+                } else {
+                    $alt = $device['alternateIds'][$modelSig];
+                    // manufacturer, model, type or icon overload
+                    if (isset($alt['manufacturer']))
+                        $device['manufacturer'] = $alt['manufacturer'];
+                    if (isset($alt['model']))
+                        $device['model'] = $alt['model'];
+                    if (isset($alt['type']))
+                        $device['type'] = $alt['type'];
+                    if (isset($alt['icon']))
+                        $device['configuration']['icon'] = $alt['icon'];
+                    if (isset($alt['batteryType']))
+                        $device['configuration']['batteryType'] = $alt['batteryType'];
+                    unset($device['alternateIds']); // Cleanup
+                }
+            }
 
             if (isset($device['commands'])) {
                 if ($mode == 0) {

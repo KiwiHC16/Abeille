@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231110-BETA-1
+-------------
+
 - Owon-THS317-ET: Mise-à-jour du modèle (2319).
 - Page réseau: Amélioration message durant collecte LQI.
 - Gledopto GL-SD-001: Mise-à-jour du modèle.

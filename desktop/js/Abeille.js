@@ -402,6 +402,28 @@ function removeSelectedEq(zgId) {
     for (const eqId of eqIdList) removeEq(zgId, eqId);
 }
 
+/* Click on 'remove' button in equipement details page.
+    Delete current equipment from Jeedom DB.
+    Default action from 'core/js/plugin.template.js' is redefined */
+$(".eqLogicAction[data-action=remove]")
+    .off("click")
+    .on("click", function (evt) {
+        console.log("eqLogicAction[data-action=remove] click: evt=", evt);
+        evt.stopPropagation();
+
+        if ($(".eqLogicAttr[data-l1key=id]").value() == undefined) {
+            console.log("ERROR: Undefined 'data-l1key=id'");
+            return;
+        }
+        eqId = $(".eqLogicAttr[data-l1key=id]").value();
+        eqLogicalId = $(".eqLogicAttr[data-l1key=logicalId]").value();
+        zgId = eqLogicalId.substring(7, 8);
+        console.log(
+            "eqId=" + eqId + ", logicId=" + eqLogicalId + " => zgId=" + zgId
+        );
+        removeEq(zgId, eqId);
+    });
+
 /* Remove from Jeedom eq with ID 'eqId' but list first how it is used and ask confirmation to user */
 function removeEq(zgId, eqId) {
     console.log("removeEq(" + eqId + ")");

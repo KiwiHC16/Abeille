@@ -102,7 +102,6 @@
 </div>
 
 <!-- Scripts -->
-<!-- < ?php include 'Abeille-Js.php'; ?> -->
 <?php include_file('desktop', 'Abeille', 'js', 'Abeille'); ?>
 <script>
     // TODO: addCmdToTable() to be moved to Abeille.js but need to fix remaining PHP code in it.

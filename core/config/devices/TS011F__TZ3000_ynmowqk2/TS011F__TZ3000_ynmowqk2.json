@@ -1,6 +1,7 @@
 {
     "TS011F__TZ3000_ynmowqk2": {
         "comment": "Smart plug with total power (polling)+rms voltage (report)+rms current (report)+active power (report)",
+        "comment2": "Tested device supports also reporting on cluster 0702 but might not the case for all FW",
         "manufacturer": "Silvercrest",
         "model": "HG08673-FR",
         "type": "Silvercrest smart plug",
@@ -64,7 +65,7 @@
             },
             "Total power": {
                 "use": "inf_zbAttr-0702-CurrentSummationDelivered",
-                "params": "div=1",
+                "params": "div=1000",
                 "unit": "KWh",
                 "isVisible": "1"
             },

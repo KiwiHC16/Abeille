@@ -3,6 +3,8 @@ ChangeLog
 
 - SilverCrest-HG08673-FR: Mises-à-jour du modèle (2635).
 - ORVIBO CM10ZW: Mises-à-jour du modèle (2024 & 2648).
+- Page EQ: Affichage signature du modèle pour support modèles multi-signatures.
+- Page EQ: Affichage 'DateCode' (cluster 0000, attrib 0006).
 
 231110-BETA-1
 -------------

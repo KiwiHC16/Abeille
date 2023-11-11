@@ -570,6 +570,7 @@
                 $eq['zbManuf'] = isset($sig['manufId']) ? $sig['manufId'] : '';
 
                 $model = $eqLogic->getConfiguration('ab::eqModel', []);
+                $eq['modelSig'] = isset($model['sig']) ? $model['sig'] : '';
                 $eq['modelName'] = isset($model['id']) ? $model['id'] : '';
                 $eq['modelSource'] = isset($model['location']) ? $model['location'] : 'Abeille';
                 $eq['modelType'] = isset($model['type']) ? $model['type'] : '';

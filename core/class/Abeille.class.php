@@ -3053,8 +3053,9 @@ class Abeille extends eqLogic {
 
         // JSON model infos
         $eqModelInfos = array(
-            'id' => $jsonId, // Equipment model id
-            'location' => $jsonLocation, // Equipment model location
+            'sig' => $modelSig, // Equipent model signature
+            'id' => $jsonId, // Equipment model file name
+            'location' => $jsonLocation, // Equipment model file location
             'type' => $model['type'],
             'lastUpdate' => time(), // Store last update from model
             'forcedByUser' => $isModelForcedByUser

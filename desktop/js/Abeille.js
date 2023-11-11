@@ -78,6 +78,7 @@ function refreshAdvEq() {
             document.getElementById("idZgType").value = eq.zgType;
             document.getElementById("idZbModel").value = eq.zbModel;
             document.getElementById("idZbManuf").value = eq.zbManuf;
+            document.getElementById("idModelSig").value = eq.modelSig;
             document.getElementById("idModelName").value = eq.modelName;
             document.getElementById("idModelSource").value = eq.modelSource;
             docUrl = document.getElementById("idDocUrl");

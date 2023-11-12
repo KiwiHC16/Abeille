@@ -92,6 +92,6 @@
                 "execAtCreation": "Yes"
             }
         },
-        "comment": "Reporting removed as it seems not necessary but increase config phase"
+        "comment": "Reporting from cluster 0006 removed as it seems to prevent reporting"
     }
 }

@@ -5,6 +5,7 @@ ChangeLog
 - ORVIBO CM10ZW: Mises-à-jour du modèle (2024 & 2648).
 - Page EQ: Affichage signature du modèle pour support modèles multi-signatures.
 - Page EQ: Affichage 'DateCode' (cluster 0000, attrib 0006).
+- Ikea wireless dimmer (ICTC-G-1): Modèle revisité.
 
 231110-BETA-1
 -------------

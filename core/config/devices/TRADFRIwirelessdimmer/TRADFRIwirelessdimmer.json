@@ -1,16 +1,22 @@
 {
     "TRADFRIwirelessdimmer": {
+        "manufacturer": "Ikea",
+        "model": "ICTC-G-1",
+        "type": "Ikea Tradfri wireless dimmer",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "IkeaTradfriDimmer",
+            "icon": "Ikea-Tradfri-Dimmer",
             "batteryType": "1x3V CR2032"
         },
         "category": {
             "light": "1"
         },
-        "type": "IKEA TRADFRI Dimmer Jaune",
         "commands": {
+            "Battery-Percent": {
+                "use": "inf_zbAttr-0001-BatteryPercent"
+            },
             "On group": {
                 "use": "act_zbCmdC-0006-OnGroup",
                 "isVisible": 1
@@ -25,14 +31,6 @@
             },
             "setLevel": {
                 "use": "setLevelGroup"
-            },
-            "Battery-Percent": {
-                "use": "inf_zbAttr-0001-BatteryPercent",
-                "isVisible": 1
-            },
-            "Get Battery-Percent": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0001&attrId=0021"
             },
             "Bind-0001-ToZigate": {
                 "use": "act_zbBindToZigate",

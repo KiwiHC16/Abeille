@@ -874,17 +874,31 @@
         /* Internal changes
          * - Logs: AbeilleSerialReadX logs moved to /tmp/jeedom/Abeille
          * - Config DB: Removing keys for Zigates 7 to 10.
+         * - eqLogic: Icon renamed 'IkeaTradfriDimmer' => 'Ikea-Tradfri-Dimmer'
          * - Cmds DB: For 'Online' adding 'repeatEventManagement=always'
          * - Cmds DB: 'OnOff' cmd replaced by 'cmd-0006'
          * - Cmds DB: 'OnOffGroup' replaced by 'cmd-0006'
          * - Cmds DB: 'onGroupBroadcast'/'offGroupBroadcast' replaced by 'cmd-0006'
          */
         if (intval($dbVersion) < 20231106) {
-            // 'eqLogic' DB updates
+            // 'eqLogic' + 'cmd' DB updates
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
                 $eqId = $eqLogic->getId();
                 $cmds = Cmd::byEqLogicId($eqId);
+
+                // Renaming icons if required
+                $iList = array(
+                    "IkeaTradfriDimmer" => "Ikea-Tradfri-Dimmer",
+                );
+                $curIcon = $eqLogic->getConfiguration('ab::icon', '');
+                if (($curIcon != '') && isset($iList[$curIcon])) {
+                    $newIcon = $iList[$curIcon];
+                    $eqLogic->setConfiguration('ab::icon', $newIcon);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": Icon '".$curIcon."' changed to '".$newIcon."'");
+                    $saveEq = true;
+                }
+
                 foreach ($cmds as $cmdLogic) {
                     $saveCmd = false;
                     $cmdLogicId = $cmdLogic->getLogicalId();

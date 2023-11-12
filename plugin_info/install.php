@@ -885,6 +885,7 @@
             $eqLogics = eqLogic::byType('Abeille');
             foreach ($eqLogics as $eqLogic) {
                 $eqId = $eqLogic->getId();
+                $eqHName = $eqLogic->getHumanName();
                 $cmds = Cmd::byEqLogicId($eqId);
 
                 // Renaming icons if required

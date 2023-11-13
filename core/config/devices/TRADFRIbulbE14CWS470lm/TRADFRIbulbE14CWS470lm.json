@@ -46,7 +46,7 @@
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
-                "params": "clustId=0008",
+                "params": "clustId=0006",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
@@ -58,6 +58,12 @@
             "Get-CurrentLevel": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
+            },
+            "Bind-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0008",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
             },
             "SetReporting-0008-0000": {
                 "use": "act_zbConfigureReporting",

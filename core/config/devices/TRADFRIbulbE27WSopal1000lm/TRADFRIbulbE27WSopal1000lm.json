@@ -10,14 +10,6 @@
         },
         "type": "IKEA Ampoule TRADFRI bulb E27 White Spectre opal 1000 lm",
         "commands": {
-            "etat": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1
-            },
-            "CurrentLevel-0008": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": 1
-            },
             "On": {
                 "use": "act_zbCmdC-0006-On",
                 "isVisible": 1
@@ -26,9 +18,27 @@
                 "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
+            "Get-Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
             "Set Level": {
                 "use": "act_setLevel-Light",
                 "isVisible": 1
+            },
+            "Get Level": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0008&attrId=0000"
+            },
+            "Level": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "Set 2200K": {
                 "use": "act_zbCmdC-0300-MoveToColorTemp",
@@ -57,14 +67,6 @@
             },
             "setTemperatureLight": {
                 "use": "setTemperatureLight"
-            },
-            "Get-Status": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0006&attrId=0000"
-            },
-            "Get-CurrentLevel": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0008&attrId=0000"
             },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
@@ -102,13 +104,6 @@
             },
             "setReportLightColorSpectre": {
                 "use": "setReportLightColorSpectre"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
             },
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",

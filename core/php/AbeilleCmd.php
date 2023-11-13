@@ -97,6 +97,9 @@
             }
         }
 
+        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+        $rwOnWhenIdle = isset($zigbee['rwOnWhenIdle']) ? $zigbee['rwOnWhenIdle'] : 0;
+        $GLOBALS['devices'][$net][$addr]['rwOnWhenIdle'] = $rwOnWhenIdle ? true : false;
         // $GLOBALS['devices'][$net][$addr]['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null);
         // parserLog('debug', "  'tuyaEF00' updated to ".json_encode($GLOBALS['devices'][$net][$addr]['tuyaEF00']));
         // $GLOBALS['devices'][$net][$addr]['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null);
@@ -283,11 +286,14 @@
                 $GLOBALS['devices'][$net] = [];
 
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            $rwOnWhenIdle = isset($zigbee['rwOnWhenIdle']) ? $zigbee['rwOnWhenIdle'] : 0;
             $eq = array(
                 'ieee' => $eqLogic->getConfiguration('IEEE', ''),
                 'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
                 'jsonId' => isset($eqModel['id']) ? $eqModel['id'] : '',
                 'jsonLocation' => isset($eqModel['location']) ? $eqModel['location'] : 'Abeille',
+                'rxOnWhenIdle' => $rwOnWhenIdle ? true : false
             );
             if ($eq['jsonId'] != '') {
                 // Read JSON to get list of commands to execute

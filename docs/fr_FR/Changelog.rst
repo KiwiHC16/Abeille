@@ -7,6 +7,7 @@ ChangeLog
 - Page EQ: Affichage 'DateCode' (cluster 0000, attrib 0006).
 - Ikea wireless dimmer (ICTC-G-1): Modèle revisité.
 - Interne: Cmd: 'getRoutingTable' + 'getBindingTable' attendent ACK.
+- Interne: Status 'NO-ACK' ne fait du sens que pour équipements en écoute permanente.
 
 231110-BETA-1
 -------------

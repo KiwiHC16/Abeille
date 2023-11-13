@@ -740,7 +740,7 @@
                         cmdLog('debug', '  Corresponding cmd not found.');
                         continue;
                     }
-cmdLog('debug', "cmd=".json_encode($cmd));
+cmdLog('debug', "  cmd=".json_encode($cmd));
                     // If ACK is requested but failed, removing cmd or it will lead to cmd timeout.
                     // Note: This is done only if cmd == last sent.
                     // if ($cmd['ackAps'] && $lastSent)
@@ -755,7 +755,9 @@ cmdLog('debug', "cmd=".json_encode($cmd));
                         if ($eq === []) {
                             cmdLog('debug', "  WARNING: Unknown device: Net=${net} Addr=${addr}");
                         } else {
-cmdLog('debug', "eq=".json_encode($eq));
+cmdLog('debug', "  eq=".json_encode($eq));
+                            // Note: TX status makes sense only if device is always listening (rxOnWhenIdle=TRUE)
+                            //       For other devices any interrogation without waking up device may lead to NO-ACK which is normal
                             if ($msg['status'] == '00') { // Ok ?
                                 if ($eq['txStatus'] !== 'ok')
                                     $eqStatusChanged = 'ok';
@@ -763,7 +765,7 @@ cmdLog('debug', "eq=".json_encode($eq));
                                 if ($eq['txStatus'] !== 'noack')
                                     $eqStatusChanged = 'noack';
                             }
-                            if ($eqStatusChanged != '') {
+                            if ($eq['rxOnWhenIdle'] && ($eqStatusChanged != '')) {
                                 $eq['txStatus'] = $eqStatusChanged;
                                 $msg = array(
                                     // 'src' => 'cmd',

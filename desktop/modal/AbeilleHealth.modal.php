@@ -240,12 +240,13 @@
             success: function (json_res) {
                 res = JSON.parse(json_res.result);
                 // console.log("res=", res);
-                equipements = res.eq;
+                equipments = res.eq; // equipments[net][addr] = object()
+                console.log("equipments=", equipments);
 
                 let tr = '';
-                for (net in equipements) {
+                for (net in equipments) {
                     // console.log("LA net=", net);
-                    n = equipements[net];
+                    n = equipments[net];
                     for (addr in n) {
                         // console.log("LA2 addr=", addr);
                         e = n[addr];
@@ -312,9 +313,9 @@
 
     refreshHealth();
 
-    setInterval(function () {
-        refreshHealth();
-    }, 2000);
+    // setInterval(function () {
+    //     refreshHealth();
+    // }, 2000);
 
     // $(function() {
     //     $("#table_healthAbeille").tablesorter();

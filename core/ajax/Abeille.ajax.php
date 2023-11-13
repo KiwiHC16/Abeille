@@ -614,8 +614,7 @@
                 $e['link'] = $eqLogic->getLinkToConfiguration();
                 $e['hName'] = $eqLogic->getHumanName(true);
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-                $type = isset($eqModel['type']) ? $eqModel['type'] : '?';
-                $e['type'] = $type;
+                $e['type'] = isset($eqModel['type']) ? $eqModel['type'] : '?';
                 $e['ieee'] = $eqLogic->getConfiguration('IEEE', '');
                 $e['isEnabled'] = $eqLogic->getIsEnable();
                 $e['timeout'] = $eqLogic->getStatus('timeout');

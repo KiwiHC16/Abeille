@@ -874,7 +874,8 @@
         /* Internal changes
          * - Logs: AbeilleSerialReadX logs moved to /tmp/jeedom/Abeille
          * - Config DB: Removing keys for Zigates 7 to 10.
-         * - eqLogic: Icon renamed 'IkeaTradfriDimmer' => 'Ikea-Tradfri-Dimmer'
+         * - eqLogic DB: Icon renamed 'IkeaTradfriDimmer' => 'Ikea-Tradfri-Dimmer'
+         * - eqLogic DB: Removed 'ab::txAck' for devices not always listening
          * - Cmds DB: For 'Online' adding 'repeatEventManagement=always'
          * - Cmds DB: 'OnOff' cmd replaced by 'cmd-0006'
          * - Cmds DB: 'OnOffGroup' replaced by 'cmd-0006'
@@ -886,20 +887,36 @@
             foreach ($eqLogics as $eqLogic) {
                 $eqId = $eqLogic->getId();
                 $eqHName = $eqLogic->getHumanName();
+                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+                $rwOnWhenIdle = isset($zigbee['rwOnWhenIdle']) ? $zigbee['rwOnWhenIdle'] : 0;
                 $cmds = Cmd::byEqLogicId($eqId);
+                $saveEq = false;
 
-                // Renaming icons if required
-                $iList = array(
+                // eqLogic: Renaming icons if required
+                $iconsList = array(
                     "IkeaTradfriDimmer" => "Ikea-Tradfri-Dimmer",
                 );
                 $curIcon = $eqLogic->getConfiguration('ab::icon', '');
-                if (($curIcon != '') && isset($iList[$curIcon])) {
-                    $newIcon = $iList[$curIcon];
+                if (($curIcon != '') && isset($iconsList[$curIcon])) {
+                    $newIcon = $iconsList[$curIcon];
                     $eqLogic->setConfiguration('ab::icon', $newIcon);
                     log::add('Abeille', 'debug', '  '.$eqHName.": Icon '".$curIcon."' changed to '".$newIcon."'");
                     $saveEq = true;
                 }
+                // eqLogic: Removing 'ab::txAck' for devices not always listening
+                if ($rwOnWhenIdle == 0) {
+                    $txStatus = $eqLogic->getStatus('ab::txAck', '');
+                    if ($txStatus != '') {
+                        $eqLogic->setStatus('ab::txAck', NULL);
+                        log::add('Abeille', 'debug', '  '.$eqHName.": Removed 'ab::txAck'");
+                        $saveEq = true;
+                    }
+                }
 
+                if ($saveEq)
+                    $eqLogic->save();
+
+                // cmd
                 foreach ($cmds as $cmdLogic) {
                     $saveCmd = false;
                     $cmdLogicId = $cmdLogic->getLogicalId();

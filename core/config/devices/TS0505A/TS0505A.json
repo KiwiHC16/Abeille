@@ -12,13 +12,6 @@
         },
         "type": "Silvercrest Ruban a LED",
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
                 "isVisible": 1
@@ -44,6 +37,12 @@
                 "params": "clustId=0006&attrId=0000"
             },
             "Bind-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "Bind-0008-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
                 "execAtCreation": "Yes",

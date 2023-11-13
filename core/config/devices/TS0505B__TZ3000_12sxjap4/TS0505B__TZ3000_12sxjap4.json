@@ -33,6 +33,12 @@
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "Bind-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
@@ -149,10 +155,6 @@
                 "maxValue": "6500",
                 "calculValueOffset": "intval(1000000\\/#value#)",
                 "isVisible": 1
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
             }
         }
     }

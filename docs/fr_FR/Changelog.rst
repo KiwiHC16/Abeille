@@ -6,6 +6,7 @@ ChangeLog
 - Page EQ: Affichage signature du modèle pour support modèles multi-signatures.
 - Page EQ: Affichage 'DateCode' (cluster 0000, attrib 0006).
 - Ikea wireless dimmer (ICTC-G-1): Modèle revisité.
+- Interne: Cmd: 'getRoutingTable' + 'getBindingTable' attendent ACK.
 
 231110-BETA-1
 -------------

@@ -54,7 +54,7 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Documentation}}</label>
     <div class="col-sm-5">
-        <a id="idDocUrl" href="tobefilled" target="_blank">{{Voir ici si présente}}</a>';
+        <a id="idDocUrl" href="tobefilled" target="_blank">{{Voir ici si présente}}</a>
     </div>
 </div>
 

@@ -10,8 +10,8 @@
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Identifiant Zigbee}}</label>
     <div class="col-sm-5">
-        <input id="idZbModel" readonly title="{{Modèle}}" value="" />
-        <input id="idZbManuf" readonly style="margin-left:4px;width:200px" title="{{Fabricant}}" value="" />
+        <input id="idZbModel" readonly title="{{Identificant Zigbee du modèle}}" value="" />
+        <input id="idZbManuf" readonly style="margin-left:4px;width:200px" title="{{Identificant Zigbee du fabricant}}" value="" />
     </div>
 </div>
 
@@ -92,5 +92,12 @@
     <label class="col-sm-3 control-label">{{Etat de l'équipement}} (BETA)</label>
     <div class="col-sm-5">
         <a class="btn btn-danger" id="idRepairBtn" title="{{Tente de corriger l'état interne de l'équipement}}">{{Réparer}}</a>
+    </div>
+
+    <!-- EQ repair popup -->
+    <div class="abeille_repair_content" style="display:none">
+        <table id="idRepairSteps">
+            <!-- Header: stepStatus + stepInfo -->
+        </table>
     </div>
 </div>

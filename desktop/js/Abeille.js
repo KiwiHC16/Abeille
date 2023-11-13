@@ -847,32 +847,93 @@ $("#idEqAssistBtn").on("click", function () {
 });
 
 /* Launch AbeilleRepair */
+// $("#idRepairBtn").on("click", function () {
+//     console.log("repair(eqId=" + eqId + ")");
+
+//     var xhttp = new XMLHttpRequest();
+//     xhttp.open(
+//         "GET",
+//         "/plugins/Abeille/core/php/AbeilleRepair.php?eqId=" + curEqId,
+//         false
+//     );
+//     xhttp.send();
+
+//     xhttp.onreadystatechange = function () {};
+
+//     // $.ajax({
+//     //     url: "/plugins/Abeille/core/php/AbeilleRepair.php?eqId=" + eqId,
+//     //     async: true,
+//     //     error: function (jqXHR, status, error) {
+//     //         console.log("repair() error status: " + status);
+//     //         console.log("repair() error msg: " + error);
+//     //     },
+//     //     success: function (data, status, jqhr) {
+//     //         //console.log("refreshLqiTable success status: " + status);
+//     //         //console.log("refreshLqiTable success msg: " + data);
+//     //     },
+//     // });
+// });
+
+/* Repair: Equipment repair popup */
 $("#idRepairBtn").on("click", function () {
-    console.log("repair(eqId=" + eqId + ")");
+    // Open empty dialog
+    var myPopup = bootbox.dialog({
+        message: "<p></p>", // must not be empty
+        title: "{{Réparation de l'état d'un équipement}}",
+        className: "abeille_repair",
+    });
 
-    var xhttp = new XMLHttpRequest();
-    xhttp.open(
-        "GET",
-        "/plugins/Abeille/core/php/AbeilleRepair.php?eqId=" + curEqId,
-        false
-    );
-    xhttp.send();
+    var $content = myPopup.find(".bootbox-body");
+    $content.empty().append($(".abeille_repair_content").clone().show());
 
-    xhttp.onreadystatechange = function () {};
-
-    // $.ajax({
-    //     url: "/plugins/Abeille/core/php/AbeilleRepair.php?eqId=" + eqId,
-    //     async: true,
-    //     error: function (jqXHR, status, error) {
-    //         console.log("repair() error status: " + status);
-    //         console.log("repair() error msg: " + error);
-    //     },
-    //     success: function (data, status, jqhr) {
-    //         //console.log("refreshLqiTable success status: " + status);
-    //         //console.log("refreshLqiTable success msg: " + data);
-    //     },
-    // });
+    repairSteps = new Object();
+    openRepairReturnChannel();
 });
+
+/* Repair: Open return channel from repair process */
+function openRepairReturnChannel() {
+    console.log("openRepairReturnChannel()");
+
+    var url = "plugins/Abeille/core/php/AbeilleRepair.php";
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.responseType = "text";
+    xhr.onload = repairReturnChannel;
+    // request.onreadystatechange = returnChannelStateChange;
+    var data = new FormData();
+    data.append("eqId", eqId);
+    xhr.send(data);
+}
+
+/* Repair: Treat async infos received from server to display them. */
+function repairReturnChannel() {
+    // console.log("receiveInfos()");
+    // console.log("Got='"+this.responseText+"'");
+    if (this.responseText == "") {
+        console.log("repairReturnChannel() => EMPTY");
+        // openRepairReturnChannel();
+        return;
+    }
+    console.log("repairReturnChannel() => " + this.responseText);
+    resp = JSON.parse(this.responseText);
+    if (resp.type == "step") {
+        stepName = resp.value;
+        stepStatus = resp.status;
+
+        let table = document.getElementById("idRepairSteps");
+
+        // New or already known step ?
+        if (typeof repairSteps[stepName] == undefined) {
+            console.log("new step");
+            let row = table.insertRow(-1); // We are adding at the end
+            rowIndex = row.rowIndex;
+            repairSteps[stepName] = new Object();
+            repairSteps[stepName]["rowIndex"] = rowIndex;
+        } else {
+            console.log("known step");
+        }
+    }
+}
 
 /* Remove given local model from 'devices_local/<model>' */
 $("#idDelLocalBtn").on("click", function () {

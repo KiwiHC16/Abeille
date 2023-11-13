@@ -8,6 +8,9 @@
     // {"heating":"1","security":"0","energy":"0","light":"0","opening":"0","automatism":"0","multimedia":"0","default":"0"}
     $eqCategories = ['heating', 'security', 'energy', 'light', 'opening', 'automatism', 'multimedia', 'default'];
 
+    // eqLogic generic types
+    $eqGenTypes = ['Other', 'Battery', 'Camera', 'Heating', 'Electricity', 'Environment', 'Generic', 'Light', 'Mode', 'Multimedia', 'Weather', 'Opening', 'Outlet', 'Robot', 'Security', 'Thermostat', 'Fan', 'Shutter'];
+
     // Cmd 'action' & 'info' subtypes
     $actSubTypes = ['other', 'slider', 'message', 'color', 'select'];
     $infSubTypes = ['numeric', 'binary', 'string'];
@@ -38,7 +41,7 @@
         global $devErrors;
         $e = array(
             "file" => $file,
-            "type" => $type,
+            "type" => $type, // 'ERROR', 'WARNING'
             "msg" => $msg
         );
         $devErrors[] = $e;
@@ -77,6 +80,7 @@
     function checkDevice($devName, $dev) {
         global $missingCmds;
         global $commandsList;
+        global $eqGenTypes;
 
         if (!isset($dev[$devName])) {
             newDevError($devName, "ERROR", "Corruped JSON. Expecting '".$devName."' top key");
@@ -95,10 +99,10 @@
         // Checking 'genericType'
         if (isset($dev[$devName]['genericType'])) {
             $genType = $dev[$devName]['genericType'];
-            $validGenTypes = ['Other', 'Battery', 'Camera', 'Heating', 'Electricity', 'Environment', 'Generic', 'Light', 'Mode', 'Multimedia', 'Weather', 'Opening', 'Outlet', 'Robot', 'Security', 'Thermostat', 'Fan', 'Shutter'];
-            if (!in_array($genType, $validGenTypes))
+            if (!in_array($genType, $eqGenTypes))
                 $error = newDevError($devName, "ERROR", "Invalid 'genericType' defined: ".$genType);
-        }
+        } /* else
+            $error = newDevError($devName, "WARNING", "No equipment genericType' defined"); */
 
         // Checking 'category'
         if (!isset($dev[$devName]['category'])) {
@@ -271,7 +275,7 @@
                 continue;
             if (substr($key, 0, 7) == "comment")
                 continue;
-            newDevError($devName, "ERROR", "Invalid device key '".$key."'");
+            newDevError($devName, "ERROR", "Invalid device top key '".$key."'");
         }
     }
 
@@ -348,8 +352,8 @@
         }
     } // End checkCommand()
 
-    function buildDevicesList() {
-        echo "Building devices list ...\n";
+    function buildDevModelsList() {
+        echo "Building devices models list ...\n";
         global $devicesList;
         $devicesList = [];
         $dh = opendir(devicesDir);
@@ -497,8 +501,9 @@
             }
 
             // Checking all remaining #var# cases
-            //  #EP# => replaced at during pairing
+            //  #EP# => replaced at Jeedom EQ creation (pairing)
             //  #select# => dynamic variable, replaced at run time
+            //  #title# + #message# => dynamic variables, replaced at run time
             // echo "newCmdText=".$newCmdText."\n";
             while (true) {
                 $start = strpos($newCmdText, "#"); // Start
@@ -507,8 +512,7 @@
 
                 $len = strpos(substr($newCmdText, $start + 1), "#"); // Length
                 if ($len === false) {
-                    newDevError($devName, "ERROR", "No closing dash (#) for cmd '".$cmdJName."'");
-                    $error = true;
+                    $error = newDevError($devName, "ERROR", "No closing dash (#) for cmd '".$cmdJName."'");
                     break;
                 }
                 $len += 2;
@@ -517,21 +521,18 @@
 
                 if ($var == "#EP#") {
                     if (!isset($device['configuration']['mainEP'])) {
-                        newDevError($devName, "ERROR", "'#EP#' found but NO 'mainEP'");
-                        $error = true;
+                        $error = newDevError($devName, "ERROR", "'#EP#' found but NO 'mainEP'");
                     }
                 } else if ($var == "#select#") {
                     if (!isset($devCmd['listValue']) && !isset($newCmd['listValue'])) {
-                        newDevError($devName, "ERROR", "Undefined 'listValue' for '#select#'");
-                        $error = true;
+                        $error = newDevError($devName, "ERROR", "Undefined 'listValue' for '#select#'");
                     }
                 } else {
                     $allowed = ['#value#', '#slider#', '#title#', '#message#', '#color#', '#onTime#', '#IEEE#', '#addrIEEE#', '#ZigateIEEE#', '#ZiGateIEEE#', '#addrGroup#'];
                     // Tcharp38 note: don't know purpose of slider/title/message/color/onTime/GroupeEPx
                     if (!in_array($var, $allowed)) {
                         if (substr($var, 0, 9) != "#GroupeEP") {
-                            newDevError($devName, "ERROR", "Missing '".$var."' variable data for cmd '".$cmdJName."'");
-                            $error = true;
+                            $error = newDevError($devName, "ERROR", "Missing '".$var."' variable data for cmd '".$cmdJName."'");
                         }
                     }
                 }
@@ -576,7 +577,7 @@
         break;
     }
     if (count($devicesList) == 0) {
-        buildDevicesList();
+        buildDevModelsList();
         buildAllCommandsList();
     }
 

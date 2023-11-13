@@ -1,6 +1,17 @@
 ChangeLog
 =========
 
+- SilverCrest-HG08673-FR: Mises-à-jour du modèle (2635).
+- ORVIBO CM10ZW: Mises-à-jour du modèle (2024 & 2648).
+- Page EQ: Affichage signature du modèle pour support modèles multi-signatures.
+- Page EQ: Affichage 'DateCode' (cluster 0000, attrib 0006).
+- Ikea wireless dimmer (ICTC-G-1): Modèle revisité.
+- Interne: Cmd: 'getRoutingTable' + 'getBindingTable' attendent ACK.
+- Interne: Status 'NO-ACK' ne fait du sens que pour équipements en écoute permanente.
+
+231110-BETA-1
+-------------
+
 - Owon-THS317-ET: Mise-à-jour du modèle (2319).
 - Page réseau: Amélioration message durant collecte LQI.
 - Gledopto GL-SD-001: Mise-à-jour du modèle.
@@ -9,6 +20,9 @@ ChangeLog
 - Abeille remote control: Commandes 'on all' & 'off all' cachées par défaut. Trop dangereux.
 - Interne: Mise-à-jour 'getDevicesList()' + 'getDeviceModel()'.
 - Reset de modele: Correction pour signatures alternatives.
+- Suppression d'un équipement: Correction permettant d'afficher comment il est utilisé avant suppression (2652).
+- Page EQ/avancé: Correction interrogations quand adresse IEEE nécessaire (2653).
+- Interne: Correction: AbeilleCmd informé si changement d'adresse via 'device announce' ou migration de réseau.
 
 231107-BETA-2
 -------------
@@ -46,6 +60,7 @@ ChangeLog
 - Modèles de cmdes: Ajout 'act_zbCmdC-0006-OffGroup' & 'act_zbCmdC-0006-OnGroup'
 - Télécommande virtuelle: revue pour utilisation 'OnOffGroup'.
 - Modèles: Cmde 'OnOffGroup' remplacée (cmd-0006 + addrMode=01).
+- Modèles d'équipements: Correction retour d'état (bind) sur de nombreux modeles.
 
 231027-BETA-2
 -------------

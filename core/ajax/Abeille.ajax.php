@@ -298,27 +298,27 @@
             ajax::success(json_encode(array('status' => $status)));
         }
 
-        /* Developer feature: Remove equipment(s) listed by id in 'eqList', from Jeedom DB.
-        Zigate is untouched.
-        Returns: status=0/-1, errors=<error message(s)> */
-        if (init('action') == 'removeEqJeedom') {
-            $eqList = init('eqList');
+        // /* Developer feature: Remove equipment(s) listed by id in 'eqList', from Jeedom DB.
+        // Zigate is untouched.
+        // Returns: status=0/-1, errors=<error message(s)> */
+        // if (init('action') == 'removeEqJeedom') {
+        //     $eqList = init('eqList');
 
-            $status = 0;
-            $errors = ""; // Error messages
-            foreach ($eqList as $eqId) {
-                /* Collecting required infos */
-                $eqLogic = eqLogic::byId($eqId);
-                if (!is_object($eqLogic)) {
-                    throw new Exception(__('EqLogic inconnu. Vérifiez l\'ID', __FILE__).' '.$eqId);
-                }
+        //     $status = 0;
+        //     $errors = ""; // Error messages
+        //     foreach ($eqList as $eqId) {
+        //         /* Collecting required infos */
+        //         $eqLogic = eqLogic::byId($eqId);
+        //         if (!is_object($eqLogic)) {
+        //             throw new Exception(__('EqLogic inconnu. Vérifiez l\'ID', __FILE__).' '.$eqId);
+        //         }
 
-                /* Removing device from Jeedom DB */
-                $eqLogic->remove();
-            }
+        //         /* Removing device from Jeedom DB */
+        //         $eqLogic->remove();
+        //     }
 
-            ajax::success(json_encode(array('status' => $status, 'errors' => $errors)));
-        }
+        //     ajax::success(json_encode(array('status' => $status, 'errors' => $errors)));
+        // }
 
         /* Remove equipment(s) from zigbee listed by id in 'eqIdList'.
            Returns: status=0/-1, errors=<error message(s)> */
@@ -561,6 +561,7 @@
                 $eq['zgType'] = config::byKey('ab::zgType'.$eq['zgId'], 'Abeille', '', 1);
                 $eq['zgChan'] = config::byKey('ab::zgChan'.$eq['zgId'], 'Abeille', '', 1);
                 $eq['addr'] = $eqAddr;
+                $eq['ieee'] = $eqLogic->getConfiguration('IEEE', '');
                 $eq['defaultEp'] = $eqLogic->getConfiguration('mainEP', '');
                 $eq['batteryType'] = $eqLogic->getConfiguration('battery_type', '');
 
@@ -569,6 +570,7 @@
                 $eq['zbManuf'] = isset($sig['manufId']) ? $sig['manufId'] : '';
 
                 $model = $eqLogic->getConfiguration('ab::eqModel', []);
+                $eq['modelSig'] = isset($model['sig']) ? $model['sig'] : '';
                 $eq['modelName'] = isset($model['id']) ? $model['id'] : '';
                 $eq['modelSource'] = isset($model['location']) ? $model['location'] : 'Abeille';
                 $eq['modelType'] = isset($model['type']) ? $model['type'] : '';
@@ -612,8 +614,7 @@
                 $e['link'] = $eqLogic->getLinkToConfiguration();
                 $e['hName'] = $eqLogic->getHumanName(true);
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-                $type = isset($eqModel['type']) ? $eqModel['type'] : '?';
-                $e['type'] = $type;
+                $e['type'] = isset($eqModel['type']) ? $eqModel['type'] : '?';
                 $e['ieee'] = $eqLogic->getConfiguration('IEEE', '');
                 $e['isEnabled'] = $eqLogic->getIsEnable();
                 $e['timeout'] = $eqLogic->getStatus('timeout');

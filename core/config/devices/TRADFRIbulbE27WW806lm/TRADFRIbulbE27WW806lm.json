@@ -1,5 +1,9 @@
 {
     "TRADFRIbulbE27WW806lm": {
+        "manufacturer": "Ikea",
+        "model": "904.087.97",
+        "type": "TRADFRI bulb E27 WW 806lm",
+        "genericType": "Light",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -8,15 +12,11 @@
         "category": {
             "light": "1"
         },
-        "type": "TRADFRI bulb E27 WW 806lm ",
         "commands": {
-            "etat": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1
-            },
-            "CurrentLevel-0008": {
-                "use": "inf_zbAttr-0008-CurrentLevel",
-                "isVisible": 1
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -26,50 +26,53 @@
                 "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
-            "Set Level": {
-                "use": "act_setLevel-Light",
-                "isVisible": 1
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle"
             },
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Get-CurrentLevel": {
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Set Level": {
+                "use": "act_setLevel-Light",
+                "isVisible": 1
+            },
+            "Level": {
+                "use": "inf_zbAttr-0008-CurrentLevel",
+                "isVisible": 1
+            },
+            "Get Level": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0008&attrId=0000"
             },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
-            },
             "Bind-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "SetReporting-0006-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 11
+            },
+            "Bind-0008-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
             },
-            "SetReporting-0006-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 11
-            },
             "SetReporting-0008-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0008&attrType=20&attrId=0000",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
             }
         },
         "comment": "Ref Ikea: 904.087.97"

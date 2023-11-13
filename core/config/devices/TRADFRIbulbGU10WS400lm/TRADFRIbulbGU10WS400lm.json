@@ -72,6 +72,12 @@
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
+                "params": "clustId=0006",
+                "execAtCreation": "Yes",
+                "execAtCreationDelay": 9
+            },
+            "Bind-0008-ToZigate": {
+                "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 9
@@ -87,13 +93,6 @@
                 "params": "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
             },
             "Toggle": {
                 "use": "act_zbCmdC-0006-Toggle",

@@ -64,17 +64,42 @@
             logMessage('debug', "  updateDeviceFromDB() WARNING: Unknown addr ${addr} and IEEE is undefined");
             return;
         }
-        if (!isset($GLOBALS['devices'][$net][$addr])) {
-            // Address may have changed following new device announce
+
+        $found = false;
+        if (isset($GLOBALS['devices'][$net][$addr]))
+            $found = true;
+        if ($found == false) {
+            // Address may have changed following new 'device announce'
             foreach ($GLOBALS['devices'][$net] as $addr2 => $eq2) {
                 if ($eq2['ieee'] == $ieee) {
+                    $found = true;
                     $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$net][$addr2];
                     unset($GLOBALS['devices'][$net][$addr2]);
                     logMessage('debug', "  Device ID ${eqId} address changed from ${addr2} to ${addr}.");
+                    break;
+                }
+            }
+        }
+        if ($found == false) {
+            // Equipment may have been migrated from another network
+            foreach ($GLOBALS['devices'] as $net2 => $devices2) { // Go thru all networks
+                if ($net2 == $net)
+                    continue; // This network has already been checked
+                foreach ($GLOBALS['devices'][$net2] as $addr2 => $eq2) {
+                    if ($eq2['ieee'] == $ieee) {
+                        $found = true;
+                        $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$net2][$addr2];
+                        unset($GLOBALS['devices'][$net2][$addr2]);
+                        logMessage('debug', "  Device ID ${eqId} migrated from ${net2}/${addr2} to ${net2}/${addr}.");
+                        break;
+                    }
                 }
             }
         }
 
+        $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+        $rwOnWhenIdle = isset($zigbee['rwOnWhenIdle']) ? $zigbee['rwOnWhenIdle'] : 0;
+        $GLOBALS['devices'][$net][$addr]['rwOnWhenIdle'] = $rwOnWhenIdle ? true : false;
         // $GLOBALS['devices'][$net][$addr]['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null);
         // parserLog('debug', "  'tuyaEF00' updated to ".json_encode($GLOBALS['devices'][$net][$addr]['tuyaEF00']));
         // $GLOBALS['devices'][$net][$addr]['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null);
@@ -261,11 +286,14 @@
                 $GLOBALS['devices'][$net] = [];
 
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            $rwOnWhenIdle = isset($zigbee['rwOnWhenIdle']) ? $zigbee['rwOnWhenIdle'] : 0;
             $eq = array(
                 'ieee' => $eqLogic->getConfiguration('IEEE', ''),
                 'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
                 'jsonId' => isset($eqModel['id']) ? $eqModel['id'] : '',
                 'jsonLocation' => isset($eqModel['location']) ? $eqModel['location'] : 'Abeille',
+                'rxOnWhenIdle' => $rwOnWhenIdle ? true : false
             );
             if ($eq['jsonId'] != '') {
                 // Read JSON to get list of commands to execute

@@ -40,6 +40,7 @@
         $eq['mainEp'] = $eqLogic->getConfiguration('mainEP', '');
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
         $eq['jsonId'] = $eqModel ? $eqModel['id'] : '';
+        $eq['name'] = $eqLogic->getName();
         if ($eqAddr == "0000") {
             if (isset($eqPerZigate[$zgId][$eqId]))
                 array_unshift($eqPerZigate[$zgId][$eqId], $eq);
@@ -101,7 +102,6 @@
 </div>
 
 <!-- Scripts -->
-<!-- < ?php include 'Abeille-Js.php'; ?> -->
 <?php include_file('desktop', 'Abeille', 'js', 'Abeille'); ?>
 <script>
     // TODO: addCmdToTable() to be moved to Abeille.js but need to fix remaining PHP code in it.

@@ -58,6 +58,7 @@ ChangeLog
 - Modèles de cmdes: Ajout 'act_zbCmdC-0006-OffGroup' & 'act_zbCmdC-0006-OnGroup'
 - Télécommande virtuelle: revue pour utilisation 'OnOffGroup'.
 - Modèles: Cmde 'OnOffGroup' remplacée (cmd-0006 + addrMode=01).
+- Ikea LED E27 806 lumen: Correction modèle.
 
 231027-BETA-2
 -------------

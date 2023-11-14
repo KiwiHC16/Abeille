@@ -8,6 +8,10 @@ ChangeLog
 - Ikea wireless dimmer (ICTC-G-1): Modèle revisité.
 - Interne: Cmd: 'getRoutingTable' + 'getBindingTable' attendent ACK.
 - Interne: Status 'NO-ACK' ne fait du sens que pour équipements en écoute permanente.
+- Page EQ/avancé: Traductions US.
+- Page EQ/avancé: Réparation de l'état de l'équipement... en cours de revue.
+- Interne: AbeilleCmd: Corrections autour de la mise-à-jour d'un équipement.
+- Tuya detecteur fumée TS0205__TZ3210_up3pngle: Ajout support préliminaire (2658).
 
 231110-BETA-1
 -------------

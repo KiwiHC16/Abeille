@@ -42,6 +42,19 @@
         return true;
     }
 
+    /* Send message to client side
+       'type' => 'step' or ?
+    */
+    function msgToCli($type, $value, $value2 = '') {
+        if ($type == "step")
+            $msgToCli = array('type' => $type, 'name' => $value, 'status' => $value2);
+        else
+            $msgToCli = array('type' => 'ERROR');
+        global $messages;
+        $messages[] = $msgToCli;
+        // echo json_encode($msgToCli);
+    }
+
     function repairDevice($eqId, $eqLogic) {
         logMessage('debug', 'repairDevice('.$eqId.')');
 
@@ -53,8 +66,10 @@
         if ($ieee == '') {
             logMessage('debug', '  Requesting IEEE');
             msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
+            msgToCli("status", "Requesting IEEE");
             return;
-        }
+        } else
+            msgToCli("status", "IEEE => ok");
 
         // Zigbee endpoints list defined ?
         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
@@ -62,8 +77,10 @@
         if (!isset($zigbee['endPoints'])) {
             logMessage('debug', '  Requesting active endpoints list');
             msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
+            msgToCli("status", "Requesting active endpoints list");
             return;
-        }
+        } else
+            msgToCli("status", "Active end points => ok");
 
         // Zigbee manufCode defined ?
         if (!isset($zigbee['manufCode'])) {
@@ -203,16 +220,44 @@
     logSetConf(jeedom::getTmpFolder("Abeille")."/AbeilleRepair.log", true);
     logMessage("", ">>> AbeilleRepair starting");
 
-    if (isset($_GET['eqId'])) // Equipment ID passed as URL ?
-        $eqId = $_GET['eqId'];
-    else
-        exit(0); // Unsupported case so far
-
-    $queueLQIToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
-    if (isset($eqId)) {
-        $eqLogic = Abeille::byId($eqId);
-        repairDevice($eqId, $eqLogic);
+    if (!isset($_POST['eqId'])) {
+        $msgToCli = array('type' => 'error', 'errMsg' => 'Missing equipment ID');
+        echo json_encode($msgToCli);
+        logMessage("", "<<< AbeilleRepair exiting on error.");
+        exit(1);
     }
+
+    $eqId = $_POST['eqId'];
+    $queueLQIToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
+
+    $eqLogic = Abeille::byId($eqId);
+    $eqLogicId = $eqLogic->getLogicalId();
+    list($net, $addr) = explode("/", $eqLogicId);
+
+    $messages = [];
+
+    // IEEE defined ?
+    $ieee = $eqLogic->getConfiguration('IEEE', '');
+    if ($ieee == '') {
+        msgToCli("step", "IEEE");
+        logMessage('debug', '  Requesting IEEE');
+        msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
+    } else
+        msgToCli("step", "IEEE", "ok");
+
+    // Zigbee endpoints list defined ?
+    $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+    logMessage('debug', '  ab::zigbee='.json_encode($zigbee));
+    if (!isset($zigbee['endPoints'])) {
+        msgToCli("step", "Active end points");
+        logMessage('debug', '  Requesting active endpoints list');
+        msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
+    } else
+        msgToCli("step", "Active end points", "ok");
+
+    echo json_encode($messages);
+
+    // repairDevice($eqId, $eqLogic);
 
     logMessage("", "<<< AbeilleRepair exiting.");
 ?>

@@ -56,12 +56,16 @@
     // Note: A delay is required prior to this if DB has to be updated (createDevice() in Abeille.class)
     function updateDeviceFromDB($eqId) {
         $eqLogic = eqLogic::byId($eqId);
+        if (!is_object($eqLogic)) {
+            logMessage('debug', "  ERROR: updateDeviceFromDB(): Equipment ID ${eqId} does not exist");
+            return;
+        }
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
 
         $ieee = $eqLogic->getConfiguration('IEEE', '');
         if (!isset($GLOBALS['devices'][$net][$addr]) && ($ieee == '')) {
-            logMessage('debug', "  updateDeviceFromDB() WARNING: Unknown addr ${addr} and IEEE is undefined");
+            logMessage('debug', "  ERROR: updateDeviceFromDB(): Unknown addr '${net}/${addr}' and IEEE is undefined");
             return;
         }
 
@@ -75,7 +79,7 @@
                     $found = true;
                     $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$net][$addr2];
                     unset($GLOBALS['devices'][$net][$addr2]);
-                    logMessage('debug', "  Device ID ${eqId} address changed from ${addr2} to ${addr}.");
+                    logMessage('debug', "  Device ID ${eqId} address changed from '${net}/${addr2}' to '${net}/${addr}'.");
                     break;
                 }
             }
@@ -90,23 +94,36 @@
                         $found = true;
                         $GLOBALS['devices'][$net][$addr] = $GLOBALS['devices'][$net2][$addr2];
                         unset($GLOBALS['devices'][$net2][$addr2]);
-                        logMessage('debug', "  Device ID ${eqId} migrated from ${net2}/${addr2} to ${net2}/${addr}.");
+                        logMessage('debug', "  Device ID ${eqId} migrated from '${net2}/${addr2}' to '${net}/${addr}'.");
                         break;
                     }
                 }
             }
         }
 
+        // Whatever found or new... updating infos used by cmd process
+        if (!isset($GLOBALS['devices'][$net]))
+            $GLOBALS['devices'][$net] = [];
+        $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
         $rwOnWhenIdle = isset($zigbee['rwOnWhenIdle']) ? $zigbee['rwOnWhenIdle'] : 0;
-        $GLOBALS['devices'][$net][$addr]['rwOnWhenIdle'] = $rwOnWhenIdle ? true : false;
-        // $GLOBALS['devices'][$net][$addr]['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null);
-        // parserLog('debug', "  'tuyaEF00' updated to ".json_encode($GLOBALS['devices'][$net][$addr]['tuyaEF00']));
-        // $GLOBALS['devices'][$net][$addr]['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null);
-        // parserLog('debug', "  'xiaomi' updated to ".json_encode($GLOBALS['devices'][$net][$addr]['xiaomi']));
-        // $GLOBALS['devices'][$net][$addr]['customization'] = $eqLogic->getConfiguration('ab::customization', null);
-        // parserLog('debug', "  'customization' updated to ".json_encode($GLOBALS['devices'][$net][$addr]['customization']));
-        // TO BE COMPLETED if any other key info
+        $eq = array(
+            'ieee' => $ieee,
+            'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
+            'jsonId' => isset($eqModel['id']) ? $eqModel['id'] : '',
+            'jsonLocation' => isset($eqModel['location']) ? $eqModel['location'] : 'Abeille',
+            'rxOnWhenIdle' => $rwOnWhenIdle ? true : false
+        );
+        if ($eq['jsonId'] != '') {
+            // Read JSON to get list of commands to execute
+            $model = AbeilleTools::getDeviceModel('', $eq['jsonId'], $eq['jsonLocation']);
+            if ($model !== false) {
+                $eq['mainEp'] = isset($model['mainEP']) ? $model['mainEP'] : "01";
+                $eq['commands'] = isset($model['commands']) ? $model['commands'] : [];
+            }
+        }
+
+        $GLOBALS['devices'][$net][$addr] = $eq;
     }
 
     /* Send msg to 'xToCmd' queue. */

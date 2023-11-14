@@ -47,10 +47,12 @@
     */
     function msgToCli($type, $value, $value2 = '') {
         if ($type == "step")
-            $msgToCli = array('type' => $type, 'value' => $value, 'status' => $value2);
+            $msgToCli = array('type' => $type, 'name' => $value, 'status' => $value2);
         else
             $msgToCli = array('type' => 'ERROR');
-        echo json_encode($msgToCli);
+        global $messages;
+        $messages[] = $msgToCli;
+        // echo json_encode($msgToCli);
     }
 
     function repairDevice($eqId, $eqLogic) {
@@ -232,32 +234,28 @@
     $eqLogicId = $eqLogic->getLogicalId();
     list($net, $addr) = explode("/", $eqLogicId);
 
+    $messages = [];
+
     // IEEE defined ?
     $ieee = $eqLogic->getConfiguration('IEEE', '');
     if ($ieee == '') {
         msgToCli("step", "IEEE");
-        while($ieee == '') {
-            logMessage('debug', '  Requesting IEEE');
-            msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
-            usleep(500000); // Wait 0.5sec
-            $ieee = $eqLogic->getConfiguration('IEEE', '');
-        }
-    }
-    msgToCli("step", "IEEE", "ok");
+        logMessage('debug', '  Requesting IEEE');
+        msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
+    } else
+        msgToCli("step", "IEEE", "ok");
 
     // Zigbee endpoints list defined ?
     $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
     logMessage('debug', '  ab::zigbee='.json_encode($zigbee));
     if (!isset($zigbee['endPoints'])) {
         msgToCli("step", "Active end points");
-        while(!isset($zigbee['endPoints'])) {
-            logMessage('debug', '  Requesting active endpoints list');
-            msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
-            usleep(500000); // Wait 0.5sec
-            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-        }
-    }
-    msgToCli("step", "Active end points", "ok");
+        logMessage('debug', '  Requesting active endpoints list');
+        msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
+    } else
+        msgToCli("step", "Active end points", "ok");
+
+    echo json_encode($messages);
 
     // repairDevice($eqId, $eqLogic);
 

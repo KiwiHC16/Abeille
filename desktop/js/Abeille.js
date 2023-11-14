@@ -887,6 +887,7 @@ $("#idRepairBtn").on("click", function () {
     $content.empty().append($(".abeille_repair_content").clone().show());
 
     repairSteps = new Object();
+    // $("#idRepairSteps tr").remove();
     openRepairReturnChannel();
 });
 
@@ -915,24 +916,36 @@ function repairReturnChannel() {
         return;
     }
     console.log("repairReturnChannel() => " + this.responseText);
+    // console.log("repairSteps=", repairSteps);
     resp = JSON.parse(this.responseText);
-    if (resp.type == "step") {
-        stepName = resp.value;
-        stepStatus = resp.status;
+    // console.log("resp=", resp);
+    resp.forEach((m) => {
+        console.log("m=", m);
+        if (m.type == "step") {
+            stepName = m.name;
+            stepStatus = m.status;
 
-        let table = document.getElementById("idRepairSteps");
+            let table = document.getElementById("idRepairSteps");
 
-        // New or already known step ?
-        if (typeof repairSteps[stepName] == undefined) {
-            console.log("new step");
-            let row = table.insertRow(-1); // We are adding at the end
-            rowIndex = row.rowIndex;
-            repairSteps[stepName] = new Object();
-            repairSteps[stepName]["rowIndex"] = rowIndex;
-        } else {
-            console.log("known step");
+            // New or already known step ?
+            if (typeof repairSteps[stepName] == "undefined") {
+                console.log("new step '" + stepName + "'");
+                repairSteps[stepName] = new Object();
+
+                let row = table.insertRow(-1); // We are adding at the end
+                rowIndex = row.rowIndex;
+                repairSteps[stepName]["rowIndex"] = rowIndex;
+                console.log("rowIndex=" + rowIndex);
+                cell0 = row.insertCell(0);
+                cell1 = row.insertCell(1);
+                cell0.innerHTML = stepStatus;
+                cell1.innerHTML = stepName;
+                // table.refresh();
+            } else {
+                console.log("known step");
+            }
         }
-    }
+    });
 }
 
 /* Remove given local model from 'devices_local/<model>' */

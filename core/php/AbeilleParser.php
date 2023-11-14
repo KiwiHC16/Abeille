@@ -280,7 +280,7 @@
             return $GLOBALS['eqList'][$net][$addr];
         }
 
-        // Not found. If IEEE is given let's check if short addr has changed.
+        // Not found. If IEEE is given let's check if short addr has changed or if equipment has migrated from another network.
         if ($ieee) {
             foreach ($GLOBALS['eqList'][$net] as $oldAddr => $eq) {
                 if (!isset($eq['ieee']) || ($eq['ieee'] !== $ieee))
@@ -308,6 +308,7 @@
             foreach ($GLOBALS['eqList'] as $oldNet => $oldAddr) {
                 if ($oldNet == $net)
                     continue; // This network has already been checked
+
                 foreach ($GLOBALS['eqList'][$oldNet] as $oldAddr => $eq) {
                     if ($eq['ieee'] !== $ieee)
                         continue;
@@ -466,9 +467,13 @@
                 'time' => time(),
                 'endPoints' => isset($zigbee['endPoints']) ? $zigbee['endPoints'] : null, // null(undef)
                 'mainEp' => '',
+                // Cluster 0000 infos
                 'manufId' => null, // null(undef)/false(unsupported)/'xx'
                 'modelId' => null, // null(undef)/false(unsupported)/'xx'
                 'location' => null, // null(undef)/false(unsupported)/'xx'
+                'dateCode' => null,
+                'swBuildId' => null,
+                // Abeille's model infos
                 'jsonId' => $jsonId,
                 'jsonLocation' => '',
                 'customization' => $eqLogic->getConfiguration('ab::customization', null),

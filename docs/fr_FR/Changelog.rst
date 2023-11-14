@@ -12,6 +12,9 @@ ChangeLog
 - Page EQ/avancé: Réparation de l'état de l'équipement... en cours de revue.
 - Interne: AbeilleCmd: Corrections autour de la mise-à-jour d'un équipement.
 - Tuya detecteur fumée TS0205__TZ3210_up3pngle: Ajout support préliminaire (2658).
+- Page maintenance/infos clefs: Amélioration.
+- Interne: Abeille.class: Corrections 'deviceUpdates'.
+- Suppression équipement: Correction incompatibilité core '4.3.19' vs '4.4.0'
 
 231110-BETA-1
 -------------

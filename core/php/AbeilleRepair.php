@@ -64,38 +64,42 @@
         // IEEE defined ?
         $ieee = $eqLogic->getConfiguration('IEEE', '');
         if ($ieee == '') {
+            msgToCli("step", "IEEE");
             logMessage('debug', '  Requesting IEEE');
             msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
-            msgToCli("status", "Requesting IEEE");
             return;
         } else
-            msgToCli("status", "IEEE => ok");
+            msgToCli("step", "IEEE", "ok");
 
         // Zigbee endpoints list defined ?
         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
         logMessage('debug', '  ab::zigbee='.json_encode($zigbee));
         if (!isset($zigbee['endPoints'])) {
+            msgToCli("step", "Active end points");
             logMessage('debug', '  Requesting active endpoints list');
             msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
-            msgToCli("status", "Requesting active endpoints list");
             return;
         } else
-            msgToCli("status", "Active end points => ok");
+            msgToCli("step", "Active end points", "ok");
 
         // Zigbee manufCode defined ?
         if (!isset($zigbee['manufCode'])) {
+            msgToCli("step", "Manuf code");
             logMessage('debug', '  Requesting node descriptor');
             msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getNodeDescriptor");
             return;
-        }
+        } else
+            msgToCli("step", "Manuf code", "ok");
 
         // Checking Zigbee endpoints
         foreach ($zigbee['endPoints'] as $epId2 => $ep2) {
             if (!isset($ep2['servClusters'])) {
+                msgToCli("step", "EP${epId2} server clusters list");
                 logMessage('debug', '  Requesting simple descriptor for EP '.$epId2);
                 msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getSimpleDescriptor", "ep=".$epId2);
                 return; // To reduce requests on first missing descriptor
             }
+            msgToCli("step", "EP${epId2} server clusters list", "ok");
 
             if (strpos($ep2['servClusters'], '0000') !== false) {
                 // Cluster 0000 is supported
@@ -123,92 +127,135 @@
                     $missing .= '0010';
                     $missingTxt .= 'location';
                 }
+                if (!isset($ep2['dateCode'])) { // DateCode
+                    if ($missing != '') {
+                        $missing .= ',';
+                        $missingTxt .= '/';
+                    }
+                    $missing .= '0006';
+                    $missingTxt .= 'DateCode';
+                }
+                if (!isset($ep2['swBuildId'])) { // SWBuildID
+                    if ($missing != '') {
+                        $missing .= ',';
+                        $missingTxt .= '/';
+                    }
+                    $missing .= '4000';
+                    $missingTxt .= 'SWBuildID';
+                }
                 if ($missing != '') {
+                    msgToCli("step", "EP${epId2} server cluster 0000 infos");
                     logMessage('debug', '  Requesting '.$missingTxt.' from EP '.$epId2);
-                    msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
+                    msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
                     return; // Reducing requests on first missing stuff
                 }
             }
+            msgToCli("step", "EP${epId2} server cluster 0000 infos", "ok");
 
             if (strpos($ep2['servClusters'], '0004') !== false) {
+                // Cluster 0004 is supported
                 if (isset($ep2['groups']))
                     logMessage('debug', '  Groups='.json_encode($ep2['groups']));
                 if (!isset($zigbee['groups']) || !isset($zigbee['groups'][$epId2])) {
+                    msgToCli("step", "EP${epId2} server cluster 0004 infos");
                     logMessage('debug', '  Requesting groups membership for EP '.$epId2);
                     msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getGroupMembership", "ep=".$epId2);
                     return; // To reduce requests on first missing groups membership
                 }
             }
+            msgToCli("step", "EP${epId2} server cluster 0004 infos", "ok");
         }
 
         // Zigbee main signature correct ?
         // Should reflect the signature of the first EP supporting cluster 0000
-        $sig = $eqLogic->getConfiguration('ab::signature', []);
-        logMessage('debug', '  ab::signature='.json_encode($sig));
-        $newSig = [];
+        $zbSig = $eqLogic->getConfiguration('ab::signature', []);
+        logMessage('debug', '  ab::signature='.json_encode($zbSig));
+        $zbNewSig = [];
         foreach ($zigbee['endPoints'] as $epId2 => $ep2) {
             if (strpos($ep2['servClusters'], '0000') === false)
                 continue; // No basic cluster for this EP
 
             if (!isset($ep2['manufId']) || !isset($ep2['modelId'])) {
-                logMessage('debug', '  Missing model or manuf for EP '.$epId2);
+                logMessage('debug', '  ERROR: Missing model or manuf for EP '.$epId2);
                 return;
             }
 
             // model or manuf are now either known or unsupported
-            if (!isset($newSig['manufId']) && ($ep2['manufId'] != ''))
-                $newSig['manufId'] = $ep2['manufId'];
-            if (!isset($newSig['modelId']) && ($ep2['modelId'] != ''))
-                $newSig['modelId'] = $ep2['modelId'];
+            if (!isset($zbNewSig['manufId']) && ($ep2['manufId'] != ''))
+                $zbNewSig['manufId'] = $ep2['manufId'];
+            if (!isset($zbNewSig['modelId']) && ($ep2['modelId'] != ''))
+                $zbNewSig['modelId'] = $ep2['modelId'];
 
             // Profalux specific case: using 'location' to get identifier
-            if (!isset($newSig['modelId']) && isset($ep2['location']) && ($ep2['location'] != '')) {
+            if (!isset($zbNewSig['modelId']) && isset($ep2['location']) && ($ep2['location'] != '')) {
                 logMessage('debug', "  Profalux case: Using 'location'=".$ep2['location']);
-                $newSig['modelId'] = $ep2['location'];
-                $newSig['manufId'] = '';
+                $zbNewSig['modelId'] = $ep2['location'];
+                $zbNewSig['manufId'] = '';
             }
         }
-        if ($newSig != $sig) {
-            $eqLogic->setConfiguration('ab::signature', $newSig);
+        if ($zbNewSig != $zbSig) {
+            $eqLogic->setConfiguration('ab::signature', $zbNewSig);
             $eqLogic->save();
-            logMessage('debug', "  ab::signature updated to ".json_encode($newSig));
-            $sig = $newSig;
+            logMessage('debug', "  ab::signature updated to ".json_encode($zbNewSig));
+            $zbSig = $zbNewSig;
         }
-        if (!isset($sig['modelId'])) {
-            logMessage('debug', "  Device ERROR: Invalid main Zigbee signature: ".json_encode($sig));
+        if (!isset($zbSig['modelId'])) {
+            msgToCli("step", "Zigbee signature");
+            logMessage('debug', "  Device ERROR: Invalid main Zigbee signature: ".json_encode($zbSig));
             return;
         }
+        msgToCli("step", "Zigbee signature", "ok");
 
         // Is model correct ?
         // ab::eqModel = array(
-        //     'id' =>
-        //     'location' =>
-        //     'type' =>
+        //     'sig' => model signature
+        //     'id' => model file name
+        //     'location' => model file source
+        //     'type' => model type
         //     'forcedByUser' => true|false
         // )
         $model = $eqLogic->getConfiguration('ab::eqModel', []);
         logMessage('debug', '  ab::eqModel='.json_encode($model));
-        if (!isset($model['id']) || ($model['id'] == 'defaultUnknown')) {
-            logMessage('debug', "  Model is 'defaultUnknown' or undefined.");
-            $m = AbeilleTools::findModel($sig['modelId'], $sig['manufId']);
-            if ($m !== false) {
-                $model['id'] = $m['jsonId'];
-                $model['location'] = $m['location'];
-                $model['type'] = $m['type'];
+        $modelChanged = false;
+        if (!isset($model['id']) || ($model['id'] == '')) {
+            msgToCli("step", "Model file name");
+            $modelContent = AbeilleTools::findModel($zbSig['modelId'], $zbSig['manufId']);
+            if ($modelContent !== false) {
+                $model['sig'] = $modelContent['modelSig'];
+                $model['id'] = $modelContent['jsonId'];
+                $model['location'] = $modelContent['location'];
+                $model['type'] = $modelContent['type'];
                 $model['forcedByUser'] = false;
-                $eqLogic->setConfiguration('ab::eqModel', $model);
-                $eqLogic->save();
-                logMessage('debug', "  ab::eqModel updated to ".json_encode($model));
-            } else if (!isset($model['id'])) {
-                $model['id'] = 'defaultUnknown';
-                $model['location'] = 'Abeille';
-                $model['type'] = 'Unknown device';
-                $model['forcedByUser'] = false;
-                $eqLogic->setConfiguration('ab::eqModel', $model);
-                $eqLogic->save();
-                logMessage('debug', "  ab::eqModel updated to ".json_encode($model));
+                $modelChanged = true;
             }
         }
+        if (!isset($model['sig']) || ($model['sig'] == '')) {
+            msgToCli("step", "Model signature");
+            logMessage('debug', "  Missing model sig.");
+            if ($modelContent !== false) {
+                $model['sig'] = $modelContent['modelSig'];
+                $model['id'] = $modelContent['jsonId'];
+                $model['location'] = $modelContent['location'];
+                $model['type'] = $modelContent['type'];
+                $model['forcedByUser'] = false;
+                $modelChanged = true;
+            // } else if (!isset($model['id'])) {
+            //     $model['id'] = 'defaultUnknown';
+            //     $model['location'] = 'Abeille';
+            //     $model['type'] = 'Unknown device';
+            //     $model['forcedByUser'] = false;
+            //     $modelChanged = true;
+            }
+        }
+        if ($modelChanged) {
+            $eqLogic->setConfiguration('ab::eqModel', $model);
+            $eqLogic->save();
+            logMessage('debug', "  ab::eqModel updated to ".json_encode($model));
+        }
+        if (isset($model['id']) && ($model['id'] != ''))
+            msgToCli("step", "Model file name", "ok");
+        if (isset($model['sig']) && ($model['sig'] != ''))
+            msgToCli("step", "Model signature", "ok");
 
         logMessage('debug', '  Device OK');
     }
@@ -228,36 +275,17 @@
     }
 
     $eqId = $_POST['eqId'];
+    $eqLogic = Abeille::byId($eqId);
+    if (!is_object($eqLogic)) {
+        msgToCli("error", "Unknown device ID ${eqId}");
+        exit(2);
+    }
+
     $queueLQIToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
 
-    $eqLogic = Abeille::byId($eqId);
-    $eqLogicId = $eqLogic->getLogicalId();
-    list($net, $addr) = explode("/", $eqLogicId);
-
     $messages = [];
-
-    // IEEE defined ?
-    $ieee = $eqLogic->getConfiguration('IEEE', '');
-    if ($ieee == '') {
-        msgToCli("step", "IEEE");
-        logMessage('debug', '  Requesting IEEE');
-        msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
-    } else
-        msgToCli("step", "IEEE", "ok");
-
-    // Zigbee endpoints list defined ?
-    $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-    logMessage('debug', '  ab::zigbee='.json_encode($zigbee));
-    if (!isset($zigbee['endPoints'])) {
-        msgToCli("step", "Active end points");
-        logMessage('debug', '  Requesting active endpoints list');
-        msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
-    } else
-        msgToCli("step", "Active end points", "ok");
-
+    repairDevice($eqId, $eqLogic);
     echo json_encode($messages);
-
-    // repairDevice($eqId, $eqLogic);
 
     logMessage("", "<<< AbeilleRepair exiting.");
 ?>

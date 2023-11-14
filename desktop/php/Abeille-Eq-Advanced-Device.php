@@ -76,15 +76,15 @@
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Date fabrication}} (DateCode)</label>
-    <div class="col-sm-5" advInfo="0000-01-0006">
-        <input type="text" id="" value="" readonly>
+    <div class="col-sm-5">
+        <input type="text" id="idDateCode" title="{{Cluster 0000, attribut 0006/DateCode}}" value="" readonly>
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Version SW}} (SWBuildID)</label>
-    <div class="col-sm-5" advInfo="0000-01-4000">
-        <input type="text" id="" value="" readonly>
+    <div class="col-sm-5">
+        <input type="text" id="idSwBuildId" title="{{Cluster 0000, attribut 4000/SWBuildID}}"value="" readonly>
     </div>
 </div>
 
@@ -93,17 +93,6 @@
     <label class="col-sm-3 control-label">{{Etat de l'équipement}} (REFONTE EN COURS)</label>
     <div class="col-sm-5">
         <a class="btn btn-danger" id="idRepairBtn" title="{{Tente de corriger l'état interne de l'équipement}}">{{Réparer}}</a>
-    </div>
-
-    <!-- EQ repair popup -->
-    <div class="abeille_repair_content" style="display:none">
-        <table id="idRepairSteps">
-            <!-- Header: stepStatus + stepName -->
-            <tr>
-                <th>Status</th>
-                <th>Etape</th>
-            </tr>
-        </table>
     </div>
 </div>
 <?php } ?>

@@ -78,25 +78,10 @@ function refreshAdvEq() {
             document.getElementById("idZgType").value = eq.zgType;
             document.getElementById("idZbModel").value = eq.zbModel;
             document.getElementById("idZbManuf").value = eq.zbManuf;
+
             document.getElementById("idModelSig").value = eq.modelSig;
             document.getElementById("idModelName").value = eq.modelName;
             document.getElementById("idModelSource").value = eq.modelSource;
-            docUrl = document.getElementById("idDocUrl");
-            docUrl.setAttribute("href", js_urlProducts + "/" + eq.modelName);
-            if (eq.modelSource == "local") {
-                $("#idDelLocalBtn").show();
-            }
-            document.getElementById("idModelType").value = eq.modelType;
-            if (eq.batteryType == "")
-                document.getElementById("idBatteryType").value = "{{Secteur}}";
-            else
-                document.getElementById("idBatteryType").value =
-                    "{{Batterie}} " + eq.batteryType;
-
-            if (typeof eq.zigbee.manufCode != "undefined")
-                document.getElementById("idManufCode").value =
-                    eq.zigbee.manufCode;
-
             // Reset model choice to 'auto' if model has been forced
             if (eq.modelForced) {
                 var $pRestoreModelAuto = $(
@@ -109,6 +94,30 @@ function refreshAdvEq() {
                     .append($aRestoreModelAuto)
                     .insertAfter("#idModelChangeBtn");
             }
+            if (typeof eq.zigbee.manufCode != "undefined")
+                document.getElementById("idManufCode").value =
+                    eq.zigbee.manufCode;
+            for (const [epId, ep] of Object.entries(eq.zigbee.endPoints)) {
+                // console.log("LA epId=", epId +", ep=", ep);
+                if (typeof ep.dateCode != "undefined")
+                    document.getElementById("idDateCode").value = ep.dateCode;
+                else if (typeof ep.swBuildId != "undefined")
+                    document.getElementById("swBuildId").value = ep.swBuildId;
+            }
+
+            docUrl = document.getElementById("idDocUrl");
+            docUrl.setAttribute("href", js_urlProducts + "/" + eq.modelName);
+            if (eq.modelSource == "local") {
+                $("#idDelLocalBtn").show();
+            }
+            document.getElementById("idModelType").value = eq.modelType;
+            if (eq.batteryType == "")
+                document.getElementById("idBatteryType").value = "{{Secteur}}";
+            else
+                document.getElementById("idBatteryType").value =
+                    "{{Batterie}} " + eq.batteryType;
+
+
 
             // Show/hide zigate or devices part
             zgPart = document.getElementById("idAdvZigate");
@@ -407,12 +416,13 @@ function removeSelectedEq(zgId) {
 
 /* Click on 'remove' button in equipement details page.
     Delete current equipment from Jeedom DB.
-    Default action from 'core/js/plugin.template.js' is redefined */
-$(".eqLogicAction[data-action=remove]")
+    Default action from 'core/js/plugin.template.js' is ignored thanks to specific 'data-action'
+    Reminder: There is a differnent behavior between core 4.3.19 & 4.4.0 */
+$(".eqLogicAction[data-action=abRemove]")
     .off("click")
     .on("click", function (evt) {
-        console.log("eqLogicAction[data-action=remove] click: evt=", evt);
-        evt.stopPropagation();
+        console.log("eqLogicAction[data-action=abRemove] click: evt=", evt);
+        // evt.stopPropagation();
 
         if ($(".eqLogicAttr[data-l1key=id]").value() == undefined) {
             console.log("ERROR: Undefined 'data-l1key=id'");
@@ -880,11 +890,21 @@ $("#idRepairBtn").on("click", function () {
     var myPopup = bootbox.dialog({
         message: "<p></p>", // must not be empty
         title: "{{Réparation de l'état d'un équipement}}",
-        className: "abeille_repair",
+        // className: "abeille_repair",
     });
 
-    var $content = myPopup.find(".bootbox-body");
-    $content.empty().append($(".abeille_repair_content").clone().show());
+    // var $content = myPopup.find(".bootbox-body");
+    // $content.empty().append($(".abeille_repair_content").clone().show());
+    t = "<div>";
+    t += '<table id="idRepairSteps">';
+    t += "<tr>";
+    t += '<th width="50px">Status</th>';
+    t += '<th width="300px">Etape</th>';
+    t += "</tr>";
+    t += "</table>";
+    t += "</div>";
+    var popup = myPopup.find(".bootbox-body");
+    popup.empty().append(t).show();
 
     repairSteps = new Object();
     // $("#idRepairSteps tr").remove();
@@ -925,27 +945,55 @@ function repairReturnChannel() {
             stepName = m.name;
             stepStatus = m.status;
 
-            let table = document.getElementById("idRepairSteps");
+            let myTable = document.getElementById("idRepairSteps");
+            // console.log("myTable=", myTable);
 
             // New or already known step ?
             if (typeof repairSteps[stepName] == "undefined") {
-                console.log("new step '" + stepName + "'");
+                console.log(
+                    "new step '" + stepName + "' => status='" + stepStatus + "'"
+                );
                 repairSteps[stepName] = new Object();
 
-                let row = table.insertRow(-1); // We are adding at the end
+                let row = myTable.insertRow(-1); // We are adding at the end
                 rowIndex = row.rowIndex;
                 repairSteps[stepName]["rowIndex"] = rowIndex;
-                console.log("rowIndex=" + rowIndex);
+                // console.log("rowIndex=" + rowIndex);
                 cell0 = row.insertCell(0);
                 cell1 = row.insertCell(1);
                 cell0.innerHTML = stepStatus;
                 cell1.innerHTML = stepName;
-                // table.refresh();
+                // console.log("myTable NOW=", myTable);
             } else {
-                console.log("known step");
+                step = repairSteps[stepName];
+                rowIndex = step.rowIndex;
+                console.log(
+                    "known step '" +
+                        stepName +
+                        "' => index=" +
+                        rowIndex +
+                        ", status='" +
+                        stepStatus +
+                        "'"
+                );
+                cell0 = myTable.rows[rowIndex].cells[0];
+                cell0.innerHTML = stepStatus;
             }
+            repairSteps[stepName]["status"] = stepStatus;
         }
     });
+
+    // Do we still need to interrogate device ?
+    missingInfo = false;
+    for (const [stepName, step] of Object.entries(repairSteps)) {
+        // console.log("toto stepName=" + stepName + " step=", step);
+        if (step.status != "ok") {
+            console.log("Still missing infos for step '" + stepName + "'");
+            missingInfo = true;
+            break;
+        }
+    }
+    // if (missingInfo) openRepairReturnChannel();
 }
 
 /* Remove given local model from 'devices_local/<model>' */

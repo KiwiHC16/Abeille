@@ -18,7 +18,7 @@
             "TS0201__TZ2000_hjsgdkfl": {
             }
         },
-        "timeout": "62",
+        "timeout": "360",
         "configuration": {
             "mainEP": "01",
             "icon": "Blitzwolf-Display",

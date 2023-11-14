@@ -3385,6 +3385,8 @@ class Abeille extends eqLogic {
         //     $cmdLogic->remove();
         // }
 
+        // $eqLogic->refreshWidget(); // Refresh equipment display ? Required ? Useful ?
+
         // Inform cmd & parser that EQ config has changed
         $msg = array(
             'type' => "eqUpdated",

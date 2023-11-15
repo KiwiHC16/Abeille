@@ -593,6 +593,16 @@
                     }
                     if (($eq['location'] === null) || ($eq['location'] === false))
                         $eq['location'] = $value;
+                } else if ($updType == '0000-0006') { // Cluster 0000, attrib 0006/DateCode
+                    if (!isset($eq['endPoints'][$ep]['dateCode']) || ($eq['endPoints'][$ep]['dateCode'] !== $value)) {
+                        $eq['endPoints'][$ep]['dateCode'] = $value;
+                        $abUpdates["dateCode"] = $value;
+                    }
+                } else if ($updType == '0000-4000') { // Cluster 0000, attrib 4000/SWBuildID
+                    if (!isset($eq['endPoints'][$ep]['swBuildId']) || ($eq['endPoints'][$ep]['swBuildId'] !== $value)) {
+                        $eq['endPoints'][$ep]['swBuildId'] = $value;
+                        $abUpdates["swBuildId"] = $value;
+                    }
                 } else // 'ieee' or 'bindingTableSize'
                     $eq[$updType] = $value;
             } // End foreach($updates)
@@ -1953,16 +1963,19 @@
                 parserLog('debug', "  decode8002_ReadAttrStatusRecord() ERROR: Unexpected record size ".$l);
                 return false;
             }
+            $attrStatus = substr($hexString, 4, 2);
             $attr = array(
                 'id' => substr($hexString, 2, 2).substr($hexString, 0, 2),
-                'status' => substr($hexString, 4, 2),
+                'status' => $attrStatus,
                 'dataType' => '',
                 'valueHex' => '', // Extracted hex value
                 'value' => null // Real value
             );
-            $size = 6;
-            if ($attr['status'] != '00')
+            $size = 6; // Amount of read bytes
+            if ($attrStatus != '00') {
+                $attr['value'] = false;
                 return $attr;
+            }
 
             $attr['dataType'] = substr($hexString, 6, 2);
             $hexString = substr($hexString, 8);
@@ -3387,7 +3400,7 @@
                                     'value' => $attr['value'],
                                 );
 
-                                if (in_array($clustId.'-'.$attrId, ['0000-0004', '0000-0005', '0000-0010']))
+                                if (in_array($clustId.'-'.$attrId, ['0000-0004', '0000-0005', '0000-0006', '0000-0010', '0000-4000']))
                                     $devUpdates[$clustId.'-'.$attrId] = $attr['value'];
                             }
 

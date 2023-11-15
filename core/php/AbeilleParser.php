@@ -466,9 +466,13 @@
                 'time' => time(),
                 'endPoints' => isset($zigbee['endPoints']) ? $zigbee['endPoints'] : null, // null(undef)
                 'mainEp' => '',
+                // Cluster 0000 infos
                 'manufId' => null, // null(undef)/false(unsupported)/'xx'
                 'modelId' => null, // null(undef)/false(unsupported)/'xx'
                 'location' => null, // null(undef)/false(unsupported)/'xx'
+                'dateCode' => null,
+                'swBuildId' => null,
+                // Abeille's model infos
                 'jsonId' => $jsonId,
                 'jsonLocation' => '',
                 'customization' => $eqLogic->getConfiguration('ab::customization', null),

@@ -161,14 +161,16 @@
                 $eqModelId = isset($eqModel['id']) ? $eqModel['id'] : '';
                 $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
                 $extra = '';
-                $status = 'ok';
-                if ($eqLogic->getStatus('timeout') == 1) {
+                $status = 'ok ';
+                if (!$eqLogic->getIsEnable())
+                    $status = "DIS";
+                else if ($eqLogic->getStatus('timeout') == 1) {
                     $lastComm = $eqLogic->getStatus('lastCommunication');
                     $extra = ", TIMEOUT (last comm ".$lastComm.")";
-                    $status = "TO";
+                    $status = "TO ";
                 } else if ($eqLogic->getStatus('ab::txAck', 'ok') != 'ok') {
                     $extra = ", NO-ACK";
-                    $status = "NA";
+                    $status = "NA ";
                 }
 
                 logIt("- ${status}: ${eqHName}, id=${eqId}${extra}\n");

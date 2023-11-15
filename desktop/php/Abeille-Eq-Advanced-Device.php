@@ -94,16 +94,5 @@
     <div class="col-sm-5">
         <a class="btn btn-danger" id="idRepairBtn" title="{{Tente de corriger l'état interne de l'équipement}}">{{Réparer}}</a>
     </div>
-
-    <!-- EQ repair popup -->
-    <div class="abeille_repair_content" style="display:none">
-        <table id="idRepairSteps">
-            <!-- Header: stepStatus + stepName -->
-            <tr>
-                <th>Status</th>
-                <th>Etape</th>
-            </tr>
-        </table>
-    </div>
 </div>
 <?php } ?>

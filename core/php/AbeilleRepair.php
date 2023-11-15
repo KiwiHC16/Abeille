@@ -64,38 +64,42 @@
         // IEEE defined ?
         $ieee = $eqLogic->getConfiguration('IEEE', '');
         if ($ieee == '') {
+            msgToCli("step", "IEEE");
             logMessage('debug', '  Requesting IEEE');
             msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
-            msgToCli("status", "Requesting IEEE");
             return;
         } else
-            msgToCli("status", "IEEE => ok");
+            msgToCli("step", "IEEE", "ok");
 
         // Zigbee endpoints list defined ?
         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
         logMessage('debug', '  ab::zigbee='.json_encode($zigbee));
         if (!isset($zigbee['endPoints'])) {
+            msgToCli("step", "Active end points");
             logMessage('debug', '  Requesting active endpoints list');
             msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
-            msgToCli("status", "Requesting active endpoints list");
             return;
         } else
-            msgToCli("status", "Active end points => ok");
+            msgToCli("step", "Active end points", "ok");
 
         // Zigbee manufCode defined ?
         if (!isset($zigbee['manufCode'])) {
+            msgToCli("step", "Manuf code");
             logMessage('debug', '  Requesting node descriptor');
             msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getNodeDescriptor");
             return;
-        }
+        } else
+            msgToCli("step", "Manuf code", "ok");
 
         // Checking Zigbee endpoints
         foreach ($zigbee['endPoints'] as $epId2 => $ep2) {
             if (!isset($ep2['servClusters'])) {
+                msgToCli("step", "EP${epId2} server clusters list");
                 logMessage('debug', '  Requesting simple descriptor for EP '.$epId2);
                 msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getSimpleDescriptor", "ep=".$epId2);
                 return; // To reduce requests on first missing descriptor
             }
+            msgToCli("step", "EP${epId2} server clusters list", "ok");
 
             if (strpos($ep2['servClusters'], '0000') !== false) {
                 // Cluster 0000 is supported
@@ -123,22 +127,43 @@
                     $missing .= '0010';
                     $missingTxt .= 'location';
                 }
+                if (!isset($ep2['dateCode'])) { // DateCode
+                    if ($missing != '') {
+                        $missing .= ',';
+                        $missingTxt .= '/';
+                    }
+                    $missing .= '0006';
+                    $missingTxt .= 'DateCode';
+                }
+                if (!isset($ep2['swBuildId'])) { // SWBuildID
+                    if ($missing != '') {
+                        $missing .= ',';
+                        $missingTxt .= '/';
+                    }
+                    $missing .= '4000';
+                    $missingTxt .= 'SWBuildID';
+                }
                 if ($missing != '') {
+                    msgToCli("step", "EP${epId2} server cluster 0000 infos");
                     logMessage('debug', '  Requesting '.$missingTxt.' from EP '.$epId2);
-                    msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
+                    msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/readAttribute", "ep=".$epId2."&clustId=0000&attrId=".$missing);
                     return; // Reducing requests on first missing stuff
                 }
             }
+            msgToCli("step", "EP${epId2} server cluster 0000 infos", "ok");
 
             if (strpos($ep2['servClusters'], '0004') !== false) {
+                // Cluster 0004 is supported
                 if (isset($ep2['groups']))
                     logMessage('debug', '  Groups='.json_encode($ep2['groups']));
                 if (!isset($zigbee['groups']) || !isset($zigbee['groups'][$epId2])) {
+                    msgToCli("step", "Server cluster 0004 infos");
                     logMessage('debug', '  Requesting groups membership for EP '.$epId2);
                     msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getGroupMembership", "ep=".$epId2);
                     return; // To reduce requests on first missing groups membership
                 }
             }
+            msgToCli("step", "Server cluster 0004 infos", "ok");
         }
 
         // Zigbee main signature correct ?
@@ -228,36 +253,17 @@
     }
 
     $eqId = $_POST['eqId'];
+    $eqLogic = Abeille::byId($eqId);
+    if (!is_object($eqLogic)) {
+        msgToCli("error", "Unknown device ID ${eqId}");
+        exit(2);
+    }
+
     $queueLQIToCmd = msg_get_queue($abQueues["xToCmd"]["id"]);
 
-    $eqLogic = Abeille::byId($eqId);
-    $eqLogicId = $eqLogic->getLogicalId();
-    list($net, $addr) = explode("/", $eqLogicId);
-
     $messages = [];
-
-    // IEEE defined ?
-    $ieee = $eqLogic->getConfiguration('IEEE', '');
-    if ($ieee == '') {
-        msgToCli("step", "IEEE");
-        logMessage('debug', '  Requesting IEEE');
-        msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getIeeeAddress");
-    } else
-        msgToCli("step", "IEEE", "ok");
-
-    // Zigbee endpoints list defined ?
-    $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
-    logMessage('debug', '  ab::zigbee='.json_encode($zigbee));
-    if (!isset($zigbee['endPoints'])) {
-        msgToCli("step", "Active end points");
-        logMessage('debug', '  Requesting active endpoints list');
-        msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getActiveEndpoints");
-    } else
-        msgToCli("step", "Active end points", "ok");
-
+    repairDevice($eqId, $eqLogic);
     echo json_encode($messages);
-
-    // repairDevice($eqId, $eqLogic);
 
     logMessage("", "<<< AbeilleRepair exiting.");
 ?>

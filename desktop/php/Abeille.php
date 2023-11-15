@@ -255,3 +255,11 @@
     } // End addCmdToTable()
 </script>
 <?php include_file('core', 'plugin.template', 'js'); ?>
+<script>
+    // test
+    // $(".eqLogicAction[data-action=remove]")
+    // .off("click")
+    // .on("click", function (evt) {
+    //     console.log("AFTER eqLogicAction[data-action=remove] click: evt=", evt);
+    // });
+</script>

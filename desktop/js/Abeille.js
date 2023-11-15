@@ -416,12 +416,13 @@ function removeSelectedEq(zgId) {
 
 /* Click on 'remove' button in equipement details page.
     Delete current equipment from Jeedom DB.
-    Default action from 'core/js/plugin.template.js' is redefined */
-$(".eqLogicAction[data-action=remove]")
+    Default action from 'core/js/plugin.template.js' is ignored thanks to specific 'data-action'
+    Reminder: There is a differnent behavior between core 4.3.19 & 4.4.0 */
+$(".eqLogicAction[data-action=abRemove]")
     .off("click")
     .on("click", function (evt) {
-        console.log("eqLogicAction[data-action=remove] click: evt=", evt);
-        evt.stopPropagation();
+        console.log("eqLogicAction[data-action=abRemove] click: evt=", evt);
+        // evt.stopPropagation();
 
         if ($(".eqLogicAttr[data-l1key=id]").value() == undefined) {
             console.log("ERROR: Undefined 'data-l1key=id'");

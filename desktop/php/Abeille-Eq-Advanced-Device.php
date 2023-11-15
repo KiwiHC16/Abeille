@@ -76,15 +76,15 @@
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Date fabrication}} (DateCode)</label>
-    <div class="col-sm-5" advInfo="0000-01-0006">
-        <input type="text" id="" value="" readonly>
+    <div class="col-sm-5">
+        <input type="text" id="idDateCode" title="{{Cluster 0000, attribut 0006/DateCode}}" value="" readonly>
     </div>
 </div>
 
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Version SW}} (SWBuildID)</label>
-    <div class="col-sm-5" advInfo="0000-01-4000">
-        <input type="text" id="" value="" readonly>
+    <div class="col-sm-5">
+        <input type="text" id="idSwBuildId" title="{{Cluster 0000, attribut 4000/SWBuildID}}"value="" readonly>
     </div>
 </div>
 

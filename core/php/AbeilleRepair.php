@@ -157,83 +157,105 @@
                 if (isset($ep2['groups']))
                     logMessage('debug', '  Groups='.json_encode($ep2['groups']));
                 if (!isset($zigbee['groups']) || !isset($zigbee['groups'][$epId2])) {
-                    msgToCli("step", "Server cluster 0004 infos");
+                    msgToCli("step", "EP${epId2} server cluster 0004 infos");
                     logMessage('debug', '  Requesting groups membership for EP '.$epId2);
                     msgToCmd(PRIO_HIGH, "Cmd".$net."/".$addr."/getGroupMembership", "ep=".$epId2);
                     return; // To reduce requests on first missing groups membership
                 }
             }
-            msgToCli("step", "Server cluster 0004 infos", "ok");
+            msgToCli("step", "EP${epId2} server cluster 0004 infos", "ok");
         }
 
         // Zigbee main signature correct ?
         // Should reflect the signature of the first EP supporting cluster 0000
-        $sig = $eqLogic->getConfiguration('ab::signature', []);
-        logMessage('debug', '  ab::signature='.json_encode($sig));
-        $newSig = [];
+        $zbSig = $eqLogic->getConfiguration('ab::signature', []);
+        logMessage('debug', '  ab::signature='.json_encode($zbSig));
+        $zbNewSig = [];
         foreach ($zigbee['endPoints'] as $epId2 => $ep2) {
             if (strpos($ep2['servClusters'], '0000') === false)
                 continue; // No basic cluster for this EP
 
             if (!isset($ep2['manufId']) || !isset($ep2['modelId'])) {
-                logMessage('debug', '  Missing model or manuf for EP '.$epId2);
+                logMessage('debug', '  ERROR: Missing model or manuf for EP '.$epId2);
                 return;
             }
 
             // model or manuf are now either known or unsupported
-            if (!isset($newSig['manufId']) && ($ep2['manufId'] != ''))
-                $newSig['manufId'] = $ep2['manufId'];
-            if (!isset($newSig['modelId']) && ($ep2['modelId'] != ''))
-                $newSig['modelId'] = $ep2['modelId'];
+            if (!isset($zbNewSig['manufId']) && ($ep2['manufId'] != ''))
+                $zbNewSig['manufId'] = $ep2['manufId'];
+            if (!isset($zbNewSig['modelId']) && ($ep2['modelId'] != ''))
+                $zbNewSig['modelId'] = $ep2['modelId'];
 
             // Profalux specific case: using 'location' to get identifier
-            if (!isset($newSig['modelId']) && isset($ep2['location']) && ($ep2['location'] != '')) {
+            if (!isset($zbNewSig['modelId']) && isset($ep2['location']) && ($ep2['location'] != '')) {
                 logMessage('debug', "  Profalux case: Using 'location'=".$ep2['location']);
-                $newSig['modelId'] = $ep2['location'];
-                $newSig['manufId'] = '';
+                $zbNewSig['modelId'] = $ep2['location'];
+                $zbNewSig['manufId'] = '';
             }
         }
-        if ($newSig != $sig) {
-            $eqLogic->setConfiguration('ab::signature', $newSig);
+        if ($zbNewSig != $zbSig) {
+            $eqLogic->setConfiguration('ab::signature', $zbNewSig);
             $eqLogic->save();
-            logMessage('debug', "  ab::signature updated to ".json_encode($newSig));
-            $sig = $newSig;
+            logMessage('debug', "  ab::signature updated to ".json_encode($zbNewSig));
+            $zbSig = $zbNewSig;
         }
-        if (!isset($sig['modelId'])) {
-            logMessage('debug', "  Device ERROR: Invalid main Zigbee signature: ".json_encode($sig));
+        if (!isset($zbSig['modelId'])) {
+            msgToCli("step", "Zigbee signature");
+            logMessage('debug', "  Device ERROR: Invalid main Zigbee signature: ".json_encode($zbSig));
             return;
         }
+        msgToCli("step", "Zigbee signature", "ok");
 
         // Is model correct ?
         // ab::eqModel = array(
-        //     'id' =>
-        //     'location' =>
-        //     'type' =>
+        //     'sig' => model signature
+        //     'id' => model file name
+        //     'location' => model file source
+        //     'type' => model type
         //     'forcedByUser' => true|false
         // )
         $model = $eqLogic->getConfiguration('ab::eqModel', []);
         logMessage('debug', '  ab::eqModel='.json_encode($model));
-        if (!isset($model['id']) || ($model['id'] == 'defaultUnknown')) {
-            logMessage('debug', "  Model is 'defaultUnknown' or undefined.");
-            $m = AbeilleTools::findModel($sig['modelId'], $sig['manufId']);
-            if ($m !== false) {
-                $model['id'] = $m['jsonId'];
-                $model['location'] = $m['location'];
-                $model['type'] = $m['type'];
+        $modelChanged = false;
+        if (!isset($model['id']) || ($model['id'] == '')) {
+            msgToCli("step", "Model file name");
+            $modelContent = AbeilleTools::findModel($zbSig['modelId'], $zbSig['manufId']);
+            if ($modelContent !== false) {
+                $model['sig'] = $modelContent['modelSig'];
+                $model['id'] = $modelContent['jsonId'];
+                $model['location'] = $modelContent['location'];
+                $model['type'] = $modelContent['type'];
                 $model['forcedByUser'] = false;
-                $eqLogic->setConfiguration('ab::eqModel', $model);
-                $eqLogic->save();
-                logMessage('debug', "  ab::eqModel updated to ".json_encode($model));
-            } else if (!isset($model['id'])) {
-                $model['id'] = 'defaultUnknown';
-                $model['location'] = 'Abeille';
-                $model['type'] = 'Unknown device';
-                $model['forcedByUser'] = false;
-                $eqLogic->setConfiguration('ab::eqModel', $model);
-                $eqLogic->save();
-                logMessage('debug', "  ab::eqModel updated to ".json_encode($model));
+                $modelChanged = true;
             }
         }
+        if (!isset($model['sig']) || ($model['sig'] == '')) {
+            msgToCli("step", "Model signature");
+            logMessage('debug', "  Missing model sig.");
+            if ($modelContent !== false) {
+                $model['sig'] = $modelContent['modelSig'];
+                $model['id'] = $modelContent['jsonId'];
+                $model['location'] = $modelContent['location'];
+                $model['type'] = $modelContent['type'];
+                $model['forcedByUser'] = false;
+                $modelChanged = true;
+            // } else if (!isset($model['id'])) {
+            //     $model['id'] = 'defaultUnknown';
+            //     $model['location'] = 'Abeille';
+            //     $model['type'] = 'Unknown device';
+            //     $model['forcedByUser'] = false;
+            //     $modelChanged = true;
+            }
+        }
+        if ($modelChanged) {
+            $eqLogic->setConfiguration('ab::eqModel', $model);
+            $eqLogic->save();
+            logMessage('debug', "  ab::eqModel updated to ".json_encode($model));
+        }
+        if (isset($model['id']) && ($model['id'] != ''))
+            msgToCli("step", "Model file name", "ok");
+        if (isset($model['sig']) && ($model['sig'] != ''))
+            msgToCli("step", "Model signature", "ok");
 
         logMessage('debug', '  Device OK');
     }

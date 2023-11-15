@@ -78,25 +78,10 @@ function refreshAdvEq() {
             document.getElementById("idZgType").value = eq.zgType;
             document.getElementById("idZbModel").value = eq.zbModel;
             document.getElementById("idZbManuf").value = eq.zbManuf;
+
             document.getElementById("idModelSig").value = eq.modelSig;
             document.getElementById("idModelName").value = eq.modelName;
             document.getElementById("idModelSource").value = eq.modelSource;
-            docUrl = document.getElementById("idDocUrl");
-            docUrl.setAttribute("href", js_urlProducts + "/" + eq.modelName);
-            if (eq.modelSource == "local") {
-                $("#idDelLocalBtn").show();
-            }
-            document.getElementById("idModelType").value = eq.modelType;
-            if (eq.batteryType == "")
-                document.getElementById("idBatteryType").value = "{{Secteur}}";
-            else
-                document.getElementById("idBatteryType").value =
-                    "{{Batterie}} " + eq.batteryType;
-
-            if (typeof eq.zigbee.manufCode != "undefined")
-                document.getElementById("idManufCode").value =
-                    eq.zigbee.manufCode;
-
             // Reset model choice to 'auto' if model has been forced
             if (eq.modelForced) {
                 var $pRestoreModelAuto = $(
@@ -109,6 +94,30 @@ function refreshAdvEq() {
                     .append($aRestoreModelAuto)
                     .insertAfter("#idModelChangeBtn");
             }
+            if (typeof eq.zigbee.manufCode != "undefined")
+                document.getElementById("idManufCode").value =
+                    eq.zigbee.manufCode;
+            for (const [epId, ep] of Object.entries(eq.zigbee.endPoints)) {
+                // console.log("LA epId=", epId +", ep=", ep);
+                if (typeof ep.dateCode != "undefined")
+                    document.getElementById("idDateCode").value = ep.dateCode;
+                else if (typeof ep.swBuildId != "undefined")
+                    document.getElementById("swBuildId").value = ep.swBuildId;
+            }
+
+            docUrl = document.getElementById("idDocUrl");
+            docUrl.setAttribute("href", js_urlProducts + "/" + eq.modelName);
+            if (eq.modelSource == "local") {
+                $("#idDelLocalBtn").show();
+            }
+            document.getElementById("idModelType").value = eq.modelType;
+            if (eq.batteryType == "")
+                document.getElementById("idBatteryType").value = "{{Secteur}}";
+            else
+                document.getElementById("idBatteryType").value =
+                    "{{Batterie}} " + eq.batteryType;
+
+
 
             // Show/hide zigate or devices part
             zgPart = document.getElementById("idAdvZigate");

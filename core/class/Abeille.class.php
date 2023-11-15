@@ -1794,31 +1794,37 @@ class Abeille extends eqLogic {
             log::add('Abeille', 'debug', "msgFromParser(): ".$net.'/'.$addr.'/'.$ep.", Device updates, ".json_encode($msg, JSON_UNESCAPED_SLASHES));
 
             $eqLogic = eqLogic::byLogicalId($net.'/'.$addr, 'Abeille');
-            if (!is_object($eqLogic) && ($updKey != 'ieee')) {
-                log::add('Abeille', 'debug', '  ERROR: Unknown '.$net.'/'.$addr." device");
-                return;
-            } else {
-                $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
+            if (!is_object($eqLogic)) {
+                if (!isset($msg['updates']['ieee'])) {
+                    log::add('Abeille', 'debug', "  ERROR: Unknown '${net}/${addr}' device and no IEEE update.");
+                    return;
+                }
+                $ieee = $msg['updates']['ieee'];
+                $all = eqLogic::byType('Abeille');
+                foreach ($all as $eqLogic) {
+                    $ieee2 = $eqLogic->getConfiguration('IEEE', '');
+                    if ($ieee2 != $ieee)
+                        continue;
+
+                    $eqLogicId2 = $eqLogic->getLogicalId(); // Ex: 'Abeille1/xxxx'
+                    list($net2, $addr2) = explode( "/", $eqLogicId2);
+                    $eqLogic->setLogicalId($net.'/'.$addr);
+                    if ($net != $net2)
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": Migrated from '${net2}/${addr2}' to '${net}/${addr}'");
+                    else
+                        log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'addr' updated to ${addr}");
+                    $eqLogic->setIsEnable(1);
+                    $eqChanged = true;
+                    $informCmd = true;
+                }
             }
+            $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);
             $zigbeeChanged = false;
             $eqChanged = false;
             foreach ($msg['updates'] as $updKey => $updVal) {
-                if ($updKey == 'ieee') {
-                    if (!is_object($eqLogic)) {
-                        $all = eqLogic::byType('Abeille');
-                        foreach ($all as $eqLogic) {
-                            $ieee2 = $eqLogic->getConfiguration('IEEE', '');
-                            if ($ieee2 != $updVal)
-                                continue;
-                            $eqLogic->setLogicalId($net.'/'.$addr);
-                            log::add('Abeille', 'debug', '  '.$eqLogic->getHumanName().": 'addr' updated to ".$addr);
-                            $eqLogic->setIsEnable(1);
-                            $eqChanged = true;
-                            $informCmd = true;
-                            break;
-                        }
-                    }
-                } else if ($updKey == 'macCapa') {
+                if ($updKey == 'ieee')
+                    continue; // Already treated
+                else if ($updKey == 'macCapa') {
                     $zigbee['macCapa'] = $updVal;
                     $mc = hexdec($zigbee['macCapa']);
                     $zigbee['mainsPowered'] = ($mc >> 2) & 0b1; // 1=mains-powered

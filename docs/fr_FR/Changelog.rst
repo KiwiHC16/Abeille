@@ -11,6 +11,7 @@ ChangeLog
 - Page EQ/avancé: Traductions US.
 - Page EQ/avancé: Réparation de l'état de l'équipement... en cours de revue.
 - Interne: AbeilleCmd: Corrections autour de la mise-à-jour d'un équipement.
+- Tuya detecteur fumée TS0205__TZ3210_up3pngle: Ajout support préliminaire (2658).
 
 231110-BETA-1
 -------------

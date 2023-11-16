@@ -98,11 +98,11 @@ function refreshAdvEq() {
                 document.getElementById("idManufCode").value =
                     eq.zigbee.manufCode;
             for (const [epId, ep] of Object.entries(eq.zigbee.endPoints)) {
-                // console.log("LA epId=", epId +", ep=", ep);
+                // console.log("LA epId=", epId + ", ep=", ep);
                 if (typeof ep.dateCode != "undefined")
                     document.getElementById("idDateCode").value = ep.dateCode;
-                else if (typeof ep.swBuildId != "undefined")
-                    document.getElementById("swBuildId").value = ep.swBuildId;
+                if (typeof ep.swBuildId != "undefined")
+                    document.getElementById("idSwBuildId").value = ep.swBuildId;
             }
 
             docUrl = document.getElementById("idDocUrl");
@@ -116,8 +116,6 @@ function refreshAdvEq() {
             else
                 document.getElementById("idBatteryType").value =
                     "{{Batterie}} " + eq.batteryType;
-
-
 
             // Show/hide zigate or devices part
             zgPart = document.getElementById("idAdvZigate");
@@ -856,45 +854,15 @@ $("#idEqAssistBtn").on("click", function () {
     window.open("index.php?v=d&m=Abeille&p=AbeilleEqAssist&id=" + curEqId);
 });
 
-/* Launch AbeilleRepair */
-// $("#idRepairBtn").on("click", function () {
-//     console.log("repair(eqId=" + eqId + ")");
-
-//     var xhttp = new XMLHttpRequest();
-//     xhttp.open(
-//         "GET",
-//         "/plugins/Abeille/core/php/AbeilleRepair.php?eqId=" + curEqId,
-//         false
-//     );
-//     xhttp.send();
-
-//     xhttp.onreadystatechange = function () {};
-
-//     // $.ajax({
-//     //     url: "/plugins/Abeille/core/php/AbeilleRepair.php?eqId=" + eqId,
-//     //     async: true,
-//     //     error: function (jqXHR, status, error) {
-//     //         console.log("repair() error status: " + status);
-//     //         console.log("repair() error msg: " + error);
-//     //     },
-//     //     success: function (data, status, jqhr) {
-//     //         //console.log("refreshLqiTable success status: " + status);
-//     //         //console.log("refreshLqiTable success msg: " + data);
-//     //     },
-//     // });
-// });
-
 /* Repair: Equipment repair popup */
 $("#idRepairBtn").on("click", function () {
     // Open empty dialog
     var myPopup = bootbox.dialog({
         message: "<p></p>", // must not be empty
         title: "{{Réparation de l'état d'un équipement}}",
-        // className: "abeille_repair",
+        className: "abeilleRepair",
     });
 
-    // var $content = myPopup.find(".bootbox-body");
-    // $content.empty().append($(".abeille_repair_content").clone().show());
     t = "<div>";
     t += '<table id="idRepairSteps">';
     t += "<tr>";
@@ -903,8 +871,24 @@ $("#idRepairBtn").on("click", function () {
     t += "</tr>";
     t += "</table>";
     t += "</div>";
+    t += "<br>";
+    t += '<p style="text-align:center; margin-top:30px">';
+    t += '<a id="idRepairCloseBtn" class="btn btn-secondary">{{Annuler}}</a>';
+    t +=
+        '<a id="idRepairRetryBtn" class="btn btn-success" title="{{Tente une nouvelle réparation}}">{{Réessayer}}</a>';
+    t += "</p>";
     var popup = myPopup.find(".bootbox-body");
     popup.empty().append(t).show();
+
+    // Retry button: Continue (or retry) repair
+    popup.find("#idRepairRetryBtn").on("click", function () {
+        openRepairReturnChannel();
+    });
+
+    // Close button
+    popup.find("#idRepairCloseBtn").on("click", function () {
+        myPopup.find(".bootbox-close-button").trigger("click");
+    });
 
     repairSteps = new Object();
     // $("#idRepairSteps tr").remove();

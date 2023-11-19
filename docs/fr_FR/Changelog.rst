@@ -15,6 +15,7 @@ ChangeLog
 - Page maintenance/infos clefs: Amélioration.
 - Interne: Abeille.class: Corrections 'deviceUpdates'.
 - Suppression équipement: Correction incompatibilité core '4.3.19' vs '4.4.0'
+- Ikea 'TRADFRIcontroloutlet': Mise-à-jour du modèle.
 
 231110-BETA-1
 -------------

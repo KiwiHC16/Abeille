@@ -1,6 +1,12 @@
 ChangeLog
 =========
 
+- Page équipement
+
+  - Ajout affichage fabricant & modèle.
+  - Correction affichage dernier LQI.
+  - Correction traductions US.
+
 231119-BETA-1
 -------------
 

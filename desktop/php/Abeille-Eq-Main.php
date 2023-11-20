@@ -34,6 +34,27 @@
     </div>
 
     <div class="form-group">
+        <label class="col-sm-3 control-label">{{Fabricant}}</label>
+        <div class="col-sm-3">
+            <input id="idModelManuf" readonly class="form-control" style="width:100%" title="{{Fabricant}}" value="" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">{{Modèle}}</label>
+        <div class="col-sm-3">
+            <input id="idModelModel" readonly class="form-control" style="width:100%" title="{{Modèle d'équipement}}" value="" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-3 control-label">{{Type}}</label>
+        <div class="col-sm-3">
+            <input id="idModelType" readonly class="form-control" style="width:100%" title="{{Type d'équipement}}" value="" />
+        </div>
+    </div>
+
+    <div class="form-group">
         <label class="col-sm-3 control-label">{{Catégorie}}</label>
         <div class="col-sm-8">
             <?php
@@ -55,13 +76,6 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label">{{Type}}</label>
-        <div class="col-sm-3">
-            <input id="idModelType" readonly style="width:100%" title="{{Type d'équipement}}" value="" />
-        </div>
-    </div>
-
-    <div class="form-group">
         <label class="col-sm-3 control-label">{{Id}}</label>
         <div class="col-sm-3">
             <span class="eqLogicAttr" data-l1key="id"></span>
@@ -78,18 +92,21 @@
     <div class="form-group" >
         <label class="col-sm-3 control-label">{{Source d'alimentation}}</label>
         <div class="col-sm-3">
-            <input id="idBatteryType" readonly style="width:100%" title="{{Source d'alimentation}}" value="" />
+            <input id="idBatteryType" readonly class="form-control" style="width:100%" title="{{Source d'alimentation}}" value="" />
         </div>
     </div>
 
     <div class="form-group">
         <label class="col-sm-3 control-label">{{Qualité du lien}} (LQI, 1-255)</label>
-        <div class="col-sm-3">
-            <?php
+        <div advInfo="Link-Quality" class="col-sm-3">
+            <input type="text" id="tofill" value="tofill" readonly style="width:100%">
+        </div>
+        <!-- <div class="col-sm-3">
+            < ?php
             $lqi = getCmdValueByLogicId($eqId, "Link-Quality");
             echo '<input type="text" value="'.$lqi.'" readonly>';
             ?>
-        </div>
+        </div> -->
     </div>
 
     <div class="form-group">

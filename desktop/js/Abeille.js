@@ -23,7 +23,7 @@ var curEqId = -1;
 if (window.location.href.indexOf("id=") > -1) {
     let params = new URL(document.location).searchParams;
     curEqId = params.get("id");
-    refreshAdvEq();
+    refreshEqInfos();
 }
 
 // console.log("LA2 eqId=", curEqId);
@@ -36,11 +36,11 @@ $(".eqLogicDisplayCard").on("click", function () {
         return;
     }
     curEqId = $(this).attr("data-eqLogic_id");
-    refreshAdvEq();
+    refreshEqInfos();
 });
 
-function refreshAdvEq() {
-    console.log("refreshAdvEq(" + curEqId + ")");
+function refreshEqInfos() {
+    console.log("refreshEqInfos(" + curEqId + ")");
     eqId = curEqId;
 
     // Collect eq & update advanced infos
@@ -57,9 +57,10 @@ function refreshAdvEq() {
             bootbox.alert("ERREUR 'getEq' !");
         },
         success: function (json_res) {
-            console.log("json_res=", json_res);
+            // console.log("json_res=", json_res);
             res = JSON.parse(json_res.result);
             eq = res.eq;
+            console.log("eq=", eq);
 
             // Updating global infos
             zgId = eq.zgId;
@@ -67,11 +68,15 @@ function refreshAdvEq() {
             eqIeee = eq.ieee;
             eqBatteryType = eq.batteryType;
 
-            console.log("eq=", eq);
             // console.log("idEqName=", document.getElementById("idEqName"));
             // console.log("idEqId=", document.getElementById("idEqId"));
 
-            // Updating device related infos on main and advanced
+            // Updating main tab
+            document.getElementById("idModelManuf").value = eq.model.manuf;
+            document.getElementById("idModelModel").value = eq.model.model;
+            document.getElementById("idModelType").value = eq.model.type;
+
+            // Updating advanced tab
             document.getElementById("idEqName").value = eq.name;
             document.getElementById("idEqId").value = eqId;
             document.getElementById("idEqAddr").value = eq.addr;
@@ -79,11 +84,12 @@ function refreshAdvEq() {
             document.getElementById("idZbModel").value = eq.zbModel;
             document.getElementById("idZbManuf").value = eq.zbManuf;
 
-            document.getElementById("idModelSig").value = eq.modelSig;
-            document.getElementById("idModelName").value = eq.modelName;
-            document.getElementById("idModelSource").value = eq.modelSource;
+            document.getElementById("idModelSig").value = eq.model.modelSig;
+            document.getElementById("idModelName").value = eq.model.modelName;
+            document.getElementById("idModelSource").value =
+                eq.model.modelSource;
             // Reset model choice to 'auto' if model has been forced
-            if (eq.modelForced) {
+            if (eq.model.modelForced) {
                 var $pRestoreModelAuto = $(
                     "<p><stron>{{Vous avez forcé le modèle de cet équipement. }}</strong></p>"
                 );
@@ -110,7 +116,6 @@ function refreshAdvEq() {
             if (eq.modelSource == "local") {
                 $("#idDelLocalBtn").show();
             }
-            document.getElementById("idModelType").value = eq.modelType;
             if (eq.batteryType == "")
                 document.getElementById("idBatteryType").value = "{{Secteur}}";
             else

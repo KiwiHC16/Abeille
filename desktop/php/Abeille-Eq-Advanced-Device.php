@@ -68,7 +68,7 @@
 </div>
 
 <div class="form-group">
-    <label class="col-sm-3 control-label">{{Code fabricant (manufCode)}}</label>
+    <label class="col-sm-3 control-label">{{Code fabricant}} (manufCode)</label>
     <div class="col-sm-5">
         <input id="idManufCode" readonly title="{{Code fabricant}}" value="" />
     </div>
@@ -85,7 +85,6 @@
     <label class="col-sm-3 control-label">{{Version SW}} (SWBuildID)</label>
     <div class="col-sm-5">
         <input type="text" id="idSwBuildId" title="{{Cluster 0000, attribut 4000/SWBuildID}}"value="" readonly>
-        <a id="idRepairRetryBtn" class="btn btn-success" title="{{Tente une nouvelle réparation}}">{{Réessayer}}</a>
     </div>
 </div>
 

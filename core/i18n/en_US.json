@@ -186,7 +186,13 @@
         "Commande générique spécifique cluster": "Generic cluster specific command",
         "Envoyer": "Send",
 
-        "Commandes": "Commands"
+        "Commandes": "Commands",
+        "Ajouter une commande action": "Add action command",
+        "Ajouter une commande info": "Add info command",
+        "Ajouter à partir d'un modèle": "Add cmd from model",
+        "Identifiant Jeedom": "Jeedom ID",
+        "Nom de la commande vue par Jeedom": "Jeedom name",
+        "ID logique": "Logical ID"
     },
     "plugins/Abeille/desktop/js/Abeille.js": {
         "Mises-à-jour OTA": "OTA upgrades",

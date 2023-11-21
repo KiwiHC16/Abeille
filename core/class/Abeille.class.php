@@ -1096,6 +1096,13 @@ class Abeille extends eqLogic {
     //     return 1;
     // }
 
+    // Jeedom optional function: called before saving (create or update) an equipment
+    public function preSave() {
+        log::add('Abeille', 'debug', 'preSave()');
+        log::add('Abeille', 'debug', 'this='.json_encode($this));
+    }
+
+    // Jeedom optional function: called after saving (create or update) an equipment
     public static function postSave()
     {
         log::add('Abeille', 'debug', 'postSave()');

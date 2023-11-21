@@ -6,6 +6,7 @@ ChangeLog
   - Ajout affichage fabricant & modèle.
   - Correction affichage dernier LQI.
   - Correction traductions US.
+  - Onglet commande legèrement revu.
 
 231119-BETA-1
 -------------

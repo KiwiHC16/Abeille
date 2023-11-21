@@ -110,6 +110,8 @@
         "Nom de l'équipement": "Equipment name",
         "Objet parent": "Parent object",
         "Catégorie": "Category",
+        "Fabricant": "Manufacturer",
+        "Modèle": "Model",
         "Source d'alimentation": "Power source",
         "Qualité du lien": "Link quality",
         "Note": "Note",
@@ -140,9 +142,11 @@
         "Assistant de découverte": "Discovery assistant",
         "Ouvrir": "Open",
         "Code fabricant (manufCode)": "Manuf code",
+        "Date fabrication": "Manufacturing code",
         "Version SW": "SW version",
         "Etat de l'équipement": "Equipment status",
         "Réparer": "Repair",
+        "Réessayer": "Retry",
 
         "Version du firmware": "Firwmare version",
         "Status réseau": "Network status",
@@ -182,7 +186,13 @@
         "Commande générique spécifique cluster": "Generic cluster specific command",
         "Envoyer": "Send",
 
-        "Commandes": "Commands"
+        "Commandes": "Commands",
+        "Ajouter une commande action": "Add action command",
+        "Ajouter une commande info": "Add info command",
+        "Ajouter à partir d'un modèle": "Add cmd from model",
+        "Identifiant Jeedom": "Jeedom ID",
+        "Nom de la commande vue par Jeedom": "Jeedom name",
+        "ID logique": "Logical ID"
     },
     "plugins/Abeille/desktop/js/Abeille.js": {
         "Mises-à-jour OTA": "OTA upgrades",

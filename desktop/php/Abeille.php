@@ -117,12 +117,11 @@
         var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
 
         tr += '<td class="hidden-xs">'; // Col 1 = Id
-        tr += '     <span class="cmdAttr" data-l1key="id"></span>';
+        tr += '     <span class="cmdAttr" data-l1key="id" title="{{Identifiant Jeedom}}"></span>';
         tr += '</td>';
 
         tr += '<td>'; // Col 2 = Jeedom cmd name
-        // tr += '     <input class="cmdAttr form-control input-sm roundedLeft" data-l1key="name" style="width:180px;" placeholder="{{Cmde Jeedom}}" title="Nom de la commande vue par Jeedom">';
-        tr += '     <input class="cmdAttr form-control input-sm roundedLeft" data-l1key="name" placeholder="{{Cmde Jeedom}}" title="Nom de la commande vue par Jeedom">';
+        tr += '     <input class="cmdAttr form-control input-sm roundedLeft" data-l1key="name" placeholder="{{Nom}}" title="{{Nom de la commande vue par Jeedom}}">';
         tr += '</td>';
 
         tr += '<td>'; // Col 3 = Type & sub-type
@@ -136,10 +135,11 @@
         tr += '     <span class="subType" subType="' + init(_cmd.subType) + '"></span>';
         tr += '</td>';
 
+        tr += '<td>'; // Col 4 = Logical ID
+        tr += '     <input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="{{ID logique}}" style="width:100%;">';
+        tr += '</td>';
+
         if (typeof js_dbgDeveloperMode != 'undefined') {
-            tr += '<td>'; // Col 4 = Abeille command name
-            tr += '     <input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="{{logicalId}}" style="width:100%;">';
-            tr += '</td>';
 
             // Tcharp38: logicalId seems not really used so displaying 'topic' too
             tr += '<td>'; // Col 4.1 = Topic

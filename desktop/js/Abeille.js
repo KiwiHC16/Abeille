@@ -23,7 +23,7 @@ var curEqId = -1;
 if (window.location.href.indexOf("id=") > -1) {
     let params = new URL(document.location).searchParams;
     curEqId = params.get("id");
-    refreshAdvEq();
+    refreshEqInfos();
 }
 
 // console.log("LA2 eqId=", curEqId);
@@ -36,11 +36,11 @@ $(".eqLogicDisplayCard").on("click", function () {
         return;
     }
     curEqId = $(this).attr("data-eqLogic_id");
-    refreshAdvEq();
+    refreshEqInfos();
 });
 
-function refreshAdvEq() {
-    console.log("refreshAdvEq(" + curEqId + ")");
+function refreshEqInfos() {
+    console.log("refreshEqInfos(" + curEqId + ")");
     eqId = curEqId;
 
     // Collect eq & update advanced infos
@@ -57,9 +57,10 @@ function refreshAdvEq() {
             bootbox.alert("ERREUR 'getEq' !");
         },
         success: function (json_res) {
-            console.log("json_res=", json_res);
+            // console.log("json_res=", json_res);
             res = JSON.parse(json_res.result);
             eq = res.eq;
+            console.log("eq=", eq);
 
             // Updating global infos
             zgId = eq.zgId;
@@ -67,11 +68,15 @@ function refreshAdvEq() {
             eqIeee = eq.ieee;
             eqBatteryType = eq.batteryType;
 
-            console.log("eq=", eq);
             // console.log("idEqName=", document.getElementById("idEqName"));
             // console.log("idEqId=", document.getElementById("idEqId"));
 
-            // Updating device related infos on main and advanced
+            // Updating main tab
+            document.getElementById("idModelManuf").value = eq.model.manuf;
+            document.getElementById("idModelModel").value = eq.model.model;
+            document.getElementById("idModelType").value = eq.model.type;
+
+            // Updating advanced tab
             document.getElementById("idEqName").value = eq.name;
             document.getElementById("idEqId").value = eqId;
             document.getElementById("idEqAddr").value = eq.addr;
@@ -79,11 +84,12 @@ function refreshAdvEq() {
             document.getElementById("idZbModel").value = eq.zbModel;
             document.getElementById("idZbManuf").value = eq.zbManuf;
 
-            document.getElementById("idModelSig").value = eq.modelSig;
-            document.getElementById("idModelName").value = eq.modelName;
-            document.getElementById("idModelSource").value = eq.modelSource;
+            document.getElementById("idModelSig").value = eq.model.modelSig;
+            document.getElementById("idModelName").value = eq.model.modelName;
+            document.getElementById("idModelSource").value =
+                eq.model.modelSource;
             // Reset model choice to 'auto' if model has been forced
-            if (eq.modelForced) {
+            if (eq.model.modelForced) {
                 var $pRestoreModelAuto = $(
                     "<p><stron>{{Vous avez forcé le modèle de cet équipement. }}</strong></p>"
                 );
@@ -97,12 +103,15 @@ function refreshAdvEq() {
             if (typeof eq.zigbee.manufCode != "undefined")
                 document.getElementById("idManufCode").value =
                     eq.zigbee.manufCode;
-            for (const [epId, ep] of Object.entries(eq.zigbee.endPoints)) {
-                // console.log("LA epId=", epId +", ep=", ep);
-                if (typeof ep.dateCode != "undefined")
-                    document.getElementById("idDateCode").value = ep.dateCode;
-                else if (typeof ep.swBuildId != "undefined")
-                    document.getElementById("swBuildId").value = ep.swBuildId;
+            
+            if (typeof eq.zigbee.endPoints != "undefined") {
+                for (const [epId, ep] of Object.entries(eq.zigbee.endPoints)) {
+                    // console.log("LA epId=", epId + ", ep=", ep);
+                    if (typeof ep.dateCode != "undefined")
+                        document.getElementById("idDateCode").value = ep.dateCode;
+                    if (typeof ep.swBuildId != "undefined")
+                        document.getElementById("idSwBuildId").value = ep.swBuildId;
+                }
             }
 
             docUrl = document.getElementById("idDocUrl");
@@ -110,14 +119,11 @@ function refreshAdvEq() {
             if (eq.modelSource == "local") {
                 $("#idDelLocalBtn").show();
             }
-            document.getElementById("idModelType").value = eq.modelType;
             if (eq.batteryType == "")
                 document.getElementById("idBatteryType").value = "{{Secteur}}";
             else
                 document.getElementById("idBatteryType").value =
                     "{{Batterie}} " + eq.batteryType;
-
-
 
             // Show/hide zigate or devices part
             zgPart = document.getElementById("idAdvZigate");
@@ -856,45 +862,15 @@ $("#idEqAssistBtn").on("click", function () {
     window.open("index.php?v=d&m=Abeille&p=AbeilleEqAssist&id=" + curEqId);
 });
 
-/* Launch AbeilleRepair */
-// $("#idRepairBtn").on("click", function () {
-//     console.log("repair(eqId=" + eqId + ")");
-
-//     var xhttp = new XMLHttpRequest();
-//     xhttp.open(
-//         "GET",
-//         "/plugins/Abeille/core/php/AbeilleRepair.php?eqId=" + curEqId,
-//         false
-//     );
-//     xhttp.send();
-
-//     xhttp.onreadystatechange = function () {};
-
-//     // $.ajax({
-//     //     url: "/plugins/Abeille/core/php/AbeilleRepair.php?eqId=" + eqId,
-//     //     async: true,
-//     //     error: function (jqXHR, status, error) {
-//     //         console.log("repair() error status: " + status);
-//     //         console.log("repair() error msg: " + error);
-//     //     },
-//     //     success: function (data, status, jqhr) {
-//     //         //console.log("refreshLqiTable success status: " + status);
-//     //         //console.log("refreshLqiTable success msg: " + data);
-//     //     },
-//     // });
-// });
-
 /* Repair: Equipment repair popup */
 $("#idRepairBtn").on("click", function () {
     // Open empty dialog
     var myPopup = bootbox.dialog({
         message: "<p></p>", // must not be empty
         title: "{{Réparation de l'état d'un équipement}}",
-        // className: "abeille_repair",
+        className: "abeilleRepair",
     });
 
-    // var $content = myPopup.find(".bootbox-body");
-    // $content.empty().append($(".abeille_repair_content").clone().show());
     t = "<div>";
     t += '<table id="idRepairSteps">';
     t += "<tr>";
@@ -903,8 +879,24 @@ $("#idRepairBtn").on("click", function () {
     t += "</tr>";
     t += "</table>";
     t += "</div>";
+    t += "<br>";
+    t += '<p style="text-align:center; margin-top:30px">';
+    t += '<a id="idRepairCloseBtn" class="btn btn-secondary">{{Annuler}}</a>';
+    t +=
+        '<a id="idRepairRetryBtn" class="btn btn-success" title="{{Tente une nouvelle réparation}}">{{Réessayer}}</a>';
+    t += "</p>";
     var popup = myPopup.find(".bootbox-body");
     popup.empty().append(t).show();
+
+    // Retry button: Continue (or retry) repair
+    popup.find("#idRepairRetryBtn").on("click", function () {
+        openRepairReturnChannel();
+    });
+
+    // Close button
+    popup.find("#idRepairCloseBtn").on("click", function () {
+        myPopup.find(".bootbox-close-button").trigger("click");
+    });
 
     repairSteps = new Object();
     // $("#idRepairSteps tr").remove();

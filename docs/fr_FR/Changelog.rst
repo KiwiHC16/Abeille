@@ -1,6 +1,16 @@
 ChangeLog
 =========
 
+- Page équipement
+
+  - Ajout affichage fabricant & modèle.
+  - Correction affichage dernier LQI.
+  - Correction traductions US.
+  - Onglet commande legèrement revu.
+
+231119-BETA-1
+-------------
+
 - SilverCrest-HG08673-FR: Mises-à-jour du modèle (2635).
 - ORVIBO CM10ZW: Mises-à-jour du modèle (2024 & 2648).
 - Page EQ: Affichage signature du modèle pour support modèles multi-signatures.
@@ -15,6 +25,7 @@ ChangeLog
 - Page maintenance/infos clefs: Amélioration.
 - Interne: Abeille.class: Corrections 'deviceUpdates'.
 - Suppression équipement: Correction incompatibilité core '4.3.19' vs '4.4.0'
+- Ikea 'TRADFRIcontroloutlet': Mise-à-jour du modèle.
 
 231110-BETA-1
 -------------

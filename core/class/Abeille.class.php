@@ -1096,6 +1096,13 @@ class Abeille extends eqLogic {
     //     return 1;
     // }
 
+    // Jeedom optional function: called before saving (create or update) an equipment
+    public function preSave() {
+        log::add('Abeille', 'debug', 'preSave()');
+        log::add('Abeille', 'debug', 'this='.json_encode($this));
+    }
+
+    // Jeedom optional function: called after saving (create or update) an equipment
     public static function postSave()
     {
         log::add('Abeille', 'debug', 'postSave()');
@@ -2871,27 +2878,6 @@ class Abeille extends eqLogic {
                 if ($eqLogic->getIsEnable() != 1)
                     message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour à partir de son modèle (source=".$jsonLocation.")");
             }
-
-            // $eqModel = $eqLogic->getConfiguration('ab::eqModel', '');
-            // $jsonId = $eqModel ? $eqModel['id'] : '';
-            // $jsonLocation = $eqModel ? $eqModel['location'] : 'Abeille';
-            // $model = AbeilleTools::getDeviceModel($jsonId, $jsonLocation);
-
-            // if (($action == 'update') || ($action == 'reset')) { // Update or reset from JSON
-            // } else { // action == create
-
-            //     if (($curEqModel == 'defaultUnknown') && ($jsonId != 'defaultUnknown')) {
-            //         message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour du modèle par défaut vers '".$modelType."'", '');
-            //         $action = 'reset'; // Update from defaultUnknown = reset to new model
-            //     } else {
-            //         if ($eqLogic->getIsEnable() == 1) {
-            //             // log::add('Abeille', 'debug', '  Device is already enabled. Doing nothing.');
-            //             log::add('Abeille', 'debug', '  Device is already enabled.');
-            //             // return; // Doing nothing on re-announce
-            //         } else
-            //         message::add("Abeille", $eqHName.": S'est réannoncé. Mise-à-jour en cours.", '');
-            //     }
-            // }
         }
 
         if ($jsonLocation == "local") {
@@ -2930,7 +2916,7 @@ class Abeille extends eqLogic {
             $iconPath = '';
             $iconExists = false;
         }
-        log::add('Abeille', 'debug', 'LA iconExists='.$iconExists.', path='.$iconPath);
+        // log::add('Abeille', 'debug', 'LA iconExists='.$iconExists.', path='.$iconPath);
         if (!$iconExists || ($action == 'reset') || ($curIcon == '') || ($curIcon == 'defaultUnknown')) {
             if (isset($modelConf["icon"]))
                 $icon = $modelConf["icon"];
@@ -3038,12 +3024,17 @@ class Abeille extends eqLogic {
 
         // JSON model infos
         $eqModelInfos = array(
+            // Model infos
             'sig' => $modelSig, // Equipent model signature
             'id' => $jsonId, // Equipment model file name
             'location' => $jsonLocation, // Equipment model file location
+            'forcedByUser' => $isModelForcedByUser,
+
+            // Equipment infos
+            'manuf' => $model['manufacturer'],
+            'model' => $model['model'],
             'type' => $model['type'],
-            'lastUpdate' => time(), // Store last update from model
-            'forcedByUser' => $isModelForcedByUser
+            // 'lastUpdate' => time(), // Store last update from model. // Tcharp38: created for Abeille but not used
         );
         if (isset($model['fromDevice'])) // Private cluster or command specific infos
             $eqModelInfos['fromDevice'] = $model['fromDevice'];

@@ -103,12 +103,15 @@ function refreshEqInfos() {
             if (typeof eq.zigbee.manufCode != "undefined")
                 document.getElementById("idManufCode").value =
                     eq.zigbee.manufCode;
-            for (const [epId, ep] of Object.entries(eq.zigbee.endPoints)) {
-                // console.log("LA epId=", epId + ", ep=", ep);
-                if (typeof ep.dateCode != "undefined")
-                    document.getElementById("idDateCode").value = ep.dateCode;
-                if (typeof ep.swBuildId != "undefined")
-                    document.getElementById("idSwBuildId").value = ep.swBuildId;
+            
+            if (typeof eq.zigbee.endPoints != "undefined") {
+                for (const [epId, ep] of Object.entries(eq.zigbee.endPoints)) {
+                    // console.log("LA epId=", epId + ", ep=", ep);
+                    if (typeof ep.dateCode != "undefined")
+                        document.getElementById("idDateCode").value = ep.dateCode;
+                    if (typeof ep.swBuildId != "undefined")
+                        document.getElementById("idSwBuildId").value = ep.swBuildId;
+                }
             }
 
             docUrl = document.getElementById("idDocUrl");

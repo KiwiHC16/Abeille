@@ -56,17 +56,19 @@
                 "use": "act_zbCmdC-Generic",
                 "params": "ep=01&clustId=E004&cmd=00&data=7B227374756479223A307D",
                 "comment": "data is JSON of {'study': 0}",
-                "isVisible": "1"
+                "isVisible": "1",
+                "logicalId": "startLearning"
             },
             "Learned IR code": {
                 "use": "inf_generic-String",
-                "logicalId": "01-learned-code",
-                "isVisible": "1"
+                "isVisible": "1",
+                "logicalId": "learnedCode"
             },
             "Code to send": {
                 "use": "act_cmd-Private",
                 "params": "ep=01&fct=tuyaZosung&cmd=00",
-                "isVisible": "1"
+                "isVisible": "1",
+                "logicalId": "sendCode"
             }
         },
         "fromDevice": {

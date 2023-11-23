@@ -8,6 +8,7 @@ ChangeLog
   - Correction traductions US.
   - Onglet commande legèrement revu.
 - Danfoss thermostat eTRV0103: Ajout support (2662).
+- Ajout support cmdes utilisateur (ID logique = xxxidxxx::parametres). Utile pour telecommande universelle.
 
 231119-BETA-1
 -------------

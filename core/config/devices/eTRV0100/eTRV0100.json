@@ -1,17 +1,25 @@
 {
     "eTRV0100": {
+        "manufacturer": "Danfoss",
+        "model": "014G2461",
+        "type": "Dansfoss Ally Radiator Thermostat 014G2461",
+        "alternateIds": {
+            "eTRV0101": {},
+            "eTRV0103": {},
+            "eT093WRO": {}
+        },
+        "genericType": "Thermostat",
         "comment": "Dansfoss Ally Radiator Thermostat 014G2461 ( https://assets.danfoss.com/documents/DOC353849556547/DOC353849556547.pdf ) ",
         "timeout": "0",
         "configuration": {
             "mainEP": "01",
             "poll": "1",
             "icon": "eTRV0100",
-            "batteryType": "2x1,5V LR6 (AA)"
+            "batteryType": "2x1.5V LR6/AA"
         },
         "category": {
             "heating": "1"
         },
-        "type": "Dansfoss Ally Radiator Thermostat 014G2461",
         "commands": {
             "Consigne": {
                 "use": "danfossTemperatureConsigneValue"

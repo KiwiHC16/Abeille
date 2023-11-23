@@ -7,6 +7,7 @@ ChangeLog
   - Correction affichage dernier LQI.
   - Correction traductions US.
   - Onglet commande legèrement revu.
+- Danfoss thermostat eTRV0103: Ajout support (2662).
 
 231119-BETA-1
 -------------

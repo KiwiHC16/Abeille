@@ -2121,7 +2121,7 @@ class Abeille extends eqLogic {
                 'clustId' => $clustId,
                 'attributes' => [],
                     'name' => 'xxx', // Attribut name = cmd logical ID (ex: 'clustId-ep-attrId')
-                    'value' => false/xx, // False = unsupported
+                    'value' => false/xx, // false = unsupported
                 'time' => time(),
                 'lqi' => $lqi
             */
@@ -3094,7 +3094,7 @@ class Abeille extends eqLogic {
                 'logicalId' => $cmdLogicId,
                 'topic' => $cmdTopic, // action only
                 'request' => $cmdReq, // action only
-                'obsolete' => True
+                'obsolete' => (strpos($cmdLogicId, '::') === false) ? true : false // User cmd must not be removed
             );
             $jeedomCmds[$cmdId] = $c;
         }
@@ -3106,19 +3106,19 @@ class Abeille extends eqLogic {
         foreach ($modelCmds as $mCmdName => $mCmd) {
             // Initial checks
             if (!isset($mCmd["type"])) {
-                log::add('Abeille', 'error', "La commande '".$mCmdName."' n'a pas de 'type' défini => ignorée");
+                log::add('Abeille', 'error', "{{La commande suivante n'a pas de type défini}}: '${mCmdName}'");
                 continue;
             }
             $mCmdType = $mCmd["type"];
             if ($mCmdType == 'info') {
                 if (!isset($mCmd["logicalId"]) || ($mCmd["logicalId"] == '')) {
-                    log::add('Abeille', 'error', "La commande '".$mCmdName."' n'a pas de 'logicalId' défini => ignorée");
+                    log::add('Abeille', 'error', "{{La commande suivante n'a pas de 'logicalId' défini}}: '${mCmdName}'");
                     continue;
                 }
             } else if ($mCmdType == 'action') {
                 // Any checks ?
             } else {
-                log::add('Abeille', 'error', "La commande '".$mCmdName."' a un type invalide (".$mCmdType.") => ignorée");
+                log::add('Abeille', 'error', "{{La commande suivante a un type invalide}}: '${mCmdName}'");
                 continue;
             }
 
@@ -3146,7 +3146,7 @@ class Abeille extends eqLogic {
                 if ($jCmd['logicalId'] != $mCmdLogicId)
                     continue;
                 $cmdId = $jCmdId;
-                $jeedomCmds[$jCmdId]['obsolete'] = False;
+                $jeedomCmds[$jCmdId]['obsolete'] = false;
                 break; // Found
             }
 
@@ -3157,7 +3157,7 @@ class Abeille extends eqLogic {
                     if (($jCmd['name'] != '') && ($jCmd['name'] != $mCmdName))
                         continue;
                     $cmdId = $jCmdId;
-                    $jeedomCmds[$jCmdId]['obsolete'] = False;
+                    $jeedomCmds[$jCmdId]['obsolete'] = false;
                     break; // Found
                 }
             }
@@ -3173,7 +3173,7 @@ class Abeille extends eqLogic {
                     if ($jCmd['request'] != $mRequest)
                         continue;
                     $cmdId = $jCmdId;
-                    $jeedomCmds[$jCmdId]['obsolete'] = False;
+                    $jeedomCmds[$jCmdId]['obsolete'] = false;
                     break;
                 }
             }
@@ -3338,28 +3338,18 @@ class Abeille extends eqLogic {
             else
                 $cmdLogic->setDisplay('title_disable', null);
 
-            // log::add('Abeille', 'debug', '  LA='.$cmdLogic->getName()." - ".$cmdLogic->getLogicalId());
             $cmdLogic->save();
-            // if (isset($jCmdId) && isset($jeedomCmds[$jCmdId])) // Mark updated if cmd was already existing
-            //     $jeedomCmds[$jCmdId]['obsolete'] = 0;
         }
 
         // Removing obsolete cmds
-        // foreach ($jeedomCmdsInf as $jCmdId => $jCmd) {
         foreach ($jeedomCmds as $jCmdId => $jCmd) {
-            if ($jCmd['obsolete'] == False)
+            if ($jCmd['obsolete'] == false)
                 continue;
-            log::add('Abeille', 'debug', "  Removing info '".$jCmd['name']."' (".$jCmd['logicalId'].")");
+
+            log::add('Abeille', 'debug', "  Removing '".$jCmd['name']."' (".$jCmd['logicalId'].")");
             $cmdLogic = cmd::byId($jCmdId);
             $cmdLogic->remove();
         }
-        // foreach ($jeedomCmdsAct as $jCmdId => $jCmd) {
-        //     if ($jCmd['obsolete'] == False)
-        //         continue;
-        //     log::add('Abeille', 'debug', "  Removing action '".$jCmd['name']."' (".$jCmd['logicalId'].")");
-        //     $cmdLogic = cmd::byId($jCmdId);
-        //     $cmdLogic->remove();
-        // }
 
         // $eqLogic->refreshWidget(); // Refresh equipment display ? Required ? Useful ?
 

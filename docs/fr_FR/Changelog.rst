@@ -6,9 +6,11 @@ ChangeLog
   - Ajout affichage fabricant & modèle.
   - Correction affichage dernier LQI.
   - Correction traductions US.
-  - Onglet commande legèrement revu.
+  - Onglet commandes legèrement revu.
+  - Onglet commandes: ajout saut de ligne avant/apres.
 - Danfoss thermostat eTRV0103: Ajout support (2662).
 - Ajout support cmdes utilisateur (ID logique = xxxidxxx::parametres). Utile pour telecommande universelle.
+- Moes télécommande universelle IR: Mise-à-jour du code & modèle (2607).
 
 231119-BETA-1
 -------------

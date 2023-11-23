@@ -120,11 +120,11 @@
         tr += '     <span class="cmdAttr" data-l1key="id" title="{{Identifiant Jeedom}}"></span>';
         tr += '</td>';
 
-        tr += '<td>'; // Col 2 = Jeedom cmd name
+        tr += '<td>'; // Jeedom cmd name
         tr += '     <input class="cmdAttr form-control input-sm roundedLeft" data-l1key="name" placeholder="{{Nom}}" title="{{Nom de la commande vue par Jeedom}}">';
         tr += '</td>';
 
-        tr += '<td>'; // Col 3 = Type & sub-type
+        tr += '<td>'; // Type & sub-type
         if (init(_cmd.type) == 'info') {
             tr += '     <span class="cmdAttr form-control type input-sm" data-l1key="type" value="info" style="margin-bottom:5px;" /></span>';
         } else if (init(_cmd.type) == 'action') {
@@ -135,8 +135,23 @@
         tr += '     <span class="subType" subType="' + init(_cmd.subType) + '"></span>';
         tr += '</td>';
 
-        tr += '<td>'; // Col 4 = Logical ID
+        tr += '<td>'; // Logical ID
         tr += '     <input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="{{ID logique}}" style="width:100%;">';
+        tr += '</td>';
+
+        tr += '<td>'; // Options
+        tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible"/>{{Afficher}}</label></span>';
+        tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="forceReturnLineBefore"/>{{Break avant}}</label></span>';
+        tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="forceReturnLineAfter"/>{{Break après}}</label></span>';
+        if (init(_cmd.type) == 'info') { // Info
+            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized"/>{{Historiser}}</label></span>';
+            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label></span><br>';
+            tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:40%; display:inline-block;"> - ';
+            tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:40%; display:inline-block;">';
+        } else if (init(_cmd.type) == 'action') {
+            // tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:40%; display:inline-block;"> - ';
+            // tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:40%; display:inline-block;">';
+        }
         tr += '</td>';
 
         if (typeof js_dbgDeveloperMode != 'undefined') {
@@ -176,22 +191,6 @@
             tr += '     </select></br>';
             tr += '     <input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="PollingOnCmdChangeDelay" style="height : 33px;" placeholder="{{en secondes}}" title="{{Temps souhaité entre Cmd Info Change et Execution de cette commande.}}" ><br/>';
             tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="configuration" data-l2key="RefreshData" title="{{Si vous souhaitez l execution de cette commande pour rafraichir l info par exemple au demarrage d abeille.}}" />{{Rafraichir}}</label></span><br> ';
-        }
-        tr += '</td>';
-
-        tr += '<td>'; // Col 7
-        if ((init(_cmd.type) == 'info') || (init(_cmd.type) == '')) { // Info or new command
-            // Col 7 = Affiche + Hist + Invert + Min/Max
-            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible"/>{{Afficher}}</label></span>';
-            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized"/>{{Historiser}}</label></span>';
-            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label></span></br>';
-            tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:40%; display:inline-block;"> - ';
-            tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:40%; display:inline-block;">';
-        } else if (init(_cmd.type) == 'action') {
-            // Col 7 = Affiche
-            tr += '     <span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible"/>{{Afficher}}</label></span><br>';
-            // tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width:40%; display:inline-block;"> - ';
-            // tr += '     <input class="tooltips cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width:40%; display:inline-block;">';
         }
         tr += '</td>';
 

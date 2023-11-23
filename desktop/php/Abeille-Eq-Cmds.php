@@ -19,17 +19,17 @@
     <table id="table_cmd" class="table table-bordered table-condensed ui-sortable">
         <thead>
             <tr>
-                <th style="width:  80px;">{{ID}}</th>
-                <th style="width: 150px;">{{Nom}}</th>
-                <th style="width: 120px;">{{Type}}</th>
+                <th style="width:  70px;">{{ID}}</th>
+                <th style="width: 160px;">{{Nom}}</th>
+                <th style="width: 50px;">{{Type}}</th>
                 <th style="width: 150px;">{{ID logique}}</th>
+                <th style="width: 130px;">{{Options}}</th>
                 <?php if (isset($dbgDeveloperMode)) { ?>
                     <!-- Tcharp38: logicalId & topic to be revisited. Currently logicalId seems to not be used. -->
                     <th style="width: 150px;">{{Cmde Abeille/topic}}</th>
                     <th style="width: 400px;">{{Paramètres cmde Abeille}}</th>
                 <?php } ?>
                 <th style="width: 150px;">{{Unité/Cron}}</th>
-                <th style="width: 130px;">{{Options}}</th>
                 <th style="width:  20px;"></th>
                 <th style="width: 80px;">{{Supprimer}}</th>
             </tr>

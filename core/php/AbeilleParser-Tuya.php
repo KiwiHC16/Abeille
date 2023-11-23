@@ -520,7 +520,7 @@
             $dataB64URL = AbeilleTools::base64url_encode($dataBA);
 
             $attrReportN[] = array(
-                'name' => "01-learned-code",
+                'name' => "learnedCode",
                 'value' => $dataB64URL,
             );
             unset($GLOBALS['zosung'][$seqR]);

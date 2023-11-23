@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231123-BETA-1
+-------------
+
 - Page équipement
 
   - Ajout affichage fabricant & modèle.

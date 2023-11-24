@@ -6,6 +6,8 @@ ChangeLog
 
 - Support commande utilisateur: Amélioration.
 - Moes télécommande universelle IR: Mise-à-jour du code (2607).
+- Page equipement: Traductions US.
+- Réparation équipement: Améliorations.
 
 231123-BETA-1
 -------------

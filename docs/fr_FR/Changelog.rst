@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231124-BETA-1
+-------------
+
 - Support commande utilisateur: Amélioration.
 - Moes télécommande universelle IR: Mise-à-jour du code (2607).
 

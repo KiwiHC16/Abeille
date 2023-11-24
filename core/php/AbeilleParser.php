@@ -202,7 +202,7 @@
         into several messages to Abeille. */
     function msgToAbeille2($msg) {
         global $queueXToAbeille;
-        if (msg_send($queueXToAbeille, 1, json_encode($msg), false, false, $errCode) == false) {
+        if (msg_send($queueXToAbeille, 1, json_encode($msg, JSON_UNESCAPED_SLASHES), false, false, $errCode) == false) {
             parserLog("debug", "msgToAbeille2(): ERROR ".$errCode);
         }
     }
@@ -217,7 +217,7 @@
 
         global $queueXToCmd;
         $errCode = 0;
-        if (msg_send($queueXToCmd, 1, json_encode($msg), false, false, $errCode) == false) {
+        if (msg_send($queueXToCmd, 1, json_encode($msg, JSON_UNESCAPED_SLASHES), false, false, $errCode) == false) {
             parserLog("debug", "  ERROR: msgToCmd(): Can't write to 'queueXToCmd', error=".$errCode);
         }
     }

@@ -433,7 +433,7 @@
                 'pos' => hexdec($positionR),
                 'maxLen' => hexdec($maxLen)
             );
-            $dataJson = json_encode($data);
+            $dataJson = json_encode($data, JSON_UNESCAPED_SLASHES);
             msgToCmd(PRIO_NORM, "Cmd".$net."/".$addr."/cmd-Private", "ep=".$ep."&fct=tuyaZosung&cmd=03&message=${dataJson}");
         } else if ($cmdId == "03") {
             // Cmd 03 reminder

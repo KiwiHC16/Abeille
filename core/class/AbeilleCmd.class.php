@@ -150,7 +150,7 @@
                     logMessage('debug', "-- User cmd: logicId=${cmdLogicId2}, params=${cmdParams}");
                     $cmdLogic = $eqLogic->getCmd('action', $cmdLogicId2);
                     if (!is_object($cmdLogic)) {
-                        logMessage('error', $this->getHumanName().': Syntaxe incorrecte.');
+                        logMessage('error', $this->getHumanName().": Cmde '${cmdLogicId2}' inconnue.");
                         return;
                     }
                     $params = explode('=', $cmdParams);
@@ -218,7 +218,7 @@
                 $msg = array();
                 $msg['topic'] = $topic;
                 $msg['payload'] = $request;
-                $msgJson = json_encode($msg);
+                $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
                 global $abQueues;
 
                 if (strpos($topic, "CmdCreate") === 0) {

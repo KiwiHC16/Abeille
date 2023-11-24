@@ -116,13 +116,15 @@
     }
 
     // Returns Tuya specific transaction ID (2 bytes)
-    function tuyaGenSqn() {
-        global $tuyaTransId;
-        $tuyaTransId++;
-        if ($tuyaTransId > 255)
-            $tuyaTransId = 0;
-        $tId = sprintf("%04X", $tuyaTransId);
-        return $tId;
+    function tuyaZosungSeq() {
+        global $tuyaSeq;
+        $tuyaSeq++;
+        // if ($tuyaSeq > 255)
+        //     $tuyaSeq = 0;
+        if ($tuyaSeq > 9) // For unknown reason, seq above 9 breaks the transfer
+            $tuyaSeq = 0;
+        $seq = sprintf("%04X", $tuyaSeq);
+        return $seq;
     }
 
     require_once __DIR__.'/../class/AbeilleCmdProcess.class.php';
@@ -150,10 +152,8 @@
 
         if ($cmd == '00') { // Send IR code
             // Data is base64 URL encoded
-            $data = AbeilleTools::base64url2base64($data);
-            cmdLog2('debug', $addr, "  Send IR code '${data}'");
-            // $dataSize = strlen($data);
-            // $dataSize = sprintf("%02X", $dataSize);
+            $dataB64 = AbeilleTools::base64url2base64($data);
+            cmdLog2('debug', $addr, "  Send IR code '${dataB64}'");
             $irMsg = array(
                 'key_num' => 1,
                 'delay' => 300,
@@ -161,21 +161,19 @@
                     'num' => 1,
                     'freq' => 38000,
                     'type' => 1,
-                    // 'key_code' => $dataSize.$data, // dataSize required ?
-                    'key_code' => $data,
+                    'key_code' => $dataB64,
                 ),
             );
-            $irMsgJson = json_encode($irMsg);
+            $irMsgJson = json_encode($irMsg, JSON_UNESCAPED_SLASHES);
             cmdLog2('debug', $addr, '  TEMPORARY: irMsgJson='.$irMsgJson);
             $message = bin2hex($irMsgJson);
             cmdLog2('debug', $addr, '  TEMPORARY: message='.$message);
-            $seq = tuyaGenSqn();
+            $seq = tuyaZosungSeq(); // For unknown reason, seq above 9 breaks the transfer
 
             // Saving message to send
             if (!isset($GLOBALS['zosung']))
                 $GLOBALS['zosung'] = [];
             $GLOBALS['zosung'][$seq] = array(
-                // 'message' => $data
                 'message' => $message
             );
 
@@ -188,7 +186,7 @@
             // {name: 'cmd', type: DataType.uint8},
             // {name: 'unk4', type: DataType.uint16},
 
-            // $seq = tuyaGenSqn();
+            // $seq = tuyaGenSqn(); // Already generated
             $length = sprintf("%08X", strlen($message) / 2);
             $unk1 = '00000000';
             $unk2 = 'e004';
@@ -216,8 +214,8 @@
         } else if ($cmd == '03') {
             $params = json_decode($data, true);
             $seq = $params['seq']; // Hex string
-            $pos = $params['pos']; // Binary
-            $maxLen = $params['maxLen']; // Binary
+            $pos = $params['pos']; // Integer
+            $maxLen = $params['maxLen']; // Integer
             cmdLog2('debug', $addr, "  Cmd ED00-03: Seq=${seq}, Pos=d${pos}, MaxLen=d${maxLen}");
 
             if (!isset($GLOBALS['zosung']) || !isset($GLOBALS['zosung'][$seq])) {

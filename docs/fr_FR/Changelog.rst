@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-231124-BETA-1
+231124-BETA-2
 -------------
 
 - Support commande utilisateur: Amélioration.

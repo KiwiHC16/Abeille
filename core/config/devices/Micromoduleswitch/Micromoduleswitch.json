@@ -46,6 +46,11 @@
                 "params": "clustId=000F",
                 "execAtCreation": "Yes",
                 "comment": "Seems required at config to avoid device to leave"
+            },
+            "SetReporting-0006-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000",
+                "execAtCreation": "Yes"
             }
         }
     }

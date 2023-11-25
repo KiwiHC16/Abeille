@@ -865,6 +865,7 @@
         mainEp = -1;
         minTimeout = 60; // Min timeout = 60min
 
+        // 0000/Basic cluster on all EP
         for (var epId in endPoints) {
             // console.log("EP "+epId);
             ep = endPoints[epId];
@@ -872,7 +873,6 @@
             if (!isset(ep.servClusters))
                 continue;
 
-            // 0000/Basic cluster
             if (isset(ep.servClusters["0000"]) && isset(ep.servClusters["0000"]['attributes'])) {
                 attributes = ep.servClusters["0000"]['attributes'];
 
@@ -881,8 +881,9 @@
                 /* Only attribute 4000 is converted to user command.
                    No sense for others */
                 if (isset(attributes['4000'])) {
-                    cmds["SWBuildID"] = newCmd("inf_zbAttr-0000-SWBuildID");
-                    cmds["Get SWBuildID"] = newCmd("act_zbReadAttribute", "clustId=0000&attrId=4000");
+                    // The following cmds are useless. Already part of EQ advanced infos.
+                    // cmds["SWBuildID"] = newCmd("inf_zbAttr-0000-SWBuildID");
+                    // cmds["Get SWBuildID"] = newCmd("act_zbReadAttribute", "clustId=0000&attrId=4000");
                 }
                 if (typeof zigbee.signature === "undefined")
                     zigbee.signature = new Object();
@@ -919,7 +920,7 @@
             /* 0003/Identify cluster */
             if (typeof ep.servClusters["0003"] !== "undefined") {
                 cmds["Identify"] = newCmd("act_zbCmdC-Identify");
-                cmds["Identify"]["isVisible"] = 1;
+                // cmds["Identify"]["isVisible"] = 1; // Hidden by default. Rarely used
                 cmds["Identify"]["nextLine"] = "after";
             }
 

@@ -3,6 +3,7 @@ ChangeLog
 
 - Page EQ/avancé: Réparation équipement: Améliorations.
 - Interne: Normalisation infos modèle: 'modelSig'/'modelName'/'modelSource'
+- Interne: Normalisation infos modèle: forcedByUser => modelForced
 
 231124-BETA-2
 -------------

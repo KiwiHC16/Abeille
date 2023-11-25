@@ -877,6 +877,7 @@
          * - eqLogic DB: Icon renamed 'IkeaTradfriDimmer' => 'Ikea-Tradfri-Dimmer'
          * - eqLogic DB: Removed 'ab::txAck' for devices not always listening
          * - eqLogic DB: 'ab::eqModel', sig/id/location renamed to modelSig/modelName/modelSource
+         * - eqLogic DB: 'ab::eqModel', 'forcedByUser' => 'modelForced'
          * - Cmds DB: For 'Online' adding 'repeatEventManagement=always'
          * - Cmds DB: 'OnOff' cmd replaced by 'cmd-0006'
          * - Cmds DB: 'OnOffGroup' replaced by 'cmd-0006'
@@ -919,7 +920,8 @@
                 $eqModelRename = array(
                     'sig' => 'modelSig',
                     'id' => 'modelName',
-                    'location' => 'modelSource'
+                    'location' => 'modelSource',
+                    'forcedByUser' => 'modelForced'
                 );
                 foreach ($eqModelRename as $oldK => $newK) {
                     if (!isset($eqModel[$oldK]))

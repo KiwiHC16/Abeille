@@ -1429,8 +1429,9 @@ class Abeille extends eqLogic {
             $dev = array(
                 'net' => $dest,
                 'addr' => $rcAddr,
-                'jsonId' => 'remotecontrol',
-                'jsonLocation' => 'Abeille',
+                'modelSig' => 'remotecontrol',
+                'modelName' => 'remotecontrol',
+                'modelSource' => 'Abeille',
             );
             Abeille::createDevice("update", $dev);
 
@@ -1473,10 +1474,10 @@ class Abeille extends eqLogic {
             }
 
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-            $jsonId = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
-            $jsonLocation = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille';
-            $isForcedModel = isset($eqModel['forcedByUser']) ? $eqModel['forcedByUser'] : false;
-            $jsonId1 = $jsonId;
+            $modelName = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
+            $modelSource = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille';
+            $isForcedModel = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false;
+            $modelName1 = $modelName;
 
             // Checking if model is defaultUnknown and there is now a real model for it (see #2211).
             // Also rechecking if model is still the correct one (ex: TS011F => TS011F__TZ3000_2putqrmw)
@@ -1487,21 +1488,21 @@ class Abeille extends eqLogic {
                 $modelInfos = self::findModel($eqSig['modelId'], $eqSig['manufId']);
                 if ($modelInfos !== false) {
                     $modelSig = $modelInfos['modelSig'];
-                    $jsonId = $modelInfos['modelName'];
-                    $jsonLocation = $modelInfos['modelSource'];
+                    $modelName = $modelInfos['modelName'];
+                    $modelSource = $modelInfos['modelSource'];
                     $eqHName = $eqLogic->getHumanName();
                 }
             }
-            if ($jsonId != $jsonId1)
+            if ($modelName != $modelName1)
                 message::add("Abeille", $eqHName.": Nouveau modèle trouvé. Mise-à-jour en cours.", '');
 
             $dev = array(
                 'net' => $dest,
                 'addr' => $addr,
-                'modelSig' => $modelSig, // Model signature
-                'jsonId' => $jsonId, // Model file name
-                'jsonLocation' => $jsonLocation, // Model file location
                 'ieee' => $eqLogic->getConfiguration('IEEE'),
+                'modelSig' => $modelSig, // Model signature
+                'modelName' => $modelName, // Model file name
+                'modelSource' => $modelSource, // Model file location
             );
             Abeille::createDevice($action, $dev);
 
@@ -1964,8 +1965,8 @@ class Abeille extends eqLogic {
                 'ieee' => $ieee,
                 'modelId' => $msg['modelId'],
                 'manufId' => $msg['manufId'],
-                'jsonId' => $jsonId,
-                'jsonLocation' => $jsonLocation,
+                'modelName' => $jsonId,
+                'modelSource' => $jsonLocation,
                 'macCapa' => $msg['macCapa']
             );
             Abeille::createDevice("update", $dev);
@@ -2783,14 +2784,15 @@ class Abeille extends eqLogic {
                 $dev = array(
                     'net' =>
                     'addr' =>
-                    'jsonId' => 'remotecontrol',
-                    'jsonLocation' => 'Abeille',
+                    'modelSig' => 'remotecontrol', // Model sig
+                    'modelName' => 'remotecontrol', // Model file name
+                    'modelSource' => 'Abeille', // Model file location
                 );
          */
 
         $modelSig = isset($dev['modelSig']) ? $dev['modelSig']: '';
-        $jsonId = isset($dev['jsonId']) ? $dev['jsonId']: '';
-        $jsonLocation = isset($dev['jsonLocation']) ? $dev['jsonLocation']: '';
+        $jsonId = isset($dev['modelName']) ? $dev['modelName']: '';
+        $jsonLocation = isset($dev['modelSource']) ? $dev['modelSource']: '';
         if ($jsonLocation == '')
             $jsonLocation = 'Abeille';
 
@@ -2802,7 +2804,7 @@ class Abeille extends eqLogic {
         $isModelForcedByUser = false;
         if(is_object($eqLogic)){
             $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
-            if(isset($jEqModel['modelName']) && isset($jEqModel['modelSource']) && isset($jEqModel['forcedByUser']) && ($jEqModel['forcedByUser'] == true)){
+            if(isset($jEqModel['modelName']) && isset($jEqModel['modelSource']) && isset($jEqModel['modelForced']) && ($jEqModel['modelForced'] == true)){
                 $jsonLocation = $jEqModel['modelSource'];
                 $jsonId = $jEqModel['modelName'];
                 $isModelForcedByUser = true;
@@ -3029,7 +3031,7 @@ class Abeille extends eqLogic {
             'modelSig' => $modelSig, // Equipent model signature
             'modelName' => $jsonId, // Equipment model file name
             'modelSource' => $jsonLocation, // Equipment model file location
-            'forcedByUser' => $isModelForcedByUser,
+            'modelForced' => $isModelForcedByUser,
 
             // Equipment infos
             'manuf' => $model['manufacturer'],

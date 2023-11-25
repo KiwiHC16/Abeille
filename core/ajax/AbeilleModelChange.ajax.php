@@ -138,9 +138,9 @@ function setModelToDevice()
     $eqModelInfos = array(
         'modelName' => $json, // ID du json
         'modelSource' => $source, // Abeille ou local
+        'modelForced' => true, // Prevents the model from being overwritten if the equipment is re-announced
         'type' => $libelleType,
         'lastUpdate' => time(), // Store last update from model
-        'forcedByUser' => true // Prevents the model from being overwritten if the equipment is re-announced
     );
     $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
 
@@ -171,7 +171,7 @@ function disableManualModelForDevice()
         // Should never happen
         throw new Exception(__('ab::eqModel non défini. Essayez de ré-inclure l\'équipement.', __FILE__) . ' ' . $eqId);
     }
-    $currentModel['forcedByUser'] = false;
+    $currentModel['modelForced'] = false;
     $eqLogic->setConfiguration('ab::eqModel', $currentModel);
     $eqLogic->save();
 

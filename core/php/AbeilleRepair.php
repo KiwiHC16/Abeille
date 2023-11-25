@@ -211,11 +211,10 @@
 
         // Is model correct ?
         // ab::eqModel = array(
-        //     'sig' => model signature
-        //     'id' => model file name
-        //     'location' => model file source
-        //     'type' => model type
-        //     'forcedByUser' => true|false
+        //     'modelSig' => model signature
+        //     'modelName' => model file name
+        //     'modelSource' => model file source
+        //     'modelForced' => true|false
         //     'manuf' => EQ manufacturer name
         //     'model' => EQ model nam
         //     'type' => EQ model type
@@ -231,7 +230,7 @@
                 $eqModel['modelSig'] = $modelContent['modelSig'];
                 $eqModel['modelName'] = $modelContent['modelName'];
                 $eqModel['modelSource'] = $modelContent['modelSource'];
-                $eqModel['forcedByUser'] = false;
+                $eqModel['modelForced'] = false;
                 $eqModelChanged = true;
             }
         }

@@ -161,7 +161,7 @@
         }
 
     	// Model forced by user ?
-    	$isManualModel = isset($eqModel['forcedByUser']) ? $eqModel['forcedByUser']: false;
+    	$isManualModel = isset($eqModel['modelForced']) ? $eqModel['modelForced']: false;
 
         if (($jsonId == "defaultUnknown") && ($modelId != "") && !$isManualModel) {
             $jsonId2 = "";

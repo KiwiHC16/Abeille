@@ -575,13 +575,13 @@
                 $eq['modelName'] = isset($eqModel['modelName']) ? $eqModel['modelName'] : ''; // TO BE REMOVED
                 $eq['modelSource'] = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille'; // TO BE REMOVED
                 $eq['modelType'] = isset($eqModel['type']) ? $eqModel['type'] : ''; // TO BE REMOVED
-                $eq['modelForced'] = isset($eqModel['forcedByUser']) ? $eqModel['forcedByUser'] : false; // TO BE REMOVED
+                $eq['modelForced'] = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false; // TO BE REMOVED
                 $eq['model'] = array(
                     // Model infos
                     'modelSig' => isset($eqModel['modelSig']) ? $eqModel['modelSig'] : '',
                     'modelName' => isset($eqModel['modelName']) ? $eqModel['modelName'] : '',
                     'modelSource' => isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille',
-                    'modelForced' => isset($eqModel['forcedByUser']) ? $eqModel['forcedByUser'] : false,
+                    'modelForced' => isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false,
 
                     // Equipment infos
                     'manuf' => isset($eqModel['manuf']) ? $eqModel['manuf'] : '',

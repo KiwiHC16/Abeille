@@ -40,6 +40,12 @@
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
+            },
+            "Bind-000F-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=000F",
+                "execAtCreation": "Yes",
+                "comment": "Seems required at config to avoid device to leave"
             }
         }
     }

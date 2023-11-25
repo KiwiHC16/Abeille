@@ -8,6 +8,7 @@ ChangeLog
 - Interne: Normalisation infos modèle: 'modelSig'/'modelName'/'modelSource'
 - Interne: Normalisation infos modèle: forcedByUser => modelForced
 - eTRV0103: Mise-à-jour du modèle.
+- Legrand micromodule switch: Mise-à-jour du modèle.
 
 231124-BETA-2
 -------------

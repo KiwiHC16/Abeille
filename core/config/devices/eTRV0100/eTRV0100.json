@@ -21,18 +21,8 @@
             "heating": "1"
         },
         "commands": {
-            "Consigne": {
-                "use": "danfossTemperatureConsigneValue"
-            },
-            "Consigne Get": {
-                "use": "danfossTemperatureConsigneGet"
-            },
-            "Consigne Set": {
-                "use": "danfossTemperatureConsigneSet"
-            },
             "Battery-Percent": {
-                "use": "inf_zbAttr-0001-BatteryPercent",
-                "isVisible": 1
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Get Battery-Percent": {
                 "use": "act_zbReadAttribute",
@@ -45,7 +35,25 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0001&attrId=0020"
             },
-            "Temp\u00e9rature": {
+            "Plus": {
+                "use": "act_zbCmdC-0201-Setpoint-Plus05",
+                 "isVisible": 1
+            },
+            "Minus": {
+                "use": "act_zbCmdC-0201-Setpoint-Minus05",
+                 "isVisible": 1
+            },
+            "Consigne Set": {
+                "use": "danfossTemperatureConsigneSet"
+            },
+            "Consigne Get": {
+                "use": "danfossTemperatureConsigneGet"
+            },
+            "Consigne": {
+                "use": "danfossTemperatureConsigneValue",
+                "nextLine": "after"
+            },
+            "Temp": {
                 "use": "spiritTemperature"
             },
             "getTemperature": {

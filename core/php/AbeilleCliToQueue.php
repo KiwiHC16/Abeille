@@ -138,12 +138,12 @@
         list($eqNet, $eqAddr) = explode("/", $eqLogic->getLogicalId());
         $zgId = substr($eqNet, 7); // AbeilleX => X
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-        if (isset($eqModel['id']) && ($eqModel['id'] != ''))
-            $jsonId = $eqModel['id'];
+        if (isset($eqModel['modelName']) && ($eqModel['modelName'] != ''))
+            $jsonId = $eqModel['modelName'];
         else
             $jsonId = '';
-        if (isset($eqModel['location']) && ($eqModel['location'] != '') && ($eqModel['location'] != null))
-            $jsonLocation = $eqModel['location'];
+        if (isset($eqModel['modelSource']) && ($eqModel['modelSource'] != '') && ($eqModel['modelSource'] != null))
+            $jsonLocation = $eqModel['modelSource'];
         else
             $jsonLocation = 'Abeille';
         if ($jsonId == '') {
@@ -159,10 +159,10 @@
             $modelId = "";
             $manufId = "";
         }
-    
+
     	// Model forced by user ?
     	$isManualModel = isset($eqModel['forcedByUser']) ? $eqModel['forcedByUser']: false;
-    	
+
         if (($jsonId == "defaultUnknown") && ($modelId != "") && !$isManualModel) {
             $jsonId2 = "";
             $jsonLoc2 = "";
@@ -184,8 +184,8 @@
             if (($jsonId2 != $jsonId) || ($jsonLoc2 != $jsonLocation)) {
                 if (isset($dbgTcharp38)) logDebug("CliToQueue: New jsonId: ".$jsonId2."/".$jsonLoc2);
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-                $eqModel['id'] = $jsonId2;
-                $eqModel['location'] = $jsonLoc2;
+                $eqModel['modelName'] = $jsonId2;
+                $eqModel['modelSource'] = $jsonLoc2;
                 $eqLogic->setConfiguration('ab::eqModel', $eqModel);
                 $eqLogic->save();
                 $jsonId = $jsonId2;

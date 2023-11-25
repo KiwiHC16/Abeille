@@ -39,7 +39,7 @@
         $eq['addr'] = $eqAddr;
         $eq['mainEp'] = $eqLogic->getConfiguration('mainEP', '');
         $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-        $eq['jsonId'] = $eqModel ? $eqModel['id'] : '';
+        $eq['jsonId'] = $eqModel ? $eqModel['modelName'] : '';
         $eq['name'] = $eqLogic->getName();
         if ($eqAddr == "0000") {
             if (isset($eqPerZigate[$zgId][$eqId]))

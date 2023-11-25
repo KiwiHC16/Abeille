@@ -49,7 +49,7 @@ function refreshEqInfos() {
         url: "plugins/Abeille/core/ajax/Abeille.ajax.php",
         data: {
             action: "getEq",
-            eqId: eqId,
+            eqId: curEqId,
         },
         dataType: "json",
         global: false,
@@ -78,7 +78,7 @@ function refreshEqInfos() {
 
             // Updating advanced tab
             document.getElementById("idEqName").value = eq.name;
-            document.getElementById("idEqId").value = eqId;
+            document.getElementById("idEqId").value = curEqId;
             document.getElementById("idEqAddr").value = eq.addr;
             document.getElementById("idZgType").value = eq.zgType;
             document.getElementById("idZbModel").value = eq.zbModel;
@@ -103,7 +103,7 @@ function refreshEqInfos() {
             if (typeof eq.zigbee.manufCode != "undefined")
                 document.getElementById("idManufCode").value =
                     eq.zigbee.manufCode;
-            
+
             if (typeof eq.zigbee.endPoints != "undefined") {
                 for (const [epId, ep] of Object.entries(eq.zigbee.endPoints)) {
                     // console.log("LA epId=", epId + ", ep=", ep);
@@ -417,7 +417,7 @@ function removeSelectedEq(zgId) {
     var eqIdList = sel["ids"];
     console.log("eqIdList=" + eqIdList);
 
-    for (const eqId of eqIdList) removeEq(zgId, eqId);
+    for (const eqId2 of eqIdList) removeEq(zgId, eqId2);
 }
 
 /* Click on 'remove' button in equipement details page.
@@ -896,6 +896,8 @@ $("#idRepairBtn").on("click", function () {
     // Close button
     popup.find("#idRepairCloseBtn").on("click", function () {
         myPopup.find(".bootbox-close-button").trigger("click");
+        // Refresh the page
+        location.reload();
     });
 
     repairSteps = new Object();
@@ -905,7 +907,7 @@ $("#idRepairBtn").on("click", function () {
 
 /* Repair: Open return channel from repair process */
 function openRepairReturnChannel() {
-    console.log("openRepairReturnChannel()");
+    console.log("openRepairReturnChannel(), curEqId="+curEqId);
 
     var url = "plugins/Abeille/core/php/AbeilleRepair.php";
     var xhr = new XMLHttpRequest();
@@ -914,7 +916,7 @@ function openRepairReturnChannel() {
     xhr.onload = repairReturnChannel;
     // request.onreadystatechange = returnChannelStateChange;
     var data = new FormData();
-    data.append("eqId", eqId);
+    data.append("eqId", curEqId);
     xhr.send(data);
 }
 
@@ -984,6 +986,12 @@ function repairReturnChannel() {
             missingInfo = true;
             break;
         }
+    }
+    if (!missingInfo) {
+        // Rename 'cancel' to 'close'
+        document.getElementById("idRepairCloseBtn").innerHTML="{{Fermer}}";
+        // Hide 'retry' button
+        document.getElementById("idRepairRetryBtn").style.display="none";
     }
     // if (missingInfo) openRepairReturnChannel();
 }

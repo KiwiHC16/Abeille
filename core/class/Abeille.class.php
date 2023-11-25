@@ -313,7 +313,7 @@ class Abeille extends eqLogic {
 
                 /* Special case: should ignore virtual remote */
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-                $jsonId = $eqModel ? $eqModel['id'] : '';
+                $jsonId = $eqModel ? $eqModel['modelName'] : '';
                 if ($jsonId == "remotecontrol")
                     continue; // Abeille virtual remote
 
@@ -1414,7 +1414,7 @@ class Abeille extends eqLogic {
                 if ($net2 != $net)
                     continue; // Wrong network
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-                $jsonId2 = $eqModel ? $eqModel['id'] : '';
+                $jsonId2 = $eqModel ? $eqModel['modelName'] : '';
                 if ($jsonId2 != "remotecontrol")
                     continue; // Not a remote
                 if ($addr2 == '')
@@ -1473,8 +1473,8 @@ class Abeille extends eqLogic {
             }
 
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-            $jsonId = isset($eqModel['id']) ? $eqModel['id'] : '';
-            $jsonLocation = isset($eqModel['location']) ? $eqModel['location'] : 'Abeille';
+            $jsonId = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
+            $jsonLocation = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille';
             $isForcedModel = isset($eqModel['forcedByUser']) ? $eqModel['forcedByUser'] : false;
             $jsonId1 = $jsonId;
 
@@ -2605,8 +2605,9 @@ class Abeille extends eqLogic {
 
         // JSON model infos
         $eqModelInfos = array(
-            'id' => 'rucheCommand', // Equipment model id
-            'location' => 'Abeille', // Equipment model location
+            'modelSig' => 'rucheCommand',
+            'modelName' => 'rucheCommand', // Equipment model id
+            'modelSource' => 'Abeille', // Equipment model location
             'type' => 'Zigate',
             'lastUpdate' => time() // Store last update from model
         );
@@ -2801,9 +2802,9 @@ class Abeille extends eqLogic {
         $isModelForcedByUser = false;
         if(is_object($eqLogic)){
             $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
-            if(isset($jEqModel['id']) && isset($jEqModel['location']) && isset($jEqModel['forcedByUser']) && ($jEqModel['forcedByUser'] == true)){
-                $jsonLocation = $jEqModel['location'];
-                $jsonId = $jEqModel['id'];
+            if(isset($jEqModel['modelName']) && isset($jEqModel['modelSource']) && isset($jEqModel['forcedByUser']) && ($jEqModel['forcedByUser'] == true)){
+                $jsonLocation = $jEqModel['modelSource'];
+                $jsonId = $jEqModel['modelName'];
                 $isModelForcedByUser = true;
             }
         }
@@ -2853,7 +2854,7 @@ class Abeille extends eqLogic {
 
             // Kept for safety but should already be assigned in 'special case' block
             $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
-            $curEqModel = isset($jEqModel['id']) ? $jEqModel['id'] : ''; // Current JSON model
+            $curEqModel = isset($jEqModel['modelName']) ? $jEqModel['modelName'] : ''; // Current JSON model
             $ieee = $eqLogic->getConfiguration('IEEE'); // IEEE from Jeedom DB
             $eqId = $eqLogic->getId();
 
@@ -3025,9 +3026,9 @@ class Abeille extends eqLogic {
         // JSON model infos
         $eqModelInfos = array(
             // Model infos
-            'sig' => $modelSig, // Equipent model signature
-            'id' => $jsonId, // Equipment model file name
-            'location' => $jsonLocation, // Equipment model file location
+            'modelSig' => $modelSig, // Equipent model signature
+            'modelName' => $jsonId, // Equipment model file name
+            'modelSource' => $jsonLocation, // Equipment model file location
             'forcedByUser' => $isModelForcedByUser,
 
             // Equipment infos

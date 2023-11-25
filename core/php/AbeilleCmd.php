@@ -110,8 +110,8 @@
         $eq = array(
             'ieee' => $ieee,
             'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
-            'jsonId' => isset($eqModel['id']) ? $eqModel['id'] : '',
-            'jsonLocation' => isset($eqModel['location']) ? $eqModel['location'] : 'Abeille',
+            'jsonId' => isset($eqModel['modelName']) ? $eqModel['modelName'] : '',
+            'jsonLocation' => isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille',
             'rxOnWhenIdle' => $rwOnWhenIdle ? true : false
         );
         if ($eq['jsonId'] != '') {
@@ -308,8 +308,8 @@
             $eq = array(
                 'ieee' => $eqLogic->getConfiguration('IEEE', ''),
                 'txStatus' => $eqLogic->getStatus('ab::txAck', 'ok'), // Transmit status: 'ok' or 'noack'
-                'jsonId' => isset($eqModel['id']) ? $eqModel['id'] : '',
-                'jsonLocation' => isset($eqModel['location']) ? $eqModel['location'] : 'Abeille',
+                'jsonId' => isset($eqModel['modelName']) ? $eqModel['modelName'] : '',
+                'jsonLocation' => isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille',
                 'rxOnWhenIdle' => $rwOnWhenIdle ? true : false
             );
             if ($eq['jsonId'] != '') {

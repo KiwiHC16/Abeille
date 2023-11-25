@@ -84,8 +84,8 @@
            Returns: false if error
             or associative array $devicesList[$identifier] = array(
                 'modelSig' => model signature
-                'jsonId' => model file
-                'location' => model file location // TODO: rename to jsonLocation
+                'modelName' => model file
+                'modelSource' => model file location
             ) */
         public static function getDevicesList($from = "Abeille") {
             $devicesList = [];
@@ -118,8 +118,8 @@
 
                 $dev = array(
                     'modelSig' => $dirEntry,
-                    'jsonId' => $dirEntry,
-                    'location' => $from
+                    'modelName' => $dirEntry,
+                    'modelSource' => $from
                 );
 
                 /* Check if config is compliant with other device identification */
@@ -149,8 +149,8 @@
                         log::add('Abeille', 'debug', "getDevicesList(): Alternate ID '".$aId."' for '".$dirEntry."'");
                         $dev = array(
                             'modelSig' => $aId,
-                            'jsonId' => $dirEntry,
-                            'location' => $from
+                            'modelName' => $dirEntry,
+                            'modelSource' => $from
                         );
                         // manufacturer, model, type or icon overload
                         // if (isset($aIdVal['manufacturer']))

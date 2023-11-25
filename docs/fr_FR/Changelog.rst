@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+- Page EQ/avancé: Réparation équipement: Améliorations.
+- Interne: Normalisation infos modèle: 'modelSig'/'modelName'/'modelSource'
+
 231124-BETA-2
 -------------
 

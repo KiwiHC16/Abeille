@@ -876,6 +876,7 @@
          * - Config DB: Removing keys for Zigates 7 to 10.
          * - eqLogic DB: Icon renamed 'IkeaTradfriDimmer' => 'Ikea-Tradfri-Dimmer'
          * - eqLogic DB: Removed 'ab::txAck' for devices not always listening
+         * - eqLogic DB: 'ab::eqModel', sig/id/location renamed to modelSig/modelName/modelSource
          * - Cmds DB: For 'Online' adding 'repeatEventManagement=always'
          * - Cmds DB: 'OnOff' cmd replaced by 'cmd-0006'
          * - Cmds DB: 'OnOffGroup' replaced by 'cmd-0006'
@@ -912,7 +913,27 @@
                         $saveEq = true;
                     }
                 }
+                // Rename some 'ab::eqModel' keys
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                $saveEqModel = false;
+                $eqModelRename = array(
+                    'sig' => 'modelSig',
+                    'id' => 'modelName',
+                    'location' => 'modelSource'
+                );
+                foreach ($eqModelRename as $oldK => $newK) {
+                    if (!isset($eqModel[$oldK]))
+                        continue;
+                    $eqModel[$newK] = $eqModel[$oldK];
+                    unset($eqModel[$oldK]);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::eqModel' update '${oldK}' to '${newK}");
+                    $saveEqModel = true;
+                }
 
+                if ($saveEqModel) {
+                    $eqLogic->setConfiguration('ab::eqModel', $eqModel);
+                    $saveEq = true;
+                }
                 if ($saveEq)
                     $eqLogic->save();
 

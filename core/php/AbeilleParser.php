@@ -450,8 +450,8 @@
             list($net, $addr) = explode("/", $eqLogicId);
 
             // $sig = $eqLogic->getConfiguration('ab::signature', '');
-            $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-            $jsonId = $eqModel ? $eqModel['id'] : '';
+            $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+            $jsonId = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
             if ($jsonId != '')
                 $status = 'idle';
             else

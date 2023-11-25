@@ -39,8 +39,8 @@
     list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
     $zgNb = substr($eqNet, 7); // Extracting zigate number from network
     $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-    $jsonName = $eqModel ? $eqModel['id'] : '';
-    $jsonLocation = $eqModel ? $eqModel['location'] : 'Abeille';
+    $jsonName = $eqModel ? $eqModel['modelName'] : '';
+    $jsonLocation = $eqModel ? $eqModel['modelSource'] : 'Abeille';
     $eqIeee = $eqLogic->getConfiguration('IEEE', '');
 
     $abQueues = $GLOBALS['abQueues'];

@@ -188,7 +188,7 @@
 
             // Profalux specific case: using 'location' to get identifier
             if (!isset($zbNewSig['modelId']) && isset($ep2['location']) && ($ep2['location'] != '')) {
-                logMessage('debug', "  Profalux case: Using 'location'=".$ep2['location']);
+                logMessage('debug', "  Profalux case: Using 'location' info '".$ep2['location']."'");
                 $zbNewSig['modelId'] = $ep2['location'];
                 $zbNewSig['manufId'] = '';
             }
@@ -221,13 +221,13 @@
         logMessage('debug', '  ab::eqModel='.json_encode($eqModel));
         $eqModelChanged = false;
         $modelContent = [];
-        if (!isset($eqModel['id']) || ($eqModel['id'] == '')) {
+        if (!isset($eqModel['modelName']) || ($eqModel['modelName'] == '')) {
             msgToCli("step", "Model file name");
             $modelContent = AbeilleTools::findModel($zbSig['modelId'], $zbSig['manufId']);
             if ($modelContent !== false) {
-                $eqModel['sig'] = $modelContent['modelSig'];
-                $eqModel['id'] = $modelContent['jsonId'];
-                $eqModel['location'] = $modelContent['location'];
+                $eqModel['modelSig'] = $modelContent['modelSig'];
+                $eqModel['modelName'] = $modelContent['jsonId'];
+                $eqModel['modelSource'] = $modelContent['location'];
                 $eqModel['forcedByUser'] = false;
                 $eqModel['manuf'] = $modelContent['manuf'];
                 $eqModel['model'] = $modelContent['model'];
@@ -235,20 +235,20 @@
                 $eqModelChanged = true;
             }
         }
-        if (isset($eqModel['id']) && ($eqModel['id'] != ''))
+        if (isset($eqModel['modelName']) && ($eqModel['modelName'] != ''))
             msgToCli("step", "Model file name", "ok");
         else
             return;
-        if (!isset($eqModel['sig']) || ($eqModel['sig'] == '')) {
+        if (!isset($eqModel['modelSig']) || ($eqModel['modelSig'] == '')) {
             msgToCli("step", "Model signature");
             logMessage('debug', "  Missing model sig.");
             $modelContent = AbeilleTools::findModel($zbSig['modelId'], $zbSig['manufId']);
             if ($modelContent !== false) {
-                $eqModel['sig'] = $modelContent['modelSig'];
+                $eqModel['modelSig'] = $modelContent['modelSig'];
                 $eqModelChanged = true;
             }
         }
-        if (isset($eqModel['sig']) && ($eqModel['sig'] != ''))
+        if (isset($eqModel['modelSig']) && ($eqModel['modelSig'] != ''))
             msgToCli("step", "Model signature", "ok");
         else
             return;
@@ -258,7 +258,7 @@
             !isset($eqModel['model']) || ($eqModel['model'] == '') ||
             !isset($eqModel['type']) || ($eqModel['type'] == '')) {
             msgToCli("step", "Equipment infos");
-            $model = AbeilleTools::getDeviceModel($eqModel['sig'], $eqModel['id'], $eqModel['location']);
+            $model = AbeilleTools::getDeviceModel($eqModel['modelSig'], $eqModel['modelName'], $eqModel['modelSource']);
             logMessage('debug', "model=".json_encode($model));
             $eqModel['manuf'] = isset($model['manufacturer']) ? $model['manufacturer']: '';
             $eqModel['model'] = isset($model['model']) ? $model['model']: '';

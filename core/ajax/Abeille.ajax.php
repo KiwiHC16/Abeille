@@ -569,23 +569,24 @@
                 $eq['zbModel'] = isset($sig['modelId']) ? $sig['modelId'] : '';
                 $eq['zbManuf'] = isset($sig['manufId']) ? $sig['manufId'] : '';
 
-                $model = $eqLogic->getConfiguration('ab::eqModel', []);
-                $eq['modelSig'] = isset($model['sig']) ? $model['sig'] : ''; // TO BE REMOVED
-                $eq['modelName'] = isset($model['id']) ? $model['id'] : ''; // TO BE REMOVED
-                $eq['modelSource'] = isset($model['location']) ? $model['location'] : 'Abeille'; // TO BE REMOVED
-                $eq['modelType'] = isset($model['type']) ? $model['type'] : ''; // TO BE REMOVED
-                $eq['modelForced'] = isset($model['forcedByUser']) ? $model['forcedByUser'] : false; // TO BE REMOVED
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                // logDebug('  eqModel='.json_encode($eqModel));
+                $eq['modelSig'] = isset($eqModel['modelSig']) ? $eqModel['modelSig'] : ''; // TO BE REMOVED
+                $eq['modelName'] = isset($eqModel['modelName']) ? $eqModel['modelName'] : ''; // TO BE REMOVED
+                $eq['modelSource'] = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille'; // TO BE REMOVED
+                $eq['modelType'] = isset($eqModel['type']) ? $eqModel['type'] : ''; // TO BE REMOVED
+                $eq['modelForced'] = isset($eqModel['forcedByUser']) ? $eqModel['forcedByUser'] : false; // TO BE REMOVED
                 $eq['model'] = array(
                     // Model infos
-                    'modelSig' => isset($model['sig']) ? $model['sig'] : '',
-                    'modelName' => isset($model['id']) ? $model['id'] : '',
-                    'modelSource' => isset($model['location']) ? $model['location'] : 'Abeille',
-                    'modelForced' => isset($model['forcedByUser']) ? $model['forcedByUser'] : false,
+                    'modelSig' => isset($eqModel['modelSig']) ? $eqModel['modelSig'] : '',
+                    'modelName' => isset($eqModel['modelName']) ? $eqModel['modelName'] : '',
+                    'modelSource' => isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille',
+                    'modelForced' => isset($eqModel['forcedByUser']) ? $eqModel['forcedByUser'] : false,
 
                     // Equipment infos
-                    'manuf' => isset($model['manuf']) ? $model['manuf'] : '',
-                    'model' => isset($model['model']) ? $model['model'] : '',
-                    'type' => isset($model['type']) ? $model['type'] : '',
+                    'manuf' => isset($eqModel['manuf']) ? $eqModel['manuf'] : '',
+                    'model' => isset($eqModel['model']) ? $eqModel['model'] : '',
+                    'type' => isset($eqModel['type']) ? $eqModel['type'] : '',
                 );
 
                 $eq['zigbee'] = $eqLogic->getConfiguration('ab::zigbee', []);

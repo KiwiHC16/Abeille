@@ -68,8 +68,8 @@ function getModelChoiceList()
     }
     $currentModel = $eqLogic->getConfiguration('ab::eqModel', null);
     $currentModelID = null;
-    if ($currentModel != null && isset($currentModel['id'])) {
-        $currentModelID = $currentModel['id'];
+    if ($currentModel != null && isset($currentModel['modelName'])) {
+        $currentModelID = $currentModel['modelName'];
     }
 
     // If we have a current model, we can pre-fill the HMI: we pass the information
@@ -104,7 +104,7 @@ function setModelToDevice()
         throw new Exception(__('Saisie incorrecte', __FILE__) . ' ' . $eqId);
     }
 
-    $tmpModelPath = mb_substr($strSaisie, $tmpPos + 2); // like "Abeille/id.json)" 
+    $tmpModelPath = mb_substr($strSaisie, $tmpPos + 2); // like "Abeille/id.json)"
     $tmpModelPath = mb_substr($tmpModelPath, 0, mb_strlen($tmpModelPath) - 1); // like "Abeille/id.json"
 
     $tmpNomModel = explode("/", $tmpModelPath);
@@ -136,8 +136,8 @@ function setModelToDevice()
 
     // Save new config
     $eqModelInfos = array(
-        'id' => $json, // ID du json
-        'location' => $source, // Abeille ou local
+        'modelName' => $json, // ID du json
+        'modelSource' => $source, // Abeille ou local
         'type' => $libelleType,
         'lastUpdate' => time(), // Store last update from model
         'forcedByUser' => true // Prevents the model from being overwritten if the equipment is re-announced
@@ -219,8 +219,8 @@ function getDevicesList($from = "Abeille")
             continue; // No local JSON model. Maybe just an auto-discovery ?
 
         $dev = array(
-            'jsonId' => $dirEntry,
-            'jsonLocation' => $from
+            'modelName' => $dirEntry,
+            'modelSource' => $from
         );
 
         /* Check if config is compliant with other device identification */
@@ -238,8 +238,8 @@ function getDevicesList($from = "Abeille")
             foreach ($idList as $id) {
                 echo ("getDevicesList(): Alternate ID '" . $id . "' for '" . $dirEntry . "'\n");
                 $dev = array(
-                    'jsonId' => $dirEntry,
-                    'jsonLocation' => $from
+                    'modelName' => $dirEntry,
+                    'modelSource' => $from
                 );
                 $devicesList[$id] = $dev;
             }

@@ -88,11 +88,9 @@
     </div>
 </div>
 
-<?php if (isset($dbgDeveloperMode)) { ?>
 <div class="form-group">
     <label class="col-sm-3 control-label">{{Etat de l'équipement}}</label>
     <div class="col-sm-5">
         <a class="btn btn-danger" id="idRepairBtn" title="{{Tente de corriger l'état interne de l'équipement}}">{{Réparer}}</a>
     </div>
 </div>
-<?php } ?>

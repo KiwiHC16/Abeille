@@ -1,7 +1,10 @@
 ChangeLog
 =========
 
-- Page EQ/avancé: Réparation équipement: Améliorations.
+- Page EQ/avancé:
+
+  - Réparation équipement: Améliorations.
+  - Fonctionalité maintenant accessible à tous.
 - Interne: Normalisation infos modèle: 'modelSig'/'modelName'/'modelSource'
 - Interne: Normalisation infos modèle: forcedByUser => modelForced
 

@@ -367,9 +367,9 @@
 
             $eq['modelSignature'] = $modelSignature;
             if ($jsonLocation == "Abeille")
-                $eq['jsonId'] = $GLOBALS['supportedEqList'][$modelSignature]['jsonId'];
+                $eq['jsonId'] = $GLOBALS['supportedEqList'][$modelSignature]['modelName'];
             else
-                $eq['jsonId'] = $GLOBALS['customEqList'][$modelSignature]['jsonId'];
+                $eq['jsonId'] = $GLOBALS['customEqList'][$modelSignature]['modelName'];
             $eq['jsonLocation'] = $jsonLocation;
             parserLog('debug', "  JSON id '".$eq['jsonId']."', location '".$jsonLocation."'");
             return true;

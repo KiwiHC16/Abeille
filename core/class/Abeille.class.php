@@ -1487,8 +1487,8 @@ class Abeille extends eqLogic {
                 $modelInfos = self::findModel($eqSig['modelId'], $eqSig['manufId']);
                 if ($modelInfos !== false) {
                     $modelSig = $modelInfos['modelSig'];
-                    $jsonId = $modelInfos['jsonId'];
-                    $jsonLocation = $modelInfos['location']; // TODO: rename to jsonLocation
+                    $jsonId = $modelInfos['modelName'];
+                    $jsonLocation = $modelInfos['modelSource'];
                     $eqHName = $eqLogic->getHumanName();
                 }
             }

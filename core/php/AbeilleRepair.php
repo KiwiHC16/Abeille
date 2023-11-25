@@ -206,6 +206,9 @@
         }
         msgToCli("step", "Zigbee signature", "ok");
 
+        $error = false;
+        $eqChanged = false;
+
         // Is model correct ?
         // ab::eqModel = array(
         //     'sig' => model signature
@@ -226,19 +229,16 @@
             $modelContent = AbeilleTools::findModel($zbSig['modelId'], $zbSig['manufId']);
             if ($modelContent !== false) {
                 $eqModel['modelSig'] = $modelContent['modelSig'];
-                $eqModel['modelName'] = $modelContent['jsonId'];
-                $eqModel['modelSource'] = $modelContent['location'];
+                $eqModel['modelName'] = $modelContent['modelName'];
+                $eqModel['modelSource'] = $modelContent['modelSource'];
                 $eqModel['forcedByUser'] = false;
-                $eqModel['manuf'] = $modelContent['manuf'];
-                $eqModel['model'] = $modelContent['model'];
-                $eqModel['type'] = $modelContent['type'];
                 $eqModelChanged = true;
             }
         }
         if (isset($eqModel['modelName']) && ($eqModel['modelName'] != ''))
             msgToCli("step", "Model file name", "ok");
         else
-            return;
+            $error = true;
         if (!isset($eqModel['modelSig']) || ($eqModel['modelSig'] == '')) {
             msgToCli("step", "Model signature");
             logMessage('debug', "  Missing model sig.");
@@ -251,12 +251,12 @@
         if (isset($eqModel['modelSig']) && ($eqModel['modelSig'] != ''))
             msgToCli("step", "Model signature", "ok");
         else
-            return;
+            $error = true;
 
         // Equipment infos
-        if (!isset($eqModel['manuf']) || ($eqModel['manuf'] == '') ||
+        if (!$error && (!isset($eqModel['manuf']) || ($eqModel['manuf'] == '') ||
             !isset($eqModel['model']) || ($eqModel['model'] == '') ||
-            !isset($eqModel['type']) || ($eqModel['type'] == '')) {
+            !isset($eqModel['type']) || ($eqModel['type'] == ''))) {
             msgToCli("step", "Equipment infos");
             $model = AbeilleTools::getDeviceModel($eqModel['modelSig'], $eqModel['modelName'], $eqModel['modelSource']);
             logMessage('debug', "model=".json_encode($model));
@@ -268,13 +268,37 @@
         if (($eqModel['manuf'] != '') && ($eqModel['model'] != '') && ($eqModel['type'] != ''))
             msgToCli("step", "Equipment infos", "ok");
 
-        if ($eqModelChanged) {
-            $eqLogic->setConfiguration('ab::eqModel', $eqModel);
-            $eqLogic->save();
-            logMessage('debug', "  ab::eqModel updated to ".json_encode($eqModel));
+        // Checking icon
+        if (!$error) {
+            $icon = $eqLogic->getConfiguration('ab::icon', '');
+            if (($icon == '') || ($icon == "defaultUnknown")) {
+                logMessage('debug', "Invalid icon '${icon}'");
+                msgToCli("step", "Icon");
+                if (!isset($model))
+                    $model = AbeilleTools::getDeviceModel($eqModel['modelSig'], $eqModel['modelName'], $eqModel['modelSource']);
+                if (isset($model['configuration']['icon'])) {
+                    $eqLogic->setConfiguration('ab::icon', $model['configuration']['icon']);
+                    logMessage('debug', "  ab::icon updated to '".$model['configuration']['icon']."'");
+                    $eqChanged = true;
+                }
+            }
+            $icon = $eqLogic->getConfiguration('ab::icon', '');
+            if (($icon != '') && ($icon != "defaultUnknown"))
+                msgToCli("step", "Icon", "ok");
         }
 
-        logMessage('debug', '  Device OK');
+        if ($eqModelChanged) {
+            $eqLogic->setConfiguration('ab::eqModel', $eqModel);
+            logMessage('debug', "  ab::eqModel updated to ".json_encode($eqModel));
+            $eqChanged = true;
+        }
+        if ($eqChanged)
+            $eqLogic->save();
+
+        if ($error)
+            logMessage('debug', '  Device status error');
+        else
+            logMessage('debug', '  Device OK');
     }
 
     /*--------------------------------------------------------------------------------------------------*/

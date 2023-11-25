@@ -598,7 +598,7 @@
         }
 
         // Attempt to find corresponding model based on given zigbee signature.
-        // Returns: associative array('jsonId', 'jsonLocation') or false
+        // Returns: associative array('modelSig', 'modelName, 'modelSource') or false
         public static function findModel($zbModelId, $zbManufId) {
 
             $identifier1 = $zbModelId.'_'.$zbManufId;

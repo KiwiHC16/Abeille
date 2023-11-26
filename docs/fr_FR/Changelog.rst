@@ -9,6 +9,7 @@ ChangeLog
 - Interne: Normalisation infos modèle: forcedByUser => modelForced
 - eTRV0103: Mise-à-jour du modèle.
 - Legrand micromodule switch: Mise-à-jour du modèle (2663).
+- Tuya double dimmer module QS-Zigbee-D02-TRIAC-2C-LN: Ajout support préliminaire (2664).
 
 231124-BETA-2
 -------------

@@ -5470,27 +5470,27 @@
                 // TEST END
 
                 // Xiaomi lumi.sensor_86sw1 (Wall 1 Switch sur batterie)
-                if (($attrId == "FF01") && ($attrSize == "001B")) {
-                    parserLog("debug","  Xiaomi proprietary (Wall 1 Switch, Gaz Sensor)" );
-                    parserLog("debug","  WARNING !! This support should be moved to decode8002");
+                // if (($attrId == "FF01") && ($attrSize == "001B")) {
+                //     parserLog("debug","  Xiaomi proprietary (Wall 1 Switch, Gaz Sensor)" );
+                //     parserLog("debug","  WARNING !! This support should be moved to decode8002");
 
-                    // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
-                    // For info until activation
+                //     // For info until activation
+                //     xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
+                //     // For info until activation
 
-                    // Dans le cas du Gaz Sensor, il n'y a pas de batterie alors le decodage est probablement faux.
-                    $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
-                    $etat = substr($payload, 80, 2);
-                    parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage).', Etat=' .$etat);
-                    $attrReportN = [
-                        array( "name" => "0006-01-0000", "value" => $etat ),
-                        // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
-                        array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
-                    ];
-                }
+                //     // Dans le cas du Gaz Sensor, il n'y a pas de batterie alors le decodage est probablement faux.
+                //     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));
+                //     $etat = substr($payload, 80, 2);
+                //     parserLog('debug', '  Voltage=' .$voltage.', Voltage%='.$this->volt2pourcent($voltage).', Etat=' .$etat);
+                //     $attrReportN = [
+                //         array( "name" => "0006-01-0000", "value" => $etat ),
+                //         // array( "name" => "0001-01-0020", "value" => $voltage  / 1000 ),
+                //         array( "name" => "0001-01-0021", "value" => $this->volt2pourcent($voltage) ),
+                //     ];
+                // }
 
                 // Xiaomi bouton Aqara Wireless Switch V3 #712 (https://github.com/KiwiHC16/Abeille/issues/712)
-                else if (($attrId == 'FF01') && ($attrSize == "0026")) {
+                if (($attrId == 'FF01') && ($attrSize == "0026")) {
                     // Assuming $dataType == "42"
                     parserLog('debug', '  Xiaomi proprietary (Aqara Wireless Switch V3)');
                     parserLog("debug","  WARNING !! This support should be moved to decode8002");

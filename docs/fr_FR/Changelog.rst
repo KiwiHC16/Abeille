@@ -10,6 +10,8 @@ ChangeLog
 - eTRV0103: Mise-à-jour du modèle.
 - Legrand micromodule switch: Mise-à-jour du modèle (2663).
 - Tuya double dimmer module QS-Zigbee-D02-TRIAC-2C-LN: Ajout support préliminaire (2664).
+- Assistant modèle: Améliorations.
+- Xiaomi wall switch sensor_86sw1 & sensor_86sw2: Support+modeles revus.
 
 231124-BETA-2
 -------------

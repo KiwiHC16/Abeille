@@ -1,5 +1,8 @@
 {
     "TS0121__TZ3000_g5xawfcq": {
+        "manufacturer": "Blitzwolf",
+        "model": "BW-SHP13",
+        "type": "Blitzwolf smart plug",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -9,11 +12,10 @@
         "category": {
             "light": "1"
         },
-        "type": "Blitzwolf smart plug",
         "commands": {
-            "etat": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -23,13 +25,17 @@
                 "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle"
+            },
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
-            },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -43,34 +49,25 @@
                 "execAtCreationDelay": 11
             },
             "Voltage": {
-                "use": "PuissanceVoltagePrise"
+                "use": "inf_zbAttr-0B04-RMSVoltage",
+                "isVisible": 1
             },
             "Current": {
-                "use": "PuissanceCurrentPrise"
+                "use": "inf_zbAttr-0B04-RMSCurrent",
+                "isVisible": 1
             },
-            "Puissance": {
+            "Power": {
                 "use": "inf_zbAttr-0B04-ActivePower",
                 "params": "mult=1&div=1",
                 "isVisible": 1
             },
-            "Conso": {
-                "use": "CurrentSummationDelivered"
+            "Total power": {
+                "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "isVisible": 1
             },
             "Poll 0B04": {
                 "use": "poll-0B04-0505-0508-050B"
-            },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
             }
-        },
-        "comment": ""
+        }
     }
 }

@@ -1099,12 +1099,11 @@ class Abeille extends eqLogic {
     // Jeedom optional function: called before saving (create or update) an equipment
     public function preSave() {
         log::add('Abeille', 'debug', 'preSave()');
-        log::add('Abeille', 'debug', 'this='.json_encode($this));
+        // log::add('Abeille', 'debug', 'this='.json_encode($this));
     }
 
     // Jeedom optional function: called after saving (create or update) an equipment
-    public static function postSave()
-    {
+    public static function postSave() {
         log::add('Abeille', 'debug', 'postSave()');
         /* Tcharp38: Strange. postSave() called when starting daemons.
            No sense to re-start main daemon from their then */
@@ -2610,7 +2609,7 @@ class Abeille extends eqLogic {
             'modelName' => 'rucheCommand', // Equipment model id
             'modelSource' => 'Abeille', // Equipment model location
             'type' => 'Zigate',
-            'lastUpdate' => time() // Store last update from model
+            // 'lastUpdate' => time() // Store last update from model
         );
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
 
@@ -3034,8 +3033,8 @@ class Abeille extends eqLogic {
             'modelForced' => $isModelForcedByUser,
 
             // Equipment infos
-            'manuf' => $model['manufacturer'],
-            'model' => $model['model'],
+            'manuf' => isset($model['manufacturer']) ? $model['manufacturer'] : '',
+            'model' => isset($model['model']) ? $model['model'] : '',
             'type' => $model['type'],
             // 'lastUpdate' => time(), // Store last update from model. // Tcharp38: created for Abeille but not used
         );
@@ -3363,7 +3362,6 @@ class Abeille extends eqLogic {
         );
         Abeille::msgToCmd2($msg);
         Abeille::msgToParser($msg);
-
     } // End createDevice()
 
     public static function msgToParser($msg) {

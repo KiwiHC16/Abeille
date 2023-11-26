@@ -13,6 +13,7 @@ ChangeLog
 - Assistant modèle: Améliorations.
 - Xiaomi wall switch sensor_86sw1 & sensor_86sw2: Support+modeles revus.
 - Tuya detecteur fumée TS0205__TZ3210_up3pngle: Mise-à-jour du modèle (2658).
+- Blitzwolf BW-SHP13: Mise-à-jour du modèle.
 
 231124-BETA-2
 -------------

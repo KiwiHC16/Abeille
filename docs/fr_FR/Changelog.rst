@@ -12,6 +12,7 @@ ChangeLog
 - Tuya double dimmer module QS-Zigbee-D02-TRIAC-2C-LN: Ajout support préliminaire (2664).
 - Assistant modèle: Améliorations.
 - Xiaomi wall switch sensor_86sw1 & sensor_86sw2: Support+modeles revus.
+- Tuya detecteur fumée TS0205__TZ3210_up3pngle: Mise-à-jour du modèle (2658).
 
 231124-BETA-2
 -------------

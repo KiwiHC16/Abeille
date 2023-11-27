@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Cmd: 'configureReporting2' completement revu.
+
 231127-BETA-3
 -------------
 

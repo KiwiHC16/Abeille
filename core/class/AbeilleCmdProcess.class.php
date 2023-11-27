@@ -3745,26 +3745,41 @@
 
                 // ZCL global: Configure reporting command (2)
                 // Mandatory parameters: addr, clustId, attrId
-                // Optional parameters: attrType (1B hex), minInterval (number), maxInterval (number), changeVal (number), manufCode (2B hex)
+                // Optional params: manufCode (2B hex), dir (1B hex, default=00)
+                // Mandatory extra params if dir=00: attrType (1B hex), minInterval (number), maxInterval (number), changeVal (number)
+                // Mandatory extra params if dir=01: timeout (number)
                 else if ($cmdName == 'configureReporting2') {
                     /* Mandatory infos: addr, clustId, attrId. 'attrType' can be auto-detected */
                     $required = ['addr', 'clustId', 'attrId'];
                     if (!$this->checkRequiredParams($required, $Command))
                         return;
 
-                    // attrType is optional because guessed according to clustId/attrId
-                    $attrType = isset($Command['attrType']) ? $Command['attrType'] : '';
-                    if ($attrType == '') {
-                        /* Attempting to find attribute type according to its id */
-                        $attr = zbGetZCLAttribute($Command['clustId'], $Command['attrId']);
-                        if (($attr === false) || !isset($attr['dataType'])) {
-                            cmdLog('error', "  command configureReporting2 ERROR: Missing 'attrType'");
-                            return;
+                    $dir = isset($Command['dir']) ? $Command['dir'] : '00';
+
+                    if ($dir == '00') {
+                        // attrType is optional because can be guessed thanks to clustId/attrId
+                        $attrType = isset($Command['attrType']) ? $Command['attrType'] : '';
+                        if ($attrType == '') {
+                            /* Attempting to find attribute type according to its id */
+                            $attr = zbGetZCLAttribute($Command['clustId'], $Command['attrId']);
+                            if (($attr === false) || !isset($attr['dataType'])) {
+                                cmdLog('error', "  command configureReporting2 ERROR: Missing 'attrType'");
+                                return;
+                            }
+                            $attrType = sprintf("%02X", $attr['dataType']);
                         }
-                        $attrType = sprintf("%02X", $attr['dataType']);
                     }
 
-                    $cmd = "0530";
+                    $required0 = ['attrType', 'minInterval', 'maxInterval', 'changeVal'];
+                    $required1 = ['timeout'];
+                    if ($dir == '00')
+                        $required = $required0;
+                    else
+                        $required = $required1;
+                    if (!$this->checkRequiredParams($required, $Command))
+                        return;
+
+                    $zgCmd = "0530";
 
                     // <address mode: uint8_t>
                     // <target short address: uint16_t>
@@ -3790,17 +3805,9 @@
                     $clustId        = $Command['clustId'];
                     $secMode        = "02";
                     $radius         = "1E";
+                    $attrId         = $Command['attrId'];
 
                     /* ZCL header */
-                    // if (isset($Command['manufId'])) {
-                    //     $manufId = $Command['manufId'];
-                    //     $fcf = "14"; // Frame Control Field
-                    // } else {
-                    //     $manufId = '';
-                    //     $fcf = "10"; // Frame Control Field
-                    // }
-                    // $sqn            = $this->genSqn();
-                    // $cmdId          = "06";
                     $hParams = array(
                         'manufCode' => isset($Command['manufCode']) ? $Command['manufCode'] : '',
                         'cmdId' => '06', // Configure reporting
@@ -3808,28 +3815,51 @@
                     $zclHeader = $this->genZclHeader($hParams);
 
                     /* Attribute Reporting Configuration Record */
-                    $dir            = "00";
-                    $attrId         = AbeilleTools::reverseHex($Command['attrId']);
-                    // $attrType       = $Command['attrType'];
-                    $minInterval    = isset($Command['minInterval']) ? $Command['minInterval'] : 0;
-                    $maxInterval    = isset($Command['maxInterval']) ? $Command['maxInterval'] : 0;
-                    $changeVal      = isset($Command['changeVal']) ? $Command['changeVal'] : 0;
+                    if ($dir == '00') {
+                        $minInterval = $Command['minInterval'];
+                        $maxInterval = $Command['maxInterval'];
+                        $changeVal   = $Command['changeVal'];
 
-                    $minInterval = $this->formatAttribute($minInterval, "uint16");
-                    $maxInterval = $this->formatAttribute($maxInterval, "uint16");
-                    $changeVal = $this->formatAttribute($changeVal, $attrType);
+                        if ((($maxInterval == 0) && ($minInterval == 0xffff)) ||
+                            ($maxInterval == 0xffff)) {
+                            // max=0000 & min=xffff => revert to default reporting
+                            // max=FFFF => terminate reporting configuration
+                            $changeVal = 0;
+                        } else {
+                            if ($maxInterval < $minInterval) {
+                                cmdLog('error', "  configureReporting2 ERROR: maxInterval < minInterval");
+                                return;
+                            }
+                            if ($changeVal == 0) {
+                                cmdLog('error', "  configureReporting2 ERROR: 'changeVal' cannot be 0");
+                                return;
+                            }
+                        }
 
-                    cmdLog('debug', "  configureReporting2: attrType='".$attrType."', min='".$minInterval."', max='".$maxInterval."', changeVal='".$changeVal."'");
-                    $minInterval = AbeilleTools::reverseHex($minInterval);
-                    $maxInterval = AbeilleTools::reverseHex($maxInterval);
-                    $changeVal = AbeilleTools::reverseHex($changeVal); // Reverse if > 1B
-                    $data2 = $zclHeader.$dir.$attrId.$attrType.$minInterval.$maxInterval.$changeVal;
+                        $minInterval = $this->formatAttribute($minInterval, "uint16");
+                        $maxInterval = $this->formatAttribute($maxInterval, "uint16");
+                        $changeVal = $this->formatAttribute($changeVal, $attrType);
+
+                        cmdLog('debug', "  configureReporting2: AttrType='${attrType}', Min='${minInterval}', Max='${maxInterval}', ChangeVal='${changeVal}'");
+                        $attrId = AbeilleTools::reverseHex($attrId);
+                        $minInterval = AbeilleTools::reverseHex($minInterval);
+                        $maxInterval = AbeilleTools::reverseHex($maxInterval);
+                        $changeVal = AbeilleTools::reverseHex($changeVal); // Reverse if > 1B
+
+                        $data2 = $zclHeader.'00'.$attrId.$attrType.$minInterval.$maxInterval.$changeVal;
+                    } else {
+                        $timeout = $Command['timeout'];
+                        $timeout = sprintf("%04X", $timeout);
+                        $timeout = AbeilleTools::reverseHex($timeout);
+
+                        $data2 = $zclHeader.'01'.$attrId.$timeout;
+                    }
+
                     $dataLen2 = sprintf("%02X", strlen($data2) / 2);
-
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $cmd, $data, $addr, $addrMode);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End 'configureReporting2'
 

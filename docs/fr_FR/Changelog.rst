@@ -25,6 +25,8 @@ ChangeLog
   - poll-0702-0000 => act_poll-0702-0000
 - Mise-à-jour de qq modèles TS0121.
 - SilverCrest-HG08673-FR: Mises-à-jour du modèle (2635).
+- Interne: AbeilleCmd: Mises-à-jour 'cmd-0201'.
+- Interne: Constante Zigbee cluster 0201: Améliorations.
 
 231124-BETA-2
 -------------

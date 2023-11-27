@@ -4601,8 +4601,7 @@
                     return;
                 } // End $cmdName == 'cmd-0102'
 
-                // ZCL cluster 0201 specific: (received) commands
-                // PRELIM: Work ongoing !!! Not tested yet.
+                // ZCL cluster 0201 specific commands
                 // Mandatory params: addr, ep, cmd
                 //    and amount for cmd '00'
                 // Optional params: mode (default=00/heat) for cmd '00'
@@ -4636,31 +4635,42 @@
                     $clustId    = '0201';
                     $secMode    = "02";
                     $radius     = "1E";
+                    $cmdId      = $Command['cmd'];
 
                     /* ZCL header */
                     // Dir = 0 = to server
-                    $fcf        = "11"; // Frame Control Field
-                    $sqn        = $this->genSqn();
-                    $cmdId      = $Command['cmd'];
+                    // $fcf        = "11"; // Frame Control Field
+                    // $sqn        = $this->genSqn();
+                    $hParams = array(
+                        'clustSpecific' => true,
+                        'cmdId' => $cmdId
+                    );
+                    $zclHeader = $this->genZclHeader($hParams);
 
-                    if ($cmdId == "00") { // Setpoint Raise/Lower
+                    if ($cmdId == "00") { // Client->server: Setpoint Raise/Lower
+                        // Mode values:
                         // 0x00 Heat (adjust Heat Setpoint)
                         // 0x01 Cool (adjust Cool Setpoint)
                         // 0x02 Both (adjust Heat Setpoint and Cool Setpoint)
                         $mode = isset($Command['mode']) ? $Command['mode'] : "00";
-                        // amount = signed 8-bit int, value for increase or decrease in steps of 0.1°C.
+                        if (($mode != '00') && ($mode != '01') && ($mode != '02')) {
+                            cmdLog('error', "  cmd-0201: SetPoint raise/lower: Mode invalide: '${mode}'");
+                            return;
+                        }
+                        // Amount = signed 8-bit int, value for increase or decrease in steps of 0.1°C.
                         $amount = $Command['amount'];
-                        $data2 = $fcf.$sqn.$cmdId.$mode.$amount;
+                        cmdLog('debug', "  cmd-0201: Cmd=00, Mode=${mode}, Amount=${amount}");
+                        $data2 = $zclHeader.$mode.$amount;
                     } else {
                         cmdLog('error', "  cmd-0201: Commande ".$cmdId." non supportée");
                         return;
                     }
-                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
 
+                    $dataLen2 = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLen2;
                     $data = $data1.$data2;
 
-                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr);
+                    $this->addCmdToQueue2(PRIO_NORM, $dest, $zgCmd, $data, $addr, $addrMode);
                     return;
                 } // End 'cmd-0201'
 

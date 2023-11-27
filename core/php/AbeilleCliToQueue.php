@@ -102,8 +102,9 @@
                 $a = explode(':', $value);
                 $m[$a[0]] = $a[1];
             }
-            if (isset($dbgTcharp38)) logDebug("CliToQueue: ".json_encode($m));
-            msg_send($queue, 1, json_encode($m), false, false);
+            $mJson = json_encode($m, JSON_UNESCAPED_SLASHES);
+            if (isset($dbgTcharp38)) logDebug("CliToQueue: ".$mJson);
+            msg_send($queue, 1, $mJson, false, false);
         } else if (isset($_GET['topic'])) {
             $topic =  $_GET['topic'];
             $topic = str_replace('_', '/', $topic);
@@ -115,7 +116,8 @@
                 'topic' => $topic,
                 'payload' => $payload,
             );
-            msg_send($queue, 1, json_encode($msg), false, false);
+            $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
+            msg_send($queue, 1, $msgJson, false, false);
         } else
             logMessage('error', 'CliToQueue: Unexpected msg');
 

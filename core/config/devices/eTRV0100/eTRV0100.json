@@ -35,14 +35,6 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0001&attrId=0020"
             },
-            "Plus": {
-                "use": "act_zbCmdC-0201-Setpoint-Plus05",
-                 "isVisible": 1
-            },
-            "Minus": {
-                "use": "act_zbCmdC-0201-Setpoint-Minus05",
-                 "isVisible": 1
-            },
             "Consigne Set": {
                 "use": "danfossTemperatureConsigneSet"
             },

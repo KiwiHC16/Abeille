@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-231127-BETA-2
+231127-BETA-3
 -------------
 
 - Page EQ/avancé:

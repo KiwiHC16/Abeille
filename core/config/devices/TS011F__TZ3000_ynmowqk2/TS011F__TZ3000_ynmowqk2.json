@@ -26,7 +26,6 @@
             },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
-                "isVisible": "1",
                 "nextLine": "after"
             },
             "On": {
@@ -43,15 +42,15 @@
                 "use": "act_zbCmdC-0006-Toggle",
                 "params": "ep=01"
             },
+            "Get Status": {
+                "use": "act_zbReadAttribute",
+                "params": "ep=01&clustId=0006&attrId=0000"
+            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
                 "isVisible": "1",
                 "nextLine": "after"
-            },
-            "Get Status": {
-                "use": "act_zbReadAttribute",
-                "params": "ep=01&clustId=0006&attrId=0000"
             },
             "Bind 01-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
@@ -66,13 +65,12 @@
             "Total power": {
                 "use": "inf_zbAttr-0702-CurrentSummationDelivered",
                 "params": "div=1000",
-                "unit": "KWh",
                 "isVisible": "1"
             },
             "Refresh Total power": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0702&attrId=0000",
-                "logicalId": "poll-01-0702-0000",
+                "logicalId": "act_poll-01-0702-0000",
                 "Polling": "cron10"
             },
             "RMS Voltage": {

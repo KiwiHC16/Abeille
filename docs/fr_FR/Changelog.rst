@@ -19,7 +19,9 @@ ChangeLog
   - PuissanceVoltagePrise => inf_zbAttr-0B04-RMSVoltage
   - PuissanceCurrentPrise => inf_zbAttr-0B04-RMSCurrent
   - poll-0B04-0505-0508-050B => act_poll-0B04-0505-0508-050B
+  - poll-0702-0000 => act_poll-0702-0000
 - Mise-à-jour de qq modèles TS0121.
+- SilverCrest-HG08673-FR: Mises-à-jour du modèle (2635).
 
 231124-BETA-2
 -------------

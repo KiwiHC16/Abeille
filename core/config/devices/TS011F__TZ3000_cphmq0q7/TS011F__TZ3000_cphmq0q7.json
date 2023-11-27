@@ -89,7 +89,7 @@
                 "execAtCreation": "yes"
             },
             "Poll 0702": {
-                "use": "poll-0702-0000"
+                "use": "act_poll-0702-0000"
             },
             "RMS Voltage": {
                 "use": "inf_zbAttr-0B04-RMSVoltage",

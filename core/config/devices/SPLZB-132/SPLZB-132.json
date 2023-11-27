@@ -3,6 +3,7 @@
         "manufacturer": "Frient",
         "zbManufacturer": "DevelcoProductsAS",
         "model": "SPLZB-132",
+        "type": "Frient Smart Plug Mini Type E (French)",
         "timeout": "60",
         "configuration": {
             "mainEP": "02",
@@ -11,7 +12,6 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Frient Smart Plug Mini Type E (French)",
         "commands": {
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -36,8 +36,8 @@
                 "execAtCreation": "Yes"
             },
             "SetReporting-0006-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
@@ -62,7 +62,7 @@
                 "params": "mult=1&div=1"
             },
             "Poll 0B04": {
-                "use": "poll-0B04-0505-0508-050B"
+                "use": "act_poll-0B04-0505-0508-050B"
             }
         }
     }

@@ -1,5 +1,8 @@
 {
     "TS011F__TZ3000_cphmq0q7": {
+        "manufacturer": "Sixwgh",
+        "model": "WH025",
+        "type": "Sixwgh WH025 plug",
         "comment": "Smart Plug 16A EU, TS011F by Tuya found under different brands",
         "alternateIds": {
             "TS011F__TZ3000_ew3ldmgx": [],
@@ -20,9 +23,6 @@
                 "model": "A1Z"
             }
         },
-        "manufacturer": "Sixwgh",
-        "model": "WH025",
-        "type": "Sixwgh WH025 plug",
         "timeout": "60",
         "category": {
             "automatism": "1"
@@ -33,8 +33,7 @@
         },
         "commands": {
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
@@ -120,7 +119,7 @@
                 "params": "clustId=0B04&attrId=050B"
             },
             "Poll 0B04": {
-                "use": "poll-0B04-0505-0508-050B"
+                "use": "act_poll-0B04-0505-0508-050B"
             }
         }
     }

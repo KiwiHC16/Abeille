@@ -13,8 +13,7 @@
         },
         "commands": {
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -42,8 +41,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting 0006": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000",
                 "execAtCreation": "yes"
             },
             "Total power": {
@@ -89,7 +88,7 @@
                 "execAtCreation": "yes"
             },
             "Poll 0B04": {
-                "use": "poll-0B04-0505-0508-050B"
+                "use": "act_poll-0B04-0505-0508-050B"
             }
         }
     }

@@ -3,6 +3,8 @@
         "manufacturer": "Blitzwolf",
         "model": "BW-SHP13",
         "type": "Blitzwolf smart plug",
+        "genericType": "Outlet",
+        "comment": "Cluster 0006 attr 0000 reports without configureReporting",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -10,7 +12,7 @@
             "icon": "Blitzwolf-SmartPlug"
         },
         "category": {
-            "light": "1"
+            "automatism": "1"
         },
         "commands": {
             "Identify": {
@@ -37,19 +39,9 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Bind-0006-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "clustId=0006",
-                "execAtCreation": "Yes"
-            },
-            "SetReporting-0006-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
-                "execAtCreation": "Yes",
-                "execAtCreationDelay": 11
-            },
             "Voltage": {
                 "use": "inf_zbAttr-0B04-RMSVoltage",
+                "params": "mult=1&div=1",
                 "isVisible": 1
             },
             "Current": {
@@ -63,10 +55,11 @@
             },
             "Total power": {
                 "use": "inf_zbAttr-0702-CurrentSummationDelivered",
+                "params": "mult=1&div=1",
                 "isVisible": 1
             },
             "Poll 0B04": {
-                "use": "poll-0B04-0505-0508-050B"
+                "use": "act_poll-0B04-0505-0508-050B"
             }
         }
     }

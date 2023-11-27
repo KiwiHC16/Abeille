@@ -14,6 +14,12 @@ ChangeLog
 - Xiaomi wall switch sensor_86sw1 & sensor_86sw2: Support+modeles revus.
 - Tuya detecteur fumée TS0205__TZ3210_up3pngle: Mise-à-jour du modèle (2658).
 - Blitzwolf BW-SHP13: Mise-à-jour du modèle.
+- Modèles: Suppression commandes obsolètes:
+
+  - PuissanceVoltagePrise => inf_zbAttr-0B04-RMSVoltage
+  - PuissanceCurrentPrise => inf_zbAttr-0B04-RMSCurrent
+  - poll-0B04-0505-0508-050B => act_poll-0B04-0505-0508-050B
+- Mise-à-jour de qq modèles TS0121.
 
 231124-BETA-2
 -------------

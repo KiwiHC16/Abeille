@@ -1711,11 +1711,13 @@ class Abeille extends eqLogic {
             if ($cmd->getConfiguration('PollingOnCmdChange', '') != $cmdLogicId)
                 continue;
             $delay = $cmd->getConfiguration('PollingOnCmdChangeDelay', '');
+            $cmdName = $cmd->getName();
+            $cmdLogicId = $cmd->getLogicalId();
             if ($delay != 0) {
-                log::add('Abeille', 'debug', "  Triggering '".$cmd->getName()."' with delay ".$delay);
+                log::add('Abeille', 'debug', "  Triggering '${cmdName}' (${cmdLogicId}) with delay ".$delay);
                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
             } else {
-                log::add('Abeille', 'debug', "  Triggering '".$cmd->getName()."'");
+                log::add('Abeille', 'debug', "  Triggering '${cmdName}' (${cmdLogicId})");
                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
             }
         }

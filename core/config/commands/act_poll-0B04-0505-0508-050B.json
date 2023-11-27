@@ -1,0 +1,16 @@
+{
+    "act_poll-0B04-0505-0508-050B": {
+        "logicalId": "poll-#EP#-0B04-0505-0508-050B",
+        "subType": "other",
+        "template": "",
+        "configuration": {
+            "topic": "readAttribute",
+            "request": "ep=#EP#&clustId=0B04&attrId=0505,0508,050B",
+            "Polling": "cron",
+            "PollingOnCmdChange": "0006-#EP#-0000",
+            "PollingOnCmdChangeDelay": "5"
+        },
+        "type": "action",
+        "comment": "Triggered by 0006-#EP#-0000 & every minutes"
+    }
+}

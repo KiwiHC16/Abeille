@@ -3813,11 +3813,11 @@
                     // $attrType       = $Command['attrType'];
                     $minInterval    = isset($Command['minInterval']) ? $Command['minInterval'] : 0;
                     $maxInterval    = isset($Command['maxInterval']) ? $Command['maxInterval'] : 0;
-                    $changeVal      = isset($Command['changeVal']) ? $Command['changeVal'] : '';
+                    $changeVal      = isset($Command['changeVal']) ? $Command['changeVal'] : 0;
 
                     $minInterval = $this->formatAttribute($minInterval, "uint16");
                     $maxInterval = $this->formatAttribute($maxInterval, "uint16");
-                    if ($changeVal != '') $changeVal = $this->formatAttribute($changeVal, $attrType);
+                    $changeVal = $this->formatAttribute($changeVal, $attrType);
 
                     cmdLog('debug', "  configureReporting2: attrType='".$attrType."', min='".$minInterval."', max='".$maxInterval."', changeVal='".$changeVal."'");
                     $minInterval = AbeilleTools::reverseHex($minInterval);

@@ -27,6 +27,7 @@ ChangeLog
 - SilverCrest-HG08673-FR: Mises-à-jour du modèle (2635).
 - Interne: AbeilleCmd: Mises-à-jour 'cmd-0201'.
 - Interne: Constante Zigbee cluster 0201: Améliorations.
+- Interne: Cmd: configureReporting2, changeVal mis à 0 par défaut.
 
 231124-BETA-2
 -------------

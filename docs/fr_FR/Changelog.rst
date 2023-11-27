@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231127-BETA-1
+-------------
+
 - Page EQ/avancé:
 
   - Réparation équipement: Améliorations.

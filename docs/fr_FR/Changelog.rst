@@ -3,7 +3,7 @@ ChangeLog
 
 - Interne: Cmd: 'configureReporting2' completement revu.
 - Ikea Tradfri E27 LED2102G3: Correction image (2626).
-- Icones: Qq images renomées
+- Icones: Qq images renommées
 
   - 'eTRV0100' => 'Danfoss-Ally-Thermostat'
   - 'IkeaTradfriBulbE14WSOpal400lm' => 'Ikea-BulbE14-Globe'

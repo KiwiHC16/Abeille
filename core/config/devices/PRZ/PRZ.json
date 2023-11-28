@@ -4,7 +4,7 @@
         "configuration": {
             "mainEP": "01",
             "poll": "1",
-            "icon": "ProfaluxLigthModule"
+            "icon": "Profalux-LigthModule"
         },
         "category": {
             "light": "1"

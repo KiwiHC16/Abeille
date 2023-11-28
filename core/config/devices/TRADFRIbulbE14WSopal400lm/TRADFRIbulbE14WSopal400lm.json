@@ -4,7 +4,7 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "icon": "IkeaTradfriBulbE14WSOpal400lm"
+            "icon": "Ikea-BulbE14-Globe"
         },
         "category": {
             "light": "1"

@@ -7,6 +7,7 @@
             "topic": "cmd-0201",
             "request": "ep=#EP#&cmd=00&amount=FB"
         },
-        "type": "action"
+        "type": "action",
+        "genericType": "THERMOSTAT_SET_SETPOINT"
     }
 }

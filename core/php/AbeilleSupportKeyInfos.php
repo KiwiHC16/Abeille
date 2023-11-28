@@ -158,7 +158,7 @@
                 $eqHName = $eqLogic->getHumanName();
                 $eqId = $eqLogic->getId();
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-                $eqModelId = isset($eqModel['id']) ? $eqModel['id'] : '';
+                $eqModelId = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
                 $eqType = isset($eqModel['type']) ? $eqModel['type'] : '';
                 $extra = '';
                 $status = 'ok ';

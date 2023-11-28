@@ -9,9 +9,10 @@
         "category": {
             "heating": "1"
         },
+        "comment": "WARNING: Recent devices are using EP01 while old one are on EP03 (see #2379)",
         "configuration": {
             "icon": "Owon-THS317-ET",
-            "mainEP": "03",
+            "mainEP": "01",
             "batteryType": "2x1.5V AAA"
         },
         "commands": {
@@ -20,7 +21,6 @@
             },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
-                "isVisible": 1,
                 "nextLine": "after"
             },
             "Temperature": {

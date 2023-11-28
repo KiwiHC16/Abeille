@@ -876,6 +876,8 @@
          * - Config DB: Removing keys for Zigates 7 to 10.
          * - eqLogic DB: Icon renamed 'IkeaTradfriDimmer' => 'Ikea-Tradfri-Dimmer'
          * - eqLogic DB: Removed 'ab::txAck' for devices not always listening
+         * - eqLogic DB: 'ab::eqModel', sig/id/location renamed to modelSig/modelName/modelSource
+         * - eqLogic DB: 'ab::eqModel', 'forcedByUser' => 'modelForced'
          * - Cmds DB: For 'Online' adding 'repeatEventManagement=always'
          * - Cmds DB: 'OnOff' cmd replaced by 'cmd-0006'
          * - Cmds DB: 'OnOffGroup' replaced by 'cmd-0006'
@@ -895,6 +897,14 @@
                 // eqLogic: Renaming icons if required
                 $iconsList = array(
                     "IkeaTradfriDimmer" => "Ikea-Tradfri-Dimmer",
+                    'eTRV0100' => 'Danfoss-Ally-Thermostat',
+                    'IkeaTradfriBulbE14WSOpal400lm' => 'Ikea-BulbE14-Globe',
+                    'ProfaluxLigthModule' => 'Profalux-LigthModule',
+                    'Ikea-BulbE14CandleWhite' => 'Ikea-BulbE14-Candle',
+                    'TRADFRIbulbE14Wopch400lm' => 'Ikea-BulbE14-Candle',
+                    'TRADFRIbulbE14WS470lm' => 'Ikea-BulbE14-Candle',
+                    'TRADFRIbulbE27WSopal1000lm' => 'Ikea-BulbE27',
+                    'TRADFRIbulbE27WW806lm' => 'Ikea-BulbE27',
                 );
                 $curIcon = $eqLogic->getConfiguration('ab::icon', '');
                 if (($curIcon != '') && isset($iconsList[$curIcon])) {
@@ -912,7 +922,28 @@
                         $saveEq = true;
                     }
                 }
+                // Rename some 'ab::eqModel' keys
+                $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+                $saveEqModel = false;
+                $eqModelRename = array(
+                    'sig' => 'modelSig',
+                    'id' => 'modelName',
+                    'location' => 'modelSource',
+                    'forcedByUser' => 'modelForced'
+                );
+                foreach ($eqModelRename as $oldK => $newK) {
+                    if (!isset($eqModel[$oldK]))
+                        continue;
+                    $eqModel[$newK] = $eqModel[$oldK];
+                    unset($eqModel[$oldK]);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::eqModel' update '${oldK}' to '${newK}");
+                    $saveEqModel = true;
+                }
 
+                if ($saveEqModel) {
+                    $eqLogic->setConfiguration('ab::eqModel', $eqModel);
+                    $saveEq = true;
+                }
                 if ($saveEq)
                     $eqLogic->save();
 

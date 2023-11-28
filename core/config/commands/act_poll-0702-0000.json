@@ -1,10 +1,7 @@
 {
-    "poll-0702-0000": {
-        "isVisible": 0,
-        "logicalId": "#EP#-poll-0702-0000",
-        "isHistorized": "0",
+    "act_poll-0702-0000": {
+        "logicalId": "poll-#EP#-0702-0000",
         "subType": "other",
-        "invertBinary": "0",
         "template": "",
         "configuration": {
             "topic": "readAttribute",

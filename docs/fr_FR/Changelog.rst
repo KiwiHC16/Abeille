@@ -1,12 +1,69 @@
 ChangeLog
 =========
 
+- Interne: Cmd: 'configureReporting2' completement revu.
+- Ikea Tradfri E27 LED2102G3: Correction image (2626).
+- Icones: Qq images renommées
+
+  - 'eTRV0100' => 'Danfoss-Ally-Thermostat'
+  - 'IkeaTradfriBulbE14WSOpal400lm' => 'Ikea-BulbE14-Globe'
+  - 'ProfaluxLigthModule' => 'Profalux-LigthModule'
+  - 'Ikea-BulbE14CandleWhite' => 'Ikea-BulbE14-Candle'
+  - 'TRADFRIbulbE14Wopch400lm' => 'Ikea-BulbE14-Candle',
+  - 'TRADFRIbulbE14WS470lm' => 'Ikea-BulbE14-Candle',
+  - 'TRADFRIbulbE27WSopal1000lm' => 'Ikea-BulbE27',
+  - 'TRADFRIbulbE27WW806lm' => 'Ikea-BulbE27',
+- Interne: Cmd: Mise-à-jour formatAttribute().
+
+231127-BETA-3
+-------------
+
+- Page EQ/avancé:
+
+  - Réparation équipement: Améliorations.
+  - Fonctionalité maintenant accessible à tous.
+- Interne: Normalisation infos modèle: 'modelSig'/'modelName'/'modelSource'
+- Interne: Normalisation infos modèle: forcedByUser => modelForced
+- eTRV0103: Mise-à-jour du modèle.
+- Legrand micromodule switch: Mise-à-jour du modèle (2663).
+- Tuya double dimmer module QS-Zigbee-D02-TRIAC-2C-LN: Ajout support préliminaire (2664).
+- Assistant modèle: Améliorations.
+- Xiaomi wall switch sensor_86sw1 & sensor_86sw2: Support+modeles revus.
+- Tuya detecteur fumée TS0205__TZ3210_up3pngle: Mise-à-jour du modèle (2658).
+- Blitzwolf BW-SHP13: Mise-à-jour du modèle.
+- Modèles: Suppression commandes obsolètes:
+
+  - PuissanceVoltagePrise => inf_zbAttr-0B04-RMSVoltage
+  - PuissanceCurrentPrise => inf_zbAttr-0B04-RMSCurrent
+  - poll-0B04-0505-0508-050B => act_poll-0B04-0505-0508-050B
+  - poll-0702-0000 => act_poll-0702-0000
+- Mise-à-jour de qq modèles TS0121.
+- SilverCrest-HG08673-FR: Mises-à-jour du modèle (2635).
+- Interne: AbeilleCmd: Mises-à-jour 'cmd-0201'.
+- Interne: Constante Zigbee cluster 0201: Améliorations.
+- Interne: Cmd: configureReporting2, changeVal mis à 0 par défaut.
+
+231124-BETA-2
+-------------
+
+- Support commande utilisateur: Amélioration.
+- Moes télécommande universelle IR: Mise-à-jour du code (2607).
+- Page equipement: Traductions US.
+- Réparation équipement: Améliorations.
+
+231123-BETA-1
+-------------
+
 - Page équipement
 
   - Ajout affichage fabricant & modèle.
   - Correction affichage dernier LQI.
   - Correction traductions US.
-  - Onglet commande legèrement revu.
+  - Onglet commandes legèrement revu.
+  - Onglet commandes: ajout saut de ligne avant/apres.
+- Danfoss thermostat eTRV0103: Ajout support (2662).
+- Ajout support cmdes utilisateur (ID logique = xxxidxxx::parametres). Utile pour telecommande universelle.
+- Moes télécommande universelle IR: Mise-à-jour du code & modèle (2607).
 
 231119-BETA-1
 -------------

@@ -552,6 +552,9 @@
                 "0002" => array( "name" => "Occupancy", "access" => "R", "dataType" => 0x18 ),
                 "0012" => array( "name" => "OccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ), // int16
                 "0014" => array( "name" => "UnoccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ), // int16
+
+                "0030" => array( "name" => "SetpointChangeSource", "access" => "R", "dataType" => 0x30 ), // enum8
+                "0031" => array( "name" => "SetpointChangeAmount", "access" => "R", "dataType" => 0x29 ), // int16
             ),
         ),
         "0202" => array(

@@ -313,7 +313,7 @@ class Abeille extends eqLogic {
 
                 /* Special case: should ignore virtual remote */
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-                $jsonId = $eqModel ? $eqModel['id'] : '';
+                $jsonId = $eqModel ? $eqModel['modelName'] : '';
                 if ($jsonId == "remotecontrol")
                     continue; // Abeille virtual remote
 
@@ -1099,12 +1099,11 @@ class Abeille extends eqLogic {
     // Jeedom optional function: called before saving (create or update) an equipment
     public function preSave() {
         log::add('Abeille', 'debug', 'preSave()');
-        log::add('Abeille', 'debug', 'this='.json_encode($this));
+        // log::add('Abeille', 'debug', 'this='.json_encode($this));
     }
 
     // Jeedom optional function: called after saving (create or update) an equipment
-    public static function postSave()
-    {
+    public static function postSave() {
         log::add('Abeille', 'debug', 'postSave()');
         /* Tcharp38: Strange. postSave() called when starting daemons.
            No sense to re-start main daemon from their then */
@@ -1414,7 +1413,7 @@ class Abeille extends eqLogic {
                 if ($net2 != $net)
                     continue; // Wrong network
                 $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-                $jsonId2 = $eqModel ? $eqModel['id'] : '';
+                $jsonId2 = $eqModel ? $eqModel['modelName'] : '';
                 if ($jsonId2 != "remotecontrol")
                     continue; // Not a remote
                 if ($addr2 == '')
@@ -1429,8 +1428,9 @@ class Abeille extends eqLogic {
             $dev = array(
                 'net' => $dest,
                 'addr' => $rcAddr,
-                'jsonId' => 'remotecontrol',
-                'jsonLocation' => 'Abeille',
+                'modelSig' => 'remotecontrol',
+                'modelName' => 'remotecontrol',
+                'modelSource' => 'Abeille',
             );
             Abeille::createDevice("update", $dev);
 
@@ -1473,10 +1473,10 @@ class Abeille extends eqLogic {
             }
 
             $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
-            $jsonId = isset($eqModel['id']) ? $eqModel['id'] : '';
-            $jsonLocation = isset($eqModel['location']) ? $eqModel['location'] : 'Abeille';
-            $isForcedModel = isset($eqModel['forcedByUser']) ? $eqModel['forcedByUser'] : false;
-            $jsonId1 = $jsonId;
+            $modelName = isset($eqModel['modelName']) ? $eqModel['modelName'] : '';
+            $modelSource = isset($eqModel['modelSource']) ? $eqModel['modelSource'] : 'Abeille';
+            $isForcedModel = isset($eqModel['modelForced']) ? $eqModel['modelForced'] : false;
+            $modelName1 = $modelName;
 
             // Checking if model is defaultUnknown and there is now a real model for it (see #2211).
             // Also rechecking if model is still the correct one (ex: TS011F => TS011F__TZ3000_2putqrmw)
@@ -1487,21 +1487,21 @@ class Abeille extends eqLogic {
                 $modelInfos = self::findModel($eqSig['modelId'], $eqSig['manufId']);
                 if ($modelInfos !== false) {
                     $modelSig = $modelInfos['modelSig'];
-                    $jsonId = $modelInfos['jsonId'];
-                    $jsonLocation = $modelInfos['location']; // TODO: rename to jsonLocation
+                    $modelName = $modelInfos['modelName'];
+                    $modelSource = $modelInfos['modelSource'];
                     $eqHName = $eqLogic->getHumanName();
                 }
             }
-            if ($jsonId != $jsonId1)
+            if ($modelName != $modelName1)
                 message::add("Abeille", $eqHName.": Nouveau modèle trouvé. Mise-à-jour en cours.", '');
 
             $dev = array(
                 'net' => $dest,
                 'addr' => $addr,
-                'modelSig' => $modelSig, // Model signature
-                'jsonId' => $jsonId, // Model file name
-                'jsonLocation' => $jsonLocation, // Model file location
                 'ieee' => $eqLogic->getConfiguration('IEEE'),
+                'modelSig' => $modelSig, // Model signature
+                'modelName' => $modelName, // Model file name
+                'modelSource' => $modelSource, // Model file location
             );
             Abeille::createDevice($action, $dev);
 
@@ -1711,11 +1711,13 @@ class Abeille extends eqLogic {
             if ($cmd->getConfiguration('PollingOnCmdChange', '') != $cmdLogicId)
                 continue;
             $delay = $cmd->getConfiguration('PollingOnCmdChangeDelay', '');
+            $cmdName = $cmd->getName();
+            $cmdLogicId = $cmd->getLogicalId();
             if ($delay != 0) {
-                log::add('Abeille', 'debug', "  Triggering '".$cmd->getName()."' with delay ".$delay);
+                log::add('Abeille', 'debug', "  Triggering '${cmdName}' (${cmdLogicId}) with delay ".$delay);
                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".(time() + $delay), $cmd->getConfiguration('request'));
             } else {
-                log::add('Abeille', 'debug', "  Triggering '".$cmd->getName()."'");
+                log::add('Abeille', 'debug', "  Triggering '${cmdName}' (${cmdLogicId})");
                 Abeille::publishMosquitto($abQueues['xToCmd']['id'], priorityInterrogation, "TempoCmd".$eqLogic->getLogicalId()."/".$cmd->getConfiguration('topic')."&time=".time(), $cmd->getConfiguration('request'));
             }
         }
@@ -1964,8 +1966,8 @@ class Abeille extends eqLogic {
                 'ieee' => $ieee,
                 'modelId' => $msg['modelId'],
                 'manufId' => $msg['manufId'],
-                'jsonId' => $jsonId,
-                'jsonLocation' => $jsonLocation,
+                'modelName' => $jsonId,
+                'modelSource' => $jsonLocation,
                 'macCapa' => $msg['macCapa']
             );
             Abeille::createDevice("update", $dev);
@@ -2121,7 +2123,7 @@ class Abeille extends eqLogic {
                 'clustId' => $clustId,
                 'attributes' => [],
                     'name' => 'xxx', // Attribut name = cmd logical ID (ex: 'clustId-ep-attrId')
-                    'value' => false/xx, // False = unsupported
+                    'value' => false/xx, // false = unsupported
                 'time' => time(),
                 'lqi' => $lqi
             */
@@ -2605,10 +2607,11 @@ class Abeille extends eqLogic {
 
         // JSON model infos
         $eqModelInfos = array(
-            'id' => 'rucheCommand', // Equipment model id
-            'location' => 'Abeille', // Equipment model location
+            'modelSig' => 'rucheCommand',
+            'modelName' => 'rucheCommand', // Equipment model id
+            'modelSource' => 'Abeille', // Equipment model location
             'type' => 'Zigate',
-            'lastUpdate' => time() // Store last update from model
+            // 'lastUpdate' => time() // Store last update from model
         );
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
 
@@ -2782,14 +2785,15 @@ class Abeille extends eqLogic {
                 $dev = array(
                     'net' =>
                     'addr' =>
-                    'jsonId' => 'remotecontrol',
-                    'jsonLocation' => 'Abeille',
+                    'modelSig' => 'remotecontrol', // Model sig
+                    'modelName' => 'remotecontrol', // Model file name
+                    'modelSource' => 'Abeille', // Model file location
                 );
          */
 
         $modelSig = isset($dev['modelSig']) ? $dev['modelSig']: '';
-        $jsonId = isset($dev['jsonId']) ? $dev['jsonId']: '';
-        $jsonLocation = isset($dev['jsonLocation']) ? $dev['jsonLocation']: '';
+        $jsonId = isset($dev['modelName']) ? $dev['modelName']: '';
+        $jsonLocation = isset($dev['modelSource']) ? $dev['modelSource']: '';
         if ($jsonLocation == '')
             $jsonLocation = 'Abeille';
 
@@ -2801,9 +2805,9 @@ class Abeille extends eqLogic {
         $isModelForcedByUser = false;
         if(is_object($eqLogic)){
             $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
-            if(isset($jEqModel['id']) && isset($jEqModel['location']) && isset($jEqModel['forcedByUser']) && ($jEqModel['forcedByUser'] == true)){
-                $jsonLocation = $jEqModel['location'];
-                $jsonId = $jEqModel['id'];
+            if(isset($jEqModel['modelName']) && isset($jEqModel['modelSource']) && isset($jEqModel['modelForced']) && ($jEqModel['modelForced'] == true)){
+                $jsonLocation = $jEqModel['modelSource'];
+                $jsonId = $jEqModel['modelName'];
                 $isModelForcedByUser = true;
             }
         }
@@ -2853,7 +2857,7 @@ class Abeille extends eqLogic {
 
             // Kept for safety but should already be assigned in 'special case' block
             $jEqModel = $eqLogic->getConfiguration('ab::eqModel', []); // Eq model from Jeedom DB
-            $curEqModel = isset($jEqModel['id']) ? $jEqModel['id'] : ''; // Current JSON model
+            $curEqModel = isset($jEqModel['modelName']) ? $jEqModel['modelName'] : ''; // Current JSON model
             $ieee = $eqLogic->getConfiguration('IEEE'); // IEEE from Jeedom DB
             $eqId = $eqLogic->getId();
 
@@ -3025,14 +3029,14 @@ class Abeille extends eqLogic {
         // JSON model infos
         $eqModelInfos = array(
             // Model infos
-            'sig' => $modelSig, // Equipent model signature
-            'id' => $jsonId, // Equipment model file name
-            'location' => $jsonLocation, // Equipment model file location
-            'forcedByUser' => $isModelForcedByUser,
+            'modelSig' => $modelSig, // Equipent model signature
+            'modelName' => $jsonId, // Equipment model file name
+            'modelSource' => $jsonLocation, // Equipment model file location
+            'modelForced' => $isModelForcedByUser,
 
             // Equipment infos
-            'manuf' => $model['manufacturer'],
-            'model' => $model['model'],
+            'manuf' => isset($model['manufacturer']) ? $model['manufacturer'] : '',
+            'model' => isset($model['model']) ? $model['model'] : '',
             'type' => $model['type'],
             // 'lastUpdate' => time(), // Store last update from model. // Tcharp38: created for Abeille but not used
         );
@@ -3094,7 +3098,7 @@ class Abeille extends eqLogic {
                 'logicalId' => $cmdLogicId,
                 'topic' => $cmdTopic, // action only
                 'request' => $cmdReq, // action only
-                'obsolete' => True
+                'obsolete' => (strpos($cmdLogicId, '::') === false) ? true : false // User cmd must not be removed
             );
             $jeedomCmds[$cmdId] = $c;
         }
@@ -3106,19 +3110,19 @@ class Abeille extends eqLogic {
         foreach ($modelCmds as $mCmdName => $mCmd) {
             // Initial checks
             if (!isset($mCmd["type"])) {
-                log::add('Abeille', 'error', "La commande '".$mCmdName."' n'a pas de 'type' défini => ignorée");
+                log::add('Abeille', 'error', "{{La commande suivante n'a pas de type défini}}: '${mCmdName}'");
                 continue;
             }
             $mCmdType = $mCmd["type"];
             if ($mCmdType == 'info') {
                 if (!isset($mCmd["logicalId"]) || ($mCmd["logicalId"] == '')) {
-                    log::add('Abeille', 'error', "La commande '".$mCmdName."' n'a pas de 'logicalId' défini => ignorée");
+                    log::add('Abeille', 'error', "{{La commande suivante n'a pas de 'logicalId' défini}}: '${mCmdName}'");
                     continue;
                 }
             } else if ($mCmdType == 'action') {
                 // Any checks ?
             } else {
-                log::add('Abeille', 'error', "La commande '".$mCmdName."' a un type invalide (".$mCmdType.") => ignorée");
+                log::add('Abeille', 'error', "{{La commande suivante a un type invalide}}: '${mCmdName}'");
                 continue;
             }
 
@@ -3146,7 +3150,7 @@ class Abeille extends eqLogic {
                 if ($jCmd['logicalId'] != $mCmdLogicId)
                     continue;
                 $cmdId = $jCmdId;
-                $jeedomCmds[$jCmdId]['obsolete'] = False;
+                $jeedomCmds[$jCmdId]['obsolete'] = false;
                 break; // Found
             }
 
@@ -3157,7 +3161,7 @@ class Abeille extends eqLogic {
                     if (($jCmd['name'] != '') && ($jCmd['name'] != $mCmdName))
                         continue;
                     $cmdId = $jCmdId;
-                    $jeedomCmds[$jCmdId]['obsolete'] = False;
+                    $jeedomCmds[$jCmdId]['obsolete'] = false;
                     break; // Found
                 }
             }
@@ -3173,7 +3177,7 @@ class Abeille extends eqLogic {
                     if ($jCmd['request'] != $mRequest)
                         continue;
                     $cmdId = $jCmdId;
-                    $jeedomCmds[$jCmdId]['obsolete'] = False;
+                    $jeedomCmds[$jCmdId]['obsolete'] = false;
                     break;
                 }
             }
@@ -3338,28 +3342,18 @@ class Abeille extends eqLogic {
             else
                 $cmdLogic->setDisplay('title_disable', null);
 
-            // log::add('Abeille', 'debug', '  LA='.$cmdLogic->getName()." - ".$cmdLogic->getLogicalId());
             $cmdLogic->save();
-            // if (isset($jCmdId) && isset($jeedomCmds[$jCmdId])) // Mark updated if cmd was already existing
-            //     $jeedomCmds[$jCmdId]['obsolete'] = 0;
         }
 
         // Removing obsolete cmds
-        // foreach ($jeedomCmdsInf as $jCmdId => $jCmd) {
         foreach ($jeedomCmds as $jCmdId => $jCmd) {
-            if ($jCmd['obsolete'] == False)
+            if ($jCmd['obsolete'] == false)
                 continue;
-            log::add('Abeille', 'debug', "  Removing info '".$jCmd['name']."' (".$jCmd['logicalId'].")");
+
+            log::add('Abeille', 'debug', "  Removing '".$jCmd['name']."' (".$jCmd['logicalId'].")");
             $cmdLogic = cmd::byId($jCmdId);
             $cmdLogic->remove();
         }
-        // foreach ($jeedomCmdsAct as $jCmdId => $jCmd) {
-        //     if ($jCmd['obsolete'] == False)
-        //         continue;
-        //     log::add('Abeille', 'debug', "  Removing action '".$jCmd['name']."' (".$jCmd['logicalId'].")");
-        //     $cmdLogic = cmd::byId($jCmdId);
-        //     $cmdLogic->remove();
-        // }
 
         // $eqLogic->refreshWidget(); // Refresh equipment display ? Required ? Useful ?
 
@@ -3370,7 +3364,6 @@ class Abeille extends eqLogic {
         );
         Abeille::msgToCmd2($msg);
         Abeille::msgToParser($msg);
-
     } // End createDevice()
 
     public static function msgToParser($msg) {

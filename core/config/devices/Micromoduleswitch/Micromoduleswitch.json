@@ -12,9 +12,9 @@
             "automatism": "1"
         },
         "commands": {
-            "etat": {
-                "use": "inf_zbAttr-0006-OnOff",
-                "isVisible": 1
+            "Identify": {
+                "use": "act_zbCmdC-Identify",
+                "nextLine": "after"
             },
             "On": {
                 "use": "act_zbCmdC-0006-On",
@@ -24,35 +24,33 @@
                 "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
+            "Toggle": {
+                "use": "act_zbCmdC-0006-Toggle"
+            },
             "Get-Status": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0006&attrId=0000"
             },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+            "Status": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "Bind-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0006",
                 "execAtCreation": "Yes"
             },
-            "SetReporting-0006-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+            "Bind-000F-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "clustId=000F",
                 "execAtCreation": "Yes",
-                "execAtCreationDelay": 11
+                "comment": "Seems required at config to avoid device to leave"
             },
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get-SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
-            "Toggle": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "nextLine": "after"
+            "SetReporting-0006-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000",
+                "execAtCreation": "Yes"
             }
         }
     }

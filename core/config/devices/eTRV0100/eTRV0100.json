@@ -1,30 +1,28 @@
 {
     "eTRV0100": {
+        "manufacturer": "Danfoss",
+        "model": "014G2461",
+        "type": "Dansfoss Ally Radiator Thermostat 014G2461",
+        "alternateIds": {
+            "eTRV0101": [],
+            "eTRV0103": [],
+            "eT093WRO": []
+        },
+        "genericType": "Thermostat",
         "comment": "Dansfoss Ally Radiator Thermostat 014G2461 ( https://assets.danfoss.com/documents/DOC353849556547/DOC353849556547.pdf ) ",
         "timeout": "0",
         "configuration": {
             "mainEP": "01",
             "poll": "1",
-            "icon": "eTRV0100",
-            "batteryType": "2x1,5V LR6 (AA)"
+            "icon": "Danfoss-Ally-Thermostat",
+            "batteryType": "2x1.5V LR6/AA"
         },
         "category": {
             "heating": "1"
         },
-        "type": "Dansfoss Ally Radiator Thermostat 014G2461",
         "commands": {
-            "Consigne": {
-                "use": "danfossTemperatureConsigneValue"
-            },
-            "Consigne Get": {
-                "use": "danfossTemperatureConsigneGet"
-            },
-            "Consigne Set": {
-                "use": "danfossTemperatureConsigneSet"
-            },
             "Battery-Percent": {
-                "use": "inf_zbAttr-0001-BatteryPercent",
-                "isVisible": 1
+                "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "Get Battery-Percent": {
                 "use": "act_zbReadAttribute",
@@ -37,7 +35,17 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0001&attrId=0020"
             },
-            "Temp\u00e9rature": {
+            "Consigne Set": {
+                "use": "danfossTemperatureConsigneSet"
+            },
+            "Consigne Get": {
+                "use": "danfossTemperatureConsigneGet"
+            },
+            "Consigne": {
+                "use": "danfossTemperatureConsigneValue",
+                "nextLine": "after"
+            },
+            "Temp": {
                 "use": "spiritTemperature"
             },
             "getTemperature": {

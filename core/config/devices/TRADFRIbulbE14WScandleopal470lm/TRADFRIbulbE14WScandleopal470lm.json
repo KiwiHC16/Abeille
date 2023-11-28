@@ -9,7 +9,7 @@
         },
         "configuration": {
             "mainEP": "01",
-            "icon": "Ikea-BulbE14CandleWhite"
+            "icon": "Ikea-BulbE14-Candle"
         },
         "commands": {
             "SWBuildID": {

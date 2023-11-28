@@ -18,21 +18,6 @@
                 "use": "inf_zbAttr-0001-BatteryPercent",
                 "params": "ep=01"
             },
-            "SetReporting 01-0001-00021": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=1800&maxInterval=3600",
-                "execAtCreation": "yes"
-            },
-            "Bind 01-0001-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0001",
-                "execAtCreation": "yes"
-            },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": "1",
-                "nextLine": "after"
-            },
             "Smoke alarm": {
                 "use": "inf_Zone-Alarm1",
                 "params": "ep=01",
@@ -42,14 +27,9 @@
             "Zone Status Changed": {
                 "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
                 "params": "ep=01",
-                "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean\/bit0 value",
+                "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value",
                 "trigOut": "01-0500-alarm1",
                 "trigOutOffset": "#value#&1"
-            },
-            "Bind 01-0500-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0500",
-                "execAtCreation": "yes"
             }
         }
     }

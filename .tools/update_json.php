@@ -84,6 +84,25 @@
                     $devUpdated = true;
                     echo "  'icone' renamed to 'icon'.\n";
                 }
+            } else {
+                $icon = $config['icon'];
+                // Rename some icons
+                $iconsToRename = array(
+                    'eTRV0100' => 'Danfoss-Ally-Thermostat',
+                    'IkeaTradfriBulbE14WSOpal400lm' => 'Ikea-BulbE14-Globe',
+                    'ProfaluxLigthModule' => 'Profalux-LigthModule',
+                    'Ikea-BulbE14CandleWhite' => 'Ikea-BulbE14-Candle',
+                    'TRADFRIbulbE14Wopch400lm' => 'Ikea-BulbE14-Candle',
+                    'TRADFRIbulbE14WS470lm' => 'Ikea-BulbE14-Candle',
+                    'TRADFRIbulbE27WSopal1000lm' => 'Ikea-BulbE27',
+                    'TRADFRIbulbE27WW806lm' => 'Ikea-BulbE27',
+                );
+                if (isset($iconsToRename[$icon])) {
+                    $newName = $iconsToRename[$icon];
+                    $dev[$devName]['configuration']['icon'] = $newName;
+                    echo "  'icon' renamed from '${icon}' to '${newName}'.\n";
+                    $devUpdated = true;
+                }
             }
 
             if (!isset($config['batteryType'])) {

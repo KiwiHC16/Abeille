@@ -86,7 +86,7 @@
                 "params": "clustId=0B04&attrId=050B"
             },
             "Poll 0B04": {
-                "use": "poll-0B04-0505-0508-050B"
+                "use": "act_poll-0B04-0505-0508-050B"
             }
         }
     }

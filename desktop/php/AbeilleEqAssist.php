@@ -39,8 +39,8 @@
     list($eqNet, $eqAddr) = explode( "/", $eqLogicId);
     $zgNb = substr($eqNet, 7); // Extracting zigate number from network
     $eqModel = $eqLogic->getConfiguration('ab::eqModel', null);
-    $jsonName = $eqModel ? $eqModel['id'] : '';
-    $jsonLocation = $eqModel ? $eqModel['location'] : 'Abeille';
+    $jsonName = $eqModel ? $eqModel['modelName'] : '';
+    $jsonLocation = $eqModel ? $eqModel['modelSource'] : 'Abeille';
     $eqIeee = $eqLogic->getConfiguration('IEEE', '');
 
     $abQueues = $GLOBALS['abQueues'];
@@ -818,24 +818,26 @@
         return false;
     }
 
-    /* Check if clustId exists in another EP.
+    /* Check if clustId exists in several EP.
        Purpose is to give a unique Jeedom command name.
        Returns: true is exists, else false */
-    function sameClustInOtherEP(epId, clustId) {
-        for (var epIdx = 0; epIdx < zigbee.endPoints.length; epIdx++) {
-            ep = zigbee.endPoints[epIdx];
-            if (ep.id == epId)
-                continue; // Current EP
-            for (var clustIdx = 0; clustIdx < ep.servClustList.length; clustIdx++) {
-                clust = ep.servClustList[clustIdx];
-                if (clust.id != clustId)
-                    continue;
+    function sameClustInSeveralEP(clustId) {
+        foundNb = 0;
+        endPoints = zigbee.endPoints;
+        for (var epId in endPoints) {
+            // console.log("EP "+epId);
+            ep = endPoints[epId];
 
-                /* Coresponding cluster in a different EP found. */
-                return true; // FOUND !
-            }
+            if (!isset(ep.servClusters))
+                continue;
+
+            if (isset(ep.servClusters[clustId]))
+                foundNb++;
         }
-        return false;
+        if (foundNb > 1)
+            return true;
+        else
+            return false;
     }
 
     function newCmd($use, $params = "", $exec = "") {
@@ -865,6 +867,7 @@
         mainEp = -1;
         minTimeout = 60; // Min timeout = 60min
 
+        // 0000/Basic cluster on all EP
         for (var epId in endPoints) {
             // console.log("EP "+epId);
             ep = endPoints[epId];
@@ -872,7 +875,6 @@
             if (!isset(ep.servClusters))
                 continue;
 
-            // 0000/Basic cluster
             if (isset(ep.servClusters["0000"]) && isset(ep.servClusters["0000"]['attributes'])) {
                 attributes = ep.servClusters["0000"]['attributes'];
 
@@ -881,8 +883,9 @@
                 /* Only attribute 4000 is converted to user command.
                    No sense for others */
                 if (isset(attributes['4000'])) {
-                    cmds["SWBuildID"] = newCmd("inf_zbAttr-0000-SWBuildID");
-                    cmds["Get SWBuildID"] = newCmd("act_zbReadAttribute", "clustId=0000&attrId=4000");
+                    // The following cmds are useless. Already part of EQ advanced infos.
+                    // cmds["SWBuildID"] = newCmd("inf_zbAttr-0000-SWBuildID");
+                    // cmds["Get SWBuildID"] = newCmd("act_zbReadAttribute", "clustId=0000&attrId=4000");
                 }
                 if (typeof zigbee.signature === "undefined")
                     zigbee.signature = new Object();
@@ -919,7 +922,7 @@
             /* 0003/Identify cluster */
             if (typeof ep.servClusters["0003"] !== "undefined") {
                 cmds["Identify"] = newCmd("act_zbCmdC-Identify");
-                cmds["Identify"]["isVisible"] = 1;
+                // cmds["Identify"]["isVisible"] = 1; // Hidden by default. Rarely used
                 cmds["Identify"]["nextLine"] = "after";
             }
 
@@ -932,16 +935,16 @@
 
         /* 0006/OnOff cluster on all EP */
         onOffIdx = 1; // Used if multiple 0006 clusters
-        multipleCluster = sameClustInOtherEP(epId, "0006");
+        multipleCluster = sameClustInSeveralEP("0006");
         clustIdx = '';
         for (var epId in endPoints) {
-            // console.log("EP "+epId);
             ep = endPoints[epId];
+            // console.log("EP"+epId+"=", ep);
 
             if (!isset(ep.servClusters))
                 continue;
 
-            if (multipleCluster)
+            if (multipleCluster) // If multiple clusters adding index in name
                 clustIdx = " "+onOffIdx;
             if (isset(ep.servClusters["0006"]) && isset(ep.servClusters["0006"]['attributes'])) {
                 attributes = ep.servClusters["0006"]['attributes'];
@@ -964,6 +967,10 @@
             onOffIdx++;
         }
 
+        /* 0008/Level cluster on all EP */
+        levelIdx = 1; // Used if multiple 0008 clusters
+        multipleCluster = sameClustInSeveralEP("0008");
+        clustIdx = '';
         for (var epId in endPoints) {
             // console.log("EP "+epId);
             ep = endPoints[epId];
@@ -971,20 +978,22 @@
             if (!isset(ep.servClusters))
                 continue;
 
-            /* 0008/Level cluster */
+            if (multipleCluster) // If multiple clusters adding index in name
+                clustIdx = " "+levelIdx;
             if (isset(ep.servClusters["0008"]) && isset(ep.servClusters["0008"]['attributes'])) {
                 attributes = ep.servClusters["0008"]['attributes'];
                 // Note: If device is a light bulb, need to use 'act_setLevel-Light'
-                cmds["Set Level"] = newCmd("act_setLevel-Light", "ep="+epId);
-                cmds["Set Level"]["isVisible"] = 1;
+                cmds["Set Level"+clustIdx] = newCmd("act_setLevel-Light", "ep="+epId);
+                cmds["Set Level"+clustIdx]["isVisible"] = 1;
 
-                cmds["Level"] = newCmd("inf_zbAttr-0008-CurrentLevel", "ep="+epId);
-                cmds["Level"]["isVisible"] = 1;
-                cmds["Level"]["nextLine"] = "after";
-                cmds["Get Level"] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
+                cmds["Level"+clustIdx] = newCmd("inf_zbAttr-0008-CurrentLevel", "ep="+epId);
+                cmds["Level"+clustIdx]["isVisible"] = 1;
+                cmds["Level"+clustIdx]["nextLine"] = "after";
+                cmds["Get Level"+clustIdx] = newCmd("act_zbReadAttribute", "ep="+epId+"&clustId=0008&attrId=0000");
                 cmds["Bind "+epId+"-0008-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0008", "yes");
                 cmds["SetReporting "+epId+"-0008-0000"] = newCmd("act_zbConfigureReporting2", "ep="+epId+"&clustId=0008&attrType=10&attrId=0000", "yes");
             }
+            levelIdx++;
         }
 
         for (var epId in endPoints) {

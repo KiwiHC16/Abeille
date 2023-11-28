@@ -188,7 +188,7 @@
 
             // Profalux specific case: using 'location' to get identifier
             if (!isset($zbNewSig['modelId']) && isset($ep2['location']) && ($ep2['location'] != '')) {
-                logMessage('debug', "  Profalux case: Using 'location'=".$ep2['location']);
+                logMessage('debug', "  Profalux case: Using 'location' info '".$ep2['location']."'");
                 $zbNewSig['modelId'] = $ep2['location'];
                 $zbNewSig['manufId'] = '';
             }
@@ -206,58 +206,98 @@
         }
         msgToCli("step", "Zigbee signature", "ok");
 
+        $error = false;
+        $eqChanged = false;
+
         // Is model correct ?
         // ab::eqModel = array(
-        //     'sig' => model signature
-        //     'id' => model file name
-        //     'location' => model file source
-        //     'type' => model type
-        //     'forcedByUser' => true|false
+        //     'modelSig' => model signature
+        //     'modelName' => model file name
+        //     'modelSource' => model file source
+        //     'modelForced' => true|false
+        //     'manuf' => EQ manufacturer name
+        //     'model' => EQ model nam
+        //     'type' => EQ model type
         // )
-        $model = $eqLogic->getConfiguration('ab::eqModel', []);
-        logMessage('debug', '  ab::eqModel='.json_encode($model));
-        $modelChanged = false;
-        if (!isset($model['id']) || ($model['id'] == '')) {
+        $eqModel = $eqLogic->getConfiguration('ab::eqModel', []);
+        logMessage('debug', '  ab::eqModel='.json_encode($eqModel));
+        $eqModelChanged = false;
+        $modelContent = [];
+        if (!isset($eqModel['modelName']) || ($eqModel['modelName'] == '')) {
             msgToCli("step", "Model file name");
             $modelContent = AbeilleTools::findModel($zbSig['modelId'], $zbSig['manufId']);
             if ($modelContent !== false) {
-                $model['sig'] = $modelContent['modelSig'];
-                $model['id'] = $modelContent['jsonId'];
-                $model['location'] = $modelContent['location'];
-                $model['type'] = $modelContent['type'];
-                $model['forcedByUser'] = false;
-                $modelChanged = true;
+                $eqModel['modelSig'] = $modelContent['modelSig'];
+                $eqModel['modelName'] = $modelContent['modelName'];
+                $eqModel['modelSource'] = $modelContent['modelSource'];
+                $eqModel['modelForced'] = false;
+                $eqModelChanged = true;
             }
         }
-        if (!isset($model['sig']) || ($model['sig'] == '')) {
+        if (isset($eqModel['modelName']) && ($eqModel['modelName'] != ''))
+            msgToCli("step", "Model file name", "ok");
+        else
+            $error = true;
+        if (!isset($eqModel['modelSig']) || ($eqModel['modelSig'] == '')) {
             msgToCli("step", "Model signature");
             logMessage('debug', "  Missing model sig.");
+            $modelContent = AbeilleTools::findModel($zbSig['modelId'], $zbSig['manufId']);
             if ($modelContent !== false) {
-                $model['sig'] = $modelContent['modelSig'];
-                $model['id'] = $modelContent['jsonId'];
-                $model['location'] = $modelContent['location'];
-                $model['type'] = $modelContent['type'];
-                $model['forcedByUser'] = false;
-                $modelChanged = true;
-            // } else if (!isset($model['id'])) {
-            //     $model['id'] = 'defaultUnknown';
-            //     $model['location'] = 'Abeille';
-            //     $model['type'] = 'Unknown device';
-            //     $model['forcedByUser'] = false;
-            //     $modelChanged = true;
+                $eqModel['modelSig'] = $modelContent['modelSig'];
+                $eqModelChanged = true;
             }
         }
-        if ($modelChanged) {
-            $eqLogic->setConfiguration('ab::eqModel', $model);
-            $eqLogic->save();
-            logMessage('debug', "  ab::eqModel updated to ".json_encode($model));
-        }
-        if (isset($model['id']) && ($model['id'] != ''))
-            msgToCli("step", "Model file name", "ok");
-        if (isset($model['sig']) && ($model['sig'] != ''))
+        if (isset($eqModel['modelSig']) && ($eqModel['modelSig'] != ''))
             msgToCli("step", "Model signature", "ok");
+        else
+            $error = true;
 
-        logMessage('debug', '  Device OK');
+        // Equipment infos
+        if (!$error && (!isset($eqModel['manuf']) || ($eqModel['manuf'] == '') ||
+            !isset($eqModel['model']) || ($eqModel['model'] == '') ||
+            !isset($eqModel['type']) || ($eqModel['type'] == ''))) {
+            msgToCli("step", "Equipment infos");
+            $model = AbeilleTools::getDeviceModel($eqModel['modelSig'], $eqModel['modelName'], $eqModel['modelSource']);
+            logMessage('debug', "model=".json_encode($model));
+            $eqModel['manuf'] = isset($model['manufacturer']) ? $model['manufacturer']: '';
+            $eqModel['model'] = isset($model['model']) ? $model['model']: '';
+            $eqModel['type'] = isset($model['type']) ? $model['type']: '';
+            $eqModelChanged = true;
+        }
+        if (($eqModel['manuf'] != '') && ($eqModel['model'] != '') && ($eqModel['type'] != ''))
+            msgToCli("step", "Equipment infos", "ok");
+
+        // Checking icon
+        if (!$error) {
+            $icon = $eqLogic->getConfiguration('ab::icon', '');
+            if (($icon == '') || ($icon == "defaultUnknown")) {
+                logMessage('debug', "Invalid icon '${icon}'");
+                msgToCli("step", "Icon");
+                if (!isset($model))
+                    $model = AbeilleTools::getDeviceModel($eqModel['modelSig'], $eqModel['modelName'], $eqModel['modelSource']);
+                if (isset($model['configuration']['icon'])) {
+                    $eqLogic->setConfiguration('ab::icon', $model['configuration']['icon']);
+                    logMessage('debug', "  ab::icon updated to '".$model['configuration']['icon']."'");
+                    $eqChanged = true;
+                }
+            }
+            $icon = $eqLogic->getConfiguration('ab::icon', '');
+            if (($icon != '') && ($icon != "defaultUnknown"))
+                msgToCli("step", "Icon", "ok");
+        }
+
+        if ($eqModelChanged) {
+            $eqLogic->setConfiguration('ab::eqModel', $eqModel);
+            logMessage('debug', "  ab::eqModel updated to ".json_encode($eqModel));
+            $eqChanged = true;
+        }
+        if ($eqChanged)
+            $eqLogic->save();
+
+        if ($error)
+            logMessage('debug', '  Device status error');
+        else
+            logMessage('debug', '  Device OK');
     }
 
     /*--------------------------------------------------------------------------------------------------*/

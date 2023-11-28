@@ -60,13 +60,13 @@
                                 $eqParent = $eqParent->getName();
                             $eqName = $eqLogic->getName();
                             $eqConfModel = $eqLogic->getConfiguration('ab::eqModel', []);
-                            if (isset($eqConfModel['id']))
-                                $eqModel = $eqConfModel['id'];
+                            if (isset($eqConfModel['modelName']))
+                                $eqModel = $eqConfModel['modelName'];
                             else
                                 $eqModel = "";
                             $eqModelSrc = "Abeille";
-                            if (isset($eqConfModel['location']))
-                                $eqModelSrc = $eqConfModel['location'];
+                            if (isset($eqConfModel['modelSource']))
+                                $eqModelSrc = $eqConfModel['modelSource'];
                             if ($eqModelSrc == "")
                                 $eqModelSrc = "Abeille";
 

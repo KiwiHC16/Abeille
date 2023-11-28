@@ -1,8 +1,8 @@
 {
     "TS": {
         "manufacturer": "Profalux",
-        "model": "T\u00e9lecommande",
-        "type": "Profalux t\u00e9l\u00e9commande",
+        "model": "Remote",
+        "type": "Profalux remote",
         "alternateIds": {
             "TG1": []
         },
@@ -15,7 +15,7 @@
             "batteryType": "2x1.5V AAA"
         },
         "category": {
-            "automatism": "1"
+            "opening": "1"
         },
         "commands": []
     }

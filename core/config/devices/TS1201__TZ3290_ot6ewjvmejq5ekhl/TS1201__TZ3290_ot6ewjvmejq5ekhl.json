@@ -46,12 +46,6 @@
                 "execAtCreationDelay": "5",
                 "execAtCreation": "yes"
             },
-            "SetReporting 01-0001-00020": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0001&attrId=0020&attrType=20&minInterval=1800&maxInterval=3600",
-                "execAtCreationDelay": "6",
-                "execAtCreation": "yes"
-            },
             "Start learning": {
                 "use": "act_zbCmdC-Generic",
                 "params": "ep=01&clustId=E004&cmd=00&data=7B227374756479223A307D",

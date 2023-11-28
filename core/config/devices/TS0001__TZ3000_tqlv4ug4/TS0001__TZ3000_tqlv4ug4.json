@@ -55,7 +55,6 @@
             },
             "Identify": {
                 "use": "act_zbCmdC-Identify",
-                "isVisible": 1,
                 "nextLine": "after"
             },
             "On": {

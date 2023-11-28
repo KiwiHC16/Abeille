@@ -212,7 +212,7 @@
 
         /* Format attribute value.
            Return hex string formatted value according to its type.
-           WARNING: Returned hex string must still be reversed in >= 2B */
+           WARNING: Returned hex string must still be reversed if >= 2B */
         function formatAttribute($valIn, $type) {
             // cmdLog('debug', "formatAttribute(".$valIn.", ".$type.")");
             $valIn2 = $valIn;
@@ -226,6 +226,12 @@
 
             $valOut = '';
             switch ($type) {
+            case 'bool':
+            case '10':
+            case '18': // map8
+            case '20': // uint8
+                $valOut = sprintf("%02X", $valIn);
+                break;
             case 'uint16':
             case '21':
                 $valOut = sprintf("%04X", $valIn);
@@ -252,8 +258,8 @@
                 // cmdLog('debug', "len=".$len.", valOut=".$valOut);
                 break;
             default:
-                cmdLog('debug', "  formatAttribute(".$valIn.", type=".$type.") => WARNING: May be unsupported type");
-                $valOut = $valIn2;
+                cmdLog('error', "  formatAttribute(${valIn}, type=${type}) => Type non supporté");
+                $valOut = '12'; // Fake value
             }
 
             cmdLog('debug', "  formatAttribute(".$valIn.", type=".$type.") => valOut=".$valOut);
@@ -3832,25 +3838,36 @@
                         $maxInterval = isset($Command['maxInterval']) ? $Command['maxInterval'] : 0;
                         $changeVal   = isset($Command['changeVal']) ? $Command['changeVal'] : 1;
 
-                        if ((($maxInterval == 0) && ($minInterval == 0xffff)) ||
-                            ($maxInterval == 0xffff)) {
-                            // max=0000 & min=xffff => revert to default reporting
-                            // max=FFFF => terminate reporting configuration
+                        if ($maxInterval == 0xffff) {
+                            cmdLog('debug', "  configureReporting2: Disable reporting");
+                            // 'changeVal' must 0 for that case
+                            $changeVal = 0;
+                        } else if (($maxInterval == 0) && ($minInterval != 0xffff)) {
+                            cmdLog('debug', "  configureReporting2: No periodic reporting");
+                            if ($changeVal == 0) {
+                                cmdLog('error', "  configureReporting2: 'changeVal' ne peut etre 0");
+                                return;
+                            }
+                        } else if (($maxInterval == 0) && ($minInterval == 0xffff)) {
+                            cmdLog('debug', "  configureReporting2: Revert to default reporting");
+                            // 'changeVal' must 0 for that case
                             $changeVal = 0;
                         } else {
                             if ($maxInterval < $minInterval) {
                                 cmdLog('error', "  configureReporting2: maxInterval < minInterval");
                                 return;
                             }
-                            if ($changeVal == 0) {
-                                cmdLog('error', "  configureReporting2: 'changeVal' ne peut etre 0");
-                                return;
-                            }
                         }
 
                         $minInterval = $this->formatAttribute($minInterval, "uint16");
                         $maxInterval = $this->formatAttribute($maxInterval, "uint16");
-                        $changeVal = $this->formatAttribute($changeVal, $attrType);
+
+                        // 'changeVal' must be omitted if 'discrete' data types
+                        $dt = hexdec($attrType);
+                        if ((($dt >= 0x08) && ($dt <= 0x1f)) || (($dt >= 0x30) && ($dt <= 0x31)) || ($dt >= 0xe8)) // Discrete types
+                            $changeVal = '';
+                        else
+                            $changeVal = $this->formatAttribute($changeVal, $attrType);
 
                         cmdLog('debug', "  configureReporting2: AttrType='${attrType}', Min='${minInterval}', Max='${maxInterval}', ChangeVal='${changeVal}'");
                         $attrId = AbeilleTools::reverseHex($attrId);

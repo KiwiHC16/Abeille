@@ -13,6 +13,7 @@ ChangeLog
   - 'TRADFRIbulbE14WS470lm' => 'Ikea-BulbE14-Candle',
   - 'TRADFRIbulbE27WSopal1000lm' => 'Ikea-BulbE27',
   - 'TRADFRIbulbE27WW806lm' => 'Ikea-BulbE27',
+- Interne: Cmd: Mise-à-jour formatAttribute().
 
 231127-BETA-3
 -------------

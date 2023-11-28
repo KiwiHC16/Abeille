@@ -34,7 +34,7 @@
 
     // Add manufacturer code input
     function addManufCodeInput($id) {
-        echo '<input id="'.$id.'" style="width:80px; margin-left: 8px" title="{{Code fabricant: Format chaine heax 4 car (défaut=aucun)}}" placeholder="{{Code fabricant (ex: 115F)}}" />';
+        echo '<input id="'.$id.'" style="width:60px; margin-left: 8px" title="{{Code fabricant (Format hexa 4 car (ex 12AC))}}" placeholder="{{Code fabricant}}" />';
     }
 
     // Create drop down list of IEEE addresses, excluding zigate by default
@@ -56,7 +56,7 @@
     }
 
     function addAttrInput($id) {
-        echo '<input id="'.$id.'" style="width:120px; margin-left: 8px" placeholder="{{Attrib (ex: 0021)}}" title="Attribut, format hex 4 caracteres (ex: 0508)"/>';
+        echo '<input id="'.$id.'" style="width:60px; margin-left: 8px" placeholder="{{Attribut}}" title="Attribut (format hexa 4 car (ex: 050B))"/>';
     }
 
     // Add a group address input

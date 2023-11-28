@@ -230,6 +230,18 @@
             case '21':
                 $valOut = sprintf("%04X", $valIn);
                 break;
+            case 'uint24':
+            case '22':
+                $valOut = sprintf("%06X", $valIn);
+                break;
+            case 'uint32':
+            case '23':
+                $valOut = sprintf("%08X", $valIn);
+                break;
+            case 'uint48':
+            case '25':
+                $valOut = sprintf("%012X", $valIn);
+                break;
             case 'int16':
             case '29':
                 $valOut = $this->signed2Hex($valIn, 2, false);
@@ -3770,14 +3782,14 @@
                         }
                     }
 
-                    $required0 = ['attrType', 'minInterval', 'maxInterval', 'changeVal'];
-                    $required1 = ['timeout'];
-                    if ($dir == '00')
-                        $required = $required0;
-                    else
-                        $required = $required1;
-                    if (!$this->checkRequiredParams($required, $Command))
-                        return;
+                    // $required0 = ['minInterval', 'maxInterval', 'changeVal']; // + 'attrType' tested before
+                    // $required1 = ['timeout'];
+                    // if ($dir == '00')
+                    //     $required = $required0;
+                    // else
+                    //     $required = $required1;
+                    // if (!$this->checkRequiredParams($required, $Command))
+                    //     return;
 
                     $zgCmd = "0530";
 
@@ -3816,9 +3828,9 @@
 
                     /* Attribute Reporting Configuration Record */
                     if ($dir == '00') {
-                        $minInterval = $Command['minInterval'];
-                        $maxInterval = $Command['maxInterval'];
-                        $changeVal   = $Command['changeVal'];
+                        $minInterval = isset($Command['minInterval']) ? $Command['minInterval'] : 0;
+                        $maxInterval = isset($Command['maxInterval']) ? $Command['maxInterval'] : 0;
+                        $changeVal   = isset($Command['changeVal']) ? $Command['changeVal'] : 1;
 
                         if ((($maxInterval == 0) && ($minInterval == 0xffff)) ||
                             ($maxInterval == 0xffff)) {
@@ -3827,11 +3839,11 @@
                             $changeVal = 0;
                         } else {
                             if ($maxInterval < $minInterval) {
-                                cmdLog('error', "  configureReporting2 ERROR: maxInterval < minInterval");
+                                cmdLog('error', "  configureReporting2: maxInterval < minInterval");
                                 return;
                             }
                             if ($changeVal == 0) {
-                                cmdLog('error', "  configureReporting2 ERROR: 'changeVal' cannot be 0");
+                                cmdLog('error', "  configureReporting2: 'changeVal' ne peut etre 0");
                                 return;
                             }
                         }

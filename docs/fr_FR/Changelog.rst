@@ -14,6 +14,7 @@ ChangeLog
   - 'TRADFRIbulbE27WSopal1000lm' => 'Ikea-BulbE27',
   - 'TRADFRIbulbE27WW806lm' => 'Ikea-BulbE27',
 - Interne: Cmd: Mise-à-jour formatAttribute().
+- Interne: Cmd: Correction formatAtrtibute() pour type 0x30/enum8.
 
 231127-BETA-3
 -------------

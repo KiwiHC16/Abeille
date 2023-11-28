@@ -230,10 +230,12 @@
             case '10':
             case '18': // map8
             case '20': // uint8
+            case '30': // enum8
                 $valOut = sprintf("%02X", $valIn);
                 break;
             case 'uint16':
             case '21':
+            case '31': // enum16
                 $valOut = sprintf("%04X", $valIn);
                 break;
             case 'uint24':

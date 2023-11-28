@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231128-BETA-1
+-------------
+
 - Interne: Cmd: 'configureReporting2' completement revu.
 - Ikea Tradfri E27 LED2102G3: Correction image (2626).
 - Icones: Qq images renommées

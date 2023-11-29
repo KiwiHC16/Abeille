@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231128-BETA-1
+-------------
+
 - Interne: Cmd: 'configureReporting2' completement revu.
 - Ikea Tradfri E27 LED2102G3: Correction image (2626).
 - Icones: Qq images renommées
@@ -14,6 +17,8 @@ ChangeLog
   - 'TRADFRIbulbE27WSopal1000lm' => 'Ikea-BulbE27',
   - 'TRADFRIbulbE27WW806lm' => 'Ikea-BulbE27',
 - Interne: Cmd: Mise-à-jour formatAttribute().
+- Interne: Cmd: Correction formatAtrtibute() pour type 0x30/enum8.
+- Page 'compatibilité' revue.
 
 231127-BETA-3
 -------------

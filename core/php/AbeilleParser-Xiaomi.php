@@ -34,7 +34,7 @@
     //     }
     // }
 
-    function xiaomiDecodeFunction($valueHex, $value, $m, $map, &$attrReportN = null, &$toMon = null) {
+    function xiaomiDecodeFunction($addr, $valueHex, $value, $m, $map, &$attrReportN = null) {
         $value2 = $value;
         $mapTxt = ' ==> ';
 
@@ -76,10 +76,10 @@
         $mapTxt .= '='.$value2;
 
         $m .= ' => '.$value.$mapTxt;
-        parserLog('debug', $m);
+        parserLog2('debug', $addr, $m);
 
-        if ($toMon !== null)
-            $toMon[] = $m;
+        // if ($toMon !== null)
+        //     $toMon[] = $m;
         if ($attrReportN !== null)
             $attrReportN[] = array( "name" => $map['info'], "value" => $value2 );
     }
@@ -88,11 +88,11 @@
     // Based on https://github.com/dresden-elektronik/deconz-rest-plugin/wiki/Xiaomi-manufacturer-specific-clusters%2C-attributes-and-attribute-reporting
     // Could be cluster 0000, attr FF01, type 42 (character string)
     // Could be cluster FCC0, attr 00F7, type 41 (octet string)
-    function xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl, &$attrReportN = null, &$toMon = null) {
+    function xiaomiDecodeTags($net, $addr, $clustId, $attrId, $pl, &$attrReportN = null) {
         $eq = &getDevice($net, $addr); // By ref
         // parserLog('debug', 'eq='.json_encode($eq));
         if (!isset($eq['xiaomi']) || !isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) {
-            parserLog('debug', "    No defined Xiaomi mapping");
+            parserLog2('debug', $addr, "    No defined Xiaomi mapping");
             // return;
             $mapping = [];
         } else
@@ -108,7 +108,7 @@
             $type = zbGetDataType($typeId);
             $size = $type['size'];
             if ($size == 0) {
-                parserLog('debug', '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].' SIZE 0');
+                parserLog2('debug', $addr, '    Tag='.$tagId.', Type='.$typeId.'/'.$type['short'].' SIZE 0');
                 break;
             }
             $valueHex = substr($pl, $i + 4, $size * 2);
@@ -121,16 +121,16 @@
 
             $idx = strtoupper($tagId.'-'.$typeId);
             if (isset($mapping[$idx]))
-                xiaomiDecodeFunction($valueHex, $value, $m, $mapping[$idx], $attrReportN, $toMon);
+                xiaomiDecodeFunction($addr, $valueHex, $value, $m, $mapping[$idx], $attrReportN);
             else {
                 $m .= ' => '.$value.' (ignored)';
-                parserLog('debug', $m);
-                $toMon[] = $m;
+                parserLog2('debug', $addr, $m);
+                // $toMon[] = $m;
             }
         }
     }
 
-    function xiaomiReportAttributes($net, $addr, $clustId, $pl, &$attrReportN = null, &$toMon = null) {
+    function xiaomiReportAttributes($net, $addr, $clustId, $pl, &$attrReportN = null) {
         $eq = &getDevice($net, $addr); // By ref
         $l = strlen($pl);
         for ( ; $l > 0; ) {
@@ -151,7 +151,7 @@
                 $attrSize = $type['size'];
                 if ($attrSize == 0) {
                     $attrSize = strlen($pl) / 2;
-                    parserLog('debug', "  WARNING: attrSize is unknown for type ".$attrType);
+                    parserLog2('debug', $addr, "  WARNING: attrSize is unknown for type ".$attrType);
                 }
             }
             $attrData = substr($pl, 0, $attrSize * 2); // Raw attribute data
@@ -208,8 +208,8 @@
                     $m = '  AttrId='.$attrId
                         .', AttrType='.$attrType
                         .', ValueHex='.$valueHex.' => '.$value.' ==> '.$fromDev['info'].'='.$value;
-                    parserLog('debug', $m);
-                    $toMon[] = $m;
+                    parserLog2('debug', $addr, $m);
+                    // $toMon[] = $m;
 
                     $attrReportN[] = array(
                         'name' => $fromDev['info'],
@@ -219,15 +219,15 @@
                     // 'CLUSTER-ATTRIB' + 'TAG-TYPE' syntax
                     $m = '  AttrId='.$attrId
                         .', AttrType='.$attrType;
-                    parserLog('debug', $m);
-                    $toMon[] = $m;
+                    parserLog2('debug', $addr, $m);
+                    // $toMon[] = $m;
 
-                    xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
+                    xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN);
                 } else { // CLUSTER-ATTRIB for type 4C/struct
                     $m = '  AttrId='.$attrId
                         .', AttrType='.$attrType;
-                    parserLog('debug', $m);
-                    $toMon[] = $m;
+                    parserLog2('debug', $addr, $m);
+                    // $toMon[] = $m;
 
                     // Note: 2B count already skipped
                     // 4C/struct format reminder
@@ -237,7 +237,7 @@
                     //      ...
                     $subIdx = 0;
                     while (strlen($attrData) > 0) {
-                        parserLog('debug', '  attrData='.$attrData);
+                        parserLog2('debug', $addr, '  attrData='.$attrData);
 
                         $subType = substr($attrData, 0, 2);
                         $subData = substr($attrData, 2); // Skipping type (1B)
@@ -246,11 +246,11 @@
                         $idx = sprintf("%02X", $subIdx);
                         $idx .= '-'.$subType;
                         if (isset($fromDev[$idx]))
-                            xiaomiDecodeFunction($valueHex, $value, $m, $fromDev[$idx], $attrReportN, $toMon);
+                            xiaomiDecodeFunction($valueHex, $value, $m, $fromDev[$idx], $attrReportN);
                         else {
                             $m .= ' => '.$value.' (ignored)';
-                            parserLog('debug', $m);
-                            $toMon[] = $m;
+                            parserLog2('debug', $addr, $m);
+                            // $toMon[] = $m;
                         }
 
                         $attrData = substr($attrData, 2 + ($subSize * 2)); // Skipping sub-type + sub-data
@@ -261,10 +261,10 @@
             }
 
             $m = "  UNHANDLED ".$clustId."-".$attrId."-".$attrType.": ".$attrData;
-            parserLog('debug', $m);
-            $toMon[] = $m;
+            parserLog2('debug', $addr, $m);
+            // $toMon[] = $m;
             if (($attrType == "41") || ($attrType == "42")) // Even if unhandled, displaying debug infos
-                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN, $toMon);
+                xiaomiDecodeTags($net, $addr, $clustId, $attrId, $attrData, $attrReportN);
         }
     }
 ?>

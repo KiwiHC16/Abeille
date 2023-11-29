@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Parser: decode8002, monitoring revu => parserLog2().
+
 231128-BETA-1
 -------------
 

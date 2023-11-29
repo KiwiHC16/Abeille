@@ -393,6 +393,7 @@
 
     /* Any device to monitor ?
        It is indicated by 'ab::monitorId' key in Jeedom 'config' table. */
+    $GLOBALS['toMon'] = [];
     // $monId = config::byKey('ab::monitorId', 'Abeille', false);
     $monId = $config['ab::monitorId'];
     if ($monId !== false) {

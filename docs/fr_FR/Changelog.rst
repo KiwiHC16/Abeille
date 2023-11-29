@@ -9,6 +9,7 @@ ChangeLog
   - spiritTemperature
   - spiritUnknown1
   - spiritUnknown2
+- Interne: Cmd: execute() revue préliminaire.
 
 231128-BETA-1
 -------------

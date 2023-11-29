@@ -2,6 +2,13 @@ ChangeLog
 =========
 
 - Interne: Parser: decode8002, monitoring revu => parserLog2().
+- Danfoss eTRV010x: Modèle en cours de changements (2662).
+- Suppression de modèles de commandes obsoletes:
+
+  - spiritBatterie-Pourcent
+  - spiritTemperature
+  - spiritUnknown1
+  - spiritUnknown2
 
 231128-BETA-1
 -------------

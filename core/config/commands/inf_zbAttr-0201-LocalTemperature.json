@@ -1,10 +1,11 @@
 {
     "inf_zbAttr-0201-LocalTemperature": {
         "comment": "0201/Thermostat cluster, attrib 0000/LocalTemperature",
-        "name": "LocalTemperature",
+        "type": "info",
         "subType": "numeric",
         "configuration": [],
-        "type": "info",
-        "logicalId": "0201-#EP#-0000"
+        "logicalId": "0201-#EP#-0000",
+        "unit": "\u00b0C",
+        "genericType": "TEMPERATURE"
     }
 }

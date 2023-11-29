@@ -1,0 +1,11 @@
+{
+    "inf_zbAttr-0201-OccupiedHeatingSetpoint": {
+        "comment": "0201/Thermostat cluster, attrib 0012/OccupiedHeatingSetpoint",
+        "type": "info",
+        "subType": "numeric",
+        "configuration": [],
+        "logicalId": "0201-#EP#-0012",
+        "unit": "\u00b0C",
+        "genericType": "TEMPERATURE"
+    }
+}

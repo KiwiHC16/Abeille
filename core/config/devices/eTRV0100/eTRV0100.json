@@ -2,11 +2,14 @@
     "eTRV0100": {
         "manufacturer": "Danfoss",
         "model": "014G2461",
-        "type": "Dansfoss Ally Radiator Thermostat 014G2461",
+        "type": "Dansfoss Ally radiator thermostat",
         "alternateIds": {
             "eTRV0101": [],
             "eTRV0103": [],
-            "eT093WRO": []
+            "TRV001": [],
+            "TRV003": [],
+            "eT093WRO": [],
+            "eT093WRG": []
         },
         "genericType": "Thermostat",
         "comment": "Dansfoss Ally Radiator Thermostat 014G2461 ( https://assets.danfoss.com/documents/DOC353849556547/DOC353849556547.pdf ) ",
@@ -35,21 +38,45 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0001&attrId=0020"
             },
-            "Consigne Set": {
+            "+": {
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=0201&attrId=0012&attrType=29&attrVal=#value#",
+                "valueOffset": "(#logicidsetpoint#+0.5)*100",
+                "comment": "Writing (setpoint value + 0.5) * 100",
+                "logicalId": "raiseSetpoint",
+                "isVisible": 1
+            },
+            "-": {
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=0201&attrId=0012&attrType=29&attrVal=#value#",
+                "valueOffset": "(#logicidsetpoint#-0.5)*100",
+                "comment": "Writing (setpoint value - 0.5) * 100",
+                "logicalId": "lowerSetpoint",
+                "isVisible": 1
+            },
+            "Set temp (OLD)": {
                 "use": "danfossTemperatureConsigneSet"
             },
-            "Consigne Get": {
+            "Get setpoint": {
                 "use": "danfossTemperatureConsigneGet"
             },
-            "Consigne": {
+            "Setpoint": {
+                "use": "inf_zbAttr-0201-OccupiedHeatingSetpoint",
+                "logicalId": "setpoint",
+                "isVisible": 1
+            },
+            "Setpoint OLD": {
                 "use": "danfossTemperatureConsigneValue",
                 "nextLine": "after"
             },
-            "Temp": {
-                "use": "spiritTemperature"
+            "Get temp": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0201&attrId=0000"
             },
-            "getTemperature": {
-                "use": "spiritTemperatureGet"
+            "Temp": {
+                "use": "inf_zbAttr-0201-LocalTemperature",
+                "isVisible": 1,
+                "nextLine": "after"
             },
             "Mode": {
                 "use": "danfossSystemeModeValue"
@@ -88,14 +115,14 @@
                 "execAtCreationDelay": 9
             },
             "SetReporting-0001-0021": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },
             "SetReporting-0001-0020": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0020&minInterval=0708&maxInterval=0E10&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0020&attrType=20&minInterval=1800&maxInterval=3600",
                 "execAtCreationDelay": 12,
                 "execAtCreation": "Yes"
             },

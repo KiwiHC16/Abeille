@@ -2,7 +2,7 @@
     "WindowsCoveringGoToLevel": {
         "isVisible": 1,
         "logicalId": "#EP#-WindowsCoveringGoToLevel",
-        "subType": "other",
+        "subType": "slider",
         "template": "",
         "configuration": {
             "topic": "WindowsCoveringLevel",

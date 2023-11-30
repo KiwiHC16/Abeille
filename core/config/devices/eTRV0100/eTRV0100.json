@@ -6,10 +6,26 @@
         "alternateIds": {
             "eTRV0101": [],
             "eTRV0103": [],
-            "TRV001": [],
-            "TRV003": [],
-            "eT093WRO": [],
-            "eT093WRG": []
+            "TRV001": {
+                "manufacturer": "Hive",
+                "model": "UK7004240",
+                "type": "Radiator valve"
+            },
+            "TRV003": {
+                "manufacturer": "Hive",
+                "model": "UK7004240",
+                "type": "Radiator valve"
+            },
+            "eT093WRO": {
+                "manufacturer": "Popp",
+                "model": "701721",
+                "type": "Smart thermostat"
+            },
+            "eT093WRG": {
+                "manufacturer": "Popp",
+                "model": "701721",
+                "type": "Smart thermostat"
+            }
         },
         "genericType": "Thermostat",
         "comment": "Dansfoss Ally Radiator Thermostat 014G2461 ( https://assets.danfoss.com/documents/DOC353849556547/DOC353849556547.pdf ) ",
@@ -37,6 +53,10 @@
             "Get Battery-Volt": {
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0001&attrId=0020"
+            },
+            "SetTest": {
+                "use": "act_zbCmdC-Generic",
+                "params": "ep=01&clustId=0201&cmd=40&manufCode=1246&data=0107D0"
             },
             "+": {
                 "use": "act_zbWriteAttribute",

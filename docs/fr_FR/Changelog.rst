@@ -21,6 +21,7 @@ ChangeLog
   - Ajout support optionnel 'mult' & 'div' pour 'setValue'.
   - 'setValueMult' & 'setValueDiv' sont obsoletes => 'setValue' + mult/div
   - Modeles obsoletes: act_tuyaEF00-Set-Setpoint, act_tuyaEF00-Set-Setpoint-Mult, act_tuyaEF00-SetThermostatMode
+- Page EQ/avancé: Ajout support 'manufCode' sur commande générique.
 
 231128-BETA-1
 -------------

@@ -399,7 +399,8 @@
 </div>
 
 <br>
-<!-- Generic -->
+
+<!-- Generic command -->
 <div class="form-group">
     <label class="col-sm-3 control-label" title="{{Commande générique}}">{{Commande générique spécifique cluster}}</label>
     <div class="col-sm-5">
@@ -409,6 +410,7 @@
             addClusterButton("idClustId-GC");
             addInput("idCmd-GC", "{{Commande (1B hexa)}}", "{{Commande}}");
             addInput("idData-GC", "{{Données}}", "{{Données}}");
+            addManufCodeInput("idManufCode-GC");
         ?>
     </div>
 </div>

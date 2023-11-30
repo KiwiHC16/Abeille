@@ -108,9 +108,11 @@ function refreshEqInfos() {
                 for (const [epId, ep] of Object.entries(eq.zigbee.endPoints)) {
                     // console.log("LA epId=", epId + ", ep=", ep);
                     if (typeof ep.dateCode != "undefined")
-                        document.getElementById("idDateCode").value = ep.dateCode;
+                        document.getElementById("idDateCode").value =
+                            ep.dateCode;
                     if (typeof ep.swBuildId != "undefined")
-                        document.getElementById("idSwBuildId").value = ep.swBuildId;
+                        document.getElementById("idSwBuildId").value =
+                            ep.swBuildId;
                 }
             }
 
@@ -907,7 +909,7 @@ $("#idRepairBtn").on("click", function () {
 
 /* Repair: Open return channel from repair process */
 function openRepairReturnChannel() {
-    console.log("openRepairReturnChannel(), curEqId="+curEqId);
+    console.log("openRepairReturnChannel(), curEqId=" + curEqId);
 
     var url = "plugins/Abeille/core/php/AbeilleRepair.php";
     var xhr = new XMLHttpRequest();
@@ -989,9 +991,9 @@ function repairReturnChannel() {
     }
     if (!missingInfo) {
         // Rename 'cancel' to 'close'
-        document.getElementById("idRepairCloseBtn").innerHTML="{{Fermer}}";
+        document.getElementById("idRepairCloseBtn").innerHTML = "{{Fermer}}";
         // Hide 'retry' button
-        document.getElementById("idRepairRetryBtn").style.display="none";
+        document.getElementById("idRepairRetryBtn").style.display = "none";
     }
     // if (missingInfo) openRepairReturnChannel();
 }
@@ -1996,6 +1998,7 @@ function interrogate(request) {
         clustId = document.getElementById("idClustId-GC").value;
         cmd = document.getElementById("idCmd-GC").value;
         data = document.getElementById("idData-GC").value;
+        manufCode = document.getElementById("idManufCode-GC").value;
 
         payload =
             "ep=" +
@@ -2006,6 +2009,7 @@ function interrogate(request) {
             cmd +
             "_data=" +
             data;
+        if (manufCode != "") payload += "_manufCode=" + manufCode;
     } else {
         console.log("Unknown request " + request);
         return;

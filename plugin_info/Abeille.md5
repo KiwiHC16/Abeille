@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="231130-BETA-1"
+# VERSION="231130-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1130,7 +1130,7 @@ c430eb12a0a7363025314cc70a0b33af *core/config/devices/defaultUnknown/defaultUnkn
 c9412bc1d3af8cd2cdfb0ad907ca82c7 *core/config/devices/diy-mains-fault/diy-mains-fault.json
 e9b83520e9096c8fe7ee898f7ea043c6 *core/config/devices/diy-routeur/diy-routeur.json
 31fd63f2793515cff7188024cc26058b *core/config/devices/eTRV0100/discovery-eTRV0103_Danfoss.json
-ee9379ea8fabbde8705dac9d4b680080 *core/config/devices/eTRV0100/eTRV0100.json
+33ef857dc9371feddbe3b7ee25de6935 *core/config/devices/eTRV0100/eTRV0100.json
 e8fece09da325a689a9633d127d09e97 *core/config/devices/fuel-tank-level/fuel-tank-level.json
 561ef1acb0f17bd132be833716901594 *core/config/devices/light.aqcn02/light.aqcn02.json
 3802d06d89c8c656e4f5f0747467e2f3 *core/config/devices/magnet.acn001/discovery.json
@@ -1269,7 +1269,7 @@ b853ae2c1cf0e48b938ce1abd5698952 *core/scripts/resetPiZigate.sh
 40eb91d49c90210682a2a795da38e675 *core/scripts/updateFirmware.sh
 8152b9a95c1e174c3246ea4176c6325a *core/scripts/updateFirmwareDIN.sh
 f43f8f808ea001dff6f5f3a8677c09c8 *core/scripts/waitPortFree.sh
-ab2db92c2882de39f433722178b19cbd *desktop/js/Abeille.js
+89f3469ab43bf5e3bd8ecef03c2d7d8e *desktop/js/Abeille.js
 2d85a512807ffdc29f5fb6b1ff54b938 *desktop/js/AbeilleNetwork.js
 d0d1ca56ff2c7b9b33e3f9e1b392e3ba *desktop/modal/Abeille-OTA.modal.php
 6b1220c68b553d5f5e9fb78041a70833 *desktop/modal/AbeilleCompatibility.modal.php
@@ -1288,7 +1288,7 @@ d473a259cb9defac634d93cd184438d6 *desktop/modal/setBeesTimeout.abeille.php
 562de0800b09c34bb2842dc06c747b2a *desktop/php/Abeille-Bees.php
 51680e87b6eda6554ccdcdaaa2a74c58 *desktop/php/Abeille-Eq-Advanced-Common.php
 d8685b3d4ea94fe1c1754c8b6efd68c8 *desktop/php/Abeille-Eq-Advanced-Device.php
-8963fc08b0dcddd7dd95d4793f54693a *desktop/php/Abeille-Eq-Advanced-Interrogations.php
+014206795f7e06986365e5ba48b6ac90 *desktop/php/Abeille-Eq-Advanced-Interrogations.php
 c0bf0b8095847231bba3b0affdaa30c9 *desktop/php/Abeille-Eq-Advanced-Specific.php
 68f7bd27b3ba69085837b72e709e1eba *desktop/php/Abeille-Eq-Advanced-Zigate.php
 9145a587ce8467f194f08ecbfe58c526 *desktop/php/Abeille-Eq-Advanced.php
@@ -1309,7 +1309,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 ce32db08df86d3ff94f08d80d463b7f2 *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-02cbdef18024cbc3d1c24c47e812b887 *docs/fr_FR/Changelog.rst
+43b09e4740466cdc01bfa380af0aff3f *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1644,10 +1644,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-5edecdc4d460c75bf972527f7b391575 *plugin_info/Abeille.version
+5fd7e18b889e4c6468b2aa285efa6896 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 c16154784139bfd2264e4a6409fdc658 *plugin_info/configuration.php
-54000392280674916763dce350e95ce4 *plugin_info/info.json
+6f1516dd7f2f382a4b451a74c760bc0a *plugin_info/info.json
 7f65609a23b7898fdf496297ac9f45be *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

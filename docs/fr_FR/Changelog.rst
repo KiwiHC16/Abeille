@@ -10,6 +10,14 @@ ChangeLog
   - spiritUnknown1
   - spiritUnknown2
 - Interne: Cmd: execute() revue préliminaire.
+- Modele 'TS0601__TZE200_e3oitdyu' (Moes MS105B): Ajout de signatures alternatives (2473).
+- Modele 'TS0601__TZE200_e3oitdyu' (Moes MS105B): Mise-à-jour du modèle pour canal 2 (2473).
+- Support Tuya, commandes action:
+
+  - Ajout 'setEnum'
+  - Ajout support optionnel 'mult' & 'div' pour 'setValue'.
+  - 'setValueMult' & 'setValueDiv' sont obsoletes => 'setValue' + mult/div
+  - Modeles obsoletes: act_tuyaEF00-Set-Setpoint, act_tuyaEF00-Set-Setpoint-Mult, act_tuyaEF00-SetThermostatMode
 
 231128-BETA-1
 -------------

@@ -2,6 +2,8 @@
     "TS0601__TZE200_hue3yfsn": {
         "manufacturer": "Tuya",
         "model": "TV02",
+        "type": "Tuya TV02",
+        "genericType": "Thermostat",
         "alternateIds": {
             "TS0601__TZE200_e9ba97vf": [],
             "TS0601__TZE200_husqqvux": [],
@@ -18,7 +20,6 @@
         "category": {
             "heating": "1"
         },
-        "type": "Tuya TV02",
         "commands": {
             "Battery-Percent": {
                 "use": "inf_zbAttr-0001-BatteryPercent"
@@ -34,8 +35,11 @@
                 "isVisible": 1
             },
             "Set Setpoint": {
-                "use": "act_tuyaEF00-Set-Setpoint-Mult",
+                "use": "act_tuyaEF00-SetValue-Slider",
                 "params": "dpId=10&mult=10",
+                "minValue": 5,
+                "maxValue": 30,
+                "genericType": "THERMOSTAT_SET_SETPOINT",
                 "isVisible": 1
             },
             "Setpoint": {

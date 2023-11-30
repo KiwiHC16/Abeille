@@ -2,7 +2,7 @@
     "TS0601__TZE200_p3dbf6qs": {
         "manufacturer": "Tuya",
         "model": "TRV06",
-        "type": "TRV06 Thermostatic head",
+        "type": "Tuya thermostatic head",
         "genericType": "Thermostat",
         "timeout": "60",
         "category": {
@@ -33,13 +33,16 @@
                 "nextLine": "after"
             },
 
-            "Setpoint": {
-                "use": "inf_Thermostat-Setpoint",
+            "Set Setpoint": {
+                "use": "act_tuyaEF00-SetValue-Slider",
+                "params": "dpId=04&mult=10",
+                "minValue": 5,
+                "maxValue": 30,
+                "genericType": "THERMOSTAT_SET_SETPOINT",
                 "isVisible": 1
             },
-            "Set Setpoint": {
-                "use": "act_tuyaEF00-Set-Setpoint-Mult",
-                "params": "dpId=04&mult=10",
+            "Setpoint": {
+                "use": "inf_Thermostat-Setpoint",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -51,21 +54,21 @@
                 "nextLine": "after" 
             },
             "Auto": {
-                "use": "act_tuyaEF00-SetThermostatMode",
+                "use": "act_tuyaEF00-SetEnum",
                 "params": "dpId=02&data=00",
                 "genericType": "THERMOSTAT_SET_MODE",
                 "logicalId": "01-mode-auto",
                 "isVisible": 1
             },
             "Manuel": {
-                "use": "act_tuyaEF00-SetThermostatMode",
+                "use": "act_tuyaEF00-SetEnum",
                 "params": "dpId=02&data=01",
                 "genericType": "THERMOSTAT_SET_MODE",
                 "logicalId": "01-mode-man",
                 "isVisible": 1
             },
             "OFF": {
-                "use": "act_tuyaEF00-SetThermostatMode",
+                "use": "act_tuyaEF00-SetEnum",
                 "params": "dpId=02&data=02",
                 "genericType": "THERMOSTAT_SET_MODE",
                 "logicalId": "01-mode-off",

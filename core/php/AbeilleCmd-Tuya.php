@@ -31,6 +31,40 @@
         $cmd = $abCmd['cmd'];
         $data = $abCmd['data'];
         switch ($cmd) {
+
+        //
+        // Generic commands
+        //
+
+        case "setBool":
+        case "setEnum":
+            $required = ['dpId', 'data'];
+            if (!tuyaCheckRequiredParams($required, $abCmd))
+                return false;
+
+            $dpId = $abCmd['dpId'];
+            if ($cmd == 'setBool')
+                $dpType = "01"; // 1B, Bool
+            else
+                $dpType = "04"; // 1B, Enum
+            $dpData = sprintf("%02X", $abCmd['data']);
+            break;
+        case "setValue":
+            $required = ['dpId', 'data']; // mult & div are optional
+            if (!tuyaCheckRequiredParams($required, $abCmd))
+                return false;
+
+            $dpId = $abCmd['dpId'];
+            $mult = isset($abCmd['mult']) ? $abCmd['mult'] : 1;
+            $div = isset($abCmd['div']) ? $abCmd['div'] : 1;
+            $dpType = "02"; // 4B, Value
+            $dpData = sprintf("%08X", $abCmd['data'] * $mult / $div);
+            break;
+
+        //
+        // The following are OBSOLETE commands
+        //
+
         case "setSetpoint": // Validated on TV02 thermostat
             $dpId = (isset($abCmd['dpId']) ? $abCmd['dpId']: "10");
             $dpType = "02"; // 4B value
@@ -49,56 +83,38 @@
         // for Saswell irrigation valve
         case "setOpenClose":
             $dpId = (isset($abCmd['dpId']) ? $abCmd['dpId']: "01");
-            $dpType = "01";
+            $dpType = "01"; // 1B, Bool
             $dpData = sprintf("%02X", $data);
             break;
-
-        // Generic commands
-
-        // Send boolean data
-        case "setBool":
-            $required = ['dpId', 'data'];
-            if (!tuyaCheckRequiredParams($required, $abCmd))
-                return false;
-            $dpId = $abCmd['dpId'];
-            $dpType = "01"; // Bool
-            $dpData = sprintf("%02X", $abCmd['data']);
-            break;
-        case "setValue":
-            $required = ['dpId', 'data'];
-            if (!tuyaCheckRequiredParams($required, $abCmd))
-                return false;
-            $dpId = $abCmd['dpId'];
-            $dpType = "02"; // Value
-            $dpData = sprintf("%08X", $abCmd['data']);
-            break;
-        case "setValueMult":
+        case "setValueMult": // OBSOLETE: Use setValue with 'mult' set
             $required = ['dpId', 'mult', 'data'];
             if (!tuyaCheckRequiredParams($required, $abCmd))
                 return false;
+
             $dpId = $abCmd['dpId'];
             $mult = $abCmd['mult'];
             $dpType = "02"; // Value
             $dpData = sprintf("%08X", $abCmd['data'] * $mult);
             break;
-        case "setValueDiv":
+        case "setValueDiv": // OBSOLETE: Use setValue with 'div' set
             $required = ['dpId', 'div', 'data'];
             if (!tuyaCheckRequiredParams($required, $abCmd))
                 return false;
+
             $dpId = $abCmd['dpId'];
             $div = $abCmd['div'];
             $dpType = "02"; // Value
             $dpData = sprintf("%08X", $abCmd['data'] / $div);
             break;
         // Send percent data in 0-1000 range with input in 0-100 range
-        case "setPercent1000":
-            if (!isset($abCmd['dpId'])) {
-                cmdLog('error', "    Undefined dpId for '".$cmd."'");
+        case "setPercent1000": // OBSOLETE: Use setValue with 'mult'=10
+            $required = ['dpId', 'data'];
+            if (!tuyaCheckRequiredParams($required, $abCmd))
                 return false;
-            }
+
             $dpId = $abCmd['dpId'];
             $dpType = "02"; // Value
-            $dpData = sprintf("%08X", $data * 10);
+            $dpData = sprintf("%08X", $abCmd['data'] * 10);
             break;
 
         default:

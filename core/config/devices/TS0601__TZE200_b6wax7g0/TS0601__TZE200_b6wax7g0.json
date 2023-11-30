@@ -24,9 +24,12 @@
                 "nextLine": "after"
             },
             "Set Setpoint": {
-                "use": "act_tuyaEF00-Set-Setpoint",
+                "use": "act_tuyaEF00-SetValue-Slider",
                 "params": "dpId=02",
+                "minValue": 5,
+                "maxValue": 30,
                 "logicalId": "#EP#-SetSetpoint",
+                "genericType": "THERMOSTAT_SET_SETPOINT",
                 "isVisible": 1
             },
             "Setpoint": {
@@ -41,8 +44,11 @@
                 "isVisible": 1
             },
             "Set ECO temp": {
-                "use": "act_tuyaEF00-Set-Setpoint",
+                "use": "act_tuyaEF00-SetValue-Slider",
                 "params": "dpId=6B",
+                "minValue": 5,
+                "maxValue": 30,
+                "genericType": "THERMOSTAT_SET_SETPOINT",
                 "logicalId": "#EP#-SetEcoTemp",
                 "isVisible": 1
             },

@@ -3,6 +3,11 @@
         "manufacturer": "Moes",
         "model": "MS-105BZ",
         "type": "Moes dual dimmer module",
+        "alternateIds": {
+            "TS0601__TZE200_fjjbhx9d": {},
+            "TS0601__TZE200_gwkapsoq": {},
+            "TS0601__TZE204_zenj4lxv": {}
+        },
         "timeout": "60",
         "category": {
             "automatism": "1"
@@ -12,40 +17,96 @@
             "mainEP": "01"
         },
         "commands": {
-            "On": {
+            "On 1": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=01&data=01",
+                "isVisible": 1
+            },
+            "On (OLD)": {
                 "use": "cmdG-TuyaEF00-Set-OnOff",
                 "params": "onOff=01&dpId=01",
                 "isVisible": 1
             },
-            "Off": {
+            "Off 1": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=01&data=00",
+                "isVisible": 1
+            },
+            "Off (OLD)": {
                 "use": "cmdG-TuyaEF00-Set-OnOff",
                 "params": "onOff=00&dpId=01",
                 "isVisible": 1
             },
-            "Status": {
+            "Status 1": {
                 "use": "inf_zbAttr-0006-OnOff",
+                "logicalId": "status1",
                 "nextLine": "after",
                 "isVisible": 1
             },
-            "Set Level": {
+            "On 2": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=07&data=01",
+                "isVisible": 1
+            },
+            "Off 2": {
+                "use": "act_tuyaEF00-SetBool",
+                "params": "dpId=07&data=00",
+                "isVisible": 1
+            },
+            "Status 2": {
+                "use": "inf_zbAttr-0006-OnOff",
+                "logicalId": "status2",
+                "nextLine": "after",
+                "isVisible": 1
+            },
+            "Set Level 1": {
+                "use": "act_tuyaEF00-SetValue-Slider",
+                "params": "dpId=02&mult=10",
+                "comment": "x per 100 to x per 1000 conversion",
+                "isVisible": 1
+            },
+            "Set Level 1 (OLD)": {
                 "use": "cmdG-TuyaEF00-Set-Level",
                 "params": "dpId=02",
                 "isVisible": 1
             },
-            "Level": {
+            "Level 1": {
                 "use": "inf_LevelPercent",
+                "logicalId": "level1",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "Set Level 2": {
+                "use": "act_tuyaEF00-SetValue-Slider",
+                "params": "dpId=08&mult=10",
+                "comment": "x per 100 to x per 1000 conversion",
                 "isVisible": 1
+            },
+            "Level 2": {
+                "use": "inf_LevelPercent",
+                "logicalId": "level2",
+                "isVisible": 1,
+                "nextLine": "after"
             }
         },
         "tuyaEF00": {
             "fromDevice": {
                 "01": {
                     "function": "rcvValue",
-                    "info": "0006-01-0000"
+                    "info": "status1"
                 },
                 "02": {
                     "function": "rcvValueDiv",
-                    "info": "01-LevelPercent",
+                    "info": "level1",
+                    "div": 10
+                },
+                "07": {
+                    "function": "rcvValue",
+                    "info": "status2"
+                },
+                "08": {
+                    "function": "rcvValueDiv",
+                    "info": "level2",
                     "div": 10
                 }
             }

@@ -2,7 +2,7 @@
     "act_tuyaEF00-SetBool": {
         "subType": "other",
         "template": "",
-        "logicalId": "#EP#-TuyaEF00-SetBool-#DPID#",
+        "logicalId": "tuyaEF00-SetBool-#EP#-#DPID#-#DATA#",
         "configuration": {
             "topic": "cmd-tuyaEF00",
             "request": "ep=#EP#&cmd=setBool&data=#DATA#"

@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231130-BETA-1
+-------------
+
 - Interne: Parser: decode8002, monitoring revu => parserLog2().
 - Danfoss eTRV010x: Modèle en cours de changements (2662).
 - Suppression de modèles de commandes obsoletes:

@@ -4,6 +4,7 @@ ChangeLog
 - Page EQ/avancé: Traductions US.
 - Modèles: Nettoyage 'poll=0'
 - Modèles: Amélioration 'trigOut' pour support multiples actions.
+- Attribut 0000/LocalTemp du cluster 0201 divisé par 100 par défaut.
 
 231130-BETA-2
 -------------

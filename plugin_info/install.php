@@ -882,6 +882,7 @@
          * - Cmds DB: 'OnOff' cmd replaced by 'cmd-0006'
          * - Cmds DB: 'OnOffGroup' replaced by 'cmd-0006'
          * - Cmds DB: 'onGroupBroadcast'/'offGroupBroadcast' replaced by 'cmd-0006'
+         * - Cmds DB: 'ab::trigOut' syntax updated to associative array
          */
         if (intval($dbVersion) < 20231106) {
             // 'eqLogic' + 'cmd' DB updates
@@ -949,18 +950,20 @@
 
                 // cmd
                 foreach ($cmds as $cmdLogic) {
-                    $saveCmd = false;
                     $cmdLogicId = $cmdLogic->getLogicalId();
+                    $cmdHName = $cmdLogic->getHumanName();
+
                     $topic = $cmdLogic->getConfiguration('topic', '');
                     if (substr($topic, 0, 10) == "CmdAbeille") {
                         $ar = explode("/", $topic);
                         $topic = $ar[2];
                     }
 
+                    $saveCmd = false;
                     if ($cmdLogicId == 'online') {
                         if ($cmdLogic->setConfiguration('repeatEventManagement', '') == '') {
                             $cmdLogic->setConfiguration('repeatEventManagement', "always");
-                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Added 'repeatEventManagement'='always'");
+                            log::add('Abeille', 'debug', "  ${cmdHName}: Added 'repeatEventManagement'='always'");
                             $saveCmd = true;
                         }
                     } else if ($topic == 'OnOff') {
@@ -971,7 +974,7 @@
                         $request = str_replace("EP=", "ep=", $request);
                         $cmdLogic->setConfiguration('topic', 'cmd-0006');
                         $cmdLogic->setConfiguration('request', $request);
-                        log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Replaced 'OnOff' by 'cmd-0006'");
+                        log::add('Abeille', 'debug', "  ${cmdHName}: Replaced 'OnOff' by 'cmd-0006'");
                         $saveCmd = true;
                     } else if ($topic == 'OnOffGroup') {
                         $request = $cmdLogic->getConfiguration('request', '');
@@ -988,7 +991,7 @@
                         $cmdLogic->setConfiguration('topic', 'cmd-0006');
                         $cmdLogic->setConfiguration('request', $request);
                         $cmdLogic->setLogicalId($lId);
-                        log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Replaced 'OnOffGroup' by 'cmd-0006'");
+                        log::add('Abeille', 'debug', "  ${cmdHName}: Replaced 'OnOffGroup' by 'cmd-0006'");
                         $saveCmd = true;
                     } else if (($topic == 'onGroupBroadcast') || ($topic == 'offGroupBroadcast')) {
                         $request = $cmdLogic->getConfiguration('request', '');
@@ -999,15 +1002,33 @@
                             $request = "cmd=01&addrMode=04";
                             $lId = "0006-CmdOnGroup";
                         } else { // assuming toggle
-                            log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": ERROR: topic=${topic}, req=${request}");
+                            log::add('Abeille', 'debug', "  ${cmdHName}: ERROR: topic=${topic}, req=${request}");
                             continue;
                         }
                         $cmdLogic->setConfiguration('topic', 'cmd-0006');
                         $cmdLogic->setConfiguration('request', $request);
                         $cmdLogic->setLogicalId($lId);
-                        log::add('Abeille', 'debug', '  '.$eqId.'/'.$cmdLogicId.": Replaced '${topic}' by 'cmd-0006'");
+                        log::add('Abeille', 'debug', "  ${cmdHName}: Replaced '${topic}' by 'cmd-0006'");
                         $saveCmd = true;
                     }
+
+                    // Updating 'ab::trigOut' syntax to associative array
+                    $confVal = $cmdLogic->getConfiguration('ab::trigOut', null);
+                    if (($confVal !== null) && (gettype($confVal) == "string")) {
+                        $toLogicId = $confVal;
+                        $to = [];
+                        $to[$toLogicId] = [];
+                        $toOffset = $cmdLogic->getConfiguration('ab::trigOutOffset', '');
+                        if ($toOffset != '') {
+                            $to[$toLogicId]['valueOffset'] = $toOffset;
+                            $cmdLogic->setConfiguration('ab::trigOutOffset', null);
+                        }
+                        $cmdLogic->setConfiguration('ab::trigOut', $to);
+                        log::add('Abeille', 'debug', "  ${cmdHName}: 'ab::trigOut' updated to associative array");
+                        $saveCmd = true;
+                    }
+                    $cmdLogic->setConfiguration('trigOut', null); // Removing obsolete
+                    $cmdLogic->setConfiguration('trigOutOffset', null); // Removing obsolete
 
                     if ($saveCmd)
                         $cmdLogic->save();

@@ -5,8 +5,11 @@
         "type": "info",
         "subType": "numeric",
         "configuration": {
-                "trigOut": "0001-#EP#-0021",
-                "trigOutOffset": "(max(min(#value#,3),2.85)-2.85)*100/(3-2.85)"
+                "trigOut": {
+                    "0001-#EP#-0021": {
+                        "valueOffset": "(max(min(#value#,3),2.85)-2.85)*100/(3-2.85)"
+                    }
+                }
         },
         "logicalId": "0001-#EP#-0020",
         "unit": "V"

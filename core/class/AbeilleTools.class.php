@@ -514,8 +514,6 @@
                             $newCmd[$cmd1]['configuration']['maxValue'] = $cmd2['maxValue'];
                         if (isset($cmd2['trigOut']))
                             $newCmd[$cmd1]['configuration']['trigOut'] = $cmd2['trigOut'];
-                        if (isset($cmd2['trigOutOffset']))
-                            $newCmd[$cmd1]['configuration']['trigOutOffset'] = $cmd2['trigOutOffset'];
                         if (isset($cmd2['historizeRound']))
                             $newCmd[$cmd1]['configuration']['historizeRound'] = $cmd2['historizeRound'];
                         if (isset($cmd2['calculValueOffset']))

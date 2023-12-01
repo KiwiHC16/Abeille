@@ -1,0 +1,11 @@
+{
+    "inf_tamper-Alarm": {
+        "comment": "A generic attribut to display a TAMPER ALARM",
+        "subType": "binary",
+        "template": "",
+        "type": "info",
+        "logicalId": "#EP#-tamperAlarm",
+        "unit": "",
+        "genericType": "SABOTAGE"
+    }
+}

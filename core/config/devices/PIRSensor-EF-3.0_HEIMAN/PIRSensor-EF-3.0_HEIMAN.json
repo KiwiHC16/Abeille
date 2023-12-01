@@ -27,10 +27,6 @@
                 "params": "ep=01&clustId=0001",
                 "execAtCreation": "yes"
             },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
-            },
             "Zone Alarm1": {
                 "use": "inf_Zone-Alarm1",
                 "isVisible": "1"
@@ -38,8 +34,11 @@
             "Zone Status Changed": {
                 "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
                 "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value",
-                "trigOut": "01-0500-alarm1",
-                "trigOutOffset": "#value#&1"
+                "trigOut": {
+                    "01-0500-alarm1": {
+                        "valueOffset": "#value#&1"
+                    }
+                }
             },
             "Bind 0500-ToZigate": {
                 "use": "act_zbBindToZigate",

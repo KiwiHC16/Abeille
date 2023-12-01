@@ -1672,8 +1672,8 @@ class Abeille extends eqLogic {
 
     /* Trig another command defined by 'trigLogicId'.
        The 'newValue' is computed with 'trigOffset' if required then applied to 'trigLogicId' */
-    public static function trigCommand($eqLogic, $newValue, $trigLogicId, $trigOffset = null) {
-        if ($trigOffset)
+    public static function trigCommand($eqLogic, $newValue, $trigLogicId, $trigOffset = '') {
+        if ($trigOffset != '')
             $trigValue = jeedom::evaluateExpression(str_replace('#value#', $newValue, $trigOffset));
         else
             $trigValue = $newValue;
@@ -1695,16 +1695,34 @@ class Abeille extends eqLogic {
 
     /* Called on info cmd update (attribute report or attribute read) to see if any action cmd must be executed */
     public static function infoCmdUpdate($eqLogic, $cmdLogic, $value) {
-        global $abQueues;
 
         // Trig another command ('ab::trigOut' eqLogic config) ?
-        $trigLogicId = $cmdLogic->getConfiguration('ab::trigOut');
-        if ($trigLogicId) {
-            $trigOffset = $cmdLogic->getConfiguration('ab::trigOutOffset');
+        // Syntax reminder
+        // "trigOut": {
+        //     "01-smokeAlarm": {
+        //         "comment": "On receive we trig <EP>-smokeAlarm with extracted boolean/bit0 value",
+        //         "valueOffset": "#value#&1"
+        //     },
+        //     "01-tamperAlarm": {
+        //         "comment": "Bit 2 is tamper",
+        //         "valueOffset": "(#value#>>2)&1"
+        //     }
+        // }
+        $toList = $cmdLogic->getConfiguration('ab::trigOut', []);
+        foreach ($toList as $trigLogicId => $to) {
+            if (isset($to['valueOffset']))
+                $trigOffset = $to['valueOffset'];
+            else
+                $trigOffset = '';
             Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
         }
+        // if ($trigLogicId) {
+        //     $trigOffset = $cmdLogic->getConfiguration('ab::trigOutOffset');
+        //     Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
+        // }
 
         // Trig another command (PollingOnCmdChange keyword) ?
+        global $abQueues;
         $cmds = cmd::searchConfigurationEqLogic($eqLogic->getId(), 'PollingOnCmdChange', 'action');
         $cmdLogicId = $cmdLogic->getLogicalId();
         foreach ($cmds as $cmd) {
@@ -3274,12 +3292,12 @@ class Abeille extends eqLogic {
                In case of update, some fields may no longer be required ($unusedConfKeys).
                They are removed if not defined in JSON model. */
             $toRemove = ['visibilityCategory', 'historizeRound', 'execAtCreation', 'execAtCreationDelay', 'topic', 'Polling', 'RefreshData', 'listValue'];
-            array_push($toRemove, 'ab::trigOut', 'ab::trigOutOffset', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'ab::notStandard');
+            array_push($toRemove, 'ab::trigOut', 'PollingOnCmdChange', 'PollingOnCmdChangeDelay', 'ab::notStandard');
             array_push($toRemove, 'ab::valueOffset');
             $rmOnlyIfReset = $toRemove;
             array_push($rmOnlyIfReset, 'minValue', 'maxValue', 'calculValueOffset', 'repeatEventManagement');
             // Abeille specific keys must be renamed when taken from model (ex: trigOut => ab::trigOut)
-            $toRename = ['trigOut', 'trigOutOffset', 'notStandard', 'valueOffset'];
+            $toRename = ['trigOut', 'notStandard', 'valueOffset'];
             if (isset($mCmd["configuration"])) {
                 $mCmdConf = $mCmd["configuration"];
 

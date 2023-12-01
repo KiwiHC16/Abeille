@@ -1,11 +1,12 @@
 {
     "TS0601__TZE200_ntcy3xu1": {
         "manufacturer": "Tuya",
-        "model": "?",
+        "model": "TS0601",
         "type": "Tuya smoke detector",
+        "genericType": "Security",
         "timeout": "60",
         "category": {
-            "automatism": "1"
+            "security": "1"
         },
         "configuration": {
             "icon": "Tuya-SmokeDetector",
@@ -14,7 +15,7 @@
         },
         "commands": {
             "Smoke alarm": {
-                "use": "inf_Smoke-Alarm",
+                "use": "inf_smoke-Alarm",
                 "isVisible": 1
             },
             "Battery-Low": {

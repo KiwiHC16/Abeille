@@ -1,12 +1,15 @@
 {
     "battery-Volt2Percent-3": {
         "comment": "Computing battery percent from received voltage, assuming max=3V",
+        "type": "info",
         "subType": "numeric",
         "configuration": {
-            "trigOut": "0001-#EP#-0021",
-            "trigOutOffset": "#value#*100/3"
+            "trigOut": {
+                "0001-#EP#-0021" : {
+                    "valueOffset": "#value#*100/3"
+                }
+            }
         },
-        "type": "info",
         "logicalId": "0001-#EP#-0020",
         "unit": "V"
     }

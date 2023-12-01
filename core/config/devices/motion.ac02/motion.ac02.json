@@ -70,8 +70,11 @@
                 "use": "inf_generic-NumericBadge",
                 "logicalId": "01-illumAndPresence",
                 "calculValueOffset": "#value#>130536?0:#value#-65536",
-                "trigOut": "0406-01-0000",
-                "trigOutOffset": "1"
+                "trigOut": {
+                    "0406-01-0000": {
+                        "valueOffset": "1"
+                    }
+                }
             },
             "Set detection interval": {
                 "use": "act_zbWriteAttribute-list",

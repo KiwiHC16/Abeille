@@ -145,11 +145,19 @@ Exemple de commande 'action'
     Delai d'execution en secondes apres l'annonce de la commande ayant le flag 'execAtCreation'.
 
   * trigOut: optionnel
-    Permet, pour une commande info, de définir une commande qui sera mise-à-jour avec la valeur de sortie.
-    Le parametre est l'identifiant logique de la commande à déclencher (logicalId).
-
-  * trigOutOffset: optionnel
-    Permet, si 'trigOut' est utilisé, de modifier la valeur reçue avant de l'appliquer à la commande pointée par 'trigOut'.
+    Permet, pour une commande info, de définir une ou plusieurs commandes info à déclencher.
+    Il est possible d'appliquer une formule sur la valeur au passage (valueOffset).
+    Chaque commande à déclencher est définie par sont identifiant logique (logicalId).
+    Exemple: "trigOut": {
+                "01-smokeAlarm": {
+                    "comment": "On receive we trig <EP>-smokeAlarm with extracted boolean/bit0 value",
+                    "valueOffset": "#value#&1"
+                },
+                "01-tamperAlarm": {
+                    "comment": "Bit 2 is tamper",
+                    "valueOffset": "(#value#>>2)&1"
+                }
+             }
 
   * calculValueOffset: optionnel (pour cmde info)
     Permet de modifier la valeur d'une cmde info.

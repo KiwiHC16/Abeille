@@ -1,9 +1,9 @@
 {
     "TS0205__TZ3210_up3pngle": {
         "manufacturer": "Tuya",
-        "model": "?",
+        "model": "TS0205",
         "type": "Tuya smoke detector",
-        "genericType": "Environment",
+        "genericType": "Security",
         "timeout": "60",
         "category": {
             "security": "1"
@@ -19,17 +19,28 @@
                 "params": "ep=01"
             },
             "Smoke alarm": {
-                "use": "inf_Zone-Alarm1",
+                "use": "inf_smoke-Alarm",
                 "params": "ep=01",
-                "isVisible": "1",
-                "genericType": "SMOKE"
+                "isVisible": "1"
+            },
+            "Tamper alarm": {
+                "use": "inf_tamper-Alarm",
+                "params": "ep=01",
+                "isVisible": "1"
             },
             "Zone Status Changed": {
                 "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
                 "params": "ep=01",
-                "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value",
-                "trigOut": "01-0500-alarm1",
-                "trigOutOffset": "#value#&1"
+                "trigOut": {
+                    "01-smokeAlarm": {
+                        "comment": "On receive we trig <EP>-smokeAlarm with extracted boolean/bit0 value",
+                        "valueOffset": "#value#&1"
+                    },
+                    "01-tamperAlarm": {
+                        "comment": "Bit 2 is tamper",
+                        "valueOffset": "(#value#>>2)&1"
+                    }
+                }
             }
         }
     }

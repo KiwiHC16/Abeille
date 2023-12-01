@@ -3,6 +3,7 @@ ChangeLog
 
 - Page EQ/avancé: Traductions US.
 - Modèles: Nettoyage 'poll=0'
+- Modèles: Amélioration 'trigOut' pour support multiples actions.
 
 231130-BETA-2
 -------------

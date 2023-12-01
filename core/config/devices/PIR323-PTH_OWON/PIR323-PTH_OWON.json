@@ -16,13 +16,6 @@
             "batteryType": "2x1.5V AAA"
         },
         "commands": {
-            "SWBuildID": {
-                "use": "inf_zbAttr-0000-SWBuildID"
-            },
-            "Get SWBuildID": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0000&attrId=4000"
-            },
             "Battery-Volt": {
                 "use": "inf_zbAttr-0001-BatteryVolt",
                 "params": "ep=01"
@@ -41,10 +34,6 @@
                 "params": "ep=01&clustId=0001",
                 "execAtCreation": "yes"
             },
-            "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
-            },
             "Zone Alarm1": {
                 "use": "inf_Zone-Alarm1",
                 "params": "ep=01",
@@ -54,8 +43,11 @@
                 "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
                 "params": "ep=01",
                 "comment": "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value",
-                "trigOut": "01-0500-alarm1",
-                "trigOutOffset": "#value#&1"
+                "trigOut": {
+                    "01-0500-alarm1": {
+                        "valueOffset": "#value#&1"
+                    }
+                }
             },
             "Temperature": {
                 "use": "inf_zbAttr-0402-MeasuredValue",

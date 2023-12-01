@@ -42,8 +42,11 @@
             "ZoneStatusChange": {
                 "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
                 "comment": "On receive we trig 01-0500-Alarm1 with extracted boolean value",
-                "trigOut": "01-0500-alarm1",
-                "trigOutOffset": "#value#&1"
+                "trigOut": {
+                    "01-0500-alarm1": {
+                        "valueOffset": "#value#&1"
+                    }
+                }
             },
             "Set Sensibility": {
                 "use": "act_zbWriteAttribute",

@@ -265,20 +265,37 @@
             }
 
             // An action cmd can trig another action cmd with 'trigOut'
-            $to = $cmdLogic->getConfiguration('ab::trigOut', null);
-            if ($to !== null) {
-                // logMessage('debug', "  LA HOULD BE TRIGGERED='".$to."'");
-                // $trigOffset = $cmdLogic->getConfiguration('ab::trigOutOffset');
-                // Abeille::trigCommand($eqLogic, $cmdLogic->execCmd(), $trigLogicId, $trigOffset);
-                $trigCmd = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $to);
+            // Syntax reminder
+            // "trigOut": {
+            //     "01-smokeAlarm": {
+            //         "comment": "On receive we trig <EP>-smokeAlarm with extracted boolean/bit0 value",
+            //         "valueOffset": "#value#&1"
+            //     },
+            //     "01-tamperAlarm": {
+            //         "comment": "Bit 2 is tamper",
+            //         "valueOffset": "(#value#>>2)&1"
+            //     }
+            // }
+            $toList = $cmdLogic->getConfiguration('ab::trigOut', []);
+            foreach ($toList as $toLogicId => $to) {
+                // if (isset($to['valueOffset']))
+                //     $toOffset = $to['valueOffset'];
+                // else
+                //     $toOffset = '';
+                $trigCmd = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $toLogicId);
                 if ($trigCmd) {
-                    logMessage('debug', "-- Triggering '".$to."'");
+                    logMessage('debug', "-- Triggering '${toLogicId}'");
                     $trigCmd->execute();
-                    // TODO
-                    // log::add('Abeille', 'debug', "  Triggering cmd '".$to."'");
-                    // $eqLogic->checkAndUpdateCmd($trigCmd, $trigValue);
                 }
             }
+            // $to = $cmdLogic->getConfiguration('ab::trigOut', null);
+            // if ($to !== null) {
+            //     $trigCmd = cmd::byEqLogicIdAndLogicalId($eqLogic->getId(), $to);
+            //     if ($trigCmd) {
+            //         logMessage('debug', "-- Triggering '".$to."'");
+            //         $trigCmd->execute();
+            //     }
+            // }
 
             return;
         } // End public function execute()

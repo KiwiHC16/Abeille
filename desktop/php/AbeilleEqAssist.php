@@ -1210,9 +1210,11 @@
                 cmds["Zone Alarm1"] = newCmd("inf_Zone-Alarm1", "ep="+epId);
                 cmds["Zone Alarm1"]["isVisible"] = 1;
                 cmds["Zone Status Changed"] = newCmd("inf_zbCmdS-0500-ZoneStatus-ChangeNotification", "ep="+epId);
-                cmds["Zone Status Changed"]["comment"] = "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value";
-                cmds["Zone Status Changed"]["trigOut"] = epId+"-0500-alarm1";
-                cmds["Zone Status Changed"]["trigOutOffset"] = "#value#&1";
+                cmds["Zone Status Changed"]["trigOut"] = [];
+                cmds["Zone Status Changed"]["trigOut"][epId+"-0500-alarm1"] = array(
+                    "comment" => "On receive we trig <EP>-0500-alarm1 with extracted boolean/bit0 value",
+                    "valueOffset" => "#value#&1"
+                );
 
                 cmds["Bind "+epId+"-0500-ToZigate"] = newCmd("act_zbBindToZigate", "ep="+epId+"&clustId=0500", "yes");
             }

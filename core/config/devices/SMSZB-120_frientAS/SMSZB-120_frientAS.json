@@ -43,8 +43,11 @@
             "ZoneStatusChange": {
                 "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
                 "comment": "On receive we trig 0500-Status with extracted boolean value",
-                "trigOut": "0500-Status",
-                "trigOutOffset": "#value#&1"
+                "trigOut": {
+                    "0500-Status": {
+                        "valueOffset": "#value#&1"
+                    }
+                }
             },
             "Bind 0500-ToZigate": {
                 "use": "act_zbBindToZigate",

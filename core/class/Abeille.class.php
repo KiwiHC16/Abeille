@@ -3262,7 +3262,7 @@ class Abeille extends eqLogic {
                     $cmdLogic->setGeneric_type(null); // Clear generic type
             }
             $curDashbTemplate = $cmdLogic->getTemplate('dashboard', '');
-            log::add('Abeille', 'debug', '  curDashbTemplate='.$curDashbTemplate);
+            // log::add('Abeille', 'debug', '  curDashbTemplate='.$curDashbTemplate);
             if (($action == 'reset') || $newCmd || ($curDashbTemplate == '')) {
                 if (isset($mCmd["template"]) && ($mCmd["template"] != "")) {
                     log::add('Abeille', 'debug', '  Set dashboard template='.$mCmd["template"]);

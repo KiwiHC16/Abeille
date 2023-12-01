@@ -49,7 +49,7 @@
             "Set push button": {
                 "comment": "Controlled but push button",
                 "use": "act_zbWriteAttribute",
-                "params": "clustId=0006&attrId=D030&attrType=30&attrVal=02",
+                "params": "clustId=0006&attrId=D030&attrType=30&attrVal=2",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 6
             },

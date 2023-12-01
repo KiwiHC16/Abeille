@@ -141,87 +141,87 @@
          *
          * @param $value int, signed
          *
-         * @param $reverseEndianness bool, if true reverses the byte order (see machine dependency)
-         *
          * @return string, upper case hex value, both bytes padded left with zeros
          */
-        function signed2hex($value, $size, $reverseEndianness = true) {
+        function signed2hex($value, $size) {
             $packed = pack('i', $value);
             $hex='';
             for ($i=0; $i < $size; $i++){
                 $hex .= strtoupper( str_pad( dechex(ord($packed[$i])) , 2, '0', STR_PAD_LEFT) );
             }
             $tmp = str_split($hex, 2);
-            $out = implode('', ($reverseEndianness ? array_reverse($tmp) : $tmp));
+            $out = implode('', array_reverse($tmp));
             return $out;
         }
 
-        // Called to convert '#sliderXX#' or '#selectXX#'
+        // Called to convert '#sliderXX#' or '#selectXX#' to 'XX'
         // 'XX' is always a decimal value
-        function sliderToHex($sliderVal, $type) {
-            $strDecVal = substr($sliderVal, 7, -1); // Extracting decimal value
-            $signed = false;
-            switch ($type) {
-            case '20': // uint8
-            case '30': // enum8
-                $size = 1;
-                break;
-            case '21': // uint16
-            case '31': // enum16
-                $size = 2;
-                break;
-            case '22': // uint24
-                $size = 3;
-                break;
-            case '23': // uint32
-                $size = 3;
-                break;
-            case '28': // int8
-                $size = 1;
-                $signed = true;
-                break;
-            case '29': // int16
-                $size = 2;
-                $signed = true;
-                break;
-            case '2A': // int24
-                $size = 3;
-                $signed = true;
-                break;
-            case '2B': // int32
-                $size = 4;
-                $signed = true;
-                break;
-            default:
-                cmdLog('error', "sliderToHex(): strDecVal=".$strDecVal.", UNSUPPORTED type=".$type);
-                return false;
-            }
-            if ($signed)
-                $strHexVal = $this->signed2hex($strDecVal, $size);
-            else {
-                $val = intval($strDecVal);
-                $size = $size * 2; // 1 Byte = 2 hex char
-                $format = "%0".$size."X";
-                // cmdLog('debug', "  val=".strval($val).", size=".strval($size)." => format=".$format);
-                $strHexVal = sprintf($format, $val);
-            }
+        // function sliderToHex($sliderVal, $type) {
+        //     $strDecVal = substr($sliderVal, 7, -1); // Extracting decimal value
+        //     $signed = false;
+        //     switch ($type) {
+        //     case '20': // uint8
+        //     case '30': // enum8
+        //         $size = 1;
+        //         break;
+        //     case '21': // uint16
+        //     case '31': // enum16
+        //         $size = 2;
+        //         break;
+        //     case '22': // uint24
+        //         $size = 3;
+        //         break;
+        //     case '23': // uint32
+        //         $size = 3;
+        //         break;
+        //     case '28': // int8
+        //         $size = 1;
+        //         $signed = true;
+        //         break;
+        //     case '29': // int16
+        //         $size = 2;
+        //         $signed = true;
+        //         break;
+        //     case '2A': // int24
+        //         $size = 3;
+        //         $signed = true;
+        //         break;
+        //     case '2B': // int32
+        //         $size = 4;
+        //         $signed = true;
+        //         break;
+        //     default:
+        //         cmdLog('error', "sliderToHex(): strDecVal=".$strDecVal.", UNSUPPORTED type=".$type);
+        //         return false;
+        //     }
+        //     if ($signed)
+        //         $strHexVal = $this->signed2hex($strDecVal, $size);
+        //     else {
+        //         $val = intval($strDecVal);
+        //         $size = $size * 2; // 1 Byte = 2 hex char
+        //         $format = "%0".$size."X";
+        //         // cmdLog('debug', "  val=".strval($val).", size=".strval($size)." => format=".$format);
+        //         $strHexVal = sprintf($format, $val);
+        //     }
 
-            cmdLog('debug', "  sliderToHex(): strDecVal=".$strDecVal." => ".$strHexVal);
-            return $strHexVal;
-        }
+        //     cmdLog('debug', "  sliderToHex(): strDecVal=".$strDecVal." => ".$strHexVal);
+        //     return $strHexVal;
+        // }
 
         /* Format attribute value.
            Return hex string formatted value according to its type.
            WARNING: Returned hex string must still be reversed if >= 2B */
         function formatAttribute($valIn, $type) {
             // cmdLog('debug', "formatAttribute(".$valIn.", ".$type.")");
-            $valIn2 = $valIn;
+            // Note: Slider/select conversion to be done in execute() function
             if (substr($valIn, 0, 7) == "#slider") {
-                $valIn2 = $this->sliderToHex($valIn, $type);
+                // $valIn = $this->sliderToHex($valIn, $type);
+                $valIn = substr($valIn, 7, -1); // Extracting decimal value
             } else if (substr($valIn, 0, 7) == "#select") {
-                $valIn2 = $this->sliderToHex($valIn, $type);
+                // $valIn = $this->sliderToHex($valIn, $type);
+                $valIn = substr($valIn, 7, -1); // Extracting decimal value
             }
-            if ($valIn2 === false)
+            if ($valIn === false)
                 return false;
 
             $valOut = '';
@@ -252,11 +252,11 @@
                 break;
             case 'int16':
             case '29':
-                $valOut = $this->signed2Hex($valIn, 2, false);
+                $valOut = $this->signed2Hex($valIn, 2);
                 break;
             case '42': // string
-                $len = sprintf("%02X", strlen($valIn2));
-                $valOut = $len.bin2hex($valIn2);
+                $len = sprintf("%02X", strlen($valIn));
+                $valOut = $len.bin2hex($valIn);
                 // cmdLog('debug', "len=".$len.", valOut=".$valOut);
                 break;
             default:
@@ -264,7 +264,7 @@
                 $valOut = '12'; // Fake value
             }
 
-            cmdLog('debug', "  formatAttribute(".$valIn.", type=".$type.") => valOut=".$valOut);
+            cmdLog('debug', "  formatAttribute(${valIn}, type=${type}) => valOut=${valOut}");
             return $valOut;
         }
 
@@ -3255,15 +3255,6 @@
                     } else
                         $attrType = $Command['attrType'];
 
-
-                    // If attrVal is coming from slider, it must be converted to proper data type
-                    // $attrVal = $Command['attrVal'];
-                    // if (substr($attrVal, 0, 7) == "#slider") {
-                    //     $attrVal = $this->sliderToHex($attrVal, $Command['attrType']);
-                    //     if ($attrVal === false)
-                    //         return;
-                    // }
-
                     /* Cmd 0110 reminder:
                         <address mode: uint8_t>	Data Indication
                         <target short address: uint16_t>
@@ -3296,12 +3287,12 @@
                         $manufCode      = "0000";
                     }
                     $nbOfAttributes = "01";
-                    $attrVal    = $this->formatAttribute($Command['attrVal'], $attrType);
+                    $attrVal = $this->formatAttribute($Command['attrVal'], $attrType);
                     if ($attrVal === false)
                         return;
-                    $attrList   = $Command['attrId'].$attrType.$attrVal;
+                    $attrList = $Command['attrId'].$attrType.$attrVal;
 
-                    cmdLog('debug', "  writeAttribute: Dir=".$dir.", ManufCode=".$manufCode.", AttrType=".$attrType.", AttrVal=".$attrVal, $this->debug['processCmd']);
+                    cmdLog('debug', "  writeAttribute: Dir=${dir}, ManufCode=${manufCode}, AttrType=${attrType}, AttrVal=${attrVal}");
                     $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufCode.$nbOfAttributes.$attrList;
 
                     $this->addCmdToQueue2($priority, $dest, "0110", $data, $addr, $addrMode);
@@ -3378,7 +3369,7 @@
                     $data2 = $zclHeader.$attrId.$dataType.$attrVal;
 
                     $dataLength = sprintf("%02X", strlen($data2) / 2);
-                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$profId.$clustId.$secMode.$radius.$dataLength;
+                    $data1 = $addrMode.$addr.$srcEp.$dstEp.$clustId.$profId.$secMode.$radius.$dataLength;
                     $data = $data1.$data2;
 
                     $this->addCmdToQueue2($priority, $dest, "0530", $data, $addr, $addrMode);

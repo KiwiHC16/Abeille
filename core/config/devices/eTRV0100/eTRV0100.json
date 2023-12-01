@@ -53,10 +53,6 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0001&attrId=0020"
             },
-            "SetTest": {
-                "use": "act_zbCmdC-Generic",
-                "params": "ep=01&clustId=0201&cmd=40&manufCode=1246&data=0107D0"
-            },
             "+": {
                 "use": "act_zbWriteAttribute",
                 "params": "clustId=0201&attrId=0012&attrType=29&attrVal=#value#",

@@ -5,6 +5,8 @@ ChangeLog
 - Modèles: Nettoyage 'poll=0'
 - Modèles: Amélioration 'trigOut' pour support multiples actions.
 - Attribut 0000/LocalTemp du cluster 0201 divisé par 100 par défaut.
+- Interne: Cmd: Correction 'writeAttribute0530()'
+- Interne: Cmd: Corrections 'writeAttribute()'
 
 231130-BETA-2
 -------------

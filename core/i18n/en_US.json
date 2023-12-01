@@ -188,6 +188,9 @@
         "Envoyer": "Send",
         "Ecriture attribut": "Write attribute",
         "Valeur à écrire (hexa)": "Data to write (hex)",
+        "Code fabricant (Hexa 4 car; ex: 12AC": "Manuf code (hex 4 char; ex 12AC)",
+        "Code fabricant": "Manufacturer code",
+        "Type d'attribut": "Attribute type",
 
         "Commandes": "Commands",
         "Ajouter une commande action": "Add action command",

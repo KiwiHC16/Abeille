@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Page EQ/avancé: Traductions US.
+
 231130-BETA-2
 -------------
 

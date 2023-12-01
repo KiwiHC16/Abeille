@@ -15,7 +15,7 @@
 
     // Add end point input
     function addEpInput($id) {
-        echo '<input id="'.$id.'" class="advEp" title="{{End Point, format hexa (ex: 01)}}" value="XX" style="width:30px; margin-left: 8px" />';
+        echo '<input id="'.$id.'" class="advEp" title="{{End Point (Hexa 2 car; ex: 01)}}" value="XX" style="width:30px; margin-left: 8px" />';
     }
 
     function addClusterButton($id) {
@@ -29,12 +29,12 @@
 
     // Add direction input
     function addDirInput($id) {
-        echo '<input id="'.$id.'" style="width:80px; margin-left: 8px" title="{{Direction. Format hex string 2 car (00=vers serveur, 01=vers client)}}" placeholder="{{Dir (ex: 00)}}" />';
+        echo '<input id="'.$id.'" style="width:80px; margin-left: 8px" title="{{Direction (Hexa 2 car: 00=vers serveur, 01=vers client)}}" placeholder="{{Dir}}" />';
     }
 
     // Add manufacturer code input
     function addManufCodeInput($id) {
-        echo '<input id="'.$id.'" style="width:60px; margin-left: 8px" title="{{Code fabricant (Format hexa 4 car (ex 12AC))}}" placeholder="{{Code fabricant}}" />';
+        echo '<input id="'.$id.'" style="width:60px; margin-left: 8px" title="{{Code fabricant (Hexa 4 car; ex: 12AC)}}" placeholder="{{Code fabricant}}" />';
     }
 
     // Create drop down list of IEEE addresses, excluding zigate by default
@@ -56,12 +56,7 @@
     }
 
     function addAttrInput($id) {
-        echo '<input id="'.$id.'" style="width:60px; margin-left: 8px" placeholder="{{Attribut}}" title="Attribut (format hexa 4 car (ex: 050B))"/>';
-    }
-
-    // Add a group address input
-    function addGroupInput($id, $title = 'Group') {
-        echo '<input id="'.$id.'" style="width:60px; margin-left: 8px" placeholder="{{Group}}" title="{{'.$title.' (4 chars hex, ex: 0001)}}" />';
+        echo '<input id="'.$id.'" style="width:60px; margin-left: 8px" placeholder="{{Attribut}}" title="Attribut (Hexa 4 car; ex: 050B)"/>';
     }
 
     // Create drop down list of Zigbee possible attribute types
@@ -76,6 +71,11 @@
                 echo '<option value="'.$typeId.'">'.$typeId.' / '.$type['short'].'</option>';
         }
         echo '</select>';
+    }
+
+    // Add a group address input
+    function addGroupInput($id, $title = 'Group') {
+        echo '<input id="'.$id.'" style="width:60px; margin-left: 8px" placeholder="{{Group}}" title="{{'.$title.' (4 chars hex, ex: 0001)}}" />';
     }
 
     // Create drop down list of 'Warning modes' (cluster 0502/Start Warning)

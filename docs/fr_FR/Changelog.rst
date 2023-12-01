@@ -2,6 +2,7 @@ ChangeLog
 =========
 
 - Page EQ/avancé: Traductions US.
+- Modèles: Nettoyage 'poll=0'
 
 231130-BETA-2
 -------------

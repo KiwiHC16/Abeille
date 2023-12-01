@@ -6,7 +6,6 @@
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
-            "poll": "0",
             "icon": "TS0121"
         },
         "category": {

@@ -1974,6 +1974,7 @@
             // WriteAttributeRequest ------------------------------------------------------------------------------------
             if ((isset($Command['WriteAttributeRequest'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']))
             {
+                cmdLog('debug', "  WARNING: Use of OBSOLETE 'WriteAttributeRequest' command");
                 $this->setParam3( $dest, $Command );
                 return;
             }
@@ -1981,6 +1982,7 @@
             // WriteAttributeRequest ------------------------------------------------------------------------------------
             if ((isset($Command['WriteAttributeRequestGeneric'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['attributeType']) && isset($Command['value']))
             {
+                cmdLog('debug', "  WARNING: Use of OBSOLETE 'WriteAttributeRequestGeneric' command");
                 $this->setParamGeneric( $dest, $Command );
                 return;
             }
@@ -1988,6 +1990,7 @@
             // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
             if ((isset($Command['WriteAttributeRequestVibration'])) && (isset($Command['address'])) && isset($Command['Proprio']) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']))
             {
+                cmdLog('debug', "  WARNING: Use of OBSOLETE 'WriteAttributeRequestVibration' command");
                 // Tcharp38: WHere is this code ??? $this->setParamXiaomi($dest, $Command);
                 // cmdLog('debug', "ERROR: WriteAttributeRequestVibration() CAN'T be executed. Missing setParamXiaomi()", $this->debug['processCmd']);
                 $this->ReportParamXiaomi($dest, $Command);
@@ -1997,6 +2000,7 @@
             // WriteAttributeRequestVibration ------------------------------------------------------------------------------------
             if ((isset($Command['WriteAttributeRequestActivateDimmer'])) && (isset($Command['address'])) && isset($Command['clusterId']) && isset($Command['attributeId']) && isset($Command['value']))
             {
+                cmdLog('debug', "  WARNING: Use of OBSOLETE 'WriteAttributeRequestActivateDimmer' command");
                 $this->setParam4( $dest, $Command );
                 return;
             }

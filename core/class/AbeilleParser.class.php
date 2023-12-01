@@ -1921,8 +1921,8 @@
                         $newVal = $newVal / 2; // Battery percent
                     }
                 } else if ($clustId == "0201") { // Thermostat
-                    if ($attrId == "0000") {
-                        $newVal /= 100; // Temperature
+                    if (($attrId == "0000") || ($attrId == "0012")) {
+                        $newVal /= 100; // LocalTemperature or OccupiedHeatingSetpoint
                     }
                 } else if ($clustId == "0300") {
                     if ($attrId == "0007") {
@@ -3362,7 +3362,7 @@
                                     break; // Stop decode there
 
                                 // Attribute value post correction according to ZCL spec
-                                $correct = ['0001-0020', '0001-0021', '0201-0000', '0300-0007', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
+                                $correct = ['0001-0020', '0001-0021', '0201-0000', '0201-0012', '0300-0007', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
                                 if (in_array($clustId.'-'.$attr['id'], $correct))
                                     $this->decode8002_ZCLCorrectAttrValue($srcEp, $clustId, $eq, $attr);
 
@@ -3583,7 +3583,7 @@
                                     break;
 
                                 // Attribute value post correction according to ZCL spec
-                                $correct = ['0001-0020', '0001-0021', '0201-0000', '0300-0007', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
+                                $correct = ['0001-0020', '0001-0021', '0201-0000', '0201-0012', '0300-0007', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
                                 if (in_array($clustId.'-'.$attr['id'], $correct))
                                     $this->decode8002_ZCLCorrectAttrValue($srcEp, $clustId, $eq, $attr);
 

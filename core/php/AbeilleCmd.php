@@ -69,6 +69,9 @@
             return;
         }
 
+        if (!isset($GLOBALS['devices'][$net]))
+            $GLOBALS['devices'][$net] = [];
+
         $found = false;
         if (isset($GLOBALS['devices'][$net][$addr]))
             $found = true;

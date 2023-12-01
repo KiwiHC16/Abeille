@@ -3,6 +3,7 @@
         "comment": "0201/Thermostat cluster, attrib 0012/OccupiedHeatingSetpoint",
         "type": "info",
         "subType": "numeric",
+        "template": "badge",
         "configuration": [],
         "logicalId": "0201-#EP#-0012",
         "unit": "\u00b0C",

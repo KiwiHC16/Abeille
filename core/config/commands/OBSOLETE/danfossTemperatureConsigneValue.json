@@ -4,9 +4,9 @@
         "logicalId": "#EP#-danfossTemperatureConsigneValue",
         "isHistorized": "1",
         "subType": "numeric",
+        "template": "badge",
         "invertBinary": "0",
         "configuration": {
-            "calculValueOffset": "#value#\/100",
             "visibilityCategory": "All"
         },
         "type": "info",

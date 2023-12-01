@@ -3,6 +3,7 @@
         "comment": "0201/Thermostat cluster, attrib 0000/LocalTemperature",
         "type": "info",
         "subType": "numeric",
+        "template": "badge",
         "configuration": [],
         "logicalId": "0201-#EP#-0000",
         "unit": "\u00b0C",

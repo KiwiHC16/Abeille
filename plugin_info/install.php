@@ -961,16 +961,25 @@
 
                     $saveCmd = false;
                     if ($cmdLogicId == 'online') {
-                        if ($cmdLogic->setConfiguration('repeatEventManagement', '') == '') {
+                        if ($cmdLogic->getConfiguration('repeatEventManagement', '') == '') {
                             $cmdLogic->setConfiguration('repeatEventManagement', "always");
                             log::add('Abeille', 'debug', "  ${cmdHName}: Added 'repeatEventManagement'='always'");
                             $saveCmd = true;
                         }
                     // '0201-#EP#-0000': Removing 'calculValueOffset'
                     } else if (preg_match("/^0201-[0-9A-F]*-0000/", $cmdLogicId)) {
-                        $cmdLogic->setConfiguration('calculValueOffset', null);
-                        log::add('Abeille', 'debug', "  ${cmdHName}: Removed 'calculValueOffset'");
-                        $saveCmd = true;
+                        if ($cmdLogic->getConfiguration('calculValueOffset', null) !== null) {
+                            $cmdLogic->setConfiguration('calculValueOffset', null);
+                            log::add('Abeille', 'debug', "  ${cmdHName}: Removed 'calculValueOffset'");
+                            $saveCmd = true;
+                        }
+                    // '0201-#EP#-0012': Removing 'calculValueOffset'
+                    } else if (preg_match("/^0201-[0-9A-F]*-0012/", $cmdLogicId)) {
+                        if ($cmdLogic->getConfiguration('calculValueOffset', null) !== null) {
+                            $cmdLogic->setConfiguration('calculValueOffset', null);
+                            log::add('Abeille', 'debug', "  ${cmdHName}: Removed 'calculValueOffset'");
+                            $saveCmd = true;
+                        }
                     } else if ($topic == 'OnOff') {
                         $request = $cmdLogic->getConfiguration('request', '');
                         $request = str_replace("Action=Off", "cmd=00", $request);

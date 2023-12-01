@@ -198,11 +198,11 @@
                         $lop = strpos($logicId, '#');
                         $logicId = substr($logicId, 0, $lop);
                         // logMessage('debug', "-- execute(): logicId=".$logicId);
-                        $cmdLogic = $eqLogic->getCmd('info', $logicId);
-                        if (!is_object($cmdLogic)) {
+                        $cmdLogic2 = $eqLogic->getCmd('info', $logicId);
+                        if (!is_object($cmdLogic2)) {
                             message::add("Abeille", $eqLogic->getHumanName().": Commande '".$logicId."' inconnue");
                         } else {
-                            $cmdVal = $cmdLogic->execCmd();
+                            $cmdVal = $cmdLogic2->execCmd();
                             logMessage('debug', "-- Cmd logicId='".$logicId."', val=".$cmdVal);
                             $vo = str_replace('#logicid'.$logicId.'#', $cmdVal, $vo); // Replace #logicid...#
                         }
@@ -210,6 +210,27 @@
                     $newValue = jeedom::evaluateExpression($vo); // Compute final formula
                     logMessage('debug', "-- 'valueOffset' applied: ".$_options['slider']." => ".$newValue);
                     $_options['slider'] = $newValue;
+                } else if (strpos($request, '#value#') !== false) {
+                    // #value# must be replaced by valueOffset result
+                    $lop = strpos($vo, '#logicid'); // Any #logicid....# variable ?
+                    if ($lop != false) {
+                        // logMessage('debug', "-- execute(): logicId at pos ".$lop);
+                        $logicId = substr($vo, $lop + 8);
+                        $lop = strpos($logicId, '#');
+                        $logicId = substr($logicId, 0, $lop);
+                        // logMessage('debug', "-- execute(): logicId=".$logicId);
+                        $cmdLogic2 = $eqLogic->getCmd('info', $logicId);
+                        if (!is_object($cmdLogic2)) {
+                            message::add("Abeille", $eqLogic->getHumanName().": Commande '".$logicId."' inconnue");
+                        } else {
+                            $cmdVal = $cmdLogic2->execCmd();
+                            logMessage('debug', "-- Cmd logicId='".$logicId."' => val=".$cmdVal);
+                            $vo = str_replace('#logicid'.$logicId.'#', $cmdVal, $vo); // Replace #logicid...#
+                        }
+                    }
+                    $newValue = jeedom::evaluateExpression($vo); // Compute final formula
+                    $request = str_replace('#value#', $newValue, $request);
+                    logMessage('debug', "-- 'valueOffset' applied: newValue=${newValue}");
                 }
             }
 

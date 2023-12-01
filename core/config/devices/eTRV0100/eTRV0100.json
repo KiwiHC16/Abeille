@@ -53,10 +53,14 @@
                 "use": "act_zbReadAttribute",
                 "params": "clustId=0001&attrId=0020"
             },
+            "Set setpoint (OLD)": {
+                "use": "danfossTemperatureConsigneSet",
+                "nextLine": "after"
+            },
             "+": {
                 "use": "act_zbWriteAttribute",
                 "params": "clustId=0201&attrId=0012&attrType=29&attrVal=#value#",
-                "valueOffset": "(#logicidsetpoint#+0.5)*100",
+                "valueOffset": "(#logicid0201-01-0012#+0.5)*100",
                 "comment": "Writing (setpoint value + 0.5) * 100",
                 "logicalId": "raiseSetpoint",
                 "isVisible": 1
@@ -64,24 +68,18 @@
             "-": {
                 "use": "act_zbWriteAttribute",
                 "params": "clustId=0201&attrId=0012&attrType=29&attrVal=#value#",
-                "valueOffset": "(#logicidsetpoint#-0.5)*100",
+                "valueOffset": "(#logicid0201-01-0012#-0.5)*100",
                 "comment": "Writing (setpoint value - 0.5) * 100",
                 "logicalId": "lowerSetpoint",
                 "isVisible": 1
             },
-            "Set temp (OLD)": {
-                "use": "danfossTemperatureConsigneSet"
-            },
             "Get setpoint": {
-                "use": "danfossTemperatureConsigneGet"
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0201&attrId=0012"
             },
             "Setpoint": {
                 "use": "inf_zbAttr-0201-OccupiedHeatingSetpoint",
-                "logicalId": "setpoint",
-                "isVisible": 1
-            },
-            "Setpoint OLD": {
-                "use": "danfossTemperatureConsigneValue",
+                "isVisible": 1,
                 "nextLine": "after"
             },
             "Get temp": {

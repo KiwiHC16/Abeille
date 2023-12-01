@@ -7,6 +7,8 @@ ChangeLog
 - Attribut 0000/LocalTemp du cluster 0201 divisé par 100 par défaut.
 - Interne: Cmd: Correction 'writeAttribute0530()'
 - Interne: Cmd: Corrections 'writeAttribute()'
+- Attribut 0012/OccupiedHeatingSetpoint du cluster 0201 divisé par 100 par défaut.
+- Danfoss eTRV010x: Modèle en cours de changements (2662).
 
 231130-BETA-2
 -------------

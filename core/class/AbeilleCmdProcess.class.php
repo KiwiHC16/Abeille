@@ -624,9 +624,9 @@
          *
          * @return none
          */
-        function setParamGeneric($dest,$Command) {
+        function setParamGeneric($dest, $Command) {
 
-            cmdLog('debug', "command setParam4", $this->debug['processCmd']);
+            cmdLog('debug', "  command setParamGeneric", $this->debug['processCmd']);
 
             $priority = $Command['priority'];
 
@@ -658,7 +658,7 @@
             $addrMode        = "02";
             $addr = $Command['address'];
             $srcEp     = "01";
-            if ($Command['destinationEndpoint']>1 ) { $dstEp = $Command['destinationEndpoint']; } else { $dstEp = "01"; } // $dstEp; // "01";
+            if ($Command['EP']>1 ) { $dstEp = $Command['EP']; } else { $dstEp = "01"; } // $dstEp; // "01";
 
             $profId          = "0104";
             $clustId          = $Command['clusterId'];

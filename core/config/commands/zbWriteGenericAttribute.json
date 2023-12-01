@@ -6,7 +6,7 @@
         "subType": "other",
         "configuration": {
             "topic": "WriteAttributeRequestGeneric",
-            "request": "ep=#EP#&Proprio=#PROPRIO#&clusterId=#CLUSTID#&attributeId=#ATTRID#&attributeType=#ATTRTYPE#&value=#VALUE#"
+            "request": "EP=#EP#&Proprio=#PROPRIO#&clusterId=#CLUSTID#&attributeId=#ATTRID#&attributeType=#ATTRTYPE#&value=#VALUE#"
         },
         "type": "action"
     }

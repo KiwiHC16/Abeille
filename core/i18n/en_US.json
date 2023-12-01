@@ -186,6 +186,8 @@
         "Configurer": "Configure",
         "Commande générique spécifique cluster": "Generic cluster specific command",
         "Envoyer": "Send",
+        "Ecriture attribut": "Write attribute",
+        "Valeur à écrire (hexa)": "Data to write (hex)",
 
         "Commandes": "Commands",
         "Ajouter une commande action": "Add action command",

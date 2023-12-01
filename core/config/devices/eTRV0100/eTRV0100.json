@@ -32,7 +32,6 @@
         "timeout": "0",
         "configuration": {
             "mainEP": "01",
-            "poll": "1",
             "icon": "Danfoss-Ally-Thermostat",
             "batteryType": "2x1.5V LR6/AA"
         },

@@ -3297,7 +3297,7 @@
                         return;
                     $attrList   = $Command['attrId'].$attrType.$attrVal;
 
-                    cmdLog('debug', "  Using dir=".$dir.", manufId=".$manufCode.", attrType=".$attrType.", attrVal=".$attrVal, $this->debug['processCmd']);
+                    cmdLog('debug', "  writeAttribute: Dir=".$dir.", ManufCode=".$manufCode.", AttrType=".$attrType.", AttrVal=".$attrVal, $this->debug['processCmd']);
                     $data = $addrMode.$addr.$srcEp.$dstEp.$clustId.$dir.$manufSpecific.$manufCode.$nbOfAttributes.$attrList;
 
                     $this->addCmdToQueue2($priority, $dest, "0110", $data, $addr, $addrMode);
@@ -3370,8 +3370,9 @@
                     $dataType   = $Command['attrType'];
                     $attrVal    = AbeilleTools::reverseHex($Command['attrVal']);
 
-                    cmdLog('debug', "  Using dir=".$dir.", attrType=".$Command['attrType'].", attrVal=".$attrVal, $this->debug['processCmd']);
+                    cmdLog('debug', "  writeAttribute0530: Dir=${dir}, AttrType=".$Command['attrType'].", AttrVal=${attrVal}");
                     $data2 = $zclHeader.$attrId.$dataType.$attrVal;
+
                     $dataLength = sprintf("%02X", strlen($data2) / 2);
                     $data1 = $addrMode.$addr.$srcEp.$dstEp.$profId.$clustId.$secMode.$radius.$dataLength;
                     $data = $data1.$data2;

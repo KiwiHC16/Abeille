@@ -182,7 +182,7 @@
     </div>
 </div>
 <div class="form-group">
-    <label class="col-sm-3 control-label" title="writeAttribute()">ZCL: Ecriture attribut</label>
+    <label class="col-sm-3 control-label" title="writeAttribute()">ZCL: {{Ecriture attribut}}</label>
     <div class="col-sm-9">
         <?php
             // echo '<a class="btn btn-danger" onclick="interrogate(\'writeAttribute\')">{{Ecrire}}</a>';
@@ -192,7 +192,7 @@
             addAttrInput("idAttrIdWA");
             addTypeList("idAttrTypeWA");
         ?>
-        <input id="idValueWA" title="{{Valeur à écrire. Format hex string}}"  placeholder="{{Data}}" />
+        <input id="idValueWA" title="{{Valeur à écrire (hexa)}}"  placeholder="{{Data}}" />
         <?php
             addDirInput("idDirWA");
             addManufCodeInput("idManufIdWA");

@@ -13,6 +13,8 @@ ChangeLog
 - Attribut 0012/OccupiedHeatingSetpoint du cluster 0201 divisé par 100 par défaut.
 - Danfoss eTRV010x: Modèle en cours de changements (2662).
 - Page EQ/avancé: Améliorations écriture attribut.
+- Danfoss eTRV010x: Qq commandes cachées par défaut car sans interet (2662).
+- Interne: Améliorations constantes Zigbee cluster 0201.
 
 231130-BETA-2
 -------------

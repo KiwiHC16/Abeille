@@ -1,6 +1,5 @@
 {
     "danfossUIKeyLockValue": {
-        "isVisible": 1,
         "logicalId": "#EP#-danfossUIKeyLockValue",
         "subType": "string",
         "configuration": {

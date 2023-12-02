@@ -549,7 +549,10 @@
             "name" => "Thermostat",
             "attributes" => array(
                 "0000" => array( "name" => "LocalTemperature", "access" => "RP", "dataType" => 0x29 ), // int16
+                "0001" => array( "name" => "OutdoorTemperature", "access" => "R", "dataType" => 0x29 ), // int16
                 "0002" => array( "name" => "Occupancy", "access" => "R", "dataType" => 0x18 ),
+                "0007" => array( "name" => "PICoolingDemand", "access" => "RP", "dataType" => 0x20 ), // uint8
+                "0008" => array( "name" => "PIHeatingDemand", "access" => "RP", "dataType" => 0x20 ), // uint8
                 "0012" => array( "name" => "OccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ), // int16
                 "0014" => array( "name" => "UnoccupiedHeatingSetpoint", "access" => "RW", "dataType" => 0x29 ), // int16
 

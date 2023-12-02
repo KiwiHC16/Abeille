@@ -1,9 +1,9 @@
 {
     "inf_zbCmdS-0500-ZoneStatus-ChangeNotification": {
         "comment": "0500/IAS Zone cluster, cmd 00 (Zone status change notification) from SERVER",
+        "type": "info",
         "subType": "numeric",
         "configuration": [],
-        "type": "info",
         "logicalId": "#EP#-0500-cmd00"
     }
 }

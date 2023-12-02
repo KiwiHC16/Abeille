@@ -2554,7 +2554,7 @@ class Abeille extends eqLogic {
 
         $abQueues = $GLOBALS['abQueues'];
         $queueId = $abQueues['xToCmd']['id'];
-        $queue = msg_get_queue($queueId);
+        $queue = msg_get_queue($queueId, JSON_UNESCAPED_SLASHES);
         if ($queue === false) {
             log::add('Abeille', 'error', "msgToCmd(): La queue ".$queueId." n'existe pas => Message ignoré.");
             return;
@@ -2583,7 +2583,7 @@ class Abeille extends eqLogic {
         $msg = array();
         $msg['topic'] = $topic;
         $msg['payload'] = $payload;
-        $msgJson = json_encode($msg);
+        $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
         if (msg_send($queue, $priority, $msgJson, false, false, $error_code)) {
             log::add('Abeille', 'debug', "  msgToCmd(): Envoyé '".$msgJson."' vers queue ".$queueId);

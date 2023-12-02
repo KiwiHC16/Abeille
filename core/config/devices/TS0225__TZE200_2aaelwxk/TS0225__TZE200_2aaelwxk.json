@@ -9,7 +9,7 @@
             "security": "1"
         },
         "configuration": {
-            "icon": "?",
+            "icon": "Tuya-PresenceAndIlluminance",
             "mainEP": "01"
         },
         "commands": {
@@ -44,6 +44,11 @@
             },
             "Zone Status Changed": {
                 "use": "inf_zbCmdS-0500-ZoneStatus-ChangeNotification",
+                "trigOut": {
+                    "01-0500-alarm1": {
+                        "valueOffset": "#value#&1"
+                    }
+                },
                 "params": "ep=01"
             },
             "Bind 01-0500-ToZigate": {

@@ -1207,7 +1207,7 @@
                 // }
 
                 // Generated cmd 00 seems to be mandatory. Using it by default
-                cmds["Zone Alarm1"] = newCmd("inf_Zone-Alarm1", "ep="+epId);
+                cmds["Zone Alarm1"] = newCmd("inf_zone-Alarm1", "ep="+epId);
                 cmds["Zone Alarm1"]["isVisible"] = 1;
                 cmds["Zone Status Changed"] = newCmd("inf_zbCmdS-0500-ZoneStatus-ChangeNotification", "ep="+epId);
                 cmds["Zone Status Changed"]["trigOut"] = [];

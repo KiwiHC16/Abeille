@@ -187,6 +187,17 @@
                     echo "  Cmd '".$cmdFName."' RENAMED.\n";
                 }
 
+                // 'inf_Xxxxx' => 'inf_xxxxxx'
+                else if (preg_match('/^inf_[A-Z]*/', $cmdFName)) {
+                    $new = "inf_";
+                    $new .= strtolower(substr($cmdFName, 4, 1));
+                    $new .= substr($cmdFName, 5);
+                    $commands2[$key] = $value;
+                    $commands2[$key]["use"] = $new;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdFName}' renamed to '${new}'.\n";
+                }
+
                 // zbReadAttribute => act_zbReadAttribute
                 else if (in_array($cmdFName, array('zbReadAttribute', 'zbWriteAttribute', 'zbConfigureReporting', 'zbBindToZigate'))) {
                     $new = "act_zb".substr($cmdFName, 2);

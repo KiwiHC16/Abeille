@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="231202-BETA-2"
+# VERSION="231202-BETA-3"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -1131,7 +1131,7 @@ a48596ec13961921a25bbf112cd37b4c *core/config/devices/ctrl_neutral2/ctrl_neutral
 c9412bc1d3af8cd2cdfb0ad907ca82c7 *core/config/devices/diy-mains-fault/diy-mains-fault.json
 73578a6f5b190d993bf1712c2dcf5471 *core/config/devices/diy-routeur/diy-routeur.json
 31fd63f2793515cff7188024cc26058b *core/config/devices/eTRV0100/discovery-eTRV0103_Danfoss.json
-6982f35dfa3a67a2570e4689617e1a73 *core/config/devices/eTRV0100/eTRV0100.json
+fb6bada5f1efdbac208868d3e1abd53e *core/config/devices/eTRV0100/eTRV0100.json
 e8fece09da325a689a9633d127d09e97 *core/config/devices/fuel-tank-level/fuel-tank-level.json
 561ef1acb0f17bd132be833716901594 *core/config/devices/light.aqcn02/light.aqcn02.json
 3802d06d89c8c656e4f5f0747467e2f3 *core/config/devices/magnet.acn001/discovery.json
@@ -1310,7 +1310,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 ce32db08df86d3ff94f08d80d463b7f2 *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-0a91099284507e95d18d6beb6c213afa *docs/fr_FR/Changelog.rst
+20d91b1ce565741d1f103916df076c3c *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1645,10 +1645,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-03fbdbd3e108b34d4e45433f9df342a7 *plugin_info/Abeille.version
+3dfecd7ebb98a8f87d12f1a2466c5cdc *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 c16154784139bfd2264e4a6409fdc658 *plugin_info/configuration.php
-29996e2e1437b0d0989624710920d62c *plugin_info/info.json
+937b09e435654c1c99ee1681f3321328 *plugin_info/info.json
 0b79c5bcb2371599ff4fb5a7fa7f4e3d *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

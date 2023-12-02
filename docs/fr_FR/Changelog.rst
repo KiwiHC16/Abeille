@@ -1,6 +1,9 @@
 ChangeLog
 =========
 
+231202-BETA-1
+-------------
+
 - Page EQ/avancé: Traductions US.
 - Modèles: Nettoyage 'poll=0'
 - Modèles: Amélioration 'trigOut' pour support multiples actions.

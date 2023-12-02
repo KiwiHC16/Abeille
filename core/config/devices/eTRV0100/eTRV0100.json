@@ -57,20 +57,20 @@
                 "use": "danfossTemperatureConsigneSet",
                 "nextLine": "after"
             },
-            "+": {
-                "use": "act_zbWriteAttribute",
-                "params": "clustId=0201&attrId=0012&attrType=29&attrVal=#value#",
-                "valueOffset": "(#logicid0201-01-0012#+0.5)*100",
-                "comment": "Writing (setpoint value + 0.5) * 100",
-                "logicalId": "raiseSetpoint",
-                "isVisible": 1
-            },
             "-": {
                 "use": "act_zbWriteAttribute",
                 "params": "clustId=0201&attrId=0012&attrType=29&attrVal=#value#",
                 "valueOffset": "(#logicid0201-01-0012#-0.5)*100",
                 "comment": "Writing (setpoint value - 0.5) * 100",
                 "logicalId": "lowerSetpoint",
+                "isVisible": 1
+            },
+            "+": {
+                "use": "act_zbWriteAttribute",
+                "params": "clustId=0201&attrId=0012&attrType=29&attrVal=#value#",
+                "valueOffset": "(#logicid0201-01-0012#+0.5)*100",
+                "comment": "Writing (setpoint value + 0.5) * 100",
+                "logicalId": "raiseSetpoint",
                 "isVisible": 1
             },
             "Get setpoint": {

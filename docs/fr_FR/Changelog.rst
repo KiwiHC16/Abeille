@@ -22,6 +22,7 @@ ChangeLog
 - Assistant modèle: Correction.
 - Tuya detecteur de présence ZG-205Z: Support préliminaire.
 - Page EQ/avancé: correction suppression modèle local.
+- Modèles de commandes: Normalisation noms.
 
 231202-BETA-3
 -------------

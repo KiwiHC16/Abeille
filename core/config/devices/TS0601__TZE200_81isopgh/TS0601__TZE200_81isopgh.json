@@ -35,15 +35,15 @@
                 "isHistorized": 1
             },
             "Last open duration": {
-                "use": "inf_Valve-LastOpenDuration",
+                "use": "inf_valve-LastOpenDuration",
                 "isVisible": 1
             },
             "Time left": {
-                "use": "inf_Valve-TimeLeft",
+                "use": "inf_valve-TimeLeft",
                 "isVisible": 1
             },
             "Measured value": {
-                "use": "inf_Valve-MeasuredValue",
+                "use": "inf_valve-MeasuredValue",
                 "calculValueOffset": "#value#/10",
                 "historizeRound": 1,
                 "isVisible": 1,

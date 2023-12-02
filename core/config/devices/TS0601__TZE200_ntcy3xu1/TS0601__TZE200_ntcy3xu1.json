@@ -19,7 +19,7 @@
                 "isVisible": 1
             },
             "Battery-Low": {
-                "use": "inf_Battery-Low",
+                "use": "inf_battery-Low",
                 "isVisible": 1
             },
             "Battery-Percent": {

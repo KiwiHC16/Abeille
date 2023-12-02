@@ -38,7 +38,7 @@
                 "comment": "Reporting every 5 to 10mins"
             },
             "Zone Alarm1": {
-                "use": "inf_Zone-Alarm1",
+                "use": "inf_zone-Alarm1",
                 "params": "ep=01",
                 "isVisible": "1"
             },

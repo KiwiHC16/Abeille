@@ -23,7 +23,7 @@
                 "nextLine": "after"
             },
             "Setpoint": {
-                "use": "inf_Thermostat-Setpoint",
+                "use": "inf_thermostat-Setpoint",
                 "isVisible": 1,
                 "nextLine": "after"
             }

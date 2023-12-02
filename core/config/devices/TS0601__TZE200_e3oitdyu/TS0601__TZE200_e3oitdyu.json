@@ -4,9 +4,9 @@
         "model": "MS-105BZ",
         "type": "Moes dual dimmer module",
         "alternateIds": {
-            "TS0601__TZE200_fjjbhx9d": {},
-            "TS0601__TZE200_gwkapsoq": {},
-            "TS0601__TZE204_zenj4lxv": {}
+            "TS0601__TZE200_fjjbhx9d": [],
+            "TS0601__TZE200_gwkapsoq": [],
+            "TS0601__TZE204_zenj4lxv": []
         },
         "timeout": "60",
         "category": {
@@ -71,7 +71,7 @@
                 "isVisible": 1
             },
             "Level 1": {
-                "use": "inf_LevelPercent",
+                "use": "inf_levelPercent",
                 "logicalId": "level1",
                 "isVisible": 1,
                 "nextLine": "after"
@@ -83,7 +83,7 @@
                 "isVisible": 1
             },
             "Level 2": {
-                "use": "inf_LevelPercent",
+                "use": "inf_levelPercent",
                 "logicalId": "level2",
                 "isVisible": 1,
                 "nextLine": "after"

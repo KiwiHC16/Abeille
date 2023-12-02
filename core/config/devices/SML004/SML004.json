@@ -90,7 +90,7 @@
                 "isVisible": "1"
             },
             "Sensitivity": {
-                "use": "inf_Sensitivity",
+                "use": "inf_sensitivity",
                 "logicalId": "0406-02-0030",
                 "comment": "Attr 0030 used as private attribute, not standard",
                 "comment2": "low/medium/high/very_high/max",

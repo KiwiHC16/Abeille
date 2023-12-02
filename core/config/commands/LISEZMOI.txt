@@ -13,6 +13,7 @@ Nom des commandes
 En dehors des commandes "historiques" en passe d'être normalisées, les noms de fichiers doivent suivre les regles suivantes:
 - Toute commande 'action' doit commencer par 'act_'.
 - Toute commande 'info' doit commencer par 'inf_'.
+- La lettre suivante est toujours en minuscule.
 
 - Les commandes specifiques Zigbee (issues du standard Zigbee) sont ensuite prefixées par "zb"
   Ex: inf_zbXXX ou act_zbXXX

@@ -1,11 +1,11 @@
 {
-    "inf_Battery-Low": {
-        "comment": "A generic attribut to display a BATTERY LOW alarm",
+    "inf_presence-Detection": {
+        "comment": "A generic attribut to display a PRESENCE DETECTION ALARM",
         "comment3": "Tcharp38: Can we map on a Zigbee standard attribute ?",
         "subType": "binary",
         "template": "",
         "type": "info",
-        "logicalId": "#EP#-batteryLow",
+        "logicalId": "#EP#-presence",
         "unit": "",
         "invertBinary": 1,
         "genericType": "ALARM_STATE"

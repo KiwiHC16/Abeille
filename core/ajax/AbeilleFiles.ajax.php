@@ -406,7 +406,7 @@ logDebug("jsonLocation=".$jsonLocation);
             }
             if ($status == 0) {
                 $fullPath = $jsonDir.'/'.$jsonId.'.json';
-                $json = json_encode($devConfig, JSON_PRETTY_PRINT);
+                $json = json_encode($devConfig, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 logDebug("json=".$json);
                 file_put_contents($fullPath, $json);
             }

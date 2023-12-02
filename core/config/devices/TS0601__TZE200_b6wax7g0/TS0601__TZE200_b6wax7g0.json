@@ -33,7 +33,7 @@
                 "isVisible": 1
             },
             "Setpoint": {
-                "use": "inf_Thermostat-Setpoint",
+                "use": "inf_thermostat-Setpoint",
                 "isVisible": 1,
                 "nextLine": "after"
             },
@@ -59,7 +59,7 @@
                 "nextLine": "after"
             },
             "Window-Detection": {
-                "use": "inf_Door-Status",
+                "use": "inf_door-Status",
                 "logicalId": "01-windowDetectionStatus",
                 "nextLine": "after",
                 "invertBinary": 0,

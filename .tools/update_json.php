@@ -188,7 +188,7 @@
                 }
 
                 // 'inf_Xxxxx' => 'inf_xxxxxx'
-                else if (preg_match('/^inf_[A-Z]*/', $cmdFName)) {
+                else if (preg_match('/^inf_[A-Z]{1}/', $cmdFName)) {
                     $new = "inf_";
                     $new .= strtolower(substr($cmdFName, 4, 1));
                     $new .= substr($cmdFName, 5);
@@ -761,14 +761,12 @@
     function updateCommand($fileName, $fullPath, $cmd) {
         global $commandsList;
 
-        foreach ($cmd as $cmdKey => $cmd2) {
-            break;
-        }
+        // foreach ($cmd as $cmdKey => $cmd2) {
+        //     break;
+        // }
 
         if (isset($cmd2['type']))
             $type = $cmd2['type'];
-        else if (isset($cmd2['Type'])) // Old name support
-            $type = $cmd2['Type'];
         else {
             newCmdError($fileName, "ERROR", "Command type is undefined.");
             return;
@@ -781,24 +779,24 @@
             $cmdUpdated = true;
             echo "  Removed 'order'.\n";
         }
-        if (isset($cmd2['Type'])) {
-            $cmd2['type'] = $cmd2['Type'];
-            unset($cmd2['Type']);
-            $cmdUpdated = true;
-            echo "  Renamed 'Type' to 'type'.\n";
-        }
-        if (isset($cmd2['unite'])) {
-            $cmd2['unit'] = $cmd2['unite'];
-            unset($cmd2['unite']);
-            $cmdUpdated = true;
-            echo "  Renamed 'unite' to 'unit'.\n";
-        }
-        if (isset($cmd2['generic_type'])) {
-            $cmd2['genericType'] = $cmd2['generic_type'];
-            unset($cmd2['generic_type']);
-            $cmdUpdated = true;
-            echo "  Renamed 'generic_type' to 'genericType'.\n";
-        }
+        // if (isset($cmd2['Type'])) {
+        //     $cmd2['type'] = $cmd2['Type'];
+        //     unset($cmd2['Type']);
+        //     $cmdUpdated = true;
+        //     echo "  Renamed 'Type' to 'type'.\n";
+        // }
+        // if (isset($cmd2['unite'])) {
+        //     $cmd2['unit'] = $cmd2['unite'];
+        //     unset($cmd2['unite']);
+        //     $cmdUpdated = true;
+        //     echo "  Renamed 'unite' to 'unit'.\n";
+        // }
+        // if (isset($cmd2['generic_type'])) {
+        //     $cmd2['genericType'] = $cmd2['generic_type'];
+        //     unset($cmd2['generic_type']);
+        //     $cmdUpdated = true;
+        //     echo "  Renamed 'generic_type' to 'genericType'.\n";
+        // }
         if (isset($cmd2['Comment'])) {
             $cmd2['comment'] = $cmd2['Comment'];
             unset($cmd2['Comment']);

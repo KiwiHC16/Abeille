@@ -101,7 +101,7 @@
             // echo '<a class="btn btn-danger" onclick="interrogate(\'bindToDevice\')">{{Bind}}</a>';
             addButton("{{Bind}}", "btn-danger", "bindToDevice");
             addEpInput("idEpE");
-            addClusterButton("idClustIdE");
+            addClusterList("idClustIdE");
             // <input id="idIeeeE" title="{{Adresse IEEE de destination (ex: 5C0272FFFE2857A3)}}" />
             echo ' TO';
             addIeeeListButton("idIeeeE", true);
@@ -117,7 +117,7 @@
             // echo '<a class="btn btn-danger" onclick="interrogate(\'unbindToDevice\')">{{Unbind}}</a>';
             addButton("{{Unbind}}", "btn-danger", "unbindToDevice");
             addEpInput("idEpSrc-UBD");
-            addClusterButton("idClustId-UBD");
+            addClusterList("idClustId-UBD");
             echo ' TO';
             addIeeeListButton("idAddr-UBD", true);
             addEpInput("idEpDst-UBD");
@@ -132,7 +132,7 @@
             // echo '<a class="btn btn-danger" onclick="interrogate(\'bindToGroup\')">{{Bind}}</a>';
             addButton("{{Bind}}", "btn-danger", "bindToGroup");
             addEpInput("idEpF");
-            addClusterButton("idClustIdF");
+            addClusterList("idClustIdF");
             echo ' TO';
             addGroupInput('idGroupF', 'Destination group');
         ?>
@@ -146,7 +146,7 @@
             addButton("{{Unbind}}", "btn-danger", "unbindToGroup");
             // echo '<a class="btn btn-danger" onclick="interrogate(\'unbindToGroup\')">{{Unbind}}</a>';
             addEpInput("idEpSrc-UBG");
-            addClusterButton("idClustId-UBG");
+            addClusterList("idClustId-UBG");
             echo ' TO';
             addGroupInput('idGroup-UBG', 'Destination group');
         ?>
@@ -160,7 +160,7 @@
             // echo '<a class="btn btn-danger" onclick="interrogate(\'leaveRequest\')">{{Leave}}</a>';
             addButton("{{Leave}}", "btn-danger", "leaveRequest");
             // addIeeeListButton("idIeeeLR");
-            // addClusterButton("idClustIdF");
+            // addClusterList("idClustIdF");
             // echo ' TO';
         ?>
         <!-- <input id="idGroupF" title="{{Adresse du groupe de destination (ex: 0001)}}" /> -->
@@ -170,12 +170,12 @@
 <!-- ZCL commands -->
 <br>
 <div class="form-group">
-    <label class="col-sm-3 control-label">ZCL: Lecture attribut</label>
+    <label class="col-sm-3 control-label">ZCL: {{Lecture attribut}}</label>
     <div class="col-sm-5">
         <?php
             addButton("{{Lire}}", "btn-default", "readAttribute");
             addEpInput("idEpA");
-            addClusterButton("idClustIdA");
+            addClusterList("idClustIdA");
             addAttrInput("idAttrIdA");
             addManufCodeInput("idManufIdRA"); // Optional
         ?>
@@ -188,11 +188,11 @@
             // echo '<a class="btn btn-danger" onclick="interrogate(\'writeAttribute\')">{{Ecrire}}</a>';
             addButton("{{Ecrire}}", "btn-danger", "writeAttribute");
             addEpInput("idEpWA");
-            addClusterButton("idClustIdWA");
+            addClusterList("idClustIdWA");
             addAttrInput("idAttrIdWA");
             addTypeList("idAttrTypeWA");
         ?>
-        <input id="idValueWA" title="{{Valeur à écrire (hexa)}}"  placeholder="{{Data}}" />
+        <input id="idValueWA" title="{{Valeur (format naturel)}}"  placeholder="{{Data}}" />
         <?php
             addDirInput("idDirWA");
             addManufCodeInput("idManufIdWA");
@@ -207,13 +207,15 @@
             // echo '<a class="btn btn-danger" onclick="interrogate(\'writeAttribute0530\')">{{Ecrire}}</a>';
             addButton("{{Ecrire}}", "btn-danger", "writeAttribute0530");
             addEpInput("idEpWA2");
-            addClusterButton("idClustIdWA2");
-            addDirInput("idDirWA2");
+            addClusterList("idClustIdWA2");
             addAttrInput("idAttrIdWA2");
             addTypeList("idAttrTypeWA2");
         ?>
         <!-- <input id="idAttrTypeWA2" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" /> -->
         <input id="idValueWA2" title="{{Valeur à écrire. Format hex string}}"  placeholder="{{Data}}" />
+        <?php
+            addDirInput("idDirWA2");
+        ?>
     </div>
 </div>
 
@@ -223,7 +225,7 @@
         <?php
             addButton("{{Interroger}}", "btn-default", "readReportingConfig");
             addEpInput("idEp");
-            addClusterButton("idClustId");
+            addClusterList("idClustId");
             addAttrInput("idAttrId");
         ?>
     </div>
@@ -234,7 +236,7 @@
         <?php
             addButton("{{Interroger}}", "btn-default", "discoverCommandsReceived");
             addEpInput("idEpB");
-            addClusterButton("idClustIdB");
+            addClusterList("idClustIdB");
         ?>
     </div>
 </div>
@@ -244,7 +246,7 @@
         <?php
             addButton("{{Interroger}}", "btn-default", "discoverAttributes");
             addEpInput("idEpD");
-            addClusterButton("idClustIdD");
+            addClusterList("idClustIdD");
         ?>
     </div>
 </div>
@@ -254,7 +256,7 @@
         <?php
             addButton("{{Interroger}}", "btn-default", "discoverAttributesExt");
             addEpInput("idEpC");
-            addClusterButton("idClustIdC");
+            addClusterList("idClustIdC");
         ?>
     </div>
 </div>
@@ -264,7 +266,7 @@
         <?php
             addButton("{{Configurer}}", "btn-danger", "configureReporting2");
             addEpInput("idEpCR2");
-            addClusterButton("idClustIdCR2");
+            addClusterList("idClustIdCR2");
             addAttrInput("idAttrIdCR2");
             addTypeList("idAttrTypeCR2");
             addManufCodeInput("idManufCodeCR2");
@@ -280,13 +282,11 @@
         <?php
             addButton("{{Configurer}}", "btn-danger", "configureReporting");
             addEpInput("idEpCR");
-            addClusterButton("idClustIdCR");
+            addClusterList("idClustIdCR");
             addAttrInput("idAttrIdCR");
             addTypeList("idAttrTypeCR");
             addManufCodeInput("idManufIdCR");
         ?>
-        <!-- <input id="idManufIdCR" title="{{Code fabricant. Format hex string 4 car (ex: 1241)}}" placeholder="{{Manuf code (ex: 1241)}}" /> -->
-        <!-- <input id="idAttrTypeCR" title="{{Type attribut. Format hex string 2 car (ex: 21)}}" placeholder="{{Type (ex: 21)}}" /> -->
         <input id="idMinCR" title="{{Interval min. Format hex string 4 car}}" placeholder="{{Min}}" style="width:60px" />
         <input id="idMaxCR" title="{{Interval max. Format hex string 4 car}}" placeholder="{{Max}}" style="width:60px" />
         <input id="idChangeCR" title="{{Change. Format hex string dépendant de l'attribut}}" placeholder="{{Change}}" />
@@ -407,7 +407,7 @@
         <?php
             addButton("{{Envoyer}}", "btn-danger", "genericCmd");
             addEpInput("idEp-GC");
-            addClusterButton("idClustId-GC");
+            addClusterList("idClustId-GC");
             addInput("idCmd-GC", "{{Commande (1B hexa)}}", "{{Commande}}");
             addInput("idData-GC", "{{Données}}", "{{Données}}");
             addManufCodeInput("idManufCode-GC");

@@ -191,6 +191,7 @@
         "Code fabricant (Hexa 4 car; ex: 12AC": "Manuf code (hex 4 char; ex 12AC)",
         "Code fabricant": "Manufacturer code",
         "Type d'attribut": "Attribute type",
+        "Valeur (format naturel)": "Data (natural format)",
 
         "Commandes": "Commands",
         "Ajouter une commande action": "Add action command",

@@ -18,7 +18,7 @@
         echo '<input id="'.$id.'" class="advEp" title="{{End Point (Hexa 2 car; ex: 01)}}" value="XX" style="width:30px; margin-left: 8px" />';
     }
 
-    function addClusterButton($id) {
+    function addClusterList($id) {
         global $zbClusters;
         echo '<select id="'.$id.'" title="{{Cluster}}" style="width:140px; margin-left: 8px">';
         foreach ($zbClusters as $clustId => $clust) {

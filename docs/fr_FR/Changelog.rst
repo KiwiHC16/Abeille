@@ -1,6 +1,8 @@
 ChangeLog
 =========
 
+- Interne: Cmd: Réactivation régulation NPDU pour éviter erreurs x85.
+
 231202-BETA-3
 -------------
 

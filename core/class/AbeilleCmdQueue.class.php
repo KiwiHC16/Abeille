@@ -200,7 +200,7 @@
             $msg = array();
             $msg['topic']   = $topic;
             $msg['payload'] = $payload;
-            $msgJson = json_encode($msg);
+            $msgJson = json_encode($msg, JSON_UNESCAPED_SLASHES);
 
             if (msg_send($queue, 1, $msgJson, false, false)) {
                 cmdLog('debug', 'msgToAbeille() mesage: '.$msgJson.' added to queue : '.$queueId, $this->debug['tempo']);
@@ -523,7 +523,7 @@
                 // cmdLog("debug", __FUNCTION__." zgId=".$zgId.", zg=".json_encode($zg));
 
                 if (!$zg['enabled']) continue; // Disabled
-                if (!$zg['available']) continue;  // Not free
+                if (!$zg['available']) continue;  // Already treating a command
 
                 $this->zgId = $zgId;
                 foreach (range(priorityMax, priorityMin) as $priority) {
@@ -531,21 +531,30 @@
                     if ($count == 0)
                         continue; // Queue empty
 
+                    // There is something to send
+
                     // Throughput limitation
                     // $zg['tp_time'] gives time (in us) when Zigate can be considered available again.
                     $mt = microtime(true);
                     if (isset($zg['tp_time']) && ($zg['tp_time'] > $mt)) {
-                        // cmdLog('debug', "  Throughput limitation for Zigate ".$zgId." (tp_time=".$zg['tp_time'].", mt=".$mt.")");
-                        cmdLog('debug', "processCmdQueues(): zigate=".$zgId.", pri=".$priority.", count=".$count." => Throughput limitation");
+                        cmdLog('debug', "processCmdQueues(): ZgId=${zgId} => Throughput limitation");
                         break; // This zigate is not yet available
                     }
 
-                    cmdLog('debug', "processCmdQueues(): zigate=".$zgId.", pri=".$priority.", NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
+                    cmdLog('debug', "processCmdQueues(): ZgId=${zgId}, Pri=${priority}, NPDU=".$zg['nPDU'].", APDU=".$zg['aPDU']);
 
                     $cmd = $zg['cmdQueue'][$priority][0]; // Takes first cmd
                     cmdLog('debug', "  cmd=".json_encode($cmd));
                     if ($cmd['status'] != '') {
                         cmdLog('debug', "  WARNING: Unexpected cmd status '".$cmd['status']."'");
+                    }
+
+                    // NDPU limitation (NDPU too high leads to extended error due to lack of resources)
+                    if (!$cmd['zgOnly']) { // Not a cmd for Zigate only
+                        if ($zg['nPDU'] > 7) {
+                            cmdLog('debug', "  NDPU limitation (NPDU=".$zg['nPDU'].")");
+                            break; // This zigate is not yet available
+                        }
                     }
 
                     /* Additional flow control with nPDU/aPDU regulation to avoid zigate internal saturation.
@@ -740,7 +749,8 @@
                         cmdLog('debug', '  Corresponding cmd not found.');
                         continue;
                     }
-cmdLog('debug', "  cmd=".json_encode($cmd));
+                    cmdLog('debug', "  cmd=".json_encode($cmd));
+
                     // If ACK is requested but failed, removing cmd or it will lead to cmd timeout.
                     // Note: This is done only if cmd == last sent.
                     // if ($cmd['ackAps'] && $lastSent)
@@ -754,7 +764,7 @@ cmdLog('debug', "  cmd=".json_encode($cmd));
                         if ($eq === []) {
                             cmdLog('debug', "  WARNING: Unknown device: Net=${net} Addr=${addr}");
                         } else {
-cmdLog('debug', "  eq=".json_encode($eq));
+                            cmdLog('debug', "  eq=".json_encode($eq));
                             // Note: TX status makes sense only if device is always listening (rxOnWhenIdle=TRUE)
                             //       For other devices any interrogation without waking up device may lead to NO-ACK which is normal
                             if (isset($eq['rxOnWhenIdle']) && $eq['rxOnWhenIdle']) {
@@ -781,6 +791,11 @@ cmdLog('debug', "  eq=".json_encode($eq));
                             }
                         }
                     }
+                }
+
+                else if ($msg['type'] == "8012") {
+                    // 8012 msg used to get NPDU/APDU status updates only
+                    return;
                 }
 
                 /* Tcharp38: 8702 now ignored. Just means message buffered but does not

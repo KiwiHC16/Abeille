@@ -4629,26 +4629,26 @@
                 $nPdu       = substr($payload,26, 2);
                 $aPdu       = substr($payload,28, 2);
             }
-            $msgDecoded = '8012/APS data confirm, Status='.$status.', Addr='.$dstAddr.', SQNAPS='.$sqnAps.', NPDU='.$nPdu.', APDU='.$aPdu;
-
-            // Log
-            parserLog('debug', $net.', Type='.$msgDecoded, "8012");
-
-            // Sending msg to cmd for flow control => Disabled as not used on cmd side
-            // $msg = array (
-            //     'type'      => "8012",
-            //     'net'       => $net,
-            //     'status'    => $status,
-            //     'addr'      => $dstAddr,
-            //     'sqnAps'    => $sqnAps,
-            //     'nPDU'      => $nPdu,
-            //     'aPDU'      => $aPdu,
-            // );
-            // $this->msgToCmdAck($msg);
 
             $zgId = substr($net, 7); // AbeilleX => X
             $GLOBALS['zigate'.$zgId]['nPdu'] = $nPdu;
             $GLOBALS['zigate'.$zgId]['aPdu'] = $aPdu;
+
+            // Log
+            $msgDecoded = '8012/APS data confirm, Status='.$status.', Addr='.$dstAddr.', SQNAPS='.$sqnAps.', NPDU='.$nPdu.', APDU='.$aPdu;
+            parserLog('debug', $net.', Type='.$msgDecoded, "8012");
+
+            // Sending msg to cmd for flow control => Useful to update NPDU/APDU
+            $msg = array (
+                'type'      => "8012",
+                'net'       => $net,
+                'status'    => $status,
+                'addr'      => $dstAddr,
+                'sqnAps'    => $sqnAps,
+                'nPDU'      => $nPdu,
+                'aPDU'      => $aPdu,
+            );
+            $this->msgToCmdAck($msg);
 
             // Monitor if required
             if (isset($GLOBALS["dbgMonitorAddr"]) && !strcasecmp($GLOBALS["dbgMonitorAddr"], $dstAddr))

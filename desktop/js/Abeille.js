@@ -16,6 +16,7 @@
 
 // Note: 'eqId' seems overwritten somewhere.
 var curEqId = -1;
+var curEq = {}; // Updated by refreshEqInfos()
 
 // console.log("LA1 eqId=", curEqId);
 
@@ -67,6 +68,14 @@ function refreshEqInfos() {
             eqAddr = eq.addr;
             eqIeee = eq.ieee;
             eqBatteryType = eq.batteryType;
+            curEq = {
+                zigbee: {
+                    addr: eq.addr
+                },
+                model: {
+                    modelName: eq.model.modelName
+                }
+            };
 
             // console.log("idEqName=", document.getElementById("idEqName"));
             // console.log("idEqId=", document.getElementById("idEqId"));
@@ -1002,9 +1011,9 @@ function repairReturnChannel() {
 $("#idDelLocalBtn").on("click", function () {
     console.log("idDelLocalBtn click");
 
-    console.log("eq=", eq);
-    jsonId = eq.modelName;
-    path = "core/config/devices_local/" + jsonId + "/" + jsonId + ".json";
+    console.log("curEq=", curEq);
+    modelName = curEq.model.modelName;
+    path = "core/config/devices_local/" + modelName + "/" + modelName + ".json";
     $.ajax({
         type: "POST",
         url: "plugins/Abeille/core/ajax/AbeilleFiles.ajax.php",

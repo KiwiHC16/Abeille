@@ -246,7 +246,7 @@
             $path = __DIR__."/../../".$file;
             $status = 0;
             $error = "";
-            // logDebug("action=delFile, file=".$file.", path=".$path);
+            logDebug("action=delFile, file=".$file.", path=".$path);
 
             if (!file_exists($path)) {
                 $status = 1;

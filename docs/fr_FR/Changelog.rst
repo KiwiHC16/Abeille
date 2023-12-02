@@ -2,6 +2,9 @@ ChangeLog
 =========
 
 - Interne: Cmd: Réactivation régulation NPDU pour éviter erreurs x85.
+- Assistant modèle: Correction.
+- Tuya detecteur de présence ZG-205Z: Support préliminaire.
+- Page EQ/avancé: correction suppression modèle local.
 
 231202-BETA-3
 -------------

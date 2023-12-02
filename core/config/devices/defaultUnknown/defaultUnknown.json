@@ -2,14 +2,14 @@
     "defaultUnknown": {
         "manufacturer": "Abeille",
         "model": "Unknown",
-        "type": "Abeille model for unknown devices",
+        "type": "Unknown device",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
             "icon": "defaultUnknown"
         },
         "category": {
-            "security": "1"
+            "default": "1"
         },
         "commands": {
         }

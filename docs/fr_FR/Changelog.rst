@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-231202-BETA-1
+231202-BETA-2
 -------------
 
 - Page EQ/avancé: Traductions US.

@@ -1,5 +1,5 @@
 # Auto-generated Abeille's MD5 file. DO NOT MODIFY !
-# VERSION="231202-BETA-1"
+# VERSION="231202-BETA-2"
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.editorconfig
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.gitattributes
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *.github/dependabot.yml
@@ -435,14 +435,14 @@ b198947ee58546fcc5da1f93b0b5f5f0 *core/config/commands/cube_1.json
 6a08bf0f152ad5f5c8e3bc1b16b6f77e *core/config/commands/cube_2.json
 6d70519f381b99d04d8d10ca67e72f0c *core/config/commands/cube_3.json
 1a2b73a7555a697be9233a0a9707f031 *core/config/commands/danfossSystemeModeGet.json
-ce08482f2dc7695877c83449426324db *core/config/commands/danfossSystemeModeValue.json
+e26ce3b5fc142da60f62549c818feca5 *core/config/commands/danfossSystemeModeValue.json
 e0a3979ffd56514219868815e40c04a6 *core/config/commands/danfossTemperatureConsigneSet.json
 bb94f0b5311dc7913588742014b78b85 *core/config/commands/danfossUIDisplayModeGet.json
 94b5a6f4138c3df1b313c35d2f4a7d3e *core/config/commands/danfossUIDisplayModeSet.json
-f7c614cafbe59fee9cd81adad2c03b6b *core/config/commands/danfossUIDisplayModeValue.json
+f81995feeb205a8b16127b4281b77909 *core/config/commands/danfossUIDisplayModeValue.json
 48e4caae64f79f9d569cafcb37fe1942 *core/config/commands/danfossUIKeyLockGet.json
 d0d4fcc47f7737693b7a45dae2130f0e *core/config/commands/danfossUIKeyLockSet.json
-a770a74c45f4b4556bc6a5091fdc6eab *core/config/commands/danfossUIKeyLockValue.json
+265b69bc4713e231bda9ddad4be6f1b7 *core/config/commands/danfossUIKeyLockValue.json
 e9a67daacf01a95811d414021a11d541 *core/config/commands/downGroup.json
 c397bb5a7935369dba599101cf13a56c *core/config/commands/etatDoorAlarme.json
 a621f4b6ea8e98b3bbc1e06a423e4765 *core/config/commands/etatIR_Alarme.json
@@ -1246,7 +1246,7 @@ feb8ee179978308ad626d738240583ca *core/php/AbeilleTest.php
 98dda2f694581222421a3bad2f6e4480 *core/php/AbeilleUpload.php
 b55a6ba4c0110b8a29a3c30f4aee6ce1 *core/php/AbeilleZigate.php
 0d5c02d3055620403f37d6e68d436fa0 *core/php/AbeilleZigateConst.php
-c91a2b4c734982d58ee42f9d77ca4f62 *core/php/AbeilleZigbeeConst.php
+8e1b8648ce1729e909d3d3645876fe79 *core/php/AbeilleZigbeeConst.php
 e2b6a4cd856fc09bff24be60d72960c8 *core/python/AbeilleSerialRead.py
 b6cb443cc29160cd2dc24e041551a919 *core/scripts/checkPiGpio.py
 959d4a651b1950727490869707807bb6 *core/scripts/checkPiGpio.sh
@@ -1310,7 +1310,7 @@ e0f8bf2a302f2fcd97a6cfcabbb847e7 *desktop/php/AbeilleFormAction.php
 7d299553e4e5e4e0e368e8afa90a7ad2 *desktop/php/AbeilleMaintenance-Phantoms.php
 ce32db08df86d3ff94f08d80d463b7f2 *desktop/php/AbeilleMaintenance.php
 bc533a8c0d225502bb1eb12e4ecc0722 *desktop/php/AbeilleNetworkMap.php
-f9f867023332411d40f560c68b1a06c9 *docs/fr_FR/Changelog.rst
+0a91099284507e95d18d6beb6c213afa *docs/fr_FR/Changelog.rst
 2d7942db30537f6f58c830ae01a9958d *images/AbeilleNetworkMap-1200.png
 50f49dd37c22f67d0df6cbf5f8499928 *images/AbeilleNetworkMap.png
 c5242209258a6a3fe0190fed4e97f623 *images/Abeille_icon.png
@@ -1645,10 +1645,10 @@ c7b21d7f825a1bf49ba4aea5d5dc7a52 *images/node_zigbeeWindowCoveringDevice.png
 0d2a0e4b178ac89579af8d9b68dbc5d3 *mobile/html/Abeille.html
 2517e8996a5d2d8bef4dc938d927181d *mobile/js/Abeille.js
 xxxxxxxxx-md5-skipped-xxxxxxxxxx *plugin_info/Abeille.md5
-4b05102287dc19eef9a5405a848d47f6 *plugin_info/Abeille.version
+03fbdbd3e108b34d4e45433f9df342a7 *plugin_info/Abeille.version
 c5242209258a6a3fe0190fed4e97f623 *plugin_info/Abeille_icon.png
 c16154784139bfd2264e4a6409fdc658 *plugin_info/configuration.php
-7356af350bb5a4b620adc2f916c97d34 *plugin_info/info.json
+29996e2e1437b0d0989624710920d62c *plugin_info/info.json
 0b79c5bcb2371599ff4fb5a7fa7f4e3d *plugin_info/install.php
 40778320ae85eae8aa76a50465ff37e4 *plugin_info/packages.json
 cbc04c02c72c949415f5d285181813e6 *plugin_info/pre_install.php

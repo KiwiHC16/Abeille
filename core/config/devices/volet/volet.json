@@ -16,7 +16,6 @@
         "commands": {
             "Identify": {
                 "use": "act_zbCmdC-Identify",
-                "isVisible": 1,
                 "nextLine": "After"
             },
             "Down": {

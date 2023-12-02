@@ -6,6 +6,7 @@
         "type": "info",
         "logicalId": "#EP#-0500-0002-alarm1",
         "template": "alert",
+        "isHistorized": "1",
         "genericType": "ALARM_STATE"
     }
 }

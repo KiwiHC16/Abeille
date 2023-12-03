@@ -24,6 +24,7 @@ ChangeLog
 - Page EQ/avancé: correction suppression modèle local.
 - Modèles de commandes: Normalisation noms.
 - Correction regression Tuya: 'Call to undefined function tuyaGenSqn()'
+- Tuya IH-K009: Mise-à-jour modèle 'TS0201__TZ3000_dowj6gyi'.
 
 231202-BETA-3
 -------------

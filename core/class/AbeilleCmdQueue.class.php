@@ -550,12 +550,12 @@
                     }
 
                     // NDPU limitation (NDPU too high leads to extended error due to lack of resources)
-                    if (!$cmd['zgOnly']) { // Not a cmd for Zigate only
-                        if ($zg['nPDU'] > 7) {
-                            cmdLog('debug', "  NDPU limitation (NPDU=".$zg['nPDU'].")");
-                            break; // This zigate is not yet available
-                        }
-                    }
+                    // if (!$cmd['zgOnly']) { // Not a cmd for Zigate only
+                    //     if ($zg['nPDU'] > 7) {
+                    //         cmdLog('debug', "  NDPU limitation (NPDU=".$zg['nPDU'].")");
+                    //         break; // This zigate is not yet available
+                    //     }
+                    // }
 
                     /* Additional flow control with nPDU/aPDU regulation to avoid zigate internal saturation.
                         This must not prevent zigate internal commands (ex: read version).

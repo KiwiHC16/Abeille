@@ -25,6 +25,7 @@ ChangeLog
 - Modèles de commandes: Normalisation noms.
 - Correction regression Tuya: 'Call to undefined function tuyaGenSqn()'
 - Tuya IH-K009: Mise-à-jour modèle 'TS0201__TZ3000_dowj6gyi'.
+- Modèles: Plusieurs mis-à-jour pour utiliser 'configureReporting2' au lieu de 'configureReporting'.
 
 231202-BETA-3
 -------------

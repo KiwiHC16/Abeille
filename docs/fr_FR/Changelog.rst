@@ -23,6 +23,7 @@ ChangeLog
 - Tuya detecteur de présence ZG-205Z: Support préliminaire.
 - Page EQ/avancé: correction suppression modèle local.
 - Modèles de commandes: Normalisation noms.
+- Correction regression Tuya: 'Call to undefined function tuyaGenSqn()'
 
 231202-BETA-3
 -------------

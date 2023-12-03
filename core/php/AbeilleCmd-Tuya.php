@@ -4,6 +4,15 @@
 
     $tuyaTransId = 0; // Transaction ID: 0 to 255
 
+    function tuyaGenSqn() {
+        global $tuyaTransId;
+        $tuyaTransId++;
+        if ($tuyaTransId > 255)
+            $tuyaTransId = 0;
+        $tId = sprintf("%04X", $tuyaTransId);
+        return $tId;
+    }
+
     function tuyaCheckRequiredParams($required, $abCmd) {
         $cmd = $abCmd['cmd'];
         foreach ($required as $req) {

@@ -305,15 +305,13 @@
                 }
 
                 // Cluster 0006 updates
-                else if ($cmdFName == "act_zbConfigureReporting") {
-                    if ($cmd['params'] ==  "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=") {
-                        $cmd['use'] = "act_zbConfigureReporting2";
-                        $cmd['params'] =  "clustId=0006&attrType=10&attrId=0000";
-                        $commands2[$cmdJName] = $cmd;
-                        $devUpdated = true;
-                        echo "  Cmd '${cmdJName}' UPDATED.\n";
-                    } else
-                        $commands2[$cmdJName] = $cmd;
+                else if (($cmdFName == "act_zbConfigureReporting") &&
+                        ($cmd['params'] ==  "clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "clustId=0006&attrType=10&attrId=0000";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
                 } else if (($cmdFName == "etatDoor") && $oldSyntax) {
                     $cmdArr = Array(
                         "use" => "zb-0006-OnOff",
@@ -420,7 +418,14 @@
                 }
 
                 // Cluster 0008 updates
-                else if (($cmdFName == "setReportLevel") && $oldSyntax) {
+                else if (($cmdFName == "act_zbConfigureReporting") &&
+                    ($cmd['params'] ==  "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "clustId=0008&attrId=0000&attrType=20";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "setReportLevel") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbConfigureReporting",
                         "params" => "clustId=0008&attrType=20&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",

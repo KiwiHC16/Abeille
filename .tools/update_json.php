@@ -312,6 +312,34 @@
                     $commands2[$cmdJName] = $cmd;
                     $devUpdated = true;
                     echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "act_zbConfigureReporting") &&
+                    ($cmd['params'] ==  "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "ep=01&clustId=0006&attrId=0000&attrType=10";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "act_zbConfigureReporting") &&
+                    ($cmd['params'] ==  "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "ep=02&clustId=0006&attrId=0000&attrType=10";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "act_zbConfigureReporting") &&
+                    ($cmd['params'] ==  "ep=03&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "ep=03&clustId=0006&attrId=0000&attrType=10";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "act_zbConfigureReporting") &&
+                    ($cmd['params'] ==  "ep=04&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "ep=04&clustId=0006&attrId=0000&attrType=10";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
                 } else if (($cmdFName == "etatDoor") && $oldSyntax) {
                     $cmdArr = Array(
                         "use" => "zb-0006-OnOff",
@@ -361,58 +389,6 @@
                         "isVisible" => 1
                     );
                     $commands2["etat switch 3"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "etatSwitch") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use" => "zb-0006-OnOff",
-                        // "params" => "ep=06",
-                        "subType" => "binary",
-                        "template" => "badge",
-                        "invertBinary" => 1,
-                        "genericType" => "SWITCH_STATE",
-                        "isVisible" => 1
-                    );
-                    $commands2["etat"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "etatSwitchKonke") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use" => "zb-0006-OnOff",
-                        // "params" => "ep=06",
-                        "subType" => "binary",
-                        "template" => "badge",
-                        // "invertBinary" => 1,
-                        "genericType" => "SWITCH_STATE",
-                        "isVisible" => 1
-                    );
-                    $commands2["etat"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if ((substr($cmdFName, 0, 10) == "etatCharge") && $oldSyntax) {
-                    $x = hexdec(substr($cmdFName, 10));
-                    $ep = sprintf("%02X", $x + 1);
-                    $cmdArr = Array(
-                        "use" => "zb-0006-OnOff",
-                        "params" => "ep=".$ep,
-                        // "subType" => "numeric",
-                        // "template" => "door",
-                        "genericType" => "LIGHT_STATE",
-                        "isVisible" => 1
-                    );
-                    $commands2["etat charge ".$x] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "etatLight") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use" => "zb-0006-OnOff",
-                        // "params" => "ep=".$ep,
-                        // "subType" => "numeric",
-                        // "template" => "door",
-                        // "genericType" => "LIGHT_STATE",
-                        "isVisible" => 1
-                    );
-                    $commands2["etat"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }

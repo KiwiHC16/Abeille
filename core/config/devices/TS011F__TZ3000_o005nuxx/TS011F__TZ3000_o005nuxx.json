@@ -42,8 +42,8 @@
                 "execAtCreation": "Yes"
             },
             "SetReporting-01-0006-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=01&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=01&clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "yes"
             },
             "On 2": {
@@ -76,8 +76,8 @@
                 "execAtCreation": "Yes"
             },
             "SetReporting-02-0006-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=02&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=02&clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "yes"
             },
             "On 3": {
@@ -110,8 +110,8 @@
                 "execAtCreation": "Yes"
             },
             "SetReporting-03-0006-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=03&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=03&clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "yes"
             },
             "On 4": {
@@ -144,8 +144,8 @@
                 "execAtCreation": "Yes"
             },
             "SetReporting-04-0006-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "ep=04&clustId=0006&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "ep=04&clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "yes"
             },
             "On 5": {

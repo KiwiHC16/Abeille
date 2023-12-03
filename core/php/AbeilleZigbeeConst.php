@@ -25,7 +25,7 @@
         "1d" => array( "desc" => "48-bit bitmap", "short" => "map48", "size" => 6 ),
         "1e" => array( "desc" => "56-bit bitmap", "short" => "map56", "size" => 7 ),
         "1f" => array( "desc" => "64-bit bitmap", "short" => "map64", "size" => 8 ),
-        "20" => array( "desc" => "Analog Unsigned 8-bit integer", "short" => "uint8", "size" => 1 ),
+        "20" => array( "desc" => "Unsigned 8-bit integer", "short" => "uint8", "size" => 1 ),
         "21" => array( "desc" => "Unsigned 16-bit integer", "short" => "uint16", "size" => 2 ),
         "22" => array( "desc" => "Unsigned 24-bit integer", "short" => "uint24", "size" => 3 ),
         "23" => array( "desc" => "Unsigned 32-bit integer", "short" => "uint32", "size" => 4 ),

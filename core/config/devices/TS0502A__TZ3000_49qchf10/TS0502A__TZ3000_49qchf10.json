@@ -65,8 +65,8 @@
                 "execAtCreation": "yes"
             },
             "SetReporting 0008-0000": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0008&attrId=0000&attrType=20",
                 "execAtCreation": "yes"
             },
             "Color Mode": {

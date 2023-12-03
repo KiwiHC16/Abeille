@@ -425,6 +425,13 @@
                     $commands2[$cmdJName] = $cmd;
                     $devUpdated = true;
                     echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "act_zbConfigureReporting") &&
+                    ($cmd['params'] ==  "clustId=0008&attrType=10&attrId=0000&minInterval=0000&maxInterval=0000&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "clustId=0008&attrId=0000&attrType=20";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
                 } else if (($cmdFName == "setReportLevel") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbConfigureReporting",
@@ -441,30 +448,6 @@
                         "isVisible" => 1,
                     );
                     $commands2["CurrentLevel-0008"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "getLevel") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use" => "zbReadAttribute",
-                        "params" => "clustId=0008&attrId=0000"
-                    );
-                    $commands2["Get-CurrentLevel"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "levelVoletStop") && $oldSyntax) {
-                    $commands2["Stop"] = Array(
-                        "use" => "zbCmdG-0008-StopWithOnOff",
-                        // "params" => "clustId=0008&attrId=0000",
-                        "isVisible" => 1,
-                    );
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "setLevelVoletUp") && $oldSyntax) {
-                    $commands2["Up"] = Array(
-                        "use" => "zbCmd-0008-UpOpen",
-                        // "params" => "clustId=0008&attrId=0000",
-                        "isVisible" => 1,
-                    );
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 } else if (($cmdFName == "setLevelVoletDown") && $oldSyntax) {

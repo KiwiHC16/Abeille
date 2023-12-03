@@ -25,8 +25,7 @@
         },
         "commands": {
             "Identify": {
-                "use": "act_zbCmdC-Identify",
-                "isVisible": 1
+                "use": "act_zbCmdC-Identify"
             },
             "Down": {
                 "use": "act_zbCmdC-0008-DownClose",
@@ -71,7 +70,7 @@
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 11
             },
-           "Bind-0008-ToZigate": {
+            "Bind-0008-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "clustId=0008",
                 "execAtCreation": "Yes",

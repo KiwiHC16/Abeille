@@ -258,7 +258,6 @@
                             dis2 = '';
                         }
 
-
                         tr += '<tr>';
 
                         // Network (AbeilleX)

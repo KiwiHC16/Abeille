@@ -3542,6 +3542,72 @@
 
                         $attrId = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
                         $updates = [];
+
+                        // $l = strlen($pl);
+                        // for ($i = 0; $i < $l; $i += $size) {
+                        //     // Decode attribute
+                        //     $attr = $this->decode8002_ReportAttribute($srcAddr, substr($msg, $i), $size);
+                        //     if ($attr === false)
+                        //         break;
+
+                        //     // Is this an attribute to handle as 'private' ?
+                        //     if (isset($eq['private'])) {
+                        //         foreach ($eq['private'] as $pKey => $pVal) {
+                        //             $lenKey = strlen($pKey);
+                        //             if ((($lenKey == 4) && ($clustId != $pKey)) || // 'CCCC' (clustId) case
+                        //                 ($lenKey == 9) && ($clustId.'-'.$attrId != $Key)) // 'CCCC-AAAA (clustId-attrId) case
+                        //                 continue;
+
+                        //             $private = $pVal;
+                        //             break;
+                        //         }
+                        //     }
+
+                        //     // Handling attribute
+                        //     if (isset($private)) {
+                        //         if ($private['type'] == "xiaomi") {
+                        //             xiaomiReportAttribute($dest, $srcAddr, $clustId, $attr, $attrReportN);
+                        //         }
+                        //     } else {
+                        //         // Not private or obsolete way to handle this attribute as private
+
+                        //         // Attribute value post correction according to ZCL spec
+                        //         $correct = ['0001-0020', '0001-0021', '0201-0000', '0201-0012', '0300-0007', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
+                        //         if (in_array($clustId.'-'.$attr['id'], $correct))
+                        //             $this->decode8002_ZCLCorrectAttrValue($srcEp, $clustId, $eq, $attr);
+
+                        //         // If cluster 0000, attributes manufId/modelId or location.. need to clean string
+                        //         if ($clustId == "0000") {
+                        //             if (($attr['id'] == "0005") || ($attr['id'] == "0010")) {
+                        //                 $attr['value'] = $this->cleanModelId($attr['valueHex']);
+                        //                 $attr['comment'] = "cleaned model";
+                        //             } else if ($attr['id'] == "0004") {
+                        //                 $attr['value'] = $this->cleanManufId($attr['value']);
+                        //                 $attr['comment'] = "cleaned manuf";
+                        //             }
+                        //             if (($attr['id'] == '0004') || ($attr['id'] == '0005') || ($attr['id'] == '0010'))
+                        //                 $updates[$clustId.'-'.$attr['id']] = $attr['value'];
+                        //         }
+
+                        //         // Log
+                        //         $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
+                        //         $m = '  AttrId='.$attr['id'].'/'.$attrName
+                        //             .', AttrType='.$attr['dataType']
+                        //             .', ValueHex='.$attr['valueHex'].' => ';
+                        //         if (isset($attr['comment']))
+                        //             $m .= $attr['comment'].', '.$attr['value'];
+                        //         else
+                        //             $m .= $attr['value'];
+                        //         parserLog2('debug', $srcAddr, $m, "8002");
+                        //         // $toMon[] = $m; // For monitor
+
+                        //         $attrReportN[] = array(
+                        //             'name' => $clustId.'-'.$srcEp.'-'.$attr['id'],
+                        //             'value' => $attr['value'],
+                        //         );
+                        //     }
+                        // }
+
                         if ($manufCode == '115F') { // Xiaomi specific
                             // New code
                             xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN);
@@ -3809,7 +3875,7 @@
                     } // Discover Attributes Extended Response
 
                     else {
-                        parserLog2("debug", $srcAddr, "  Ignored general command ".$cmd, "8002");
+                        parserLog2("debug", $srcAddr, "  Ignored cluster ${clustId} general command ${cmd}", "8002");
                         // return;
                     }
                 } else { // Cluster specific command
@@ -4355,6 +4421,7 @@
                         if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                             return;
 
+                        // Checking if command must be treated as special private case
                         // WORK ONGOING !!!
                         /* Generic format for private clusters/commands reminder
                         "private": {

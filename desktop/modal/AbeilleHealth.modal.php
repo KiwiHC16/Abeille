@@ -250,23 +250,31 @@
                     for (addr in n) {
                         // console.log("LA2 addr=", addr);
                         e = n[addr];
+                        if (e.isEnabled == 0) { // Disabled ?
+                            dis1 = '<s>';
+                            dis2 = '</s>';
+                        } else {
+                            dis1 = '';
+                            dis2 = '';
+                        }
+
 
                         tr += '<tr>';
 
                         // Network (AbeilleX)
-                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+net+'</span></td>';
+                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+net+dis2+'</span></td>';
 
                         // Device name
-                        tr += '<td><a href="'+e.link+'" style="text-decoration: none;">'+e.hName+'</a></td>';
+                        tr += '<td><a href="'+e.link+'" style="text-decoration: none;">'+dis1+e.hName+dis2+'</a></td>';
 
                         // Device type
-                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+e.type+'</span></td>';
+                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.type+dis2+'</span></td>';
 
                         // Short address
-                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+addr+'</span></td>';
+                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+addr+dis2+'</span></td>';
 
                         // IEEE address
-                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+e.ieee+'</span></td>';
+                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.ieee+dis2+'</span></td>';
 
                         // Status: Updated every minutes by cron() (see Abeille.class.php)
                         if (e.isEnabled == 0) // Disabled ?
@@ -289,16 +297,16 @@
                         if (addr.substr(2) == "rc") // Remote control ?
                             lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">-</span>';
                         else
-                            lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">'+e.lastComm+'</span>';
+                            lastComm = '<span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.lastComm+dis2+'</span>';
                         tr += '<td>'+lastComm+'</td>';
 
                         // Time in H since last comm.
-                        since = '<span class="label label-info" style="font-size: 1em; cursor: default;">'+e.since+'</span>';
+                        since = '<span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.since+dis2+'</span>';
                         tr += '<td>'+since+'</td>';
 
-                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+e.lastLqi+'</span></td>';
+                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.lastLqi+dis2+'</span></td>';
 
-                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+e.lastBat+'</span></td>';
+                        tr += '<td><span class="label label-info" style="font-size: 1em; cursor: default;">'+dis1+e.lastBat+dis2+'</span></td>';
 
                         tr += '</tr>';
                     }

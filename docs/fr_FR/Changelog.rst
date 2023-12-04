@@ -27,6 +27,7 @@ ChangeLog
 - Tuya IH-K009: Mise-à-jour modèle 'TS0201__TZ3000_dowj6gyi'.
 - Modèles: Plusieurs mis-à-jour pour utiliser 'configureReporting2' au lieu de 'configureReporting'.
 - Modèles: Plusieurs corrigés pour reporting cluster 0008. Mauvais type d'attribut.
+- PAge santé: Amélioration: Equipements désactivités barrés.
 
 231202-BETA-3
 -------------

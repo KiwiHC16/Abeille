@@ -3018,10 +3018,10 @@ class Abeille extends eqLogic {
             $eqLogic->setConfiguration('ab::tuyaEF00', null);
 
         // Xiaomi specific infos: OBSOLETE soon. Replaced by 'fromDevice'
-        if (isset($model['xiaomi']))
-            $eqLogic->setConfiguration('ab::xiaomi', $model['xiaomi']);
-        else
-            $eqLogic->setConfiguration('ab::xiaomi', null);
+        // if (isset($model['xiaomi']))
+        //     $eqLogic->setConfiguration('ab::xiaomi', $model['xiaomi']);
+        // else
+        //     $eqLogic->setConfiguration('ab::xiaomi', null);
 
         // Zigbee & customization from model
         $zigbee = $eqLogic->getConfiguration('ab::zigbee', []);

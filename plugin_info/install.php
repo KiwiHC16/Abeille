@@ -878,6 +878,7 @@
          * - eqLogic DB: Removed 'ab::txAck' for devices not always listening
          * - eqLogic DB: 'ab::eqModel', sig/id/location renamed to modelSig/modelName/modelSource
          * - eqLogic DB: 'ab::eqModel', 'forcedByUser' => 'modelForced'
+         * - eqLogic DB: 'ab::xiaomi' replaced by 'ab::eqModel['private']' + type=xiaomi
          * - Cmds DB: For 'Online' adding 'repeatEventManagement=always'
          * - Cmds DB: 'OnOff' cmd replaced by 'cmd-0006'
          * - Cmds DB: 'OnOffGroup' replaced by 'cmd-0006'
@@ -938,6 +939,18 @@
                     $eqModel[$newK] = $eqModel[$oldK];
                     unset($eqModel[$oldK]);
                     log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::eqModel' update '${oldK}' to '${newK}");
+                    $saveEqModel = true;
+                }
+                // ab::xiaomi replaced by ab::eqModel['private'] + type=xiaomi
+                $xiaomi = $eqLogic->getConfiguration('ab::xiaomi', null);
+                if ($xiaomi !== null) {
+                    $eqMode['private'] = [];
+                    foreach ($xiaomi['fromDevice'] as $pKey => $pVal) {
+                        $pVal['type'] = "xiaomi";
+                        $eqModel['private'][$pKey] = $pVal;
+                    }
+                    $eqLogic->setConfiguration('ab::xiaomi', null);
+                    log::add('Abeille', 'debug', '  '.$eqHName.": 'ab::xiaomi' replaced by 'private' entries");
                     $saveEqModel = true;
                 }
 

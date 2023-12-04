@@ -3531,45 +3531,158 @@
                         if ($this->isDuplicated($dest, $srcAddr, $fcf, $sqn))
                             return;
 
-                        // Some clusters are directly handled by 8100/8102 decode
-                        // $refused = ['FC00'];
-                        // if (in_array($clustId, $refused)) {
-                        //     parserLog('debug', "  Handled by decode8100_8102");
-                        //     return;
-                        // }
-
-                        // $eq = getDevice($dest, $srcAddr); // Corresponding device
-
-                        $attrId = substr($pl, 2, 2).substr($pl, 0, 2); // Attribute
                         $updates = [];
 
-                        // $l = strlen($pl);
-                        // for ($i = 0; $i < $l; $i += $size) {
-                        //     // Decode attribute
-                        //     $attr = $this->decode8002_ReportAttribute($srcAddr, substr($msg, $i), $size);
-                        //     if ($attr === false)
-                        //         break;
+                        while (($l = strlen($pl) > 0)) {
+                            // Decode attribute
+                            $plOld = $pl; // Saving pl for old way support
+                            $attr = $this->decode8002_ReportAttribute($srcAddr, $pl, $skipSize);
+                            if ($attr === false)
+                                break;
+                            $pl = substr($pl, $skipSize);
+                            $attrId = $attr['id'];
 
-                        //     // Is this an attribute to handle as 'private' ?
-                        //     if (isset($eq['private'])) {
-                        //         foreach ($eq['private'] as $pKey => $pVal) {
-                        //             $lenKey = strlen($pKey);
-                        //             if ((($lenKey == 4) && ($clustId != $pKey)) || // 'CCCC' (clustId) case
-                        //                 ($lenKey == 9) && ($clustId.'-'.$attrId != $Key)) // 'CCCC-AAAA (clustId-attrId) case
-                        //                 continue;
+                            // Is this an attribute to handle as 'private' ?
+                            unset($private); // Clear in case it is set by previous attribute
+                            // parserLog('debug', 'LA eq='.json_encode($eq));
+                            if (isset($eq['private'])) {
+                                parserLog('debug', "  Model with 'private' entry");
+                                foreach ($eq['private'] as $pKey => $pVal) {
+                                    $pKeyLen = strlen($pKey);
+                                    parserLog('debug', "  clustId/attrId=${clustId}/${attrId} vs pKey=${pKey}, len=${pKeyLen}");
+                                    if ((($pKeyLen == 4) && ($pKey != $clustId)) || // 'CCCC' (clustId) case
+                                        (($pKeyLen == 9) && ($pKey != $clustId.'-'.$attrId))) // 'CCCC-AAAA (clustId-attrId) case
+                                        continue;
 
-                        //             $private = $pVal;
+                                    $private = $pVal;
+                                    parserLog('debug', "  Private=".json_encode($private));
+                                    break;
+                                }
+                            }
+
+                            // Handling attribute
+                            if (isset($private)) {
+                                parserLog('debug', "  This cluster/attrib must be handled as private");
+                                if ($private['type'] == "xiaomi") {
+                                    xiaomiReportAttribute($dest, $srcAddr, $clustId, $attr, $attrReportN);
+                                } else {
+                                    parserLog("error", "  Ouahh... missing code to handle private cluster");
+                                }
+                            } else {
+                                // Not private or obsolete way to handle this attribute as private
+                                if ($manufCode == '115F') { // Xiaomi specific
+                                    parserLog('warning', "  Old way (manufCode) to handle Xiaomi private cluster");
+                                    // parserLog('debug', "  plOld=${plOld}");
+                                    xiaomiReportAttributeOld($dest, $srcAddr, $clustId, $plOld, $attrReportN);
+                                    // $pl = ''; // Full payload treated
+                                }
+
+                                else if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
+                                    parserLog('warning', "  Old way (fromDevice) to handle Xiaomi private cluster");
+                                    xiaomiReportAttributeOld($dest, $srcAddr, $clustId, $plOld, $attrReportN);
+                                    // $pl = ''; // Full payload treated
+                                }
+
+                                // Philips Hue specific cluster
+                                // Used by RWL021, RDM001
+                                // Tcharp38: Where is the source of this decoding ?
+                                else if ($clustId == "FC00") {
+                                    $buttonEventTxt = array (
+                                        '00' => 'Short press',
+                                        '01' => 'Long press',
+                                        '02' => 'Release short press',
+                                        '03' => 'Release long press',
+                                    );
+                                    $button = $attrId;
+                                    // $buttonEvent = substr($payload, 24 + 2, 2);
+                                    $buttonEvent = substr($pl, 0 + 2, 2);
+                                    // $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
+                                    $buttonDuree = hexdec(substr($pl, 0 + 6, 2));
+                                    parserLog2("debug", $srcAddr, "  Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
+
+                                    $attrReportN = [
+                                        array( "name" => $clustId."-".$ep."-".$attrId."-Event", "value" => $buttonEvent ),
+                                        array( "name" => $clustId."-".$ep."-".$attrId."-Duree", "value" => $buttonDuree ),
+                                    ];
+                                } // End cluster FC00
+
+                                else {
+                                    // Attribute value post correction according to ZCL spec
+                                    $correct = ['0001-0020', '0001-0021', '0201-0000', '0201-0012', '0300-0007', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
+                                    if (in_array($clustId.'-'.$attr['id'], $correct))
+                                        $this->decode8002_ZCLCorrectAttrValue($srcEp, $clustId, $eq, $attr);
+
+                                    // If cluster 0000, attributes manufId/modelId or location.. need to clean string
+                                    if ($clustId == "0000") {
+                                        if (($attr['id'] == "0005") || ($attr['id'] == "0010")) {
+                                            $attr['value'] = $this->cleanModelId($attr['valueHex']);
+                                            $attr['comment'] = "cleaned model";
+                                        } else if ($attr['id'] == "0004") {
+                                            $attr['value'] = $this->cleanManufId($attr['value']);
+                                            $attr['comment'] = "cleaned manuf";
+                                        }
+                                        if (($attr['id'] == '0004') || ($attr['id'] == '0005') || ($attr['id'] == '0010'))
+                                            $updates[$clustId.'-'.$attr['id']] = $attr['value'];
+                                    }
+
+                                    // Log
+                                    $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
+                                    $m = '  AttrId='.$attr['id'].'/'.$attrName
+                                        .', AttrType='.$attr['dataType']
+                                        .', ValueHex='.$attr['valueHex'].' => ';
+                                    if (isset($attr['comment']))
+                                        $m .= $attr['comment'].', '.$attr['value'];
+                                    else
+                                        $m .= $attr['value'];
+                                    parserLog2('debug', $srcAddr, $m, "8002");
+
+                                    $attrReportN[] = array(
+                                        'name' => $clustId.'-'.$srcEp.'-'.$attr['id'],
+                                        'value' => $attr['value'],
+                                    );
+                                }
+                            }
+                        }
+
+                        // if ($manufCode == '115F') { // Xiaomi specific
+                        //     // New code
+                        //     xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN);
+                        // }
+
+                        // else if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
+                        //     xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN);
+                        // }
+
+                        // // Philips Hue specific cluster
+                        // // Used by RWL021, RDM001
+                        // // Tcharp38: Where is the source of this decoding ?
+                        // else if ($clustId == "FC00") {
+                        //     $buttonEventTxt = array (
+                        //         '00' => 'Short press',
+                        //         '01' => 'Long press',
+                        //         '02' => 'Release short press',
+                        //         '03' => 'Release long press',
+                        //     );
+                        //     $button = $attrId;
+                        //     // $buttonEvent = substr($payload, 24 + 2, 2);
+                        //     $buttonEvent = substr($pl, 0 + 2, 2);
+                        //     // $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
+                        //     $buttonDuree = hexdec(substr($pl, 0 + 6, 2));
+                        //     parserLog2("debug", $srcAddr, "  Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
+
+                        //     $attrReportN = [
+                        //         array( "name" => $clustId."-".$ep."-".$attrId."-Event", "value" => $buttonEvent ),
+                        //         array( "name" => $clustId."-".$ep."-".$attrId."-Duree", "value" => $buttonDuree ),
+                        //     ];
+                        // } // End cluster FC00
+
+                        // else {
+                        //     $l = strlen($msg);
+                        //     for ($i = 0; $i < $l; $i += $size) {
+                        //         // Decode attribute
+                        //         $attr = $this->decode8002_ReportAttribute($srcAddr, substr($msg, $i), $size);
+                        //         if ($attr === false)
                         //             break;
-                        //         }
-                        //     }
-
-                        //     // Handling attribute
-                        //     if (isset($private)) {
-                        //         if ($private['type'] == "xiaomi") {
-                        //             xiaomiReportAttribute($dest, $srcAddr, $clustId, $attr, $attrReportN);
-                        //         }
-                        //     } else {
-                        //         // Not private or obsolete way to handle this attribute as private
 
                         //         // Attribute value post correction according to ZCL spec
                         //         $correct = ['0001-0020', '0001-0021', '0201-0000', '0201-0012', '0300-0007', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
@@ -3607,83 +3720,6 @@
                         //         );
                         //     }
                         // }
-
-                        if ($manufCode == '115F') { // Xiaomi specific
-                            // New code
-                            xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN);
-                        }
-
-                        else if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
-                            xiaomiReportAttributes($dest, $srcAddr, $clustId, $pl, $attrReportN);
-                        }
-
-                        // Philips Hue specific cluster
-                        // Used by RWL021, RDM001
-                        // Tcharp38: Where is the source of this decoding ?
-                        else if ($clustId == "FC00") {
-                            $buttonEventTxt = array (
-                                '00' => 'Short press',
-                                '01' => 'Long press',
-                                '02' => 'Release short press',
-                                '03' => 'Release long press',
-                            );
-                            $button = $attrId;
-                            // $buttonEvent = substr($payload, 24 + 2, 2);
-                            $buttonEvent = substr($pl, 0 + 2, 2);
-                            // $buttonDuree = hexdec(substr($payload, 24 + 6, 2));
-                            $buttonDuree = hexdec(substr($pl, 0 + 6, 2));
-                            parserLog2("debug", $srcAddr, "  Philips Hue proprietary: Button=".$button.", Event=".$buttonEvent." (".$buttonEventTxt[$buttonEvent]."), duration=".$buttonDuree);
-
-                            $attrReportN = [
-                                array( "name" => $clustId."-".$ep."-".$attrId."-Event", "value" => $buttonEvent ),
-                                array( "name" => $clustId."-".$ep."-".$attrId."-Duree", "value" => $buttonDuree ),
-                            ];
-                        } // End cluster FC00
-
-                        else {
-                            $l = strlen($msg);
-                            for ($i = 0; $i < $l; $i += $size) {
-                                // Decode attribute
-                                $attr = $this->decode8002_ReportAttribute($srcAddr, substr($msg, $i), $size);
-                                if ($attr === false)
-                                    break;
-
-                                // Attribute value post correction according to ZCL spec
-                                $correct = ['0001-0020', '0001-0021', '0201-0000', '0201-0012', '0300-0007', '0400-0000', '0402-0000', '0403-0000', '0405-0000'];
-                                if (in_array($clustId.'-'.$attr['id'], $correct))
-                                    $this->decode8002_ZCLCorrectAttrValue($srcEp, $clustId, $eq, $attr);
-
-                                // If cluster 0000, attributes manufId/modelId or location.. need to clean string
-                                if ($clustId == "0000") {
-                                    if (($attr['id'] == "0005") || ($attr['id'] == "0010")) {
-                                        $attr['value'] = $this->cleanModelId($attr['valueHex']);
-                                        $attr['comment'] = "cleaned model";
-                                    } else if ($attr['id'] == "0004") {
-                                        $attr['value'] = $this->cleanManufId($attr['value']);
-                                        $attr['comment'] = "cleaned manuf";
-                                    }
-                                    if (($attr['id'] == '0004') || ($attr['id'] == '0005') || ($attr['id'] == '0010'))
-                                        $updates[$clustId.'-'.$attr['id']] = $attr['value'];
-                                }
-
-                                // Log
-                                $attrName = zbGetZCLAttributeName($clustId, $attr['id']);
-                                $m = '  AttrId='.$attr['id'].'/'.$attrName
-                                    .', AttrType='.$attr['dataType']
-                                    .', ValueHex='.$attr['valueHex'].' => ';
-                                if (isset($attr['comment']))
-                                    $m .= $attr['comment'].', '.$attr['value'];
-                                else
-                                    $m .= $attr['value'];
-                                parserLog2('debug', $srcAddr, $m, "8002");
-                                // $toMon[] = $m; // For monitor
-
-                                $attrReportN[] = array(
-                                    'name' => $clustId.'-'.$srcEp.'-'.$attr['id'],
-                                    'value' => $attr['value'],
-                                );
-                            }
-                        }
 
                         $unknown = false;
                         if (count($updates) != 0)
@@ -5598,7 +5634,7 @@
                     parserLog("debug","  WARNING !! This support should be moved to decode8002");
 
                     // For info until activation
-                    xiaomiDecodeTags($dest, $srcAddr, $clustId, $attrId, $Attribut);
+                    xiaomiDecodeTagsOld($dest, $srcAddr, $clustId, $attrId, $Attribut);
                     // For info until activation
 
                     $voltage = hexdec(substr($payload, 24 + 2 * 2 + 2, 2).substr($payload, 24 + 2 * 2, 2));

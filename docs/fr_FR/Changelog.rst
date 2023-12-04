@@ -28,7 +28,11 @@ ChangeLog
 - Modèles: Plusieurs mis-à-jour pour utiliser 'configureReporting2' au lieu de 'configureReporting'.
 - Modèles: Plusieurs corrigés pour reporting cluster 0008. Mauvais type d'attribut.
 - Page santé: Amélioration: Equipements désactivités barrés.
-- Syntaxe des modèles: Support préliminaire 'private' pour clusters privés.
+- Support de clusters privés:
+
+  - Syntaxe des modèles revue (mot clef 'private').
+  - Support préliminaire Xiaomi.
+  - Appliqué à 2 modèles seulement pour l'instant: weather & sensor_magnet.aq2
 
 231202-BETA-3
 -------------

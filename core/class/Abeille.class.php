@@ -3058,7 +3058,9 @@ class Abeille extends eqLogic {
             'type' => $model['type'],
             // 'lastUpdate' => time(), // Store last update from model. // Tcharp38: created for Abeille but not used
         );
-        if (isset($model['fromDevice'])) // Private cluster or command specific infos
+        if (isset($model['private'])) // Private cluster or command specific infos
+            $eqModelInfos['private'] = $model['private'];
+        else if (isset($model['fromDevice'])) // OBSOLETE soon => replaced by 'private'
             $eqModelInfos['fromDevice'] = $model['fromDevice'];
         $eqLogic->setConfiguration('ab::eqModel', $eqModelInfos);
 

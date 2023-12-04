@@ -36,15 +36,14 @@
                 "use": "testSmoke"
             }
         },
-        "xiaomi": {
-            "fromDevice": {
-                "0000-FF01": {
-                    "01-21": {
-                        "func": "numberDiv",
-                        "div": 1000,
-                        "info": "0001-01-0020"
-                    }
-                }
+        "private": {
+            "0000-FF01": {
+                "01-21": {
+                    "func": "numberDiv",
+                    "div": 1000,
+                    "info": "0001-01-0020"
+                },
+                "type": "xiaomi"
             }
         }
     }

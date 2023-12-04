@@ -647,6 +647,20 @@
             echo "  'Comment' renamed to 'comment'.\n";
         }
 
+        // xiaomi/fromDevice => private + type=xiaomi
+        if (isset($dev[$devName]['xiaomi'])) {
+            if (isset($dev[$devName]['xiaomi']['fromDevice'])) {
+                $dev[$devName]['private'] = [];
+                foreach ($dev[$devName]['xiaomi']['fromDevice'] as $pKey => $pVal) {
+                    $pVal['type'] = "xiaomi";
+                    $dev[$devName]['private'][$pKey] = $pVal;
+                }
+            }
+            unset($dev[$devName]['xiaomi']);
+            $devUpdated = true;
+            echo "  'xiaomi' updated to 'private'.\n";
+        }
+
         if ($devUpdated) {
             $text = json_encode($dev, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
             file_put_contents($fullPath, $text);

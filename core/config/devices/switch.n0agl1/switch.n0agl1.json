@@ -63,30 +63,29 @@
                 "isVisible": 1
             }
         },
-        "xiaomi": {
-            "fromDevice": {
-                "FCC0-00F7": {
-                    "95-39": {
-                        "func": "number",
-                        "info": "0702-01-0000",
-                        "comment": "Total power"
-                    },
-                    "96-39": {
-                        "func": "number",
-                        "info": "0B04-01-0505",
-                        "comment": "Voltage"
-                    },
-                    "97-39": {
-                        "func": "number",
-                        "info": "0B04-01-0508",
-                        "comment": "Current"
-                    },
-                    "98-39": {
-                        "func": "number",
-                        "info": "0B04-01-050B",
-                        "comment": "Power"
-                    }
-                }
+        "private": {
+            "FCC0-00F7": {
+                "95-39": {
+                    "func": "number",
+                    "info": "0702-01-0000",
+                    "comment": "Total power"
+                },
+                "96-39": {
+                    "func": "number",
+                    "info": "0B04-01-0505",
+                    "comment": "Voltage"
+                },
+                "97-39": {
+                    "func": "number",
+                    "info": "0B04-01-0508",
+                    "comment": "Current"
+                },
+                "98-39": {
+                    "func": "number",
+                    "info": "0B04-01-050B",
+                    "comment": "Power"
+                },
+                "type": "xiaomi"
             }
         }
     }

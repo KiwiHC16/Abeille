@@ -269,7 +269,7 @@
 
         /* Checking top level supported keywords */
         $supportedKeys = ['type', 'manufacturer', 'zbManufacturer', 'model', 'timeout', 'category', 'configuration', 'commands', 'isVisible', 'alternateIds', 'tuyaEF00', 'customization', 'xiaomi'];
-        array_push($supportedKeys, 'genericType', 'fromDevice');
+        array_push($supportedKeys, 'genericType', 'fromDevice', 'private');
         foreach ($dev[$devName] as $key => $value) {
             if (in_array($key, $supportedKeys))
                 continue;

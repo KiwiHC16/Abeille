@@ -31,8 +31,8 @@ ChangeLog
 - Support de clusters privés:
 
   - Syntaxe des modèles revue (mot clef 'private').
-  - Support préliminaire Xiaomi.
-  - Appliqué à 2 modèles seulement pour l'instant: weather & sensor_magnet.aq2
+  - Support limité à Xiaomi seulement.
+  - Tous les modèles Xiaomi mis-à-jour.
 
 231202-BETA-3
 -------------

@@ -4357,7 +4357,27 @@
 
                         // WORK ONGOING !!!
                         /* Generic format for private clusters/commands reminder
-                        "fromDevice": {
+                        "private": {
+                            "ED00": { // CLUSTID
+                                "type": "tuya-zosung"
+                            },
+                            "0000-FF01": { // CLUSTID-ATTRID
+                                "type": "xiaomi",
+                                "01-21": {
+                                    "func": "numberDiv",
+                                    "div": 1000,
+                                    "info": "0001-01-0020"
+                                }
+                            },
+                            "EF00": { // CLUSTID
+                                "type": "tuya",
+                                "05": { // DP
+                                    "function": "rcvValue",
+                                    "info": "01-measuredValue"
+                                },
+                            }
+                        }
+                        "fromDevice": { // OBSOLETE !! Previous naming
                             "ED00": {
                                 "type": "tuya-zosung"
                             },
@@ -4377,7 +4397,19 @@
                                 },
                             }
                         } */
-                        if (isset($eq['fromDevice'])) {
+                        if (isset($eq['private'])) {
+                            foreach ($eq['private'] as $key => $p2) {
+                                $lenKey = strlen($key);
+                                if (($lenKey == 4) && ($clustId != $key)) // 'CCCC' (clustId) case
+                                    continue;
+                                // if (($lenFd1 == 9) && ($clustId.'-'.$attrId != $fd1)) // 'CCCC-AAAA' (clustId-attrId) case
+                                //     continue;
+
+                                $supportType = $p2['type']; // "tuya", "tuya-zosung", "xiaomi"
+                                break;
+                            }
+                        }
+                        else if (isset($eq['fromDevice'])) { // OBSOLETE !! Replaced by 'private'
                             foreach ($eq['fromDevice'] as $fd1 => $fd2) {
                                 $lenFd1 = strlen($fd1);
                                 if (($lenFd1 == 4) && ($clustId != $fd1)) // 'CCCC' (clustId) case

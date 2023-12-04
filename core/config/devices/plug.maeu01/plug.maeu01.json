@@ -22,14 +22,14 @@
                 "use": "act_zbCmdC-0006-Off",
                 "isVisible": 1
             },
+            "Get-Status": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0006&attrId=0000"
+            },
             "Status": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "isVisible": 1,
                 "nextLine": "after"
-            },
-            "Get-Status": {
-                "use": "act_zbReadAttribute",
-                "params": "clustId=0006&attrId=0000"
             },
             "Total power": {
                 "use": "inf_zbAttr-0702-CurrentSummationDelivered",

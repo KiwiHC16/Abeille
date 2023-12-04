@@ -250,7 +250,7 @@
             'location' => null, // null(undef)/false(unsupported)/'xx'
             'jsonId' => '',
             'jsonLocation' => '',
-            // Optional 'tuyaEF00'
+            // Optional 'private'
             // Optional 'notStandard-0400-0000'
         );
 
@@ -342,21 +342,38 @@
     // Note: A delay is required prior to this if DB has to be updated (createDevice() in Abeille.class)
     function updateDeviceFromDB($eqId) {
         $eqLogic = eqLogic::byId($eqId);
+        if (!is_object($eqLogic)) {
+            parserLog('error', "updateDeviceFromDB(${eqId}): Equipement inconnu");
+            return;
+        }
         $eqLogicId = $eqLogic->getLogicalId();
         list($net, $addr) = explode("/", $eqLogicId);
 
-        $GLOBALS['eqList'][$net][$addr]['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null); // OBSOLETE soon. Replaced by 'fromDevice'
-        parserLog('debug', "  'tuyaEF00' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['tuyaEF00'])); // OBSOLETE soon. Replaced by 'fromDevice'
-        $GLOBALS['eqList'][$net][$addr]['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null); // OBSOLETE soon. Replaced by 'fromDevice'
-        parserLog('debug', "  'xiaomi' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['xiaomi'])); // OBSOLETE soon. Replaced by 'fromDevice'
-        $GLOBALS['eqList'][$net][$addr]['customization'] = $eqLogic->getConfiguration('ab::customization', null);
-        parserLog('debug', "  'customization' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['customization']));
-        $fromDevice = $eqLogic->getConfiguration('ab::fromDevice', null);
-        if ($fromDevice !== null) {
-            $GLOBALS['eqList'][$net][$addr]['fromDevice'] = $fromDevice;
-            parserLog('debug', "  'fromDevice' updated to ".json_encode($GLOBALS['eqList'][$net][$addr]['fromDevice']));
-        } else if (isset($GLOBALS['eqList'][$net][$addr]['fromDevice']))
+        if (!isset($GLOBALS['eqList'][$net]))
+            $GLOBALS['eqList'][$net] = [];
+        if (!isset($GLOBALS['eqList'][$net][$addr]))
+            $GLOBALS['eqList'][$net][$addr] = [];
+        $eq = &$GLOBALS['eqList'][$net][$addr];
+
+        $private = $eqLogic->getConfiguration('ab::private', null);
+        if ($private !== null) {
+            $eq['private'] = $private;
+            parserLog('debug', "  'private' updated to ".json_encode($eq['private'], JSON_UNESCAPED_SLASHES));
+        } else if (isset($eq['private']))
+            unset($GLOBALS['eqList'][$net][$addr]['private']);
+        $fromDevice = $eqLogic->getConfiguration('ab::fromDevice', null); // OBSOLETE soon. Replaced by 'private'
+        if ($fromDevice !== null) { // OBSOLETE soon. Replaced by 'private'
+            $eq['fromDevice'] = $fromDevice;
+            parserLog('debug', "  'fromDevice' updated to ".json_encode($eq['fromDevice']));
+        } else if (isset($eq['fromDevice']))
             unset($GLOBALS['eqList'][$net][$addr]['fromDevice']);
+        $eq['tuyaEF00'] = $eqLogic->getConfiguration('ab::tuyaEF00', null); // OBSOLETE soon. Replaced by 'private'
+        parserLog('debug', "  'tuyaEF00' updated to ".json_encode($eq['tuyaEF00'])); // OBSOLETE soon. Replaced by 'private'
+        $eq['xiaomi'] = $eqLogic->getConfiguration('ab::xiaomi', null); // OBSOLETE soon. Replaced by 'private'
+        parserLog('debug', "  'xiaomi' updated to ".json_encode($eq['xiaomi'])); // OBSOLETE soon. Replaced by 'private'
+
+        $eq['customization'] = $eqLogic->getConfiguration('ab::customization', null);
+        parserLog('debug', "  'customization' updated to ".json_encode($eq['customization']));
 
         // TO BE COMPLETED with any other useful info for parser
     }
@@ -478,13 +495,16 @@
                 'jsonId' => $jsonId,
                 'jsonLocation' => '',
                 'customization' => $eqLogic->getConfiguration('ab::customization', null),
-                //'fromDevice' => // Set if exists
-                'tuyaEF00' => $eqLogic->getConfiguration('ab::tuyaEF00', null), // OBSOLETE soon
-                'xiaomi' => $eqLogic->getConfiguration('ab::xiaomi', null), // OBSOLETE soon
+                //'private' => // Set if exists in model
+                //'fromDevice' => // Set if exists in model // OBSOLETE soon
+                'tuyaEF00' => $eqLogic->getConfiguration('ab::tuyaEF00', null), // OBSOLETE soon => replaced by 'private'
+                'xiaomi' => $eqLogic->getConfiguration('ab::xiaomi', null), // OBSOLETE soon => replaced by 'private'
                 // Optional 'notStandard-0400-0000'
             );
-            if (isset($eqModel['fromDevice']))
-                $eq['fromDevice'] = $eqModel['fromDevice'];
+            if (isset($eqModel['private']))
+                $eq['private'] = $eqModel['private'];
+            else if (isset($eqModel['fromDevice'])) // OBSOLETE soon => replaced by 'private'
+                $eq['fromDevice'] = $eqModel['fromDevice']; // OBSOLETE soon => replaced by 'private'
 
             // Checking for '0400-0000' not standard attribute
             $cmds = Cmd::byEqLogicId($eqLogic->getId(), 'info');

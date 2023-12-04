@@ -700,6 +700,11 @@
 
                 else if ($msg['type'] == "8000") {
 
+                    if (!isset($GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri][$sentIdx])) {
+                        cmdLog("warning", "  Unexpected 8000 msg. Could not find cmd with Pri=${sentPri}, Idx=${sentIdx}");
+                        continue;
+                    }
+
                     $cmd = $GLOBALS['zigates'][$zgId]['cmdQueue'][$sentPri][$sentIdx];
 
                     // Checking sent cmd vs received ack misalignment

@@ -46,12 +46,10 @@ Exemple: BASICZBR3.json
         "mainEP": "01"
       },
       "commands": {
-        "Groups": { "use": "Group-Membership" },
-
-        "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" },
         "On": { "use": "On", "isVisible": 1 },
-        "Off": { "use": "Off", "isVisible": 1, "nextLine": "after" },
-        "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" }
+        "Off": { "use": "Off", "isVisible": 1 },
+        "Get-Status": { "use": "zbReadAttribute", "params": "clustId=0006&attrId=0000" },
+        "Status": { "use": "zb-0006-OnOff", "isVisible": 1, "nextLine": "after" }
       }
     }
   }
@@ -152,3 +150,29 @@ Exemple: BASICZBR3.json
     - "include1":"cmd1",
     - ...
     - "includeX":"cmdX",
+
+Support spécifique de cluster privés
+====================================
+EN COURS !!!
+La syntaxe actuelle est la suivante :
+
+    "private": {
+        "ED00": { // CLUSTID
+            "type": "tuya-zosung"
+        },
+        "0000-FF01": { // CLUSTID-ATTRID
+            "type": "xiaomi",
+            "01-21": {
+                "func": "numberDiv",
+                "div": 1000,
+                "info": "0001-01-0020"
+            }
+        },
+        "EF00": { // CLUSTID
+            "type": "tuya",
+            "05": { // DP
+                "function": "rcvValue",
+                "info": "01-measuredValue"
+            },
+        }
+    }

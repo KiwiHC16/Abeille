@@ -303,6 +303,17 @@
             return false; // Not found
         }
 
+        // Remove all 'commentX' from the top level of given 'tree'
+        public static function removeComments(&$tree) {
+            foreach ($tree as $key => $val) {
+                if (substr($key, 0, 7) != "comment")
+                    continue;
+
+                // log::add('Abeille', 'debug', "REMOVING '${key}' '${val}'");
+                unset($tree[$key]);
+            }
+        }
+
         /**
          * Read given command JSON model.
          *  'cmdFName' = command file name without '.json'
@@ -334,11 +345,12 @@
             }
 
             // Removing all comments
-            foreach ($cmd[$cmdJName] as $cmdKey => $cmdVal) {
-                if (substr($cmdKey, 0, 7) != "comment")
-                    continue;
-                unset($cmd[$cmdJName][$cmdKey]);
-            }
+            self::removeComments($cmd[$cmdJName]);
+            // foreach ($cmd[$cmdJName] as $cmdKey => $cmdVal) {
+            //     if (substr($cmdKey, 0, 7) != "comment")
+            //         continue;
+            //     unset($cmd[$cmdJName][$cmdKey]);
+            // }
 
             return $cmd;
         }
@@ -415,6 +427,11 @@
                     unset($device['alternateIds']); // Cleanup
                 }
             }
+
+            // Removing all comments
+            self::removeComments($device);
+            if (isset($device['private']))
+                self::removeComments($device['private']);
 
             if (isset($device['commands'])) {
                 if ($mode == 0) {

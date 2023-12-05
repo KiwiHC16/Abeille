@@ -4,14 +4,14 @@
         "model": "HS1SA",
         "type": "Heiman Smoke Sensor",
         "alternateIds": {
-            "SMOK_V15": {},
-            "SMOK_V16": {},
-            "b5db59bfd81e4f1f95dc57fdbba17931": {},
-            "SMOK_YDLV10": {},
-            "SmokeSensor-N": {},
-            "Smoke": {},
-            "319fa36e7384414a9ea62cba8f6e7626": {},
-            "c3442b4ac59b4ba1a83119d938f283ab": {}
+            "SMOK_V15": [],
+            "SMOK_V16": [],
+            "b5db59bfd81e4f1f95dc57fdbba17931": [],
+            "SMOK_YDLV10": [],
+            "SmokeSensor-N": [],
+            "Smoke": [],
+            "319fa36e7384414a9ea62cba8f6e7626": [],
+            "c3442b4ac59b4ba1a83119d938f283ab": []
         },
         "timeout": "60",
         "configuration": {
@@ -45,8 +45,8 @@
                 "execAtCreationDelay": 9
             },
             "SetReporting-0001-0021": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
             },

@@ -30,8 +30,6 @@ ChangeLog
 - Modèles de commandes: Normalisation noms.
 - Correction regression Tuya: 'Call to undefined function tuyaGenSqn()'
 - Tuya IH-K009: Mise-à-jour modèle 'TS0201__TZ3000_dowj6gyi'.
-- Modèles: Plusieurs mis-à-jour pour utiliser 'configureReporting2' au lieu de 'configureReporting'.
-- Modèles: Plusieurs corrigés pour reporting cluster 0008. Mauvais type d'attribut.
 - Page santé: Amélioration: Equipements désactivités barrés.
 - Support de clusters privés:
 
@@ -41,6 +39,10 @@ ChangeLog
 - Xiaomi Aqara smart plug EU: Mise-à-jour du modèle (2665).
 - Tuya/Moes universal remote: Séparation des modèles pour versions batterie et USB.
 - Page maintenance/infos clefs: Amélioration affichage.
+- Modèles
+
+  - Plusieurs mis-à-jour pour utiliser 'configureReporting2' au lieu de 'configureReporting'.
+  - Plusieurs corrigés pour reporting cluster 0008. Mauvais type d'attribut.
 
 231202-BETA-3
 -------------

@@ -245,30 +245,6 @@
                     $commands2["Get Battery-Percent"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "Batterie-Volt") && $oldSyntax) {
-                    $commands2["Battery-Volt"] = Array(
-                        "use"=> "zb-0001-BatteryVolt"
-                    );
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "Batterie-Volt-Konke") && $oldSyntax) {
-                    $commands2["Battery-Volt"] = Array(
-                        "use"=> "zb-0001-BatteryVolt"
-                    );
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "Batterie-Pourcent") && $oldSyntax) {
-                    $commands2["Battery-Percent"] = Array(
-                        "use"=> "zb-0001-BatteryPercent"
-                    );
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "Batterie-Hue") && $oldSyntax) {
-                    $commands2["Battery-Percent"] = Array(
-                        "use"=> "zb-0001-BatteryPercent"
-                    );
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
 
                 // Cluster 0003/Identify updates
@@ -363,32 +339,6 @@
                         "isVisible" => 1
                     );
                     $commands2["etat switch 1"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "etatSW2") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use" => "zb-0006-OnOff",
-                        "params" => "ep=05",
-                        "subType" => "binary",
-                        "template" => "badge",
-                        "invertBinary" => 1,
-                        "genericType" => "OPENING",
-                        "isVisible" => 1
-                    );
-                    $commands2["etat switch 2"] = $cmdArr;
-                    $devUpdated = true;
-                    echo "  Cmd '".$cmdFName."' UPDATED.\n";
-                } else if (($cmdFName == "etatSW3") && $oldSyntax) {
-                    $cmdArr = Array(
-                        "use" => "zb-0006-OnOff",
-                        "params" => "ep=06",
-                        "subType" => "binary",
-                        "template" => "badge",
-                        "invertBinary" => 1,
-                        "genericType" => "OPENING",
-                        "isVisible" => 1
-                    );
-                    $commands2["etat switch 3"] = $cmdArr;
                     $devUpdated = true;
                     echo "  Cmd '".$cmdFName."' UPDATED.\n";
                 }
@@ -601,7 +551,14 @@
                 }
 
                 // Cluster 0B04 updates
-                else if (($cmdFName == "getPlugA") && $oldSyntax) {
+                else if (($cmdFName == "act_zbConfigureReporting") &&
+                    ($cmd['params'] ==  "clustId=0B04&attrType=21&attrId=0508&minInterval=0000&maxInterval=0000&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "clustId=0B04&attrId=0508&attrType=21";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "getPlugA") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "poll-0B04-0508",
                     );

@@ -3579,7 +3579,7 @@
                                 //     xiaomiReportAttributeOld($dest, $srcAddr, $clustId, $plOld, $attrReportN);
                                 //     // $pl = ''; // Full payload treated
                                 // }
-                                if (($manufCode == '115F') || ($clustId == 'FCC0')) { // Xiaomi specific: displaying debug infos
+                                if (($manufCode == '115F') || ($clustId == 'FCC0') || ($clustId == 'FF01')) { // Xiaomi specific: displaying debug infos
                                     $attrType = $attr['dataType'];
                                     if (($attrType == "41") || ($attrType == "42")) // Even if unhandled, displaying debug infos
                                         xiaomiDecodeTagsDebug($dest, $srcAddr, $clustId, $attrId, $attr['valueHex']);

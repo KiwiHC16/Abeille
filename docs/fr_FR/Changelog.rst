@@ -1,7 +1,7 @@
 ChangeLog
 =========
 
-231205-BETA-3
+231205-BETA-4
 -------------
 
   .. warning:: **Mise-à-jour de modèles**
@@ -43,6 +43,7 @@ ChangeLog
 
   - Plusieurs mis-à-jour pour utiliser 'configureReporting2' au lieu de 'configureReporting'.
   - Plusieurs corrigés pour reporting cluster 0008. Mauvais type d'attribut.
+  - Plusieurs corrigés pour reporting cluster 0102. Mauvais type d'attribut.
 
 231202-BETA-3
 -------------

@@ -17,8 +17,8 @@
                 "use": "inf_zbAttr-0001-BatteryPercent"
             },
             "SetReporting 0001-00021": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "yes"
             },
             "Bind 0001-ToZigate": {
@@ -43,8 +43,8 @@
                 "isVisible": "1"
             },
             "SetReporting 0500-0002": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0500&attrId=0002&attrType=19&minInterval=0000&maxInterval=0000&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0500&attrId=0002&attrType=19",
                 "execAtCreation": "yes"
             },
             "Bind 0500-ToZigate": {

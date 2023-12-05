@@ -28,10 +28,12 @@
                 "nextLine": "after"
             },
             "Down": {
-                "use": "downGroup"
+                "use": "inf_zbCmdC-0008-Step",
+                "isVisible": 1
             },
             "Up": {
-                "use": "upGroup"
+                "use": "inf_zbCmdC-0008-StepWithOnOff",
+                "isVisible": 1
             },
             "setLevel": {
                 "use": "setLevelGroup"
@@ -58,24 +60,16 @@
                 "execAtCreationDelay": 9
             },
             "SetReporting-0001-0021": {
-                "use": "act_zbConfigureReporting",
-                "params": "clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=",
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600",
                 "execAtCreation": "Yes",
                 "execAtCreationDelay": 7
-            },
-            "Up": {
-                "use": "inf_zbCmdC-0008-StepWithOnOff",
-                "isVisible": 1
             },
             "Up Long": {
                 "use": "inf_zbCmdC-0008-MoveWithOnOff",
                 "isVisible": 1
             },
-            "Down": {
-                "use": "inf_zbCmdC-0008-Step",
-                "isVisible": 1
-            },
-          	"Down Long": {
+            "Down Long": {
                 "use": "inf_zbCmdC-0008-Move",
                 "isVisible": 1
             },

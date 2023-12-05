@@ -226,6 +226,13 @@
                     $commands2[$cmdJName] = $cmd;
                     $devUpdated = true;
                     echo "  Cmd '${cmdJName}' UPDATED.\n";
+                } else if (($cmdFName == "act_zbConfigureReporting") &&
+                    ($cmd['params'] ==  "ep=01&clustId=0001&attrType=20&attrId=0021&minInterval=0708&maxInterval=0E10&changeVal=")) {
+                    $cmd['use'] = "act_zbConfigureReporting2";
+                    $cmd['params'] =  "ep=01&clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600";
+                    $commands2[$cmdJName] = $cmd;
+                    $devUpdated = true;
+                    echo "  Cmd '${cmdJName}' UPDATED.\n";
                 } else if (($cmdFName == "BindToPowerConfig") && $oldSyntax) {
                     $cmdArr = Array(
                         "use"=> "zbBindToZigate",

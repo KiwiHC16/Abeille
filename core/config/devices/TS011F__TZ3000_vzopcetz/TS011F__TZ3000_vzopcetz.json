@@ -3,6 +3,8 @@
         "manufacturer": "Silvercrest",
         "model": "HG06338-FR",
         "zbManufacturer": "_TZ3000_vzopcetz",
+        "type": "Silvercrest power strip USB SPSZ 3 A1",
+        "genericType": "Outlet",
         "timeout": "60",
         "configuration": {
             "mainEP": "01",
@@ -11,67 +13,72 @@
         "category": {
             "automatism": "1"
         },
-        "type": "Silvercrest power strip USB SPSZ 3 A1",
         "commands": {
+            "Tuya-ConfigureMagicPacket": {
+                "use": "act_zbReadAttribute",
+                "params": "clustId=0000&attrId=0004,0000,0001,0005,0007,FFFE",
+                "logicalId": "Tuya-ConfigureMagicPacket",
+                "execAtCreation": "Yes"
+            },
+            "On 1": {
+                "use": "act_zbCmdC-0006-On",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Off 1": {
+                "use": "act_zbCmdC-0006-Off",
+                "params": "ep=01",
+                "isVisible": 1
+            },
+            "Toggle 1": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "params": "ep=01"
+            },
             "Status 1": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=01",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "On 2": {
+                "use": "act_zbCmdC-0006-On",
+                "params": "ep=02",
                 "isVisible": 1
+            },
+            "Off 2": {
+                "use": "act_zbCmdC-0006-Off",
+                "params": "ep=02",
+                "isVisible": 1
+            },
+            "Toggle 2": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "params": "ep=02"
             },
             "Status 2": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=02",
+                "isVisible": 1,
+                "nextLine": "after"
+            },
+            "On 3": {
+                "use": "act_zbCmdC-0006-On",
+                "params": "ep=03",
                 "isVisible": 1
+            },
+            "Off 3": {
+                "use": "act_zbCmdC-0006-Off",
+                "params": "ep=03",
+                "isVisible": 1
+            },
+            "Toggle 3": {
+                "use": "act_zbCmdC-0006-Toggle",
+                "params": "ep=03"
             },
             "Status 3": {
                 "use": "inf_zbAttr-0006-OnOff",
                 "params": "ep=03",
                 "isVisible": 1,
                 "nextLine": "after"
-            },
-            "On": {
-                "use": "act_zbCmdC-0006-On",
-                "params": "ep=01",
-                "isVisible": 1
-            },
-            "On 1": {
-                "use": "act_zbCmdC-0006-On",
-                "params": "ep=02",
-                "isVisible": 1
-            },
-            "On 2": {
-                "use": "act_zbCmdC-0006-On",
-                "params": "ep=03",
-                "isVisible": 1,
-                "nextLine": "after"
-            },
-            "Off": {
-                "use": "act_zbCmdC-0006-Off",
-                "params": "ep=01",
-                "isVisible": 1
-            },
-            "Off 1": {
-                "use": "act_zbCmdC-0006-Off",
-                "params": "ep=02",
-                "isVisible": 1
-            },
-            "Off 2": {
-                "use": "act_zbCmdC-0006-Off",
-                "params": "ep=03",
-                "isVisible": 1,
-                "nextLine": "after"
-            },
-            "Toggle 1": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "params": "ep=01"
-            },
-            "Toggle 2": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "params": "ep=02"
-            },
-            "Toggle 3": {
-                "use": "act_zbCmdC-0006-Toggle",
-                "params": "ep=03"
             },
             "Get-Status 1": {
                 "use": "act_zbReadAttribute",
@@ -90,29 +97,14 @@
                 "params": "ep=01&clustId=0006",
                 "execAtCreation": "Yes"
             },
-            "SetReporting-OnOff-01": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0006&attrId=0000&attrType=10",
-                "execAtCreation": "Yes"
-            },
             "Bind-02-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=02&clustId=0006",
                 "execAtCreation": "Yes"
             },
-            "SetReporting-OnOff-02": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=02&clustId=0006&attrId=0000&attrType=10",
-                "execAtCreation": "Yes"
-            },
             "Bind-03-0006-ToZigate": {
                 "use": "act_zbBindToZigate",
                 "params": "ep=03&clustId=0006",
-                "execAtCreation": "Yes"
-            },
-            "SetReporting-OnOff-03": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=03&clustId=0006&attrId=0000&attrType=10",
                 "execAtCreation": "Yes"
             }
         }

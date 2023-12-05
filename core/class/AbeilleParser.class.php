@@ -3570,23 +3570,24 @@
                                 }
                             } else {
                                 // Not private or obsolete way to handle this attribute as private
-                                if ($manufCode == '115F') { // Xiaomi specific
-                                    parserLog('warning', "  Old way (manufCode) to handle Xiaomi private cluster");
-                                    // parserLog('debug', "  plOld=${plOld}");
-                                    xiaomiReportAttributeOld($dest, $srcAddr, $clustId, $plOld, $attrReportN);
-                                    // $pl = ''; // Full payload treated
-                                }
+                                // if ($manufCode == '115F') { // Xiaomi specific
+                                //     parserLog('warning', "  Old way (manufCode) to handle Xiaomi private cluster");
+                                //     // parserLog('debug', "  plOld=${plOld}");
+                                //     xiaomiReportAttributeOld($dest, $srcAddr, $clustId, $plOld, $attrReportN);
+                                //     // $pl = ''; // Full payload treated
+                                // }
 
-                                else if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
-                                    parserLog('warning', "  Old way (fromDevice) to handle Xiaomi private cluster");
-                                    xiaomiReportAttributeOld($dest, $srcAddr, $clustId, $plOld, $attrReportN);
-                                    // $pl = ''; // Full payload treated
-                                }
+                                // else if (isset($eq['xiaomi']) && isset($eq['xiaomi']['fromDevice'][$clustId.'-'.$attrId])) { // Xiaomi specific without manufCode
+                                //     parserLog('warning', "  Old way (fromDevice) to handle Xiaomi private cluster");
+                                //     xiaomiReportAttributeOld($dest, $srcAddr, $clustId, $plOld, $attrReportN);
+                                //     // $pl = ''; // Full payload treated
+                                // }
 
                                 // Philips Hue specific cluster
                                 // Used by RWL021, RDM001
                                 // Tcharp38: Where is the source of this decoding ?
-                                else if ($clustId == "FC00") {
+                                // else if ($clustId == "FC00") {
+                                if ($clustId == "FC00") {
                                     $buttonEventTxt = array (
                                         '00' => 'Short press',
                                         '01' => 'Long press',

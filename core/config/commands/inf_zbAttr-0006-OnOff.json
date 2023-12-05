@@ -4,7 +4,7 @@
         "subType": "binary",
         "template": "light",
         "configuration": {
-            "repeatEventManagement": "always",
+            "repeatEventManagement": "never",
             "visibilityCategory": "All"
         },
         "logicalId": "0006-#EP#-0000",

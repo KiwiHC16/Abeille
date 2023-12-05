@@ -31,6 +31,16 @@
                 "isVisible": 1,
                 "nextLine": "after"
             },
+            "Bind-01-0006-ToZigate": {
+                "use": "act_zbBindToZigate",
+                "params": "ep=01&clustId=0006",
+                "execAtCreation": "Yes"
+            },
+            "SetReporting-01-0006-0000": {
+                "use": "act_zbConfigureReporting2",
+                "params": "clustId=0006&attrType=10&attrId=0000",
+                "execAtCreation": "Yes"
+            },
             "Total power": {
                 "use": "inf_zbAttr-0702-CurrentSummationDelivered",
                 "params": "ep=01&div=10",

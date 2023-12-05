@@ -1,19 +1,18 @@
 {
-    "TS1201__TZ3290_ot6ewjvmejq5ekhl": {
-        "manufacturer": "Moes",
-        "model": "UFO-R11",
-        "type": "Moes universal smart IR remote control",
+    "TS1201__TZ3290_7v1k4vufotpowp9z": {
+        "manufacturer": "Tuya",
+        "model": "ZS08",
+        "type": "Tuya universal remote USB powered",
+        "comment": "Universal remote USB powered",
         "timeout": "60",
         "alternateIds": {
-            "TS1201__TZ3290_j37rooaxrcdcqo5n": []
         },
         "category": {
             "automatism": "1"
         },
         "configuration": {
-            "icon": "Moes-UniversalRemote",
-            "mainEP": "01",
-            "batteryType": "2x1.5V AAA"
+            "icon": "Tuya-UniversalRemote",
+            "mainEP": "01"
         },
         "commands": {
             "Init 0": {
@@ -21,22 +20,6 @@
                 "params": "ep=01&clustId=0001&attrId=0020,0021",
                 "comment": "Might be required for init",
                 "logicalId": "readAttr-Volt-Percent",
-                "execAtCreation": "yes"
-            },
-            "Battery-Percent": {
-                "use": "inf_zbAttr-0001-BatteryPercent",
-                "params": "ep=01"
-            },
-            "Bind 01-0001-ToZigate": {
-                "use": "act_zbBindToZigate",
-                "params": "ep=01&clustId=0001",
-                "execAtCreationDelay": "4",
-                "execAtCreation": "yes"
-            },
-            "SetReporting 01-0001-00021": {
-                "use": "act_zbConfigureReporting2",
-                "params": "ep=01&clustId=0001&attrId=0021&attrType=20&minInterval=1800&maxInterval=3600",
-                "execAtCreationDelay": "5",
                 "execAtCreation": "yes"
             },
             "Start learning": {

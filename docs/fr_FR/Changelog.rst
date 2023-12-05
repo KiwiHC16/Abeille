@@ -34,6 +34,7 @@ ChangeLog
   - Support limité à Xiaomi seulement.
   - Tous les modèles Xiaomi mis-à-jour.
 - Xiaomi Aqara smart plug EU: Mise-à-jour du modèle (2665).
+- Tuya/Moes universal remote: Séparation des modèles pour versions batterie et USB.
 
 231202-BETA-3
 -------------
